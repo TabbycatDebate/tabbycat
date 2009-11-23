@@ -9,11 +9,6 @@ class Tournament(object):
         return Team.objects.all()
     teams = property(get_teams)
     
-    def get_active_venues(self):
-        return Venue.active.all()
-    active_venues = property(get_active_venues)
-    
-
 class Institution(models.Model):
     code = models.CharField(max_length=10)
     name = models.CharField(max_length=30)
@@ -28,16 +23,32 @@ class Team(models.Model):
     
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
+    
+    def _get_points(self):
+        # TODO
+        return 0
+    points = property(_get_points)
+    
+    def _get_aff_count(self):
+        # TODO
+        return 0
+    aff_count = property(_get_aff_count)
+    
+    def _get_neg_count(self):
+        # TODO
+        return 0
+    neg_count = property(_get_neg_count)
+    
+    def seen(self, other):
+        # TODO
+        return False
+    
+    def same_institution(self, other):
+        return self.institution_id == other.institution_id
 
 class Speaker(models.Model):
     name = models.CharField(max_length=40)
     team = models.ForeignKey(Team)
-
-class AdjudicatorManager(models.Manager):
-    def activate_all(self):
-        self.update(is_active=True)
-    def deactivate_all(self):
-        self.update(is_active=False)
 
 class ActiveManager(models.Manager):
     def __init__(self, status):
@@ -47,19 +58,10 @@ class ActiveManager(models.Manager):
     def get_query_set(self):
         return super(ActiveManager, self).get_query_set().filter(is_active=self.status)
 
-class AdjudicatorActiveManager(AdjudicatorManager, ActiveManager):
-    def __init__(self, status):
-        super(AdjudicatorActiveManager, self).__init__(status)
-    
 class Adjudicator(models.Model):
     name = models.CharField(max_length=40)
     institution = models.ForeignKey(Institution)
-    is_active = models.BooleanField()
-    
-    objects = AdjudicatorManager()
-    active = AdjudicatorActiveManager(True)
-    inactive = AdjudicatorActiveManager(False)
-    
+   
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
 
@@ -80,53 +82,19 @@ class Round(models.Model):
     #preceded
     
     tournament = Tournament()
+
+    active_venues = models.ManyToManyField('Venue')
+    active_adjudicators = models.ManyToManyField('Adjudicator')
     
     def debates(self):
         return Debate.objects.filter(round=self)
     
-    class DrawError(Exception):
-        pass
-    
-    def _draw_get_teams(self):
-        if not self.status == self.STATUS_DRAFT:
-            raise DrawError()
-        
-        teams = list(self.tournament.teams)
-        
-        if not len(teams) % 2 == 0:
-            raise DrawError()
-        return teams
-    
-    def draw_random(self):
-        teams = self._draw_get_teams()
-        
-        random.shuffle(teams)
-        pairs = pair_list(teams)
-        self.make_debates(pairs)
-        
-    def draw_bracketed(self):
-        teams = self._draw_get_teams()
-        
-        # create bracket data structure
-        max_points = teams[0].total_points
-        brackets = ([],) * (max_points + 1)
-        for team in teams:
-            brackets[team.total_points].append(team)
-        # balance brackets from top down
-        for i in range(max_points, -1, -1):
-            if len(brackets[i]) % 2 != 0:
-                # find next non-empty bracket
-                idx = i - 1
-                while len(brackets[idx]) == 0:
-                    idx -= 1
-                brackets[i].append(brackets[idx].pop(0))
-                
-        pairs = pair_list(teams)
-        self.make_debates(pairs)
-        
+    def draw(self, drawer):
+        d = drawer(self)
+        self.make_debates(d.get_draw())
         
     def make_debates(self, pairs):
-        venues = list(self.tournament.active_venues)
+        venues = list(self.active_venues.all())
         
         for pair in pairs:
             debate = Debate(round=self, venue=venues.pop(0))
@@ -140,13 +108,8 @@ class Round(models.Model):
         
 class Venue(models.Model):
     name = models.CharField(max_length=40)
-    is_active = models.BooleanField()
     priority = models.IntegerField()
     
-    objects = models.Manager()
-    active = ActiveManager(True)
-    inactive = ActiveManager(False)
-
 class Debate(models.Model):
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue)

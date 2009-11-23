@@ -7,9 +7,11 @@ Replace these with more appropriate tests for your application.
 
 from django.test import TestCase
 from debate.models import Institution, Team, Speaker, Adjudicator, Debate, Round, Venue, DebateTeam
+from debate.draw import RandomDraw, AidaDraw
 
 class BaseTest(TestCase):
     def setUp(self):
+        super(BaseTest, self).setUp()
         # add test models
         for i in range(4):
             ins = Institution(code="INS%s"%i, name="Institution %s"%i)
@@ -23,20 +25,28 @@ class BaseTest(TestCase):
             for j in range(2):
                 adj = Adjudicator(institution=ins, name="Adjudicator%s%s" % (i,j))
                 adj.save()
-        Adjudicator.objects.activate_all()
         
         for i in range(8):
             venue = Venue(name="Venue %s" % i)
-            venue.is_active = True
             venue.priority = i
             venue.save()
             
-        for i in range(3):
             venue = Venue(name="IVenue %s" % i)
-            venue.is_active = False
             venue.priority = i
             venue.save()
-                    
+
+    def activate_all_adj(self, r):
+        for adj in Adjudicator.objects.all():
+            r.active_adjudicators.add(adj)
+
+    def activate_all_venue(self, r):
+        for venue in Venue.objects.all():
+            r.active_venues.add(venue)
+
+    def activate_venues(self, r):
+        for venue in Venue.objects.all():
+            if venue.name.startswith("Venue"):
+                r.active_venues.add(venue)
                     
 class TestInstitution(BaseTest):
     def test_objects(self):
@@ -45,32 +55,35 @@ class TestInstitution(BaseTest):
 class TestAdjudicator(BaseTest):
     def test_objects(self):
         self.failUnlessEqual(8, Adjudicator.objects.count())
-    def test_active(self):
-        self.failUnlessEqual(8, Adjudicator.active.count())
-    def test_inactive(self):
-        self.failUnlessEqual(0, Adjudicator.inactive.count())
-        
+       
 class TestAdjudicatorDisable(BaseTest):
     def setUp(self):
         super(TestAdjudicatorDisable, self).setUp()
-        
+        self.round = Round()
+        self.round.save()
+        self.activate_all_adj(self.round)
+
         adj = Adjudicator.objects.get(name="Adjudicator00")
-        adj.is_active = False
-        adj.save()
-        
+        self.round.active_adjudicators.remove(adj)
+
     def test_objects(self):
         self.failUnlessEqual(8, Adjudicator.objects.count())
-    def test_active(self):
-        self.failUnlessEqual(7, Adjudicator.active.count())
-    def test_inactive(self):
-        self.failUnlessEqual(1, Adjudicator.inactive.count())
-       
 
-class TestDrawRandom(BaseTest):
+    def test_active(self):
+        self.failUnlessEqual(7, self.round.active_adjudicators.count())
+
+class RandomDrawTests(BaseTest):
+    DRAW_CLASS = RandomDraw
+
+    def setUp(self):
+        super(RandomDrawTests, self).setUp()
+        self.round = Round()
+        self.round.save()
+        self.activate_all_adj(self.round)
+        self.activate_venues(self.round)
+
     def test_std(self):
-        round = Round()
-        round.save()
-        round.draw_random()
+        self.round.draw(self.DRAW_CLASS)
         
         self.failUnlessEqual(6, Debate.objects.count()) 
         self.failUnlessEqual(12, DebateTeam.objects.count())
@@ -78,7 +91,8 @@ class TestDrawRandom(BaseTest):
         for team in Team.objects.all():
             self.failUnlessEqual(1, DebateTeam.objects.filter(team=team).count())
             
-
+class AidaDrawTests(RandomDrawTests):
+    DRAW_CLASS = AidaDraw
 
 __test__ = {"doctest": """
 Another way to test that 1 + 1 is equal to 2.
