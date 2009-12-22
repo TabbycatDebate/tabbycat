@@ -4,6 +4,13 @@ from django.conf.urls.defaults import *
 from django.contrib import admin
 admin.autodiscover()
 
+def redirect(view):
+    from django.http import HttpResponseRedirect
+    from django.core.urlresolvers import reverse
+    def foo(request):
+        return HttpResponseRedirect(reverse(view))
+    return foo
+
 urlpatterns = patterns('',
     # Example:
     # (r'^debates/', include('debates.foo.urls')),
@@ -13,6 +20,7 @@ urlpatterns = patterns('',
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
+    (r'^$', redirect('debate_index')),
     (r'^admin/', include(admin.site.urls)),
-    (r'^$', 'debate.views.index'),
+    (r'^debate/', include('debate.urls')),
 )

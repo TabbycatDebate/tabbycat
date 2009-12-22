@@ -5,9 +5,13 @@ from django.db import models
 from debate.utils import pair_list
 
 class Tournament(object):
-    def get_teams(self):
+    def _get_teams(self):
         return Team.objects.all()
-    teams = property(get_teams)
+    teams = property(_get_teams)
+
+    def _get_current_round(self):
+        return Round.objects.order_by('-id')[0]
+    current_round = property(_get_current_round)
     
 class Institution(models.Model):
     code = models.CharField(max_length=10)
@@ -85,6 +89,9 @@ class Round(models.Model):
 
     active_venues = models.ManyToManyField('Venue')
     active_adjudicators = models.ManyToManyField('Adjudicator')
+
+    def __unicode__(self):
+        return unicode(self.id)
     
     def debates(self):
         return Debate.objects.filter(round=self)
