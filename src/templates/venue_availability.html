@@ -1,9 +1,31 @@
 {% extends "base.html" %}
 
 {% block extra-head %}
-    <script type="text/javascript charset="utf-8">
+    <script type="text/javascript" charset="utf-8">
         $(document).ready(function() {
             $('#dataTable').dataTable();
+        } );
+
+        $(document).ready(function() {
+            $("#dataTable tbody tr :checkbox").click(function() {
+                var jp = $(this).parents("tr");
+                if (this.checked) {
+                    jp.addClass("active");
+                    jp.removeClass("inactive");
+                } else {
+                    jp.addClass("inactive");
+                    jp.removeClass("active");
+                }
+            });
+
+            $("#dataTable tbody tr").click(function(event) {
+                if (event.target.type !== "checkbox") {
+                    var jc = $(":checkbox", this);
+                    jc[0].checked = !jc[0].checked;
+                    jc.triggerHandler("click");
+                }
+            });
+
         } );
     </script>
     <style type="text/css" title="currentStyle">
@@ -17,10 +39,13 @@
 {% block content %}
 <div id="demo">
 <table id="dataTable" class="display">
-    <thead><tr><th>Venue</th><th>Status</th></tr></thead>
+    <thead><tr><th>Venue</th><th>Active</th></tr></thead>
     <tbody>
         {% for venue in venues %}
-        <tr class="{{ venue.is_active|yesno:"active,inactive" }}"><td>{{ venue.name }}</td><td>{{ venue.is_active|yesno:"y,n"  }}</td></tr>
+        <tr class="{{ venue.is_active|yesno:'active,inactive' }}">
+            <td>{{ venue.name }}</td>
+            <td><input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="foo" /></td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>

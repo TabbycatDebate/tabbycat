@@ -122,6 +122,13 @@ table.display tfoot th {
 	font-weight: bold;
 }
 
+
+table.display tbody tr {
+    cursor: pointer;
+    * cursor: hand;
+}
+
+
 table.display tr.heading2 td {
 	border-bottom: 1px solid #aaa;
 }

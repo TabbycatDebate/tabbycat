@@ -10,6 +10,13 @@
 	background-color: #fff;
 }
 
+#debate #jsWarn {
+    font-weight: bold;
+    background-color: #f00;
+    color: #ff0;
+    padding: 5px;
+}
+
 
 #debate #container {
 	width: 800px;

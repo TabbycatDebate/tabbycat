@@ -10,12 +10,22 @@
     <script type="text/javascript" language="javascript" src="/static/js/jquery.js"></script>
     <script type="text/javascript" language="javascript" src="/static/js/jquery.dataTables.js"></script>
 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#jsWarn").hide();
+        });
+    </script>
+
     {% block extra-head %}
     {% endblock extra-head %}
 
     </head>
 <body id="{% block body-id %}debate{% endblock %}" class="{% block body-class %}{% endblock %}">
+    <div id="jsWarn">
+        Javascript must be enabled for this application to function correctly.
+    </div>
     {% block body %}
+    <div id="container">
         {% block nav %}
         <ul id="nav">
             <li id="overview">Overview</li>
@@ -31,6 +41,7 @@
         <h1>{% block h1 %}{% endblock %}</h1>
         {% block content %}
         {% endblock content %}
+    </div>
     {% endblock body %}
 </body>
 </html>
