@@ -50,6 +50,7 @@ class Team(models.Model):
     def same_institution(self, other):
         return self.institution_id == other.institution_id
 
+
 class Speaker(models.Model):
     name = models.CharField(max_length=40)
     team = models.ForeignKey(Team)
@@ -87,7 +88,7 @@ class Round(models.Model):
     
     tournament = Tournament()
 
-    active_venues = models.ManyToManyField('Venue')
+    active_venues = models.ManyToManyField('Venue', through='ActiveVenue')
     active_adjudicators = models.ManyToManyField('Adjudicator')
     active_teams = models.ManyToManyField('Team')
 
@@ -116,17 +117,34 @@ class Round(models.Model):
 
     def venue_availability(self):
         return Venue.objects.all().extra(select={'is_active': """EXISTS (Select 1
-                                                 from debate_round_active_venues
+                                                 from debate_activevenue
                                                  drav where drav.venue_id =
                                                  debate_venue.id and
                                                  drav.round_id=%d)""" % self.id })
         
+    def set_available_venues(self, ids):
+        ids = set(ids)
+        all_ids = set(a['id'] for a in Venue.objects.values('id'))
+        exclude_ids = all_ids.difference(ids)
+        existing_ids = set(a['id'] for a in self.active_venues.values('id'))
+
+        remove_ids = existing_ids.intersection(exclude_ids)
+        add_ids = ids.difference(existing_ids)
+
+        ActiveVenue.objects.filter(round=self, id__in=remove_ids).delete()
+        for id in add_ids:
+            ActiveVenue(venue_id=id, round=self).save()
+
 class Venue(models.Model):
     name = models.CharField(max_length=40)
     priority = models.IntegerField()
 
     def __unicode__(self):
         return u'%s (%d)' % (self.name, self.priority)
+
+class ActiveVenue(models.Model):
+    venue = models.ForeignKey(Venue)
+    round = models.ForeignKey(Round)
     
 class Debate(models.Model):
     round = models.ForeignKey(Round)

@@ -2,23 +2,38 @@
 
 {% block extra-head %}
     <script type="text/javascript" charset="utf-8">
-        $(document).ready(function() {
-            $('#dataTable').dataTable();
-        } );
+        var dTable;
+        var unsavedChanges = false;
+        var updateCheckbox = function(cb) {
+            var jp = $(cb).parents("tr");
+            if (cb.checked) {
+                jp.addClass("active");
+                jp.removeClass("inactive");
+            } else {
+                jp.addClass("inactive");
+                jp.removeClass("active");
+            }
+        };
 
-        $(document).ready(function() {
-            $("#dataTable tbody tr :checkbox").click(function() {
-                var jp = $(this).parents("tr");
-                if (this.checked) {
-                    jp.addClass("active");
-                    jp.removeClass("inactive");
-                } else {
-                    jp.addClass("inactive");
-                    jp.removeClass("active");
-                }
+        var changeHappened = function (e) {
+            if (!unsavedChanges) {
+//                $(".status").append("<span>Unsaved changes</span");
+                unsavedChanges = true;
+            }
+            $(e).parents("tr").addClass("pendingChange");
+
+        }
+
+        $(document).ready( function() {
+            $("#dataTable tbody tr :checkbox").each( function(){
+                updateCheckbox(this);
             });
-
-            $("#dataTable tbody tr").click(function(event) {
+            $("#dataTable tbody tr :checkbox").click( function(){
+                updateCheckbox(this);
+                changeHappened(this);
+            });
+            
+            $("#dataTable tbody tr").click( function(event) {
                 if (event.target.type !== "checkbox") {
                     var jc = $(":checkbox", this);
                     jc[0].checked = !jc[0].checked;
@@ -26,6 +41,22 @@
                 }
             });
 
+            $("#form").submit( function() {
+                var sData = $("input", dTable.fnGetNodes()).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url update_venue_availability round.id %}",
+                    data: sData,
+                    success: function(data, txtStatus) {
+
+                    },
+                    error: function(req, txtStatus, err) {
+                    },
+                });
+                return false;
+            } );
+
+            dTable = $('#dataTable').dataTable();
         } );
     </script>
     <style type="text/css" title="currentStyle">
@@ -37,19 +68,24 @@
 {% block h1 %}Venue Availability for Round {{ round }}{% endblock %}
 
 {% block content %}
+<form id="form">
 <div id="demo">
+    <div class="status"><button type="submit">Save changes</button>
+</div>
 <table id="dataTable" class="display">
     <thead><tr><th>Venue</th><th>Active</th></tr></thead>
     <tbody>
         {% for venue in venues %}
-        <tr class="{{ venue.is_active|yesno:'active,inactive' }}">
+        <tr>
             <td>{{ venue.name }}</td>
-            <td><input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="foo" /></td>
+            <td><input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="check_{{ venue.id }}"  value="1" /></td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+<div class="status"></div>
 </div>
+</form>
 {% endblock content %}
 
 

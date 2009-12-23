@@ -17,6 +17,14 @@
     padding: 5px;
 }
 
+#debate .status {
+    text-align: right;
+    padding-bottom: 1em;
+}
+
+#debate .pendingChange {
+    font-style: italic;
+}
 
 #debate #container {
 	width: 800px;
