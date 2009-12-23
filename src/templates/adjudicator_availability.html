@@ -1,0 +1,19 @@
+{% extends "base_availability.html" %}
+
+{% block update-url %}{% url update_adjudicator_availability round.id %}{% endblock %}
+
+{% block h1 %}Adjudicator Availability for Round {{ round }}{% endblock %}
+
+{% block table-contents %}
+    <thead><tr><th>Adjudicator</th><th>Institution</th><th>Active</th></tr></thead>
+    <tbody>
+        {% for adj in adjudicators %}
+        <tr>
+            <td>{{ adj.name }}</td>
+            <td>{{ adj.institution.name }}</td>
+            <td><input type="checkbox" {{ adj.is_active|yesno:'checked="yes",'  }} name="check_{{ adj.id }}"  value="{{ adj.id }}" /></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+{% endblock table-contents %}
+

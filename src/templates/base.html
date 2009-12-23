@@ -32,7 +32,8 @@
             <li id="round">Current Round
                 <ul>
                     <li><a href="{% url venue_availability current_round.id %}">Venues</a></li>
-                    <li>Adjudicators</li>
+                    <li><a href="{% url adjudicator_availability current_round.id %}">Adjudicators</a></li>
+                    <li><a href="{% url team_availability current_round.id %}">Teams</a></li>
                 </ul>
             </li>
 

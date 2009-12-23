@@ -1,0 +1,19 @@
+{% extends "base_availability.html" %}
+
+{% block update-url %}{% url update_team_availability round.id %}{% endblock %}
+
+{% block h1 %}Team Availability for Round {{ round }}{% endblock %}
+
+{% block table-contents %}
+    <thead><tr><th>Team</th><th>Institution</th><th>Active</th></tr></thead>
+    <tbody>
+        {% for team in teams %}
+        <tr>
+            <td>{{ team.name }}</td>
+            <td>{{ team.institution.name }}</td>
+            <td><input type="checkbox" {{ team.is_active|yesno:'checked="yes",'  }} name="check_{{ team.id }}"  value="{{ team.id }}" /></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+{% endblock table-contents %}
+

@@ -115,25 +115,60 @@ class Round(models.Model):
             aff.save()
             neg.save()
 
+    def base_availability(self, model, active_table, active_column, model_table):
+        d = {
+            'active_table' : active_table,
+            'active_column' : active_column,
+            'model_table': model_table,
+            'id' : self.id
+        }
+        return model.objects.all().extra(select={'is_active': """EXISTS (Select 1
+                                                 from %(active_table)s 
+                                                 drav where
+                                                 drav.%(active_column)s =
+                                                 %(model_table)s.id and
+                                                 drav.round_id=%(id)d)""" % d })
+
     def venue_availability(self):
-        return Venue.objects.all().extra(select={'is_active': """EXISTS (Select 1
-                                                 from debate_activevenue
-                                                 drav where drav.venue_id =
-                                                 debate_venue.id and
-                                                 drav.round_id=%d)""" % self.id })
-        
-    def set_available_venues(self, ids):
+        return self.base_availability(Venue, 'debate_activevenue', 'venue_id',
+                                      'debate_venue')
+
+    def adjudicator_availability(self):
+        return self.base_availability(Adjudicator, 'debate_activeadjudicator', 
+                                      'adjudicator_id',
+                                      'debate_adjudicator')
+
+    def team_availability(self):
+        return self.base_availability(Team, 'debate_activeteam', 'team_id',
+                                      'debate_team')
+
+    def set_available_base(self, ids, model, active_model, get_active,
+                             id_column):
         ids = set(ids)
-        all_ids = set(a['id'] for a in Venue.objects.values('id'))
+        all_ids = set(a['id'] for a in model.objects.values('id'))
         exclude_ids = all_ids.difference(ids)
-        existing_ids = set(a['id'] for a in self.active_venues.values('id'))
+        existing_ids = set(a['id'] for a in get_active.values('id'))
 
         remove_ids = existing_ids.intersection(exclude_ids)
         add_ids = ids.difference(existing_ids)
 
-        ActiveVenue.objects.filter(round=self, id__in=remove_ids).delete()
+        active_model.objects.filter(round=self, id__in=remove_ids).delete()
         for id in add_ids:
-            ActiveVenue(venue_id=id, round=self).save()
+            m = active_model(round=self)
+            setattr(m, id_column, id)
+            m.save()
+
+    def set_available_venues(self, ids):
+        return self.set_available_base(ids, Venue, ActiveVenue,
+                                       self.active_venues, 'venue_id')
+
+    def set_available_adjudicators(self, ids):
+        return self.set_available_base(ids, Adjudicator, ActiveAdjudicator,
+                                       self.active_adjudicators, 'adjudicator_id')
+
+    def set_available_teams(self, ids):
+        return self.set_available_base(ids, Team, ActiveTeam,
+                                       self.active_teams, 'team_id')
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
@@ -144,6 +179,14 @@ class Venue(models.Model):
 
 class ActiveVenue(models.Model):
     venue = models.ForeignKey(Venue)
+    round = models.ForeignKey(Round)
+
+class ActiveTeam(models.Model):
+    team = models.ForeignKey(Team)
+    round = models.ForeignKey(Round)
+
+class ActiveAdjudicator(models.Model):
+    adjudicator = models.ForeignKey(Adjudicator)
     round = models.ForeignKey(Round)
     
 class Debate(models.Model):

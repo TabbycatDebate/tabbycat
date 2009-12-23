@@ -10,17 +10,35 @@ def index(request):
     return render_to_response('index.html', context_instance=RequestContext(request))
 
 def venue_availability(request, round_id):
+    return base_availability(request, round_id, 'venue', 'venues')
+
+def update_venue_availability(request, round_id):
+    return update_base_availability(request, round_id, 'set_available_venues')
+
+def adjudicator_availability(request, round_id):
+    return base_availability(request, round_id, 'adjudicator', 'adjudicators')
+
+def update_adjudicator_availability(request, round_id):
+    return update_base_availability(request, round_id, 'set_available_adjudicators')
+
+def team_availability(request, round_id):
+    return base_availability(request, round_id, 'team', 'teams')
+
+def update_team_availability(request, round_id):
+    return update_base_availability(request, round_id, 'set_available_teams')
+
+def base_availability(request, round_id, model, context_name):
     rc = RequestContext(request)
     round = get_object_or_404(Round, id=round_id)
 
-    venues = round.venue_availability().order_by('name')
+    items = getattr(round, '%s_availability' % model)().order_by('name')
 
-    rc['venues'] = venues 
+    rc[context_name] = items 
     rc['round'] = round
-    return render_to_response('venue_availability.html',
+    return render_to_response('%s_availability.html' % model,
                               context_instance=rc)
 
-def update_venue_availability(request, round_id):
+def update_base_availability(request, round_id, update_method):
     round = get_object_or_404(Round, id=round_id)
 
     if request.method != "POST":
@@ -28,7 +46,7 @@ def update_venue_availability(request, round_id):
 
     available_ids = [int(a.replace("check_", "")) for a in request.POST.keys()]
 
-    round.set_available_venues(available_ids)
+    getattr(round, update_method)(available_ids)
 
     return HttpResponse("ok")
 

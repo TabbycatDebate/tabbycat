@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+    <script type="text/javascript" charset="utf-8">
+        var dTable;
+        var venueState = [];
+        var newState = [];
+        var unsavedChanges = 0;
+        var checkboxes = function () { return $("#dataTable tbody tr :checkbox") };
+        var updateCheckbox = function(cb) {
+            var jp = $(cb).parents("tr");
+            if (cb.checked) {
+                jp.addClass("active");
+                jp.removeClass("inactive");
+                if (venueState[cb.value]) {
+                    jp.removeClass("pendingChange");
+                } else {
+                    jp.addClass("pendingChange");
+                }
+            } else {
+                jp.addClass("inactive");
+                jp.removeClass("active");
+                if (venueState[cb.value]) {
+                    jp.addClass("pendingChange");
+                } else {
+                    jp.removeClass("pendingChange");
+                }
+            }
+        };
+
+        var changeHappened = function (e) {
+            unsavedChanges++;
+            if (!unsavedChanges) {
+//                $(".status").append("<span>Unsaved changes</span");
+//                unsavedChanges = true;
+            }
+
+        }
+
+        $(document).ready( function() {
+            checkboxes().each( function(){
+                var cb = $(this)[0];
+                venueState[cb.value] = cb.checked;
+                updateCheckbox(this);
+            });
+            checkboxes().click( function(){
+                updateCheckbox(this);
+                changeHappened(this);
+            });
+            
+            $("#dataTable tbody tr").click( function(event) {
+                if (event.target.type !== "checkbox") {
+                    var jc = $(":checkbox", this);
+                    jc[0].checked = !jc[0].checked;
+                    jc.triggerHandler("click");
+                }
+            });
+
+            $("#form").submit( function() {
+                checkboxes().each( function(){
+                    var cb = $(this)[0];
+                    newState[cb.value] = cb.checked;
+                });
+
+                var sData = $("input", dTable.fnGetNodes()).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "{% block update-url %}{% endblock %}",
+                    data: sData,
+                    success: function(data, txtStatus) {
+                        venueState = newState;
+                        checkboxes().each( function() {
+                            updateCheckbox(this);
+                        });
+
+                    },
+                    error: function(req, txtStatus, err) {
+                    },
+                });
+                return false;
+            } );
+
+            dTable = $('#dataTable').dataTable();
+        } );
+    </script>
+    <style type="text/css" title="currentStyle">
+        @import "/static/css/demo_page.css";
+        @import "/static/css/demo_table.css";
+    </style>
+{% endblock %}
+
+{% block content %}
+<form id="form">
+<div id="demo">
+    <div class="status"><button type="submit">Save changes</button>
+</div>
+<table id="dataTable" class="display">
+    {% block table-contents %}
+    {% endblock table-contents %}
+</table>
+<div class="status"></div>
+</div>
+</form>
+{% endblock content %}
+
+

@@ -8,5 +8,13 @@ urlpatterns = patterns('debate.views',
                            'venue_availability', name='venue_availability'),
                        url(r'^round/(?P<round_id>\d+)/venues/update/$',
                            'update_venue_availability', name='update_venue_availability'),
+                       url(r'^round/(?P<round_id>\d+)/adjudicators/$',
+                           'adjudicator_availability', name='adjudicator_availability'),
+                       url(r'^round/(?P<round_id>\d+)/adjudicators/update/$',
+                           'update_adjudicator_availability', name='update_adjudicator_availability'),
+                       url(r'^round/(?P<round_id>\d+)/teams/$',
+                           'team_availability', name='team_availability'),
+                       url(r'^round/(?P<round_id>\d+)/teams/update/$',
+                           'update_team_availability', name='update_team_availability'),
                       )
 

@@ -24,6 +24,8 @@
 
 #debate .pendingChange {
     font-style: italic;
+    font-size: 85%;
+    font-weight: bold;
 }
 
 #debate #container {
