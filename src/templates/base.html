@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+{% load debate_tags %}
+
+<head>
+    <title>
+    {% block head-title %}{% endblock %}
+    </title>
+
+    <script type="text/javascript" language="javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/js/jquery.dataTables.js"></script>
+
+    {% block extra-head %}
+    {% endblock extra-head %}
+
+    </head>
+<body id="{% block body-id %}debate{% endblock %}" class="{% block body-class %}{% endblock %}">
+    {% block body %}
+        {% block nav %}
+        <ul id="nav">
+            <li id="overview">Overview</li>
+            <li id="round">Current Round
+                <ul>
+                    <li><a href="{% url venue_availability current_round.id %}">Venues</a></li>
+                    <li>Adjudicators</li>
+                </ul>
+            </li>
+
+        </ul>
+        {% endblock nav %}
+        <h1>{% block h1 %}{% endblock %}</h1>
+        {% block content %}
+        {% endblock content %}
+    {% endblock body %}
+</body>
+</html>
+
+

@@ -11,8 +11,12 @@ def index(request):
 
 def venue_availability(request, round_id):
     rc = RequestContext(request)
-    rc['round'] = get_object_or_404(Round, id=round_id)
+    round = get_object_or_404(Round, id=round_id)
 
+    venues = round.venue_availability().order_by('name')
+
+    rc['venues'] = venues 
+    rc['round'] = round
     return render_to_response('venue_availability.html',
                               context_instance=rc)
 

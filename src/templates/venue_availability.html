@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+    <script type="text/javascript charset="utf-8">
+        $(document).ready(function() {
+            $('#dataTable').dataTable();
+        } );
+    </script>
+    <style type="text/css" title="currentStyle">
+        @import "/static/css/demo_page.css";
+        @import "/static/css/demo_table.css";
+    </style>
+{% endblock %}
+
+{% block h1 %}Venue Availability for Round {{ round }}{% endblock %}
+
+{% block content %}
+<div id="demo">
+<table id="dataTable" class="display">
+    <thead><tr><th>Venue</th><th>Status</th></tr></thead>
+    <tbody>
+        {% for venue in venues %}
+        <tr class="{{ venue.is_active|yesno:"active,inactive" }}"><td>{{ venue.name }}</td><td>{{ venue.is_active|yesno:"y,n"  }}</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock content %}
+
+

@@ -89,6 +89,7 @@ class Round(models.Model):
 
     active_venues = models.ManyToManyField('Venue')
     active_adjudicators = models.ManyToManyField('Adjudicator')
+    active_teams = models.ManyToManyField('Team')
 
     def __unicode__(self):
         return unicode(self.id)
@@ -112,10 +113,20 @@ class Round(models.Model):
             
             aff.save()
             neg.save()
+
+    def venue_availability(self):
+        return Venue.objects.all().extra(select={'is_active': """EXISTS (Select 1
+                                                 from debate_round_active_venues
+                                                 drav where drav.venue_id =
+                                                 debate_venue.id and
+                                                 drav.round_id=%d)""" % self.id })
         
 class Venue(models.Model):
     name = models.CharField(max_length=40)
     priority = models.IntegerField()
+
+    def __unicode__(self):
+        return u'%s (%d)' % (self.name, self.priority)
     
 class Debate(models.Model):
     round = models.ForeignKey(Round)
