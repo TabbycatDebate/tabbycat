@@ -148,6 +148,15 @@ class Round(models.Model):
         self.draw_status = self.STATUS_DRAFT
         self.save()
 
+    def allocate_adjudicators(self):
+        if self.draw_status != self.STATUS_CONFIRMED:
+            raise
+
+        allocator = DumbAdjAllocator(self)
+        self.make_adj_allocation(allocator.get_allocation())
+        self.adjudicator_status = self.STATUS_DRAFT
+        self.save()
+
     def get_draw(self):
         return Debate.objects.filter(round=self)
         

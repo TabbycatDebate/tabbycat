@@ -78,6 +78,11 @@ def draw_draft(request, round, rc):
 
     return render_to_response("draw_draft.html", context_instance=rc)
 
+def draw_confirmed(request, round, rc):
+    rc['draw'] = round.get_draw()
+
+    return render_to_response("draw_confirmed.html", context_instance=rc)
+
 def create_draw(request, round_id):
     round = get_object_or_404(Round, id=round_id)
 
@@ -88,4 +93,16 @@ def create_draw(request, round_id):
 
     return HttpResponseRedirect(reverse('draw', args=[round_id])) 
 
+def confirm_draw(request, round_id):
+    round = get_object_or_404(Round, id=round_id)
+
+    if request.method != "POST":
+        return HttpResponseBadRequest("Expected POST")
+    if round.draw_status != round.STATUS_DRAFT:
+        return HttpResponseBadRequest("Draw status is not DRAFT")
+
+    round.draw_status = round.STATUS_CONFIRMED
+    round.save()
+
+    return HttpResponseRedirect(reverse('draw', args=[round_id])) 
 
