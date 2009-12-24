@@ -2,6 +2,7 @@ from django.db import models
 
 from debate.utils import pair_list
 from debate.draw import RandomDrawNoConflict
+from debate.adjudicator import AdjAllocation, DumbAdjAllocator
 
 class Tournament(object):
     def _get_teams(self):
@@ -157,6 +158,18 @@ class Round(models.Model):
         self.adjudicator_status = self.STATUS_DRAFT
         self.save()
 
+    def make_adj_allocation(self, allocation):
+        def make(debate, adj, type):
+            AdjudicatorAllocation(debate=debate, adjudicator=adj,
+                                  type=type).save()
+
+        for debate, alloc in allocation:
+            make(debate, alloc.chair, AdjudicatorAllocation.TYPE_CHAIR)
+            for adj in alloc.panel:
+                make(debate, adj, AdjudicatorAllocation.TYPE_PANEL)
+            for adj in alloc.trainees:
+                make(debate, adj, AdjudicatorAllocation.TYPE_TRAINEE)
+
     def get_draw(self):
         return Debate.objects.filter(round=self)
         
@@ -288,6 +301,39 @@ class Debate(models.Model):
         return ", ".join(self._draw_conflicts) 
     draw_conflicts = property(_get_draw_conflicts)
 
+    def _get_adjudicators(self):
+        if not hasattr(self, '_adjudicators'):
+            adjs = AdjudicatorAllocation.objects.filter(debate=self)
+            alloc = AdjAllocation()
+            for a in adjs:
+                if a.type == a.TYPE_CHAIR:
+                    alloc.chair = a.adjudicator
+                if a.type == a.TYPE_PANEL:
+                    alloc.panel.append(a.adjudicator)
+                if a.type == a.TYPE_TRAINEE:
+                    alloc.trainees.append(a.adjudicator)
+            self._adjudicators = alloc
+        return self._adjudicators
+
+
+    def _get_adjudicators_display(self):
+        if not hasattr(self, '_adjudicators_display'):
+            alloc = self._get_adjudicators()
+
+            s = alloc.chair.name
+            if alloc.panel:
+                s += " (c), "
+            elif alloc.trainees:
+                s += ", "
+            sd = [p.name for p in alloc.panel]
+            sd.extend(["%s (t)" % t.name for t in alloc.trainees])
+            s += ", ".join(sd)
+
+            self._adjudicators_display = s
+        return self._adjudicators_display
+    adjudicators_display = property(_get_adjudicators_display)
+
+
     def __contains__(self, team):
         return team in (self.aff_team, self.neg_team) 
     
@@ -304,9 +350,14 @@ class DebateTeam(models.Model):
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
     
 class AdjudicatorAllocation(models.Model):
+    TYPE_CHAIR = 'C'
+    TYPE_PANEL = 'P'
+    TYPE_TRAINEE = 'T'
+
     TYPE_CHOICES = (
-        ('C', 'Chair'),
-        ('P1', 'Panel 1'),
+        (TYPE_CHAIR, 'Chair'),
+        (TYPE_PANEL, 'Panel'),
+        (TYPE_TRAINEE, 'Trainee'),
     )
     
     debate = models.ForeignKey(Debate)

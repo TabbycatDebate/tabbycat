@@ -4,8 +4,8 @@
     <script type="text/javascript" charset="utf-8">
 
         $(document).ready( function() {
-            $("#confirmDraw").click( function() {
-                $("#confirmForm").submit();
+            $("#allocateAdj").click( function() {
+                $("#allocateAdjForm").submit();
 
                 return false;
             } );
@@ -28,9 +28,11 @@
 {% block content %}
 
 <p>
-Here's the confirmed draw.
+Here's the confirmed draw. <a href="" id="allocateAdj">Allocate adjudicators</a>.
 </p>
 
+<form id="allocateAdjForm" method="POST" action="{% url create_adj_allocation round.id %}">
+</form>
 
 <table id="dataTable" class="display">
     <thead>

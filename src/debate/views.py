@@ -106,3 +106,17 @@ def confirm_draw(request, round_id):
 
     return HttpResponseRedirect(reverse('draw', args=[round_id])) 
 
+def create_adj_allocation(request, round_id):
+    round = get_object_or_404(Round, id=round_id)
+    if request.method != "POST":
+        return HtppResponseBadRequest("Expected POST")
+    if round.draw_status != round.STATUS_CONFIRMED:
+        return HttpResponseBadRequest("Draw is not confirmed")
+    if round.adjudicator_status != round.STATUS_NONE:
+        return HtppResponseBadRequest("Adj allocation is not NONE")
+
+    round.allocate_adjudicators()
+
+    return HttpResponseRedirect(reverse('draw', args=[round_id])) 
+
+
