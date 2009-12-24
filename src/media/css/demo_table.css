@@ -190,6 +190,14 @@ table.display tr.even.inactive {
   background-color: #ffeeee;
 }
 
+table.display tr.odd.conflict {
+  background-color: #ffdddd;
+}
+
+table.display tr.even.conflict {
+  background-color: #ffeeee;
+}
+
 
 tr.odd.active td.sorting_1 {
   background-color: #c4ffc4;
@@ -236,6 +244,30 @@ tr.even.inactive td.sorting_2 {
 }
 
 tr.even.inactive td.sorting_3 {
+  background-color: #ffe2e2;
+}
+
+tr.odd.conflict td.sorting_1 {
+  background-color: #ffc4c4;
+}
+
+tr.odd.conflict td.sorting_2 {
+  background-color: #ffd1d1;
+}
+
+tr.odd.conflict td.sorting_3 {
+  background-color: #ffd1d1;
+}
+
+tr.even.conflict td.sorting_1 {
+  background-color: #ffd5d5;
+}
+
+tr.even.conflict td.sorting_2 {
+  background-color: #ffe2e2;
+}
+
+tr.even.conflict td.sorting_3 {
   background-color: #ffe2e2;
 }
 

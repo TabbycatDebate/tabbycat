@@ -10,10 +10,16 @@
                 return false;
             } );
 
+            $("#dataTable").dataTable();
+
         } );
 
     </script>
 {% endblock extra-head %}
+
+{% block extra-style %}
+    @import "/static/css/demo_table.css";
+{% endblock %}
 
 {% block content %}
 
@@ -21,11 +27,20 @@
 Here's the draw:
 </p>
 
-<ul>
+<table id="dataTable" class="display">
+    <thead>
+        <tr><th>Bracket</th><th>Affirmative</th><th>Negative</th><th>Conflict</th></tr>
+    </thead>
+    <tbody>
     {% for debate in draw %}
-    <li>{{ debate.aff_team }} v {{ debate.neg_team }}</li>
+    <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+        <td>{{ debate.bracket }}</td>
+        <td>{{ debate.aff_team }}</td>
+        <td>{{ debate.neg_team }}</td>
+        <td>{{ debate.draw_conflicts }}</td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 
 {% endblock content %}
 

@@ -44,11 +44,21 @@ class Team(models.Model):
         # TODO
         return 0
     neg_count = property(_get_neg_count)
+
+    def _get_debates(self, before_round=None):
+        dts = DebateTeam.objects.select_related('debate').filter(team=self)
+        if before_round is not None:
+            dts = dts.filter(debate__round__seq__lt=before_round)
+        if not hasattr(self, '_debates'):
+            self._debates = [dt.debate for dt in dts]
+        return self._debates
+    debates = property(_get_debates)
     
-    def seen(self, other):
-        # TODO
-        return False
-    
+    def seen(self, other, before_round=None):
+        debates = self._get_debates(before_round)
+
+        return len([1 for d in self.debates if other in d])
+
     def same_institution(self, other):
         return self.institution_id == other.institution_id
 
@@ -101,6 +111,7 @@ class Round(models.Model):
         (STATUS_CONFIRMED, 'Confirmed'),
     )
 
+    seq = models.IntegerField()
     name = models.CharField(max_length=40)
     type = models.CharField(max_length=1, choices=TYPE_CHOICES)
 
@@ -208,6 +219,12 @@ class Round(models.Model):
         return self.set_available_base(ids, Team, ActiveTeam,
                                        self.active_teams, 'team_id')
 
+    def activate_all(self):
+        self.set_available_venues([v.id for v in Venue.objects.all()])
+        self.set_available_adjudicators([a.id for a in
+                                         Adjudicator.objects.all()])
+        self.set_available_teams([t.id for t in Team.objects.all()])
+
 class Venue(models.Model):
     name = models.CharField(max_length=40)
     priority = models.IntegerField()
@@ -230,24 +247,40 @@ class ActiveAdjudicator(models.Model):
 class Debate(models.Model):
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue)
+    bracket = models.IntegerField(default=0)
 
-    def _get_team(self, pos):
+    def _get_teams(self):
         if not hasattr(self, '_team_cache'):
             self._team_cache = {}
 
             for t in DebateTeam.objects.filter(debate=self):
-                self._team_cache[t.position] = t
-        return self._team_cache[pos].team
+                self._team_cache[t.position] = t.team
 
     def _get_aff_team(self):
-        return self._get_team(DebateTeam.POSITION_AFFIRMATIVE)
+        self._get_teams()
+        return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE]
     aff_team = property(_get_aff_team)
 
     def _get_neg_team(self):
-        return self._get_team(DebateTeam.POSITION_NEGATIVE)
+        self._get_teams()
+        return self._team_cache[DebateTeam.POSITION_NEGATIVE]
     neg_team = property(_get_neg_team)
 
+    def _get_draw_conflicts(self):
+        if not hasattr(self, '_draw_conflicts'):
+            self._get_teams()
+            self._draw_conflicts = []
+            history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
+            if history:
+                self._draw_conflicts.append("History (%d)" % history)
+            if self.aff_team.institution == self.neg_team.institution:
+                self._draw_conflicts.append("Institution")
 
+        return ", ".join(self._draw_conflicts) 
+    draw_conflicts = property(_get_draw_conflicts)
+
+    def __contains__(self, team):
+        return team in (self.aff_team, self.neg_team) 
     
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
