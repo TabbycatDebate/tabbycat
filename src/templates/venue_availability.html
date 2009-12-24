@@ -5,11 +5,12 @@
 {% block h1 %}Venue Availability for Round {{ round }}{% endblock %}
 
 {% block table-contents %}
-    <thead><tr><th>Venue</th><th>Active</th></tr></thead>
+    <thead><tr><th>Venue</th><th>Priority</th><th>Active</th></tr></thead>
     <tbody>
         {% for venue in venues %}
         <tr>
             <td>{{ venue.name }}</td>
+            <td>{{ venue.priority }}</td>
             <td><input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="check_{{ venue.id }}"  value="{{ venue.id }}" /></td>
         </tr>
         {% endfor %}

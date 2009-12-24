@@ -10,12 +10,15 @@ class Tournament(object):
     teams = property(_get_teams)
 
     def _get_current_round(self):
-        return Round.objects.order_by('-id')[0]
+        try:
+            return Round.objects.order_by('-id')[0]
+        except IndexError:
+            return None
     current_round = property(_get_current_round)
     
 class Institution(models.Model):
-    code = models.CharField(max_length=10)
-    name = models.CharField(max_length=30)
+    code = models.CharField(max_length=20)
+    name = models.CharField(max_length=40)
     
     def __unicode__(self):
         return u"%s (%s)" % (self.code, self.name)
@@ -66,9 +69,16 @@ class ActiveManager(models.Manager):
 class Adjudicator(models.Model):
     name = models.CharField(max_length=40)
     institution = models.ForeignKey(Institution)
+    test_score = models.FloatField()
+
+    conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
    
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
+
+class AdjudicatorConflict(models.Model):
+    adjudicator = models.ForeignKey('Adjudicator')
+    team = models.ForeignKey('Team')
 
 class Round(models.Model):
     TYPE_CHOICES = (
