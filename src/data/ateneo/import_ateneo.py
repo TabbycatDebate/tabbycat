@@ -66,7 +66,7 @@ def run():
     im.import_adjudicator_conflicts('adjudicator_conflicts.tab')
 
 
-    Round().save()
+    Round(type=Round.TYPE_RANDOM).save()
 
 if __name__ == '__main__':
     run()

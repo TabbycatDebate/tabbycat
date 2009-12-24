@@ -7,9 +7,9 @@ class DrawError(Exception):
 class BaseDraw(object):
     def __init__(self, round):
         self.round = round
-        if not self.round.status == self.round.STATUS_DRAFT:
+        if not self.round.draw_status == self.round.STATUS_NONE:
             raise DrawError()
-        self.teams = list(self.round.tournament.teams)
+        self.teams = list(self.round.active_teams.all())
         
         if not len(self.teams) % 2 == 0:
             raise DrawError()

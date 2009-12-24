@@ -1,6 +1,7 @@
 from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, loader
+from django.core.urlresolvers import reverse
 
 from debate.models import Round
 
@@ -72,10 +73,19 @@ def draw_none(request, round, rc):
     rc['active_teams'] = active_teams
     return render_to_response("draw_none.html", context_instance=rc)
 
+def draw_draft(request, round, rc):
+    rc['draw'] = round.get_draw()
+
+    return render_to_response("draw_draft.html", context_instance=rc)
+
 def create_draw(request, round_id):
     round = get_object_or_404(Round, id=round_id)
 
     if request.method != "POST":
         return HttpResponseBadRequest("Expected POST")
+
+    round.draw()
+
+    return HttpResponseRedirect(reverse('draw', args=[round_id])) 
 
 

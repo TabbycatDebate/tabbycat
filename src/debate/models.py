@@ -1,6 +1,7 @@
 from django.db import models
 
 from debate.utils import pair_list
+from debate.draw import RandomDraw
 
 class Tournament(object):
     def _get_teams(self):
@@ -79,11 +80,17 @@ class AdjudicatorConflict(models.Model):
     team = models.ForeignKey('Team')
 
 class Round(models.Model):
+    TYPE_RANDOM = 'R'
+    TYPE_PRELIM = 'P'
     TYPE_CHOICES = (
-        ('R', 'Random'),
-        ('P', 'Preliminary'),
+        (TYPE_RANDOM, 'Random'),
+        (TYPE_PRELIM, 'Preliminary'),
         ('B', 'Break'),
     )
+
+    DRAW_CLASS = {
+        TYPE_RANDOM: RandomDraw,
+    }
     
     STATUS_NONE = 0
     STATUS_DRAFT = 1
@@ -117,9 +124,21 @@ class Round(models.Model):
     def debates(self):
         return Debate.objects.filter(round=self)
     
-    def draw(self, drawer):
+    def _drawer(self):
+        return self.DRAW_CLASS[self.type]
+
+    def draw(self):
+        if self.draw_status != self.STATUS_NONE:
+            raise
+
+        drawer = self._drawer()
         d = drawer(self)
         self.make_debates(d.get_draw())
+        self.draw_status = self.STATUS_DRAFT
+        self.save()
+
+    def get_draw(self):
+        return Debate.objects.filter(round=self)
         
     def make_debates(self, pairs):
         venues = list(self.active_venues.all())
@@ -211,6 +230,24 @@ class ActiveAdjudicator(models.Model):
 class Debate(models.Model):
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue)
+
+    def _get_team(self, pos):
+        if not hasattr(self, '_team_cache'):
+            self._team_cache = {}
+
+            for t in DebateTeam.objects.filter(debate=self):
+                self._team_cache[t.position] = t
+        return self._team_cache[pos].team
+
+    def _get_aff_team(self):
+        return self._get_team(DebateTeam.POSITION_AFFIRMATIVE)
+    aff_team = property(_get_aff_team)
+
+    def _get_neg_team(self):
+        return self._get_team(DebateTeam.POSITION_NEGATIVE)
+    neg_team = property(_get_neg_team)
+
+
     
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'

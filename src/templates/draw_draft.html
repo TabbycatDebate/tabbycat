@@ -5,7 +5,7 @@
 
         $(document).ready( function() {
             $("#createDraw").click( function() {
-                $("#createForm").submit();
+                $.post("{% url create_draw round.id %}");
 
                 return false;
             } );
@@ -17,13 +17,13 @@
 
 {% block content %}
 
-<p>No draw currently exists. Draw to be created for the following {{ active_teams|length }} teams.
-<a id="createDraw" href="">Create Draw</a>.
+<p>
+Here's the draw:
 </p>
-<form id="createForm" action="{% url create_draw round.id %}" method="POST"></form>
+
 <ul>
-    {% for team in active_teams %}
-    <li>{{ team.name }} ({{ team.institution.code }})</li>
+    {% for debate in draw %}
+    <li>{{ debate.aff_team }} v {{ debate.neg_team }}</li>
     {% endfor %}
 </ul>
 
