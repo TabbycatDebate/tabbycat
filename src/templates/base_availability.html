@@ -83,11 +83,11 @@
             dTable = $('#dataTable').dataTable();
         } );
     </script>
-    <style type="text/css" title="currentStyle">
-        @import "/static/css/demo_page.css";
-        @import "/static/css/demo_table.css";
-    </style>
 {% endblock %}
+
+{% block extra-style %}
+        @import "/static/css/demo_table.css";
+{% endblock extra-style %}
 
 {% block content %}
 <form id="form">

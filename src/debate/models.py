@@ -1,5 +1,3 @@
-import random
-
 from django.db import models
 
 from debate.utils import pair_list
@@ -87,20 +85,31 @@ class Round(models.Model):
         ('B', 'Break'),
     )
     
-    STATUS_DRAFT = 0
+    STATUS_NONE = 0
+    STATUS_DRAFT = 1
+    STATUS_CONFIRMED = 10
     STATUS_CHOICES = (
+        (STATUS_NONE, 'None'),
         (STATUS_DRAFT, 'Draft'),
+        (STATUS_CONFIRMED, 'Confirmed'),
     )
+
     name = models.CharField(max_length=40)
     type = models.CharField(max_length=1, choices=TYPE_CHOICES)
-    status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_DRAFT)
-    #preceded
+
+    draw_status = models.IntegerField(choices=STATUS_CHOICES,
+                                      default=STATUS_NONE)
+    venue_status = models.IntegerField(choices=STATUS_CHOICES,
+                                       default=STATUS_NONE)
+    adjudicator_status = models.IntegerField(choices=STATUS_CHOICES,
+                                             default=STATUS_NONE)
     
     tournament = Tournament()
 
     active_venues = models.ManyToManyField('Venue', through='ActiveVenue')
-    active_adjudicators = models.ManyToManyField('Adjudicator')
-    active_teams = models.ManyToManyField('Team')
+    active_adjudicators = models.ManyToManyField('Adjudicator',
+                                                 through='ActiveAdjudicator')
+    active_teams = models.ManyToManyField('Team', through='ActiveTeam')
 
     def __unicode__(self):
         return unicode(self.id)

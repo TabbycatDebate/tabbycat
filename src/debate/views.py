@@ -50,3 +50,32 @@ def update_base_availability(request, round_id, update_method):
 
     return HttpResponse("ok")
 
+def draw(request, round_id):
+    round = get_object_or_404(Round, id=round_id)
+    rc = RequestContext(request)
+    rc['round'] = round
+
+    if round.draw_status == round.STATUS_NONE:
+        return draw_none(request, round, rc)
+
+    if round.draw_status == round.STATUS_DRAFT:
+        return draw_draft(request, round, rc)
+
+    if round.draw_status == round.STATUS_CONFIRMED:
+        return draw_confirmed(request, round, rc)
+
+    raise
+
+def draw_none(request, round, rc):
+    
+    active_teams = round.active_teams.all()
+    rc['active_teams'] = active_teams
+    return render_to_response("draw_none.html", context_instance=rc)
+
+def create_draw(request, round_id):
+    round = get_object_or_404(Round, id=round_id)
+
+    if request.method != "POST":
+        return HttpResponseBadRequest("Expected POST")
+
+

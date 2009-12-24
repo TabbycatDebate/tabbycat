@@ -1,0 +1,31 @@
+{% extends "draw_base.html" %}
+
+{% block extra-head %}
+    <script type="text/javascript" charset="utf-8">
+
+        $(document).ready( function() {
+            $("#createDraw").click( function() {
+
+                return false;
+            } );
+
+        } );
+
+    </script>
+{% endblock extra-head %}
+
+{% block content %}
+
+<p>No draw currently exists. Draw to be created for the following {{ active_teams|length }} teams.
+<a id="createDraw" href="">Create Draw</a>.
+</p>
+
+<ul>
+    {% for team in active_teams %}
+    <li>{{ team.name }} ({{ team.institution.code }})</li>
+    {% endfor %}
+</ul>
+
+{% endblock content %}
+
+
