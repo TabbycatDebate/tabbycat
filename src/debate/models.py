@@ -1,7 +1,7 @@
 from django.db import models
 
 from debate.utils import pair_list
-from debate.draw import RandomDraw
+from debate.draw import RandomDrawNoConflict
 
 class Tournament(object):
     def _get_teams(self):
@@ -99,7 +99,7 @@ class Round(models.Model):
     )
 
     DRAW_CLASS = {
-        TYPE_RANDOM: RandomDraw,
+        TYPE_RANDOM: RandomDrawNoConflict,
     }
     
     STATUS_NONE = 0

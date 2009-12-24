@@ -31,6 +31,26 @@ class RandomDraw(BaseDraw):
     def get_draw(self):
         random.shuffle(self.teams)
         return pair_list(self.teams)
+
+class RandomDrawNoConflict(RandomDraw):
+    MAX_SWAP_ATTEMPTS = 10
+
+    def get_draw(self):
+        draw = super(RandomDrawNoConflict, self).get_draw()
+
+        for i, (aff, neg) in enumerate(draw):
+            if aff.institution == neg.institution:
+                for j in range(self.MAX_SWAP_ATTEMPTS):
+                    k = random.randint(0, len(draw))
+                    n_aff, n_neg = draw[k]
+                    if (n_aff.institution != aff.institution and
+                        n_neg.institution != aff.institution):
+                        m1 = (aff, n_neg)
+                        m2 = (n_aff, neg)
+                        draw[i] = m1
+                        draw[k] = m2
+                        break
+        return draw
      
 class AidaDraw(BaseDraw):
     
