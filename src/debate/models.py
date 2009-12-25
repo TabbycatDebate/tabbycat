@@ -402,7 +402,32 @@ class DebateResult(object):
 
         setattr(self, '%s_score' % team, team_score)
 
-    # adding these methods programmatically would require a bit too much
+    def save(self):
+        self._save('aff')
+        self._save('neg')
+
+    def _save(self, team):
+        dt = getattr(self.debate, '%s_dt' % team)
+        total = getattr(self, '%s_score' % team)
+
+        TeamScoreSheet.objects.filter(debate_team=dt).delete()
+        TeamScoreSheet(debate_team=dt, score=total).save()
+
+        SpeakerScoreSheet.objects.filter(debate_team=dt).delete()
+        for i in range(1, 5):
+            speaker = getattr(self, '%s_speaker_%d' % (team, i))
+            SpeakerScoreSheet(
+                debate_team = dt,
+                speaker = speaker,
+                score = speaker.score,
+                position = i,
+            ).save()
+
+    def set_speaker_entry(self, team, pos, speaker, score):
+        speaker.score = score
+        getattr(self, '%s_speakers' % team)[pos] = speaker
+
+    # adding these properties programmatically would require a bit too much
     # crazy black magic
     def _get_aff_speaker_1(self):
         return self.aff_speakers[1]

@@ -2,6 +2,12 @@ from django import forms
 
 from debate.models import TeamScoreSheet, SpeakerScoreSheet, DebateResult
 
+def get_or_instantiate(model, **kwargs):
+    try:
+        return model.objects.get(**kwargs)
+    except model.DoesNotExist:
+        return model(**kwargs)
+
 class ScoreField(forms.FloatField):
     MIN_VALUE = 65
     MAX_VALUE = 85
@@ -74,37 +80,23 @@ def make_results_form_class(debate):
 
         def save(self):
             #TODO: validation
-            neg_dt = self.debate.neg_dt
 
-            def get_or_instantiate(model, **kwargs):
-                try:
-                    return model.objects.get(**kwargs)
-                except model.DoesNotExist:
-                    return model(**kwargs)
-            
+            dr = DebateResult(self.debate)
+
             def do(team):
-                dt = getattr(self.debate, '%s_dt' % team) 
-
                 total = sum(self.cleaned_data['%s_score_%d' % (team, i)] for i
                             in range(1, 5)) 
+                setattr(dr, '%s_score' % team, total)
 
-                ts = get_or_instantiate(TeamScoreSheet, debate_team=dt)
-                ts.score = total
-                ts.save()
-
-                SpeakerScoreSheet.objects.filter(debate_team=dt).delete()
                 for i in range(1, 5): 
-                    # easier for these to delete and recreate again because
-                    # of the reply speaker position
-                    SpeakerScoreSheet(
-                        debate_team = dt,
-                        speaker = self.cleaned_data['%s_speaker_%d' % (team, i)],
-                        score = self.cleaned_data['%s_score_%d' % (team, i)],
-                        position = i,
-                    ).save()
+                    speaker = self.cleaned_data['%s_speaker_%d' % (team, i)]
+                    score = self.cleaned_data['%s_score_%d' % (team, i)]
+                    dr.set_speaker_entry(team, i, speaker, score)
             do('aff')
             do('neg')
-            self.debate.result_status = self.debate.STATUS_DRAFT
+            dr.save()
+
+#            self.debate.result_status = self.debate.STATUS_DRAFT
             self.debate.save()
 
     return ResultForm
