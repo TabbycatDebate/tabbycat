@@ -2,3 +2,49 @@
 
 {% block h1 %} {{ debate }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
 
+{% block content %}
+<form id="resultsForm" action="{% url save_result debate.id %}" method="POST">
+<table>
+<tr>
+    <th> Aff 1 </th>
+    <td> {{ form.aff_speaker_1 }} </td>
+    <td> {{ form.aff_score_1 }} </td>
+
+    <th> Neg 1 </th>
+    <td> {{ form.neg_speaker_1 }} </td>
+    <td> {{ form.neg_score_1 }} </td>
+</tr>
+<tr>
+    <th> Aff 2 </th>
+    <td> {{ form.aff_speaker_2 }} </td>
+    <td> {{ form.aff_score_2 }} </td>
+
+    <th> Neg 2 </th>
+    <td> {{ form.neg_speaker_2 }} </td>
+    <td> {{ form.neg_score_2 }} </td>
+</tr>
+<tr>
+    <th> Aff 3 </th>
+    <td> {{ form.aff_speaker_3 }} </td>
+    <td> {{ form.aff_score_3 }} </td>
+
+    <th> Neg 3 </th>
+    <td> {{ form.neg_speaker_3 }} </td>
+    <td> {{ form.neg_score_3 }} </td>
+</tr>
+<tr>
+    <th> Aff Reply </th>
+    <td> {{ form.aff_speaker_reply }} </td>
+    <td> {{ form.aff_score_reply }} </td>
+
+    <th> Neg Reply </th>
+    <td> {{ form.neg_speaker_reply }} </td>
+    <td> {{ form.neg_score_reply }} </td>
+</tr>
+</table>
+
+<input type="submit" value="Save" />
+</form>
+
+{% endblock content %}
+

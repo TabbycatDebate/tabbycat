@@ -63,10 +63,28 @@ class Team(models.Model):
     def same_institution(self, other):
         return self.institution_id == other.institution_id
 
+    def prev_debate(self, round_seq):
+        try:
+            return DebateTeam.objects.filter(
+                debate__round__seq__lt=round_seq,
+                team=self,
+            ).order_by('-debate__round__seq')[0].debate
+        except IndexError:
+            return None
+
+    def _get_speakers(self):
+        if not hasattr(self, '_speakers'):
+            self._speakers = self.speaker_set.all()
+        return self._speakers
+    speakers = property(_get_speakers)
+
 
 class Speaker(models.Model):
     name = models.CharField(max_length=40)
     team = models.ForeignKey(Team)
+
+    def __unicode__(self):
+        return unicode(self.name)
 
 class ActiveManager(models.Manager):
     def __init__(self, status):
@@ -286,17 +304,27 @@ class Debate(models.Model):
             self._team_cache = {}
 
             for t in DebateTeam.objects.filter(debate=self):
-                self._team_cache[t.position] = t.team
+                self._team_cache[t.position] = t
 
     def _get_aff_team(self):
         self._get_teams()
-        return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE]
+        return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE].team
     aff_team = property(_get_aff_team)
 
     def _get_neg_team(self):
         self._get_teams()
-        return self._team_cache[DebateTeam.POSITION_NEGATIVE]
+        return self._team_cache[DebateTeam.POSITION_NEGATIVE].team
     neg_team = property(_get_neg_team)
+
+    def _get_aff_dt(self):
+        self._get_teams()
+        return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE]
+    aff_dt = property(_get_aff_dt)
+
+    def _get_neg_dt(self):
+        self._get_teams()
+        return self._team_cache[DebateTeam.POSITION_NEGATIVE]
+    neg_dt = property(_get_neg_dt)
 
     def _get_draw_conflicts(self):
         if not hasattr(self, '_draw_conflicts'):
@@ -377,16 +405,26 @@ class AdjudicatorAllocation(models.Model):
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
     
 class TeamScoreSheet(models.Model):
-    adjudicator_allocation = models.ForeignKey(AdjudicatorAllocation)
+    # TODO: review scoresheet for adjudicator
+    # adjudicator_allocation = models.ForeignKey(AdjudicatorAllocation)
     debate_team = models.ForeignKey(DebateTeam)
     score = models.FloatField()
+
+    def _get_debate(self):
+        return self.debate_team.debate
+    debate = property(_get_debate)
     
 class SpeakerScoreSheet(models.Model):
-    adjudicator_allocation = models.ForeignKey(AdjudicatorAllocation)
+    # TODO: review scoresheet for adjudicator
+    # adjudicator_allocation = models.ForeignKey(AdjudicatorAllocation)
     debate_team = models.ForeignKey(DebateTeam)
     debater = models.ForeignKey(Speaker)
     score = models.FloatField()
     position = models.IntegerField()
+
+    def _get_debate(self):
+        return self.debate_team.debate
+    debate = property(_get_debate)
     
     
 

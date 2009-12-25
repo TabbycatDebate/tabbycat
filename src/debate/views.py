@@ -4,6 +4,7 @@ from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 
 from debate.models import Round, Debate
+from debate import forms
 
 # Create your views here.
 
@@ -134,6 +135,27 @@ def enter_result(request, debate_id):
     rc = RequestContext(request)
     rc['debate'] = debate
 
+    form = forms.make_results_form(debate)
+    rc['form'] = form
+
     return render_to_response('enter_results.html', context_instance=rc)
 
+def save_result(request, debate_id):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Expected POST")
+
+    debate = get_object_or_404(Debate, id=debate_id)
+
+    rc = RequestContext(request)
+    rc['debate'] = debate
+
+    class_ = forms.make_results_form_class(debate)
+    form = class_(request.POST)
+
+    if form.is_valid():
+        form.save()
+    else:
+        raise
+
+    return HttpResponseRedirect(reverse('results', args=[debate.round.id]))
 

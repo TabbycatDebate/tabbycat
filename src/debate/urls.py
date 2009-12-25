@@ -30,5 +30,7 @@ urlpatterns = patterns('debate.views',
         name='results'),
     url(r'^debate/(?P<debate_id>\d+)/results/$', 'enter_result',
         name='enter_result'),
+    url(r'^debate/(?P<debate_id>\d+)/results/save/$', 'save_result',
+        name='save_result'),
     )
 
