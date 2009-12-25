@@ -4,12 +4,6 @@
     <script type="text/javascript" charset="utf-8">
 
         $(document).ready( function() {
-            $("#allocateAdj").click( function() {
-                $("#allocateAdjForm").submit();
-
-                return false;
-            } );
-
             $("#dataTable").dataTable( {
                 "bPaginate": false
             } );
@@ -28,25 +22,28 @@
 {% block content %}
 
 <p>
-Here's the confirmed draw. <a href="" id="allocateAdj">Allocate adjudicators</a>.
+Enter results.
 </p>
-
-<form id="allocateAdjForm" method="POST" action="{% url create_adj_allocation round.id %}">
-</form>
 
 <table id="dataTable" class="display">
     <thead>
-        <tr><th>Bracket</th><th>Venue</th><th>Affirmative</th><th>Negative</th><th>Adjudicators</th><th>Conflict</th></tr>
+        <tr><th>Bracket</th><th>Venue</th><th>Affirmative</th><th>Negative</th><th>Adjudicators</th><th>Results</th></tr>
     </thead>
     <tbody>
     {% for debate in draw %}
-    <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+    <tr>
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td>{{ debate.aff_team.name }}</td>
         <td>{{ debate.neg_team.name }}</td>
         <td>{{ debate.adjudicators_display }}</td>
-        <td>{{ debate.draw_conflicts }}</td>
+        <td>
+            {% ifequal debate.result_status "N" %}
+            <a href="{% url enter_result debate.id %}">Enter results</a>
+            {% endifequal %}
+            {% ifequal debate.result_status "D" %}Unconfirmed{% endifequal %}
+            {% ifequal debate.result_status "C" %}Confirmed{% endifequal %}
+        </td>
     </tr>
     {% endfor %}
 </table>

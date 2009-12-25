@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 
-from debate.models import Round
+from debate.models import Round, Debate
 
 # Create your views here.
 
@@ -109,14 +109,31 @@ def confirm_draw(request, round_id):
 def create_adj_allocation(request, round_id):
     round = get_object_or_404(Round, id=round_id)
     if request.method != "POST":
-        return HtppResponseBadRequest("Expected POST")
+        return HttpResponseBadRequest("Expected POST")
     if round.draw_status != round.STATUS_CONFIRMED:
         return HttpResponseBadRequest("Draw is not confirmed")
     if round.adjudicator_status != round.STATUS_NONE:
-        return HtppResponseBadRequest("Adj allocation is not NONE")
+        return HttpResponseBadRequest("Adj allocation is not NONE")
 
     round.allocate_adjudicators()
 
     return HttpResponseRedirect(reverse('draw', args=[round_id])) 
+
+def results(request, round_id):
+    round = get_object_or_404(Round, id=round_id)
+
+    rc = RequestContext(request)
+    rc['round'] = round
+    rc['draw'] = round.get_draw()
+
+    return render_to_response("results.html", context_instance=rc)
+
+def enter_result(request, debate_id):
+    debate = get_object_or_404(Debate, id=debate_id)
+
+    rc = RequestContext(request)
+    rc['debate'] = debate
+
+    return render_to_response('enter_results.html', context_instance=rc)
 
 

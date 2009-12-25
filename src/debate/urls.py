@@ -26,5 +26,9 @@ urlpatterns = patterns('debate.views',
     url(r'^round/(?P<round_id>\d+)/adj_allocation/create/$',
         'create_adj_allocation',
         name='create_adj_allocation'),
+    url(r'^round/(?P<round_id>\d+)/results/$', 'results',
+        name='results'),
+    url(r'^debate/(?P<debate_id>\d+)/results/$', 'enter_result',
+        name='enter_result'),
     )
 

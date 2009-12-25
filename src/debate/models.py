@@ -267,9 +267,19 @@ class ActiveAdjudicator(models.Model):
     round = models.ForeignKey(Round)
     
 class Debate(models.Model):
+    STATUS_NONE = 'N' 
+    STATUS_DRAFT = 'D' 
+    STATUS_CONFIRMED = 'C' 
+    STATUS_CHOICES = (
+        (STATUS_NONE, 'None'),
+        (STATUS_DRAFT, 'Draft'),
+        (STATUS_CONFIRMED, 'Confirmed'),
+    )
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue)
     bracket = models.IntegerField(default=0)
+    result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
+                                    default=STATUS_NONE)
 
     def _get_teams(self):
         if not hasattr(self, '_team_cache'):
@@ -290,7 +300,6 @@ class Debate(models.Model):
 
     def _get_draw_conflicts(self):
         if not hasattr(self, '_draw_conflicts'):
-            self._get_teams()
             self._draw_conflicts = []
             history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
             if history:
@@ -336,6 +345,9 @@ class Debate(models.Model):
 
     def __contains__(self, team):
         return team in (self.aff_team, self.neg_team) 
+
+    def __unicode__(self):
+        return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
     
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
