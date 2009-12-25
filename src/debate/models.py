@@ -377,6 +377,66 @@ class Debate(models.Model):
     def __unicode__(self):
         return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
     
+class DebateResult(object):
+    def __init__(self, debate):
+        self.debate = debate
+
+        self._init_team('aff')
+        self._init_team('neg')
+
+    def _init_team(self, team):
+        speakers = dict((i, None) for i in range(1, 5))
+        scores = dict((i, None) for i in range(1, 5))
+        dt = getattr(self.debate, '%s_dt' % team)
+
+        for sss in SpeakerScoreSheet.objects.filter(debate_team=dt):
+            setattr(sss.speaker, 'score', sss.score)
+            speakers[sss.position] = sss.speaker
+
+        setattr(self, '%s_speakers' % team, speakers)
+
+        try:
+            team_score = TeamScoreSheet.objects.get(debate_team=dt).score
+        except TeamScoreSheet.DoesNotExist:
+            team_score = None
+
+        setattr(self, '%s_score' % team, team_score)
+
+    # adding these methods programmatically would require a bit too much
+    # crazy black magic
+    def _get_aff_speaker_1(self):
+        return self.aff_speakers[1]
+    aff_speaker_1 = property(_get_aff_speaker_1)
+
+    def _get_aff_speaker_2(self):
+        return self.aff_speakers[2]
+    aff_speaker_2 = property(_get_aff_speaker_2)
+
+    def _get_aff_speaker_3(self):
+        return self.aff_speakers[3]
+    aff_speaker_3 = property(_get_aff_speaker_3)
+
+    def _get_aff_speaker_4(self):
+        return self.aff_speakers[4]
+    aff_speaker_4 = property(_get_aff_speaker_4)
+
+    def _get_neg_speaker_1(self):
+        return self.neg_speakers[1]
+    neg_speaker_1 = property(_get_neg_speaker_1)
+
+    def _get_neg_speaker_2(self):
+        return self.neg_speakers[2]
+    neg_speaker_2 = property(_get_neg_speaker_2)
+
+    def _get_neg_speaker_3(self):
+        return self.neg_speakers[3]
+    neg_speaker_3 = property(_get_neg_speaker_3)
+
+    def _get_neg_speaker_4(self):
+        return self.neg_speakers[4]
+    neg_speaker_4 = property(_get_neg_speaker_4)
+
+
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
     POSITION_NEGATIVE = 'N'
@@ -418,7 +478,7 @@ class SpeakerScoreSheet(models.Model):
     # TODO: review scoresheet for adjudicator
     # adjudicator_allocation = models.ForeignKey(AdjudicatorAllocation)
     debate_team = models.ForeignKey(DebateTeam)
-    debater = models.ForeignKey(Speaker)
+    speaker = models.ForeignKey(Speaker)
     score = models.FloatField()
     position = models.IntegerField()
 

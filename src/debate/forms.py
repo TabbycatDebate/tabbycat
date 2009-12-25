@@ -1,8 +1,8 @@
 from django import forms
 
-from debate.models import TeamScoreSheet, SpeakerScoreSheet
+from debate.models import TeamScoreSheet, SpeakerScoreSheet, DebateResult
 
-class ScoreField(forms.IntegerField):
+class ScoreField(forms.FloatField):
     MIN_VALUE = 65
     MAX_VALUE = 85
 
@@ -46,7 +46,7 @@ def make_results_form_class(debate):
                                                initial=aff_initial[2])
         aff_speaker_3 = forms.ModelChoiceField(queryset=aff_speakers,
                                                initial=aff_initial[3])
-        aff_speaker_reply = forms.ModelChoiceField(queryset=aff_speakers,
+        aff_speaker_4 = forms.ModelChoiceField(queryset=aff_speakers,
                                                initial=aff_initial[4])
 
         neg_speaker_1 = forms.ModelChoiceField(queryset=neg_speakers,
@@ -55,18 +55,18 @@ def make_results_form_class(debate):
                                                initial=neg_initial[2])
         neg_speaker_3 = forms.ModelChoiceField(queryset=neg_speakers,
                                                initial=neg_initial[3])
-        neg_speaker_reply = forms.ModelChoiceField(queryset=neg_speakers,
+        neg_speaker_4 = forms.ModelChoiceField(queryset=neg_speakers,
                                                    initial=neg_initial[4])
 
         aff_score_1 = ScoreField()
         aff_score_2 = ScoreField()
         aff_score_3 = ScoreField()
-        aff_score_reply = ReplyScoreField()
+        aff_score_4 = ReplyScoreField()
 
         neg_score_1 = ScoreField()
         neg_score_2 = ScoreField()
         neg_score_3 = ScoreField()
-        neg_score_reply = ReplyScoreField()
+        neg_score_4 = ReplyScoreField()
 
         def __init__(self, *args, **kwargs):
             super(ResultForm, self).__init__(*args, **kwargs)
@@ -75,30 +75,50 @@ def make_results_form_class(debate):
         def save(self):
             #TODO: validation
             neg_dt = self.debate.neg_dt
+
+            def get_or_instantiate(model, **kwargs):
+                try:
+                    return model.objects.get(**kwargs)
+                except model.DoesNotExist:
+                    return model(**kwargs)
             
             def do(team):
                 dt = getattr(self.debate, '%s_dt' % team) 
 
-                total = sum(self.cleaned_data[a] for a in 
-                            ('%s_score_1' % team,
-                             '%s_score_2' % team,
-                             '%s_score_3' % team,
-                             '%s_score_reply' % team))
+                total = sum(self.cleaned_data['%s_score_%d' % (team, i)] for i
+                            in range(1, 5)) 
 
-                TeamScoreSheet(debate_team=dt, score=total).save()
-                for i in range(1, 4):
+                ts = get_or_instantiate(TeamScoreSheet, debate_team=dt)
+                ts.score = total
+                ts.save()
+
+                SpeakerScoreSheet.objects.filter(debate_team=dt).delete()
+                for i in range(1, 5): 
+                    # easier for these to delete and recreate again because
+                    # of the reply speaker position
                     SpeakerScoreSheet(
-                        debate_team=dt,
-                        debater=self.cleaned_data['%s_speaker_%d' % (team, i)],
-                        score=self.cleaned_data['%s_score_%d' % (team, i)],
-                        position=i,
+                        debate_team = dt,
+                        speaker = self.cleaned_data['%s_speaker_%d' % (team, i)],
+                        score = self.cleaned_data['%s_score_%d' % (team, i)],
+                        position = i,
                     ).save()
             do('aff')
             do('neg')
+            self.debate.result_status = self.debate.STATUS_DRAFT
+            self.debate.save()
 
     return ResultForm
 
 def make_results_form(debate):
     class_ = make_results_form_class(debate)
-    return class_()
+    result = DebateResult(debate)
+    initial = {}
+    for team in ('aff', 'neg'):
+        for i in range(1, 5):
+            s = getattr(result, '%s_speaker_%d' % (team, i))
+            if s:
+                initial['%s_speaker_%d' % (team, i)] = s.id
+                initial['%s_score_%d' % (team, i)] = s.score
+
+    return class_(initial=initial)
 

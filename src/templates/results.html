@@ -31,7 +31,10 @@ Enter results.
     </thead>
     <tbody>
     {% for debate in draw %}
-    <tr>
+    <tr class="
+    {% ifequal debate.result_status "N" %}inactive {% endifequal %}
+    {% ifequal debate.result_status "C" %}active{% endifequal %}
+    ">
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td>{{ debate.aff_team.name }}</td>
