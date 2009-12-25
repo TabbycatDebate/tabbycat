@@ -1,6 +1,6 @@
 from django import forms
 
-from debate.models import TeamScoreSheet, SpeakerScoreSheet, DebateResult
+from debate.models import TeamScoreSheet, SpeakerScoreSheet, DebateResult, Debate
 
 def get_or_instantiate(model, **kwargs):
     try:
@@ -46,6 +46,9 @@ def make_results_form_class(debate):
     neg_initial = initial(debate, debate.neg_team)
 
     class ResultForm(forms.Form):
+
+        result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
+
         aff_speaker_1 = forms.ModelChoiceField(queryset=aff_speakers,
                                                initial=aff_initial[1])
         aff_speaker_2 = forms.ModelChoiceField(queryset=aff_speakers,
@@ -96,7 +99,7 @@ def make_results_form_class(debate):
             do('neg')
             dr.save()
 
-#            self.debate.result_status = self.debate.STATUS_DRAFT
+            self.debate.result_status = self.cleaned_data['result_status']
             self.debate.save()
 
     return ResultForm
@@ -104,7 +107,7 @@ def make_results_form_class(debate):
 def make_results_form(debate):
     class_ = make_results_form_class(debate)
     result = DebateResult(debate)
-    initial = {}
+    initial = { 'result_status': debate.result_status }
     for team in ('aff', 'neg'):
         for i in range(1, 5):
             s = getattr(result, '%s_speaker_%d' % (team, i))

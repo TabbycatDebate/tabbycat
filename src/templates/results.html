@@ -41,11 +41,11 @@ Enter results.
         <td>{{ debate.neg_team.name }}</td>
         <td>{{ debate.adjudicators_display }}</td>
         <td>
-            {% ifequal debate.result_status "N" %}
-            <a href="{% url enter_result debate.id %}">Enter results</a>
-            {% endifequal %}
+            <a href="{% url enter_result debate.id %}">
+            {% ifequal debate.result_status "N" %}Enter results {% endifequal %}
             {% ifequal debate.result_status "D" %}Unconfirmed{% endifequal %}
             {% ifequal debate.result_status "C" %}Confirmed{% endifequal %}
+            </a>
         </td>
     </tr>
     {% endfor %}
