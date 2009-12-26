@@ -4,6 +4,9 @@ from debate.utils import pair_list
 from debate.draw import RandomDrawNoConflict
 from debate.adjudicator import AdjAllocation, DumbAdjAllocator
 
+class ScoreField(models.FloatField):
+    pass
+
 class Tournament(object):
     def _get_teams(self):
         return Team.objects.all()
@@ -370,6 +373,12 @@ class Debate(models.Model):
         return self._adjudicators_display
     adjudicators_display = property(_get_adjudicators_display)
 
+    def _get_result(self):
+        if not hasattr(self, '_result'):
+            self._result = DebateResult(self)
+        return self._result
+    result = property(_get_result)
+
 
     def __contains__(self, team):
         return team in (self.aff_team, self.neg_team) 
@@ -461,6 +470,18 @@ class DebateResult(object):
         return self.neg_speakers[4]
     neg_speaker_4 = property(_get_neg_speaker_4)
 
+    def _get_aff_win(self):
+        if self.aff_score:
+            return self.aff_score > self.neg_score
+        return None
+    aff_win = property(_get_aff_win)
+
+    def _get_neg_win(self):
+        if self.neg_score:
+            return self.neg_score > self.aff_score
+        return None
+    neg_win = property(_get_neg_win)
+
 
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
@@ -493,7 +514,7 @@ class TeamScoreSheet(models.Model):
     # TODO: review scoresheet for adjudicator
     # adjudicator_allocation = models.ForeignKey(AdjudicatorAllocation)
     debate_team = models.ForeignKey(DebateTeam)
-    score = models.FloatField()
+    score = ScoreField()
 
     def _get_debate(self):
         return self.debate_team.debate
@@ -504,13 +525,21 @@ class SpeakerScoreSheet(models.Model):
     # adjudicator_allocation = models.ForeignKey(AdjudicatorAllocation)
     debate_team = models.ForeignKey(DebateTeam)
     speaker = models.ForeignKey(Speaker)
-    score = models.FloatField()
+    score = ScoreField()
     position = models.IntegerField()
 
     def _get_debate(self):
         return self.debate_team.debate
     debate = property(_get_debate)
     
-    
+class TeamStanding(models.Model):
+    round = models.ForeignKey(Round)
+    team = models.ForeignKey(Team)
+    points = ScoreField()
+    total_score = ScoreField()
 
- 
+class SpeakerStanding(models.Model):
+    round = models.ForeignKey(Round)
+    speaker = models.ForeignKey(Speaker)
+    total_score = ScoreField()
+

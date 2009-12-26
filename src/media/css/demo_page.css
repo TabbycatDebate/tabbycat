@@ -17,6 +17,10 @@
     padding: 5px;
 }
 
+#debate .winner {
+    font-weight: bold;
+}
+
 #debate .status {
     text-align: right;
     padding-bottom: 1em;
