@@ -88,15 +88,15 @@ def make_results_form_class(debate):
 
             dr = DebateResult(self.debate)
 
-            def do(team):
-                total = sum(self.cleaned_data['%s_score_%d' % (team, i)] for i
+            def do(side):
+                total = sum(self.cleaned_data['%s_score_%d' % (side, i)] for i
                             in range(1, 5)) 
-                setattr(dr, '%s_score' % team, total)
+                setattr(dr, '%s_score' % side, total)
 
                 for i in range(1, 5): 
-                    speaker = self.cleaned_data['%s_speaker_%d' % (team, i)]
-                    score = self.cleaned_data['%s_score_%d' % (team, i)]
-                    dr.set_speaker_entry(team, i, speaker, score)
+                    speaker = self.cleaned_data['%s_speaker_%d' % (side, i)]
+                    score = self.cleaned_data['%s_score_%d' % (side, i)]
+                    dr.set_speaker_entry(side, i, speaker, score)
             do('aff')
             do('neg')
             dr.save()
@@ -110,12 +110,12 @@ def make_results_form(debate):
     class_ = make_results_form_class(debate)
     result = DebateResult(debate)
     initial = { 'result_status': debate.result_status }
-    for team in ('aff', 'neg'):
+    for side in ('aff', 'neg'):
         for i in range(1, 5):
-            s = getattr(result, '%s_speaker_%d' % (team, i))
+            s = getattr(result, '%s_speaker_%d' % (side, i))
             if s:
-                initial['%s_speaker_%d' % (team, i)] = s.id
-                initial['%s_score_%d' % (team, i)] = s.score
+                initial['%s_speaker_%d' % (side, i)] = s.id
+                initial['%s_score_%d' % (side, i)] = s.score
 
     return class_(initial=initial)
 

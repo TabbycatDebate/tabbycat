@@ -409,26 +409,26 @@ class DebateResult(object):
     def __init__(self, debate):
         self.debate = debate
 
-        self._init_team('aff')
-        self._init_team('neg')
+        self._init_side('aff')
+        self._init_side('neg')
 
-    def _init_team(self, team):
+    def _init_side(self, side):
         speakers = dict((i, None) for i in range(1, 5))
         scores = dict((i, None) for i in range(1, 5))
-        dt = getattr(self.debate, '%s_dt' % team)
+        dt = getattr(self.debate, '%s_dt' % side)
 
         for sss in SpeakerScoreSheet.objects.filter(debate_team=dt):
             setattr(sss.speaker, 'score', sss.score)
             speakers[sss.position] = sss.speaker
 
-        setattr(self, '%s_speakers' % team, speakers)
+        setattr(self, '%s_speakers' % side, speakers)
 
         try:
             team_score = TeamScoreSheet.objects.get(debate_team=dt).score
         except TeamScoreSheet.DoesNotExist:
             team_score = None
 
-        setattr(self, '%s_score' % team, team_score)
+        setattr(self, '%s_score' % side, team_score)
 
         # TODO: also load TeamScore, SpeakerScore objects
 
@@ -436,9 +436,9 @@ class DebateResult(object):
         self._save('aff', 'neg')
         self._save('neg', 'aff')
 
-    def _save(self, team, other):
-        dt = getattr(self.debate, '%s_dt' % team)
-        total = sum(getattr(self, '%s_speaker_%d' % (team, i)).score
+    def _save(self, side, other):
+        dt = getattr(self.debate, '%s_dt' % side)
+        total = sum(getattr(self, '%s_speaker_%d' % (side, i)).score
                     for i in range(1, 5))
         other = sum(getattr(self, '%s_speaker_%d' % (other, i)).score
                     for i in range(1, 5))
@@ -449,7 +449,7 @@ class DebateResult(object):
 
         SpeakerScoreSheet.objects.filter(debate_team=dt).delete()
         for i in range(1, 5):
-            speaker = getattr(self, '%s_speaker_%d' % (team, i))
+            speaker = getattr(self, '%s_speaker_%d' % (side, i))
             SpeakerScoreSheet(
                 debate_team = dt,
                 speaker = speaker,
@@ -463,7 +463,7 @@ class DebateResult(object):
 
         SpeakerScore.objects.filter(debate_team=dt).delete()
         for i in range(1, 5):
-            speaker = getattr(self, '%s_speaker_%d' % (team, i))
+            speaker = getattr(self, '%s_speaker_%d' % (side, i))
             SpeakerScore(
                 debate_team = dt,
                 speaker = speaker,
