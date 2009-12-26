@@ -387,6 +387,11 @@ class Debate(models.Model):
         return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
     
 class DebateResult(object):
+    """
+    Wrapper object for modelling the result of a debate. Use this
+    instead of manipulating *ScoreSheet and *Score models directly
+    """
+
     def __init__(self, debate):
         self.debate = debate
 
@@ -411,13 +416,16 @@ class DebateResult(object):
 
         setattr(self, '%s_score' % team, team_score)
 
-    def save(self):
-        self._save('aff')
-        self._save('neg')
+        # TODO: also load TeamScore, SpeakerScore objects
 
-    def _save(self, team):
+    def save(self):
+        self._save('aff', 'neg')
+        self._save('neg', 'aff')
+
+    def _save(self, team, other):
         dt = getattr(self.debate, '%s_dt' % team)
         total = getattr(self, '%s_score' % team)
+        points = total > getattr(self, '%s_score' % other) and 1 or 0
 
         TeamScoreSheet.objects.filter(debate_team=dt).delete()
         TeamScoreSheet(debate_team=dt, score=total).save()
@@ -432,7 +440,23 @@ class DebateResult(object):
                 position = i,
             ).save()
 
+        #TODO (adj): calculate official scores from separate adjudicators
+        TeamScore.objects.filter(debate_team=dt).delete()
+        TeamScore(debate_team=dt, score=total, points=points).save()
+
+        SpeakerScore.objects.filter(debate_team=dt).delete()
+        for i in range(1, 5):
+            speaker = getattr(self, '%s_speaker_%d' % (team, i))
+            SpeakerScore(
+                debate_team = dt,
+                speaker = speaker,
+                score = speaker.score,
+                position = i,
+            ).save()
+
+
     def set_speaker_entry(self, team, pos, speaker, score):
+        #TODO: adj change
         speaker.score = score
         getattr(self, '%s_speakers' % team)[pos] = speaker
 
@@ -532,14 +556,14 @@ class SpeakerScoreSheet(models.Model):
         return self.debate_team.debate
     debate = property(_get_debate)
     
-class TeamStanding(models.Model):
-    round = models.ForeignKey(Round)
-    team = models.ForeignKey(Team)
-    points = ScoreField()
-    total_score = ScoreField()
+class TeamScore(models.Model):
+    debate_team = models.ForeignKey(DebateTeam)
+    points = models.PositiveSmallIntegerField()
+    score = ScoreField()
 
-class SpeakerStanding(models.Model):
-    round = models.ForeignKey(Round)
+class SpeakerScore(models.Model):
+    debate_team = models.ForeignKey(DebateTeam)
     speaker = models.ForeignKey(Speaker)
-    total_score = ScoreField()
+    score = ScoreField()
+    position = models.IntegerField()
 
