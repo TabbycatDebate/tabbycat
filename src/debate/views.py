@@ -2,7 +2,7 @@ from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden, Ht
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 from debate.models import Round, Debate, Team
 from debate import forms
@@ -169,8 +169,12 @@ def team_standings(request, round_id):
     
     teams = Team.objects.annotate(
         team_points = Sum('debateteam__teamscore__points'),
-        team_score = Sum('debateteam__teamscore__score')
+        team_score = Sum('debateteam__teamscore__score'),
+        results_count = Count('debateteam__teamscore'),
     ).order_by('-team_points', '-team_score')
+
+    for team in teams:
+        setattr(team, 'results_in', team.results_count >= round.seq)
 
     rc['teams'] = teams
 

@@ -28,7 +28,8 @@
     </thead>
     <tbody>
     {% for team in teams %}
-    <tr> 
+    <tr class="
+        {% if not team.results_in %}inactive{% endif%}"> 
         <td>{{ forloop.counter }}</td>
         <td>{{ team.name }}</td>
         <td>{{ team.team_points }}</td>
