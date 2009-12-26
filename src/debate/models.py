@@ -67,13 +67,17 @@ class Team(models.Model):
         return self.institution_id == other.institution_id
 
     def prev_debate(self, round_seq):
-        try:
-            return DebateTeam.objects.filter(
-                debate__round__seq__lt=round_seq,
-                team=self,
-            ).order_by('-debate__round__seq')[0].debate
-        except IndexError:
-            return None
+        if not hasattr(self, '_prev_debate'):
+            self._prev_debate = {}
+        if round_seq not in self._prev_debate:
+            try:
+                self._prev_debate[round_seq] = DebateTeam.objects.filter(
+                    debate__round__seq__lt=round_seq,
+                    team=self,
+                ).order_by('-debate__round__seq')[0].debate
+            except IndexError:
+                self._prev_debate[round_seq] = None
+        return self._prev_debate[round_seq]
 
     def _get_speakers(self):
         if not hasattr(self, '_speakers'):
@@ -379,7 +383,13 @@ class Debate(models.Model):
         return self._result
     result = property(_get_result)
 
-
+    def get_side(self, team):
+        if self.aff_team == team:
+            return 'aff'
+        if self.neg_team == team:
+            return 'neg'
+        return None
+ 
     def __contains__(self, team):
         return team in (self.aff_team, self.neg_team) 
 
@@ -506,6 +516,9 @@ class DebateResult(object):
             return self.neg_score > self.aff_score
         return None
     neg_win = property(_get_neg_win)
+
+    def get_speaker(self, side, position):
+        return getattr(self, '%s_speakers' % side)[position]
 
 
 class DebateTeam(models.Model):

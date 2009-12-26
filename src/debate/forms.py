@@ -27,7 +27,9 @@ def initial(debate, team):
     speakers = team.speakers
     prev_debate = team.prev_debate(debate.round.seq)
     if prev_debate:
-        raise
+        dr = DebateResult(prev_debate)
+        side = prev_debate.get_side(team)
+        return dict((i, dr.get_speaker(side, i).id) for i in range(1, 5))
     else:
         return {
             1: speakers[0].id, 

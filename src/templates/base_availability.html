@@ -56,6 +56,8 @@
                 }
             });
 
+            $("#dataTable tbody tr").addClass("clickable");
+
             $("#form").submit( function() {
                 checkboxes().each( function(){
                     var cb = $(this)[0];
