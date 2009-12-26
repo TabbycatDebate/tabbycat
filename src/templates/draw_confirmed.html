@@ -46,7 +46,7 @@ Here's the confirmed draw. <a href="" id="allocateAdj">Allocate adjudicators</a>
         <td>{{ debate.aff_team.name }}</td>
         <td>{{ debate.neg_team.name }}</td>
         <td>{{ debate.adjudicators_display }}</td>
-        <td>{{ debate.draw_conflicts }}</td>
+        <td>{{ debate.draw_conflicts|join:", " }}</td>
     </tr>
     {% endfor %}
 </table>

@@ -110,6 +110,10 @@ class Adjudicator(models.Model):
    
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
+    
+    def conflict_with(self, team):
+        return AdjudicatorConflict.objects.filter(adjudicator=self,
+                                                  team=team).count()
 
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('Adjudicator')
@@ -346,7 +350,7 @@ class Debate(models.Model):
             if self.aff_team.institution == self.neg_team.institution:
                 self._draw_conflicts.append("Institution")
 
-        return ", ".join(self._draw_conflicts) 
+        return self._draw_conflicts 
     draw_conflicts = property(_get_draw_conflicts)
 
     def _get_adjudicators(self):

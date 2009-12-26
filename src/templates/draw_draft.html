@@ -43,7 +43,7 @@ Here's the draw. <a id="confirmDraw" href="">Click to confirm</a>.
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.aff_team }}</td>
         <td>{{ debate.neg_team }}</td>
-        <td>{{ debate.draw_conflicts }}</td>
+        <td>{{ debate.draw_conflicts|join:"," }}</td>
     </tr>
     {% endfor %}
 </table>
