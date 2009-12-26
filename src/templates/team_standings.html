@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+    <script type="text/javascript" charset="utf-8">
+
+        $(document).ready( function() {
+            $("#dataTable").dataTable( {
+                "bPaginate": false
+            } );
+
+        } );
+
+    </script>
+{% endblock extra-head %}
+
+{% block extra-style %}
+    @import "/static/css/demo_table.css";
+{% endblock %}
+
+{% block h1 %} Team Standings after Round {{ round }}{% endblock %}
+
+{% block content %}
+
+
+<table id="dataTable" class="display">
+    <thead>
+        <tr><th>Rank</th><th>Team</th><th>Points</th><th>Total Score</th></tr>
+    </thead>
+    <tbody>
+    {% for team in teams %}
+    <tr> 
+        <td>{{ forloop.counter }}</td>
+        <td>{{ team.name }}</td>
+        <td>{{ team.team_points }}</td>
+        <td>{{ team.team_score }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock content %}
+
+

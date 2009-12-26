@@ -2,8 +2,9 @@ from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden, Ht
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
+from django.db.models import Sum
 
-from debate.models import Round, Debate
+from debate.models import Round, Debate, Team
 from debate import forms
 
 # Create your views here.
@@ -158,4 +159,20 @@ def save_result(request, debate_id):
         raise
 
     return HttpResponseRedirect(reverse('results', args=[debate.round.id]))
+
+def team_standings(request, round_id):
+    round = get_object_or_404(Round, id=round_id)
+
+    rc = RequestContext(request)
+    rc['round'] = round
+
+    
+    teams = Team.objects.annotate(
+        team_points = Sum('debateteam__teamscore__points'),
+        team_score = Sum('debateteam__teamscore__score')
+    ).order_by('-team_points', '-team_score')
+
+    rc['teams'] = teams
+
+    return render_to_response('team_standings.html', context_instance=rc)
 
