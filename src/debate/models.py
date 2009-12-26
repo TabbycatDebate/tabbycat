@@ -1,7 +1,7 @@
 from django.db import models
 
 from debate.utils import pair_list
-from debate.draw import RandomDrawNoConflict
+from debate.draw import RandomDrawNoConflict, AidaDraw
 from debate.adjudicator import AdjAllocation, DumbAdjAllocator
 
 class ScoreField(models.FloatField):
@@ -126,6 +126,7 @@ class Round(models.Model):
 
     DRAW_CLASS = {
         TYPE_RANDOM: RandomDrawNoConflict,
+        TYPE_PRELIM: AidaDraw,
     }
     
     STATUS_NONE = 0
@@ -167,6 +168,9 @@ class Round(models.Model):
     def draw(self):
         if self.draw_status != self.STATUS_NONE:
             raise
+
+        import ipdb
+        ipdb.set_trace()
 
         drawer = self._drawer()
         d = drawer(self)
@@ -436,7 +440,9 @@ class DebateResult(object):
         dt = getattr(self.debate, '%s_dt' % team)
         total = sum(getattr(self, '%s_speaker_%d' % (team, i)).score
                     for i in range(1, 5))
-        points = total > getattr(self, '%s_score' % other) and 1 or 0
+        other = sum(getattr(self, '%s_speaker_%d' % (other, i)).score
+                    for i in range(1, 5))
+        points = (total > other) and 1 or 0
 
         TeamScoreSheet.objects.filter(debate_team=dt).delete()
         TeamScoreSheet(debate_team=dt, score=total).save()

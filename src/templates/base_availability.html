@@ -82,7 +82,9 @@
                 return false;
             } );
 
-            dTable = $('#dataTable').dataTable();
+            dTable = $('#dataTable').dataTable({
+                'bPaginate': false
+            });
         } );
     </script>
 {% endblock %}
