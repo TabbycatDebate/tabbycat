@@ -112,7 +112,7 @@ def make_results_form(debate):
     initial = { 'result_status': debate.result_status }
     for side in ('aff', 'neg'):
         for i in range(1, 5):
-            s = getattr(result, '%s_speaker_%d' % (side, i))
+            s = result.get_speaker(side, i)
             if s:
                 initial['%s_speaker_%d' % (side, i)] = s.id
                 initial['%s_score_%d' % (side, i)] = s.score

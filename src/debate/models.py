@@ -1,6 +1,6 @@
 from django.db import models
 
-from debate.utils import pair_list
+from debate.utils import pair_list, memoize
 from debate.draw import RandomDrawNoConflict, AidaDraw
 from debate.adjudicator import AdjAllocation, DumbAdjAllocator
 
@@ -8,16 +8,16 @@ class ScoreField(models.FloatField):
     pass
 
 class Tournament(object):
-    def _get_teams(self):
+    @property
+    def teams(self):
         return Team.objects.all()
-    teams = property(_get_teams)
 
-    def _get_current_round(self):
+    @property
+    def current_round(self):
         try:
             return Round.objects.order_by('-id')[0]
         except IndexError:
             return None
-    current_round = property(_get_current_round)
     
 class Institution(models.Model):
     code = models.CharField(max_length=20)
@@ -34,57 +34,54 @@ class Team(models.Model):
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
     
-    def _get_points(self):
+    @property
+    def points(self):
         # TODO
         return 0
-    points = property(_get_points)
     
-    def _get_aff_count(self):
+    @property
+    def aff_count(self):
         # TODO
         return 0
-    aff_count = property(_get_aff_count)
     
-    def _get_neg_count(self):
+    @property
+    def neg_count(self):
         # TODO
         return 0
-    neg_count = property(_get_neg_count)
 
-    def _get_debates(self, before_round=None):
+    @memoize
+    def get_debates(self, before_round):
         dts = DebateTeam.objects.select_related('debate').filter(team=self)
         if before_round is not None:
             dts = dts.filter(debate__round__seq__lt=before_round)
-        if not hasattr(self, '_debates'):
-            self._debates = [dt.debate for dt in dts]
-        return self._debates
-    debates = property(_get_debates)
+        return [dt.debate for dt in dts]
+
+    @property
+    def debates(self):
+        return self.get_debates(None)
     
     def seen(self, other, before_round=None):
-        debates = self._get_debates(before_round)
+        debates = self.get_debates(before_round)
 
-        return len([1 for d in self.debates if other in d])
+        return len([1 for d in debates if other in d])
 
     def same_institution(self, other):
         return self.institution_id == other.institution_id
 
+    @memoize
     def prev_debate(self, round_seq):
-        if not hasattr(self, '_prev_debate'):
-            self._prev_debate = {}
-        if round_seq not in self._prev_debate:
-            try:
-                self._prev_debate[round_seq] = DebateTeam.objects.filter(
-                    debate__round__seq__lt=round_seq,
-                    team=self,
-                ).order_by('-debate__round__seq')[0].debate
-            except IndexError:
-                self._prev_debate[round_seq] = None
-        return self._prev_debate[round_seq]
+        try:
+            return DebateTeam.objects.filter(
+                debate__round__seq__lt=round_seq,
+                team=self,
+            ).order_by('-debate__round__seq')[0].debate
+        except IndexError:
+            return None
 
-    def _get_speakers(self):
-        if not hasattr(self, '_speakers'):
-            self._speakers = self.speaker_set.all()
-        return self._speakers
-    speakers = property(_get_speakers)
-
+    @property
+    @memoize
+    def speakers(self):
+        return self.speaker_set.all()
 
 class Speaker(models.Model):
     name = models.CharField(max_length=40)
@@ -172,9 +169,6 @@ class Round(models.Model):
     def draw(self):
         if self.draw_status != self.STATUS_NONE:
             raise
-
-        import ipdb
-        ipdb.set_trace()
 
         drawer = self._drawer()
         d = drawer(self)
@@ -321,75 +315,73 @@ class Debate(models.Model):
             for t in DebateTeam.objects.filter(debate=self):
                 self._team_cache[t.position] = t
 
-    def _get_aff_team(self):
+    @property
+    def aff_team(self):
         self._get_teams()
         return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE].team
-    aff_team = property(_get_aff_team)
 
-    def _get_neg_team(self):
+    @property
+    def neg_team(self):
         self._get_teams()
         return self._team_cache[DebateTeam.POSITION_NEGATIVE].team
-    neg_team = property(_get_neg_team)
 
-    def _get_aff_dt(self):
+    @property
+    def aff_dt(self):
         self._get_teams()
         return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE]
-    aff_dt = property(_get_aff_dt)
 
-    def _get_neg_dt(self):
+    @property
+    def neg_dt(self):
         self._get_teams()
         return self._team_cache[DebateTeam.POSITION_NEGATIVE]
-    neg_dt = property(_get_neg_dt)
 
-    def _get_draw_conflicts(self):
-        if not hasattr(self, '_draw_conflicts'):
-            self._draw_conflicts = []
-            history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
-            if history:
-                self._draw_conflicts.append("History (%d)" % history)
-            if self.aff_team.institution == self.neg_team.institution:
-                self._draw_conflicts.append("Institution")
+    @property
+    @memoize
+    def draw_conflicts(self):
+        d = []
+        history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
+        if history:
+            d.append("History (%d)" % history)
+        if self.aff_team.institution == self.neg_team.institution:
+            d.append("Institution")
 
-        return self._draw_conflicts 
-    draw_conflicts = property(_get_draw_conflicts)
+        return d
 
-    def _get_adjudicators(self):
-        if not hasattr(self, '_adjudicators'):
-            adjs = AdjudicatorAllocation.objects.filter(debate=self)
-            alloc = AdjAllocation()
-            for a in adjs:
-                if a.type == a.TYPE_CHAIR:
-                    alloc.chair = a.adjudicator
-                if a.type == a.TYPE_PANEL:
-                    alloc.panel.append(a.adjudicator)
-                if a.type == a.TYPE_TRAINEE:
-                    alloc.trainees.append(a.adjudicator)
-            self._adjudicators = alloc
-        return self._adjudicators
+    @property
+    @memoize
+    def adjudicators(self):
+        adjs = AdjudicatorAllocation.objects.filter(debate=self)
+        alloc = AdjAllocation()
+        for a in adjs:
+            if a.type == a.TYPE_CHAIR:
+                alloc.chair = a.adjudicator
+            if a.type == a.TYPE_PANEL:
+                alloc.panel.append(a.adjudicator)
+            if a.type == a.TYPE_TRAINEE:
+                alloc.trainees.append(a.adjudicator)
+        return alloc
 
 
-    def _get_adjudicators_display(self):
-        if not hasattr(self, '_adjudicators_display'):
-            alloc = self._get_adjudicators()
+    @property
+    @memoize
+    def adjudicators_display(self):
+        alloc = self.adjudicators
 
-            s = alloc.chair.name
-            if alloc.panel:
-                s += " (c), "
-            elif alloc.trainees:
-                s += ", "
-            sd = [p.name for p in alloc.panel]
-            sd.extend(["%s (t)" % t.name for t in alloc.trainees])
-            s += ", ".join(sd)
+        s = alloc.chair.name
+        if alloc.panel:
+            s += " (c), "
+        elif alloc.trainees:
+            s += ", "
+        sd = [p.name for p in alloc.panel]
+        sd.extend(["%s (t)" % t.name for t in alloc.trainees])
+        s += ", ".join(sd)
 
-            self._adjudicators_display = s
-        return self._adjudicators_display
-    adjudicators_display = property(_get_adjudicators_display)
+        return s
 
-    def _get_result(self):
-        if not hasattr(self, '_result'):
-            self._result = DebateResult(self)
-        return self._result
-    result = property(_get_result)
+    @property
+    @memoize
+    def result(self):
+        return DebateResult(self)
 
     def get_side(self, team):
         if self.aff_team == team:
@@ -453,7 +445,7 @@ class DebateResult(object):
 
         SpeakerScoreSheet.objects.filter(debate_team=dt).delete()
         for i in range(1, 5):
-            speaker = getattr(self, '%s_speaker_%d' % (side, i))
+            speaker = self.get_speaker(side, i)
             SpeakerScoreSheet(
                 debate_team = dt,
                 speaker = speaker,
@@ -467,7 +459,7 @@ class DebateResult(object):
 
         SpeakerScore.objects.filter(debate_team=dt).delete()
         for i in range(1, 5):
-            speaker = getattr(self, '%s_speaker_%d' % (side, i))
+            speaker = self.get_speaker(side, i)
             SpeakerScore(
                 debate_team = dt,
                 speaker = speaker,
@@ -483,49 +475,49 @@ class DebateResult(object):
 
     # adding these properties programmatically would require a bit too much
     # crazy black magic
-    def _get_aff_speaker_1(self):
+    @property
+    def aff_speaker_1(self):
         return self.aff_speakers[1]
-    aff_speaker_1 = property(_get_aff_speaker_1)
 
-    def _get_aff_speaker_2(self):
+    @property
+    def aff_speaker_2(self):
         return self.aff_speakers[2]
-    aff_speaker_2 = property(_get_aff_speaker_2)
 
-    def _get_aff_speaker_3(self):
+    @property
+    def aff_speaker_3(self):
         return self.aff_speakers[3]
-    aff_speaker_3 = property(_get_aff_speaker_3)
 
-    def _get_aff_speaker_4(self):
+    @property
+    def aff_speaker_4(self):
         return self.aff_speakers[4]
-    aff_speaker_4 = property(_get_aff_speaker_4)
 
-    def _get_neg_speaker_1(self):
+    @property
+    def neg_speaker_1(self):
         return self.neg_speakers[1]
-    neg_speaker_1 = property(_get_neg_speaker_1)
 
-    def _get_neg_speaker_2(self):
+    @property
+    def neg_speaker_2(self):
         return self.neg_speakers[2]
-    neg_speaker_2 = property(_get_neg_speaker_2)
 
-    def _get_neg_speaker_3(self):
+    @property
+    def neg_speaker_3(self):
         return self.neg_speakers[3]
-    neg_speaker_3 = property(_get_neg_speaker_3)
 
-    def _get_neg_speaker_4(self):
+    @property
+    def neg_speaker_4(self):
         return self.neg_speakers[4]
-    neg_speaker_4 = property(_get_neg_speaker_4)
 
-    def _get_aff_win(self):
+    @property
+    def aff_win(self):
         if self.aff_score:
             return self.aff_score > self.neg_score
         return None
-    aff_win = property(_get_aff_win)
 
-    def _get_neg_win(self):
+    @property
+    def neg_win(self):
         if self.neg_score:
             return self.neg_score > self.aff_score
         return None
-    neg_win = property(_get_neg_win)
 
     def get_speaker(self, side, position):
         return getattr(self, '%s_speakers' % side)[position]
@@ -564,9 +556,9 @@ class TeamScoreSheet(models.Model):
     debate_team = models.ForeignKey(DebateTeam)
     score = ScoreField()
 
-    def _get_debate(self):
+    @property
+    def debate(self):
         return self.debate_team.debate
-    debate = property(_get_debate)
     
 class SpeakerScoreSheet(models.Model):
     # TODO: review scoresheet for adjudicator
@@ -576,9 +568,9 @@ class SpeakerScoreSheet(models.Model):
     score = ScoreField()
     position = models.IntegerField()
 
-    def _get_debate(self):
+    @property
+    def debate(self):
         return self.debate_team.debate
-    debate = property(_get_debate)
     
 class TeamScore(models.Model):
     debate_team = models.ForeignKey(DebateTeam)
