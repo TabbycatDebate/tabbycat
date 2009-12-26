@@ -424,7 +424,8 @@ class DebateResult(object):
 
     def _save(self, team, other):
         dt = getattr(self.debate, '%s_dt' % team)
-        total = getattr(self, '%s_score' % team)
+        total = sum(getattr(self, '%s_speaker_%d' % (team, i)).score
+                    for i in range(1, 5))
         points = total > getattr(self, '%s_score' % other) and 1 or 0
 
         TeamScoreSheet.objects.filter(debate_team=dt).delete()
