@@ -24,7 +24,7 @@ class Institution(models.Model):
     name = models.CharField(max_length=40)
     
     def __unicode__(self):
-        return u"%s (%s)" % (self.code, self.name)
+        return unicode(self.name) 
 
 class Team(models.Model):
     name = models.CharField(max_length=50)
