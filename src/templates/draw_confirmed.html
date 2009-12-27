@@ -40,13 +40,13 @@ Here's the confirmed draw. <a href="" id="allocateAdj">Allocate adjudicators</a>
     </thead>
     <tbody>
     {% for debate in draw %}
-    <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+    <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td>{{ debate.aff_team.name }}</td>
         <td>{{ debate.neg_team.name }}</td>
         <td>{{ debate.adjudicators_display }}</td>
-        <td>{{ debate.draw_conflicts|join:", " }}</td>
+        <td>{{ debate.all_conflicts|join:", " }}</td>
     </tr>
     {% endfor %}
 </table>

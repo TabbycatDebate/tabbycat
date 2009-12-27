@@ -2,7 +2,7 @@ from django.db import models
 
 from debate.utils import pair_list, memoize
 from debate.draw import RandomDrawNoConflict, AidaDraw
-from debate.adjudicator import AdjAllocation, DumbAdjAllocator
+from debate.adjudicator import DumbAdjAllocator
 
 class ScoreField(models.FloatField):
     pass
@@ -187,15 +187,15 @@ class Round(models.Model):
 
     def make_adj_allocation(self, allocation):
         def make(debate, adj, type):
-            AdjudicatorAllocation(debate=debate, adjudicator=adj,
-                                  type=type).save()
+            DebateAdjudicator(debate=debate, adjudicator=adj,
+                              type=type).save()
 
         for debate, alloc in allocation:
-            make(debate, alloc.chair, AdjudicatorAllocation.TYPE_CHAIR)
+            make(debate, alloc.chair, DebateAdjudicator.TYPE_CHAIR)
             for adj in alloc.panel:
-                make(debate, adj, AdjudicatorAllocation.TYPE_PANEL)
+                make(debate, adj, DebateAdjudicator.TYPE_PANEL)
             for adj in alloc.trainees:
-                make(debate, adj, AdjudicatorAllocation.TYPE_TRAINEE)
+                make(debate, adj, DebateAdjudicator.TYPE_TRAINEE)
 
     def get_draw(self):
         return Debate.objects.filter(round=self)
@@ -349,9 +349,20 @@ class Debate(models.Model):
 
     @property
     @memoize
+    def all_conflicts(self):
+        return self.draw_conflicts + self.adjudicator_conflicts
+
+    @property
+    @memoize
+    def adjudicator_conflicts(self):
+        for adj in self.adjudicators:
+            pass
+
+    @property
+    @memoize
     def adjudicators(self):
-        adjs = AdjudicatorAllocation.objects.filter(debate=self)
-        alloc = AdjAllocation()
+        adjs = DebateAdjudicator.objects.filter(debate=self)
+        alloc = AdjudicatorAllocation()
         for a in adjs:
             if a.type == a.TYPE_CHAIR:
                 alloc.chair = a.adjudicator
@@ -535,7 +546,7 @@ class DebateTeam(models.Model):
     team = models.ForeignKey(Team)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
     
-class AdjudicatorAllocation(models.Model):
+class DebateAdjudicator(models.Model):
     TYPE_CHAIR = 'C'
     TYPE_PANEL = 'P'
     TYPE_TRAINEE = 'T'
@@ -549,10 +560,23 @@ class AdjudicatorAllocation(models.Model):
     debate = models.ForeignKey(Debate)
     adjudicator = models.ForeignKey(Adjudicator)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
-    
+
+class AdjudicatorAllocation(object):
+    def __init__(self):
+        self.chair = None
+        self.panel = []
+        self.trainees = []
+
+    def __iter__(self):
+        yield self.chair
+        for a in self.panel:
+            yield a
+        for a in self.trainees:
+            yield a
+
 class TeamScoreSheet(models.Model):
     # TODO: review scoresheet for adjudicator
-    # adjudicator_allocation = models.ForeignKey(AdjudicatorAllocation)
+    # debate_adjudicator = models.ForeignKey(DebateAdjudicator)
     debate_team = models.ForeignKey(DebateTeam)
     score = ScoreField()
 
@@ -562,7 +586,7 @@ class TeamScoreSheet(models.Model):
     
 class SpeakerScoreSheet(models.Model):
     # TODO: review scoresheet for adjudicator
-    # adjudicator_allocation = models.ForeignKey(AdjudicatorAllocation)
+    # debate_adjudicator = models.ForeignKey(DebateAdjudicator)
     debate_team = models.ForeignKey(DebateTeam)
     speaker = models.ForeignKey(Speaker)
     score = ScoreField()
