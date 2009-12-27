@@ -1,6 +1,6 @@
 from django.db import models
 
-from debate.utils import pair_list, memoize
+from debate.utils import pair_list
 from debate.draw import RandomDrawNoConflict, AidaDraw
 from debate.adjudicator import DumbAdjAllocator
 
@@ -15,7 +15,7 @@ class Tournament(object):
     @property
     def current_round(self):
         try:
-            return Round.objects.order_by('-id')[0]
+            return Round.objects.get(is_current=True)
         except IndexError:
             return None
     
@@ -49,7 +49,6 @@ class Team(models.Model):
         # TODO
         return 0
 
-    @memoize
     def get_debates(self, before_round):
         dts = DebateTeam.objects.select_related('debate').filter(team=self)
         if before_round is not None:
@@ -68,7 +67,6 @@ class Team(models.Model):
     def same_institution(self, other):
         return self.institution_id == other.institution_id
 
-    @memoize
     def prev_debate(self, round_seq):
         try:
             return DebateTeam.objects.filter(
@@ -79,7 +77,6 @@ class Team(models.Model):
             return None
 
     @property
-    @memoize
     def speakers(self):
         return self.speaker_set.all()
 
@@ -149,6 +146,7 @@ class Round(models.Model):
                                        default=STATUS_NONE)
     adjudicator_status = models.IntegerField(choices=STATUS_CHOICES,
                                              default=STATUS_NONE)
+    is_current = models.BooleanField()
     
     tournament = Tournament()
 
@@ -336,7 +334,6 @@ class Debate(models.Model):
         return self._team_cache[DebateTeam.POSITION_NEGATIVE]
 
     @property
-    @memoize
     def draw_conflicts(self):
         d = []
         history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
@@ -348,12 +345,10 @@ class Debate(models.Model):
         return d
 
     @property
-    @memoize
     def all_conflicts(self):
         return self.draw_conflicts + self.adjudicator_conflicts
 
     @property
-    @memoize
     def adjudicator_conflicts(self):
         class Conflict(object):
             def __init__(self, adj, team):
@@ -370,7 +365,6 @@ class Debate(models.Model):
         return a
 
     @property
-    @memoize
     def adjudicators(self):
         adjs = DebateAdjudicator.objects.filter(debate=self)
         alloc = AdjudicatorAllocation()
@@ -385,7 +379,6 @@ class Debate(models.Model):
 
 
     @property
-    @memoize
     def adjudicators_display(self):
         alloc = self.adjudicators
 
@@ -401,7 +394,6 @@ class Debate(models.Model):
         return s
 
     @property
-    @memoize
     def result(self):
         return DebateResult(self)
 
