@@ -355,8 +355,19 @@ class Debate(models.Model):
     @property
     @memoize
     def adjudicator_conflicts(self):
-        for adj in self.adjudicators:
-            pass
+        class Conflict(object):
+            def __init__(self, adj, team):
+                self.adj = adj
+                self.team = team
+            def __unicode__(self):
+                return u'Adj %s + %s' % (self.adj, self.team)
+
+        a = []
+        for t, adj in self.adjudicators:
+            for team in (self.aff_team, self.neg_team):
+                if adj.conflict_with(team):
+                    a.append(Conflict(adj, team))
+        return a
 
     @property
     @memoize
@@ -568,11 +579,11 @@ class AdjudicatorAllocation(object):
         self.trainees = []
 
     def __iter__(self):
-        yield self.chair
+        yield DebateAdjudicator.TYPE_CHAIR, self.chair
         for a in self.panel:
-            yield a
+            yield DebateAdjudicator.TYPE_PANEL, a
         for a in self.trainees:
-            yield a
+            yield DebateAdjudicator.TYPE_TRAINEE, a
 
 class TeamScoreSheet(models.Model):
     # TODO: review scoresheet for adjudicator
