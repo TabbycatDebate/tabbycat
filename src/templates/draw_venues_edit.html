@@ -13,41 +13,50 @@
                 },
                 revert: 'invalid'
             });
+            $(".venue").addClass("vo");
             $("#dataTable tbody tr td:last-child").droppable( {
                 hoverClass: 'hover',
                 drop: function(event, ui) {
-                    var newHomeOff = $(".venue", this).offset();
-                    var curOff = ui.draggable.offset();
-                    var replacing = $(".venue", this);
+                    var venue = ui.draggable;
+                    var oldHolder = venue.parent("td");
+                    var replacing = $(".vo", this);
+                    var newHomeOff = replacing.offset();
+                    var curOff = venue.offset();
 
-                    if (replacing.attr("id") != ui.draggable.attr("id")) {
-                        $(".venue", this).remove();
+                    if (replacing.attr("id") != venue.attr("id")) {
+                        $(".vo", this).remove();
                     }
 
-                    $(this).append(ui.draggable);
-                    ui.draggable.css('top', curOff.top - newHomeOff.top);
-                    ui.draggable.css('left', curOff.left - newHomeOff.left);
-                    ui.draggable.animate({'top': '0', 'left': '0'}, 300);
+                    $(this).append(venue);
+                    oldHolder.append('<div class="vo placeholder">&nbsp;</div>');
+                    venue.css('top', curOff.top - newHomeOff.top);
+                    venue.css('left', curOff.left - newHomeOff.left);
+                    venue.animate({'top': '0', 'left': '0'}, 300);
                 }
 
             });
-        });
-    </script>
-    <script type="text/javascript" charset="utf-8">
 
-        $(document).ready( function() {
-            $("#confirmDraw").click( function() {
-                $("#confirmForm").submit();
-
-                return false;
-            } );
+            /* sorting function for venues */
+            $.fn.dataTableExt.afnSortData['venue'] = function ( oSettings, iColumn) {
+                var aData = [];
+                $('.vo', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
+                    var name = $('span', this).html();
+                    if (name == null) name = '';
+                    aData.push(name);
+                });
+                return aData;
+            }
 
             $("#dataTable").dataTable( {
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    { "sSortDataType": "venue"}
+                ],
                 "bPaginate": false
             } );
-
-        } );
-
+        });
     </script>
     <style type="text/css">
         .venue { background-color: #ccc; }
