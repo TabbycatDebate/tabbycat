@@ -25,10 +25,10 @@
 
                     if (replacing.attr("id") != venue.attr("id")) {
                         $(".vo", this).remove();
+                        $(this).append(venue);
+                        oldHolder.append('<div class="vo placeholder">&nbsp;</div>');
                     }
 
-                    $(this).append(venue);
-                    oldHolder.append('<div class="vo placeholder">&nbsp;</div>');
                     venue.css('top', curOff.top - newHomeOff.top);
                     venue.css('left', curOff.left - newHomeOff.left);
                     venue.animate({'top': '0', 'left': '0'}, 300);
@@ -45,14 +45,22 @@
                     aData.push(name);
                 });
                 return aData;
-            }
+            };
+
+            /* filter function for venues */
+            $.fn.dataTableExt.ofnSearch['venue'] = function ( sData ) {
+                var jo = $(sData);
+                var f = $('span', jo).html();
+
+                return f;
+            };
 
             $("#dataTable").dataTable( {
                 "aoColumns": [
                     null,
                     null,
                     null,
-                    { "sSortDataType": "venue"}
+                    { "sSortDataType": "venue", "sType": "venue" }
                 ],
                 "bPaginate": false
             } );
