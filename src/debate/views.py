@@ -180,3 +180,12 @@ def team_standings(request, round_id):
 
     return render_to_response('team_standings.html', context_instance=rc)
 
+
+def draw_venues_edit(request, round_id):
+    round = get_object_or_404(Round, id=round_id)
+    rc = RequestContext(request)
+
+    rc['round'] = round
+    rc['draw'] = round.get_draw()
+
+    return render_to_response("draw_venues_edit.html", context_instance=rc)

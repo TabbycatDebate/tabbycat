@@ -23,6 +23,9 @@ urlpatterns = patterns('debate.views',
     url(r'^round/(?P<round_id>\d+)/draw/confirm/$', 'confirm_draw',
         name='confirm_draw'),
 
+    url(r'^round/(?P<round_id>\d+)/draw/venues/$', 'draw_venues_edit',
+        name='draw_venues_edit'),
+
     url(r'^round/(?P<round_id>\d+)/adj_allocation/create/$',
         'create_adj_allocation',
         name='create_adj_allocation'),

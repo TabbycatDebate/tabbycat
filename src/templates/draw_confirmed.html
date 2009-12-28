@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra-head %}
-    <script type="text/javascript" charset="utf-8">
+   <script type="text/javascript" charset="utf-8">
 
         $(document).ready( function() {
             $("#allocateAdj").click( function() {
@@ -29,6 +29,7 @@
 
 <p>
 Here's the confirmed draw. <a href="" id="allocateAdj">Allocate adjudicators</a>.
+<a href="{% url draw_venues_edit round.id %}">Edit venues</a>.
 </p>
 
 <form id="allocateAdjForm" method="POST" action="{% url create_adj_allocation round.id %}">

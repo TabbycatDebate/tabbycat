@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+    <script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready( function() {
+            $(".venue").draggable( {
+                handle: 'div',
+                cursor: 'move',
+                stack: {
+                    group: '.venue',
+                    min: 1
+                },
+                revert: 'invalid'
+            });
+            $("#dataTable tbody tr td:last-child").droppable( {
+                hoverClass: 'hover',
+                drop: function(event, ui) {
+                    var newHomeOff = $(".venue", this).offset();
+                    var curOff = ui.draggable.offset();
+                    var replacing = $(".venue", this);
+
+                    if (replacing.attr("id") != ui.draggable.attr("id")) {
+                        $(".venue", this).remove();
+                    }
+
+                    $(this).append(ui.draggable);
+                    ui.draggable.css('top', curOff.top - newHomeOff.top);
+                    ui.draggable.css('left', curOff.left - newHomeOff.left);
+                    ui.draggable.animate({'top': '0', 'left': '0'}, 300);
+                }
+
+            });
+        });
+    </script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(document).ready( function() {
+            $("#confirmDraw").click( function() {
+                $("#confirmForm").submit();
+
+                return false;
+            } );
+
+            $("#dataTable").dataTable( {
+                "bPaginate": false
+            } );
+
+        } );
+
+    </script>
+    <style type="text/css">
+        .venue { background-color: #ccc; }
+        .venue span { margin-left: 10px; }
+        .hover { background-color: #ff8; }
+
+    </style>
+{% endblock extra-head %}
+
+{% block extra-style %}
+    @import "/static/css/demo_table.css";
+{% endblock %}
+
+{% block h1 %} Edit venues for Round {{ round }} {% endblock %}
+
+{% block content %}
+
+<p>
+Edit venues
+</p>
+
+<form id="confirmForm" method="POST" action="{% url confirm_draw round.id %}"></form>
+
+<table id="dataTable" class="display" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr><th>Bracket</th><th>Affirmative</th><th>Negative</th><th>Venue</th></tr>
+    </thead>
+    <tbody>
+    {% for debate in draw %}
+    <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+        <td>{{ debate.bracket }}</td>
+        <td>{{ debate.aff_team }}</td>
+        <td>{{ debate.neg_team }}</td>
+        <td>
+            <div id="venue_{{ debate.venue.id }}" class="venue"><span>{{ debate.venue }}</span></div></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock content %}
+
+
