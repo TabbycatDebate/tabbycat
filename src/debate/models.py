@@ -199,7 +199,10 @@ class Round(models.Model):
         return Debate.objects.filter(round=self)
         
     def make_debates(self, pairs):
-        venues = list(self.active_venues.all())
+        import random
+
+        venues = list(self.active_venues.all())[:len(pairs)]
+        random.shuffle(venues)
         
         for pair in pairs:
             debate = Debate(round=self, venue=venues.pop(0))
@@ -301,7 +304,7 @@ class Debate(models.Model):
         (STATUS_CONFIRMED, 'Confirmed'),
     )
     round = models.ForeignKey(Round)
-    venue = models.ForeignKey(Venue)
+    venue = models.ForeignKey(Venue, blank=True, null=True)
     bracket = models.IntegerField(default=0)
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                                     default=STATUS_NONE)
