@@ -4,6 +4,24 @@
 <script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
+        var debates = {};
+        // populate data
+        $("#dataTable .venue-holder").each( function() {
+            debates[$(this).attr("id")] = $("div.venue", this).attr("id");
+        } );
+
+        function venueMoved(venue, oldDebate, newDebate) {
+            var oldId = oldDebate.attr("id");
+            if (oldId != undefined) {
+                debates[oldId] = null;
+            }
+            var newId = newDebate.attr("id");
+            if (newId != undefined) {
+                debates[newId] = venue.attr("id");
+            }
+        }
+            
+
         $(".venue").draggable( {
             handle: 'div',
             cursor: 'move',
@@ -28,6 +46,8 @@
                     $(this).append(venue);
                     oldHolder.append('<div class="vo placeholder">&nbsp;</div>');
                 }
+
+                venueMoved(venue, oldHolder, $(this));
 
                 venue.css('top', curOff.top - newHomeOff.top);
                 venue.css('left', curOff.left - newHomeOff.left);
@@ -72,6 +92,23 @@
             return f;
         };
 
+        $('#save').click( function() {
+            $.ajax( {
+                type: "POST",
+                url: "{% url save_venues round.id %}",
+                data: debates,
+                success: function(data, status) {
+                    alert("win");
+                },
+                error: function(xhr, error, ex) {
+                    alert("fail");
+                }
+            } );
+
+            return false;
+
+        } );
+
         $("#dataTable").dataTable( {
             "aoColumns": [
                 null,
@@ -111,7 +148,10 @@
 {% block body %}
 
 <div id="statusBar">
-    Save Discard Undo Redo Quit
+    Edit venues for Round {{ round }} |
+    <a href="" id="save">Save</a>
+    Discard Undo Redo 
+    <a href="{% url debate_index %}">Quit</a>
 </div>
 
 <div id="scratch">
@@ -129,7 +169,7 @@ Unused Venues
             <td>{{ debate.bracket }}</td>
             <td>{{ debate.aff_team }}</td>
             <td>{{ debate.neg_team }}</td>
-            <td>
+            <td id="debate_{{ debate.id }}" class="venue-holder">
                 <div id="venue_{{ debate.venue.id }}" class="venue"><span>{{ debate.venue }}</span></div></td>
         </tr>
         {% endfor %}

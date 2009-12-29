@@ -4,7 +4,7 @@ from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 from django.db.models import Sum, Count
 
-from debate.models import Round, Debate, Team
+from debate.models import Round, Debate, Team, Venue
 from debate import forms
 
 # Create your views here.
@@ -47,7 +47,8 @@ def update_base_availability(request, round_id, update_method):
     if request.method != "POST":
         return HttpResponseBadRequest("expected POST")
 
-    available_ids = [int(a.replace("check_", "")) for a in request.POST.keys()]
+    available_ids = [int(a.replace("check_", "")) for a in request.POST.keys()
+                     if a.startswith("check_")]
 
     getattr(round, update_method)(available_ids)
 
@@ -189,3 +190,25 @@ def draw_venues_edit(request, round_id):
     rc['draw'] = round.get_draw()
 
     return render_to_response("draw_venues_edit.html", context_instance=rc)
+
+def save_venues(request, round_id):
+    round = get_object_or_404(Round, id=round_id)
+    if request.method != "POST":
+        return HttpResponseBadRequest("Expected POST")
+
+    def v_id(a):
+        try:
+            return int(request.POST[a].split('_')[1])
+        except IndexError:
+            return None
+    data = [(int(a.split('_')[1]), v_id(a))
+             for a in request.POST.keys()]
+
+    debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
+    venues = Venue.objects.in_bulk([v_id for _, v_id in data])
+    for debate_id, venue_id in data:
+        debates[debate_id].venue = venues[venue_id]
+        debates[debate_id].save()
+
+    return HttpResponse("ok")
+
