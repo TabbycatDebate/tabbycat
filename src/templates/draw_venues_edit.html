@@ -1,138 +1,141 @@
 {% extends "base.html" %}
 
 {% block extra-head %}
-    <script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready( function() {
-            $(".venue").draggable( {
-                handle: 'div',
-                cursor: 'move',
-                stack: {
-                    group: '.venue',
-                    min: 1
-                },
-                revert: 'invalid'
-            });
-            $(".venue").addClass("vo");
-            $("#dataTable tbody tr td:last-child").droppable( {
-                hoverClass: 'hover',
-                drop: function(event, ui) {
-                    var venue = ui.draggable;
-                    var oldHolder = venue.parent("td");
-                    var replacing = $(".vo", this);
-                    var newHomeOff = replacing.offset();
-                    var curOff = venue.offset();
+<script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+        $(".venue").draggable( {
+            handle: 'div',
+            cursor: 'move',
+            stack: {
+                group: '.venue',
+                min: 1
+            },
+            revert: 'invalid'
+        });
+        $(".venue").addClass("vo");
+        $("#dataTable tbody tr td:last-child").droppable( {
+            hoverClass: 'hover',
+            drop: function(event, ui) {
+                var venue = ui.draggable;
+                var oldHolder = venue.parent("td");
+                var replacing = $(".vo", this);
+                var newHomeOff = replacing.offset();
+                var curOff = venue.offset();
 
-                    if (replacing.attr("id") != venue.attr("id")) {
-                        $(".vo", this).remove();
-                        $(this).append(venue);
-                        oldHolder.append('<div class="vo placeholder">&nbsp;</div>');
-                    }
-
-                    venue.css('top', curOff.top - newHomeOff.top);
-                    venue.css('left', curOff.left - newHomeOff.left);
-                    venue.animate({'top': '0', 'left': '0'}, 300);
-                }
-
-            });
-
-            $("#scratch").droppable( {
-                hoverClass: 'hover',
-                drop: function(event, ui) {
-                    var venue = ui.draggable;
-                    var oldHolder = venue.parent("td");
+                if (replacing.attr("id") != venue.attr("id")) {
+                    $(".vo", this).remove();
                     $(this).append(venue);
                     oldHolder.append('<div class="vo placeholder">&nbsp;</div>');
-
-                    venue.animate({'top': '0', 'left': '0'}, 300);
-
-
                 }
 
+                venue.css('top', curOff.top - newHomeOff.top);
+                venue.css('left', curOff.left - newHomeOff.left);
+                venue.animate({'top': '0', 'left': '0'}, 300);
+            }
 
-            } );
-            $("#scratch").append('<div class="placeholder"></div>');
-
-            /* sorting function for venues */
-            $.fn.dataTableExt.afnSortData['venue'] = function ( oSettings, iColumn) {
-                var aData = [];
-                $('.vo', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
-                    var name = $('span', this).html();
-                    if (name == null) name = '';
-                    aData.push(name);
-                });
-                return aData;
-            };
-
-            /* filter function for venues */
-            $.fn.dataTableExt.ofnSearch['venue'] = function ( sData ) {
-                var jo = $(sData);
-                var f = $('span', jo).html();
-
-                return f;
-            };
-
-            $("#dataTable").dataTable( {
-                "aoColumns": [
-                    null,
-                    null,
-                    null,
-                    { "sSortDataType": "venue" }
-                ],
-                "bPaginate": false
-            } );
         });
-    </script>
-    <style type="text/css">
-        .venue { background-color: #ccc; }
-        .venue span { margin-left: 10px; }
-        #dataTable td.hover { background-color: #ff8; }
-        #scratch {
-            position: fixed;
-            top: 0;
-            right: 0;
-            background-color: #cff;
-            width: 200px;
-            height: 800px;
-        }
-        #scratch.hover { background-color: #ff8; }
 
-    </style>
+        $("#scratch").droppable( {
+            hoverClass: 'hover',
+            drop: function(event, ui) {
+                var venue = ui.draggable;
+                var oldHolder = venue.parent("td");
+                $(this).append(venue);
+                oldHolder.append('<div class="vo placeholder">&nbsp;</div>');
+
+                venue.animate({'top': '0', 'left': '0'}, 300);
+
+
+            }
+
+
+        } );
+        $("#scratch").append('<div class="placeholder"></div>');
+
+        /* sorting function for venues */
+        $.fn.dataTableExt.afnSortData['venue'] = function ( oSettings, iColumn) {
+            var aData = [];
+            $('.vo', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
+                var name = $('span', this).html();
+                if (name == null) name = '';
+                aData.push(name);
+            });
+            return aData;
+        };
+
+        /* filter function for venues */
+        $.fn.dataTableExt.ofnSearch['venue'] = function ( sData ) {
+            var jo = $(sData);
+            var f = $('span', jo).html();
+
+            return f;
+        };
+
+        $("#dataTable").dataTable( {
+            "aoColumns": [
+                null,
+                null,
+                null,
+                { "sSortDataType": "venue" }
+            ],
+            "bPaginate": false
+        } );
+    });
+</script>
+<style type="text/css">
+    .venue { background-color: #ccc; }
+    .venue span { margin-left: 10px; }
+    #dataTable td.hover { background-color: #ff8; }
+    #scratch {
+        position: fixed;
+        top: 0;
+        right: 0;
+        background-color: #cff;
+        width: 20%;
+        height: 800px;
+    }
+    #scratch.hover { background-color: #ff8; }
+    #main {
+        width: 79%;
+    }
+
+</style>
 {% endblock extra-head %}
 
 {% block extra-style %}
     @import "/static/css/demo_table.css";
 {% endblock %}
 
-{% block h1 %} Edit venues for Round {{ round }} {% endblock %}
 
-{% block content %}
+{% block body %}
 
-<p>
-Edit venues
-</p>
-
-<form id="confirmForm" method="POST" action="{% url confirm_draw round.id %}"></form>
+<div id="statusBar">
+    Save Discard Undo Redo Quit
+</div>
 
 <div id="scratch">
 Unused Venues
 </div>
-<table id="dataTable" class="display" cellpadding="0" cellspacing="0">
-    <thead>
-        <tr><th>Bracket</th><th>Affirmative</th><th>Negative</th><th>Venue</th></tr>
-    </thead>
-    <tbody>
-    {% for debate in draw %}
-    <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
-        <td>{{ debate.bracket }}</td>
-        <td>{{ debate.aff_team }}</td>
-        <td>{{ debate.neg_team }}</td>
-        <td>
-            <div id="venue_{{ debate.venue.id }}" class="venue"><span>{{ debate.venue }}</span></div></td>
-    </tr>
-    {% endfor %}
-</table>
 
-{% endblock content %}
+<div id="main">
+    <table id="dataTable" class="display" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr><th>Bracket</th><th>Affirmative</th><th>Negative</th><th>Venue</th></tr>
+        </thead>
+        <tbody>
+        {% for debate in draw %}
+        <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+            <td>{{ debate.bracket }}</td>
+            <td>{{ debate.aff_team }}</td>
+            <td>{{ debate.neg_team }}</td>
+            <td>
+                <div id="venue_{{ debate.venue.id }}" class="venue"><span>{{ debate.venue }}</span></div></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock body %}
 
 
