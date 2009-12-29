@@ -231,6 +231,14 @@ class Round(models.Model):
     def venue_availability(self):
         return self.base_availability(Venue, 'debate_activevenue', 'venue_id',
                                       'debate_venue')
+    def unused_venues(self):
+        return self.venue_availability().extra(
+            select = {'is_used': """EXISTS (SELECT 1 
+                      FROM debate_debate da 
+                      WHERE da.round_id=%d AND
+                      da.venue_id = debate_venue.id)""" % self.id},
+            where = ['is_active AND NOT is_used'])
+
 
     def adjudicator_availability(self):
         return self.base_availability(Adjudicator, 'debate_activeadjudicator', 

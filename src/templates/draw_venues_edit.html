@@ -12,14 +12,25 @@
 
         function venueMoved(venue, oldDebate, newDebate) {
             var oldId = oldDebate.attr("id");
-            if (oldId != undefined) {
-                debates[oldId] = null;
+            if (oldId != undefined && oldId != "scratch") {
+                debates[oldId] = 'none';
             }
             var newId = newDebate.attr("id");
-            if (newId != undefined) {
+            if (newId != undefined && newId != "scratch") {
                 debates[newId] = venue.attr("id");
             }
         }
+
+        function addPlaceholder(toHolder) {
+            toHolder.append('<div class="vo placeholder">&nbsp;</div>');
+        }
+
+        // init empties
+        $("#dataTable div.empty").each( function() {
+            var holder = $(this).parent("venue-holder");
+            $(this).remove();
+            addPlaceholder(holder);
+        } );
             
 
         $(".venue").draggable( {
@@ -44,7 +55,7 @@
                 if (replacing.attr("id") != venue.attr("id")) {
                     $(".vo", this).remove();
                     $(this).append(venue);
-                    oldHolder.append('<div class="vo placeholder">&nbsp;</div>');
+                    addPlaceholder(oldHolder);
                 }
 
                 venueMoved(venue, oldHolder, $(this));
@@ -62,8 +73,9 @@
                 var venue = ui.draggable;
                 var oldHolder = venue.parent("td");
                 $(this).append(venue);
-                oldHolder.append('<div class="vo placeholder">&nbsp;</div>');
+                addPlaceholder(oldHolder);
 
+                venueMoved(venue, oldHolder, $(this));
                 venue.animate({'top': '0', 'left': '0'}, 300);
 
 
@@ -151,11 +163,16 @@
     Edit venues for Round {{ round }} |
     <a href="" id="save">Save</a>
     Discard Undo Redo 
-    <a href="{% url debate_index %}">Quit</a>
+    <a href="{% url draw round.id %}">Quit</a>
 </div>
 
 <div id="scratch">
-Unused Venues
+    Unused Venues
+    {% for venue in round.unused_venues %}
+    <div id="venue_{{ venue.id }}" class="venue">
+        <span>{{ venue }}</span>
+    </div>
+    {% endfor %}
 </div>
 
 <div id="main">
@@ -170,7 +187,8 @@ Unused Venues
             <td>{{ debate.aff_team }}</td>
             <td>{{ debate.neg_team }}</td>
             <td id="debate_{{ debate.id }}" class="venue-holder">
-                <div id="venue_{{ debate.venue.id }}" class="venue"><span>{{ debate.venue }}</span></div></td>
+                <div id="venue_{{ debate.venue.id }}" class="
+                    {% if debate.venue %}venue{% else %}empty{% endif %}"><span>{{ debate.venue }}</span></div></td>
         </tr>
         {% endfor %}
     </table>

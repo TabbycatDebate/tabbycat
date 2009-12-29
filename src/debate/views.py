@@ -207,7 +207,11 @@ def save_venues(request, round_id):
     debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
     venues = Venue.objects.in_bulk([v_id for _, v_id in data])
     for debate_id, venue_id in data:
-        debates[debate_id].venue = venues[venue_id]
+        if venue_id == None:
+            debates[debate_id].venue = None
+        else:
+            debates[debate_id].venue = venues[venue_id]
+
         debates[debate_id].save()
 
     return HttpResponse("ok")
