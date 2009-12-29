@@ -53,7 +53,14 @@
                 var curOff = venue.offset();
 
                 if (replacing.attr("id") != venue.attr("id")) {
-                    $(".vo", this).remove();
+                    if (replacing.attr("id") != undefined) {
+                        //replacing another venue
+                        venueMoved(replacing, $(this), $("#scratch"));
+                        $("#scratch").append(replacing);
+                    } else {
+                        //replacing a placeholder
+                        replacing.remove();
+                    }
                     $(this).append(venue);
                     addPlaceholder(oldHolder);
                 }
