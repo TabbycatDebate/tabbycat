@@ -36,6 +36,23 @@
 
             });
 
+            $("#scratch").droppable( {
+                hoverClass: 'hover',
+                drop: function(event, ui) {
+                    var venue = ui.draggable;
+                    var oldHolder = venue.parent("td");
+                    $(this).append(venue);
+                    oldHolder.append('<div class="vo placeholder">&nbsp;</div>');
+
+                    venue.animate({'top': '0', 'left': '0'}, 300);
+
+
+                }
+
+
+            } );
+            $("#scratch").append('<div class="placeholder"></div>');
+
             /* sorting function for venues */
             $.fn.dataTableExt.afnSortData['venue'] = function ( oSettings, iColumn) {
                 var aData = [];
@@ -69,7 +86,16 @@
     <style type="text/css">
         .venue { background-color: #ccc; }
         .venue span { margin-left: 10px; }
-        td.hover { background-color: #ff8; }
+        #dataTable td.hover { background-color: #ff8; }
+        #scratch {
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #cff;
+            width: 200px;
+            height: 800px;
+        }
+        #scratch.hover { background-color: #ff8; }
 
     </style>
 {% endblock extra-head %}
@@ -88,6 +114,9 @@ Edit venues
 
 <form id="confirmForm" method="POST" action="{% url confirm_draw round.id %}"></form>
 
+<div id="scratch">
+Unused Venues
+</div>
 <table id="dataTable" class="display" cellpadding="0" cellspacing="0">
     <thead>
         <tr><th>Bracket</th><th>Affirmative</th><th>Negative</th><th>Venue</th></tr>
