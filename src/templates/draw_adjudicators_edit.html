@@ -32,6 +32,17 @@
 
         });
 
+        function moveToUnused(adj) {
+            // add data
+            var idxs = unusedTable.fnAddData([adj.html(), "0.0"]);
+            var trNode = unusedTable.fnGetNodes(idxs[0]);
+            var td = $("td:first", trNode);
+            td.addClass("unused");
+            // append node (to preserve events)
+            td.children().remove();
+            td.append(adj);
+            $(adj).removeClass("conflict");
+        }
         function eachConflictingTeam(adj_id, fn) {
             $.each(conflicts[adj_id.split('_')[1]], function (i, n) {
                 $("#team_" + n).each( function() { fn(this); } );
@@ -145,7 +156,9 @@
                 } else {
                     // replacing an existing chair
                     newHomeOff = replacing.offset();
-                    $("#scratch").append(replacing);
+
+                    // move chair to unused table
+                    moveToUnused(replacing);
                 }
 
                 $(this).append(adj);
@@ -170,8 +183,7 @@
             drop: function(event, ui) {
                 var adj = ui.draggable;
                 var oldHolder = adj[0].oldHolder;
-                $(this).append(adj);
-
+                moveToUnused(adj);
                 adj.animate({'top': '0', 'left': '0'}, 300);
                 adj.removeClass("conflict");
                 updateConflicts($(oldHolder).parent("tr"));
@@ -245,6 +257,7 @@
         overflow-x: hidden;
     }
     #scratch.hover { background-color: #ff8; }
+    .hover #unusedTable tbody td { background-color: #ffa; }
     #main {
         width: 74%;
     }
@@ -281,7 +294,11 @@
         <tbody>
     {% for adj in round.unused_adjudicators %}
     <tr>
-        <td class="unused"><div id="adj_{{ adj.id }}" class="adj">{{ adj.name }}</div></td>
+        <td class="unused">
+            <div id="adj_{{ adj.id }}" class="adj">
+                <span>{{ adj.name }}</span>
+            </div>
+        </td>
         <td>{{ adj.test_score }}</td>
     </tr>
     {% endfor %}
@@ -303,7 +320,7 @@
             {% with debate.adjudicators as adj %}
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
                 {% if adj.chair %}
-                <div id="adj_{{ adj.chair.id }}">
+                <div id="adj_{{ adj.chair.id }}" class="adj">
                     <span>{{ adj.chair.name }}</span>
                 </div>
                 {% endif %}
