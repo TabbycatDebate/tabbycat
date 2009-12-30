@@ -387,7 +387,7 @@ class Debate(models.Model):
     @property
     def adjudicators(self):
         adjs = DebateAdjudicator.objects.filter(debate=self)
-        alloc = AdjudicatorAllocation()
+        alloc = AdjudicatorAllocation(self)
         for a in adjs:
             if a.type == a.TYPE_CHAIR:
                 alloc.chair = a.adjudicator
@@ -585,7 +585,8 @@ class DebateAdjudicator(models.Model):
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
 class AdjudicatorAllocation(object):
-    def __init__(self):
+    def __init__(self, debate=None):
+        self.debate = debate
         self.chair = None
         self.panel = []
         self.trainees = []
@@ -596,6 +597,24 @@ class AdjudicatorAllocation(object):
             yield DebateAdjudicator.TYPE_PANEL, a
         for a in self.trainees:
             yield DebateAdjudicator.TYPE_TRAINEE, a
+
+    def delete(self):
+        if self.debate:
+            DebateAdjudicator.objects.filter(debate=self.debate).delete()
+            self.chair = None
+            self.panel = []
+            self.trainees = []
+
+    def save(self):
+        if self.debate:
+            for t, adj in self:
+                if isinstance(adj, Adjudicator):
+                    adj = adj.id
+                DebateAdjudicator(
+                    debate = self.debate,
+                    adjudicator_id = adj,
+                    type = t,
+                ).save()
 
 class TeamScoreSheet(models.Model):
     # TODO: review scoresheet for adjudicator

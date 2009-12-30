@@ -7,6 +7,10 @@
         var conflicts;
         var scores;
 
+        function intId(e) {
+            return parseInt($(e).attr('id').split('_')[1]);
+        }
+
         // load adjudicator conflict data
         $.getJSON("{% url adj_conflicts %}", function(data) {
             conflicts = data;
@@ -40,7 +44,7 @@
 
         function moveToUnused(adj) {
             // add data
-            var id = parseInt($(adj).attr("id").split('_')[1]);
+            var id = intId(adj);
             var idxs = unusedTable.fnAddData([adj.html(), scores[id]]);
             var trNode = unusedTable.fnGetNodes(idxs[0]);
             var td = $("td:first", trNode);
@@ -51,7 +55,7 @@
             $(adj).removeClass("conflict");
         }
         function eachConflictingTeam(adj_id, fn) {
-            $.each(conflicts[adj_id.split('_')[1]], function (i, n) {
+            $.each(conflicts[adj_id], function (i, n) {
                 $("#team_" + n).each( function() { fn(this); } );
             } );
         }
@@ -60,12 +64,12 @@
             var c = 0;
             $(".adj", debate_tr).each( function() {
                 var adj = this;
-                var adj_id = $(this).attr('id').split('_')[1];
+                var adj_id = intId(this);
                 var a = 0;
                 // select aff & neg team
                 $("td:gt(0):lt(2)", debate_tr).each( function() {
                     if ($.inArray(
-                            parseInt($(this).attr('id').split('_')[1]), 
+                            intId(this), 
                             conflicts[adj_id]) != -1) {
                         $(debate_tr).addClass("conflict");
                         $(adj).addClass("conflict");
@@ -126,7 +130,7 @@
             revert: 'invalid',
             start: function (event, ui) {
                 eachConflictingTeam(
-                    $(ui.helper).attr("id"),
+                    intId(ui.helper),
                     function (elem) {
                         $(elem).addClass("conflicts-with-active");
                     }
@@ -135,7 +139,7 @@
             },
             stop: function(event, ui) {
                 eachConflictingTeam(
-                    $(ui.helper).attr("id"),
+                    intId(ui.helper),
                     function (elem) {
                         $(elem).removeClass("conflicts-with-active");
                     }
@@ -223,10 +227,22 @@
         };
 
         $('#save').click( function() {
+            var data = {};
+            $("#dataTable tbody tr").each( function() {
+                var debateId = intId(this);
+                $(".chair-holder .adj", this).each( function() {
+                    data['chair_' + debateId] = intId(this);
+                } );
+                data['panel_' + debateId]  = [];
+                $(".panel-holder .adj", this).each( function() {
+                    data['panel_' + debateId].push(intId(this));
+                } );
+            } );
+
             $.ajax( {
                 type: "POST",
-                url: "{% url save_venues round.id %}",
-                data: debates,
+                url: "{% url save_adjudicators round.id %}",
+                data: data,
                 success: function(data, status) {
                     alert("win");
                 },
@@ -324,7 +340,7 @@
         </thead>
         <tbody>
         {% for debate in draw %}
-        <tr class="active">
+        <tr id="debate_{{ debate.id }}" class="active">
             <td>{{ debate.bracket }}</td>
             <td id="team_{{ debate.aff_team.id }}">{{ debate.aff_team.name }}</td>
             <td id="team_{{ debate.neg_team.id }}">{{ debate.neg_team.name }}</td>

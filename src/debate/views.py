@@ -115,8 +115,6 @@ def create_adj_allocation(request, round_id):
         return HttpResponseBadRequest("Expected POST")
     if round.draw_status != round.STATUS_CONFIRMED:
         return HttpResponseBadRequest("Draw is not confirmed")
-    if round.adjudicator_status != round.STATUS_NONE:
-        return HttpResponseBadRequest("Adj allocation is not NONE")
 
     round.allocate_adjudicators()
 
@@ -229,6 +227,28 @@ def save_adjudicators(request, round_id):
     round = get_object_or_404(Round, id=round_id)
     if request.method != "POST":
         return HttpResponseBadRequest("Expected POST")
+
+    def id(s):
+        return int(s.split('_')[1])
+
+    debate_ids = set(id(a) for a in request.POST);
+    debates = Debate.objects.in_bulk(list(debate_ids));
+    debate_adjudicators = {}
+    for d_id, debate in debates.items():
+        a = debate.adjudicators
+        a.delete()
+        debate_adjudicators[d_id] = a
+
+    for key, vals in request.POST.lists():
+        if key.startswith("chair_"):
+            debate_adjudicators[id(key)].chair = vals[0]
+        if key.startswith("panel_"):
+            for val in vals:
+                debate_adjudicators[id(key)].panel.append(val)
+
+    for d_id, alloc in debate_adjudicators.items():
+        alloc.save()
+
     return HttpResponse("ok")
 
 def adj_conflicts(request):
