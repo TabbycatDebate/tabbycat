@@ -21,15 +21,10 @@
             }
         }
 
-        function addPlaceholder(toHolder) {
-            toHolder.append('<div class="vo placeholder">&nbsp;</div>');
-        }
-
         // init empties
         $("#dataTable div.empty").each( function() {
             var holder = $(this).parent("venue-holder");
             $(this).remove();
-            addPlaceholder(holder);
         } );
             
 
@@ -42,29 +37,31 @@
             },
             revert: 'invalid'
         });
-        $(".adj").addClass("ao");
         $("#dataTable tbody  .adj-holder").droppable( {
             hoverClass: 'hover',
             drop: function(event, ui) {
                 var venue = ui.draggable;
                 var oldHolder = venue.parent("td");
-                var replacing = $(".vo", this);
-                var newHomeOff = replacing.offset();
+                var replacing = $(".adj", this);
+                var newHomeOff;
                 var curOff = venue.offset();
 
-                if (replacing.attr("id") != venue.attr("id")) {
-                    if (replacing.attr("id") != undefined) {
-                        //replacing another venue
-                        venueMoved(replacing, $(this), $("#scratch"));
-                        $("#scratch").append(replacing);
-                    } else {
-                        //replacing a placeholder
-                        replacing.remove();
-                    }
-                    $(this).append(venue);
-                    addPlaceholder(oldHolder);
+                // if replacing an empty chair, or adding to a panel
+                if (replacing.length == 0 || $(this).hasClass("panel-holder")) {
+                    replacing = $(document.createElement("div"));
+                    replacing.addClass("adj");
+                    replacing[0].style.visibility = "hidden";
+                    $(this).append(replacing);
+                    newHomeOff = replacing.offset();
+                    replacing.remove();
+                } else {
+                    // replacing an existing chair
+                    newHomeOff = replacing.offset();
+                    venueMoved(replacing, $(this), $("#scratch"));
+                    $("#scratch").append(replacing);
                 }
 
+                $(this).append(venue);
                 venueMoved(venue, oldHolder, $(this));
 
                 venue.css('top', curOff.top - newHomeOff.top);
@@ -80,7 +77,6 @@
                 var venue = ui.draggable;
                 var oldHolder = venue.parent("td");
                 $(this).append(venue);
-                addPlaceholder(oldHolder);
 
                 venueMoved(venue, oldHolder, $(this));
                 venue.animate({'top': '0', 'left': '0'}, 300);
@@ -90,12 +86,11 @@
 
 
         } );
-        $("#scratch").append('<div class="placeholder"></div>');
 
         /* sorting function for venues */
         $.fn.dataTableExt.afnSortData['venue'] = function ( oSettings, iColumn) {
             var aData = [];
-            $('.vo', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
+            $('.adj-holder', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
                 var name = $('span', this).html();
                 if (name == null) name = '';
                 aData.push(name);
@@ -158,6 +153,7 @@
         width: 79%;
     }
     .adj { display: inline; }
+    #scratch .adj { display: block; }
 
 </style>
 {% endblock extra-head %}
@@ -197,13 +193,13 @@
             <td>{{ debate.aff_team.name }}</td>
             <td>{{ debate.neg_team.name }}</td>
             {% with debate.adjudicators as adj %}
-            <td id="chair_{{ debate.id }}" class="adj-holder">
+            <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
                 <div id="adj_{{ adj.chair.id }}" class="
                     {% if adj.chair %}adj{% else %}empty{% endif %}">
                     <span>{{ adj.chair.name }}</span>
                 </div>
             </td>
-            <td id="panel_{{ debate.id }}" class="adj-holder">
+            <td id="panel_{{ debate.id }}" class="adj-holder panel-holder">
                 {% for p in adj.panel %}
                 <div id="adj_{{ p.id }}" class="adj">
                     <span>{{ p.name }}</span>
