@@ -164,8 +164,12 @@
                     // replacing an existing chair
                     newHomeOff = replacing.offset();
 
-                    // move chair to unused table
-                    moveToUnused(replacing);
+                    // perform a swap if adj came from a debate
+                    if (oldHolder.hasClass("adj-holder")) {
+                        oldHolder.append(replacing);
+                    } else {
+                        moveToUnused(replacing);
+                    }
                 }
 
                 $(this).append(adj);
