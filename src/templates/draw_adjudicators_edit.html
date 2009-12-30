@@ -37,6 +37,7 @@
             $(".adj", debate_tr).each( function() {
                 var adj = this;
                 var adj_id = $(this).attr('id').split('_')[1];
+                var a = 0;
                 // select aff & neg team
                 $("td:gt(0):lt(2)", debate_tr).each( function() {
                     if ($.inArray(
@@ -45,8 +46,12 @@
                         $(debate_tr).addClass("conflict");
                         $(adj).addClass("conflict");
                         c++;
+                        a++;
                     } 
                 } );
+                if (a == 0) {
+                    $(adj).removeClass("conflict");
+                }
 
 
             } );
@@ -54,6 +59,21 @@
             if (c == 0) {
                 $(debate_tr).removeClass("conflict");
             }
+
+            // check for incomplete panels
+            if ($(".panel-holder .adj", debate_tr).length % 2 != 0) {
+                $(".panel-holder", debate_tr).addClass("incomplete");
+            } else {
+                $(".panel-holder", debate_tr).removeClass("incomplete");
+            }
+
+            // check for missing chairs
+            if ($(".chair-holder .adj", debate_tr).length != 1) {
+                $(".chair-holder", debate_tr).addClass("incomplete");
+            } else {
+                $(".chair-holder", debate_tr).removeClass("incomplete");
+            }
+
         }
 
         $(".adj").draggable( {
@@ -199,6 +219,7 @@
     .adj { display: inline; }
     #scratch .adj { display: block; }
 
+    .incomplete { border: 1px solid #f84; }
     #dataTable .conflicts-with-active { color: red; font-weight: bold; }
 
 </style>
