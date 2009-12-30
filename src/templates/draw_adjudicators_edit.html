@@ -5,6 +5,7 @@
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
         var conflicts;
+        var scores;
 
         // load adjudicator conflict data
         $.getJSON("{% url adj_conflicts %}", function(data) {
@@ -26,6 +27,11 @@
 
         } );
 
+        // load adjudicator scores
+        $.getJSON("{% url adj_scores %}", function(data) {
+            scores = data;
+        } );
+
         var unusedTable = $("#unusedTable").dataTable({
             bPaginate: false,
             bFilter: false
@@ -34,7 +40,8 @@
 
         function moveToUnused(adj) {
             // add data
-            var idxs = unusedTable.fnAddData([adj.html(), "0.0"]);
+            var id = parseInt($(adj).attr("id").split('_')[1]);
+            var idxs = unusedTable.fnAddData([adj.html(), scores[id]]);
             var trNode = unusedTable.fnGetNodes(idxs[0]);
             var td = $("td:first", trNode);
             td.addClass("unused");
