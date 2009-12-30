@@ -9,12 +9,51 @@
         // load adjudicator conflict data
         $.getJSON("{% url adj_conflicts %}", function(data) {
             conflicts = data;
+
+            // insert blank entries for adjudicators who aren't there
+            // (no conflicts)
+            $("#dataTable .adj").each( function() {
+                var id = $(this).attr('id').split('_')[1];
+                if (conflicts[id] == undefined) {
+                    conflicts[id] = [];
+                }
+            } );
+
+            // update all
+            $("#dataTable tbody tr").each( function() {
+                updateConflicts(this);
+            });
+
         } );
 
         function eachConflictingTeam(adj_id, fn) {
             $.each(conflicts[adj_id.split('_')[1]], function (i, n) {
                 $("#team_" + n).each( function() { fn(this); } );
             } );
+        }
+
+        function updateConflicts(debate_tr) {
+            var c = 0;
+            $(".adj", debate_tr).each( function() {
+                var adj = this;
+                var adj_id = $(this).attr('id').split('_')[1];
+                // select aff & neg team
+                $("td:gt(0):lt(2)", debate_tr).each( function() {
+                    if ($.inArray(
+                            parseInt($(this).attr('id').split('_')[1]), 
+                            conflicts[adj_id]) != -1) {
+                        $(debate_tr).addClass("conflict");
+                        $(adj).addClass("conflict");
+                        c++;
+                    } 
+                } );
+
+
+            } );
+
+            if (c == 0) {
+                $(debate_tr).removeClass("conflict");
+            }
         }
 
         $(".adj").draggable( {
@@ -70,6 +109,8 @@
                 adj.css('top', curOff.top - newHomeOff.top);
                 adj.css('left', curOff.left - newHomeOff.left);
                 adj.animate({'top': '0', 'left': '0'}, 300);
+                updateConflicts(oldHolder.parent("tr"));
+                updateConflicts($(this).parent("tr"));
             }
 
         });
@@ -82,6 +123,8 @@
                 $(this).append(adj);
 
                 adj.animate({'top': '0', 'left': '0'}, 300);
+                adj.removeClass("conflict");
+                updateConflicts($(oldHolder).parent("tr"));
             }
 
 
@@ -138,6 +181,7 @@
 </script>
 <style type="text/css">
     .adj { background-color: #ccc; white-space: nowrap; margin-right: 1em; }
+    .adj.conflict { color: red; font-weight: bold; }
     .adj span { margin-left: 10px; }
     #dataTable td.hover { background-color: #ff8; }
     #scratch {
@@ -190,7 +234,7 @@
         </thead>
         <tbody>
         {% for debate in draw %}
-        <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+        <tr class="active">
             <td>{{ debate.bracket }}</td>
             <td id="team_{{ debate.aff_team.id }}">{{ debate.aff_team.name }}</td>
             <td id="team_{{ debate.neg_team.id }}">{{ debate.neg_team.name }}</td>
