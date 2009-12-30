@@ -12,7 +12,7 @@
 
             // insert blank entries for adjudicators who aren't there
             // (no conflicts)
-            $("#dataTable .adj").each( function() {
+            $(".adj").each( function() {
                 var id = $(this).attr('id').split('_')[1];
                 if (conflicts[id] == undefined) {
                     conflicts[id] = [];
@@ -77,11 +77,27 @@
         }
 
         $(".adj").draggable( {
+            appendTo: 'body',
             handle: 'div',
             cursor: 'move',
+            helper: function() {
+                var offset = $(this).offset();
+                $(this).css('position', 'relative');
+                // set a property on element to remember previous holder
+                this.oldHolder = $(this).parent("td");
+                $(this).appendTo('body');
+                $(this).css('top', 0);
+                $(this).css('left', 0);
+                var curOff = $(this).offset();
+                $(this).css('top', offset.top - curOff.top);
+                $(this).css('left', offset.left - curOff.left);
+
+
+                return this;
+            },
             stack: {
                 group: '.adj',
-                min: 1
+                min: 1000
             },
             revert: 'invalid',
             start: function (event, ui) {
@@ -91,6 +107,7 @@
                         $(elem).addClass("conflicts-with-active");
                     }
                 );
+                var foo=0;
             },
             stop: function(event, ui) {
                 eachConflictingTeam(
@@ -105,7 +122,7 @@
             hoverClass: 'hover',
             drop: function(event, ui) {
                 var adj = ui.draggable;
-                var oldHolder = adj.parent("td");
+                var oldHolder = adj[0].oldHolder;
                 var replacing = $(".adj", this);
                 var newHomeOff;
                 var curOff = adj.offset();
@@ -139,7 +156,7 @@
             hoverClass: 'hover',
             drop: function(event, ui) {
                 var adj = ui.draggable;
-                var oldHolder = adj.parent("td");
+                var oldHolder = adj[0].oldHolder;
                 $(this).append(adj);
 
                 adj.animate({'top': '0', 'left': '0'}, 300);
@@ -210,7 +227,9 @@
         right: 0;
         background-color: #cff;
         width: 20%;
-        height: 800px;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     #scratch.hover { background-color: #ff8; }
     #main {
@@ -242,7 +261,7 @@
 <div id="scratch">
     Unused Adjudicators
     {% for adj in round.unused_adjudicators %}
-    <div id="venue_{{ adj.id }}" class="adj">
+    <div id="adj_{{ adj.id }}" class="adj">
         <span>{{ adj.name }}</span>
     </div>
     {% endfor %}
