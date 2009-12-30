@@ -46,5 +46,6 @@ urlpatterns = patterns('debate.views',
         name='save_result'),
 
     url(r'^adj_conflicts/$', 'adj_conflicts', name='adj_conflicts'),
+    url(r'^adj_scores/$', 'adj_scores', name='adj_scores'),
     )
 

@@ -5,6 +5,7 @@
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
         var conflicts;
+        var scores;
 
         // load adjudicator conflict data
         $.getJSON("{% url adj_conflicts %}", function(data) {
@@ -12,7 +13,7 @@
 
             // insert blank entries for adjudicators who aren't there
             // (no conflicts)
-            $("#dataTable .adj").each( function() {
+            $(".adj").each( function() {
                 var id = $(this).attr('id').split('_')[1];
                 if (conflicts[id] == undefined) {
                     conflicts[id] = [];
@@ -26,6 +27,29 @@
 
         } );
 
+        // load adjudicator scores
+        $.getJSON("{% url adj_scores %}", function(data) {
+            scores = data;
+        } );
+
+        var unusedTable = $("#unusedTable").dataTable({
+            bPaginate: false,
+            bFilter: false
+
+        });
+
+        function moveToUnused(adj) {
+            // add data
+            var id = parseInt($(adj).attr("id").split('_')[1]);
+            var idxs = unusedTable.fnAddData([adj.html(), scores[id]]);
+            var trNode = unusedTable.fnGetNodes(idxs[0]);
+            var td = $("td:first", trNode);
+            td.addClass("unused");
+            // append node (to preserve events)
+            td.children().remove();
+            td.append(adj);
+            $(adj).removeClass("conflict");
+        }
         function eachConflictingTeam(adj_id, fn) {
             $.each(conflicts[adj_id.split('_')[1]], function (i, n) {
                 $("#team_" + n).each( function() { fn(this); } );
@@ -79,9 +103,25 @@
         $(".adj").draggable( {
             handle: 'div',
             cursor: 'move',
+            helper: function() {
+                var offset = $(this).offset();
+                $(this).css('position', 'relative');
+                // set a property on element to remember previous holder
+                this.oldHolder = $(this).parent("td");
+                var adj = $(this).clone();
+                $(adj).appendTo('body');
+                $(adj).css('top', 0);
+                $(adj).css('left', 0);
+                var curOff = $(adj).offset();
+                $(adj).css('top', offset.top - curOff.top);
+                $(adj).css('left', offset.left - curOff.left);
+
+
+                return adj;
+            },
             stack: {
                 group: '.adj',
-                min: 1
+                min: 1000
             },
             revert: 'invalid',
             start: function (event, ui) {
@@ -91,6 +131,7 @@
                         $(elem).addClass("conflicts-with-active");
                     }
                 );
+                var foo=0;
             },
             stop: function(event, ui) {
                 eachConflictingTeam(
@@ -99,13 +140,14 @@
                         $(elem).removeClass("conflicts-with-active");
                     }
                 );
+                $(ui.helper).remove();
             }
         });
         $("#dataTable tbody  .adj-holder").droppable( {
             hoverClass: 'hover',
             drop: function(event, ui) {
                 var adj = ui.draggable;
-                var oldHolder = adj.parent("td");
+                var oldHolder = adj[0].oldHolder;
                 var replacing = $(".adj", this);
                 var newHomeOff;
                 var curOff = adj.offset();
@@ -121,7 +163,13 @@
                 } else {
                     // replacing an existing chair
                     newHomeOff = replacing.offset();
-                    $("#scratch").append(replacing);
+
+                    // perform a swap if adj came from a debate
+                    if (oldHolder.hasClass("adj-holder")) {
+                        oldHolder.append(replacing);
+                    } else {
+                        moveToUnused(replacing);
+                    }
                 }
 
                 $(this).append(adj);
@@ -131,6 +179,12 @@
                 adj.animate({'top': '0', 'left': '0'}, 300);
                 updateConflicts(oldHolder.parent("tr"));
                 updateConflicts($(this).parent("tr"));
+
+                // if from scratch, delete row
+                if ($(oldHolder).hasClass("unused")) {
+                    var idx = unusedTable.fnGetPosition(oldHolder[0]);
+                    unusedTable.fnDeleteRow(idx[0]);
+                }
             }
 
         });
@@ -139,9 +193,8 @@
             hoverClass: 'hover',
             drop: function(event, ui) {
                 var adj = ui.draggable;
-                var oldHolder = adj.parent("td");
-                $(this).append(adj);
-
+                var oldHolder = adj[0].oldHolder;
+                moveToUnused(adj);
                 adj.animate({'top': '0', 'left': '0'}, 300);
                 adj.removeClass("conflict");
                 updateConflicts($(oldHolder).parent("tr"));
@@ -209,16 +262,19 @@
         top: 0;
         right: 0;
         background-color: #cff;
-        width: 20%;
-        height: 800px;
+        width: 25%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     #scratch.hover { background-color: #ff8; }
     .hover #unusedTable tbody td { background-color: #ffa; }
     #main {
-        width: 79%;
+        width: 74%;
     }
     .adj { display: inline; }
-    #scratch .adj { display: block; }
+    #scratch .adj { white-space: none; }
+    
 
     .incomplete { border: 1px solid #f84; }
     #dataTable .conflicts-with-active { color: red; font-weight: bold; }
@@ -242,11 +298,23 @@
 
 <div id="scratch">
     Unused Adjudicators
+    <table id="unusedTable" class="display" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr><th>Name</th><th>Score</th></tr>
+        </thead>
+        <tbody>
     {% for adj in round.unused_adjudicators %}
-    <div id="venue_{{ adj.id }}" class="adj">
-        <span>{{ adj.name }}</span>
-    </div>
+    <tr>
+        <td class="unused">
+            <div id="adj_{{ adj.id }}" class="adj">
+                <span>{{ adj.name }}</span>
+            </div>
+        </td>
+        <td>{{ adj.test_score }}</td>
+    </tr>
     {% endfor %}
+    </tbody>
+    </table>
 </div>
 
 <div id="main">

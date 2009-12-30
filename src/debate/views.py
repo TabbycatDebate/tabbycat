@@ -245,3 +245,15 @@ def adj_conflicts(request):
     return HttpResponse(json.dumps(data), mimetype="text/json")
 
 
+def adj_scores(request):
+    import json
+    from debate.models import Adjudicator
+
+    data = {}
+
+    for adj in Adjudicator.objects.all():
+        data[adj.id] = adj.test_score
+
+    return HttpResponse(json.dumps(data), mimetype="text/json")
+
+
