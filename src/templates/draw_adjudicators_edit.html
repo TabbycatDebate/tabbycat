@@ -213,6 +213,7 @@
         height: 800px;
     }
     #scratch.hover { background-color: #ff8; }
+    .hover #unusedTable tbody td { background-color: #ffa; }
     #main {
         width: 79%;
     }
@@ -262,7 +263,7 @@
             {% with debate.adjudicators as adj %}
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
                 {% if adj.chair %}
-                <div id="adj_{{ adj.chair.id }}">
+                <div id="adj_{{ adj.chair.id }}" class="adj">
                     <span>{{ adj.chair.name }}</span>
                 </div>
                 {% endif %}
