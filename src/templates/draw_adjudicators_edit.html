@@ -4,6 +4,18 @@
 <script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
+        var conflicts;
+
+        // load adjudicator conflict data
+        $.getJSON("{% url adj_conflicts %}", function(data) {
+            conflicts = data;
+        } );
+
+        function eachConflictingTeam(adj_id, fn) {
+            $.each(conflicts[adj_id.split('_')[1]], function (i, n) {
+                $("#team_" + n).each( function() { fn(this); } );
+            } );
+        }
 
         $(".adj").draggable( {
             handle: 'div',
@@ -12,7 +24,23 @@
                 group: '.adj',
                 min: 1
             },
-            revert: 'invalid'
+            revert: 'invalid',
+            start: function (event, ui) {
+                eachConflictingTeam(
+                    $(ui.helper).attr("id"),
+                    function (elem) {
+                        $(elem).addClass("conflicts-with-active");
+                    }
+                );
+            },
+            stop: function(event, ui) {
+                eachConflictingTeam(
+                    $(ui.helper).attr("id"),
+                    function (elem) {
+                        $(elem).removeClass("conflicts-with-active");
+                    }
+                );
+            }
         });
         $("#dataTable tbody  .adj-holder").droppable( {
             hoverClass: 'hover',
@@ -127,6 +155,8 @@
     .adj { display: inline; }
     #scratch .adj { display: block; }
 
+    #dataTable .conflicts-with-active { color: red; font-weight: bold; }
+
 </style>
 {% endblock extra-head %}
 
@@ -162,8 +192,8 @@
         {% for debate in draw %}
         <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
             <td>{{ debate.bracket }}</td>
-            <td>{{ debate.aff_team.name }}</td>
-            <td>{{ debate.neg_team.name }}</td>
+            <td id="team_{{ debate.aff_team.id }}">{{ debate.aff_team.name }}</td>
+            <td id="team_{{ debate.neg_team.id }}">{{ debate.neg_team.name }}</td>
             {% with debate.adjudicators as adj %}
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
                 <div id="adj_{{ adj.chair.id }}" class="

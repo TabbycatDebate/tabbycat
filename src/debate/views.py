@@ -231,4 +231,17 @@ def save_adjudicators(request, round_id):
         return HttpResponseBadRequest("Expected POST")
     return HttpResponse("ok")
 
+def adj_conflicts(request):
+    import json
+    from debate.models import AdjudicatorConflict
+
+    data = {}
+
+    for ac in AdjudicatorConflict.objects.all():
+        if ac.adjudicator_id not in data:
+            data[ac.adjudicator_id] = list()
+        data[ac.adjudicator_id].append(ac.team_id)
+
+    return HttpResponse(json.dumps(data), mimetype="text/json")
+
 
