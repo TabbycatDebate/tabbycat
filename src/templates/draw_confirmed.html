@@ -30,6 +30,7 @@
 <p>
 Here's the confirmed draw. <a href="" id="allocateAdj">Allocate adjudicators</a>.
 <a href="{% url draw_venues_edit round.id %}">Edit venues</a>.
+<a href="{% url draw_adjudicators_edit round.id %}">Edit adjudicators</a>.
 </p>
 
 <form id="allocateAdjForm" method="POST" action="{% url create_adj_allocation round.id %}">

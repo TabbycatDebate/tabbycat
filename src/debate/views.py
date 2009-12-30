@@ -216,3 +216,19 @@ def save_venues(request, round_id):
 
     return HttpResponse("ok")
 
+def draw_adjudicators_edit(request, round_id):
+    round = get_object_or_404(Round, id=round_id)
+    rc = RequestContext(request)
+
+    rc['round'] = round
+    rc['draw'] = round.get_draw()
+
+    return render_to_response("draw_adjudicators_edit.html", context_instance=rc)
+
+def save_adjudicators(request, round_id):
+    round = get_object_or_404(Round, id=round_id)
+    if request.method != "POST":
+        return HttpResponseBadRequest("Expected POST")
+    return HttpResponse("ok")
+
+

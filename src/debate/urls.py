@@ -28,6 +28,11 @@ urlpatterns = patterns('debate.views',
     url(r'^round/(?P<round_id>\d+)/draw/venues/save/$', 'save_venues',
         name='save_venues'),
 
+    url(r'^round/(?P<round_id>\d+)/draw/adjudicators/$', 'draw_adjudicators_edit',
+        name='draw_adjudicators_edit'),
+    url(r'^round/(?P<round_id>\d+)/draw/adjudicators/save/$', 'save_adjudicators',
+        name='save_adjudicators'),
+
     url(r'^round/(?P<round_id>\d+)/adj_allocation/create/$',
         'create_adj_allocation',
         name='create_adj_allocation'),
