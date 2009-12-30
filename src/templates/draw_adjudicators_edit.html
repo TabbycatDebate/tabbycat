@@ -4,35 +4,12 @@
 <script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
-        var debates = {};
-        // populate data
-        $("#dataTable .venue-holder").each( function() {
-            debates[$(this).attr("id")] = $("div.venue", this).attr("id");
-        } );
-
-        function venueMoved(venue, oldDebate, newDebate) {
-            var oldId = oldDebate.attr("id");
-            if (oldId != undefined && oldId != "scratch") {
-                debates[oldId] = 'none';
-            }
-            var newId = newDebate.attr("id");
-            if (newId != undefined && newId != "scratch") {
-                debates[newId] = venue.attr("id");
-            }
-        }
-
-        // init empties
-        $("#dataTable div.empty").each( function() {
-            var holder = $(this).parent("venue-holder");
-            $(this).remove();
-        } );
-            
 
         $(".adj").draggable( {
             handle: 'div',
             cursor: 'move',
             stack: {
-                group: '.venue',
+                group: '.adj',
                 min: 1
             },
             revert: 'invalid'
@@ -40,11 +17,11 @@
         $("#dataTable tbody  .adj-holder").droppable( {
             hoverClass: 'hover',
             drop: function(event, ui) {
-                var venue = ui.draggable;
-                var oldHolder = venue.parent("td");
+                var adj = ui.draggable;
+                var oldHolder = adj.parent("td");
                 var replacing = $(".adj", this);
                 var newHomeOff;
-                var curOff = venue.offset();
+                var curOff = adj.offset();
 
                 // if replacing an empty chair, or adding to a panel
                 if (replacing.length == 0 || $(this).hasClass("panel-holder")) {
@@ -57,16 +34,14 @@
                 } else {
                     // replacing an existing chair
                     newHomeOff = replacing.offset();
-                    venueMoved(replacing, $(this), $("#scratch"));
                     $("#scratch").append(replacing);
                 }
 
-                $(this).append(venue);
-                venueMoved(venue, oldHolder, $(this));
+                $(this).append(adj);
 
-                venue.css('top', curOff.top - newHomeOff.top);
-                venue.css('left', curOff.left - newHomeOff.left);
-                venue.animate({'top': '0', 'left': '0'}, 300);
+                adj.css('top', curOff.top - newHomeOff.top);
+                adj.css('left', curOff.left - newHomeOff.left);
+                adj.animate({'top': '0', 'left': '0'}, 300);
             }
 
         });
@@ -74,21 +49,18 @@
         $("#scratch").droppable( {
             hoverClass: 'hover',
             drop: function(event, ui) {
-                var venue = ui.draggable;
-                var oldHolder = venue.parent("td");
-                $(this).append(venue);
+                var adj = ui.draggable;
+                var oldHolder = adj.parent("td");
+                $(this).append(adj);
 
-                venueMoved(venue, oldHolder, $(this));
-                venue.animate({'top': '0', 'left': '0'}, 300);
-
-
+                adj.animate({'top': '0', 'left': '0'}, 300);
             }
 
 
         } );
 
-        /* sorting function for venues */
-        $.fn.dataTableExt.afnSortData['venue'] = function ( oSettings, iColumn) {
+        /* sorting function for adjs */
+        $.fn.dataTableExt.afnSortData['adj'] = function ( oSettings, iColumn) {
             var aData = [];
             $('.adj-holder', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
                 var name = $('span', this).html();
@@ -98,8 +70,8 @@
             return aData;
         };
 
-        /* filter function for venues */
-        $.fn.dataTableExt.ofnSearch['venue'] = function ( sData ) {
+        /* filter function for adjs */
+        $.fn.dataTableExt.ofnSearch['adj'] = function ( sData ) {
             var jo = $(sData);
             var f = $('span', jo).html();
 
@@ -166,14 +138,14 @@
 {% block body %}
 
 <div id="statusBar">
-    Edit venues for Round {{ round }} |
+    Edit adjudicators for Round {{ round }} |
     <a href="" id="save">Save</a>
     Discard Undo Redo 
     <a href="{% url draw round.id %}">Quit</a>
 </div>
 
 <div id="scratch">
-    Unused Venues
+    Unused Adjudicators
     {% for venue in round.unused_venues %}
     <div id="venue_{{ venue.id }}" class="venue">
         <span>{{ venue }}</span>
