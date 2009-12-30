@@ -241,9 +241,9 @@
 
 <div id="scratch">
     Unused Adjudicators
-    {% for venue in round.unused_venues %}
-    <div id="venue_{{ venue.id }}" class="venue">
-        <span>{{ venue }}</span>
+    {% for adj in round.unused_adjudicators %}
+    <div id="venue_{{ adj.id }}" class="adj">
+        <span>{{ adj.name }}</span>
     </div>
     {% endfor %}
 </div>
@@ -261,18 +261,17 @@
             <td id="team_{{ debate.neg_team.id }}">{{ debate.neg_team.name }}</td>
             {% with debate.adjudicators as adj %}
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
-                <div id="adj_{{ adj.chair.id }}" class="
-                    {% if adj.chair %}adj{% else %}empty{% endif %}">
+                {% if adj.chair %}
+                <div id="adj_{{ adj.chair.id }}">
                     <span>{{ adj.chair.name }}</span>
                 </div>
+                {% endif %}
             </td>
             <td id="panel_{{ debate.id }}" class="adj-holder panel-holder">
                 {% for p in adj.panel %}
                 <div id="adj_{{ p.id }}" class="adj">
                     <span>{{ p.name }}</span>
                 </div>
-                {% empty %}
-                <div class="empty">&nbsp;</div>
                 {% endfor %}
             </td>
 

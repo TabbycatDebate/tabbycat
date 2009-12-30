@@ -245,6 +245,15 @@ class Round(models.Model):
                                       'adjudicator_id',
                                       'debate_adjudicator')
 
+    def unused_adjudicators(self):
+        return self.adjudicator_availability().extra(
+            select = {'is_used': """EXISTS (SELECT 1
+                      FROM debate_debateadjudicator da
+                      LEFT JOIN debate_debate d ON da.debate_id = d.id
+                      WHERE d.round_id = %d AND
+                      da.adjudicator_id = debate_adjudicator.id)""" % self.id },
+            where = ['is_active AND NOT is_used'])
+
     def team_availability(self):
         return self.base_availability(Team, 'debate_activeteam', 'team_id',
                                       'debate_team')
