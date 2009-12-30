@@ -21,10 +21,6 @@
             }
         }
 
-        function addPlaceholder(toHolder) {
-            toHolder.append('<div class="vo placeholder">&nbsp;</div>');
-        }
-
         // init empties
         $("#dataTable div.empty").each( function() {
             var holder = $(this).parent("venue-holder");
@@ -42,29 +38,30 @@
             },
             revert: 'invalid'
         });
-        $(".venue").addClass("vo");
         $("#dataTable tbody tr td:last-child").droppable( {
             hoverClass: 'hover',
             drop: function(event, ui) {
                 var venue = ui.draggable;
                 var oldHolder = venue.parent("td");
-                var replacing = $(".vo", this);
-                var newHomeOff = replacing.offset();
+                var replacing = $(".venue", this);
+                var newHomeOff;
                 var curOff = venue.offset();
-
-                if (replacing.attr("id") != venue.attr("id")) {
-                    if (replacing.attr("id") != undefined) {
-                        //replacing another venue
-                        venueMoved(replacing, $(this), $("#scratch"));
-                        $("#scratch").append(replacing);
-                    } else {
-                        //replacing a placeholder
-                        replacing.remove();
-                    }
-                    $(this).append(venue);
-                    addPlaceholder(oldHolder);
+                if (replacing.length == 0) {
+                    // no venue, construct a hidden node
+                    // to do position calculation
+                    replacing = $(document.createElement("div"));
+                    replacing.addClass("venue");
+                    replacing[0].style.visibility = "hidden";
+                    $(this).append(replacing);
+                    newHomeOff = replacing.offset();
+                    replacing.remove();
+                } else {
+                    newHomeOff = replacing.offset();
+                    venueMoved(replacing, $(this), $("#scratch"));
+                    $("#scratch").append(replacing);
                 }
-
+                
+                $(this).append(venue);
                 venueMoved(venue, oldHolder, $(this));
 
                 venue.css('top', curOff.top - newHomeOff.top);
@@ -80,7 +77,6 @@
                 var venue = ui.draggable;
                 var oldHolder = venue.parent("td");
                 $(this).append(venue);
-                addPlaceholder(oldHolder);
 
                 venueMoved(venue, oldHolder, $(this));
                 venue.animate({'top': '0', 'left': '0'}, 300);
@@ -90,12 +86,11 @@
 
 
         } );
-        $("#scratch").append('<div class="placeholder"></div>');
 
         /* sorting function for venues */
         $.fn.dataTableExt.afnSortData['venue'] = function ( oSettings, iColumn) {
             var aData = [];
-            $('.vo', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
+            $('.venue-holder', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
                 var name = $('span', this).html();
                 if (name == null) name = '';
                 aData.push(name);
