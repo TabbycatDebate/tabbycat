@@ -77,7 +77,6 @@
         }
 
         $(".adj").draggable( {
-            appendTo: 'body',
             handle: 'div',
             cursor: 'move',
             helper: function() {
@@ -85,15 +84,16 @@
                 $(this).css('position', 'relative');
                 // set a property on element to remember previous holder
                 this.oldHolder = $(this).parent("td");
-                $(this).appendTo('body');
-                $(this).css('top', 0);
-                $(this).css('left', 0);
-                var curOff = $(this).offset();
-                $(this).css('top', offset.top - curOff.top);
-                $(this).css('left', offset.left - curOff.left);
+                var adj = $(this).clone();
+                $(adj).appendTo('body');
+                $(adj).css('top', 0);
+                $(adj).css('left', 0);
+                var curOff = $(adj).offset();
+                $(adj).css('top', offset.top - curOff.top);
+                $(adj).css('left', offset.left - curOff.left);
 
 
-                return this;
+                return adj;
             },
             stack: {
                 group: '.adj',
@@ -116,6 +116,7 @@
                         $(elem).removeClass("conflicts-with-active");
                     }
                 );
+                $(ui.helper).remove();
             }
         });
         $("#dataTable tbody  .adj-holder").droppable( {
