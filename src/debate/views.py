@@ -19,6 +19,14 @@ def round_view(view_fn):
         return view_fn(request, rc, round)
     return foo
 
+def expect_post(view_fn):
+    @wraps(view_fn)
+    def foo(request, *args, **kwargs):
+        if request.method != "POST":
+            return HttpResponseBadRequest("Expected POST")
+        return view_fn(request, *args, **kwargs)
+    return foo
+
 def index(request):
     return render_to_response('index.html', context_instance=RequestContext(request))
 
@@ -50,12 +58,9 @@ def base_availability(request, round_id, model, context_name):
     rc['round'] = round
     return render_to_response('%s_availability.html' % model,
                               context_instance=rc)
-
+@expect_post
 def update_base_availability(request, round_id, update_method):
     round = get_object_or_404(Round, id=round_id)
-
-    if request.method != "POST":
-        return HttpResponseBadRequest("expected POST")
 
     available_ids = [int(a.replace("check_", "")) for a in request.POST.keys()
                      if a.startswith("check_")]
@@ -94,21 +99,18 @@ def draw_confirmed(request, rc, round):
 
     return render_to_response("draw_confirmed.html", context_instance=rc)
 
+@expect_post
 @round_view
 def create_draw(request, rc, round):
-
-    if request.method != "POST":
-        return HttpResponseBadRequest("Expected POST")
 
     round.draw()
 
     return HttpResponseRedirect(reverse('draw', args=[round.id])) 
 
+@expect_post
 @round_view
 def confirm_draw(request, rc, round):
 
-    if request.method != "POST":
-        return HttpResponseBadRequest("Expected POST")
     if round.draw_status != round.STATUS_DRAFT:
         return HttpResponseBadRequest("Draw status is not DRAFT")
 
@@ -117,10 +119,9 @@ def confirm_draw(request, rc, round):
 
     return HttpResponseRedirect(reverse('draw', args=[round.id])) 
 
+@expect_post
 @round_view
 def create_adj_allocation(request, rc, round):
-    if request.method != "POST":
-        return HttpResponseBadRequest("Expected POST")
     if round.draw_status != round.STATUS_CONFIRMED:
         return HttpResponseBadRequest("Draw is not confirmed")
 
@@ -145,9 +146,8 @@ def enter_result(request, debate_id):
 
     return render_to_response('enter_results.html', context_instance=rc)
 
+@expect_post
 def save_result(request, debate_id):
-    if request.method != "POST":
-        return HttpResponseBadRequest("Expected POST")
 
     debate = get_object_or_404(Debate, id=debate_id)
 
@@ -187,10 +187,9 @@ def draw_venues_edit(request, rc, round):
 
     return render_to_response("draw_venues_edit.html", context_instance=rc)
 
+@expect_post
 @round_view
 def save_venues(request, rc, round):
-    if request.method != "POST":
-        return HttpResponseBadRequest("Expected POST")
 
     def v_id(a):
         try:
