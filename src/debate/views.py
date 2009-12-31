@@ -7,7 +7,17 @@ from django.db.models import Sum, Count
 from debate.models import Round, Debate, Team, Venue
 from debate import forms
 
+from functools import wraps
 # Create your views here.
+
+def round_view(view_fn):
+    @wraps(view_fn)
+    def foo(request, round_id):
+        round = get_object_or_404(Round, id=round_id)
+        rc = RequestContext(request)
+        rc['round'] = round
+        return view_fn(request, rc, round)
+    return foo
 
 def index(request):
     return render_to_response('index.html', context_instance=RequestContext(request))
@@ -54,50 +64,48 @@ def update_base_availability(request, round_id, update_method):
 
     return HttpResponse("ok")
 
-def draw(request, round_id):
-    round = get_object_or_404(Round, id=round_id)
-    rc = RequestContext(request)
-    rc['round'] = round
+@round_view
+def draw(request, rc, round):
 
     if round.draw_status == round.STATUS_NONE:
-        return draw_none(request, round, rc)
+        return draw_none(request, rc, round)
 
     if round.draw_status == round.STATUS_DRAFT:
-        return draw_draft(request, round, rc)
+        return draw_draft(request, rc, round)
 
     if round.draw_status == round.STATUS_CONFIRMED:
-        return draw_confirmed(request, round, rc)
+        return draw_confirmed(request, rc, round)
 
     raise
 
-def draw_none(request, round, rc):
+def draw_none(request, rc, round):
     
     active_teams = round.active_teams.all()
     rc['active_teams'] = active_teams
     return render_to_response("draw_none.html", context_instance=rc)
 
-def draw_draft(request, round, rc):
+def draw_draft(request, rc, round):
     rc['draw'] = round.get_draw()
 
     return render_to_response("draw_draft.html", context_instance=rc)
 
-def draw_confirmed(request, round, rc):
+def draw_confirmed(request, rc, round):
     rc['draw'] = round.get_draw()
 
     return render_to_response("draw_confirmed.html", context_instance=rc)
 
-def create_draw(request, round_id):
-    round = get_object_or_404(Round, id=round_id)
+@round_view
+def create_draw(request, rc, round):
 
     if request.method != "POST":
         return HttpResponseBadRequest("Expected POST")
 
     round.draw()
 
-    return HttpResponseRedirect(reverse('draw', args=[round_id])) 
+    return HttpResponseRedirect(reverse('draw', args=[round.id])) 
 
-def confirm_draw(request, round_id):
-    round = get_object_or_404(Round, id=round_id)
+@round_view
+def confirm_draw(request, rc, round):
 
     if request.method != "POST":
         return HttpResponseBadRequest("Expected POST")
@@ -107,10 +115,10 @@ def confirm_draw(request, round_id):
     round.draw_status = round.STATUS_CONFIRMED
     round.save()
 
-    return HttpResponseRedirect(reverse('draw', args=[round_id])) 
+    return HttpResponseRedirect(reverse('draw', args=[round.id])) 
 
-def create_adj_allocation(request, round_id):
-    round = get_object_or_404(Round, id=round_id)
+@round_view
+def create_adj_allocation(request, rc, round):
     if request.method != "POST":
         return HttpResponseBadRequest("Expected POST")
     if round.draw_status != round.STATUS_CONFIRMED:
@@ -118,13 +126,10 @@ def create_adj_allocation(request, round_id):
 
     round.allocate_adjudicators()
 
-    return HttpResponseRedirect(reverse('draw', args=[round_id])) 
+    return HttpResponseRedirect(reverse('draw', args=[round.id])) 
 
-def results(request, round_id):
-    round = get_object_or_404(Round, id=round_id)
-
-    rc = RequestContext(request)
-    rc['round'] = round
+@round_view
+def results(request, rc, round):
     rc['draw'] = round.get_draw()
 
     return render_to_response("results.html", context_instance=rc)
@@ -159,12 +164,8 @@ def save_result(request, debate_id):
 
     return HttpResponseRedirect(reverse('results', args=[debate.round.id]))
 
-def team_standings(request, round_id):
-    round = get_object_or_404(Round, id=round_id)
-
-    rc = RequestContext(request)
-    rc['round'] = round
-
+@round_view
+def team_standings(request, rc, round):
     
     teams = Team.objects.annotate(
         team_points = Sum('debateteam__teamscore__points'),
@@ -180,17 +181,14 @@ def team_standings(request, round_id):
     return render_to_response('team_standings.html', context_instance=rc)
 
 
-def draw_venues_edit(request, round_id):
-    round = get_object_or_404(Round, id=round_id)
-    rc = RequestContext(request)
-
-    rc['round'] = round
+@round_view
+def draw_venues_edit(request, rc, round):
     rc['draw'] = round.get_draw()
 
     return render_to_response("draw_venues_edit.html", context_instance=rc)
 
-def save_venues(request, round_id):
-    round = get_object_or_404(Round, id=round_id)
+@round_view
+def save_venues(request, rc, round):
     if request.method != "POST":
         return HttpResponseBadRequest("Expected POST")
 
@@ -214,17 +212,14 @@ def save_venues(request, round_id):
 
     return HttpResponse("ok")
 
-def draw_adjudicators_edit(request, round_id):
-    round = get_object_or_404(Round, id=round_id)
-    rc = RequestContext(request)
-
-    rc['round'] = round
+@round_view
+def draw_adjudicators_edit(request, rc, round):
     rc['draw'] = round.get_draw()
 
     return render_to_response("draw_adjudicators_edit.html", context_instance=rc)
 
-def save_adjudicators(request, round_id):
-    round = get_object_or_404(Round, id=round_id)
+@round_view
+def save_adjudicators(request, rc, round):
     if request.method != "POST":
         return HttpResponseBadRequest("Expected POST")
 
