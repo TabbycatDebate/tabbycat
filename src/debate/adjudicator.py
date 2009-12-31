@@ -10,12 +10,12 @@ class DumbAdjAllocator(object):
 
         result = []
         for debate in debates:
-            alloc = AdjudicatorAllocation()
+            alloc = AdjudicatorAllocation(debate)
             alloc.chair = adjs.pop(0)
-            result.append((debate, alloc))
+            result.append(alloc)
 
         while len(adjs) >= 2:
-            for debate, alloc in result:
+            for alloc in result:
                 if len(adjs) >= 2:
                     alloc.panel.append(adjs.pop(0))
                     alloc.panel.append(adjs.pop(0))

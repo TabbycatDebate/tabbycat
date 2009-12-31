@@ -179,21 +179,10 @@ class Round(models.Model):
             raise
 
         allocator = DumbAdjAllocator(self)
-        self.make_adj_allocation(allocator.get_allocation())
+        for alloc in allocator.get_allocation():
+            alloc.save()
         self.adjudicator_status = self.STATUS_DRAFT
         self.save()
-
-    def make_adj_allocation(self, allocation):
-        def make(debate, adj, type):
-            DebateAdjudicator(debate=debate, adjudicator=adj,
-                              type=type).save()
-
-        for debate, alloc in allocation:
-            make(debate, alloc.chair, DebateAdjudicator.TYPE_CHAIR)
-            for adj in alloc.panel:
-                make(debate, adj, DebateAdjudicator.TYPE_PANEL)
-            for adj in alloc.trainees:
-                make(debate, adj, DebateAdjudicator.TYPE_TRAINEE)
 
     def get_draw(self):
         return Debate.objects.filter(round=self)
@@ -599,22 +588,29 @@ class AdjudicatorAllocation(object):
             yield DebateAdjudicator.TYPE_TRAINEE, a
 
     def delete(self):
-        if self.debate:
-            DebateAdjudicator.objects.filter(debate=self.debate).delete()
-            self.chair = None
-            self.panel = []
-            self.trainees = []
+        """
+        Delete existing, current allocation
+        """
+
+        if not self.debate:
+            raise
+        DebateAdjudicator.objects.filter(debate=self.debate).delete()
+        self.chair = None
+        self.panel = []
+        self.trainees = []
 
     def save(self):
-        if self.debate:
-            for t, adj in self:
-                if isinstance(adj, Adjudicator):
-                    adj = adj.id
-                DebateAdjudicator(
-                    debate = self.debate,
-                    adjudicator_id = adj,
-                    type = t,
-                ).save()
+        if not self.debate:
+            raise
+        DebateAdjudicator.objects.filter(debate=self.debate).delete()
+        for t, adj in self:
+            if isinstance(adj, Adjudicator):
+                adj = adj.id
+            DebateAdjudicator(
+                debate = self.debate,
+                adjudicator_id = adj,
+                type = t,
+            ).save()
 
 class TeamScoreSheet(models.Model):
     # TODO: review scoresheet for adjudicator
