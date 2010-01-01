@@ -164,11 +164,11 @@ class Importer(object):
         for line in self.load_table('team_score_sheets'):
             id, aa_id, dt_id, score, c, u = line.split('\t')
 
-            if (int(dt_id) in self.debate_teams:
+            if int(dt_id) in self.debate_teams:
                 s = m.TeamScoreSheet(
                     debate_adjudicator = self.adjudicator_allocations[int(aa_id)],
                     debate_team = self.debate_teams[int(dt_id)],
-                    score = float(score),
+                    points = float(score),
                 )
                 s.save()
                 self.team_score_sheets[int(id)] = s

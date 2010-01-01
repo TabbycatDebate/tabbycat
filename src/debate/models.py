@@ -627,7 +627,7 @@ class AdjudicatorAllocation(object):
 class TeamScoreSheet(models.Model):
     debate_adjudicator = models.ForeignKey(DebateAdjudicator)
     debate_team = models.ForeignKey(DebateTeam)
-    score = ScoreField()
+    points = models.IntegerField()
 
     @property
     def debate(self):
