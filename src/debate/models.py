@@ -625,8 +625,7 @@ class AdjudicatorAllocation(object):
             ).save()
 
 class TeamScoreSheet(models.Model):
-    # TODO: review scoresheet for adjudicator
-    # debate_adjudicator = models.ForeignKey(DebateAdjudicator)
+    debate_adjudicator = models.ForeignKey(DebateAdjudicator)
     debate_team = models.ForeignKey(DebateTeam)
     score = ScoreField()
 
@@ -635,8 +634,7 @@ class TeamScoreSheet(models.Model):
         return self.debate_team.debate
     
 class SpeakerScoreSheet(models.Model):
-    # TODO: review scoresheet for adjudicator
-    # debate_adjudicator = models.ForeignKey(DebateAdjudicator)
+    debate_adjudicator = models.ForeignKey(DebateAdjudicator)
     debate_team = models.ForeignKey(DebateTeam)
     speaker = models.ForeignKey(Speaker)
     score = ScoreField()
