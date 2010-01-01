@@ -12,6 +12,9 @@ class Importer(object):
         self.rounds = {}
         self.debates = {}
         self.debate_teams = {}
+        self.adjudicator_allocations = {}
+        self.speaker_score_sheets = {}
+        self.team_score_sheets = {}
 
     def import_institutions(self):
         for line in self.load_table('institutions'):
@@ -93,6 +96,9 @@ class Importer(object):
                 r.activate_all()
                 self.rounds[int(id)] = r
 
+        self.rounds[rounds[-1]].is_current = True
+        self.rounds[rounds[-1]].save()
+
         for line in self.load_table('debates'):
             id, round_id, venue_id, c, u = line.split('\t')
             if int(round_id) in rounds:
@@ -122,6 +128,50 @@ class Importer(object):
 
                 d.save()
                 self.debate_teams[int(id)] = d
+
+        _type = {
+            '1': m.DebateAdjudicator.TYPE_CHAIR,
+            '2': m.DebateAdjudicator.TYPE_PANEL,
+        }
+
+        for line in self.load_table('adjudicator_allocations'):
+            id, debate_id, adj_id, type, c, u = line.split('\t')
+
+            if int(debate_id) in self.debates:
+
+                a = m.DebateAdjudicator(
+                    debate = self.debates[int(debate_id)],
+                    adjudicator = self.adjudicators[int(adj_id)],
+                    type = _type[type],
+                )
+                a.save()
+                self.adjudicator_allocations[int(id)] = a
+
+        for line in self.load_table('speaker_score_sheets'):
+            id, aa_id, dt_id, s_id, score, pos, c, u = line.split('\t')
+
+            if int(dt_id) in self.debate_teams:
+                s = m.SpeakerScoreSheet(
+                    debate_adjudicator = self.adjudicator_allocations[int(aa_id)],
+                    debate_team = self.debate_teams[int(dt_id)],
+                    speaker = self.speakers[int(s_id)],
+                    score = float(score),
+                    position = int(pos),
+                )
+                s.save()
+                self.speaker_score_sheets[int(id)] = s
+
+        for line in self.load_table('team_score_sheets'):
+            id, aa_id, dt_id, score, c, u = line.split('\t')
+
+            if (int(dt_id) in self.debate_teams:
+                s = m.TeamScoreSheet(
+                    debate_adjudicator = self.adjudicator_allocations[int(aa_id)],
+                    debate_team = self.debate_teams[int(dt_id)],
+                    score = float(score),
+                )
+                s.save()
+                self.team_score_sheets[int(id)] = s
 
 
 def run():
