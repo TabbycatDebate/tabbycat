@@ -116,10 +116,11 @@ class AdjudicatorConflict(models.Model):
 class Round(models.Model):
     TYPE_RANDOM = 'R'
     TYPE_PRELIM = 'P'
+    TYPE_BREAK = 'B'
     TYPE_CHOICES = (
         (TYPE_RANDOM, 'Random'),
         (TYPE_PRELIM, 'Preliminary'),
-        ('B', 'Break'),
+        (TYPE_BREAK, 'Break'),
     )
 
     DRAW_CLASS = {
@@ -154,6 +155,8 @@ class Round(models.Model):
     active_adjudicators = models.ManyToManyField('Adjudicator',
                                                  through='ActiveAdjudicator')
     active_teams = models.ManyToManyField('Team', through='ActiveTeam')
+
+    feedback_weight = models.FloatField(default=1)
 
     def __unicode__(self):
         return unicode(self.id)
@@ -572,6 +575,15 @@ class DebateAdjudicator(models.Model):
     debate = models.ForeignKey(Debate)
     adjudicator = models.ForeignKey(Adjudicator)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
+
+class AdjudicatorFeedback(models.Model):
+    adjudicator = models.ForeignKey(Adjudicator)
+    score = models.FloatField()
+
+    source_adjudicator = models.ForeignKey(DebateAdjudicator, blank=True,
+                                           null=True)
+    source_team = models.ForeignKey(DebateTeam, blank=True, null=True)
+    
 
 class AdjudicatorAllocation(object):
     def __init__(self, debate=None):
