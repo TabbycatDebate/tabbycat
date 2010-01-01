@@ -1,46 +1,51 @@
 {% extends "base.html" %}
 
+{% block extra-head %}
+
+<style>
+    #resultsForm input[type='text'] {
+        width: 4em;
+    }
+</style>
+{% endblock %}
+
 {% block h1 %} {{ debate }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
 
 {% block content %}
 <form id="resultsForm" action="{% url save_result debate.id %}" method="POST">
 <table>
 <tr>
-    <th> Aff 1 </th>
-    <td> {{ form.aff_speaker_1 }} </td>
-    <td> {{ form.aff_score_1 }} </td>
 
-    <th> Neg 1 </th>
-    <td> {{ form.neg_speaker_1 }} </td>
-    <td> {{ form.neg_score_1 }} </td>
+    <td></td>
+    <td></td>
+    {% for adj in form.adjudicators %}
+    <th>{{ adj }}</td>
+    {% endfor %}
+
+    <td></td>
+    <td></td>
+
+    {% for adj in form.adjudicators %}
+    <th>{{ adj }}</td>
+    {% endfor %}
+
 </tr>
+
+{% for position in form.position_iter %}
 <tr>
-    <th> Aff 2 </th>
-    <td> {{ form.aff_speaker_2 }} </td>
-    <td> {{ form.aff_score_2 }} </td>
+    <th> Aff {{ position }}</th>
+    <td> {{ position.aff_speaker }} </td>
+    {% for field in position.aff_score_iter %}
+        <td> {{ field }} </td>
+    {% endfor %}
 
-    <th> Neg 2 </th>
-    <td> {{ form.neg_speaker_2 }} </td>
-    <td> {{ form.neg_score_2 }} </td>
+    <th> Neg {{ position }}</th>
+    <td> {{ position.neg_speaker }} </td>
+    {% for field in position.neg_score_iter %}
+        <td> {{ field }} </td>
+    {% endfor %}
 </tr>
-<tr>
-    <th> Aff 3 </th>
-    <td> {{ form.aff_speaker_3 }} </td>
-    <td> {{ form.aff_score_3 }} </td>
-
-    <th> Neg 3 </th>
-    <td> {{ form.neg_speaker_3 }} </td>
-    <td> {{ form.neg_score_3 }} </td>
-</tr>
-<tr>
-    <th> Aff Reply </th>
-    <td> {{ form.aff_speaker_4 }} </td>
-    <td> {{ form.aff_score_4 }} </td>
-
-    <th> Neg Reply </th>
-    <td> {{ form.neg_speaker_4 }} </td>
-    <td> {{ form.neg_score_4 }} </td>
-</tr>
+{% endfor %}
 </table>
 
 Status: {{ form.result_status }} <input type="submit" value="Save" />

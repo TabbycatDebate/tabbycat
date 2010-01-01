@@ -338,6 +338,9 @@ class Debate(models.Model):
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
 
+    def get_dt(self, side):
+        return getattr(self, '%s_dt' % side)
+
     @property
     def aff_dt(self):
         self._get_teams()
@@ -425,48 +428,50 @@ class Debate(models.Model):
     def __unicode__(self):
         return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
     
-class DebateResult(object):
-    """
-    Wrapper object for modelling the result of a debate. Use this
-    instead of manipulating *ScoreSheet and *Score models directly
-    """
-
-    def __init__(self, debate):
+class AdjudicatorResult(object):
+    def __init__(self, debate, adjudicator):
         self.debate = debate
+        self.adjudicator = adjudicator
 
         self._init_side('aff')
         self._init_side('neg')
 
     def _init_side(self, side):
         speakers = dict((i, None) for i in range(1, 5))
-        scores = dict((i, None) for i in range(1, 5))
-        dt = getattr(self.debate, '%s_dt' % side)
-
-        for sss in SpeakerScoreSheet.objects.filter(debate_team=dt):
-            setattr(sss.speaker, 'score', sss.score)
-            speakers[sss.position] = sss.speaker
-
         setattr(self, '%s_speakers' % side, speakers)
 
-        try:
-            team_score = TeamScoreSheet.objects.get(debate_team=dt).score
-        except TeamScoreSheet.DoesNotExist:
-            team_score = None
+        dt = self.debate.get_dt(side)
+        da = DebateAdjudicator.objects.get(
+            debate = self.debate,
+            adjudicator=self.adjudicator,
+        )
 
-        setattr(self, '%s_score' % side, team_score)
+        for sss in SpeakerScoreSheet.objects.filter(
+            debate_team = dt,
+            debate_adjudicator = da,
+        ):
 
-        # TODO: also load TeamScore, SpeakerScore objects
+            self.set_speaker_entry(side, sss.position,
+                                   sss.speaker, sss.score)
+            
+        # TODO
+        #try:
+        #    points = TeamScoreSheet.objects.get(debate_team=dt).points
+        #except TeamScoreSheet.DoesNotExist:
+        #    points = None
+        points = None
+
+        setattr(self, '%s_poitns' % side, points)
 
     def save(self):
         self._save('aff', 'neg')
         self._save('neg', 'aff')
 
     def _save(self, side, other):
-        dt = getattr(self.debate, '%s_dt' % side)
-        total = sum(getattr(self, '%s_speaker_%d' % (side, i)).score
-                    for i in range(1, 5))
-        other = sum(getattr(self, '%s_speaker_%d' % (other, i)).score
-                    for i in range(1, 5))
+        dt = self.debate.get_dt(side)
+        total = sum(self.get_speaker(side, i).score for i in range(1, 5))
+        total = sum(self.get_speaker(other, i).score for i in range(1, 5))
+
         points = (total > other) and 1 or 0
 
         TeamScoreSheet.objects.filter(debate_team=dt).delete()
@@ -482,7 +487,46 @@ class DebateResult(object):
                 position = i,
             ).save()
 
-        #TODO (adj): calculate official scores from separate adjudicators
+        
+    def set_speaker_entry(self, side, pos, speaker, score):
+        #TODO: adj change
+        speaker.score = score
+        getattr(self, '%s_speakers' % side)[pos] = speaker
+
+    @property
+    def aff_points(self):
+        if self.aff_score:
+            if self.aff_score > self.neg_score:
+                return 1
+            return 0
+        return None
+
+    @property
+    def neg_points(self):
+        aff_points = self.aff_points
+        if aff_points is None:
+            return None
+        return 1 - aff_points
+
+    def get_speaker(self, side, position):
+        return getattr(self, '%s_speakers' % side)[position]
+
+class DebateResult(object):
+    """
+    Wrapper object for modelling the result of a debate. Use this
+    instead of manipulating *ScoreSheet and *Score models directly
+    """
+
+    def __init__(self, debate):
+        self.debate = debate
+
+        self.adj_results = []
+
+        for t, adj in self.debate.adjudicators:
+            self.adj_results.append(AdjudicatorResult(self.debate, adj))
+
+    def save(self):
+
         TeamScore.objects.filter(debate_team=dt).delete()
         TeamScore(debate_team=dt, score=total, points=points).save()
 
@@ -497,59 +541,21 @@ class DebateResult(object):
             ).save()
 
 
-    def set_speaker_entry(self, team, pos, speaker, score):
-        #TODO: adj change
-        speaker.score = score
-        getattr(self, '%s_speakers' % team)[pos] = speaker
-
-    # adding these properties programmatically would require a bit too much
-    # crazy black magic
-    @property
-    def aff_speaker_1(self):
-        return self.aff_speakers[1]
-
-    @property
-    def aff_speaker_2(self):
-        return self.aff_speakers[2]
-
-    @property
-    def aff_speaker_3(self):
-        return self.aff_speakers[3]
-
-    @property
-    def aff_speaker_4(self):
-        return self.aff_speakers[4]
-
-    @property
-    def neg_speaker_1(self):
-        return self.neg_speakers[1]
-
-    @property
-    def neg_speaker_2(self):
-        return self.neg_speakers[2]
-
-    @property
-    def neg_speaker_3(self):
-        return self.neg_speakers[3]
-
-    @property
-    def neg_speaker_4(self):
-        return self.neg_speakers[4]
-
     @property
     def aff_win(self):
-        if self.aff_score:
-            return self.aff_score > self.neg_score
-        return None
+        # WARN: aff_points etc is only set on object init
+        aff_points = list(a.aff_points for a in self.adj_results)
+        neg_points = list(a.neg_points for a in self.adj_results)
+        if None in aff_points or None in neg_points:
+            return None
+        return sum(aff_points) > (neg_points)
 
     @property
     def neg_win(self):
-        if self.neg_score:
-            return self.neg_score > self.aff_score
-        return None
-
-    def get_speaker(self, side, position):
-        return getattr(self, '%s_speakers' % side)[position]
+        aff_win = self.aff_win
+        if aff_win is None:
+            return None
+        return not aff_win
 
 
 class DebateTeam(models.Model):

@@ -39,11 +39,38 @@ def initial(debate, team):
         }
 
 def make_results_form_class(debate):
+
+    class position(object):
+        def __init__(self, form, pos, name):
+            self.form = form
+            self.pos = pos
+            self.name = name
+
+
+        def __unicode__(self):
+            return unicode(self.name)
+
+        def aff_speaker(self):
+            return self.form['aff_speaker_%d' % self.pos]
+
+        def neg_speaker(self):
+            return self.form['neg_speaker_%d' % self.pos]
+
+        def aff_score_iter(self):
+            for i, adj in enumerate(self.form.debate.adjudicators):
+                yield self.form['aff_%d_score_%d' % (self.pos, i)]
+
+        def neg_score_iter(self):
+            for i, adj in enumerate(self.form.debate.adjudicators):
+                yield self.form['neg_%d_score_%d' % (self.pos, i)]
+
     
     class ResultFormMetaclass(forms.Form.__metaclass__):
         def __new__(cls, name, bases, attrs):
 
-            adjudicators = tuple(debate.adjudicators)
+            attrs['debate'] = debate
+            adjudicators = tuple(a for t, a in debate.adjudicators)
+            attrs['adjudicators'] = adjudicators
 
             # create speaker fields
             for side in ('aff', 'neg'):
@@ -101,6 +128,10 @@ def make_results_form_class(debate):
             self.debate.result_status = self.cleaned_data['result_status']
             self.debate.save()
 
+        def position_iter(self):
+            for i, name in ((1, 1), (2, 2), (3, 3), (4, 'Reply')):
+                yield position(self, i, name)
+
     return ResultForm
 
 def make_results_form(debate):
@@ -109,7 +140,10 @@ def make_results_form(debate):
     initial = { 'result_status': debate.result_status }
     for side in ('aff', 'neg'):
         for i in range(1, 5):
-            s = result.get_speaker(side, i)
+
+            #TODO
+            continue
+            s = result.debate.get_speaker(side, i)
             if s:
                 initial['%s_speaker_%d' % (side, i)] = s.id
                 initial['%s_score_%d' % (side, i)] = s.score
