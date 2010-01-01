@@ -38,50 +38,47 @@ def initial(debate, team):
             4: speakers[0].id,
         }
 
-
 def make_results_form_class(debate):
     
-    aff_speakers = debate.aff_team.speakers
-    neg_speakers = debate.neg_team.speakers
+    class ResultFormMetaclass(forms.Form.__metaclass__):
+        def __new__(cls, name, bases, attrs):
 
-    aff_initial = initial(debate, debate.aff_team)
-    neg_initial = initial(debate, debate.neg_team)
+            adjudicators = tuple(debate.adjudicators)
+
+            # create speaker fields
+            for side in ('aff', 'neg'):
+                team = debate.get_team(side)
+                init = initial(debate, team)
+                for i in range(1, 5):
+                    attrs['%s_speaker_%s' % (side, i)] = forms.ModelChoiceField(
+                        queryset = team.speakers,
+                        initial = init[i],
+                    )
+
+                    if i == 4:
+                        score_field = ReplyScoreField
+                    else:
+                        score_field = ScoreField
+
+                    # create score fields
+                    for j in range(len(adjudicators)):
+                        attrs['%s_%d_score_%d' % (side, i, j)] = score_field()
+
+
+            new_class = super(ResultFormMetaclass, cls).__new__(cls, name, bases,
+                                                                attrs)
+
+            return new_class
+
 
     class ResultForm(forms.Form):
 
+        __metaclass__ = ResultFormMetaclass
+
         result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
-
-        aff_speaker_1 = forms.ModelChoiceField(queryset=aff_speakers,
-                                               initial=aff_initial[1])
-        aff_speaker_2 = forms.ModelChoiceField(queryset=aff_speakers,
-                                               initial=aff_initial[2])
-        aff_speaker_3 = forms.ModelChoiceField(queryset=aff_speakers,
-                                               initial=aff_initial[3])
-        aff_speaker_4 = forms.ModelChoiceField(queryset=aff_speakers,
-                                               initial=aff_initial[4])
-
-        neg_speaker_1 = forms.ModelChoiceField(queryset=neg_speakers,
-                                               initial=neg_initial[1])
-        neg_speaker_2 = forms.ModelChoiceField(queryset=neg_speakers,
-                                               initial=neg_initial[2])
-        neg_speaker_3 = forms.ModelChoiceField(queryset=neg_speakers,
-                                               initial=neg_initial[3])
-        neg_speaker_4 = forms.ModelChoiceField(queryset=neg_speakers,
-                                                   initial=neg_initial[4])
-
-        aff_score_1 = ScoreField()
-        aff_score_2 = ScoreField()
-        aff_score_3 = ScoreField()
-        aff_score_4 = ReplyScoreField()
-
-        neg_score_1 = ScoreField()
-        neg_score_2 = ScoreField()
-        neg_score_3 = ScoreField()
-        neg_score_4 = ReplyScoreField()
 
         def __init__(self, *args, **kwargs):
             super(ResultForm, self).__init__(*args, **kwargs)
-            self.debate = debate
 
         def save(self):
             #TODO: validation
@@ -118,4 +115,9 @@ def make_results_form(debate):
                 initial['%s_score_%d' % (side, i)] = s.score
 
     return class_(initial=initial)
+
+def test():
+    from debate.models import Debate
+
+    return make_results_form_class(Debate.objects.get(pk=1))
 

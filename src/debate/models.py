@@ -335,6 +335,9 @@ class Debate(models.Model):
         self._get_teams()
         return self._team_cache[DebateTeam.POSITION_NEGATIVE].team
 
+    def get_team(self, side):
+        return getattr(self, '%s_team' % side)
+
     @property
     def aff_dt(self):
         self._get_teams()
