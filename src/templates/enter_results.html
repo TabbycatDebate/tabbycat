@@ -14,36 +14,15 @@
 {% block content %}
 <form id="resultsForm" action="{% url save_result debate.id %}" method="POST">
 <table>
-<tr>
-
-    <td></td>
-    <td></td>
-    {% for adj in form.adjudicators %}
-    <th>{{ adj }}</td>
-    {% endfor %}
-
-    <td></td>
-    <td></td>
-
-    {% for adj in form.adjudicators %}
-    <th>{{ adj }}</td>
-    {% endfor %}
-
-</tr>
-
 {% for position in form.position_iter %}
 <tr>
     <th> Aff {{ position }}</th>
     <td> {{ position.aff_speaker }} </td>
-    {% for field in position.aff_score_iter %}
-        <td> {{ field }} </td>
-    {% endfor %}
+    <td> {{ position.aff_score }} </td>
 
     <th> Neg {{ position }}</th>
     <td> {{ position.neg_speaker }} </td>
-    {% for field in position.neg_score_iter %}
-        <td> {{ field }} </td>
-    {% endfor %}
+    <td> {{ position.neg_score }} </td>
 </tr>
 {% endfor %}
 </table>

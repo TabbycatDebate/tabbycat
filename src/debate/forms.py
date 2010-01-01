@@ -56,21 +56,17 @@ def make_results_form_class(debate):
         def neg_speaker(self):
             return self.form['neg_speaker_%d' % self.pos]
 
-        def aff_score_iter(self):
-            for i, adj in enumerate(self.form.debate.adjudicators):
-                yield self.form['aff_%d_score_%d' % (self.pos, i)]
+        def aff_score(self):
+            return self.form['aff_score_%d' % self.pos]
 
-        def neg_score_iter(self):
-            for i, adj in enumerate(self.form.debate.adjudicators):
-                yield self.form['neg_%d_score_%d' % (self.pos, i)]
+        def neg_score(self):
+            return self.form['neg_score_%d' % self.pos]
 
     
     class ResultFormMetaclass(forms.Form.__metaclass__):
         def __new__(cls, name, bases, attrs):
 
             attrs['debate'] = debate
-            adjudicators = tuple(a for t, a in debate.adjudicators)
-            attrs['adjudicators'] = adjudicators
 
             # create speaker fields
             for side in ('aff', 'neg'):
@@ -87,9 +83,8 @@ def make_results_form_class(debate):
                     else:
                         score_field = ScoreField
 
-                    # create score fields
-                    for j in range(len(adjudicators)):
-                        attrs['%s_%d_score_%d' % (side, i, j)] = score_field()
+                    # create score field
+                    attrs['%s_score_%d' % (side, i)] = score_field()
 
 
             new_class = super(ResultFormMetaclass, cls).__new__(cls, name, bases,
@@ -113,10 +108,6 @@ def make_results_form_class(debate):
             dr = DebateResult(self.debate)
 
             def do(side):
-                total = sum(self.cleaned_data['%s_score_%d' % (side, i)] for i
-                            in range(1, 5)) 
-                setattr(dr, '%s_score' % side, total)
-
                 for i in range(1, 5): 
                     speaker = self.cleaned_data['%s_speaker_%d' % (side, i)]
                     score = self.cleaned_data['%s_score_%d' % (side, i)]
@@ -141,9 +132,7 @@ def make_results_form(debate):
     for side in ('aff', 'neg'):
         for i in range(1, 5):
 
-            #TODO
-            continue
-            s = result.debate.get_speaker(side, i)
+            s = result.get_speaker(side, i)
             if s:
                 initial['%s_speaker_%d' % (side, i)] = s.id
                 initial['%s_score_%d' % (side, i)] = s.score
