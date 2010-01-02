@@ -486,26 +486,28 @@ class DebateResult(object):
 
         SpeakerScore.objects.filter(debate_team=dt).delete()
         for i in range(1, 5):
-            speaker = self.get_speaker(side, i)
+            speaker, score = self.teams[side][i]
             SpeakerScore(
                 debate_team = dt,
                 speaker = speaker,
-                score = speaker.score,
+                score = score,
                 position = i,
             ).save()
 
         
     def get_speaker(self, side, position):
+        return self.teams[side][position][0]
+
+    def get_speaker_score(self, side, position):
         return self.teams[side][position]
 
     def set_speaker_entry(self, side, pos, speaker, score):
-        speaker.score = score
-        self.teams[side][pos] = speaker
+        self.teams[side][pos] = (speaker, score)
 
     def _score(self, side):
         if None in self.teams[side].values():
             return None
-        return sum(s.score for s in self.teams[side].values())
+        return sum(score for (sp, score) in self.teams[side].values())
 
     @property
     def aff_score(self):
@@ -529,6 +531,14 @@ class DebateResult(object):
     @property
     def neg_points(self):
         return self._points('neg')
+
+    @property
+    def aff_win(self):
+        return self.aff_points
+
+    @property
+    def neg_win(self):
+        return self.neg_points
 
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'

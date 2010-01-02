@@ -1,5 +1,6 @@
 import debate.models as m
 
+
 class Importer(object):
     def __init__(self, fname):
         self.fname = fname
@@ -147,20 +148,64 @@ class Importer(object):
                 a.save()
                 self.adjudicator_allocations[int(id)] = a
 
+        # read in speaker score sheets, then construct
+        # actual scores later
+        debates = {}
+        P_AFF = m.DebateTeam.POSITION_AFFIRMATIVE
+        P_NEG = m.DebateTeam.POSITION_NEGATIVE
+        _side = {
+            P_AFF: 'aff',
+            P_NEG: 'neg',
+        }
         for line in self.load_table('speaker_score_sheets'):
             id, aa_id, dt_id, s_id, score, pos, c, u = line.split('\t')
 
             if int(dt_id) in self.debate_teams:
-                s = m.SpeakerScoreSheet(
-                    debate_adjudicator = self.adjudicator_allocations[int(aa_id)],
-                    debate_team = self.debate_teams[int(dt_id)],
-                    speaker = self.speakers[int(s_id)],
-                    score = float(score),
-                    position = int(pos),
-                )
-                s.save()
-                self.speaker_score_sheets[int(id)] = s
+                dt = self.debate_teams[int(dt_id)]
+                d = dt.debate.id
 
+                if d not in debates:
+                    debates[d] = {}
+
+                a = self.adjudicator_allocations[int(aa_id)].adjudicator.id
+
+                if a not in debates[d]:
+                    debates[d][a] = {
+                        P_AFF: {},
+                        P_NEG: {},
+                    }
+
+
+                speaker = self.speakers[int(s_id)]
+                score = float(score)
+
+                debates[d][a][dt.position][int(pos)] = (speaker, score)
+
+        for debate_id, adjudicators in debates.items():
+            decision = []
+            for a_id, teams in adjudicators.items():
+                aff_score = sum(sc for sp, sc in teams[P_AFF].values())
+                neg_score = sum(sc for sp, sc in teams[P_NEG].values())
+                decision.append((a_id, aff_score > neg_score))
+
+            votes = [v for a, v in decision]
+            majority_aff = votes.count(True) > votes.count(False)
+
+            majority_adj = [a for a, v in decision if v == majority_aff]
+
+
+            dr = m.DebateResult(m.Debate.objects.get(pk=debate_id))
+            first_adj = adjudicators.values()[0]
+            for side in (P_AFF, P_NEG):
+                for pos in range(1,5):
+                    speaker, _ = first_adj[side][pos]
+                    score = sum(adjudicators[a][side][pos][1]
+                        for a in majority_adj) / len(majority_adj)
+
+                    dr.set_speaker_entry(_side[side], pos, speaker, score)
+            dr.save()
+
+                
         for line in self.load_table('team_score_sheets'):
             id, aa_id, dt_id, score, c, u = line.split('\t')
 
