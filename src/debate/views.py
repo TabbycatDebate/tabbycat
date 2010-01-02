@@ -167,12 +167,7 @@ def save_result(request, debate_id):
 @round_view
 def team_standings(request, rc, round):
     
-    teams = Team.objects.annotate(
-        team_points = Sum('debateteam__teamscore__points'),
-        team_score = Sum('debateteam__teamscore__score'),
-        results_count = Count('debateteam__teamscore'),
-    ).order_by('-team_points', '-team_score')
-
+    teams = Team.objects.standings(round)
     for team in teams:
         setattr(team, 'results_in', team.results_count >= round.seq)
 

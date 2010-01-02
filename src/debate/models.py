@@ -26,18 +26,32 @@ class Institution(models.Model):
     def __unicode__(self):
         return unicode(self.name) 
 
+class TeamManager(models.Manager):
+    def standings(self, round=None):
+        if round is None:
+            teams = self.all()
+        else:
+            teams = self.filter(
+                debateteam__debate__round__seq__lte = round.seq,
+            )
+
+        teams = teams.annotate(
+            team_points = models.Sum('debateteam__teamscore__points'),
+            team_score = models.Sum('debateteam__teamscore__score'),
+            results_count = models.Count('debateteam__teamscore'),
+        ).order_by('-team_points', '-team_score')
+
+        return teams
+
 class Team(models.Model):
     name = models.CharField(max_length=50)
     institution = models.ForeignKey(Institution)
     is_active = models.BooleanField()
+
+    objects = TeamManager()
     
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
-    
-    @property
-    def points(self):
-        # TODO
-        return 0
     
     @property
     def aff_count(self):

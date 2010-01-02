@@ -205,20 +205,18 @@ class Importer(object):
                     dr.set_speaker_entry(_side[side], pos, speaker, score)
             dr.save()
 
-                
-        for line in self.load_table('team_score_sheets'):
-            id, aa_id, dt_id, score, c, u = line.split('\t')
+        for debate in m.Debate.objects.all():
+            # set debate brackets
+            aff_team = m.Team.objects.standings(
+                debate.round).get(id=debate.aff_team.id)
 
-            if int(dt_id) in self.debate_teams:
-                s = m.TeamScoreSheet(
-                    debate_adjudicator = self.adjudicator_allocations[int(aa_id)],
-                    debate_team = self.debate_teams[int(dt_id)],
-                    points = float(score),
-                )
-                s.save()
-                self.team_score_sheets[int(id)] = s
+            neg_team = m.Team.objects.standings(
+                debate.round).get(id=debate.neg_team.id)
 
+            debate.bracket = max(aff_team.team_points, neg_team.team_points)
+            debate.save()
 
+ 
 def run():
     im = Importer('stab_pt.sql')
     im.import_institutions()
@@ -228,7 +226,7 @@ def run():
     im.import_speakers()
     im.import_adjudicator_conflicts()
 
-    im.load_round([1])
+    im.load_round(range(1,9))
 
 if __name__ == '__main__':
     run()
