@@ -207,13 +207,16 @@ class Importer(object):
 
         for debate in m.Debate.objects.all():
             # set debate brackets
-            aff_team = m.Team.objects.standings(
-                debate.round.prev).get(id=debate.aff_team.id)
+            if debate.round.prev is None:
+                debate.bracket = 0
+            else:
+                aff_team = m.Team.objects.standings(
+                    debate.round.prev).get(id=debate.aff_team.id)
 
-            neg_team = m.Team.objects.standings(
-                debate.round.prev).get(id=debate.neg_team.id)
+                neg_team = m.Team.objects.standings(
+                    debate.round.prev).get(id=debate.neg_team.id)
 
-            debate.bracket = max(aff_team.team_points, neg_team.team_points)
+                debate.bracket = max(aff_team.team_points, neg_team.team_points)
             debate.save()
 
  
@@ -228,7 +231,15 @@ def run():
 
     return im
 
-    #im.load_round(range(1,7))
-
 if __name__ == '__main__':
-    run()
+    im = run()
+    import sys
+    if len(sys.argv) == 1:
+        a, b = 1, 9
+    elif len(sys.argv) == 2:
+        a, b = 1, int(sys.argv[1])
+    else:
+        a, b = int(sys.argv[1]), int(sys.argv[2])
+    
+    im.load_round(range(a, b))
+
