@@ -24,7 +24,8 @@ class BaseTest(TestCase):
                     speaker = Speaker(team=team, name="Speaker%s%s%s" % (i,j,k))
                     speaker.save()
             for j in range(2):
-                adj = Adjudicator(institution=ins, name="Adjudicator%s%s" % (i,j))
+                adj = Adjudicator(institution=ins, name="Adjudicator%s%s" %
+                                  (i,j), test_score=0)
                 adj.save()
         
         for i in range(8):
@@ -38,16 +39,20 @@ class BaseTest(TestCase):
 
     def activate_all_adj(self, r):
         for adj in Adjudicator.objects.all():
-            r.active_adjudicators.add(adj)
+            r.activate_adjudicator(adj, True)
 
     def activate_all_venue(self, r):
         for venue in Venue.objects.all():
-            r.active_venues.add(venue)
+            r.activate_venue(venue, True)
+
+    def activate_all_teams(self, r):
+        for team in Team.objects.all():
+            r.activate_team(team, True)
 
     def activate_venues(self, r):
         for venue in Venue.objects.all():
             if venue.name.startswith("Venue"):
-                r.active_venues.add(venue)
+                r.activate_venue(venue, True)
                     
 class TestInstitution(BaseTest):
     def test_objects(self):
@@ -60,12 +65,12 @@ class TestAdjudicator(BaseTest):
 class TestAdjudicatorDisable(BaseTest):
     def setUp(self):
         super(TestAdjudicatorDisable, self).setUp()
-        self.round = Round()
+        self.round = Round(seq=1)
         self.round.save()
         self.activate_all_adj(self.round)
 
         adj = Adjudicator.objects.get(name="Adjudicator00")
-        self.round.active_adjudicators.remove(adj)
+        self.round.activate_adjudicator(adj, False)
 
     def test_objects(self):
         self.failUnlessEqual(8, Adjudicator.objects.count())
@@ -74,17 +79,17 @@ class TestAdjudicatorDisable(BaseTest):
         self.failUnlessEqual(7, self.round.active_adjudicators.count())
 
 class RandomDrawTests(BaseTest):
-    DRAW_CLASS = RandomDraw
 
     def setUp(self):
         super(RandomDrawTests, self).setUp()
-        self.round = Round()
+        self.round = Round(seq=2, type=Round.TYPE_RANDOM)
         self.round.save()
         self.activate_all_adj(self.round)
+        self.activate_all_teams(self.round)
         self.activate_venues(self.round)
 
     def test_std(self):
-        self.round.draw(self.DRAW_CLASS)
+        self.round.draw()
         
         self.failUnlessEqual(6, Debate.objects.count()) 
         self.failUnlessEqual(12, DebateTeam.objects.count())
@@ -92,9 +97,6 @@ class RandomDrawTests(BaseTest):
         for team in Team.objects.all():
             self.failUnlessEqual(1, DebateTeam.objects.filter(team=team).count())
             
-class AidaDrawTests(RandomDrawTests):
-    DRAW_CLASS = AidaDraw
-
 __test__ = {"doctest": """
 Another way to test that 1 + 1 is equal to 2.
 

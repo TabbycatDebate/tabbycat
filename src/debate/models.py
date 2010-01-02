@@ -16,7 +16,7 @@ class Tournament(object):
     def current_round(self):
         try:
             return Round.objects.get(is_current=True)
-        except IndexError:
+        except Round.DoesNotExist:
             return None
     
 class Institution(models.Model):
@@ -212,7 +212,7 @@ class Round(models.Model):
         
         for pair in pairs:
             debate = Debate(round=self, venue=venues.pop(0))
-            debate.bracket = max(pair[0].team_points, pair[1].team_points)
+            debate.bracket = max(0, pair[0].team_points, pair[1].team_points)
             debate.save()
             
             aff = DebateTeam(debate=debate, team=pair[0], position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -292,6 +292,25 @@ class Round(models.Model):
     def set_available_teams(self, ids):
         return self.set_available_base(ids, Team, ActiveTeam,
                                        self.active_teams, 'team_id')
+
+    def activate_adjudicator(self, adj, state=True):
+        if state:
+            ActiveAdjudicator.objects.get_or_create(round=self, adjudicator=adj)
+        else:
+            ActiveAdjudicator.objects.filter(round=self,
+                                             adjudicator=adj).delete()
+
+    def activate_venue(self, venue, state=True):
+        if state:
+            ActiveVenue.objects.get_or_create(round=self, venue=venue)
+        else:
+            ActiveVenue.objects.filter(round=self, venue=venue).delete()
+
+    def activate_team(self, team, state=True):
+        if state:
+            ActiveTeam.objects.get_or_create(round=self, team=team)
+        else:
+            ActiveTeam.objects.filter(round=self, team=team).delete()
 
     def activate_all(self):
         self.set_available_venues([v.id for v in Venue.objects.all()])
