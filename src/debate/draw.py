@@ -22,10 +22,10 @@ class BaseDraw(object):
     def balance_sides(self, pairs):
         p = []
         for pair in pairs:
-            if pair[0].aff_count < pair[0].neg_count:
-                p.append(pair[0], pair[1])
-            elif pair[0].aff_count > pair[0].neg_count:
-                p.append(pair[1], pair[0])
+            if pair[0].aff_count < pair[1].aff_count:
+                p.append((pair[0], pair[1]))
+            elif pair[0].aff_count > pair[1].aff_count:
+                p.append((pair[1], pair[0]))
             else:
                 l = list(pair)
                 random.shuffle(l)

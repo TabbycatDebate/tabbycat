@@ -18,6 +18,17 @@ class Tournament(object):
             return Round.objects.get(is_current=True)
         except Round.DoesNotExist:
             return None
+
+    def create_next_round(self):
+        curr = self.current_round
+        next = curr.seq + 1
+        r = Round(name="Round %d" % next, seq=next, type=Round.TYPE_PRELIM,
+                  is_current=True)
+        r.save()
+        r.activate_all()
+
+        curr.is_current = False
+        curr.save()
     
 class Institution(models.Model):
     code = models.CharField(max_length=20)
@@ -52,16 +63,28 @@ class Team(models.Model):
     
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
+
+    def get_aff_count(self, before_round=None):
+        return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, before_round)
+
+    def get_neg_count(self, before_round=None):
+        return self._get_count(DebateTeam.POSITION_NEGATIVE, before_round)
+
+    def _get_count(self, position, before_round):
+        dts = DebateTeam.objects.filter(team=self, position=position)
+        if before_round is not None:
+            dts = dts.filter(debate__round__seq__lt=before_round)
+        return dts.count()
     
     @property
     def aff_count(self):
-        # TODO
-        return 0
+        # WARN: this will be incorrect if re-drawing a round before deleting the
+        # old draw
+        return self.get_aff_count()
     
     @property
     def neg_count(self):
-        # TODO
-        return 0
+        return self.get_neg_count()
 
     def get_debates(self, before_round):
         dts = DebateTeam.objects.select_related('debate').filter(team=self)

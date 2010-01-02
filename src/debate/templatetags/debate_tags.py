@@ -29,3 +29,11 @@ def version(path_string, base_url=settings.MEDIA_URL):
         return base_url + path_string 
 register.simple_tag(version) 
 
+def aff_count(team, round):
+    return team.get_aff_count(round.seq)
+register.simple_tag(aff_count)
+
+def neg_count(team, round):
+    return team.get_neg_count(round.seq)
+register.simple_tag(neg_count)
+

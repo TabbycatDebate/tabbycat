@@ -34,7 +34,17 @@
         // load adjudicator scores
         $.getJSON("{% url adj_scores %}", function(data) {
             scores = data;
-        } );
+            $(".adj").each( function() {
+                $(this).append('<span class="info"><a href="">(i)</a></span>');
+                $("a", this).attr("title", "Score: " + scores[intId(this)]);
+                $("a", this).click( function() {
+
+                    return false;
+
+                } );
+            } );
+
+       } );
 
         var unusedTable = $("#unusedTable").dataTable({
             bPaginate: false,
@@ -273,6 +283,8 @@
     .adj { background-color: #ccc; white-space: nowrap; margin-right: 1em; }
     .adj.conflict { color: red; font-weight: bold; }
     .adj span { margin-left: 10px; }
+    .adj span.info { margin-left: 0; margin-right: 5px; }
+
     #dataTable td.hover { background-color: #ff8; }
     #scratch {
         position: fixed;
