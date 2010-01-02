@@ -1,6 +1,6 @@
 from django.db import models
 
-from debate.utils import pair_list
+from debate.utils import pair_list, memoize
 from debate.draw import RandomDrawNoConflict, AidaDraw
 from debate.adjudicator import DumbAdjAllocator
 
@@ -212,6 +212,7 @@ class Round(models.Model):
         
         for pair in pairs:
             debate = Debate(round=self, venue=venues.pop(0))
+            debate.bracket = max(pair[0].team_points, pair[1].team_points)
             debate.save()
             
             aff = DebateTeam(debate=debate, team=pair[0], position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -297,6 +298,14 @@ class Round(models.Model):
         self.set_available_adjudicators([a.id for a in
                                          Adjudicator.objects.all()])
         self.set_available_teams([t.id for t in Team.objects.all()])
+
+    @property
+    @memoize
+    def prev(self):
+        try:
+            return Round.objects.get(seq=self.seq-1)
+        except Round.DoesNotExist:
+            return None
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)

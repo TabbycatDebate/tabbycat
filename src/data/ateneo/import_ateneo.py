@@ -208,10 +208,10 @@ class Importer(object):
         for debate in m.Debate.objects.all():
             # set debate brackets
             aff_team = m.Team.objects.standings(
-                debate.round).get(id=debate.aff_team.id)
+                debate.round.prev).get(id=debate.aff_team.id)
 
             neg_team = m.Team.objects.standings(
-                debate.round).get(id=debate.neg_team.id)
+                debate.round.prev).get(id=debate.neg_team.id)
 
             debate.bracket = max(aff_team.team_points, neg_team.team_points)
             debate.save()
@@ -226,7 +226,9 @@ def run():
     im.import_speakers()
     im.import_adjudicator_conflicts()
 
-    im.load_round(range(1,9))
+    return im
+
+    #im.load_round(range(1,7))
 
 if __name__ == '__main__':
     run()

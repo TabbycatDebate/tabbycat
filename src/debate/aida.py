@@ -66,8 +66,15 @@ def swap(draw, i):
     draw[i+1] = m2
 
 def one_up_down(draw):
-    score, swaps = dp([(score_swap(draw[i], draw[i+1])) for i in range(len(draw) - 1)])
-    for s in swaps:
+    swap_scores = [(score_swap(draw[i], draw[i+1])) for i in range(len(draw) - 1)]
+    # adjust scores so that if there are two equivalent ways to resolve a
+    # conflict, swaps higher in the ranking are preferred to those lower
+    for i, score in enumerate(swap_scores):
+        if score > 0:
+            swap_scores[i] += (len(swap_scores) - i) * 1e-2
+
+    best_score, best_swaps = dp(swap_scores)
+    for s in best_swaps:
         swap(draw, s)
     return draw
 
