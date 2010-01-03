@@ -35,7 +35,7 @@
         $.getJSON("{% url adj_scores %}", function(data) {
             scores = data;
             $(".adj").each( function() {
-                $(this).append('<span class="info"><a href="">(i)</a></span>');
+                $(this).append('<span class="info"><a href="">' + scores[intId(this)] + '(i)</a></span>');
                 $("a", this).attr("title", "Score: " + scores[intId(this)]);
                 $("a", this).click( function() {
 

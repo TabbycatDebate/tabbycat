@@ -2,7 +2,7 @@ from django.db import models
 
 from debate.utils import pair_list, memoize
 from debate.draw import RandomDrawNoConflict, AidaDraw
-from debate.adjudicator import DumbAdjAllocator
+from debate.adjudicator.dumb import DumbAllocator
 
 class ScoreField(models.FloatField):
     pass
@@ -218,8 +218,11 @@ class Round(models.Model):
         if self.draw_status != self.STATUS_CONFIRMED:
             raise
 
-        allocator = DumbAdjAllocator(self)
-        for alloc in allocator.get_allocation():
+        debates = self.debates()
+        adjs = list(self.active_adjudicators.order_by('-test_score'))
+        allocator = DumbAllocator(debates, adjs)
+
+        for alloc in allocator.allocate():
             alloc.save()
         self.adjudicator_status = self.STATUS_DRAFT
         self.save()

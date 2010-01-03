@@ -1,12 +1,11 @@
-class DumbAdjAllocator(object):
-    def __init__(self, round):
-        self.round = round
+from debate.adjudicator import Allocator
 
-    def get_allocation(self):
+class DumbAllocator(Allocator):
+    def allocate(self):
         from debate.models import AdjudicatorAllocation
 
-        debates = self.round.debates()
-        adjs = list(self.round.active_adjudicators.order_by('-test_score'))
+        debates = self.debates
+        adjs = self.adjudicators
 
         result = []
         for debate in debates:
@@ -15,7 +14,7 @@ class DumbAdjAllocator(object):
             result.append(alloc)
 
         while len(adjs) >= 2:
-            for alloc in result:
+            for alloc in reversed(result):
                 if len(adjs) >= 2:
                     alloc.panel.append(adjs.pop(0))
                     alloc.panel.append(adjs.pop(0))

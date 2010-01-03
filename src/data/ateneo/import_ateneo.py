@@ -234,12 +234,25 @@ def run():
 if __name__ == '__main__':
     im = run()
     import sys
-    if len(sys.argv) == 1:
+
+    n_args = len(sys.argv)
+
+    make_new = False
+
+    if sys.argv[-1] == '--new':
+        n_args -= 1
+        make_new = True
+
+    if n_args == 1:
         a, b = 1, 9
-    elif len(sys.argv) == 2:
+    elif n_args == 2:
         a, b = 1, int(sys.argv[1])
     else:
         a, b = int(sys.argv[1]), int(sys.argv[2])
     
     im.load_round(range(a, b))
+
+    if make_new:
+        from debate.models import Tournament
+        Tournament().create_next_round()
 
