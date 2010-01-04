@@ -117,7 +117,7 @@ class Team(models.Model):
     def speakers(self):
         return self.speaker_set.all()
 
-def TeamAtRound(team):
+def TeamAtRound(team, round):
     return Team.objects.standings(round).get(id=team.id)
 
 class Speaker(models.Model):
@@ -222,13 +222,13 @@ class Round(models.Model):
         self.draw_status = self.STATUS_DRAFT
         self.save()
 
-    def allocate_adjudicators(self):
+    def allocate_adjudicators(self, alloc_class=DumbAllocator):
         if self.draw_status != self.STATUS_CONFIRMED:
             raise
 
         debates = self.debates()
-        adjs = list(self.active_adjudicators.order_by('-test_score'))
-        allocator = DumbAllocator(debates, adjs)
+        adjs = list(self.active_adjudicators.all())
+        allocator = alloc_class(debates, adjs)
 
         for alloc in allocator.allocate():
             alloc.save()
@@ -300,7 +300,7 @@ class Round(models.Model):
                                       'debate_team')
 
     def set_available_base(self, ids, model, active_model, get_active,
-                             id_column):
+                             id_column, active_id_column):
         ids = set(ids)
         all_ids = set(a['id'] for a in model.objects.values('id'))
         exclude_ids = all_ids.difference(ids)
@@ -309,7 +309,11 @@ class Round(models.Model):
         remove_ids = existing_ids.intersection(exclude_ids)
         add_ids = ids.difference(existing_ids)
 
-        active_model.objects.filter(round=self, id__in=remove_ids).delete()
+        active_model.objects.filter(**{
+            '%s__in' % active_id_column: remove_ids, 
+            'round': self,
+        }).delete()
+
         for id in add_ids:
             m = active_model(round=self)
             setattr(m, id_column, id)
@@ -317,11 +321,13 @@ class Round(models.Model):
 
     def set_available_venues(self, ids):
         return self.set_available_base(ids, Venue, ActiveVenue,
-                                       self.active_venues, 'venue_id')
+                                       self.active_venues, 'venue_id',
+                                       'venue__id')
 
     def set_available_adjudicators(self, ids):
         return self.set_available_base(ids, Adjudicator, ActiveAdjudicator,
-                                       self.active_adjudicators, 'adjudicator_id')
+                                       self.active_adjudicators,
+                                       'adjudicator_id', 'adjudicator__id')
 
     def set_available_teams(self, ids):
         return self.set_available_base(ids, Team, ActiveTeam,

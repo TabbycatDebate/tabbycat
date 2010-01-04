@@ -121,19 +121,59 @@ class StabAllocator(Allocator):
         self.debates.sort(key=lambda d:d.get_energy(), reverse=True)
         panels.sort(key=lambda p:p.get_energy(), reverse=True)
 
-        pairings = zip(self.debates, panels)
+        self.pairings = zip(self.debates, panels)
 
-        return pairings
+        for i, (debate, panel) in enumerate(self.pairings):
+            if panel.conflicts(debate):
+                j = self.search_swap(i, range(i, 0, -1))
+                if j is None:
+                    j = self.search_swap(i, range(i+1, len(panels)))
+
+        from debate.models import AdjudicatorAllocation
+
+        allocation = []
+        for debate, panel in self.pairings:
+            a = AdjudicatorAllocation(debate.debate)
+            a.chair = panel[0]
+            a.panel = panel[1:]
+            allocation.append(a)
+
+        return allocation
+
+    def search_swap(self, idx, search_range):
+        base_debate, base_panel = self.pairings[idx]
+
+        for j in search_range:
+            debate, panel = self.pairings[j]
+            if not (base_panel.conflicts(debate) or
+                    panel.conflicts(base_debate)):
+                # do swap
+                self.pairings[idx] = (base_debate, panel)
+                self.pairings[j] = (debate, base_panel)
+                return j
+        return None
+
 
 class StabPanel(object):
     def __init__(self, panel):
-        self.panel = panel
+        self.panel = list(panel)
+        self.panel.sort(key=lambda a: a.score, reverse=True)
 
     def __getattr__(self, name):
         return getattr(self.panel, name)
 
+    def __getitem__(self, o):
+        return self.panel.__getitem__(o)
+
     def get_energy(self):
         return sum(a.score for a in self.panel) / len(self.panel)
+
+    def conflicts(self, debate):
+        for adj in self.panel:
+            for team in (debate.aff_team, debate.neg_team):
+                if adj.conflict_with(team):
+                    return True
+        return False
 
 class StabDebate(object):
     def __init__(self, debate):
@@ -147,14 +187,14 @@ class StabDebate(object):
         return getattr(self.debate, name)
 
     def get_energy(self, bubble=False):
-        from debate.models import DebateTeam
-        aff_team = self.get_team(DebateTeam.POSITION_AFFIRMATIVE, scores=True)
-        neg_team = self.get_team(DebateTeam.POSITION_NEGATIVE, scores=True)
+        from debate.models import DebateTeam, TeamAtRound
+        aff_team = TeamAtRound(self.aff_team, self.round)
+        neg_team = TeamAtRound(self.neg_team, self.round)
 
-        energy = aff_team.team_points * 300
-        energy += neg_team.team_points * 300
-        energy += aff_team.team_score
-        energy += neg_team.team_score
+        energy = aff_team.points * 300
+        energy += neg_team.points * 300
+        energy += aff_team.speaker_score
+        energy += neg_team.speaker_score
 
         return energy
 
