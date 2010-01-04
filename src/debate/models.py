@@ -47,10 +47,10 @@ class TeamManager(models.Manager):
             )
 
         teams = teams.annotate(
-            team_points = models.Sum('debateteam__teamscore__points'),
-            team_score = models.Sum('debateteam__teamscore__score'),
+            points = models.Sum('debateteam__teamscore__points'),
+            speaker_score = models.Sum('debateteam__teamscore__score'),
             results_count = models.Count('debateteam__teamscore'),
-        ).order_by('-team_points', '-team_score')
+        ).order_by('-points', '-speaker_score')
 
         return teams
 
@@ -117,6 +117,9 @@ class Team(models.Model):
     def speakers(self):
         return self.speaker_set.all()
 
+def TeamAtRound(team):
+    return Team.objects.standings(round).get(id=team.id)
+
 class Speaker(models.Model):
     name = models.CharField(max_length=40)
     team = models.ForeignKey(Team)
@@ -145,6 +148,11 @@ class Adjudicator(models.Model):
     def conflict_with(self, team):
         return AdjudicatorConflict.objects.filter(adjudicator=self,
                                                   team=team).count()
+
+    @property
+    def score(self):
+        # TODO: proper scoring
+        return self.test_score
 
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('Adjudicator')

@@ -11,9 +11,9 @@ class BaseDraw(object):
             raise DrawError()
         from django.db.models import Sum
         teams = self.round.active_teams.annotate(
-            team_points = Sum('debateteam__teamscore__points'),
-            team_score = Sum('debateteam__teamscore__score')
-        ).order_by('-team_points', '-team_score')
+            points = Sum('debateteam__teamscore__points'),
+            speaker_score = Sum('debateteam__teamscore__score')
+        ).order_by('-points', '-speaker_score')
         self.teams = list(teams)
         
         if not len(self.teams) % 2 == 0:
@@ -86,7 +86,7 @@ class AidaDraw(BaseDraw):
             top_team = teams.pop(0)
             pool = []
             pool.append(top_team)
-            while len(teams) > 0 and teams[0].team_points == top_team.team_points:
+            while len(teams) > 0 and teams[0].points == top_team.points:
                 pool.append(teams.pop(0))
             if len(pool) % 2 != 0:
                 pool.append(teams.pop(0))

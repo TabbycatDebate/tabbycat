@@ -32,8 +32,8 @@
         {% if not team.results_in %}inactive{% endif%}"> 
         <td>{{ forloop.counter }}</td>
         <td>{{ team.name }}</td>
-        <td>{{ team.team_points }}</td>
-        <td>{{ team.team_score }}</td>
+        <td>{{ team.points }}</td>
+        <td>{{ team.speaker_score }}</td>
     </tr>
     {% endfor %}
 </table>
