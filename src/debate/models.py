@@ -331,7 +331,8 @@ class Round(models.Model):
 
     def set_available_teams(self, ids):
         return self.set_available_base(ids, Team, ActiveTeam,
-                                       self.active_teams, 'team_id')
+                                       self.active_teams, 'team_id',
+                                      'team__id')
 
     def activate_adjudicator(self, adj, state=True):
         if state:
