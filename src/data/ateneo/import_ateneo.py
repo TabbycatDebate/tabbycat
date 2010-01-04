@@ -92,6 +92,7 @@ class Importer(object):
                     venue_status = m.Round.STATUS_CONFIRMED,
                     adjudicator_status = m.Round.STATUS_CONFIRMED,
                     is_current = False,
+                    feedback_weight = float(fw),
                 )
                 r.save()
                 r.activate_all()
@@ -216,8 +217,32 @@ class Importer(object):
                 neg_team = m.Team.objects.standings(
                     debate.round.prev).get(id=debate.neg_team.id)
 
-                debate.bracket = max(aff_team.team_points, neg_team.team_points)
+                debate.bracket = max(aff_team.points, neg_team.points)
             debate.save()
+
+        def _int(id):
+            if id.strip() == r'\N':
+                return None
+            return int(id)
+
+        for line in self.load_table('adjudicator_feedback_sheets'):
+            id, adj_id, aa_id, dt_id, comm, score, c, u = line.split('\t')
+            dt_id = _int(dt_id)
+            aa_id = _int(aa_id)
+
+            if (dt_id in self.debate_teams 
+                or aa_id in self.adjudicator_allocations):
+
+                dt = self.debate_teams.get(dt_id)
+                aa = self.adjudicator_allocations.get(aa_id)
+
+                m.AdjudicatorFeedback(
+                    adjudicator = self.adjudicators[int(adj_id)],
+                    score = float(score),
+                    comments = comm.strip(),
+                    source_adjudicator = aa,
+                    source_team = dt,
+                ).save()
 
  
 def run():

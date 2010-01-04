@@ -4,11 +4,12 @@ from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 from django.db.models import Sum, Count
 
-from debate.models import Round, Debate, Team, Venue
+from debate.models import Round, Debate, Team, Venue, Adjudicator
+from debate.models import AdjudicatorConflict
 from debate import forms
 
 from functools import wraps
-# Create your views here.
+import json
 
 def round_view(view_fn):
     @wraps(view_fn)
@@ -242,9 +243,6 @@ def save_adjudicators(request, rc, round):
     return HttpResponse("ok")
 
 def adj_conflicts(request):
-    import json
-    from debate.models import AdjudicatorConflict
-
     data = {}
 
     for ac in AdjudicatorConflict.objects.all():
@@ -256,9 +254,6 @@ def adj_conflicts(request):
 
 
 def adj_scores(request):
-    import json
-    from debate.models import Adjudicator
-
     data = {}
 
     for adj in Adjudicator.objects.all():
@@ -266,4 +261,8 @@ def adj_scores(request):
 
     return HttpResponse(json.dumps(data), mimetype="text/json")
 
+def adj_feedback(request):
+    rc = RequestContext(request)
+    rc['adjudicators'] = Adjudicator.objects.all()
 
+    return render_to_response('adjudicator_feedback.html', context_instance=rc)

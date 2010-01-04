@@ -653,10 +653,31 @@ class DebateAdjudicator(models.Model):
 class AdjudicatorFeedback(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
     score = models.FloatField()
+    weighted_score = models.FloatField()
+    comments = models.TextField(blank=True)
 
     source_adjudicator = models.ForeignKey(DebateAdjudicator, blank=True,
                                            null=True)
     source_team = models.ForeignKey(DebateTeam, blank=True, null=True)
+
+
+    def save(self, *args, **kwargs):
+        self.weighted_score = self.score * self.feedback_weight
+
+        super(AdjudicatorFeedback, self).save(*args, **kwargs)
+
+    @property
+    def round(self):
+        if self.source_adjudicator:
+            return self.source_adjudicator.debate.round
+        if self.source_team:
+            return self.source_team.debate.round
+
+    @property
+    def feedback_weight(self):
+        if self.round:
+            return self.round.feedback_weight
+        return 1
     
 
 class AdjudicatorAllocation(object):
