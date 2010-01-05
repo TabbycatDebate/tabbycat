@@ -266,3 +266,21 @@ def adj_feedback(request):
     rc['adjudicators'] = Adjudicator.objects.all()
 
     return render_to_response('adjudicator_feedback.html', context_instance=rc)
+
+def get_adj_feedback(request):
+
+    adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
+
+    feedback = adj.get_feedback()
+
+    data = [ [unicode(f.round), 
+              f.debate.bracket, 
+              unicode(f.debate), 
+              unicode(f.source), 
+              f.score,
+              f.comments,
+             ] for f in feedback ]
+
+    return HttpResponse(json.dumps({'aaData': data}), mimetype="text/json")
+
+

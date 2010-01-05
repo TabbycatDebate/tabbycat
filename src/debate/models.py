@@ -154,6 +154,9 @@ class Adjudicator(models.Model):
         # TODO: proper scoring
         return self.test_score
 
+    def get_feedback(self):
+        return AdjudicatorFeedback.objects.filter(adjudicator=self)
+
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('Adjudicator')
     team = models.ForeignKey('Team')
@@ -667,11 +670,23 @@ class AdjudicatorFeedback(models.Model):
         super(AdjudicatorFeedback, self).save(*args, **kwargs)
 
     @property
-    def round(self):
+    def source(self):
         if self.source_adjudicator:
-            return self.source_adjudicator.debate.round
+            return self.source_adjudicator.adjudicator
         if self.source_team:
-            return self.source_team.debate.round
+            return self.source_team.team
+
+    @property
+    def debate(self):
+        if self.source_adjudicator:
+            return self.source_adjudicator.debate
+        if self.source_team:
+            return self.source_team.debate
+
+
+    @property
+    def round(self):
+        return self.debate.round
 
     @property
     def feedback_weight(self):
