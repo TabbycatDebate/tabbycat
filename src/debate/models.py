@@ -257,7 +257,7 @@ class Round(models.Model):
         
         for pair in pairs:
             debate = Debate(round=self, venue=venues.pop(0))
-            debate.bracket = max(0, pair[0].team_points, pair[1].team_points)
+            debate.bracket = max(0, pair[0].points, pair[1].points)
             debate.save()
             
             aff = DebateTeam(debate=debate, team=pair[0], position=DebateTeam.POSITION_AFFIRMATIVE)
