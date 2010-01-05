@@ -5,13 +5,14 @@
 {% block h1 %}Adjudicator Availability for Round {{ round }}{% endblock %}
 
 {% block table-contents %}
-    <thead><tr><th>Adjudicator</th><th>Institution</th><th>Test Score</th><th>Active</th></tr></thead>
+    <thead><tr><th>Adjudicator</th><th>Institution</th><th>Test Score</th><th>Score</th><th>Active</th></tr></thead>
     <tbody>
         {% for adj in adjudicators %}
         <tr>
             <td>{{ adj.name }}</td>
             <td>{{ adj.institution.name }}</td>
             <td>{{ adj.test_score }}</td>
+            <td>{{ adj.score }}</td>
             <td><input type="checkbox" {{ adj.is_active|yesno:'checked="yes",'  }} name="check_{{ adj.id }}"  value="{{ adj.id }}" /></td>
         </tr>
         {% endfor %}

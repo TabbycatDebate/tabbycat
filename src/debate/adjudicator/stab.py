@@ -20,7 +20,7 @@ class PanelMaker(object):
     )
 
     def _rate(self, adj):
-        score = adj.score
+        score = adj.test_score
 
         for rank, lo, hi in self.RANK_RANGES:
             if lo <= score <= hi:
@@ -77,7 +77,10 @@ class PanelMaker(object):
             if num_c >= num_bbc:
                 self.build(self.RANK_B, self.RANK_B, self.RANK_C, num_bbc)
                 num_c -= num_bbc
-        if num_c / 2 < panels_left:
+
+        if num_c // 3 >= panels_left:
+            self.build(self.RANK_C, self.RANK_C, self.RANK_C, panels_left)
+        elif num_c / 2 < panels_left:
             num_ccc = num_c % 2
             num_ccd = (num_c // 2) - num_ccc
             num_ddd = panels_left - (num_c // 2)
@@ -116,7 +119,7 @@ class StabAllocator(Allocator):
         p = PanelMaker()
         panels = p.form_panels(self.adjudicators, len(self.debates))
 
-        assert len(self.debates) == len(panels)
+        assert len(self.debates) <= len(panels)
 
         self.debates.sort(key=lambda d:d.get_energy(), reverse=True)
         panels.sort(key=lambda p:p.get_energy(), reverse=True)
