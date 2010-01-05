@@ -1,8 +1,27 @@
 import random
-from debate.utils import pair_list
+from debate.utils import pair_list, memoize
 
 class DrawError(Exception):
     pass
+
+class TeamAtRound(object):
+    def __init__(self, team, round):
+        self.team = team
+        self.round = round
+
+    def __getattr__(self, name):
+        return getattr(self.team, name)
+
+    @property
+    @memoize
+    def aff_count(self):
+        return self.team.get_aff_count(self.round.seq)
+
+    @property
+    @memoize
+    def neg_count(self):
+        return self.team.get_neg_count(self.round.seq)
+
     
 class BaseDraw(object):
     def __init__(self, round):
@@ -14,7 +33,7 @@ class BaseDraw(object):
             points = Sum('debateteam__teamscore__points'),
             speaker_score = Sum('debateteam__teamscore__score')
         ).order_by('-points', '-speaker_score')
-        self.teams = list(teams)
+        self.teams = [TeamAtRound(team, round.prev) for team in teams]
         
         if not len(self.teams) % 2 == 0:
             raise DrawError()
@@ -31,6 +50,12 @@ class BaseDraw(object):
                 random.shuffle(l)
                 p.append(l)
         return p
+
+    def draw(self):
+        draw = self.get_draw()
+
+        # unbox
+        return [(a.team, n.team) for a, n in draw]
         
 class RandomDraw(BaseDraw):
     def get_draw(self):

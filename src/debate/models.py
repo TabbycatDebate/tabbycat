@@ -64,16 +64,16 @@ class Team(models.Model):
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
 
-    def get_aff_count(self, before_round=None):
-        return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, before_round)
+    def get_aff_count(self, seq=None):
+        return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)
 
-    def get_neg_count(self, before_round=None):
-        return self._get_count(DebateTeam.POSITION_NEGATIVE, before_round)
+    def get_neg_count(self, seq=None):
+        return self._get_count(DebateTeam.POSITION_NEGATIVE, seq)
 
-    def _get_count(self, position, before_round):
+    def _get_count(self, position, seq):
         dts = DebateTeam.objects.filter(team=self, position=position)
-        if before_round is not None:
-            dts = dts.filter(debate__round__seq__lt=before_round)
+        if seq is not None:
+            dts = dts.filter(debate__round__seq__lte=seq)
         return dts.count()
     
     @property
@@ -229,7 +229,7 @@ class Round(models.Model):
 
         drawer = self._drawer()
         d = drawer(self)
-        self.make_debates(d.get_draw())
+        self.make_debates(d.draw())
         self.draw_status = self.STATUS_DRAFT
         self.save()
 
