@@ -6,6 +6,10 @@
     $(document).ready( function() {
         var conflicts;
         var scores;
+        var conflictTypeClass = {
+            'conflict': 'conflict-with-active',
+            'history': 'history-with-active',
+        }
 
         function intId(e) {
             return parseInt($(e).attr('id').split('_')[1]);
@@ -16,17 +20,20 @@
         }
 
         // load adjudicator conflict data
-        $.getJSON("{% url adj_conflicts %}", function(data) {
+        $.getJSON("{% url adj_conflicts round.id %}", function(data) {
             conflicts = data;
 
-            // insert blank entries for adjudicators who aren't there
-            // (no conflicts)
-            $(".adj").each( function() {
-                var id = $(this).attr('id').split('_')[1];
-                if (conflicts[id] == undefined) {
-                    conflicts[id] = [];
-                }
-            } );
+             // insert blank entries for adjudicators who aren't there
+             // (no conflicts)
+             $(".adj").each( function() {
+                 var id = intId(this);
+                 if (conflicts['conflict'][id] == undefined) {
+                     conflicts['conflict'][id] = [];
+                 }
+                 if (conflicts['history'][id] == undefined) {
+                     conflicts['history'][id] = [];
+                 }
+             } );
 
             // update all
             $("#dataTable tbody tr").each( function() {
@@ -69,8 +76,11 @@
             $(adj).removeClass("conflict");
         }
         function eachConflictingTeam(adj_id, fn) {
-            $.each(conflicts[adj_id], function (i, n) {
-                $("#team_" + n).each( function() { fn(this); } );
+            $.each(conflicts['conflict'][adj_id], function (i, n) {
+                $("#team_" + n).each( function() { fn('conflict', this); } );
+            } );
+            $.each(conflicts['history'][adj_id], function (i, n) {
+                $("#team_" + n).each( function() { fn('history', this); } );
             } );
         }
 
@@ -80,21 +90,31 @@
                 var adj = this;
                 var adj_id = intId(this);
                 var a = 0;
+                var h = 0;
                 // select aff & neg team
                 $("td:gt(0):lt(2)", debate_tr).each( function() {
                     if ($.inArray(
                             intId(this), 
-                            conflicts[adj_id]) != -1) {
+                            conflicts['conflict'][adj_id]) != -1) {
                         $(debate_tr).addClass("conflict");
                         $(adj).addClass("conflict");
                         c++;
                         a++;
+                    } else if ($.inArray(
+                            intId(this), 
+                            conflicts['history'][adj_id]) != -1) {
+                        $(debate_tr).addClass("history-conflict");
+                        $(adj).addClass("history-conflict");
+                        c++;
+                        h++;
                     } 
                 } );
                 if (a == 0) {
                     $(adj).removeClass("conflict");
                 }
-
+                if (h == 0) {
+                    $(adj).removeClass("history-conflict");
+                }
 
             } );
 
@@ -145,8 +165,8 @@
             start: function (event, ui) {
                 eachConflictingTeam(
                     intId(ui.helper),
-                    function (elem) {
-                        $(elem).addClass("conflicts-with-active");
+                    function (type, elem) {
+                        $(elem).addClass(conflictTypeClass[type]);
                     }
                 );
                 var foo=0;
@@ -154,8 +174,8 @@
             stop: function(event, ui) {
                 eachConflictingTeam(
                     intId(ui.helper),
-                    function (elem) {
-                        $(elem).removeClass("conflicts-with-active");
+                    function (type, elem) {
+                        $(elem).removeClass(conflictTypeClass[type]);
                     }
                 );
                 $(ui.helper).remove();
@@ -289,6 +309,8 @@
     .adj span { margin-left: 10px; }
     .adj span.info { margin-left: 0; margin-right: 5px; }
 
+    .adj.history-conflict { color: #f80; font-weight: bold; }
+
     #dataTable td.hover { background-color: #ff8; }
     #scratch {
         position: fixed;
@@ -310,7 +332,8 @@
     
 
     .incomplete { border: 1px solid #f84; }
-    #dataTable .conflicts-with-active { color: red; font-weight: bold; }
+    #dataTable .conflict-with-active { color: red; font-weight: bold; }
+    #dataTable .history-with-active { color: #f80; font-weight: bold; }
 
 </style>
 {% endblock extra-head %}

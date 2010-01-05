@@ -45,7 +45,7 @@ urlpatterns = patterns('debate.views',
     url(r'^debate/(?P<debate_id>\d+)/results/save/$', 'save_result',
         name='save_result'),
 
-    url(r'^adjudicators/conflicts/$', 'adj_conflicts', name='adj_conflicts'),
+    url(r'^round/(?P<round_id>\d+)/adjudicators/conflicts/$', 'adj_conflicts', name='adj_conflicts'),
     url(r'^adjudicators/scores/$', 'adj_scores', name='adj_scores'),
     url(r'^adjudicators/feedback/$', 'adj_feedback', name='adj_feedback'),
     url(r'^adjudicators/feedback/get/$', 'get_adj_feedback', name='get_adj_feedback'),

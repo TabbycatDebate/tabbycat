@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Sum, Count
 
 from debate.models import Round, Debate, Team, Venue, Adjudicator
-from debate.models import AdjudicatorConflict
+from debate.models import AdjudicatorConflict, DebateAdjudicator
 from debate import forms
 
 from functools import wraps
@@ -245,13 +245,28 @@ def save_adjudicators(request, rc, round):
 
     return HttpResponse("ok")
 
-def adj_conflicts(request):
-    data = {}
+@round_view
+def adj_conflicts(request, rc, round):
+    data = {
+        'conflict': {},
+        'history': {},
+    }
+
+    def add(type, adj_id, target_id):
+        if adj_id not in data[type]:
+            data[type][adj_id] = []
+        data[type][adj_id].append(target_id)
 
     for ac in AdjudicatorConflict.objects.all():
-        if ac.adjudicator_id not in data:
-            data[ac.adjudicator_id] = list()
-        data[ac.adjudicator_id].append(ac.team_id)
+        add('conflict', ac.adjudicator_id, ac.team_id)
+
+    history = DebateAdjudicator.objects.filter(
+        debate__round__seq__lt = round.seq,
+    )
+
+    for da in history:
+        add('history', da.adjudicator_id, da.debate.aff_team.id)
+        add('history', da.adjudicator_id, da.debate.neg_team.id)
 
     return HttpResponse(json.dumps(data), mimetype="text/json")
 
