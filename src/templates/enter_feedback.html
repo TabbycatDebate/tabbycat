@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+
+<style>
+    #id_score {
+        width: 4em;
+    }
+
+    #feedbackForm label {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block h1 %}Enter Feedback for {{ adj }} {% endblock %}
+
+{% block content %}
+<form id="feedbackForm" action="" method="POST">
+    {{ form.as_p }}
+<input type="submit" value="Save" />
+</form>
+
+{% endblock content %}
+

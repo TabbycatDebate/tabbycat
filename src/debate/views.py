@@ -11,6 +11,9 @@ from debate import forms
 from functools import wraps
 import json
 
+def redirect_to(view, **kwargs):
+    return HttpResponseRedirect(reverse(view, **kwargs))
+
 def round_view(view_fn):
     @wraps(view_fn)
     def foo(request, round_id):
@@ -106,7 +109,7 @@ def create_draw(request, rc, round):
 
     round.draw()
 
-    return HttpResponseRedirect(reverse('draw', args=[round.id])) 
+    return redirect_to('draw', args=[round.id])
 
 @expect_post
 @round_view
@@ -118,7 +121,7 @@ def confirm_draw(request, rc, round):
     round.draw_status = round.STATUS_CONFIRMED
     round.save()
 
-    return HttpResponseRedirect(reverse('draw', args=[round.id])) 
+    return redirect_to('draw', args=[round.id])
 
 @expect_post
 @round_view
@@ -129,7 +132,7 @@ def create_adj_allocation(request, rc, round):
     from debate.adjudicator.stab import StabAllocator
     round.allocate_adjudicators(StabAllocator)
 
-    return HttpResponseRedirect(reverse('draw', args=[round.id])) 
+    return redirect_to('draw', args=[round.id])
 
 @round_view
 def results(request, rc, round):
@@ -164,7 +167,7 @@ def save_result(request, debate_id):
     else:
         raise
 
-    return HttpResponseRedirect(reverse('results', args=[debate.round.id]))
+    return redirect_to('results', args=[debate.round.id])
 
 @round_view
 def team_standings(request, rc, round):
@@ -283,4 +286,18 @@ def get_adj_feedback(request):
 
     return HttpResponse(json.dumps({'aaData': data}), mimetype="text/json")
 
+def enter_feedback(request, adjudicator_id):
+    adj = get_object_or_404(Adjudicator, id=adjudicator_id)
 
+    if request.method == "POST":
+        form = forms.make_feedback_form_class(adj)(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect_to('adj_feedback')
+        raise
+
+    rc = RequestContext(request)
+    rc['adj'] = adj
+    rc['form'] = forms.make_feedback_form_class(adj)()
+    
+    return render_to_response('enter_feedback.html', context_instance=rc)

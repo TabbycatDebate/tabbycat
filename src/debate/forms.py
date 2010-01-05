@@ -1,6 +1,7 @@
 from django import forms
 
 from debate.models import TeamScoreSheet, SpeakerScoreSheet, DebateResult, Debate
+from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
 
 def get_or_instantiate(model, **kwargs):
     try:
@@ -138,6 +139,89 @@ def make_results_form(debate):
                 initial['%s_score_%d' % (side, i)] = score
 
     return class_(initial=initial)
+
+def make_feedback_form_class(adjudicator):
+
+    debates = [da.debate for da in DebateAdjudicator.objects.filter(
+        adjudicator = adjudicator )]
+
+    def adj_choice(da):
+        return (
+            'A:%d' % da.id, 
+            '(%d) %s' % (da.debate.round.seq, da.adjudicator.name)
+        )
+
+    adj_choices = [(None, '-- Adjudicators --')]
+    adj_choices.extend ([
+        adj_choice(da) for da in DebateAdjudicator.objects.filter(
+            debate__id__in = [d.id for d in debates]
+        ).select_related('debate') if da.adjudicator != adjudicator
+    ])
+
+    if len(adj_choices) == 1: adj_choices = []
+
+    def team_choice(dt):
+        return (
+            'T:%d' % dt.id,
+            '(%d) %s' % (dt.debate.round.seq, dt.team.name)
+        )
+
+    team_choices = [(None, '-- Teams --')]
+    team_choices.extend([
+        team_choice(dt) for dt in DebateTeam.objects.filter(
+            debate__id__in = [d.id for d in debates]
+        ).select_related('debate')
+    ])
+
+    choices = adj_choices + team_choices
+
+    def coerce(value):
+        obj_type, id = value.split(':')
+        id = int(id)
+
+        if obj_type.strip() == 'A':
+            return DebateAdjudicator.objects.get(pk=id)
+        if obj_type.strip() == 'T':
+            return DebateTeam.objects.get(pk=id)
+        
+    class FeedbackForm(forms.Form):
+        source = forms.TypedChoiceField(
+            choices = choices,
+            coerce = coerce,
+        )
+
+        score = forms.FloatField(
+            min_value = 0,
+            max_value = 5,
+        )
+
+        comment = forms.CharField(widget=forms.Textarea)
+
+        def save(self):
+            source = self.cleaned_data['source']
+            if isinstance(source, DebateAdjudicator):
+                sa = source
+            else:
+                sa = None
+            if isinstance(source, DebateTeam):
+                st = source
+            else:
+                st = None
+
+            a, c = AdjudicatorFeedback.objects.get_or_create(
+                adjudicator = adjudicator,
+                source_adjudicator = sa,
+                source_team = st,
+            )
+            a.score = self.cleaned_data['score']
+            a.comments = self.cleaned_data['comment']
+
+            a.save()
+
+
+
+    return FeedbackForm
+
 
 def test():
     from debate.models import Debate
