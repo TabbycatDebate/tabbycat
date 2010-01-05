@@ -11,6 +11,10 @@
             return parseInt($(e).attr('id').split('_')[1]);
         }
 
+        function formatScore(n) {
+            return n.toPrecision(2);
+        }
+
         // load adjudicator conflict data
         $.getJSON("{% url adj_conflicts %}", function(data) {
             conflicts = data;
@@ -35,7 +39,7 @@
         $.getJSON("{% url adj_scores %}", function(data) {
             scores = data;
             $(".adj").each( function() {
-                $(this).append('<span class="info"><a href="">' + scores[intId(this)] + '(i)</a></span>');
+                $(this).append('<span class="info"><a href="">' + formatScore(scores[intId(this)]) + '(i)</a></span>');
                 $("a", this).attr("title", "Score: " + scores[intId(this)]);
                 $("a", this).click( function() {
 
@@ -339,7 +343,7 @@
                 <span>{{ adj.name }}</span>
             </div>
         </td>
-        <td>{{ adj.test_score }}</td>
+        <td>{{ adj.score }}</td>
     </tr>
     {% endfor %}
     </tbody>

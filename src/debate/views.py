@@ -260,7 +260,7 @@ def adj_scores(request):
     data = {}
 
     for adj in Adjudicator.objects.all():
-        data[adj.id] = adj.test_score
+        data[adj.id] = adj.score
 
     return HttpResponse(json.dumps(data), mimetype="text/json")
 
