@@ -151,8 +151,16 @@ class Adjudicator(models.Model):
 
     @property
     def score(self):
-        # TODO: proper scoring
-        return self.test_score
+        weight = Tournament().current_round.feedback_weight
+
+        avg_score = AdjudicatorFeedback.objects.filter(
+            adjudicator = self,
+        ).aggregate(avg=models.Avg('score'))['avg']
+
+        if avg_score is None:
+            return self.test_score
+
+        return self.test_score * (1 - weight) + weight * avg_score
 
     def get_feedback(self):
         return AdjudicatorFeedback.objects.filter(adjudicator=self)
@@ -656,18 +664,11 @@ class DebateAdjudicator(models.Model):
 class AdjudicatorFeedback(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
     score = models.FloatField()
-    weighted_score = models.FloatField()
     comments = models.TextField(blank=True)
 
     source_adjudicator = models.ForeignKey(DebateAdjudicator, blank=True,
                                            null=True)
     source_team = models.ForeignKey(DebateTeam, blank=True, null=True)
-
-
-    def save(self, *args, **kwargs):
-        self.weighted_score = self.score * self.feedback_weight
-
-        super(AdjudicatorFeedback, self).save(*args, **kwargs)
 
     @property
     def source(self):
