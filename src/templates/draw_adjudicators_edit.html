@@ -138,6 +138,27 @@
 
         }
 
+        $("div.adj").mouseover( function(e) {
+            eachConflictingTeam(
+                intId(e.currentTarget),
+                function (type, elem) {
+                    $(elem).addClass(conflictTypeClass[type]);
+                }
+            );
+        } );
+
+        $("div.adj").mouseout( function(e) {
+            // check if currently being dragged
+            if (! $(e.currentTarget).hasClass("dragging")) {
+                eachConflictingTeam(
+                    intId(e.currentTarget),
+                    function (type, elem) {
+                        $(elem).removeClass(conflictTypeClass[type]);
+                    }
+                );
+            }
+        } );
+
         $(".adj").draggable( {
             handle: 'div',
             cursor: 'move',
@@ -162,22 +183,11 @@
                 min: 1000
             },
             revert: 'invalid',
-            start: function (event, ui) {
-                eachConflictingTeam(
-                    intId(ui.helper),
-                    function (type, elem) {
-                        $(elem).addClass(conflictTypeClass[type]);
-                    }
-                );
-                var foo=0;
+            start: function(event, ui) {
+                $("#" + ui.helper.attr("id")).addClass("dragging");
             },
             stop: function(event, ui) {
-                eachConflictingTeam(
-                    intId(ui.helper),
-                    function (type, elem) {
-                        $(elem).removeClass(conflictTypeClass[type]);
-                    }
-                );
+                $("#" + ui.helper.attr("id")).removeClass("dragging");
                 $(ui.helper).remove();
             }
         });
