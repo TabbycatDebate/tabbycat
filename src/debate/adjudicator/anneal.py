@@ -6,6 +6,7 @@ import math
 
 class SAAllocator(Allocator):
     SCORE_ADJ_TEAM_CONFLICT = 10000
+    SCORE_TARGET_PANEL = 800
     SCORE_ADJ_TEAM_HISTORY = 100
     SCORE_ADJ_ADJ_HISTORY = 30
 
@@ -16,13 +17,33 @@ class SAAllocator(Allocator):
 
         if initial is None:
             initial = StabAllocator(self.debates, self.adjudicators).allocate()
-        self.state = dict((aa.debate, tuple(a[1] for a in aa)) for aa in initial)
-        self.anneal(400, 1, 1e4, self.state)
 
-        i = 0
-        while self.best_energy > 0 and i < self.MAX_TRIES:
-            self.anneal(100, 1, 1e3, self.best_state)
-            i += 1
+        pairs = [(aa.debate, tuple(a[1] for a in aa)) for aa in initial]
+
+        top_bracket = pairs[0][0].bracket
+        bot_bracket = pairs[-1][0].bracket
+
+        # 4-0 - 5 brackets, needs 6 gaps
+        # 5-2
+
+        gaps = (top_bracket - bot_bracket) + 2
+
+        div = 3.0 / gaps
+
+        for debate, panel in pairs:
+            setattr(debate, 'target_panel', 2 + (debate.bracket - bot_bracket +
+                                                 1) * div)
+
+        print [d.target_panel for d, p in pairs]
+
+        self.state = dict(pairs)
+
+        self.anneal(800, 1, 1e4, self.state)
+
+        #i = 0
+        #while self.best_energy > 0 and i < self.MAX_TRIES:
+        #    self.anneal(100, 1, 1e3, self.best_state)
+        #    i += 1
 
         result = []
         for debate, panel in self.best_state.items():
@@ -148,8 +169,9 @@ class SAAllocator(Allocator):
         score = 0
 
         for adj in panel:
-            score += self.SCORE_ADJ_TEAM_HISTORY * adj.seen_team(debate.aff_team)
-            score += self.SCORE_ADJ_TEAM_HISTORY * adj.seen_team(debate.neg_team)
+            adj_impt = (6 - adj.score)
+            score += self.SCORE_ADJ_TEAM_HISTORY * adj.seen_team(debate.aff_team) * adj_impt
+            score += self.SCORE_ADJ_TEAM_HISTORY * adj.seen_team(debate.neg_team) * adj_impt
 
         return score
 
@@ -163,20 +185,24 @@ class SAAllocator(Allocator):
 
         return score
 
-    def score_panel_strength(self, debate, panel):
-        return 0
+
+    def score_target_panel_strength(self, debate, panel):
+        avg = sum(p.score for p in panel) / len(panel)
+        diff = abs(debate.target_panel - avg)
+
+        return self.SCORE_TARGET_PANEL * diff * debate.target_panel * avg
 
 def test():
     from debate.models import Round
-    from debate.adjudicator.dumb import DumbAllocator
+    from debate.adjudicator.stab import StabAllocator
 
     r = Round.objects.get(pk=4)
     debates = r.debates()
     adjs = list(r.active_adjudicators.all())
 
-    initial = DumbAllocator(debates, adjs).allocate()
+    initial = StabAllocator(debates, adjs).allocate()
 
-    sa = SAAllocator(initial).allocate()
+    sa = SAAllocator(debates, adjs).allocate(initial)
 
 if __name__ == '__main__':
     test()
