@@ -709,10 +709,10 @@ class AdjudicatorFeedback(models.Model):
     
 
 class AdjudicatorAllocation(object):
-    def __init__(self, debate=None):
+    def __init__(self, debate=None, chair=None, panel=None):
         self.debate = debate
-        self.chair = None
-        self.panel = []
+        self.chair = chair
+        self.panel = panel or []
         self.trainees = []
 
     def __iter__(self):

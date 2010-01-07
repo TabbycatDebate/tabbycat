@@ -1,9 +1,5 @@
 from debate.adjudicator import Allocator
 
-class StabAllocator(Allocator):
-    def allocate(self):
-        pass
-
 class PanelMaker(object):
     RANK_A = 0
     RANK_B = 1
@@ -113,7 +109,7 @@ class PanelMaker(object):
         return len([(adj, rank) for adj, rank in self.available if rank == r])
 
 class StabAllocator(Allocator):
-    def allocate(self):
+    def allocate(self, avoid_conflicts=True):
         self.debates = [StabDebate(d) for d in self.debates]
 
         p = PanelMaker()
@@ -126,11 +122,12 @@ class StabAllocator(Allocator):
 
         self.pairings = zip(self.debates, panels)
 
-        for i, (debate, panel) in enumerate(self.pairings):
-            if panel.conflicts(debate):
-                j = self.search_swap(i, range(i, 0, -1))
-                if j is None:
-                    j = self.search_swap(i, range(i+1, len(panels)))
+        if avoid_conflicts:
+            for i, (debate, panel) in enumerate(self.pairings):
+                if panel.conflicts(debate):
+                    j = self.search_swap(i, range(i, 0, -1))
+                    if j is None:
+                        j = self.search_swap(i, range(i+1, len(panels)))
 
         from debate.models import AdjudicatorAllocation
 

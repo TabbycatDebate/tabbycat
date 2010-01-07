@@ -129,8 +129,8 @@ def create_adj_allocation(request, rc, round):
     if round.draw_status != round.STATUS_CONFIRMED:
         return HttpResponseBadRequest("Draw is not confirmed")
 
-    from debate.adjudicator.anneal import SAAllocator
-    round.allocate_adjudicators(SAAllocator)
+    from debate.adjudicator.hungarian import HungarianAllocator
+    round.allocate_adjudicators(HungarianAllocator)
 
     return redirect_to('draw', args=[round.id])
 
