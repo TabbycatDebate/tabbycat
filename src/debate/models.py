@@ -2,7 +2,7 @@ from django.db import models
 
 from debate.utils import pair_list, memoize
 from debate.draw import RandomDrawNoConflict, AidaDraw
-from debate.adjudicator.dumb import DumbAllocator
+from debate.adjudicator.anneal import SAAllocator
 
 class ScoreField(models.FloatField):
     pass
@@ -165,6 +165,18 @@ class Adjudicator(models.Model):
     def get_feedback(self):
         return AdjudicatorFeedback.objects.filter(adjudicator=self)
 
+    def seen_team(self, team):
+        return DebateAdjudicator.objects.filter(
+            adjudicator = self,
+            debate__debateteam__team = team,
+        ).count()
+
+    def seen_adjudicator(self, adj):
+        return DebateAdjudicator.objects.filter(
+            adjudicator = self,
+            debate__debateadjudicator__adjudicator = adj,
+        ).count()
+
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('Adjudicator')
     team = models.ForeignKey('Team')
@@ -233,7 +245,7 @@ class Round(models.Model):
         self.draw_status = self.STATUS_DRAFT
         self.save()
 
-    def allocate_adjudicators(self, alloc_class=DumbAllocator):
+    def allocate_adjudicators(self, alloc_class=SAAllocator):
         if self.draw_status != self.STATUS_CONFIRMED:
             raise
 
