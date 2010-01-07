@@ -10,10 +10,10 @@ class HungarianAllocator(Allocator):
 
         cost += 1000000 * adj.conflict_with(debate.aff_team)
         cost += 1000000 * adj.conflict_with(debate.neg_team)
-        cost += 10000 * adj.seen_team(debate.aff_team)
-        cost += 10000 * adj.seen_team(debate.neg_team)
+        cost += 10000 * adj.seen_team(debate.aff_team, debate.round)
+        cost += 10000 * adj.seen_team(debate.neg_team, debate.round)
 
-        cost += abs(debate.bracket - adj.score)
+        cost += (10 - debate.bracket) * adj.score
 
         return cost
 
@@ -57,7 +57,44 @@ class HungarianAllocator(Allocator):
 
         print [(a.debate, a.chair) for a in alloc]
 
-        return alloc + panels
+        # do panels
+        n = len(panels)
+
+        from itertools import chain
+        debates = [a.debate for a in panels]
+        panellists = []
+        for p in panels:
+            panellists.extend(tuple(a[1] for a in p))
+        
+
+        print "costing panellists"
+
+        cost_matrix = [[0] * n * 3 for i in range(n*3)]
+        for i, debate in enumerate(debates):
+            for j in range(3):
+                for k, adj in enumerate(panellists):
+                    cost_matrix[3*i+j][k] = self.calc_cost(debate, adj)
+
+        print "optimizing"
+
+        indexes = m.compute(cost_matrix)
+
+        cost = 0
+        for r, c in indexes:
+            cost += cost_matrix[r][c]
+
+        p = [[] for i in range(n)]
+        for r, c in indexes:
+            p[r // 3].append(panellists[c])
+
+        for i, d in enumerate(debates):
+            a = AdjudicatorAllocation(d)
+            p[i].sort(key=lambda a: a.score, reverse=True)
+            a.chair = p[i].pop(0)
+            a.panel = p[i]
+            alloc.append(a)
+
+        return alloc 
 
 def test():
     from debate.models import Round

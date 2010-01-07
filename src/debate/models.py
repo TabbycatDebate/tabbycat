@@ -165,17 +165,27 @@ class Adjudicator(models.Model):
     def get_feedback(self):
         return AdjudicatorFeedback.objects.filter(adjudicator=self)
 
-    def seen_team(self, team):
-        return DebateAdjudicator.objects.filter(
+    def seen_team(self, team, before_round=None):
+        d = DebateAdjudicator.objects.filter(
             adjudicator = self,
             debate__debateteam__team = team,
-        ).count()
+        )
+        if before_round is not None:
+            d = d.filter(
+                debate__round__seq__lt = before_round.seq
+            )
+        return d.count()
 
-    def seen_adjudicator(self, adj):
-        return DebateAdjudicator.objects.filter(
+    def seen_adjudicator(self, adj, before_round=None):
+        d = DebateAdjudicator.objects.filter(
             adjudicator = self,
             debate__debateadjudicator__adjudicator = adj,
-        ).count()
+        )
+        if before_round is not None:
+            d = d.filter(
+                debate__round__seq__lt = before_round.seq
+            )
+        return d.count()
 
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('Adjudicator')
