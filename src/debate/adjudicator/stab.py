@@ -110,14 +110,12 @@ class PanelMaker(object):
 
 class StabAllocator(Allocator):
     def allocate(self, avoid_conflicts=True):
-        self.debates = [StabDebate(d) for d in self.debates]
-
         p = PanelMaker()
         panels = p.form_panels(self.adjudicators, len(self.debates))
 
         assert len(self.debates) <= len(panels)
 
-        self.debates.sort(key=lambda d:d.get_energy(), reverse=True)
+        self.debates.sort(key=lambda d: self.get_debate_energy(d), reverse=True)
         panels.sort(key=lambda p:p.get_energy(), reverse=True)
 
         self.pairings = zip(self.debates, panels)
@@ -133,12 +131,25 @@ class StabAllocator(Allocator):
 
         allocation = []
         for debate, panel in self.pairings:
-            a = AdjudicatorAllocation(debate.debate)
+            a = AdjudicatorAllocation(debate)
             a.chair = panel[0]
             a.panel = panel[1:]
             allocation.append(a)
 
         return allocation
+
+    def get_debate_energy(self, debate, bubble=False):
+        from debate.models import DebateTeam, TeamAtRound
+        aff_team = TeamAtRound(debate.aff_team, debate.round)
+        neg_team = TeamAtRound(debate.neg_team, debate.round)
+
+        energy = aff_team.points * 300
+        energy += neg_team.points * 300
+        energy += aff_team.speaker_score
+        energy += neg_team.speaker_score
+
+        return energy
+
 
     def search_swap(self, idx, search_range):
         base_debate, base_panel = self.pairings[idx]
@@ -174,30 +185,6 @@ class StabPanel(object):
                 if adj.conflict_with(team):
                     return True
         return False
-
-class StabDebate(object):
-    def __init__(self, debate):
-        from debate.models import Debate
-
-        if not isinstance(debate, Debate):
-            raise TypeError("Expected Debate object")
-        self.debate = debate
-
-    def __getattr__(self, name):
-        return getattr(self.debate, name)
-
-    def get_energy(self, bubble=False):
-        from debate.models import DebateTeam, TeamAtRound
-        aff_team = TeamAtRound(self.aff_team, self.round)
-        neg_team = TeamAtRound(self.neg_team, self.round)
-
-        energy = aff_team.points * 300
-        energy += neg_team.points * 300
-        energy += aff_team.speaker_score
-        energy += neg_team.speaker_score
-
-        return energy
-
 
 def test():
     p = PanelMaker()
