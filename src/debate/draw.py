@@ -4,27 +4,10 @@ from debate.utils import pair_list, memoize
 class DrawError(Exception):
     pass
 
-class TeamAtRound(object):
-    def __init__(self, team, round):
-        self.team = team
-        self.round = round
-
-    def __getattr__(self, name):
-        return getattr(self.team, name)
-
-    @property
-    @memoize
-    def aff_count(self):
-        return self.team.get_aff_count(self.round.seq)
-
-    @property
-    @memoize
-    def neg_count(self):
-        return self.team.get_neg_count(self.round.seq)
-
-    
 class BaseDraw(object):
     def __init__(self, round):
+        from debate.models import TeamAtRound
+
         self.round = round
         if not self.round.draw_status == self.round.STATUS_NONE:
             raise DrawError()
@@ -52,10 +35,8 @@ class BaseDraw(object):
         return p
 
     def draw(self):
-        draw = self.get_draw()
+        return self.get_draw()
 
-        # unbox
-        return [(a.team, n.team) for a, n in draw]
         
 class RandomDraw(BaseDraw):
     def get_draw(self):

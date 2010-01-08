@@ -76,16 +76,6 @@ class Team(models.Model):
             dts = dts.filter(debate__round__seq__lte=seq)
         return dts.count()
     
-    @property
-    def aff_count(self):
-        # WARN: this will be incorrect if re-drawing a round before deleting the
-        # old draw
-        return self.get_aff_count()
-    
-    @property
-    def neg_count(self):
-        return self.get_neg_count()
-
     def get_debates(self, before_round):
         dts = DebateTeam.objects.select_related('debate').filter(team=self)
         if before_round is not None:
@@ -118,7 +108,11 @@ class Team(models.Model):
         return self.speaker_set.all()
 
 def TeamAtRound(team, round):
-    return Team.objects.standings(round).get(id=team.id)
+    t = Team.objects.standings(round).get(id=team.id)
+    setattr(t, 'aff_count', t.get_aff_count(round.seq))
+    setattr(t, 'neg_count', t.get_neg_count(round.seq))
+    return t
+
 
 class Speaker(models.Model):
     name = models.CharField(max_length=40)
