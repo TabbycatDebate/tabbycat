@@ -7,17 +7,15 @@ from debate.adjudicator.anneal import SAAllocator
 class ScoreField(models.FloatField):
     pass
 
-class Tournament(object):
-    @property
-    def teams(self):
-        return Team.objects.all()
+class Tournament(models.Model):
+
+    slug = models.SlugField()
+    current_round = models.ForeignKey('Round', null=True, blank=True,
+                                     related_name='tournament_')
 
     @property
-    def current_round(self):
-        try:
-            return Round.objects.get(is_current=True)
-        except Round.DoesNotExist:
-            return None
+    def teams(self):
+        return Team.objects.filter(institution__tournament=self)
 
     def create_next_round(self):
         curr = self.current_round
@@ -27,10 +25,8 @@ class Tournament(object):
         r.save()
         r.activate_all()
 
-        curr.is_current = False
-        curr.save()
-    
 class Institution(models.Model):
+    tournament = models.ForeignKey(Tournament)
     code = models.CharField(max_length=20)
     name = models.CharField(max_length=40)
     
@@ -144,8 +140,12 @@ class Adjudicator(models.Model):
                                                   team=team).count()
 
     @property
+    def tournament(self):
+        return self.institution.tournament
+
+    @property
     def score(self):
-        weight = Tournament().current_round.feedback_weight
+        weight = self.tournament.current_round.feedback_weight
 
         avg_score = AdjudicatorFeedback.objects.filter(
             adjudicator = self,
@@ -209,6 +209,7 @@ class Round(models.Model):
         (STATUS_CONFIRMED, 'Confirmed'),
     )
 
+    tournament = models.ForeignKey(Tournament)
     seq = models.IntegerField()
     name = models.CharField(max_length=40)
     type = models.CharField(max_length=1, choices=TYPE_CHOICES)
@@ -221,8 +222,6 @@ class Round(models.Model):
                                              default=STATUS_NONE)
     is_current = models.BooleanField()
     
-    tournament = Tournament()
-
     active_venues = models.ManyToManyField('Venue', through='ActiveVenue')
     active_adjudicators = models.ManyToManyField('Adjudicator',
                                                  through='ActiveAdjudicator')

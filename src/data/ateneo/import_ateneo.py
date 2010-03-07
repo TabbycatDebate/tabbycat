@@ -2,9 +2,10 @@ import debate.models as m
 
 
 class Importer(object):
-    def __init__(self, fname):
+    def __init__(self, tournament, fname):
         self.fname = fname
 
+        self.tournament = tournament
         self.institutions = {}
         self.adjudicators = {}
         self.teams = {}
@@ -20,7 +21,8 @@ class Importer(object):
     def import_institutions(self):
         for line in self.load_table('institutions'):
             id, code, name, c, u = line.split('\t')
-            i = m.Institution(code=code.strip(), name=name.strip())
+            i = m.Institution(code=code.strip(), name=name.strip(),
+                             tournament=self.tournament)
             i.save()
             self.institutions[int(id)] = i
 
@@ -85,6 +87,7 @@ class Importer(object):
             id, name, type, status, pr, fw, c, u = line.split('\t')
             if int(id) in rounds:
                 r = m.Round(
+                    tournament = self.tournament,
                     seq = id,
                     name = name,
                     type = _type[type],
@@ -94,6 +97,7 @@ class Importer(object):
                     is_current = False,
                     feedback_weight = float(fw),
                 )
+
                 r.save()
                 r.activate_all()
                 self.rounds[int(id)] = r
@@ -244,9 +248,13 @@ class Importer(object):
                     source_team = dt,
                 ).save()
 
+        self.tournament.current_round = m.Round.objects.order_by('-seq')[0]
+        self.tournament.save()
  
 def run():
-    im = Importer('stab_pt.sql')
+    t = m.Tournament(slug='australs')
+    t.save()
+    im = Importer(t, 'stab_pt.sql')
     im.import_institutions()
     im.import_adjudicators()
     im.import_venues()

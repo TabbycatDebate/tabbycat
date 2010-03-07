@@ -281,6 +281,7 @@ def adj_conflicts(request, rc, round):
 def adj_scores(request):
     data = {}
 
+    #TODO: make round-dependent
     for adj in Adjudicator.objects.all():
         data[adj.id] = adj.score
 
