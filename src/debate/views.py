@@ -34,6 +34,13 @@ def expect_post(view_fn):
 def index(request):
     return render_to_response('index.html', context_instance=RequestContext(request))
 
+def draw_index(request):
+    return render_to_response('draw_index.html', context_instance=RequestContext(request))
+
+@round_view
+def round_index(request, rc, round):
+    return render_to_response('round_index.html', context_instance=rc)
+
 def venue_availability(request, round_id):
     return base_availability(request, round_id, 'venue', 'venues')
 

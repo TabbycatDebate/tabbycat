@@ -17,7 +17,7 @@
     </script>
 
     <style type="text/css" title="currentStyle">
-        @import "/static/css/demo_page.css";
+        @import "/static/css/debate.css";
         {% block extra-style %}
         {% endblock extra-style %}
 
@@ -37,34 +37,17 @@
     <div id="container">
         {% block nav %}
         <ul id="nav">
-            <li id="overview">Overview</li>
-            {% for r in rounds %}
-            {% ifequal round.id r.id %}
-            <li id="{% ifequal r.id current_round.id %}current_round{% endifequal %}">{{ r.name }}
-                <ul>
-                    <li><a href="{% url venue_availability round.id %}">Venues</a></li>
-                    <li><a href="{% url adjudicator_availability round.id %}">Adjudicators</a></li>
-                    <li><a href="{% url team_availability round.id %}">Teams</a></li>
-                    <li><a href="{% url draw round.id %}">Draw</a></li>
-                    <li><a href="{% url results round.id %}">Results</a></li>
-                    <li><a href="{% url team_standings round.id %}">Team Standings</a></li>
-                </ul>
-            </li>
-            {% else %}
-            <li id="{% ifequal r.id current_round.id %}current_round{% endifequal %}">
-                <a href="{% url draw r.id %}">{{ r.name }}</a>
-            </li>
-            {% endifequal %}
-            {% endfor %}
-            <li id="adj_feedback"><a href="{% url adj_feedback %}">Adjudicator Feedback</a></li>
+            <li id="home"><a href="{% url debate_index %}">Dashboard</a></li>
+            <li id="draw"><a href="{% url draw_index %}">Draw</a></li>
+            <li id="feedback"><a href="{% url adj_feedback %}">Feedback</a></li>
             <li id="admin"><a href="/admin/">Admin</a></li>
-
         </ul>
         {% endblock nav %}
+
         <h1>{% block h1 %}{% endblock %}</h1>
         {% block content %}
         {% endblock content %}
-    </div>
+    </div><!-- container -->
     {% endblock body %}
 </body>
 </html>

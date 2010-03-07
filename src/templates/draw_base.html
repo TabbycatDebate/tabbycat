@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block nav %}
+    {{ block.super }}
+
+    <ul id="nav2">
+        {% for r in rounds %}
+        <li><a href="{% url round_index r.id %}">{{ r.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+{% endblock nav %}
+
