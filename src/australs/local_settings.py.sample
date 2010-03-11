@@ -1,0 +1,24 @@
+# rename this file to local_settings.py and change PROJ_ROOT as necessary
+# the rest you can probably leave alone
+
+from os.path import join
+
+def proj(p):
+    return join(PROJ_ROOT, p)
+
+# root directory (i.e. the parent of the src directory)
+PROJ_ROOT = '/media/data/projects/australs/debate/debate.git'
+
+DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = proj('test.db')             # Or path to database file if using sqlite3.
+DATABASE_USER = ''             # Not used with sqlite3.
+DATABASE_PASSWORD = ''         # Not used with sqlite3.
+DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+
+# Absolute path to the directory that holds media.
+# Example: "/home/media/media.lawrence.com/"
+MEDIA_ROOT = proj('src/media')
+MEDIA_URL = 'static'
+TEMPLATE_DIRS = (proj('src/templates'),)
+
