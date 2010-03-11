@@ -286,6 +286,5 @@ if __name__ == '__main__':
     im.load_round(range(a, b))
 
     if make_new:
-        from debate.models import Tournament
-        Tournament().create_next_round()
+        im.tournament.create_next_round()
 

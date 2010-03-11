@@ -21,7 +21,7 @@ class Tournament(models.Model):
         curr = self.current_round
         next = curr.seq + 1
         r = Round(name="Round %d" % next, seq=next, type=Round.TYPE_PRELIM,
-                  is_current=True)
+                  is_current=True, tournament=self)
         r.save()
         r.activate_all()
 

@@ -4,12 +4,12 @@
 
     {{ block.super }}
     <ul id="nav3">
-        <li><a href="{% url venue_availability current_round.id %}">Venues</a></li>
-        <li><a href="{% url adjudicator_availability current_round.id %}">Adjudicators</a></li>
-        <li><a href="{% url team_availability current_round.id %}">Teams</a></li>
-        <li><a href="{% url draw current_round.id %}">Draw</a></li>
-        <li><a href="{% url results current_round.id %}">Results</a></li>
-        <li><a href="{% url team_standings current_round.id %}">Team Standings</a></li>
+        <li><a href="{% url venue_availability round.id %}">Venues</a></li>
+        <li><a href="{% url adjudicator_availability round.id %}">Adjudicators</a></li>
+        <li><a href="{% url team_availability round.id %}">Teams</a></li>
+        <li><a href="{% url draw round.id %}">Draw</a></li>
+        <li><a href="{% url results round.id %}">Results</a></li>
+        <li><a href="{% url team_standings round.id %}">Team Standings</a></li>
     </ul>
 
 {% endblock %}
