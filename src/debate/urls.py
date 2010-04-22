@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 
 urlpatterns = patterns('debate.views',
     url(r'^$', 'index', name='debate_index'),
+    url(r'^login/$', 'login', name='login'),
     url(r'^draw/$', 'draw_index', name='draw_index'),
     url(r'^round/(?P<round_id>\d+)/$',
         'round_index', name='round_index'),
