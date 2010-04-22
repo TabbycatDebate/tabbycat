@@ -1,13 +1,9 @@
-# rename this file to local_settings.py and change PROJ_ROOT as necessary
-# the rest you can probably leave alone
-
 from os.path import join
 
 def proj(p):
     return join(PROJ_ROOT, p)
 
-# root directory (i.e. the parent of the src directory)
-PROJ_ROOT = '/media/data/projects/australs/debate/debate.git'
+PROJ_ROOT = '/media/data/projects/australs/debate.git'
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = proj('test.db')             # Or path to database file if using sqlite3.

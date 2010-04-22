@@ -85,4 +85,6 @@ INSTALLED_APPS = (
 
 LOGIN_REDIRECT_URL = '/'
 
-from local_settings import *
+from os.path import dirname, join
+exec open(join(dirname(__file__), '../../config/local_settings.py'))
+

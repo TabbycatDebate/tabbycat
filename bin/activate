@@ -1,0 +1,6 @@
+export BASE=$(pwd )/$(dirname $0)/..
+source $BASE/env/bin/activate
+
+export PYTHONPATH=$PYTHONPATH:$BASE/src/
+export PATH=$BASE/bin:$PATH
+
