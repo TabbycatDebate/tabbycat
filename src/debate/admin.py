@@ -67,3 +67,5 @@ class SpeakerScoreAdmin(admin.ModelAdmin):
     list_filter = ('score',)
 admin.site.register(models.SpeakerScore, SpeakerScoreAdmin)
 
+admin.site.register(models.Tournament)
+

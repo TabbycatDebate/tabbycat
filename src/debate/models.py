@@ -25,6 +25,9 @@ class Tournament(models.Model):
         r.save()
         r.activate_all()
 
+    def __unicode__(self):
+        return unicode(self.slug)
+
 class Institution(models.Model):
     tournament = models.ForeignKey(Tournament)
     code = models.CharField(max_length=20)
