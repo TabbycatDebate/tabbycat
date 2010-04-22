@@ -1,0 +1,19 @@
+Installation Instructions
+-------------------------
+
+1) Create virtualenv named 'env' in root directory:
+
+   $ virtualenv env
+
+2) Source activation script (do this whenever you want to do work
+   from the shell):
+
+   $ source bin/activate
+
+3) Install requirements:
+
+   $ pip install -r requirements.txt
+
+4) Copy config/local_settings.py.example to config/local_settings.py
+   and edit
+
