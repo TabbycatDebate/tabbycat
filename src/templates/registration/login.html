@@ -1,0 +1,9 @@
+{% extends "registration/base.html" %}
+
+{% block body %}
+<form id="login" action="." method="POST">
+{{ form.as_p }}
+<input id="login-btn" type="submit" value="Log in" />
+</form>
+{% endblock body %}
+

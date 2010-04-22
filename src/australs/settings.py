@@ -83,4 +83,6 @@ INSTALLED_APPS = (
     'debate',
 )
 
+LOGIN_REDIRECT_URL = '/'
+
 from local_settings import *

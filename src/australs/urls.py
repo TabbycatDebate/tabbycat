@@ -25,6 +25,9 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     (r'^debate/', include('debate.urls')),
 
+    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    (r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
+
     # Site media
     (r'^%s/(?P<path>.*)$' % settings.MEDIA_URL, 'django.views.static.serve',
      {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
