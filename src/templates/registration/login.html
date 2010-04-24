@@ -2,6 +2,7 @@
 
 {% block body %}
 <form id="login" action="." method="POST">
+{% csrf_token %}
 {{ form.as_p }}
 <input id="login-btn" type="submit" value="Log in" />
 </form>
