@@ -2,13 +2,18 @@
 
 <ul id="nav">
     <li id="home"><a href="{{ tournament.get_absolute_url }}">Home</a></li>
-    <li id="draw">
-        <a href="{% tournament_url draw_index %}">Draw</a>
+    <li id="draw"><a href="{% round_url draw current_round %}">Draw</a></li>
+    <li id="results"><a href="{% round_url results current_round %}">Results</a></li>
+    <li id="current_standings"><a href="{% round_url team_standings current_round %}">Team Standings</a></li>
+    <li id="feedback"><a href="{% tournament_url adj_feedback %}">Feedback</a></li>
+    <li>|</li>
+    <li id="rounds"> 
+        <a href="#rounds">All Rounds</a>
         <ul>
             {% for r in tournament.rounds.all %}
-            <li>
+            <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %}">
                 <a href="{% round_url round_index r %}">{{ r.name }}</a>
-                <ul id="nav3">
+                <ul>
                     <li><a href="{% round_url venue_availability r %}">Venues</a></li>
                     <li><a href="{% round_url adjudicator_availability r %}">Adjudicators</a></li>
                     <li><a href="{% round_url team_availability r %}">Teams</a></li>
@@ -23,7 +28,6 @@
         </ul>
     
     </li>
-    <li id="feedback"><a href="{% tournament_url adj_feedback %}">Feedback</a></li>
     <li id="admin"><a href="/admin/">Admin</a></li>
     <li id="logout"><a href="/accounts/logout/">Log out</a></li>
 </ul>

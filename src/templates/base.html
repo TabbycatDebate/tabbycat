@@ -13,6 +13,17 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#jsWarn").hide();
+
+            $('#rounds > ul > li > a').click(function() {
+                $this = $(this);
+                $('#rounds > ul > li > ul').hide();
+                $('#rounds > ul > li').removeClass('selected');
+                $this.parent().addClass('selected');
+                $this.siblings('ul').show();
+                return false;
+            });
+
+            $('#round > ul > li.selected > a').click();
         });
     </script>
 

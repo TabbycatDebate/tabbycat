@@ -352,7 +352,7 @@ def adj_scores(request, t):
 def adj_feedback(request, t):
 
     adjudicators = Adjudicator.objects.all()
-    return render_to_response('adjudicator_feedback.html',
+    return r2r(request, 'adjudicator_feedback.html',
                               dict(adjudicators=adjudicators))
 
 

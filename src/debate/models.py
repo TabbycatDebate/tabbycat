@@ -25,7 +25,7 @@ class Tournament(models.Model):
         curr = self.current_round
         next = curr.seq + 1
         r = Round(name="Round %d" % next, seq=next, type=Round.TYPE_PRELIM,
-                  is_current=True, tournament=self)
+                  tournament=self)
         r.save()
         r.activate_all()
 
@@ -227,8 +227,7 @@ class Round(models.Model):
                                        default=STATUS_NONE)
     adjudicator_status = models.IntegerField(choices=STATUS_CHOICES,
                                              default=STATUS_NONE)
-    is_current = models.BooleanField()
-    
+
     active_venues = models.ManyToManyField('Venue', through='ActiveVenue')
     active_adjudicators = models.ManyToManyField('Adjudicator',
                                                  through='ActiveAdjudicator')

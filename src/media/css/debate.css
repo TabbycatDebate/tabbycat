@@ -89,16 +89,58 @@ ul {
     width: 300px;
 }
 
-#nav li, #nav2 li, #nav3 li {
-    padding: 0 1em;
-    display: inline;
-    list-style-type: none;
-}
-
 #nav2 {
     margin-left: 2em;
 }
 
 #nav3 {
     margin-left: 4em;
+}
+
+ul#nav {
+    border: none;
+    background-color: #36c;
+    color: #fff;
+    padding: 0;
+}
+
+ul#nav a {
+    color: #fff;
+}
+
+#nav li {
+    padding: 0 1em;
+    display: inline;
+    list-style-type: none;
+}
+
+ul#nav ul {
+    position: absolute;
+    top: 48px;
+    width: 800px;
+    border-top: none;
+    background-color: #95B1BB;
+}
+
+ul#nav ul ul {
+    position: absolute;
+    top: 19px;
+    width: 760px;
+    background-color: #E4EEE4;
+    color: #111;
+}
+
+ul#nav ul ul a{
+    color: #111;
+}
+
+ul#nav .selected{
+    font-weight: bold;
+}
+ul#nav .selected ul{
+    font-weight: normal;
+}
+
+.winner {
+    font-weight: bold;
 }
