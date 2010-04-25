@@ -30,7 +30,7 @@ def round_view(view_fn):
     @wraps(view_fn)
     @tournament_view
     def foo(request, tournament, round_seq, *args, **kwargs):
-        return view_fn(request, request.round)
+        return view_fn(request, request.round, *args, **kwargs)
     return foo
 
 def admin_required(view_fn):
@@ -75,32 +75,9 @@ def draw_index(request, t):
 def round_index(request, round):
     return r2r(request, 'round_index.html')
 
-@round_view
-def venue_availability(request, round):
-    return base_availability(request, round, 'venue', 'venues')
-
-@round_view
-def update_venue_availability(request, round):
-    return update_base_availability(request, round, 'set_available_venues')
-
-@round_view
-def adjudicator_availability(request, round):
-    return base_availability(request, round, 'adjudicator', 'adjudicators')
-
-@round_view
-def update_adjudicator_availability(request, round):
-    return update_base_availability(request, round, 'set_available_adjudicators')
-
-@round_view
-def team_availability(request, round):
-    return base_availability(request, round, 'team', 'teams')
-
-@round_view
-def update_team_availability(request, round):
-    return update_base_availability(request, round, 'set_available_teams')
-
 @admin_required
-def base_availability(request, round, model, context_name):
+@round_view
+def availability(request, round, model, context_name):
 
     items = getattr(round, '%s_availability' % model)().order_by('name')
     
@@ -112,7 +89,8 @@ def base_availability(request, round, model, context_name):
 
 @admin_required
 @expect_post
-def update_base_availability(request, round, update_method):
+@round_view
+def update_availability(request, round, update_method):
 
     available_ids = [int(a.replace("check_", "")) for a in request.POST.keys()
                      if a.startswith("check_")]
