@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load debate_tags %}
+
 {% block extra-head %}
     <script type="text/javascript" charset="utf-8">
         function intId(elem) {
@@ -29,7 +31,7 @@
 
                         var feedTable = $("#feedback_" + intId(nTr)).dataTable( {
                             'bProcessing': true,
-                            'sAjaxSource': '{% url get_adj_feedback %}?id=' + intId(nTr),
+                            'sAjaxSource': '{% tournament_url get_adj_feedback %}?id=' + intId(nTr),
 
                             'bPaginate': false
                         });
@@ -79,7 +81,7 @@
             <td>{{ adj.test_score }}</td>
             <td>{{ adj.score }}</td>
             <td><a class="view" href="">View Feedback</a></td>
-            <td><a href="{% url enter_feedback adj.id %}">Add Feedback</a></td>
+            <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
         </tr>
         {% endfor %}
     </tbody>

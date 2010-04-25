@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load debate_tags %}
+
 {% block extra-head %}
 <script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
 <script type="text/javascript" charset="utf-8">
@@ -109,7 +111,7 @@
         $('#save').click( function() {
             $.ajax( {
                 type: "POST",
-                url: "{% url save_venues round.id %}",
+                url: "{% round_url save_venues %}",
                 data: debates,
                 success: function(data, status) {
                     alert("win");
@@ -166,7 +168,7 @@
     Edit venues for Round {{ round }} |
     <a href="" id="save">Save</a>
     Discard Undo Redo 
-    <a href="{% url draw round.id %}">Quit</a>
+    <a href="{% round_url draw %}">Quit</a>
 </div>
 
 <div id="scratch">

@@ -30,10 +30,6 @@ class VenueAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 admin.site.register(models.Venue, VenueAdmin)
 
-class RoundAdmin(admin.ModelAdmin):
-    list_display = ('seq',)
-admin.site.register(models.Round, RoundAdmin)
-
 class DebateTeamInline(admin.TabularInline):
     model = models.DebateTeam
     extra = 1
@@ -67,5 +63,11 @@ class SpeakerScoreAdmin(admin.ModelAdmin):
     list_filter = ('score',)
 admin.site.register(models.SpeakerScore, SpeakerScoreAdmin)
 
-admin.site.register(models.Tournament)
+class RoundAdminInline(admin.TabularInline):
+    model = models.Round
+
+class TournamentAdmin(admin.ModelAdmin):
+    inlines = [RoundAdminInline]
+
+admin.site.register(models.Tournament, TournamentAdmin)
 

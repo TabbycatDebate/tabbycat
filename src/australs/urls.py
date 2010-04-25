@@ -21,12 +21,13 @@ urlpatterns = patterns('',
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    (r'^$', redirect('debate_index')),
+    (r'^$', 'debate.views.index'),
     (r'^admin/', include(admin.site.urls)),
-    (r'^debate/', include('debate.urls')),
 
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
+
+    (r'^t/(?P<tournament_slug>[-\w_]+)/', include('debate.urls')),
 
     # Site media
     (r'^%s/(?P<path>.*)$' % settings.MEDIA_URL, 'django.views.static.serve',

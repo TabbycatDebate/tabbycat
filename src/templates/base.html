@@ -36,13 +36,7 @@
     {% block body %}
     <div id="container">
         {% block nav %}
-        <ul id="nav">
-            <li id="home"><a href="{% url debate_index %}">Dashboard</a></li>
-            <li id="draw"><a href="{% url draw_index %}">Draw</a></li>
-            <li id="feedback"><a href="{% url adj_feedback %}">Feedback</a></li>
-            <li id="admin"><a href="/admin/">Admin</a></li>
-            <li id="logout"><a href="/accounts/logout/">Log out</a></li>
-        </ul>
+        {% include "nav.html" %}
         {% endblock nav %}
 
         <h1>{% block h1 %}{% endblock %}</h1>

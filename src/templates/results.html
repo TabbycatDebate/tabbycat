@@ -1,5 +1,7 @@
 {% extends "draw_rbase.html" %}
 
+{% load debate_tags %}
+
 {% block extra-head %}
     <script type="text/javascript" charset="utf-8">
 
@@ -45,7 +47,7 @@ Enter results.
             {{ debate.neg_team.name }} {{ debate.result.neg_win|yesno:"(win),(loss), " }}</td>
         <td>{{ debate.adjudicators_display }}</td>
         <td>
-            <a href="{% url enter_result debate.id %}">
+            <a href="{% tournament_url enter_result debate.id %}">
             {% ifequal debate.result_status "N" %}Enter results {% endifequal %}
             {% ifequal debate.result_status "D" %}Unconfirmed{% endifequal %}
             {% ifequal debate.result_status "C" %}Confirmed{% endifequal %}

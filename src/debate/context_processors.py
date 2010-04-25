@@ -1,8 +1,14 @@
 from debate.models import Tournament, Round 
 
 def debate_context(request):
-    return {
-        'current_round': Tournament().current_round, 
-        'rounds': Round.objects.all(),
-    }
+
+    if hasattr(request, 'tournament'):
+        d = {
+            'tournament': request.tournament,
+            'current_round': request.tournament.current_round,
+        }
+        if hasattr(request, 'round'):
+            d['round'] = request.round
+        return d
+    return {}
 

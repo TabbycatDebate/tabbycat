@@ -13,6 +13,10 @@ class Tournament(models.Model):
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_')
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('tournament_home', [self.slug])
+
     @property
     def teams(self):
         return Team.objects.filter(institution__tournament=self)
@@ -212,7 +216,7 @@ class Round(models.Model):
         (STATUS_CONFIRMED, 'Confirmed'),
     )
 
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, related_name='rounds')
     seq = models.IntegerField()
     name = models.CharField(max_length=40)
     type = models.CharField(max_length=1, choices=TYPE_CHOICES)
@@ -231,6 +235,9 @@ class Round(models.Model):
     active_teams = models.ManyToManyField('Team', through='ActiveTeam')
 
     feedback_weight = models.FloatField(default=1)
+
+    class Meta:
+        unique_together = ('tournament', 'seq')
 
     def __unicode__(self):
         return unicode(self.id)

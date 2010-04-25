@@ -1,0 +1,30 @@
+{% load debate_tags %}
+
+<ul id="nav">
+    <li id="home"><a href="{{ tournament.get_absolute_url }}">Home</a></li>
+    <li id="draw">
+        <a href="{% tournament_url draw_index %}">Draw</a>
+        <ul>
+            {% for r in tournament.rounds.all %}
+            <li>
+                <a href="{% round_url round_index r %}">{{ r.name }}</a>
+                <ul id="nav3">
+                    <li><a href="{% round_url venue_availability r %}">Venues</a></li>
+                    <li><a href="{% round_url adjudicator_availability r %}">Adjudicators</a></li>
+                    <li><a href="{% round_url team_availability r %}">Teams</a></li>
+                    <li><a href="{% round_url draw r %}">Draw</a></li>
+                    <li><a href="{% round_url results r %}">Results</a></li>
+                    <li><a href="{% round_url team_standings r %}">Team Standings</a></li>
+                </ul>
+
+
+            </li>
+            {% endfor %}
+        </ul>
+    
+    </li>
+    <li id="feedback"><a href="{% tournament_url adj_feedback %}">Feedback</a></li>
+    <li id="admin"><a href="/admin/">Admin</a></li>
+    <li id="logout"><a href="/accounts/logout/">Log out</a></li>
+</ul>
+

@@ -1,6 +1,7 @@
 {% extends "base_availability.html" %}
 
-{% block update-url %}{% url update_venue_availability round.id %}{% endblock %}
+{% load debate_tags %}
+{% block update-url %}{% round_url update_venue_availability %}{% endblock %}
 
 {% block h1 %}Venue Availability for Round {{ round }}{% endblock %}
 

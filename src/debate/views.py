@@ -1,11 +1,11 @@
 from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden, HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.db.models import Sum, Count
 
-from debate.models import Round, Debate, Team, Venue, Adjudicator
+from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, DebateAdjudicator
 from debate import forms
 
@@ -13,18 +13,25 @@ from functools import wraps
 import json
 
 
-def redirect_to(view, **kwargs):
-    return HttpResponseRedirect(reverse(view, **kwargs))
+def redirect_round(to, round, **kwargs):
+    return redirect(to, tournament_slug=round.tournament.slug,
+                    round_seq=round.seq, *kwargs)
 
+def redirect_tournament(to, tournament, **kwargs):
+    return redirect(to, tournament_slug=tournament.slug, *kwargs)
+
+def tournament_view(view_fn):
+    @wraps(view_fn)
+    def foo(request, tournament_slug, *args, **kwargs):
+        return view_fn(request, request.tournament, *args, **kwargs)
+    return foo
 
 def round_view(view_fn):
     @wraps(view_fn)
-    def foo(request, round_id):
-        round = get_object_or_404(Round, id=round_id)
-        rc = dict(round=round)
-        return view_fn(request, rc, round)
+    @tournament_view
+    def foo(request, tournament, round_seq, *args, **kwargs):
+        return view_fn(request, request.round)
     return foo
-
 
 def admin_required(view_fn):
     return user_passes_test(lambda u: u.is_superuser)(view_fn)
@@ -48,52 +55,64 @@ def r2r(request, template, extra_context=None):
 
 @login_required
 def index(request):
-    return r2r(request, 'index.html')
+    return r2r(request, 'index.html',
+               dict(tournaments=Tournament.objects.all()))
+
+
+@login_required
+@tournament_view
+def tournament_home(request, t):
+    return r2r(request, 'tournament_home.html')
 
 
 @admin_required
-def draw_index(request):
+@tournament_view
+def draw_index(request, t):
     return r2r(request, 'draw_index.html')
 
 @admin_required
 @round_view
-def round_index(request, rc, round):
-    return r2r(request, 'round_index.html', rc)
+def round_index(request, round):
+    return r2r(request, 'round_index.html')
 
-def venue_availability(request, round_id):
-    return base_availability(request, round_id, 'venue', 'venues')
+@round_view
+def venue_availability(request, round):
+    return base_availability(request, round, 'venue', 'venues')
 
-def update_venue_availability(request, round_id):
-    return update_base_availability(request, round_id, 'set_available_venues')
+@round_view
+def update_venue_availability(request, round):
+    return update_base_availability(request, round, 'set_available_venues')
 
-def adjudicator_availability(request, round_id):
-    return base_availability(request, round_id, 'adjudicator', 'adjudicators')
+@round_view
+def adjudicator_availability(request, round):
+    return base_availability(request, round, 'adjudicator', 'adjudicators')
 
-def update_adjudicator_availability(request, round_id):
-    return update_base_availability(request, round_id, 'set_available_adjudicators')
+@round_view
+def update_adjudicator_availability(request, round):
+    return update_base_availability(request, round, 'set_available_adjudicators')
 
-def team_availability(request, round_id):
-    return base_availability(request, round_id, 'team', 'teams')
+@round_view
+def team_availability(request, round):
+    return base_availability(request, round, 'team', 'teams')
 
-def update_team_availability(request, round_id):
-    return update_base_availability(request, round_id, 'set_available_teams')
+@round_view
+def update_team_availability(request, round):
+    return update_base_availability(request, round, 'set_available_teams')
 
 @admin_required
-def base_availability(request, round_id, model, context_name):
-    round = get_object_or_404(Round, id=round_id)
+def base_availability(request, round, model, context_name):
 
     items = getattr(round, '%s_availability' % model)().order_by('name')
-
+    
     context = {
         context_name: items,
-        'round': round,
     }
+
     return r2r(request, '%s_availability.html' % model, context)
 
 @admin_required
 @expect_post
-def update_base_availability(request, round_id, update_method):
-    round = get_object_or_404(Round, id=round_id)
+def update_base_availability(request, round, update_method):
 
     available_ids = [int(a.replace("check_", "")) for a in request.POST.keys()
                      if a.startswith("check_")]
@@ -104,51 +123,51 @@ def update_base_availability(request, round_id, update_method):
 
 @admin_required
 @round_view
-def draw(request, rc, round):
+def draw(request, round):
 
     if round.draw_status == round.STATUS_NONE:
-        return draw_none(request, rc, round)
+        return draw_none(request, round)
 
     if round.draw_status == round.STATUS_DRAFT:
-        return draw_draft(request, rc, round)
+        return draw_draft(request, round)
 
     if round.draw_status == round.STATUS_CONFIRMED:
-        return draw_confirmed(request, rc, round)
+        return draw_confirmed(request, round)
 
     raise
 
 
-def draw_none(request, rc, round):
+def draw_none(request, round):
 
-    rc['active_teams'] = round.active_teams.all()
-    return r2r(request, "draw_none.html", rc)
-
-
-def draw_draft(request, rc, round):
-
-    rc['draw'] = round.get_draw()
-    return r2r(request, "draw_draft.html", rc)
+    active_teams = round.active_teams.all()
+    return r2r(request, "draw_none.html", dict(active_teams=active_teams))
 
 
-def draw_confirmed(request, rc, round):
+def draw_draft(request, round):
 
-    rc['draw'] = round.get_draw()
-    return r2r(request, "draw_confirmed.html", rc)
+    draw = round.get_draw()
+    return r2r(request, "draw_draft.html", dict(draw=draw))
+
+
+def draw_confirmed(request, round):
+
+    draw = round.get_draw()
+    return r2r(request, "draw_confirmed.html", dict(draw=draw))
 
 
 @admin_required
 @expect_post
 @round_view
-def create_draw(request, rc, round):
+def create_draw(request, round):
 
     round.draw()
-    return redirect_to('draw', args=[round.id])
+    return redirect_round('draw', round)
 
 
 @admin_required
 @expect_post
 @round_view
-def confirm_draw(request, rc, round):
+def confirm_draw(request, round):
 
     if round.draw_status != round.STATUS_DRAFT:
         return HttpResponseBadRequest("Draw status is not DRAFT")
@@ -156,13 +175,13 @@ def confirm_draw(request, rc, round):
     round.draw_status = round.STATUS_CONFIRMED
     round.save()
 
-    return redirect_to('draw', args=[round.id])
+    return redirect_round('draw', round)
 
 
 @admin_required
 @expect_post
 @round_view
-def create_adj_allocation(request, rc, round):
+def create_adj_allocation(request, round):
 
     if round.draw_status != round.STATUS_CONFIRMED:
         return HttpResponseBadRequest("Draw is not confirmed")
@@ -170,18 +189,19 @@ def create_adj_allocation(request, rc, round):
     from debate.adjudicator.hungarian import HungarianAllocator
     round.allocate_adjudicators(HungarianAllocator)
 
-    return redirect_to('draw', args=[round.id])
+    return redirect_round('draw', round)
 
 
 @admin_required
 @round_view
-def results(request, rc, round):
+def results(request, round):
 
-    rc['draw'] = round.get_draw()
-    return r2r(request, "results.html", rc)
+    draw = round.get_draw()
+    return r2r(request, "results.html", dict(draw=draw))
 
 
-def enter_result(request, debate_id): 
+@tournament_view
+def enter_result(request, t, debate_id): 
     debate = get_object_or_404(Debate, id=debate_id)
     form = forms.make_results_form(debate)
 
@@ -189,7 +209,8 @@ def enter_result(request, debate_id):
 
 
 @expect_post
-def save_result(request, debate_id):
+@tournament_view
+def save_result(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
 
     class_ = forms.make_results_form_class(debate)
@@ -200,33 +221,32 @@ def save_result(request, debate_id):
     else:
         raise
 
-    return redirect_to('results', args=[debate.round.id])
+    return redirect_round('results', debate.round)
 
 
 @admin_required
 @round_view
-def team_standings(request, rc, round):
+def team_standings(request, round):
     
     teams = Team.objects.standings(round)
     for team in teams:
         setattr(team, 'results_in', team.results_count >= round.seq)
-    rc['teams'] = teams
 
-    return r2r(request, 'team_standings.html', rc)
+    return r2r(request, 'team_standings.html', dict(teams=teams))
 
 
 @admin_required
 @round_view
-def draw_venues_edit(request, rc, round):
+def draw_venues_edit(request, round):
 
-    rc['draw'] = round.get_draw()
-    return r2r(request, "draw_venues_edit.html", rc)
+    draw = round.get_draw()
+    return r2r(request, "draw_venues_edit.html", dict(draw=draw))
 
 
 @admin_required
 @expect_post
 @round_view
-def save_venues(request, rc, round):
+def save_venues(request, round):
 
     def v_id(a):
         try:
@@ -251,15 +271,15 @@ def save_venues(request, rc, round):
 
 @admin_required
 @round_view
-def draw_adjudicators_edit(request, rc, round):
+def draw_adjudicators_edit(request, round):
 
-    rc['draw'] = round.get_draw()
-    return r2r(request, "draw_adjudicators_edit.html", rc)
+    draw = round.get_draw()
+    return r2r(request, "draw_adjudicators_edit.html", dict(draw=draw))
 
 
 @admin_required
 @round_view
-def save_adjudicators(request, rc, round):
+def save_adjudicators(request, round):
     if request.method != "POST":
         return HttpResponseBadRequest("Expected POST")
 
@@ -289,7 +309,7 @@ def save_adjudicators(request, rc, round):
 
 @admin_required
 @round_view
-def adj_conflicts(request, rc, round):
+def adj_conflicts(request, round):
 
     data = {
         'conflict': {},
@@ -316,7 +336,8 @@ def adj_conflicts(request, rc, round):
 
 
 @admin_required
-def adj_scores(request):
+@tournament_view
+def adj_scores(request, t):
     data = {}
 
     #TODO: make round-dependent
@@ -327,7 +348,8 @@ def adj_scores(request):
 
 
 @admin_required
-def adj_feedback(request):
+@tournament_view
+def adj_feedback(request, t):
 
     adjudicators = Adjudicator.objects.all()
     return render_to_response('adjudicator_feedback.html',
@@ -335,7 +357,8 @@ def adj_feedback(request):
 
 
 @admin_required
-def get_adj_feedback(request):
+@tournament_view
+def get_adj_feedback(request, t):
 
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback()
@@ -351,14 +374,15 @@ def get_adj_feedback(request):
 
 
 @admin_required
-def enter_feedback(request, adjudicator_id):
+@tournament_view
+def enter_feedback(request, t, adjudicator_id):
 
     adj = get_object_or_404(Adjudicator, id=adjudicator_id)
     if request.method == "POST":
         form = forms.make_feedback_form_class(adj)(request.POST)
         if form.is_valid():
             form.save()
-            return redirect_to('adj_feedback')
+            return redirect_tournament('adj_feedback', t)
         raise
 
     form = forms.make_feedback_form_class(adj)()

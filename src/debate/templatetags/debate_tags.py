@@ -2,6 +2,7 @@ from django import template
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 import re
 import os
@@ -40,4 +41,46 @@ def neg_count(team, round):
         return 0
     return team.get_neg_count(round.seq)
 register.simple_tag(neg_count)
+
+class RoundURLNode(template.Node):
+    def __init__(self, view_name, round=None):
+        self.view_name = view_name
+        self.round = round
+
+    def render(self, context):
+        if self.round:
+            round = self.round.resolve(context)
+        else:
+            round = context['round']
+        return reverse(self.view_name, args=[round.tournament.slug,
+                                             round.seq],
+                       current_app=context.current_app)
+
+class TournamentURLNode(template.Node):
+    def __init__(self, view_name, args):
+        self.view_name = view_name
+        self.args = args
+
+    def render(self, context):
+        args=[context['tournament'].slug]
+        args.extend(a.resolve(context) for a in self.args)
+        args = tuple(args)
+        return reverse(self.view_name, args=args,
+                       current_app=context.current_app)
+
+@register.tag
+def round_url(parser, token):
+    bits = token.split_contents()
+    if len(bits) == 3:
+        round = parser.compile_filter(bits[2])
+    else:
+        round = None
+    return RoundURLNode(bits[1], round)
+
+@register.tag
+def tournament_url(parser, token):
+    bits = token.split_contents()
+    
+    args = tuple([parser.compile_filter(b) for b in bits[2:]])
+    return TournamentURLNode(bits[1], args)
 

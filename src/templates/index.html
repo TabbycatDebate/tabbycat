@@ -1,20 +1,13 @@
-{% extends "base.html" %}
-
-{%block h1 %}Dashboard{% endblock %}
-
-
-{% block content %}
-
-<div id="dashboard-main">
-
-    <h2> Current Round </h2>
-
-
-</div>
-
-<div id="dashboard-side">
-    <h2>Sub</h2>
-</div>
-
-
-{% endblock content %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Debate</title>
+    </head>
+    <body>
+        <ul>
+            {% for tournament in tournaments %}
+            <li><a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a></li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

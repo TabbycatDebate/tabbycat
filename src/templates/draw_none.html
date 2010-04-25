@@ -1,5 +1,7 @@
 {% extends "draw_rbase.html" %}
 
+{% load debate_tags %}
+
 {% block extra-head %}
     <script type="text/javascript" charset="utf-8">
 
@@ -20,7 +22,7 @@
 <p>No draw currently exists. Draw to be created for the following {{ active_teams|length }} teams.
 <a id="createDraw" href="">Create Draw</a>.
 </p>
-<form id="createForm" action="{% url create_draw round.id %}" method="POST"></form>
+<form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
 <ul>
     {% for team in active_teams %}
     <li>{{ team.name }} ({{ team.institution.code }})</li>

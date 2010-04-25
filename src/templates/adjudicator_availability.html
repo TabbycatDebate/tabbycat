@@ -1,6 +1,7 @@
 {% extends "base_availability.html" %}
 
-{% block update-url %}{% url update_adjudicator_availability round.id %}{% endblock %}
+{% load debate_tags %}
+{% block update-url %}{% round_url update_adjudicator_availability %}{% endblock %}
 
 {% block h1 %}Adjudicator Availability for Round {{ round }}{% endblock %}
 

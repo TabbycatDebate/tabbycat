@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load debate_tags %}
+
 {% block extra-head %}
 
 <style>
@@ -12,7 +14,7 @@
 {% block h1 %} {{ debate }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
 
 {% block content %}
-<form id="resultsForm" action="{% url save_result debate.id %}" method="POST">
+<form id="resultsForm" action="{% tournament_url save_result debate.id %}" method="POST">
 <table>
 {% for position in form.position_iter %}
 <tr>

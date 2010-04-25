@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load debate_tags %}
+
 {% block extra-head %}
 <script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
 <script type="text/javascript" charset="utf-8">
@@ -20,7 +22,7 @@
         }
 
         // load adjudicator conflict data
-        $.getJSON("{% url adj_conflicts round.id %}", function(data) {
+        $.getJSON("{% round_url adj_conflicts %}", function(data) {
             conflicts = data;
 
              // insert blank entries for adjudicators who aren't there
@@ -43,7 +45,7 @@
         } );
 
         // load adjudicator scores
-        $.getJSON("{% url adj_scores %}", function(data) {
+        $.getJSON("{% tournament_url adj_scores %}", function(data) {
             scores = data;
             $(".adj").each( function() {
                 $(this).append('<span class="info"><a href="">' + formatScore(scores[intId(this)]) + '(i)</a></span>');
@@ -285,7 +287,7 @@
 
             $.ajax( {
                 type: "POST",
-                url: "{% url save_adjudicators round.id %}",
+                url: "{% round_url save_adjudicators %}",
                 data: data,
                 success: function(data, status) {
                     alert("win");
@@ -359,7 +361,7 @@
     Edit adjudicators for Round {{ round }} |
     <a href="" id="save">Save</a>
     Discard Undo Redo 
-    <a href="{% url draw round.id %}">Quit</a>
+    <a href="{% round_url draw %}">Quit</a>
 </div>
 
 <div id="scratch">
