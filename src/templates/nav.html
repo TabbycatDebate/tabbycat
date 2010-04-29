@@ -14,6 +14,7 @@
             <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %}">
                 <a href="{% round_url round_index r %}">{{ r.name }}</a>
                 <ul>
+                    <li>Round {{ r }}:</li>
                     <li><a href="{% round_url venue_availability r %}">Venues</a></li>
                     <li><a href="{% round_url adjudicator_availability r %}">Adjudicators</a></li>
                     <li><a href="{% round_url team_availability r %}">Teams</a></li>
