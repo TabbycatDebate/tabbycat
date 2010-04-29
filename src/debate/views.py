@@ -167,7 +167,7 @@ def create_adj_allocation(request, round):
     from debate.adjudicator.hungarian import HungarianAllocator
     round.allocate_adjudicators(HungarianAllocator)
 
-    return redirect_round('draw', round)
+    return _json_adj_allocation(round.get_draw(), round.unused_adjudicators())
 
 
 @admin_required

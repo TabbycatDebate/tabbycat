@@ -23,9 +23,11 @@
 
 
         function _make_adj(data) {
-            return $('<div></div>').addClass('adj')
+            var adj = $('<div></div>').addClass('adj')
                 .attr('id', 'adj_' + data.id)
                 .append($('<span></span> ').html(data.name))
+            init_adj(adj);
+            return adj;
         }
         function set_chair(debate_id, data) {
             var td = $('#chair_'+debate_id);
@@ -40,6 +42,30 @@
         function add_panellist(debate_id, data) {
             var td = $('#panel_'+debate_id);
             _make_adj(data).appendTo(td);
+        }
+
+        function load_allocation_data(data) {
+            $.each(data.debates, function(debate_id, adj_data) {
+                set_chair(debate_id, adj_data.chair);
+                clear_panel(debate_id);
+                $.each(adj_data.panel, function(idx, adj) {
+                    add_panellist(debate_id, adj);
+                });
+
+            });
+        }
+
+        function load_allocation(callback) {
+            $.getJSON("{% round_url draw_adjudicators_get %}", function(data){
+                load_allocation_data(data);
+                callback();
+            });
+        }//load_allocation()
+
+        function update_all_conflicts() {
+            $("#dataTable tbody tr").each( function() {
+                updateConflicts(this);
+            });
         }
 
         function load_conflict_data() {
@@ -59,44 +85,28 @@
                      }
                  } );
 
-                // update all
-                $("#dataTable tbody tr").each( function() {
-                    updateConflicts(this);
-                });
+                 update_all_conflicts();
 
             } );
         } //load_conflict_data()
 
-        function load_allocation(callback) {
-            $.getJSON("{% round_url draw_adjudicators_get %}", function(data) {
-                $.each(data.debates, function(debate_id, adj_data) {
-                    set_chair(debate_id, adj_data.chair);
-                    clear_panel(debate_id);
-                    $.each(adj_data.panel, function(idx, adj) {
-                        add_panellist(debate_id, adj);
-                    });
-
-                });
-
-                callback();
-            });
-        }//load_allocation()
-
         function load_adjudicator_scores() {
             $.getJSON("{% tournament_url adj_scores %}", function(data) {
                 scores = data;
-                $(".adj").each( function() {
-                    $(this).append('<span class="info"><a href="">' + formatScore(scores[intId(this)]) + '(i)</a></span>');
-                    $("a", this).attr("title", "Score: " + scores[intId(this)]);
-                    $("a", this).click( function() {
-
-                        return false;
-
-                    } );
-                } );
-
+                append_adj_scores();
+        
             } );
         }//load_adjudicator_scores()
+
+        function append_adj_scores() {
+            $(".adj").each( function() {
+                $(this).append('<span class="info"><a href="">' + formatScore(scores[intId(this)]) + '(i)</a></span>');
+                $("a", this).attr("title", "Score: " + scores[intId(this)]);
+                $("a", this).click( function() {
+                    return false;
+                } );
+            } );
+        }
 
         var unusedTable = $("#unusedTable").dataTable({
             bPaginate: false,
@@ -179,59 +189,62 @@
 
         }
 
-        $("div.adj").mouseover( function(e) {
-            eachConflictingTeam(
-                intId(e.currentTarget),
-                function (type, elem) {
-                    $(elem).addClass(conflictTypeClass[type]);
-                }
-            );
-        } );
-
-        $("div.adj").mouseout( function(e) {
-            // check if currently being dragged
-            if (! $(e.currentTarget).hasClass("dragging")) {
+        function init_adj(el) {
+            el.mouseover( function(e) {
                 eachConflictingTeam(
                     intId(e.currentTarget),
                     function (type, elem) {
-                        $(elem).removeClass(conflictTypeClass[type]);
+                        $(elem).addClass(conflictTypeClass[type]);
                     }
                 );
-            }
-        } );
+            } );
 
-        $(".adj").draggable( {
-            handle: 'div',
-            cursor: 'move',
-            helper: function() {
-                var offset = $(this).offset();
-                $(this).css('position', 'relative');
-                // set a property on element to remember previous holder
-                this.oldHolder = $(this).parent("td");
-                var adj = $(this).clone();
-                $(adj).appendTo('body');
-                $(adj).css('top', 0);
-                $(adj).css('left', 0);
-                var curOff = $(adj).offset();
-                $(adj).css('top', offset.top - curOff.top);
-                $(adj).css('left', offset.left - curOff.left);
+            el.mouseout( function(e) {
+                // check if currently being dragged
+                if (! $(e.currentTarget).hasClass("dragging")) {
+                    eachConflictingTeam(
+                        intId(e.currentTarget),
+                        function (type, elem) {
+                            $(elem).removeClass(conflictTypeClass[type]);
+                        }
+                    );
+                }
+            } );
+
+            el.draggable( {
+                handle: 'div',
+                cursor: 'move',
+                helper: function() {
+                    var offset = $(this).offset();
+                    $(this).css('position', 'relative');
+                    // set a property on element to remember previous holder
+                    this.oldHolder = $(this).parent("td");
+                    var adj = $(this).clone();
+                    $(adj).appendTo('body');
+                    $(adj).css('top', 0);
+                    $(adj).css('left', 0);
+                    var curOff = $(adj).offset();
+                    $(adj).css('top', offset.top - curOff.top);
+                    $(adj).css('left', offset.left - curOff.left);
 
 
-                return adj;
-            },
-            stack: {
-                group: '.adj',
-                min: 1000
-            },
-            revert: 'invalid',
-            start: function(event, ui) {
-                $("#" + ui.helper.attr("id")).addClass("dragging");
-            },
-            stop: function(event, ui) {
-                $("#" + ui.helper.attr("id")).removeClass("dragging");
-                $(ui.helper).remove();
-            }
-        });
+                    return adj;
+                },
+                stack: {
+                    group: '.adj',
+                    min: 1000
+                },
+                revert: 'invalid',
+                start: function(event, ui) {
+                    $("#" + ui.helper.attr("id")).addClass("dragging");
+                },
+                stop: function(event, ui) {
+                    $("#" + ui.helper.attr("id")).removeClass("dragging");
+                    $(ui.helper).remove();
+                }
+            });
+        }
+
         $("#dataTable tbody  .adj-holder").droppable( {
             hoverClass: 'hover',
             drop: function(event, ui) {
@@ -353,6 +366,9 @@
                 type: "POST",
                 url: "{% round_url create_adj_allocation %}",
                 success: function(data, status) {
+                    load_allocation_data($.parseJSON(data));
+                    update_all_conflicts();
+                    append_adj_scores();
                     $('#loading').hide();
                 },
                 error: function(xhr, error, ex) {
@@ -423,7 +439,7 @@
     #dataTable .history-with-active { color: #f80; }
 
     #loading {vertical-align: middle; position: fixed; left: 0; top: 0; width:100%; height:100%; 
-        background-image:url("/static/images/80.png"); z-index: 1000; text-align: center;}
+        background-image:url("/static/images/80.png"); z-index: 100000; text-align: center;}
     #loading div {position: absolute; margin-left: 48%; top: 50%; width: 100px; background: #fff; padding: 20px;}
 
 </style>
