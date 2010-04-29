@@ -21,43 +21,82 @@
             return n.toPrecision(2);
         }
 
-        // load adjudicator conflict data
-        $.getJSON("{% round_url adj_conflicts %}", function(data) {
-            conflicts = data;
 
-             // insert blank entries for adjudicators who aren't there
-             // (no conflicts)
-             $(".adj").each( function() {
-                 var id = intId(this);
-                 if (conflicts['conflict'][id] == undefined) {
-                     conflicts['conflict'][id] = [];
-                 }
-                 if (conflicts['history'][id] == undefined) {
-                     conflicts['history'][id] = [];
-                 }
-             } );
+        function _make_adj(data) {
+            return $('<div></div>').addClass('adj')
+                .attr('id', 'adj_' + data.id)
+                .append($('<span></span> ').html(data.name))
+        }
+        function set_chair(debate_id, data) {
+            var td = $('#chair_'+debate_id);
+            $('div.adj', td).remove();
+            _make_adj(data).appendTo(td);
+        }
 
-            // update all
-            $("#dataTable tbody tr").each( function() {
-                updateConflicts(this);
-            });
+        function clear_panel(debate_id) {
+            $('#panel_'+debate_id).find('div.adj').remove();
+        }
 
-        } );
+        function add_panellist(debate_id, data) {
+            var td = $('#panel_'+debate_id);
+            _make_adj(data).appendTo(td);
+        }
 
-        // load adjudicator scores
-        $.getJSON("{% tournament_url adj_scores %}", function(data) {
-            scores = data;
-            $(".adj").each( function() {
-                $(this).append('<span class="info"><a href="">' + formatScore(scores[intId(this)]) + '(i)</a></span>');
-                $("a", this).attr("title", "Score: " + scores[intId(this)]);
-                $("a", this).click( function() {
+        function load_conflict_data() {
+            // load adjudicator conflict data
+            $.getJSON("{% round_url adj_conflicts %}", function(data) {
+                conflicts = data;
 
-                    return false;
+                 // insert blank entries for adjudicators who aren't there
+                 // (no conflicts)
+                 $(".adj").each( function() {
+                     var id = intId(this);
+                     if (conflicts['conflict'][id] == undefined) {
+                         conflicts['conflict'][id] = [];
+                     }
+                     if (conflicts['history'][id] == undefined) {
+                         conflicts['history'][id] = [];
+                     }
+                 } );
 
-                } );
+                // update all
+                $("#dataTable tbody tr").each( function() {
+                    updateConflicts(this);
+                });
+
             } );
+        } //load_conflict_data()
 
-       } );
+        function load_allocation(callback) {
+            $.getJSON("{% round_url draw_adjudicators_get %}", function(data) {
+                $.each(data.debates, function(debate_id, adj_data) {
+                    set_chair(debate_id, adj_data.chair);
+                    clear_panel(debate_id);
+                    $.each(adj_data.panel, function(idx, adj) {
+                        add_panellist(debate_id, adj);
+                    });
+
+                });
+
+                callback();
+            });
+        }//load_allocation()
+
+        function load_adjudicator_scores() {
+            $.getJSON("{% tournament_url adj_scores %}", function(data) {
+                scores = data;
+                $(".adj").each( function() {
+                    $(this).append('<span class="info"><a href="">' + formatScore(scores[intId(this)]) + '(i)</a></span>');
+                    $("a", this).attr("title", "Score: " + scores[intId(this)]);
+                    $("a", this).click( function() {
+
+                        return false;
+
+                    } );
+                } );
+
+            } );
+        }//load_adjudicator_scores()
 
         var unusedTable = $("#unusedTable").dataTable({
             bPaginate: false,
@@ -272,6 +311,10 @@
             return f;
         };
 
+        /////////////////////
+        // HANDLERS
+        ////////////////////
+
         $('#save').click( function() {
             $('#loading span').html('saving...');
             $('#loading').show();
@@ -303,19 +346,6 @@
 
         } );
 
-        $("#dataTable").dataTable( {
-            "aoColumns": [
-                null,
-                null,
-                null,
-                null,
-                { "sWidth": "30%" },
-                null
-            ],
-            "bPaginate": false,
-            "aaSorting": [[0, 'desc']]
-        } );
-
         $('#auto_allocate').click(function() {
             $('#loading span').html('allocating...');
             $('#loading').show();
@@ -332,7 +362,31 @@
 
         });
 
-        setTimeout(function() { $('#loading').hide() }, 1000);
+        $("#dataTable").dataTable( {
+            "aoColumns": [
+                { "sWidth": "5%" },
+                { "sWidth": "15%" },
+                { "sWidth": "15%" },
+                { "sWidth": "25%" },
+                { "sWidth": "40%" }
+            ],
+            "bPaginate": false,
+            "bSort": false,
+            "bFilter": false,
+            "bAutoWidth": false,
+            "aaSorting": [[0, 'desc']]
+        } );
+
+
+        //////////
+        // INIT
+        ////////
+
+        load_allocation(function() {
+            load_conflict_data();
+            load_adjudicator_scores();
+            setTimeout(function() { $('#loading').hide() }, 1000);
+        });
 
     });
 </script>
@@ -420,7 +474,7 @@
 <div id="main">
     <table id="dataTable" class="display" cellpadding="0" cellspacing="0">
         <thead>
-            <tr><th>Brkt</th><th>Affirmative</th><th>Negative</th><th>Chair</th><th>Panel</th><th>Conflicts</th></tr>
+            <tr><th>Brkt</th><th>Affirmative</th><th>Negative</th><th>Chair</th><th>Panel</th></tr>
         </thead>
         <tbody>
         {% for debate in draw %}
@@ -430,24 +484,11 @@
             <td id="team_{{ debate.neg_team.id }}">{{ debate.neg_team.name }}</td>
             {% with debate.adjudicators as adj %}
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
-                {% if adj.chair %}
-                <div id="adj_{{ adj.chair.id }}" class="adj">
-                    <span>{{ adj.chair.name }}</span>
-                </div>
-                {% endif %}
             </td>
             <td id="panel_{{ debate.id }}" class="adj-holder panel-holder">
-                {% for p in adj.panel %}
-                <div id="adj_{{ p.id }}" class="adj">
-                    <span>{{ p.name }}</span>
-                </div>
-                {% endfor %}
             </td>
 
             {% endwith %}
-            <td>
-               {{ debate.adjudicator_conflicts|yesno:"C," }}
-            </td>
         </tr>
         {% endfor %}
     </table>

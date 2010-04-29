@@ -254,6 +254,39 @@ def draw_adjudicators_edit(request, round):
     draw = round.get_draw()
     return r2r(request, "draw_adjudicators_edit.html", dict(draw=draw))
 
+def _json_adj_allocation(debates, unused_adj):
+
+    obj = {}
+
+    def _adj(a):
+        return {
+            'id': a.id,
+            'name': a.name,
+        }
+
+    def _debate(d):
+        r = {}
+        if d.adjudicators.chair:
+            r['chair'] = _adj(d.adjudicators.chair)
+        r['panel'] = [_adj(a) for a in d.adjudicators.panel]
+        return r
+
+    obj['debates'] = dict((d.id, _debate(d)) for d in debates)
+    obj['unused'] = [_adj(a) for a in unused_adj]
+
+    import json
+
+    return HttpResponse(json.dumps(obj))
+
+
+@admin_required
+@round_view
+def draw_adjudicators_get(request, round):
+
+    draw = round.get_draw()
+
+    return _json_adj_allocation(draw, round.unused_adjudicators())
+
 
 @admin_required
 @round_view

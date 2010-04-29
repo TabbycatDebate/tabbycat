@@ -37,6 +37,9 @@ urlpatterns = patterns('debate.views',
 
     url(r'^round/(?P<round_seq>\d+)/draw/adjudicators/$', 'draw_adjudicators_edit',
         name='draw_adjudicators_edit'),
+    url(r'^round/(?P<round_seq>\d+)/draw/adjudicators/_get/$',
+        'draw_adjudicators_get',
+        name='draw_adjudicators_get'),
     url(r'^round/(?P<round_seq>\d+)/draw/adjudicators/save/$', 'save_adjudicators',
         name='save_adjudicators'),
 
