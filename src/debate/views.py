@@ -274,8 +274,6 @@ def _json_adj_allocation(debates, unused_adj):
     obj['debates'] = dict((d.id, _debate(d)) for d in debates)
     obj['unused'] = [_adj(a) for a in unused_adj]
 
-    import json
-
     return HttpResponse(json.dumps(obj))
 
 
