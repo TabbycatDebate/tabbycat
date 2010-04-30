@@ -9,7 +9,7 @@ class ScoreField(models.FloatField):
 
 class Tournament(models.Model):
 
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_')
 
@@ -433,6 +433,7 @@ class Debate(models.Model):
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue, blank=True, null=True)
     bracket = models.IntegerField(default=0)
+    importance = models.IntegerField(blank=True, null=True)
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                                     default=STATUS_NONE)
 

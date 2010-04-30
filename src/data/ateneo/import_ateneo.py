@@ -94,7 +94,6 @@ class Importer(object):
                     draw_status = m.Round.STATUS_CONFIRMED,
                     venue_status = m.Round.STATUS_CONFIRMED,
                     adjudicator_status = m.Round.STATUS_CONFIRMED,
-                    is_current = False,
                     feedback_weight = float(fw),
                 )
 
@@ -102,7 +101,6 @@ class Importer(object):
                 r.activate_all()
                 self.rounds[int(id)] = r
 
-        self.rounds[rounds[-1]].is_current = True
         self.rounds[rounds[-1]].save()
 
         for line in self.load_table('debates'):

@@ -171,6 +171,18 @@ def create_adj_allocation(request, round):
 
 
 @admin_required
+@expect_post
+@round_view
+def update_debate_importance(request, round):
+    id = int(request.POST.get('debate_id'))
+    im = int(request.POST.get('value'))
+    debate = Debate.objects.get(pk=id)
+    debate.importance = im
+    debate.save()
+    return HttpResponse(im)
+
+
+@admin_required
 @round_view
 def results(request, round):
 
