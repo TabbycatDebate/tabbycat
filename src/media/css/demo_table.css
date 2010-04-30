@@ -103,8 +103,8 @@
  * DataTables display
  */
 table.display {
+    table-layout: fixed;
 	margin: 0 auto;
-	width: 100%;
 	clear: both;
 }
 

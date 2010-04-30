@@ -295,6 +295,7 @@ def save_adjudicators(request, round):
         return HttpResponseBadRequest("Expected POST")
 
     def id(s):
+        s = s.replace('[]', '')
         return int(s.split('_')[1])
 
     debate_ids = set(id(a) for a in request.POST);

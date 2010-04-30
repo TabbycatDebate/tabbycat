@@ -753,11 +753,12 @@ class AdjudicatorAllocation(object):
         for t, adj in self:
             if isinstance(adj, Adjudicator):
                 adj = adj.id
-            DebateAdjudicator(
-                debate = self.debate,
-                adjudicator_id = adj,
-                type = t,
-            ).save()
+            if adj:
+                DebateAdjudicator(
+                    debate = self.debate,
+                    adjudicator_id = adj,
+                    type = t,
+                ).save()
 
 class TeamScoreSheet(models.Model):
     # unused

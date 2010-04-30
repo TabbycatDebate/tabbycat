@@ -6,6 +6,7 @@
 <script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
+        var unusedTable;
         var conflicts;
         var scores;
         var conflictTypeClass = {
@@ -46,13 +47,24 @@
 
         function load_allocation_data(data) {
             $.each(data.debates, function(debate_id, adj_data) {
-                set_chair(debate_id, adj_data.chair);
+                if (adj_data.chair)
+                    set_chair(debate_id, adj_data.chair);
                 clear_panel(debate_id);
                 $.each(adj_data.panel, function(idx, adj) {
                     add_panellist(debate_id, adj);
                 });
 
             });
+            $.each(data.unused, function(idx, adj_data) {
+                var adj = _make_adj(adj_data);
+                moveToUnused(adj);
+
+            });
+        }
+
+        function reset() {
+            $('.adj').remove();
+            unusedTable.fnClearTable();
         }
 
         function load_allocation(callback) {
@@ -90,10 +102,11 @@
             } );
         } //load_conflict_data()
 
-        function load_adjudicator_scores() {
+        function load_adjudicator_scores(callback) {
             $.getJSON("{% tournament_url adj_scores %}", function(data) {
                 scores = data;
-                append_adj_scores();
+
+                if (callback) callback();
         
             } );
         }//load_adjudicator_scores()
@@ -108,16 +121,10 @@
             } );
         }
 
-        var unusedTable = $("#unusedTable").dataTable({
-            bPaginate: false,
-            bFilter: false
-
-        });
-
         function moveToUnused(adj) {
             // add data
             var id = intId(adj);
-            var idxs = unusedTable.fnAddData([adj.html(), scores[id]]);
+            var idxs = unusedTable.fnAddData([adj.html(), scores[id].toPrecision(2)]);
             var trNode = unusedTable.fnGetNodes(idxs[0]);
             var td = $("td:first", trNode);
             td.addClass("unused");
@@ -366,6 +373,7 @@
                 type: "POST",
                 url: "{% round_url create_adj_allocation %}",
                 success: function(data, status) {
+                    reset();
                     load_allocation_data($.parseJSON(data));
                     update_all_conflicts();
                     append_adj_scores();
@@ -394,23 +402,35 @@
         } );
 
 
+        unusedTable = $("#unusedTable").dataTable({
+            aoColumns: [
+                { "sWdith": "90%" },
+                { "sWidth": "10%" }
+            ],
+            bPaginate: false,
+            bFilter: false
+        });
+
         //////////
         // INIT
         ////////
 
-        load_allocation(function() {
-            load_conflict_data();
-            load_adjudicator_scores();
-            setTimeout(function() { $('#loading').hide() }, 1000);
+        load_adjudicator_scores(function() {
+            load_allocation(function() {
+                append_adj_scores(); //needs alloc
+                load_conflict_data(); //needs alloc (fill in the blank conflict data)
+                setTimeout(function() { $('#loading').hide() }, 1000);
+            });
         });
 
     });
 </script>
 <style type="text/css">
-    .adj { background-color: #eee; white-space: nowrap; margin-right: 1em; cursor: move;}
+    .adj { display: block; background-color: #eee; white-space: nowrap; margin-right: 1em; cursor: move;}
+    .panel-holder .adj { margin: 1px 0;}
     .adj.conflict { color: red; }
     .adj span { margin-left: 10px; }
-    .adj span.info { margin-left: 0; margin-right: 5px; }
+    .adj span.info { margin: 0 5px;  }
 
     .adj.history-conflict { color: #f80; }
 
@@ -420,7 +440,7 @@
         top: 0;
         right: 0;
         background-color: #cff;
-        width: 25%;
+        width: 300px;
         height: 100%;
         overflow-y: auto;
         overflow-x: hidden;
@@ -430,9 +450,10 @@
     #main {
         width: 74%;
     }
-    .adj { display: inline; }
     #scratch .adj { white-space: none; }
-    
+    #scratch .adj .info { display: none; }
+
+    #unusedTable { width: 100%; }
 
     .incomplete { border: 1px solid #f84; }
     #dataTable .conflict-with-active { color: red; }
@@ -470,19 +491,13 @@
     Unused Adjudicators
     <table id="unusedTable" class="display" cellpadding="0" cellspacing="0">
         <thead>
-            <tr><th>Name</th><th>Score</th></tr>
+            <tr>
+                <th>Name</th>
+                <th>Score</th>
+            
+            </tr>
         </thead>
-        <tbody>
-    {% for adj in round.unused_adjudicators %}
-    <tr>
-        <td class="unused">
-            <div id="adj_{{ adj.id }}" class="adj">
-                <span>{{ adj.name }}</span>
-            </div>
-        </td>
-        <td>{{ adj.score }}</td>
-    </tr>
-    {% endfor %}
+    <tbody>
     </tbody>
     </table>
 </div>
