@@ -257,6 +257,9 @@ class Round(models.Model):
         self.draw_status = self.STATUS_DRAFT
         self.save()
 
+        from debate.draw import assign_importance
+        assign_importance(self)
+
     def allocate_adjudicators(self, alloc_class=SAAllocator):
         if self.draw_status != self.STATUS_CONFIRMED:
             raise

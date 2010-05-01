@@ -3,7 +3,13 @@ from debate.adjudicator.stab import StabAllocator
 
 from munkres import Munkres
 
+from math import exp
+
 class HungarianAllocator(Allocator):
+
+    MAX_SCORE = 5.0
+    CHAIR_CUTOFF = 3.5
+    MIN_SCORE = 1.5
 
     def calc_cost(self, debate, adj):
         cost = 0
@@ -13,24 +19,38 @@ class HungarianAllocator(Allocator):
         cost += 10000 * adj.seen_team(debate.aff_team, debate.round)
         cost += 10000 * adj.seen_team(debate.neg_team, debate.round)
 
-        cost += (10 - debate.bracket) * adj.score
+        diff = debate.importance - adj.score
+        if diff > 0:
+            cost += 10000 * exp(diff - 0.25)
+
+        cost += (self.MAX_SCORE - adj.score) * 1000
 
         return cost
 
     def allocate(self):
         from debate.models import AdjudicatorAllocation
 
-        print "running Stab"
-        initial = StabAllocator(self.debates,
-                                self.adjudicators).allocate(avoid_conflicts=False)
+        # sort adjudicators and debates in descending score/importance
+        self.adjudicators_sorted = list(self.adjudicators)
+        self.adjudicators_sorted.sort(key=lambda a: a.score, reverse=True)
+        self.debates_sorted = list(self.debates)
+        self.debates_sorted.sort(key=lambda a: a.importance, reverse=True)
+
+        # get adjudicators that can adjudicate solo
+        chairs = [a for a in self.adjudicators_sorted if a.score >
+                  self.CHAIR_CUTOFF]
+
+        # get debates that will be judged by solo adjudicators
+        chair_debates = self.debates_sorted[:len(chairs)]
+
+        panel_debates = self.debates_sorted[len(chairs):]
+        panellists = [a for a in self.adjudicators_sorted if self.MIN_SCORE <
+                      a.score < self.CHAIR_CUTOFF]
+
+        assert len(panel_debates) * 3 <= len(panellists)
+
 
         print "calculating costs"
-
-        chairs_only = [a for a in initial if len(a.panel) == 0]
-        panels = [a for a in initial if len(a.panel) > 0]
-
-        chair_debates = [a.debate for a in chairs_only]
-        chairs = [a.chair for a in chairs_only]
 
         n = len(chairs)
 
@@ -58,19 +78,15 @@ class HungarianAllocator(Allocator):
         print [(a.debate, a.chair) for a in alloc]
 
         # do panels
-        n = len(panels)
+        n = len(panel_debates)
 
-        from itertools import chain
-        debates = [a.debate for a in panels]
-        panellists = []
-        for p in panels:
-            panellists.extend(tuple(a[1] for a in p))
-        
+        npan = len(panellists)
 
         print "costing panellists"
 
-        cost_matrix = [[0] * n * 3 for i in range(n*3)]
-        for i, debate in enumerate(debates):
+        # matrix is square, dummy debates have cost 0
+        cost_matrix = [[0] * npan for i in range(npan)]
+        for i, debate in enumerate(panel_debates):
             for j in range(3):
                 for k, adj in enumerate(panellists):
                     cost_matrix[3*i+j][k] = self.calc_cost(debate, adj)
@@ -84,10 +100,10 @@ class HungarianAllocator(Allocator):
             cost += cost_matrix[r][c]
 
         p = [[] for i in range(n)]
-        for r, c in indexes:
+        for r, c in indexes[:n*3]:
             p[r // 3].append(panellists[c])
 
-        for i, d in enumerate(debates):
+        for i, d in enumerate(panel_debates):
             a = AdjudicatorAllocation(d)
             p[i].sort(key=lambda a: a.score, reverse=True)
             a.chair = p[i].pop(0)

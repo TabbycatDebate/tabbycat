@@ -121,3 +121,26 @@ class BracketDraw(BaseDraw):
             for i in range(num/2):
                 pairs.append(bracket[i], bracket[num+i])
         return pairs
+
+def assign_importance(round):
+    debates = round.get_draw().order_by('-bracket')
+    adjudicators = list(round.active_adjudicators.all())
+    adjudicators.sort(key=lambda a:-a.score)
+
+    bubble_bracket = debates[15].bracket
+
+    # TODO: impl round specific
+    nd = float(len(debates))
+    na = len(adjudicators)
+
+    for i, debate in enumerate(debates):
+        debate.importance = adjudicators[int(i*na/nd)].score
+
+        debate.save()
+
+
+    
+
+    
+
+
