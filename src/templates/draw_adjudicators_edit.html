@@ -114,7 +114,7 @@
 
         function append_adj_scores() {
             $(".adj").each( function() {
-                $(this).append('<span class="info"><a href="">' + formatScore(scores[intId(this)]) + '(i)</a></span>');
+                $(this).append('<span class="info">(' + formatScore(scores[intId(this)]) + ')</span>');
                 $("a", this).attr("title", "Score: " + scores[intId(this)]);
                 $("a", this).click( function() {
                     return false;
@@ -441,6 +441,7 @@
     });
 </script>
 <style type="text/css">
+    #statusBar a { margin-left: 10px; }
     .adj { display: block; background-color: #ddd; white-space: nowrap; margin-right: 1em; cursor: move;}
     .adj:hover {background-color: #eee; }
     .panel-holder .adj { margin: 1px 0;}
@@ -455,11 +456,15 @@
         position: fixed;
         top: 0;
         right: 0;
-        background-color: #cff;
+        background-color: #fea;
         width: 300px;
         height: 100%;
         overflow-y: auto;
         overflow-x: hidden;
+    }
+    #statusBar {
+        height: 30px;
+        background-color: #fff;
     }
     #scratch.hover { background-color: #ff8; }
     .hover #unusedTable tbody td { background-color: #ffa; }
@@ -501,6 +506,8 @@
     <a href="#auto" id="auto_allocate">Auto Allocate</a>
     <a href="" id="save">Save</a>
     <a href="{% round_url draw %}">Quit</a>
+    |
+    <span style="margin-left:10px"> Legend: <a style="color:red;">conflict</a>, <a style="color:#f80;">history</a></span>
 </div>
 
 <div id="scratch">
