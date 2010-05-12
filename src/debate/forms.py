@@ -79,13 +79,17 @@ def make_results_form_class(debate):
                         initial = init[i],
                     )
 
+                    # css_class is for jquery validation plugin
                     if i == 4:
                         score_field = ReplyScoreField
+                        css_class = 'required number'
                     else:
                         score_field = ScoreField
+                        css_class = 'required number'
 
                     # create score field
-                    attrs['%s_score_%d' % (side, i)] = score_field()
+                    attrs['%s_score_%d' % (side, i)] = score_field(
+                        widget = forms.TextInput(attrs={'class':css_class}))
 
 
             new_class = super(ResultFormMetaclass, cls).__new__(cls, name, bases,

@@ -3,33 +3,53 @@
 {% load debate_tags %}
 
 {% block extra-head %}
-
 <style>
     #resultsForm input[type='text'] {
         width: 4em;
     }
 </style>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#resultsForm").validate({
+            debug: true
+        });
+
+
+    });
+</script>
 {% endblock %}
 
 {% block h1 %} {{ debate }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
 
 {% block content %}
 <form id="resultsForm" action="{% tournament_url save_result debate.id %}" method="POST">
-<table>
-{% for position in form.position_iter %}
-<tr>
-    <th> Aff {{ position }}</th>
-    <td> {{ position.aff_speaker }} </td>
-    <td> {{ position.aff_score }} </td>
+<table class="scoresheet">
+    <tbody>
+        {% for position in form.position_iter %}
+        <tr>
+            <th> Aff {{ position }}</th>
+            <td> {{ position.aff_speaker }} </td>
+            <td class="score"> {{ position.aff_score }} </td>
 
-    <th> Neg {{ position }}</th>
-    <td> {{ position.neg_speaker }} </td>
-    <td> {{ position.neg_score }} </td>
-</tr>
-{% endfor %}
+            <th class="neg"> Neg {{ position }}</th>
+            <td> {{ position.neg_speaker }} </td>
+            <td class="score"> {{ position.neg_score }} </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th></th>
+            <td></td>
+            <td></td>
+            <th>Status:</th> 
+            <td>{{ form.result_status }}</td>
+            <td><input class="save" type="submit" value="Save" /></td>
+        </tr>
+    </tfoot>
 </table>
 
-Status: {{ form.result_status }} <input type="submit" value="Save" />
 </form>
 
 {% endblock content %}

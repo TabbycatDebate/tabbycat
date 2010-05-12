@@ -144,3 +144,32 @@ ul#nav .selected ul{
 .winner {
     font-weight: bold;
 }
+
+table.scoresheet {
+    padding: 20px;
+    background-color: #f4fef4; 
+}
+.scoresheet tr { height: 40px; vertical-align: top; }
+.scoresheet th { text-align: right; }
+.scoresheet td.score { width: 100px; }
+.scoresheet th.neg { margin-left: 30px; }
+.scoresheet input[type="text"] { width: 4em; font-size: 110%; padding: 0.3em; }
+.scoresheet input[type="text"]:focus {
+    background-color: #ffd;
+    border: 1px solid #8f8;
+}
+.scoresheet input.save {
+    background-color: #fff;
+    border: 1px solid #888;
+    font-size: 110%;
+    padding: 0 0.3em;
+    width: 4em;
+    cursor: pointer;
+}
+.scoresheet label.error { color: red; }
+.scoresheet input.save:hover {
+    background-color: #fafafa;
+}
+.scoresheet select {
+}
+
