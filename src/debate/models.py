@@ -29,6 +29,13 @@ class Tournament(models.Model):
         r.save()
         r.activate_all()
 
+    @property
+    def config(self):
+        if not hasattr(self, '_config'):
+            from debate.config import Config
+            self._config = Config(self)
+        return self._config
+
     def __unicode__(self):
         return unicode(self.slug)
 
@@ -796,4 +803,25 @@ class SpeakerScore(models.Model):
     speaker = models.ForeignKey(Speaker)
     score = ScoreField()
     position = models.IntegerField()
+
+class ConfigManager(models.Manager):
+    def set(self, tournament, key, value):
+        obj, created = self.get_or_create(tournament=tournament, key=key)
+        obj.value = value
+        obj.save()
+
+    def get_(self, tournament, key, default=None):
+        from django.core.exceptions import ObjectDoesNotExist
+        try:
+            return self.get(tournament=tournament, key=key).value
+        except ObjectDoesNotExist:
+            return default
+            
+
+class Config(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    key = models.CharField(max_length=40)
+    value = models.CharField(max_length=40)
+
+    objects = ConfigManager()
 

@@ -173,3 +173,8 @@ table.scoresheet {
 .scoresheet select {
 }
 
+#configForm label.name { width: 10em; display: block; float: left;}
+#configForm label.help { padding-left: 0.5em; color: #aaa; }
+#configForm .error, #configForm .errorlist { color: red; }
+#configForm div.updated { font-size: 120%; padding: 0.5em; border: 1px solid #00f; }
+

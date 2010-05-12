@@ -67,6 +67,27 @@ def tournament_home(request, t):
 
 @admin_required
 @tournament_view
+def tournament_config(request, t):
+
+    from debate.config import make_config_form
+
+    context = {}
+    if request.method == 'POST':
+        form = make_config_form(t, request.POST)
+        if form.is_valid():
+            form.save()
+            context['updated'] = True
+    else:
+        form = make_config_form(t)
+
+    context['form'] = form
+
+
+    return r2r(request, 'tournament_config.html', context)
+
+
+@admin_required
+@tournament_view
 def draw_index(request, t):
     return r2r(request, 'draw_index.html')
 

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block h1 %}Configuration{% endblock %}
+
+
+{% block content %}
+
+<form id="configForm" action="." method="POST">
+    {% if form.errors %}
+    <div class="error">Please correct the errors below</div>
+    {% endif %}
+    {% if updated %}
+    <div class="updated">Configuration updated</div>
+    {% endif %}
+    {% for field in form %}
+    <p>
+        <label class="name">{{ field.label }}:</label>
+        {{ field }}
+        <label class="help">({{ field.help_text }})</label>
+        {% if field.errors %}
+            {{ field.errors }}
+        {% endif %}
+    </p>
+    {% endfor %}
+    <p><input type="submit" value="Save" /></p>
+</form>
+
+{% endblock content %}

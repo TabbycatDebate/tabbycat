@@ -39,6 +39,8 @@ def initial(debate, team):
             4: speakers[0].id,
         }
 
+# TODO: must've been on something when I wrote this. get rid of the
+# metaclass craziness http://www.b-list.org/weblog/2008/nov/09/dynamic-forms/ 
 def make_results_form_class(debate):
 
     class position(object):
@@ -231,4 +233,5 @@ def test():
     from debate.models import Debate
 
     return make_results_form_class(Debate.objects.get(pk=1))
+
 
