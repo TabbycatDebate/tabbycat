@@ -67,9 +67,6 @@ a:hover {
 	text-decoration: underline;
 }
 
-ul {
-	color: #B0BED9;
-}
 
 .css_right {
 	float: right;
@@ -154,7 +151,7 @@ table.scoresheet {
 .scoresheet td.score { width: 100px; }
 .scoresheet th.neg { margin-left: 30px; }
 .scoresheet input[type="text"] { width: 4em; font-size: 110%; padding: 0.3em; }
-.scoresheet input[type="text"]:focus {
+.scoresheet .score input[type="text"]:focus {
     background-color: #ffd;
     border: 1px solid #8f8;
 }
@@ -172,6 +169,11 @@ table.scoresheet {
 }
 .scoresheet select {
 }
+
+.scoresheet input.win { border: 1px solid #0f0; background-color: #efe;}
+.scoresheet input.lose { border: 1px solid #f00; background-color: #fee; }
+
+.scoresheet thead th { text-align: center; font-size: 130%; }
 
 #configForm label.name { width: 10em; display: block; float: left;}
 #configForm label.help { padding-left: 0.5em; color: #aaa; }

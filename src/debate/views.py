@@ -216,7 +216,8 @@ def enter_result(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
     form = forms.make_results_form(debate)
 
-    return r2r(request, 'enter_results.html', dict(debate=debate, form=form))
+    return r2r(request, 'enter_results.html', dict(debate=debate, form=form,
+                                                   round=debate.round))
 
 
 @expect_post

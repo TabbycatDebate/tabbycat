@@ -15,6 +15,34 @@
             debug: true
         });
 
+        function refresh_totals() {
+            var aff = sum($('.aff.score input'));
+            var neg = sum($('.neg.score input'));
+            $('.aff_total').val(aff);
+            $('.neg_total').val(neg);
+
+            if (aff > neg) {
+                $('.aff_total').addClass('win').removeClass('lose');
+                $('.neg_total').addClass('lose').removeClass('win');
+            } else {
+                $('.aff_total').addClass('lose').removeClass('win');
+                $('.neg_total').addClass('win').removeClass('lose');
+            }
+
+        };
+
+        function sum(elems) {
+            var r = 0;
+            elems.each(function(){
+                var p = parseInt($(this).val());
+                if (p > 0) r += p;
+            });
+            return r;
+        }
+
+        $('.score input').change(refresh_totals);
+
+        refresh_totals();
 
     });
 </script>
@@ -23,22 +51,43 @@
 {% block h1 %} {{ debate }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
 
 {% block content %}
+
+<ul>
+    {% for t, a in debate.adjudicators %}
+    <li>{{ a }}</li>
+    {% endfor %}
+</ul>
+
 <form id="resultsForm" action="{% tournament_url save_result debate.id %}" method="POST">
 <table class="scoresheet">
+    <thead>
+        <tr>
+            <th colspan="3">{{ debate.aff_team }}</td>
+            <th colspan="3">{{ debate.neg_team }}</td>
+        </tr>
+    </thead>
     <tbody>
         {% for position in form.position_iter %}
         <tr>
             <th> Aff {{ position }}</th>
             <td> {{ position.aff_speaker }} </td>
-            <td class="score"> {{ position.aff_score }} </td>
+            <td class="aff score"> {{ position.aff_score }} </td>
 
             <th class="neg"> Neg {{ position }}</th>
             <td> {{ position.neg_speaker }} </td>
-            <td class="score"> {{ position.neg_score }} </td>
+            <td class="neg score"> {{ position.neg_score }} </td>
         </tr>
         {% endfor %}
     </tbody>
     <tfoot>
+        <tr>
+            <th></th>
+            <td></td>
+            <td><input class="aff_total" type="text" readonly /></td>
+            <th></th>
+            <td></td>
+            <td><input class="neg_total" type="text" readonly /></td>
+        </tr>
         <tr>
             <th></th>
             <td></td>
