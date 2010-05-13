@@ -11,6 +11,13 @@ class HungarianAllocator(Allocator):
     CHAIR_CUTOFF = 3.5
     MIN_SCORE = 1.5
 
+    def __init__(self, *args, **kwargs):
+        super(HungarianAllocator, self).__init__(*args, **kwargs)
+        config = self.debates[0].round.tournament.config
+        self.MAX_SCORE = config.get('adj_max_score')
+        self.MIN_SCORE = config.get('adj_min_score')
+        self.CHAIR_CUTOFF = config.get('adj_chair_min_score')
+
     def calc_cost(self, debate, adj):
         cost = 0
 
@@ -82,33 +89,34 @@ class HungarianAllocator(Allocator):
 
         npan = len(panellists)
 
-        print "costing panellists"
+        if npan:
+            print "costing panellists"
 
-        # matrix is square, dummy debates have cost 0
-        cost_matrix = [[0] * npan for i in range(npan)]
-        for i, debate in enumerate(panel_debates):
-            for j in range(3):
-                for k, adj in enumerate(panellists):
-                    cost_matrix[3*i+j][k] = self.calc_cost(debate, adj)
+            # matrix is square, dummy debates have cost 0
+            cost_matrix = [[0] * npan for i in range(npan)]
+            for i, debate in enumerate(panel_debates):
+                for j in range(3):
+                    for k, adj in enumerate(panellists):
+                        cost_matrix[3*i+j][k] = self.calc_cost(debate, adj)
 
-        print "optimizing"
+            print "optimizing"
 
-        indexes = m.compute(cost_matrix)
+            indexes = m.compute(cost_matrix)
 
-        cost = 0
-        for r, c in indexes:
-            cost += cost_matrix[r][c]
+            cost = 0
+            for r, c in indexes:
+                cost += cost_matrix[r][c]
 
-        p = [[] for i in range(n)]
-        for r, c in indexes[:n*3]:
-            p[r // 3].append(panellists[c])
+            p = [[] for i in range(n)]
+            for r, c in indexes[:n*3]:
+                p[r // 3].append(panellists[c])
 
-        for i, d in enumerate(panel_debates):
-            a = AdjudicatorAllocation(d)
-            p[i].sort(key=lambda a: a.score, reverse=True)
-            a.chair = p[i].pop(0)
-            a.panel = p[i]
-            alloc.append(a)
+            for i, d in enumerate(panel_debates):
+                a = AdjudicatorAllocation(d)
+                p[i].sort(key=lambda a: a.score, reverse=True)
+                a.chair = p[i].pop(0)
+                a.panel = p[i]
+                alloc.append(a)
 
         return alloc 
 

@@ -122,8 +122,9 @@ class Team(models.Model):
 
 def TeamAtRound(team, round):
     t = Team.objects.standings(round).get(id=team.id)
-    setattr(t, 'aff_count', t.get_aff_count(round.seq))
-    setattr(t, 'neg_count', t.get_neg_count(round.seq))
+    if round:
+        setattr(t, 'aff_count', t.get_aff_count(round.seq))
+        setattr(t, 'neg_count', t.get_neg_count(round.seq))
     return t
 
 

@@ -52,7 +52,7 @@ class RandomDrawNoConflict(RandomDraw):
         for i, (aff, neg) in enumerate(draw):
             if aff.institution == neg.institution:
                 for j in range(self.MAX_SWAP_ATTEMPTS):
-                    k = random.randint(0, len(draw))
+                    k = random.randint(0, len(draw)-1)
                     n_aff, n_neg = draw[k]
                     if (n_aff.institution != aff.institution and
                         n_neg.institution != aff.institution):
@@ -127,7 +127,9 @@ def assign_importance(round):
     adjudicators = list(round.active_adjudicators.all())
     adjudicators.sort(key=lambda a:-a.score)
 
-    bubble_bracket = debates[15].bracket
+    bs = round.tournament.config.get('break_size')
+
+    bubble_bracket = debates[(bs/2)-1].bracket
 
     # TODO: impl round specific
     nd = float(len(debates))

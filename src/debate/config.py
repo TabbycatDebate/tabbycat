@@ -6,6 +6,10 @@ SETTINGS = SortedDict([
     ('score_max', (int, 'Maximum allowed score', 85)),
     ('reply_score_min', (int, 'Minimum allowed reply score', 30)),
     ('reply_score_max', (int, 'Maximum allowed reply score', 45)),
+    ('break_size', (int, 'Number of breaking teams', 32)),
+    ('adj_min_score', (int, 'Minimum adjudicator score', 1.5)),
+    ('adj_max_score', (int, 'Maximum adjudicator score', 5)),
+    ('adj_chair_min_score', (int, 'Minimum chair score', 3.5)),
 ])
 
 
@@ -20,7 +24,7 @@ class Config(object):
         from debate.models import Config
         if key in SETTINGS:
             coerce, help, default = SETTINGS[key]
-            return Config.objects.get_(self._t, key, default)
+            return coerce(Config.objects.get_(self._t, key, default))
     
     def set(self, key, value):
         from debate.models import Config
