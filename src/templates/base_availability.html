@@ -85,6 +85,18 @@
             dTable = $('#dataTable').dataTable({
                 'bPaginate': false
             });
+
+            $('#select_all').click(function() {
+                checkboxes().each(function(){
+                    if (!this.checked) {
+                        $(this).click();
+                        updateCheckbox(this);
+                    }
+                });
+                return false;
+            });
+
+
         } );
     </script>
 {% endblock %}
@@ -95,15 +107,15 @@
 
 {% block content %}
 <form id="form">
-<div id="demo">
-    <div class="status"><button type="submit">Save changes</button>
-</div>
-<table id="dataTable" class="display" cellpadding="0", cellspacing="0">
-    {% block table-contents %}
-    {% endblock table-contents %}
-</table>
-<div class="status"></div>
-</div>
+    <div class="status">
+        <button type="submit">Save changes</button>
+        <a id="select_all" href="#all">Select All</a>
+    </div>
+    <table id="dataTable" class="display" cellpadding="0", cellspacing="0">
+        {% block table-contents %}
+        {% endblock table-contents %}
+    </table>
+    <div class="status"></div>
 </form>
 {% endblock content %}
 

@@ -20,9 +20,14 @@ class SpeakerAdmin(admin.ModelAdmin):
                      'team__institution__code',)
 admin.site.register(models.Speaker, SpeakerAdmin)
 
+class AdjudicatorConflictInline(admin.TabularInline):
+    model = models.AdjudicatorConflict
+    extra = 1
+
 class AdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution')
     search_fields = ('name', 'institution__name', 'institution__code',)
+    inlines = (AdjudicatorConflictInline,)
 admin.site.register(models.Adjudicator, AdjudicatorAdmin)
 
 class VenueAdmin(admin.ModelAdmin):

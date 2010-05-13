@@ -418,6 +418,7 @@ class Round(models.Model):
 class Venue(models.Model):
     name = models.CharField(max_length=40)
     priority = models.IntegerField()
+    tournament = models.ForeignKey(Tournament)
 
     def __unicode__(self):
         return u'%s (%d)' % (self.name, self.priority)
