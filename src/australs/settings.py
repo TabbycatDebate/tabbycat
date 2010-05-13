@@ -83,6 +83,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'debate',
+    'south',
 )
 
 LOGIN_REDIRECT_URL = '/'
