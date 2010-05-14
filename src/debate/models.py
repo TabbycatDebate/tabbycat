@@ -563,6 +563,10 @@ class Debate(models.Model):
         return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
     
 class DebateResult(object):
+    """
+    TODO: this desparately needs documentation.
+    """
+
     def __init__(self, debate):
         self.debate = debate
 
@@ -639,7 +643,7 @@ class DebateResult(object):
         self.teams[side][pos] = (speaker, score)
 
     def _score(self, side):
-        if None in self.teams[side].values():
+        if (None, None) in self.teams[side].values():
             return None
         return sum(score for (sp, score) in self.teams[side].values())
 
