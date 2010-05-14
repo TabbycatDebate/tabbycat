@@ -1,0 +1,1108 @@
+[
+  {
+    "pk": 1, 
+    "model": "debate.tournament", 
+    "fields": {
+      "slug": "thropy", 
+      "current_round": 1
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "debate.institution", 
+    "fields": {
+      "code": "Victoria", 
+      "tournament": 1, 
+      "name": "Victoria"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "debate.institution", 
+    "fields": {
+      "code": "Waikato", 
+      "tournament": 1, 
+      "name": "Waikato"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "debate.institution", 
+    "fields": {
+      "code": "Northland", 
+      "tournament": 1, 
+      "name": "Northland"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "debate.institution", 
+    "fields": {
+      "code": "Auckland", 
+      "tournament": 1, 
+      "name": "Auckland"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Vic 1", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Vic 2", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Vic 3", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Vic 4", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Vic 5", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Vic 6", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Vic 7", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Vic 8", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Vic 9", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 1", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 2", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 3", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 4", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 5", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 6", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 7", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 8", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 9", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 10", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 11", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 12", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 22, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 13", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 14", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 15", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 25, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Auckland 16", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 26, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Waikato 1", 
+      "institution": 2
+    }
+  }, 
+  {
+    "pk": 27, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Waikato 2", 
+      "institution": 2
+    }
+  }, 
+  {
+    "pk": 28, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Waikato 3", 
+      "institution": 2
+    }
+  }, 
+  {
+    "pk": 29, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Waikato 4", 
+      "institution": 2
+    }
+  }, 
+  {
+    "pk": 30, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Northland", 
+      "institution": 3
+    }
+  }, 
+  {
+    "pk": 31, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Waikato 5", 
+      "institution": 2
+    }
+  }, 
+  {
+    "pk": 32, 
+    "model": "debate.team", 
+    "fields": {
+      "name": "Waikato 6", 
+      "institution": 2
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "AA1", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "AA2", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "AA3", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "AA4", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "AA5", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "AA6", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "AA7", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "AA8", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "AA9", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "AA10", 
+      "institution": 4
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "VV1", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "VV2", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "VV3", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "VV4", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "debate.adjudicator", 
+    "fields": {
+      "test_score": 0.0, 
+      "name": "VV5", 
+      "institution": 1
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "debate.round", 
+    "fields": {
+      "draw_status": 0, 
+      "name": "Round 1", 
+      "seq": 1, 
+      "tournament": 1, 
+      "venue_status": 0, 
+      "adjudicator_status": 0, 
+      "feedback_weight": 1.0, 
+      "type": "R"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "debate.round", 
+    "fields": {
+      "draw_status": 0, 
+      "name": "Round 2", 
+      "seq": 2, 
+      "tournament": 1, 
+      "venue_status": 0, 
+      "adjudicator_status": 0, 
+      "feedback_weight": 1.0, 
+      "type": "P"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "debate.round", 
+    "fields": {
+      "draw_status": 0, 
+      "name": "Round 3", 
+      "seq": 3, 
+      "tournament": 1, 
+      "venue_status": 0, 
+      "adjudicator_status": 0, 
+      "feedback_weight": 1.0, 
+      "type": "P"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "debate.round", 
+    "fields": {
+      "draw_status": 0, 
+      "name": "Round 4", 
+      "seq": 4, 
+      "tournament": 1, 
+      "venue_status": 0, 
+      "adjudicator_status": 0, 
+      "feedback_weight": 1.0, 
+      "type": "P"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R1"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R2"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R3"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R4"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R5"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R6"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R7"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R8"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R9"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R10"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R11"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R12"
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R13"
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R14"
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "debate.venue", 
+    "fields": {
+      "priority": 1, 
+      "tournament": 1, 
+      "name": "R15"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 1, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 2, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 3, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 4, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 5, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 6, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 7, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 8, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 9, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 10, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 11, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 12, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 13, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 14, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "debate.activevenue", 
+    "fields": {
+      "venue": 15, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 1
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 2
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 3
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 4
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 5
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 6
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 7
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 8
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 9
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 10
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 11
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 12
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 13
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 14
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 15
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 16
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 17
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 18
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 19
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 20
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 21
+    }
+  }, 
+  {
+    "pk": 22, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 22
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 23
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 24
+    }
+  }, 
+  {
+    "pk": 25, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 25
+    }
+  }, 
+  {
+    "pk": 26, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 26
+    }
+  }, 
+  {
+    "pk": 27, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 27
+    }
+  }, 
+  {
+    "pk": 28, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 28
+    }
+  }, 
+  {
+    "pk": 29, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 29
+    }
+  }, 
+  {
+    "pk": 30, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 30
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 1, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 2, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 3, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 4, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 5, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 6, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 7, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 8, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 9, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 10, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 11, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 12, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 13, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 14, 
+      "round": 1
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "debate.activeadjudicator", 
+    "fields": {
+      "adjudicator": 15, 
+      "round": 1
+    }
+  }
+]
