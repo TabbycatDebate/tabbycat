@@ -228,22 +228,6 @@
     }
   }, 
   {
-    "pk": 24, 
-    "model": "debate.team", 
-    "fields": {
-      "name": "Auckland 15", 
-      "institution": 4
-    }
-  }, 
-  {
-    "pk": 25, 
-    "model": "debate.team", 
-    "fields": {
-      "name": "Auckland 16", 
-      "institution": 4
-    }
-  }, 
-  {
     "pk": 26, 
     "model": "debate.team", 
     "fields": {
@@ -292,11 +276,11 @@
     }
   }, 
   {
-    "pk": 32, 
+    "pk": 33, 
     "model": "debate.team", 
     "fields": {
-      "name": "Waikato 6", 
-      "institution": 2
+      "name": "Auckland 15", 
+      "institution": 4
     }
   }, 
   {
@@ -930,22 +914,6 @@
     }
   }, 
   {
-    "pk": 24, 
-    "model": "debate.activeteam", 
-    "fields": {
-      "round": 1, 
-      "team": 24
-    }
-  }, 
-  {
-    "pk": 25, 
-    "model": "debate.activeteam", 
-    "fields": {
-      "round": 1, 
-      "team": 25
-    }
-  }, 
-  {
     "pk": 26, 
     "model": "debate.activeteam", 
     "fields": {
@@ -978,7 +946,23 @@
     }
   }, 
   {
-    "pk": 30, 
+    "pk": 31, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 33
+    }
+  }, 
+  {
+    "pk": 32, 
+    "model": "debate.activeteam", 
+    "fields": {
+      "round": 1, 
+      "team": 31
+    }
+  }, 
+  {
+    "pk": 33, 
     "model": "debate.activeteam", 
     "fields": {
       "round": 1, 
