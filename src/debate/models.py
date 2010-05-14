@@ -70,7 +70,6 @@ class TeamManager(models.Manager):
 class Team(models.Model):
     name = models.CharField(max_length=50)
     institution = models.ForeignKey(Institution)
-    is_active = models.BooleanField()
 
     objects = TeamManager()
     
@@ -135,13 +134,6 @@ class Speaker(models.Model):
     def __unicode__(self):
         return unicode(self.name)
 
-class ActiveManager(models.Manager):
-    def __init__(self, status):
-        super(ActiveManager, self).__init__()
-        self.status = status
-        
-    def get_query_set(self):
-        return super(ActiveManager, self).get_query_set().filter(is_active=self.status)
 
 class Adjudicator(models.Model):
     name = models.CharField(max_length=40)
@@ -261,6 +253,8 @@ class Round(models.Model):
     def draw(self):
         if self.draw_status != self.STATUS_NONE:
             raise
+        # delete all existing debates for this round
+        Debate.objects.filter(round=self).delete()
 
         drawer = self._drawer()
         d = drawer(self)

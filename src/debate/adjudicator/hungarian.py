@@ -79,7 +79,8 @@ class HungarianAllocator(Allocator):
         print 'total cost', total_cost
         print n
 
-        result = ((chair_debates[i], chairs[j]) for i, j in indexes)
+        result = ((chair_debates[i], chairs[j]) for i, j in indexes if i <
+                  len(chair_debates))
         alloc = [AdjudicatorAllocation(d, c) for d, c in result]
 
         print [(a.debate, a.chair) for a in alloc]

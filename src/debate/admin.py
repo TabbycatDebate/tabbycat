@@ -8,9 +8,13 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Institution, InstitutionAdmin)
 
+class SpeakerInline(admin.TabularInline):
+    model = models.Speaker 
+
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution',)
     search_fields = ('name','institution__name', 'institution__code',)
+    inlines = (SpeakerInline,)
 
 admin.site.register(models.Team, TeamAdmin)
 
