@@ -42,18 +42,18 @@ def generate_random_results(round):
         dr = DebateResult(debate)
         
         rr = gen_results()
-        for team in ('aff', 'neg'):
-            speakers = getattr(debate, '%s_team' % team).speakers
-            scores = rr[team]
+        for side in ('aff', 'neg'):
+            speakers = getattr(debate, '%s_team' % side).speakers
+            scores = rr[side]
             for i in range(1, 4):
                 dr.set_speaker_entry(
-                    team = team,
+                    side = side,
                     pos = i,
                     speaker = speakers[i - 1],
                     score = scores[i-1],
                 )
             dr.set_speaker_entry(
-                team = team,
+                side = side,
                 pos = 4,
                 speaker = speakers[0],
                 score = scores[3]
@@ -67,4 +67,5 @@ def generate_random_results(round):
 def test_gen():
     from debate.models import Round
     generate_random_results(Round.objects.get(pk=1))
+
 
