@@ -122,6 +122,13 @@ def update_availability(request, round, update_method):
 
 @admin_required
 @round_view
+def draw_display(request, round):
+    draw = round.get_draw().order_by('venue__name')
+    return r2r(request, "draw_display.html", dict(draw=draw))
+
+    
+@admin_required
+@round_view
 def draw(request, round):
 
     if round.draw_status == round.STATUS_NONE:

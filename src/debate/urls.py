@@ -26,6 +26,8 @@ urlpatterns = patterns('debate.views',
 
     url(r'^round/(?P<round_seq>\d+)/draw/$', 'draw',
         name='draw'),
+    url(r'^round/(?P<round_seq>\d+)/draw_display/$', 'draw_display',
+        name='draw_display'),
     url(r'^round/(?P<round_seq>\d+)/draw/create/$', 'create_draw',
         name='create_draw'),
     url(r'^round/(?P<round_seq>\d+)/draw/confirm/$', 'confirm_draw',
