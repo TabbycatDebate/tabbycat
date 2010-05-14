@@ -216,24 +216,17 @@ def enter_result(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
     form = forms.make_results_form(debate)
 
+    if request.method == 'POST':
+        class_ = forms.make_results_form_class(debate)
+        form = class_(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect_round('results', debate.round)
+
+
     return r2r(request, 'enter_results.html', dict(debate=debate, form=form,
                                                    round=debate.round))
-
-
-@expect_post
-@tournament_view
-def save_result(request, t, debate_id):
-    debate = get_object_or_404(Debate, id=debate_id)
-
-    class_ = forms.make_results_form_class(debate)
-    form = class_(request.POST)
-
-    if form.is_valid():
-        form.save()
-    else:
-        raise
-
-    return redirect_round('results', debate.round)
 
 
 @admin_required

@@ -11,11 +11,8 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        /*
         $("#resultsForm").validate({
-            debug: true
         });
-        */
 
         function refresh_totals() {
             var aff = sum($('.aff.score input'));
@@ -54,13 +51,15 @@
 
 {% block content %}
 
+{{ form.errors }}
+
 <ul>
     {% for t, a in debate.adjudicators %}
     <li>{{ a }}</li>
     {% endfor %}
 </ul>
 
-<form id="resultsForm" action="{% tournament_url save_result debate.id %}" method="POST">
+<form id="resultsForm" action="." method="POST">
 <table class="scoresheet">
     <thead>
         <tr>
