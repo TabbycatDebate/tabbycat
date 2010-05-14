@@ -11,9 +11,11 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        /*
         $("#resultsForm").validate({
             debug: true
         });
+        */
 
         function refresh_totals() {
             var aff = sum($('.aff.score input'));
@@ -40,7 +42,7 @@
             return r;
         }
 
-        $('.score input').change(refresh_totals);
+        //$('.score input').change(refresh_totals);
 
         refresh_totals();
 
@@ -83,10 +85,10 @@
         <tr>
             <th></th>
             <td></td>
-            <td><input class="aff_total" type="text" readonly /></td>
+            <td><input name="aff_total" class="aff_total" type="text" readonly /></td>
             <th></th>
             <td></td>
-            <td><input class="neg_total" type="text" readonly /></td>
+            <td><input name="neg_total" class="neg_total" type="text" readonly /></td>
         </tr>
         <tr>
             <th></th>

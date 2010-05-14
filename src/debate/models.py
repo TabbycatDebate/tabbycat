@@ -566,8 +566,8 @@ class DebateResult(object):
     def __init__(self, debate):
         self.debate = debate
 
-        aff_speakers = dict((i, None) for i in range(1, 5))
-        neg_speakers = dict((i, None) for i in range(1, 5))
+        aff_speakers = dict((i, (None, None)) for i in range(1, 5))
+        neg_speakers = dict((i, (None, None)) for i in range(1, 5))
 
         self.teams = {
             'aff': aff_speakers,
