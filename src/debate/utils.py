@@ -68,4 +68,13 @@ def test_gen():
     from debate.models import Round
     generate_random_results(Round.objects.get(pk=1))
 
+def make_dummy_speakers():
+    from debate import models as m
+    t = m.Tournament.objects.get(pk=1)
+
+    for team in t.teams:
+        assert m.Speaker.objects.filter(team=team).count() == 0
+        for i in range(1, 4):
+            m.Speaker(name='%s %d' % (team, i), team=team).save()
+
 
