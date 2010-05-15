@@ -3,6 +3,7 @@
 {% load debate_tags %}
 
 {% block extra-head %}
+    {{ block.super }}
     <script type="text/javascript" charset="utf-8">
 
         $(document).ready( function() {
@@ -11,6 +12,7 @@
             } );
 
         } );
+
 
     </script>
 {% endblock extra-head %}
@@ -26,16 +28,17 @@
 
 <table id="dataTable" class="display" cellspacing="0" cellpadding="0">
     <thead>
-        <tr><th>Rank</th><th>Team</th><th>Points</th><th>Total Score</th><th>Affs</th></tr>
+        <tr><th>Rank</th><th>Team</th><th>Points</th><th>Total Score</th><th>Beat</th><th>Affs</th></tr>
     </thead>
     <tbody>
     {% for team in teams %}
     <tr class="
         {% if not team.results_in %}inactive{% endif%}"> 
         <td>{{ forloop.counter }}</td>
-        <td>{{ team.name }}</td>
+        <td><a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</a></td>
         <td>{{ team.points }}</td>
         <td>{{ team.speaker_score }}</td>
+        <td>{{ team.who_beat }}</td>
         <td>{% aff_count team round %}</td>
     </tr>
     {% endfor %}

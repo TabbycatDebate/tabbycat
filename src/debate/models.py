@@ -89,7 +89,7 @@ class Team(models.Model):
         return dts.count()
     
     def get_debates(self, before_round):
-        dts = DebateTeam.objects.select_related('debate').filter(team=self)
+        dts = DebateTeam.objects.select_related('debate').filter(team=self).order_by('debate__round__seq')
         if before_round is not None:
             dts = dts.filter(debate__round__seq__lt=before_round)
         return [dt.debate for dt in dts]

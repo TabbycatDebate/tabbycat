@@ -240,9 +240,27 @@ def enter_result(request, t, debate_id):
 @round_view
 def team_standings(request, round):
     
+
+    def who_beat(team):
+        debates = team.debates
+        s = []
+        for debate in debates:
+            if debate.aff_team == team:
+                if debate.result.aff_win:
+                    s.append("beat %s" % debate.neg_team.name)
+                elif debate.result.neg_win:
+                    s.append("lost to %s" % debate.neg_team.name)
+            else:
+                if debate.result.neg_win:
+                    s.append("beat %s" % debate.aff_team.name)
+                elif debate.result.aff_win:
+                    s.append("lost to %s" % debate.aff_team.name)
+        return ', '.join(s)
+
     teams = Team.objects.standings(round)
     for team in teams:
         setattr(team, 'results_in', team.results_count >= round.seq)
+        team.who_beat = who_beat(team)
 
     return r2r(request, 'team_standings.html', dict(teams=teams))
 
