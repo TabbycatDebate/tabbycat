@@ -10,8 +10,8 @@ def get_or_instantiate(model, **kwargs):
         return model(**kwargs)
 
 class ScoreField(forms.FloatField):
-    MIN_VALUE = 65
-    MAX_VALUE = 85
+    MIN_VALUE = 60
+    MAX_VALUE = 80
 
     def __init__(self, *args, **kwargs):
         if 'min_value' not in kwargs:
