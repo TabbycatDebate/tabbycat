@@ -1,0 +1,53 @@
+{% extends "draw_rbase.html" %}
+
+{% load debate_tags %}
+
+{% block extra-head %}
+    <script type="text/javascript" charset="utf-8">
+
+        $(document).ready( function() {
+            $("#dataTable").dataTable( {
+                "bPaginate": false
+            } );
+
+        } );
+
+    </script>
+{% endblock extra-head %}
+
+{% block extra-style %}
+    @import "/static/css/demo_table.css";
+{% endblock %}
+
+{% block h1 %} Speaker Standings after Round {{ round }}{% endblock %}
+
+{% block content %}
+
+
+<table id="dataTable" class="display" cellspacing="0" cellpadding="0">
+    <thead>
+        <tr><th>Rank</th><th>Name</th><th>Team</th>
+            {% for round in rounds %}
+            <th>{{ round }}</th>
+            {% endfor %}
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for speaker in speakers %}
+    <tr class="
+        {% if not speaker.results_in %}inactive{% endif%}"> 
+        <td>{{ forloop.counter }}</td>
+        <td>{{ speaker.name }}</td>
+        <td>{{ speaker.team }}</td>
+        {% for score in speaker.scores %}
+        <td>{{ score }}</td>
+        {% endfor %}
+        <td>{{ speaker.total }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock content %}
+
+

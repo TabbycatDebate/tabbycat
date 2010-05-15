@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.db.models import Sum, Count
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
-from debate.models import AdjudicatorConflict, DebateAdjudicator
+from debate.models import AdjudicatorConflict, DebateAdjudicator, Speaker
 from debate import forms
 
 from functools import wraps
@@ -246,6 +246,34 @@ def team_standings(request, round):
 
     return r2r(request, 'team_standings.html', dict(teams=teams))
 
+@admin_required
+@round_view
+def speaker_standings(request, round):
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                  seq__lte=round.seq).order_by('seq')
+    speakers = Speaker.objects.standings(round.tournament, round)
+
+    from debate.models import SpeakerScore
+    def get_score(speaker, r):
+        try:
+            return SpeakerScore.objects.get(speaker=speaker,
+                                    debate_team__debate__round=r,
+                                    position__lte=3).score
+        except SpeakerScore.DoesNotExist:
+            return None
+
+    for speaker in speakers:
+        speaker.scores = [get_score(speaker, r) for r in rounds]
+        try:
+            SpeakerScore.objects.get(speaker=speaker,
+                                     debate_team__debate__round=r,
+                                     position__lte=3)
+            speaker.results_in = True
+        except SpeakerScore.DoesNotExist:
+            speaker.results_in = False
+
+    return r2r(request, 'speaker_standings.html', dict(speakers=speakers,
+                                                       rounds=rounds))
 
 @admin_required
 @round_view

@@ -127,9 +127,33 @@ def TeamAtRound(team, round):
     return t
 
 
+class SpeakerManager(models.Manager):
+    def standings(self, tournament, round=None):
+        # only include scoresheets for up to this round, exclude replies
+        if round:
+            speakers = self.filter(
+                team__institution__tournament=tournament,
+                speakerscore__position__lte=3,
+                speakerscore__debate_team__debate__round__seq__lte =
+                round.seq,
+            )
+        else:
+            speakers = self.filter(
+                team__institution__tournament=tournament,
+                speakerscore__position__lte=3,
+            )
+
+        speakers = speakers.annotate(
+            total = models.Sum('speakerscore__score'),
+        ).order_by('-total', 'name')
+
+        return speakers
+
 class Speaker(models.Model):
     name = models.CharField(max_length=40)
     team = models.ForeignKey(Team)
+
+    objects = SpeakerManager()
 
     def __unicode__(self):
         return unicode(self.name)
