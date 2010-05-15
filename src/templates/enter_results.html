@@ -33,13 +33,13 @@
         function sum(elems) {
             var r = 0;
             elems.each(function(){
-                var p = parseInt($(this).val());
+                var p = parseFloat($(this).val());
                 if (p > 0) r += p;
             });
             return r;
         }
 
-        //$('.score input').change(refresh_totals);
+        $('.score input').change(refresh_totals);
 
         refresh_totals();
 
