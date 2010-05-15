@@ -151,7 +151,7 @@
                 var a = 0;
                 var h = 0;
                 // select aff & neg team
-                $("td:gt(0):lt(2)", debate_tr).each( function() {
+                $("td.team", debate_tr).each( function() {
                     if ($.inArray(
                             intId(this), 
                             conflicts['conflict'][adj_id]) != -1) {
@@ -445,11 +445,11 @@
     .adj { display: block; background-color: #ddd; white-space: nowrap; margin-right: 1em; cursor: move;}
     .adj:hover {background-color: #eee; }
     .panel-holder .adj { margin: 1px 0;}
-    .adj.conflict { color: red; }
     .adj span { margin-left: 10px; }
     .adj span.info { margin: 0 5px;  }
 
     .adj.history-conflict { color: #f80; }
+    .adj.conflict { color: red; }
 
     #dataTable td.hover { background-color: #ff8; }
     #scratch {
@@ -477,8 +477,8 @@
     #unusedTable { width: 100%; }
 
     .incomplete { border: 1px solid #f84; }
-    #dataTable .conflict-with-active { color: red; }
     #dataTable .history-with-active { color: #f80; }
+    #dataTable .conflict-with-active { color: red; }
 
     #loading {vertical-align: middle; position: fixed; left: 0; top: 0; width:100%; height:100%; 
         background-image:url("/static/images/80.png"); z-index: 100000; text-align: center;}
@@ -535,8 +535,8 @@
         <tr id="debate_{{ debate.id }}" class="active">
             <td>{{ debate.bracket }}</td>
             <td class="importance">{{ debate.importance }}</td>
-            <td id="team_{{ debate.aff_team.id }}">{{ debate.aff_team.name }}</td>
-            <td id="team_{{ debate.neg_team.id }}">{{ debate.neg_team.name }}</td>
+            <td id="team_{{ debate.aff_team.id }}" class="team">{{ debate.aff_team.name }}</td>
+            <td id="team_{{ debate.neg_team.id }}" class="team">{{ debate.neg_team.name }}</td>
             {% with debate.adjudicators as adj %}
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
             </td>
