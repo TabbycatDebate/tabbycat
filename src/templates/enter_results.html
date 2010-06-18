@@ -43,6 +43,20 @@
 
         refresh_totals();
 
+        function update_speaker() {
+            // e.g. id_aff_speaker_1
+            var parts = $(this).attr('id').split('_');
+            var val = $(':selected', this).text();
+
+            // e.g. '.aff.s1 label'
+            var side = parts[1];
+            var pos = parts[3];
+
+            $('.' + side + '.s' + pos + ' label').html(val);
+        }
+
+        $('.speaker select').change(update_speaker).each(update_speaker);
+
     });
 </script>
 {% endblock %}
@@ -68,10 +82,22 @@
             {% for position in adj.position_iter %}
             <tr>
                 <th> Aff {{ position }}</th>
-                <td> {{ position.aff_speaker }} </td>
+                <td class="aff speaker s{{ position.pos }}">
+                    {% if forloop.parentloop.first %} 
+                    {{ position.aff_speaker }} 
+                    {% else %}
+                    <label ></label>
+                    {% endif %}
+                </td>
                 <td class="aff score"> {{ position.aff_score }} </td>
                 <th class="neg"> Neg {{ position }}</th>
-                <td> {{ position.neg_speaker }} </td>
+                <td class="neg speaker s{{ position.pos }}">
+                    {% if forloop.parentloop.first %}
+                    {{ position.neg_speaker }} 
+                    {% else %}
+                    <label></label>
+                    {% endif %}
+                </td>
                 <td class="neg score"> {{ position.neg_score }} </td>
             </tr>
             {% endfor %}
