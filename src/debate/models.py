@@ -45,7 +45,7 @@ class Tournament(models.Model):
 class Institution(models.Model):
     tournament = models.ForeignKey(Tournament)
     code = models.CharField(max_length=20)
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=100)
     
     def __unicode__(self):
         return unicode(self.name) 

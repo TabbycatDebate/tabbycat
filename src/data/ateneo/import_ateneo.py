@@ -38,7 +38,7 @@ class Importer(object):
     def import_venues(self):
         for line in self.load_table('venues'):
             id, name, active, priority, c, u = line.split('\t')
-            v = m.Venue(name=name.strip(), priority=int(priority))
+            v = m.Venue(tournament=self.tournament, name=name.strip(), priority=int(priority))
             v.save()
             self.venues[int(id)] = v
 
