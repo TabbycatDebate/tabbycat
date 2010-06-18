@@ -44,8 +44,8 @@ class Tournament(models.Model):
 
 class Institution(models.Model):
     tournament = models.ForeignKey(Tournament)
-    code = models.CharField(max_length=20)
-    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=100, unique=True)
     
     def __unicode__(self):
         return unicode(self.name) 
@@ -70,6 +70,9 @@ class TeamManager(models.Manager):
 class Team(models.Model):
     name = models.CharField(max_length=50)
     institution = models.ForeignKey(Institution)
+
+    class Meta:
+        unique_together = [('name', 'institution')]
 
     objects = TeamManager()
     
@@ -446,14 +449,23 @@ class ActiveVenue(models.Model):
     venue = models.ForeignKey(Venue)
     round = models.ForeignKey(Round)
 
+    class Meta:
+        unique_together = [('venue', 'round')]
+
 class ActiveTeam(models.Model):
     team = models.ForeignKey(Team)
     round = models.ForeignKey(Round)
+
+    class Meta:
+        unique_together = [('team', 'round')]
 
 class ActiveAdjudicator(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
     round = models.ForeignKey(Round)
     
+    class Meta:
+        unique_together = [('adjudicator', 'round')]
+
 class Debate(models.Model):
     STATUS_NONE = 'N' 
     STATUS_DRAFT = 'D' 
@@ -799,29 +811,34 @@ class AdjudicatorAllocation(object):
                 ).save()
 
 class TeamScoreSheet(models.Model):
-    # unused
+
     debate_adjudicator = models.ForeignKey(DebateAdjudicator)
     debate_team = models.ForeignKey(DebateTeam)
     points = models.IntegerField()
+
+    class Meta:
+        unique_together = [('debate_adjudicator', 'debate_team')]
 
     @property
     def debate(self):
         return self.debate_team.debate
     
 class SpeakerScoreSheet(models.Model):
-    # unused 
     debate_adjudicator = models.ForeignKey(DebateAdjudicator)
     debate_team = models.ForeignKey(DebateTeam)
     speaker = models.ForeignKey(Speaker)
     score = ScoreField()
     position = models.IntegerField()
 
+    class Meta:
+        unique_together = [('debate_adjudicator', 'speaker')]
+
     @property
     def debate(self):
         return self.debate_team.debate
     
 class TeamScore(models.Model):
-    debate_team = models.ForeignKey(DebateTeam)
+    debate_team = models.ForeignKey(DebateTeam, unique=True)
     points = models.PositiveSmallIntegerField()
     score = ScoreField()
 
@@ -830,6 +847,9 @@ class SpeakerScore(models.Model):
     speaker = models.ForeignKey(Speaker)
     score = ScoreField()
     position = models.IntegerField()
+
+    class Meta:
+        unique_together = [('debate_team', 'speaker', 'position')]
 
 class ConfigManager(models.Manager):
     def set(self, tournament, key, value):
