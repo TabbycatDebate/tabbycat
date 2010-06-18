@@ -658,11 +658,17 @@ class AdjudicatorFeedback(models.Model):
     
 
 class AdjudicatorAllocation(object):
-    def __init__(self, debate=None, chair=None, panel=None):
+    def __init__(self, debate, chair=None, panel=None):
         self.debate = debate
         self.chair = chair
         self.panel = panel or []
         self.trainees = []
+
+    @property
+    def list(self):
+        a = [self.chair]
+        a.extend(self.panel)
+        return a
 
     def __iter__(self):
         yield DebateAdjudicator.TYPE_CHAIR, self.chair
@@ -676,16 +682,12 @@ class AdjudicatorAllocation(object):
         Delete existing, current allocation
         """
 
-        if not self.debate:
-            raise
         DebateAdjudicator.objects.filter(debate=self.debate).delete()
         self.chair = None
         self.panel = []
         self.trainees = []
 
     def save(self):
-        if not self.debate:
-            raise
         DebateAdjudicator.objects.filter(debate=self.debate).delete()
         for t, adj in self:
             if isinstance(adj, Adjudicator):
@@ -697,20 +699,10 @@ class AdjudicatorAllocation(object):
                     type = t,
                 ).save()
 
-class TeamScoreSheet(models.Model):
-
-    debate_adjudicator = models.ForeignKey(DebateAdjudicator)
-    debate_team = models.ForeignKey(DebateTeam)
-    points = models.IntegerField()
-
-    class Meta:
-        unique_together = [('debate_adjudicator', 'debate_team')]
-
-    @property
-    def debate(self):
-        return self.debate_team.debate
-    
-class SpeakerScoreSheet(models.Model):
+class SpeakerScoreByAdj(models.Model):
+    """
+    Holds score given by a particular adjudicator in a debate
+    """
     debate_adjudicator = models.ForeignKey(DebateAdjudicator)
     debate_team = models.ForeignKey(DebateTeam)
     speaker = models.ForeignKey(Speaker)
@@ -725,11 +717,17 @@ class SpeakerScoreSheet(models.Model):
         return self.debate_team.debate
     
 class TeamScore(models.Model):
+    """
+    Holds a teams total score and points in a debate
+    """
     debate_team = models.ForeignKey(DebateTeam, unique=True)
     points = models.PositiveSmallIntegerField()
     score = ScoreField()
 
 class SpeakerScore(models.Model):
+    """
+    Represents a speaker's score in a debate
+    """
     debate_team = models.ForeignKey(DebateTeam)
     speaker = models.ForeignKey(Speaker)
     score = ScoreField()

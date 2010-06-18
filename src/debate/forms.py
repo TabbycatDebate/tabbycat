@@ -1,6 +1,6 @@
 from django import forms
 
-from debate.models import TeamScoreSheet, SpeakerScoreSheet, DebateResult, Debate
+from debate.models import SpeakerScoreByAdj, DebateResult, Debate
 from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
 from debate.result import DebateResult
 
@@ -40,27 +40,6 @@ def initial(debate, team):
             4: speakers[0].id,
         }
 
-class Position(object):
-    def __init__(self, form, pos, name):
-        self.form = form
-        self.pos = pos
-        self.name = name
-
-    def __unicode__(self):
-        return unicode(self.name)
-
-    def aff_speaker(self):
-        return self.form['aff_speaker_%d' % self.pos]
-
-    def neg_speaker(self):
-        return self.form['neg_speaker_%d' % self.pos]
-
-    def aff_score(self):
-        return self.form['aff_score_%d' % self.pos]
-
-    def neg_score(self):
-        return self.form['neg_score_%d' % self.pos]
-
 
 class ResultForm(forms.Form):
 
@@ -72,9 +51,9 @@ class ResultForm(forms.Form):
 
         <side>_speaker_<pos> and
         <side>_score_<pos>
-        TODO: adj
         """
         self.debate = debate
+        self.adjudicators = debate.adjudicators.list
 
         super(ResultForm, self).__init__(*args, **kwargs)
 
@@ -83,25 +62,33 @@ class ResultForm(forms.Form):
         for side in ('aff', 'neg'):
             team = debate.get_team(side)
             init = initial(debate, team)
-            for i in range(1, 5):
-                self.fields['%s_speaker_%s' % (side, i)] = forms.ModelChoiceField(
+            for pos in range(1, 5):
+                self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(
                     queryset = team.speakers,
-                    initial = init[i]
+                    initial = init[pos]
                 )
 
                 # css_class is for jquery validation plugin, surely this can
                 # be moved elsewhere
-                if i == 4:
+                if pos == 4:
                     score_field = ReplyScoreField
                     css_class = 'required number'
                 else:
                     score_field = ScoreField
                     css_class = 'required number'
 
+                for adj in self.adjudicators:
+                    self.fields[self.score_field_name(adj, side, pos)] = score_field(
+                        widget = forms.TextInput(attrs={'class': css_class}))
 
-                # TODO: for each adjudicator
-                self.fields['%s_score_%d' % (side, i)] = score_field(
-                    widget = forms.TextInput(attrs={'class': css_class}))
+    def score_field_name(self, adj, side, pos):
+        """
+        Return the name of the score field for adj/side/pos
+        """
+        return '%s_score_a%d_%d' % (side, adj.id, pos)
+
+    def score_field(self, adj, side, pos):
+        return self[self.score_field_name(adj, side, pos)]
 
     def _initial_data(self):
         """
@@ -113,11 +100,13 @@ class ResultForm(forms.Form):
 
         for side in ('aff', 'neg'):
             for i in range(1, 5):
+                speaker = result.get_speaker(side, i)
+                if speaker:
+                    initial['%s_speaker_%d' % (side, i)] = speaker.id
 
-                sp, score = result.get_speaker_score(side, i)
-                if sp:
-                    initial['%s_speaker_%d' % (side, i)] = sp.id
-                    initial['%s_score_%d' % (side, i)] = score
+                    for adj in self.adjudicators:
+                        score = result.get_score(adj, side, i)
+                        initial[self.score_field_name(adj, side, i)] = score
 
         return initial
 
@@ -139,9 +128,46 @@ class ResultForm(forms.Form):
         self.debate.result_status = self.cleaned_data['result_status']
         self.debate.save()
 
-    def position_iter(self):
-        for i, name in ((1, 1), (2, 2), (3, 3), (4, 'Reply')):
-            yield Position(self, i, name)
+    def adj_iter(self):
+        form = self
+
+        class Position(object):
+            def __init__(self, adj, pos, name):
+                self.adj = adj
+                self.pos = pos
+                self.name = name
+
+            def __unicode__(self):
+                return unicode(self.name)
+
+            def aff_speaker(self):
+                return form['aff_speaker_%d' % self.pos]
+
+            def neg_speaker(self):
+                return form['neg_speaker_%d' % self.pos]
+
+            def _scores(self, side):
+                for adj in form.adjudicators:
+                    yield form.score_field(adj, side, self.pos)
+
+            def aff_score(self):
+                return str(form.score_field(self.adj, 'aff', self.pos))
+
+            def neg_score(self):
+                return str(form.score_field(self.adj, 'neg', self.pos))
+
+
+        class AdjudicatorWrapper(object):
+            def __init__(self, adj):
+                self.adj = adj
+
+            def position_iter(self):
+                for i, name in ((1, 1), (2, 2), (3, 3), (4, 'Reply')):
+                    yield Position(self.adj, i, name)
+
+
+        for adj in self.adjudicators:
+            yield AdjudicatorWrapper(adj)
 
 
 def make_feedback_form_class(adjudicator):

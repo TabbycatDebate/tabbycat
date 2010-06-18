@@ -53,53 +53,47 @@
 
 {{ form.errors }}
 
-<ul>
-    {% for t, a in debate.adjudicators %}
-    <li>{{ a }}</li>
-    {% endfor %}
-</ul>
 
 <form id="resultsForm" action="." method="POST">
-<table class="scoresheet">
-    <thead>
-        <tr>
-            <th colspan="3">{{ debate.aff_team }}</td>
-            <th colspan="3">{{ debate.neg_team }}</td>
-        </tr>
-    </thead>
-    <tbody>
-        {% for position in form.position_iter %}
-        <tr>
-            <th> Aff {{ position }}</th>
-            <td> {{ position.aff_speaker }} </td>
-            <td class="aff score"> {{ position.aff_score }} </td>
+    {% for adj in form.adj_iter %}
+    <h2> {{ adj.adj }} </h2>
+    <table class="scoresheet {% if forloop.first %}first{% endif %}">
+        <thead>
+            <tr>
+                <th colspan="3">{{ debate.aff_team }}</td>
+                <th colspan="3">{{ debate.neg_team }}</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for position in adj.position_iter %}
+            <tr>
+                <th> Aff {{ position }}</th>
+                <td> {{ position.aff_speaker }} </td>
+                <td class="aff score"> {{ position.aff_score }} </td>
+                <th class="neg"> Neg {{ position }}</th>
+                <td> {{ position.neg_speaker }} </td>
+                <td class="neg score"> {{ position.neg_score }} </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <td></td>
+                <td><input name="aff_total" class="aff_total" type="text" readonly /></td>
+                <th></th>
+                <td></td>
+                <td><input name="neg_total" class="neg_total" type="text" readonly /></td>
+            </tr>
+        </tfoot>
+    </table>
+    {% endfor %}
 
-            <th class="neg"> Neg {{ position }}</th>
-            <td> {{ position.neg_speaker }} </td>
-            <td class="neg score"> {{ position.neg_score }} </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-    <tfoot>
-        <tr>
-            <th></th>
-            <td></td>
-            <td><input name="aff_total" class="aff_total" type="text" readonly /></td>
-            <th></th>
-            <td></td>
-            <td><input name="neg_total" class="neg_total" type="text" readonly /></td>
-        </tr>
-        <tr>
-            <th></th>
-            <td></td>
-            <td></td>
-            <th>Status:</th> 
-            <td>{{ form.result_status }}</td>
-            <td><input class="save" type="submit" value="Save" /></td>
-        </tr>
-    </tfoot>
-</table>
-
+    <div>
+        <label>Status:</label>
+        {{ form.result_status }}
+        <input class="save" type="submit" value="Save" />
+    </div>
 </form>
 
 {% endblock content %}
