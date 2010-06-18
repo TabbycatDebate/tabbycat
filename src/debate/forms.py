@@ -2,6 +2,7 @@ from django import forms
 
 from debate.models import TeamScoreSheet, SpeakerScoreSheet, DebateResult, Debate
 from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
+from debate.result import DebateResult
 
 def get_or_instantiate(model, **kwargs):
     try:
@@ -38,6 +39,111 @@ def initial(debate, team):
             3: speakers[2].id,
             4: speakers[0].id,
         }
+
+class Position(object):
+    def __init__(self, form, pos, name):
+        self.form = form
+        self.pos = pos
+        self.name = name
+
+    def __unicode__(self):
+        return unicode(self.name)
+
+    def aff_speaker(self):
+        return self.form['aff_speaker_%d' % self.pos]
+
+    def neg_speaker(self):
+        return self.form['neg_speaker_%d' % self.pos]
+
+    def aff_score(self):
+        return self.form['aff_score_%d' % self.pos]
+
+    def neg_score(self):
+        return self.form['neg_score_%d' % self.pos]
+
+
+class ResultForm(forms.Form):
+
+    result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
+
+    def __init__(self, debate, *args, **kwargs):
+        """
+        Dynamically generate fields for this debate
+
+        <side>_speaker_<pos> and
+        <side>_score_<pos>
+        TODO: adj
+        """
+        self.debate = debate
+
+        super(ResultForm, self).__init__(*args, **kwargs)
+
+        self.initial = self._initial_data()
+
+        for side in ('aff', 'neg'):
+            team = debate.get_team(side)
+            init = initial(debate, team)
+            for i in range(1, 5):
+                self.fields['%s_speaker_%s' % (side, i)] = forms.ModelChoiceField(
+                    queryset = team.speakers,
+                    initial = init[i]
+                )
+
+                # css_class is for jquery validation plugin, surely this can
+                # be moved elsewhere
+                if i == 4:
+                    score_field = ReplyScoreField
+                    css_class = 'required number'
+                else:
+                    score_field = ScoreField
+                    css_class = 'required number'
+
+
+                # TODO: for each adjudicator
+                self.fields['%s_score_%d' % (side, i)] = score_field(
+                    widget = forms.TextInput(attrs={'class': css_class}))
+
+    def _initial_data(self):
+        """
+        Generate dictionary of initial form data
+        """
+
+        initial = {'result_status': self.debate.result_status}
+        result = self.debate.result
+
+        for side in ('aff', 'neg'):
+            for i in range(1, 5):
+
+                sp, score = result.get_speaker_score(side, i)
+                if sp:
+                    initial['%s_speaker_%d' % (side, i)] = sp.id
+                    initial['%s_score_%d' % (side, i)] = score
+
+        return initial
+
+
+    def save(self):
+        #TODO: validation
+
+        dr = DebateResult(self.debate)
+
+        def do(side):
+            for i in range(1, 5): 
+                speaker = self.cleaned_data['%s_speaker_%d' % (side, i)]
+                score = self.cleaned_data['%s_score_%d' % (side, i)]
+                dr.set_speaker_entry(side, i, speaker, score)
+        do('aff')
+        do('neg')
+        dr.save()
+
+        self.debate.result_status = self.cleaned_data['result_status']
+        self.debate.save()
+
+    def position_iter(self):
+        for i, name in ((1, 1), (2, 2), (3, 3), (4, 'Reply')):
+            yield Position(self, i, name)
+
+
 
 # TODO: must've been on something when I wrote this. get rid of the
 # metaclass craziness http://www.b-list.org/weblog/2008/nov/09/dynamic-forms/ 

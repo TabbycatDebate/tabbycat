@@ -221,15 +221,15 @@ def results(request, round):
 @tournament_view
 def enter_result(request, t, debate_id): 
     debate = get_object_or_404(Debate, id=debate_id)
-    form = forms.make_results_form(debate)
 
     if request.method == 'POST':
-        class_ = forms.make_results_form_class(debate)
-        form = class_(request.POST)
+        form = forms.ResultForm(debate, request.POST)
 
         if form.is_valid():
             form.save()
             return redirect_round('results', debate.round)
+    else:
+        form = forms.ResultForm(debate)
 
 
     return r2r(request, 'enter_results.html', dict(debate=debate, form=form,

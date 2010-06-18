@@ -4,6 +4,8 @@ from debate.utils import pair_list, memoize
 from debate.draw import RandomDrawNoConflict, AidaDraw
 from debate.adjudicator.anneal import SAAllocator
 
+from debate.result import DebateResult
+
 class ScoreField(models.FloatField):
     pass
 
@@ -577,6 +579,7 @@ class Debate(models.Model):
 
     @property
     def result(self):
+        from debate.result import DebateResult
         return DebateResult(self)
 
     def get_side(self, team):
@@ -592,122 +595,6 @@ class Debate(models.Model):
     def __unicode__(self):
         return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
     
-class DebateResult(object):
-    """
-    TODO: this desparately needs documentation.
-    """
-
-    def __init__(self, debate):
-        self.debate = debate
-
-        aff_speakers = dict((i, (None, None)) for i in range(1, 5))
-        neg_speakers = dict((i, (None, None)) for i in range(1, 5))
-
-        self.teams = {
-            'aff': aff_speakers,
-            'neg': neg_speakers,
-        }
-
-        self.points = {
-            'aff': None,
-            'neg': None,
-        }
-
-        self._other = {
-            'aff': 'neg',
-            'neg': 'aff',
-        }
-
-        self._init_side('aff')
-        self._init_side('neg')
-
-    def _init_side(self, side):
-        dt = self.debate.get_dt(side)
-
-        for sss in SpeakerScore.objects.filter(
-            debate_team = dt,
-        ):
-
-            self.set_speaker_entry(side, sss.position,
-                                   sss.speaker, sss.score)
-            
-        try:
-            ts = TeamScore.objects.get(debate_team=dt)
-            points = ts.points
-        except TeamScore.DoesNotExist:
-            points = None
-
-
-        self.points[side] = points
-
-    def save(self):
-        self._save('aff')
-        self._save('neg')
-
-    def _save(self, side):
-        dt = self.debate.get_dt(side)
-        total = self._score(side)
-        points = self._points(side)
-
-        TeamScore.objects.filter(debate_team=dt).delete()
-        TeamScore(debate_team=dt, score=total, points=points).save()
-
-        SpeakerScore.objects.filter(debate_team=dt).delete()
-        for i in range(1, 5):
-            speaker, score = self.teams[side][i]
-            SpeakerScore(
-                debate_team = dt,
-                speaker = speaker,
-                score = score,
-                position = i,
-            ).save()
-
-        
-    def get_speaker(self, side, position):
-        return self.teams[side][position][0]
-
-    def get_speaker_score(self, side, position):
-        return self.teams[side][position]
-
-    def set_speaker_entry(self, side, pos, speaker, score):
-        self.teams[side][pos] = (speaker, score)
-
-    def _score(self, side):
-        if (None, None) in self.teams[side].values():
-            return None
-        return sum(score for (sp, score) in self.teams[side].values())
-
-    @property
-    def aff_score(self):
-        return self._score('aff')
-
-    @property
-    def neg_score(self):
-        return self._score('neg')
-
-    def _points(self, side):
-        if self._score(side):
-            if self._score(side) > self._score(self._other[side]):
-                return 1
-            return 0
-        return None
-
-    @property
-    def aff_points(self):
-        return self._points('aff')
-
-    @property
-    def neg_points(self):
-        return self._points('neg')
-
-    @property
-    def aff_win(self):
-        return self.aff_points
-
-    @property
-    def neg_win(self):
-        return self.neg_points
-
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
     POSITION_NEGATIVE = 'N'
