@@ -49,8 +49,9 @@ Here's the confirmed draw.
     <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
-        <td title="{% aff_count debate.aff_team round.prev %}">{{ debate.aff_team.name }}</td>
-        <td title="{% neg_count debate.neg_team round.prev %}">{{ debate.neg_team.name }}</td>
+        <td title="{% aff_count debate.aff_team round.prev %}">
+            <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a></td>
+        <td title="{% neg_count debate.neg_team round.prev %}"><a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a></td>
         <td>{{ debate.adjudicators_display }}</td>
         <td>{{ debate.all_conflicts|join:", " }}</td>
     </tr>

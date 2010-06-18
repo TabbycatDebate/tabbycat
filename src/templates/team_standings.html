@@ -28,7 +28,7 @@
 
 <table id="dataTable" class="display" cellspacing="0" cellpadding="0">
     <thead>
-        <tr><th>Rank</th><th>Team</th><th>Points</th><th>Total Score</th><th>Beat</th><th>Affs</th></tr>
+        <tr><th>Rank</th><th>Team</th><th>Points</th><th>Total Score</th><th>Beat</th><th>WP</th><th>Affs</th></tr>
     </thead>
     <tbody>
     {% for team in teams %}
@@ -39,6 +39,7 @@
         <td>{{ team.points }}</td>
         <td>{{ team.speaker_score }}</td>
         <td>{{ team.who_beat }}</td>
+        <td>{{ team.win_points }}</td>
         <td>{% aff_count team round %}</td>
     </tr>
     {% endfor %}

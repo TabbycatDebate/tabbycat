@@ -41,10 +41,10 @@ Enter results.
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td class="{% if debate.result.aff_win %}winner{% endif %}">
-            {{ debate.aff_team.name }} {{ debate.result.aff_win|yesno:"(win),(loss)," }}
+            <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a> {{ debate.result.aff_win|yesno:"(win),(loss)," }}
         </td>
         <td class="{% if debate.result.neg_win %}winner{% endif %}">
-            {{ debate.neg_team.name }} {{ debate.result.neg_win|yesno:"(win),(loss), " }}</td>
+            <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a> {{ debate.result.neg_win|yesno:"(win),(loss), " }}</td>
         <td>{{ debate.adjudicators_display }}</td>
         <td>
             <a href="{% tournament_url enter_result debate.id %}">
