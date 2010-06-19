@@ -705,12 +705,11 @@ class SpeakerScoreByAdj(models.Model):
     """
     debate_adjudicator = models.ForeignKey(DebateAdjudicator)
     debate_team = models.ForeignKey(DebateTeam)
-    speaker = models.ForeignKey(Speaker)
     score = ScoreField()
     position = models.IntegerField()
 
     class Meta:
-        unique_together = [('debate_adjudicator', 'speaker')]
+        unique_together = [('debate_adjudicator', 'debate_team', 'position')]
 
     @property
     def debate(self):

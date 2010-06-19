@@ -185,27 +185,19 @@ class Importer(object):
                 debates[d][a][dt.position][int(pos)] = (speaker, score)
 
         for debate_id, adjudicators in debates.items():
-            decision = []
-            for a_id, teams in adjudicators.items():
-                aff_score = sum(sc for sp, sc in teams[P_AFF].values())
-                neg_score = sum(sc for sp, sc in teams[P_NEG].values())
-                decision.append((a_id, aff_score > neg_score))
-
-            votes = [v for a, v in decision]
-            majority_aff = votes.count(True) > votes.count(False)
-
-            majority_adj = [a for a, v in decision if v == majority_aff]
-
 
             dr = m.DebateResult(m.Debate.objects.get(pk=debate_id))
-            first_adj = adjudicators.values()[0]
             for side in (P_AFF, P_NEG):
                 for pos in range(1,5):
+                    first_adj = adjudicators.values()[0]
                     speaker, _ = first_adj[side][pos]
-                    score = sum(adjudicators[a][side][pos][1]
-                        for a in majority_adj) / len(majority_adj)
+                    dr.set_speaker(_side[side], pos, speaker)
 
-                    dr.set_speaker_entry(_side[side], pos, speaker, score)
+                    for a_id in adjudicators:
+                        adj = m.Adjudicator.objects.get(pk=a_id)
+                        score = adjudicators[a_id][side][pos][1]
+                        dr.set_score(adj, _side[side], pos, score)
+
             dr.save()
 
         for debate in m.Debate.objects.all():
