@@ -37,7 +37,7 @@
         <td>{{ forloop.counter }}</td>
         <td><a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</a></td>
         <td>{{ team.points }}</td>
-        <td>{{ team.speaker_score }}</td>
+        <td>{{ team.speaker_score|stringformat:".2f" }}</td>
         <td>{% aff_count team round %}</td>
     </tr>
     {% endfor %}

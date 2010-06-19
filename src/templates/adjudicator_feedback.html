@@ -8,7 +8,36 @@
 {% endblock extra-head %}
 
 {% block content %}
-{% include "adjudicator_feedback_content.html" %}
+<table id="dataTable" class="display" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Institution</th>
+            <th>CV</th>
+            <th>Test</th>
+            <th>Feedback</th>
+            <th>Score</th>
+            <th>View</th>
+            <th>Add</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for adj in adjudicators %}
+        <tr id="adj_{{ adj.id }}">
+            <td>{{ adj.name }}</td>
+            <td>{{ adj.institution }}</td>
+            <td>{{ adj.cv_score }}</td>
+            <td>{{ adj.test_score }}</td>
+            <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
+            <td>{{ adj.score|stringformat:".2f" }}</td>
+            <td><a class="view" href="">View Feedback</a></td>
+            <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
 {% endblock content %}
 
 

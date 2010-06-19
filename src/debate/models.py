@@ -73,6 +73,23 @@ class Team(models.Model):
     name = models.CharField(max_length=50)
     institution = models.ForeignKey(Institution)
 
+    # set to True if a team is ineligible to break (other than being
+    # swing/composite)
+    cannot_break = models.BooleanField(default=False)
+
+    TYPE_NORMAL = 'N'
+    TYPE_ESL = 'E'
+    TYPE_SWING = 'S'
+    TYPE_COMPOSITE = 'C'
+    TYPE_CHOICES = (
+        (TYPE_NORMAL, 'Normal'),
+        (TYPE_ESL, 'ESL'),
+        (TYPE_SWING, 'Swing'),
+        (TYPE_COMPOSITE, 'Composite'),
+    )
+    type = models.CharField(max_length=1, choices=TYPE_CHOICES,
+                            default=TYPE_NORMAL)
+
     class Meta:
         unique_together = [('name', 'institution')]
 
@@ -158,6 +175,16 @@ class Speaker(models.Model):
     name = models.CharField(max_length=40)
     team = models.ForeignKey(Team)
 
+    TYPE_NORMAL = 'N'
+    TYPE_ESL = 'E'
+    TYPE_CHOICES = (
+        (TYPE_NORMAL, 'Normal'),
+        (TYPE_ESL, 'ESL'),
+    )
+
+    type = models.CharField(max_length=1, choices=TYPE_CHOICES,
+                            default=TYPE_NORMAL)
+
     objects = SpeakerManager()
 
     def __unicode__(self):
@@ -187,14 +214,18 @@ class Adjudicator(models.Model):
     def score(self):
         weight = self.tournament.current_round.feedback_weight
 
+        return (self.cv_score + self.test_score)/2.0 * (1 - weight) + (weight *
+    self.feedback_score)
+
+
+    @property
+    def feedback_score(self):
         avg_score = AdjudicatorFeedback.objects.filter(
             adjudicator = self,
         ).aggregate(avg=models.Avg('score'))['avg']
 
-        if avg_score is None:
-            return self.test_score
+        return avg_score or 0
 
-        return self.test_score * (1 - weight) + weight * avg_score
 
     def get_feedback(self):
         return AdjudicatorFeedback.objects.filter(adjudicator=self)

@@ -471,11 +471,18 @@ def get_adj_feedback(request, t):
     return HttpResponse(json.dumps({'aaData': data}), mimetype="text/json")
 
 
-@admin_required
+@login_required
 @tournament_view
 def enter_feedback(request, t, adjudicator_id):
 
     adj = get_object_or_404(Adjudicator, id=adjudicator_id)
+
+
+    if not request.user.is_superuser:
+        template = 'monkey/enter_feedback.html'
+    else:
+        template = 'enter_feedback.html'
+
     if request.method == "POST":
         form = forms.make_feedback_form_class(adj)(request.POST)
         if form.is_valid():
@@ -485,5 +492,5 @@ def enter_feedback(request, t, adjudicator_id):
 
     form = forms.make_feedback_form_class(adj)()
     
-    return r2r(request, 'enter_feedback.html', dict(adj=adj, form=form))
+    return r2r(request, template, dict(adj=adj, form=form))
 
