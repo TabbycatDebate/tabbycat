@@ -167,7 +167,8 @@ class Speaker(models.Model):
 class Adjudicator(models.Model):
     name = models.CharField(max_length=40)
     institution = models.ForeignKey(Institution)
-    test_score = models.FloatField()
+    cv_score = models.FloatField(default=0)
+    test_score = models.FloatField(default=0)
 
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
    
