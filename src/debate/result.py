@@ -96,7 +96,10 @@ class Scoresheet(object):
         """
         Return total score for side
         """
-        return sum(self.data[side][p] for p in range(1, 5))
+        scores = [self.data[side][p] for p in range(1, 5)]
+        if None in scores:
+            return 0
+        return sum(scores)
 
 
 class DebateResult(object):

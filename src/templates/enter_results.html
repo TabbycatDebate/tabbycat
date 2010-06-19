@@ -14,18 +14,22 @@
         $("#resultsForm").validate({
         });
 
-        function refresh_totals() {
-            var aff = sum($('.aff.score input'));
-            var neg = sum($('.neg.score input'));
-            $('.aff_total').val(aff);
-            $('.neg_total').val(neg);
+        function refresh_totals(table) {
+            $table = $(table);
+            $aff_total = $('.aff_total', $table);
+            $neg_total = $('.neg_total', $table);
+
+            var aff = sum($('.aff.score input', $table));
+            var neg = sum($('.neg.score input', $table));
+            $aff_total.val(aff);
+            $neg_total.val(neg);
 
             if (aff > neg) {
-                $('.aff_total').addClass('win').removeClass('lose');
-                $('.neg_total').addClass('lose').removeClass('win');
+                $aff_total.addClass('win').removeClass('lose');
+                $neg_total.addClass('lose').removeClass('win');
             } else {
-                $('.aff_total').addClass('lose').removeClass('win');
-                $('.neg_total').addClass('win').removeClass('lose');
+                $aff_total.addClass('lose').removeClass('win');
+                $neg_total.addClass('win').removeClass('lose');
             }
 
         };
@@ -39,9 +43,13 @@
             return r;
         }
 
-        $('.score input').change(refresh_totals);
+        $('.score input').change(function() {
+            refresh_totals($(this).parents('table.scoresheet'));
+        });
 
-        refresh_totals();
+        $('table.scoresheet').each(function() {
+            refresh_totals($(this));
+        });
 
         function update_speaker() {
             // e.g. id_aff_speaker_1
