@@ -239,59 +239,9 @@ def enter_result(request, t, debate_id):
 @admin_required
 @round_view
 def team_standings(request, round):
-    
-    from debate.models import DebateTeam, TeamScore
-
-    def opposition(team, debate):
-        if team == debate.aff_team:
-            team = debate.neg_team
-        else:
-            team = debate.aff_team
-        team.points = sum(ts.points for ts in
-                          TeamScore.objects.filter(debate_team__team=team,
-                                                   debate_team__debate__round__seq__lte=round.seq))
-        return team
-
-    def win_points(team):
-        opps = [opposition(team, debate) for debate in
-                team.get_debates(round.seq+1)]
-        sum_points = sum(t.points for t in opps)
-        return sum_points
-        
-
-    def who_beat(team):
-        debates = team.debates
-        s = []
-        for debate in debates:
-            if debate.aff_team == team:
-                if debate.result.aff_win:
-                    s.append("beat %s" % debate.neg_team.name)
-                elif debate.result.neg_win:
-                    s.append("lost to %s" % debate.neg_team.name)
-            else:
-                if debate.result.neg_win:
-                    s.append("beat %s" % debate.aff_team.name)
-                elif debate.result.aff_win:
-                    s.append("lost to %s" % debate.aff_team.name)
-        return ', '.join(s)
-
     teams = Team.objects.standings(round)
     for team in teams:
         setattr(team, 'results_in', team.results_count >= round.seq)
-        team.who_beat = who_beat(team)
-        team.win_points = win_points(team)
-
-    def cmp(t1, t2):
-        point_diff = t1.points - t2.points
-        if point_diff != 0:
-            return point_diff
-        win_diff = t1.win_points - t2.win_points
-        if win_diff != 0:
-            return win_diff
-        return int(t1.speaker_score - t2.speaker_score)
-
-    teams = list(teams)
-    teams.sort(cmp=cmp, reverse=True)
 
     return r2r(request, 'team_standings.html', dict(teams=teams))
 
