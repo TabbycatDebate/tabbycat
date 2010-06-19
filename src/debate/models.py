@@ -346,13 +346,15 @@ class Round(models.Model):
         return self.base_availability(Venue, 'debate_activevenue', 'venue_id',
                                       'debate_venue')
     def unused_venues(self):
-        return self.venue_availability().extra(
+        result = self.venue_availability().extra(
             select = {'is_used': """EXISTS (SELECT 1 
                       FROM debate_debate da 
                       WHERE da.round_id=%d AND
                       da.venue_id = debate_venue.id)""" % self.id},
-            where = ['is_active AND NOT is_used'])
-
+        )
+        # if we wanted to do this with sql we'd need to use a subselect, this is much
+        # easier
+        return [v for v in result if v.is_active and not v.is_used]
 
     def adjudicator_availability(self):
         return self.base_availability(Adjudicator, 'debate_activeadjudicator', 
@@ -360,13 +362,14 @@ class Round(models.Model):
                                       'debate_adjudicator')
 
     def unused_adjudicators(self):
-        return self.adjudicator_availability().extra(
+        result =  self.adjudicator_availability().extra(
             select = {'is_used': """EXISTS (SELECT 1
                       FROM debate_debateadjudicator da
                       LEFT JOIN debate_debate d ON da.debate_id = d.id
                       WHERE d.round_id = %d AND
                       da.adjudicator_id = debate_adjudicator.id)""" % self.id },
-            where = ['is_active AND NOT is_used'])
+        )
+        return [a for a in result if a.is_active and not a.is_used]
 
     def team_availability(self):
         return self.base_availability(Team, 'debate_activeteam', 'team_id',

@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
-    (r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', name='logout'),
 
     (r'^t/(?P<tournament_slug>[-\w_]+)/', include('debate.urls')),
 

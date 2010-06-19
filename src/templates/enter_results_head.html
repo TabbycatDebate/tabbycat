@@ -1,0 +1,65 @@
+<style>
+    #resultsForm input[type='text'] {
+        width: 4em;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#resultsForm").validate({
+        });
+
+        function refresh_totals(table) {
+            $table = $(table);
+            $aff_total = $('.aff_total', $table);
+            $neg_total = $('.neg_total', $table);
+
+            var aff = sum($('.aff.score input', $table));
+            var neg = sum($('.neg.score input', $table));
+            $aff_total.val(aff);
+            $neg_total.val(neg);
+
+            if (aff > neg) {
+                $aff_total.addClass('win').removeClass('lose');
+                $neg_total.addClass('lose').removeClass('win');
+            } else {
+                $aff_total.addClass('lose').removeClass('win');
+                $neg_total.addClass('win').removeClass('lose');
+            }
+
+        };
+
+        function sum(elems) {
+            var r = 0;
+            elems.each(function(){
+                var p = parseFloat($(this).val());
+                if (p > 0) r += p;
+            });
+            return r;
+        }
+
+        $('.score input').change(function() {
+            refresh_totals($(this).parents('table.scoresheet'));
+        });
+
+        $('table.scoresheet').each(function() {
+            refresh_totals($(this));
+        });
+
+        function update_speaker() {
+            // e.g. id_aff_speaker_1
+            var parts = $(this).attr('id').split('_');
+            var val = $(':selected', this).text();
+
+            // e.g. '.aff.s1 label'
+            var side = parts[1];
+            var pos = parts[3];
+
+            $('.' + side + '.s' + pos + ' label').html(val);
+        }
+
+        $('.speaker select').change(update_speaker).each(update_speaker);
+
+    });
+</script>
+

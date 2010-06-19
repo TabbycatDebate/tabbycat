@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load debate_tags %}
+
+{% block body %}
+<div id="container">
+    <div id="header">
+        <h1>Australs 2010 - Round {{ current_round }}</h1>
+        <div>Logged in as {{ user}} | <a href="{% url logout %}">logout</a></div>
+
+        <ul>
+            <li><a href="{% round_url results current_round %}">Enter Results</a></li>
+            <li><a href="{% tournament_url adj_feedback %}">Enter Feedback</a></li>
+        </ul>
+    </div>
+
+    <h1>{% block h1 %}{% endblock %}</h1>
+    {% block content %}
+    {% endblock content %}
+</div><!-- container -->
+{% endblock body %}
+
+

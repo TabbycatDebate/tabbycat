@@ -55,6 +55,9 @@ def r2r(request, template, extra_context=None):
 
 @login_required
 def index(request):
+    tournaments = Tournament.objects.all()
+    if len(tournaments) == 1:
+        return redirect('tournament_home', tournament_slug=tournaments[0].slug)
     return r2r(request, 'index.html',
                dict(tournaments=Tournament.objects.all()))
 
@@ -62,7 +65,13 @@ def index(request):
 @login_required
 @tournament_view
 def tournament_home(request, t):
+    if not request.user.is_superuser:
+        return monkey_home(request, t)
     return r2r(request, 'tournament_home.html')
+
+@login_required
+def monkey_home(request, t):
+    return r2r(request, 'monkey/home.html')
 
 
 @admin_required
@@ -210,17 +219,33 @@ def update_debate_importance(request, round):
     return HttpResponse(im)
 
 
-@admin_required
+@login_required
 @round_view
 def results(request, round):
+    if not request.user.is_superuser:
+        return monkey_results(request, round)
 
     draw = round.get_draw()
     return r2r(request, "results.html", dict(draw=draw))
 
+def monkey_results(request, round):
 
+    if round != request.tournament.current_round:
+        raise Http404()
+
+    draw = round.get_draw()
+    return r2r(request, "monkey/results.html", dict(draw=draw))
+
+
+@login_required
 @tournament_view
 def enter_result(request, t, debate_id): 
     debate = get_object_or_404(Debate, id=debate_id)
+
+    if not request.user.is_superuser:
+        template = 'monkey/enter_results.html'
+    else:
+        template = 'enter_results.html'
 
     if request.method == 'POST':
         form = forms.ResultForm(debate, request.POST)
@@ -231,8 +256,7 @@ def enter_result(request, t, debate_id):
     else:
         form = forms.ResultForm(debate)
 
-
-    return r2r(request, 'enter_results.html', dict(debate=debate, form=form,
+    return r2r(request, template, dict(debate=debate, form=form,
                                                    round=debate.round))
 
 
@@ -418,13 +442,16 @@ def adj_scores(request, t):
     return HttpResponse(json.dumps(data), mimetype="text/json")
 
 
-@admin_required
+@login_required
 @tournament_view
 def adj_feedback(request, t):
+    if not request.user.is_superuser:
+        template = 'monkey/adjudicator_feedback.html'
+    else:
+        template = 'adjudicator_feedback.html'
 
     adjudicators = Adjudicator.objects.all()
-    return r2r(request, 'adjudicator_feedback.html',
-                              dict(adjudicators=adjudicators))
+    return r2r(request, template, dict(adjudicators=adjudicators))
 
 
 @admin_required
