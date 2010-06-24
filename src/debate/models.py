@@ -368,18 +368,20 @@ class Round(models.Model):
             aff.save()
             neg.save()
 
-    def base_availability(self, model, active_table, active_column, model_table):
+    def base_availability(self, model, active_table, active_column, model_table,
+                         id_field='id'):
         d = {
             'active_table' : active_table,
             'active_column' : active_column,
             'model_table': model_table,
-            'id' : self.id
+            'id_field': id_field,
+            'id' : self.id,
         }
         return model.objects.all().extra(select={'is_active': """EXISTS (Select 1
                                                  from %(active_table)s 
                                                  drav where
                                                  drav.%(active_column)s =
-                                                 %(model_table)s.id and
+                                                 %(model_table)s.%(id_field)s and
                                                  drav.round_id=%(id)d)""" % d })
 
     def venue_availability(self):
@@ -399,7 +401,7 @@ class Round(models.Model):
     def adjudicator_availability(self):
         return self.base_availability(Adjudicator, 'debate_activeadjudicator', 
                                       'adjudicator_id',
-                                      'debate_adjudicator')
+                                      'debate_adjudicator', id_field='person_ptr_id')
 
     def unused_adjudicators(self):
         result =  self.adjudicator_availability().extra(
@@ -407,7 +409,7 @@ class Round(models.Model):
                       FROM debate_debateadjudicator da
                       LEFT JOIN debate_debate d ON da.debate_id = d.id
                       WHERE d.round_id = %d AND
-                      da.adjudicator_id = debate_adjudicator.id)""" % self.id },
+                      da.adjudicator_id = debate_adjudicator.person_ptr_id)""" % self.id },
         )
         return [a for a in result if a.is_active and not a.is_used]
 
