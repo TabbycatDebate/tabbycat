@@ -25,22 +25,6 @@ class ReplyScoreField(ScoreField):
     MIN_VALUE = 30
     MAX_VALUE = 40
 
-def initial(debate, team):
-    speakers = team.speakers
-    prev_debate = team.prev_debate(debate.round.seq)
-    if prev_debate:
-        dr = DebateResult(prev_debate)
-        side = prev_debate.get_side(team)
-        return dict((i, dr.get_speaker(side, i).id) for i in range(1, 5))
-    else:
-        return {
-            1: speakers[0].id, 
-            2: speakers[1].id,
-            3: speakers[2].id,
-            4: speakers[0].id,
-        }
-
-
 class ResultForm(forms.Form):
 
     result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
@@ -61,11 +45,9 @@ class ResultForm(forms.Form):
 
         for side in ('aff', 'neg'):
             team = debate.get_team(side)
-            init = initial(debate, team)
             for pos in range(1, 5):
                 self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(
                     queryset = team.speakers,
-                    initial = init[pos]
                 )
 
                 # css_class is for jquery validation plugin, surely this can

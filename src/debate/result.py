@@ -210,7 +210,7 @@ class DebateResult(object):
         """
         Return the speaker object for side/position
         """
-        return self.speakers[side][position]
+        return self.speakers[side].get(position)
 
     def get_score(self, adj, side, position):
         """
