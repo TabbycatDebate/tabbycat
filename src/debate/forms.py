@@ -119,8 +119,10 @@ class ResultForm(forms.Form):
         def do(side):
             for i in range(1, 5): 
                 speaker = self.cleaned_data['%s_speaker_%d' % (side, i)]
-                score = self.cleaned_data['%s_score_%d' % (side, i)]
-                dr.set_speaker_entry(side, i, speaker, score)
+                dr.set_speaker(side, i, speaker)
+                for adj in self.adjudicators:
+                    score = self.cleaned_data[self.score_field_name(adj, side, i)]
+                    dr.set_score(adj, side, i, score)
         do('aff')
         do('neg')
         dr.save()
