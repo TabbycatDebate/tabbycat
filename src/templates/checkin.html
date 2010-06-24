@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block head-title %}Checkin{% endblock %}
+
+{% block extra-head %}
+<script>
+    $(document).ready(function() {
+        setInterval( function() {
+            $('#barcode_id').focus();
+        }, 50);
+    });
+</script>
+{% endblock %}
+
+{% block body %}
+<div id="container">
+    <h1>Round {{ round }}</h1>
+
+    {% if person %}
+    <div class="success box">
+        Checked in {{ person.name }}
+    </div>
+    {% endif %}
+    {% if unknown_id %}
+    <div class="error box">
+        Unknown ID: {{ unknown_id }}
+    </div>
+    {% endif %}
+
+    <form method="POST" action=".">
+        <input id="barcode_id" type="text" name="barcode_id" />
+        <input type="submit" name="submit" value="checkin" />
+    </form>
+
+</div>
+
+{% endblock %}
+
+
+

@@ -24,6 +24,9 @@ urlpatterns = patterns('debate.views',
     url(r'^round/(?P<round_seq>\d+)/teams/update/$',
         'update_availability', { 'update_method': 'set_available_teams' }, 'update_team_availability'),
 
+    url(r'^round/(?P<round_seq>\d+)/checkin/$', 'checkin',
+        name='checkin'),
+
     url(r'^round/(?P<round_seq>\d+)/draw/$', 'draw',
         name='draw'),
     url(r'^round/(?P<round_seq>\d+)/draw_display/$', 'draw_display',

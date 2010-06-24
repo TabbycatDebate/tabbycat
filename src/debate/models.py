@@ -171,8 +171,15 @@ class SpeakerManager(models.Manager):
 
         return speakers
 
-class Speaker(models.Model):
+class Person(models.Model):
     name = models.CharField(max_length=40)
+    barcode_id = models.IntegerField(blank=True, null=True)
+
+class Checkin(models.Model):
+    person = models.ForeignKey('Person')
+    round = models.ForeignKey('Round')
+
+class Speaker(Person):
     team = models.ForeignKey(Team)
 
     TYPE_NORMAL = 'N'
@@ -191,8 +198,7 @@ class Speaker(models.Model):
         return unicode(self.name)
 
 
-class Adjudicator(models.Model):
-    name = models.CharField(max_length=40)
+class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
     cv_score = models.FloatField(default=0)
     test_score = models.FloatField(default=0)
@@ -291,6 +297,9 @@ class Round(models.Model):
                                        default=STATUS_NONE)
     adjudicator_status = models.IntegerField(choices=STATUS_CHOICES,
                                              default=STATUS_NONE)
+
+    checkins = models.ManyToManyField('Person', through='Checkin',
+                                      related_name='checkedin_rounds')
 
     active_venues = models.ManyToManyField('Venue', through='ActiveVenue')
     active_adjudicators = models.ManyToManyField('Adjudicator',

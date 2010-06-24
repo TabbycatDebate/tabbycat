@@ -7,6 +7,7 @@ from django.db.models import Sum, Count
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, DebateAdjudicator, Speaker
+from debate.models import Person, Checkin
 from debate import forms
 
 from functools import wraps
@@ -104,6 +105,26 @@ def draw_index(request, t):
 @round_view
 def round_index(request, round):
     return r2r(request, 'round_index.html')
+
+
+@round_view
+def checkin(request, round):
+    context = {}
+    if request.method == 'POST':
+        v = request.POST.get('barcode_id')
+        try:
+            barcode_id = int(v)
+            p = Person.objects.get(barcode_id=barcode_id)
+            ch, created = Checkin.objects.get_or_create(
+                person = p,
+                round = round
+            )
+            context['person'] = p
+
+        except (ValueError, Person.DoesNotExist):
+            context['unknown_id'] = v
+
+    return r2r(request, 'checkin.html', context)
 
 @admin_required
 @round_view
