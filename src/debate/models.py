@@ -262,6 +262,14 @@ class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('Adjudicator')
     team = models.ForeignKey('Team')
 
+class RoundManager(models.Manager):
+    use_for_related_Fields = True
+
+    def get_query_set(self):
+        return super(RoundManager,
+                     self).get_query_set().select_related('tournament')
+
+
 class Round(models.Model):
     TYPE_RANDOM = 'R'
     TYPE_PRELIM = 'P'
@@ -285,6 +293,8 @@ class Round(models.Model):
         (STATUS_DRAFT, 'Draft'),
         (STATUS_CONFIRMED, 'Confirmed'),
     )
+
+    objects = RoundManager()
 
     tournament = models.ForeignKey(Tournament, related_name='rounds')
     seq = models.IntegerField()
@@ -625,8 +635,10 @@ class Debate(models.Model):
 
     @property
     def result(self):
-        from debate.result import DebateResult
-        return DebateResult(self)
+        if not hasattr(self, '_result'):
+            from debate.result import DebateResult
+            self._result = DebateResult(self)
+        return self._result
 
     def get_side(self, team):
         if self.aff_team == team:

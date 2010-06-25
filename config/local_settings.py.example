@@ -1,5 +1,7 @@
 from os.path import join
 
+DEBUG = True
+
 def proj(p):
     return join(PROJ_ROOT, p)
 
@@ -17,4 +19,17 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 MEDIA_ROOT = proj('src/media')
 MEDIA_URL = 'static'
 TEMPLATE_DIRS = (proj('src/templates'),)
+
+INSTALLED_APPS += (
+    'debug_toolbar',
+)
+INTERNAL_IPS = (
+    '127.0.0.1',
+)
+MIDDLEWARE_CLASSES += (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPTS_REDIRECTS': False,
+}
 

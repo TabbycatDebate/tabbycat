@@ -2,4 +2,5 @@
 south
 flup
 fabric
+-e git+git://github.com/robhudson/django-debug-toolbar.git@ee1811238e91ae0ad33413b0d40d2f8482101951#egg=debug_toolbar
 

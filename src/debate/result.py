@@ -111,19 +111,19 @@ class DebateResult(object):
 
     It acts as a translation layer on top of the following db models:
 
-
     SpeakerScoreSheet
     TeamScore
     SpeakerScore
+
 
     """
 
     def __init__(self, debate):
         self.debate = debate
         self.adjudicators = debate.adjudicators.list
-        self.adjudicator_sheets = dict(
-            (a, Scoresheet(self.debate, a)) for a in self.adjudicators
-        )
+
+        self.loaded_sheets = False
+        self._adjudicator_sheets = None
 
         self.speakers = {
             'aff': {},
@@ -135,12 +135,16 @@ class DebateResult(object):
             'neg': None,
         }
 
+        self.total_score = {
+            'aff': None,
+            'neg': None,
+        }
+
         self._other = {
             'aff': 'neg',
             'neg': 'aff',
         }
 
-        self._calc_decision()
         self._init_side('aff')
         self._init_side('neg')
 
@@ -157,11 +161,23 @@ class DebateResult(object):
         try:
             ts = TeamScore.objects.get(debate_team=dt)
             points = ts.points
+            score = ts.score
         except TeamScore.DoesNotExist:
             points = None
+            score = None
 
 
         self.points[side] = points
+        self.total_score[side] = score
+
+    @property
+    def adjudicator_sheets(self):
+        if not self._adjudicator_sheets:
+            self._adjudicator_sheets = dict(
+                (a, Scoresheet(self.debate, a)) for a in self.adjudicators
+            )
+            self.loaded_sheets = True
+        return self._adjudicator_sheets
 
     def save(self):
         for sheet in self.adjudicator_sheets.values():
@@ -239,6 +255,9 @@ class DebateResult(object):
 
 
     def _score(self, side):
+        if not self.loaded_sheets:
+            return self.total_score[side]
+
         return sum(self.adjudicator_sheets[adj].get_total(side) for adj in
                    self.majority_adj) / len(self.majority_adj)
 
@@ -251,6 +270,9 @@ class DebateResult(object):
         return self._score('neg')
 
     def _points(self, side):
+        if not self.loaded_sheets:
+            return self.points[side]
+
         if self._score(side):
             if self._score(side) > self._score(self._other[side]):
                 return 1
