@@ -1,6 +1,5 @@
-export BASE=$(pwd )/$(dirname $0)/..
-source $BASE/env/bin/activate
-
-export PYTHONPATH=$PYTHONPATH:$BASE/src/
-export PATH=$BASE/bin:$PATH
+if [ -z "${SITE_ROOT+x}" ]; then export SITE_ROOT=$(pwd)/$(dirname $0)..; fi
+source $SITE_ROOT/env/bin/activate
+export PYTHONPATH=$PYTHONPATH:$SITE_ROOT/src/
+export PATH=$SITE_ROOT/bin:$PATH
 
