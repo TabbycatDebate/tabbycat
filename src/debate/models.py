@@ -524,6 +524,13 @@ class ActiveAdjudicator(models.Model):
     class Meta:
         unique_together = [('adjudicator', 'round')]
 
+class DebateManager(models.Manager):
+    use_for_related_fields = True
+
+    def get_query_set(self):
+        return super(DebateManager, self).get_query_set().select_related(
+        'round', 'venue')
+
 class Debate(models.Model):
     STATUS_NONE = 'N' 
     STATUS_DRAFT = 'D' 
@@ -533,6 +540,8 @@ class Debate(models.Model):
         (STATUS_DRAFT, 'Draft'),
         (STATUS_CONFIRMED, 'Confirmed'),
     )
+    objects = DebateManager()
+
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue, blank=True, null=True)
     bracket = models.IntegerField(default=0)
@@ -653,6 +662,11 @@ class Debate(models.Model):
     def __unicode__(self):
         return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
     
+class SRManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(SRManager, self).get_query_set().select_related(depth=1)
+
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
     POSITION_NEGATIVE = 'N'
@@ -660,6 +674,8 @@ class DebateTeam(models.Model):
         (POSITION_AFFIRMATIVE, 'Affirmative'),
         (POSITION_NEGATIVE, 'Negative'),
     )
+
+    objects = SRManager()
     
     debate = models.ForeignKey(Debate)
     team = models.ForeignKey(Team)
@@ -675,6 +691,8 @@ class DebateAdjudicator(models.Model):
         (TYPE_PANEL, 'Panel'),
         (TYPE_TRAINEE, 'Trainee'),
     )
+
+    objects = SRManager()
     
     debate = models.ForeignKey(Debate)
     adjudicator = models.ForeignKey(Adjudicator)
@@ -781,6 +799,13 @@ class TeamScore(models.Model):
     points = models.PositiveSmallIntegerField()
     score = ScoreField()
 
+class SpeakerScoreManager(models.Manager):
+    use_for_related_fields = True
+
+    def get_query_set(self):
+        return super(SpeakerScoreManager,
+                     self).get_query_set().select_related('speaker')
+
 class SpeakerScore(models.Model):
     """
     Represents a speaker's score in a debate
@@ -789,6 +814,8 @@ class SpeakerScore(models.Model):
     speaker = models.ForeignKey(Speaker)
     score = ScoreField()
     position = models.IntegerField()
+
+    objects = SpeakerScoreManager()
 
     class Meta:
         unique_together = [('debate_team', 'speaker', 'position')]
