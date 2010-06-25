@@ -3,13 +3,31 @@
 {% load debate_tags %}
 
 {% block extra-head %}
+{{ block.super }}
 
 {% include "enter_results_head.html" %}
+
+<style>
+    h2 { font-size: 140%; }
+    div.sheet {
+        background-color:#F4FEF4;
+    }
+    div.sheet h2 {
+        padding: 15px 20px 0;
+        font-size: 110%;
+    }
+    table.scoresheet {
+        padding-top: 0;
+    }
+
+
+</style>
 {% endblock %}
 
-{% block h1 %} {{ debate }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
+{% block h1 %}Enter Results{% endblock %}
 
 {% block content %}
+<h2>{{ debate }} (Round {{ debate.round }}, {{ debate.venue.name }})</h2>
     {% include "enter_results_content.html" %}
 {% endblock content %}
 

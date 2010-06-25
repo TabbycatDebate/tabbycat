@@ -3,9 +3,12 @@
 {% load debate_tags %}
 
 {% block extra-head %}
+{{ block.super }}
 {% include "adjudicator_feedback_head.html" %}
 
 {% endblock extra-head %}
+
+{% block h1 %}Enter Feedback{% endblock %}
 
 {% block content %}
 {% include "adjudicator_feedback_content.html" %}

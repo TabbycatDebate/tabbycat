@@ -4,8 +4,8 @@
     <li id="home"><a href="{{ tournament.get_absolute_url }}">Home</a></li>
     <li id="draw"><a href="{% round_url draw current_round %}">Draw</a></li>
     <li id="results"><a href="{% round_url results current_round %}">Results</a></li>
-    <li id="current_standings"><a href="{% round_url team_standings current_round %}">Team Standings</a></li>
-    <li id="current_sstandings"><a href="{% round_url speaker_standings current_round %}">Speaker Standings</a></li>
+    <li id="current_standings"><a href="{% round_url team_standings current_round %}">Teams</a></li>
+    <li id="current_standings"><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
     <li id="feedback"><a href="{% tournament_url adj_feedback %}">Feedback</a></li>
     <li>|</li>
     <li id="rounds"> 

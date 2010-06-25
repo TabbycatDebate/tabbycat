@@ -475,7 +475,7 @@ def adj_feedback(request, t):
     return r2r(request, template, dict(adjudicators=adjudicators))
 
 
-@admin_required
+@login_required
 @tournament_view
 def get_adj_feedback(request, t):
 
@@ -509,9 +509,8 @@ def enter_feedback(request, t, adjudicator_id):
         if form.is_valid():
             form.save()
             return redirect_tournament('adj_feedback', t)
-        raise
-
-    form = forms.make_feedback_form_class(adj)()
+    else:
+        form = forms.make_feedback_form_class(adj)()
     
     return r2r(request, template, dict(adj=adj, form=form))
 

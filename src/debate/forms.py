@@ -214,7 +214,7 @@ def make_feedback_form_class(adjudicator):
             max_value = 5,
         )
 
-        comment = forms.CharField(widget=forms.Textarea)
+        comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def save(self):
             source = self.cleaned_data['source']

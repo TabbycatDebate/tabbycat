@@ -1,15 +1,17 @@
-{% extends "base.html" %}
+{% extends "monkey/base.html" %}
 
 {% load debate_tags %}
 
 {% block extra-head %}
+{{ block.super }}
 
 {% include "enter_results_head.html" %}
 {% endblock %}
 
-{% block h1 %} {{ debate }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
+{% block h1 %}Enter Results{% endblock %}
 
 {% block content %}
+<h2>{{ debate }} (Round {{ debate.round }}, {{ debate.venue.name }})</h2>
     {% include "enter_results_content.html" %}
 {% endblock content %}
 

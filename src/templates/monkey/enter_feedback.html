@@ -1,6 +1,7 @@
 {% extends "monkey/base.html" %}
 
 {% block extra-head %}
+{{ block.super }}
 
 <style>
     #id_score {
@@ -13,9 +14,12 @@
 </style>
 {% endblock %}
 
-{% block h1 %}Enter Feedback for {{ adj }} {% endblock %}
+{% block h1 %}Enter Feedback{% endblock %}
 
 {% block content %}
+<h2>
+Feedback for {{ adj }}
+</h2>
 <form id="feedbackForm" action="" method="POST">
     {{ form.as_p }}
 <input type="submit" value="Save" />

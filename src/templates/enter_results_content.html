@@ -2,6 +2,7 @@
 
 <form id="resultsForm" action="." method="POST">
     {% for adj in form.adj_iter %}
+    <div class="sheet">
     <h2>Adjudicator: {{ adj.adj }} </h2>
     <table class="scoresheet {% if forloop.first %}first{% endif %}">
         <thead>
@@ -53,6 +54,7 @@
             </tr>
         </tfoot>
     </table>
+    </div>
     {% endfor %}
 
     <div>
