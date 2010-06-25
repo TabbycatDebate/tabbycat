@@ -7,9 +7,9 @@ SETTINGS = SortedDict([
     ('reply_score_min', (int, 'Minimum allowed reply score', 30)),
     ('reply_score_max', (int, 'Maximum allowed reply score', 45)),
     ('break_size', (int, 'Number of breaking teams', 32)),
-    ('adj_min_score', (int, 'Minimum adjudicator score', 1.5)),
-    ('adj_max_score', (int, 'Maximum adjudicator score', 5)),
-    ('adj_chair_min_score', (int, 'Minimum chair score', 3.5)),
+    ('adj_min_score', (float, 'Minimum adjudicator score', 1.5)),
+    ('adj_max_score', (float, 'Maximum adjudicator score', 5)),
+    ('adj_chair_min_score', (float, 'Minimum chair score', 3.5)),
 ])
 
 
@@ -37,6 +37,8 @@ def make_config_form(tournament, data=None):
     def _field(t):
         if t is int:
             return forms.IntegerField
+        if t is float:
+            return forms.FloatField
 
     fields = SortedDict()
     initial_data = {}
