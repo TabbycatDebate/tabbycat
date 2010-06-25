@@ -67,7 +67,8 @@ def index(request):
 @tournament_view
 def tournament_home(request, t):
     if not request.user.is_superuser:
-        return monkey_home(request, t)
+        return redirect('results', tournament_slug=t.slug,
+                        round_seq=t.current_round.seq)
     return r2r(request, 'tournament_home.html')
 
 @login_required
