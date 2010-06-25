@@ -1,7 +1,5 @@
 {% load debate_tags %}
 
-{{ form.errors }}
-
 <form id="resultsForm" action="." method="POST">
     {% for adj in form.adj_iter %}
     <h2>Adjudicator: {{ adj.adj }} </h2>
@@ -16,23 +14,31 @@
             {% for position in adj.position_iter %}
             <tr>
                 <th> Aff {{ position }}</th>
-                <td class="aff speaker s{{ position.pos }}">
+                <td class="aff speaker s{{ position.pos }} {{ position.aff_speaker.errors|yesno:'error,' }}">
                     {% if forloop.parentloop.first %} 
                     {{ position.aff_speaker }} 
+                    {{ position.aff_speaker.errors }}
                     {% else %}
                     <label ></label>
                     {% endif %}
                 </td>
-                <td class="aff score"> {{ position.aff_score }} </td>
+                <td class="aff score {{ position.aff_score_errors|yesno:'error,' }}">
+                    {{ position.aff_score }}
+                    {{ position.aff_score_errors }}
+                </td>
                 <th class="neg"> Neg {{ position }}</th>
-                <td class="neg speaker s{{ position.pos }}">
+                <td class="neg speaker s{{ position.pos }} {{ position.neg_speaker.errors|yesno:'error,' }}">
                     {% if forloop.parentloop.first %}
                     {{ position.neg_speaker }} 
+                    {{ position.neg_speaker.errors }}
                     {% else %}
                     <label></label>
                     {% endif %}
                 </td>
-                <td class="neg score"> {{ position.neg_score }} </td>
+                <td class="neg score {{ position.neg_score_errors|yesno:'error,' }}"> 
+                    {{ position.neg_score }} 
+                    {{ position.neg_score_errors }} 
+                </td>
             </tr>
             {% endfor %}
         </tbody>

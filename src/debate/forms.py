@@ -137,9 +137,14 @@ class ResultForm(forms.Form):
             def aff_score(self):
                 return str(form.score_field(self.adj, 'aff', self.pos))
 
+            def aff_score_errors(self):
+                return str(form.score_field(self.adj, 'aff', self.pos).errors)
+
             def neg_score(self):
                 return str(form.score_field(self.adj, 'neg', self.pos))
 
+            def neg_score_errors(self):
+                return str(form.score_field(self.adj, 'neg', self.pos).errors)
 
         class AdjudicatorWrapper(object):
             def __init__(self, adj):

@@ -30,6 +30,6 @@ MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPTS_REDIRECTS': False,
+    'INTERCEPT_REDIRECTS': False,
 }
 

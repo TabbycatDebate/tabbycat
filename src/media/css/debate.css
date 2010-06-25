@@ -148,8 +148,20 @@ table.scoresheet {
 }
 .scoresheet tr { height: 40px; vertical-align: top; }
 .scoresheet th { text-align: right; }
-.scoresheet td.score { width: 100px; }
+.scoresheet td.score { width: 200px; }
 .scoresheet th.neg { margin-left: 30px; }
+.scoresheet td select{
+}
+.scoresheet td ul.errorlist {
+    list-style: none;
+    margin: 5px;
+    padding: 0;
+    width: 150px;
+}
+.scoresheet td.error {
+    background-color: #fee;
+    color: #811;
+}
 .scoresheet input[type="text"] { width: 4em; font-size: 110%; padding: 0.3em; }
 .scoresheet .score input[type="text"]:focus {
     background-color: #ffd;
