@@ -1,3 +1,4 @@
 -e git+git://github.com/django/django.git#egg=django
 south
+flup
 
