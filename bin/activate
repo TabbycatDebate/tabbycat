@@ -1,4 +1,4 @@
-if [ -z "${SITE_ROOT+x}" ]; then export SITE_ROOT=$(pwd)/$(dirname $0)..; fi
+if [ -z "${SITE_ROOT+x}" ]; then export SITE_ROOT=$(pwd)/$(dirname $0)/..; fi
 source $SITE_ROOT/env/bin/activate
 export PYTHONPATH=$PYTHONPATH:$SITE_ROOT/src/
 export PATH=$SITE_ROOT/bin:$PATH
