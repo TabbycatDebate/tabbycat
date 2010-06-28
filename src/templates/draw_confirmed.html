@@ -17,6 +17,10 @@
                 "aaSorting": [[0, 'desc']]
             } );
 
+            $('#wpPostLink').click( function() {
+                $('#wpPostForm').submit();
+            } );
+
         } );
 
     </script>
@@ -35,7 +39,11 @@ Here's the confirmed draw.
 <a href="{% round_url draw_venues_edit %}">Edit venues</a>.
 <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
 <a href="{% round_url draw_display %}">Draw for display</a>.
+<a id="wpPostLink" href="#">Post Draw to Website</a>
 </p>
+
+<form id="wpPostForm" method="POST" action="{% round_url wordpress_post_draw %}">
+</form>
 
 <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}">
 </form>

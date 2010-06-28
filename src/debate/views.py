@@ -1,18 +1,29 @@
 from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext, loader
+from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib import messages
 from django.db.models import Sum, Count
+from django.conf import settings
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, DebateAdjudicator, Speaker
 from debate.models import Person, Checkin
 from debate import forms
 
+from debate import wordpresslib
+
 from functools import wraps
 import json
 
+def get_wordpress_client():
+    return wordpresslib.WordPressClient(
+        settings.WORDPRESS_URL,
+        settings.WORDPRESS_USER,
+        settings.WORDPRESS_PASSWORD,
+    )
 
 def redirect_round(to, round, **kwargs):
     return redirect(to, tournament_slug=round.tournament.slug,
@@ -150,6 +161,26 @@ def update_availability(request, round, update_method):
     getattr(round, update_method)(available_ids)
 
     return HttpResponse("ok")
+
+@admin_required
+@expect_post
+@round_view
+def wordpress_post_draw(request, round):
+
+    client = get_wordpress_client()
+
+    post = wordpresslib.WordPressPost()
+    post.title = 'Draw for Round %d' % round.seq
+    post.description = str(render_to_string('wp_draw.html', {'round': round,
+                                                             'draw':
+                                                             round.get_draw()}))
+
+    post.categories = (settings.WORDPRESS_DRAW_CATEGORY_ID,)
+
+    post_id = client.newPost(post, False)
+
+    return redirect_round('draw', round)
+
 
 @admin_required
 @round_view
