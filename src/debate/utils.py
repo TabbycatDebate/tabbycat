@@ -46,18 +46,20 @@ def generate_random_results(round):
             speakers = getattr(debate, '%s_team' % side).speakers
             scores = rr[side]
             for i in range(1, 4):
-                dr.set_speaker_entry(
+                dr.set_speaker(
                     side = side,
                     pos = i,
                     speaker = speakers[i - 1],
-                    score = scores[i-1],
                 )
-            dr.set_speaker_entry(
+            dr.set_speaker(
                 side = side,
                 pos = 4,
-                speaker = speakers[0],
-                score = scores[3]
+                speaker = speakers[0]
             )
+
+            for adj in debate.adjudicators.list:
+                for pos in range(1, 5):
+                    dr.set_score(adj, side, pos, scores[pos-1])
 
         dr.save()
         debate.result_status = debate.STATUS_CONFIRMED

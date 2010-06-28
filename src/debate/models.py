@@ -342,8 +342,8 @@ class Round(models.Model):
         self.draw_status = self.STATUS_DRAFT
         self.save()
 
-        from debate.draw import assign_importance
-        assign_importance(self)
+        #from debate.draw import assign_importance
+        #assign_importance(self)
 
     def allocate_adjudicators(self, alloc_class=SAAllocator):
         if self.draw_status != self.STATUS_CONFIRMED:
@@ -660,7 +660,8 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team) 
 
     def __unicode__(self):
-        return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
+        return u'[%s] %s vs %s (%s)' % (self.round.seq, self.aff_team.name, self.neg_team.name,
+                                   self.venue)
     
 class SRManager(models.Manager):
     use_for_related_fields = True
@@ -680,6 +681,10 @@ class DebateTeam(models.Model):
     debate = models.ForeignKey(Debate)
     team = models.ForeignKey(Team)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
+
+    def __unicode__(self):
+        return u'%s %s' % (self.debate, self.team)
+        
     
 class DebateAdjudicator(models.Model):
     TYPE_CHAIR = 'C'
@@ -697,6 +702,9 @@ class DebateAdjudicator(models.Model):
     debate = models.ForeignKey(Debate)
     adjudicator = models.ForeignKey(Adjudicator)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
+
+    def __unicode__(self):
+        return u'%s %s' % (self.adjudicator, self.debate)
 
 class AdjudicatorFeedback(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)

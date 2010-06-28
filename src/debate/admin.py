@@ -80,3 +80,6 @@ class TournamentAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Tournament, TournamentAdmin)
 
+admin.site.register(models.DebateTeam)
+admin.site.register(models.DebateAdjudicator)
+
