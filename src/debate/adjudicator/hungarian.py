@@ -26,7 +26,8 @@ class HungarianAllocator(Allocator):
         cost += 10000 * adj.seen_team(debate.aff_team, debate.round)
         cost += 10000 * adj.seen_team(debate.neg_team, debate.round)
 
-        diff = debate.importance - adj.score
+        impt = debate.importance or 0
+        diff = impt - adj.score
         if diff > 0:
             cost += 10000 * exp(diff - 0.25)
 
