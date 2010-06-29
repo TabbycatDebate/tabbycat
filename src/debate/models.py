@@ -662,6 +662,10 @@ class Debate(models.Model):
     def __unicode__(self):
         return u'[%s] %s vs %s (%s)' % (self.round.seq, self.aff_team.name, self.neg_team.name,
                                    self.venue)
+
+    @property
+    def matchup(self):
+        return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
     
 class SRManager(models.Manager):
     use_for_related_fields = True

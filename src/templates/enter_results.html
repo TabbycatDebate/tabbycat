@@ -7,9 +7,19 @@
 {% include "enter_results_head.html" %}
 {% endblock %}
 
-{% block h1 %} {{ debate }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
+{% block h1 %} {{ debate.matchup }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
 
 {% block content %}
+
+<form id="resultsForm" action="." method="POST">
     {% include "enter_results_content.html" %}
+    <div>
+        <label>Status:</label>
+        {{ form.result_status }}
+        <input class="save" type="submit" value="Save" />
+    </div>
+</form>
+
+
 {% endblock content %}
 

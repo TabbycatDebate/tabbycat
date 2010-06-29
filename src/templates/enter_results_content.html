@@ -1,6 +1,5 @@
 {% load debate_tags %}
 
-<form id="resultsForm" action="." method="POST">
     {% for adj in form.adj_iter %}
     <div class="sheet">
     <h2>Adjudicator: {{ adj.adj }} </h2>
@@ -56,12 +55,4 @@
     </table>
     </div>
     {% endfor %}
-
-    <div>
-        <label>Status:</label>
-        {{ form.result_status }}
-        <input class="save" type="submit" value="Save" />
-    </div>
-</form>
-
 
