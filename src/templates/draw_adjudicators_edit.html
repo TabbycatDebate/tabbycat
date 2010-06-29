@@ -28,6 +28,9 @@
             var adj = $('<div></div>').addClass('adj')
                 .attr('id', 'adj_' + data.id)
                 .append($('<span></span> ').html(data.name))
+            if (data.is_trainee) {
+                adj.addClass('trainee');
+            }
             init_adj(adj);
             return adj;
         }
@@ -41,8 +44,17 @@
             $('#panel_'+debate_id).find('div.adj').remove();
         }
 
+        function clear_trainees(debate_id) {
+            $('#trainees_'+debate_id).find('div.adj').remove();
+        }
+
         function add_panellist(debate_id, data) {
             var td = $('#panel_'+debate_id);
+            _make_adj(data).appendTo(td);
+        }
+
+        function add_trainee(debate_id, data) {
+            var td = $('#trainees_'+debate_id);
             _make_adj(data).appendTo(td);
         }
 
@@ -53,6 +65,10 @@
                 clear_panel(debate_id);
                 $.each(adj_data.panel, function(idx, adj) {
                     add_panellist(debate_id, adj);
+                });
+                clear_trainees(debate_id);
+                $.each(adj_data.trainees, function(idx, adj) {
+                    add_trainee(debate_id, adj);
                 });
 
             });
@@ -114,7 +130,7 @@
 
         function append_adj_scores() {
             $(".adj").each( function() {
-                $(this).append('<span class="info">(' + formatScore(scores[intId(this)]) + ')</span>');
+                $(this).prepend('<span class="info">' + formatScore(scores[intId(this)]) + '</span>');
                 $("a", this).attr("title", "Score: " + scores[intId(this)]);
                 $("a", this).click( function() {
                     return false;
@@ -262,8 +278,9 @@
                 var newHomeOff;
                 var curOff = adj.offset();
 
-                // if replacing an empty chair, or adding to a panel
-                if (replacing.length == 0 || $(this).hasClass("panel-holder")) {
+                // if replacing an empty chair, or adding to a panel/trainee list
+                if (replacing.length == 0 || $(this).hasClass("panel-holder")
+                    || $(this).hasClass("trainee-holder")) {
                     replacing = $(document.createElement("div"));
                     replacing.addClass("adj");
                     replacing[0].style.visibility = "hidden";
@@ -348,6 +365,10 @@
                 data['panel_' + debateId]  = [];
                 $(".panel-holder .adj", this).each( function() {
                     data['panel_' + debateId].push(intId(this));
+                } );
+                data['trainees_' + debateId]  = [];
+                $(".trainee-holder .adj", this).each( function() {
+                    data['trainees_' + debateId].push(intId(this));
                 } );
             } );
 
@@ -442,11 +463,12 @@
 </script>
 <style type="text/css">
     #statusBar a { margin-left: 10px; }
-    .adj { display: block; background-color: #ddd; white-space: nowrap; margin-right: 1em; cursor: move;}
-    .adj:hover {background-color: #eee; }
+    .adj { display: block; background-color: #eee; white-space: nowrap; margin-right: 1em; cursor: move;}
+    .adj.trainee { background-color: #ffb; }
+    .adj:hover {background-color: #fafafa; }
+    .adj.trainee:hover { background-color: #ffe; }
     .panel-holder .adj { margin: 1px 0;}
-    .adj span { margin-left: 10px; }
-    .adj span.info { margin: 0 5px;  }
+    .adj span.info { margin: 0 5px; color: #44f;  }
 
     .adj.history-conflict { color: #f80; }
     .adj.conflict { color: red; }
@@ -528,7 +550,7 @@
 <div id="main">
     <table id="dataTable" class="display" cellpadding="0" cellspacing="0">
         <thead>
-            <tr><th>Brkt</th><th>Impt</th><th>Affirmative</th><th>Negative</th><th>Chair</th><th>Panel</th></tr>
+            <tr><th>Brkt</th><th>Impt</th><th>Affirmative</th><th>Negative</th><th>Chair</th><th>Panel</th><th>Trainee</th></tr>
         </thead>
         <tbody>
         {% for debate in draw %}
@@ -537,13 +559,12 @@
             <td class="importance">{{ debate.importance }}</td>
             <td id="team_{{ debate.aff_team.id }}" class="team">{{ debate.aff_team.name }}</td>
             <td id="team_{{ debate.neg_team.id }}" class="team">{{ debate.neg_team.name }}</td>
-            {% with debate.adjudicators as adj %}
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
             </td>
             <td id="panel_{{ debate.id }}" class="adj-holder panel-holder">
             </td>
-
-            {% endwith %}
+            <td id="trainees_{{ debate.id }}" class="adj-holder trainee-holder">
+            </td>
         </tr>
         {% endfor %}
     </table>

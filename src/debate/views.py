@@ -408,6 +408,7 @@ def _json_adj_allocation(debates, unused_adj):
         return {
             'id': a.id,
             'name': a.name,
+            'is_trainee': a.is_trainee,
         }
 
     def _debate(d):
@@ -415,6 +416,7 @@ def _json_adj_allocation(debates, unused_adj):
         if d.adjudicators.chair:
             r['chair'] = _adj(d.adjudicators.chair)
         r['panel'] = [_adj(a) for a in d.adjudicators.panel]
+        r['trainees'] = [_adj(a) for a in d.adjudicators.trainees]
         return r
 
     obj['debates'] = dict((d.id, _debate(d)) for d in debates)
@@ -456,6 +458,9 @@ def save_adjudicators(request, round):
         if key.startswith("panel_"):
             for val in vals:
                 debate_adjudicators[id(key)].panel.append(val)
+        if key.startswith("trainees_"):
+            for val in vals:
+                debate_adjudicators[id(key)].trainees.append(val)
 
     for d_id, alloc in debate_adjudicators.items():
         alloc.save()
