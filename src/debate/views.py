@@ -279,7 +279,13 @@ def results(request, round):
         return monkey_results(request, round)
 
     draw = round.get_draw()
-    return r2r(request, "results.html", dict(draw=draw))
+
+    stats = {
+        'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
+        'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
+        'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
+    }
+    return r2r(request, "results.html", dict(draw=draw, stats=stats))
 
 def monkey_results(request, round):
 

@@ -14,19 +14,27 @@
         } );
 
     </script>
+    <style>
+        #stats { text-align: left; }
+        #stats .none { color: red; }
+        #stats .unconfirmed { color: blue; }
+        #stats .confirmed { color: green; }
+    </style>
 {% endblock extra-head %}
 
 {% block extra-style %}
     @import "/static/css/demo_table.css";
 {% endblock %}
 
-{% block h1 %} Draw for Round {{ round }} (Debates Confirmed){% endblock %}
+{% block h1 %} Result for Round {{ round }}{% endblock %}
 
 {% block content %}
 
-<p>
-Enter results.
-</p>
+<table id="stats">
+    <tr class="none"><th>No result</th><td>{{ stats.none }}</td></tr>
+    <tr class="unconfirmed"><th>Unconfirmed</th><td>{{ stats.draft }}</td></tr>
+    <tr class="confirmed"><th>Confirmed</th><td>{{ stats.confirmed }}</td></tr>
+</table>
 
 <table id="dataTable" class="display" cellpadding="0" cellspacing="0">
     <thead>
