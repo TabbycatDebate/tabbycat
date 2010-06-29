@@ -204,6 +204,8 @@ class Adjudicator(Person):
     test_score = models.FloatField(default=0)
 
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
+
+    is_trainee = models.BooleanField(default=False)
    
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
