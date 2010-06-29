@@ -198,6 +198,12 @@ class Speaker(Person):
         return unicode(self.name)
 
 
+class AdjudicatorManager(models.Manager):
+    use_for_related_fields = True
+
+    def accredited(self):
+        return self.filter(is_trainee=False)
+
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
     cv_score = models.FloatField(default=0)
@@ -206,6 +212,8 @@ class Adjudicator(Person):
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
 
     is_trainee = models.BooleanField(default=False)
+
+    objects = AdjudicatorManager()
    
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
@@ -358,7 +366,7 @@ class Round(models.Model):
             raise
 
         debates = self.debates()
-        adjs = list(self.active_adjudicators.all())
+        adjs = list(self.active_adjudicators.accredited())
         allocator = alloc_class(debates, adjs)
 
         for alloc in allocator.allocate():
