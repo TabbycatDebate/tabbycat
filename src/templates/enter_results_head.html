@@ -2,6 +2,12 @@
     #resultsForm input[type='text'] {
         width: 4em;
     }
+    select.sp_error {
+        border: 2px solid red;
+    }
+    select {
+        border: 1px solid black;
+    }
 </style>
 
 <script type="text/javascript">
@@ -46,19 +52,54 @@
             refresh_totals($(this));
         });
 
+        function update_speakers() {
+            $('#resultsForm select').each(update_speaker);
+        }
+
         function update_speaker() {
             // e.g. id_aff_speaker_1
             var parts = $(this).attr('id').split('_');
-            var val = $(':selected', this).text();
+            var speaker = $(':selected', this).text();
 
             // e.g. '.aff.s1 label'
             var side = parts[1];
             var pos = parts[3];
 
-            $('.' + side + '.s' + pos + ' label').html(val);
+            $('.' + side + '.s' + pos + ' label').html(speaker);
+
+            var others;
+            if (pos == '1') {
+                others = [2, 3];
+            } else if (pos == '2') {
+                others = [1, 3];
+            } else if (pos == '3') {
+                others = [1, 2];
+            } else {
+                others = [];
+            }
+
+            var dupe = false;
+            $.each(others, function(idx, val) {
+                $sel = $('#id_'+parts[1]+'_speaker_'+val);
+                if ($(':selected', $sel).text() == speaker) {
+                    dupe = true;
+                };
+            });
+            if (dupe) {
+                $(this).addClass('sp_error');
+            } else {
+                $(this).removeClass('sp_error');
+            }
         }
 
-        $('.speaker select').change(update_speaker).each(update_speaker);
+        $('.speaker select').change(update_speakers).each(update_speaker);
+
+        $('#resultsForm').submit(function() {
+            if ($('.sp_error', this).length) {
+                alert("Fix errors!!");
+                return false;
+            }
+        });
 
     });
 </script>
