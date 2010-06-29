@@ -28,7 +28,12 @@
 
 <table id="dataTable" class="display" cellspacing="0" cellpadding="0">
     <thead>
-        <tr><th>Rank</th><th>Team</th><th>Points</th><th>Total Score</th><th>Affs</th></tr>
+        <tr><th>Rank</th><th>Team</th><th>Points</th>
+            {% for round in rounds %}
+            <th>{{ round }}</th>
+            {% endfor %}
+            <th>Total Score</th><th>Affs</th>
+        </tr>
     </thead>
     <tbody>
     {% for team in teams %}
@@ -37,6 +42,9 @@
         <td>{{ forloop.counter }}</td>
         <td><a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</a></td>
         <td>{{ team.points }}</td>
+        {% for score in team.scores %}
+        <td>{{ score|stringformat:".2f" }}</td>
+        {% endfor %}
         <td>{{ team.speaker_score|stringformat:".2f" }}</td>
         <td>{% aff_count team round %}</td>
     </tr>

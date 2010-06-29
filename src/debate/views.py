@@ -324,11 +324,26 @@ def enter_result(request, t, debate_id):
 @admin_required
 @round_view
 def team_standings(request, round):
+    from debate.models import TeamScore
     teams = Team.objects.standings(round)
+
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                  seq__lte=round.seq).order_by('seq')
+
+    def get_score(team, r):
+        try:
+            return TeamScore.objects.get(
+                debate_team__team=team,
+                debate_team__debate__round=r,
+            ).score
+        except TeamScore.DoesNotExist:
+            return None
+
     for team in teams:
         setattr(team, 'results_in', team.results_count >= round.seq)
+        team.scores = [get_score(team, r) for r in rounds]
 
-    return r2r(request, 'team_standings.html', dict(teams=teams))
+    return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds))
 
 @admin_required
 @round_view

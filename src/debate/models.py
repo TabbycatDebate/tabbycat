@@ -346,9 +346,6 @@ class Round(models.Model):
     def __unicode__(self):
         return unicode(self.id)
     
-    def debates(self):
-        return Debate.objects.filter(round=self)
-    
     def _drawer(self):
         return self.DRAW_CLASS[self.type]
 
@@ -371,7 +368,7 @@ class Round(models.Model):
         if self.draw_status != self.STATUS_CONFIRMED:
             raise
 
-        debates = self.debates()
+        debates = self.get_draw()
         adjs = list(self.active_adjudicators.accredited())
         allocator = alloc_class(debates, adjs)
 
@@ -381,17 +378,25 @@ class Round(models.Model):
         self.save()
 
     def get_draw(self):
-        return Debate.objects.filter(round=self)
+        # -bracket is included for ateneo data, which doesn't have room_rank
+        return Debate.objects.filter(round=self).order_by('room_rank',
+                                                          '-bracket')
         
     def make_debates(self, pairs):
         import random
 
+
         venues = list(self.active_venues.all())[:len(pairs)]
-        random.shuffle(venues)
-        
-        for pair in pairs:
+        for v in venues:
+            v.rnd = random.random() * 0.1
+
+        # sort venues by priority, but randomized within the same rank
+        venues.sort(key=lambda v: v.priority + v.rnd, reverse=True)
+
+        for i, pair in enumerate(pairs):
             debate = Debate(round=self, venue=venues.pop(0))
             debate.bracket = max(0, pair[0].points, pair[1].points)
+            debate.room_rank = i+1
             debate.save()
             
             aff = DebateTeam(debate=debate, team=pair[0], position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -567,6 +572,7 @@ class Debate(models.Model):
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue, blank=True, null=True)
     bracket = models.IntegerField(default=0)
+    room_rank = models.IntegerField(default=0)
     importance = models.IntegerField(blank=True, null=True)
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                                     default=STATUS_NONE)

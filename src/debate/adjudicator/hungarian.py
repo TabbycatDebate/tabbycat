@@ -21,7 +21,7 @@ class HungarianAllocator(Allocator):
         self.CONFLICT_PENALTY = config.get('adj_conflict_penalty')
         self.HISTORY_PENALTY = config.get('adj_history_penalty')
 
-    def calc_cost(self, debate, adj):
+    def calc_cost(self, debate, adj, adjustment=0):
         cost = 0
 
         cost += self.CONFLICT_PENALTY * adj.conflict_with(debate.aff_team)
@@ -29,12 +29,12 @@ class HungarianAllocator(Allocator):
         cost += self.HISTORY_PENALTY * adj.seen_team(debate.aff_team, debate.round)
         cost += self.HISTORY_PENALTY * adj.seen_team(debate.neg_team, debate.round)
 
-        impt = debate.importance or 0
+        impt = (debate.importance + adjustment) or 0
         diff = impt - adj.score
-        if diff > 0:
+        if diff > 0.25:
             cost += 10000 * exp(diff - 0.25)
 
-        cost += (self.MAX_SCORE - adj.score) * 1000
+        cost += (self.MAX_SCORE - adj.score) * 100
 
         return cost
 
@@ -106,8 +106,17 @@ class HungarianAllocator(Allocator):
             cost_matrix = [[0] * npan for i in range(npan)]
             for i, debate in enumerate(panel_debates):
                 for j in range(3):
+
+                    # for the top half of these debates, the final panellist 
+                    # can be of lower quality than the other 2
+                    if i < npan/2 and j==2:
+                        adjustment = -1.0
+                    else:
+                        adjustment = 0
+
                     for k, adj in enumerate(panellists):
-                        cost_matrix[3*i+j][k] = self.calc_cost(debate, adj)
+                        cost_matrix[3*i+j][k] = self.calc_cost(debate, adj,
+                                                               adjustment)
 
             print "optimizing"
 

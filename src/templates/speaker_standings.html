@@ -41,9 +41,9 @@
         <td>{{ speaker.name }}</td>
         <td>{{ speaker.team }}</td>
         {% for score in speaker.scores %}
-        <td>{{ score }}</td>
+        <td>{{ score|stringformat:".2f" }}</td>
         {% endfor %}
-        <td>{{ speaker.total }}</td>
+        <td>{{ speaker.total|stringformat:".2f" }}</td>
     </tr>
     {% endfor %}
 </table>
