@@ -219,8 +219,11 @@ class Adjudicator(Person):
         return u"%s (%s)" % (self.name, self.institution.code)
     
     def conflict_with(self, team):
-        return AdjudicatorConflict.objects.filter(adjudicator=self,
-                                                  team=team).count()
+        if not hasattr(self, '_conflict_cache'):
+            self._conflict_cache = set(c['team_id'] for c in
+                AdjudicatorConflict.objects.filter(adjudicator=self).values('team_id')
+            )
+        return team.id in self._conflict_cache
 
     @property
     def tournament(self):
@@ -253,15 +256,18 @@ class Adjudicator(Person):
         return AdjudicatorFeedback.objects.filter(adjudicator=self)
 
     def seen_team(self, team, before_round=None):
-        d = DebateAdjudicator.objects.filter(
-            adjudicator = self,
-            debate__debateteam__team = team,
-        )
-        if before_round is not None:
-            d = d.filter(
-                debate__round__seq__lt = before_round.seq
+        if not hasattr(self, '_seen_cache'):
+            self._seen_cache = {}
+        if before_round not in self._seen_cache:
+            qs = DebateTeam.objects.filter(
+                debate__debateadjudicator__adjudicator=self
             )
-        return d.count()
+            if before_round is not None:
+                qs = qs.filter(
+                    debate__round__seq__lt = before_round.seq
+                )
+            self._seen_cache[before_round] = set(dt.team.id for dt in qs)
+        return team.id in self._seen_cache[before_round] 
 
     def seen_adjudicator(self, adj, before_round=None):
         d = DebateAdjudicator.objects.filter(

@@ -44,16 +44,21 @@ class HungarianAllocator(Allocator):
         self.debates_sorted = list(self.debates)
         self.debates_sorted.sort(key=lambda a: a.importance, reverse=True)
 
+        n_adjudicators = len(self.adjudicators)
+        n_debates = len(self.debates)
+
+        n_solos = n_debates - (n_adjudicators - n_debates)/2
+
         # get adjudicators that can adjudicate solo
-        chairs = [a for a in self.adjudicators_sorted if a.score >
-                  self.CHAIR_CUTOFF]
+        chairs = self.adjudicators_sorted[:n_solos]
+        #chairs = [a for a in self.adjudicators_sorted if a.score >
+        #          self.CHAIR_CUTOFF]
 
         # get debates that will be judged by solo adjudicators
         chair_debates = self.debates_sorted[:len(chairs)]
 
         panel_debates = self.debates_sorted[len(chairs):]
-        panellists = [a for a in self.adjudicators_sorted if self.MIN_SCORE <
-                      a.score < self.CHAIR_CUTOFF]
+        panellists = [a for a in self.adjudicators_sorted if a not in chairs]
 
         assert len(panel_debates) * 3 <= len(panellists)
 
