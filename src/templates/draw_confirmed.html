@@ -54,7 +54,7 @@ Here's the confirmed draw.
     </thead>
     <tbody>
     {% for debate in draw %}
-    <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+    <tr class="{{ debate.all_conflicts|yesno:'conflict,' }} {% if not debate.adjudicators_display %}inactive{% endif %}">
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td title="{% aff_count debate.aff_team round.prev %}">

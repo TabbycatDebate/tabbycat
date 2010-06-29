@@ -18,13 +18,16 @@ class HungarianAllocator(Allocator):
         self.MIN_SCORE = config.get('adj_min_score')
         self.CHAIR_CUTOFF = config.get('adj_chair_min_score')
 
+        self.CONFLICT_PENALTY = config.get('adj_conflict_penalty')
+        self.HISTORY_PENALTY = config.get('adj_history_penalty')
+
     def calc_cost(self, debate, adj):
         cost = 0
 
-        cost += 1000000 * adj.conflict_with(debate.aff_team)
-        cost += 1000000 * adj.conflict_with(debate.neg_team)
-        cost += 10000 * adj.seen_team(debate.aff_team, debate.round)
-        cost += 10000 * adj.seen_team(debate.neg_team, debate.round)
+        cost += self.CONFLICT_PENALTY * adj.conflict_with(debate.aff_team)
+        cost += self.CONFLICT_PENALTY * adj.conflict_with(debate.neg_team)
+        cost += self.HISTORY_PENALTY * adj.seen_team(debate.aff_team, debate.round)
+        cost += self.HISTORY_PENALTY * adj.seen_team(debate.neg_team, debate.round)
 
         impt = debate.importance or 0
         diff = impt - adj.score

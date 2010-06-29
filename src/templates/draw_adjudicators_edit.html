@@ -359,6 +359,11 @@
             var data = {};
             $("#dataTable tbody tr").each( function() {
                 var debateId = intId(this);
+                // sole purpose of this value is to identify that this
+                // debate is being saved, so that if the following values
+                // are blank, the allocation for this debate still gets
+                // processed (and cleared)
+                data['debate_' + debateId] = true;
                 $(".chair-holder .adj", this).each( function() {
                     data['chair_' + debateId] = intId(this);
                 } );
