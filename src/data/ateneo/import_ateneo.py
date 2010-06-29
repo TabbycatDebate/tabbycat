@@ -31,7 +31,8 @@ class Importer(object):
             id, name, test_score, institution_id, active, c, u = line.split('\t')
             a = m.Adjudicator(name=name.strip(),
                             institution=self.institutions[int(institution_id)],
-                            test_score = float(test_score))
+                            test_score = float(test_score),
+                             cv_score = float(test_score))
             a.save()
             self.adjudicators[int(id)] = a
 

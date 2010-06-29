@@ -220,17 +220,23 @@ class Adjudicator(Person):
     def score(self):
         weight = self.tournament.current_round.feedback_weight
 
+        feedback_score = self._feedback_score()
+        if feedback_score is None:
+            feedback_score = 0
+            weight = 0
+
         return (self.cv_score + self.test_score)/2.0 * (1 - weight) + (weight *
-    self.feedback_score)
+    feedback_score)
 
 
-    @property
-    def feedback_score(self):
-        avg_score = AdjudicatorFeedback.objects.filter(
+    def _feedback_score(self):
+        return AdjudicatorFeedback.objects.filter(
             adjudicator = self,
         ).aggregate(avg=models.Avg('score'))['avg']
 
-        return avg_score or 0
+    @property
+    def feedback_score(self):
+        return self._feedback_score() or 0
 
 
     def get_feedback(self):
