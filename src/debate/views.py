@@ -287,6 +287,8 @@ def monkey_results(request, round):
         raise Http404()
 
     draw = round.get_draw()
+    draw = draw.filter(result_status__in=(Debate.STATUS_NONE,
+                                           Debate.STATUS_DRAFT))
     return r2r(request, "monkey/results.html", dict(draw=draw))
 
 
