@@ -3,6 +3,26 @@
 {% block head-title %}Checkin{% endblock %}
 
 {% block extra-head %}
+<style>
+        body {
+            background: #f6f6f6;
+            text-align: center;
+        }
+        #logo { text-align: center; }
+        #container {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 300px;
+            margin: 100px auto;
+        }
+        h1, h2 { text-align: center; }
+        #container h1 {
+            margin: 30px auto 14pz;
+            margin-top: 30px;
+        }
+
+</style>
 <script>
     $(document).ready(function() {
         setInterval( function() {
@@ -14,7 +34,14 @@
 
 {% block body %}
 <div id="container">
-    <h1>Round {{ round }}</h1>
+    <div id="logo">
+    <img src="/static/images/australs.png" />
+    </div>
+    <h1>Check in for Round {{ round }}</h1>
+
+    <h2>
+        Please scan your ID card.
+    </h2>
 
     {% if person %}
     <div class="success box">
