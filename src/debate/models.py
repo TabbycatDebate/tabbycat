@@ -99,7 +99,7 @@ class Team(models.Model):
     objects = TeamManager()
     
     def __unicode__(self):
-        return u"%s (%s)" % (self.name, self.institution.code)
+        return unicode(self.name)
 
     def get_aff_count(self, seq=None):
         return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)
@@ -292,7 +292,7 @@ class RoundManager(models.Manager):
 
     def get_query_set(self):
         return super(RoundManager,
-                     self).get_query_set().select_related('tournament')
+                     self).get_query_set().select_related('tournament').order_by('seq')
 
 
 class Round(models.Model):

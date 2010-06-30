@@ -85,7 +85,7 @@
                     dupe = true;
                 };
             });
-            if (dupe) {
+            if (dupe || speaker === '---------') {
                 $(this).addClass('sp_error');
             } else {
                 $(this).removeClass('sp_error');

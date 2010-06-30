@@ -6,7 +6,7 @@ def main():
     t = m.Tournament(slug='australs')
     t.save()
 
-    for i in range(1, 8):
+    for i in range(1, 9):
         if i == 1:
             rtype = m.Round.TYPE_RANDOM
         else:
@@ -17,7 +17,7 @@ def main():
             seq = i,
             name = 'Round %d' % i,
             type = rtype,
-            feedback_weight = max((i-1)*0.1, 0.5),
+            feedback_weight = min((i-1)*0.1, 0.5),
         ).save()
 
     t.current_round = m.Round.objects.get(tournament=t, seq=1)
@@ -87,7 +87,14 @@ def main():
         r.activate_all()
 
     from django.contrib.auth.models import User
-    User.objects.create_user('monkey', 'qishan@gmail.com', 'monkey')
+
+    from debate.models import Adjudicator
+    for adj in Adjudicator.objects.all():
+        for team in m.Team.objects.filter(institution=adj.institution):
+            m.AdjudicatorConflict(
+                adjudicator = adj,
+                team = team,
+            ).save()
 
 
 
