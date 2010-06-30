@@ -46,8 +46,11 @@ class Tournament(models.Model):
 
 class Institution(models.Model):
     tournament = models.ForeignKey(Tournament)
-    code = models.CharField(max_length=20, unique=True)
-    name = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=20)
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        unique_together = ('tournament', 'code')
     
     def __unicode__(self):
         return unicode(self.name) 
@@ -338,13 +341,13 @@ class Round(models.Model):
                                                  through='ActiveAdjudicator')
     active_teams = models.ManyToManyField('Team', through='ActiveTeam')
 
-    feedback_weight = models.FloatField(default=1)
+    feedback_weight = models.FloatField(default=0)
 
     class Meta:
         unique_together = ('tournament', 'seq')
 
     def __unicode__(self):
-        return unicode(self.id)
+        return unicode(self.seq)
     
     def _drawer(self):
         return self.DRAW_CLASS[self.type]
