@@ -86,6 +86,9 @@ def main():
     for r in m.Round.objects.all():
         r.activate_all()
 
+    from django.contrib.auth.models import User
+    User.objects.create_user('monkey', 'qishan@gmail.com', 'monkey')
+
 
 
 if __name__ == '__main__':
