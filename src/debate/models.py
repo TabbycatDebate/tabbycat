@@ -386,15 +386,10 @@ class Round(models.Model):
                                                           '-bracket')
         
     def make_debates(self, pairs):
+
         import random
-
-
         venues = list(self.active_venues.all())[:len(pairs)]
-        for v in venues:
-            v.rnd = random.random() * 0.1
-
-        # sort venues by priority, but randomized within the same rank
-        venues.sort(key=lambda v: v.priority + v.rnd, reverse=True)
+        random.shuffle(venues)
 
         for i, pair in enumerate(pairs):
             debate = Debate(round=self, venue=venues.pop(0))

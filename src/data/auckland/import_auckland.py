@@ -83,18 +83,40 @@ def main():
 
 
     # TODO [remove]
-    for r in m.Round.objects.all():
-        r.activate_all()
+    #for r in m.Round.objects.all():
+    #    r.activate_all()
 
     from django.contrib.auth.models import User
 
-    from debate.models import Adjudicator
-    for adj in Adjudicator.objects.all():
-        for team in m.Team.objects.filter(institution=adj.institution):
+    def add_conflicts(adj, teams):
+        for team in teams:
             m.AdjudicatorConflict(
                 adjudicator = adj,
                 team = team,
             ).save()
+
+    from debate.models import Adjudicator
+    for adj in Adjudicator.objects.all():
+        add_conflicts(adj, m.Team.objects.filter(institution=adj.institution))
+
+    reader = csv.reader(open('conflicts.csv'))
+    for data in reader:
+        barcode, institution, first, last, personal, add_institution = data
+        adj = Adjudicator.objects.get(barcode_id=barcode)
+
+        for ins_code in add_institution.split(','):
+            ins_code = ins_code.strip()
+            if ins_code:
+                print ins_code
+                ins = m.Institution.objects.get(code=ins_code, tournament=t)
+                add_conflicts(adj, m.Team.objects.filter(institution=ins))
+
+        for team_name in personal.split(','):
+            team_name = team_name.strip()
+            if team_name:
+                print team_name
+                team = m.Team.objects.get(name=team_name, institution__tournament=t)
+                add_conflicts(adj, [team])
 
 
 
