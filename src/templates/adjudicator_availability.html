@@ -6,13 +6,12 @@
 {% block h1 %}Adjudicator Availability for Round {{ round }}{% endblock %}
 
 {% block table-contents %}
-<thead><tr><th>Adjudicator</th><th>Institution</th><th>CV</th><th>Test</th><th>Feedback</th><th>Score</th><th>Active</th></tr></thead>
+<thead><tr><th>Adjudicator</th><th>Institution</th><th>Test</th><th>Feedback</th><th>Score</th><th>Active</th></tr></thead>
     <tbody>
         {% for adj in adjudicators %}
         <tr>
             <td>{{ adj.name }}</td>
             <td>{{ adj.institution.name }}</td>
-            <td>{{ adj.cv_score }}</td>
             <td>{{ adj.test_score }}</td>
             <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
             <td>{{ adj.score|stringformat:".2f" }}</td>

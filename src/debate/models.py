@@ -209,7 +209,6 @@ class AdjudicatorManager(models.Manager):
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
-    cv_score = models.FloatField(default=0)
     test_score = models.FloatField(default=0)
 
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
@@ -241,7 +240,7 @@ class Adjudicator(Person):
             feedback_score = 0
             weight = 0
 
-        return (self.cv_score + self.test_score)/2.0 * (1 - weight) + (weight *
+        return self.test_score * (1 - weight) + (weight *
     feedback_score)
 
 
