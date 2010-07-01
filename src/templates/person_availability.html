@@ -1,0 +1,25 @@
+{% extends "base_availability.html" %}
+
+{% load debate_tags %}
+{% block update-url %}{% round_url update_venue_availability %}{% endblock %}
+
+{% block h1 %}Checkins for Round {{ round }}{% endblock %}
+
+{% block table-contents %}
+    <thead><tr><th>Team</th><th>Name</th><th>Checked in</th><th>Barcode</th></tr></thead>
+    <tbody>
+        {% for person in people %}
+        <tr>
+            {% if person.speaker %}
+            <td>{{ person.speaker.team }}</td>
+            {% else %}
+            <td>{{ person.adjudicator.institution.code }} Judge</td>
+            {% endif %}
+            <td>{{ person.name }}</td>
+            <td><input type="checkbox" {{ person.checked_in|yesno:'checked="yes",'  }} name="check_{{ person.id }}"  value="{{ person.id }}" /></td>
+            <td>{{ person.barcode_id }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+{% endblock table-contents %}
+

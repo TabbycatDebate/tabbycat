@@ -421,6 +421,12 @@ class Round(models.Model):
                                                  %(model_table)s.%(id_field)s and
                                                  drav.round_id=%(id)d)""" % d })
 
+    def person_availability(self):
+        return self.base_availability(Person, 'debate_checkin', 'person_id',
+                                      'debate_person')
+
+
+
     def venue_availability(self):
         return self.base_availability(Venue, 'debate_activevenue', 'venue_id',
                                       'debate_venue')

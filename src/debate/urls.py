@@ -19,6 +19,11 @@ urlpatterns = patterns('debate.views',
     url(r'^round/(?P<round_seq>\d+)/adjudicators/update/$',
         'update_availability', { 'update_method': 'set_available_adjudicators' }, 'update_adjudicator_availability'),
 
+    url(r'^round/(?P<round_seq>\d+)/people/$',
+        'availability', { 'model': 'person', 'context_name': 'people' }, 'people_availability'),
+    url(r'^round/(?P<round_seq>\d+)/people/update/$',
+        'update_availability', { 'update_method': 'set_available_people' }, 'update_people_availability'),
+
     url(r'^round/(?P<round_seq>\d+)/teams/$',
         'availability', { 'model': 'team', 'context_name': 'teams' }, 'team_availability'),
     url(r'^round/(?P<round_seq>\d+)/teams/update/$',

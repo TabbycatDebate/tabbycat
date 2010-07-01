@@ -138,6 +138,7 @@ def checkin(request, round):
 
     return r2r(request, 'checkin.html', context)
 
+
 @admin_required
 @round_view
 def availability(request, round, model, context_name):
