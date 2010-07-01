@@ -56,11 +56,20 @@ def main():
             ).save()
 
     #TODO (dummy venues)
-    for i in range(1, 52):
+    reader = csv.reader(open('venues.csv'))
+    for data in reader:
+        building, group, room, priority = data[:4]
+
+        try:
+            group = int(group)
+        except ValueError:
+            group = None
+
         m.Venue(
             tournament = t,
-            name = 'Room %02d' % i,
-            priority = 10-(i//10),
+            group = group,
+            name = '%s %s' % (building, room),
+            priority = priority,
         ).save()
 
     # swing team

@@ -522,6 +522,7 @@ class Round(models.Model):
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
+    group = models.IntegerField(null=True, blank=True)
     priority = models.IntegerField()
     tournament = models.ForeignKey(Tournament)
 
