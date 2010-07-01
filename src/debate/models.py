@@ -383,6 +383,9 @@ class Round(models.Model):
         # -bracket is included for ateneo data, which doesn't have room_rank
         return Debate.objects.filter(round=self).order_by('room_rank',
                                                           '-bracket')
+
+    def get_unordered_draw(self):
+        return Debate.objects.filter(round=self).order_by('venue__name')
         
     def make_debates(self, pairs):
 

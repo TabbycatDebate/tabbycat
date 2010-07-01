@@ -1,17 +1,18 @@
 {% load debate_tags %}
 
-<table id="draw" class="display" cellpadding="0" cellspacing="0">
-    <thead>
+<table style="padding: 3px;" id="draw" class="display" cellpadding="0" cellspacing="0">
+    <thead style="font-weight:bold;">
         <tr><th>Venue</th><th>Affirmative</th><th>Negative</th><th>Adjudicators</th></tr>
     </thead>
     <tbody>
-    {% for debate in draw %}
-    <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
-        <td>{{ debate.venue.name }}</td>
-        <td title="{% aff_count debate.aff_team round.prev %}">{{ debate.aff_team.name }}</td>
-        <td title="{% neg_count debate.neg_team round.prev %}">{{ debate.neg_team.name }}</td>
-        <td>{{ debate.adjudicators_display }}</td>
-    </tr>
-    {% endfor %}
+        {% for debate in draw %}
+        <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+            <td>{{ debate.venue.name }}</td>
+            <td title="{% aff_count debate.aff_team round.prev %}">{{ debate.aff_team.name }}</td>
+            <td title="{% neg_count debate.neg_team round.prev %}">{{ debate.neg_team.name }}</td>
+            <td>{{ debate.adjudicators_display }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 

@@ -171,9 +171,9 @@ def wordpress_post_draw(request, round):
 
     post = wordpresslib.WordPressPost()
     post.title = 'Draw for Round %d' % round.seq
+    draw = round.get_unordered_draw()
     post.description = str(render_to_string('wp_draw.html', {'round': round,
-                                                             'draw':
-                                                             round.get_draw()}))
+                                                             'draw': draw}))
 
     post.categories = (settings.WORDPRESS_DRAW_CATEGORY_ID,)
 
