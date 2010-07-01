@@ -32,11 +32,11 @@ class HungarianAllocator(Allocator):
         impt = (debate.importance or 0) + adjustment
         diff = impt - adj.score
         import random
-        random.seed(adj.name)
+        random.seed(adj.name+str(debate))
         if diff > 0.25:
             cost += 10000 * exp(diff - 0.25)
 
-        cost += random.random()
+        cost += random.uniform(1, 100)
 
         cost += (self.MAX_SCORE - adj.score) * 100
 
