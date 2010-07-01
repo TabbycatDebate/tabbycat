@@ -1,0 +1,2 @@
+#!/bin/bash
+pg_restore -U debate -c  $1 |psql -U debate
