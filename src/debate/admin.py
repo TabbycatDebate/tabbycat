@@ -35,7 +35,7 @@ class AdjudicatorAdmin(admin.ModelAdmin):
 admin.site.register(models.Adjudicator, AdjudicatorAdmin)
 
 class VenueAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'group', 'priority')
     search_fields = ('name',)
 admin.site.register(models.Venue, VenueAdmin)
 
