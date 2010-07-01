@@ -371,7 +371,7 @@ class Round(models.Model):
             raise
 
         debates = self.get_draw()
-        adjs = list(self.active_adjudicators.accredited())
+        adjs = list(self.active_adjudicators.accredited().filter(test_score__gt=0))
         allocator = alloc_class(debates, adjs)
 
         for alloc in allocator.allocate():

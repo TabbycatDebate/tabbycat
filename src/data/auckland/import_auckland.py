@@ -110,8 +110,16 @@ def main():
 
     reader = csv.reader(open('conflicts.csv'))
     for data in reader:
-        barcode, institution, first, last, personal, add_institution = data
+        barcode, institution, first, last, personal, add_institution, score = data
         adj = Adjudicator.objects.get(barcode_id=barcode)
+
+        if score == 'T':
+            adj.is_trainee = True
+            adj.test_score = 1
+        elif score.strip():
+            adj.test_score = float(score)
+
+        adj.save()
 
         for ins_code in add_institution.split(','):
             ins_code = ins_code.strip()
