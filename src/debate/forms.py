@@ -167,7 +167,8 @@ def make_feedback_form_class(adjudicator):
     def adj_choice(da):
         return (
             'A:%d' % da.id, 
-            '(%d) %s' % (da.debate.round.seq, da.adjudicator.name)
+            '(%d) %s (%s)' % (da.debate.round.seq, da.adjudicator.name, 
+                           da.type)
         )
 
     adj_choices = [(None, '-- Adjudicators --')]
