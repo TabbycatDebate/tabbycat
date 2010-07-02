@@ -227,15 +227,23 @@ def make_feedback_form_class(adjudicator):
             else:
                 st = None
 
-            a, c = AdjudicatorFeedback.objects.get_or_create(
-                adjudicator = adjudicator,
-                source_adjudicator = sa,
-                source_team = st,
-            )
-            a.score = self.cleaned_data['score']
-            a.comments = self.cleaned_data['comment']
+            try:
+                af = AdjudicatorFeedback.objects.get(
+                    adjudicator = adjudicator,
+                    source_adjudicator = sa,
+                    source_team = st,
+                )
+            except AdjudicatorFeedback.DoesNotExist:
+                af = AdjudicatorFeedback(
+                    adjudicator = adjudicator,
+                    source_adjudicator = sa,
+                    source_team = st,
+                )
 
-            a.save()
+            af.score = self.cleaned_data['score']
+            af.comments = self.cleaned_data['comment']
+
+            af.save()
 
 
 
