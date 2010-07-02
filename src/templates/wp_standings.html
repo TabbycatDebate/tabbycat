@@ -1,0 +1,16 @@
+{% load debate_tags %}
+
+<table style="padding: 3px;" id="draw" class="display" cellpadding="0" cellspacing="4">
+    <thead style="font-weight:bold; text-align: left;">
+        <tr><th>Wins</th><th>Team</th></tr>
+    </thead>
+    <tbody>
+        {% for team in teams %}
+        <tr style="background-color: {% cycle '#eef' '#fff' %};">
+            <td>{{ team.points}}</td>
+            <td>{{ team }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
