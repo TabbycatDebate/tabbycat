@@ -182,6 +182,27 @@ def wordpress_post_draw(request, round):
 
     return redirect_round('draw', round)
 
+@admin_required
+@expect_post
+@round_view
+def wordpress_post_standings(request, round):
+    from debate.models import TeamScore
+
+    teams = Team.objects.standings(round).order_by('-points', 'name')
+
+    client = get_wordpress_client()
+
+    post = wordpresslib.WordPressPost()
+    post.title = 'Standings after Round %d' % round.seq
+    post.description = str(render_to_string('wp_standings.html', {'teams':
+                                                                  teams},))
+
+    post.categories = (settings.WORDPRESS_DRAW_CATEGORY_ID,)
+
+    post_id = client.newPost(post, False)
+
+    return redirect_round('draw', round)
+
 
 @admin_required
 @round_view

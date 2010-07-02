@@ -20,6 +20,9 @@
             $('#wpPostLink').click( function() {
                 $('#wpPostForm').submit();
             } );
+            $('#wpPostStandLink').click( function() {
+                $('#wpPostStandForm').submit();
+            } );
 
         } );
 
@@ -40,9 +43,13 @@ Here's the confirmed draw.
 <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
 <a href="{% round_url draw_display %}">Draw for display</a>.
 <a id="wpPostLink" href="#">Post Draw to Website</a>
+<a id="wpPostStandLink" href="#">Post Standings to Website</a>
 </p>
 
 <form id="wpPostForm" method="POST" action="{% round_url wordpress_post_draw %}">
+</form>
+
+<form id="wpPostStandForm" method="POST" action="{% round_url wordpress_post_standings %}">
 </form>
 
 <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}">
