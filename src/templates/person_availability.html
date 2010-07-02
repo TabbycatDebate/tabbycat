@@ -1,7 +1,8 @@
 {% extends "base_availability.html" %}
 
 {% load debate_tags %}
-{% block update-url %}{% round_url update_venue_availability %}{% endblock %}
+{% block update-url %}{% round_url update_people_availability  %}{% endblock %}
+{% block post-success %}location.reload();{% endblock %}
 
 {% block h1 %}Checkins for Round {{ round }}{% endblock %}
 

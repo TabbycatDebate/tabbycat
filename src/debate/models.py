@@ -461,7 +461,7 @@ class Round(models.Model):
                                       'debate_team')
 
     def set_available_base(self, ids, model, active_model, get_active,
-                             id_column, active_id_column):
+                             id_column, active_id_column, remove=True):
         ids = set(ids)
         all_ids = set(a['id'] for a in model.objects.values('id'))
         exclude_ids = all_ids.difference(ids)
@@ -470,15 +470,21 @@ class Round(models.Model):
         remove_ids = existing_ids.intersection(exclude_ids)
         add_ids = ids.difference(existing_ids)
 
-        active_model.objects.filter(**{
-            '%s__in' % active_id_column: remove_ids, 
-            'round': self,
-        }).delete()
+        if remove:
+            active_model.objects.filter(**{
+                '%s__in' % active_id_column: remove_ids, 
+                'round': self,
+            }).delete()
 
         for id in add_ids:
             m = active_model(round=self)
             setattr(m, id_column, id)
             m.save()
+
+    def set_available_people(self, ids):
+        return self.set_available_base(ids, Person, Checkin,
+                                      self.checkins, 'person_id',
+                                      'person__id', remove=False)
 
     def set_available_venues(self, ids):
         return self.set_available_base(ids, Venue, ActiveVenue,

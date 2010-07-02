@@ -74,6 +74,7 @@
                         checkboxes().each( function() {
                             updateCheckbox(this);
                         });
+                        {% block post-success %}{% endblock %}
 
                     },
                     error: function(req, txtStatus, err) {
