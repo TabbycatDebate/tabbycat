@@ -154,7 +154,17 @@ def availability(request, round, model, context_name):
 @admin_required
 @expect_post
 @round_view
-def update_availability(request, round, update_method):
+def update_availability(request, round, update_method, active_model, active_attr):
+
+    if request.POST.get('copy'):
+        prev_round = Round.objects.get(tournament=round.tournament,
+                                       seq=round.seq-1)
+
+        prev_objects = active_model.objects.filter(round=prev_round)
+        available_ids = [getattr(o, '%s_id' % active_attr) for o in prev_objects]
+        getattr(round, update_method)(available_ids)
+
+        return HttpResponseRedirect(request.path.replace('update/', ''))
 
     available_ids = [int(a.replace("check_", "")) for a in request.POST.keys()
                      if a.startswith("check_")]

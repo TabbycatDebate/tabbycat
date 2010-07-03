@@ -2,6 +2,8 @@ from django.conf.urls.defaults import *
 
 from django.core.urlresolvers import reverse
 
+from debate import models as m
+
 urlpatterns = patterns('debate.views',
     url(r'^$', 'tournament_home', name='tournament_home'),
     url(r'^config/$', 'tournament_config', name='tournament_config'),
@@ -12,22 +14,22 @@ urlpatterns = patterns('debate.views',
     url(r'^round/(?P<round_seq>\d+)/venues/$',
         'availability', { 'model': 'venue', 'context_name': 'venues' }, 'venue_availability'),
     url(r'^round/(?P<round_seq>\d+)/venues/update/$',
-        'update_availability', { 'update_method': 'set_available_venues' }, 'update_venue_availability'),
+        'update_availability', { 'active_attr': 'venue', 'active_model': m.ActiveVenue, 'update_method': 'set_available_venues' }, 'update_venue_availability'),
 
     url(r'^round/(?P<round_seq>\d+)/adjudicators/$',
         'availability', { 'model': 'adjudicator', 'context_name': 'adjudicators' }, 'adjudicator_availability'),
     url(r'^round/(?P<round_seq>\d+)/adjudicators/update/$',
-        'update_availability', { 'update_method': 'set_available_adjudicators' }, 'update_adjudicator_availability'),
+        'update_availability', { 'active_attr': 'adjudicator', 'active_model': m.ActiveAdjudicator, 'update_method': 'set_available_adjudicators' }, 'update_adjudicator_availability'),
 
     url(r'^round/(?P<round_seq>\d+)/people/$',
         'availability', { 'model': 'person', 'context_name': 'people' }, 'people_availability'),
     url(r'^round/(?P<round_seq>\d+)/people/update/$',
-        'update_availability', { 'update_method': 'set_available_people' }, 'update_people_availability'),
+        'update_availability', { 'active_attr': None, 'active_model': None, 'update_method': 'set_available_people' }, 'update_people_availability'),
 
     url(r'^round/(?P<round_seq>\d+)/teams/$',
         'availability', { 'model': 'team', 'context_name': 'teams' }, 'team_availability'),
     url(r'^round/(?P<round_seq>\d+)/teams/update/$',
-        'update_availability', { 'update_method': 'set_available_teams' }, 'update_team_availability'),
+        'update_availability', { 'active_attr': 'team', 'active_model': m.ActiveTeam, 'update_method': 'set_available_teams' }, 'update_team_availability'),
 
     url(r'^round/(?P<round_seq>\d+)/checkin/$', 'checkin',
         name='checkin'),

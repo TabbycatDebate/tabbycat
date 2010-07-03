@@ -56,7 +56,18 @@
                 }
             });
 
+            var update_url = "{% block update-url %}{% endblock %}";
             $("#dataTable tbody tr").addClass("clickable");
+
+            $('#btn_copy').click(function() {
+                var form = document.createElement("form");
+                $(form).attr('method', 'POST').attr('action', update_url).appendTo($('body'));
+                var input = document.createElement("input");
+                $(input).attr('type', 'hidden').attr('name', 'copy').attr('value', '1').appendTo(form);
+                form.submit();
+                return false;
+
+            });
 
             $("#form").submit( function() {
                 checkboxes().each( function(){
@@ -67,7 +78,7 @@
                 var sData = $("input", dTable.fnGetNodes()).serialize();
                 $.ajax({
                     type: "POST",
-                    url: "{% block update-url %}{% endblock %}",
+                    url: update_url,
                     data: sData,
                     success: function(data, txtStatus) {
                         venueState = newState;
@@ -109,6 +120,9 @@
 {% block content %}
 <form id="form">
     <div class="status">
+        {% block copy_btn %}
+        <button id="btn_copy" type="button">Copy from previous</button>
+        {% endblock %}
         <button type="submit">Save changes</button>
         <a id="select_all" href="#all">Select All</a>
     </div>
