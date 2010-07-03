@@ -246,7 +246,7 @@ def progress(request, round):
     }
     stats['in'] = stats['confirmed']
     stats['out'] = stats['none'] + stats['draft']
-    stats['pc'] = float(stats['in']) / (stats['out'] + stats['in'])
+    stats['pc'] = float(stats['in']) / (stats['out'] + stats['in']) * 100
 
     return r2r(request, "progress.html", stats)
 
