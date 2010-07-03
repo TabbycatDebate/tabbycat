@@ -234,6 +234,22 @@ def draw_display(request, round):
     draw = round.get_draw().order_by('venue__name')
     return r2r(request, "draw_display.html", dict(draw=draw))
 
+
+@round_view
+def progress(request, round):
+    draw = round.get_draw()
+
+    stats = {
+        'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
+        'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
+        'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
+    }
+    stats['in'] = stats['confirmed']
+    stats['out'] = stats['none'] + stats['draft']
+    stats['pc'] = float(stats['in']) / (stats['out'] + stats['in'])
+
+    return r2r(request, "progress.html", stats)
+
     
 @admin_required
 @round_view
