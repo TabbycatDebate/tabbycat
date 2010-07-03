@@ -138,6 +138,20 @@ def checkin(request, round):
 
     return r2r(request, 'checkin.html', context)
 
+@round_view
+def post_checkin(request, round):
+    v = request.POST.get('barcode_id')
+    try:
+        barcode_id = int(v)
+        p = Person.objects.get(barcode_id=barcode_id)
+        ch, created = Checkin.objects.get_or_create(
+            person = p,
+            round = round
+        )
+        return HttpResponse("Checked in %s" % p.name)
+
+    except (ValueError, Person.DoesNotExist):
+        return HttpResponse("Unknown Id: %s" % v)
 
 @admin_required
 @round_view

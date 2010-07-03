@@ -31,8 +31,8 @@ urlpatterns = patterns('debate.views',
     url(r'^round/(?P<round_seq>\d+)/teams/update/$',
         'update_availability', { 'active_attr': 'team', 'active_model': m.ActiveTeam, 'update_method': 'set_available_teams' }, 'update_team_availability'),
 
-    url(r'^round/(?P<round_seq>\d+)/checkin/$', 'checkin',
-        name='checkin'),
+    url(r'^round/(?P<round_seq>\d+)/checkin/$', 'checkin', name='checkin'),
+    url(r'^round/(?P<round_seq>\d+)/checkin/post/$', 'post_checkin', name='post_checkin'),
 
     url(r'^round/(?P<round_seq>\d+)/draw/$', 'draw',
         name='draw'),

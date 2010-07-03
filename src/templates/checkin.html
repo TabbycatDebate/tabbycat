@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load debate_tags %}
+
 {% block head-title %}Checkin{% endblock %}
 
 {% block extra-head %}
@@ -28,6 +30,25 @@
         setInterval( function() {
             $('#barcode_id').focus();
         }, 50);
+
+        $('#checkin_btn').click(function() {
+            $('#success').html("Checking....");
+            var val = $('#barcode_id').val();
+            $('#barcode_id').val('').focus();
+            $.ajax({
+                type: "POST",
+                url: "{% round_url post_checkin %}",
+                data: { barcode_id: val },
+                success: function(data, txtStatus) {
+                    $('#success').html(data);
+                },
+                error: function() {
+                    $('#success').html("Error checking card");
+                }
+
+            });
+            return false;
+        });
     });
 </script>
 {% endblock %}
@@ -43,11 +64,8 @@
         Please scan your ID card.
     </h2>
 
-    {% if person %}
-    <div class="success box">
-        Checked in {{ person.name }}
+    <div id="success" class="success box">
     </div>
-    {% endif %}
     {% if unknown_id %}
     <div class="error box">
         Unknown ID: {{ unknown_id }}
@@ -56,7 +74,7 @@
 
     <form method="POST" action=".">
         <input id="barcode_id" type="text" name="barcode_id" />
-        <input type="submit" name="submit" value="checkin" />
+        <input id="checkin_btn" type="submit" name="submit" value="checkin" />
     </form>
 
 </div>
