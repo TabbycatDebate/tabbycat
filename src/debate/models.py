@@ -178,7 +178,7 @@ class Person(models.Model):
     name = models.CharField(max_length=40)
     barcode_id = models.IntegerField(blank=True, null=True)
 
-    checkin_message = models.CharField(max_length=100, blank=True)
+    checkin_message = models.TextField(blank=True)
 
 class Checkin(models.Model):
     person = models.ForeignKey('Person')
