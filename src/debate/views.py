@@ -148,7 +148,12 @@ def post_checkin(request, round):
             person = p,
             round = round
         )
-        return HttpResponse("Checked in %s" % p.name)
+
+        message = p.checkin_message
+
+        if not message:
+            message = "Checked in %s" % p.name
+        return HttpResponse(message)
 
     except (ValueError, Person.DoesNotExist):
         return HttpResponse("Unknown Id: %s" % v)
