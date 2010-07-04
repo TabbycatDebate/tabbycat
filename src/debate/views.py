@@ -153,9 +153,7 @@ def post_checkin(request, round):
     except (ValueError, Person.DoesNotExist):
         return HttpResponse("Unknown Id: %s" % v)
 
-@admin_required
-@round_view
-def availability(request, round, model, context_name):
+def _availability(request, round, model, context_name):
 
     items = getattr(round, '%s_availability' % model)().order_by('name')
     
@@ -165,10 +163,17 @@ def availability(request, round, model, context_name):
 
     return r2r(request, '%s_availability.html' % model, context)
 
+
 @admin_required
-@expect_post
 @round_view
-def update_availability(request, round, update_method, active_model, active_attr):
+def availability(request, round, model, context_name):
+    return _availability(request, round, model, context_name)
+
+@round_view
+def checkin_results(request, round, model, context_name):
+    return _availability(request, round, model, context_name)
+
+def _update_availability(request, round, update_method, active_model, active_attr):
 
     if request.POST.get('copy'):
         prev_round = Round.objects.get(tournament=round.tournament,
@@ -186,6 +191,18 @@ def update_availability(request, round, update_method, active_model, active_attr
     getattr(round, update_method)(available_ids)
 
     return HttpResponse("ok")
+
+@admin_required
+@expect_post
+@round_view
+def update_availability(request, round, update_method, active_model, active_attr):
+    return _update_availability(request, round, update_method, active_model, active_attr)
+
+@expect_post
+@round_view
+def checkin_update(request, round, update_method, active_model, active_attr):
+    return _update_availability(request, round, update_method, active_model, active_attr)
+
 
 @admin_required
 @expect_post

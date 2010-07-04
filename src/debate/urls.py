@@ -22,9 +22,9 @@ urlpatterns = patterns('debate.views',
         'update_availability', { 'active_attr': 'adjudicator', 'active_model': m.ActiveAdjudicator, 'update_method': 'set_available_adjudicators' }, 'update_adjudicator_availability'),
 
     url(r'^round/(?P<round_seq>\d+)/people/$',
-        'availability', { 'model': 'person', 'context_name': 'people' }, 'people_availability'),
+        'checkin_results', { 'model': 'person', 'context_name': 'people' }, 'people_availability'),
     url(r'^round/(?P<round_seq>\d+)/people/update/$',
-        'update_availability', { 'active_attr': None, 'active_model': None, 'update_method': 'set_available_people' }, 'update_people_availability'),
+        'checkin_update', { 'active_attr': None, 'active_model': None, 'update_method': 'set_available_people' }, 'update_people_availability'),
 
     url(r'^round/(?P<round_seq>\d+)/teams/$',
         'availability', { 'model': 'team', 'context_name': 'teams' }, 'team_availability'),
