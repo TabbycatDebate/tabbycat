@@ -246,6 +246,18 @@ class Adjudicator(Person):
     feedback_score)
 
 
+    @property
+    def rscores(self):
+        r = []
+        for round in self.institution.tournament.rounds.all():
+            q = models.Q(source_adjudicator__debate__round=round) | \
+                    models.Q(source_team__debate__round=round)
+            a = AdjudicatorFeedback.objects.filter(
+                adjudicator = self,
+            ).filter(q).aggregate(avg=models.Avg('score'))['avg']
+            r.append(a)
+        return r
+
     def _feedback_score(self):
         return AdjudicatorFeedback.objects.filter(
             adjudicator = self,
