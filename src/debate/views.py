@@ -416,10 +416,11 @@ def team_standings(request, round):
 
     def get_score(team, r):
         try:
-            return TeamScore.objects.get(
+            ts = TeamScore.objects.get(
                 debate_team__team=team,
                 debate_team__debate__round=r,
-            ).score
+            )
+            return ts.score, ts.points
         except TeamScore.DoesNotExist:
             return None
 
