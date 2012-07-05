@@ -17,10 +17,10 @@ class BaseDraw(object):
             speaker_score = Sum('debateteam__teamscore__score')
         ).order_by('-points', '-speaker_score')
         self.teams = [TeamAtRound(team, round.prev) for team in teams]
-        
+
         if not len(self.teams) % 2 == 0:
             raise DrawError()
-        
+
     def balance_sides(self, pairs):
         p = []
         for pair in pairs:
@@ -35,9 +35,10 @@ class BaseDraw(object):
         return p
 
     def draw(self):
+        # get_draw is an abstract method that should be defined in derived classes.
         return self.get_draw()
 
-        
+
 class RandomDraw(BaseDraw):
     def get_draw(self):
         random.shuffle(self.teams)
@@ -62,16 +63,16 @@ class RandomDrawNoConflict(RandomDraw):
                         draw[k] = m2
                         break
         return draw
-     
+
 class AidaDraw(BaseDraw):
-    
-                
+
+
     def get_draw(self):
         from debate.aida import one_up_down
 
         pools = self.make_pools()
         pairs = []
-        
+
         for pool in pools:
             debates = len(pool) / 2
             top = pool[:debates]
@@ -79,15 +80,15 @@ class AidaDraw(BaseDraw):
 
             pool_draw = zip(top, bottom)
             one_up_down(pool_draw)
-            
+
             pairs.extend(pool_draw)
-        return self.balance_sides(pairs)                
-                    
-        
+        return self.balance_sides(pairs)
+
+
     def make_pools(self):
         pools = []
         teams = list(self.teams)
-        
+
         while len(teams) > 0:
             top_team = teams.pop(0)
             pool = []
@@ -98,7 +99,7 @@ class AidaDraw(BaseDraw):
                 pool.append(teams.pop(0))
             pools.append(pool)
         return pools
-        
+
 class BracketDraw(BaseDraw):
     def get_draw(self):
         teams = self.teams
@@ -141,8 +142,8 @@ def assign_importance(round):
         debate.save()
 
 
-    
 
-    
+
+
 
 

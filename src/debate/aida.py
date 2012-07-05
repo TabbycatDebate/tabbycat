@@ -17,7 +17,7 @@ def dp(data):
     j = N
     L = []
     #while j >= 0:
-    #    L.insert(0, j) 
+    #    L.insert(0, j)
     #    j -= (action[j] + 1)
     #return state[N], L
     while j >= 2:
@@ -31,6 +31,9 @@ def run():
     print dp(data)
 
 def score_swap((a1, n1), (a2, n2)):
+    """Returns an integer representing the improvement from swapping the
+    teams in these two debates.  The higher the integer, the more you
+    want to do the swap."""
     inst = (a1.institution == n1.institution,
             a2.institution == n2.institution)
     hist = (a1.seen(n1), a2.seen(n2))
@@ -54,7 +57,7 @@ class Team(object):
     def __init__(self, id, inst, hist):
         self.id = id
         self.institution = inst
-        self.hist = hist 
+        self.hist = hist
 
     def seen(self, other):
         return self.hist.count(other.id)
@@ -66,7 +69,10 @@ def swap(draw, i):
     draw[i+1] = m2
 
 def one_up_down(draw):
+    """'draw' is a list of 2-tuples [(aff, neg), (aff, neg)...]"""
     swap_scores = [(score_swap(draw[i], draw[i+1])) for i in range(len(draw) - 1)]
+    # swap_scores is now a list of integers, representing how much better you get
+    # by executing the swap with the team below.
     # adjust scores so that if there are two equivalent ways to resolve a
     # conflict, swaps higher in the ranking are preferred to those lower
     for i, score in enumerate(swap_scores):
