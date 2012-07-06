@@ -3,6 +3,7 @@ INSTITUTION_SCORE = 1
 HISTORY_SCORE = 1e2
 
 def dp(data):
+    """data is a list of integers"""
     N = len(data) + 1
     state = [0] * (N + 1)
     action = [0] * (N + 1)
@@ -69,7 +70,8 @@ def swap(draw, i):
     draw[i+1] = m2
 
 def one_up_down(draw):
-    """'draw' is a list of 2-tuples [(aff, neg), (aff, neg)...]"""
+    """'draw' is a list of 2-tuples of Teams [(aff, neg), (aff, neg)...]
+    representing the entire draw"""
     swap_scores = [(score_swap(draw[i], draw[i+1])) for i in range(len(draw) - 1)]
     # swap_scores is now a list of integers, representing how much better you get
     # by executing the swap with the team below.
