@@ -429,6 +429,9 @@ def team_standings(request, round):
         team.scores = [get_score(team, r) for r in rounds]
 
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds))
+    # Comment out above line and uncomment below line to prevent access to team
+    # standings.
+    #return r2r(request, 'team_standings.html', dict(teams=None, rounds=rounds))
 
 @admin_required
 @round_view
@@ -458,6 +461,10 @@ def speaker_standings(request, round):
 
     return r2r(request, 'speaker_standings.html', dict(speakers=speakers,
                                                        rounds=rounds))
+    # Comment out above line and uncomment below line to prevent access to
+    # speaker standings.
+    #return r2r(request, 'speaker_standings.html', dict(speakers=None,
+                                                       #rounds=rounds))
 
 @admin_required
 @round_view
