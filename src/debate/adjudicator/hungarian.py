@@ -66,7 +66,7 @@ class HungarianAllocator(Allocator):
         assert len(panel_debates) * 3 <= len(panellists)
 
 
-        print "calculating costs"
+        print "costing chairs"
 
         n = len(chairs)
 
@@ -85,8 +85,8 @@ class HungarianAllocator(Allocator):
         for r, c in indexes:
             total_cost += cost_matrix[r][c]
 
-        print 'total cost', total_cost
-        print n
+        print 'total cost for solos', total_cost
+        print 'number of solo debates', n
 
         result = ((chair_debates[i], chairs[j]) for i, j in indexes if i <
                   len(chair_debates))
@@ -126,16 +126,24 @@ class HungarianAllocator(Allocator):
             for r, c in indexes:
                 cost += cost_matrix[r][c]
 
+            print 'total cost for panellists', cost
+
+            # transfer the indices to the debates
+            # the debate corresponding to row r is floor(r/3) (i.e. r // 3)
             p = [[] for i in range(n)]
             for r, c in indexes[:n*3]:
                 p[r // 3].append(panellists[c])
 
+            # create the corresponding adjudicator allocations, making sure
+            # that the chair is the highest-ranked adjudicator in the panel
             for i, d in enumerate(panel_debates):
                 a = AdjudicatorAllocation(d)
                 p[i].sort(key=lambda a: a.score, reverse=True)
                 a.chair = p[i].pop(0)
                 a.panel = p[i]
                 alloc.append(a)
+
+        print [(a.debate, a.chair, a.panel) for a in alloc[len(chairs):]]
 
         return alloc 
 
