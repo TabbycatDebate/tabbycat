@@ -10,6 +10,19 @@ def add_conflicts(adj, teams):
             team = team,
         ).save()
 
+def get_priority(room):
+    for i in xrange(1, len(room)):
+        candidate = room[0:i]
+        if not (candidate.isalpha() and candidate.isupper()):
+            break
+    i -= 1
+    building = room[0:i]
+    priority = 50
+    priorities = {"WR": 20, "KP": 30, "SUB": 40}
+    if building in priorities:
+        priority = priorities[building]
+    return priority
+
 def main(suffix=None, verbose=False):
 
     def make_filename(name):
@@ -177,18 +190,34 @@ def main(suffix=None, verbose=False):
 
     reader = csv.reader(open('venues.csv'))
     print('venues.csv')
-    for room, group, priority in reader:
+    reader.next() # skip the first row (headers)
+    max_group = 0
+    for row in reader:
+        group, rooms = row[0:2]
+        rooms = rooms.split("/")
 
         try:
             group = int(group)
+            if group > max_group:
+                max_group = group
         except ValueError:
             group = None
 
+        for room in rooms:
+            m.Venue(
+                tournament = t,
+                group = group,
+                name = room,
+                priority = get_priority(room)
+            ).save()
+
+    # Add Fairlie Terrace rooms at the bottom of the list
+    for room in ["FT83201", "FT83203"]:
         m.Venue(
             tournament = t,
-            group = group,
+            group = max_group + 1,
             name = room,
-            priority = int(priority)
+            priority = str(0)
         ).save()
 
 if __name__ == '__main__':
@@ -201,10 +230,6 @@ if __name__ == '__main__':
     except IndexError:
         print("The first argument must be the file suffix.")
         exit(1)
-
-    # Parse the rooms
-    import parse_rooms
-    parse_rooms.main()
 
     # Now import all
     main(suffix, options.verbose)
