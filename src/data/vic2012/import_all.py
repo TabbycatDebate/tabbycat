@@ -174,7 +174,8 @@ def main(suffix=None, verbose=False):
                 home_ins = m.Institution.objects.get(name=ins_name, tournament=t)
             except m.Institution.DoesNotExist:
                 print("No institution '{0}', conflict not added for {1}".format(ins_name, name))
-            add_conflicts(adj, m.Team.objects.filter(institution=home_ins))
+            else:
+                add_conflicts(adj, m.Team.objects.filter(institution=home_ins))
 
         else:
             ins = m.Institution.objects.get(name=ins_name, tournament=t)
