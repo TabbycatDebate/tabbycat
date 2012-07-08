@@ -164,9 +164,13 @@ def main(suffix=None, verbose=False):
                 institution = ins
             ).save()
 
+    # Add conflicts for own institutions
+    for adj in m.Adjudicator.objects.all():
+        add_conflicts(adj, m.Team.objects.filter(institution=adj.institution))
+
     reader = csv.reader(open('venues.csv'))
     print('venues.csv')
-    for room, group in reader:
+    for room, group, priority in reader:
 
         try:
             group = int(group)
@@ -177,7 +181,7 @@ def main(suffix=None, verbose=False):
             tournament = t,
             group = group,
             name = room,
-            priority = 50
+            priority = int(priority)
         ).save()
 
 if __name__ == '__main__':
@@ -190,4 +194,10 @@ if __name__ == '__main__':
     except IndexError:
         print("The first argument must be the file suffix.")
         exit(1)
+
+    # Parse the rooms
+    import parse_rooms
+    parse_rooms.main()
+
+    # Now import all
     main(suffix, options.verbose)
