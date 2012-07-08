@@ -11,6 +11,8 @@ class HungarianAllocator(Allocator):
     CHAIR_CUTOFF = 3.5
     MIN_SCORE = 1.5
 
+    DEFAULT_IMPORTANCE = 2
+
     def __init__(self, *args, **kwargs):
         super(HungarianAllocator, self).__init__(*args, **kwargs)
         config = self.debates[0].round.tournament.config
@@ -29,7 +31,7 @@ class HungarianAllocator(Allocator):
         cost += self.HISTORY_PENALTY * adj.seen_team(debate.aff_team, debate.round)
         cost += self.HISTORY_PENALTY * adj.seen_team(debate.neg_team, debate.round)
 
-        impt = (debate.importance or 0) + adjustment
+        impt = (debate.importance or self.DEFAULT_IMPORTANCE) + adjustment
         diff = 5+ impt - adj.score
         if diff > 0.25:
             cost += 100000 * exp(diff - 0.25)
