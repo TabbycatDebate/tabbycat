@@ -22,9 +22,12 @@ def main(suffix=None, verbose=False):
         if verbose:
             print message
 
+    print "Deleting and re-creating tournament..."
     m.Tournament.objects.filter(slug='australs2012').delete()
     t = m.Tournament(slug='australs2012')
     t.save()
+
+    print "Adding rounds..."
 
     for i in range(1, NUM_ROUNDS+1):
         if i == 1:
@@ -42,6 +45,8 @@ def main(suffix=None, verbose=False):
 
     t.current_round = m.Round.objects.get(tournament=t, seq=1)
     t.save()
+
+    print "Importing from files..."
 
     print('institutions.csv')
     reader = csv.reader(open('institutions.csv'))
@@ -148,7 +153,8 @@ def main(suffix=None, verbose=False):
             ins = m.Institution.objects.get(name="Independent Adjudicators", tournament=t)
             adj = m.Adjudicator(
                 name = name,
-                institution = ins
+                institution = ins,
+                test_score = 2
             )
             adj.save()
             try:
@@ -161,7 +167,8 @@ def main(suffix=None, verbose=False):
             ins = m.Institution.objects.get(name=ins_name, tournament=t)
             m.Adjudicator(
                 name = name,
-                institution = ins
+                institution = ins,
+                test_score = ins_name == "Adjudication Core" and 5 or 1
             ).save()
 
     # Add conflicts for own institutions
