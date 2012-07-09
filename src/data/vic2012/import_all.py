@@ -1,5 +1,6 @@
 import csv
 import debate.models as m
+import os
 
 NUM_ROUNDS = 8
 
@@ -25,11 +26,14 @@ def get_priority(room):
 
 def main(suffix=None, verbose=False):
 
-    def make_filename(name):
-        if suffix:
-            return name + "-" + suffix + ".csv"
+    directory_name = os.dirname(__file__)
+
+    def make_filename(name, add_suffix):
+        if suffix and add_suffix:
+            filename = name + "-" + suffix + ".csv"
         else:
-            return name + ".csv"
+            filename = name + ".csv"
+        return os.join(directory_name, filename)
 
     def verbose_print(message):
         if verbose:
@@ -61,14 +65,15 @@ def main(suffix=None, verbose=False):
 
     print "Importing from files..."
 
-    print('institutions.csv')
-    reader = csv.reader(open('institutions.csv'))
+    filename = make_filename("institutions", add_suffix=False)
+    print(filename)
+    reader = csv.reader(open(filename))
     for name, code in reader:
         i = m.Institution(code=code, name=name, tournament=t)
         i.save()
 
-    filename = make_filename('debaters')
-    print filename
+    filename = make_filename('debaters', add_suffix=True)
+    print(filename)
     reader = csv.reader(open(filename))
     header_row = reader.next() # skip the first row (headers)
     first_column = header_row.index("Name")
@@ -118,8 +123,8 @@ def main(suffix=None, verbose=False):
             team = team
         ).save()
 
-    filename = make_filename('judges')
-    print filename
+    filename = make_filename('judges', add_suffix=True)
+    print(filename)
     reader = csv.reader(open(filename))
     header_row = reader.next() # skip the first row (headers)
     first_column = header_row.index("Name")
@@ -201,8 +206,9 @@ def main(suffix=None, verbose=False):
     for adj in m.Adjudicator.objects.all():
         add_conflicts(adj, m.Team.objects.filter(institution=adj.institution))
 
-    reader = csv.reader(open('venues.csv'))
-    print('venues.csv')
+    filename = make_filename("venues", add_suffix=False)
+    print(filename)
+    reader = csv.reader(open(filename))
     reader.next() # skip the first row (headers)
     for row in reader:
         group, rooms = row[0:2]
