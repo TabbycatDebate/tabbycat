@@ -18,7 +18,7 @@ def get_priority(room):
     i -= 1
     building = room[0:i]
     priority = 50
-    priorities = {"WR": 20, "KP": 30, "SUB": 40}
+    priorities = {"FT": 0, "WR": 20, "KP": 30, "SUB": 40}
     if building in priorities:
         priority = priorities[building]
     return priority
@@ -192,15 +192,12 @@ def main(suffix=None, verbose=False):
     reader = csv.reader(open('venues.csv'))
     print('venues.csv')
     reader.next() # skip the first row (headers)
-    max_group = 0
     for row in reader:
         group, rooms = row[0:2]
         rooms = rooms.split("/")
 
         try:
             group = int(group)
-            if group > max_group:
-                max_group = group
         except ValueError:
             group = None
 
@@ -211,15 +208,6 @@ def main(suffix=None, verbose=False):
                 name = room,
                 priority = get_priority(room)
             ).save()
-
-    # Add Fairlie Terrace rooms at the bottom of the list
-    for room in ["FT83201", "FT83203"]:
-        m.Venue(
-            tournament = t,
-            group = max_group + 1,
-            name = room,
-            priority = str(0)
-        ).save()
 
 if __name__ == '__main__':
     import optparse
