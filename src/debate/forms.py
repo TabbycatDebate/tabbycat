@@ -11,8 +11,8 @@ def get_or_instantiate(model, **kwargs):
         return model(**kwargs)
 
 class ScoreField(forms.FloatField):
-    MIN_VALUE = 60
-    MAX_VALUE = 80
+    MIN_VALUE = 68
+    MAX_VALUE = 82
 
     def __init__(self, *args, **kwargs):
         if 'min_value' not in kwargs:
@@ -22,8 +22,8 @@ class ScoreField(forms.FloatField):
         super(ScoreField, self).__init__(*args, **kwargs)
 
 class ReplyScoreField(ScoreField):
-    MIN_VALUE = 30
-    MAX_VALUE = 40
+    MIN_VALUE = 34
+    MAX_VALUE = 41
 
 class ResultForm(forms.Form):
 
