@@ -1,5 +1,10 @@
--e git+git://github.com/django/django.git@c724ad9c7d#egg=django
-south==0.7.1
-flup==1.0.3.dev-20110405
-fabric
--e git+git://github.com/robhudson/django-debug-toolbar.git@ee1811238e91ae0ad33413b0d40d2f8482101951#egg=debug_toolbar
+Django==1.4
+Fabric==1.4.3
+South==0.7.5
+distribute==0.6.27
+dj-database-url==0.2.1
+django-debug-toolbar==0.9.4
+psycopg2==2.4.5
+pycrypto==2.6
+ssh==1.7.14
+wsgiref==0.1.2
