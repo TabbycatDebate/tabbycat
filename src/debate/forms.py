@@ -27,7 +27,8 @@ class ReplyScoreField(ScoreField):
 
 class ResultForm(forms.Form):
 
-    result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
+    result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES,
+        widget = forms.Select(attrs = {'tabindex': 100}))
 
     def __init__(self, debate, *args, **kwargs):
         """
@@ -43,12 +44,34 @@ class ResultForm(forms.Form):
 
         self.initial = self._initial_data()
 
+        # tab indices are as follows:
+        #
+        # Adjudicator 1
+        #  1 A1name  2 A1score     9 N1name  10 N1score
+        #  3 A2name  4 A2score    11 N2name  12 N2score
+        #  5 A3name  6 A3score    13 N3name  14 N3score
+        #  7 ARname  8 ARscore    15 NRname  16 NRscore
+        #
+        # Adjudicator 2 (odd numbers not used)
+        #  - A1name 18 A1score     - N1name  26 N1score
+        #  - A2name 20 A2score     - N2name  28 N2score
+        #  - A3name 22 A3score     - N3name  30 N3score
+        #  - ARname 24 ARscore     - NRname  32 NRscore
+        #
+        # Adjudicator 3 (odd numbers not used)
+        #  - A1name 34 A1score     - N1name  42 N1score
+        #  - A2name 36 A2score     - N2name  44 N2score
+        #  - A3name 38 A3score     - N3name  46 N3score
+        #  - ARname 40 ARscore     - NRname  48 NRscore
+
         for side in ('aff', 'neg'):
             team = debate.get_team(side)
             for pos in range(1, 5):
                 self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(
                     queryset = team.speakers,
-                )
+                    widget = forms.Select(attrs = {
+                        'tabindex': 2 * pos + (side == 'neg' and 7 or -1)
+                    }))
 
                 # css_class is for jquery validation plugin, surely this can
                 # be moved elsewhere
@@ -59,9 +82,12 @@ class ResultForm(forms.Form):
                     score_field = ScoreField
                     css_class = 'required number'
 
-                for adj in self.adjudicators:
+                for i, adj in enumerate(self.adjudicators):
                     self.fields[self.score_field_name(adj, side, pos)] = score_field(
-                        widget = forms.TextInput(attrs={'class': css_class}))
+                        widget = forms.TextInput(attrs={
+                            'class': css_class,
+                            'tabindex': 2 * pos + (side == 'neg' and 8 or 0) + 16 * i
+                        }))
 
     def score_field_name(self, adj, side, pos):
         """
