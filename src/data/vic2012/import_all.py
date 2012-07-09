@@ -70,11 +70,12 @@ def main(suffix=None, verbose=False):
     filename = make_filename('debaters')
     print filename
     reader = csv.reader(open(filename))
-    reader.next() # skip the first row (headers)
+    header_row = reader.next() # skip the first row (headers)
+    first_column = header_row.index("Name")
     for row in reader:
         # for some reason there are a bunch of stray cells at the end of each row
         # we only care about the non-blank cells, i.e. the first four
-        name, ins_name, attendance, team_number = row[0:4]
+        name, ins_name, attendance, team_number = row[first_column:first_column+4]
         verbose_print(ins_name)
 
         if attendance != "Debater":
@@ -120,18 +121,29 @@ def main(suffix=None, verbose=False):
     filename = make_filename('judges')
     print filename
     reader = csv.reader(open(filename))
-    reader.next() # skip the first row (headers)
-    for name, ins_name, attendance, _ in reader:
+    header_row = reader.next() # skip the first row (headers)
+    first_column = header_row.index("Name")
+    for row in reader:
         verbose_print(ins_name)
 
-        if attendance not in ["Judge", "Independent", "CA", "DCA"]:
-            print("{0} is not a judge or independent? ({1})".format(name, attendance))
+        name, ins_name, attendance = row[first_column:first_column+3]
+
+        if attendance not in ["Judge", "Independent", "CA", "DCA", "Observer", "Org Comm"]:
+            print("{0} is not a judge, independent, CA, DCA, observer or org comm? ({1})".format(name, attendance))
 
         ins_name_full = ins_name
 
         if ins_name == "Adjudication Core":
             if attendance not in ["CA", "DCA"]:
                 print("{0} is in the adjudication core, but not a CA or DCA".format(name))
+
+        elif ins_name == "Org Comm":
+            # Do nothing, we don't care about org comms
+            continue
+
+        elif attendance == "Observer" and "Observer" in ins_name:
+            # Do nothing, we don't care about observers
+            continue
 
         else:
             # extract the institution name from Seb's longer institution name
@@ -173,7 +185,7 @@ def main(suffix=None, verbose=False):
             try:
                 home_ins = m.Institution.objects.get(name=ins_name, tournament=t)
             except m.Institution.DoesNotExist:
-                print("No institution '{0}', conflict not added for {1}".format(ins_name, name))
+                print("No institution '{0}', institution conflict not added for independent {1}".format(ins_name, name))
             else:
                 add_conflicts(adj, m.Team.objects.filter(institution=home_ins))
 
