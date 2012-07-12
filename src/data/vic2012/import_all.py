@@ -1,6 +1,6 @@
 import csv
 import debate.models as m
-import os
+import os.path
 
 NUM_ROUNDS = 8
 
@@ -26,14 +26,14 @@ def get_priority(room):
 
 def main(suffix=None, verbose=False):
 
-    directory_name = os.dirname(__file__)
+    directory_name = os.path.dirname(__file__)
 
     def make_filename(name, add_suffix):
         if suffix and add_suffix:
             filename = name + "-" + suffix + ".csv"
         else:
             filename = name + ".csv"
-        return os.join(directory_name, filename)
+        return os.path.join(directory_name, filename)
 
     def verbose_print(message):
         if verbose:
@@ -129,9 +129,9 @@ def main(suffix=None, verbose=False):
     header_row = reader.next() # skip the first row (headers)
     first_column = header_row.index("Name")
     for row in reader:
-        verbose_print(ins_name)
-
         name, ins_name, attendance = row[first_column:first_column+3]
+
+        verbose_print(ins_name)
 
         if attendance not in ["Judge", "Independent", "CA", "DCA", "Observer", "Org Comm"]:
             print("{0} is not a judge, independent, CA, DCA, observer or org comm? ({1})".format(name, attendance))
@@ -184,7 +184,7 @@ def main(suffix=None, verbose=False):
             adj = m.Adjudicator(
                 name = name,
                 institution = ins,
-                test_score = 2
+                test_score = 0
             )
             adj.save()
             try:
@@ -199,12 +199,30 @@ def main(suffix=None, verbose=False):
             m.Adjudicator(
                 name = name,
                 institution = ins,
-                test_score = ins_name == "Adjudication Core" and 5 or 1
+                test_score = 0
             ).save()
 
     # Add conflicts for own institutions
     for adj in m.Adjudicator.objects.all():
         add_conflicts(adj, m.Team.objects.filter(institution=adj.institution))
+
+    # Add test scores
+    filename = make_filename("adj_scores", add_suffix=False)
+    print(filename)
+    reader = csv.reader(open(filename))
+    header_row = reader.next()
+    first_column = header_row.index("Name")
+    for row in reader:
+        name, score = row[first_column:first_column+2]
+        verbose_print(name)
+        try:
+            adj = m.Adjudicator.objects.get(name=name)
+        except m.Adjudicator.DoesNotExist:
+            print("Could not find adjudicator {0}, can't add his/her test score".format(name))
+            continue
+        adj.test_score = float(score)
+        adj.save()
+
 
     filename = make_filename("venues", add_suffix=False)
     print(filename)
