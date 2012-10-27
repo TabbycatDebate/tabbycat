@@ -1,0 +1,10 @@
+Django==1.4
+Fabric==1.4.3
+South==0.7.5
+distribute==0.6.27
+dj-database-url==0.2.1
+django-debug-toolbar==0.9.4
+psycopg2==2.4.5
+pycrypto==2.6
+ssh==1.7.14
+wsgiref==0.1.2
