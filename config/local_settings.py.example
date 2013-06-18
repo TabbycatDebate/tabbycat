@@ -5,20 +5,30 @@ DEBUG = True
 def proj(p):
     return join(PROJ_ROOT, p)
 
+# Absolute path to the project root
 PROJ_ROOT = '/media/data/projects/australs/debate.git'
 
-DATABASE_ENGINE = 'postgresql_psycopg2'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'debate'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'debate'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'debate'         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+# See https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-DATABASES for details
+DATABASES = {
+    'default': {
+        'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
+        'NAME'    : 'debate',
+        'USER'    : 'debate',
+        'PASSWORD': 'debate',
+        'HOST'    : ''
+    }
+}
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = proj('src/media')
-MEDIA_URL = 'static'
-TEMPLATE_DIRS = (proj('src/templates'),)
+STATICFILES_DIRS = (
+    proj('src/media'),
+)
+STATIC_URL = '/static/'
+
+TEMPLATE_DIRS = (
+    proj('src/templates'),
+)
 
 INSTALLED_APPS += (
     'debug_toolbar',

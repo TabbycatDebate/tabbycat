@@ -1,5 +1,0 @@
--e git+https://github.com/django/django.git@c724ad9c7d#egg=django
-south==0.7.1
-flup==1.0.3.dev-20110405
-fabric
--e git+https://github.com/robhudson/django-debug-toolbar.git@ee1811238e91ae0ad33413b0d40d2f8482101951#egg=debug_toolbar

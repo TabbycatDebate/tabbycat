@@ -24,8 +24,7 @@ Installation Instructions
 
    $ pip install -r requirements.txt
 
-   This requires network access (to check out some third-party Git
-   repositories) and can take a while.
+   This requires network access and can take a while to complete.
 
 4) Copy config/local_settings.py.example to config/local_settings.py
    and edit
