@@ -1,6 +1,16 @@
 Installation Instructions
 -------------------------
 
+0) You will need to have the following packages installed if you don't
+   already have them:
+
+   $ sudo apt-get install libpq-dev python-dev
+
+   If you're expecting the PostgreSQL database to be on your computer,
+   don't forget you'll need the server as well as the client:
+
+   $ sudo apt-get install postgresql
+
 1) Create virtualenv named 'env' in root directory:
 
    $ virtualenv env
@@ -13,6 +23,9 @@ Installation Instructions
 3) Install requirements:
 
    $ pip install -r requirements.txt
+
+   This requires network access (to check out some third-party Git
+   repositories) and can take a while.
 
 4) Copy config/local_settings.py.example to config/local_settings.py
    and edit
