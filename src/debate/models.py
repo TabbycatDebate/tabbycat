@@ -681,21 +681,27 @@ class Debate(models.Model):
                 alloc.trainees.append(a.adjudicator)
         return alloc
 
+    @property
+    def adjudicator_names_list(self):
+        alloc = self.adjudicators
+
+        if alloc.panel:
+            l = [alloc.chair.name + " (c)"]
+            l.extend(p.name for p in alloc.panel)
+        else:
+            l = [alloc.chair.name]
+
+        l.extend("%s (t)" % t.name for t in alloc.trainees)
+
+        return l
 
     @property
     def adjudicators_display(self):
-        alloc = self.adjudicators
+        return ", ".join(self.adjudicator_names_list)
 
-        s = alloc.chair.name
-        if alloc.panel:
-            s += " (c), "
-        elif alloc.trainees:
-            s += ", "
-        sd = [p.name for p in alloc.panel]
-        sd.extend(["%s (t)" % t.name for t in alloc.trainees])
-        s += ", ".join(sd)
-
-        return s
+    @property
+    def adjudicators_display_with_line_breaks(self):
+        return "\n".join(self.adjudicator_names_list)
 
     @property
     def result(self):

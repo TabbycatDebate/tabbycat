@@ -46,7 +46,7 @@
                     <td>{{ debate.venue.name }}</td>
                     <td title="{% aff_count debate.aff_team round.prev %}">{{ debate.aff_team.name }}</td>
                     <td title="{% neg_count debate.neg_team round.prev %}">{{ debate.neg_team.name }}</td>
-                    <td>{{ debate.adjudicators_display }}</td>
+                    <td>{{ debate.adjudicators_display_with_line_breaks | linebreaks }}</td>
                 </tr>
                 {% endfor %}
             </table>
