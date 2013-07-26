@@ -43,6 +43,9 @@ class HungarianAllocator(Allocator):
     def allocate(self):
         from debate.models import AdjudicatorAllocation
 
+        # remove trainees
+        self.adjudicators = filter(lambda a: a.score > self.MIN_SCORE, self.adjudicators)
+
         # sort adjudicators and debates in descending score/importance
         self.adjudicators_sorted = list(self.adjudicators)
         self.adjudicators_sorted.sort(key=lambda a: a.score, reverse=True)
