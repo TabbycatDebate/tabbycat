@@ -40,8 +40,8 @@ def main(suffix=None, verbose=False):
             print message
 
     print "Deleting and re-creating tournament..."
-    m.Tournament.objects.filter(slug='australs2012').delete()
-    t = m.Tournament(slug='australs2012')
+    m.Tournament.objects.filter(slug='test-australs2012').delete()
+    t = m.Tournament(slug='test-australs2012')
     t.save()
 
     print "Adding rounds..."
@@ -216,7 +216,7 @@ def main(suffix=None, verbose=False):
         name, score = row[first_column:first_column+2]
         verbose_print(name)
         try:
-            adj = m.Adjudicator.objects.get(name=name)
+            adj = m.Adjudicator.objects.get(name=name, institution__tournament=t)
         except m.Adjudicator.DoesNotExist:
             print("Could not find adjudicator {0}, can't add his/her test score".format(name))
             continue
