@@ -4,7 +4,7 @@ Installation Instructions
 0) You will need to have the following packages installed if you don't
    already have them:
 
-   $ sudo apt-get install libpq-dev python-dev
+   $ sudo apt-get install libpq-dev python-dev python-virtualenv
 
    If you're expecting the PostgreSQL database to be on your computer,
    don't forget you'll need the server as well as the client:
