@@ -48,11 +48,11 @@ Here's the confirmed draw.
 </p>
 
 {% if round.adjudicators_allocation_validity == 1 %}
-<table style="background-color: #F5BCA9; border: 1px solid red; padding: 0px 10px" width="100%"><tr><td>
+<table class="warningbox"><tr><td>
 <p>One or more debates don't have a chair. <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.</p>
 </td></tr></table>
 {% elif round.adjudicators_allocation_validity == 2 %}
-<table style="background-color: #F5BCA9; border: 1px solid red; padding: 0px 10px" width="100%"><tr><td>
+<table class="warningbox"><tr><td>
 <p>One or more debates have panels with an even number of adjudicators. <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.</p>
 </td></tr></table>
 {% endif %}

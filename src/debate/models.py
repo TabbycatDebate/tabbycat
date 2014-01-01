@@ -606,10 +606,12 @@ class DebateManager(models.Manager):
 
 class Debate(models.Model):
     STATUS_NONE = 'N'
+    STATUS_BALLOT_IN = 'B'
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = (
         (STATUS_NONE, 'None'),
+        (STATUS_BALLOT_IN, 'Ballot in'),
         (STATUS_DRAFT, 'Draft'),
         (STATUS_CONFIRMED, 'Confirmed'),
     )
