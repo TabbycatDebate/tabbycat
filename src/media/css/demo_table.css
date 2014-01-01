@@ -190,11 +190,11 @@ table.display tr.even.inactive {
 }
 
 table.display tr.odd.conflict {
-  background-color: #ffdddd;
+  background-color: #ffee99;
 }
 
 table.display tr.even.conflict {
-  background-color: #ffeeee;
+  background-color: #fff6cc;
 }
 
 
@@ -247,27 +247,27 @@ tr.even.inactive td.sorting_3 {
 }
 
 tr.odd.conflict td.sorting_1 {
-  background-color: #ffc4c4;
+  background-color: #ffe14e;
 }
 
 tr.odd.conflict td.sorting_2 {
-  background-color: #ffd1d1;
+  background-color: #ffe875;
 }
 
 tr.odd.conflict td.sorting_3 {
-  background-color: #ffd1d1;
+  background-color: #ffe875;
 }
 
 tr.even.conflict td.sorting_1 {
-  background-color: #ffd5d5;
+  background-color: #ffea81;
 }
 
 tr.even.conflict td.sorting_2 {
-  background-color: #ffe2e2;
+  background-color: #fff0a8;
 }
 
 tr.even.conflict td.sorting_3 {
-  background-color: #ffe2e2;
+  background-color: #fff0a8;
 }
 
 
