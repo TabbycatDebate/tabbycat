@@ -393,6 +393,15 @@ class Round(models.Model):
         self.adjudicator_status = self.STATUS_DRAFT
         self.save()
 
+    @property
+    def adjudicators_allocation_validity(self):
+        debates = self.get_draw()
+        if not all(debate.adjudicators.has_chair for debate in debates):
+            return 1
+        if not all(debate.adjudicators.valid for debate in debates):
+            return 2
+        return 0
+
     def get_draw(self):
         # -bracket is included for ateneo data, which doesn't have room_rank
         return Debate.objects.filter(round=self).order_by('room_rank',
@@ -845,6 +854,14 @@ class AdjudicatorAllocation(object):
         self.chair = None
         self.panel = []
         self.trainees = []
+
+    @property
+    def has_chair(self):
+        return self.chair is not None
+
+    @property
+    def valid(self):
+        return self.has_chair and len(self.panel) % 2 == 0
 
     def save(self):
         DebateAdjudicator.objects.filter(debate=self.debate).delete()

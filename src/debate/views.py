@@ -574,6 +574,9 @@ def save_adjudicators(request, round):
             for val in vals:
                 debate_adjudicators[id(key)].trainees.append(val)
 
+    # We don't do any validity checking here, so that the adjudication
+    # core can save a work in progress.
+
     for d_id, alloc in debate_adjudicators.items():
         alloc.save()
 
