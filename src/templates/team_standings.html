@@ -41,11 +41,11 @@
     <tbody>
     {% for team in teams %}
     <tr class="
-        {% if not team.results_in %}inactive{% endif%}"> 
+        {% if not team.results_in %}inactive{% endif%}">
         <td>{{ forloop.counter }}</td>
         <td><a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</a></td>
         {% for score in team.scores %}
-        <td>{{ score.1 }}</td>
+        <td>{{ score.1|yesno:"win,loss" }}</td>
         <td>{{ score.0|stringformat:".2f" }}</td>
         {% endfor %}
         <td>{{ team.points }}</td>

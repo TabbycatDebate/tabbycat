@@ -8,7 +8,7 @@
     <li id="current_standings" style="display: none;"><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
     <li id="feedback"><a href="{% tournament_url adj_feedback %}">Feedback</a></li>
     <li>|</li>
-    <li id="rounds"> 
+    <li id="rounds">
         <a href="#rounds">All Rounds</a>
         <ul>
             {% for r in tournament.rounds.all %}
@@ -23,14 +23,14 @@
                     <li><a href="{% round_url draw r %}">Draw</a></li>
                     <li><a href="{% round_url results r %}">Results</a></li>
                     <li><a href="{% round_url team_standings r %}">Team Standings</a></li>
-                    <li style="display: none;"><a href="{% round_url speaker_standings r %}">Speaker Standings</a></li>
+                    <li><a href="{% round_url speaker_standings r %}">Speaker Standings</a></li>
                 </ul>
 
 
             </li>
             {% endfor %}
         </ul>
-    
+
     </li>
     <li id="config"><a href="{% tournament_url tournament_config %}">Config</a></li>
     <li id="admin"><a href="/admin/">Admin</a></li>
