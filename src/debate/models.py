@@ -174,6 +174,27 @@ class SpeakerManager(models.Manager):
 
         return speakers
 
+    def reply_standings(self, tournament, round=None):
+        if round:
+            speakers = self.filter(
+                team__institution__tournament=tournament,
+                speakerscore__position=4,
+                speakerscore__debate_team__debate__round__seq__lte =
+                round.seq,
+            )
+        else:
+            speakers = self.filter(
+                team__institution__tournament=tournament,
+                speakerscore__position=4,
+            )
+
+        speakers = speakers.annotate(
+            average = models.Avg('speakerscore__score'),
+            replies = models.Count('speakerscore__score'),
+        ).order_by('-average', '-replies', 'name')
+
+        return speakers
+
 class Person(models.Model):
     name = models.CharField(max_length=40)
     barcode_id = models.IntegerField(blank=True, null=True)

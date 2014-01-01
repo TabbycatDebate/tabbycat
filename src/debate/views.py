@@ -473,6 +473,37 @@ def speaker_standings(request, round):
 
 @admin_required
 @round_view
+def reply_standings(request, round):
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                  seq__lte=round.seq).order_by('seq')
+    speakers = Speaker.objects.reply_standings(round.tournament, round)
+
+    from debate.models import SpeakerScore
+    def get_score(speaker, r):
+        try:
+            return SpeakerScore.objects.get(speaker=speaker,
+                                    debate_team__debate__round=r,
+                                    position=4).score
+        except SpeakerScore.DoesNotExist:
+            return None
+
+    for speaker in speakers:
+        speaker.scores = [get_score(speaker, r) for r in rounds]
+        try:
+            # TODO detect if the speaker's *team's* ballot has been entered
+            # for this round, and set results_in accordingly.
+            #SpeakerScore.objects.get(speaker=speaker,
+                                     #debate_team__debate__round=r,
+                                     #position=4)
+            speaker.results_in = True
+        except SpeakerScore.DoesNotExist:
+            speaker.results_in = False
+
+    return r2r(request, 'reply_standings.html', dict(speakers=speakers,
+                                                       rounds=rounds))
+
+@admin_required
+@round_view
 def draw_venues_edit(request, round):
 
     draw = round.get_draw()
