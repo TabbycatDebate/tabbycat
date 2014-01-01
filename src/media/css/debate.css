@@ -148,7 +148,7 @@ ul#nav .selected ul{
 
 table.scoresheet {
     padding: 20px;
-    background-color: #f4fef4; 
+    background-color: #f4fef4;
 }
 .scoresheet tr { height: 40px; vertical-align: top; }
 .scoresheet th { text-align: right; }
@@ -196,3 +196,5 @@ table.scoresheet {
 #configForm .error, #configForm .errorlist { color: red; }
 #configForm div.updated { font-size: 120%; padding: 0.5em; border: 1px solid #00f; }
 
+table.warningbox { background-color: #F5BCA9; border: 1px solid red; padding: 10px 10px; width: 100%; }
+table.warningbox p { margin: 0px 0px }

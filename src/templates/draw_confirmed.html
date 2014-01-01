@@ -38,13 +38,24 @@
 {% block content %}
 
 <p>
-Here's the confirmed draw. 
+Here's the confirmed draw.
 <a href="{% round_url draw_venues_edit %}">Edit venues</a>.
 <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
-<a href="{% round_url draw_display %}">Draw for display</a>.
-<a id="wpPostLink" href="#">Post Draw to Website</a>
+<a href="{% round_url draw_display_by_venue %}">Draw for display sorted by venue</a>.
+<a href="{% round_url draw_display_by_team %}">Draw for display sorted by team</a>.
+{#<a id="wpPostLink" href="#">Post draw to website</a>#}
 {#<a id="wpPostStandLink" href="#">Post Standings to Website</a>#}
 </p>
+
+{% if round.adjudicators_allocation_validity == 1 %}
+<table class="warningbox"><tr><td>
+<p>One or more debates don't have a chair. <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.</p>
+</td></tr></table>
+{% elif round.adjudicators_allocation_validity == 2 %}
+<table class="warningbox"><tr><td>
+<p>One or more debates have panels with an even number of adjudicators. <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.</p>
+</td></tr></table>
+{% endif %}
 
 <form id="wpPostForm" method="POST" action="{% round_url wordpress_post_draw %}">
 </form>
@@ -61,7 +72,7 @@ Here's the confirmed draw.
     </thead>
     <tbody>
     {% for debate in draw %}
-    <tr class="{{ debate.all_conflicts|yesno:'conflict,' }} {% if not debate.adjudicators_display %}inactive{% endif %}">
+    <tr class="{{ debate.all_conflicts|yesno:'conflict,' }} {% if not debate.adjudicators_display or not debate.adjudicators.valid %}inactive{% endif %}">
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td title="{% aff_count debate.aff_team round.prev %}">
