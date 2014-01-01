@@ -51,9 +51,9 @@ class Institution(models.Model):
 
     class Meta:
         unique_together = ('tournament', 'code')
-    
+
     def __unicode__(self):
-        return unicode(self.name) 
+        return unicode(self.name)
 
 class TeamManager(models.Manager):
     def standings(self, round=None):
@@ -97,7 +97,7 @@ class Team(models.Model):
         unique_together = [('name', 'institution')]
 
     objects = TeamManager()
-    
+
     def __unicode__(self):
         return unicode(self.name)
 
@@ -112,7 +112,7 @@ class Team(models.Model):
         if seq is not None:
             dts = dts.filter(debate__round__seq__lte=seq)
         return dts.count()
-    
+
     def get_debates(self, before_round):
         dts = DebateTeam.objects.select_related('debate').filter(team=self).order_by('debate__round__seq')
         if before_round is not None:
@@ -122,7 +122,7 @@ class Team(models.Model):
     @property
     def debates(self):
         return self.get_debates(None)
-    
+
     def seen(self, other, before_round=None):
         debates = self.get_debates(before_round)
 
@@ -218,10 +218,10 @@ class Adjudicator(Person):
     is_trainee = models.BooleanField(default=False)
 
     objects = AdjudicatorManager()
-   
+
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
-    
+
     def conflict_with(self, team):
         if not hasattr(self, '_conflict_cache'):
             self._conflict_cache = set(c['team_id'] for c in
@@ -283,7 +283,7 @@ class Adjudicator(Person):
                     debate__round__seq__lt = before_round.seq
                 )
             self._seen_cache[before_round] = set(dt.team.id for dt in qs)
-        return team.id in self._seen_cache[before_round] 
+        return team.id in self._seen_cache[before_round]
 
     def seen_adjudicator(self, adj, before_round=None):
         d = DebateAdjudicator.objects.filter(
@@ -322,7 +322,7 @@ class Round(models.Model):
         TYPE_RANDOM: RandomDrawNoConflict,
         TYPE_PRELIM: AidaDraw,
     }
-    
+
     STATUS_NONE = 0
     STATUS_DRAFT = 1
     STATUS_CONFIRMED = 10
@@ -361,7 +361,7 @@ class Round(models.Model):
 
     def __unicode__(self):
         return unicode(self.seq)
-    
+
     def _drawer(self):
         return self.DRAW_CLASS[self.type]
 
@@ -398,9 +398,19 @@ class Round(models.Model):
         return Debate.objects.filter(round=self).order_by('room_rank',
                                                           '-bracket')
 
-    def get_unordered_draw(self):
+    def get_draw_by_room(self):
         return Debate.objects.filter(round=self).order_by('venue__name')
-        
+
+    def get_draw_by_team(self):
+        # TODO is there a more efficient way to do this?
+        draw = Debate.objects.filter(round=self)
+        draw_by_team = list()
+        for debate in draw:
+            draw_by_team.append((debate.aff_team, debate))
+            draw_by_team.append((debate.neg_team, debate))
+        draw_by_team.sort(key=lambda x: x[0].name)
+        return draw_by_team
+
     def make_debates(self, pairs):
 
         import random
@@ -412,10 +422,10 @@ class Round(models.Model):
             debate.bracket = max(0, pair[0].points, pair[1].points)
             debate.room_rank = i+1
             debate.save()
-            
+
             aff = DebateTeam(debate=debate, team=pair[0], position=DebateTeam.POSITION_AFFIRMATIVE)
             neg = DebateTeam(debate=debate, team=pair[1], position=DebateTeam.POSITION_NEGATIVE)
-            
+
             aff.save()
             neg.save()
 
@@ -429,7 +439,7 @@ class Round(models.Model):
             'id' : self.id,
         }
         return model.objects.all().extra(select={'is_active': """EXISTS (Select 1
-                                                 from %(active_table)s 
+                                                 from %(active_table)s
                                                  drav where
                                                  drav.%(active_column)s =
                                                  %(model_table)s.%(id_field)s and
@@ -446,8 +456,8 @@ class Round(models.Model):
                                       'debate_venue')
     def unused_venues(self):
         result = self.venue_availability().extra(
-            select = {'is_used': """EXISTS (SELECT 1 
-                      FROM debate_debate da 
+            select = {'is_used': """EXISTS (SELECT 1
+                      FROM debate_debate da
                       WHERE da.round_id=%d AND
                       da.venue_id = debate_venue.id)""" % self.id},
         )
@@ -456,7 +466,7 @@ class Round(models.Model):
         return [v for v in result if v.is_active and not v.is_used]
 
     def adjudicator_availability(self):
-        return self.base_availability(Adjudicator, 'debate_activeadjudicator', 
+        return self.base_availability(Adjudicator, 'debate_activeadjudicator',
                                       'adjudicator_id',
                                       'debate_adjudicator', id_field='person_ptr_id')
 
@@ -486,7 +496,7 @@ class Round(models.Model):
 
         if remove:
             active_model.objects.filter(**{
-                '%s__in' % active_id_column: remove_ids, 
+                '%s__in' % active_id_column: remove_ids,
                 'round': self,
             }).delete()
 
@@ -574,7 +584,7 @@ class ActiveTeam(models.Model):
 class ActiveAdjudicator(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
     round = models.ForeignKey(Round)
-    
+
     class Meta:
         unique_together = [('adjudicator', 'round')]
 
@@ -586,9 +596,9 @@ class DebateManager(models.Manager):
         'round', 'venue')
 
 class Debate(models.Model):
-    STATUS_NONE = 'N' 
-    STATUS_DRAFT = 'D' 
-    STATUS_CONFIRMED = 'C' 
+    STATUS_NONE = 'N'
+    STATUS_DRAFT = 'D'
+    STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = (
         (STATUS_NONE, 'None'),
         (STATUS_DRAFT, 'Draft'),
@@ -716,9 +726,9 @@ class Debate(models.Model):
         if self.neg_team == team:
             return 'neg'
         return None
- 
+
     def __contains__(self, team):
-        return team in (self.aff_team, self.neg_team) 
+        return team in (self.aff_team, self.neg_team)
 
     def __unicode__(self):
         return u'[%s] %s vs %s (%s)' % (self.round.seq, self.aff_team.name, self.neg_team.name,
@@ -727,7 +737,7 @@ class Debate(models.Model):
     @property
     def matchup(self):
         return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
-    
+
 class SRManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
@@ -742,15 +752,15 @@ class DebateTeam(models.Model):
     )
 
     objects = SRManager()
-    
+
     debate = models.ForeignKey(Debate)
     team = models.ForeignKey(Team)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __unicode__(self):
         return u'%s %s' % (self.debate, self.team)
-        
-    
+
+
 class DebateAdjudicator(models.Model):
     TYPE_CHAIR = 'C'
     TYPE_PANEL = 'P'
@@ -763,7 +773,7 @@ class DebateAdjudicator(models.Model):
     )
 
     objects = SRManager()
-    
+
     debate = models.ForeignKey(Debate)
     adjudicator = models.ForeignKey(Adjudicator)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
@@ -804,7 +814,7 @@ class AdjudicatorFeedback(models.Model):
         if self.round:
             return self.round.feedback_weight
         return 1
-    
+
 
 class AdjudicatorAllocation(object):
     def __init__(self, debate, chair=None, panel=None):
@@ -863,7 +873,7 @@ class SpeakerScoreByAdj(models.Model):
     @property
     def debate(self):
         return self.debate_team.debate
-    
+
 class TeamScore(models.Model):
     """
     Holds a teams total score and points in a debate
@@ -905,7 +915,7 @@ class ConfigManager(models.Manager):
             return self.get(tournament=tournament, key=key).value
         except ObjectDoesNotExist:
             return default
-            
+
 
 class Config(models.Model):
     tournament = models.ForeignKey(Tournament)

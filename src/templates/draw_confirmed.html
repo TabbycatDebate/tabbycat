@@ -38,11 +38,12 @@
 {% block content %}
 
 <p>
-Here's the confirmed draw. 
+Here's the confirmed draw.
 <a href="{% round_url draw_venues_edit %}">Edit venues</a>.
 <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
-<a href="{% round_url draw_display %}">Draw for display</a>.
-<a id="wpPostLink" href="#">Post Draw to Website</a>
+<a href="{% round_url draw_display_by_venue %}">Draw for display sorted by venue</a>.
+<a href="{% round_url draw_display_by_team %}">Draw for display sorted by team</a>.
+{#<a id="wpPostLink" href="#">Post draw to website</a>#}
 {#<a id="wpPostStandLink" href="#">Post Standings to Website</a>#}
 </p>
 

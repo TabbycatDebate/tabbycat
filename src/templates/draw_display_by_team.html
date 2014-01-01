@@ -1,0 +1,58 @@
+{% load debate_tags %}
+<html>
+    <head>
+        <title>Draw for Round {{ round }}</title>
+    </head>
+    <style>
+        #container { width: 95%; }
+        #draw { border: 1px solid rgb(194, 207, 233); margin: 20px auto; padding: 10px; }
+        #container { margin: 0 auto; }
+        h1 { font-family: Verdana, Lucida, Arial, Helvetica; font-size: 1.2em; font-weight: bold }
+
+        body { font-size: 30px; }
+        h1 {
+            background-image: url(/static/images/australs.png);
+            text-align: center;
+            background-repeat: no-repeat;
+            padding-left: 240px;
+            padding-top: 60px;
+            margin-top: 0px;
+            height: 80px;
+            width: 400px;
+            margin-bottom: 0px;
+        }
+        h2 { margin-top: 1.5em; }
+        th, td { font-size: 24px; }
+
+        th, td {padding: 0.2em 1.0em; text-align: center;}
+        tr.even {background: #eeeeff;}
+        tr.odd {background: #f8ffff; }
+
+    </style>
+    <body>
+        <div id="container">
+            <div id="logo">
+            </div>
+            <h1>Draw for Round {{ round }}</h1>
+
+            <table id="draw" class="display" cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr><th>Team</th><th>Group</th><th>Venue</th><th>Affirmative</th><th>Negative</th><th>Adjudicators</th></tr>
+                </thead>
+                <tbody>
+                {% for team, debate in draw %}
+                <tr class="{{ debate.all_conflicts|yesno:'conflict,' }} {% cycle 'even' 'odd' %}">
+                    <td>{{ team.name }}</td>
+                    <td>{{ debate.venue.group }}</td>
+                    <td>{{ debate.venue.name }}</td>
+                    <td title="{% aff_count debate.aff_team round.prev %}">{{ debate.aff_team.name }}</td>
+                    <td title="{% neg_count debate.neg_team round.prev %}">{{ debate.neg_team.name }}</td>
+                    <td>{{ debate.adjudicators_display_with_line_breaks | linebreaks }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+    </body>
+</html>
+

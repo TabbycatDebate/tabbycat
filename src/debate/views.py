@@ -161,7 +161,7 @@ def post_checkin(request, round):
 def _availability(request, round, model, context_name):
 
     items = getattr(round, '%s_availability' % model)().order_by('name')
-    
+
     context = {
         context_name: items,
     }
@@ -218,7 +218,7 @@ def wordpress_post_draw(request, round):
 
     post = wordpresslib.WordPressPost()
     post.title = 'Draw for Round %d' % round.seq
-    draw = round.get_unordered_draw()
+    draw = round.get_draw_by_room()
     post.description = str(render_to_string('wp_draw.html', {'round': round,
                                                              'draw': draw}))
 
@@ -253,9 +253,14 @@ def wordpress_post_standings(request, round):
 @admin_required
 @round_view
 def draw_display(request, round):
-    draw = round.get_draw().order_by('venue__name')
+    draw = round.get_draw_by_room()
     return r2r(request, "draw_display.html", dict(draw=draw))
 
+@admin_required
+@round_view
+def draw_display_by_team(request, round):
+    draw_by_team = round.get_draw_by_team()
+    return r2r(request, "draw_display_by_team.html", dict(draw=draw_by_team))
 
 @round_view
 def progress(request, round):
@@ -272,7 +277,7 @@ def progress(request, round):
 
     return r2r(request, "progress.html", stats)
 
-    
+
 @admin_required
 @round_view
 def draw(request, round):
@@ -384,7 +389,7 @@ def monkey_results(request, round):
 
 @login_required
 @tournament_view
-def enter_result(request, t, debate_id): 
+def enter_result(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
 
     if not request.user.is_superuser:
@@ -633,10 +638,10 @@ def get_adj_feedback(request, t):
 
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback()
-    data = [ [unicode(f.round), 
-              f.debate.bracket, 
-              unicode(f.debate), 
-              unicode(f.source), 
+    data = [ [unicode(f.round),
+              f.debate.bracket,
+              unicode(f.debate),
+              unicode(f.source),
               f.score,
               f.comments,
              ] for f in feedback ]
@@ -663,6 +668,6 @@ def enter_feedback(request, t, adjudicator_id):
             return redirect_tournament('adj_feedback', t)
     else:
         form = forms.make_feedback_form_class(adj)()
-    
+
     return r2r(request, template, dict(adj=adj, form=form))
 
