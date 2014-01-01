@@ -17,6 +17,7 @@
     <style>
         #stats { text-align: left; }
         #stats .none { color: red; }
+        #stats .ballotin { color: orange; }
         #stats .unconfirmed { color: blue; }
         #stats .confirmed { color: green; }
     </style>
@@ -26,12 +27,13 @@
     @import "/static/css/demo_table.css";
 {% endblock %}
 
-{% block h1 %} Result for Round {{ round }}{% endblock %}
+{% block h1 %} Results for Round {{ round }}{% endblock %}
 
 {% block content %}
 
 <table id="stats">
-    <tr class="none"><th>No result</th><td>{{ stats.none }}</td></tr>
+    <tr class="none"><th>No ballot</th><td>{{ stats.none }}</td></tr>
+    <tr class="ballotin"><th>Ballot in</th><td>{{ stats.ballot_in }}</td></tr>
     <tr class="unconfirmed"><th>Unconfirmed</th><td>{{ stats.draft }}</td></tr>
     <tr class="confirmed"><th>Confirmed</th><td>{{ stats.confirmed }}</td></tr>
 </table>
@@ -44,6 +46,7 @@
     {% for debate in draw %}
     <tr class="
     {% ifequal debate.result_status "N" %}inactive {% endifequal %}
+    {% ifequal debate.result_status "B" %}inactive {% endifequal %}
     {% ifequal debate.result_status "C" %}active{% endifequal %}
     ">
         <td>{{ debate.bracket }}</td>
@@ -56,7 +59,8 @@
         <td>{{ debate.adjudicators_display }}</td>
         <td>
             <a href="{% tournament_url enter_result debate.id %}">
-            {% ifequal debate.result_status "N" %}Enter results {% endifequal %}
+            {% ifequal debate.result_status "N" %}No ballot{% endifequal %}
+            {% ifequal debate.result_status "B" %}Ballot in{% endifequal %}
             {% ifequal debate.result_status "D" %}Unconfirmed{% endifequal %}
             {% ifequal debate.result_status "C" %}Confirmed{% endifequal %}
             </a>

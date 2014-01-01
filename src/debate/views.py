@@ -366,6 +366,7 @@ def results(request, round):
 
     stats = {
         'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
+        'ballot_in': draw.filter(result_status=Debate.STATUS_BALLOT_IN).count(),
         'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
         'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
     }
