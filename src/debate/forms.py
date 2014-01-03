@@ -22,9 +22,23 @@ class ScoreField(forms.FloatField):
             kwargs['max_value'] = self.MAX_VALUE
         super(ScoreField, self).__init__(*args, **kwargs)
 
+    def validate(self, value):
+        super(ScoreField, self).validate(value)
+        if int(value) != value:
+            raise forms.ValidationError(
+                _('Please enter a whole number.'), code='decimal'
+            )
+
 class ReplyScoreField(ScoreField):
     MIN_VALUE = 34
     MAX_VALUE = 41
+
+    def validate(self, value):
+        super(ScoreField, self).validate(value)
+        if value % 0.5 != 0:
+            raise forms.ValidationError(
+                _('Please enter a multiple of 0.5'), code='decimal'
+            )
 
 class ResultForm(forms.Form):
 
@@ -124,8 +138,11 @@ class ResultForm(forms.Form):
 
         for adj in self.adjudicators:
             # Check that it was not a draw
-            aff_total = sum(cleaned_data[self.score_field_name(adj, 'aff', pos)] for pos in range(1, 5))
-            neg_total = sum(cleaned_data[self.score_field_name(adj, 'neg', pos)] for pos in range(1, 5))
+            try:
+                aff_total = sum(cleaned_data[self.score_field_name(adj, 'aff', pos)] for pos in range(1, 5))
+                neg_total = sum(cleaned_data[self.score_field_name(adj, 'neg', pos)] for pos in range(1, 5))
+            except KeyError:
+                return cleaned_data
             if aff_total == neg_total:
                 raise forms.ValidationError(
                     _('The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)'),
