@@ -1,5 +1,5 @@
 psycopg2==2.5
-django==1.5.1
+django==1.6.1
 south==0.8
 flup==1.0.3.dev-20110405
 fabric==1.6.1
