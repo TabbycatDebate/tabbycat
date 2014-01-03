@@ -24,6 +24,9 @@ class ScoreField(forms.FloatField):
 
     def validate(self, value):
         super(ScoreField, self).validate(value)
+        self.check_value(value)
+
+    def check_value(self, value):
         if int(value) != value:
             raise forms.ValidationError(
                 _('Please enter a whole number.'), code='decimal'
@@ -33,8 +36,7 @@ class ReplyScoreField(ScoreField):
     MIN_VALUE = 34
     MAX_VALUE = 41
 
-    def validate(self, value):
-        super(ScoreField, self).validate(value)
+    def check_value(self, value):
         if value % 0.5 != 0:
             raise forms.ValidationError(
                 _('Please enter a multiple of 0.5'), code='decimal'
