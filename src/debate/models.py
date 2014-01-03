@@ -78,6 +78,15 @@ class TeamManager(models.Manager):
             results_count = models.Count('debateteam__teamscore'),
         ).order_by('-points', '-speaker_score')
 
+        prev_rank_value = (None, None)
+        current_rank = 0
+        for i, team in enumerate(teams, start=1):
+            rank_value = (team.points, team.speaker_score)
+            if rank_value != prev_rank_value:
+                current_rank = i
+                prev_rank_value = rank_value
+            team.rank = current_rank
+
         return teams
 
 class Team(models.Model):
@@ -180,6 +189,14 @@ class SpeakerManager(models.Manager):
             total = models.Sum('speakerscore__score'),
         ).order_by('-total', 'name')
 
+        prev_total = None
+        current_rank = 0
+        for i, speaker in enumerate(speakers, start=1):
+            if speaker.total != prev_total:
+                current_rank = i
+                prev_total = speaker.total
+            speaker.rank = current_rank
+
         return speakers
 
     def reply_standings(self, tournament, round=None):
@@ -200,6 +217,15 @@ class SpeakerManager(models.Manager):
             average = models.Avg('speakerscore__score'),
             replies = models.Count('speakerscore__score'),
         ).order_by('-average', '-replies', 'name')
+
+        prev_rank_value = (None, None)
+        current_rank = 0
+        for i, speaker in enumerate(speakers, start=1):
+            rank_value = (speaker.average, speaker.replies)
+            if rank_value != prev_rank_value:
+                current_rank = i
+                prev_rank_value = rank_value
+            speaker.rank = current_rank
 
         return speakers
 

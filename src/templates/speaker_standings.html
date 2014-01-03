@@ -36,8 +36,8 @@
     <tbody>
     {% for speaker in speakers %}
     <tr class="
-        {% if not speaker.results_in %}inactive{% endif%}"> 
-        <td>{{ forloop.counter }}</td>
+        {% if not speaker.results_in %}inactive{% endif%}">
+        <td>{{ speaker.rank }}</td>
         <td>{{ speaker.name }}</td>
         <td>{{ speaker.team }}</td>
         {% for score in speaker.scores %}
