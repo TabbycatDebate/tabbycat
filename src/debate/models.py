@@ -48,12 +48,20 @@ class Institution(models.Model):
     tournament = models.ForeignKey(Tournament)
     code = models.CharField(max_length=20)
     name = models.CharField(max_length=100)
+    abbreviation = models.CharField(max_length=8, default="")
 
     class Meta:
         unique_together = ('tournament', 'code')
 
     def __unicode__(self):
         return unicode(self.name)
+
+    @property
+    def short_code(self):
+        if self.abbreviation:
+            return self.abbreviation
+        else:
+            return self.code[:5]
 
 class TeamManager(models.Manager):
     def standings(self, round=None):
