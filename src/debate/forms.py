@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import ugettext as _
 
 from debate.models import SpeakerScoreByAdj, DebateResult, Debate
 from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
@@ -126,7 +127,10 @@ class ResultForm(forms.Form):
             aff_total = sum(cleaned_data[self.score_field_name(adj, 'aff', pos)] for pos in range(1, 5))
             neg_total = sum(cleaned_data[self.score_field_name(adj, 'neg', pos)] for pos in range(1, 5))
             if aff_total == neg_total:
-                raise forms.ValidationError("The total scores for the teams are the same (i.e. a draw) for adjudicator %s." % (adj.name,))
+                raise forms.ValidationError(
+                    _('The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)'),
+                    params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
+                )
 
         return cleaned_data
 
