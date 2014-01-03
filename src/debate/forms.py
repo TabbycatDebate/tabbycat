@@ -138,18 +138,35 @@ class ResultForm(forms.Form):
     def clean(self):
         cleaned_data = super(ResultForm, self).clean()
 
+        errors = list()
+
         for adj in self.adjudicators:
             # Check that it was not a draw
             try:
                 aff_total = sum(cleaned_data[self.score_field_name(adj, 'aff', pos)] for pos in range(1, 5))
                 neg_total = sum(cleaned_data[self.score_field_name(adj, 'neg', pos)] for pos in range(1, 5))
             except KeyError:
-                return cleaned_data
+                continue
             if aff_total == neg_total:
-                raise forms.ValidationError(
+                errors.append(forms.ValidationError(
                     _('The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)'),
                     params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
-                )
+                ))
+
+        # The third speaker can't give the reply.
+        for side in ('affirmative', 'negative'):
+            try:
+                reply_speaker_error = cleaned_data['%s_speaker_3' % (side[:3],)] == cleaned_data['%s_speaker_4' % (side[:3],)]
+            except KeyError:
+                continue
+            if reply_speaker_error:
+                errors.append(forms.ValidationError(
+                    _('The third speaker and reply speaker for the %(side)s team are the same.'),
+                    params={'side': side}, code='reply_speaker'
+                ))
+
+        if errors:
+            raise forms.ValidationError(errors)
 
         return cleaned_data
 
