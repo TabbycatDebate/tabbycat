@@ -42,7 +42,7 @@
     {% for team in teams %}
     <tr class="
         {% if not team.results_in %}inactive{% endif%}">
-        <td>{{ forloop.counter }}</td>
+        <td>{{ team.rank }}</td>
         <td><a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</a></td>
         {% for score in team.scores %}
         <td>{{ score.1|yesno:"win,loss" }}</td>
