@@ -172,14 +172,14 @@
                     if ($.inArray(
                             intId(this),
                             conflicts['conflict'][adj_id]) != -1) {
-                        $(debate_tr).addClass("conflict");
+                        $(debate_tr).addClass("inactive");
                         $(adj).addClass("conflict");
                         ca++;
                         a++;
                     } else if ($.inArray(
                             intId(this),
                             conflicts['history'][adj_id]) != -1) {
-                        $(debate_tr).addClass("history-conflict");
+//                         $(debate_tr).addClass("conflict");
                         $(adj).addClass("history-conflict");
                         ch++;
                         h++;
@@ -195,11 +195,11 @@
             } );
 
             if (ca == 0) {
-                $(debate_tr).removeClass("conflict");
+                $(debate_tr).removeClass("inactive");
             }
-            if (ch == 0) {
-                $(debate_tr).removeClass("history-conflict");
-            }
+//             if (ch == 0) {
+//                 $(debate_tr).removeClass("conflict");
+//             }
 
             // check for incomplete panels
             if ($(".panel-holder .adj", debate_tr).length % 2 != 0) {
