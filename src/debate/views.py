@@ -9,7 +9,7 @@ from django.db.models import Sum, Count
 from django.conf import settings
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
-from debate.models import AdjudicatorConflict, DebateAdjudicator, Speaker
+from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
 from debate.models import Person, Checkin
 from debate import forms
 
@@ -474,6 +474,37 @@ def speaker_standings(request, round):
 
 @admin_required
 @round_view
+def reply_standings(request, round):
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                  seq__lte=round.seq).order_by('seq')
+    speakers = Speaker.objects.reply_standings(round.tournament, round)
+
+    from debate.models import SpeakerScore
+    def get_score(speaker, r):
+        try:
+            return SpeakerScore.objects.get(speaker=speaker,
+                                    debate_team__debate__round=r,
+                                    position=4).score
+        except SpeakerScore.DoesNotExist:
+            return None
+
+    for speaker in speakers:
+        speaker.scores = [get_score(speaker, r) for r in rounds]
+        try:
+            # TODO detect if the speaker's *team's* ballot has been entered
+            # for this round, and set results_in accordingly.
+            #SpeakerScore.objects.get(speaker=speaker,
+                                     #debate_team__debate__round=r,
+                                     #position=4)
+            speaker.results_in = True
+        except SpeakerScore.DoesNotExist:
+            speaker.results_in = False
+
+    return r2r(request, 'reply_standings.html', dict(speakers=speakers,
+                                                       rounds=rounds))
+
+@admin_required
+@round_view
 def draw_venues_edit(request, round):
 
     draw = round.get_draw()
@@ -520,7 +551,7 @@ def _json_adj_allocation(debates, unused_adj):
     def _adj(a):
         return {
             'id': a.id,
-            'name': a.name + " (" + a.institution.code + ")",
+            'name': a.name + " (" + a.institution.short_code + ")",
             'is_trainee': a.is_trainee,
         }
 
@@ -600,6 +631,10 @@ def adj_conflicts(request, round):
 
     for ac in AdjudicatorConflict.objects.all():
         add('conflict', ac.adjudicator_id, ac.team_id)
+
+    for ic in AdjudicatorInstitutionConflict.objects.all():
+        for team in Team.objects.filter(institution=ic.institution):
+            add('conflict', ic.adjudicator_id, team.id)
 
     history = DebateAdjudicator.objects.filter(
         debate__round__seq__lt = round.seq,

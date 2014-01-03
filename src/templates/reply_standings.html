@@ -3,7 +3,6 @@
 {% load debate_tags %}
 
 {% block extra-head %}
-    {{ block.super }}
     <script type="text/javascript" charset="utf-8">
 
         $(document).ready( function() {
@@ -13,7 +12,6 @@
 
         } );
 
-
     </script>
 {% endblock extra-head %}
 
@@ -21,36 +19,33 @@
     @import "/static/css/demo_table.css";
 {% endblock %}
 
-{% block h1 %} Team Standings after Round {{ round }}{% endblock %}
+{% block h1 %} Reply Standings after Round {{ round }}{% endblock %}
 
 {% block content %}
 
 
 <table id="dataTable" class="display" cellspacing="0" cellpadding="0">
     <thead>
-        <tr><th>Rank</th><th>Team</th>
+        <tr><th>Rank</th><th>Name</th><th>Team</th>
             {% for round in rounds %}
             <th>{{ round }}</th>
-            <th></th>
             {% endfor %}
-            <th>Points</th>
-            <th>Total Score</th>
-            <th>Affs</th>
+            <th>Average</th>
+            <th>Replies</th>
         </tr>
     </thead>
     <tbody>
-    {% for team in teams %}
+    {% for speaker in speakers %}
     <tr class="
-        {% if not team.results_in %}inactive{% endif%}">
+        {% if not speaker.results_in %}inactive{% endif%}">
         <td>{{ forloop.counter }}</td>
-        <td><a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</a></td>
-        {% for score in team.scores %}
-        <td>{{ score.1|yesno:"win,loss" }}</td>
-        <td>{{ score.0|stringformat:".2f" }}</td>
+        <td>{{ speaker.name }}</td>
+        <td>{{ speaker.team }}</td>
+        {% for score in speaker.scores %}
+        <td>{{ score|stringformat:".2f" }}</td>
         {% endfor %}
-        <td>{{ team.points }}</td>
-        <td>{{ team.speaker_score|stringformat:".2f" }}</td>
-        <td>{% aff_count team round %}</td>
+        <td>{{ speaker.average|stringformat:".2f" }}</td>
+        <td>{{ speaker.replies }}</td>
     </tr>
     {% endfor %}
 </table>
