@@ -404,7 +404,7 @@ class Round(models.Model):
 
     def draw(self):
         if self.draw_status != self.STATUS_NONE:
-            raise
+            raise RuntimeError("Tried to run draw on round that already has a draw")
         # delete all existing debates for this round
         Debate.objects.filter(round=self).delete()
 
@@ -419,7 +419,7 @@ class Round(models.Model):
 
     def allocate_adjudicators(self, alloc_class=SAAllocator):
         if self.draw_status != self.STATUS_CONFIRMED:
-            raise
+            raise RuntimeError("Tried to allocate adjudicators on unconfirmed draw")
 
         debates = self.get_draw()
         adjs = list(self.active_adjudicators.accredited().filter(test_score__gt=0))
