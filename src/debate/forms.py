@@ -125,7 +125,7 @@ class ResultForm(forms.Form):
         dr = DebateResult(self.debate)
 
         def do(side):
-            for i in range(1, 5): 
+            for i in range(1, 5):
                 speaker = self.cleaned_data['%s_speaker_%d' % (side, i)]
                 dr.set_speaker(side, i, speaker)
                 for adj in self.adjudicators:
@@ -192,8 +192,8 @@ def make_feedback_form_class(adjudicator):
 
     def adj_choice(da):
         return (
-            'A:%d' % da.id, 
-            '(%d) %s (%s)' % (da.debate.round.seq, da.adjudicator.name, 
+            'A:%d' % da.id,
+            '%s (%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
                            da.type)
         )
 
@@ -209,7 +209,7 @@ def make_feedback_form_class(adjudicator):
     def team_choice(dt):
         return (
             'T:%d' % dt.id,
-            '(%d) %s' % (dt.debate.round.seq, dt.team.name)
+            '%s (%d)' % (dt.team.name, dt.debate.round.seq)
         )
 
     team_choices = [(None, '-- Teams --')]
@@ -229,7 +229,7 @@ def make_feedback_form_class(adjudicator):
             return DebateAdjudicator.objects.get(pk=id)
         if obj_type.strip() == 'T':
             return DebateTeam.objects.get(pk=id)
-        
+
     class FeedbackForm(forms.Form):
         source = forms.TypedChoiceField(
             choices = choices,

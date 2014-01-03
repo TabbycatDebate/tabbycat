@@ -46,7 +46,7 @@
     {% for debate in draw %}
     <tr class="
     {% ifequal debate.result_status "N" %}inactive {% endifequal %}
-    {% ifequal debate.result_status "B" %}inactive {% endifequal %}
+    {% ifequal debate.result_status "B" %}conflict {% endifequal %}
     {% ifequal debate.result_status "C" %}active{% endifequal %}
     ">
         <td>{{ debate.bracket }}</td>
