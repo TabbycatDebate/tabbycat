@@ -242,6 +242,7 @@ class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
     test_score = models.FloatField(default=0)
 
+    institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adjudicator_institution_conflicts')
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
 
     is_trainee = models.BooleanField(default=False)
@@ -256,7 +257,10 @@ class Adjudicator(Person):
             self._conflict_cache = set(c['team_id'] for c in
                 AdjudicatorConflict.objects.filter(adjudicator=self).values('team_id')
             )
-        return team.id in self._conflict_cache
+            self._institution_conflict_cache = set(c['institution_id'] for c in
+                AdjudicatorInstitutionConflict.objects.filter(adjudicator=self).values('institution_id')
+            )
+        return team.id in self._conflict_cache or team.institution_id in self._institution_conflict_cache
 
     @property
     def tournament(self):
@@ -328,6 +332,10 @@ class Adjudicator(Person):
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('Adjudicator')
     team = models.ForeignKey('Team')
+
+class AdjudicatorInstitutionConflict(models.Model):
+    adjudicator = models.ForeignKey('Adjudicator')
+    institution = models.ForeignKey('Institution')
 
 class RoundManager(models.Manager):
     use_for_related_Fields = True

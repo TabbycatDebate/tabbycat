@@ -9,7 +9,7 @@ class InstitutionAdmin(admin.ModelAdmin):
 admin.site.register(models.Institution, InstitutionAdmin)
 
 class SpeakerInline(admin.TabularInline):
-    model = models.Speaker 
+    model = models.Speaker
 
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution',)
@@ -28,10 +28,14 @@ class AdjudicatorConflictInline(admin.TabularInline):
     model = models.AdjudicatorConflict
     extra = 1
 
+class AdjudicatorInstitutionConflictInline(admin.TabularInline):
+    model = models.AdjudicatorInstitutionConflict
+    extra = 1
+
 class AdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution')
     search_fields = ('name', 'institution__name', 'institution__code',)
-    inlines = (AdjudicatorConflictInline,)
+    inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline)
 admin.site.register(models.Adjudicator, AdjudicatorAdmin)
 
 class VenueAdmin(admin.ModelAdmin):

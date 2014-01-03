@@ -9,7 +9,7 @@ from django.db.models import Sum, Count
 from django.conf import settings
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
-from debate.models import AdjudicatorConflict, DebateAdjudicator, Speaker
+from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
 from debate.models import Person, Checkin
 from debate import forms
 
@@ -630,6 +630,10 @@ def adj_conflicts(request, round):
 
     for ac in AdjudicatorConflict.objects.all():
         add('conflict', ac.adjudicator_id, ac.team_id)
+
+    for ic in AdjudicatorInstitutionConflict.objects.all():
+        for team in Team.objects.filter(institution=ic.institution):
+            add('conflict', ic.adjudicator_id, team.id)
 
     history = DebateAdjudicator.objects.filter(
         debate__round__seq__lt = round.seq,
