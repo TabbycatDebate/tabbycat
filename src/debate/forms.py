@@ -118,10 +118,19 @@ class ResultForm(forms.Form):
 
         return initial
 
+    def clean(self):
+        cleaned_data = super(ResultForm, self).clean()
+
+        for adj in self.adjudicators:
+            # Check that it was not a draw
+            aff_total = sum(cleaned_data[self.score_field_name(adj, 'aff', pos)] for pos in range(1, 5))
+            neg_total = sum(cleaned_data[self.score_field_name(adj, 'neg', pos)] for pos in range(1, 5))
+            if aff_total == neg_total:
+                raise forms.ValidationError("The total scores for the teams are the same (i.e. a draw) for adjudicator %s." % (adj.name,))
+
+        return cleaned_data
 
     def save(self):
-        #TODO: validation
-
         dr = DebateResult(self.debate)
 
         def do(side):

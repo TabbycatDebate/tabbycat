@@ -146,6 +146,8 @@ ul#nav .selected ul{
     font-weight: bold;
 }
 
+ul.errorlist { color: red; }
+
 table.scoresheet {
     padding: 20px;
     background-color: #f4fef4;

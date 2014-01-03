@@ -1,5 +1,7 @@
 {% load debate_tags %}
 
+    {{ form.non_field_errors }}
+
     {% for adj in form.adj_iter %}
     <div class="sheet">
     <h2>Adjudicator: {{ adj.adj }} </h2>
@@ -15,8 +17,8 @@
             <tr>
                 <th> Aff {{ position }}</th>
                 <td class="aff speaker s{{ position.pos }} {{ position.aff_speaker.errors|yesno:'error,' }}">
-                    {% if forloop.parentloop.first %} 
-                    {{ position.aff_speaker }} 
+                    {% if forloop.parentloop.first %}
+                    {{ position.aff_speaker }}
                     {{ position.aff_speaker.errors }}
                     {% else %}
                     <label ></label>
@@ -29,15 +31,15 @@
                 <th class="neg"> Neg {{ position }}</th>
                 <td class="neg speaker s{{ position.pos }} {{ position.neg_speaker.errors|yesno:'error,' }}">
                     {% if forloop.parentloop.first %}
-                    {{ position.neg_speaker }} 
+                    {{ position.neg_speaker }}
                     {{ position.neg_speaker.errors }}
                     {% else %}
                     <label></label>
                     {% endif %}
                 </td>
-                <td class="neg score {{ position.neg_score_errors|yesno:'error,' }}"> 
-                    {{ position.neg_score }} 
-                    {{ position.neg_score_errors }} 
+                <td class="neg score {{ position.neg_score_errors|yesno:'error,' }}">
+                    {{ position.neg_score }}
+                    {{ position.neg_score_errors }}
                 </td>
             </tr>
             {% endfor %}

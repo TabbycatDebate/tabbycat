@@ -28,9 +28,12 @@
             if (aff > neg) {
                 $aff_total.addClass('win').removeClass('lose');
                 $neg_total.addClass('lose').removeClass('win');
-            } else {
+            } else if (neg > aff) {
                 $aff_total.addClass('lose').removeClass('win');
                 $neg_total.addClass('win').removeClass('lose');
+            } else {
+                $aff_total.addClass('lose').removeClass('win');
+                $neg_total.addClass('lose').removeClass('win');
             }
 
         };
