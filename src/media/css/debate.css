@@ -204,6 +204,11 @@ table.scoresheet {
     font-size: 100%;
     padding: 7px;
 }
+
+.ballot-checkin-form .ballots-left {
+    text-align: right;
+}
+
 .ballot-checkin-form .message {
     padding: 10px 10px;
     font-weight: bold;

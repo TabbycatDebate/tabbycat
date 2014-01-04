@@ -740,6 +740,13 @@ def get_debate_from_ballot_checkin_request(request, round):
 
 @admin_required
 @round_view
+def ballot_checkin_number_left(request, round):
+    count = Debate.objects.filter(round=round, result_status=Debate.STATUS_NONE).count()
+    print count
+    return HttpResponse(str(count))
+
+@admin_required
+@round_view
 def ballot_checkin_get_details(request, round):
     try:
         debate = get_debate_from_ballot_checkin_request(request, round)
