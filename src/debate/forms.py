@@ -325,6 +325,10 @@ def make_feedback_form_class(adjudicator):
 
     return FeedbackForm
 
+class BallotCheckinForm(forms.Form):
+
+    room_field = forms.CharField()
+
 
 def test():
     from debate.models import Debate

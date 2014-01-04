@@ -80,6 +80,8 @@ urlpatterns = patterns('debate.views',
         name='reply_standings'),
     url(r'^debate/(?P<debate_id>\d+)/results/$', 'enter_result',
         name='enter_result'),
+    url(r'^round/(?P<round_seq>\d+)/ballot_checkin/$', 'ballot_checkin',
+        name='ballot_checkin'),
 
     url(r'^round/(?P<round_seq>\d+)/adjudicators/conflicts/$', 'adj_conflicts', name='adj_conflicts'),
     url(r'^adjudicators/scores/$', 'adj_scores', name='adj_scores'),

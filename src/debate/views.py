@@ -710,3 +710,8 @@ def enter_feedback(request, t, adjudicator_id):
 
     return r2r(request, template, dict(adj=adj, form=form))
 
+@admin_required
+@round_view
+def ballot_checkin(request, round):
+
+    return r2r(request, 'ballot_checkin.html')
