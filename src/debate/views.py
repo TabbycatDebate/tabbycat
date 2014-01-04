@@ -713,5 +713,70 @@ def enter_feedback(request, t, adjudicator_id):
 @admin_required
 @round_view
 def ballot_checkin(request, round):
-
     return r2r(request, 'ballot_checkin.html')
+
+class DebateBallotCheckinError(Exception):
+    pass
+
+def get_debate_from_ballot_checkin_request(request, round):
+    # Called by the submit button on the ballot checkin form.
+    # Returns the message that should go in the "success" field.
+    v = request.POST.get('venue')
+
+    try:
+        venue = Venue.objects.get(name__iexact=v)
+    except Venue.DoesNotExist:
+        raise DebateBallotCheckinError('There aren\'t any venues with the name "' + v + '".')
+
+    try:
+        debate = Debate.objects.get(round=round, venue=venue)
+    except Debate.DoesNotExist:
+        raise DebateBallotCheckinError('There wasn\'t a debate in venue ' + venue.name + ' this round.')
+
+    if debate.result_status != Debate.STATUS_NONE:
+        raise DebateBallotCheckinError('The ballot for venue ' + venue.name + ' has already been checked in.')
+
+    return debate
+
+@admin_required
+@round_view
+def ballot_checkin_get_details(request, round):
+    try:
+        debate = get_debate_from_ballot_checkin_request(request, round)
+    except DebateBallotCheckinError, e:
+        data = {'exists': False, 'message': str(e)}
+        return HttpResponse(json.dumps(data))
+
+    obj = dict()
+
+    obj['exists'] = True
+    obj['venue'] = debate.venue.name
+    obj['aff_team'] = debate.aff_team.name
+    obj['neg_team'] = debate.neg_team.name
+
+    adjs = debate.adjudicators
+    adj_names = [adj.name for type, adj in adjs if type != DebateAdjudicator.TYPE_TRAINEE]
+    obj['num_adjs'] = len(adj_names)
+    obj['adjudicators'] = adj_names
+
+    return HttpResponse(json.dumps(obj))
+
+@admin_required
+@round_view
+def post_ballot_checkin(request, round):
+    try:
+        debate = get_debate_from_ballot_checkin_request(request, round)
+    except DebateBallotCheckinError, e:
+        data = {'exists': False, 'message': str(e)}
+        return HttpResponse(json.dumps(data))
+
+    debate.result_status = Debate.STATUS_BALLOT_IN
+    debate.save()
+
+    obj = dict()
+
+    obj['success'] = True
+    obj['venue'] = debate.venue.name
+    obj['debate_description'] = debate.aff_team.name + " vs " + debate.neg_team.name
+    print obj
+    return HttpResponse(json.dumps(obj))

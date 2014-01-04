@@ -327,7 +327,7 @@ def make_feedback_form_class(adjudicator):
 
 class BallotCheckinForm(forms.Form):
 
-    room_field = forms.CharField()
+    room = forms.CharField()
 
 
 def test():

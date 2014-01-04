@@ -194,6 +194,64 @@ table.scoresheet {
 
 .scoresheet thead th { text-align: center; font-size: 130%; }
 
+.ballot-checkin-form { text-align: center; font-size: 150%; }
+.ballot-checkin-form input[type="text"] {
+    border: 1px solid black;
+    font-size: 125%;
+    padding-left: 8px;
+}
+.ballot-checkin-form button {
+    font-size: 100%;
+    padding: 7px;
+}
+.ballot-checkin-form .message {
+    padding: 10px 10px;
+    font-weight: bold;
+    background-color: #fc9;
+    color: #804000;
+}
+
+.ballot-checkin-form p {
+    margin-top: 7pt;
+    margin-bottom: 7pt;
+}
+
+.ballot-checkin-form .detail { font-weight: bold; }
+
+.ballot-checkin-form table.debate-teams {
+    text-align: left;
+    margin: auto auto;
+}
+
+.ballot-checkin-form table.debate-teams th {
+    padding: 5px;
+}
+.ballot-checkin-form table.debate-teams td {
+    padding: 5px;
+}
+
+.ballot-checkin-form #success { padding: 10px 10px; }
+.ballot-checkin-form .error { background-color: #fcc; color: #800000; }
+.ballot-checkin-form .success { background-color: #cfc; color: #008000; }
+
+.ballot-checkin-form #num_ballots {
+    font-weight: bold;
+}
+
+.ballot-checkin-form .adjudicators-list-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.ballot-checkin-form ul#adjudicators {
+    margin: 0 0 1em 0;
+}
+
+.ballot-checkin-form ul#adjudicators li {
+    margin: 8pt 0;
+}
+
 #configForm label.name { width: 14em; display: block; float: left;}
 #configForm label.help { padding-left: 0.5em; color: #aaa; }
 #configForm .error, #configForm .errorlist { color: red; }
