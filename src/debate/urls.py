@@ -84,8 +84,6 @@ urlpatterns = patterns('debate.views',
         name='ballot_checkin'),
     url(r'^round/(?P<round_seq>\d+)/ballot_checkin/get_details/$', 'ballot_checkin_get_details',
         name='ballot_checkin_get_details'),
-    url(r'^round/(?P<round_seq>\d+)/ballot_checkin/number_left/$', 'ballot_checkin_number_left',
-        name='ballot_checkin_number_left'),
     url(r'^round/(?P<round_seq>\d+)/ballot_checkin/post/$', 'post_ballot_checkin',
         name='post_ballot_checkin'),
 

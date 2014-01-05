@@ -713,7 +713,8 @@ def enter_feedback(request, t, adjudicator_id):
 @admin_required
 @round_view
 def ballot_checkin(request, round):
-    return r2r(request, 'ballot_checkin.html')
+    ballots_left = ballot_checkin_number_left(round)
+    return r2r(request, 'ballot_checkin.html', dict(ballots_left=ballots_left))
 
 class DebateBallotCheckinError(Exception):
     pass
@@ -738,12 +739,9 @@ def get_debate_from_ballot_checkin_request(request, round):
 
     return debate
 
-@admin_required
-@round_view
-def ballot_checkin_number_left(request, round):
+def ballot_checkin_number_left(round):
     count = Debate.objects.filter(round=round, result_status=Debate.STATUS_NONE).count()
-    print count
-    return HttpResponse(str(count))
+    return count
 
 @admin_required
 @round_view
@@ -766,6 +764,8 @@ def ballot_checkin_get_details(request, round):
     obj['num_adjs'] = len(adj_names)
     obj['adjudicators'] = adj_names
 
+    obj['ballots_left'] = ballot_checkin_number_left(round)
+
     return HttpResponse(json.dumps(obj))
 
 @admin_required
@@ -785,5 +785,7 @@ def post_ballot_checkin(request, round):
     obj['success'] = True
     obj['venue'] = debate.venue.name
     obj['debate_description'] = debate.aff_team.name + " vs " + debate.neg_team.name
-    print obj
+
+    obj['ballots_left'] = ballot_checkin_number_left(round)
+
     return HttpResponse(json.dumps(obj))
