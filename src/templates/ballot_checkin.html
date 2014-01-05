@@ -1,0 +1,141 @@
+{% extends "draw_base.html" %}
+
+{% load debate_tags %}
+
+{% block extra-head %}
+
+<script>
+    $(document).ready(function() {
+        $('#venue').focus();
+        $('#debate_details').hide();
+
+        $('#venue').keyup(function(e) {
+            if (e.keyCode != 13) return;
+            $('#success').removeClass('success error').html("Retrieving info...");
+            var val = $('#venue').val();
+            if (val == '') {
+                $('#debate_details').hide();
+                $('#success').html("").show();
+                return;
+            }
+            $.ajax( {
+                type: "POST",
+                url: "{% round_url ballot_checkin_get_details %}",
+                data: {venue: val},
+                success: function(raw_data, status) {
+                    var data = $.parseJSON(raw_data);
+                    // If the debate exists, show its details.
+                    if (data.exists) {
+                        $('#venue_confirm').text(data.venue);
+                        $('#aff_team').text(data.aff_team);
+                        $('#neg_team').text(data.neg_team);
+                        var num_ballots_text, from_text;
+                        if (data.num_adjs == 1) {
+                            $('#num_ballots').text("1 ballot");
+                            $('#ballot_from').text("from");
+                            $('#checkin_btn').text("Check this ballot in");
+                        } else {
+                            $('#num_ballots').text(data.num_adjs + " ballots");
+                            $('#ballot_from').text("one from each of");
+                            $('#checkin_btn').text("Check these ballots in");
+                        }
+                        $('#adjudicators').empty();
+                        $.each(data.adjudicators, function(index, value) {
+                            $('#adjudicators').append("<li>" + value + "</li>");
+                        });
+                        $('#debate_details').show();
+                        $('#success').hide();
+                    // If not, show the error message.
+                    } else {
+                        $('#debate_details').hide();
+                        $('#success').html(data.message).addClass('error').show();
+                    }
+                    $('#ballots_left').text(data.ballots_left);
+                },
+                error: function(xhr, error, ex) {
+                    // Show an error message.
+                    $('#debate_details').hide();
+                    $('#success').html("There was an error retrieving information about that debate.")
+                        .addClass('error').show();
+                }
+            });
+            return false;
+        });
+
+        $('#checkin_btn').click(function() {
+            $('#success').removeClass('success error').html("Checking in...");
+            $('#debate_details').hide();
+            var val = $('#venue_confirm').text();
+            $.ajax( {
+                type: "POST",
+                url: "{% round_url post_ballot_checkin %}",
+                data: {venue: val},
+                success: function(raw_data, status) {
+                    var data = $.parseJSON(raw_data);
+                    if (data.success) {
+                        $('#success').html("Thanks! Checked in the ballot for "
+                            + data.debate_description + " (" + data.venue + ").")
+                            .addClass('success').show();
+                        $('#venue').val('').focus();
+                    } else {
+                        $('#success').html("There was an error checking that ballot in.")
+                            .addClass('error').show();
+                    }
+                    $('#ballots_left').text(data.ballots_left);
+                },
+                error: function(xhr, error, ex) {
+                    // Show an error message.
+                    $('#success').html("There was an error checking that ballot in.")
+                        .addClass('error').show();
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+{% endblock extra-head %}
+
+{% block h1 %} Ballot check-in for Round {{ round }}{% endblock %}
+
+{% block content %}
+<!-- Surround with a form so that we can press 'Enter' on the venue field to submit. -->
+<div class="ballot-checkin-form">
+        <p class="ballots-left">
+            Ballots left: <span id="ballots_left" class="detail">{{ ballots_left }}</span>
+        </p>
+
+        <div>
+            <label for="venue">Venue</label>
+            <input id="venue" type="text" name="venue" />
+        </div>
+
+        <div class="debate-details" id="debate_details">
+            <p id="message" class="message">Please check all these details before you check the ballot in.</p>
+
+            <table class="debate-teams">
+                <tr>
+                    <td>Venue</td>
+                    <td id="venue_confirm" class="detail"></td>
+                </tr>
+                <tr>
+                    <td>Affirmative</td>
+                    <td id="aff_team" class="detail"></td>
+                </tr>
+                <tr>
+                    <td>Negative</td>
+                    <td id="neg_team" class="detail"></td>
+                </tr>
+            </table>
+
+            <p>There should be <span id="num_ballots"></span>, <span id="ballot_from"></span></p>
+
+            <table class="adjudicators-list-wrapper"><tr><td>
+                <ul id="adjudicators"></ul>
+            </td></tr></table>
+            <button id="checkin_btn">Check this ballot in</button>
+        </div>
+        <p id="success"></p>
+</div>
+
+{% endblock content %}
