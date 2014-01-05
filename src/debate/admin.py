@@ -87,3 +87,8 @@ admin.site.register(models.Tournament, TournamentAdmin)
 admin.site.register(models.DebateTeam)
 admin.site.register(models.DebateAdjudicator)
 
+class MotionAdmin(admin.ModelAdmin):
+    list_display = ('reference', 'round')
+    list_filter = ('round',)
+
+admin.site.register(models.Motion, MotionAdmin)

@@ -10,7 +10,7 @@ from django.conf import settings
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
-from debate.models import Person, Checkin
+from debate.models import Person, Checkin, Motion
 from debate import forms
 
 from debate import wordpresslib
@@ -360,6 +360,11 @@ def update_debate_importance(request, round):
     debate.save()
     return HttpResponse(im)
 
+@admin_required
+@round_view
+def motions(request, round):
+    motions = Motion.objects.filter(round=round)
+    return r2r(request, "motions.html", dict(motions=motions))
 
 @login_required
 @round_view

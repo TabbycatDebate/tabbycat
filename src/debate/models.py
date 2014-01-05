@@ -985,6 +985,13 @@ class SpeakerScore(models.Model):
     class Meta:
         unique_together = [('debate_team', 'speaker', 'position')]
 
+class Motion(models.Model):
+    """Represents a single motion (not a set of motions)."""
+
+    text = models.CharField(max_length=500)
+    reference = models.CharField(max_length=100)
+    round = models.ForeignKey(Round)
+
 class ConfigManager(models.Manager):
     def set(self, tournament, key, value):
         obj, created = self.get_or_create(tournament=tournament, key=key)
