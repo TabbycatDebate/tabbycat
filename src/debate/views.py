@@ -380,7 +380,10 @@ def results(request, round):
         'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
         'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
     }
-    return r2r(request, "results.html", dict(draw=draw, stats=stats))
+
+    show_motions_column = Motion.objects.filter(round=round).count() > 1
+
+    return r2r(request, "results.html", dict(draw=draw, stats=stats, show_motions_column=show_motions_column))
 
 def monkey_results(request, round):
 
@@ -388,8 +391,7 @@ def monkey_results(request, round):
         raise Http404()
 
     draw = round.get_draw()
-    draw = draw.filter(result_status__in=(Debate.STATUS_NONE,
-                                           Debate.STATUS_DRAFT))
+    draw = draw.filter(result_status__in=(Debate.STATUS_NONE, Debate.STATUS_BALLOT_IN, Debate.STATUS_DRAFT))
     return r2r(request, "monkey/results.html", dict(draw=draw))
 
 
