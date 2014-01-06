@@ -149,6 +149,8 @@ ul#nav .selected ul{
 ul.errorlist { color: red; }
 div.errors { color: red; }
 
+.scoresheet_motion { text-align: center; }
+
 table.scoresheet {
     padding: 20px;
     background-color: #f4fef4;

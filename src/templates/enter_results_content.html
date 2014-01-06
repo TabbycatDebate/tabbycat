@@ -5,6 +5,11 @@
     {% endif %}
     {{ form.non_field_errors }}
 
+    <div class="scoresheet_motion">
+        <label for="id_motion">Motion:</label>
+        {{ form.motion }}
+    </div>
+
     {% for adj in form.adj_iter %}
     <div class="sheet">
     <h2>Adjudicator: {{ adj.adj }} </h2>

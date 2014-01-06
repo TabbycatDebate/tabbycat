@@ -687,6 +687,7 @@ class Debate(models.Model):
     importance = models.IntegerField(blank=True, null=True)
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                                     default=STATUS_NONE)
+    motion = models.ForeignKey('Motion', blank=True, null=True)
 
     def _get_teams(self):
         if not hasattr(self, '_team_cache'):
@@ -985,12 +986,30 @@ class SpeakerScore(models.Model):
     class Meta:
         unique_together = [('debate_team', 'speaker', 'position')]
 
+class MotionManager(models.Manager):
+    def statistics(self, round=None):
+        if round is None:
+            motions = self.all()
+        else:
+            motions = self.filter(round=round)
+
+        motions = motions.annotate(
+            chosen_in = models.Count('debate'),
+            # TODO add affs won/negs won
+        )
+
+        return motions
+
 class Motion(models.Model):
     """Represents a single motion (not a set of motions)."""
 
     text = models.CharField(max_length=500)
     reference = models.CharField(max_length=100)
     round = models.ForeignKey(Round)
+    objects = MotionManager()
+
+    def __unicode__(self):
+        return self.text
 
 class ConfigManager(models.Manager):
     def set(self, tournament, key, value):
