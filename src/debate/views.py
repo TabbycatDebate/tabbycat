@@ -366,6 +366,12 @@ def motions(request, round):
     motions = Motion.objects.statistics(round=round)
     return r2r(request, "motions.html", dict(motions=motions))
 
+@admin_required
+@round_view
+def motions_edit(request, round):
+    motions = Motion.objects.filter(round=round)
+    return r2r(request, "motions_edit.html", dict(motions=motions))
+
 @login_required
 @round_view
 def results(request, round):
