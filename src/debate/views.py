@@ -363,7 +363,7 @@ def update_debate_importance(request, round):
 @admin_required
 @round_view
 def motions(request, round):
-    motions = Motion.objects.statistics(round)
+    motions = Motion.objects.statistics(round=round)
     return r2r(request, "motions.html", dict(motions=motions))
 
 @login_required
