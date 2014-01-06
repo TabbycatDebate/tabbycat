@@ -61,6 +61,10 @@ class ResultForm(forms.Form):
 
         self.initial = self._initial_data()
 
+        config = debate.round.tournament.config
+        score_kwargs = dict(min_value = config.get('score_min'), max_value = config.get('score_max'))
+        reply_score_kwargs = dict(min_value = config.get('reply_score_min'), max_value = config.get('reply_score_max'))
+
         # tab indices are as follows:
         #
         # Adjudicator 1
@@ -94,9 +98,11 @@ class ResultForm(forms.Form):
                 # be moved elsewhere
                 if pos == 4:
                     score_field = ReplyScoreField
+                    kwargs = reply_score_kwargs
                     css_class = 'required number'
                 else:
                     score_field = ScoreField
+                    kwargs = score_kwargs
                     css_class = 'required number'
 
                 for i, adj in enumerate(self.adjudicators):
@@ -104,7 +110,7 @@ class ResultForm(forms.Form):
                         widget = forms.TextInput(attrs={
                             'class': css_class,
                             'tabindex': 2 * pos + (side == 'neg' and 8 or 0) + 16 * i
-                        }))
+                        }), **kwargs)
 
     def score_field_name(self, adj, side, pos):
         """

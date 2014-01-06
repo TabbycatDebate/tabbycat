@@ -2,10 +2,10 @@ from django.utils.datastructures import SortedDict
 
 #name,  coerce, help, default
 SETTINGS = SortedDict([
-    ('score_min', (int, 'Minimum allowed score', 65)),
-    ('score_max', (int, 'Maximum allowed score', 85)),
-    ('reply_score_min', (int, 'Minimum allowed reply score', 30)),
-    ('reply_score_max', (int, 'Maximum allowed reply score', 45)),
+    ('score_min', (int, 'Minimum allowed score', 68)),
+    ('score_max', (int, 'Maximum allowed score', 82)),
+    ('reply_score_min', (int, 'Minimum allowed reply score', 34)),
+    ('reply_score_max', (int, 'Maximum allowed reply score', 41)),
     ('break_size', (int, 'Number of breaking teams', 16)),
     ('adj_min_score', (float, 'Minimum adjudicator score', 1.5)),
     ('adj_max_score', (float, 'Maximum adjudicator score', 5)),
@@ -29,7 +29,7 @@ class Config(object):
         if key in SETTINGS:
             coerce, help, default = SETTINGS[key]
             return coerce(Config.objects.get_(self._t, key, default))
-    
+
     def set(self, key, value):
         from debate.models import Config
         Config.objects.set(self._t, key, value)
