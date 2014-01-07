@@ -261,7 +261,6 @@ table.scoresheet {
 }
 
 .motions-edit input[type="text"] {
-    border: 1px solid black;
     width: 150px;
 }
 
