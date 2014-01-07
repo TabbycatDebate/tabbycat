@@ -148,6 +148,7 @@ ul#nav .selected ul{
 
 ul.errorlist { color: red; }
 div.errors { color: red; }
+p.warning { color: red; font-weight: bold; }
 
 .scoresheet_motion { text-align: center; }
 

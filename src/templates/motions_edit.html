@@ -24,6 +24,8 @@
 {% block h1 %} Edit Motions for Round {{ round }}{% endblock %}
 
 {% block content %}
+<p class="warning">Warning: Do not add the motions before they have been released to debaters!</p>
+
 <form method="post" action="">
     {{ formset.management_form }}
 
