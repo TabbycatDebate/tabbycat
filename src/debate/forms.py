@@ -328,6 +328,7 @@ def make_feedback_form_class(adjudicator):
 
     return FeedbackForm
 
+
 def test():
     from debate.models import Debate
 

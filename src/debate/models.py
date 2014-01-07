@@ -686,8 +686,9 @@ class Debate(models.Model):
     room_rank = models.IntegerField(default=0)
     importance = models.IntegerField(blank=True, null=True)
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
-                                    default=STATUS_NONE)
-    motion = models.ForeignKey('Motion', blank=True, null=True)
+            default=STATUS_NONE)
+    motion = models.ForeignKey('Motion', blank=True, null=True,
+            on_delete=models.SET_NULL)
 
     def _get_teams(self):
         if not hasattr(self, '_team_cache'):

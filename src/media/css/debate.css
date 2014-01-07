@@ -259,6 +259,17 @@ table.scoresheet {
     margin: 8pt 0;
 }
 
+.motions-edit input[type="text"] {
+    border: 1px solid black;
+    width: 150px;
+}
+
+.motions-edit textarea {
+    font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+    height: 3em;
+    width: 550px;
+}
+
 #configForm label.name { width: 14em; display: block; float: left;}
 #configForm label.help { padding-left: 0.5em; color: #aaa; }
 #configForm .error, #configForm .errorlist { color: red; }

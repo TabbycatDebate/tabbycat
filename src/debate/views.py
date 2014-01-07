@@ -13,6 +13,9 @@ from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, D
 from debate.models import Person, Checkin, Motion
 from debate import forms
 
+from django.forms.models import modelformset_factory
+from django.forms import Textarea
+
 from debate import wordpresslib
 
 from functools import wraps
@@ -369,8 +372,22 @@ def motions(request, round):
 @admin_required
 @round_view
 def motions_edit(request, round):
-    motions = Motion.objects.filter(round=round)
-    return r2r(request, "motions_edit.html", dict(motions=motions))
+    MotionFormSet = modelformset_factory(Motion,
+        widgets={'text': Textarea()},
+        can_delete=True, extra=3, exclude=['round'])
+
+    if request.method == 'POST':
+        formset = MotionFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            for motion in formset.save(commit=False):
+                motion.round = round
+                motion.save()
+            if 'submit' in request.POST:
+                return redirect_round('motions', round)
+
+    formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
+
+    return r2r(request, "motions_edit.html", dict(formset=formset))
 
 @login_required
 @round_view
