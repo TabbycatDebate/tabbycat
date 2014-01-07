@@ -149,6 +149,8 @@ ul#nav .selected ul{
 ul.errorlist { color: red; }
 div.errors { color: red; }
 
+.scoresheet_motion { text-align: center; }
+
 table.scoresheet {
     padding: 20px;
     background-color: #f4fef4;
@@ -255,6 +257,17 @@ table.scoresheet {
 
 .ballot-checkin-form ul#adjudicators li {
     margin: 8pt 0;
+}
+
+.motions-edit input[type="text"] {
+    border: 1px solid black;
+    width: 150px;
+}
+
+.motions-edit textarea {
+    font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+    height: 3em;
+    width: 550px;
 }
 
 #configForm label.name { width: 14em; display: block; float: left;}

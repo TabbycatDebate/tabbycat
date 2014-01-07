@@ -1,0 +1,53 @@
+{% extends "draw_rbase.html" %}
+
+{% load debate_tags %}
+
+{% block extra-head %}
+    <script type="text/javascript" charset="utf-8">
+
+        $(document).ready( function() {
+            $(window).keydown( function(e){
+                if(e.keyCode == 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            } );
+        } );
+
+    </script>
+{% endblock extra-head %}
+
+{% block extra-style %}
+    @import "/static/css/demo_table.css";
+{% endblock %}
+
+{% block h1 %} Edit Motions for Round {{ round }}{% endblock %}
+
+{% block content %}
+<form method="post" action="">
+    {{ formset.management_form }}
+
+    <table class="display motions-edit" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr><th>Reference</th><th>Motion</th><th>Delete</th></tr>
+        </thead>
+        <tbody>
+        {% for form in formset %}
+            {% if form.errors %}
+                <tr><td colspan="3" class="errors">{{ form.errors }}</td></tr>
+            {% endif %}
+            <tr>
+                <td>{{ form.reference }}</td>
+                <td>{{ form.text }}</td>
+                <td>{{ form.DELETE }}{{ form.id }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <input class="button" type="submit" name="submit" value="Save" />
+    <input class="button" type="submit" name="submit_add_more" value="Save and add more" />
+    <a href="{% round_url motions %}">Cancel</a>
+</form>
+
+{% endblock content %}

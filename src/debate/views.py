@@ -10,8 +10,11 @@ from django.conf import settings
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
-from debate.models import Person, Checkin
+from debate.models import Person, Checkin, Motion
 from debate import forms
+
+from django.forms.models import modelformset_factory
+from django.forms import Textarea
 
 from debate import wordpresslib
 
@@ -360,6 +363,31 @@ def update_debate_importance(request, round):
     debate.save()
     return HttpResponse(im)
 
+@admin_required
+@round_view
+def motions(request, round):
+    motions = Motion.objects.statistics(round=round)
+    return r2r(request, "motions.html", dict(motions=motions))
+
+@admin_required
+@round_view
+def motions_edit(request, round):
+    MotionFormSet = modelformset_factory(Motion,
+        widgets={'text': Textarea()},
+        can_delete=True, extra=3, exclude=['round'])
+
+    if request.method == 'POST':
+        formset = MotionFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            for motion in formset.save(commit=False):
+                motion.round = round
+                motion.save()
+            if 'submit' in request.POST:
+                return redirect_round('motions', round)
+
+    formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
+
+    return r2r(request, "motions_edit.html", dict(formset=formset))
 
 @login_required
 @round_view
@@ -375,7 +403,10 @@ def results(request, round):
         'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
         'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
     }
-    return r2r(request, "results.html", dict(draw=draw, stats=stats))
+
+    show_motions_column = Motion.objects.filter(round=round).count() > 1
+
+    return r2r(request, "results.html", dict(draw=draw, stats=stats, show_motions_column=show_motions_column))
 
 def monkey_results(request, round):
 
@@ -383,8 +414,7 @@ def monkey_results(request, round):
         raise Http404()
 
     draw = round.get_draw()
-    draw = draw.filter(result_status__in=(Debate.STATUS_NONE,
-                                           Debate.STATUS_DRAFT))
+    draw = draw.filter(result_status__in=(Debate.STATUS_NONE, Debate.STATUS_BALLOT_IN, Debate.STATUS_DRAFT))
     return r2r(request, "monkey/results.html", dict(draw=draw))
 
 

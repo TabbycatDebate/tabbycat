@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
-from debate.models import SpeakerScoreByAdj, DebateResult, Debate
+from debate.models import SpeakerScoreByAdj, DebateResult, Debate, Motion
 from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
 from debate.result import DebateResult
 
@@ -65,6 +65,10 @@ class ResultForm(forms.Form):
         score_kwargs = dict(min_value = config.get('score_min'), max_value = config.get('score_max'))
         reply_score_kwargs = dict(min_value = config.get('reply_score_min'), max_value = config.get('reply_score_max'))
 
+        self.fields['motion'] = forms.ModelChoiceField(
+            queryset = Motion.objects.filter(round=self.debate.round),
+            widget = forms.Select(attrs = {'tabindex': 0}))
+
         # tab indices are as follows:
         #
         # Adjudicator 1
@@ -126,7 +130,7 @@ class ResultForm(forms.Form):
         Generate dictionary of initial form data
         """
 
-        initial = {'result_status': self.debate.result_status}
+        initial = {'result_status': self.debate.result_status, 'motion': self.debate.motion}
         result = self.debate.result
 
         for side in ('aff', 'neg'):
@@ -191,6 +195,7 @@ class ResultForm(forms.Form):
         dr.save()
 
         self.debate.result_status = self.cleaned_data['result_status']
+        self.debate.motion = self.cleaned_data['motion']
         self.debate.save()
 
     def adj_iter(self):
@@ -327,13 +332,7 @@ def make_feedback_form_class(adjudicator):
 
             af.save()
 
-
-
     return FeedbackForm
-
-class BallotCheckinForm(forms.Form):
-
-    room = forms.CharField()
 
 
 def test():
