@@ -67,27 +67,28 @@ class ResultForm(forms.Form):
 
         self.fields['motion'] = forms.ModelChoiceField(
             queryset = Motion.objects.filter(round=self.debate.round),
-            widget = forms.Select(attrs = {'tabindex': 0}))
+            widget   = forms.Select(attrs = {'tabindex': 1}),
+            required = False)
 
         # tab indices are as follows:
         #
         # Adjudicator 1
-        #  1 A1name  2 A1score     9 N1name  10 N1score
-        #  3 A2name  4 A2score    11 N2name  12 N2score
-        #  5 A3name  6 A3score    13 N3name  14 N3score
-        #  7 ARname  8 ARscore    15 NRname  16 NRscore
+        #  21 A1name  22 A1score    29 N1name  30 N1score
+        #  23 A2name  24 A2score    31 N2name  32 N2score
+        #  25 A3name  26 A3score    33 N3name  34 N3score
+        #  27 ARname  28 ARscore    35 NRname  36 NRscore
         #
         # Adjudicator 2 (odd numbers not used)
-        #  - A1name 18 A1score     - N1name  26 N1score
-        #  - A2name 20 A2score     - N2name  28 N2score
-        #  - A3name 22 A3score     - N3name  30 N3score
-        #  - ARname 24 ARscore     - NRname  32 NRscore
+        #   - A1name 38 A1score     - N1name  46 N1score
+        #   - A2name 40 A2score     - N2name  48 N2score
+        #   - A3name 42 A3score     - N3name  50 N3score
+        #   - ARname 44 ARscore     - NRname  52 NRscore
         #
         # Adjudicator 3 (odd numbers not used)
-        #  - A1name 34 A1score     - N1name  42 N1score
-        #  - A2name 36 A2score     - N2name  44 N2score
-        #  - A3name 38 A3score     - N3name  46 N3score
-        #  - ARname 40 ARscore     - NRname  48 NRscore
+        #   - A1name 54 A1score     - N1name  62 N1score
+        #   - A2name 56 A2score     - N2name  64 N2score
+        #   - A3name 58 A3score     - N3name  66 N3score
+        #   - ARname 60 ARscore     - NRname  68 NRscore
 
         for side in ('aff', 'neg'):
             team = debate.get_team(side)
@@ -95,7 +96,7 @@ class ResultForm(forms.Form):
                 self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(
                     queryset = team.speakers,
                     widget = forms.Select(attrs = {
-                        'tabindex': 2 * pos + (side == 'neg' and 7 or -1)
+                        'tabindex': 20 + 2 * pos + (side == 'neg' and 7 or -1)
                     }))
 
                 # css_class is for jquery validation plugin, surely this can
@@ -113,7 +114,7 @@ class ResultForm(forms.Form):
                     self.fields[self.score_field_name(adj, side, pos)] = score_field(
                         widget = forms.TextInput(attrs={
                             'class': css_class,
-                            'tabindex': 2 * pos + (side == 'neg' and 8 or 0) + 16 * i
+                            'tabindex': 20 + 2 * pos + (side == 'neg' and 8 or 0) + 16 * i
                         }), **kwargs)
 
     def score_field_name(self, adj, side, pos):

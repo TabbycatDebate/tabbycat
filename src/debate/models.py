@@ -480,7 +480,7 @@ class Round(models.Model):
         for debate in draw:
             draw_by_team.append((debate.aff_team, debate))
             draw_by_team.append((debate.neg_team, debate))
-        draw_by_team.sort(key=lambda x: x[0].name)
+        draw_by_team.sort(key=lambda x: str(x[0]))
         return draw_by_team
 
     def make_debates(self, pairs):
@@ -996,8 +996,13 @@ class MotionManager(models.Manager):
 
         motions = motions.annotate(
             chosen_in = models.Count('debate'),
-            # TODO add affs won/negs won
         )
+
+        # TODO is there a more efficient way to do this?
+        for motion in motions:
+            debates = Debate.objects.filter(motion=motion)
+            motion.aff_wins = sum(debate.result.aff_win for debate in debates)
+            motion.neg_wins = sum(debate.result.neg_win for debate in debates)
 
         return motions
 
