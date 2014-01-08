@@ -59,15 +59,19 @@ class ResultForm(forms.Form):
 
         super(ResultForm, self).__init__(*args, **kwargs)
 
+        motions = Motion.objects.filter(round=self.debate.round)
+        self.show_motion = motions.count() > 0 # only show the motion field if there are motions specified for this round
         self.initial = self._initial_data()
 
         config = debate.round.tournament.config
         score_kwargs = dict(min_value = config.get('score_min'), max_value = config.get('score_max'))
         reply_score_kwargs = dict(min_value = config.get('reply_score_min'), max_value = config.get('reply_score_max'))
 
+        # Select the motion first if there's more than one, or last (after the save button)
+        # if there's only one.  (This isn't shown if there are no motions.)
         self.fields['motion'] = forms.ModelChoiceField(
-            queryset = Motion.objects.filter(round=self.debate.round),
-            widget   = forms.Select(attrs = {'tabindex': 1}),
+            queryset = motions,
+            widget   = forms.Select(attrs = {'tabindex': motions.count() > 1 and 1 or 200}),
             required = False)
 
         # tab indices are as follows:
@@ -131,7 +135,21 @@ class ResultForm(forms.Form):
         Generate dictionary of initial form data
         """
 
-        initial = {'result_status': self.debate.result_status, 'motion': self.debate.motion}
+        initial = {'result_status': self.debate.result_status}
+
+        # This isn't relevant if we're not showing the motions field
+        # (i.e. there are no motions given for this round).
+        # Generally, initialise the motion to what is currently in the
+        # database.  But if there is only one motion and no motion is
+        # currently stored in the database for this round, then default
+        # to the only motion there is.
+        motions = Motion.objects.filter(round=self.debate.round)
+        if self.show_motion:
+            if not self.debate.motion and motions.count() == 1:
+                initial['motion'] = motions[0]
+            else:
+                initial['motion'] = self.debate.motion
+
         result = self.debate.result
 
         for side in ('aff', 'neg'):

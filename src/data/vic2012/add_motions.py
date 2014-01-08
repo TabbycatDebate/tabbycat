@@ -2,6 +2,9 @@ import csv
 import debate.models as m
 import random
 
+print "Deleting all motions..."
+m.Motion.objects.all().delete()
+
 reader = csv.reader(open("motions.csv"))
 for text, reference, round in reader:
     round = m.Round.objects.get(seq=int(round))
