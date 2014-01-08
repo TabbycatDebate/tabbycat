@@ -163,7 +163,7 @@ def post_checkin(request, round):
 
 def _availability(request, round, model, context_name):
 
-    items = getattr(round, '%s_availability' % model)().order_by('name')
+    items = getattr(round, '%s_availability' % model)()
 
     context = {
         context_name: items,

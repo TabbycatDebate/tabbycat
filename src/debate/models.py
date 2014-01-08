@@ -90,8 +90,9 @@ class TeamManager(models.Manager):
         return teams
 
 class Team(models.Model):
-    name = models.CharField(max_length=50)
+    reference = models.CharField(max_length=50, verbose_name="Name or suffix")
     institution = models.ForeignKey(Institution)
+    use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
 
     # set to True if a team is ineligible to break (other than being
     # swing/composite)
@@ -111,12 +112,26 @@ class Team(models.Model):
                             default=TYPE_NORMAL)
 
     class Meta:
-        unique_together = [('name', 'institution')]
+        unique_together = [('reference', 'institution')]
 
     objects = TeamManager()
 
     def __unicode__(self):
-        return unicode(self.name)
+        return self.name
+
+    @property
+    def name(self):
+        if self.use_institution_prefix:
+            return unicode(self.institution.code + " " + self.reference)
+        else:
+            return unicode(self.reference)
+
+    @property
+    def long_name(self):
+        if self.use_institution_prefix:
+            return unicode(self.institution.name + " " + self.reference)
+        else:
+            return unicode(self.reference)
 
     def get_aff_count(self, seq=None):
         return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)

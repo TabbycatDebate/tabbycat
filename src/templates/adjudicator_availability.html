@@ -10,13 +10,13 @@
         {% for round in tournament.rounds.all %}
         <th>{{ round.seq }}</th>
         {% endfor %}
-        
+
         <th>Avg</th><th>Score</th><th>Active</th></tr></thead>
     <tbody>
         {% for adj in adjudicators %}
         <tr>
             <td>{{ adj.name }}</td>
-            <td>{{ adj.institution.name }}</td>
+            <td>{{ adj.institution.code }}</td>
             <td>{{ adj.test_score }}</td>
             {% for rscore in adj.rscores %}
             {% if rscore %}
