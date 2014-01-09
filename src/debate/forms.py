@@ -60,7 +60,6 @@ class ResultForm(forms.Form):
         super(ResultForm, self).__init__(*args, **kwargs)
 
         motions = Motion.objects.filter(round=self.debate.round)
-        self.show_motion = motions.count() > 0 # only show the motion field if there are motions specified for this round
         self.initial = self._initial_data()
 
         config = debate.round.tournament.config
@@ -144,7 +143,7 @@ class ResultForm(forms.Form):
         # currently stored in the database for this round, then default
         # to the only motion there is.
         motions = Motion.objects.filter(round=self.debate.round)
-        if self.show_motion:
+        if motions.exists():
             if not self.debate.motion and motions.count() == 1:
                 initial['motion'] = motions[0]
             else:
