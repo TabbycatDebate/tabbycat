@@ -29,3 +29,8 @@ Installation Instructions
 4) Copy config/local_settings.py.example to config/local_settings.py
    and edit
 
+You should only need to do this once. Once you've done the installation,
+you should never need to set up the virtual environment again - just run
+ $ source bin/activate
+from this directory whenever you want to run anything (including run the
+Django development server) from the shell.
