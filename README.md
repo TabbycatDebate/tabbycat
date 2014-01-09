@@ -7,10 +7,11 @@ Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010, was used at Vic
 Australs 2012, and will be used at Otago Australs 2014.
 
 We haven't released this under an open-source licence (so there is no formal general
-right to use this software), but if you're running a debating tournament,
-you're certainly welcome to use it.  It'd be nice if you could please
-let us know that you're doing so, and let us know how it went.  Pull requests
-are welcome and encouraged.
+right to use this software), but if you're running a debating tournament, you're 
+certainly welcome to use it.  It'd be nice if you could please let us know that 
+you're doing so, and let us know how it went.  We're happy to help if you have any
+questions (contact below), though obviously we provide no warranty and disclaim all
+legal liability.  Pull requests are welcome and encouraged.
 
 Requirements and getting started
 --------------------------------
