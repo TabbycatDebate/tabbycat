@@ -482,17 +482,16 @@ class Round(models.Model):
 
     def get_draw(self):
         # -bracket is included for ateneo data, which doesn't have room_rank
-        return Debate.objects.filter(round=self).order_by('room_rank',
+        return self.debate_set.order_by('room_rank',
                                                           '-bracket')
 
     def get_draw_by_room(self):
-        return Debate.objects.filter(round=self).order_by('venue__name')
+        return self.debate_set.order_by('venue__name')
 
     def get_draw_by_team(self):
         # TODO is there a more efficient way to do this?
-        draw = Debate.objects.filter(round=self)
         draw_by_team = list()
-        for debate in draw:
+        for debate in self.debate_set:
             draw_by_team.append((debate.aff_team, debate))
             draw_by_team.append((debate.neg_team, debate))
         draw_by_team.sort(key=lambda x: str(x[0]))
