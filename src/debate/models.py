@@ -41,6 +41,22 @@ class Tournament(models.Model):
             self._config = Config(self)
         return self._config
 
+    @property
+    def LAST_SUBSTANTIVE_POSITION(self):
+        return 3
+
+    @property
+    def REPLY_POSITION(self):
+        return 4
+
+    @property
+    def REPLIES_ENABLED(self):
+        return True
+
+    @property
+    def POSITIONS(self):
+        return range(1, 5)
+
     def __unicode__(self):
         return unicode(self.slug)
 
@@ -190,14 +206,14 @@ class SpeakerManager(models.Manager):
         if round:
             speakers = self.filter(
                 team__institution__tournament=tournament,
-                speakerscore__position__lte=3,
+                speakerscore__position__lte=tournament.LAST_SUBSTANTIVE_POSITION,
                 speakerscore__debate_team__debate__round__seq__lte =
                 round.seq,
             )
         else:
             speakers = self.filter(
                 team__institution__tournament=tournament,
-                speakerscore__position__lte=3,
+                speakerscore__position__lte=tournament.LAST_SUBSTANTIVE_POSITION,
             )
 
         speakers = speakers.annotate(
@@ -215,17 +231,21 @@ class SpeakerManager(models.Manager):
         return speakers
 
     def reply_standings(self, tournament, round=None):
+        # If replies aren't enabled, return an empty queryset.
+        if not tournament.REPLIES_ENABLED:
+            return self.objects.none()
+
         if round:
             speakers = self.filter(
                 team__institution__tournament=tournament,
-                speakerscore__position=4,
+                speakerscore__position=tournament.REPLY_POSITION,
                 speakerscore__debate_team__debate__round__seq__lte =
                 round.seq,
             )
         else:
             speakers = self.filter(
                 team__institution__tournament=tournament,
-                speakerscore__position=4,
+                speakerscore__position=tournament.REPLY_POSITION,
             )
 
         speakers = speakers.annotate(

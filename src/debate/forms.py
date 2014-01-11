@@ -59,10 +59,15 @@ class ResultForm(forms.Form):
 
         super(ResultForm, self).__init__(*args, **kwargs)
 
-        motions = Motion.objects.filter(round=self.debate.round)
+        tournament = debate.round.tournament
+        self.POSITIONS = tournament.POSITIONS
+        self.LAST_SUBSTANTIVE_POSITION = tournament.LAST_SUBSTANTIVE_POSITION
+        self.REPLY_POSITION = tournament.REPLY_POSITION
+
+        motions = debate.round.motion_set
         self.initial = self._initial_data()
 
-        config = debate.round.tournament.config
+        config = tournament.config
         score_kwargs = dict(min_value = config.get('score_min'), max_value = config.get('score_max'))
         reply_score_kwargs = dict(min_value = config.get('reply_score_min'), max_value = config.get('reply_score_max'))
 
@@ -73,7 +78,7 @@ class ResultForm(forms.Form):
             widget   = forms.Select(attrs = {'tabindex': motions.count() > 1 and 1 or 200}),
             required = False)
 
-        # tab indices are as follows:
+        # tab indices are as follows (example):
         #
         # Adjudicator 1
         #  21 A1name  22 A1score    29 N1name  30 N1score
@@ -82,29 +87,31 @@ class ResultForm(forms.Form):
         #  27 ARname  28 ARscore    35 NRname  36 NRscore
         #
         # Adjudicator 2 (odd numbers not used)
-        #   - A1name 38 A1score     - N1name  46 N1score
-        #   - A2name 40 A2score     - N2name  48 N2score
-        #   - A3name 42 A3score     - N3name  50 N3score
-        #   - ARname 44 ARscore     - NRname  52 NRscore
+        #   - A1name  38 A1score     - N1name  46 N1score
+        #   - A2name  40 A2score     - N2name  48 N2score
+        #   - A3name  42 A3score     - N3name  50 N3score
+        #   - ARname  44 ARscore     - NRname  52 NRscore
         #
         # Adjudicator 3 (odd numbers not used)
-        #   - A1name 54 A1score     - N1name  62 N1score
-        #   - A2name 56 A2score     - N2name  64 N2score
-        #   - A3name 58 A3score     - N3name  66 N3score
-        #   - ARname 60 ARscore     - NRname  68 NRscore
+        #   - A1name  54 A1score     - N1name  62 N1score
+        #   - A2name  56 A2score     - N2name  64 N2score
+        #   - A3name  58 A3score     - N3name  66 N3score
+        #   - ARname  60 ARscore     - NRname  68 NRscore
 
-        for side in ('aff', 'neg'):
+        MAX_POSITION = max(self.POSITIONS)
+
+        for side, tab_index_add in (('aff', 0), ('neg', 2 * MAX_POSITION)):
             team = debate.get_team(side)
-            for pos in range(1, 5):
+            for pos in self.POSITIONS:
                 self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(
                     queryset = team.speakers,
                     widget = forms.Select(attrs = {
-                        'tabindex': 20 + 2 * pos + (side == 'neg' and 7 or -1)
+                        'tabindex': 19 + 2 * pos + tab_index_add
                     }))
 
                 # css_class is for jquery validation plugin, surely this can
                 # be moved elsewhere
-                if pos == 4:
+                if pos == self.REPLY_POSITION:
                     score_field = ReplyScoreField
                     kwargs = reply_score_kwargs
                     css_class = 'required number'
@@ -117,7 +124,7 @@ class ResultForm(forms.Form):
                     self.fields[self.score_field_name(adj, side, pos)] = score_field(
                         widget = forms.TextInput(attrs={
                             'class': css_class,
-                            'tabindex': 20 + 2 * pos + (side == 'neg' and 8 or 0) + 16 * i
+                            'tabindex': 20 + 2 * pos + tab_index_add + 4 * MAX_POSITION * i
                         }), **kwargs)
 
     def score_field_name(self, adj, side, pos):
@@ -152,7 +159,7 @@ class ResultForm(forms.Form):
         result = self.debate.result
 
         for side in ('aff', 'neg'):
-            for i in range(1, 5):
+            for i in self.POSITIONS:
                 speaker = result.get_speaker(side, i)
                 if speaker:
                     initial['%s_speaker_%d' % (side, i)] = speaker.id
@@ -171,8 +178,8 @@ class ResultForm(forms.Form):
         for adj in self.adjudicators:
             # Check that it was not a draw
             try:
-                aff_total = sum(cleaned_data[self.score_field_name(adj, 'aff', pos)] for pos in range(1, 5))
-                neg_total = sum(cleaned_data[self.score_field_name(adj, 'neg', pos)] for pos in range(1, 5))
+                aff_total = sum(cleaned_data[self.score_field_name(adj, 'aff', pos)] for pos in self.POSITIONS)
+                neg_total = sum(cleaned_data[self.score_field_name(adj, 'neg', pos)] for pos in self.POSITIONS)
             except KeyError:
                 continue
             if aff_total == neg_total:
@@ -184,12 +191,12 @@ class ResultForm(forms.Form):
         # The third speaker can't give the reply.
         for side in ('affirmative', 'negative'):
             try:
-                reply_speaker_error = cleaned_data['%s_speaker_3' % (side[:3],)] == cleaned_data['%s_speaker_4' % (side[:3],)]
+                reply_speaker_error = cleaned_data['%s_speaker_%d' % (side[:3], self.LAST_SUBSTANTIVE_POSITION)] == cleaned_data['%s_speaker_%d' % (side[:3], self.REPLY_POSITION)]
             except KeyError:
                 continue
             if reply_speaker_error:
                 errors.append(forms.ValidationError(
-                    _('The third speaker and reply speaker for the %(side)s team are the same.'),
+                    _('The last substantive speaker and reply speaker for the %(side)s team are the same.'),
                     params={'side': side}, code='reply_speaker'
                 ))
 
@@ -202,7 +209,7 @@ class ResultForm(forms.Form):
         dr = DebateResult(self.debate)
 
         def do(side):
-            for i in range(1, 5):
+            for i in self.POSITIONS:
                 speaker = self.cleaned_data['%s_speaker_%d' % (side, i)]
                 dr.set_speaker(side, i, speaker)
                 for adj in self.adjudicators:
@@ -255,7 +262,8 @@ class ResultForm(forms.Form):
                 self.adj = adj
 
             def position_iter(self):
-                for i, name in ((1, 1), (2, 2), (3, 3), (4, 'Reply')):
+                for i in form.POSITIONS:
+                    name = (i == form.REPLY_POSITION) and "Reply" or str(i)
                     yield Position(self.adj, i, name)
 
 
