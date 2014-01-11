@@ -65,6 +65,7 @@ class ResultForm(forms.Form):
         self.REPLY_POSITION = tournament.REPLY_POSITION
 
         motions = debate.round.motion_set
+        self.show_motion = motions.exists() # this is used in the template
         self.initial = self._initial_data()
 
         config = tournament.config
@@ -149,8 +150,8 @@ class ResultForm(forms.Form):
         # database.  But if there is only one motion and no motion is
         # currently stored in the database for this round, then default
         # to the only motion there is.
-        motions = Motion.objects.filter(round=self.debate.round)
-        if motions.exists():
+        motions = self.debate.round.motion_set
+        if self.show_motion:
             if not self.debate.motion and motions.count() == 1:
                 initial['motion'] = motions[0]
             else:
