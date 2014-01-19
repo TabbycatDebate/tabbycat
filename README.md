@@ -13,11 +13,17 @@ you're doing so, and let us know how it went.  We're happy to help if you have a
 questions (contact below), though obviously we provide no warranty and disclaim all
 legal liability.  Pull requests are welcome and encouraged.
 
+If you're interested in using, developing or otherwise following this software,
+join our Facebook group: https://www.facebook.com/groups/tabbycat.debate/
+
 Requirements and getting started
 --------------------------------
 Tabbycat runs on Linux, and requires Python (which is normally distributed with
 Linux).  It runs a Django-based server.  All requirements are included in the
 installation instructions in the INSTALL file.
+
+We've seen Tabbycat work fine on OS X, and there's no theoretical reason we can
+think of why it wouldn't work on Windows, though we haven't tried it.
 
 You'll need to set up a PostgreSQL database, or your favourite Django-compatible
 database engine should work just as well.
