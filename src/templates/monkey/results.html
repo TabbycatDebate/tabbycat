@@ -9,7 +9,7 @@
         $(document).ready( function() {
             $("#dataTable").dataTable( {
                 "bPaginate": false,
-                "aaSorting": [[0, 'desc']]
+                "aaSorting": [[0, 'asc']]
             } );
 
         } );
@@ -31,11 +31,12 @@
     {% for debate in draw %}
     <tr class="
     {% ifequal debate.result_status "N" %}inactive {% endifequal %}
+    {% ifequal debate.result_status "B" %}inactive {% endifequal %}
     {% ifequal debate.result_status "C" %}active{% endifequal %}
     ">
         <td>{{ debate.venue.name }}</td>
         <td>
-            <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a> 
+            <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a>
         </td>
         <td>
             <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a>
@@ -43,7 +44,7 @@
         <td>{{ debate.adjudicators_display }}</td>
         <td>
             <a href="{% tournament_url enter_result debate.id %}">
-            {% ifequal debate.result_status "N" %}Enter results {% endifequal %}
+            {% if debate.result_status == "B" or debate.result_status == "N" %}Enter results {% endif %}
             {% ifequal debate.result_status "D" %}Unconfirmed{% endifequal %}
             {% ifequal debate.result_status "C" %}Confirmed{% endifequal %}
             </a>
