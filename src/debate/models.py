@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from debate.utils import pair_list, memoize
 from debate.draw import RandomDrawNoConflict, AidaDraw
@@ -1050,6 +1052,94 @@ class Motion(models.Model):
 
     def __unicode__(self):
         return self.text
+
+class ActionLogManager(models.Manager):
+    def log(self, *args, **kwargs):
+        obj = self.model(*args, **kwargs)
+        obj.full_clean()
+        obj.save()
+
+class ActionLog(models.Model):
+    # These aren't generated automatically - all generations of these should
+    # be done in views (not models).
+
+    ACTION_TYPE_BALLOT_CHECKIN    = 10
+    ACTION_TYPE_BALLOT_DRAFT      = 11
+    ACTION_TYPE_BALLOT_CONFIRM    = 12
+    ACTION_TYPE_BALLOT_ANNUL      = 13
+    ACTION_TYPE_FEEDBACK_SUBMIT   = 20
+    ACTION_TYPE_FEEDBACK_SAVE     = 21
+    ACTION_TYPE_DRAW_CREATE       = 30
+    ACTION_TYPE_DRAW_CONFIRM      = 31
+    ACTION_TYPE_ADJUDICATORS_SAVE = 32
+    ACTION_TYPE_VENUES_SAVE       = 33
+    ACTION_TYPE_MOTION_EDIT       = 40
+
+    ACTION_TYPE_CHOICES = (
+        (ACTION_TYPE_BALLOT_ANNUL     , 'Annulled ballot'),
+        (ACTION_TYPE_BALLOT_CHECKIN   , 'Checked in ballot'),
+        (ACTION_TYPE_BALLOT_DRAFT     , 'Entered draft ballot'),
+        (ACTION_TYPE_BALLOT_CONFIRM   , 'Confirmed ballot'),
+        (ACTION_TYPE_FEEDBACK_SUBMIT  , 'Submitted feedback'), # For debaters, not tab monkeys
+        (ACTION_TYPE_FEEDBACK_SAVE    , 'Saved feedback'),     # For tab monkeys, not debaters
+        (ACTION_TYPE_ADJUDICATORS_SAVE, 'Saved adjudicator allocation'),
+        (ACTION_TYPE_VENUES_SAVE      , 'Saved venues'),
+        (ACTION_TYPE_DRAW_CREATE      , 'Created draw'),
+        (ACTION_TYPE_DRAW_CONFIRM     , 'Confirmed draw'),
+        (ACTION_TYPE_MOTION_EDIT      , 'Added/edited motion'),
+    )
+
+    REQUIRED_FIELDS_BY_ACTION_TYPE = {
+        ACTION_TYPE_BALLOT_ANNUL     : ('debate',),
+        ACTION_TYPE_BALLOT_CHECKIN   : ('debate',),
+        ACTION_TYPE_BALLOT_DRAFT     : ('debate',),
+        ACTION_TYPE_BALLOT_CONFIRM   : ('debate',),
+        ACTION_TYPE_FEEDBACK_SUBMIT  : ('adjudicator_feedback',),
+        ACTION_TYPE_FEEDBACK_SAVE    : ('adjudicator_feedback',),
+        ACTION_TYPE_ADJUDICATORS_SAVE: ('round',),
+        ACTION_TYPE_VENUES_SAVE      : ('round',),
+        ACTION_TYPE_DRAW_CREATE      : ('round',),
+        ACTION_TYPE_DRAW_CONFIRM     : ('round',),
+        ACTION_TYPE_MOTION_EDIT      : ('motion',),
+    }
+
+    ACTION_TYPE_BY_RESULT_STATUS = {
+        Debate.STATUS_NONE:      ACTION_TYPE_BALLOT_ANNUL,
+        Debate.STATUS_BALLOT_IN: ACTION_TYPE_BALLOT_CHECKIN,
+        Debate.STATUS_DRAFT:     ACTION_TYPE_BALLOT_DRAFT,
+        Debate.STATUS_CONFIRMED: ACTION_TYPE_BALLOT_CONFIRM,
+    }
+
+    ALL_OPTIONAL_FIELDS = ('debate', 'adjudicator_feedback', 'round', 'motion')
+
+    type = models.PositiveSmallIntegerField(choices=ACTION_TYPE_CHOICES)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    debate = models.ForeignKey(Debate, blank=True, null=True)
+    adjudicator_feedback = models.ForeignKey(AdjudicatorFeedback, blank=True, null=True)
+    round = models.ForeignKey(Round, blank=True, null=True)
+    motion = models.ForeignKey(Motion, blank=True, null=True)
+
+    objects = ActionLogManager()
+
+    def __repr__(self):
+        return '<Action %d by %s (%s): %s>' % (self.id, self.user, self.timestamp, self.get_type_display())
+
+    def clean(self):
+        required_fields = self.REQUIRED_FIELDS_BY_ACTION_TYPE[self.type]
+        errors = list()
+        for field_name in self.ALL_OPTIONAL_FIELDS:
+            if field_name in required_fields:
+                if getattr(self, field_name) is None:
+                    errors.append(ValidationError('A log entry of type "%s" requires the field "%s".' %
+                        (self.get_type_display(), field_name)))
+            else:
+                if getattr(self, field_name) is not None:
+                    errors.append(ValidationError('A log entry of type "%s" must not have the field "%s".' %
+                        (self.get_type_display(), field_name)))
+        if errors:
+            raise ValidationError(errors)
 
 class ConfigManager(models.Manager):
     def set(self, tournament, key, value):

@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 
 from debate.models import SpeakerScoreByAdj, DebateResult, Debate, Motion
 from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
+from debate.models import ActionLog
 from debate.result import DebateResult
 
 def get_or_instantiate(model, **kwargs):
@@ -320,7 +321,7 @@ def make_feedback_form_class(adjudicator):
     class FeedbackForm(forms.Form):
         source = forms.TypedChoiceField(
             choices = choices,
-            coerce = coerce,
+            #coerce = coerce, # This seems to mess up data cleaning?
         )
 
         score = forms.FloatField(
@@ -331,7 +332,11 @@ def make_feedback_form_class(adjudicator):
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def save(self):
+            # Saves the form and returns the AdjudicatorFeedback object
+
             source = self.cleaned_data['source']
+            source = coerce(source)
+
             if isinstance(source, DebateAdjudicator):
                 sa = source
             else:
@@ -358,6 +363,8 @@ def make_feedback_form_class(adjudicator):
             af.comments = self.cleaned_data['comment']
 
             af.save()
+
+            return af
 
     return FeedbackForm
 

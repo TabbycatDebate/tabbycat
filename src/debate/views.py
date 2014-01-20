@@ -10,7 +10,7 @@ from django.conf import settings
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
-from debate.models import Person, Checkin, Motion
+from debate.models import Person, Checkin, Motion, ActionLog
 from debate import forms
 
 from django.forms.models import modelformset_factory
@@ -321,6 +321,8 @@ def draw_confirmed(request, round):
 def create_draw(request, round):
 
     round.draw()
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CREATE,
+        user=request.user, round=round)
     return redirect_round('draw', round)
 
 
@@ -334,6 +336,8 @@ def confirm_draw(request, round):
 
     round.draw_status = round.STATUS_CONFIRMED
     round.save()
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CONFIRM,
+        user=request.user, round=round)
 
     return redirect_round('draw', round)
 
@@ -382,6 +386,8 @@ def motions_edit(request, round):
             for motion in formset.save(commit=False):
                 motion.round = round
                 motion.save()
+                ActionLog.objects.log(type=ActionLog.ACTION_TYPE_MOTION_EDIT,
+                    user=request.user, motion=motion)
             if 'submit' in request.POST:
                 return redirect_round('motions', round)
 
@@ -433,6 +439,11 @@ def enter_result(request, t, debate_id):
 
         if form.is_valid():
             form.save()
+
+            action_type = ActionLog.ACTION_TYPE_BY_RESULT_STATUS[debate.result_status]
+            ActionLog.objects.log(type=action_type, user=request.user,
+                debate=debate)
+
             return redirect_round('results', debate.round)
     else:
         form = forms.ResultForm(debate)
@@ -564,6 +575,9 @@ def save_venues(request, round):
 
         debates[debate_id].save()
 
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_VENUES_SAVE,
+        user=request.user, round=round)
+
     return HttpResponse("ok")
 
 
@@ -641,6 +655,9 @@ def save_adjudicators(request, round):
 
     for d_id, alloc in debate_adjudicators.items():
         alloc.save()
+
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_ADJUDICATORS_SAVE,
+        user=request.user, round=round)
 
     return HttpResponse("ok")
 
@@ -733,7 +750,9 @@ def enter_feedback(request, t, adjudicator_id):
     if request.method == "POST":
         form = forms.make_feedback_form_class(adj)(request.POST)
         if form.is_valid():
-            form.save()
+            adj_feedback = form.save()
+            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
+                user=request.user, adjudicator_feedback=adj_feedback)
             return redirect_tournament('adj_feedback', t)
     else:
         form = forms.make_feedback_form_class(adj)()
@@ -809,6 +828,9 @@ def post_ballot_checkin(request, round):
 
     debate.result_status = Debate.STATUS_BALLOT_IN
     debate.save()
+
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_CHECKIN,
+        user=request.user, debate=debate)
 
     obj = dict()
 
