@@ -39,10 +39,6 @@ you should never need to set up the virtual environment again - just run
 ...from this directory whenever you want to run anything (including run the
 Django development server) from the shell.
 
-While in the root directory the development server can be started using:
-
-      $ python src/australs/manage.py runserver
-
 On your first-run, you'll need to create the relevant database tables and relations using:
 
       $ python src/australs/manage.py syncdb
@@ -50,3 +46,8 @@ On your first-run, you'll need to create the relevant database tables and relati
 As well as setup the database migrations using [South](http://south.aeracode.org) as follows:
 
       $ python src/australs/manage.py migrate
+
+
+While in the root directory the development server can be started using:
+
+      $ python src/australs/manage.py runserver
