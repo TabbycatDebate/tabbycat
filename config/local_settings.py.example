@@ -6,7 +6,7 @@ def proj(p):
     return join(PROJ_ROOT, p)
 
 # Absolute path to the project root
-PROJ_ROOT = '/media/data/projects/australs/debate.git'
+PROJ_ROOT = '/media/data/projects/australs/debate'
 
 # See https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-DATABASES for details
 DATABASES = {
