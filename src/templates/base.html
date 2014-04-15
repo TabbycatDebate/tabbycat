@@ -1,62 +1,52 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-{% load debate_tags %}
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>
-    {% block head-title %}{% endblock %}
-    </title>
 
-    <script type="text/javascript" language="javascript" src="/static/js/jquery-1.4.2.js"></script>
-    <script type="text/javascript" language="javascript" src="/static/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" language="javascript" src="/static/js/jquery.validate.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#jsWarn").hide();
+    <title>{% block head-title %}{% endblock %}</title>
 
-            $('#rounds > ul > li > a').click(function() {
-                $this = $(this);
-                $('#rounds > ul > li > ul').hide();
-                $('#rounds > ul > li').removeClass('selected');
-                $this.parent().addClass('selected');
-                $this.siblings('ul').show();
-                return false;
-            });
-
-            $('#rounds > ul > li.selected > a').click();
-        });
-    </script>
-
-    <style type="text/css" title="currentStyle">
-        @import "/static/css/debate.css";
-        {% block extra-style %}
-        {% endblock extra-style %}
-
-        #current_round a { font-weight: bold; }
-        #current_round ul a { font-weight: normal; }
-    </style>
+    <link href="/static/bootstrap/stylesheets/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
 
     {% block extra-head %}
     {% endblock extra-head %}
 
-    </head>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    {% load debate_tags %}
+
+</head>
+
 <body id="{% block body-id %}debate{% endblock %}" class="{% block body-class %}{% endblock %}">
-    <div id="jsWarn">
-        Javascript must be enabled for this application to function correctly.
-    </div>
+
     {% block body %}
-    <div id="container">
+    <div id="container" class="container-fluid">
+
         {% block nav %}
         {% include "nav.html" %}
         {% endblock nav %}
 
         <h1>{% block h1 %}{% endblock %}</h1>
+
         {% block content %}
         {% endblock content %}
-    </div><!-- container -->
+
+    </div>
     {% endblock body %}
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/bootstrap/javascripts/bootstrap.js"></script>
+
+    <script type="text/javascript" language="javascript" src="/static/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/js/jquery.validate.js"></script>
+
 </body>
 </html>
-
-

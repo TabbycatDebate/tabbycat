@@ -29,7 +29,7 @@
             $(this).remove();
             addPlaceholder(holder);
         } );
-            
+
 
         $(".venue").draggable( {
             handle: 'div',
@@ -62,7 +62,7 @@
                     venueMoved(replacing, $(this), $("#scratch"));
                     $("#scratch").append(replacing);
                 }
-                
+
                 $(this).append(venue);
                 venueMoved(venue, oldHolder, $(this));
 
@@ -168,7 +168,7 @@
 <div id="statusBar">
     Edit venues for Round {{ round }} |
     <a href="" id="save">Save</a>
-    Discard Undo Redo 
+    Discard Undo Redo
     <a href="{% round_url draw %}">Quit</a>
 </div>
 
@@ -182,7 +182,7 @@
 </div>
 
 <div id="main">
-    <table id="dataTable" class="display" cellpadding="0" cellspacing="0">
+    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
         <thead>
             <tr><th>Bracket</th><th>Affirmative</th><th>Negative</th><th>Venue</th></tr>
         </thead>

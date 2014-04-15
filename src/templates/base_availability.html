@@ -47,7 +47,7 @@
                 updateCheckbox(this);
                 changeHappened(this);
             });
-            
+
             $("#dataTable tbody tr").click( function(event) {
                 if (event.target.type !== "checkbox") {
                     var jc = $(":checkbox", this);
@@ -126,7 +126,7 @@
         <button type="submit">Save changes</button>
         <a id="select_all" href="#all">Select All</a>
     </div>
-    <table id="dataTable" class="display" cellpadding="0", cellspacing="0">
+    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0", cellspacing="0">
         {% block table-contents %}
         {% endblock table-contents %}
     </table>

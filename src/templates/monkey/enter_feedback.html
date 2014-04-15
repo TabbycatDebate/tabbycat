@@ -22,7 +22,11 @@ Feedback for {{ adj }}
 </h2>
 <form id="feedbackForm" action="" method="POST">
     {{ form.as_p }}
-<input type="submit" value="Save" />
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" value="Save" class="btn btn-default ">Save</button>
+        </div>
+    </div>
 </form>
 
 {% endblock content %}
