@@ -1,0 +1,28 @@
+@import url(datatables/jquery.dataTables.css);
+@import url(datatables/dataTables.bootstrap.css);
+.text-success {
+  color: #5cb85c; }
+
+a.text-success:hover {
+  color: #449d44; }
+
+.text-info {
+  color: #d5e615; }
+
+a.text-info:hover {
+  color: #aab711; }
+
+.text-warning {
+  color: #f0ad4e; }
+
+a.text-warning:hover {
+  color: #ec971f; }
+
+.text-danger {
+  color: #d9534f; }
+
+a.text-danger:hover {
+  color: #c9302c; }
+
+.btn-group {
+  padding: 0 0 10px 0; }

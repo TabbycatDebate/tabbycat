@@ -2,85 +2,65 @@
 
 {% load debate_tags %}
 
-{% block extra-head %}
-    <script type="text/javascript" charset="utf-8">
-
-        $(document).ready( function() {
-            $("#dataTable").dataTable( {
-                "bPaginate": false,
-                "aaSorting": [[0, 'desc']]
-            } );
-
-        } );
-
-    </script>
-    <style>
-        #stats th { text-align: left; }
-        #stats td { text-align: right; }
-        #stats .none { color: red; }
-        #stats .ballotin { color: orange; }
-        #stats .unconfirmed { color: blue; }
-        #stats .confirmed { color: green; }
-    </style>
-{% endblock extra-head %}
-
-{% block extra-style %}
-    @import "/static/css/demo_table.css";
-{% endblock %}
-
-{% block h1 %} Results for Round {{ round }}{% endblock %}
+{% block h1 %}Results for Round {{ round }}{% endblock %}
 
 {% block content %}
 
 <div class="btn-group btn-group-lg">
-    <button class="btn btn-default btn-danger"><span class="label none">{{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove-sign"></span></span></button>
-    <button class="btn btn-default btn-warning"><span class="label ballotin">{{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-info-sign"></span></span></button>
-    <button class="btn btn-default btn-warning"><span class="label unconfirmed">{{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-question-sign"></span></span></button>
-    <button class="btn btn-default btn-success"><span class="label confirmed">{{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok-sign"></span></span></button>
+    <button class="btn btn-default btn-danger"><span class="label none">{{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span></span></button>
+    <button class="btn btn-default btn-warning"><span class="label ballotin">{{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span></span></button>
+    <button class="btn btn-default btn-info"><span class="label unconfirmed">{{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span></span></button>
+    <button class="btn btn-default btn-success"><span class="label confirmed">{{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span></span></button>
 </div>
 
-<table id="dataTable" class="table table-hover table-striped table-bordered" cellpadding="0" cellspacing="0">
+<table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
     <thead>
-        <tr><th>Status</th><th>[ ]</th><th>Venue</th><th>Affirmative</th><th>Negative</th><th>Adjudicators</th>
+        <tr>
+            <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="Ballot Status"></span></th>
+            <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+            <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+            <th>Affirmative</th>
+            <th>Negative</th>
+            <th>Adjudicators</th>
         {% if show_motions_column %}<th>Motion</th>{% endif %}
         </tr>
     </thead>
     <tbody>
     {% for debate in draw %}
-    <tr class="
-    {% ifequal debate.result_status "N" %}inactive {% endifequal %}
-    {% ifequal debate.result_status "B" %}conflict {% endifequal %}
-    {% ifequal debate.result_status "C" %}active{% endifequal %}
+    <tr class=" {% ifequal debate.result_status "N" %}bg-danger {% endifequal %}
+                {% ifequal debate.result_status "B" %}bg-warning {% endifequal %}
+                {% ifequal debate.result_status "D" %}bg-info {% endifequal %}
+                {% ifequal debate.result_status "C" %}bg-success{% endifequal %}
     ">
 
         {% ifequal debate.result_status "N" %}
-            <td><a href="{% tournament_url enter_result debate.id %}"><span class="glyphicon glyphicon-remove-sign text-danger"></span></a></td>
+            <td><a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="No Ballot (click to edit)"><span class="glyphicon glyphicon-remove text-danger"></span></a></td>
         {% endifequal %}
         {% ifequal debate.result_status "B" %}
-            <td><a href="{% tournament_url enter_result debate.id %}"><span class="glyphicon glyphicon-info-sign text-warning"></span></a></td>
+            <td><a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Ballot In (click to edit)"><span class="glyphicon glyphicon-inbox text-warning"></span></a></td>
         {% endifequal %}
         {% ifequal debate.result_status "D" %}
-            <td><a href="{% tournament_url enter_result debate.id %}"><span class="glyphicon glyphicon-question-sign text-warning"></span></a></td>
+            <td><a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Unconfirmed Ballot (click to edit)"><span class="glyphicon glyphicon-adjust text-info"></span></a></td>
         {% endifequal %}
         {% ifequal debate.result_status "C" %}
-            <td><a href="{% tournament_url enter_result debate.id %}"><span class="glyphicon glyphicon-ok-sign text-success"></span></a></td>
+            <td><a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Confirmed Ballot (click to edit)"><span class="glyphicon glyphicon-ok text-success"></span></a></td>
         {% endifequal %}
 
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td class="{% if debate.result.aff_win %}winner{% endif %}">
             {% if debate.result.aff_win == 1 %}
-                <span class="glyphicon glyphicon-ok "></span>
+                <span class="glyphicon glyphicon-arrow-up"></span>
             {% else %}
-                <span class="glyphicon glyphicon-remove "></span>
+                <span class="glyphicon glyphicon-arrow-down"></span>
             {% endif %}
             <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a>
         </td>
         <td class="{% if debate.result.neg_win %}winner{% endif %}">
             {% if debate.result.neg_win == 1 %}
-                <span class="glyphicon glyphicon-ok "></span>
+                <span class="glyphicon glyphicon-arrow-up"></span>
             {% else %}
-                <span class="glyphicon glyphicon-remove "></span>
+                <span class="glyphicon glyphicon glyphicon-arrow-down"></span>
             {% endif %}
             <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a>
         <td>{{ debate.adjudicators_display }}</td>

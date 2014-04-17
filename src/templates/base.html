@@ -33,7 +33,9 @@
         {% include "nav.html" %}
         {% endblock nav %}
 
-        <h1>{% block h1 %}{% endblock %}</h1>
+        <div class="page-header">
+            <h1>{% block h1 %}{% endblock %}</h1>
+        </div>
 
         {% block content %}
         {% endblock content %}
@@ -43,10 +45,19 @@
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script type="text/javascript" language="javascript" src="/static/bootstrap/javascripts/bootstrap.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/bootstrap/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/js/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/js/datatables/dataTables.bootstrap.js"></script>
 
-    <script type="text/javascript" language="javascript" src="/static/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" language="javascript" src="/static/js/jquery.validate.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle=tooltip]').tooltip();
+            $('#dataTable').DataTable({
+                paging: false,
+                ordering: false
+            });
+        });
+    </script>
 
 </body>
 </html>

@@ -808,12 +808,12 @@ class Debate(models.Model):
         alloc = self.adjudicators
 
         if alloc.panel:
-            l = [alloc.chair.name + " (c)"]
+            l = [alloc.chair.name + " (C)"]
             l.extend(p.name for p in sorted(alloc.panel, key=lambda p: p.name))
         else:
             l = [alloc.chair.name]
 
-        l.extend("%s (t)" % t.name for t in sorted(alloc.trainees, key=lambda t: t.name))
+        l.extend("%s (T)" % t.name for t in sorted(alloc.trainees, key=lambda t: t.name))
 
         return l
 

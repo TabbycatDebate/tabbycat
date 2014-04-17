@@ -6,7 +6,7 @@
 {% block h1 %}Venue Availability for Round {{ round }}{% endblock %}
 
 {% block table-contents %}
-    <thead><tr><th>Venue</th><th>Priority</th><th>Active</th></tr></thead>
+    <thead><tr><th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th><th>Priority</th><th>Active</th></tr></thead>
     <tbody>
         {% for venue in venues %}
         <tr>

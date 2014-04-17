@@ -12,40 +12,21 @@
                 return false;
             } );
 
-            $("#dataTable").dataTable( {
-                "bPaginate": false,
-                "aaSorting": [[0, 'desc']]
-            } );
-
-            $('#wpPostLink').click( function() {
-                $('#wpPostForm').submit();
-            } );
-            $('#wpPostStandLink').click( function() {
-                $('#wpPostStandForm').submit();
-            } );
-
         } );
 
     </script>
 {% endblock extra-head %}
 
-{% block extra-style %}
-    @import "/static/css/demo_table.css";
-{% endblock %}
-
-{% block h1 %} Draw for Round {{ round }} (Debates Confirmed){% endblock %}
+{% block h1 %} Draw for Round {{ round }} <small>(Debates Confirmed)</small>{% endblock %}
 
 {% block content %}
 
-<p>
-Here's the confirmed draw.
-<a href="{% round_url draw_venues_edit %}">Edit venues</a>.
-<a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
-<a href="{% round_url draw_display_by_venue %}">Draw for display sorted by venue</a>.
-<a href="{% round_url draw_display_by_team %}">Draw for display sorted by team</a>.
-{#<a id="wpPostLink" href="#">Post draw to website</a>#}
-{#<a id="wpPostStandLink" href="#">Post Standings to Website</a>#}
-</p>
+<div class="btn-group btn-group-lg">
+    <a class="btn btn-default" href="{% round_url draw_venues_edit %}">Edit venues</a>
+    <a class="btn btn-default" href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>
+    <a class="btn btn-default" href="{% round_url draw_display_by_venue %}">Display sorted by venue</a>
+    <a class="btn btn-default" href="{% round_url draw_display_by_team %}">Display sorted by team</a>
+</div>
 
 {% if round.adjudicators_allocation_validity == 1 %}
 <table class="warningbox"><tr><td>
@@ -68,7 +49,14 @@ Here's the confirmed draw.
 
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
-        <tr><th>Bracket</th><th>Venue</th><th>Affirmative</th><th>Negative</th><th>Adjudicators</th><th>Conflict</th></tr>
+        <tr>
+        <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+        <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+        <th>Affirmative</th>
+        <th>Negative</th>
+        <th>Adjudicators</th>
+        <th>Conflict</th>
+        </tr>
     </thead>
     <tbody>
     {% for debate in draw %}

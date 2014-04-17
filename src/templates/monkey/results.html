@@ -4,28 +4,12 @@
 
 {% block extra-head %}
     {{ block.super }}
-    <script type="text/javascript" charset="utf-8">
-
-        $(document).ready( function() {
-            $("#dataTable").dataTable( {
-                "bPaginate": false,
-                "aaSorting": [[0, 'asc']]
-            } );
-
-        } );
-
-    </script>
 {% endblock extra-head %}
-
-{% block extra-style %}
-    @import "/static/css/demo_table.css";
-{% endblock %}
-
 
 {% block content %}
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
-        <tr><th>Venue</th><th>Affirmative</th><th>Negative</th><th>Adjudicators</th><th>Results</th></tr>
+        <tr><th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th><th>Affirmative</th><th>Negative</th><th>Adjudicators</th><th>Results</th></tr>
     </thead>
     <tbody>
     {% for debate in draw %}
