@@ -1,7 +1,7 @@
 // Core variables and mixins
 @import "../bootstrap/stylesheets/bootstrap/variables";
 @import "../bootstrap/stylesheets/bootstrap/mixins";
-@import "datatables/jquery.dataTables.css";
+//@import "datatables/jquery.dataTables.css";
 @import "datatables/dataTables.bootstrap.css";
 
 @include text-emphasis-variant('.text-success', $brand-success);
@@ -16,3 +16,10 @@
     padding: 0 0 $padding-large-vertical 0;
 }
 
+.dataTables_info {
+    display: none;
+}
+
+.modal-lg {
+    width: 90%;
+}

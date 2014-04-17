@@ -4,37 +4,26 @@
 
 {% block extra-head %}
     {{ block.super }}
-    <script type="text/javascript" charset="utf-8">
-
-        $(document).ready( function() {
-            $("#dataTable").dataTable( {
-                "bPaginate": false
-            } );
-
-        } );
-
-
-    </script>
 {% endblock extra-head %}
 
-{% block extra-style %}
-    @import "/static/css/demo_table.css";
-{% endblock %}
+{% block extra-style %}{% endblock %}
 
-{% block h1 %} Team Standings after Round {{ round }}{% endblock %}
+{% block h1 %}Team Standings <small>after Round {{ round }}</small>{% endblock %}
 
 {% block content %}
 
 
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
-        <tr><th>Rank</th><th>Team</th>
+        <tr>
+            <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
+            <th>Team</th>
             {% for round in rounds %}
             <th>{{ round }}</th>
             <th>Score{{ round }}</th>
             {% endfor %}
             <th>Wins</th>
-            <th>Total Score</th>
+            <th>Total</th>
             <th>Affs</th>
         </tr>
     </thead>

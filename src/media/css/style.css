@@ -1,4 +1,3 @@
-@import url(datatables/jquery.dataTables.css);
 @import url(datatables/dataTables.bootstrap.css);
 .text-success {
   color: #5cb85c; }
@@ -26,3 +25,9 @@ a.text-danger:hover {
 
 .btn-group {
   padding: 0 0 10px 0; }
+
+.dataTables_info {
+  display: none; }
+
+.modal-lg {
+  width: 90%; }

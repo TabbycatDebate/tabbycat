@@ -63,7 +63,6 @@ table.dataTable thead .sorting_asc_disabled { background: url('../../images/sort
 table.dataTable thead .sorting_desc_disabled { background: url('../../images/sort_desc_disabled.png') no-repeat center right; }
 
 table.dataTable thead > tr > th {
-	padding-left: 18px;
 	padding-right: 18px;
 }
 
@@ -99,9 +98,6 @@ div.dataTables_scrollFoot table {
 	margin-top: 0 !important;
 	border-top: none;
 }
-
-
-
 
 /*
  * TableTools styles

@@ -1,15 +1,13 @@
 {% extends "base.html" %}
-
 {% load debate_tags %}
 
 {% block extra-head %}
-{% include "adjudicator_feedback_head.html" %}
-
+    {% include "adjudicator_feedback_head.html" %}
 {% endblock extra-head %}
 
-{% block content %}
+{% block h1 %}Feedback{% endblock %}
 
-<h1>Feedback</h1>
+{% block content %}
 
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
@@ -32,14 +30,43 @@
             <td>{{ adj.test_score }}</td>
             <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
             <td>{{ adj.score|stringformat:".2f" }}</td>
-            <td><a class="view" href="">View Feedback</a></td>
+            <td><a data-toggle="modal" data-target="#adj-{{ adj.id }}-feedback">View Feedback</a></td>
             <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
         </tr>
         {% endfor %}
     </tbody>
+
 </table>
+
+{% for adj in adjudicators %}
+<div class="modal fade" id="adj-{{ adj.id }}-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header"><h3>Feedback for {{ adj.name }}</h3></div>
+        <div class="modal-body">
+        <table class="table table-bordered">
+            <thead>
+                <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
+                <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+                <th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>
+            </thead>
+            <tbody>
+                {% for round in adj.get_feedback %}
+                <tr>
+                    <td>{{ round.round }}</td>
+                    <td>{{ round.debate.bracket }}</td>
+                    <td>{{ round.debate.aff_team }} vs {{ round.debate.neg_team }}</td>
+                    <td>{{ round.source }}</td>
+                    <td>{{ round.score }}</td>
+                    <td>{{ round.comments }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+  </div>
 </div>
+{% endfor %}
+
 {% endblock content %}
-
-
-

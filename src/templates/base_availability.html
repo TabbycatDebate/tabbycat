@@ -114,17 +114,17 @@
 {% endblock %}
 
 {% block extra-style %}
-        @import "/static/css/demo_table.css";
+
 {% endblock extra-style %}
 
 {% block content %}
 <form id="form">
-    <div class="status">
+    <div class="status btn-group btn-group-lg">
         {% block copy_btn %}
-        <button id="btn_copy" type="button">Copy from previous</button>
+        <button id="btn_copy" class="btn btn-default" type="button">Copy from previous</button>
         {% endblock %}
-        <button type="submit">Save changes</button>
-        <a id="select_all" href="#all">Select All</a>
+        <button type="submit" class="btn btn-default" >Save changes</button>
+        <button id="select_all" class="btn btn-default" href="#all">Select All</a>
     </div>
     <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0", cellspacing="0">
         {% block table-contents %}

@@ -2,6 +2,18 @@
 
 {% load debate_tags %}
 
+
+{% block extra-head %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#dataTable').DataTable({
+                "bPaginate": false,
+            });
+        });
+    </script>
+{% endblock %}
+
+
 {% block h1 %}Results for Round {{ round }}{% endblock %}
 
 {% block content %}
@@ -14,6 +26,7 @@
 </div>
 
 <table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
+
     <thead>
         <tr>
             <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="Ballot Status"></span></th>
@@ -25,52 +38,72 @@
         {% if show_motions_column %}<th>Motion</th>{% endif %}
         </tr>
     </thead>
+
     <tbody>
+
     {% for debate in draw %}
-    <tr class=" {% ifequal debate.result_status "N" %}bg-danger {% endifequal %}
-                {% ifequal debate.result_status "B" %}bg-warning {% endifequal %}
-                {% ifequal debate.result_status "D" %}bg-info {% endifequal %}
-                {% ifequal debate.result_status "C" %}bg-success{% endifequal %}
-    ">
+        <tr class=" {% ifequal debate.result_status "N" %}danger {% endifequal %}
+                    {% ifequal debate.result_status "B" %}warning {% endifequal %}
+                    {% ifequal debate.result_status "D" %}info {% endifequal %}
+                    {% ifequal debate.result_status "C" %}success{% endifequal %}
+        ">
 
-        {% ifequal debate.result_status "N" %}
-            <td><a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="No Ballot (click to edit)"><span class="glyphicon glyphicon-remove text-danger"></span></a></td>
-        {% endifequal %}
-        {% ifequal debate.result_status "B" %}
-            <td><a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Ballot In (click to edit)"><span class="glyphicon glyphicon-inbox text-warning"></span></a></td>
-        {% endifequal %}
-        {% ifequal debate.result_status "D" %}
-            <td><a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Unconfirmed Ballot (click to edit)"><span class="glyphicon glyphicon-adjust text-info"></span></a></td>
-        {% endifequal %}
-        {% ifequal debate.result_status "C" %}
-            <td><a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Confirmed Ballot (click to edit)"><span class="glyphicon glyphicon-ok text-success"></span></a></td>
-        {% endifequal %}
+            {% ifequal debate.result_status "N" %}
+                <td>
+                    <span class="hidden">0</span>
+                    <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="No Ballot (click to edit)">
+                    <span class="glyphicon glyphicon-remove text-danger"></span>
+                </a></td>
+            {% endifequal %}
+            {% ifequal debate.result_status "B" %}
+                <td>
+                    <span class="hidden">1</span>
+                    <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Ballot In (click to edit)">
+                    <span class="glyphicon glyphicon-inbox text-warning"></span>
+                </a></td>
+            {% endifequal %}
+            {% ifequal debate.result_status "D" %}
+                <td>
+                    <span class="hidden">2</span>
+                    <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Unconfirmed Ballot (click to edit)">
+                    <span class="glyphicon glyphicon-adjust text-info"></span>
+                </a></td>
+            {% endifequal %}
+            {% ifequal debate.result_status "C" %}
+                <td>
+                    <span class="hidden">3</span>
+                    <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Confirmed Ballot (click to edit)">
+                    <span class="glyphicon glyphicon-ok text-success"></span>
+                </a></td>
+            {% endifequal %}
 
-        <td>{{ debate.bracket }}</td>
-        <td>{{ debate.venue.name }}</td>
-        <td class="{% if debate.result.aff_win %}winner{% endif %}">
-            {% if debate.result.aff_win == 1 %}
-                <span class="glyphicon glyphicon-arrow-up"></span>
-            {% else %}
-                <span class="glyphicon glyphicon-arrow-down"></span>
+            <td>{{ debate.bracket }}</td>
+
+            <td>{{ debate.venue.name }}</td>
+
+            <td class="{% if debate.result.aff_win %}winner{% endif %}">
+                {% if debate.result.aff_win == 1 %}
+                    <span class="glyphicon glyphicon-arrow-up"></span>
+                {% else %}
+                    <span class="glyphicon glyphicon-arrow-down"></span>
+                {% endif %}
+                <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a>
+            </td>
+
+            <td class="{% if debate.result.neg_win %}winner{% endif %}">
+                {% if debate.result.neg_win == 1 %}
+                    <span class="glyphicon glyphicon-arrow-up"></span>
+                {% else %}
+                    <span class="glyphicon glyphicon glyphicon-arrow-down"></span>
+                {% endif %}
+                <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a>
+            <td>{{ debate.adjudicators_display }}</td>
+
+            {% if show_motions_column %}
+                <td class="">{{ debate.motion.reference }}</td>
             {% endif %}
-            <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a>
-        </td>
-        <td class="{% if debate.result.neg_win %}winner{% endif %}">
-            {% if debate.result.neg_win == 1 %}
-                <span class="glyphicon glyphicon-arrow-up"></span>
-            {% else %}
-                <span class="glyphicon glyphicon glyphicon-arrow-down"></span>
-            {% endif %}
-            <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a>
-        <td>{{ debate.adjudicators_display }}</td>
-        {% if show_motions_column %}
-            <td>{{ debate.motion.reference }}</td>
-        {% endif %}
-    </tr>
+        </tr>
     {% endfor %}
 </table>
 
 {% endblock content %}
-
-

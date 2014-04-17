@@ -11,9 +11,6 @@
     <link href="/static/bootstrap/stylesheets/bootstrap.css" rel="stylesheet">
     <link href="/static/css/style.css" rel="stylesheet">
 
-    {% block extra-head %}
-    {% endblock extra-head %}
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -21,6 +18,20 @@
     <![endif]-->
 
     {% load debate_tags %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/bootstrap/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/js/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/js/datatables/dataTables.bootstrap.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle=tooltip]').tooltip();
+        });
+    </script>
+
+    {% block extra-head %}
+    {% endblock extra-head %}
 
 </head>
 
@@ -44,20 +55,7 @@
     {% endblock body %}
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script type="text/javascript" language="javascript" src="/static/bootstrap/javascripts/bootstrap.min.js"></script>
-    <script type="text/javascript" language="javascript" src="/static/js/datatables/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" language="javascript" src="/static/js/datatables/dataTables.bootstrap.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('[data-toggle=tooltip]').tooltip();
-            $('#dataTable').DataTable({
-                paging: false,
-                ordering: false
-            });
-        });
-    </script>
 
 </body>
 </html>
