@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     # Example:
     # (r'^debates/', include('debates.foo.urls')),
 
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
+    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
@@ -28,6 +28,8 @@ urlpatterns = patterns('',
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', name='logout'),
 
     (r'^t/(?P<tournament_slug>[-\w_]+)/', include('debate.urls')),
+
+    (r'^emoji/', include('emoji.urls')),
 
     # Site media
     (r'^%s/(?P<path>.*)$' % settings.MEDIA_URL, 'django.views.static.serve',

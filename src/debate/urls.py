@@ -98,5 +98,3 @@ urlpatterns = patterns('debate.views',
     url(r'^adjudicators/feedback/(?P<adjudicator_id>\d+)/$',
         'enter_feedback', name='enter_feedback'),
     )
-
-

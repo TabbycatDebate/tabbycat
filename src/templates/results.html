@@ -8,6 +8,7 @@
         $(document).ready(function(){
             $('#dataTable').DataTable({
                 "bPaginate": false,
+                "aaSorting": [[ 1, "desc" ]],
             });
         });
     </script>
@@ -83,18 +84,18 @@
 
             <td class="{% if debate.result.aff_win %}winner{% endif %}">
                 {% if debate.result.aff_win == 1 %}
-                    <span class="glyphicon glyphicon-arrow-up"></span>
+                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
                 {% else %}
-                    <span class="glyphicon glyphicon-arrow-down"></span>
+                    <span class="glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
                 <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a>
             </td>
 
             <td class="{% if debate.result.neg_win %}winner{% endif %}">
                 {% if debate.result.neg_win == 1 %}
-                    <span class="glyphicon glyphicon-arrow-up"></span>
+                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
                 {% else %}
-                    <span class="glyphicon glyphicon glyphicon-arrow-down"></span>
+                    <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
                 <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a>
             <td>{{ debate.adjudicators_display }}</td>

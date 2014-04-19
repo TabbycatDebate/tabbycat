@@ -4,6 +4,14 @@
 
 {% block extra-head %}
     {{ block.super }}
+       <script type="text/javascript" charset="utf-8">
+            $(document).ready( function() {
+                $("#dataTable").dataTable( {
+                    "bPaginate": false,
+                    "aaSorting": [[ 0, "asc" ]],
+                } );
+            } );
+        </script>
 {% endblock extra-head %}
 
 {% block extra-style %}{% endblock %}
@@ -19,11 +27,10 @@
             <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
             <th>Team</th>
             {% for round in rounds %}
-            <th>{{ round }}</th>
-            <th>Score{{ round }}</th>
+            <th>Round {{ round }}</th>
             {% endfor %}
-            <th>Wins</th>
             <th>Total</th>
+            <th>Wins</th>
             <th>Affs</th>
         </tr>
     </thead>
@@ -34,15 +41,16 @@
         <td>{{ team.rank }}</td>
         <td><a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</a></td>
         {% for score in team.scores %}
+        <td>
         {% if score.1 == 1 %}
-            <td><span class="glyphicon glyphicon-ok text-success"></td>
+            <span class="glyphicon glyphicon-arrow-up text-success"></span> {{ score.0|stringformat:".2f" }}
         {% else %}
-            <td><span class="glyphicon glyphicon-remove text-danger"></td>
+            <span class="glyphicon glyphicon-arrow-down text-danger"></span> {{ score.0|stringformat:".2f" }}
         {% endif %}
-        <td>{{ score.0|stringformat:".2f" }}</td>
+        </td>
         {% endfor %}
-        <td>{{ team.points }}</td>
         <td>{{ team.speaker_score|stringformat:".2f" }}</td>
+        <td>{{ team.points }}</td>
         <td>{% aff_count team round %}</td>
     </tr>
     {% endfor %}

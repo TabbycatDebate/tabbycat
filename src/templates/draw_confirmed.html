@@ -8,9 +8,12 @@
         $(document).ready( function() {
             $("#allocateAdj").click( function() {
                 $("#allocateAdjForm").submit();
-
                 return false;
             } );
+            $('#dataTable').dataTable({
+                'bPaginate': false,
+                "aaSorting": [[ 0, "desc" ]],
+            });
 
         } );
 
@@ -24,8 +27,7 @@
 <div class="btn-group btn-group-lg">
     <a class="btn btn-default" href="{% round_url draw_venues_edit %}">Edit venues</a>
     <a class="btn btn-default" href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>
-    <a class="btn btn-default" href="{% round_url draw_display_by_venue %}">Display sorted by venue</a>
-    <a class="btn btn-default" href="{% round_url draw_display_by_team %}">Display sorted by team</a>
+    <a class="btn btn-default" href="{% round_url draw_display_by_venue %}">Display draw</a>
 </div>
 
 {% if round.adjudicators_allocation_validity == 1 %}

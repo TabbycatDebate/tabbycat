@@ -137,54 +137,37 @@
         } );
     });
 </script>
-<style type="text/css">
-    .venue { background-color: #ddd; cursor: move; }
-    .venue:hover { background-color: #eee; }
-    .venue span { margin-left: 10px; }
-    #dataTable td.hover { background-color: #ff8; }
-    #scratch {
-        position: fixed;
-        top: 0;
-        right: 0;
-        background-color: #cff;
-        width: 20%;
-        height: 800px;
-    }
-    #scratch.hover { background-color: #ff8; }
-    #main {
-        width: 79%;
-    }
-
-</style>
 {% endblock extra-head %}
 
-{% block extra-style %}
+{% block extra-style %}{% endblock %}
 
+{% block body_class %}edit-venues{% endblock %}
+
+{% block h1 %}Edit Venues for Round {{ round }}
+<div id="statusBar" class="btn-group btn-group-lg">
+    <a class="btn btn-default" href="" id="save">Save</a>
+    <a class="btn btn-default" href="">Discard</a>
+    <a class="btn btn-default" href="">Undo</a>
+    <a class="btn btn-default" href="">Redo</a>
+    <a class="btn btn-default" href="{% round_url draw %}">Quit</a>
+</div>
 {% endblock %}
 
+{% block content %}
 
-{% block body %}
-
-<div id="statusBar">
-    Edit venues for Round {{ round }} |
-    <a href="" id="save">Save</a>
-    Discard Undo Redo
-    <a href="{% round_url draw %}">Quit</a>
-</div>
-
-<div id="scratch">
-    Unused Venues
+<div id="scratch" class="h4">
+    <h3>Unused Venues</h3>
     {% for venue in round.unused_venues %}
-    <div id="venue_{{ venue.id }}" class="venue">
+    <div id="venue_{{ venue.id }}" class="btn btn-default btn-lg btn-block venue">
         <span>{{ venue }}</span>
     </div>
     {% endfor %}
 </div>
 
 <div id="main">
-    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+    <table id="dataTable" class="table table-hover table-bordered table-striped h4" cellpadding="0" cellspacing="0">
         <thead>
-            <tr><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Affirmative</th><th>Negative</th><th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th></tr>
+            <tr><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Affirmative</th><th>Negative</th><th>Venue</th></tr>
         </thead>
         <tbody>
         {% for debate in draw %}
@@ -193,13 +176,16 @@
             <td>{{ debate.aff_team }}</td>
             <td>{{ debate.neg_team }}</td>
             <td id="debate_{{ debate.id }}" class="venue-holder">
-                <div id="venue_{{ debate.venue.id }}" class="
-                    {% if debate.venue %}venue{% else %}empty{% endif %}"><span>{{ debate.venue }}</span></div></td>
+                <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default btn-lg
+                    {% if debate.venue %}venue{% else %}empty{% endif %}">
+                    <span class="">{{ debate.venue }}</span>
+                </div>
+            </td>
         </tr>
         {% endfor %}
     </table>
 </div>
 
-{% endblock body %}
+{% endblock content %}
 
 

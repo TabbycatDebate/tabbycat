@@ -486,87 +486,41 @@
     });
 </script>
 <style type="text/css">
-    #statusBar a { margin-left: 10px; }
-    .adj { display: block; background-color: #eee; white-space: nowrap; margin-right: 1em; cursor: move;}
-    .adj.trainee { background-color: #ffb; }
-    .adj:hover {background-color: #fafafa; }
-    .adj.trainee:hover { background-color: #ffe; }
-    .panel-holder .adj { margin: 1px 0;}
-    .adj span.info { margin: 0 5px; color: #44f;  }
-
-    .adj.history-conflict { color: #f80; }
-    .adj.conflict { color: red; }
-
-    #dataTable td.hover { background-color: #ff8; }
-    #scratch {
-        position: fixed;
-        top: 0;
-        right: 0;
-        background-color: #fea;
-        width: 300px;
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-    #statusBar {
-        height: 30px;
-        background-color: #fff;
-    }
-    #scratch.hover { background-color: #ff8; }
-    .hover #unusedTable tbody td { background-color: #ffa; }
-    #main {
-        width: 74%;
-    }
-    @media print {
-        #scratch { display:none; }
-    }
-    #scratch .adj { white-space: none; }
-    #scratch .adj .info { display: none; }
-
-    #unusedTable { width: 100%; }
-
-    .incomplete { border: 1px solid #f84; }
-    #dataTable .history-with-active { color: #f80; }
-    #dataTable .conflict-with-active { color: red; }
-
-    #loading {vertical-align: middle; position: fixed; left: 0; top: 0; width:100%; height:100%;
-        background-image:url("/static/images/80.png"); z-index: 100000; text-align: center;}
-    #loading div {position: absolute; margin-left: 48%; top: 50%; width: 100px; background: #fff; padding: 20px;}
-
 </style>
 {% endblock extra-head %}
 
-{% block extra-style %}
+{% block extra-style %}{% endblock %}
 
+{% block body_class %}edit-adjs{% endblock %}
+
+
+{% block h1 %}Edit Adjs for Round {{ round }}
+<div id="statusBar" class="btn-group btn-group-lg">
+    <a class="btn btn-default" href="#auto" id="auto_allocate">Auto Allocate</a>
+    <a class="btn btn-default" href="" id="save">Save</a>
+    <a class="btn btn-default" href="{% round_url draw %}">Quit</a>
+</div>
 {% endblock %}
 
+{% block content %}
 
-{% block body %}
+<span style="margin-left:10px"> Legend: <a style="color:red;">conflict</a>, <a style="color:#f80;">history</a></span>
 
+<!-- temporary disabled
 <div id="loading">
     <div>
     <img src="/static/images/loading.gif">
     <span>loading...</span>
     </div>
-</div>
-
-<div id="statusBar">
-    Edit adjudicators for Round {{ round }} |
-    <a href="#auto" id="auto_allocate">Auto Allocate</a>
-    <a href="" id="save">Save</a>
-    <a href="{% round_url draw %}">Quit</a>
-    |
-    <span style="margin-left:10px"> Legend: <a style="color:red;">conflict</a>, <a style="color:#f80;">history</a></span>
-</div>
+</div>-->
 
 <div id="scratch">
-    Unused Adjudicators
+    <h3>Unused Adjudicators</h3>
     <table id="unusedTable" class="display" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Score</th>
-
             </tr>
         </thead>
     <tbody>
@@ -575,9 +529,16 @@
 </div>
 
 <div id="main">
-    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+    <table id="dataTable" class="table table-hover table-bordered table-striped h4" cellpadding="0" cellspacing="0">
         <thead>
-            <tr><th>Brkt</th><th>Impt</th><th>Affirmative</th><th>Negative</th><th>Chair</th><th>Panel</th><th>Trainee</th></tr>
+            <tr>
+            <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+            <th><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Importance"></span></th>
+            <th>Affirmative</th>
+            <th>Negative</th>
+            <th>Chair</th>
+            <th>Panel</th>
+            <th>Trainee</th></tr>
         </thead>
         <tbody>
         {% for debate in draw %}
@@ -597,6 +558,6 @@
     </table>
 </div>
 
-{% endblock body %}
+{% endblock content %}
 
 

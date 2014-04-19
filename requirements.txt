@@ -1,6 +1,12 @@
-psycopg2==2.5
-django==1.6.1
-south==0.8
-flup==1.0.3.dev-20110405
-fabric==1.6.1
+Django==1.6.1
+Fabric==1.6.1
+South==0.8
 django-debug-toolbar==0.9.4
+django-emoji==1.2.0
+ecdsa==0.11
+## FIXME: could not find svn URL in dependency_links for this package:
+flup==1.0.3.dev-20110405
+paramiko==1.13.0
+psycopg2==2.5
+pycrypto==2.6.1
+wsgiref==0.1.2

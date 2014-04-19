@@ -16,10 +16,121 @@
     padding: 0 0 $padding-large-vertical 0;
 }
 
+
+
+// Tables
+
+#dataTable_filter, #draw_filter {
+    margin-top: -68px;
+}
 .dataTables_info {
     display: none;
 }
 
 .modal-lg {
     width: 90%;
+}
+.team-name {
+    background-position: 4px 4px;
+    background-repeat: no-repeat;
+    background-size:28px 28px;
+    padding-left: 40px !important;
+}
+
+// Draw display:
+
+.draw-public-display {
+    .nav {
+        display: none;
+    }
+    #draw.dataTable {
+        tbody > tr > td {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            padding-right: 0 !important;
+        }
+        thead > tr > th {
+            padding-right: 0 !important;
+        }
+        p {
+            margin: 0;
+        }
+    }
+}
+
+// Draw Editing Venues
+
+.edit-venues {
+    .nav {
+        display: none;
+    }
+    .venue-holder {
+        padding: 0px;
+    }
+    .venue {
+        cursor: move;
+    }
+    #scratch {
+        position: fixed;
+        top: 0;
+        right: 0;
+        background-color: #cff;
+        width: 20%;
+        height: 800px;
+    }
+    #scratch.hover { background-color: #ff8; }
+    #main {
+        width: 79%;
+    }
+
+}
+
+// Draw Editing Adj's
+
+.edit-adjs {
+    .nav {
+        display: none;
+    }
+
+    .adj { display: block; background-color: #eee; white-space: nowrap; margin-right: 1em; cursor: move;}
+    .adj.trainee { background-color: #ffb; }
+    .adj:hover {background-color: #fafafa; }
+    .adj.trainee:hover { background-color: #ffe; }
+    .panel-holder .adj { margin: 1px 0;}
+    .adj span.info { margin: 0 5px; color: #44f;  }
+
+    .adj.history-conflict { color: #f80; }
+    .adj.conflict { color: red; }
+
+    #scratch {
+        position: fixed;
+        top: 0;
+        right: 0;
+        background-color: #fea;
+        width: 300px;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    #scratch.hover { background-color: #ff8; }
+    .hover #unusedTable tbody td { background-color: #ffa; }
+    #main {
+        width: 74%;
+    }
+    @media print {
+        #scratch { display:none; }
+    }
+    #scratch .adj { white-space: none; }
+    #scratch .adj .info { display: none; }
+
+    #unusedTable { width: 100%; }
+
+    .incomplete { border: 1px solid #f84; }
+    #dataTable .history-with-active { color: #f80; }
+    #dataTable .conflict-with-active { color: red; }
+
+    #loading {vertical-align: middle; position: fixed; left: 0; top: 0; width:100%; height:100%;
+        background-image:url("/static/images/80.png"); z-index: 100000; text-align: center;}
+    #loading div {position: absolute; margin-left: 48%; top: 50%; width: 100px; background: #fff; padding: 20px;}
+
 }

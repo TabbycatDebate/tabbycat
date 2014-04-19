@@ -2,10 +2,60 @@
 {% load debate_tags %}
 
 {% block extra-head %}
-    {% include "adjudicator_feedback_head.html" %}
+
+
+    <script type="text/javascript" charset="utf-8">
+        function intId(elem) {
+            return parseInt($(elem).attr("id").split('_')[1]);
+        }
+
+        // function details(nTr) {
+        //     var s = '<table id="feedback_' + intId(nTr) + '" class="display table table-bordered"><thead>';
+        //     s += '<tr><th>Round</th><th>Bracket</th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>';
+        //     s += '</thead><tbody></tbody></table>';
+        //     return s;
+        // }
+        //var dTable;
+
+        $(document).ready( function() {
+            $('#dataTable').dataTable({
+                'bPaginate': false,
+                "aaSorting": [[ 4, "desc" ]],
+            });
+
+            // $("#dataTable a.view").each( function() {
+            //     $(this).click( function() {
+            //         var nTr = this.parentNode.parentNode;
+
+            //         if ($(this).html().match('View')) {
+            //             dTable.fnOpen(nTr, details(nTr), 'details');
+
+            //             var feedTable = $("#feedback_" + intId(nTr)).dataTable( {
+            //                 'bProcessing': true,
+            //                 'sAjaxSource': '{% tournament_url get_adj_feedback %}?id=' + intId(nTr),
+            //                 'bFilter': false,
+            //                 'bPaginate': false
+            //             });
+
+            //             $(this).html("Hide Feedback");
+            //         } else {
+            //             dTable.fnClose(nTr);
+            //             $(this).html("View Feedback");
+            //         }
+
+            //         return false;
+
+            //     } );
+            // } );
+
+        } );
+    </script>
+
+
+
 {% endblock extra-head %}
 
-{% block h1 %}Feedback{% endblock %}
+{% block h1 %}Adjudicator Feedback{% endblock %}
 
 {% block content %}
 
