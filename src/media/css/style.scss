@@ -1,6 +1,7 @@
 // Core variables and mixins
 @import "../bootstrap/stylesheets/bootstrap/variables";
 @import "../bootstrap/stylesheets/bootstrap/mixins";
+@import "../bootstrap/stylesheets/bootstrap/type";
 //@import "datatables/jquery.dataTables.css";
 @import "datatables/dataTables.bootstrap.css";
 
@@ -20,8 +21,13 @@
 
 // Tables
 
-#dataTable_filter, #draw_filter {
-    margin-top: -68px;
+#dataTable_filter, #draw_filter, #draw {
+    label {
+        float: left;
+    }
+    thead > tr > th {
+        padding-right: 0 !important;
+    }
 }
 .dataTables_info {
     display: none;
@@ -36,6 +42,15 @@
     background-size:28px 28px;
     padding-left: 40px !important;
 }
+.venue-name {
+
+}
+.adj-chair {
+    text-decoration: underline;
+}
+.adj-trainee {
+    font-style: italic;
+}
 
 // Draw display:
 
@@ -45,16 +60,58 @@
     }
     #draw.dataTable {
         tbody > tr > td {
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-            padding-right: 0 !important;
+
         }
         thead > tr > th {
-            padding-right: 0 !important;
+            //padding-right: 0 !important;
         }
         p {
             margin: 0;
         }
+        td {
+            @extend .h3;
+        }
+        .adj-names {
+            ul {
+                padding-left: 0px;
+                margin-left: 0;
+                list-style-type: none;
+            }
+            li span {
+                margin-left: -5px;
+            }
+        }
+    }
+    @media
+    only screen and (max-width: 760px),
+    (min-device-width: 768px) and (max-device-width: 1024px)  {
+
+        #draw.dataTable {
+
+
+            margin-left: -15px;
+
+            .team-name {
+                background-position: bottom right;
+                background-repeat: no-repeat;
+                padding-left: 8px !important;
+            }
+            .adj-names {
+                ul {
+                    padding-left: 0px;
+                }
+                li {
+                    display: block;
+                    list-style-type: none;
+                    margin-left: 0px;
+                    padding-left: 0px;
+                }
+                li span {
+                    margin-left: 0px;
+                }
+            }
+        }
+
     }
 }
 

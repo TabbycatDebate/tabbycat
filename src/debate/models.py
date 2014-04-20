@@ -1,3 +1,4 @@
+import re
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -808,14 +809,29 @@ class Debate(models.Model):
         alloc = self.adjudicators
 
         if alloc.panel:
-            l = [alloc.chair.name + " (C)"]
+            l = [alloc.chair.name + " " + u"\u24B8"]
             l.extend(p.name for p in sorted(alloc.panel, key=lambda p: p.name))
         else:
             l = [alloc.chair.name]
 
-        l.extend("%s (T)" % t.name for t in sorted(alloc.trainees, key=lambda t: t.name))
+        l.extend(u"%s \u24C9" % t.name for t in sorted(alloc.trainees, key=lambda t: t.name))
 
         return l
+
+    @property
+    def venue_splitname(self):
+        # Formatting venue names so they can split over multiple lines
+        match = re.match(r"([a-z]+)([0-9]+)", str(self.venue), re.I)
+        if match:
+            items = match.groups()
+            if len(items[1]) > 3:
+                alloc = u'%s %s %s' % (items[0], items[1][:3], items[1][3:])
+            else:
+                alloc = u'%s %s' % (items[0], items[1])
+        else:
+            alloc = self.venue
+
+        return alloc
 
     @property
     def adjudicators_display(self):

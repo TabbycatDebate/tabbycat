@@ -27,13 +27,13 @@
 
 {% block body_class %}draw-public-display{% endblock %}
 
-{% block h1 %}Draw for Round {{ round }}{% endblock %}
+{% block h1 %}Round {{ round }} Draw{% endblock %}
 
 {% block content %}
     <table id="draw" class="table table-hover table-bordered table-striped">
         <thead>
             <tr>
-                <th>Venue</th>
+                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
                 <th>Affirmative</th>
                 <th>Negative</th>
                 <th>Adjudicators</th>
@@ -41,19 +41,34 @@
         </thead>
         <tbody>
         {% for debate in draw %}
-        <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}} h3">
-            <td>{{ debate.venue.name }}</td>
+        <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+            <td class="venue-name">
+                {{ debate.venue_splitname }}
+            </td>
             <td title="{% aff_count debate.aff_team round.prev %}" class="team-name" id="{{ debate.aff_team.id }}">
                 {{ debate.aff_team.name }}
             </td>
             <td title="{% neg_count debate.neg_team round.prev %}" class="team-name" id="{{ debate.neg_team.id }}">
                 {{ debate.neg_team.name }}
             </td>
-            <td>{{ debate.adjudicators_display_with_line_breaks | linebreaks }}</td>
+            <td class="adj-names">
+                <ul class="">
+                {% for item in debate.adjudicator_names_list %}
+
+                    {% if "Ⓒ" in item %}
+                        <li class=""><span class="adj-chair">{{ item }}</span>,</li>
+                    {% elif "Ⓣ" in item %}
+                        <li class=""><span class="adj-trainee">{{ item }}</span>,</li>
+                    {% else %}
+                        <li class=""><span class="adj-normal">{{ item }}</span>,</li>
+                    {% endif %}
+
+                {% endfor %}
+                </ul>
+            </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
-
 
 {% endblock content %}
