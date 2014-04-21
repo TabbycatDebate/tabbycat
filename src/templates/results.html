@@ -43,11 +43,12 @@
     <tbody>
 
     {% for debate in draw %}
-        <tr class=" {% ifequal debate.result_status "N" %}danger {% endifequal %}
+<!--         <tr class=" {% ifequal debate.result_status "N" %}danger {% endifequal %}
                     {% ifequal debate.result_status "B" %}warning {% endifequal %}
                     {% ifequal debate.result_status "D" %}info {% endifequal %}
                     {% ifequal debate.result_status "C" %}success{% endifequal %}
-        ">
+        "> -->
+            <tr>
 
             {% ifequal debate.result_status "N" %}
                 <td>
@@ -84,18 +85,18 @@
 
             <td class="{% if debate.result.aff_win %}winner{% endif %}">
                 {% if debate.result.aff_win == 1 %}
-                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
+                    <span class="glyphicon glyphicon-arrow-up"></span>
                 {% else %}
-                    <span class="glyphicon glyphicon-arrow-down text-danger"></span>
+                    <span class="glyphicon glyphicon-arrow-down"></span>
                 {% endif %}
                 <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a>
             </td>
 
             <td class="{% if debate.result.neg_win %}winner{% endif %}">
                 {% if debate.result.neg_win == 1 %}
-                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
+                    <span class="glyphicon glyphicon-arrow-up"></span>
                 {% else %}
-                    <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
+                    <span class="glyphicon glyphicon glyphicon-arrow-down"></span>
                 {% endif %}
                 <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a>
             <td>{{ debate.adjudicators_display }}</td>
