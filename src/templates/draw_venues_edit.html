@@ -3,7 +3,8 @@
 {% load debate_tags %}
 
 {% block extra-head %}
-<script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
+<script type="text/javascript" language="javascript" src="/static/js/jquery-ui-1.10.4.custom.min.js"></script>
+
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
         var debates = {};
@@ -40,6 +41,7 @@
             },
             revert: 'invalid'
         });
+
         $("#dataTable tbody tr td:last-child").droppable( {
             hoverClass: 'hover',
             drop: function(event, ui) {

@@ -18,15 +18,14 @@
 }
 
 
-
 // Tables
 
+.dataTable thead > tr > th {
+    padding-right: 0 !important;
+}
 #dataTable_filter, #draw_filter, #draw {
     label {
         float: left;
-    }
-    thead > tr > th {
-        padding-right: 0 !important;
     }
 }
 .dataTables_info {

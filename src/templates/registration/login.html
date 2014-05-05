@@ -1,13 +1,38 @@
-{% extends "registration/base.html" %}
+{% extends "base.html" %}
+
+{% load add_field_css %}
 
 {% block body %}
-<form id="login" action="." method="POST">
-    <div id="logo">
-    <img src="/static/images/australs.png" />
-    </div>
-{% csrf_token %}
-{{ form.as_p }}
-<input id="login-btn" type="submit" value="Log in" />
-</form>
-{% endblock body %}
+    <div id="container" class="container-fluid">
 
+        <form id="login" action="." method="POST" class="form-horizontal">
+
+                <div class="page-header">
+                    <h1>Login</h1>
+                </div>
+
+                {% csrf_token %}
+
+
+                {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>
+                    <div class="col-sm-2">
+                        {{field|addcss:"form-control"}}
+                    </div>
+
+                    {% if field.errors %}
+                        {{ field.errors }}
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default ">Save</button>
+                    </div>
+                </div>
+
+        </form>
+    </div>
+{% endblock body %}

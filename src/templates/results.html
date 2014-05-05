@@ -89,7 +89,9 @@
                 {% else %}
                     <span class="glyphicon glyphicon-arrow-down"></span>
                 {% endif %}
-                <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a>
+                <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip" class="clickable">
+                    {{ debate.aff_team.name }}
+                </span>
             </td>
 
             <td class="{% if debate.result.neg_win %}winner{% endif %}">
@@ -98,7 +100,9 @@
                 {% else %}
                     <span class="glyphicon glyphicon glyphicon-arrow-down"></span>
                 {% endif %}
-                <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a>
+                <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                    {{ debate.neg_team.name }}
+                </a>
             <td>{{ debate.adjudicators_display }}</td>
 
             {% if show_motions_column %}
