@@ -5,14 +5,16 @@
 {% block extra-head %}
 <script type="text/javascript" language="javascript" src="/static/js/jquery-ui-1.10.4.custom.min.js"></script>
 <script type="text/javascript" language="javascript" src="/static/js/jquery.jeditable.js"></script>
+
 <script type="text/javascript" charset="utf-8">
+
     $(document).ready( function() {
         var dataTable, unusedTable;
         var conflicts;
         var scores;
         var conflictTypeClass = {
-            'conflict': 'conflict-with-active',
-            'history': 'history-with-active',
+            'conflict': 'btn-danger',
+            'history': 'btn-warning',
         }
 
         function intId(e) {
@@ -25,7 +27,7 @@
 
 
         function _make_adj(data) {
-            var adj = $('<div></div>').addClass('adj')
+            var adj = $('<div></div>').addClass('adj btn btn-block btn-default')
                 .attr('id', 'adj_' + data.id)
                 .append($('<span></span> ').html(data.name))
             if (data.is_trainee) {
@@ -130,7 +132,7 @@
 
         function append_adj_scores() {
             $(".adj").each( function() {
-                $(this).prepend('<span class="info">' + formatScore(scores[intId(this)]) + '</span>');
+                $(this).prepend('<span class="info">' + formatScore(scores[intId(this)]) + ' </span>');
                 $("a", this).attr("title", "Score: " + scores[intId(this)]);
                 $("a", this).click( function() {
                     return false;
@@ -148,7 +150,7 @@
             // append node (to preserve events)
             td.children().remove();
             td.append(adj);
-            $(adj).removeClass("conflict");
+            $(adj).removeClass("btn-danger");
         }
         function eachConflictingTeam(adj_id, fn) {
             $.each(conflicts['conflict'][adj_id], function (i, n) {
@@ -169,27 +171,26 @@
                 var h = 0;
                 // select aff & neg team
                 $("td.team", debate_tr).each( function() {
+                    //console.log(conflicts);
                     if ($.inArray(
                             intId(this),
                             conflicts['conflict'][adj_id]) != -1) {
                         $(debate_tr).addClass("inactive");
-                        $(adj).addClass("conflict");
+                        $(adj).addClass("btn-danger");
                         ca++;
                         a++;
-                    } else if ($.inArray(
-                            intId(this),
-                            conflicts['history'][adj_id]) != -1) {
-//                         $(debate_tr).addClass("conflict");
-                        $(adj).addClass("history-conflict");
+                    } else if ($.inArray(intId(this), conflicts['history'][adj_id]) != -1) {
+//                         $(debate_tr).addClass("btn-danger");
+                        $(adj).addClass("btn-warning");
                         ch++;
                         h++;
                     }
                 } );
                 if (a == 0) {
-                    $(adj).removeClass("conflict");
+                    $(adj).removeClass("btn-danger");
                 }
                 if (h == 0) {
-                    $(adj).removeClass("history-conflict");
+                    $(adj).removeClass("btn-warning");
                 }
 
             } );
@@ -198,7 +199,7 @@
                 $(debate_tr).removeClass("inactive");
             }
 //             if (ch == 0) {
-//                 $(debate_tr).removeClass("conflict");
+//                 $(debate_tr).removeClass("btn-danger");
 //             }
 
             // check for incomplete panels
@@ -254,8 +255,6 @@
                     var curOff = $(adj).offset();
                     $(adj).css('top', offset.top - curOff.top);
                     $(adj).css('left', offset.left - curOff.left);
-
-
                     return adj;
                 },
                 stack: {
@@ -288,7 +287,7 @@
             });
         }
 
-        $("#dataTable tbody  .adj-holder").droppable( {
+        $("#dataTable tbody .adj-holder").droppable( {
             hoverClass: 'hover',
             drop: function(event, ui) {
                 var adj = ui.draggable;
@@ -342,7 +341,7 @@
                 var oldHolder = adj[0].oldHolder;
                 moveToUnused(adj);
                 adj.animate({'top': '0', 'left': '0'}, 300);
-                adj.removeClass("conflict");
+                adj.removeClass("btn-danger");
                 updateConflicts($(oldHolder).parent("tr"));
             }
 
@@ -433,26 +432,27 @@
         });
 
         dataTable = $("#dataTable").dataTable( {
-            "aoColumns": [
-                { "sWidth": "5%" },
-                { "sWidth": "15%" },
-                { "sWidth": "15%" },
-                { "sWidth": "25%" },
-                { "sWidth": "40%" }
-            ],
+            // "aoColumns": [
+            //     { "sWidth": "5%" },
+            //     { "sWidth": "15%" },
+            //     { "sWidth": "15%" },
+            //     { "sWidth": "25%" },
+            //     { "sWidth": "40%" }
+            // ],
             "bPaginate": false,
-            "bSort": false,
-            "bFilter": false,
-            "bAutoWidth": false,
             "aaSorting": [[0, 'desc']]
+            // "bSort": false,
+            // "bFilter": false,
+            // "bAutoWidth": false,
+            // "aaSorting": [[0, 'desc']]
         } );
 
 
         unusedTable = $("#unusedTable").dataTable({
-            aoColumns: [
-                { "sWdith": "90%" },
-                { "sWidth": "10%" }
-            ],
+            // aoColumns: [
+            //     { "sWdith": "90%" },
+            //     { "sWidth": "10%" }
+            // ],
             bPaginate: false,
             bFilter: false
         });
@@ -485,14 +485,12 @@
 
     });
 </script>
-<style type="text/css">
-</style>
+
 {% endblock extra-head %}
 
 {% block extra-style %}{% endblock %}
 
 {% block body_class %}edit-adjs{% endblock %}
-
 
 {% block h1 %}Edit Adjs for Round {{ round }}
 <div id="statusBar" class="btn-group btn-group-lg">
@@ -500,11 +498,16 @@
     <a class="btn btn-default" href="" id="save">Save</a>
     <a class="btn btn-default" href="{% round_url draw %}">Quit</a>
 </div>
+
+<div id="statusBar" class="btn-group btn-group-lg">
+    <div class="btn btn-default">Legend:</div>
+    <div class="btn btn-default btn-warning">History Warning</div>
+    <div class="btn btn-default btn-danger">Conflict</div>
+</div>
+
 {% endblock %}
 
 {% block content %}
-
-<span style="margin-left:10px"> Legend: <a style="color:red;">conflict</a>, <a style="color:#f80;">history</a></span>
 
 <!-- temporary disabled
 <div id="loading">
@@ -516,7 +519,7 @@
 
 <div id="scratch">
     <h3>Unused Adjudicators</h3>
-    <table id="unusedTable" class="display" cellpadding="0" cellspacing="0">
+    <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
                 <th>Name</th>
@@ -529,7 +532,7 @@
 </div>
 
 <div id="main">
-    <table id="dataTable" class="table table-hover table-bordered table-striped h4" cellpadding="0" cellspacing="0">
+    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
             <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
@@ -543,15 +546,26 @@
         <tbody>
         {% for debate in draw %}
         <tr id="debate_{{ debate.id }}" class="active">
-            <td>{{ debate.bracket }}</td>
-            <td class="importance">{{ debate.importance }}</td>
-            <td id="team_{{ debate.aff_team.id }}" class="team">{{ debate.aff_team.name }}</td>
-            <td id="team_{{ debate.neg_team.id }}" class="team">{{ debate.neg_team.name }}</td>
+            <td>
+                {{ debate.bracket }}
+            </td>
+            <td class="importance">
+                {{ debate.importance }}
+            </td>
+            <td id="team_{{ debate.aff_team.id }}" class="team">
+                {{ debate.aff_team.name }}
+            </td>
+            <td id="team_{{ debate.neg_team.id }}" class="team">
+                {{ debate.neg_team.name }}
+            </td>
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
+
             </td>
             <td id="panel_{{ debate.id }}" class="adj-holder panel-holder">
+
             </td>
             <td id="trainees_{{ debate.id }}" class="adj-holder trainee-holder">
+
             </td>
         </tr>
         {% endfor %}

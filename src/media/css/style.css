@@ -316,10 +316,11 @@ a.text-danger:hover {
 .btn-group {
   padding: 0 0 10px 0; }
 
+.dataTable thead > tr > th {
+  padding-right: 0 !important; }
+
 #dataTable_filter label, #draw_filter label, #draw label {
   float: left; }
-#dataTable_filter thead > tr > th, #draw_filter thead > tr > th, #draw thead > tr > th {
-  padding-right: 0 !important; }
 
 .dataTables_info {
   display: none; }
@@ -366,91 +367,30 @@ a.text-danger:hover {
     .draw-public-display #draw.dataTable .adj-names li span {
       margin-left: 0px; } }
 
-.edit-venues .nav {
+.edit-venues .nav, .edit-adjs .nav {
   display: none; }
-.edit-venues .venue-holder {
-  padding: 0px; }
-.edit-venues .venue {
-  cursor: move; }
-.edit-venues #scratch {
+.edit-venues #main, .edit-adjs #main {
+  width: 79%; }
+.edit-venues #scratch, .edit-adjs #scratch {
   position: fixed;
   top: 0;
   right: 0;
   background-color: #cff;
   width: 20%;
   height: 800px; }
-.edit-venues #scratch.hover {
-  background-color: #ff8; }
-.edit-venues #main {
-  width: 79%; }
+
+.edit-venues .venue-holder {
+  padding: 0px; }
+.edit-venues .venue {
+  cursor: move; }
 
 .edit-adjs .nav {
   display: none; }
-.edit-adjs .adj {
-  display: block;
-  background-color: #eee;
-  white-space: nowrap;
-  margin-right: 1em;
-  cursor: move; }
 .edit-adjs .adj.trainee {
   background-color: #ffb; }
-.edit-adjs .adj:hover {
-  background-color: #fafafa; }
 .edit-adjs .adj.trainee:hover {
   background-color: #ffe; }
-.edit-adjs .panel-holder .adj {
-  margin: 1px 0; }
-.edit-adjs .adj span.info {
-  margin: 0 5px;
-  color: #44f; }
 .edit-adjs .adj.history-conflict {
   color: #f80; }
 .edit-adjs .adj.conflict {
   color: red; }
-.edit-adjs #scratch {
-  position: fixed;
-  top: 0;
-  right: 0;
-  background-color: #fea;
-  width: 300px;
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden; }
-.edit-adjs #scratch.hover {
-  background-color: #ff8; }
-.edit-adjs .hover #unusedTable tbody td {
-  background-color: #ffa; }
-.edit-adjs #main {
-  width: 74%; }
-@media print {
-  .edit-adjs #scratch {
-    display: none; } }
-.edit-adjs #scratch .adj {
-  white-space: none; }
-.edit-adjs #scratch .adj .info {
-  display: none; }
-.edit-adjs #unusedTable {
-  width: 100%; }
-.edit-adjs .incomplete {
-  border: 1px solid #f84; }
-.edit-adjs #dataTable .history-with-active {
-  color: #f80; }
-.edit-adjs #dataTable .conflict-with-active {
-  color: red; }
-.edit-adjs #loading {
-  vertical-align: middle;
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url("/static/images/80.png");
-  z-index: 100000;
-  text-align: center; }
-.edit-adjs #loading div {
-  position: absolute;
-  margin-left: 48%;
-  top: 50%;
-  width: 100px;
-  background: #fff;
-  padding: 20px; }
