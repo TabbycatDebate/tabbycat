@@ -7,12 +7,15 @@
 
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
+
         var debates = {};
         // populate data
         $("#dataTable .venue-holder").each( function() {
             debates[$(this).attr("id")] = $("div.venue", this).attr("id");
         } );
 
+
+        // Triggers when a draggable element is placed
         function venueMoved(venue, oldDebate, newDebate) {
             var oldId = oldDebate.attr("id");
             if (oldId != undefined && oldId != "scratch") {
@@ -24,32 +27,33 @@
             }
         }
 
-        // init empties
+        // remove the table cells without venues
         $("#dataTable div.empty").each( function() {
             var holder = $(this).parent("venue-holder");
             $(this).remove();
-            addPlaceholder(holder);
+            //addPlaceholder(holder); no idea what this function is doing...
         } );
 
-
         $(".venue").draggable( {
-            handle: 'div',
+            //handle: 'div',
+            containment: "document",
             cursor: 'move',
-            stack: {
-                group: '.venue',
-                min: 1
-            },
-            revert: 'invalid'
+            //stack: {
+                //group: '.venue',
+                //min: 1
+            //},
+            revert: 'invalid' // revert to initial position if undropped
         });
 
-        $("#dataTable tbody tr td:last-child").droppable( {
-            hoverClass: 'hover',
+        // Droppable elements are targets for draggable elements
+        $(".venue-holder").droppable( {
+            //hoverClass: 'hover',
             drop: function(event, ui) {
                 var venue = ui.draggable;
                 var oldHolder = venue.parent("td");
                 var replacing = $(".venue", this);
                 var newHomeOff;
-                var curOff = venue.offset();
+                //var curOff = venue.offset();
                 if (replacing.length == 0) {
                     // no venue, construct a hidden node
                     // to do position calculation
@@ -57,10 +61,10 @@
                     replacing.addClass("venue");
                     replacing[0].style.visibility = "hidden";
                     $(this).append(replacing);
-                    newHomeOff = replacing.offset();
+                    //newHomeOff = replacing.offset();
                     replacing.remove();
                 } else {
-                    newHomeOff = replacing.offset();
+                    //newHomeOff = replacing.offset();
                     venueMoved(replacing, $(this), $("#scratch"));
                     $("#scratch").append(replacing);
                 }
@@ -68,55 +72,52 @@
                 $(this).append(venue);
                 venueMoved(venue, oldHolder, $(this));
 
-                venue.css('top', curOff.top - newHomeOff.top);
-                venue.css('left', curOff.left - newHomeOff.left);
-                venue.animate({'top': '0', 'left': '0'}, 300);
+                //venue.css('top', curOff.top - newHomeOff.top);
+                //venue.css('left', curOff.left - newHomeOff.left);
+                //venue.animate({'top': '0', 'left': '0'}, 300);
             }
 
         });
 
         $("#scratch").droppable( {
-            hoverClass: 'hover',
+            //hoverClass: 'hover',
             drop: function(event, ui) {
                 var venue = ui.draggable;
                 var oldHolder = venue.parent("td");
                 $(this).append(venue);
-
                 venueMoved(venue, oldHolder, $(this));
-                venue.animate({'top': '0', 'left': '0'}, 300);
-
+                //venue.animate({'top': '0', 'left': '0'}, 300);
 
             }
-
-
+//
         } );
-
-        /* sorting function for venues */
-        $.fn.dataTableExt.afnSortData['venue'] = function ( oSettings, iColumn) {
-            var aData = [];
-            $('.venue-holder', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
-                var name = $('span', this).html();
-                if (name == null) name = '';
-                aData.push(name);
-            });
-            return aData;
-        };
-
-        /* filter function for venues */
-        $.fn.dataTableExt.ofnSearch['venue'] = function ( sData ) {
-            var jo = $(sData);
-            var f = $('span', jo).html();
-
-            return f;
-        };
-
+//
+        ///* sorting function for venues */
+        //$.fn.dataTableExt.afnSortData['venue'] = function ( oSettings, iColumn) {
+            //var aData = [];
+            //$('.venue-holder', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
+                //var name = $('span', this).html();
+                //if (name == null) name = '';
+                //aData.push(name);
+            //});
+            //return aData;
+        //};
+//
+        ///* filter function for venues */
+        //$.fn.dataTableExt.ofnSearch['venue'] = function ( sData ) {
+            //var jo = $(sData);
+            //var f = $('span', jo).html();
+//
+            //return f;
+        //};
+//
         $('#save').click( function() {
             $.ajax( {
                 type: "POST",
                 url: "{% round_url save_venues %}",
                 data: debates,
                 success: function(data, status) {
-                    alert("win");
+                    $("#savedVenues").removeClass('hide');
                 },
                 error: function(xhr, error, ex) {
                     alert("fail");
@@ -138,6 +139,7 @@
             "aaSorting": [[0, 'desc']]
         } );
     });
+
 </script>
 {% endblock extra-head %}
 
@@ -153,6 +155,7 @@
     <a class="btn btn-default" href="">Redo</a>
     <a class="btn btn-default" href="{% round_url draw %}">Quit</a>
 </div>
+
 {% endblock %}
 
 {% block content %}
@@ -167,6 +170,20 @@
 </div>
 
 <div id="main">
+
+
+<div class="alert alert-success fade in alert-dismissable hide" id="savedVenues">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  Saved succesfully!
+</div>
+
+
+<div class="alert alert-error fade in alert-dismissable hide" id="savedVenues">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  Failed to save!
+</div>
+
+
     <table id="dataTable" class="table table-hover table-bordered table-striped h4" cellpadding="0" cellspacing="0">
         <thead>
             <tr><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Affirmative</th><th>Negative</th><th>Venue</th></tr>

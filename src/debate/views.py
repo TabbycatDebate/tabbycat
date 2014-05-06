@@ -113,6 +113,65 @@ def tournament_config(request, t):
 
 @admin_required
 @tournament_view
+def wall_of_shame(request, t):
+    from debate.models import AdjudicatorFeedback
+
+    adjudicators = Adjudicator.objects.all()[:5]
+    teams = Team.objects.all()[:3]
+    feedback = AdjudicatorFeedback.objects.all()
+    debates = Debate.objects.all()
+
+    for adj in adjudicators:
+        adj.completed_feedbacks = []
+        adj.missing_feedbacks = []
+        adj.owes_feedback_on = []
+
+        for d in debates:
+            # Compiling all the allocations from debates that include this adjudicator
+            if (adj == d.adjudicators.chair) or (adj in d.adjudicators.panel) or (adj in d.adjudicators.trainees):
+                debate_adjs = d.adjudicators
+
+                for person in debate_adjs:
+                    # Excluding themselves from the adjudicators in the allocation
+                    if adj != person[1]:
+                        adj.owes_feedback_on.append({'round':d.round.seq, 'adj':person[1]})
+
+
+        for owes in adj.owes_feedback_on:
+            # Get all the feedbacks submitted on this particular person
+            all_targets_feedbacks = feedback.filter(adjudicator=owes['adj'])
+
+            test_array = []
+            for f in all_targets_feedbacks:
+                # Go through all the feedback, cross reference against owed rounds
+
+                if owes['round'] == f.round.seq:
+                    try:
+                        test = str(f.source_adjudicator.adjudicator)
+                    except:
+                        test = None
+
+                    if test is not None:
+                        if test == str(adj):
+                            adj.completed_feedbacks.append({'round':f.round.seq, 'adj':owes['adj']})
+
+
+        for unconfirmed in adj.owes_feedback_on:
+            hits = 0
+            for confirmed in adj.completed_feedbacks:
+                if confirmed == unconfirmed:
+                    hits = hits + 1
+            if hits == 0:
+                adj.missing_feedbacks.append(unconfirmed)
+
+
+
+
+    return r2r(request, 'wall_of_shame.html', dict(teams=teams, adjudicators=adjudicators))
+
+
+@admin_required
+@tournament_view
 def draw_index(request, t):
     return r2r(request, 'draw_index.html')
 
@@ -740,7 +799,6 @@ def get_adj_feedback(request, t):
 def enter_feedback(request, t, adjudicator_id):
 
     adj = get_object_or_404(Adjudicator, id=adjudicator_id)
-
 
     if not request.user.is_superuser:
         template = 'monkey/enter_feedback.html'

@@ -909,6 +909,7 @@ class DebateAdjudicator(models.Model):
     def __unicode__(self):
         return u'%s %s' % (self.adjudicator, self.debate)
 
+
 class AdjudicatorFeedback(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
     score = models.FloatField()
@@ -931,7 +932,6 @@ class AdjudicatorFeedback(models.Model):
             return self.source_adjudicator.debate
         if self.source_team:
             return self.source_team.debate
-
 
     @property
     def round(self):

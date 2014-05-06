@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block extra-head %}
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $('.table').dataTable({
+                'bPaginate': false,
+                "aaSorting": [[ 0, "desc" ]],
+            });
+            var emoji_arr = [];
+            $.getJSON('http://127.0.0.1:8000/emoji/all.json', function(data) {
+                for (var i in data) {
+                    //console.log(data[i]);
+                    emoji_arr.push(data[i]);
+                }
+                console.log(emoji_arr[0]);
+                $(".team-name").each(function(index) {
+                    console.log(this.id);
+                    //var img = "<img src=" + emoji_arr[this.id] + " class='team-emoji'/>"
+                    $(this).css('background-image', 'url(' + emoji_arr[this.id] + ')');
+                });
+             });
+        });
+    </script>
+{% endblock extra-head %}
+
+{% block body_class %}draw-public-display{% endblock %}
+
+{% block h1 %}The Wall of Shame{% endblock %}
+
+{% block content %}
+    <table id="dataTable" class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Completed Ballots"></span></th>
+                <th>Entity</th>
+                <th>Institution</th>
+                <th>Missing Ballots</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+        {% for adj in adjudicators %}
+        <tr class="">
+            <td class="">
+                {{ adj.missing_feedbacks|length }}
+            </td>
+            <td title="" class="" id="">
+                {{ adj.name }}
+            </td>
+            <td class="">
+                {{ adj.institution }}
+            </td>
+            <td title="" class="" id="">
+                {% for a in adj.missing_feedbacks %}
+                    {{ a.adj.name }} in R{{ a.round }},
+                {% endfor %}
+                </ul>
+
+            </td>
+        </tr>
+        {% endfor %}
+
+
+        {% for team in teams %}
+        <!-- <tr class="">
+            <td class="">
+                C: {{ team.completed_feedbacks.count }}
+                {{ team.completed_feedbacks }}
+                {% for fb in team.completed_feedbacks %}
+                    <li>Feedback from {{ fb.source }} on {{ fb.adjudicator }} in {{ fb.round }} </li>
+                {% endfor %}
+            </td>
+            <td title="" class="team-name" id="{{ team.id }}">
+                <span href="#" title="{{ team.speakers|join:', ' }}" data-toggle="tooltip" class="clickable">
+                    {{ team.name }}
+                </span>
+            </td>
+            <td class="">
+                {{ team.institution }}
+            </td>
+            <td title="" class="" id="">
+                {{ team.missing_feedbacks }}
+                <ul class="">
+                M: {{ team.missing_feedbacks.count }}
+                {% for fb in team.missing_feedbacks %}
+                    <li>{{ fb }}</li>
+                {% endfor %}
+                </ul>
+            </td>
+        </tr> -->
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+
+{% endblock content %}
