@@ -114,55 +114,44 @@ def tournament_config(request, t):
 @admin_required
 @tournament_view
 def wall_of_shame(request, t):
-    from debate.models import AdjudicatorFeedback
 
-    adjudicators = Adjudicator.objects.all()[:5]
-    teams = Team.objects.all()[:3]
+    # take two
+    from debate.models import AdjudicatorFeedback
     feedback = AdjudicatorFeedback.objects.all()
-    debates = Debate.objects.all()
+    adjudicators = Adjudicator.objects.all()
+    teams = Team.objects.all()
+    current_round = request.tournament.current_round.seq
 
     for adj in adjudicators:
-        adj.completed_feedbacks = []
-        adj.missing_feedbacks = []
-        adj.owes_feedback_on = []
+        adj.total_ballots = 0
+        # number of submitted ballots
+        adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator = adj)
+        # number of debates seen
+        adjudications = DebateAdjudicator.objects.filter(adjudicator = adj)
 
-        for d in debates:
-            # Compiling all the allocations from debates that include this adjudicator
-            if (adj == d.adjudicators.chair) or (adj in d.adjudicators.panel) or (adj in d.adjudicators.trainees):
-                debate_adjs = d.adjudicators
+        # for each tdebate they've seen...
+        debates = []
+        for item in adjudications:
+            if item.type == item.TYPE_CHAIR:
+                adj.total_ballots += 0
+                # now need to count trainees and panelists?
+                pass
+            if item.type == item.TYPE_PANEL:
+                adj.total_ballots += 1
+                # just need to submit on chair?
+                pass
+            if item.type == item.TYPE_TRAINEE:
+                # owes one for the chair?
+                adj.total_ballots += 1
+                pass
 
-                for person in debate_adjs:
-                    # Excluding themselves from the adjudicators in the allocation
-                    if adj != person[1]:
-                        adj.owes_feedback_on.append({'round':d.round.seq, 'adj':person[1]})
-
-
-        for owes in adj.owes_feedback_on:
-            # Get all the feedbacks submitted on this particular person
-            all_targets_feedbacks = feedback.filter(adjudicator=owes['adj'])
-
-            test_array = []
-            for f in all_targets_feedbacks:
-                # Go through all the feedback, cross reference against owed rounds
-
-                if owes['round'] == f.round.seq:
-                    try:
-                        test = str(f.source_adjudicator.adjudicator)
-                    except:
-                        test = None
-
-                    if test is not None:
-                        if test == str(adj):
-                            adj.completed_feedbacks.append({'round':f.round.seq, 'adj':owes['adj']})
+        adj.owed_ballots = int(adj.total_ballots) - int(adj.submitted_feedbacks.count())
 
 
-        for unconfirmed in adj.owes_feedback_on:
-            hits = 0
-            for confirmed in adj.completed_feedbacks:
-                if confirmed == unconfirmed:
-                    hits = hits + 1
-            if hits == 0:
-                adj.missing_feedbacks.append(unconfirmed)
+    for t in teams:
+        t.total_ballots = current_round * 2
+        t.owed_ballots = t.total_ballots - feedback.filter(source_team__team = t).count()
+
 
 
 

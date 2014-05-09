@@ -11,13 +11,9 @@
             var emoji_arr = [];
             $.getJSON('http://127.0.0.1:8000/emoji/all.json', function(data) {
                 for (var i in data) {
-                    //console.log(data[i]);
                     emoji_arr.push(data[i]);
                 }
-                console.log(emoji_arr[0]);
                 $(".team-name").each(function(index) {
-                    console.log(this.id);
-                    //var img = "<img src=" + emoji_arr[this.id] + " class='team-emoji'/>"
                     $(this).css('background-image', 'url(' + emoji_arr[this.id] + ')');
                 });
              });

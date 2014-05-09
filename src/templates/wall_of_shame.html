@@ -2,27 +2,36 @@
 {% load debate_tags %}
 
 {% block extra-head %}
-    <script type="text/javascript">
-        $(document).ready( function() {
-            $('.table').dataTable({
-                'bPaginate': false,
-                "aaSorting": [[ 0, "desc" ]],
-            });
-            var emoji_arr = [];
-            $.getJSON('http://127.0.0.1:8000/emoji/all.json', function(data) {
-                for (var i in data) {
-                    //console.log(data[i]);
-                    emoji_arr.push(data[i]);
-                }
-                console.log(emoji_arr[0]);
-                $(".team-name").each(function(index) {
-                    console.log(this.id);
-                    //var img = "<img src=" + emoji_arr[this.id] + " class='team-emoji'/>"
-                    $(this).css('background-image', 'url(' + emoji_arr[this.id] + ')');
-                });
-             });
+<script type="text/javascript">
+    $(document).ready( function() {
+        $('.table').dataTable({
+            'bPaginate': false,
+            "aaSorting": [[ 0, "desc" ]],
         });
-    </script>
+
+    // the standard header to be re-added to the modal
+    var tableHead = '<table id="modal-adj-table" class="table table-bordered"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
+
+    $(".view-feedback").each( function() {
+        $(this).click( function() {
+
+            var adj_row = $(this).parent().parent() // the <tr> for this adjudicator in the table
+            var adj_name = adj_row.find(".adj-name").text()
+            var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
+
+            $("#modal-adj-table_wrapper").remove(); // removing the previously loaded table
+            $("#modal-adj-name").text(adj_name); // Updating header of the modal
+            $(".modal-body").append(tableHead);
+            $("#modal-adj-table").dataTable({
+              // Grabbing the adj data into a datatable
+              'sAjaxSource': '{% tournament_url get_adj_feedback %}?id=' + adj_id,
+              'bPaginate': false,
+            });
+
+        });
+    });
+});
+</script>
 {% endblock extra-head %}
 
 {% block body_class %}draw-public-display{% endblock %}
@@ -33,68 +42,78 @@
     <table id="dataTable" class="table table-hover table-bordered table-striped">
         <thead>
             <tr>
-                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Completed Ballots"></span></th>
-                <th>Entity</th>
+                <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Uncompleted Ballots"></span></th>
+                <th>Type</th>
+                <th>Offendor</th>
                 <th>Institution</th>
                 <th>Missing Ballots</th>
             </tr>
         </thead>
         <tbody>
 
-
-        {% for adj in adjudicators %}
-        <tr class="">
+        {% for entity in adjudicators %}
+        <tr id="adj_{{ entity.id }}">
             <td class="">
-                {{ adj.missing_feedbacks|length }}
+                {{ entity.owed_ballots }} / {{ entity.total_ballots }}
+            </td>
+            <td>
+                Adj
+            </td>
+            <td class="entity-name">{{ entity.name }}</td>
+                {{ entity.name }}
+            </td>
+            <td class="">
+                {{ entity.institution }}
             </td>
             <td title="" class="" id="">
-                {{ adj.name }}
-            </td>
-            <td class="">
-                {{ adj.institution }}
-            </td>
-            <td title="" class="" id="">
-                {% for a in adj.missing_feedbacks %}
-                    {{ a.adj.name }} in R{{ a.round }},
-                {% endfor %}
-                </ul>
-
+                <a data-toggle="modal" data-target="#adj-feedback"  class="view-feedback">View Missing Feedback</a>
             </td>
         </tr>
         {% endfor %}
 
-
         {% for team in teams %}
-        <!-- <tr class="">
+        <tr id="team_{{ team.id }}">
             <td class="">
-                C: {{ team.completed_feedbacks.count }}
-                {{ team.completed_feedbacks }}
-                {% for fb in team.completed_feedbacks %}
-                    <li>Feedback from {{ fb.source }} on {{ fb.adjudicator }} in {{ fb.round }} </li>
-                {% endfor %}
+                {{ team.owed_ballots }} / {{ team.total_ballots }}
             </td>
-            <td title="" class="team-name" id="{{ team.id }}">
-                <span href="#" title="{{ team.speakers|join:', ' }}" data-toggle="tooltip" class="clickable">
+            <td>
+                Team
+            </td>
+            <td>
+                <a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" data-toggle="tooltip" class="team" href="#">
                     {{ team.name }}
-                </span>
+                </a>
             </td>
             <td class="">
                 {{ team.institution }}
             </td>
             <td title="" class="" id="">
-                {{ team.missing_feedbacks }}
-                <ul class="">
-                M: {{ team.missing_feedbacks.count }}
-                {% for fb in team.missing_feedbacks %}
-                    <li>{{ fb }}</li>
-                {% endfor %}
-                </ul>
+                <a data-toggle="modal" data-target="#adj-feedback"  class="view-feedback">View Missing Feedback</a>
             </td>
-        </tr> -->
+        </tr>
         {% endfor %}
 
 
         </tbody>
     </table>
+
+<div class="modal fade" id="adj-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header"><h3>Missing Feedback for <span id="modal-adj-name"></span></h3></div>
+        <div class="modal-body">
+<!-- <table id="modal-adj-table" class="table table-bordered">
+    <thead>
+        <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
+        <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+        <th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table> -->
+        </div>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}
