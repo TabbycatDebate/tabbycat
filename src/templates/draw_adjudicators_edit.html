@@ -27,7 +27,7 @@
 
 
         function _make_adj(data) {
-            var adj = $('<div></div>').addClass('adj btn btn-block btn-default')
+            var adj = $('<div></div>').addClass('adj btn btn-block btn-default text-left')
                 .attr('id', 'adj_' + data.id)
                 .append($('<span></span> ').html(data.name))
             if (data.is_trainee) {
@@ -132,7 +132,7 @@
 
         function append_adj_scores() {
             $(".adj").each( function() {
-                $(this).prepend('<span class="info">' + formatScore(scores[intId(this)]) + ' </span>');
+                $(this).prepend('<span class="info"> ' + formatScore(scores[intId(this)]) + ' </span>');
                 $("a", this).attr("title", "Score: " + scores[intId(this)]);
                 $("a", this).click( function() {
                     return false;
@@ -432,18 +432,18 @@
         });
 
         dataTable = $("#dataTable").dataTable( {
+            "bAutoWidth": false,
             // "aoColumns": [
             //     { "sWidth": "5%" },
-            //     { "sWidth": "15%" },
-            //     { "sWidth": "15%" },
-            //     { "sWidth": "25%" },
-            //     { "sWidth": "40%" }
+            //     { "sWidth": "5%" },
+            //     { "sWidth": "5%" },
+            //     { "sWidth": "5%" },
+            //     { "sWidth": "10%" }
             // ],
             "bPaginate": false,
             "aaSorting": [[0, 'desc']]
             // "bSort": false,
             // "bFilter": false,
-            // "bAutoWidth": false,
             // "aaSorting": [[0, 'desc']]
         } );
 
@@ -553,10 +553,10 @@
                 {{ debate.importance }}
             </td>
             <td id="team_{{ debate.aff_team.id }}" class="team">
-                {{ debate.aff_team.name }}
+                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
             </td>
             <td id="team_{{ debate.neg_team.id }}" class="team">
-                {{ debate.neg_team.name }}
+                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
             </td>
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
 

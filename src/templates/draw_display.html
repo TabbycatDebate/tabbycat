@@ -27,13 +27,13 @@
 
 {% block body_class %}draw-public-display{% endblock %}
 
-{% block h1 %}Round {{ round }} Draw{% endblock %}
+{% block h1 %}Round {{ round }} Draw for {{ tournament }} {% endblock %}
 
 {% block content %}
     <table id="draw" class="table table-hover table-bordered table-striped">
         <thead>
             <tr>
-                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
                 <th>Affirmative</th>
                 <th>Negative</th>
                 <th>Adjudicators</th>
@@ -45,11 +45,11 @@
             <td class="venue-name">
                 {{ debate.venue_splitname }}
             </td>
-            <td title="{% aff_count debate.aff_team round.prev %}" class="team-name" id="{{ debate.aff_team.id }}">
-                {{ debate.aff_team.name }}
+            <td class="team-name" id="{{ debate.aff_team.id }}">
+                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
             </td>
-            <td title="{% neg_count debate.neg_team round.prev %}" class="team-name" id="{{ debate.neg_team.id }}">
-                {{ debate.neg_team.name }}
+            <td title="{{ debate.neg_team.speakers|join:', ' }}"  class="team-name" id="{{ debate.neg_team.id }}">
+                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.name }}</span>
             </td>
             <td class="adj-names">
                 <ul class="">

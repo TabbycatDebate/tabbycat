@@ -348,8 +348,6 @@ a.text-danger:hover {
   padding-left: 0px;
   margin-left: 0;
   list-style-type: none; }
-.draw-public-display #draw.dataTable .adj-names li span {
-  margin-left: -5px; }
 @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
   .draw-public-display #draw.dataTable {
     margin-left: -15px; }
@@ -367,6 +365,8 @@ a.text-danger:hover {
     .draw-public-display #draw.dataTable .adj-names li span {
       margin-left: 0px; } }
 
+.edit-venues .btn-default.text-left, .edit-adjs .btn-default.text-left {
+  padding-left: 6px; }
 .edit-venues .nav, .edit-adjs .nav {
   display: none; }
 .edit-venues #main, .edit-adjs #main {

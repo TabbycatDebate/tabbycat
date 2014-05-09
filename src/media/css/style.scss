@@ -76,9 +76,7 @@
                 margin-left: 0;
                 list-style-type: none;
             }
-            li span {
-                margin-left: -5px;
-            }
+
         }
     }
     @media
@@ -116,6 +114,9 @@
 
 .edit-venues, .edit-adjs {
 
+    .btn-default.text-left {
+        padding-left: 6px;
+    }
     .nav {
         display: none;
     }

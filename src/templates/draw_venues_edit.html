@@ -163,7 +163,7 @@
 <div id="scratch" class="h4">
     <h3>Unused Venues</h3>
     {% for venue in round.unused_venues %}
-    <div id="venue_{{ venue.id }}" class="btn btn-default btn-lg btn-block venue">
+    <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
         <span>{{ venue }}</span>
     </div>
     {% endfor %}
@@ -192,10 +192,14 @@
         {% for debate in draw %}
         <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
             <td>{{ debate.bracket }}</td>
-            <td>{{ debate.aff_team }}</td>
-            <td>{{ debate.neg_team }}</td>
+            <td>
+                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
+            </td>
+            <td>
+                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
+            </td>
             <td id="debate_{{ debate.id }}" class="venue-holder">
-                <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default btn-lg
+                <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default text-left
                     {% if debate.venue %}venue{% else %}empty{% endif %}">
                     <span class="">{{ debate.venue }}</span>
                 </div>
