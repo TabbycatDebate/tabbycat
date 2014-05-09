@@ -4,52 +4,41 @@
 {% block extra-head %}
 
 
-    <script type="text/javascript" charset="utf-8">
-        function intId(elem) {
-            return parseInt($(elem).attr("id").split('_')[1]);
-        }
+<script type="text/javascript" charset="utf-8">
 
-        // function details(nTr) {
-        //     var s = '<table id="feedback_' + intId(nTr) + '" class="display table table-bordered"><thead>';
-        //     s += '<tr><th>Round</th><th>Bracket</th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>';
-        //     s += '</thead><tbody></tbody></table>';
-        //     return s;
-        // }
-        //var dTable;
+    $(document).ready( function() {
 
-        $(document).ready( function() {
-            $('#dataTable').dataTable({
-                'bPaginate': false,
-                "aaSorting": [[ 4, "desc" ]],
+        // The overall adj feedback table
+        $('#dataTable').dataTable({
+            'bPaginate': false,
+            "aaSorting": [[ 4, "desc" ]],
+        });
+
+        // the standard header to be re-added to the modal
+        var tableHead = '<table id="modal-adj-table" class="table table-bordered"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
+
+        $(".view-feedback").each( function() {
+            $(this).click( function() {
+
+
+                var adj_row = $(this).parent().parent() // the <tr> for this adjudicator in the table
+                var adj_name = adj_row.find(".adj-name").text()
+                var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
+
+                $("#modal-adj-table_wrapper").remove(); // removing the previously loaded table
+                $("#modal-adj-name").text(adj_name); // Updating header of the modal
+                $(".modal-body").append(tableHead);
+                $("#modal-adj-table").dataTable({
+                  // Grabbing the adj data into a datatable
+                  'sAjaxSource': '{% tournament_url get_adj_feedback %}?id=' + adj_id,
+                  'bPaginate': false,
+                });
+
             });
+        });
+    });
 
-            // $("#dataTable a.view").each( function() {
-            //     $(this).click( function() {
-            //         var nTr = this.parentNode.parentNode;
-
-            //         if ($(this).html().match('View')) {
-            //             dTable.fnOpen(nTr, details(nTr), 'details');
-
-            //             var feedTable = $("#feedback_" + intId(nTr)).dataTable( {
-            //                 'bProcessing': true,
-            //                 'sAjaxSource': '{% tournament_url get_adj_feedback %}?id=' + intId(nTr),
-            //                 'bFilter': false,
-            //                 'bPaginate': false
-            //             });
-
-            //             $(this).html("Hide Feedback");
-            //         } else {
-            //             dTable.fnClose(nTr);
-            //             $(this).html("View Feedback");
-            //         }
-
-            //         return false;
-
-            //     } );
-            // } );
-
-        } );
-    </script>
+</script>
 
 
 
@@ -75,12 +64,12 @@
     <tbody>
         {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">
-            <td>{{ adj.name }}</td>
+            <td class="adj-name">{{ adj.name }}</td>
             <td>{{ adj.institution }}</td>
             <td>{{ adj.test_score }}</td>
             <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
             <td>{{ adj.score|stringformat:".2f" }}</td>
-            <td><a data-toggle="modal" data-target="#adj-{{ adj.id }}-feedback">View Feedback</a></td>
+            <td><a data-toggle="modal" data-target="#adj-feedback"  class="view-feedback">View Feedback</a></td>
             <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
         </tr>
         {% endfor %}
@@ -88,35 +77,23 @@
 
 </table>
 
-{% for adj in adjudicators %}
-<div class="modal fade" id="adj-{{ adj.id }}-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="adj-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-        <div class="modal-header"><h3>Feedback for {{ adj.name }}</h3></div>
+        <div class="modal-header"><h3>Feedback for <span id="modal-adj-name"></span></h3></div>
         <div class="modal-body">
-        <table class="table table-bordered">
-            <thead>
-                <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
-                <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-                <th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>
-            </thead>
-            <tbody>
-                {% for round in adj.get_feedback %}
-                <tr>
-                    <td>{{ round.round }}</td>
-                    <td>{{ round.debate.bracket }}</td>
-                    <td>{{ round.debate.aff_team }} vs {{ round.debate.neg_team }}</td>
-                    <td>{{ round.source }}</td>
-                    <td>{{ round.score }}</td>
-                    <td>{{ round.comments }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<!-- <table id="modal-adj-table" class="table table-bordered">
+    <thead>
+        <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
+        <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+        <th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table> -->
         </div>
     </div>
   </div>
 </div>
-{% endfor %}
 
 {% endblock content %}
