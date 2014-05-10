@@ -115,7 +115,14 @@ def tournament_config(request, t):
 @tournament_view
 def wall_of_shame(request, t):
 
-    # take two
+    def calculate_coverage(submitted, total):
+        if total == 0:
+            return False # Don't show these ones
+        elif submitted == 0:
+            return 0
+        else:
+            return int((float(submitted) / float(total)) * 100)
+
     from debate.models import AdjudicatorFeedback
     feedback = AdjudicatorFeedback.objects.all()
     adjudicators = Adjudicator.objects.all()
@@ -124,37 +131,31 @@ def wall_of_shame(request, t):
 
     for adj in adjudicators:
         adj.total_ballots = 0
-        # number of submitted ballots
         adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator = adj)
-        # number of debates seen
         adjudications = DebateAdjudicator.objects.filter(adjudicator = adj)
 
-        # for each tdebate they've seen...
-        debates = []
         for item in adjudications:
             if item.type == item.TYPE_CHAIR:
-                adj.total_ballots += 0
-                # now need to count trainees and panelists?
-                pass
+                adj_allocation = item.debate.adjudicators
+                adj.total_ballots += len(adj_allocation.trainees)
+                adj.total_ballots += len(adj_allocation.panel)
+
             if item.type == item.TYPE_PANEL:
+                # Panelists owe feedback on chairs
                 adj.total_ballots += 1
-                # just need to submit on chair?
-                pass
+
             if item.type == item.TYPE_TRAINEE:
-                # owes one for the chair?
+                # Trainees owe feedback on chairs
                 adj.total_ballots += 1
-                pass
 
-        adj.owed_ballots = int(adj.total_ballots) - int(adj.submitted_feedbacks.count())
+        adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
+        adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
+        adj.coverage = calculate_coverage(adj.submitted_ballots, adj.total_ballots)
 
-
-    for t in teams:
-        t.total_ballots = current_round * 2
-        t.owed_ballots = t.total_ballots - feedback.filter(source_team__team = t).count()
-
-
-
-
+    for team in teams:
+        team.submitted_ballots = max(feedback.filter(source_team__team = team).count(), 0)
+        team.owed_ballots = max((current_round - team.submitted_ballots), 0)
+        team.coverage = calculate_coverage(team.submitted_ballots, current_round)
 
     return r2r(request, 'wall_of_shame.html', dict(teams=teams, adjudicators=adjudicators))
 

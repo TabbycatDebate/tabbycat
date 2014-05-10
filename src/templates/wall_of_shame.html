@@ -3,6 +3,7 @@
 
 {% block extra-head %}
 <script type="text/javascript">
+
     $(document).ready( function() {
         $('.table').dataTable({
             'bPaginate': false,
@@ -12,17 +13,18 @@
     // the standard header to be re-added to the modal
     var tableHead = '<table id="modal-adj-table" class="table table-bordered"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
 
-    $(".view-feedback").each( function() {
+    $(".view-missing-adjs").each(function() {
         $(this).click( function() {
 
             var adj_row = $(this).parent().parent() // the <tr> for this adjudicator in the table
-            var adj_name = adj_row.find(".adj-name").text()
-            var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
+            var adj_name = adj_row.find(".entity-name").text()
+            var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator objec
+
 
             $("#modal-adj-table_wrapper").remove(); // removing the previously loaded table
             $("#modal-adj-name").text(adj_name); // Updating header of the modal
-            $(".modal-body").append(tableHead);
-            $("#modal-adj-table").dataTable({
+            $("#adj-feedback .modal-body").append(tableHead);
+            $("#adj-feedback #modal-adj-table").dataTable({
               // Grabbing the adj data into a datatable
               'sAjaxSource': '{% tournament_url get_adj_feedback %}?id=' + adj_id,
               'bPaginate': false,
@@ -36,15 +38,23 @@
 
 {% block body_class %}draw-public-display{% endblock %}
 
-{% block h1 %}The Wall of Shame{% endblock %}
+{% block h1 %}Unsubmitted Ballots Shitlist{% endblock %}
 
 {% block content %}
+
+<div class="btn-group btn-group-lg">
+    <a class="btn btn-default" href="">Show All</a>
+    <a class="btn btn-default" href="">Show Teams</a>
+    <a class="btn btn-default" href="">Show Adjudicators</a>
+</div>
+
     <table id="dataTable" class="table table-hover table-bordered table-striped">
         <thead>
             <tr>
-                <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Uncompleted Ballots"></span></th>
-                <th>Type</th>
-                <th>Offendor</th>
+                <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Unsubmitted Ballots"></span></th>
+                <th><span class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Submitted Ballots"></span></th>
+                <th><span class="glyphicon glyphicon-eye-open" data-toggle="tooltip" title="Coverage"></span></th>
+                <th>Person or Team</th>
                 <th>Institution</th>
                 <th>Missing Ballots</th>
             </tr>
@@ -52,35 +62,43 @@
         <tbody>
 
         {% for entity in adjudicators %}
-        <tr id="adj_{{ entity.id }}">
+        {% if entity.coverage %}
+        <tr id="adj_{{ entity.id }}" class="adj-row">
             <td class="">
-                {{ entity.owed_ballots }} / {{ entity.total_ballots }}
+                {{ entity.owed_ballots }}
             </td>
-            <td>
-                Adj
+            <td class="">
+                {{ entity.submitted_ballots }}
             </td>
-            <td class="entity-name">{{ entity.name }}</td>
+            <td class="">
+                {{ entity.coverage}}%
+            </td>
+            <td class="entity-name">
                 {{ entity.name }}
             </td>
             <td class="">
-                {{ entity.institution }}
+                {{ entity.institution }} {{ entity.test }}
             </td>
             <td title="" class="" id="">
-                <a data-toggle="modal" data-target="#adj-feedback"  class="view-feedback">View Missing Feedback</a>
+                <a data-toggle="modal" data-target="#adj-feedback"  class="view-missing-adjs">View Missing Feedback</a>
             </td>
         </tr>
+        {% endif %}
         {% endfor %}
 
         {% for team in teams %}
-        <tr id="team_{{ team.id }}">
+        <tr id="team_{{ team.id }}" class="team-row">
             <td class="">
-                {{ team.owed_ballots }} / {{ team.total_ballots }}
+                {{ team.owed_ballots }}
+            </td>
+            <td class="">
+                {{ team.submitted_ballots }}
+            </td>
+            <td class="">
+                {{ team.coverage}}%
             </td>
             <td>
-                Team
-            </td>
-            <td>
-                <a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" data-toggle="tooltip" class="team" href="#">
+                <a title="{{ team.speakers|join:", " }}" data-toggle="tooltip" class="entity" href="#">
                     {{ team.name }}
                 </a>
             </td>
@@ -88,29 +106,28 @@
                 {{ team.institution }}
             </td>
             <td title="" class="" id="">
-                <a data-toggle="modal" data-target="#adj-feedback"  class="view-feedback">View Missing Feedback</a>
+                <a data-toggle="modal" data-target="#team-feedback"  class="view-missing">View Missing Feedback</a>
             </td>
         </tr>
         {% endfor %}
-
-
         </tbody>
     </table>
 
 <div class="modal fade" id="adj-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-        <div class="modal-header"><h3>Missing Feedback for <span id="modal-adj-name"></span></h3></div>
+        <div class="modal-header"><h3>Missing Ballots for <span id="modal-adj-name"></span></h3></div>
         <div class="modal-body">
-<!-- <table id="modal-adj-table" class="table table-bordered">
-    <thead>
-        <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
-        <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-        <th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table> -->
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="team-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header"><h3>Missing Ballots for <span id="modal-adj-name"></span></h3></div>
+        <div class="modal-body">
         </div>
     </div>
   </div>
