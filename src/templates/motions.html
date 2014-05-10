@@ -8,7 +8,7 @@
         $(document).ready( function() {
             $("#dataTable").dataTable( {
                 "bPaginate": false,
-                "aaSorting": [[0, 'desc']]
+                "aaSorting": [[2, 'desc']]
             } );
 
         } );
@@ -16,14 +16,17 @@
     </script>
 {% endblock extra-head %}
 
-{% block extra-style %}
+{% block body_class %}display-motions{% endblock %}
 
+{% block h1 %} Motions for Round {{ round }}
+
+<a href="{% round_url motions_edit %}" class="btn btn-default col-sm-offset-1">
+    Edit motions
+</a>
 {% endblock %}
 
-{% block h1 %} Motions for Round {{ round }}{% endblock %}
-
 {% block content %}
-<a href="{% round_url motions_edit %}">Edit motions</a>.
+
 
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>

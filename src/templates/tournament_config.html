@@ -8,7 +8,8 @@
 
 <form id="configForm" action="." method="POST" class="form-horizontal">
     {% if form.errors %}
-    <div class="error">Please correct the errors below</div>
+        <div class="error">Please correct the errors below</div>
+        {{ form.errors }}
     {% endif %}
     {% if updated %}
     <div class="updated">Configuration updated</div>

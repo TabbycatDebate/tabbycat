@@ -319,8 +319,11 @@ a.text-danger:hover {
 .dataTable thead > tr > th {
   padding-right: 0 !important; }
 
-#dataTable_filter label, #draw_filter label, #draw label {
+#dataTable_filter label, #draw_filter label, #draw label, div.dataTables_filter label {
   float: left; }
+
+#modal-adj-table_wrapper div.dataTables_filter, .display-motions div.dataTables_filter {
+  display: none; }
 
 .dataTables_info {
   display: none; }

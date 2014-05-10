@@ -23,9 +23,15 @@
 .dataTable thead > tr > th {
     padding-right: 0 !important;
 }
-#dataTable_filter, #draw_filter, #draw {
+#dataTable_filter, #draw_filter, #draw, div.dataTables_filter {
     label {
         float: left;
+    }
+}
+// Hide the search box in these instances
+#modal-adj-table_wrapper, .display-motions {
+    div.dataTables_filter {
+        display: none;
     }
 }
 .dataTables_info {

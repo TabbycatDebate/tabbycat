@@ -1,5 +1,6 @@
 {% extends "draw_rbase.html" %}
 
+{% load add_field_css %}
 {% load debate_tags %}
 
 {% block extra-head %}
@@ -17,39 +18,58 @@
     </script>
 {% endblock extra-head %}
 
-{% block extra-style %}
-
-{% endblock %}
-
 {% block h1 %} Edit Motions for Round {{ round }}{% endblock %}
 
 {% block content %}
 <p class="warning">Warning: Do not add the motions before they have been released to debaters!</p>
 
-<form method="post" action="">
+<form method="post" action="" class="form-horizontal">
     {{ formset.management_form }}
 
-    <table class="display motions-edit" cellpadding="0" cellspacing="0">
-        <thead>
-            <tr><th>Reference</th><th>Motion</th><th>Delete</th></tr>
-        </thead>
-        <tbody>
         {% for form in formset %}
-            {% if form.errors %}
-                <tr><td colspan="3" class="errors">{{ form.errors }}</td></tr>
-            {% endif %}
-            <tr>
-                <td>{{ form.reference }}</td>
-                <td>{{ form.text }}</td>
-                <td>{{ form.DELETE }}{{ form.id }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <input class="button" type="submit" name="submit" value="Save" />
-    <input class="button" type="submit" name="submit_add_more" value="Save and add more" />
-    <a href="{% round_url motions %}">Cancel</a>
+            {% if form.errors %}
+            <div class="error">
+                {{ form.errors }}
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
+                    {{ form.reference.label }}
+                </label>
+                <div class="col-sm-6">
+                    {{form.reference|addcss:"form-control"}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
+                    {{ form.text.label }}
+                </label>
+                <div class="col-sm-6">
+                    {{form.text|addcss:"form-control"}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
+                    {{ form.DELETE.label }}
+                </label>
+                <div class="col-sm-6">
+                    {{form.DELETE|addcss:"form-control"}}{{ form.id }}
+                </div>
+            </div>
+
+        {% endfor %}
+
+        <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-6">
+                <input class="btn btn-default" type="submit" name="submit" value="Save" />
+                <input class="btn btn-default" type="submit" name="submit_add_more" value="Save and add more" />
+                <a class="btn btn-default" href="{% round_url motions %}">Cancel</a>
+            </div>
+        </div>
+
+
 </form>
 
 {% endblock content %}

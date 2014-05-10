@@ -52,11 +52,9 @@
 
 {% block body_class %}draw-public-display{% endblock %}
 
-{% block h1 %}Unsubmitted Ballots Shitlist{% endblock %}
+{% block h1 %}Unsubmitted Ballots Shitlist
 
-{% block content %}
-
-<div class="btn-group btn-group-lg" data-toggle="buttons">
+<div class="btn-group btn-group-lg col-sm-offset-1" data-toggle="buttons">
 
   <label class="btn btn-default active" id="toggle-all">
     <input type="radio" name="options">Show All
@@ -69,6 +67,11 @@
   </label>
 
 </div>
+
+{% endblock %}
+
+{% block content %}
+
 
     <table id="dataTable" class="table table-hover table-bordered table-striped">
         <thead>
