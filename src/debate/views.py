@@ -135,27 +135,27 @@ def wall_of_shame(request, t):
         adjudications = DebateAdjudicator.objects.filter(adjudicator = adj)
 
         for item in adjudications:
+            # Finding out the composition of their panel, tallying owed ballots
             if item.type == item.TYPE_CHAIR:
-                adj_allocation = item.debate.adjudicators
-                adj.total_ballots += len(adj_allocation.trainees)
-                adj.total_ballots += len(adj_allocation.panel)
+                adj.total_ballots += len(item.debate.adjudicators.trainees)
+                adj.total_ballots += len(item.debate.adjudicators.panel)
 
             if item.type == item.TYPE_PANEL:
-                # Panelists owe feedback on chairs
+                # Panelists owe on chairs
                 adj.total_ballots += 1
 
             if item.type == item.TYPE_TRAINEE:
-                # Trainees owe feedback on chairs
+                # Trainees owe on chairs
                 adj.total_ballots += 1
 
         adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
         adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
-        adj.coverage = calculate_coverage(adj.submitted_ballots, adj.total_ballots)
+        adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
 
     for team in teams:
         team.submitted_ballots = max(feedback.filter(source_team__team = team).count(), 0)
         team.owed_ballots = max((current_round - team.submitted_ballots), 0)
-        team.coverage = calculate_coverage(team.submitted_ballots, current_round)
+        team.coverage = min(calculate_coverage(team.submitted_ballots, current_round), 100)
 
     return r2r(request, 'wall_of_shame.html', dict(teams=teams, adjudicators=adjudicators))
 

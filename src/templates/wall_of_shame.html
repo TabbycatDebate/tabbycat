@@ -5,10 +5,24 @@
 <script type="text/javascript">
 
     $(document).ready( function() {
+
         $('.table').dataTable({
             'bPaginate': false,
             "aaSorting": [[ 0, "desc" ]],
         });
+
+      $("#toggle-all").click(function () {
+        $('.adj-row').show();
+        $('.team-row').show();
+      });
+      $('#toggle-teams').click(function () {
+        $('.adj-row').hide();
+        $('.team-row').show();
+      });
+      $('#toggle-adjs').click(function () {
+        $('.adj-row').show();
+        $('.team-row').hide();
+      });
 
     // the standard header to be re-added to the modal
     var tableHead = '<table id="modal-adj-table" class="table table-bordered"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
@@ -42,21 +56,28 @@
 
 {% block content %}
 
-<div class="btn-group btn-group-lg">
-    <a class="btn btn-default" href="">Show All</a>
-    <a class="btn btn-default" href="">Show Teams</a>
-    <a class="btn btn-default" href="">Show Adjudicators</a>
+<div class="btn-group btn-group-lg" data-toggle="buttons">
+
+  <label class="btn btn-default active" id="toggle-all">
+    <input type="radio" name="options">Show All
+  </label>
+  <label class="btn btn-default" id="toggle-teams">
+    <input type="radio" name="options" >Only Teams
+  </label>
+  <label class="btn btn-default" id="toggle-adjs">
+    <input type="radio" name="options" >Only Adjudicators
+  </label>
+
 </div>
 
     <table id="dataTable" class="table table-hover table-bordered table-striped">
         <thead>
             <tr>
+                <th><span class="glyphicon glyphicon-eye-open" data-toggle="tooltip" title="Percentage Returned"> %</span></th>
                 <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Unsubmitted Ballots"></span></th>
                 <th><span class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Submitted Ballots"></span></th>
-                <th><span class="glyphicon glyphicon-eye-open" data-toggle="tooltip" title="Coverage"></span></th>
-                <th>Person or Team</th>
+                <th>Adjudicator/Team</th>
                 <th>Institution</th>
-                <th>Missing Ballots</th>
             </tr>
         </thead>
         <tbody>
@@ -65,13 +86,13 @@
         {% if entity.coverage %}
         <tr id="adj_{{ entity.id }}" class="adj-row">
             <td class="">
+                {{ entity.coverage}}
+            </td>
+            <td class="">
                 {{ entity.owed_ballots }}
             </td>
             <td class="">
                 {{ entity.submitted_ballots }}
-            </td>
-            <td class="">
-                {{ entity.coverage}}%
             </td>
             <td class="entity-name">
                 {{ entity.name }}
@@ -79,23 +100,19 @@
             <td class="">
                 {{ entity.institution }} {{ entity.test }}
             </td>
-            <td title="" class="" id="">
-                <a data-toggle="modal" data-target="#adj-feedback"  class="view-missing-adjs">View Missing Feedback</a>
-            </td>
         </tr>
         {% endif %}
         {% endfor %}
-
         {% for team in teams %}
         <tr id="team_{{ team.id }}" class="team-row">
+            <td class="">
+                {{ team.coverage}}
+            </td>
             <td class="">
                 {{ team.owed_ballots }}
             </td>
             <td class="">
                 {{ team.submitted_ballots }}
-            </td>
-            <td class="">
-                {{ team.coverage}}%
             </td>
             <td>
                 <a title="{{ team.speakers|join:", " }}" data-toggle="tooltip" class="entity" href="#">
@@ -105,9 +122,7 @@
             <td class="">
                 {{ team.institution }}
             </td>
-            <td title="" class="" id="">
-                <a data-toggle="modal" data-target="#team-feedback"  class="view-missing">View Missing Feedback</a>
-            </td>
+
         </tr>
         {% endfor %}
         </tbody>
