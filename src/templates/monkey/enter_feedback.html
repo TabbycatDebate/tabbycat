@@ -1,33 +1,34 @@
-{% extends "monkey/base.html" %}
+{% extends "base.html" %}
 
-{% block extra-head %}
-{{ block.super }}
+{% load add_field_css %}
 
-<style>
-    #id_score {
-        width: 4em;
-    }
+{% block extra-head %}{% endblock %}
 
-    #feedbackForm label {
-        display: block;
-    }
-</style>
-{% endblock %}
+{% block head-title %}Add Feedback for {{ adj }}{% endblock %}
+{% block page-title %}Add Feedback for {{ adj }}{% endblock %}
 
-{% block header %}Enter Feedback{% endblock %}
+{% block nav %}{% include "monkey_nav.html" %}{% endblock %}
 
 {% block content %}
-<h2>
-Feedback for {{ adj }}
-</h2>
-<form id="feedbackForm" action="" method="POST">
-    {{ form.as_p }}
+
+<form id="feedbackForm" action="" method="POST" class="form-horizontal">
+
+    {% for field in form %}
+    <div class="form-group">
+        <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>
+        <div class="col-sm-6">
+            {{field|addcss:"form-control"}}
+        </div>
+        {% if field.errors %}
+            {{ field.errors }}
+        {% endif %}
+    </div>
+    {% endfor %}
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" value="Save" class="btn btn-default ">Save</button>
+            <button type="submit" value="Save" class="btn btn-default">Save</button>
         </div>
     </div>
 </form>
 
 {% endblock content %}
-

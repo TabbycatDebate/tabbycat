@@ -2,58 +2,11 @@
 
 {% load debate_tags %}
 
-{% block extra-head %}
-<style>
-    body {
-        background: #f6f6f6;
-    }
-    #container {
-        background: #fff;
-        border: 1px solid #ccc;
-        padding: 10px;
-        width: 90%;
-        margin: 30px auto;
-    }
-    #header {
-        height: 60px;
-    }
-    #header h1 {
-        float: left;
-        background-image: url(/static/images/australs.png);
-        background-repeat: no-repeat;
-        padding-left: 240px;
-        padding-top: 60px;
-        margin-top: 0px;
-        height: 80px;
-        width: 400px;
-    }
-    #presence { float: right; }
-    #menu {clear; both; }
-    #content { margin-top: 20px; padding-bottom: 40px;}
-    h2 { font-weight: bold }
+{% block head-title %}Round {{ current_round }}{% endblock %}
+{% block page-title %}Round {{ current_round }}{% endblock %}
 
-</style>
+
+
+{% block content %}
 
 {% endblock %}
-
-{% block body %}
-<div id="container">
-    <div id="header">
-        <h1>{% block header %}Round {{ current_round }}{% endblock %}</h1>
-        <div id="presence">Logged in as {{ user }} | <a href="{% url 'logout' %}">logout</a></div>
-
-    </div>
-    <ul id="menu">
-        <li><a href="{% round_url results current_round %}">Enter Results</a></li>
-        <li><a href="{% tournament_url adj_feedback %}">Enter Feedback</a></li>
-    </ul>
-
-    <div id="content">
-    {% block content %}
-    {% endblock content %}
-</div>
-
-</div><!-- container -->
-{% endblock body %}
-
-

@@ -1,4 +1,4 @@
-{% extends "monkey/base.html" %}
+{% extends "base.html" %}
 
 {% load debate_tags %}
 
@@ -35,6 +35,7 @@
 {% if debate.result_status == debate.STATUS_DRAFT %}
 <script>
     $(document).ready(function() {
+
         function preSubmit() {
             $('#resultsForm input').removeAttr('readonly');
             $('#resultsForm select').removeAttr('disabled');
@@ -64,13 +65,15 @@
 
 {% endblock %}
 
-{% block header %}
+{% block head-title %}
 {% if debate.result_status == debate.STATUS_DRAFT %}
-Confirm Results
+Confirm Results for {{ debate.matchup }}
 {% else %}
-Enter Results
+Enter Results for {{ debate.matchup }}
 {% endif %}
 {% endblock %}
+
+{% block nav %}{% include "monkey_nav.html" %}{% endblock %}
 
 {% block content %}
 <h2>{{ debate.matchup }} (Round {{ debate.round }}, {{ debate.venue.name }})</h2>

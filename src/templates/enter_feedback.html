@@ -8,6 +8,7 @@
 {% block content %}
 
 <form id="feedbackForm" action="" method="POST" class="form-horizontal">
+
     {% for field in form %}
     <div class="form-group">
         <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>

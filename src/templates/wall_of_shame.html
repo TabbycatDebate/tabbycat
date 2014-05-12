@@ -54,10 +54,11 @@
 
 {% block nav %}{% include "public_nav.html" %}{% endblock %}
 
-{% block header %}Unsubmitted Feedback Shitlist
+{% block head-title %}Unsubmitted Feedback Shitlist{% endblock %}
+{% block page-title %}Unsubmitted Feedback Shitlist{% endblock %}
 
+{% block header %}
 <div class="btn-group btn-group-lg" data-toggle="buttons">
-
   <label class="btn btn-default active" id="toggle-all">
     <input type="radio" name="options">Show All
   </label>
@@ -67,9 +68,7 @@
   <label class="btn btn-default" id="toggle-adjs">
     <input type="radio" name="options" >Only Adjudicators
   </label>
-
 </div>
-
 {% endblock %}
 
 {% block content %}
@@ -78,8 +77,8 @@
         <thead>
             <tr>
                 <th><span class="glyphicon glyphicon-eye-open" data-toggle="tooltip" title="Percentage Returned"> %</span></th>
-                <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Unsubmitted Ballots"></span></th>
-                <th><span class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Submitted Ballots"></span></th>
+                <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Unsubmitted Feedbacks"></span></th>
+                <th><span class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Submitted Feedbacks"></span></th>
                 <th>Adjudicator/Team</th>
                 <th>Institution</th>
             </tr>

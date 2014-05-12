@@ -1,24 +1,41 @@
-{% extends "monkey/base.html" %}
+{% extends "base.html" %}
 
 {% load debate_tags %}
 
 {% block extra-head %}
-    {{ block.super }}
+
+{{ block.super }}
+
+<script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+        $("#dataTable").dataTable( {
+            "bPaginate": false,
+            "aaSorting": [[ 0, "asc" ]],
+        } );
+    } );
+</script>
+
 {% endblock extra-head %}
 
+{% block head-title %}Enter Results for {{ current_round }}{% endblock %}
+{% block page-title %}Enter Results for {{ current_round }}{% endblock %}
+
+{% block nav %}{% include "monkey_nav.html" %}{% endblock %}
+
 {% block content %}
+
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
         <tr><th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
         <th>Affirmative</th><th>Negative</th><th>Adjudicators</th><th>Results</th></tr>
     </thead>
     <tbody>
-    {% for debate in draw %}
-    <tr class="
-    {% ifequal debate.result_status "N" %}inactive {% endifequal %}
-    {% ifequal debate.result_status "B" %}inactive {% endifequal %}
-    {% ifequal debate.result_status "C" %}active{% endifequal %}
-    ">
+        {% for debate in draw %}
+        <tr class="
+        {% ifequal debate.result_status "N" %}inactive {% endifequal %}
+        {% ifequal debate.result_status "B" %}inactive {% endifequal %}
+        {% ifequal debate.result_status "C" %}active{% endifequal %}
+        ">
         <td>{{ debate.venue.name }}</td>
         <td>
             <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a>

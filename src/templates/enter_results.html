@@ -9,9 +9,9 @@
 
 {% block content %}
 
-<form id="resultsForm" action="." method="POST">
+<form id="resultsForm" class="form-horizontal" action="." method="POST">
     {% include "enter_results_content.html" %}
-    <div>
+    <div class="form-group">
         <label>Status:</label>
         {{ form.result_status }}
         <input class="save" type="submit" value="Save" tabindex="101" />
