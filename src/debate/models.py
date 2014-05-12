@@ -513,7 +513,7 @@ class Round(models.Model):
     def get_draw_by_team(self):
         # TODO is there a more efficient way to do this?
         draw_by_team = list()
-        for debate in self.debate_set:
+        for debate in self.debate_set.all():
             draw_by_team.append((debate.aff_team, debate))
             draw_by_team.append((debate.neg_team, debate))
         draw_by_team.sort(key=lambda x: str(x[0]))
