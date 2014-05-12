@@ -52,6 +52,8 @@
 
 {% block body_class %}draw-public-display{% endblock %}
 
+{% block nav %}{% endblock %}
+
 {% block h1 %}Unsubmitted Feedback Shitlist
 
 <div class="btn-group btn-group-lg col-sm-offset-1" data-toggle="buttons">
@@ -72,6 +74,7 @@
 
 {% block content %}
 
+    {% include "public_nav.html" %}
 
     <table id="dataTable" class="table table-hover table-bordered table-striped">
         <thead>

@@ -68,14 +68,36 @@ def r2r(request, template, extra_context=None):
     return render_to_response(template, context_instance=rc)
 
 
-@login_required
 def index(request):
     tournaments = Tournament.objects.all()
-    if len(tournaments) == 1:
-        return redirect('tournament_home', tournament_slug=tournaments[0].slug)
-    return r2r(request, 'index.html',
-               dict(tournaments=Tournament.objects.all()))
 
+    if request.user.is_authenticated():
+        if len(tournaments) == 1:
+            return redirect('tournament_home', tournament_slug=tournaments[0].slug)
+        else:
+            return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
+    else:
+        if len(tournaments) == 1:
+            return redirect('public_index', tournament_slug=tournaments[0].slug)
+        else:
+            return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
+
+
+@tournament_view
+def public_index(request, t):
+    return r2r(request, 'public_index.html')
+
+@tournament_view
+def public_draw(request, t):
+    return r2r(request, 'public_index.html')
+
+@tournament_view
+def public_ballot_submit(request, t):
+    return r2r(request, 'public_index.html')
+
+@tournament_view
+def public_feedback_submit(request, t):
+    return r2r(request, 'public_index.html')
 
 @login_required
 @tournament_view
@@ -111,9 +133,8 @@ def tournament_config(request, t):
     return r2r(request, 'tournament_config.html', context)
 
 
-@admin_required
 @tournament_view
-def wall_of_shame(request, t):
+def feedback_progress(request, t):
 
     def calculate_coverage(submitted, total):
         if total == 0:

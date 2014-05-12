@@ -7,10 +7,15 @@ from debate import models as m
 urlpatterns = patterns('debate.views',
     url(r'^$', 'tournament_home', name='tournament_home'),
     url(r'^config/$', 'tournament_config', name='tournament_config'),
-    url(r'^shame/$', 'wall_of_shame', name='wall_of_shame'),
     url(r'^draw/$', 'draw_index', name='draw_index'),
     url(r'^round/(?P<round_seq>\d+)/$',
         'round_index', name='round_index'),
+
+    url(r'^public/$', 'public_index', name='public_index'),
+    url(r'^public/draw/$', 'public_draw', name='public_draw'),
+    url(r'^public/add_ballot/$', 'public_ballot_submit', name='public_ballot_submit'),
+    url(r'^public/add_feedback$', 'public_feedback_submit', name='public_feedback_submit'),
+    url(r'^public/feedback_progress/$', 'feedback_progress', name='feedback_progress'),
 
     url(r'^round/(?P<round_seq>\d+)/venues/$',
         'availability', { 'model': 'venue', 'context_name': 'venues' }, 'venue_availability'),
