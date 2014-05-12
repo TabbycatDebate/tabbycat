@@ -50,9 +50,9 @@
 </script>
 {% endblock extra-head %}
 
-{% block body_class %}draw-public-display{% endblock %}
+{% block body_class %}public-feedback{% endblock %}
 
-{% block nav %}{% endblock %}
+{% block nav %}{% include "public_nav.html" %}{% endblock %}
 
 {% block h1 %}Unsubmitted Feedback Shitlist
 
@@ -73,8 +73,6 @@
 {% endblock %}
 
 {% block content %}
-
-    {% include "public_nav.html" %}
 
     <table id="dataTable" class="table table-hover table-bordered table-striped">
         <thead>

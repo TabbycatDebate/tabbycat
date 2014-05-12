@@ -93,11 +93,12 @@ def public_draw(request, t):
 
 @tournament_view
 def public_ballot_submit(request, t):
-    return r2r(request, 'public_index.html')
+    return r2r(request, 'public_add_ballot.html')
 
 @tournament_view
 def public_feedback_submit(request, t):
-    return r2r(request, 'public_index.html')
+    return r2r(request, 'public_add_feedback.html')
+
 
 @login_required
 @tournament_view
