@@ -853,7 +853,7 @@ class Debate(models.Model):
 class SRManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(SRManager, self).get_query_set().select_related(depth=1)
+        return super(SRManager, self).get_query_set().select_related('debate', 'team', 'position')
 
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
