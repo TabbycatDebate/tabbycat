@@ -304,15 +304,15 @@ def wordpress_post_standings(request, round):
 
 @admin_required
 @round_view
-def draw_display(request, round):
-    draw = round.get_draw_by_room()
-    return r2r(request, "draw_display.html", dict(draw=draw))
+def draw_display_by_venue(request, round):
+    draw = round.get_draw()
+    return r2r(request, "draw_display_by_venue.html", dict(draw=draw))
 
 @admin_required
 @round_view
 def draw_display_by_team(request, round):
-    draw_by_team = round.get_draw_by_team()
-    return r2r(request, "draw_display_by_team.html", dict(draw=draw_by_team))
+    draw = round.get_draw()
+    return r2r(request, "draw_display_by_team.html", dict(draw=draw))
 
 @round_view
 def progress(request, round):
