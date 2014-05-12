@@ -4,7 +4,7 @@
 {% block extra-head %}
     <script type="text/javascript">
         $(document).ready( function() {
-            $('.table').dataTable({
+            $('#draw').dataTable({
                 'bPaginate': false,
                 "aaSorting": [[ 0, "asc" ]],
             });
@@ -21,7 +21,7 @@
         <thead>
             <tr>
                 <th>Team</th>
-                <th>Group</th>
+<!--                 <th>Group</th> -->
                 <th>Venue</th>
                 <th>Affirmative</th>
                 <th>Negative</th>
@@ -32,7 +32,7 @@
         {% for team, debate in draw %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}} h3">
             <td>{{ team.name }}</td>
-            <td>{{ debate.venue.group }}</td>
+<!--             <td>{{ debate.venue.group }}</td> -->
             <td>{{ debate.venue.name }}</td>
             <td title="{% aff_count debate.aff_team round.prev %}" class="team-name" id="{{ debate.aff_team.id }}">
                 {{ debate.aff_team.name }}
