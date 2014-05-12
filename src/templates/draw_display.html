@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block extra-head %}
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $('#draw').dataTable({
+                'bPaginate': false,
+                "aaSorting": [[ 0, "asc" ]],
+                "columnDefs": [{"type": "string"}],
+            });
+            var emoji_arr = [];
+            $.getJSON('http://127.0.0.1:8000/emoji/all.json', function(data) {
+                for (var i in data) {
+                    //console.log(data[i]);
+                    emoji_arr.push(data[i]);
+                }
+                console.log(emoji_arr[0]);
+                $(".team-name").each(function(index) {
+                    console.log(this.id);
+                    //var img = "<img src=" + emoji_arr[this.id] + " class='team-emoji'/>"
+                    $(this).css('background-image', 'url(' + emoji_arr[this.id] + ')');
+                });
+             });
+        });
+    </script>
+{% endblock extra-head %}
+
+{% block body_class %}draw-public-display{% endblock %}
+
+{% block h1 %}Round {{ round }} Draw{% endblock %}
+
+{% block content %}
+    <table id="draw" class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+                <th>Affirmative</th>
+                <th>Negative</th>
+                <th>Adjudicators</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for debate in draw %}
+        <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+            <td class="venue-name">
+                {{ debate.venue_splitname }}
+            </td>
+            <td title="{% aff_count debate.aff_team round.prev %}" class="team-name" id="{{ debate.aff_team.id }}">
+                {{ debate.aff_team.name }}
+            </td>
+            <td title="{% neg_count debate.neg_team round.prev %}" class="team-name" id="{{ debate.neg_team.id }}">
+                {{ debate.neg_team.name }}
+            </td>
+            <td class="adj-names">
+                <ul class="">
+                {% for item in debate.adjudicator_names_list %}
+
+                    {% if "Ⓒ" in item %}
+                        <li class=""><span class="adj-chair">{{ item }}</span>,</li>
+                    {% elif "Ⓣ" in item %}
+                        <li class=""><span class="adj-trainee">{{ item }}</span>,</li>
+                    {% else %}
+                        <li class=""><span class="adj-normal">{{ item }}</span>,</li>
+                    {% endif %}
+
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}

@@ -15,6 +15,19 @@
                       { "sType": "string" }
                     ],
             });
+            var emoji_arr = [];
+            $.getJSON('http://127.0.0.1:8000/emoji/all.json', function(data) {
+                for (var i in data) {
+                    //console.log(data[i]);
+                    emoji_arr.push(data[i]);
+                }
+                console.log(emoji_arr[0]);
+                $(".team-name").each(function(index) {
+                    console.log(this.id);
+                    //var img = "<img src=" + emoji_arr[this.id] + " class='team-emoji'/>"
+                    $(this).css('background-image', 'url(' + emoji_arr[this.id] + ')');
+                });
+             });
         });
 
             dTable = $('#dataTable').dataTable({
@@ -40,6 +53,7 @@
     <thead>
         <tr>
             <th>Team</th>
+<!--                 <th>Group</th> -->
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
             <th>Affirmative</th>
             <th>Negative</th>
@@ -50,6 +64,8 @@
     {% for debate in draw %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td>{{ debate.aff_team.name }}</td>
+<!--             <td>{{ debate.venue.group }}</td> -->
+            <td>{{ debate.venue.name }}</td>
             <td class="venue-name">
                 {{ debate.venue_splitname }}
             </td>

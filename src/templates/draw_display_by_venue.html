@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block extra-head %}
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $('.table').dataTable({
+                'bPaginate': false,
+                "aaSorting": [[ 0, "asc" ]],
+            });
+            var emoji_arr = [];
+            $.getJSON('http://127.0.0.1:8000/emoji/all.json', function(data) {
+                for (var i in data) {
+                    emoji_arr.push(data[i]);
+                }
+                $(".team-name").each(function(index) {
+                    $(this).css('background-image', 'url(' + emoji_arr[this.id] + ')');
+                });
+             });
+        });
+    </script>
+{% endblock extra-head %}
+
+{% block body_class %}draw-public-display{% endblock %}
+
+{% block h1 %}Round {{ round }} Draw for {{ tournament }} {% endblock %}
+
+{% block content %}
+    <table id="draw" class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+                <th>Affirmative</th>
+                <th>Negative</th>
+                <th>Adjudicators</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for debate in draw %}
+        <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+            <td class="venue-name">
+                {{ debate.venue_splitname }}
+            </td>
+            <td class="team-name" id="{{ debate.aff_team.id }}">
+                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
+            </td>
+            <td title="{{ debate.neg_team.speakers|join:', ' }}"  class="team-name" id="{{ debate.neg_team.id }}">
+                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.name }}</span>
+            </td>
+            <td class="adj-names">
+                <ul class="">
+                {% for item in debate.adjudicator_names_list %}
+
+                    {% if "Ⓒ" in item %}
+                        <li class=""><span class="adj-chair">{{ item }}</span>,</li>
+                    {% elif "Ⓣ" in item %}
+                        <li class=""><span class="adj-trainee">{{ item }}</span>,</li>
+                    {% else %}
+                        <li class=""><span class="adj-normal">{{ item }}</span>,</li>
+                    {% endif %}
+
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}

@@ -1,17 +1,17 @@
 {% load debate_tags %}
 
 <ul id="nav" class="nav nav-pills">
-    <li id="home"><a href="{{ tournament.get_absolute_url }}">Home</a></li>
-    <li id="draw"><a href="{% round_url draw current_round %}">Draw</a></li>
-    <li id="results"><a href="{% round_url results current_round %}">Results</a></li>
-    <li id="current_standings"><a href="{% round_url team_standings current_round %}">Teams</a></li>
-    <li id="current_standings" style="display: none;"><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
-    <li id="feedback"><a href="{% tournament_url adj_feedback %}">Feedback</a></li>
-    <li id="shame"><a href="{% tournament_url wall_of_shame %}">Shame</a></li>
-    <li id="config"><a href="{% tournament_url tournament_config %}">Config</a></li>
-    <li id="admin"><a href="/admin/">Admin</a></li>
-    <li id="logout"><a href="/accounts/logout/">Log out</a></li>
-    <li id="user">({{ user }})</li>
+    <li id="nav-home"><a href="{{ tournament.get_absolute_url }}">Home</a></li>
+    <li id="nav-draw"><a href="{% round_url draw current_round %}">Draw</a></li>
+    <li id="nav-results"><a href="{% round_url results current_round %}">Results</a></li>
+    <li id="nav-standings-teams"><a href="{% round_url team_standings current_round %}">Teams</a></li>
+    <li id="nav-standings-speakers" style="display: none;"><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
+    <li id="nav-feedback"><a href="{% tournament_url adj_feedback %}">Feedback</a></li>
+    <li id="nav-shame"><a href="{% tournament_url wall_of_shame %}">Shame</a></li>
+    <li id="nav-config"><a href="{% tournament_url tournament_config %}">Config</a></li>
+    <li id="nav-admin"><a href="/admin/">Admin</a></li>
+    <li id="nav-logout"><a href="/accounts/logout/">Log out</a></li>
+    <li id="nav-user">({{ user }})</li>
 </ul>
 <ul id="" class="nav nav-pills">
     {% for r in tournament.rounds.all %}
