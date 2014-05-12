@@ -95,7 +95,13 @@
             } );
 
             dTable = $('#dataTable').dataTable({
-                'bPaginate': false
+                'bPaginate': false,
+                "aoColumns": [
+                      { "sType": "string" },
+                      { "sType": "string" },
+                        null
+                    ],
+                "aaSorting": [[ 0, "asc" ]]
             });
 
             $('#select_all').click(function() {
