@@ -29,17 +29,6 @@
                 });
              });
         });
-
-            dTable = $('#dataTable').dataTable({
-                'bPaginate': false,
-                "aoColumns": [
-                      { "sType": "string" },
-                      { "sType": "string" },
-                        null
-                    ],
-                "aaSorting": [[ 0, "asc" ]]
-            });
-
     </script>
 {% endblock extra-head %}
 
@@ -53,7 +42,6 @@
     <thead>
         <tr>
             <th>Team</th>
-<!--                 <th>Group</th> -->
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
             <th>Affirmative</th>
             <th>Negative</th>
@@ -64,8 +52,6 @@
     {% for debate in draw %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td>{{ debate.aff_team.name }}</td>
-<!--             <td>{{ debate.venue.group }}</td> -->
-            <td>{{ debate.venue.name }}</td>
             <td class="venue-name">
                 {{ debate.venue_splitname }}
             </td>
@@ -78,7 +64,6 @@
             <td class="adj-names">
                 <ul class="">
                 {% for item in debate.adjudicator_names_list %}
-
                     {% if "Ⓒ" in item %}
                         <li class=""><span class="adj-chair">{{ item }}</span>,</li>
                     {% elif "Ⓣ" in item %}
