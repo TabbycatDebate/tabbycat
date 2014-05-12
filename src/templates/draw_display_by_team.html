@@ -2,39 +2,40 @@
 {% load debate_tags %}
 
 {% block extra-head %}
-    <script type="text/javascript">
-        $(document).ready( function() {
-            $('.table').dataTable({
-                'bPaginate': false,
-                "aaSorting": [[ 0, "asc" ]],
-                "aoColumns": [
-                      { "sType": "string" },
-                      { "sType": "string" },
-                      { "sType": "string" },
-                      { "sType": "string" },
-                      { "sType": "string" }
-                    ],
-            });
-            var emoji_arr = [];
-            $.getJSON('http://127.0.0.1:8000/emoji/all.json', function(data) {
-                for (var i in data) {
-                    //console.log(data[i]);
-                    emoji_arr.push(data[i]);
-                }
-                console.log(emoji_arr[0]);
-                $(".team-name").each(function(index) {
-                    console.log(this.id);
-                    //var img = "<img src=" + emoji_arr[this.id] + " class='team-emoji'/>"
-                    $(this).css('background-image', 'url(' + emoji_arr[this.id] + ')');
-                });
-             });
+<script type="text/javascript">
+    $(document).ready( function() {
+        $('.table').dataTable({
+            'bPaginate': false,
+            "aaSorting": [[ 0, "asc" ]],
+            "aoColumns": [
+                  { "sType": "string" },
+                  { "sType": "string" },
+                  { "sType": "string" },
+                  { "sType": "string" },
+                  { "sType": "string" }
+                ],
         });
-    </script>
+        var emoji_arr = [];
+        $.getJSON('http://127.0.0.1:8000/emoji/all.json', function(data) {
+            for (var i in data) {
+                //console.log(data[i]);
+                emoji_arr.push(data[i]);
+            }
+            console.log(emoji_arr[0]);
+            $(".team-name").each(function(index) {
+                console.log(this.id);
+                //var img = "<img src=" + emoji_arr[this.id] + " class='team-emoji'/>"
+                $(this).css('background-image', 'url(' + emoji_arr[this.id] + ')');
+            });
+         });
+    });
+</script>
 {% endblock extra-head %}
 
 {% block body_class %}draw-public-display{% endblock %}
 
-{% block h1 %}Round {{ round }} Draw for {{ tournament }}{% endblock %}
+{% block head-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}
+{% block page-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}
 
 {% block content %}
 

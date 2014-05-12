@@ -23,7 +23,8 @@
 
 {% block body_class %}draw-public-display{% endblock %}
 
-{% block h1 %}Round {{ round }} Draw for {{ tournament }} {% endblock %}
+{% block head-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}
+{% block page-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}
 
 {% block content %}
     <table id="draw" class="table table-hover table-bordered table-striped">

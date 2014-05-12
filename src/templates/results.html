@@ -14,16 +14,16 @@
     </script>
 {% endblock %}
 
+{% block head-title %}Results for Round {{ round }}{% endblock %}
+{% block page-title %}Results for Round {{ round }}{% endblock %}
 
-{% block h1 %}Results for Round {{ round }}
-
-<div class="btn-group btn-group-lg col-sm-offset-1">
+{% block header %}
+<div class="btn-group btn-group-lg">
     <button class="btn btn-default btn-danger"><span class="label none">{{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span></span></button>
     <button class="btn btn-default btn-warning"><span class="label ballotin">{{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span></span></button>
     <button class="btn btn-default btn-info"><span class="label unconfirmed">{{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span></span></button>
     <button class="btn btn-default btn-success"><span class="label confirmed">{{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span></span></button>
 </div>
-
 {% endblock %}
 
 {% block content %}

@@ -492,7 +492,10 @@
 
 {% block body_class %}edit-adjs{% endblock %}
 
-{% block h1 %}Edit Adjs for Round {{ round }}
+{% block head-title %}Edit Adjs for Round {{ round }}{% endblock %}
+{% block page-title %}Edit Adjs for Round {{ round }}{% endblock %}
+
+{% block header %}
 <div id="statusBar" class="btn-group btn-group-lg">
     <a class="btn btn-default" href="#auto" id="auto_allocate">Auto Allocate</a>
     <a class="btn btn-default" href="" id="save">Save</a>
@@ -504,7 +507,6 @@
     <div class="btn btn-default btn-warning">History Warning</div>
     <div class="btn btn-default btn-danger">Conflict</div>
 </div>
-
 {% endblock %}
 
 {% block content %}

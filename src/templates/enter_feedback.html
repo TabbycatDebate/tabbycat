@@ -2,22 +2,11 @@
 
 {% load add_field_css %}
 
-{% block extra-head %}
-
-<style>
-    #id_score {
-        width: 4em;
-    }
-
-    #feedbackForm label {
-        display: block;
-    }
-</style>
-{% endblock %}
-
-{% block h1 %}Add Feedback for {{ adj }} {% endblock %}
+{% block head-title %}Add Feedback for {{ adj }}{% endblock %}
+{% block page-title %}Add Feedback for {{ adj }}{% endblock %}
 
 {% block content %}
+
 <form id="feedbackForm" action="" method="POST" class="form-horizontal">
     {% for field in form %}
     <div class="form-group">
@@ -32,10 +21,9 @@
     {% endfor %}
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" value="Save" class="btn btn-default ">Save</button>
+            <button type="submit" value="Save" class="btn btn-default">Save</button>
         </div>
     </div>
 </form>
 
 {% endblock content %}
-

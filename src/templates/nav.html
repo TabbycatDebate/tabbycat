@@ -14,11 +14,11 @@
 
         <div class="collapse navbar-collapse">
             <ul id="nav" class="nav navbar-nav navbar-left">
-                <li id="nav-draw"><a href="{% round_url draw current_round %}">Draw</a></li>
-                <li id="nav-results"><a href="{% round_url results current_round %}">Results</a></li>
-                <li id="nav-standings-teams"><a href="{% round_url team_standings current_round %}">Teams</a></li>
-                <li id="nav-standings-speakers" style="display: none;"><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
-                <li id="nav-feedback"><a href="{% tournament_url adj_feedback %}">Feedback</a></li>
+                <li><a href="{% round_url draw current_round %}">Draw</a></li>
+                <li><a href="{% round_url results current_round %}">Results</a></li>
+                <li><a href="{% round_url team_standings current_round %}">Teams</a></li>
+                <li><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
+                <li><a href="{% tournament_url adj_feedback %}">Feedback</a></li>
                 {% for r in tournament.rounds.all %}
                 <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ r }}<b class="caret"></b></a>
@@ -41,9 +41,9 @@
                 {% endfor %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li id="nav-config"><a href="{% tournament_url tournament_config %}">Config</a></li>
-                <li id="nav-admin"><a href="/admin/">Admin</a></li>
-                <li id="nav-logout"><a href="/accounts/logout/" title="Log out of {{ user }}">Logout</a></li>
+                <li><a href="{% tournament_url tournament_config %}">Config</a></li>
+                <li><a href="/admin/">Admin</a></li>
+                <li><a href="/accounts/logout/" title="Log out of {{ user }}">Logout</a></li>
             </ul>
         </div>
     </div>

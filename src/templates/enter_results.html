@@ -2,12 +2,10 @@
 
 {% load debate_tags %}
 
-{% block extra-head %}
+{% block extra-head %}{% include "enter_results_head.html" %}{% endblock %}
 
-{% include "enter_results_head.html" %}
-{% endblock %}
-
-{% block h1 %} {{ debate.matchup }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
+{% block head-title %}{{ debate.matchup }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
+{% block page-title %}{{ debate.matchup }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
 
 {% block content %}
 
