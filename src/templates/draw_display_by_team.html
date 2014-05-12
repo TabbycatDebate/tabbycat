@@ -6,7 +6,7 @@
         $(document).ready( function() {
             $('.table').dataTable({
                 'bPaginate': false,
-                "aaSorting": [[ 2, "asc" ]],
+                "aaSorting": [[ 0, "asc" ]],
             });
         });
     </script>
@@ -20,7 +20,8 @@
     <table id="draw" class="table table-hover table-bordered table-striped">
         <thead>
             <tr>
-                <th>G</th>
+                <th>Team</th>
+                <th>Group</th>
                 <th>Venue</th>
                 <th>Affirmative</th>
                 <th>Negative</th>
@@ -28,13 +29,32 @@
             </tr>
         </thead>
         <tbody>
-        {% for debate in draw %}
+        {% for team, debate in draw %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}} h3">
+            <td>{{ team.name }}</td>
             <td>{{ debate.venue.group }}</td>
             <td>{{ debate.venue.name }}</td>
-            <td title="{% aff_count debate.aff_team round.prev %}">{{ debate.aff_team.name }}</td>
-            <td title="{% neg_count debate.neg_team round.prev %}">{{ debate.neg_team.name }}</td>
-            <td>{{ debate.adjudicators_display_with_line_breaks | linebreaks }}</td>
+            <td title="{% aff_count debate.aff_team round.prev %}" class="team-name" id="{{ debate.aff_team.id }}">
+                {{ debate.aff_team.name }}
+            </td>
+            <td title="{% neg_count debate.neg_team round.prev %}" class="team-name" id="{{ debate.neg_team.id }}">
+                {{ debate.neg_team.name }}
+            </td>
+            <td class="adj-names">
+                <ul class="">
+                {% for item in debate.adjudicator_names_list %}
+
+                    {% if "Ⓒ" in item %}
+                        <li class=""><span class="adj-chair">{{ item }}</span></li>
+                    {% elif "Ⓣ" in item %}
+                        <li class=""><span class="adj-trainee">{{ item }}</span></li>
+                    {% else %}
+                        <li class=""><span class="adj-normal">{{ item }}</span></li>
+                    {% endif %}
+
+                {% endfor %}
+                </ul>
+            </td>
         </tr>
         {% endfor %}
     </table>
