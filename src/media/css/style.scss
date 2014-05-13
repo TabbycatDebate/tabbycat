@@ -28,7 +28,6 @@
         float: left;
     }
 }
-// Hide the search box in these instances
 #modal-adj-table_wrapper, .display-motions {
     div.dataTables_filter {
         display: none;
@@ -199,3 +198,60 @@
     // #loading div {position: absolute; margin-left: 48%; top: 50%; width: 100px; background: #fff; padding: 20px;}
 
 }
+
+// To sort from the old debate.css
+
+#jsWarn {
+    font-weight: bold;
+    background-color: #f00;
+    color: #ff0;
+    padding: 5px;
+}
+.winner {
+    font-weight: bold;
+}
+ul.errorlist { color: red; }
+div.errors { color: red; }
+p.warning { color: red; font-weight: bold; }
+.scoresheet .errorlist {
+    list-style: none;
+    margin: 5px;
+    padding: 0;
+    width: 150px;
+}
+.scoresheet .error {
+    background-color: #fee;
+    color: #811;
+}
+.scoresheet input.save {
+    background-color: #fff;
+    border: 1px solid #888;
+    font-size: 110%;
+    padding: 0 0.3em;
+    width: 4em;
+    cursor: pointer;
+}
+.scoresheet label.error { color: red; }
+.scoresheet input.save:hover {
+    background-color: #fafafa;
+}
+.scoresheet input.win { border: 1px solid #0f0; background-color: #efe;}
+.scoresheet input.lose { border: 1px solid #f00; background-color: #fee; }
+
+.ballot-checkin-form .message {
+    padding: 10px 10px;
+    font-weight: bold;
+    background-color: #fc9;
+    color: #804000;
+}
+.ballot-checkin-form #success { padding: 10px 10px; }
+.ballot-checkin-form .error { background-color: #fcc; color: #800000; }
+.ballot-checkin-form .success { background-color: #cfc; color: #008000; }
+
+#configForm label.name { width: 14em; display: block; float: left;}
+#configForm label.help { padding-left: 0.5em; color: #aaa; }
+#configForm .error, #configForm .errorlist { color: red; }
+#configForm div.updated { font-size: 120%; padding: 0.5em; border: 1px solid #00f; }
+
+table.warningbox { background-color: #F5BCA9; border: 1px solid red; padding: 10px 10px; width: 100%; }
+table.warningbox p { margin: 0px 0px }
