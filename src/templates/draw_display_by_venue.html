@@ -4,18 +4,28 @@
 {% block extra-head %}
     <script type="text/javascript">
         $(document).ready( function() {
-            var table = $('.table').dataTable({
+            var table = $('#draw').dataTable({
                 'bPaginate': false,
                 "aaSorting": [[ 0, "asc" ]],
+                "aoColumns": [
+                      { "sType": "string" },
+                      { "sType": "html" },
+                      { "sType": "string" },
+                      { "sType": "html" },
+                      { "sType": "string" },
+                      { "sType": "string" }
+                    ]
             });
             new $.fn.dataTable.FixedHeader( table );
             var emoji_arr = [];
-            $.getJSON('http://127.0.0.1:8000/emoji/all.json', function(data) {
+            $.getJSON('/emoji/all.json', function(data) {
                 for (var i in data) {
+                    //console.log(data[i]);
                     emoji_arr.push(data[i]);
                 }
-                $(".team-name").each(function(index) {
-                    $(this).css('background-image', 'url(' + emoji_arr[this.id] + ')');
+                $(".team-emoji").each(function(index) {
+                    var emojiID = $(this).attr("class").replace('team-emoji team-', '');
+                    $(this).append('<img src="' + emoji_arr[parseInt(emojiID)] + '" />');
                 });
              });
         });
@@ -32,7 +42,9 @@
         <thead>
             <tr>
                 <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+                <th>aff</th>
                 <th>Affirmative</th>
+                <th>neg</th>
                 <th>Negative</th>
                 <th>Adjudicators</th>
             </tr>
@@ -43,10 +55,12 @@
             <td class="venue-name">
                 {{ debate.venue_splitname }}
             </td>
-            <td class="team-name" id="{{ debate.aff_team.id }}">
+            <td class="team-emoji team-{{ debate.aff_team.id }}"></td>
+            <td class="team-name">
                 <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
             </td>
-            <td title="{{ debate.neg_team.speakers|join:', ' }}"  class="team-name" id="{{ debate.neg_team.id }}">
+            <td class="team-emoji team-{{ debate.neg_team.id }}"></td>
+            <td title="{{ debate.neg_team.speakers|join:', ' }}"  class="team-name">
                 <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.name }}</span>
             </td>
             <td class="adj-names">

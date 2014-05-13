@@ -1,6 +1,6 @@
 @import url(datatables/dataTables.bootstrap.css);
 h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .draw-public-display #draw.dataTable td, .h4, .h5, .h6 {
+.h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: inherit;
   font-weight: 500;
   line-height: 1.1;
@@ -14,9 +14,8 @@ h1, h2, h3, h4, h5, h6,
   h6 .small,
   .h1 small,
   .h1 .small, .h2 small,
-  .h2 .small, .h3 small, .draw-public-display #draw.dataTable td small,
-  .h3 .small,
-  .draw-public-display #draw.dataTable td .small, .h4 small,
+  .h2 .small, .h3 small,
+  .h3 .small, .h4 small,
   .h4 .small, .h5 small,
   .h5 .small, .h6 small,
   .h6 .small {
@@ -26,7 +25,7 @@ h1, h2, h3, h4, h5, h6,
 
 h1, .h1,
 h2, .h2,
-h3, .h3, .draw-public-display #draw.dataTable td {
+h3, .h3 {
   margin-top: 20px;
   margin-bottom: 10px; }
   h1 small,
@@ -36,9 +35,8 @@ h3, .h3, .draw-public-display #draw.dataTable td {
   h2 .small, .h2 small,
   .h2 .small,
   h3 small,
-  h3 .small, .h3 small, .draw-public-display #draw.dataTable td small,
-  .h3 .small,
-  .draw-public-display #draw.dataTable td .small {
+  h3 .small, .h3 small,
+  .h3 .small {
     font-size: 65%; }
 
 h4, .h4,
@@ -63,7 +61,7 @@ h1, .h1 {
 h2, .h2 {
   font-size: 30px; }
 
-h3, .h3, .draw-public-display #draw.dataTable td {
+h3, .h3 {
   font-size: 24px; }
 
 h4, .h4 {
@@ -349,40 +347,29 @@ a.text-danger:hover {
 .modal-lg {
   width: 90%; }
 
-.team-name {
-  background-position: 4px 4px;
-  background-repeat: no-repeat;
-  background-size: 28px 28px;
-  padding-left: 40px !important; }
-
 .adj-chair {
   text-decoration: underline; }
 
 .adj-trainee {
   font-style: italic; }
 
-.draw-public-display #draw.dataTable p {
-  margin: 0; }
-.draw-public-display #draw.dataTable .adj-names ul {
+#draw.dataTable td {
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.4;
+  color: inherit;
+  font-size: 24px;
+  padding-bottom: 0; }
+#draw.dataTable .adj-names ul {
   padding-left: 0px;
   margin-left: 0;
   list-style-type: none; }
-@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
-  .draw-public-display #draw.dataTable {
-    margin-left: -15px; }
-    .draw-public-display #draw.dataTable .team-name {
-      background-position: bottom right;
-      background-repeat: no-repeat;
-      padding-left: 8px !important; }
-    .draw-public-display #draw.dataTable .adj-names ul {
-      padding-left: 0px; }
-    .draw-public-display #draw.dataTable .adj-names li {
-      display: block;
-      list-style-type: none;
-      margin-left: 0px;
-      padding-left: 0px; }
-    .draw-public-display #draw.dataTable .adj-names li span {
-      margin-left: 0px; } }
+#draw.dataTable .team-emoji {
+  text-align: center;
+  padding: 4px; }
+  #draw.dataTable .team-emoji img {
+    width: 28px;
+    height: 28px; }
 
 .edit-venues .btn-default.text-left, .edit-adjs .btn-default.text-left {
   padding-left: 6px; }

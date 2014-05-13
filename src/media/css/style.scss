@@ -62,12 +62,6 @@
 .modal-lg {
     width: 90%;
 }
-.team-name {
-    background-position: 4px 4px;
-    background-repeat: no-repeat;
-    background-size:28px 28px;
-    padding-left: 40px !important;
-}
 .venue-name {
 
 }
@@ -78,61 +72,32 @@
     font-style: italic;
 }
 
-// Draw display
+// Draw displays
 
-.draw-public-display {
-
-    #draw.dataTable {
-        tbody > tr > td {
-
-        }
-        thead > tr > th {
-            //padding-right: 0 !important;
-        }
-        p {
-            margin: 0;
-        }
-        td {
-            @extend .h3;
-        }
-        .adj-names {
-            ul {
-                padding-left: 0px;
-                margin-left: 0;
-                list-style-type: none;
-            }
-
+#draw.dataTable {
+    td {
+        font-family: $headings-font-family;
+        font-weight: $headings-font-weight;
+        line-height: 1.4; // controls the spacing
+        color: $headings-color;
+        font-size: $font-size-h3;
+        padding-bottom: 0; // fix for uneven spacing
+        //padding-top: 0; // fix for uneven spacing
+    }
+    .adj-names {
+        ul {
+            padding-left: 0px;
+            margin-left: 0;
+            list-style-type: none;
         }
     }
-    @media
-    only screen and (max-width: 760px),
-    (min-device-width: 768px) and (max-device-width: 1024px)  {
-
-        #draw.dataTable {
-
-
-            margin-left: -15px;
-
-            .team-name {
-                background-position: bottom right;
-                background-repeat: no-repeat;
-                padding-left: 8px !important;
-            }
-            .adj-names {
-                ul {
-                    padding-left: 0px;
-                }
-                li {
-                    display: block;
-                    list-style-type: none;
-                    margin-left: 0px;
-                    padding-left: 0px;
-                }
-                li span {
-                    margin-left: 0px;
-                }
-            }
+    .team-emoji {
+        img {
+            width: 28px;
+            height: 28px;
         }
+        text-align: center;
+        padding: 4px;
 
     }
 }
