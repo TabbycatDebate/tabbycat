@@ -5,10 +5,11 @@
 {{ block.super }}
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
-        $("#dataTable").dataTable( {
+        var table = $("#dataTable").dataTable( {
             "bPaginate": false,
             "aaSorting": [[ 1, "asc" ]],
-        } );
+        });
+        new $.fn.dataTable.FixedHeader( table );
     } );
 </script>
 {% endblock extra-head %}

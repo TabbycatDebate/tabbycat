@@ -6,10 +6,11 @@
     <script type="text/javascript" charset="utf-8">
 
         $(document).ready( function() {
-            $("#dataTable").dataTable( {
+            var table = $("#dataTable").dataTable( {
                 "bPaginate": false,
                 "aaSorting": [[2, 'desc']]
-            } );
+            });
+            new $.fn.dataTable.FixedHeader( table );
 
         } );
 

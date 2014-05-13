@@ -331,6 +331,9 @@ a.text-danger:hover {
 .page-header h1 {
   margin-top: 0; }
 
+.dataTable thead {
+  background-color: #FFF; }
+
 .dataTable thead > tr > th {
   padding-right: 0 !important; }
 

@@ -39,6 +39,9 @@
 
 // Tables
 
+.dataTable thead {
+    background-color: #FFF; // hovering opacity
+}
 .dataTable thead > tr > th {
     padding-right: 0 !important;
 }

@@ -6,10 +6,11 @@
 {% block extra-head %}
     <script type="text/javascript">
         $(document).ready(function(){
-            $('#dataTable').DataTable({
+            var table = $('#dataTable').DataTable({
                 "bPaginate": false,
                 "aaSorting": [[ 1, "desc" ]],
             });
+            new $.fn.dataTable.FixedHeader( table );
         });
     </script>
 {% endblock %}
