@@ -4,11 +4,13 @@
 {% block extra-head %}
     <script type="text/javascript">
         $(document).ready( function() {
-            $('#draw').dataTable({
+            var table = $('#draw').dataTable({
                 'bPaginate': false,
                 "aaSorting": [[ 0, "asc" ]],
                 "columnDefs": [{"type": "string"}],
             });
+            new $.fn.dataTable.FixedHeader( table );
+
             var emoji_arr = [];
             $.getJSON('http://127.0.0.1:8000/emoji/all.json', function(data) {
                 for (var i in data) {

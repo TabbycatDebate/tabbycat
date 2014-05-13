@@ -12,10 +12,11 @@
                 return false;
             } );
 
-            $("#dataTable").dataTable( {
+            var table = $("#dataTable").dataTable( {
                 "bPaginate": false,
                 "aaSorting": [[0, 'desc']]
             } );
+            new $.fn.dataTable.FixedHeader( table );
 
         } );
 
