@@ -85,19 +85,19 @@ def index(request):
 
 @tournament_view
 def public_index(request, t):
-    return r2r(request, 'public_index.html')
+    return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_draw(request, t):
-    return r2r(request, 'public_index.html')
+    return r2r(request, 'public/draw.html')
 
 @tournament_view
 def public_ballot_submit(request, t):
-    return r2r(request, 'public_add_ballot.html')
+    return r2r(request, 'public/add_ballot.html')
 
 @tournament_view
 def public_feedback_submit(request, t):
-    return r2r(request, 'public_add_feedback.html')
+    return r2r(request, 'public/add_feedback.html')
 
 
 @login_required

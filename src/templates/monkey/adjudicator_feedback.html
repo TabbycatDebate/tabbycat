@@ -1,17 +1,15 @@
 {% extends "base.html" %}
-
 {% load debate_tags %}
 
 {% block extra-head %}
 {{ block.super }}
 {% include "adjudicator_feedback_head.html" %}
-
 {% endblock extra-head %}
 
 {% block head-title %}Enter Feedback for Adjudicators{% endblock %}
 {% block page-title %}Enter Feedback for Adjudicators{% endblock %}
-
-{% block nav %}{% include "monkey_nav.html" %}{% endblock %}
+{% block body-class %}monkey-enter-feedback{% endblock %}
+{% block nav %}{% include "monkey/nav.html" %}{% endblock %}
 
 {% block content %}
 

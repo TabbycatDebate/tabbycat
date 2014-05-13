@@ -1,37 +1,9 @@
 {% extends "base.html" %}
-
 {% load debate_tags %}
 
 {% block extra-head %}
 {{ block.super }}
-
 {% include "enter_results_head.html" %}
-
-<style>
-    h2 { font-size: 140%; }
-    div.sheet {
-        background-color:#F4FEF4;
-    }
-    div.sheet h2 {
-        padding: 15px 20px 0;
-        font-size: 110%;
-    }
-    table.scoresheet {
-        padding-top: 0;
-    }
-
-    #incorrect {
-        background-color: red;
-        color: white;
-    }
-
-    #correct{
-        background-color: green;
-        color: white;
-    }
-
-
-</style>
 {% if debate.result_status == debate.STATUS_DRAFT %}
 <script>
     $(document).ready(function() {
@@ -57,12 +29,7 @@
     });
 
 </script>
-<style>
-    #resultsForm select { color: black; }
-</style>
-
 {% endif %}
-
 {% endblock %}
 
 {% block head-title %}
@@ -72,10 +39,11 @@ Confirm Results for {{ debate.matchup }}
 Enter Results for {{ debate.matchup }}
 {% endif %}
 {% endblock %}
-
-{% block nav %}{% include "monkey_nav.html" %}{% endblock %}
+{% block body-class %}monkey-enter-result{% endblock %}
+{% block nav %}{% include "monkey/nav.html" %}{% endblock %}
 
 {% block content %}
+
 <h2>{{ debate.matchup }} (Round {{ debate.round }}, {{ debate.venue.name }})</h2>
 <form id="resultsForm" action="." method="POST">
     {% include "enter_results_content.html" %}

@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-
 {% load add_field_css %}
 
 {% block extra-head %}{% endblock %}
 
 {% block head-title %}Add Feedback for {{ adj }}{% endblock %}
 {% block page-title %}Add Feedback for {{ adj }}{% endblock %}
+{% block body-class %}monkey-enter-feedback{% endblock %}
 
-{% block nav %}{% include "monkey_nav.html" %}{% endblock %}
+{% block nav %}{% include "monkey/nav.html" %}{% endblock %}
 
 {% block content %}
 

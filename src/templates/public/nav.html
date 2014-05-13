@@ -14,10 +14,18 @@
 
         <div class="collapse navbar-collapse">
             <ul id="nav" class="nav navbar-nav navbar-left">
-                <li><a href="{% tournament_url public_draw %}">Draw for Round {{ current_round }}</a></li>
-                <li><a href="{% tournament_url feedback_progress %}">Feedback Progress</a></li>
-                <li><a href="{% tournament_url public_ballot_submit %}">Submit Ballot</a></li>
-                <li><a href="{% tournament_url public_feedback_submit %}">Submit Feedback</a></li>
+                <li><a class="public-draw-nav" href="{% tournament_url public_draw %}">
+                    Draw for Round {{ current_round }}
+                </a></li>
+                <li><a class="public-feedback-nav" href="{% tournament_url feedback_progress %}">
+                    Feedback Progress
+                </a></li>
+                <li><a class="public-add-ballot-nav" href="{% tournament_url public_ballot_submit %}">
+                    Submit Ballot
+                </a></li>
+                <li><a class="public-add-feedback-nav" href="{% tournament_url public_feedback_submit %}">
+                    Submit Feedback
+                </a></li>
             </ul>
             <ul id="nav" class="nav navbar-nav navbar-right">
                 <li id="nav-logout"><a href="/accounts/login/">Log in</a></li>

@@ -22,9 +22,10 @@
 
 {% block head-title %}Draw for Round {{ round }} <small>(Debates Confirmed)</small>{% endblock %}
 {% block page-title %}Draw for Round {{ round }} (Debates Confirmed){% endblock %}
+{% block body-class %}draw{% endblock %}
 
 {% block header %}
-<div class="btn-group btn-group-lg">
+<div class="btn-group">
     <a class="btn btn-default" href="{% round_url draw_venues_edit %}">Edit venues</a>
     <a class="btn btn-default" href="{% round_url draw_adjudicators_edit %}">Edit adjs</a>
     <a class="btn btn-default" href="{% round_url draw_display_by_venue %}">Display by venue</a>

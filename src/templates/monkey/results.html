@@ -1,11 +1,8 @@
 {% extends "base.html" %}
-
 {% load debate_tags %}
 
 {% block extra-head %}
-
 {{ block.super }}
-
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
         $("#dataTable").dataTable( {
@@ -14,13 +11,12 @@
         } );
     } );
 </script>
-
 {% endblock extra-head %}
 
 {% block head-title %}Enter Results for Round {{ current_round }}{% endblock %}
 {% block page-title %}Enter Results for Round {{ current_round }}{% endblock %}
-
-{% block nav %}{% include "monkey_nav.html" %}{% endblock %}
+{% block body-class %}monkey-enter-result{% endblock %}
+{% block nav %}{% include "monkey/nav.html" %}{% endblock %}
 
 {% block content %}
 

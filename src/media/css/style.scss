@@ -2,7 +2,6 @@
 @import "../bootstrap/stylesheets/bootstrap/variables";
 @import "../bootstrap/stylesheets/bootstrap/mixins";
 @import "../bootstrap/stylesheets/bootstrap/type";
-//@import "datatables/jquery.dataTables.css";
 @import "datatables/dataTables.bootstrap.css";
 
 @include text-emphasis-variant('.text-success', $brand-success);
@@ -13,10 +12,30 @@
 
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
-.btn-group {
-    padding: 0 0 $padding-large-vertical 0;
+
+// Navigation Highlights
+
+.public-draw a.public-draw-nav,
+.public-feedback a.public-feedback-nav,
+.public-add-ballot a.public-add-ballot-nav,
+.public-add-feedback a.public-add-feedback-nav,
+.monkey-enter-result a.monkey-enter-result-nav,
+.monkey-enter-feedback a.monkey-enter-feedback-nav,
+.dash a.dash-nav,
+.draw a.draw-nav,
+.results a.results-nav,
+.team-standings a.team-standings-nav,
+.speaker-standings a.speaker-standings-nav,
+.adj-feedback a.adj-feedback-nav,
+.config a.config-nav {
+    font-weight: bold;
 }
 
+// Universal Style overrides
+
+.page-header h1 {
+    margin-top: 0; // fixes button alignment easily
+}
 
 // Tables
 
@@ -56,7 +75,7 @@
     font-style: italic;
 }
 
-// Draw display:
+// Draw display
 
 .draw-public-display {
 
@@ -114,6 +133,8 @@
 
     }
 }
+
+// General Draw
 
 .edit-venues, .edit-adjs {
 
@@ -255,3 +276,14 @@ p.warning { color: red; font-weight: bold; }
 
 table.warningbox { background-color: #F5BCA9; border: 1px solid red; padding: 10px 10px; width: 100%; }
 table.warningbox p { margin: 0px 0px }
+
+// From monkey/enter result
+#incorrect {
+    background-color: red;
+    color: white;
+}
+#correct{
+    background-color: green;
+    color: white;
+}
+#resultsForm select { color: black; }

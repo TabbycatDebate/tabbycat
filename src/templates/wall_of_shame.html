@@ -50,15 +50,15 @@
 </script>
 {% endblock extra-head %}
 
-{% block body_class %}public-feedback{% endblock %}
+{% block body-class %}public-feedback{% endblock %}
 
-{% block nav %}{% include "public_nav.html" %}{% endblock %}
+{% block nav %}{% include "public/nav.html" %}{% endblock %}
 
 {% block head-title %}Unsubmitted Feedback Shitlist{% endblock %}
 {% block page-title %}Unsubmitted Feedback Shitlist{% endblock %}
 
 {% block header %}
-<div class="btn-group btn-group-lg" data-toggle="buttons">
+<div class="btn-group" data-toggle="buttons">
   <label class="btn btn-default active" id="toggle-all">
     <input type="radio" name="options">Show All
   </label>

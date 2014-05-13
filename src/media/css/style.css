@@ -313,8 +313,23 @@ a.text-warning:hover {
 a.text-danger:hover {
   color: #c9302c; }
 
-.btn-group {
-  padding: 0 0 10px 0; }
+.public-draw a.public-draw-nav,
+.public-feedback a.public-feedback-nav,
+.public-add-ballot a.public-add-ballot-nav,
+.public-add-feedback a.public-add-feedback-nav,
+.monkey-enter-result a.monkey-enter-result-nav,
+.monkey-enter-feedback a.monkey-enter-feedback-nav,
+.dash a.dash-nav,
+.draw a.draw-nav,
+.results a.results-nav,
+.team-standings a.team-standings-nav,
+.speaker-standings a.speaker-standings-nav,
+.adj-feedback a.adj-feedback-nav,
+.config a.config-nav {
+  font-weight: bold; }
+
+.page-header h1 {
+  margin-top: 0; }
 
 .dataTable thead > tr > th {
   padding-right: 0 !important; }
@@ -395,3 +410,108 @@ a.text-danger:hover {
   color: #f80; }
 .edit-adjs .adj.conflict {
   color: red; }
+
+#jsWarn {
+  font-weight: bold;
+  background-color: #f00;
+  color: #ff0;
+  padding: 5px; }
+
+.winner {
+  font-weight: bold; }
+
+ul.errorlist {
+  color: red; }
+
+div.errors {
+  color: red; }
+
+p.warning {
+  color: red;
+  font-weight: bold; }
+
+.scoresheet .errorlist {
+  list-style: none;
+  margin: 5px;
+  padding: 0;
+  width: 150px; }
+
+.scoresheet .error {
+  background-color: #fee;
+  color: #811; }
+
+.scoresheet input.save {
+  background-color: #fff;
+  border: 1px solid #888;
+  font-size: 110%;
+  padding: 0 0.3em;
+  width: 4em;
+  cursor: pointer; }
+
+.scoresheet label.error {
+  color: red; }
+
+.scoresheet input.save:hover {
+  background-color: #fafafa; }
+
+.scoresheet input.win {
+  border: 1px solid #0f0;
+  background-color: #efe; }
+
+.scoresheet input.lose {
+  border: 1px solid #f00;
+  background-color: #fee; }
+
+.ballot-checkin-form .message {
+  padding: 10px 10px;
+  font-weight: bold;
+  background-color: #fc9;
+  color: #804000; }
+
+.ballot-checkin-form #success {
+  padding: 10px 10px; }
+
+.ballot-checkin-form .error {
+  background-color: #fcc;
+  color: #800000; }
+
+.ballot-checkin-form .success {
+  background-color: #cfc;
+  color: #008000; }
+
+#configForm label.name {
+  width: 14em;
+  display: block;
+  float: left; }
+
+#configForm label.help {
+  padding-left: 0.5em;
+  color: #aaa; }
+
+#configForm .error, #configForm .errorlist {
+  color: red; }
+
+#configForm div.updated {
+  font-size: 120%;
+  padding: 0.5em;
+  border: 1px solid #00f; }
+
+table.warningbox {
+  background-color: #F5BCA9;
+  border: 1px solid red;
+  padding: 10px 10px;
+  width: 100%; }
+
+table.warningbox p {
+  margin: 0px 0px; }
+
+#incorrect {
+  background-color: red;
+  color: white; }
+
+#correct {
+  background-color: green;
+  color: white; }
+
+#resultsForm select {
+  color: black; }

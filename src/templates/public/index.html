@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block header %}{{ tournament }}{% endblock %}
+{% block head-title %}{{ tournament }} Home{% endblock %}
+{% block page-title %}{{ tournament }} Home{% endblock %}
+{% block body-class %}public-home{% endblock %}
 
-{% block nav %}{% include "public_nav.html" %}{% endblock %}
+{% block nav %}{% include "public/nav.html" %}{% endblock %}
 
 {% block content %}
 

@@ -13,11 +13,11 @@
         </div>
 
         <div class="collapse navbar-collapse">
-            <ul id="nav" class="nav navbar-nav navbar-left">
-                <li><a href="{% round_url results current_round %}">Enter Results</a></li>
-                <li><a href="{% tournament_url adj_feedback %}">Enter Feedback</a></li>
+            <ul id="" class="nav navbar-nav navbar-left">
+                <li><a class="monkey-enter-result-nav" href="{% round_url results current_round %}">Enter Results</a></li>
+                <li><a class="monkey-enter-feedback-nav" href="{% tournament_url adj_feedback %}">Enter Feedback</a></li>
             </ul>
-            <ul id="nav" class="nav navbar-nav navbar-right">
+            <ul id="" class="nav navbar-nav navbar-right">
                 <li><a>Logged in as {{ user }}</a></li>
                 <li><a href="{% url 'logout' %}">Log out</a></li>
             </ul>
