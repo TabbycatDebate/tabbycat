@@ -8,7 +8,7 @@
         $(document).ready(function(){
             var table = $('#dataTable').DataTable({
                 "bPaginate": false,
-                "aaSorting": [[ 1, "desc" ]],
+                "aaSorting": [[ 0, "desc" ]],
             });
             new $.fn.dataTable.FixedHeader( table );
         });
@@ -86,30 +86,32 @@
                 </a></td>
             {% endifequal %}
 
+            <td><a href="{% tournament_url enter_result debate.id %}">{% if debate.result_status == "B" or debate.result_status == "N" %}Enter results {% endif %}</a></td>
+
             <td>{{ debate.bracket }}</td>
 
             <td>{{ debate.venue.name }}</td>
 
             <td class="{% if debate.result.aff_win %}winner{% endif %}">
                 {% if debate.result.aff_win == 1 %}
-                    <span class="glyphicon glyphicon-arrow-up"></span>
+                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
                 {% else %}
-                    <span class="glyphicon glyphicon-arrow-down"></span>
+                    <span class="glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
-                <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip" class="clickable">
+                <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
                     {{ debate.aff_team.name }}
                 </span>
             </td>
 
             <td class="{% if debate.result.neg_win %}winner{% endif %}">
                 {% if debate.result.neg_win == 1 %}
-                    <span class="glyphicon glyphicon-arrow-up"></span>
+                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
                 {% else %}
-                    <span class="glyphicon glyphicon glyphicon-arrow-down"></span>
+                    <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
-                <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
                     {{ debate.neg_team.name }}
-                </a>
+                </span>
             <td>{{ debate.adjudicators_display }}</td>
 
             {% if show_motions_column %}

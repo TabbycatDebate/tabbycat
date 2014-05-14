@@ -47,10 +47,10 @@
         </td>
         <td>{{ debate.venue.name }}</td>
         <td>
-            <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a>
+            <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}<span>
         </td>
         <td>
-            <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a>
+            <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</span>
         </td>
         <td>{{ debate.adjudicators_display }}</td>
     </tr>

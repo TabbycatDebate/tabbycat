@@ -740,9 +740,6 @@ a.text-danger:hover, a.error:hover, a.errorlist:hover {
   color: #ff0;
   padding: 5px; }
 
-.winner {
-  font-weight: bold; }
-
 p.warning {
   color: red;
   font-weight: bold; }
