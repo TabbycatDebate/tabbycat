@@ -3,7 +3,7 @@
 @import "../bootstrap/stylesheets/bootstrap/mixins";
 @import "../bootstrap/stylesheets/bootstrap/type";
 @import "../bootstrap/stylesheets/bootstrap/forms";
-@import "datatables/dataTables.bootstrap.css";
+//@import "datatables/dataTables.bootstrap.css";
 
 @include text-emphasis-variant('.text-success', $brand-success);
 
@@ -37,40 +37,8 @@
 .page-header h1 {
     margin-top: 0; // fixes button alignment easily
 }
-
-// Tables
-
-.dataTable thead {
-    background-color: #FFF; // hovering opacity
-}
-.dataTable thead > tr > th {
-    padding-right: 0 !important;
-}
-#dataTable_filter, #draw_filter, #draw, div.dataTables_filter {
-    label {
-        float: left;
-    }
-}
-#modal-adj-table_wrapper, .display-motions {
-    div.dataTables_filter {
-        display: none;
-    }
-}
-.dataTables_info {
-    display: none;
-}
-
-.modal-lg {
-    width: 90%;
-}
-.venue-name {
-
-}
-.adj-chair {
-    text-decoration: underline;
-}
-.adj-trainee {
-    font-style: italic;
+[data-toggle="tooltip"] {
+    cursor: pointer // for tooltips
 }
 
 // Forms
@@ -81,8 +49,68 @@
     list-style-type: none;
 }
 
+// Tables
 
+table.dataTable {
+    margin-top: 0px !important; // for the fixed header
+    thead {
+        background-color: #FFF; // hovering opacity
 
+        .sorting {
+            background: url('../images/sort_both.png') no-repeat center right;
+        }
+        .sorting_asc {
+            background: url('../images/sort_asc.png') no-repeat center right;
+            color: #000;
+        }
+        .sorting_desc {
+            background: url('../images/sort_desc.png') no-repeat center right;
+            color: #000;
+        }
+        .sorting_asc_disabled {
+            background: url('../images/sort_asc_disabled.png') no-repeat center right;
+        }
+        .sorting_desc_disabled {
+            background: url('../images/sort_desc_disabled.png') no-repeat center right;
+        }
+        .sorting,
+        .sorting_asc,
+        .sorting_desc,
+        .sorting_asc_disabled,
+        .sorting_desc_disabled {
+            cursor: pointer;
+        }
+    }
+    thead > tr > td, thead > tr > th  {
+        // fix for header and icons
+        min-width: 40px; // minimum widths so icons are jammed
+        padding-right: 4px;
+        padding-left: 8px;
+    }
+    th:active {
+        outline: none;
+    }
+
+    .adj-chair {
+        text-decoration: underline;
+    }
+    .adj-trainee {
+        font-style: italic;
+    }
+}
+.dataTables_wrapper .dataTables_filter {
+    
+    margin-bottom: 12px;
+    label {
+        display: block;
+    }
+    input {
+
+    }
+}
+.modal-lg {
+    width: 90%;
+}
 
 
 // Draw displays
@@ -115,15 +143,12 @@
     }
 }
 
-// General Draw
+// Editing the Draw
 
 .edit-venues, .edit-adjs {
 
     .btn-default.text-left {
         padding-left: 6px;
-    }
-    .nav {
-        display: none;
     }
     #main {
         width: 79%;
@@ -136,37 +161,38 @@
         width: 20%;
         height: 800px;
     }
-}
 
-// Draw Editing Venues
-
-.edit-venues {
     .venue-holder {
         padding: 0px;
     }
     .venue {
         cursor: move;
     }
+    .adj.trainee { 
+        background-color: #ffb;
+    }
+    .adj.trainee:hover { 
+        background-color: #ffe;
+    }
+    .adj.history-conflict { 
+        color: #f80;
+    }
+    .adj.conflict { 
+        color: red;
+    }
 
 }
 
-// Draw Editing Adj's
+// to sort
 
 .edit-adjs {
 
-    .nav {
-        display: none;
-    }
-
     // .adj { display: block; background-color: #eee; white-space: nowrap; margin-right: 1em; cursor: move;}
-    .adj.trainee { background-color: #ffb; }
+
     // .adj:hover {background-color: #fafafa; }
-    .adj.trainee:hover { background-color: #ffe; }
+
     // .panel-holder .adj { margin: 1px 0;}
     // .adj span.info { margin: 0 5px; color: #44f;  }
-
-    .adj.history-conflict { color: #f80; }
-    .adj.conflict { color: red; }
 
     // #scratch {
     //     position: fixed;
@@ -234,18 +260,9 @@ p.warning { color: red; font-weight: bold; }
     color: #804000;
 }
 .ballot-checkin-form #success { padding: 10px 10px; }
-
 .ballot-checkin-form .success { background-color: #cfc; color: #008000; }
 
-#configForm label.name { width: 14em; display: block; float: left;}
-#configForm label.help { padding-left: 0.5em; color: #aaa; }
 
-#configForm div.updated { font-size: 120%; padding: 0.5em; border: 1px solid #00f; }
-
-table.warningbox { background-color: #F5BCA9; border: 1px solid red; padding: 10px 10px; width: 100%; }
-table.warningbox p { margin: 0px 0px }
-
-// From monkey/enter result
 #incorrect {
     background-color: red;
     color: white;
@@ -255,3 +272,6 @@ table.warningbox p { margin: 0px 0px }
     color: white;
 }
 #resultsForm select { color: black; }
+
+
+

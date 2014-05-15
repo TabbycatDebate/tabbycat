@@ -1,4 +1,3 @@
-@import url(datatables/dataTables.bootstrap.css);
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: inherit;
@@ -659,32 +658,52 @@ a.text-danger:hover, a.error:hover, a.errorlist:hover {
 .page-header h1 {
   margin-top: 0; }
 
-.dataTable thead {
-  background-color: #FFF; }
-
-.dataTable thead > tr > th {
-  padding-right: 0 !important; }
-
-#dataTable_filter label, #draw_filter label, #draw label, div.dataTables_filter label {
-  float: left; }
-
-#modal-adj-table_wrapper div.dataTables_filter, .display-motions div.dataTables_filter {
-  display: none; }
-
-.dataTables_info {
-  display: none; }
-
-.modal-lg {
-  width: 90%; }
-
-.adj-chair {
-  text-decoration: underline; }
-
-.adj-trainee {
-  font-style: italic; }
+[data-toggle="tooltip"] {
+  cursor: pointer; }
 
 .error, .errorlist {
   list-style-type: none; }
+
+table.dataTable {
+  margin-top: 0px !important; }
+  table.dataTable thead {
+    background-color: #FFF; }
+    table.dataTable thead .sorting {
+      background: url("../images/sort_both.png") no-repeat center right; }
+    table.dataTable thead .sorting_asc {
+      background: url("../images/sort_asc.png") no-repeat center right;
+      color: #000; }
+    table.dataTable thead .sorting_desc {
+      background: url("../images/sort_desc.png") no-repeat center right;
+      color: #000; }
+    table.dataTable thead .sorting_asc_disabled {
+      background: url("../images/sort_asc_disabled.png") no-repeat center right; }
+    table.dataTable thead .sorting_desc_disabled {
+      background: url("../images/sort_desc_disabled.png") no-repeat center right; }
+    table.dataTable thead .sorting,
+    table.dataTable thead .sorting_asc,
+    table.dataTable thead .sorting_desc,
+    table.dataTable thead .sorting_asc_disabled,
+    table.dataTable thead .sorting_desc_disabled {
+      cursor: pointer; }
+  table.dataTable thead > tr > td, table.dataTable thead > tr > th {
+    min-width: 40px;
+    padding-right: 4px;
+    padding-left: 8px; }
+  table.dataTable th:active {
+    outline: none; }
+  table.dataTable .adj-chair {
+    text-decoration: underline; }
+  table.dataTable .adj-trainee {
+    font-style: italic; }
+
+.dataTables_wrapper .dataTables_filter {
+  margin-bottom: 12px; }
+  .dataTables_wrapper .dataTables_filter label {
+    display: block; }
+
+.modal-lg {
+  width: 90%; }
 
 #draw.dataTable td {
   font-family: inherit;
@@ -706,8 +725,6 @@ a.text-danger:hover, a.error:hover, a.errorlist:hover {
 
 .edit-venues .btn-default.text-left, .edit-adjs .btn-default.text-left {
   padding-left: 6px; }
-.edit-venues .nav, .edit-adjs .nav {
-  display: none; }
 .edit-venues #main, .edit-adjs #main {
   width: 79%; }
 .edit-venues #scratch, .edit-adjs #scratch {
@@ -717,21 +734,17 @@ a.text-danger:hover, a.error:hover, a.errorlist:hover {
   background-color: #cff;
   width: 20%;
   height: 800px; }
-
-.edit-venues .venue-holder {
+.edit-venues .venue-holder, .edit-adjs .venue-holder {
   padding: 0px; }
-.edit-venues .venue {
+.edit-venues .venue, .edit-adjs .venue {
   cursor: move; }
-
-.edit-adjs .nav {
-  display: none; }
-.edit-adjs .adj.trainee {
+.edit-venues .adj.trainee, .edit-adjs .adj.trainee {
   background-color: #ffb; }
-.edit-adjs .adj.trainee:hover {
+.edit-venues .adj.trainee:hover, .edit-adjs .adj.trainee:hover {
   background-color: #ffe; }
-.edit-adjs .adj.history-conflict {
+.edit-venues .adj.history-conflict, .edit-adjs .adj.history-conflict {
   color: #f80; }
-.edit-adjs .adj.conflict {
+.edit-venues .adj.conflict, .edit-adjs .adj.conflict {
   color: red; }
 
 #jsWarn {
@@ -775,29 +788,6 @@ p.warning {
 .ballot-checkin-form .success {
   background-color: #cfc;
   color: #008000; }
-
-#configForm label.name {
-  width: 14em;
-  display: block;
-  float: left; }
-
-#configForm label.help {
-  padding-left: 0.5em;
-  color: #aaa; }
-
-#configForm div.updated {
-  font-size: 120%;
-  padding: 0.5em;
-  border: 1px solid #00f; }
-
-table.warningbox {
-  background-color: #F5BCA9;
-  border: 1px solid red;
-  padding: 10px 10px;
-  width: 100%; }
-
-table.warningbox p {
-  margin: 0px 0px; }
 
 #incorrect {
   background-color: red;

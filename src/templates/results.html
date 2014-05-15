@@ -7,7 +7,6 @@
     <script type="text/javascript">
         $(document).ready(function(){
             var table = $('#dataTable').DataTable({
-                "bPaginate": false,
                 "aaSorting": [[ 0, "desc" ]],
             });
             new $.fn.dataTable.FixedHeader( table );
@@ -50,12 +49,12 @@
     <tbody>
 
     {% for debate in draw %}
-<!--         <tr class=" {% ifequal debate.result_status "N" %}danger {% endifequal %}
+        <tr class=" {% ifequal debate.result_status "N" %}danger {% endifequal %}
                     {% ifequal debate.result_status "B" %}warning {% endifequal %}
                     {% ifequal debate.result_status "D" %}info {% endifequal %}
                     {% ifequal debate.result_status "C" %}success{% endifequal %}
-        "> -->
-            <tr>
+        ">
+
 
             {% ifequal debate.result_status "N" %}
                 <td>
@@ -63,6 +62,7 @@
                     <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="No Ballot (click to edit)">
                     <span class="glyphicon glyphicon-remove text-danger"></span>
                 </a></td>
+                <td><a href="{% tournament_url enter_result debate.id %}" title="Add Ballot">Add Ballot</a></td>
             {% endifequal %}
             {% ifequal debate.result_status "B" %}
                 <td>
@@ -70,6 +70,7 @@
                     <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Ballot In (click to edit)">
                     <span class="glyphicon glyphicon-inbox text-warning"></span>
                 </a></td>
+                <td><a href="{% tournament_url enter_result debate.id %}" title="Add Ballot">Edit Ballot</a></td>
             {% endifequal %}
             {% ifequal debate.result_status "D" %}
                 <td>
@@ -77,6 +78,7 @@
                     <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Unconfirmed Ballot (click to edit)">
                     <span class="glyphicon glyphicon-adjust text-info"></span>
                 </a></td>
+                <td><a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Confirm Ballot">Confirm Ballot</a></td>
             {% endifequal %}
             {% ifequal debate.result_status "C" %}
                 <td>
@@ -84,9 +86,8 @@
                     <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Confirmed Ballot (click to edit)">
                     <span class="glyphicon glyphicon-ok text-success"></span>
                 </a></td>
+                <td></td>
             {% endifequal %}
-
-            <td><a href="{% tournament_url enter_result debate.id %}">{% if debate.result_status == "B" or debate.result_status == "N" %}Enter results {% endif %}</a></td>
 
             <td>{{ debate.bracket }}</td>
 

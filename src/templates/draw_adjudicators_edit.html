@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-
 {% load debate_tags %}
 
+{% block nav %}{% endblock %}
 {% block extra-head %}
 <script type="text/javascript" language="javascript" src="/static/js/jquery-ui-1.10.4.custom.min.js"></script>
 <script type="text/javascript" language="javascript" src="/static/js/jquery.jeditable.js"></script>
@@ -440,7 +440,6 @@
             //     { "sWidth": "5%" },
             //     { "sWidth": "10%" }
             // ],
-            "bPaginate": false,
             "aaSorting": [[0, 'desc']]
             // "bSort": false,
             // "bFilter": false,
