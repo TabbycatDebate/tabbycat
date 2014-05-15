@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load debate_tags %}
+{% load static %}
 
 {% block extra-head %}
     <script type="text/javascript">
@@ -17,25 +18,24 @@
                     ]
             });
             new $.fn.dataTable.FixedHeader( table );
-            var emoji_arr = [];
-            $.getJSON('/emoji/all.json', function(data) {
-                for (var i in data) {
-                    //console.log(data[i]);
-                    emoji_arr.push(data[i]);
-                }
-                $(".team-emoji").each(function(index) {
-                    var emojiID = $(this).attr("class").replace('team-emoji team-', '');
-                    $(this).append('<img src="' + emoji_arr[parseInt(emojiID)] + '" />');
-                });
-             });
+
         });
     </script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/scroller.js' %}"></script>
+
 {% endblock extra-head %}
 
 {% block body-class %}draw-public-display{% endblock %}
 
 {% block head-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}
-{% block page-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}
+{% block page-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}{% block header %}
+<div class="btn-group">
+    <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
+    <a class="btn btn-default" href="" id="scroll_draw2">Scroll Medium</a>
+    <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
+</div>
+{% endblock %}
 
 {% block content %}
     <table id="draw" class="table table-hover table-bordered table-striped">

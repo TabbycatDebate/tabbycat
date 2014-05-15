@@ -86,7 +86,7 @@
                     <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Confirmed Ballot (click to edit)">
                     <span class="glyphicon glyphicon-ok text-success"></span>
                 </a></td>
-                <td></td>
+               <td><a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Confirm Ballot">Re-edit Ballot</a></td>
             {% endifequal %}
 
             <td>{{ debate.bracket }}</td>
