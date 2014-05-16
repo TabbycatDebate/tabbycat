@@ -1,4 +1,4 @@
-{% extends "draw_rbase.html" %}
+{% extends "draw_base.html" %}
 
 {% load debate_tags %}
 
@@ -7,7 +7,11 @@
 
         $(document).ready( function() {
             var table = $("#dataTable").dataTable( {
-                "aaSorting": [[2, 'desc']]
+                "aaSorting": [[0, 'desc']],
+                "sDom":
+                "<'row'<'col-md-12'l>r>"+ // f = the filter
+                "t"+
+                "<'row'<'form'><'col-xs-6'p>>"
             });
             new $.fn.dataTable.FixedHeader( table );
 
@@ -18,30 +22,37 @@
 
 {% block body-class %}display-motions{% endblock %}
 
-{% block head-title %}Motions for Round {{ round }}{% endblock %}
-{% block page-title %}Motions for Round {{ round }}{% endblock %}
+{% block head-title %}Motions{% endblock %}
+{% block page-title %}Motions{% endblock %}
 
 {% block header %}
 <a href="{% round_url motions_edit %}" class="btn btn-default col-sm-offset-1">
-    Edit motions
+    Edit motions for Round {{ round }}
 </a>
 {% endblock %}
 
 {% block content %}
 
-
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
-        <tr><th>Reference</th><th>Motion</th><th>Chosen in</th><th>Affs won</th><th>Negs won</th></tr>
+    <tr>
+        <th>Round</th>
+        <th>Reference</th>
+        <th>Motion</th>
+        <th>Chosen in</th>
+        <th>Affs won%</th>
+        <th>Negs won%</th>
+    </tr>
     </thead>
     <tbody>
     {% for motion in motions %}
     <tr>
+        <td>{{ motion.round }}</td>
         <td>{{ motion.reference }}</td>
         <td>{{ motion.text }}</td>
         <td>{{ motion.chosen_in }}</td>
-        <td>{{ motion.aff_wins }}</td>
-        <td>{{ motion.neg_wins }}</td>
+        <td>{{ motion.aff_wins_percent }}</td>
+        <td>{{ motion.neg_wins_percent }}</td>
     </tr>
     {% endfor %}
 </table>

@@ -1041,7 +1041,9 @@ class MotionManager(models.Manager):
         for motion in motions:
             debates = Debate.objects.filter(motion=motion)
             motion.aff_wins = sum(debate.result.aff_win for debate in debates)
+            motion.aff_wins_percent = int((float(motion.aff_wins) / float(motion.chosen_in)) * 100)
             motion.neg_wins = sum(debate.result.neg_win for debate in debates)
+            motion.neg_wins_percent = int((float(motion.neg_wins) / float(motion.chosen_in)) * 100)
 
         return motions
 

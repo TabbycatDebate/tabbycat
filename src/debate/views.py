@@ -410,7 +410,16 @@ def update_debate_importance(request, round):
 @admin_required
 @round_view
 def motions(request, round):
-    motions = Motion.objects.statistics(round=round)
+    motions = [];
+
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                  seq__lte=round.seq).order_by('seq')
+
+    for r in rounds:
+        r_motions = Motion.objects.statistics(round=r)
+        for m in r_motions:
+            motions.append(m)
+
     return r2r(request, "motions.html", dict(motions=motions))
 
 @admin_required
