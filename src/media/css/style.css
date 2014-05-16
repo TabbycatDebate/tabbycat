@@ -698,7 +698,7 @@ table.dataTable {
     font-style: italic; }
   table.dataTable .team-emoji {
     text-align: center;
-    padding: 4px; }
+    padding: 4px 0 4px 0; }
     table.dataTable .team-emoji img {
       width: 28px;
       height: 28px; }

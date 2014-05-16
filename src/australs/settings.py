@@ -86,11 +86,5 @@ INSTALLED_APPS = (
 
 LOGIN_REDIRECT_URL = '/'
 
-WORDPRESS_USER = 'tab'
-WORDPRESS_PASSWORD = 'australs__tab__2010'
-WORDPRESS_URL = 'http://www.australs2010.com/xmlrpc.php'
-WORDPRESS_DRAW_CATEGORY_ID = 3
-
 from os.path import dirname, join
 exec open(join(dirname(__file__), '../../config/local_settings.py'))
-

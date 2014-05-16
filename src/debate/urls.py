@@ -17,6 +17,12 @@ urlpatterns = patterns('debate.views',
     url(r'^public/add_feedback$', 'public_feedback_submit', name='public_feedback_submit'),
     url(r'^public/feedback_progress/$', 'feedback_progress', name='feedback_progress'),
 
+    url(r'^public/tab/team_tab/$', 'public_team_tab', name='public_team_tab'),
+    url(r'^public/tab/speaker_tab/$', 'public_speaker_tab', name='public_speaker_tab'),
+    url(r'^public/tab/replies_tab/$', 'public_replies_tab', name='public_replies_tab'),
+    url(r'^public/tab/motions_tab/$', 'public_motions_tab', name='public_motions_tab'),
+    url(r'^public/tab/feedback_tab/$', 'public_feedback_tab', name='public_feedback_tab'),
+
     url(r'^round/(?P<round_seq>\d+)/venues/$',
         'availability', { 'model': 'venue', 'context_name': 'venues' }, 'venue_availability'),
     url(r'^round/(?P<round_seq>\d+)/venues/update/$',

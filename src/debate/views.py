@@ -99,6 +99,26 @@ def public_ballot_submit(request, t):
 def public_feedback_submit(request, t):
     return r2r(request, 'public/add_feedback.html')
 
+@tournament_view
+def public_team_tab(request, t):
+    return r2r(request, 'public/team_tab.html')
+
+@tournament_view
+def public_speaker_tab(request, t):
+    return r2r(request, 'public/speaker_tab.html')
+
+@tournament_view
+def public_replies_tab(request, t):
+    return r2r(request, 'public/reply_tab.html')
+
+@tournament_view
+def public_motions_tab(request, t):
+    return r2r(request, 'public/motions_tab.html')
+
+@tournament_view
+def public_feedback_tab(request, t):
+    return r2r(request, 'public/feedback_tab.html')
+
 
 @login_required
 @tournament_view
@@ -116,7 +136,6 @@ def monkey_home(request, t):
 @admin_required
 @tournament_view
 def tournament_config(request, t):
-
     from debate.config import make_config_form
 
     context = {}
@@ -129,7 +148,6 @@ def tournament_config(request, t):
         form = make_config_form(t)
 
     context['form'] = form
-
 
     return r2r(request, 'tournament_config.html', context)
 

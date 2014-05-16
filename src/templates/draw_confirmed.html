@@ -72,8 +72,11 @@
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td title="{% aff_count debate.aff_team round.prev %}">
-            <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a></td>
-        <td title="{% neg_count debate.neg_team round.prev %}"><a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a></td>
+            <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</span>
+        </td>
+        <td title="{% neg_count debate.neg_team round.prev %}">
+            <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</span>
+        </td>
         <td>{{ debate.adjudicators_display }}</td>
         <td>{{ debate.all_conflicts|join:", " }}</td>
     </tr>
