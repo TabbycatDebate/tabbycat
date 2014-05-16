@@ -1,5 +1,5 @@
 {% extends "draw_rbase.html" %}
-
+{% load static %}
 {% load debate_tags %}
 
 {% block extra-head %}
@@ -12,6 +12,7 @@
                 new $.fn.dataTable.FixedHeader( table );
             } );
         </script>
+        <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
 {% endblock extra-head %}
 
 {% block extra-style %}{% endblock %}
@@ -27,6 +28,7 @@
     <thead>
         <tr>
             <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
+            <th>e</th>
             <th>Team</th>
             {% for round in rounds %}
             <th>Round {{ round }}</th>
@@ -41,6 +43,7 @@
     <tr class="
         {% if not team.results_in %}inactive{% endif%}">
         <td>{{ team.rank }}</td>
+        <td class="team-emoji team-{{ team.id }}"></td>
         <td><a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</a></td>
         {% for score in team.scores %}
         <td>

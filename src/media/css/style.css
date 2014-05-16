@@ -696,6 +696,12 @@ table.dataTable {
     text-decoration: underline; }
   table.dataTable .adj-trainee {
     font-style: italic; }
+  table.dataTable .team-emoji {
+    text-align: center;
+    padding: 4px; }
+    table.dataTable .team-emoji img {
+      width: 28px;
+      height: 28px; }
 
 .dataTables_wrapper .dataTables_filter {
   margin-bottom: 12px; }
@@ -716,12 +722,6 @@ table.dataTable {
   padding-left: 0px;
   margin-left: 0;
   list-style-type: none; }
-#draw.dataTable .team-emoji {
-  text-align: center;
-  padding: 4px; }
-  #draw.dataTable .team-emoji img {
-    width: 28px;
-    height: 28px; }
 
 .edit-venues .btn-default.text-left, .edit-adjs .btn-default.text-left {
   padding-left: 6px; }

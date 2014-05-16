@@ -97,6 +97,15 @@ table.dataTable {
     .adj-trainee {
         font-style: italic;
     }
+    .team-emoji {
+        img {
+            width: 28px;
+            height: 28px;
+        }
+        text-align: center;
+        padding: 4px;
+
+    }
 }
 .dataTables_wrapper .dataTables_filter {
     
@@ -131,15 +140,6 @@ table.dataTable {
             margin-left: 0;
             list-style-type: none;
         }
-    }
-    .team-emoji {
-        img {
-            width: 28px;
-            height: 28px;
-        }
-        text-align: center;
-        padding: 4px;
-
     }
 }
 
