@@ -16,17 +16,9 @@ from debate import forms
 from django.forms.models import modelformset_factory
 from django.forms import Textarea
 
-from debate import wordpresslib
 
 from functools import wraps
 import json
-
-def get_wordpress_client():
-    return wordpresslib.WordPressClient(
-        settings.WORDPRESS_URL,
-        settings.WORDPRESS_USER,
-        settings.WORDPRESS_PASSWORD,
-    )
 
 def redirect_round(to, round, **kwargs):
     return redirect(to, tournament_slug=round.tournament.slug,
@@ -299,47 +291,6 @@ def update_availability(request, round, update_method, active_model, active_attr
 @round_view
 def checkin_update(request, round, update_method, active_model, active_attr):
     return _update_availability(request, round, update_method, active_model, active_attr)
-
-
-@admin_required
-@expect_post
-@round_view
-def wordpress_post_draw(request, round):
-
-    client = get_wordpress_client()
-
-    post = wordpresslib.WordPressPost()
-    post.title = 'Draw for Round %d' % round.seq
-    draw = round.get_draw_by_room()
-    post.description = str(render_to_string('wp_draw.html', {'round': round,
-                                                             'draw': draw}))
-
-    post.categories = (settings.WORDPRESS_DRAW_CATEGORY_ID,)
-
-    post_id = client.newPost(post, False)
-
-    return redirect_round('draw', round)
-
-@admin_required
-@expect_post
-@round_view
-def wordpress_post_standings(request, round):
-    from debate.models import TeamScore
-
-    teams = Team.objects.standings(round).order_by('-points', 'name')
-
-    client = get_wordpress_client()
-
-    post = wordpresslib.WordPressPost()
-    post.title = 'Standings after Round %d' % round.seq
-    post.description = str(render_to_string('wp_standings.html', {'teams':
-                                                                  teams},))
-
-    post.categories = (settings.WORDPRESS_DRAW_CATEGORY_ID,)
-
-    post_id = client.newPost(post, False)
-
-    return redirect_round('draw', round)
 
 
 @admin_required
