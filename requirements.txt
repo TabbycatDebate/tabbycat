@@ -1,14 +1,25 @@
 Django==1.6.5
 Fabric==1.6.1
+Flask==0.10.1
+Jinja2==2.7.2
+MarkupSafe==0.23
 South==0.8
+Werkzeug==0.9.4
+dj-database-url==0.3.0
+dj-static==0.0.5
 django-debug-toolbar==1.2
 django-emoji==1.2.0
 django-pylibmc-sasl==0.2.4
+django-toolbelt==0.0.1
 ecdsa==0.11
 ## FIXME: could not find svn URL in dependency_links for this package:
 flup==1.0.3.dev-20110405
+gunicorn==18.0
+itsdangerous==0.24
 paramiko==1.13.0
 psycopg2==2.5
 pycrypto==2.6.1
+pystache==0.5.4
 sqlparse==0.1.11
+static==1.0.2
 wsgiref==0.1.2
