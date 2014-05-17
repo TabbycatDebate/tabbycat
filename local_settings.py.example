@@ -1,45 +1,39 @@
-from os.path import join
+import os
 
-DEBUG = True
+# ===================
+# = Server Settings =
+# ===================
 
-def proj(p):
-    return join(PROJ_ROOT, p)
+ADMINS              = (
+    #'Your Name', 'your_email@domain.com'),
+)
+MANAGERS            = ADMINS
+DEBUG               = True
+TEMPLATE_DEBUG      = DEBUG
+DEBUG_ASSETS        = DEBUG
+SECRET_KEY          = ''
 
-# Absolute path to the project root
-PROJ_ROOT = '/media/data/projects/australs/debate'
+# ===========================
+# = Database Settings       =
+# ===========================
 
-# See https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-DATABASES for details
-DATABASES = {
-    'default': {
-        'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-        'NAME'    : 'debate',
-        'USER'    : 'debate',
-        'PASSWORD': 'debate',
-        'HOST'    : ''
+if 'DATABASE_URL' in os.environ:
+    # On Heroku
+    import dj_database_url
+    DEBUG = True
+    # Parse database configuration from $DATABASE_URL
+    DATABASES['default'] =  dj_database_url.config()
+    # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+else:
+    # Local
+    DATABASES = {
+        'default': {
+            'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
+            'NAME'    : '',
+            'USER'    : '',
+            'PASSWORD': '',
+            'HOST':     'localhost',
+            'PORT':     '5432',
+        }
     }
-}
-
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
-STATICFILES_DIRS = (
-    proj('src/media'),
-)
-STATIC_URL = '/static/'
-
-TEMPLATE_DIRS = (
-    proj('src/templates'),
-)
-
-INSTALLED_APPS += (
-    'debug_toolbar',
-)
-INTERNAL_IPS = (
-    '127.0.0.1',
-)
-MIDDLEWARE_CLASSES += (
-#    'debug_toolbar.middleware.DebugToolbarMiddleware',
-)
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-}
-
