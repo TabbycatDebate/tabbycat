@@ -1,42 +1,49 @@
 {% load debate_tags %}
 
-<ul id="nav">
-    <li id="nav-home"><a href="{{ tournament.get_absolute_url }}">Home</a></li>
-    <li id="nav-draw"><a href="{% round_url draw current_round %}">Draw</a></li>
-    <li id="nav-results"><a href="{% round_url results current_round %}">Results</a></li>
-    <li id="nav-current_standings"><a href="{% round_url team_standings current_round %}">Teams</a></li>
-    <li id="nav-current_standings" style="display: none;"><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
-    <li id="nav-feedback"><a href="{% tournament_url adj_feedback %}">Feedback</a></li>
-    <li>|</li>
-    <li id="nav-rounds">
-        <a href="#rounds">All Rounds</a>
-        <ul>
-            {% for r in tournament.rounds.all %}
-            <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %}">
-                <a href="{% round_url round_index r %}">{{ r.name }}</a>
-                <ul>
-                    <li>Round {{ r }}:</li>
-                    <li><a href="{% round_url venue_availability r %}">Venues</a></li>
-                    <li><a href="{% round_url adjudicator_availability r %}">Adjudicators</a></li>
-                    <li><a href="{% round_url team_availability r %}">Teams</a></li>
-                    <li><a href="{% round_url people_availability r %}">Participant checkins</a></li>
-                    <li><a href="{% round_url draw r %}">Draw</a></li>
-                    <li><a href="{% round_url motions r %}">Motions</a></li>
-                    <li><a href="{% round_url ballot_checkin r %}">Ballot checkin</a></li>
-                    <li><a href="{% round_url results r %}">Results</a></li>
-                    <li><a href="{% round_url team_standings r %}">Team standings</a></li>
-                    <li><a href="{% round_url speaker_standings r %}">Speaker standings</a></li>
-                    <li><a href="{% round_url reply_standings r %}">Reply standings</a></li>
-                </ul>
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand dash-nav" id="nav-home" href="{{ tournament.get_absolute_url  }}">{{ tournament }}</a>
+        </div>
 
-
-            </li>
-            {% endfor %}
-        </ul>
-
-    </li>
-    <li id="nav-config"><a href="{% tournament_url tournament_config %}">Config</a></li>
-    <li id="nav-admin"><a href="/admin/">Admin</a></li>
-    <li id="nav-logout"><a href="/accounts/logout/">Log out</a></li>
-    <li id="nav-user">({{ user }})</li>
-</ul>
+        <div class="collapse navbar-collapse">
+            <ul id="nav" class="nav navbar-nav navbar-left">
+                <li><a class="draw-nav" href="{% round_url draw current_round %}">Draw</a></li>
+                <li><a class="results-nav" href="{% round_url results current_round %}">Results</a></li>
+                <li><a class="team-standings-nav" href="{% round_url team_standings current_round %}">Teams</a></li>
+                <li><a class="speaker-standings-nav" href="{% round_url speaker_standings current_round %}">Speakers</a></li>
+                <li><a class="adj-feedback-nav" href="{% tournament_url adj_feedback %}">Feedback</a></li>
+                <li><a class="adj-feedback-nav" href="{% round_url motions current_round %}">Motions</a></li>
+                <li><a class="config-nav" href="{% tournament_url tournament_config %}">Config</a></li>
+            </ul>
+            <ul id="nav" class="nav navbar-nav navbar-right">
+                {% for r in tournament.rounds.all %}
+                <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ r }}<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% round_url venue_availability r %}">Venues</a></li>
+                        <li><a href="{% round_url adjudicator_availability r %}">Adjudicators</a></li>
+                        <li><a href="{% round_url team_availability r %}">Teams</a></li>
+                        <li><a href="{% round_url people_availability r %}">Participant checkins</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{% round_url draw r %}">Draw</a></li>
+                        <li><a href="{% round_url motions r %}">Motions</a></li>
+                        <li><a href="{% round_url ballot_checkin r %}">Ballot checkin</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{% round_url results r %}">Results</a></li>
+                        <li><a href="{% round_url team_standings r %}">Team standings</a></li>
+                        <li><a href="{% round_url speaker_standings r %}">Speaker standings</a></li>
+                        <li><a href="{% round_url reply_standings r %}">Reply standings</a></li>
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</nav>
