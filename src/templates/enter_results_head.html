@@ -1,39 +1,25 @@
-<style>
-    #resultsForm input[type='text'] {
-        width: 4em;
-    }
-    select.sp_error {
-        border: 2px solid red;
-    }
-    select {
-        border: 1px solid black;
-    }
-</style>
-
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#resultsForm").validate({
-        });
 
-        function refresh_totals(table) {
-            $table = $(table);
-            $aff_total = $('.aff_total', $table);
-            $neg_total = $('.neg_total', $table);
+        function refresh_totals(scoresheet) {
+            $scoresheet = $(scoresheet);
+            $aff_total = $('.aff_total', $scoresheet);
+            $neg_total = $('.neg_total', $scoresheet);
 
-            var aff = sum($('.aff.score input', $table));
-            var neg = sum($('.neg.score input', $table));
-            $aff_total.val(aff);
-            $neg_total.val(neg);
+            var aff = sum($('.aff.score input', $scoresheet));
+            var neg = sum($('.neg.score input', $scoresheet));
+            $aff_total.text(aff);
+            $neg_total.text(neg);
 
             if (aff > neg) {
-                $aff_total.addClass('win').removeClass('lose');
-                $neg_total.addClass('lose').removeClass('win');
+                $aff_total.addClass('btn-success').removeClass('btn-danger');
+                $neg_total.addClass('btn-danger').removeClass('btn-success');
             } else if (neg > aff) {
-                $aff_total.addClass('lose').removeClass('win');
-                $neg_total.addClass('win').removeClass('lose');
+                $aff_total.addClass('btn-danger').removeClass('btn-success');
+                $neg_total.addClass('btn-success').removeClass('btn-danger');
             } else {
-                $aff_total.addClass('lose').removeClass('win');
-                $neg_total.addClass('lose').removeClass('win');
+                $aff_total.addClass('btn-danger').removeClass('btn-success');
+                $neg_total.addClass('btn-danger').removeClass('btn-success');
             }
 
         };
@@ -46,14 +32,6 @@
             });
             return r;
         }
-
-        $('.score input').change(function() {
-            refresh_totals($(this).parents('table.scoresheet'));
-        });
-
-        $('table.scoresheet').each(function() {
-            refresh_totals($(this));
-        });
 
         function update_speakers() {
             $('#resultsForm select').each(update_speaker);
@@ -68,7 +46,8 @@
             var side = parts[1];
             var pos = parts[3];
 
-            $('.' + side + '.s' + pos + ' label').html(speaker);
+            // Keeping the labels the same...
+            //$('.' + side + '.s' + pos + ' label').html(speaker);
 
             var others;
             if (pos == '1') {
@@ -89,17 +68,26 @@
                 };
             });
             if (dupe || speaker === '---------') {
-                $(this).addClass('sp_error');
+                $(this).addClass('error');
             } else {
-                $(this).removeClass('sp_error');
+                $(this).removeClass('error');
             }
         }
+
+        $("#resultsForm").validate({});
+
+        $('.scoresheet').each(function() {
+            refresh_totals($(this));
+        });
+        $('.score input').change(function() {
+            refresh_totals($(this).parents('.scoresheet'));
+        });
 
         $('.speaker select').change(update_speakers).each(update_speaker);
 
         $('#resultsForm').submit(function() {
-            if ($('.sp_error', this).length) {
-                alert("Fix errors!!");
+            if ($('select.error', this).length) {
+                alert("Please fix speaker position errors!");
                 return false;
             }
         });

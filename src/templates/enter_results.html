@@ -1,22 +1,38 @@
 {% extends "base.html" %}
+{% load add_field_css %}
 
 {% load debate_tags %}
 
-{% block extra-head %}
+{% block extra-head %}{% include "enter_results_head.html" %}{% endblock %}
 
-{% include "enter_results_head.html" %}
+{% block head-title %}
+{% if debate.result_status == debate.STATUS_DRAFT %}
+Confirm Results for
+{% else %}
+Enter Results for
+{% endif %}
+{{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>
 {% endblock %}
-
-{% block h1 %} {{ debate.matchup }} (Round {{ debate.round }}, {{ debate.venue.name }}){% endblock %}
+{% block page-title %}{{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>{% endblock %}
+{% block body-class %}monkey-enter-result{% endblock %}
 
 {% block content %}
 
-<form id="resultsForm" action="." method="POST">
+<form id="resultsForm" class="form-horizontal" action="." method="POST">
     {% include "enter_results_content.html" %}
-    <div>
-        <label>Status:</label>
-        {{ form.result_status }}
-        <input class="save" type="submit" value="Save" tabindex="101" />
+    <div class="row">
+        <h3 class="col-sm-12 page-header lead">Debate Status</h3>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <label class="col-sm-1 col-xs-1 control-label"></label>
+            <div class="col-sm-2 col-xs-6">
+                {{ form.result_status|addcss:"form-control" }}
+            </div>
+            <div class="col-sm-2 col-md-1 col-xs-4">
+                <input class="save form-control btn btn-default" type="submit" value="Save" tabindex="101" />
+            </div>
+        </div>
     </div>
 </form>
 

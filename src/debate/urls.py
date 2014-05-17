@@ -11,6 +11,18 @@ urlpatterns = patterns('debate.views',
     url(r'^round/(?P<round_seq>\d+)/$',
         'round_index', name='round_index'),
 
+    url(r'^public/$', 'public_index', name='public_index'),
+    url(r'^public/draw/$', 'public_draw', name='public_draw'),
+    url(r'^public/add_ballot/$', 'public_ballot_submit', name='public_ballot_submit'),
+    url(r'^public/add_feedback$', 'public_feedback_submit', name='public_feedback_submit'),
+    url(r'^public/feedback_progress/$', 'feedback_progress', name='feedback_progress'),
+
+    url(r'^public/tab/team_tab/$', 'public_team_tab', name='public_team_tab'),
+    url(r'^public/tab/speaker_tab/$', 'public_speaker_tab', name='public_speaker_tab'),
+    url(r'^public/tab/replies_tab/$', 'public_replies_tab', name='public_replies_tab'),
+    url(r'^public/tab/motions_tab/$', 'public_motions_tab', name='public_motions_tab'),
+    url(r'^public/tab/feedback_tab/$', 'public_feedback_tab', name='public_feedback_tab'),
+
     url(r'^round/(?P<round_seq>\d+)/venues/$',
         'availability', { 'model': 'venue', 'context_name': 'venues' }, 'venue_availability'),
     url(r'^round/(?P<round_seq>\d+)/venues/update/$',
@@ -36,11 +48,7 @@ urlpatterns = patterns('debate.views',
 
     url(r'^round/(?P<round_seq>\d+)/draw/$', 'draw',
         name='draw'),
-    url(r'^round/(?P<round_seq>\d+)/wordpress_post_draw/$', 'wordpress_post_draw',
-        name='wordpress_post_draw'),
-    url(r'^round/(?P<round_seq>\d+)/wordpress_post_standings/$', 'wordpress_post_standings',
-        name='wordpress_post_standings'),
-    url(r'^round/(?P<round_seq>\d+)/draw_display_by_venue/$', 'draw_display',
+    url(r'^round/(?P<round_seq>\d+)/draw_display_by_venue/$', 'draw_display_by_venue',
         name='draw_display_by_venue'),
     url(r'^round/(?P<round_seq>\d+)/draw_display_by_team/$', 'draw_display_by_team',
         name='draw_display_by_team'),
@@ -98,5 +106,3 @@ urlpatterns = patterns('debate.views',
     url(r'^adjudicators/feedback/(?P<adjudicator_id>\d+)/$',
         'enter_feedback', name='enter_feedback'),
     )
-
-

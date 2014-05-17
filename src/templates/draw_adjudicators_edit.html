@@ -1,31 +1,30 @@
 {% extends "base.html" %}
-
 {% load debate_tags %}
 
+{% block nav %}{% endblock %}
 {% block extra-head %}
-<script type="text/javascript" language="javascript" src="/static/js/jquery-ui.js"></script>
+<script type="text/javascript" language="javascript" src="/static/js/jquery-ui-1.10.4.custom.min.js"></script>
 <script type="text/javascript" language="javascript" src="/static/js/jquery.jeditable.js"></script>
+
 <script type="text/javascript" charset="utf-8">
+
     $(document).ready( function() {
         var dataTable, unusedTable;
         var conflicts;
         var scores;
         var conflictTypeClass = {
-            'conflict': 'conflict-with-active',
-            'history': 'history-with-active',
+            'conflict': 'btn-danger',
+            'history': 'btn-warning',
         }
 
         function intId(e) {
             return parseInt($(e).attr('id').split('_')[1]);
         }
-
         function formatScore(n) {
             return n.toPrecision(2);
         }
-
-
         function _make_adj(data) {
-            var adj = $('<div></div>').addClass('adj')
+            var adj = $('<div></div>').addClass('adj btn btn-block btn-default text-left')
                 .attr('id', 'adj_' + data.id)
                 .append($('<span></span> ').html(data.name))
             if (data.is_trainee) {
@@ -39,25 +38,20 @@
             $('div.adj', td).remove();
             _make_adj(data).appendTo(td);
         }
-
         function clear_panel(debate_id) {
             $('#panel_'+debate_id).find('div.adj').remove();
         }
-
         function clear_trainees(debate_id) {
             $('#trainees_'+debate_id).find('div.adj').remove();
         }
-
         function add_panellist(debate_id, data) {
             var td = $('#panel_'+debate_id);
             _make_adj(data).appendTo(td);
         }
-
         function add_trainee(debate_id, data) {
             var td = $('#trainees_'+debate_id);
             _make_adj(data).appendTo(td);
         }
-
         function load_allocation_data(data) {
             $.each(data.debates, function(debate_id, adj_data) {
                 if (adj_data.chair)
@@ -130,7 +124,7 @@
 
         function append_adj_scores() {
             $(".adj").each( function() {
-                $(this).prepend('<span class="info">' + formatScore(scores[intId(this)]) + '</span>');
+                $(this).prepend('<span class="info"> ' + formatScore(scores[intId(this)]) + ' </span>');
                 $("a", this).attr("title", "Score: " + scores[intId(this)]);
                 $("a", this).click( function() {
                     return false;
@@ -148,7 +142,7 @@
             // append node (to preserve events)
             td.children().remove();
             td.append(adj);
-            $(adj).removeClass("conflict");
+            $(adj).removeClass("btn-danger");
         }
         function eachConflictingTeam(adj_id, fn) {
             $.each(conflicts['conflict'][adj_id], function (i, n) {
@@ -169,36 +163,35 @@
                 var h = 0;
                 // select aff & neg team
                 $("td.team", debate_tr).each( function() {
+                    //console.log(conflicts);
                     if ($.inArray(
                             intId(this),
                             conflicts['conflict'][adj_id]) != -1) {
-                        $(debate_tr).addClass("inactive");
-                        $(adj).addClass("conflict");
+                        $(debate_tr).addClass("debate-inactive");
+                        $(adj).addClass("btn-danger");
                         ca++;
                         a++;
-                    } else if ($.inArray(
-                            intId(this),
-                            conflicts['history'][adj_id]) != -1) {
-//                         $(debate_tr).addClass("conflict");
-                        $(adj).addClass("history-conflict");
+                    } else if ($.inArray(intId(this), conflicts['history'][adj_id]) != -1) {
+//                         $(debate_tr).addClass("btn-danger");
+                        $(adj).addClass("btn-warning");
                         ch++;
                         h++;
                     }
                 } );
                 if (a == 0) {
-                    $(adj).removeClass("conflict");
+                    $(adj).removeClass("btn-danger");
                 }
                 if (h == 0) {
-                    $(adj).removeClass("history-conflict");
+                    $(adj).removeClass("btn-warning");
                 }
 
             } );
 
             if (ca == 0) {
-                $(debate_tr).removeClass("inactive");
+                $(debate_tr).removeClass("debate-inactive");
             }
 //             if (ch == 0) {
-//                 $(debate_tr).removeClass("conflict");
+//                 $(debate_tr).removeClass("btn-danger");
 //             }
 
             // check for incomplete panels
@@ -239,9 +232,9 @@
                 }
             } );
 
-            el.draggable( {
-                handle: 'div',
-                cursor: 'move',
+            el.draggable({
+                containment: "body", // bounds that limit dragging area{
+                //handle: 'div',
                 helper: function() {
                     var offset = $(this).offset();
                     $(this).css('position', 'relative');
@@ -254,16 +247,15 @@
                     var curOff = $(adj).offset();
                     $(adj).css('top', offset.top - curOff.top);
                     $(adj).css('left', offset.left - curOff.left);
-
-
                     return adj;
                 },
-                stack: {
-                    group: '.adj',
-                    min: 1000
-                },
+                // stack: {
+                //     group: '.adj',
+                //     min: 1000
+                // },
                 revert: 'invalid',
                 start: function(event, ui) {
+                    console.log("dragging");
                     $("#" + ui.helper.attr("id")).addClass("dragging");
                 },
                 stop: function(event, ui) {
@@ -288,8 +280,8 @@
             });
         }
 
-        $("#dataTable tbody  .adj-holder").droppable( {
-            hoverClass: 'hover',
+        $("#dataTable tbody .adj-holder").droppable( {
+            hoverClass: 'border-success',
             drop: function(event, ui) {
                 var adj = ui.draggable;
                 var oldHolder = adj[0].oldHolder;
@@ -336,18 +328,17 @@
         });
 
         $("#scratch").droppable( {
-            hoverClass: 'hover',
+            accept: '.adj',
+            hoverClass: 'bg-success',
             drop: function(event, ui) {
                 var adj = ui.draggable;
                 var oldHolder = adj[0].oldHolder;
                 moveToUnused(adj);
                 adj.animate({'top': '0', 'left': '0'}, 300);
-                adj.removeClass("conflict");
+                adj.removeClass("btn-danger");
                 updateConflicts($(oldHolder).parent("tr"));
             }
-
-
-        } );
+        });
 
         /* sorting function for adjs */
         $.fn.dataTableExt.afnSortData['adj'] = function ( oSettings, iColumn) {
@@ -364,7 +355,6 @@
         $.fn.dataTableExt.ofnSearch['adj'] = function ( sData ) {
             var jo = $(sData);
             var f = $('span', jo).html();
-
             return f;
         };
 
@@ -433,27 +423,25 @@
         });
 
         dataTable = $("#dataTable").dataTable( {
-            "aoColumns": [
-                { "sWidth": "5%" },
-                { "sWidth": "15%" },
-                { "sWidth": "15%" },
-                { "sWidth": "25%" },
-                { "sWidth": "40%" }
-            ],
-            "bPaginate": false,
-            "bSort": false,
-            "bFilter": false,
             "bAutoWidth": false,
-            "aaSorting": [[0, 'desc']]
+            "aoColumns": [
+                { "sWidth": "2.5%" },
+                { "sWidth": "2.5%" },
+                { "sWidth": "10%" },
+                { "sWidth": "10%" },
+                { "sWidth": "25%" },
+                { "sWidth": "25%" },
+                { "sWidth": "25%" }
+            ],
+            "aaSorting": [[1, 'desc']]
         } );
-
 
         unusedTable = $("#unusedTable").dataTable({
             aoColumns: [
-                { "sWdith": "90%" },
-                { "sWidth": "10%" }
+                { "sWdith": "90%", "sType": "string" },
+                { "sWidth": "10%", "sType": "string" }
             ],
-            bPaginate: false,
+            "aaSorting": [[1, 'desc']],
             bFilter: false
         });
 
@@ -485,88 +473,43 @@
 
     });
 </script>
-<style type="text/css">
-    #statusBar a { margin-left: 10px; }
-    .adj { display: block; background-color: #eee; white-space: nowrap; margin-right: 1em; cursor: move;}
-    .adj.trainee { background-color: #ffb; }
-    .adj:hover {background-color: #fafafa; }
-    .adj.trainee:hover { background-color: #ffe; }
-    .panel-holder .adj { margin: 1px 0;}
-    .adj span.info { margin: 0 5px; color: #44f;  }
 
-    .adj.history-conflict { color: #f80; }
-    .adj.conflict { color: red; }
-
-    #dataTable td.hover { background-color: #ff8; }
-    #scratch {
-        position: fixed;
-        top: 0;
-        right: 0;
-        background-color: #fea;
-        width: 300px;
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-    #statusBar {
-        height: 30px;
-        background-color: #fff;
-    }
-    #scratch.hover { background-color: #ff8; }
-    .hover #unusedTable tbody td { background-color: #ffa; }
-    #main {
-        width: 74%;
-    }
-    @media print {
-        #scratch { display:none; }
-    }
-    #scratch .adj { white-space: none; }
-    #scratch .adj .info { display: none; }
-
-    #unusedTable { width: 100%; }
-
-    .incomplete { border: 1px solid #f84; }
-    #dataTable .history-with-active { color: #f80; }
-    #dataTable .conflict-with-active { color: red; }
-
-    #loading {vertical-align: middle; position: fixed; left: 0; top: 0; width:100%; height:100%;
-        background-image:url("/static/images/80.png"); z-index: 100000; text-align: center;}
-    #loading div {position: absolute; margin-left: 48%; top: 50%; width: 100px; background: #fff; padding: 20px;}
-
-</style>
 {% endblock extra-head %}
 
-{% block extra-style %}
-    @import "/static/css/demo_table.css";
+{% block extra-style %}{% endblock %}
+
+{% block body-class %}edit-adjs{% endblock %}
+
+{% block head-title %}Edit Adjudicators for Round {{ round }}{% endblock %}
+{% block page-title %}Edit Adjudicators for Round {{ round }}{% endblock %}
+
+{% block header %}
+<div id="statusBar" class="btn-group">
+    <a class="btn btn-default" href="#auto" id="auto_allocate">Auto Allocate</a>
+    <a class="btn btn-default" href="" id="save">Save</a>
+    <a class="btn btn-default" href="{% round_url draw %}">Quit</a>
+</div>
+
+<div id="statusBar" class="btn-group">
+    <div class="btn btn-default">Legend:</div>
+    <div class="btn btn-default btn-warning">History Warning</div>
+    <div class="btn btn-default btn-danger">Conflict</div>
+</div>
 {% endblock %}
 
+{% block content %}
 
-{% block body %}
+<div class="row">
 
-<div id="loading">
-    <div>
-    <img src="/static/images/loading.gif">
-    <span>loading...</span>
+<div id="scratch" class="col-md-2">
+    <div class="page-header">
+        <h2>Unused</h2>
     </div>
-</div>
-
-<div id="statusBar">
-    Edit adjudicators for Round {{ round }} |
-    <a href="#auto" id="auto_allocate">Auto Allocate</a>
-    <a href="" id="save">Save</a>
-    <a href="{% round_url draw %}">Quit</a>
-    |
-    <span style="margin-left:10px"> Legend: <a style="color:red;">conflict</a>, <a style="color:#f80;">history</a></span>
-</div>
-
-<div id="scratch">
-    Unused Adjudicators
-    <table id="unusedTable" class="display" cellpadding="0" cellspacing="0">
+    <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Score</th>
-
             </tr>
         </thead>
     <tbody>
@@ -574,18 +517,37 @@
     </table>
 </div>
 
-<div id="main">
-    <table id="dataTable" class="display" cellpadding="0" cellspacing="0">
+<div id="main" class="col-md-10">
+    <table id="dataTable" class="table table-bordered" cellpadding="0" cellspacing="0">
         <thead>
-            <tr><th>Brkt</th><th>Impt</th><th>Affirmative</th><th>Negative</th><th>Chair</th><th>Panel</th><th>Trainee</th></tr>
+            <tr>
+            <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+            <th><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Importance"></span></th>
+            <th>Affirmative</th>
+            <th>Negative</th>
+            <th>Chair</th>
+            <th>Panel</th>
+            <th>Trainee</th></tr>
         </thead>
         <tbody>
         {% for debate in draw %}
-        <tr id="debate_{{ debate.id }}" class="active">
-            <td>{{ debate.bracket }}</td>
-            <td class="importance">{{ debate.importance }}</td>
-            <td id="team_{{ debate.aff_team.id }}" class="team">{{ debate.aff_team.name }}</td>
-            <td id="team_{{ debate.neg_team.id }}" class="team">{{ debate.neg_team.name }}</td>
+        <tr id="debate_{{ debate.id }}" class="debate-active">
+            <td>
+                {{ debate.bracket }}
+            </td>
+            <td class="importance">
+                {% if debate.importance == None %}
+                    .NA
+                {% else %}
+                    {{ debate.importance }}
+                {% endif %}
+            </td>
+            <td id="team_{{ debate.aff_team.id }}" class="team">
+                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
+            </td>
+            <td id="team_{{ debate.neg_team.id }}" class="team">
+                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.name }}</span>
+            </td>
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
             </td>
             <td id="panel_{{ debate.id }}" class="adj-holder panel-holder">
@@ -594,9 +556,9 @@
             </td>
         </tr>
         {% endfor %}
+        </tbody>
     </table>
 </div>
 
-{% endblock body %}
-
-
+</div>
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% load debate_tags %}
+
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        <a class="navbar-brand" href="{% tournament_url public_index %}">{{ tournament }}</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <ul id="nav" class="nav navbar-nav navbar-left">
+                <li><a class="public-feedback-nav" href="{% tournament_url public_team_tab %}">
+                    Team Tab
+                </a></li>
+                <li><a class="public-add-ballot-nav" href="{% tournament_url public_speaker_tab %}">
+                    Speaker Tab
+                </a></li>
+                <li><a class="public-add-feedback-nav" href="{% tournament_url public_replies_tab %}">
+                    Replies Tab
+                </a></li>
+                <li><a class="public-add-feedback-nav" href="{% tournament_url public_motions_tab %}">
+                    Motions Tab
+                </a></li>
+                <li><a class="" href="{% tournament_url public_feedback_tab %}">
+                    Feedback Tab
+                </a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

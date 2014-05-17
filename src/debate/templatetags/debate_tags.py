@@ -14,7 +14,7 @@ version_cache = {}
 
 rx = re.compile(r'^(.*)\.(.*?)$')
 def version(path_string, base_url=settings.MEDIA_URL):
-    
+
     if not hasattr(settings, 'ENABLE_MEDIA_VERSIONING') or not settings.ENABLE_MEDIA_VERSIONING:
         return base_url + path_string
 
@@ -27,8 +27,8 @@ def version(path_string, base_url=settings.MEDIA_URL):
 
         return base_url + rx.sub(r'\1.%d.\2' % mtime, path_string)
     except:
-        return base_url + path_string 
-register.simple_tag(version) 
+        return base_url + path_string
+register.simple_tag(version)
 
 def aff_count(team, round):
     if round is None:
@@ -80,7 +80,7 @@ def round_url(parser, token):
 @register.tag
 def tournament_url(parser, token):
     bits = token.split_contents()
-    
+
     args = tuple([parser.compile_filter(b) for b in bits[2:]])
     return TournamentURLNode(bits[1], args)
 

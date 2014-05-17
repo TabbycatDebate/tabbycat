@@ -1,18 +1,36 @@
-{% extends "monkey/base.html" %}
-
+{% extends "base.html" %}
 {% load debate_tags %}
 
 {% block extra-head %}
 {{ block.super }}
 {% include "adjudicator_feedback_head.html" %}
-
 {% endblock extra-head %}
 
-{% block h1 %}Enter Feedback{% endblock %}
+{% block head-title %}Enter Feedback for Adjudicators{% endblock %}
+{% block page-title %}Enter Feedback for Adjudicators{% endblock %}
+{% block body-class %}monkey-enter-feedback{% endblock %}
+{% block nav %}{% include "monkey/nav.html" %}{% endblock %}{% block footer %}{% include "monkey/footer.html" %}{% endblock %}
 
 {% block content %}
-{% include "adjudicator_feedback_content.html" %}
+
+<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Add</th>
+            <th>Name</th>
+            <th>Institution</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for adj in adjudicators %}
+        <tr id="adj_{{ adj.id }}">
+            <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
+            <td>{{ adj.name }}</td>
+            <td>{{ adj.institution }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock content %}
-
-
-

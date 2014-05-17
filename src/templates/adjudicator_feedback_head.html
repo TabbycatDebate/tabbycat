@@ -15,9 +15,7 @@
 
         var dTable;
         $(document).ready( function() {
-            dTable = $('#dataTable').dataTable({
-                'bPaginate': false
-            });
+            dTable = $('#dataTable').dataTable();
 
             $("#dataTable a.view").each( function() {
                 $(this).click( function() {

@@ -1,37 +1,10 @@
-{% extends "monkey/base.html" %}
-
+{% extends "base.html" %}
 {% load debate_tags %}
 
 {% block extra-head %}
 {{ block.super }}
 
 {% include "enter_results_head.html" %}
-
-<style>
-    h2 { font-size: 140%; }
-    div.sheet {
-        background-color:#F4FEF4;
-    }
-    div.sheet h2 {
-        padding: 15px 20px 0;
-        font-size: 110%;
-    }
-    table.scoresheet {
-        padding-top: 0;
-    }
-
-    #incorrect {
-        background-color: red;
-        color: white;
-    }
-
-    #correct{
-        background-color: green;
-        color: white;
-    }
-
-
-</style>
 {% if debate.result_status == debate.STATUS_DRAFT %}
 <script>
     $(document).ready(function() {
@@ -39,54 +12,56 @@
             $('#resultsForm input').removeAttr('readonly');
             $('#resultsForm select').removeAttr('disabled');
         }
-
         $('#resultsForm input[type="text"]').attr('readonly', 'true');
         $('#resultsForm select').attr('disabled', 'true');
-
         $('#incorrect').click(function() {
             $('#id_result_status').val('{{ debate.STATUS_NONE }}');
             preSubmit();
             $('#resultsForm').submit();
             return false;
         });
-
         $('#correct').click(function() {
             preSubmit();
         });
     });
 
 </script>
-<style>
-    #resultsForm select { color: black; }
-</style>
-
 {% endif %}
-
 {% endblock %}
 
-{% block h1 %}
+{% block head-title %}
 {% if debate.result_status == debate.STATUS_DRAFT %}
-Confirm Results
+Confirm Results for
 {% else %}
-Enter Results
+Enter Results for
 {% endif %}
+{{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>
 {% endblock %}
+{% block body-class %}monkey-enter-result{% endblock %}
 
+{% block nav %}{% include "monkey/nav.html" %}{% endblock %}{% block footer %}{% include "monkey/footer.html" %}{% endblock %}
 {% block content %}
-<h2>{{ debate.matchup }} (Round {{ debate.round }}, {{ debate.venue.name }})</h2>
-<form id="resultsForm" action="." method="POST">
+
+<form id="resultsForm" action="." method="POST" class="form-horizontal">
     {% include "enter_results_content.html" %}
-    <div>
+
+    <div class="row">
+        <h3 class="col-sm-12 page-header lead">Debate Status</h3>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <div class="col-sm-2 col-sm-offset-1">
         {% if debate.result_status == debate.STATUS_NONE or debate.result_status == debate.STATUS_BALLOT_IN %}
-        <input id="id_result_status" type="hidden" name="result_status" value="{{ debate.STATUS_DRAFT }}" />
-        <input class="save" type="submit" value="Save results" tabindex="100" />
+            <input id="id_result_status" type="hidden" name="result_status" value="{{ debate.STATUS_DRAFT }}" />
+            <input class="form-control save" type="submit" value="Save results" tabindex="100" />
         {% endif %}
         {% if debate.result_status == debate.STATUS_DRAFT %}
-        <input id="incorrect" type="button" value="Results incorrect" />
-        <input id="id_result_status" type="hidden" name="result_status" value="{{ debate.STATUS_CONFIRMED }}" />
-        <input id="correct" class="save" type="submit" value="Confirm results" />
-
+            <input id="incorrect" type="button" value="Results incorrect" />
+            <input id="id_result_status" type="hidden" name="result_status" value="{{ debate.STATUS_CONFIRMED }}" />
+            <input id="correct" class="form-control save btn btn-default" type="submit" value="Confirm results" />
         {% endif %}
+            </div>
+        </div>
     </div>
 </form>
 

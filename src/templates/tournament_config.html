@@ -1,28 +1,40 @@
 {% extends "base.html" %}
 
-{% block h1 %}Configuration{% endblock %}
+{% load add_field_css %}
 
+{% block head-title %}Configuration{% endblock %}
+{% block page-title %}Configuration{% endblock %}
+{% block body-class %}config{% endblock %}
 
 {% block content %}
 
-<form id="configForm" action="." method="POST">
+<form id="configForm" action="." method="POST" class="form-horizontal">
     {% if form.errors %}
-    <div class="error">Please correct the errors below</div>
+        <div class="error">Please correct the errors below</div>
+        {{ form.errors }}
     {% endif %}
     {% if updated %}
     <div class="updated">Configuration updated</div>
     {% endif %}
     {% for field in form %}
-    <p>
-        <label class="name">{{ field.label }}:</label>
-        {{ field }}
-        <label class="help">({{ field.help_text }})</label>
+    <div class="form-group">
+        <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">{{ field.label }}</label>
+        <div class="col-sm-2">
+            {{field|addcss:"form-control"}}
+        </div>
+        <div class="col-sm-5">
+            <span class="help-block">({{ field.help_text }})</span>
+        </div>
         {% if field.errors %}
             {{ field.errors }}
         {% endif %}
-    </p>
+    </div>
     {% endfor %}
-    <p><input type="submit" value="Save" /></p>
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-10">
+            <button type="submit" class="btn btn-default ">Save</button>
+        </div>
+    </div>
 </form>
 
 {% endblock content %}

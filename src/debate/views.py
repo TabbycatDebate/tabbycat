@@ -16,17 +16,9 @@ from debate import forms
 from django.forms.models import modelformset_factory
 from django.forms import Textarea
 
-from debate import wordpresslib
 
 from functools import wraps
 import json
-
-def get_wordpress_client():
-    return wordpresslib.WordPressClient(
-        settings.WORDPRESS_URL,
-        settings.WORDPRESS_USER,
-        settings.WORDPRESS_PASSWORD,
-    )
 
 def redirect_round(to, round, **kwargs):
     return redirect(to, tournament_slug=round.tournament.slug,
@@ -68,13 +60,56 @@ def r2r(request, template, extra_context=None):
     return render_to_response(template, context_instance=rc)
 
 
-@login_required
 def index(request):
     tournaments = Tournament.objects.all()
-    if len(tournaments) == 1:
-        return redirect('tournament_home', tournament_slug=tournaments[0].slug)
-    return r2r(request, 'index.html',
-               dict(tournaments=Tournament.objects.all()))
+
+    if request.user.is_authenticated():
+        if len(tournaments) == 1:
+            return redirect('tournament_home', tournament_slug=tournaments[0].slug)
+        else:
+            return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
+    else:
+        if len(tournaments) == 1:
+            return redirect('public_index', tournament_slug=tournaments[0].slug)
+        else:
+            return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
+
+
+@tournament_view
+def public_index(request, t):
+    return r2r(request, 'public/index.html')
+
+@tournament_view
+def public_draw(request, t):
+    return r2r(request, 'public/draw.html')
+
+@tournament_view
+def public_ballot_submit(request, t):
+    return r2r(request, 'public/add_ballot.html')
+
+@tournament_view
+def public_feedback_submit(request, t):
+    return r2r(request, 'public/add_feedback.html')
+
+@tournament_view
+def public_team_tab(request, t):
+    return r2r(request, 'public/team_tab.html')
+
+@tournament_view
+def public_speaker_tab(request, t):
+    return r2r(request, 'public/speaker_tab.html')
+
+@tournament_view
+def public_replies_tab(request, t):
+    return r2r(request, 'public/reply_tab.html')
+
+@tournament_view
+def public_motions_tab(request, t):
+    return r2r(request, 'public/motions_tab.html')
+
+@tournament_view
+def public_feedback_tab(request, t):
+    return r2r(request, 'public/feedback_tab.html')
 
 
 @login_required
@@ -93,7 +128,6 @@ def monkey_home(request, t):
 @admin_required
 @tournament_view
 def tournament_config(request, t):
-
     from debate.config import make_config_form
 
     context = {}
@@ -107,8 +141,55 @@ def tournament_config(request, t):
 
     context['form'] = form
 
-
     return r2r(request, 'tournament_config.html', context)
+
+
+@tournament_view
+def feedback_progress(request, t):
+
+    def calculate_coverage(submitted, total):
+        if total == 0:
+            return False # Don't show these ones
+        elif submitted == 0:
+            return 0
+        else:
+            return int((float(submitted) / float(total)) * 100)
+
+    from debate.models import AdjudicatorFeedback
+    feedback = AdjudicatorFeedback.objects.all()
+    adjudicators = Adjudicator.objects.all()
+    teams = Team.objects.all()
+    current_round = request.tournament.current_round.seq
+
+    for adj in adjudicators:
+        adj.total_ballots = 0
+        adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator = adj)
+        adjudications = DebateAdjudicator.objects.filter(adjudicator = adj)
+
+        for item in adjudications:
+            # Finding out the composition of their panel, tallying owed ballots
+            if item.type == item.TYPE_CHAIR:
+                adj.total_ballots += len(item.debate.adjudicators.trainees)
+                adj.total_ballots += len(item.debate.adjudicators.panel)
+
+            if item.type == item.TYPE_PANEL:
+                # Panelists owe on chairs
+                adj.total_ballots += 1
+
+            if item.type == item.TYPE_TRAINEE:
+                # Trainees owe on chairs
+                adj.total_ballots += 1
+
+        adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
+        adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
+        adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
+
+    for team in teams:
+        team.submitted_ballots = max(feedback.filter(source_team__team = team).count(), 0)
+        team.owed_ballots = max((current_round - team.submitted_ballots), 0)
+        team.coverage = min(calculate_coverage(team.submitted_ballots, current_round), 100)
+
+    return r2r(request, 'wall_of_shame.html', dict(teams=teams, adjudicators=adjudicators))
 
 
 @admin_required
@@ -213,57 +294,16 @@ def checkin_update(request, round, update_method, active_model, active_attr):
 
 
 @admin_required
-@expect_post
 @round_view
-def wordpress_post_draw(request, round):
-
-    client = get_wordpress_client()
-
-    post = wordpresslib.WordPressPost()
-    post.title = 'Draw for Round %d' % round.seq
-    draw = round.get_draw_by_room()
-    post.description = str(render_to_string('wp_draw.html', {'round': round,
-                                                             'draw': draw}))
-
-    post.categories = (settings.WORDPRESS_DRAW_CATEGORY_ID,)
-
-    post_id = client.newPost(post, False)
-
-    return redirect_round('draw', round)
-
-@admin_required
-@expect_post
-@round_view
-def wordpress_post_standings(request, round):
-    from debate.models import TeamScore
-
-    teams = Team.objects.standings(round).order_by('-points', 'name')
-
-    client = get_wordpress_client()
-
-    post = wordpresslib.WordPressPost()
-    post.title = 'Standings after Round %d' % round.seq
-    post.description = str(render_to_string('wp_standings.html', {'teams':
-                                                                  teams},))
-
-    post.categories = (settings.WORDPRESS_DRAW_CATEGORY_ID,)
-
-    post_id = client.newPost(post, False)
-
-    return redirect_round('draw', round)
-
-
-@admin_required
-@round_view
-def draw_display(request, round):
-    draw = round.get_draw_by_room()
-    return r2r(request, "draw_display.html", dict(draw=draw))
+def draw_display_by_venue(request, round):
+    draw = round.get_draw()
+    return r2r(request, "draw_display_by_venue.html", dict(draw=draw))
 
 @admin_required
 @round_view
 def draw_display_by_team(request, round):
-    draw_by_team = round.get_draw_by_team()
-    return r2r(request, "draw_display_by_team.html", dict(draw=draw_by_team))
+    draw = round.get_draw()
+    return r2r(request, "draw_display_by_team.html", dict(draw=draw))
 
 @round_view
 def progress(request, round):
@@ -370,7 +410,16 @@ def update_debate_importance(request, round):
 @admin_required
 @round_view
 def motions(request, round):
-    motions = Motion.objects.statistics(round=round)
+    motions = [];
+
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                  seq__lte=round.seq).order_by('seq')
+
+    for r in rounds:
+        r_motions = Motion.objects.statistics(round=r)
+        for m in r_motions:
+            motions.append(m)
+
     return r2r(request, "motions.html", dict(motions=motions))
 
 @admin_required
@@ -740,7 +789,6 @@ def get_adj_feedback(request, t):
 def enter_feedback(request, t, adjudicator_id):
 
     adj = get_object_or_404(Adjudicator, id=adjudicator_id)
-
 
     if not request.user.is_superuser:
         template = 'monkey/enter_feedback.html'

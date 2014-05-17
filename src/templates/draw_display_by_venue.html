@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block extra-head %}
+    <script type="text/javascript">
+        $(document).ready( function() {
+            var table = $('#draw').dataTable({
+                'bPaginate': false,
+                "aaSorting": [[ 0, "asc" ]],
+                "aoColumns": [
+                      { "sType": "string" },
+                      { "sType": "html" },
+                      { "sType": "string" },
+                      { "sType": "html" },
+                      { "sType": "string" },
+                      { "sType": "string" }
+                    ]
+            });
+            new $.fn.dataTable.FixedHeader( table );
+
+        });
+    </script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/scroller.js' %}"></script>
+
+{% endblock extra-head %}
+
+{% block body-class %}draw-public-display{% endblock %}
+
+{% block head-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}
+{% block page-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}{% block header %}
+<div class="btn-group">
+    <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
+    <a class="btn btn-default" href="" id="scroll_draw2">Scroll Medium</a>
+    <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <table id="draw" class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+                <th>aff</th>
+                <th>Affirmative</th>
+                <th>neg</th>
+                <th>Negative</th>
+                <th>Adjudicators</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for debate in draw %}
+        <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+            <td class="venue-name">
+                {{ debate.venue_splitname }}
+            </td>
+            <td class="team-emoji team-{{ debate.aff_team.id }}"></td>
+            <td class="team-name">
+                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
+            </td>
+            <td class="team-emoji team-{{ debate.neg_team.id }}"></td>
+            <td title="{{ debate.neg_team.speakers|join:', ' }}"  class="team-name">
+                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.name }}</span>
+            </td>
+            <td class="adj-names">
+                <ul class="">
+                {% for item in debate.adjudicator_names_list %}
+
+                    {% if "Ⓒ" in item %}
+                        <li class=""><span class="adj-chair">{{ item }}</span>,</li>
+                    {% elif "Ⓣ" in item %}
+                        <li class=""><span class="adj-trainee">{{ item }}</span>,</li>
+                    {% else %}
+                        <li class=""><span class="adj-normal">{{ item }}</span>,</li>
+                    {% endif %}
+
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}

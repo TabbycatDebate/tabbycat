@@ -1,40 +1,39 @@
 {% extends "draw_rbase.html" %}
-
+{% load static %}
 {% load debate_tags %}
 
 {% block extra-head %}
     {{ block.super }}
-    <script type="text/javascript" charset="utf-8">
-
-        $(document).ready( function() {
-            $("#dataTable").dataTable( {
-                "bPaginate": false
+       <script type="text/javascript" charset="utf-8">
+            $(document).ready( function() {
+                var table = $("#dataTable").dataTable({
+                    "aaSorting": [[ 0, "asc" ]],
+                });
+                new $.fn.dataTable.FixedHeader( table );
             } );
-
-        } );
-
-
-    </script>
+        </script>
+        <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
 {% endblock extra-head %}
 
-{% block extra-style %}
-    @import "/static/css/demo_table.css";
-{% endblock %}
+{% block extra-style %}{% endblock %}
 
-{% block h1 %} Team Standings after Round {{ round }}{% endblock %}
+{% block head-title %}Team Standings <small>after Round {{ round }}</small>{% endblock %}
+{% block page-title %}Team Standings after Round {{ round }{% endblock %}
+{% block body-class %}team-standings{% endblock %}
 
 {% block content %}
 
-
-<table id="dataTable" class="display" cellspacing="0" cellpadding="0">
+<table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
-        <tr><th>Rank</th><th>Team</th>
+        <tr>
+            <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
+            <th>e</th>
+            <th>Team</th>
             {% for round in rounds %}
-            <th>{{ round }}</th>
-            <th>Score{{ round }}</th>
+            <th>Round {{ round }}</th>
             {% endfor %}
+            <th>Total</th>
             <th>Wins</th>
-            <th>Total Score</th>
             <th>Affs</th>
         </tr>
     </thead>
@@ -43,13 +42,21 @@
     <tr class="
         {% if not team.results_in %}inactive{% endif%}">
         <td>{{ team.rank }}</td>
-        <td><a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</a></td>
+        <td class="team-emoji team-{{ team.id }}"></td>
+        <td>
+            <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</span>
+        </td>
         {% for score in team.scores %}
-        <td>{{ score.1|yesno:"win,loss" }}</td>
-        <td>{{ score.0|stringformat:".2f" }}</td>
+        <td>
+        {% if score.1 == 1 %}
+            <span class="glyphicon glyphicon-arrow-up text-success"></span> {{ score.0|stringformat:".2f" }}
+        {% else %}
+            <span class="glyphicon glyphicon-arrow-down text-danger"></span> {{ score.0|stringformat:".2f" }}
+        {% endif %}
+        </td>
         {% endfor %}
-        <td>{{ team.points }}</td>
         <td>{{ team.speaker_score|stringformat:".2f" }}</td>
+        <td>{{ team.points }}</td>
         <td>{% aff_count team round %}</td>
     </tr>
     {% endfor %}

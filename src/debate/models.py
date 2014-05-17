@@ -1,3 +1,4 @@
+import re
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -504,8 +505,7 @@ class Round(models.Model):
 
     def get_draw(self):
         # -bracket is included for ateneo data, which doesn't have room_rank
-        return self.debate_set.order_by('room_rank',
-                                                          '-bracket')
+        return self.debate_set.order_by('room_rank', '-bracket')
 
     def get_draw_by_room(self):
         return self.debate_set.order_by('venue__name')
@@ -808,14 +808,29 @@ class Debate(models.Model):
         alloc = self.adjudicators
 
         if alloc.panel:
-            l = [alloc.chair.name + " (c)"]
+            l = [alloc.chair.name + " " + u"\u24B8"]
             l.extend(p.name for p in sorted(alloc.panel, key=lambda p: p.name))
         else:
             l = [alloc.chair.name]
 
-        l.extend("%s (t)" % t.name for t in sorted(alloc.trainees, key=lambda t: t.name))
+        l.extend(u"%s \u24C9" % t.name for t in sorted(alloc.trainees, key=lambda t: t.name))
 
         return l
+
+    @property
+    def venue_splitname(self):
+        # Formatting venue names so they can split over multiple lines
+        match = re.match(r"([a-z]+)([0-9]+)", str(self.venue), re.I)
+        if match:
+            items = match.groups()
+            if len(items[1]) > 3:
+                alloc = u'%s %s %s' % (items[0], items[1][:3], items[1][3:])
+            else:
+                alloc = u'%s %s' % (items[0], items[1])
+        else:
+            alloc = self.venue
+
+        return alloc
 
     @property
     def adjudicators_display(self):
@@ -892,6 +907,7 @@ class DebateAdjudicator(models.Model):
 
     def __unicode__(self):
         return u'%s %s' % (self.adjudicator, self.debate)
+
 
 class AdjudicatorFeedback(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
@@ -1038,7 +1054,9 @@ class MotionManager(models.Manager):
         for motion in motions:
             debates = Debate.objects.filter(motion=motion)
             motion.aff_wins = sum(debate.result.aff_win for debate in debates)
+            motion.aff_wins_percent = int((float(motion.aff_wins) / float(motion.chosen_in)) * 100)
             motion.neg_wins = sum(debate.result.neg_win for debate in debates)
+            motion.neg_wins_percent = int((float(motion.neg_wins) / float(motion.chosen_in)) * 100)
 
         return motions
 

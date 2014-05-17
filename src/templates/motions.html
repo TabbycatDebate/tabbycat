@@ -1,4 +1,4 @@
-{% extends "draw_rbase.html" %}
+{% extends "draw_base.html" %}
 
 {% load debate_tags %}
 
@@ -6,37 +6,53 @@
     <script type="text/javascript" charset="utf-8">
 
         $(document).ready( function() {
-            $("#dataTable").dataTable( {
-                "bPaginate": false,
-                "aaSorting": [[0, 'desc']]
-            } );
+            var table = $("#dataTable").dataTable( {
+                "aaSorting": [[0, 'desc']],
+                "sDom":
+                "<'row'<'col-md-12'l>r>"+ // f = the filter
+                "t"+
+                "<'row'<'form'><'col-xs-6'p>>"
+            });
+            new $.fn.dataTable.FixedHeader( table );
 
         } );
 
     </script>
 {% endblock extra-head %}
 
-{% block extra-style %}
-    @import "/static/css/demo_table.css";
+{% block body-class %}display-motions{% endblock %}
+
+{% block head-title %}Motions{% endblock %}
+{% block page-title %}Motions{% endblock %}
+
+{% block header %}
+<a href="{% round_url motions_edit %}" class="btn btn-default col-sm-offset-1">
+    Edit motions for Round {{ round }}
+</a>
 {% endblock %}
 
-{% block h1 %} Motions for Round {{ round }}{% endblock %}
-
 {% block content %}
-<a href="{% round_url motions_edit %}">Edit motions</a>.
 
-<table id="dataTable" class="display" cellpadding="0" cellspacing="0">
+<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
-        <tr><th>Reference</th><th>Motion</th><th>Chosen in</th><th>Affs won</th><th>Negs won</th></tr>
+    <tr>
+        <th>Round</th>
+        <th>Reference</th>
+        <th>Motion</th>
+        <th>Chosen in</th>
+        <th>Affs won%</th>
+        <th>Negs won%</th>
+    </tr>
     </thead>
     <tbody>
     {% for motion in motions %}
     <tr>
+        <td>{{ motion.round }}</td>
         <td>{{ motion.reference }}</td>
         <td>{{ motion.text }}</td>
         <td>{{ motion.chosen_in }}</td>
-        <td>{{ motion.aff_wins }}</td>
-        <td>{{ motion.neg_wins }}</td>
+        <td>{{ motion.aff_wins_percent }}</td>
+        <td>{{ motion.neg_wins_percent }}</td>
     </tr>
     {% endfor %}
 </table>

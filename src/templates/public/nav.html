@@ -1,0 +1,41 @@
+{% load debate_tags %}
+
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        <a class="navbar-brand" href="{% tournament_url public_index %}">{{ tournament }}</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <ul id="nav" class="nav navbar-nav navbar-left">
+                <li><a class="public-draw-nav" href="{% tournament_url public_draw %}">
+                    Draw for Round {{ current_round }}
+                </a></li>
+                <li><a class="public-feedback-nav" href="{% tournament_url feedback_progress %}">
+                    Feedback Progress
+                </a></li>
+                <li><a class="public-add-ballot-nav" href="{% tournament_url public_ballot_submit %}">
+                    Submit Ballot
+                </a></li>
+                <li><a class="public-add-feedback-nav" href="{% tournament_url public_feedback_submit %}">
+                    Submit Feedback
+                </a></li>
+                <li><a class="public-add-feedback-nav" href="{% tournament_url public_feedback_submit %}">
+                    Submit Feedback
+                </a></li>
+                <li><a class="" href="{% tournament_url public_team_tab %}">
+                    The Tab
+                </a></li>
+            </ul>
+            <ul id="nav" class="nav navbar-nav navbar-right">
+                <li id="nav-logout"><a href="/accounts/login/">Log in</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

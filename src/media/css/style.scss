@@ -1,0 +1,294 @@
+// Core variables and mixins
+@import "../bootstrap/stylesheets/bootstrap/variables";
+@import "../bootstrap/stylesheets/bootstrap/mixins";
+@import "../bootstrap/stylesheets/bootstrap/type";
+@import "../bootstrap/stylesheets/bootstrap/forms";
+//@import "datatables/dataTables.bootstrap.css";
+
+@include text-emphasis-variant('.text-success', $brand-success);
+
+@include text-emphasis-variant('.text-info', $brand-info);
+
+@include text-emphasis-variant('.text-warning', $brand-warning);
+
+@include text-emphasis-variant('.text-danger', $brand-danger);
+
+#header-options {
+    min-height: 30px; // Spacer for mobile rendering (pre form relocation)
+}
+#footer {
+    margin-top: 40px;
+    .navbar {
+        margin-bottom: 0;
+    }
+    .navbar-brand {
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+}
+
+// Navigation Highlights
+
+.public-draw a.public-draw-nav,
+.public-feedback a.public-feedback-nav,
+.public-add-ballot a.public-add-ballot-nav,
+.public-add-feedback a.public-add-feedback-nav,
+.monkey-enter-result a.monkey-enter-result-nav,
+.monkey-enter-feedback a.monkey-enter-feedback-nav,
+.dash a.dash-nav,
+.draw a.draw-nav,
+.results a.results-nav,
+.team-standings a.team-standings-nav,
+.speaker-standings a.speaker-standings-nav,
+.adj-feedback a.adj-feedback-nav,
+.config a.config-nav {
+    font-weight: bold;
+}
+
+// Universal Style overrides
+
+.page-header h1 {
+    margin-top: 0; // fixes button alignment easily
+}
+[data-toggle="tooltip"] {
+    cursor: pointer // for tooltips
+}
+
+// Forms
+
+input.error, select.error, .error input {
+    border-color: $state-danger-text;
+    color: $state-danger-text;
+    background: $state-danger-bg;
+}
+.errorlist {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.error, .errorlist li {
+    border-color: $state-danger-text;
+    color: $state-danger-text;
+}
+.form-control-parent input {
+    @extend .form-control;
+}
+
+// Tables
+
+table.dataTable {
+    margin-top: 0px !important; // for the fixed header
+    thead {
+        background-color: #FFF; // hovering opacity
+
+        .sorting {
+            background: url('../images/sort_both.png') no-repeat center right;
+        }
+        .sorting_asc {
+            background: url('../images/sort_asc.png') no-repeat center right;
+            color: #000;
+        }
+        .sorting_desc {
+            background: url('../images/sort_desc.png') no-repeat center right;
+            color: #000;
+        }
+        .sorting_asc_disabled {
+            background: url('../images/sort_asc_disabled.png') no-repeat center right;
+        }
+        .sorting_desc_disabled {
+            background: url('../images/sort_desc_disabled.png') no-repeat center right;
+        }
+        .sorting,
+        .sorting_asc,
+        .sorting_desc,
+        .sorting_asc_disabled,
+        .sorting_desc_disabled {
+            cursor: pointer;
+        }
+    }
+    thead > tr > td, thead > tr > th  {
+        // fix for header and icons
+        min-width: 40px; // minimum widths so icons are jammed
+        padding-right: 4px;
+        padding-left: 8px;
+    }
+    th:active {
+        outline: none;
+    }
+
+    .adj-chair {
+        text-decoration: underline;
+    }
+    .adj-trainee {
+        font-style: italic;
+    }
+    .team-emoji {
+        img {
+            width: 28px;
+            height: 28px;
+        }
+        text-align: center;
+        padding: 4px 0 4px 0;
+
+    }
+}
+.modal-lg {
+    width: 90%;
+}
+
+
+// Draw displays
+
+#draw.dataTable {
+    td {
+        font-family: $headings-font-family;
+        font-weight: $headings-font-weight;
+        line-height: 1.4; // controls the spacing
+        color: $headings-color;
+        font-size: $font-size-h3;
+        padding-bottom: 0; // fix for uneven spacing
+        //padding-top: 0; // fix for uneven spacing
+    }
+    .adj-names {
+        ul {
+            padding-left: 0px;
+            margin-left: 0;
+            list-style-type: none;
+        }
+    }
+}
+
+// Editing the Draw
+
+.edit-venues, .edit-adjs {
+
+    .btn-default.text-left {
+        padding-left: 6px;
+    }
+    #scratch {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+
+        .info {
+            display: none; // hide adj score inside the button - is in table
+        }
+    }
+    .venue, .adj {
+        max-width: 300px;
+    }
+    .venue-holder, .adj-holder {
+        padding: 4px;
+        border: 2px solid #ddd;
+    }
+    .venue:hover, .adj:hover {
+        cursor: move;
+    }
+    .border-success {
+        border: 2px solid $btn-success-border;
+    }
+    .adj.trainee {
+        background-color: #ffb;
+    }
+    .adj.trainee:hover {
+        background-color: #ffe;
+    }
+    .adj.history-conflict {
+        color: #f80;
+    }
+    .adj.conflict {
+        color: red;
+    }
+
+}
+
+// to sort
+
+.edit-adjs {
+
+    // .adj { display: block; background-color: #eee; white-space: nowrap; margin-right: 1em; cursor: move;}
+
+    // .adj:hover {background-color: #fafafa; }
+
+    // .panel-holder .adj { margin: 1px 0;}
+    // .adj span.info { margin: 0 5px; color: #44f;  }
+
+    // #scratch {
+    //     position: fixed;
+    //     top: 0;
+    //     right: 0;
+    //     background-color: #fea;
+    //     width: 300px;
+    //     height: 100%;
+    //     overflow-y: auto;
+    //     overflow-x: hidden;
+    // }
+    // .hover #unusedTable tbody td { background-color: #ffa; }
+    // #main {
+    //     width: 74%;
+    // }
+    // @media print {
+    //     #scratch { display:none; }
+    // }
+    // #scratch .adj { white-space: none; }
+    // #scratch .adj .info { display: none; }
+
+    // #unusedTable { width: 100%; }
+
+    // .incomplete { border: 1px solid #f84; }
+    // #dataTable .history-with-active { color: #f80; }
+    // #dataTable .conflict-with-active { color: red; }
+
+    // #loading {vertical-align: middle; position: fixed; left: 0; top: 0; width:100%; height:100%;
+    //     background-image:url("/static/images/80.png"); z-index: 100000; text-align: center;}
+    // #loading div {position: absolute; margin-left: 48%; top: 50%; width: 100px; background: #fff; padding: 20px;}
+
+}
+
+// Ballots
+
+.scoresheet {
+    .score input {
+        width: 60px;
+        float: left;
+        margin-right: 10px
+    }
+    .aff_total, .neg_total {
+        width: 60px;
+        font-weight: bold;
+        cursor: default;
+    }
+}
+
+// To sort from the old debate.css
+
+#jsWarn {
+    font-weight: bold;
+    background-color: #f00;
+    color: #ff0;
+    padding: 5px;
+}
+
+p.warning { color: red; font-weight: bold; }
+
+.ballot-checkin-form .message {
+    padding: 10px 10px;
+    font-weight: bold;
+    background-color: #fc9;
+    color: #804000;
+}
+.ballot-checkin-form #success { padding: 10px 10px; }
+.ballot-checkin-form .success { background-color: #cfc; color: #008000; }
+
+
+#incorrect {
+    background-color: red;
+    color: white;
+}
+#correct{
+    background-color: green;
+    color: white;
+}
+
+

@@ -1,47 +1,43 @@
-{% extends "monkey/base.html" %}
-
+{% extends "base.html" %}
 {% load debate_tags %}
 
 {% block extra-head %}
-    {{ block.super }}
-    <script type="text/javascript" charset="utf-8">
-
-        $(document).ready( function() {
-            $("#dataTable").dataTable( {
-                "bPaginate": false,
-                "aaSorting": [[0, 'asc']]
-            } );
-
-        } );
-
-    </script>
+{{ block.super }}
+<script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+        var table = $("#dataTable").dataTable( {
+            "aaSorting": [[ 1, "asc" ]],
+        });
+        new $.fn.dataTable.FixedHeader( table );
+    } );
+</script>
 {% endblock extra-head %}
 
-{% block extra-style %}
-    @import "/static/css/demo_table.css";
-{% endblock %}
+{% block head-title %}Enter Results for Round {{ current_round }}{% endblock %}
+{% block page-title %}Enter Results for Round {{ current_round }}{% endblock %}
+{% block body-class %}monkey-enter-result{% endblock %}
 
+{% block nav %}{% include "monkey/nav.html" %}{% endblock %}{% block footer %}{% include "monkey/footer.html" %}{% endblock %}
 
 {% block content %}
-<table id="dataTable" class="display" cellpadding="0" cellspacing="0">
+
+<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
-        <tr><th>Venue</th><th>Affirmative</th><th>Negative</th><th>Adjudicators</th><th>Results</th></tr>
+        <tr>
+            <th>Results</th>
+            <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+            <th>Affirmative</th>
+            <th>Negative</th>
+            <th>Adjudicators</th>
+        </tr>
     </thead>
     <tbody>
-    {% for debate in draw %}
-    <tr class="
-    {% ifequal debate.result_status "N" %}inactive {% endifequal %}
-    {% ifequal debate.result_status "B" %}inactive {% endifequal %}
-    {% ifequal debate.result_status "C" %}active{% endifequal %}
-    ">
-        <td>{{ debate.venue.name }}</td>
-        <td>
-            <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a>
-        </td>
-        <td>
-            <a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a>
-        </td>
-        <td>{{ debate.adjudicators_display }}</td>
+        {% for debate in draw %}
+        <tr class="
+        {% ifequal debate.result_status "N" %}inactive {% endifequal %}
+        {% ifequal debate.result_status "B" %}inactive {% endifequal %}
+        {% ifequal debate.result_status "C" %}active{% endifequal %}
+        ">
         <td>
             <a href="{% tournament_url enter_result debate.id %}">
             {% if debate.result_status == "B" or debate.result_status == "N" %}Enter results {% endif %}
@@ -49,6 +45,14 @@
             {% ifequal debate.result_status "C" %}Confirmed{% endifequal %}
             </a>
         </td>
+        <td>{{ debate.venue.name }}</td>
+        <td>
+            <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}<span>
+        </td>
+        <td>
+            <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</span>
+        </td>
+        <td>{{ debate.adjudicators_display }}</td>
     </tr>
     {% endfor %}
 </table>

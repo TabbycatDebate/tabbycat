@@ -11,7 +11,7 @@
 
         $('#venue').keyup(function(e) {
             if (e.keyCode != 13) return;
-            $('#success').removeClass('success error').html("Retrieving info...");
+            $('#success').removeClass('alert-success alert-error').html("Retrieving info...");
             var val = $('#venue').val();
             if (val == '') {
                 $('#debate_details').hide();
@@ -48,7 +48,7 @@
                     // If not, show the error message.
                     } else {
                         $('#debate_details').hide();
-                        $('#success').html(data.message).addClass('error').show();
+                        $('#success').html(data.message).addClass('alert-error').show();
                     }
                     $('#ballots_left').text(data.ballots_left);
                 },
@@ -56,14 +56,14 @@
                     // Show an error message.
                     $('#debate_details').hide();
                     $('#success').html("There was an error retrieving information about that debate.")
-                        .addClass('error').show();
+                        .addClass('alert-error').show();
                 }
             });
             return false;
         });
 
         $('#checkin_btn').click(function() {
-            $('#success').removeClass('success error').html("Checking in...");
+            $('#success').removeClass('alert-success alert-error').html("Checking in...");
             $('#debate_details').hide();
             var val = $('#venue_confirm').text();
             $.ajax( {
@@ -75,18 +75,18 @@
                     if (data.success) {
                         $('#success').html("Thanks! Checked in the ballot for "
                             + data.debate_description + " (" + data.venue + ").")
-                            .addClass('success').show();
+                            .addClass('alert-success').show();
                         $('#venue').val('').focus();
                     } else {
                         $('#success').html("There was an error checking that ballot in.")
-                            .addClass('error').show();
+                            .addClass('alert-error').show();
                     }
                     $('#ballots_left').text(data.ballots_left);
                 },
                 error: function(xhr, error, ex) {
                     // Show an error message.
                     $('#success').html("There was an error checking that ballot in.")
-                        .addClass('error').show();
+                        .addClass('alert-error').show();
                 }
             });
             return false;
@@ -96,46 +96,67 @@
 
 {% endblock extra-head %}
 
-{% block h1 %} Ballot check-in for Round {{ round }}{% endblock %}
+{% block head-title %} Ballot check-in for Round {{ round }}{% endblock %}
+{% block page-title %} Ballot check-in for Round {{ round }}{% endblock %}
+
+{% block header %}
+<div class="btn-group">
+    <button class="btn btn-default btn-danger"><span class="label none"><span id="ballots_left" class="detail">{{ ballots_left }}</span>  Ballots Left <span class="glyphicon glyphicon-remove"></span></span></button>
+</div>
+{% endblock %}
 
 {% block content %}
 <!-- Surround with a form so that we can press 'Enter' on the venue field to submit. -->
-<div class="ballot-checkin-form">
-        <p class="ballots-left">
-            Ballots left: <span id="ballots_left" class="detail">{{ ballots_left }}</span>
-        </p>
+<div class="ballot-checkin-form form-horizontal">
 
-        <div>
-            <label for="venue">Venue</label>
-            <input id="venue" type="text" name="venue" />
+    <div class="form-group">
+        <label for="venue" class="col-sm-1 control-label">Venue</label>
+        <div class="col-sm-6">
+            <input id="venue" class="form-control" type="text" name="venue" placeholder="Type the Ballot's venue, hit enter" />
+        </div>
+    </div>
+
+    <div class="debate-details" id="debate_details">
+        <div class="form-group">
+            <p id="message" class="form-control-static h4 col-sm-offset-1">Please check all these details before you check the ballot in.</p>
         </div>
 
-        <div class="debate-details" id="debate_details">
-            <p id="message" class="message">Please check all these details before you check the ballot in.</p>
-
-            <table class="debate-teams">
-                <tr>
-                    <td>Venue</td>
-                    <td id="venue_confirm" class="detail"></td>
-                </tr>
-                <tr>
-                    <td>Affirmative</td>
-                    <td id="aff_team" class="detail"></td>
-                </tr>
-                <tr>
-                    <td>Negative</td>
-                    <td id="neg_team" class="detail"></td>
-                </tr>
-            </table>
-
-            <p>There should be <span id="num_ballots"></span>, <span id="ballot_from"></span></p>
-
-            <table class="adjudicators-list-wrapper"><tr><td>
-                <ul id="adjudicators"></ul>
-            </td></tr></table>
-            <button id="checkin_btn">Check this ballot in</button>
+        <div class="form-group">
+            <label class="col-sm-1 control-label">Venue</label>
+            <div class="col-sm-6">
+              <p id="venue_confirm" class="form-control-static detail"></p>
+            </div>
         </div>
-        <p id="success"></p>
+
+        <div class="form-group">
+            <label class="col-sm-1 control-label">Affirmative</label>
+            <div class="col-sm-6">
+              <p id="aff_team" class="form-control-static detail"></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-1 control-label">Affirmative</label>
+            <div class="col-sm-6">
+              <p id="neg_team" class="form-control-static detail"></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <p class="form-control-static h4 col-sm-offset-1">There should be <span id="num_ballots"></span>, <span id="ballot_from"></span></p>
+            <ul class="col-sm-offset-1" id="adjudicators"></ul>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-10">
+                <button id="checkin_btn" class="btn btn-default">Check this ballot in</button>
+            </div>
+        </div>
+
+    </div>
+
+    <p id="success" class="alert fade in alert-dismissable col-sm-offset-1 col-sm-6" data-dismiss="alert"></p>
+
 </div>
 
 {% endblock content %}

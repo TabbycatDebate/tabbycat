@@ -8,44 +8,33 @@
         $(document).ready( function() {
             $("#allocateAdj").click( function() {
                 $("#allocateAdjForm").submit();
-
                 return false;
             } );
-
-            $("#dataTable").dataTable( {
-                "bPaginate": false,
-                "aaSorting": [[0, 'desc']]
-            } );
-
-            $('#wpPostLink').click( function() {
-                $('#wpPostForm').submit();
-            } );
-            $('#wpPostStandLink').click( function() {
-                $('#wpPostStandForm').submit();
-            } );
+            var table = $('#dataTable').dataTable({
+                'bPaginate': false,
+                "aaSorting": [[ 0, "desc" ]],
+            });
+            new $.fn.dataTable.FixedHeader( table );
 
         } );
 
     </script>
 {% endblock extra-head %}
 
-{% block extra-style %}
-    @import "/static/css/demo_table.css";
+{% block head-title %}Draw for Round {{ round }} <small>(Debates Confirmed)</small>{% endblock %}
+{% block page-title %}Draw for Round {{ round }} (Debates Confirmed){% endblock %}
+{% block body-class %}draw{% endblock %}
+
+{% block header %}
+<div class="btn-group">
+    <a class="btn btn-default" href="{% round_url draw_venues_edit %}">Edit venues</a>
+    <a class="btn btn-default" href="{% round_url draw_adjudicators_edit %}">Edit adjs</a>
+    <a class="btn btn-default" href="{% round_url draw_display_by_venue %}">Display by venue</a>
+    <a class="btn btn-default" href="{% round_url draw_display_by_team %}">Display by team</a>
+</div>
 {% endblock %}
 
-{% block h1 %} Draw for Round {{ round }} (Debates Confirmed){% endblock %}
-
 {% block content %}
-
-<p>
-Here's the confirmed draw.
-<a href="{% round_url draw_venues_edit %}">Edit venues</a>.
-<a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
-<a href="{% round_url draw_display_by_venue %}">Draw for display sorted by venue</a>.
-<a href="{% round_url draw_display_by_team %}">Draw for display sorted by team</a>.
-{#<a id="wpPostLink" href="#">Post draw to website</a>#}
-{#<a id="wpPostStandLink" href="#">Post Standings to Website</a>#}
-</p>
 
 {% if round.adjudicators_allocation_validity == 1 %}
 <table class="warningbox"><tr><td>
@@ -57,18 +46,20 @@ Here's the confirmed draw.
 </td></tr></table>
 {% endif %}
 
-<form id="wpPostForm" method="POST" action="{% round_url wordpress_post_draw %}">
-</form>
-
-<form id="wpPostStandForm" method="POST" action="{% round_url wordpress_post_standings %}">
-</form>
 
 <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}">
 </form>
 
-<table id="dataTable" class="display" cellpadding="0" cellspacing="0">
+<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
-        <tr><th>Bracket</th><th>Venue</th><th>Affirmative</th><th>Negative</th><th>Adjudicators</th><th>Conflict</th></tr>
+        <tr>
+        <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+        <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+        <th>Affirmative</th>
+        <th>Negative</th>
+        <th>Adjudicators</th>
+        <th>Conflict</th>
+        </tr>
     </thead>
     <tbody>
     {% for debate in draw %}
@@ -76,8 +67,11 @@ Here's the confirmed draw.
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td title="{% aff_count debate.aff_team round.prev %}">
-            <a href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</a></td>
-        <td title="{% neg_count debate.neg_team round.prev %}"><a href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</a></td>
+            <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</span>
+        </td>
+        <td title="{% neg_count debate.neg_team round.prev %}">
+            <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</span>
+        </td>
         <td>{{ debate.adjudicators_display }}</td>
         <td>{{ debate.all_conflicts|join:", " }}</td>
     </tr>

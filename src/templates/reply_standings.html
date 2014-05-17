@@ -6,25 +6,20 @@
     <script type="text/javascript" charset="utf-8">
 
         $(document).ready( function() {
-            $("#dataTable").dataTable( {
-                "bPaginate": false
-            } );
+            var table = $("#dataTable").dataTable();
+            new $.fn.dataTable.FixedHeader( table );
 
         } );
 
     </script>
 {% endblock extra-head %}
 
-{% block extra-style %}
-    @import "/static/css/demo_table.css";
-{% endblock %}
-
-{% block h1 %} Reply Standings after Round {{ round }}{% endblock %}
+{% block head-title %}Reply Standings after Round {{ round }}{% endblock %}
+{% block page-title %}Reply Standings after Round {{ round }}{% endblock %}
 
 {% block content %}
 
-
-<table id="dataTable" class="display" cellspacing="0" cellpadding="0">
+<table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
         <tr><th>Rank</th><th>Name</th><th>Team</th>
             {% for round in rounds %}
