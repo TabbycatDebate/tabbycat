@@ -12,11 +12,19 @@ MEDIA_ROOT          = os.path.join(PROJECT_PATH, 'media')
 SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # ===================
+# = Overwritten in Local =
+# ===================
+
+ADMINS              = ('Test', 'test@test.com')
+MANAGERS            = ADMINS
+DEBUG               = True
+TEMPLATE_DEBUG      = DEBUG
+DEBUG_ASSETS        = DEBUG
+
+# ===================
 # = Global Settings =
 # ===================
 
-DEBUG               = True
-TEMPLATE_DEBUG      = DEBUG
 ADMIN_MEDIA_PREFIX  = '/media/'
 MEDIA_URL           = '/media/'
 STATIC_URL          = '/static/'
