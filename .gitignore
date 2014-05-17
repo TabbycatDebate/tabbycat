@@ -1,3 +1,6 @@
+local_settings.py
+staticfiles/
+
 env/
 venv
 *.pyc
@@ -40,4 +43,3 @@ nosetests.xml
 *.log
 *.pot
 *.pyc
-local_settings.py

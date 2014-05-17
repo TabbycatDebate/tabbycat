@@ -1,0 +1,47 @@
+{% load debate_tags %}
+
+    <script type="text/javascript" charset="utf-8">
+        function intId(elem) {
+            return parseInt($(elem).attr("id").split('_')[1]);
+        }
+
+        function details(nTr) {
+            var s = '<table id="feedback_' + intId(nTr) + '" cellpadding="0" cellspacing="0" class="display"><thead>';
+            s += '<tr><th>Rnd</th><th>Brkt</th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>';
+            s += '</thead><tbody></tbody></table>';
+
+            return s;
+        }
+
+        var dTable;
+        $(document).ready( function() {
+            dTable = $('#dataTable').dataTable();
+
+            $("#dataTable a.view").each( function() {
+                $(this).click( function() {
+                    var nTr = this.parentNode.parentNode;
+
+                    if ($(this).html().match('View')) {
+                        dTable.fnOpen(nTr, details(nTr), 'details');
+
+                        var feedTable = $("#feedback_" + intId(nTr)).dataTable( {
+                            'bProcessing': true,
+                            'sAjaxSource': '{% tournament_url get_adj_feedback %}?id=' + intId(nTr),
+
+                            'bPaginate': false
+                        });
+
+                        $(this).html("Hide Feedback");
+                    } else {
+                        dTable.fnClose(nTr);
+                        $(this).html("View Feedback");
+                    }
+
+                    return false;
+
+                } );
+            } );
+
+
+        } );
+    </script>

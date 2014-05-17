@@ -1,0 +1,95 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block page-title %}{% endblock %}</title>
+
+    <link href="{% static 'bootstrap/stylesheets/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    {% load debate_tags %}
+
+    <script type="text/javascript" language="javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
+
+     <script type="text/javascript">
+        $.extend( true, $.fn.dataTable.defaults, {
+            // Default Data Table options
+            "sDom":
+                "<'row'<'col-md-12'lr"+ // f = the filter
+                "t"+
+                "f<p>>",
+            "bPaginate": false,
+            "oLanguage": {
+                "sSearch": "Search: "
+            }
+        });
+    </script>
+
+    {% block extra-head %}{% endblock extra-head %}
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle=tooltip]').tooltip();
+            // Shifting the search filter around
+            if ($('#dataTable_filter').length <= 1) {
+                var filter = $('#dataTable_filter').detach()
+                $("#header-options").append(filter);
+                var input = $("#dataTable_filter .form-control").detach();
+                filter.text("").append(input).addClass("form-group has-feedback");
+                input.attr("placeholder", "Quick Search");
+                //filter.append('<span class="glyphicon glyphicon-search form-control-feedback"></span>');
+            }
+            $('input.number').attr("type", "number").attr("step", "any");
+
+        });
+    </script>
+
+</head>
+
+<body id="{% block body-id %}{% endblock %}" class="{% block body-class %}{% endblock %}">
+
+    {% block body %}
+
+    {% block nav %}
+    {% include "nav.html" %}
+    {% endblock nav %}
+
+    <div id="container" class="container-fluid">
+
+        <div class="row page-header">
+            <div class="col-md-6">
+                <h1 class="h2">{% block head-title %}{% endblock %}</h1>
+            </div>
+            <div class="col-md-6 form-inline" id="header-options">
+                {% block header %}{% endblock %}
+            </div>
+        </div>
+        {% block content %}{% endblock content %}
+
+    </div>
+
+    {% endblock body %}
+
+    {% block footer %}
+    {% include "footer.html" %}
+    {% endblock footer %}
+
+
+</body>
+</html>

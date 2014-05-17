@@ -8,5 +8,5 @@ source $SITE_ROOT/env/bin/activate
 export PYTHONPATH=$PYTHONPATH:$SITE_ROOT/src/
 export PATH=$SITE_ROOT/bin:$PATH
 
-export DJANGO_SETTINGS_MODULE="australs.settings"
+export DJANGO_SETTINGS_MODULE="settings"
 
