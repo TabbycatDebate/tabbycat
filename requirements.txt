@@ -9,7 +9,6 @@ dj-database-url==0.3.0
 dj-static==0.0.5
 django-debug-toolbar==1.2
 django-emoji==1.2.0
-django-pylibmc-sasl==0.2.4
 django-toolbelt==0.0.1
 ecdsa==0.11
 flup==1.0.3.dev-20110405
