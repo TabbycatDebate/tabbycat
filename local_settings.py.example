@@ -11,7 +11,6 @@ MANAGERS            = ADMINS
 DEBUG               = True
 TEMPLATE_DEBUG      = DEBUG
 DEBUG_ASSETS        = DEBUG
-SECRET_KEY          = ''
 
 # ===========================
 # = Database Settings       =
@@ -20,6 +19,7 @@ SECRET_KEY          = ''
 if 'DATABASE_URL' in os.environ:
     # On Heroku
     import dj_database_url
+    SECRET_KEY = get_env_variable("DJANGO_SECRET_KEY")
     DEBUG = True
     # Parse database configuration from $DATABASE_URL
     DATABASES['default'] =  dj_database_url.config()
@@ -27,6 +27,7 @@ if 'DATABASE_URL' in os.environ:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 else:
     # Local
+    SECRET_KEY = ''
     DATABASES = {
         'default': {
             'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
