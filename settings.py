@@ -9,7 +9,7 @@ STATIC_ROOT         = 'staticfiles'
 STATIC_URL          = '/static/'
 TEMPLATE_DIRS       = os.path.join(PROJECT_PATH, 'templates')
 MEDIA_ROOT          = os.path.join(PROJECT_PATH, 'media')
-SECRET_KEY          = '' #overwritten in local_settings
+SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # ===================
 # = Global Settings =
