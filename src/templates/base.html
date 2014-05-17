@@ -58,15 +58,18 @@
             <h1 class="h2">{% block head-title %}{% endblock %}</h1>
         </div>
         <div class="row">
-            <div class="col-sm-12">
-                {% block header %}{% endblock %}
-            </div>
+            {% block header %}{% endblock %}
         </div>
         {% block content %}{% endblock content %}
 
     </div>
 
     {% endblock body %}
+
+    {% block footer %}
+    {% include "footer.html" %}
+    {% endblock footer %}
+
 
 </body>
 </html>

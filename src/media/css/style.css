@@ -655,6 +655,14 @@ a.text-danger:hover {
 .config a.config-nav {
   font-weight: bold; }
 
+#footer {
+  margin-top: 40px; }
+  #footer .navbar {
+    margin-bottom: 0; }
+  #footer .navbar-brand {
+    font-size: 14px;
+    margin-bottom: 0; }
+
 .page-header h1 {
   margin-top: 0; }
 

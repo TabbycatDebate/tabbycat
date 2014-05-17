@@ -20,6 +20,9 @@
                 <li><a class="speaker-standings-nav" href="{% round_url speaker_standings current_round %}">Speakers</a></li>
                 <li><a class="adj-feedback-nav" href="{% tournament_url adj_feedback %}">Feedback</a></li>
                 <li><a class="adj-feedback-nav" href="{% round_url motions current_round %}">Motions</a></li>
+                <li><a class="config-nav" href="{% tournament_url tournament_config %}">Config</a></li>
+            </ul>
+            <ul id="nav" class="nav navbar-nav navbar-right">
                 {% for r in tournament.rounds.all %}
                 <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ r }}<b class="caret"></b></a>
@@ -40,11 +43,6 @@
                     </ul>
                 </li>
                 {% endfor %}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a class="config-nav" href="{% tournament_url tournament_config %}">Config</a></li>
-                <li><a href="/admin/">Admin</a></li>
-                <li><a href="/accounts/logout/" title="Log out of {{ user }}">Logout</a></li>
             </ul>
         </div>
     </div>

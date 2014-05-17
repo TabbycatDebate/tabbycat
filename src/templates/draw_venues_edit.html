@@ -2,19 +2,17 @@
 
 {% load debate_tags %}
 {% block nav %}{% endblock %}
+{% block footer %}{% endblock %}
 
 {% block extra-head %}
 <script type="text/javascript" language="javascript" src="/static/js/jquery-ui-1.10.4.custom.min.js"></script>
-
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
-
-//         var debates = {};
-//         // populate data
-//         $("#dataTable .venue-holder").each( function() {
-//             debates[$(this).attr("id")] = $("div.venue", this).attr("id");
-//         } );
-
+        var debates = {};
+        // populate data - unclear why this is needed...
+        $("#dataTable .venue-holder").each( function() {
+            debates[$(this).attr("id")] = $("div.venue", this).attr("id");
+        } );
 
 //         // Triggers when a draggable element is placed
 //         function venueMoved(venue, oldDebate, newDebate) {
@@ -28,23 +26,16 @@
 //             }
 //         }
 
-//         // remove the table cells without venues
-//         $("#dataTable div.empty").each( function() {
-//             var holder = $(this).parent("venue-holder");
-//             $(this).remove();
-//             //addPlaceholder(holder); no idea what this function is doing...
-//         } );
-
-//         $(".venue").draggable( {
-//             //handle: 'div',
-//             containment: "document",
-//             cursor: 'move',
-//             //stack: {
-//                 //group: '.venue',
-//                 //min: 1
-//             //},
-//             revert: 'invalid' // revert to initial position if undropped
-//         });
+        $(".venue").draggable( {
+            //handle: 'div',
+            containment: "document",
+            cursor: 'move',
+            //stack: {
+                //group: '.venue',
+                //min: 1
+            //},
+            revert: 'invalid' // revert to initial position if undropped
+        });
 
 //         // Droppable elements are targets for draggable elements
 //         $(".venue-holder").droppable( {
@@ -137,8 +128,16 @@
                 null,
                 { "sSortDataType": "venue" }
             ],
-            "aaSorting": [[0, 'desc']]
+            "aaSorting": [[3, 'asc']]
         });
+
+        // remove the table cells without venues
+        $("#dataTable div.empty").each( function() {
+            var holder = $(this).parent("venue-holder");
+            $(this).remove();
+            //addPlaceholder(holder); NOTE: there's no function for this...?
+        } );
+
     });
 
 </script>
@@ -160,53 +159,49 @@
 
 {% block content %}
 
-<div id="scratch" class="h4">
-    <h3>Unused Venues</h3>
-    {% for venue in round.unused_venues %}
-    <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
-        <span>{{ venue }}</span>
-    </div>
-    {% endfor %}
-</div>
-
-<div id="main">
-
-
-<div class="alert alert-success fade in alert-dismissable hide" id="savedVenues">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  Saved succesfully!
-</div>
-
-
-<div class="alert alert-error fade in alert-dismissable hide" id="savedVenues">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  Failed to save!
-</div>
-
-
-    <table id="dataTable" class="table table-hover table-bordered table-striped h4" cellpadding="0" cellspacing="0">
-        <thead>
-            <tr><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Affirmative</th><th>Negative</th><th>Venue</th></tr>
-        </thead>
-        <tbody>
-        {% for debate in draw %}
-        <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
-            <td>{{ debate.bracket }}</td>
-            <td>
-                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
-            </td>
-            <td>
-                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
-            </td>
-            <td id="debate_{{ debate.id }}" class="venue-holder">
-                <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default text-left
-                    {% if debate.venue %}venue{% else %}empty{% endif %}">
-                    <span class="">{{ debate.venue }}</span>
-                </div>
-            </td>
-        </tr>
+    <div id="scratch" class="h4">
+        <h3>Unused Venues</h3>
+        {% for venue in round.unused_venues %}
+        <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
+            <span>{{ venue }}</span>
+        </div>
         {% endfor %}
-    </table>
-</div>
+    </div>
+
+    <div id="main">
+
+        <div class="alert alert-success fade in alert-dismissable hide" id="savedVenues">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          Saved succesfully!
+        </div>
+
+        <div class="alert alert-error fade in alert-dismissable hide" id="savedVenues">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          Failed to save!
+        </div>
+
+        <table id="dataTable" class="table table-hover table-bordered table-striped h4" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Affirmative</th><th>Negative</th><th>Venue</th></tr>
+            </thead>
+            <tbody>
+            {% for debate in draw %}
+            <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+                <td>{{ debate.bracket }}</td>
+                <td>
+                    <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
+                </td>
+                <td>
+                    <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
+                </td>
+                <td id="debate_{{ debate.id }}" class="venue-holder">
+                    <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default text-left {% if debate.venue %}venue{% else %}empty{% endif %}">
+                        <span class="">{% if debate.venue %}{{ debate.venue }}{% else %}.None{% endif %}</span>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 
 {% endblock content %}

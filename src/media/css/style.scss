@@ -32,6 +32,17 @@
     font-weight: bold;
 }
 
+#footer {
+    margin-top: 40px;
+    .navbar {
+        margin-bottom: 0;
+    }
+    .navbar-brand {
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+}
+
 // Universal Style overrides
 
 .page-header h1 {

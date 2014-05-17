@@ -16,7 +16,8 @@
 {% block head-title %}Enter Results for Round {{ current_round }}{% endblock %}
 {% block page-title %}Enter Results for Round {{ current_round }}{% endblock %}
 {% block body-class %}monkey-enter-result{% endblock %}
-{% block nav %}{% include "monkey/nav.html" %}{% endblock %}
+
+{% block nav %}{% include "monkey/nav.html" %}{% endblock %}{% block footer %}{% include "monkey/footer.html" %}{% endblock %}
 
 {% block content %}
 
