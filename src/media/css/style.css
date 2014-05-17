@@ -725,11 +725,6 @@ table.dataTable {
       width: 28px;
       height: 28px; }
 
-.dataTables_wrapper .dataTables_filter {
-  margin-bottom: 12px; }
-  .dataTables_wrapper .dataTables_filter label {
-    display: block; }
-
 .modal-lg {
   width: 90%; }
 

@@ -13,12 +13,14 @@
     {% for field in form %}
     <div class="form-group">
         <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>
-        <div class="col-sm-6">
+        <div class="col-sm-9 col-md-6">
             {{field|addcss:"form-control"}}
         </div>
-        {% if field.errors %}
-            {{ field.errors }}
-        {% endif %}
+        <div class="col-md-2 col-xs-10 col-sm-offset-2">
+            {% if field.errors %}
+                {{ field.errors }}
+            {% endif %}
+        </div>
     </div>
     {% endfor %}
     <div class="form-group">

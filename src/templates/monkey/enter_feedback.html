@@ -1,34 +1,8 @@
-{% extends "base.html" %}
+{% extends "enter_feedback.html" %}
 {% load add_field_css %}
 
 {% block extra-head %}{% endblock %}
 
-{% block head-title %}Add Feedback for {{ adj }}{% endblock %}
-{% block page-title %}Add Feedback for {{ adj }}{% endblock %}
 {% block body-class %}monkey-enter-feedback{% endblock %}
 
 {% block nav %}{% include "monkey/nav.html" %}{% endblock %}{% block footer %}{% include "monkey/footer.html" %}{% endblock %}
-
-{% block content %}
-
-<form id="feedbackForm" action="" method="POST" class="form-horizontal">
-
-    {% for field in form %}
-    <div class="form-group">
-        <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>
-        <div class="col-sm-6">
-            {{field|addcss:"form-control"}}
-        </div>
-        {% if field.errors %}
-            {{ field.errors }}
-        {% endif %}
-    </div>
-    {% endfor %}
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" value="Save" class="btn btn-default">Save</button>
-        </div>
-    </div>
-</form>
-
-{% endblock content %}

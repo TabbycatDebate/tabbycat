@@ -14,11 +14,11 @@
             </div>
             {% for position in adj.position_iter %}
             <div class="form-group aff speaker s{{ position.pos }}">
-                <label class="col-xs-2 control-label" >{{ position }}A</label>
-                <div class="col-xs-4  {{ position.aff_speaker.errors|yesno:'error,' }}">
+                <label class="col-md-2 col-xs-3 control-label" >{{ position }}A</label>
+                <div class="col-md-4 col-xs-6 { position.aff_speaker.errors|yesno:'error,' }}">
                     {{ position.aff_speaker|addcss:"form-control" }}
                 </div>
-                <div class="col-xs-6 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
+                <div class="col-md-6 col-xs-2 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
                     {{ position.aff_score }}
                     {{ position.aff_score_errors }}
                     {{ position.aff_speaker.errors }}
@@ -26,8 +26,8 @@
             </div>
             {% endfor %}
             <div class="form-group">
-                <label class="col-xs-2 control-label" >Total</label>
-                <div class="form-control-parent col-xs-1 col-xs-offset-4">
+                <label class="col-md-2 col-xs-3 control-label" >Total</label>
+                <div class="form-control-parent col-md-offset-4 col-xs-1 col-xs-offset-6">
                     <div name="aff_total" class="btn btn-default aff_total" type="text" readonly />00</div>
                 </div>
             </div>
@@ -39,11 +39,11 @@
             </div>
            {% for position in adj.position_iter %}
                 <div class="form-group neg speaker s{{ position.pos }}">
-                    <label class="col-xs-2 control-label" >{{ position }}N</label>
-                    <div class="col-xs-4 {{ position.aff_speaker.errors|yesno:'error,' }}">
+                    <label class="col-md-2 col-xs-3 control-label" >{{ position }}N</label>
+                    <div class="col-md-4 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
                         {{ position.neg_speaker|addcss:"form-control" }}
                     </div>
-                    <div class="col-xs-6 neg score form-control-parent {{ position.neg_score_errors|yesno:'error,' }}">
+                    <div class="col-md-6 col-xs-2 neg score form-control-parent {{ position.neg_score_errors|yesno:'error,' }}">
                         {{ position.neg_score }}
                         {{ position.neg_score_errors }}
                         {{ position.neg_speaker.errors }}
@@ -51,8 +51,8 @@
                 </div>
             {% endfor %}
             <div class="form-group">
-                <label class="col-xs-2 control-label" >Total</label>
-                <div class="form-control-parent col-xs-1 col-xs-offset-4">
+                <label class="col-md-2 col-xs-3 control-label" >Total</label>
+                <div class="form-control-parent col-md-offset-4 col-xs-1 col-xs-offset-6">
                     <div name="neg_total" class="btn btn-default neg_total" type="text" readonly />00</div>
                 </div>
             </div>

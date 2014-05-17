@@ -13,7 +13,7 @@
     </script>
 {% endblock extra-head %}
 
-{% block head-title %}Speaker Standings after Round {{ round }}{% endblock %}
+{% block head-title %}Speaker Standings <small>after Round {{ round }}</small>{% endblock %}
 {% block page-title %}Speaker Standings after Round {{ round }}{% endblock %}
 {% block body-class %}speaker-standings{% endblock %}
 
@@ -22,7 +22,10 @@
 
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
-        <tr><th>Rank</th><th>Name</th><th>Team</th>
+        <tr>
+            <th><span data-toggle="tooltip" title="" class="glyphicon glyphicon-signal" data-original-title="Rank"></span></th>
+            <th>Name</th>
+            <th>Team</th>
             {% for round in rounds %}
             <th>{{ round }}</th>
             {% endfor %}

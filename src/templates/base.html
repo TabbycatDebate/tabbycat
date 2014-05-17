@@ -54,6 +54,7 @@
                 input.attr("placeholder", "Quick Search");
                 //filter.append('<span class="glyphicon glyphicon-search form-control-feedback"></span>');
             }
+            $('input.number').attr("type", "number").attr("step", "any");
 
         });
     </script>
@@ -71,10 +72,10 @@
     <div id="container" class="container-fluid">
 
         <div class="row page-header">
-            <div class="col-sm-6">
+            <div class="col-md-6">
                 <h1 class="h2">{% block head-title %}{% endblock %}</h1>
             </div>
-            <div class="col-sm-6 form-inline" id="header-options">
+            <div class="col-md-6 form-inline" id="header-options">
                 {% block header %}{% endblock %}
             </div>
         </div>
