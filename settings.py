@@ -77,5 +77,8 @@ LOGIN_REDIRECT_URL = '/'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False # NEEDED otherwise gunicorn blows up
 
-from local_settings import *
+try:
+    from config.local_settings import *
+except Exception as e:
+    pass
 
