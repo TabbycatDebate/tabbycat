@@ -63,7 +63,8 @@ INSTALLED_APPS = (
     'debate',
     'south',
     'emoji',
-    'debug_toolbar', # disable for production
+    'debug_toolbar',
+    "gunicorn",
 )
 
 LOGIN_REDIRECT_URL = '/'
