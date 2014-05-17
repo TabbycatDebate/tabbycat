@@ -744,19 +744,18 @@ table.dataTable {
 
 .edit-venues .btn-default.text-left, .edit-adjs .btn-default.text-left {
   padding-left: 6px; }
-.edit-venues #main, .edit-adjs #main {
-  width: 79%; }
 .edit-venues #scratch, .edit-adjs #scratch {
   position: fixed;
   top: 0;
   right: 0;
-  background-color: #cff;
-  width: 20%;
-  height: 800px; }
+  height: 100%; }
 .edit-venues .venue-holder, .edit-adjs .venue-holder {
-  padding: 0px; }
-.edit-venues .venue, .edit-adjs .venue {
+  padding: 4px;
+  border: 2px solid #ddd; }
+.edit-venues .venue:hover, .edit-adjs .venue:hover {
   cursor: move; }
+.edit-venues .border-success, .edit-adjs .border-success {
+  border: 2px solid #4cae4c; }
 .edit-venues .adj.trainee, .edit-adjs .adj.trainee {
   background-color: #ffb; }
 .edit-venues .adj.trainee:hover, .edit-adjs .adj.trainee:hover {

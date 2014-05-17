@@ -173,23 +173,21 @@ table.dataTable {
     .btn-default.text-left {
         padding-left: 6px;
     }
-    #main {
-        width: 79%;
-    }
     #scratch {
         position: fixed;
         top: 0;
         right: 0;
-        background-color: #cff;
-        width: 20%;
-        height: 800px;
+        height: 100%;
     }
-
     .venue-holder {
-        padding: 0px;
+        padding: 4px;
+        border: 2px solid #ddd;
     }
-    .venue {
+    .venue:hover {
         cursor: move;
+    }
+    .border-success {
+        border: 2px solid $btn-success-border;
     }
     .adj.trainee {
         background-color: #ffb;
@@ -227,7 +225,6 @@ table.dataTable {
     //     overflow-y: auto;
     //     overflow-x: hidden;
     // }
-    // #scratch.hover { background-color: #ff8; }
     // .hover #unusedTable tbody td { background-color: #ffa; }
     // #main {
     //     width: 74%;
@@ -275,7 +272,6 @@ table.dataTable {
 }
 
 p.warning { color: red; font-weight: bold; }
-
 
 .ballot-checkin-form .message {
     padding: 10px 10px;
