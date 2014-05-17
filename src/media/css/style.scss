@@ -43,10 +43,22 @@
 
 // Forms
 
-.error, .errorlist {
-    @extend .help-block;
-    @extend .text-danger;
+input.error, select.error, .error input {
+    border-color: $state-danger-text;
+    color: $state-danger-text;
+    background: $state-danger-bg;
+}
+.errorlist {
     list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.error, .errorlist li {
+    border-color: $state-danger-text;
+    color: $state-danger-text;
+}
+.form-control-parent input {
+    @extend .form-control;
 }
 
 // Tables
@@ -108,7 +120,7 @@ table.dataTable {
     }
 }
 .dataTables_wrapper .dataTables_filter {
-    
+
     margin-bottom: 12px;
     label {
         display: block;
@@ -168,16 +180,16 @@ table.dataTable {
     .venue {
         cursor: move;
     }
-    .adj.trainee { 
+    .adj.trainee {
         background-color: #ffb;
     }
-    .adj.trainee:hover { 
+    .adj.trainee:hover {
         background-color: #ffe;
     }
-    .adj.history-conflict { 
+    .adj.history-conflict {
         color: #f80;
     }
-    .adj.conflict { 
+    .adj.conflict {
         color: red;
     }
 
@@ -227,6 +239,21 @@ table.dataTable {
 
 }
 
+// Ballots
+
+.scoresheet {
+    .score input {
+        width: 60px;
+        float: left;
+        margin-right: 10px
+    }
+    .aff_total, .neg_total {
+        width: 60px;
+        font-weight: bold;
+        cursor: default;
+    }
+}
+
 // To sort from the old debate.css
 
 #jsWarn {
@@ -238,20 +265,6 @@ table.dataTable {
 
 p.warning { color: red; font-weight: bold; }
 
-.scoresheet input.save {
-    background-color: #fff;
-    border: 1px solid #888;
-    font-size: 110%;
-    padding: 0 0.3em;
-    width: 4em;
-    cursor: pointer;
-}
-
-.scoresheet input.save:hover {
-    background-color: #fafafa;
-}
-.scoresheet input.win { border: 1px solid #0f0; background-color: #efe;}
-.scoresheet input.lose { border: 1px solid #f00; background-color: #fee; }
 
 .ballot-checkin-form .message {
     padding: 10px 10px;
@@ -271,7 +284,5 @@ p.warning { color: red; font-weight: bold; }
     background-color: green;
     color: white;
 }
-#resultsForm select { color: black; }
-
 
 

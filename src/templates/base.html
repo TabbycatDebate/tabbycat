@@ -22,6 +22,7 @@
     <script type="text/javascript" language="javascript" src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" language="javascript" src="/static/bootstrap/javascripts/bootstrap.min.js"></script>
     <script type="text/javascript" language="javascript" src="/static/js/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/js/jquery.validate.min.js"></script>
     <script type="text/javascript" language="javascript" src="/static/js/datatables/dataTables.bootstrap.js"></script>
     <script type="text/javascript" language="javascript" src="/static/js/datatables/dataTables.fixedHeader.min.js"></script>
 
@@ -54,10 +55,13 @@
     <div id="container" class="container-fluid">
 
         <div class="page-header row">
-            <h1 class="h2 col-sm-6">{% block head-title %}{% endblock %}</h1>
-            <div class="col-sm-6">{% block header %}{% endblock %}</div>
+            <h1 class="h2">{% block head-title %}{% endblock %}</h1>
         </div>
-
+        <div class="row">
+            <div class="col-sm-12">
+                {% block header %}{% endblock %}
+            </div>
+        </div>
         {% block content %}{% endblock content %}
 
     </div>

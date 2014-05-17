@@ -130,10 +130,10 @@ a.text-info:hover {
 a.text-warning:hover {
   color: #66512c; }
 
-.text-danger, .error, .errorlist {
+.text-danger {
   color: #a94442; }
 
-a.text-danger:hover, a.error:hover, a.errorlist:hover {
+a.text-danger:hover {
   color: #843534; }
 
 .bg-primary {
@@ -345,7 +345,7 @@ output {
   line-height: 1.42857;
   color: #555555; }
 
-.form-control {
+.form-control, .form-control-parent input {
   display: block;
   width: 100%;
   height: 34px;
@@ -361,19 +361,19 @@ output {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s; }
-  .form-control:focus {
+  .form-control:focus, .form-control-parent input:focus {
     border-color: #66afe9;
     outline: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6); }
-  .form-control::-moz-placeholder {
+  .form-control::-moz-placeholder, .form-control-parent input::-moz-placeholder {
     color: #999999;
     opacity: 1; }
-  .form-control:-ms-input-placeholder {
+  .form-control:-ms-input-placeholder, .form-control-parent input:-ms-input-placeholder {
     color: #999999; }
-  .form-control::-webkit-input-placeholder {
+  .form-control::-webkit-input-placeholder, .form-control-parent input::-webkit-input-placeholder {
     color: #999999; }
-  .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+  .form-control[disabled], .form-control-parent input[disabled], .form-control[readonly], .form-control-parent input[readonly], fieldset[disabled] .form-control, fieldset[disabled] .form-control-parent input, .form-control-parent fieldset[disabled] input {
     cursor: not-allowed;
     background-color: #eeeeee;
     opacity: 1; }
@@ -473,7 +473,7 @@ select[multiple].input-lg {
 
 .has-feedback {
   position: relative; }
-  .has-feedback .form-control {
+  .has-feedback .form-control, .has-feedback .form-control-parent input, .form-control-parent .has-feedback input {
     padding-right: 42.5px; }
   .has-feedback .form-control-feedback {
     position: absolute;
@@ -485,18 +485,18 @@ select[multiple].input-lg {
     line-height: 34px;
     text-align: center; }
 
-.has-success .help-block, .has-success .error, .has-success .errorlist,
+.has-success .help-block,
 .has-success .control-label,
 .has-success .radio,
 .has-success .checkbox,
 .has-success .radio-inline,
 .has-success .checkbox-inline {
   color: #3c763d; }
-.has-success .form-control {
+.has-success .form-control, .has-success .form-control-parent input, .form-control-parent .has-success input {
   border-color: #3c763d;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-success .form-control:focus {
+  .has-success .form-control:focus, .has-success .form-control-parent input:focus, .form-control-parent .has-success input:focus {
     border-color: #2b542c;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #67b168;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #67b168; }
@@ -507,18 +507,18 @@ select[multiple].input-lg {
 .has-success .form-control-feedback {
   color: #3c763d; }
 
-.has-warning .help-block, .has-warning .error, .has-warning .errorlist,
+.has-warning .help-block,
 .has-warning .control-label,
 .has-warning .radio,
 .has-warning .checkbox,
 .has-warning .radio-inline,
 .has-warning .checkbox-inline {
   color: #8a6d3b; }
-.has-warning .form-control {
+.has-warning .form-control, .has-warning .form-control-parent input, .form-control-parent .has-warning input {
   border-color: #8a6d3b;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-warning .form-control:focus {
+  .has-warning .form-control:focus, .has-warning .form-control-parent input:focus, .form-control-parent .has-warning input:focus {
     border-color: #66512c;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c0a16b;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c0a16b; }
@@ -529,18 +529,18 @@ select[multiple].input-lg {
 .has-warning .form-control-feedback {
   color: #8a6d3b; }
 
-.has-error .help-block, .has-error .error, .has-error .errorlist,
+.has-error .help-block,
 .has-error .control-label,
 .has-error .radio,
 .has-error .checkbox,
 .has-error .radio-inline,
 .has-error .checkbox-inline {
   color: #a94442; }
-.has-error .form-control {
+.has-error .form-control, .has-error .form-control-parent input, .form-control-parent .has-error input {
   border-color: #a94442;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-error .form-control:focus {
+  .has-error .form-control:focus, .has-error .form-control-parent input:focus, .form-control-parent .has-error input:focus {
     border-color: #843534;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483; }
@@ -554,7 +554,7 @@ select[multiple].input-lg {
 .form-control-static {
   margin-bottom: 0; }
 
-.help-block, .error, .errorlist {
+.help-block {
   display: block;
   margin-top: 5px;
   margin-bottom: 10px;
@@ -565,11 +565,11 @@ select[multiple].input-lg {
     display: inline-block;
     margin-bottom: 0;
     vertical-align: middle; }
-  .form-inline .form-control {
+  .form-inline .form-control, .form-inline .form-control-parent input, .form-control-parent .form-inline input {
     display: inline-block;
     width: auto;
     vertical-align: middle; }
-  .form-inline .input-group > .form-control {
+  .form-inline .input-group > .form-control, .form-inline .form-control-parent .input-group > input, .form-control-parent .form-inline .input-group > input {
     width: 100%; }
   .form-inline .control-label {
     margin-bottom: 0;
@@ -634,10 +634,10 @@ a.text-info:hover {
 a.text-warning:hover {
   color: #ec971f; }
 
-.text-danger, .error, .errorlist {
+.text-danger {
   color: #d9534f; }
 
-a.text-danger:hover, a.error:hover, a.errorlist:hover {
+a.text-danger:hover {
   color: #c9302c; }
 
 .public-draw a.public-draw-nav,
@@ -661,8 +661,19 @@ a.text-danger:hover, a.error:hover, a.errorlist:hover {
 [data-toggle="tooltip"] {
   cursor: pointer; }
 
-.error, .errorlist {
-  list-style-type: none; }
+input.error, select.error, .error input {
+  border-color: #a94442;
+  color: #a94442;
+  background: #f2dede; }
+
+.errorlist {
+  list-style-type: none;
+  margin: 0;
+  padding: 0; }
+
+.error, .errorlist li {
+  border-color: #a94442;
+  color: #a94442; }
 
 table.dataTable {
   margin-top: 0px !important; }
@@ -747,6 +758,15 @@ table.dataTable {
 .edit-venues .adj.conflict, .edit-adjs .adj.conflict {
   color: red; }
 
+.scoresheet .score input {
+  width: 60px;
+  float: left;
+  margin-right: 10px; }
+.scoresheet .aff_total, .scoresheet .neg_total {
+  width: 60px;
+  font-weight: bold;
+  cursor: default; }
+
 #jsWarn {
   font-weight: bold;
   background-color: #f00;
@@ -756,25 +776,6 @@ table.dataTable {
 p.warning {
   color: red;
   font-weight: bold; }
-
-.scoresheet input.save {
-  background-color: #fff;
-  border: 1px solid #888;
-  font-size: 110%;
-  padding: 0 0.3em;
-  width: 4em;
-  cursor: pointer; }
-
-.scoresheet input.save:hover {
-  background-color: #fafafa; }
-
-.scoresheet input.win {
-  border: 1px solid #0f0;
-  background-color: #efe; }
-
-.scoresheet input.lose {
-  border: 1px solid #f00;
-  background-color: #fee; }
 
 .ballot-checkin-form .message {
   padding: 10px 10px;
@@ -796,6 +797,3 @@ p.warning {
 #correct {
   background-color: green;
   color: white; }
-
-#resultsForm select {
-  color: black; }

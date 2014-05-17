@@ -42,7 +42,7 @@
             <th>Affirmative</th>
             <th>Negative</th>
             <th>Adjudicators</th>
-        {% if show_motions_column %}<th>Motion</th>{% endif %}
+            {% if show_motions_column %}<th>Motion</th>{% endif %}
         </tr>
     </thead>
 
@@ -54,8 +54,6 @@
                     {% ifequal debate.result_status "D" %}info {% endifequal %}
                     {% ifequal debate.result_status "C" %}success{% endifequal %}
         ">
-
-
             {% ifequal debate.result_status "N" %}
                 <td>
                     <span class="hidden">0</span>
@@ -93,10 +91,10 @@
 
             <td>{{ debate.venue.name }}</td>
 
-            <td class="{% if debate.result.aff_win %}winner{% endif %}">
+            <td class="">
                 {% if debate.result.aff_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-up text-success"></span>
-                {% else %}
+                {% elif debate.result.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
                 <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
@@ -104,10 +102,10 @@
                 </span>
             </td>
 
-            <td class="{% if debate.result.neg_win %}winner{% endif %}">
+            <td class="">
                 {% if debate.result.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-up text-success"></span>
-                {% else %}
+                {% elif debate.result.aff_win == 1 %}
                     <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
                 <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
@@ -118,6 +116,7 @@
             {% if show_motions_column %}
                 <td class="">{{ debate.motion.reference }}</td>
             {% endif %}
+
         </tr>
     {% endfor %}
 </table>
