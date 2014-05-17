@@ -9,6 +9,7 @@ STATIC_ROOT         = 'staticfiles'
 STATIC_URL          = '/static/'
 TEMPLATE_DIRS       = os.path.join(PROJECT_PATH, 'templates')
 MEDIA_ROOT          = os.path.join(PROJECT_PATH, 'media')
+SECRET_KEY          = '' #overwritten in local_settings
 
 # ===================
 # = Global Settings =
@@ -50,6 +51,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.csrf",
+    "django.core.context_processors.static",
     "debate.context_processors.debate_context",
 )
 
@@ -75,8 +77,5 @@ LOGIN_REDIRECT_URL = '/'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False # NEEDED otherwise gunicorn blows up
 
-try:
-    from local_settings import *
-except Exception as e:
-    pass
+from local_settings import *
 
