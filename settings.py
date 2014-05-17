@@ -85,8 +85,18 @@ LOGIN_REDIRECT_URL = '/'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False # NEEDED otherwise gunicorn blows up
 
+# Local
 try:
     from config.local_settings import *
 except Exception as e:
     pass
+
+# Heroku
+if os.environ:
+    import dj_database_url
+    SECRET_KEY = get_env_variable("DJANGO_SECRET_KEY")
+    # Parse database configuration from $DATABASE_URL
+    DATABASES['default'] =  dj_database_url.config()
+    # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
