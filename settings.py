@@ -91,7 +91,7 @@ try:
 except Exception as e:
     pass
 
-if 'HEROKU'' in os.environ:
+if 'HEROKU' in os.environ:
     import dj_database_url
     DEBUG = True
     # Parse database configuration from $DATABASE_URL
