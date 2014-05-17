@@ -18,18 +18,20 @@
     {% endif %}
     {% for field in form %}
     <div class="form-group">
-        <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>
+        <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">{{ field.label }}</label>
         <div class="col-sm-2">
             {{field|addcss:"form-control"}}
         </div>
-        <span class="help-block">({{ field.help_text }})</span>
+        <div class="col-sm-5">
+            <span class="help-block">({{ field.help_text }})</span>
+        </div>
         {% if field.errors %}
             {{ field.errors }}
         {% endif %}
     </div>
     {% endfor %}
     <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
+        <div class="col-sm-offset-3 col-sm-10">
             <button type="submit" class="btn btn-default ">Save</button>
         </div>
     </div>

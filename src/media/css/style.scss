@@ -13,6 +13,19 @@
 
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
+#header-options {
+    min-height: 30px; // Spacer for mobile rendering (pre form relocation)
+}
+#footer {
+    margin-top: 40px;
+    .navbar {
+        margin-bottom: 0;
+    }
+    .navbar-brand {
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+}
 
 // Navigation Highlights
 
@@ -30,17 +43,6 @@
 .adj-feedback a.adj-feedback-nav,
 .config a.config-nav {
     font-weight: bold;
-}
-
-#footer {
-    margin-top: 40px;
-    .navbar {
-        margin-bottom: 0;
-    }
-    .navbar-brand {
-        font-size: 14px;
-        margin-bottom: 0;
-    }
 }
 
 // Universal Style overrides
@@ -178,12 +180,19 @@ table.dataTable {
         top: 0;
         right: 0;
         height: 100%;
+
+        .info {
+            display: none; // hide adj score inside the button - is in table
+        }
     }
-    .venue-holder {
+    .venue, .adj {
+        max-width: 300px;
+    }
+    .venue-holder, .adj-holder {
         padding: 4px;
         border: 2px solid #ddd;
     }
-    .venue:hover {
+    .venue:hover, .adj:hover {
         cursor: move;
     }
     .border-success {

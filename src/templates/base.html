@@ -30,17 +30,33 @@
         $.extend( true, $.fn.dataTable.defaults, {
             // Default Data Table options
             "sDom":
-                "<'row'<'col-md-12'lf>r>"+ // f = the filter
+                "<'row'<'col-md-12'lr"+ // f = the filter
                 "t"+
-                "<'row'<'form'><'col-xs-6'p>>",
-            "bPaginate": false
-        });
-        $(document).ready(function(){
-            $('[data-toggle=tooltip]').tooltip();
+                "f<p>>",
+            "bPaginate": false,
+            "oLanguage": {
+                "sSearch": "Search: "
+            }
         });
     </script>
 
     {% block extra-head %}{% endblock extra-head %}
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle=tooltip]').tooltip();
+            // Shifting the search filter around
+            if ($('#dataTable_filter').length <= 1) {
+                var filter = $('#dataTable_filter').detach()
+                $("#header-options").append(filter);
+                var input = $("#dataTable_filter .form-control").detach();
+                filter.text("").append(input).addClass("form-group has-feedback");
+                input.attr("placeholder", "Quick Search");
+                //filter.append('<span class="glyphicon glyphicon-search form-control-feedback"></span>');
+            }
+
+        });
+    </script>
 
 </head>
 
@@ -54,11 +70,13 @@
 
     <div id="container" class="container-fluid">
 
-        <div class="page-header row">
-            <h1 class="h2">{% block head-title %}{% endblock %}</h1>
-        </div>
-        <div class="row">
-            {% block header %}{% endblock %}
+        <div class="row page-header">
+            <div class="col-sm-6">
+                <h1 class="h2">{% block head-title %}{% endblock %}</h1>
+            </div>
+            <div class="col-sm-6 form-inline" id="header-options">
+                {% block header %}{% endblock %}
+            </div>
         </div>
         {% block content %}{% endblock content %}
 

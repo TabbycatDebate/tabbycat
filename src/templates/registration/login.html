@@ -13,14 +13,12 @@
 
                 {% csrf_token %}
 
-
                 {% for field in form %}
                 <div class="form-group">
-                    <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>
-                    <div class="col-sm-2">
+                    <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
+                    <div class="col-md-6">
                         {{field|addcss:"form-control"}}
                     </div>
-
                     {% if field.errors %}
                         {{ field.errors }}
                     {% endif %}
@@ -28,11 +26,13 @@
                 {% endfor %}
 
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
+                    <div class="col-md-offset-2 col-md-4">
                         <button type="submit" class="btn btn-default ">Save</button>
                     </div>
                 </div>
 
         </form>
     </div>
-{% endblock body %}
+{% endblock %}
+
+{% block footer %}{% endblock %}

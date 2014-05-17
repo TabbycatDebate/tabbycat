@@ -23,7 +23,6 @@
 
 {% block content %}
 
-
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
         <tr>
@@ -44,7 +43,9 @@
         {% if not team.results_in %}inactive{% endif%}">
         <td>{{ team.rank }}</td>
         <td class="team-emoji team-{{ team.id }}"></td>
-        <td><a title="{{ team.speakers|join:", " }}" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</a></td>
+        <td>
+            <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</span>
+        </td>
         {% for score in team.scores %}
         <td>
         {% if score.1 == 1 %}

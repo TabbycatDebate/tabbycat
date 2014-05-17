@@ -640,6 +640,17 @@ a.text-warning:hover {
 a.text-danger:hover {
   color: #c9302c; }
 
+#header-options {
+  min-height: 30px; }
+
+#footer {
+  margin-top: 40px; }
+  #footer .navbar {
+    margin-bottom: 0; }
+  #footer .navbar-brand {
+    font-size: 14px;
+    margin-bottom: 0; }
+
 .public-draw a.public-draw-nav,
 .public-feedback a.public-feedback-nav,
 .public-add-ballot a.public-add-ballot-nav,
@@ -654,14 +665,6 @@ a.text-danger:hover {
 .adj-feedback a.adj-feedback-nav,
 .config a.config-nav {
   font-weight: bold; }
-
-#footer {
-  margin-top: 40px; }
-  #footer .navbar {
-    margin-bottom: 0; }
-  #footer .navbar-brand {
-    font-size: 14px;
-    margin-bottom: 0; }
 
 .page-header h1 {
   margin-top: 0; }
@@ -749,10 +752,14 @@ table.dataTable {
   top: 0;
   right: 0;
   height: 100%; }
-.edit-venues .venue-holder, .edit-adjs .venue-holder {
+  .edit-venues #scratch .info, .edit-adjs #scratch .info {
+    display: none; }
+.edit-venues .venue, .edit-venues .adj, .edit-adjs .venue, .edit-adjs .adj {
+  max-width: 300px; }
+.edit-venues .venue-holder, .edit-venues .adj-holder, .edit-adjs .venue-holder, .edit-adjs .adj-holder {
   padding: 4px;
   border: 2px solid #ddd; }
-.edit-venues .venue:hover, .edit-adjs .venue:hover {
+.edit-venues .venue:hover, .edit-venues .adj:hover, .edit-adjs .venue:hover, .edit-adjs .adj:hover {
   cursor: move; }
 .edit-venues .border-success, .edit-adjs .border-success {
   border: 2px solid #4cae4c; }

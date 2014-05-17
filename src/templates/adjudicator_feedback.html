@@ -13,29 +13,34 @@
         });
         new $.fn.dataTable.FixedHeader( table );
 
+        var adjTable = $("#modal-adj-table").dataTable({
+          // Grabbing the adj data into a datatable
+          'ajax': '{% tournament_url get_adj_feedback %}?id=642',
+          'bPaginate': false,
+          'bFilter': false
+        });
+
         // the standard header to be re-added to the modal
         var tableHead = '<table id="modal-adj-table" class="table table-bordered"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
 
         $(".view-feedback").each( function() {
             $(this).click( function() {
 
-
                 var adj_row = $(this).parent().parent() // the <tr> for this adjudicator in the table
                 var adj_name = adj_row.find(".adj-name").text()
                 var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
 
-                $("#modal-adj-table_wrapper").remove(); // removing the previously loaded table
                 $("#modal-adj-name").text(adj_name); // Updating header of the modal
-                $(".modal-body").append(tableHead);
-                $("#modal-adj-table").dataTable({
-                  // Grabbing the adj data into a datatable
-                  'sAjaxSource': '{% tournament_url get_adj_feedback %}?id=' + adj_id,
-                  'bPaginate': false,
-                });
+
+                var newUrl = '{% tournament_url get_adj_feedback %}?id=' + adj_id
+                adjTable.api().ajax.url(newUrl).load();
 
             });
         });
     });
+
+
+
 
 </script>
 
@@ -50,26 +55,26 @@
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
+            <th><span class="glyphicon glyphicon-question-sign"></span></th>
+            <th><span class="glyphicon glyphicon-plus-sign"></span></th>
             <th>Name</th>
             <th>Institution</th>
             <th>Test</th>
             <th>Feedback</th>
             <th>Score</th>
-            <th>View</th>
-            <th>Add</th>
         </tr>
     </thead>
 
     <tbody>
         {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">
+            <td><a data-toggle="modal" data-target="#adj-feedback"  class="view-feedback">View</a></td>
+            <td><a href="{% tournament_url enter_feedback adj.id %}">Add</a></td>
             <td class="adj-name">{{ adj.name }}</td>
             <td>{{ adj.institution }}</td>
             <td>{{ adj.test_score }}</td>
             <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
             <td>{{ adj.score|stringformat:".2f" }}</td>
-            <td><a data-toggle="modal" data-target="#adj-feedback"  class="view-feedback">View Feedback</a></td>
-            <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
         </tr>
         {% endfor %}
     </tbody>
@@ -81,15 +86,15 @@
     <div class="modal-content">
         <div class="modal-header"><h3>Feedback for <span id="modal-adj-name"></span></h3></div>
         <div class="modal-body">
-<!-- <table id="modal-adj-table" class="table table-bordered">
-    <thead>
-        <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
-        <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-        <th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table> -->
+        <table id="modal-adj-table" class="table table-bordered">
+            <thead>
+                <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
+                <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+                <th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
         </div>
     </div>
   </div>

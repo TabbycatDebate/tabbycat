@@ -20,12 +20,9 @@
         function intId(e) {
             return parseInt($(e).attr('id').split('_')[1]);
         }
-
         function formatScore(n) {
             return n.toPrecision(2);
         }
-
-
         function _make_adj(data) {
             var adj = $('<div></div>').addClass('adj btn btn-block btn-default text-left')
                 .attr('id', 'adj_' + data.id)
@@ -41,25 +38,20 @@
             $('div.adj', td).remove();
             _make_adj(data).appendTo(td);
         }
-
         function clear_panel(debate_id) {
             $('#panel_'+debate_id).find('div.adj').remove();
         }
-
         function clear_trainees(debate_id) {
             $('#trainees_'+debate_id).find('div.adj').remove();
         }
-
         function add_panellist(debate_id, data) {
             var td = $('#panel_'+debate_id);
             _make_adj(data).appendTo(td);
         }
-
         function add_trainee(debate_id, data) {
             var td = $('#trainees_'+debate_id);
             _make_adj(data).appendTo(td);
         }
-
         function load_allocation_data(data) {
             $.each(data.debates, function(debate_id, adj_data) {
                 if (adj_data.chair)
@@ -175,7 +167,7 @@
                     if ($.inArray(
                             intId(this),
                             conflicts['conflict'][adj_id]) != -1) {
-                        $(debate_tr).addClass("inactive");
+                        $(debate_tr).addClass("debate-inactive");
                         $(adj).addClass("btn-danger");
                         ca++;
                         a++;
@@ -196,7 +188,7 @@
             } );
 
             if (ca == 0) {
-                $(debate_tr).removeClass("inactive");
+                $(debate_tr).removeClass("debate-inactive");
             }
 //             if (ch == 0) {
 //                 $(debate_tr).removeClass("btn-danger");
@@ -240,9 +232,9 @@
                 }
             } );
 
-            el.draggable( {
-                handle: 'div',
-                cursor: 'move',
+            el.draggable({
+                containment: "body", // bounds that limit dragging area{
+                //handle: 'div',
                 helper: function() {
                     var offset = $(this).offset();
                     $(this).css('position', 'relative');
@@ -257,12 +249,13 @@
                     $(adj).css('left', offset.left - curOff.left);
                     return adj;
                 },
-                stack: {
-                    group: '.adj',
-                    min: 1000
-                },
+                // stack: {
+                //     group: '.adj',
+                //     min: 1000
+                // },
                 revert: 'invalid',
                 start: function(event, ui) {
+                    console.log("dragging");
                     $("#" + ui.helper.attr("id")).addClass("dragging");
                 },
                 stop: function(event, ui) {
@@ -288,7 +281,7 @@
         }
 
         $("#dataTable tbody .adj-holder").droppable( {
-            hoverClass: 'hover',
+            hoverClass: 'border-success',
             drop: function(event, ui) {
                 var adj = ui.draggable;
                 var oldHolder = adj[0].oldHolder;
@@ -335,7 +328,8 @@
         });
 
         $("#scratch").droppable( {
-            hoverClass: 'hover',
+            accept: '.adj',
+            hoverClass: 'bg-success',
             drop: function(event, ui) {
                 var adj = ui.draggable;
                 var oldHolder = adj[0].oldHolder;
@@ -344,9 +338,7 @@
                 adj.removeClass("btn-danger");
                 updateConflicts($(oldHolder).parent("tr"));
             }
-
-
-        } );
+        });
 
         /* sorting function for adjs */
         $.fn.dataTableExt.afnSortData['adj'] = function ( oSettings, iColumn) {
@@ -363,7 +355,6 @@
         $.fn.dataTableExt.ofnSearch['adj'] = function ( sData ) {
             var jo = $(sData);
             var f = $('span', jo).html();
-
             return f;
         };
 
@@ -433,26 +424,24 @@
 
         dataTable = $("#dataTable").dataTable( {
             "bAutoWidth": false,
-            // "aoColumns": [
-            //     { "sWidth": "5%" },
-            //     { "sWidth": "5%" },
-            //     { "sWidth": "5%" },
-            //     { "sWidth": "5%" },
-            //     { "sWidth": "10%" }
-            // ],
-            "aaSorting": [[0, 'desc']]
-            // "bSort": false,
-            // "bFilter": false,
-            // "aaSorting": [[0, 'desc']]
+            "aoColumns": [
+                { "sWidth": "2.5%" },
+                { "sWidth": "2.5%" },
+                { "sWidth": "10%" },
+                { "sWidth": "10%" },
+                { "sWidth": "25%" },
+                { "sWidth": "25%" },
+                { "sWidth": "25%" }
+            ],
+            "aaSorting": [[1, 'desc']]
         } );
 
-
         unusedTable = $("#unusedTable").dataTable({
-            // aoColumns: [
-            //     { "sWdith": "90%" },
-            //     { "sWidth": "10%" }
-            // ],
-            bPaginate: false,
+            aoColumns: [
+                { "sWdith": "90%", "sType": "string" },
+                { "sWidth": "10%", "sType": "string" }
+            ],
+            "aaSorting": [[1, 'desc']],
             bFilter: false
         });
 
@@ -491,8 +480,8 @@
 
 {% block body-class %}edit-adjs{% endblock %}
 
-{% block head-title %}Edit Adjs for Round {{ round }}{% endblock %}
-{% block page-title %}Edit Adjs for Round {{ round }}{% endblock %}
+{% block head-title %}Edit Adjudicators for Round {{ round }}{% endblock %}
+{% block page-title %}Edit Adjudicators for Round {{ round }}{% endblock %}
 
 {% block header %}
 <div id="statusBar" class="btn-group">
@@ -510,16 +499,12 @@
 
 {% block content %}
 
-<!-- temporary disabled
-<div id="loading">
-    <div>
-    <img src="/static/images/loading.gif">
-    <span>loading...</span>
-    </div>
-</div>-->
+<div class="row">
 
-<div id="scratch">
-    <h3>Unused Adjudicators</h3>
+<div id="scratch" class="col-md-2">
+    <div class="page-header">
+        <h2>Unused</h2>
+    </div>
     <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
@@ -532,8 +517,8 @@
     </table>
 </div>
 
-<div id="main">
-    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+<div id="main" class="col-md-10">
+    <table id="dataTable" class="table table-bordered" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
             <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
@@ -546,33 +531,34 @@
         </thead>
         <tbody>
         {% for debate in draw %}
-        <tr id="debate_{{ debate.id }}" class="active">
+        <tr id="debate_{{ debate.id }}" class="debate-active">
             <td>
                 {{ debate.bracket }}
             </td>
             <td class="importance">
-                {{ debate.importance }}
+                {% if debate.importance == None %}
+                    .NA
+                {% else %}
+                    {{ debate.importance }}
+                {% endif %}
             </td>
             <td id="team_{{ debate.aff_team.id }}" class="team">
                 <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
             </td>
             <td id="team_{{ debate.neg_team.id }}" class="team">
-                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
+                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.name }}</span>
             </td>
             <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
-
             </td>
             <td id="panel_{{ debate.id }}" class="adj-holder panel-holder">
-
             </td>
             <td id="trainees_{{ debate.id }}" class="adj-holder trainee-holder">
-
             </td>
         </tr>
         {% endfor %}
+        </tbody>
     </table>
 </div>
 
+</div>
 {% endblock content %}
-
-
