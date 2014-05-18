@@ -107,7 +107,7 @@
                 url: "{% round_url save_venues %}",
                 data: debates,
                 success: function(data, status) {
-                    $("#savedVenues").removeClass('hide');
+                    $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id="savedVenues"><button type="button" class="close" data-dismiss="alert">&times;</button>Saved succesfully!</div>');
                 },
                 error: function(xhr, error, ex) {
                     alert("fail");
@@ -153,6 +153,8 @@
 
 {% block content %}
 
+<div id="alerts-holder"></div>
+
 <div class="row">
 
     <div id="scratch" class="col-md-2">
@@ -167,16 +169,6 @@
     </div>
 
     <div id="main" class="col-md-10">
-
-        <div class="alert alert-success fade in alert-dismissable hide" id="savedVenues">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          Saved succesfully!
-        </div>
-
-        <div class="alert alert-error fade in alert-dismissable hide" id="savedVenues">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          Failed to save!
-        </div>
 
         <table id="dataTable" class="table table-hover table-bordered h4" cellpadding="0" cellspacing="0">
             <thead>

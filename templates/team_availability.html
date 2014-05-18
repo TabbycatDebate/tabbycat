@@ -3,7 +3,8 @@
 {% load debate_tags %}
 {% block update-url %}{% round_url update_team_availability %}{% endblock %}
 
-{% block header %}Team Availability for Round {{ round }}{% endblock %}
+{% block page-title %}Team Availability for Round {{ round }}{% endblock %}
+{% block head-title %}Team Availability <small>for Round {{ round }}</small>{% endblock %}
 
 {% block table-contents %}
     <thead>
@@ -23,4 +24,3 @@
         {% endfor %}
     </tbody>
 {% endblock table-contents %}
-

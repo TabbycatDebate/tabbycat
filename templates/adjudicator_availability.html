@@ -4,15 +4,22 @@
 {% block update-url %}{% round_url update_adjudicator_availability %}{% endblock %}
 
 {% block head-title %}Adjudicator Availability for Round {{ round }}{% endblock %}
-{% block page-title %}Adjudicator Availability for Round {{ round }}{% endblock %}
+{% block page-title %}Adjudicator Availability for <small>Round {{ round }}</small>{% endblock %}
 
 {% block table-contents %}
-<thead><tr><th>Adjudicator</th><th>Institution</th><th>Test</th>
-        {% for round in tournament.rounds.all %}
-        <th>{{ round.seq }}</th>
-        {% endfor %}
-
-        <th>Avg</th><th>Score</th><th>Active</th></tr></thead>
+    <thead>
+        <tr>
+            <th>Adjudicator</th>
+            <th>Institution</th>
+            <th>Test</th>
+            {% for round in tournament.rounds.all %}
+            <th>{{ round.seq }}</th>
+            {% endfor %}
+            <th>Avg</th>
+            <th>Score</th>
+            <th>Active</th>
+        </tr>
+    </thead>
     <tbody>
         {% for adj in adjudicators %}
         <tr>
@@ -28,7 +35,7 @@
             {% endfor %}
             <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
             <td>{{ adj.score|stringformat:".2f" }}</td>
-            <td><input type="checkbox" {{ adj.is_active|yesno:'checked="yes",'  }} name="check_{{ adj.id }}"  value="{{ adj.id }}" /></td>
+            <td><input type="checkbox" {{ adj.is_active|yesno:'checked="yes",'  }} class="adj-check" name="check_{{ adj.id }}"  value="{{ adj.id }}" /></td>
         </tr>
         {% endfor %}
     </tbody>

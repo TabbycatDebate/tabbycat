@@ -6,7 +6,7 @@
         var venueState = [];
         var newState = [];
         var unsavedChanges = 0;
-        var checkboxes = function () { return $("#dataTable tbody tr :checkbox") };
+
         var updateCheckbox = function(cb) {
             var jp = $(cb).parents("tr");
             if (cb.checked) {
@@ -31,22 +31,25 @@
         var changeHappened = function (e) {
             unsavedChanges++;
             if (!unsavedChanges) {
-//                $(".status").append("<span>Unsaved changes</span");
-//                unsavedChanges = true;
+                $(".status").append("<span>Unsaved changes</span");
+                unsavedChanges = true;
             }
 
         }
 
         $(document).ready( function() {
-            checkboxes().each( function(){
+
+            $(":checkbox").each( function(){
                 var cb = $(this)[0];
                 venueState[cb.value] = cb.checked;
                 updateCheckbox(this);
             });
-            checkboxes().click( function(){
+
+            $(":checkbox").click( function(){
                 updateCheckbox(this);
                 changeHappened(this);
             });
+
 
             $("#dataTable tbody tr").click( function(event) {
                 if (event.target.type !== "checkbox") {
@@ -69,8 +72,9 @@
 
             });
 
-            $("#form").submit( function() {
-                checkboxes().each( function(){
+            $("#submit_adjs").click( function() {
+
+                $(":checkbox").each( function(){
                     var cb = $(this)[0];
                     newState[cb.value] = cb.checked;
                 });
@@ -82,7 +86,7 @@
                     data: sData,
                     success: function(data, txtStatus) {
                         venueState = newState;
-                        checkboxes().each( function() {
+                        $(":checkbox").each( function() {
                             updateCheckbox(this);
                         });
                         {% block post-success %}{% endblock %}
@@ -91,21 +95,17 @@
                     error: function(req, txtStatus, err) {
                     },
                 });
+                $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id="savedVenues"><button type="button" class="close" data-dismiss="alert">&times;</button>Saved succesfully!</div>');
+                $(this).removeClass("active");
                 return false;
             } );
 
             dTable = $('#dataTable').dataTable({
-                'bPaginate': false,
-                "aoColumns": [
-                      { "sType": "string" },
-                      { "sType": "string" },
-                        null
-                    ],
                 "aaSorting": [[ 0, "asc" ]]
             });
 
             $('#select_all').click(function() {
-                checkboxes().each(function(){
+                $(":checkbox").each(function(){
                     if (!this.checked) {
                         $(this).click();
                         updateCheckbox(this);
@@ -124,12 +124,15 @@
         {% block copy_btn %}
         <button id="btn_copy" class="btn btn-default" type="button">Copy from previous</button>
         {% endblock %}
-        <button type="submit" class="btn btn-default" >Save changes</button>
+        <button id="submit_adjs" class="btn btn-default" >Save changes</button>
         <button id="select_all" class="btn btn-default" href="#all">Select All</a>
     </div>
 {% endblock %}
 
 {% block content %}
+
+<div id="alerts-holder"></div>
+
 <form id="form">
     <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0", cellspacing="0">
         {% block table-contents %}
