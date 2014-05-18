@@ -1,0 +1,5 @@
+id,tournament,seq,name,type,feedback_weight
+,2,1,Round 1,R,0.7
+,2,2,Round 2,P,0.7
+,2,3,Round 3,P,0.7
+,2,4,Round 4,P,0.7

@@ -31,7 +31,19 @@ Linux). It runs a Django-based server.
 ### On Heroku
 
 
-### Setting up a Tournament
+### Preparing a Tournament
+
+### Importing a Tournament
+
+- Go to /admin/
+- Hit add on tournaments
+- Add just a slug
+- Go to rounds, import from the CSV
+- Now can go back to tournament to edit round details easily. First up set the Current Round (or else front end crashes)
+- Next up import Venues
+- Then import institutions
+
+### Directing a Tournament
 
 # Authors
 
