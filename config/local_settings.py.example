@@ -5,7 +5,7 @@ import os
 # ===================
 
 ADMINS              = (
-    #'Your Name', 'your_email@domain.com'),
+    #'', '',
 )
 MANAGERS            = ADMINS
 DEBUG               = True
@@ -16,25 +16,14 @@ DEBUG_ASSETS        = DEBUG
 # = Database Settings       =
 # ===========================
 
-if 'DATABASE_URL' in os.environ:
-    # On Heroku
-    import dj_database_url
-    SECRET_KEY = get_env_variable("DJANGO_SECRET_KEY")
-    DEBUG = True
-    # Parse database configuration from $DATABASE_URL
-    DATABASES['default'] =  dj_database_url.config()
-    # Honor the 'X-Forwarded-Proto' header for request.is_secure()
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-else:
-    # Local
-    SECRET_KEY = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
-    DATABASES = {
-        'default': {
-            'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-            'NAME'    : '',
-            'USER'    : '',
-            'PASSWORD': '',
-            'HOST':     'localhost',
-            'PORT':     '5432',
-        }
+SECRET_KEY          = '#2q43u&tpds(4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
+DATABASES = {
+    'default': {
+        'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
+        'NAME'    : '',
+        'USER'    : '',
+        'PASSWORD': '',
+        'HOST':     'localhost',
+        'PORT':     '5432',
     }
+}

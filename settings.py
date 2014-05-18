@@ -64,6 +64,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 INSTALLED_APPS = (
+    'django_admin_bootstrapped.bootstrap3',
+    'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,7 +76,8 @@ INSTALLED_APPS = (
     'south',
     'emoji',
     'debug_toolbar',
-    "gunicorn",
+    'gunicorn',
+    'import_export',
 )
 
 LOGIN_REDIRECT_URL = '/'
@@ -85,12 +88,7 @@ LOGIN_REDIRECT_URL = '/'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False # NEEDED otherwise gunicorn blows up
 
-# Local
-try:
-    from config.local_settings import *
-except Exception as e:
-    pass
-
+# Herouk
 if 'HEROKU' in os.environ:
     DEBUG = True
     # Parse database configuration from $DATABASE_URL
@@ -101,3 +99,9 @@ if 'HEROKU' in os.environ:
     # Allow all host headers
     ALLOWED_HOSTS = ['*']
 
+
+# Local
+try:
+    from config.local_settings import *
+except Exception as e:
+    pass
