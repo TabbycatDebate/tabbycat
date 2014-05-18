@@ -75,7 +75,6 @@ INSTALLED_APPS = (
     'emoji',
     'debug_toolbar',
     'gunicorn',
-    'import_export',
 )
 
 LOGIN_REDIRECT_URL = '/'
@@ -100,6 +99,6 @@ if 'HEROKU' in os.environ:
 
 # Local
 try:
-    from config.local_settings import *
+    from local_settings import *
 except Exception as e:
     pass

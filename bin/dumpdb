@@ -1,2 +1,0 @@
-#!/bin/bash
-pg_dump -C -Ft -f $1 -U debate debate

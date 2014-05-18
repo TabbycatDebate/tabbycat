@@ -2,54 +2,76 @@
 
 Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
 
+## Features
+
+- Easily deployable to [Heroku](https://www.heroku.com) for a super fast setup
+- A drag and drop interface for adjudicator allocation that displays templates on the fly
+- Responsive templates designed for large screens, laptops, tablets, and phones
+- Optional online ballot submission
+- Optional online post-tournament tab display
+
+## Installation Instructions
+
+#### Setup on Linux or OS X
+
+1. Install Python, pip, and virtualenv following either [this guide (Linux)](http://docs.python-guide.org/en/latest/starting/install/linux/) or [this guide (OS X)](http://docs.python-guide.org/en/latest/starting/install/osx/). You will also need Git installed along with a database engine of your choice.
+
+2. Create a virtualenv in the project's root directory:
+
+        $ virtualenv venv
+
+3. Activate the virtualenv. Nnote you will need to activate the venv each time you want to run the project.
+
+        $ source venv/bin/activate
+
+3. Install the project's requirements. Note this requires an internet connection and can take a while:
+    
+        $ pip install -r requirements.txt
+
+4. Rename ```local_settings.py.example``` to ```local_settings.py```
+   and edit to match your database setup.
+
+5. Sync and migrate the database:
+
+        $ python manage.py syncdb
+        $ python manage.py migrate
+
+6. Run using:
+
+        $ foreman start
+
+#### Deploy to Heroku
+
+After a local setup, these commands can be used to deploy to Heroku, provided you have setup the [Heroku Toolbelt](https://devcenter.heroku.com/articles/getting-started-with-python#local-workstation-setup):
+
+    $ heroku create
+    $ heroku ps:scale web=1
+    $ heroku config:set HEROKU=1
+    $ git push heroku master
+    $ heroku run python manage.py syncdb
+    $ heroku run python manage.py migrate
+    $ heroku open
+
+#### Preparing a Tournament
+
+*TODO: Instructions for how to structure data for import*
+
+#### Importing a Tournament
+
+*TODO: Instructions for how to import the data*
+
+#### Directing a Tournament
+
+*TODO: Instructions for how to use the interface and configure the settings*
+
+## Developers and Development
+
 Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010, was also used at [Victoria Australs 2012](http://australs2012.com), and will be used at [Otago Australs 2014](http://australs2014.com).
 
-We haven't released this under an open-source licence (so there is no formal general right to use this software), but if you're running a debating tournament, you're welcome to use it. It'd be nice if you could please let us know that you're doing so, and let us know how it went. We're happy to help if you have any
-questions (contact below), though obviously we provide no warranty and disclaim all legal liability. Pull requests are encouraged.
+We haven't released this under an open-source licence (so there is no formal general right to use this software), but if you're running a debating tournament, you're welcome to use it. It'd be nice if you could please let us know that you're doing so, and let us know how it went. We're happy to help if you have any questions (contact below), though obviously we provide no warranty and disclaim all legal liability. Pull requests are encouraged.
 
-If you're interested in using, developing or otherwise following this software,
+Contact Chuan-Zheng Lee with any questions. I shouldn't be too hard to find, but the easiest thing to do is check out the repository and find my e-mail address in the commit history. Or message me on Facebook (czlee) or Twitter (@czlee11). If you're interested in using, developing or otherwise following this software,
 [join our Facebook group](https://www.facebook.com/groups/tabbycat.debate/).
-
-# Features
-
-### Design!
-
-- Drag and drop interface, hoverable conflicts
-- Responsive templates
-
-### Online
-
-- Easily deployable to heroku
-
-# Installation Instructions
-
-### On Linux / OS X
-
-Tabbycat runs on Linux, and requires Python (which is normally distributed with
-Linux). It runs a Django-based server.
-
-### On Heroku
-
-
-### Preparing a Tournament
-
-### Importing a Tournament
-
-- Go to /admin/
-- Hit add on tournaments
-- Add just a slug
-- Go to rounds, import from the CSV
-- Now can go back to tournament to edit round details easily. First up set the Current Round (or else front end crashes)
-- Next up import Venues
-- Then import institutions
-
-### Directing a Tournament
-
-# Authors
-
-Contact Chuan-Zheng Lee with any questions. I shouldn't be too hard to find, but
-the easiest thing to do is check out the repository and find my e-mail address
-in the commit history. Or message me on Facebook (czlee) or Twitter (@czlee11).
 
 
 
