@@ -108,10 +108,10 @@
                 url: "{% round_url save_venues %}",
                 data: debates,
                 success: function(data, status) {
-                    $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id="savedVenues"><button type="button" class="close" data-dismiss="alert">&times;</button>Saved succesfully!</div>');
+                    $("#alerts-holder").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Saved succesfully!</div>');
                 },
                 error: function(xhr, error, ex) {
-                    alert("fail");
+                    $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Save failed!</div>');
                 }
             } );
 
@@ -154,7 +154,7 @@
 
 {% block content %}
 
-<div id="alerts-holder"></div>
+<div id="alerts-holder" class="col-md-10"></div>
 
 <div class="row">
 

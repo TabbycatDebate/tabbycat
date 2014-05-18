@@ -392,10 +392,10 @@
                 url: "{% round_url save_adjudicators %}",
                 data: data,
                 success: function(data, status) {
-                    $('#loading').hide();
+                    $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved succesfully!</div>');
                 },
                 error: function(xhr, error, ex) {
-                    alert("fail");
+                    $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved failed!</div>');
                 }
             } );
 
@@ -500,6 +500,8 @@
 
 {% block content %}
 
+<div id="alerts-holder" class="col-md-10"></div>
+
 <div class="row">
 
 <div id="scratch" class="col-md-2">
@@ -519,7 +521,7 @@
 </div>
 
 <div id="main" class="col-md-10">
-    <table id="dataTable" class="table table-bordered" cellpadding="0" cellspacing="0">
+    <table id="dataTable" class=" table table-bordered" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
             <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
