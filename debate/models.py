@@ -424,10 +424,12 @@ class Round(models.Model):
     STATUS_NONE = 0
     STATUS_DRAFT = 1
     STATUS_CONFIRMED = 10
+    STATUS_RELEASED = 99
     STATUS_CHOICES = (
         (STATUS_NONE, 'None'),
         (STATUS_DRAFT, 'Draft'),
         (STATUS_CONFIRMED, 'Confirmed'),
+        (STATUS_RELEASED, 'Released'),
     )
 
     objects = RoundManager()

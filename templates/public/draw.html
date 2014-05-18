@@ -1,9 +1,10 @@
-{% extends "draw_display_by_venue.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}{{ tournament }} Draw for Round {{ current_round }}{% endblock %}
-{% block page-title %}{{ tournament }} Draw for Round {{ current_round }}{% endblock %}
+{% block head-title %}Draw for Round {{ current_round }} has yet to be released{% endblock %}
+{% block page-title %}Draw for Round {{ current_round }} has yet to be released{% endblock %}
 {% block body-class %}public-draw{% endblock %}
 
 {% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
 
+{% block content %}{% endblock %}

@@ -81,7 +81,12 @@ def public_index(request, t):
 
 @tournament_view
 def public_draw(request, t):
-    return r2r(request, 'public/draw.html')
+    r = t.current_round
+    if r.draw_status == r.STATUS_RELEASED:
+        draw = r.get_draw()
+        return r2r(request, "draw_display_by_venue.html", dict(draw=draw))
+    else:
+        return r2r(request, 'public/draw.html')
 
 @tournament_view
 def public_ballot_submit(request, t):

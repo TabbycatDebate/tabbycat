@@ -47,10 +47,10 @@
         $(document).ready(function(){
             $('[data-toggle=tooltip]').tooltip();
             // Shifting the search filter around
-            if ($('#dataTable_filter').length <= 1) {
-                var filter = $('#dataTable_filter').detach()
+            if ($('.dataTables_filter').length <= 1) {
+                var filter = $('.dataTables_filter').detach()
                 $("#header-options").append(filter);
-                var input = $("#dataTable_filter .form-control").detach();
+                var input = $(".dataTables_filter .form-control").detach();
                 filter.text("").append(input).addClass("form-group has-feedback");
                 input.attr("placeholder", "Quick Search");
                 //filter.append('<span class="glyphicon glyphicon-search form-control-feedback"></span>');

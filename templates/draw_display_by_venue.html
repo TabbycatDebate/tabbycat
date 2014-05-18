@@ -6,7 +6,6 @@
     <script type="text/javascript">
         $(document).ready( function() {
             var table = $('#draw').dataTable({
-                'bPaginate': false,
                 "aaSorting": [[ 0, "asc" ]],
                 "aoColumns": [
                       { "sType": "string" },
@@ -28,8 +27,9 @@
 
 {% block body-class %}draw-public-display{% endblock %}
 
-{% block head-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}
-{% block page-title %}Round {{ round }} Draw for {{ tournament }}{% endblock %}{% block header %}
+{% block head-title %}Round {{ round }} Draw{% endblock %}
+{% block page-title %}Round {{ round }} Draw{% endblock %}
+{% block header %}
 <div class="btn-group">
     <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
     <a class="btn btn-default" href="" id="scroll_draw2">Scroll Medium</a>
