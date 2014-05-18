@@ -364,8 +364,8 @@
         ////////////////////
 
         $('#save').click( function() {
-            $('#loading span').html('saving...');
-            $('#loading').show();
+            var btn = $(this)
+            btn.button('loading')
             var data = {};
             $("#dataTable tbody tr").each( function() {
                 var debateId = intId(this);
@@ -392,9 +392,11 @@
                 url: "{% round_url save_adjudicators %}",
                 data: data,
                 success: function(data, status) {
+                    btn.button('reset')
                     $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved succesfully!</div>');
                 },
                 error: function(xhr, error, ex) {
+                    btn.button('reset')
                     $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved failed!</div>');
                 }
             } );
@@ -404,8 +406,8 @@
         } );
 
         $('#auto_allocate').click(function() {
-            $('#loading span').html('allocating...');
-            $('#loading').show();
+            var btn = $(this)
+            btn.button('loading')
             $.ajax({
                 type: "POST",
                 url: "{% round_url create_adj_allocation %}",
@@ -415,9 +417,12 @@
                     update_all_conflicts();
                     append_adj_scores();
                     $('#loading').hide();
+                    btn.button('reset')
                 },
                 error: function(xhr, error, ex) {
-                    alert("fail");
+                    $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Auto-allocation failed!</div>');
+                    $(this).button('reset');
+                    btn.button('reset')
                 }
             });
 
@@ -481,14 +486,14 @@
 
 {% block body-class %}edit-adjs{% endblock %}
 
-{% block head-title %}Edit Adjudicators for Round {{ round }}{% endblock %}
-{% block page-title %}Edit Adjudicators for Round {{ round }}{% endblock %}
+{% block head-title %}Edit Adjudicators <small>for Round {{ round }}</small>{% endblock %}
+{% block page-title %}Edit Adjudicators <small>for Round {{ round }}</small>{% endblock %}
 
 {% block header %}
 <div id="statusBar" class="btn-group">
     <a class="btn btn-default" href="#auto" id="auto_allocate">Auto Allocate</a>
-    <a class="btn btn-default" href="" id="save">Save</a>
-    <a class="btn btn-default" href="{% round_url draw %}">Quit</a>
+    <a data-loading-text="Saving..." class="btn btn-default" href="" id="save">Save</a>
+    <a data-loading-text="Allocating..." class="btn btn-default" href="{% round_url draw %}">Quit</a>
 </div>
 
 <div id="statusBar" class="btn-group">
