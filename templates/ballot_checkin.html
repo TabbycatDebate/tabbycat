@@ -11,7 +11,7 @@
 
         $('#venue').keyup(function(e) {
             if (e.keyCode != 13) return;
-            $('#success').removeClass('alert-success alert-error').html("Retrieving info...");
+            $('#success').removeClass('alert-success alert-danger').html("Retrieving info...");
             var val = $('#venue').val();
             if (val == '') {
                 $('#debate_details').hide();
@@ -48,7 +48,7 @@
                     // If not, show the error message.
                     } else {
                         $('#debate_details').hide();
-                        $('#success').html(data.message).addClass('alert-error').show();
+                        $('#success').html(data.message).addClass('alert-danger').show();
                     }
                     $('#ballots_left').text(data.ballots_left);
                 },
@@ -56,14 +56,14 @@
                     // Show an error message.
                     $('#debate_details').hide();
                     $('#success').html("There was an error retrieving information about that debate.")
-                        .addClass('alert-error').show();
+                        .addClass('alert-danger').show();
                 }
             });
             return false;
         });
 
         $('#checkin_btn').click(function() {
-            $('#success').removeClass('alert-success alert-error').html("Checking in...");
+            $('#success').removeClass('alert-success alert-danger').html("Checking in...");
             $('#debate_details').hide();
             var val = $('#venue_confirm').text();
             $.ajax( {
@@ -79,14 +79,14 @@
                         $('#venue').val('').focus();
                     } else {
                         $('#success').html("There was an error checking that ballot in.")
-                            .addClass('alert-error').show();
+                            .addClass('alert-danger').show();
                     }
                     $('#ballots_left').text(data.ballots_left);
                 },
                 error: function(xhr, error, ex) {
                     // Show an error message.
                     $('#success').html("There was an error checking that ballot in.")
-                        .addClass('alert-error').show();
+                        .addClass('alert-danger').show();
                 }
             });
             return false;

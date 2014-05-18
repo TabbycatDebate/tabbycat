@@ -17,11 +17,18 @@
     </script>
 {% endblock extra-head %}
 
+{% block head-title %}
+No draw currently exists
+{% endblock %}
+{% block header %}
+<div class="btn-group">
+    <a class="btn btn-default" id="createDraw">Create Draw</a>
+</div>
+{% endblock %}
+
 {% block content %}
 
-<p>No draw currently exists. Draw to be created for the following {{ active_teams|length }} teams.
-<a id="createDraw" href="">Create Draw</a>.
-</p>
+<p>Draw to be created for the following {{ active_teams|length }} teams</p>
 <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
 <ul>
     {% for team in active_teams %}

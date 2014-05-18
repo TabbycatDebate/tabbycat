@@ -44,6 +44,7 @@ class RandomDraw(BaseDraw):
         random.shuffle(self.teams)
         return pair_list(self.teams)
 
+
 class RandomDrawNoConflict(RandomDraw):
     MAX_SWAP_ATTEMPTS = 10
 
@@ -64,8 +65,8 @@ class RandomDrawNoConflict(RandomDraw):
                         break
         return draw
 
-class AidaDraw(BaseDraw):
 
+class AidaDraw(BaseDraw):
 
     def get_draw(self):
         from debate.aida import one_up_down
@@ -84,7 +85,6 @@ class AidaDraw(BaseDraw):
             pairs.extend(pool_draw)
         return self.balance_sides(pairs)
 
-
     def make_pools(self):
         pools = []
         teams = list(self.teams)
@@ -99,6 +99,7 @@ class AidaDraw(BaseDraw):
                 pool.append(teams.pop(0))
             pools.append(pool)
         return pools
+
 
 class BracketDraw(BaseDraw):
     def get_draw(self):
@@ -123,6 +124,7 @@ class BracketDraw(BaseDraw):
                 pairs.append(bracket[i], bracket[num+i])
         return pairs
 
+
 def assign_importance(round):
     debates = round.get_draw().order_by('-bracket')
     adjudicators = list(round.active_adjudicators.all())
@@ -140,10 +142,3 @@ def assign_importance(round):
         debate.importance = adjudicators[int(i*na/nd)].score
 
         debate.save()
-
-
-
-
-
-
-
