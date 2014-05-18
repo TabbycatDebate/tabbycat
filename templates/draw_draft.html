@@ -22,14 +22,15 @@
     </script>
 {% endblock extra-head %}
 
-{% block head-title %}Draw for Round {{ round }} (DRAFT){% endblock %}
-{% block page-title %}Draw for Round {{ round }} (DRAFT){% endblock %}
+{% block head-title %}Draw for Round {{ round }} <small>(DRAFT)</small>{% endblock %}
+{% block page-title %}Draw for Round {{ round }} <small>(DRAFT)</small>{% endblock %}
+{% block header %}
+    <div class="status btn-group">
+        <button id="confirmDraw" class="btn btn-default" >Confirm Draw</button>
+    </div>
+{% endblock %}
 
 {% block content %}
-
-<p>
-Here's the draw. <a id="confirmDraw" href="">Click to confirm</a>.
-</p>
 
 <form id="confirmForm" method="POST" action="{% round_url confirm_draw %}"></form>
 

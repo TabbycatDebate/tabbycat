@@ -8,14 +8,22 @@
 
 {% block content %}
 
+
+{% if updated %}
+<div class="alert alert-success updated alert-dismissable" id="savedVenues">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    Saved succesfully!
+</div>
+{% endif %}
+
+{% if form.errors %}
+    <div class="alert alert-error alert-dismissable" id="savedVenues">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        Please correct the errors below {{ form.errors }}
+    </div>
+{% endif %}
+
 <form id="configForm" action="." method="POST" class="form-horizontal">
-    {% if form.errors %}
-        <div class="error">Please correct the errors below</div>
-        {{ form.errors }}
-    {% endif %}
-    {% if updated %}
-    <div class="updated">Configuration updated</div>
-    {% endif %}
     {% for field in form %}
     <div class="form-group">
         <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">{{ field.label }}</label>

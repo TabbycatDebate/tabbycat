@@ -85,7 +85,7 @@ LOGIN_REDIRECT_URL = '/'
 # = Configurations =
 # ==================
 
-DEBUG_TOOLBAR_PATCH_SETTINGS = False # NEEDED otherwise gunicorn blows up
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 # Herouk
 if 'HEROKU' in os.environ:
