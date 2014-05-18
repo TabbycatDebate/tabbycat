@@ -359,7 +359,6 @@ def draw_confirmed(request, round):
 @expect_post
 @round_view
 def create_draw(request, round):
-
     round.draw()
     ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CREATE,
         user=request.user, round=round)
