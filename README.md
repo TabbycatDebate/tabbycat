@@ -10,6 +10,10 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
 - Optional online ballot submission
 - Optional online post-tournament tab display
 
+## Screenshots
+
+*TODO*
+
 ## Installation Instructions
 
 #### Setup on Linux or OS X
@@ -25,7 +29,7 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
         $ source venv/bin/activate
 
 3. Install the project's requirements. Note this requires an internet connection and can take a while:
-    
+
         $ pip install -r requirements.txt
 
 4. Rename ```local_settings.py.example``` to ```local_settings.py```
@@ -42,7 +46,7 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
 
 #### Deploy to Heroku
 
-After a local setup, these commands can be used to deploy to Heroku, provided you have setup the [Heroku Toolbelt](https://devcenter.heroku.com/articles/getting-started-with-python#local-workstation-setup):
+These commands can be used to deploy to Heroku, provided you have setup the [Heroku Toolbelt](https://devcenter.heroku.com/articles/getting-started-with-python#local-workstation-setup). Note that you can skip the local setup if you are just running on Heroku.
 
     $ heroku create
     $ heroku ps:scale web=1
@@ -54,11 +58,14 @@ After a local setup, these commands can be used to deploy to Heroku, provided yo
 
 #### Preparing a Tournament
 
-*TODO: Instructions for how to structure data for import*
+1. Copy and rename the ```data/dummy``` folder
+2. See the csv files in the new folder, and add/replace the data as per your tournament. Note that the institutions (ie first row) in the ```speakers.csv``` and ```adjudicators.csv``` files must match the institutions in the second row of the ```institutions.csv``` file. And that all csv files must end with a blank line.
 
 #### Importing a Tournament
 
-*TODO: Instructions for how to import the data*
+1. Use this command, replacing 'dummy' with your new folder's name:
+
+        $ ./manage.py import_tournament dummy
 
 #### Directing a Tournament
 

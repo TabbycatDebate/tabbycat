@@ -1,5 +1,5 @@
 {
-  "poop" : "/static/emoji/img/poop.png", 
+  "poop" : "/static/emoji/img/poop.png",
   "angel" : "/static/emoji/img/angel.png",
   "eggplant" : "/static/emoji/img/eggplant.png",
   "trollface" : "/static/emoji/img/trollface.png",
@@ -21,6 +21,7 @@
   "smoking" : "/static/emoji/img/smoking.png",
   "cat" : "/static/emoji/img/cat.png",
   "wave" : "/static/emoji/img/wave.png",
+  "sleeping" : "/static/emoji/img/sleeping.png",
   "coffee" : "/static/emoji/img/coffee.png",
   "cold_sweat" : "/static/emoji/img/cold_sweat.png",
   "fist" : "/static/emoji/img/fist.png",
@@ -581,7 +582,6 @@
   "six" : "/static/emoji/img/six.png",
   "six_pointed_star" : "/static/emoji/img/six_pointed_star.png",
   "ski" : "/static/emoji/img/ski.png",
-  "sleeping" : "/static/emoji/img/sleeping.png",
   "sleepy" : "/static/emoji/img/sleepy.png",
   "slot_machine" : "/static/emoji/img/slot_machine.png",
   "small_blue_diamond" : "/static/emoji/img/small_blue_diamond.png",

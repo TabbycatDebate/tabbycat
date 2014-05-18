@@ -41,7 +41,7 @@ def main():
             team = team
         ).save()
 
-    reader = csv.reader(open('judges.csv'))
+    reader = csv.reader(open('adjudicators.csv'))
     for _, ins_name, name, score in reader:
         print ins_name
         ins = m.Institution.objects.get(name=ins_name, tournament=t)
