@@ -75,9 +75,9 @@ These commands can be used to deploy to Heroku, provided you have setup the [Her
 
 #### Directing a Tournament
 
-1. Each round of the tournament has a number in the top right of the menu
-2. For each round, you need to confirm the Venues, Teams, Adjudicators, and Participants are all available using the options in this menu.
-3.
+1. First, view the tournament configuration page and adjust the speaker ranges and interface options.
+2. Each round of the tournament has a number in the top right of the menu
+3. For each round, you need to confirm the Venues, Teams, Adjudicators, and Participants are all available using the options in this menu.
 
 ## Developers and Development
 

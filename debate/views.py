@@ -74,6 +74,7 @@ def index(request):
         else:
             return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
 
+## Public UI
 
 @tournament_view
 def public_index(request, t):
@@ -81,40 +82,66 @@ def public_index(request, t):
 
 @tournament_view
 def public_draw(request, t):
-    r = t.current_round
-    if r.draw_status == r.STATUS_RELEASED:
-        draw = r.get_draw()
-        return r2r(request, "public/draw.html", dict(draw=draw, round=r))
+    if request.tournament.config.get('public_draw') > 0:
+        r = t.current_round
+        if r.draw_status == r.STATUS_RELEASED:
+            draw = r.get_draw()
+            return r2r(request, "public/draw.html", dict(draw=draw, round=r))
+        else:
+            return r2r(request, 'public/draw.html', dict(draw=None, round=r))
     else:
-        return r2r(request, 'public/draw.html', dict(draw=None, round=r))
+        return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_ballot_submit(request, t):
-    return r2r(request, 'public/add_ballot.html')
+    if request.tournament.config.get('public_ballots') > 0:
+        return r2r(request, 'public/add_ballot.html')
+    else:
+        return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_feedback_submit(request, t):
-    return r2r(request, 'public/add_feedback.html')
+    if request.tournament.config.get('public_feedback') > 0:
+        return r2r(request, 'public/add_feedback.html')
+    else:
+        return r2r(request, 'public/index.html')
+
+## Tab
 
 @tournament_view
 def public_team_tab(request, t):
-    return r2r(request, 'public/team_tab.html')
+    if request.tournament.config.get('tab_released') > 0:
+        return r2r(request, 'public/team_tab.html')
+    else:
+        return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_speaker_tab(request, t):
-    return r2r(request, 'public/speaker_tab.html')
+    if request.tournament.config.get('tab_released') > 0:
+        return r2r(request, 'public/speaker_tab.html')
+    else:
+        return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_replies_tab(request, t):
-    return r2r(request, 'public/reply_tab.html')
+    if request.tournament.config.get('tab_released') > 0:
+        return r2r(request, 'public/reply_tab.html')
+    else:
+        return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_motions_tab(request, t):
-    return r2r(request, 'public/motions_tab.html')
+    if request.tournament.config.get('tab_released') > 0:
+        return r2r(request, 'public/motions_tab.html')
+    else:
+        return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_feedback_tab(request, t):
-    return r2r(request, 'public/feedback_tab.html')
+    if request.tournament.config.get('tab_released') > 0:
+        return r2r(request, 'public/feedback_tab.html')
+    else:
+        return r2r(request, 'public_index.html')
 
 
 @login_required
