@@ -1,10 +1,17 @@
-{% extends "base.html" %}
+{% extends "draw_display_by_venue.html" %}
 {% load debate_tags %}
+{% load static %}
 
-{% block head-title %}Draw for Round {{ current_round }} has yet to be released{% endblock %}
-{% block page-title %}Draw for Round {{ current_round }} has yet to be released{% endblock %}
-{% block body-class %}public-draw{% endblock %}
+{% block nav %}{% include "public/nav.html" %}{% endblock %}
+{% block footer %}{% include "public/footer.html" %}{% endblock %}
+{% block header %}{% endblock %}
 
-{% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
+{% if round == None %}
+{% block content %}
 
-{% block content %}{% endblock %}
+<p class="lead">The draw has yet to be released
+<img src="{% static 'emoji/img/scream.png' %}" width="24" height="24" />
+</p>
+
+{% endblock %}
+{% endif %}

@@ -21,7 +21,16 @@
     </script>
 {% endblock extra-head %}
 
-{% block head-title %}Draw for Round {{ round }} <small>(Debates Confirmed)</small>{% endblock %}
+{% block head-title %}
+    Draw for Round {{ round }}
+    <small>(Debates
+    {% if round.draw_status = 10 %}
+        Confirmed
+    {% elif round.draw_status = 99 %}
+        Released
+    {% endif %})
+    </small>
+{% endblock %}
 {% block page-title %}Draw for Round {{ round }} (Debates Confirmed){% endblock %}
 {% block body-class %}draw{% endblock %}
 

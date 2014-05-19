@@ -173,7 +173,6 @@ class Team(models.Model):
 
     def seen(self, other, before_round=None):
         debates = self.get_debates(before_round)
-
         return len([1 for d in debates if other in d])
 
     def same_institution(self, other):

@@ -4,7 +4,9 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
 
 ## Features
 
+- Enter data from multiple computers simultaneously
 - Easily deployable to [Heroku](https://www.heroku.com) for a super fast setup
+- Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts
 - A drag and drop interface for adjudicator allocation that displays templates on the fly
 - Responsive templates designed for large screens, laptops, tablets, and phones
 - Optional online ballot submission

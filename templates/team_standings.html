@@ -51,8 +51,10 @@
         <td>
         {% if score.1 == 1 %}
             <span class="glyphicon glyphicon-arrow-up text-success"></span> {{ score.0|stringformat:".2f" }}
-        {% else %}
+        {% elif score.1 == 0 %}
             <span class="glyphicon glyphicon-arrow-down text-danger"></span> {{ score.0|stringformat:".2f" }}
+        {% else % }
+            No Result
         {% endif %}
         </td>
         {% endfor %}
