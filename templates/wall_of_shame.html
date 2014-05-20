@@ -51,10 +51,10 @@
 
 {% block body-class %}public-feedback{% endblock %}
 
-{% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
+{% block nav %}{% include "nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
 
-{% block head-title %}Unsubmitted Feedback Shitlist{% endblock %}
-{% block page-title %}Unsubmitted Feedback Shitlist{% endblock %}
+{% block head-title %}Unsubmitted Feedback Ballots{% endblock %}
+{% block page-title %}Unsubmitted Feedback Ballots{% endblock %}
 
 {% block header %}
 <div class="btn-group" data-toggle="buttons">
@@ -122,7 +122,7 @@
             </td>
             <td>
                 <a title="{{ team.speakers|join:", " }}" data-toggle="tooltip" class="entity" href="#">
-                    {{ team.name }}
+                    {{ team.short_name }}
                 </a>
             </td>
             <td class="">

@@ -15,7 +15,7 @@
         {% for person in people %}
         <tr>
             {% if person.speaker %}
-            <td>{{ person.speaker.team }}</td>
+            <td>{{ person.speaker.team.short_name }}</td>
             {% else %}
             <td>{{ person.adjudicator.institution.code }} Judge</td>
             {% endif %}

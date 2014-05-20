@@ -35,7 +35,7 @@
         {% if not speaker.results_in %}inactive{% endif%}">
         <td>{{ speaker.rank }}</td>
         <td>{{ speaker.name }}</td>
-        <td>{{ speaker.team }}</td>
+        <td>{{ speaker.team.shortname }}</td>
         {% for score in speaker.scores %}
         <td>{{ score|stringformat:".2f" }}</td>
         {% endfor %}

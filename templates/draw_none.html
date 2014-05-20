@@ -32,7 +32,7 @@ No draw currently exists
 <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
 <ul>
     {% for team in active_teams %}
-    <li>{{ team.name }} ({{ team.institution.code }})</li>
+    <li>{{ team.short_name }} ({{ team.institution.code }})</li>
     {% endfor %}
 </ul>
 

@@ -52,7 +52,7 @@
             <td class="team-emoji team-{{ team.id }}"></td>
         {% endif %}
         <td>
-            <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">{{ team.name }}</span>
+            <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">{{ team.short_name }}</span>
         </td>
         {% if show_institutions > 0 %}
             <td>{{ team.institution }}</td>
@@ -63,7 +63,7 @@
             <span class="glyphicon glyphicon-arrow-up text-success"></span> {{ score.0|stringformat:".2f" }}
         {% elif score.1 == 0 %}
             <span class="glyphicon glyphicon-arrow-down text-danger"></span> {{ score.0|stringformat:".2f" }}
-        {% else % }
+        {% else %}
             No Result
         {% endif %}
         </td>

@@ -178,7 +178,6 @@ def tournament_config(request, t):
 
 @tournament_view
 def feedback_progress(request, t):
-
     def calculate_coverage(submitted, total):
         if total == 0:
             return False # Don't show these ones
