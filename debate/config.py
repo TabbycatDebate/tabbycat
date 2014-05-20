@@ -50,15 +50,6 @@ def make_config_form(tournament, data=None):
             return forms.IntegerField(help_text=help)
         if t is float:
             return forms.FloatField(help_text=help)
-        if t is bool:
-            return forms.TypedChoiceField(
-                coerce=lambda x: x =='True',
-                choices=((False, 'No'), (True, 'Yes')),
-                widget=forms.RadioSelect,
-                help_text=help
-            )
-
-    #(coerce=lambda x: bool(int(x)),choices=((0, 'False'), (1, 'True')),widget=forms.RadioSelect)
 
     fields = SortedDict()
     initial_data = {}

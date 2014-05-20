@@ -62,22 +62,38 @@ These commands can be used to deploy to Heroku, provided you have setup the [Her
     $ heroku run python manage.py migrate
     $ heroku open
 
-#### Preparing a Tournament
+#### Preparing a Tournament (Manual Data Entry)
+
+1. Go to <your url>/admin/
+2. Create a new Tournament object (and input the rounds)
+3. Proceed to create Venues, Institutions, Teams (which also allows you to add speakers), and Adjudicators
+
+#### Importing a Tournament (Data Import)
 
 1. Copy and rename the ```data/dummy``` folder
 2. See the csv files in the new folder, and add/replace the data as per your tournament. Note that the institutions (ie first row) in the ```speakers.csv``` and ```adjudicators.csv``` files must match the institutions in the second row of the ```institutions.csv``` file. And that all csv files must end with a blank line.
-
-#### Importing a Tournament
-
-1. Use this command, replacing 'dummy' with your new folder's name:
+3. Use this command, replacing 'dummy' with your new folder's name:
 
         $ ./manage.py import_tournament dummy
 
 #### Directing a Tournament
 
+###### Initial Setup
+
 1. First, view the tournament configuration page and adjust the speaker ranges and interface options.
-2. Each round of the tournament has a number in the top right of the menu
-3. For each round, you need to confirm the Venues, Teams, Adjudicators, and Participants are all available using the options in this menu.
+2. Go to the /admin/ page to add any users that should have access to data-entry functions, but not the main tab backend. These should have *Active* and *Staff status* ticked.
+
+###### Round-by-Round
+
+1. Each round of the tournament has a number in the top right of the menu
+2. For each round, you need to confirm the Venues, Teams, Adjudicators, and Participants are all available using the options in this menu.
+3. The draw can then be generated on the Draw page
+4. If using the public draw function, set the round to be released in the Django admin backend
+5. If you desire motion break downs, enter the motions for each round in the Motions page
+
+###### Wrapping Up
+
+1. Tabs can be released using the *Tab released* option under configuration. Note that you probably want to turn off *Public ballots*, *Public feedback*, *Feedback progress*, and *Public draw* at this stage.
 
 ## Developers and Development
 

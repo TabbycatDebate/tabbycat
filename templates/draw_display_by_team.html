@@ -8,15 +8,9 @@
             var table = $('#draw').dataTable({
                 'bPaginate': false,
                 "aaSorting": [[ 0, "asc" ]],
-                "aoColumns": [
-                      { "sType": "string" },
-                      { "sType": "string" },
-                      { "sType": "string" },
-                      { "sType": "string" },
-                      { "sType": "string" },
-                      { "sType": "string" },
-                      { "sType": "string" }
-                    ],
+                "aoColumnDefs": [
+                  { "sType": "string", aTargets: [ '_all' ] }
+                ]
             });
             new $.fn.dataTable.FixedHeader( table );
         });
@@ -43,9 +37,13 @@
         <tr>
             <th>Team</th>
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-            <th>e</th>
+            {% if show_emoji > 0 %}
+                <th></th>
+            {% endif %}
             <th>Affirmative</th>
-            <th>e</th>
+            {% if show_emoji > 0 %}
+                <th></th>
+            {% endif %}
             <th>Negative</th>
             <th>Adjudicators</th>
         </tr>
@@ -57,11 +55,15 @@
             <td class="venue-name">
                 {{ debate.venue_splitname }}
             </td>
-            <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
+            {% if show_emoji > 0 %}
+                <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
+            {% endif %}
             <td class="team-name" id="">
                 <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.name }}</span>
             </td>
-            <td class="team-emoji team-{{ debate.neg_team.id }}" id=""></td>
+            {% if show_emoji > 0 %}
+                <td class="team-emoji team-{{ debate.neg_team.id }}" id=""></td>
+            {% endif %}
             <td class="team-name">
                 <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.name }}</span>
             </td>

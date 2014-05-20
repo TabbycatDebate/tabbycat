@@ -26,6 +26,9 @@
             <th><span data-toggle="tooltip" title="" class="glyphicon glyphicon-signal" data-original-title="Rank"></span></th>
             <th>Name</th>
             <th>Team</th>
+            {% if show_institutions > 0 %}
+                <th>Institution</th>
+            {% endif %}
             {% for round in rounds %}
             <th>{{ round }}</th>
             {% endfor %}
@@ -39,6 +42,9 @@
         <td>{{ speaker.rank }}</td>
         <td>{{ speaker.name }}</td>
         <td>{{ speaker.team }}</td>
+        {% if show_institutions > 0 %}
+            <td>{{ speaker.institution }}</td>
+        {% endif %}
         {% for score in speaker.scores %}
         <td>{{ score|stringformat:".2f" }}</td>
         {% endfor %}
