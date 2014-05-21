@@ -686,22 +686,6 @@ input.error, select.error, .error input {
   border-color: #a94442;
   color: #a94442; }
 
-.form-group ul {
-  padding-left: 0px; }
-  .form-group ul li {
-    list-style-type: none;
-    float: left;
-    width: 50%; }
-    .form-group ul li label {
-      width: 100%;
-      float: left;
-      line-height: 34px; }
-      .form-group ul li label input {
-        float: left;
-        display: inline;
-        width: 30px;
-        margin-top: 0; }
-
 table.dataTable {
   margin-top: 0px !important; }
   table.dataTable thead {
@@ -735,6 +719,7 @@ table.dataTable {
   table.dataTable .adj-trainee {
     font-style: italic; }
   table.dataTable .team-emoji {
+    max-width: 28px;
     text-align: center;
     padding: 4px 0 4px 0; }
     table.dataTable .team-emoji img {
