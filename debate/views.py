@@ -886,8 +886,8 @@ def ballot_checkin_get_details(request, round):
 
     obj['exists'] = True
     obj['venue'] = debate.venue.name
-    obj['aff_team'] = debate.aff_team.name
-    obj['neg_team'] = debate.neg_team.name
+    obj['aff_team'] = debate.aff_team.short_name
+    obj['neg_team'] = debate.neg_team.short_name
 
     adjs = debate.adjudicators
     adj_names = [adj.name for type, adj in adjs if type != DebateAdjudicator.TYPE_TRAINEE]
