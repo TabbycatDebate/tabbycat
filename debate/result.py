@@ -107,7 +107,7 @@ class DebateResult(object):
     Encapsulates the result of a debate
 
     This class makes it easier for views & forms to work with the result
-    of a debate. 
+    of a debate.
 
     It acts as a translation layer on top of the following db models:
 
@@ -157,7 +157,7 @@ class DebateResult(object):
         ):
 
             self.speakers[side][sss.position] = sss.speaker
-            
+
         try:
             ts = TeamScore.objects.get(debate_team=dt)
             points = ts.points
@@ -221,7 +221,7 @@ class DebateResult(object):
                 position = i,
             ).save()
 
-        
+
     def get_speaker(self, side, position):
         """
         Return the speaker object for side/position

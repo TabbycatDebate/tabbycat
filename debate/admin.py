@@ -62,7 +62,7 @@ _ts_round.short_description = 'Round'
 _ts_team = lambda o: o.debate_team.team.name
 _ts_team.short_description = 'Team'
 class TeamScoreAdmin(admin.ModelAdmin):
-    list_display = ('id', _ts_round, _ts_team,)
+    list_display = ('id', 'ballot_submission', _ts_round, _ts_team,)
     search_fields = ('debate_team__debate__round__seq',
                      'debate_team__team__name')
 admin.site.register(models.TeamScore, TeamScoreAdmin)
@@ -70,7 +70,7 @@ admin.site.register(models.TeamScore, TeamScoreAdmin)
 _ss_speaker = lambda o: o.speaker.name
 _ss_speaker.short_description = 'Speaker'
 class SpeakerScoreAdmin(admin.ModelAdmin):
-    list_display = ('id', _ts_round, _ts_team, 'position', _ss_speaker, 'score')
+    list_display = ('id', 'ballot_submission', _ts_round, _ts_team, 'position', _ss_speaker, 'score')
     search_fields = ('debate_team__debate__round__seq',
                      'debate_team__team__name', 'speaker__name')
     list_filter = ('score',)
@@ -92,3 +92,23 @@ class MotionAdmin(admin.ModelAdmin):
     list_filter = ('round',)
 
 admin.site.register(models.Motion, MotionAdmin)
+
+class SpeakerScoreByAdjInline(admin.TabularInline):
+    model = models.SpeakerScoreByAdj
+    extra = 0
+
+class SpeakerScoreInline(admin.TabularInline):
+    model = models.SpeakerScore
+    extra = 0
+
+class TeamScoreInline(admin.TabularInline):
+    model = models.TeamScore
+    extra = 0
+
+class BallotSubmissionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'user')
+    search_fields = ('debate',)
+    # This incurs a massive performance hit
+    #inlines = (SpeakerScoreByAdjInline, SpeakerScoreInline, TeamScoreInline)
+
+admin.site.register(models.BallotSubmission, BallotSubmissionAdmin)

@@ -731,6 +731,8 @@ class Debate(models.Model):
     motion = models.ForeignKey('Motion', blank=True, null=True,
             on_delete=models.SET_NULL)
 
+    active_ballot = models.OneToOneField('BallotSubmission', null=True, related_name='active_ballot')
+
     def _get_teams(self):
         if not hasattr(self, '_team_cache'):
             self._team_cache = {}
@@ -999,17 +1001,44 @@ class AdjudicatorAllocation(object):
                     type = t,
                 ).save()
 
+class BallotSubmission(models.Model):
+    """Represents a single submission of ballots for a debate.
+    (Not a single motion, but a single submission of all ballots for a debate.)"""
+
+    SUBMITTER_TABROOM = 0
+    SUBMITTER_PUBLIC  = 1
+    SUBMITTER_TYPE_CHOICES = (
+        (SUBMITTER_TABROOM, 'Tab room'),
+        (SUBMITTER_PUBLIC,  'Public'),
+    )
+
+    debate = models.ForeignKey(Debate)
+
+    timestamp = models.DateTimeField(auto_now_add=True)
+    submitter_type = models.IntegerField(choices=SUBMITTER_TYPE_CHOICES)
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True) # only relevant if submitter was in tab room
+
+    def __unicode__(self):
+        return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp)
+
+    # For further discussion
+    #submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
+    #submitter_email = models.EmailField(max_length=254, blank=True, null=True) # only relevant for public submissions
+    #submitter_phone = models.CharField(max_length=40, blank=True, null=True)   # only relevant for public submissions
+
 class SpeakerScoreByAdj(models.Model):
     """
     Holds score given by a particular adjudicator in a debate
     """
+    ballot_submission = models.ForeignKey(BallotSubmission)
     debate_adjudicator = models.ForeignKey(DebateAdjudicator)
     debate_team = models.ForeignKey(DebateTeam)
     score = ScoreField()
     position = models.IntegerField()
 
     class Meta:
-        unique_together = [('debate_adjudicator', 'debate_team', 'position')]
+        unique_together = [('debate_adjudicator', 'debate_team', 'position', 'ballot_submission')]
 
     @property
     def debate(self):
@@ -1019,9 +1048,13 @@ class TeamScore(models.Model):
     """
     Holds a teams total score and points in a debate
     """
-    debate_team = models.ForeignKey(DebateTeam, unique=True)
+    ballot_submission = models.ForeignKey(BallotSubmission)
+    debate_team = models.ForeignKey(DebateTeam)
     points = models.PositiveSmallIntegerField()
     score = ScoreField()
+
+    class Meta:
+        unique_together = [('debate_team', 'ballot_submission')]
 
 class SpeakerScoreManager(models.Manager):
     use_for_related_fields = True
@@ -1034,6 +1067,7 @@ class SpeakerScore(models.Model):
     """
     Represents a speaker's score in a debate
     """
+    ballot_submission = models.ForeignKey(BallotSubmission)
     debate_team = models.ForeignKey(DebateTeam)
     speaker = models.ForeignKey(Speaker)
     score = ScoreField()
@@ -1042,7 +1076,7 @@ class SpeakerScore(models.Model):
     objects = SpeakerScoreManager()
 
     class Meta:
-        unique_together = [('debate_team', 'speaker', 'position')]
+        unique_together = [('debate_team', 'speaker', 'position', 'ballot_submission')]
 
 class MotionManager(models.Manager):
     def statistics(self, round=None):
