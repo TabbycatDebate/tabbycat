@@ -38,7 +38,7 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
 
         $ pip install -r requirements.txt
 
-4. Rename ```local_settings.py.example``` to ```local_settings.py```
+4. Rename ```local_settings.example``` to ```local_settings.py```
    and edit to match your database setup.
 
 5. Sync and migrate the database:
