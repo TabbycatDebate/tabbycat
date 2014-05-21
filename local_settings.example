@@ -5,7 +5,7 @@ import os
 # ===================
 
 ADMINS              = (
-    '', ',
+    '', '',
 )
 MANAGERS            = ADMINS
 DEBUG               = True
