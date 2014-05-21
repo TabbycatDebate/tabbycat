@@ -14,21 +14,43 @@
 
         <div class="collapse navbar-collapse">
             <ul id="nav" class="nav navbar-nav navbar-left">
+                 {% if tab_released > 0 %}
+                <li><a class="public-feedback-nav" href="{% tournament_url public_team_tab %}">
+                    Team Tab
+                </a></li>
+                <li><a class="public-add-ballot-nav" href="{% tournament_url public_speaker_tab %}">
+                    Speaker Tab
+                </a></li>
+                <li><a class="public-add-feedback-nav" href="{% tournament_url public_replies_tab %}">
+                    Replies Tab
+                </a></li>
+                <li><a class="public-add-feedback-nav" href="{% tournament_url public_motions_tab %}">
+                    Motions Tab
+                </a></li>
+                <li><a class="" href="{% tournament_url public_feedback_tab %}">
+                    Feedback Tab
+                </a></li>
+                {% endif %}
+                {% if public_draw > 0 %}
                 <li><a class="public-draw-nav" href="{% tournament_url public_draw %}">
                     Draw for Round {{ current_round }}
                 </a></li>
+                {% endif %}
+                {% if feedback_progress > 0 %}
                 <li><a class="public-feedback-nav" href="{% tournament_url feedback_progress %}">
                     Feedback Progress
                 </a></li>
+                {% endif %}
+                {% if public_ballots > 0 %}
                 <li><a class="public-add-ballot-nav" href="{% tournament_url public_ballot_submit %}">
-                    Submit Ballot
+                    Enter Ballot
                 </a></li>
+                {% endif %}
+                {% if public_feedback > 0 %}
                 <li><a class="public-add-feedback-nav" href="{% tournament_url public_feedback_submit %}">
-                    Submit Feedback
+                    Enter Feedback
                 </a></li>
-                <li><a class="" href="{% tournament_url public_team_tab %}">
-                    The Tab
-                </a></li>
+                {% endif %}
             </ul>
             <ul id="nav" class="nav navbar-nav navbar-right">
                 <li id="nav-logout"><a href="/accounts/login/">Log in</a></li>

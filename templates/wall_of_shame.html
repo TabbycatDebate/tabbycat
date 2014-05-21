@@ -51,10 +51,10 @@
 
 {% block body-class %}public-feedback{% endblock %}
 
-{% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
+{% block nav %}{% include "nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
 
-{% block head-title %}Unsubmitted Feedback Shitlist{% endblock %}
-{% block page-title %}Unsubmitted Feedback Shitlist{% endblock %}
+{% block head-title %}Unsubmitted Feedback Ballots{% endblock %}
+{% block page-title %}Unsubmitted Feedback Ballots{% endblock %}
 
 {% block header %}
 <div class="btn-group" data-toggle="buttons">
@@ -79,7 +79,9 @@
                 <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Unsubmitted Feedbacks"></span></th>
                 <th><span class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Submitted Feedbacks"></span></th>
                 <th>Adjudicator/Team</th>
-                <th>Institution</th>
+                {% if show_institutions > 0 %}
+                    <th>Institution</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -99,9 +101,11 @@
             <td class="entity-name">
                 {{ entity.name }}
             </td>
+            {% if show_institutions > 0 %}
             <td class="">
                 {{ entity.institution }} {{ entity.test }}
             </td>
+            {% endif %}
         </tr>
         {% endif %}
         {% endfor %}
@@ -118,7 +122,7 @@
             </td>
             <td>
                 <a title="{{ team.speakers|join:", " }}" data-toggle="tooltip" class="entity" href="#">
-                    {{ team.name }}
+                    {{ team.short_name }}
                 </a>
             </td>
             <td class="">

@@ -14,6 +14,13 @@ SETTINGS = SortedDict([
                               1000000)),
     ('adj_history_penalty', (int, 'Penalty for adjudicator-team history',
                               10000)),
+    ('show_emoji', (int, 'Shows Emoji in the draw UI', 1)),
+    ('show_institutions', (int, 'Shows the institutions column in the draw UI', 1)),
+    ('public_draw', (int, 'Public interface to see RELEASED draws', 0)),
+    ('public_ballots', (int, 'Public interface to add ballots', 0)),
+    ('public_feedback', (int, 'Public interface to add feedback', 0)),
+    ('feedback_progress', (int, 'Public interface to view unsubmitted ballots', 0)),
+    ('tab_released', (int, 'Displays the tab PUBLICLY. For AFTER the tournament', 0)),
 ])
 
 
@@ -38,16 +45,16 @@ class Config(object):
 def make_config_form(tournament, data=None):
     from django import forms
 
-    def _field(t):
+    def _field(t, help):
         if t is int:
-            return forms.IntegerField
+            return forms.IntegerField(help_text=help)
         if t is float:
-            return forms.FloatField
+            return forms.FloatField(help_text=help)
 
     fields = SortedDict()
     initial_data = {}
     for name, (coerce, help, default) in SETTINGS.items():
-        fields[name] = _field(coerce)(help_text=help)
+        fields[name] = _field(coerce, help)
         fields[name].default = default
         initial_data[name] = tournament.config.get(name)
     class BaseConfigForm(forms.BaseForm):

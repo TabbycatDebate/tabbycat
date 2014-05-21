@@ -49,10 +49,10 @@
                 {{ debate.venue_splitname }}
             </td>
             <td title="{% aff_count debate.aff_team round.prev %}" class="team-name" id="{{ debate.aff_team.id }}">
-                {{ debate.aff_team.name }}
+                {{ debate.aff_team.short_name }}
             </td>
             <td title="{% neg_count debate.neg_team round.prev %}" class="team-name" id="{{ debate.neg_team.id }}">
-                {{ debate.neg_team.name }}
+                {{ debate.neg_team.short_name }}
             </td>
             <td class="adj-names">
                 <ul class="">

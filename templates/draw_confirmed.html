@@ -6,6 +6,7 @@
    <script type="text/javascript" charset="utf-8">
 
         $(document).ready( function() {
+
             $("#allocateAdj").click( function() {
                 $("#allocateAdjForm").submit();
                 return false;
@@ -15,6 +16,25 @@
                 "aaSorting": [[ 0, "desc" ]],
             });
             new $.fn.dataTable.FixedHeader( table );
+            $("#release_draw").click( function() {
+                var btn = $(this)
+                btn.button('releasing...')
+                $.ajax({
+                    type: "POST",
+                    url: "{% round_url create_adj_allocation %}",
+                    success: function(data, status) {
+                        btn.button('reset')
+                    },
+                    error: function(xhr, error, ex) {
+                        btn.button('reset')
+                    }
+                });
+                return false;
+            } );
+            $("#unrelease_draw").click( function() {
+                //$("#allocateAdjForm").submit();
+                return false;
+            } );
 
         } );
 
@@ -36,25 +56,30 @@
 
 {% block header %}
 <div class="btn-group">
-    <a class="btn btn-default" href="{% round_url draw_venues_edit %}">Edit venues</a>
-    <a class="btn btn-default" href="{% round_url draw_adjudicators_edit %}">Edit adjs</a>
-    <a class="btn btn-default" href="{% round_url draw_display_by_venue %}">Display by venue</a>
-    <a class="btn btn-default" href="{% round_url draw_display_by_team %}">Display by team</a>
+    <a class="btn btn-default" href="{% round_url draw_venues_edit %}">Edit Venues</a>
+    <a class="btn btn-default" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
+    <a class="btn btn-default" href="{% round_url draw_display_by_venue %}">Display by Venue</a>
+    <a class="btn btn-default" href="{% round_url draw_display_by_team %}">Display by Team</a>
+    {% if round.draw_status = 10 %}
+        <button class="btn btn-default" id="release_draw">Release to Public</button>
+    {% elif round.draw_status = 99 %}
+        <button class="btn btn-default" id="unrelease_draw">Unrelease</button>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block content %}
 
 {% if round.adjudicators_allocation_validity == 1 %}
-<div class="alert alert-danger alert-dismissable" id="savedVenues">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    One or more debates don't have a chair. <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.</p>
-</div>
+    <div class="alert alert-danger alert-dismissable" id="savedVenues">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        One or more debates don't have a chair. <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.</p>
+    </div>
 {% elif round.adjudicators_allocation_validity == 2 %}
-<div class="alert alert-danger alert-dismissable" id="savedVenues">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    One or more debates have panels with an even number of adjudicators. <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.</p>
-</div>
+    <div class="alert alert-danger alert-dismissable" id="savedVenues">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        One or more debates have panels with an even number of adjudicators. <a href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.</p>
+    </div>
 {% endif %}
 
 <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}"></form>
@@ -76,10 +101,10 @@
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td title="{% aff_count debate.aff_team round.prev %}">
-            <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.name }}</span>
+            <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.short_name }}</span>
         </td>
         <td title="{% neg_count debate.neg_team round.prev %}">
-            <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.name }}</span>
+            <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.short_name }}</span>
         </td>
         <td>{{ debate.adjudicators_display }}</td>
         <td>{{ debate.all_conflicts|join:", " }}</td>

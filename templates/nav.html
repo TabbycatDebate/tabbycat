@@ -18,8 +18,9 @@
                 <li><a class="results-nav" href="{% round_url results current_round %}">Results</a></li>
                 <li><a class="team-standings-nav" href="{% round_url team_standings current_round %}">Teams</a></li>
                 <li><a class="speaker-standings-nav" href="{% round_url speaker_standings current_round %}">Speakers</a></li>
-                <li><a class="adj-feedback-nav" href="{% tournament_url adj_feedback %}">Feedback</a></li>
-                <li><a class="adj-feedback-nav" href="{% round_url motions current_round %}">Motions</a></li>
+                <li><a class="adjudicators-standings-nav" href="{% tournament_url adj_feedback %}">Adjudicators</a></li>
+                <li><a class="feedback-standings-nav" href="{% tournament_url feedback_progress %}">Feedbacks</a></li>
+                <li><a class="motions-nav" href="{% round_url motions current_round %}">Motions</a></li>
                 <li><a class="config-nav" href="{% tournament_url tournament_config %}">Config</a></li>
             </ul>
             <ul id="nav" class="nav navbar-nav navbar-right">

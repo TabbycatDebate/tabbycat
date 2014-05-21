@@ -18,7 +18,9 @@
         <tr>
             <th>Add</th>
             <th>Name</th>
+            {% if show_institutions > 0 %}
             <th>Institution</th>
+            {% endif %}
         </tr>
     </thead>
 
@@ -27,7 +29,9 @@
         <tr id="adj_{{ adj.id }}">
             <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
             <td>{{ adj.name }}</td>
+            {% if show_institutions > 0 %}
             <td>{{ adj.institution }}</td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>
