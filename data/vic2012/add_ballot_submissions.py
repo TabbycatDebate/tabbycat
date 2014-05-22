@@ -8,14 +8,14 @@ from django.contrib.auth.models import User
 # Add a ballot submission to everything. Method:
 #  1. Create a BallotSubmission for every debate.
 #  2. Give it default submitted-by fields, etc.
-#  3. Make it the active_ballot of the Debate
-#  4. Make it the active_ballot of every SpeakerScoreByAdj, TeamScore and SpeakerScore for that debate
+#  3. Make it the confirmed_ballot of the Debate
+#  4. Make it the confirmed_ballot of every SpeakerScoreByAdj, TeamScore and SpeakerScore for that debate
 
 for debate in m.Debate.objects.all():
     bs = m.BallotSubmission(submitter_type=m.BallotSubmission.SUBMITTER_TABROOM, debate=debate)
     bs.user = User.objects.get(username='original')
     bs.save()
-    debate.active_ballot = bs
+    debate.confirmed_ballot = bs
     for ssba in m.SpeakerScoreByAdj.objects.filter(debate_team__debate = debate):
         ssba.ballot_submission = bs
         ssba.save()

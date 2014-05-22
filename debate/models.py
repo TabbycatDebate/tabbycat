@@ -735,7 +735,8 @@ class Debate(models.Model):
     motion = models.ForeignKey('Motion', blank=True, null=True,
             on_delete=models.SET_NULL)
 
-    active_ballot = models.OneToOneField('BallotSubmission', null=True, related_name='active_ballot')
+    # confirmed_ballot represents all the ballots in the confirmed set, not just one adjudicator's ballot
+    confirmed_ballot = models.OneToOneField('BallotSubmission', null=True, related_name='confirmed_ballot')
 
     def _get_teams(self):
         if not hasattr(self, '_team_cache'):
