@@ -9,6 +9,8 @@ from debate.adjudicator.anneal import SAAllocator
 
 from debate.result import DebateResult
 
+from warnings import warn
+
 class ScoreField(models.FloatField):
     pass
 
@@ -136,11 +138,13 @@ class Team(models.Model):
     objects = TeamManager()
 
     def __unicode__(self):
-        return self.name
+        return self.short_name
 
     @property
     def name(self):
-        return unicode(self.reference)
+        # TODO make this an exception so that we get rid of all of them
+        warn("Team.name is deprecated, use Team.short_name", DeprecationWarning)
+        return self.short_name
 
     @property
     def short_name(self):
@@ -865,7 +869,7 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __unicode__(self):
-        return u'[%s] %s vs %s (%s)' % (self.round.seq, self.aff_team.name, self.neg_team.name,
+        return u'[%s] %s vs %s (%s)' % (self.round.seq, self.aff_team, self.neg_team,
                                    self.venue)
 
     @property
