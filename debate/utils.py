@@ -12,7 +12,7 @@ def memoize(fn):
     foo.func_name = fn.func_name
     return foo
 
-        
+
 def pair_list(ls):
     half = len(ls)/2
     return zip(ls[:half], ls[half:])
@@ -34,13 +34,15 @@ def gen_results():
     return r
 
 def generate_random_results(round):
+    # WARNING: This function has probably been broken by the transition to
+    # using BallotSubmissions.
     from debate.models import Debate, DebateResult
 
     debates = Debate.objects.filter(round=round)
 
     for debate in debates:
         dr = DebateResult(debate)
-        
+
         rr = gen_results()
         for side in ('aff', 'neg'):
             speakers = getattr(debate, '%s_team' % side).speakers
@@ -65,7 +67,7 @@ def generate_random_results(round):
         debate.result_status = debate.STATUS_CONFIRMED
         debate.save()
 
-        
+
 def test_gen():
     from debate.models import Round
     generate_random_results(Round.objects.get(pk=1))

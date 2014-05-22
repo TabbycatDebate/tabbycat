@@ -1,10 +1,10 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
-from debate.models import SpeakerScoreByAdj, DebateResult, Debate, Motion
+from debate.models import SpeakerScoreByAdj, Debate, Motion
 from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
 from debate.models import ActionLog
-from debate.result import DebateResult
+from debate.result import BallotSet
 
 def get_or_instantiate(model, **kwargs):
     try:
@@ -43,28 +43,30 @@ class ReplyScoreField(ScoreField):
                 _('Please enter a multiple of 0.5'), code='decimal'
             )
 
-class ResultForm(forms.Form):
+class BallotSetForm(forms.Form):
 
     result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES,
         widget = forms.Select(attrs = {'tabindex': 100}))
 
-    def __init__(self, debate, *args, **kwargs):
+    def __init__(self, ballots, *args, **kwargs):
         """
         Dynamically generate fields for this debate
 
         <side>_speaker_<pos> and
         <side>_score_<pos>
         """
-        self.debate = debate
+        self.ballots = ballots
+        self.debate = ballots.debate
         self.adjudicators = debate.adjudicators.list
 
-        super(ResultForm, self).__init__(*args, **kwargs)
+        super(BallotSetForm, self).__init__(*args, **kwargs)
 
         tournament = debate.round.tournament
         self.POSITIONS = tournament.POSITIONS
         self.LAST_SUBSTANTIVE_POSITION = tournament.LAST_SUBSTANTIVE_POSITION
         self.REPLY_POSITION = tournament.REPLY_POSITION
 
+        # Limit the motions you can choose to the motions for this round
         motions = debate.round.motion_set
         self.show_motion = motions.exists() # this is used in the template
         self.initial = self._initial_data()
@@ -145,6 +147,8 @@ class ResultForm(forms.Form):
 
         initial = {'result_status': self.debate.result_status}
 
+        bs = BallotSet(self.ballots)
+
         # This isn't relevant if we're not showing the motions field
         # (i.e. there are no motions given for this round).
         # Generally, initialise the motion to what is currently in the
@@ -153,27 +157,25 @@ class ResultForm(forms.Form):
         # to the only motion there is.
         motions = self.debate.round.motion_set
         if self.show_motion:
-            if not self.debate.motion and motions.count() == 1:
+            if not bs.motion and motions.count() == 1:
                 initial['motion'] = motions[0]
             else:
-                initial['motion'] = self.debate.motion
-
-        result = self.debate.result
+                initial['motion'] = bs.motion
 
         for side in ('aff', 'neg'):
             for i in self.POSITIONS:
-                speaker = result.get_speaker(side, i)
+                speaker = bs.get_speaker(side, i)
                 if speaker:
                     initial['%s_speaker_%d' % (side, i)] = speaker.id
 
                     for adj in self.adjudicators:
-                        score = result.get_score(adj, side, i)
+                        score = bs.get_score(adj, side, i)
                         initial[self.score_field_name(adj, side, i)] = score
 
         return initial
 
     def clean(self):
-        cleaned_data = super(ResultForm, self).clean()
+        cleaned_data = super(BallotSetForm, self).clean()
 
         errors = list()
 
@@ -208,21 +210,21 @@ class ResultForm(forms.Form):
         return cleaned_data
 
     def save(self):
-        dr = DebateResult(self.debate)
+        bs = BallotSet(self.ballots)
 
+        bs.set_motion(self.cleaned_data['motion'])
         def do(side):
             for i in self.POSITIONS:
                 speaker = self.cleaned_data['%s_speaker_%d' % (side, i)]
-                dr.set_speaker(side, i, speaker)
+                bs.set_speaker(side, i, speaker)
                 for adj in self.adjudicators:
                     score = self.cleaned_data[self.score_field_name(adj, side, i)]
-                    dr.set_score(adj, side, i, score)
+                    bs.set_score(adj, side, i, score)
         do('aff')
         do('neg')
-        dr.save()
+        bs.save()
 
         self.debate.result_status = self.cleaned_data['result_status']
-        self.debate.motion = self.cleaned_data['motion']
         self.debate.save()
 
     def adj_iter(self):

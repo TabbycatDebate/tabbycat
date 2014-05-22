@@ -7,7 +7,7 @@ from debate.utils import pair_list, memoize
 from debate.draw import RandomDrawNoConflict, AidaDraw
 from debate.adjudicator.anneal import SAAllocator
 
-from debate.result import DebateResult
+from debate.result import BallotSet
 
 from warnings import warn
 
@@ -732,8 +732,6 @@ class Debate(models.Model):
     importance = models.IntegerField(blank=True, null=True)
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
             default=STATUS_NONE)
-    motion = models.ForeignKey('Motion', blank=True, null=True,
-            on_delete=models.SET_NULL)
 
     # confirmed_ballot represents all the ballots in the confirmed set, not just one adjudicator's ballot
     confirmed_ballot = models.OneToOneField('BallotSubmission', null=True, related_name='confirmed_ballot')
@@ -759,6 +757,7 @@ class Debate(models.Model):
         return getattr(self, '%s_team' % side)
 
     def get_dt(self, side):
+        """dt = DebateTeam"""
         return getattr(self, '%s_dt' % side)
 
     @property
@@ -854,10 +853,7 @@ class Debate(models.Model):
 
     @property
     def result(self):
-        if not hasattr(self, '_result'):
-            from debate.result import DebateResult
-            self._result = DebateResult(self)
-        return self._result
+        raise NotImplementedError("Debate.result is deprecated. Use Debate.confirmed_ballot.ballot_set instead.")
 
     def get_side(self, team):
         if self.aff_team == team:
@@ -1018,6 +1014,7 @@ class BallotSubmission(models.Model):
     )
 
     debate = models.ForeignKey(Debate)
+    motion = models.ForeignKey('Motion', blank=True, null=True, on_delete=models.SET_NULL)
 
     timestamp = models.DateTimeField(auto_now_add=True)
     submitter_type = models.IntegerField(choices=SUBMITTER_TYPE_CHOICES)
@@ -1026,6 +1023,11 @@ class BallotSubmission(models.Model):
 
     def __unicode__(self):
         return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp)
+
+    def ballot_set(self):
+        if not hasattr(self, "_ballot_set"):
+            self._ballot_set = BallotSet(self)
+        return self._ballot_set
 
     # For further discussion
     #submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
@@ -1096,10 +1098,10 @@ class MotionManager(models.Manager):
 
         # TODO is there a more efficient way to do this?
         for motion in motions:
-            debates = Debate.objects.filter(motion=motion)
-            motion.aff_wins = sum(debate.result.aff_win for debate in debates)
+            confirmed_ballots = BallotSubmission.objects.filter(motion=motion, debate__confirmed_ballot__isnull=False)
+            motion.aff_wins = sum(ballot.ballot_set.aff_win for ballot in confirmed_ballots)
             motion.aff_wins_percent = int((float(motion.aff_wins) / float(motion.chosen_in)) * 100)
-            motion.neg_wins = sum(debate.result.neg_win for debate in debates)
+            motion.neg_wins = sum(ballot.ballot_set.neg_win for ballot in confirmed_ballots)
             motion.neg_wins_percent = int((float(motion.neg_wins) / float(motion.chosen_in)) * 100)
 
         return motions

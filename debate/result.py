@@ -8,8 +8,9 @@ class Scoresheet(object):
     self.data[side][pos] = score
     """
 
-    def __init__(self, debate, adjudicator):
-        self.debate = debate
+    def __init__(self, ballots, adjudicator):
+        self.ballots = ballots
+        self.debate = ballots.debate
         self.adjudicator = adjudicator
 
         from debate import models as m
@@ -40,6 +41,7 @@ class Scoresheet(object):
         dt = self.debate.get_dt(side)
 
         scores = m.SpeakerScoreByAdj.objects.filter(
+            ballot_submission = self.ballots,
             debate_adjudicator = self.da,
             debate_team = dt,
         )
@@ -53,6 +55,7 @@ class Scoresheet(object):
 
         # delete existing db objects
         m.SpeakerScoreByAdj.objects.filter(
+            ballot_submission = self.ballots,
             debate_adjudicator = self.da,
         ).delete()
 
@@ -71,6 +74,7 @@ class Scoresheet(object):
         # create new ones
         for pos in range(1, 5):
             m.SpeakerScoreByAdj(
+                ballot_submission = self.ballots,
                 debate_adjudicator = self.da,
                 debate_team = dt,
                 position = pos,
@@ -102,25 +106,28 @@ class Scoresheet(object):
         return sum(scores)
 
 
-class DebateResult(object):
+class BallotSet(object):
     """
-    Encapsulates the result of a debate
+    Encapsulates a set of ballots
 
-    This class makes it easier for views & forms to work with the result
-    of a debate.
+    This class makes it easier for views and forms to work with a set of
+    ballots for a particular debate.
 
     It acts as a translation layer on top of the following db models:
 
-    SpeakerScoreSheet
+    BallotSubmission
     TeamScore
     SpeakerScore
-
-
+    Motion
     """
 
-    def __init__(self, debate):
-        self.debate = debate
-        self.adjudicators = debate.adjudicators.list
+    def __init__(self, ballots):
+        """Constructor.
+        'ballots' must be a BallotSubmission.
+        """
+        self.ballots = ballots
+        self.debate = ballots.debate
+        self.adjudicators = self.debate.adjudicators.list
 
         self.loaded_sheets = False
         self._adjudicator_sheets = None
@@ -148,12 +155,15 @@ class DebateResult(object):
         self._init_side('aff')
         self._init_side('neg')
 
+        self.motion = self.ballots.motion
+
     def _init_side(self, side):
         dt = self.debate.get_dt(side)
         from debate.models import SpeakerScore, TeamScore
 
         for sss in SpeakerScore.objects.filter(
             debate_team = dt,
+            ballot_submission = self.ballots,
         ):
 
             self.speakers[side][sss.position] = sss.speaker
@@ -207,19 +217,23 @@ class DebateResult(object):
         total = self._score(side)
         points = self._points(side)
 
-        TeamScore.objects.filter(debate_team=dt).delete()
-        TeamScore(debate_team=dt, score=total, points=points).save()
+        TeamScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
+        TeamScore(ballot_submission=self.ballots, debate_team=dt, score=total, points=points).save()
 
-        SpeakerScore.objects.filter(debate_team=dt).delete()
+        SpeakerScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
         for i in range(1, 5):
             speaker = self.speakers[side][i]
             score = self.get_avg_score(side, i)
             SpeakerScore(
+                ballot_submission = self.ballots,
                 debate_team = dt,
                 speaker = speaker,
                 score = score,
                 position = i,
             ).save()
+
+        self.ballots.motion = motion
+        self.ballots.save()
 
 
     def get_speaker(self, side, position):
@@ -295,4 +309,9 @@ class DebateResult(object):
     def neg_win(self):
         return self.neg_points
 
+    def set_motion(self, motion):
+        self.motion = motion
 
+class DebateResult(object):
+    def __init__(self, *args):
+        raise TypeError("DebateResult no longer exists, use BallotSet instead.")
