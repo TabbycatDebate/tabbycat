@@ -184,7 +184,7 @@ class BallotSet(object):
     def adjudicator_sheets(self):
         if not self._adjudicator_sheets:
             self._adjudicator_sheets = dict(
-                (a, Scoresheet(self.debate, a)) for a in self.adjudicators
+                (a, Scoresheet(self.ballots, a)) for a in self.adjudicators
             )
             self.loaded_sheets = True
         return self._adjudicator_sheets

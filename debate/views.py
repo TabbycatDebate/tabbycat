@@ -510,6 +510,10 @@ def monkey_results(request, round):
 @tournament_view
 def enter_result(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
+    if debate.ballotsubmission_set.count() > 1:
+        raise RuntimeError("Can't do debates with multiple ballots yet")
+
+    ballot = debate.ballotsubmission_set.get()
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
@@ -517,7 +521,7 @@ def enter_result(request, t, debate_id):
         template = 'enter_results.html'
 
     if request.method == 'POST':
-        form = forms.ResultForm(debate, request.POST)
+        form = forms.BallotSetForm(ballot, request.POST)
 
         if form.is_valid():
             form.save()
@@ -528,7 +532,7 @@ def enter_result(request, t, debate_id):
 
             return redirect_round('results', debate.round)
     else:
-        form = forms.ResultForm(debate)
+        form = forms.BallotSetForm(ballot)
 
     return r2r(request, template, dict(debate=debate, form=form,
                                                    round=debate.round))

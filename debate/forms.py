@@ -57,17 +57,17 @@ class BallotSetForm(forms.Form):
         """
         self.ballots = ballots
         self.debate = ballots.debate
-        self.adjudicators = debate.adjudicators.list
+        self.adjudicators = self.debate.adjudicators.list
 
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
-        tournament = debate.round.tournament
+        tournament = self.debate.round.tournament
         self.POSITIONS = tournament.POSITIONS
         self.LAST_SUBSTANTIVE_POSITION = tournament.LAST_SUBSTANTIVE_POSITION
         self.REPLY_POSITION = tournament.REPLY_POSITION
 
         # Limit the motions you can choose to the motions for this round
-        motions = debate.round.motion_set
+        motions = self.debate.round.motion_set
         self.show_motion = motions.exists() # this is used in the template
         self.initial = self._initial_data()
 
@@ -105,7 +105,7 @@ class BallotSetForm(forms.Form):
         MAX_POSITION = max(self.POSITIONS)
 
         for side, tab_index_add in (('aff', 0), ('neg', 2 * MAX_POSITION)):
-            team = debate.get_team(side)
+            team = self.debate.get_team(side)
             for pos in self.POSITIONS:
                 self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(
                     queryset = team.speakers,
