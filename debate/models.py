@@ -1021,6 +1021,9 @@ class BallotSubmission(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True) # only relevant if submitter was in tab room
 
+    copied_from = models.ForeignKey('BallotSubmission', null=True)
+    discarded = models.BooleanField(default=False)
+
     def __unicode__(self):
         return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp)
 
