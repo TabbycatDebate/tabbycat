@@ -784,11 +784,11 @@ table.dataTable {
   color: red; }
 
 .scoresheet .score input {
-  width: 60px;
+  width: 70px;
   float: left;
   margin-right: 10px; }
 .scoresheet .aff_total, .scoresheet .neg_total {
-  width: 60px;
+  width: 70px;
   font-weight: bold;
   cursor: default; }
 
