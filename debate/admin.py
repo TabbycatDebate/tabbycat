@@ -53,7 +53,8 @@ class DebateAdjudicatorInline(admin.TabularInline):
 
 class DebateAdmin(admin.ModelAdmin):
     list_display = ('id', 'aff_team', 'neg_team', 'adjudicators_display',)
-    search_fields = ('debateteam__team__reference', 'debateteam__team__institution__code', 'debateadjudicator__adjudicator__name',)
+    search_fields = ('debateteam__team__reference', 'debateteam__team__institution__code',
+                     'debateadjudicator__adjudicator__name',)
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
 admin.site.register(models.Debate, DebateAdmin)
 
@@ -64,7 +65,7 @@ _ts_team.short_description = 'Team'
 class TeamScoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ts_team,)
     search_fields = ('debate_team__debate__round__seq',
-                     'debate_team__team__name')
+                     'debateteam__team__reference', 'debateteam__team__institution__code')
 admin.site.register(models.TeamScore, TeamScoreAdmin)
 
 _ss_speaker = lambda o: o.speaker.name
@@ -72,7 +73,8 @@ _ss_speaker.short_description = 'Speaker'
 class SpeakerScoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ts_team, 'position', _ss_speaker, 'score')
     search_fields = ('debate_team__debate__round__seq',
-                     'debate_team__team__name', 'speaker__name')
+                     'debateteam__team__reference', 'debateteam__team__institution__code',
+                     'speaker__name')
     list_filter = ('score',)
 admin.site.register(models.SpeakerScore, SpeakerScoreAdmin)
 
@@ -107,7 +109,7 @@ class TeamScoreInline(admin.TabularInline):
 
 class BallotSubmissionAdmin(admin.ModelAdmin):
     list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'user')
-    search_fields = ('debate',)
+    search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__code')
     # This incurs a massive performance hit
     #inlines = (SpeakerScoreByAdjInline, SpeakerScoreInline, TeamScoreInline)
 
