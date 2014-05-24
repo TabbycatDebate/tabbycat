@@ -44,6 +44,11 @@ class ReplyScoreField(ScoreField):
             )
 
 class BallotSetForm(forms.Form):
+    """Form for data entry for a single set of ballots.
+    Responsible for presenting the part that looks like a ballot, i.e.
+    speaker names and scores for each adjudicator. Not responsible for
+    controls that submit the form or anything like that.
+    """
 
     result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES,
         widget = forms.Select(attrs = {'tabindex': 100}))
@@ -61,6 +66,7 @@ class BallotSetForm(forms.Form):
 
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
+        # Grab info about how many positions there are
         tournament = self.debate.round.tournament
         self.POSITIONS = tournament.POSITIONS
         self.LAST_SUBSTANTIVE_POSITION = tournament.LAST_SUBSTANTIVE_POSITION
@@ -71,6 +77,7 @@ class BallotSetForm(forms.Form):
         self.show_motion = motions.exists() # this is used in the template
         self.initial = self._initial_data()
 
+        # Grab the relevant score field configurations
         config = tournament.config
         score_kwargs = dict(min_value = config.get('score_min'), max_value = config.get('score_max'))
         reply_score_kwargs = dict(min_value = config.get('reply_score_min'), max_value = config.get('reply_score_max'))

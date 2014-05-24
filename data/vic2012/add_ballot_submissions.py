@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 for debate in m.Debate.objects.all():
     bs = m.BallotSubmission(submitter_type=m.BallotSubmission.SUBMITTER_TABROOM, debate=debate)
     bs.user = User.objects.get(username='original')
+    bs.confirmed = True
     bs.save()
     debate.confirmed_ballot = bs
     for ssba in m.SpeakerScoreByAdj.objects.filter(debate_team__debate = debate):
@@ -27,4 +28,14 @@ for debate in m.Debate.objects.all():
         ts.save()
 
 for bs in m.BallotSubmission.objects.all():
-    print bs
+    bs.confirmed = True
+    bs.save()
+
+# Add motions
+import random
+for round in m.Round.objects.all():
+    motions = m.Motion.objects.filter(round=round)
+    for ballots in m.BallotSubmission.objects.filter(debate__round=round):
+        ballots.motion = random.choice(motions)
+        print "Chose motion", ballots.motion.reference, "for ballot", ballots
+        ballots.save()

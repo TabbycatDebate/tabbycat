@@ -1,7 +1,7 @@
 import re
 from django.db import models
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
 from debate.utils import pair_list, memoize
 from debate.draw import RandomDrawNoConflict, AidaDraw
@@ -733,15 +733,21 @@ class Debate(models.Model):
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
             default=STATUS_NONE)
 
-    # confirmed_ballot represents all the ballots in the confirmed set, not just one adjudicator's ballot
-    confirmed_ballot = models.OneToOneField('BallotSubmission', null=True, related_name='confirmed_ballot')
-
     def _get_teams(self):
         if not hasattr(self, '_team_cache'):
             self._team_cache = {}
 
             for t in DebateTeam.objects.filter(debate=self):
                 self._team_cache[t.position] = t
+
+    @property
+    def confirmed_ballot(self):
+        """Returns the confirmed ballot for this debate, or None if there is
+        no such ballot."""
+        try:
+            self.ballot_set.get(confirmed=True)
+        except ObjectDoesNotExist: # BallotSubmission isn't defined yet, so can't use BallotSubmission.DoesNotExist
+            return None
 
     @property
     def aff_team(self):
@@ -1023,14 +1029,34 @@ class BallotSubmission(models.Model):
 
     copied_from = models.ForeignKey('BallotSubmission', null=True)
     discarded = models.BooleanField(default=False)
+    confirmed = models.BooleanField(default=False)
 
     def __unicode__(self):
         return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp)
 
+    @property
     def ballot_set(self):
         if not hasattr(self, "_ballot_set"):
             self._ballot_set = BallotSet(self)
         return self._ballot_set
+
+    def save(self, *args, **kwargs):
+        # Only one ballot can be "confirmed" per debate.
+        if self.confirmed:
+            try:
+                current_confirmed_ballot = BallotSubmission.objects.get(confirmed=True, debate=self.debate)
+            except BallotSubmission.DoesNotExist:
+                pass
+            else:
+                warn("%s confirmed while %s was already confirmed, setting latter to unconfirmed" % (self, current_confirmed_ballot))
+                current_confirmed_ballot.confirmed = False
+                current_confirmed_ballot.save()
+        super(BallotSubmission, self).save(*args, **kwargs)
+
+    def clean(self):
+        # The motion must be from the relevant round
+        if motion.round != debate.round:
+            raise ValidationError("Debate is in round %d but motion (%s) is from round %d" % (debate.round, motion.reference, motion.round))
 
     # For further discussion
     #submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
@@ -1090,22 +1116,26 @@ class SpeakerScore(models.Model):
 
 class MotionManager(models.Manager):
     def statistics(self, round=None):
+        print round
         if round is None:
             motions = self.all()
         else:
             motions = self.filter(round=round)
 
-        motions = motions.annotate(
-            chosen_in = models.Count('debate'),
-        )
-
         # TODO is there a more efficient way to do this?
         for motion in motions:
-            confirmed_ballots = BallotSubmission.objects.filter(motion=motion, debate__confirmed_ballot__isnull=False)
-            motion.aff_wins = sum(ballot.ballot_set.aff_win for ballot in confirmed_ballots)
-            motion.aff_wins_percent = int((float(motion.aff_wins) / float(motion.chosen_in)) * 100)
-            motion.neg_wins = sum(ballot.ballot_set.neg_win for ballot in confirmed_ballots)
-            motion.neg_wins_percent = int((float(motion.neg_wins) / float(motion.chosen_in)) * 100)
+            ballots = BallotSubmission.objects.filter(confirmed=True, motion=motion)
+            motion.chosen_in = ballots.count()
+            if motion.chosen_in == 0:
+                motion.aff_wins = 0
+                motion.aff_wins_percent = 0
+                motion.neg_wins = 0
+                motion.neg_wins_percent = 0
+            else:
+                motion.aff_wins = sum(ballot.ballot_set.aff_win for ballot in ballots)
+                motion.aff_wins_percent = int((float(motion.aff_wins) / float(motion.chosen_in)) * 100)
+                motion.neg_wins = sum(ballot.ballot_set.neg_win for ballot in ballots)
+                motion.neg_wins_percent = int((float(motion.neg_wins) / float(motion.chosen_in)) * 100)
 
         return motions
 
@@ -1215,7 +1245,6 @@ class ConfigManager(models.Manager):
         obj.save()
 
     def get_(self, tournament, key, default=None):
-        from django.core.exceptions import ObjectDoesNotExist
         try:
             return self.get(tournament=tournament, key=key).value
         except ObjectDoesNotExist:
