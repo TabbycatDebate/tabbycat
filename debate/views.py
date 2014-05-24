@@ -585,6 +585,7 @@ def team_standings(request, round):
     def get_score(team, r):
         try:
             ts = TeamScore.objects.get(
+                ballot_submission__confirmed=True,
                 debate_team__team=team,
                 debate_team__debate__round=r,
             )
@@ -593,7 +594,7 @@ def team_standings(request, round):
             return None
 
     for team in teams:
-        setattr(team, 'results_in', team.results_count >= round.seq)
+        setattr(team, 'results_in', get_score(team, round) is not None)
         team.scores = [get_score(team, r) for r in rounds]
 
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds))
@@ -611,21 +612,17 @@ def speaker_standings(request, round):
     from debate.models import SpeakerScore
     def get_score(speaker, r):
         try:
-            return SpeakerScore.objects.get(speaker=speaker,
-                                    debate_team__debate__round=r,
-                                    position__lte=3).score
+            return SpeakerScore.objects.get(
+                ballot_submission__confirmed=True,
+                speaker=speaker,
+                debate_team__debate__round=r,
+                position__lte=3).score
         except SpeakerScore.DoesNotExist:
             return None
 
     for speaker in speakers:
         speaker.scores = [get_score(speaker, r) for r in rounds]
-        try:
-            SpeakerScore.objects.get(speaker=speaker,
-                                     debate_team__debate__round=r,
-                                     position__lte=3)
-            speaker.results_in = True
-        except SpeakerScore.DoesNotExist:
-            speaker.results_in = False
+        speaker.results_in = get_score(speaker, round) is not None
 
     return r2r(request, 'speaker_standings.html', dict(speakers=speakers,
                                                        rounds=rounds))
@@ -644,9 +641,11 @@ def reply_standings(request, round):
     from debate.models import SpeakerScore
     def get_score(speaker, r):
         try:
-            return SpeakerScore.objects.get(speaker=speaker,
-                                    debate_team__debate__round=r,
-                                    position=4).score
+            return SpeakerScore.objects.get(
+                ballot_submission__confirmed=True,
+                speaker=speaker,
+                debate_team__debate__round=r,
+                position=4).score
         except SpeakerScore.DoesNotExist:
             return None
 

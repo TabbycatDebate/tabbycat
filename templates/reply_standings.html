@@ -32,7 +32,7 @@
     <tbody>
     {% for speaker in speakers %}
     <tr class="
-        {% if not speaker.results_in %}inactive{% endif%}">
+        {% if not speaker.results_in %}danger{% endif%}">
         <td>{{ speaker.rank }}</td>
         <td>{{ speaker.name }}</td>
         <td>{{ speaker.team.shortname }}</td>

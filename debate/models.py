@@ -93,10 +93,10 @@ class TeamManager(models.Manager):
                 debateteam__debate__round__seq__lte = round.seq,
             )
 
+        # TODO fix this, should only aggregate over confirmed ballots
         teams = teams.annotate(
             points = models.Sum('debateteam__teamscore__points'),
             speaker_score = models.Sum('debateteam__teamscore__score'),
-            results_count = models.Count('debateteam__teamscore'),
         ).order_by('-points', '-speaker_score')
 
         prev_rank_value = (None, None)
@@ -226,6 +226,7 @@ class SpeakerManager(models.Manager):
                 speakerscore__position__lte=tournament.LAST_SUBSTANTIVE_POSITION,
             )
 
+        # TODO fix this, should only aggregate over confirmed ballots
         speakers = speakers.annotate(
             total = models.Sum('speakerscore__score'),
         ).order_by('-total', 'name')
@@ -258,6 +259,7 @@ class SpeakerManager(models.Manager):
                 speakerscore__position=tournament.REPLY_POSITION,
             )
 
+        # TODO fix this, should only aggregate over confirmed ballots
         speakers = speakers.annotate(
             average = models.Avg('speakerscore__score'),
             replies = models.Count('speakerscore__score'),
