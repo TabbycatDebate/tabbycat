@@ -754,6 +754,10 @@ class Debate(models.Model):
         return self.ballotsubmission_set.all().order_by('timestamp')
 
     @property
+    def ballotsubmission_set_by_time_except_discarded(self):
+        return self.ballotsubmission_set.filter(discarded=False).order_by('timestamp')
+
+    @property
     def aff_team(self):
         self._get_teams()
         return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE].team

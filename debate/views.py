@@ -567,8 +567,11 @@ def new_ballots(request, t, debate_id):
     else:
         form = forms.BallotSetForm(ballots)
 
+    other_ballots_set = debate.ballotsubmission_set.all()
+
     return r2r(request, template, dict(debate=debate, form=form,
-        round=debate.round, ballots=ballots, new=True))
+        round=debate.round, ballots=ballots, other_ballots_set=other_ballots_set,
+        new=True))
 
 @admin_required
 @round_view

@@ -23,14 +23,18 @@
 
     {% if other_ballots_set.exists %}
     <div class="row">
-        There is more than one ballot submission for this debate. Here are the others:
+        {% if not new %}
+            There is more than one ballot submission for this debate. Here are the others:
+        {% else %}
+            There are existing ballot submissions for this debate:
+        {% endif %}
         <ul>
             {% for other_ballots in other_ballots_set %}
             <li><a href="{% tournament_url edit_ballots other_ballots.id %}">
                 {% if other_ballots.submitter_type == 0 %}
-                    Entered by <b>{{ other_ballots.user }}</b> at {{ other_ballots.timestamp_str }}
+                    Version <b>{{other_ballots.id}}</b>, entered by <b>{{ other_ballots.user }}</b> at {{ other_ballots.timestamp_str }}
                 {% elif other_ballots.submitted_type == 1 %}
-                    Submitted from the public form at {{ other_ballots.timestamp_str }}
+                    Version <b>{{other_ballots.id}}</b>, submitted from the public form at {{ other_ballots.timestamp_str }}
                 {% endif %}
                 {% if other_ballots.discarded %}
                     (discarded)
