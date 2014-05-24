@@ -4,9 +4,9 @@
     {% if not new %}
     <div class="row">
         <div class="col-sm-12">
-        {% if ballots.submitter_type == 0 %}
+        {% if ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
             This ballot set was entered by <b>{{ ballots.user }}</b> at {{ ballots.timestamp_str }}.
-        {% elif ballots.submitted_type == 1 %}
+        {% elif ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
             This ballot set was submitted from the public form at {{ ballots.timestamp_str }}.
         {% endif %}
         </div>
@@ -31,9 +31,9 @@
         <ul>
             {% for other_ballots in other_ballots_set %}
             <li><a href="{% tournament_url edit_ballots other_ballots.id %}">
-                {% if other_ballots.submitter_type == 0 %}
+                {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
                     Version <b>{{other_ballots.id}}</b>, entered by <b>{{ other_ballots.user }}</b> at {{ other_ballots.timestamp_str }}
-                {% elif other_ballots.submitted_type == 1 %}
+                {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
                     Version <b>{{other_ballots.id}}</b>, submitted from the public form at {{ other_ballots.timestamp_str }}
                 {% endif %}
                 {% if other_ballots.discarded %}

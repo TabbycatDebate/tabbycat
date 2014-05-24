@@ -3,7 +3,28 @@
 
 {% load debate_tags %}
 
-{% block extra-head %}{% include "enter_results_head.html" %}{% endblock %}
+{% block extra-head %}
+
+{% include "enter_results_head.html" %}
+
+{% if ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+<script>
+    $(document).ready(function() {
+        function preSubmit() {
+            $('#ballot_set input').removeAttr('readonly');
+            $('#ballot_set select').removeAttr('disabled');
+        }
+        $('#ballot_set input[type="text"]').attr('readonly', 'true');
+        $('#ballot_set select').attr('disabled', 'true');
+        $('#submit').click(function() {
+            preSubmit();
+        });
+    });
+
+</script>
+{% endif %}
+
+{% endblock %}
 
 {% block head-title %}
 {% if new %}
@@ -21,7 +42,9 @@ Edit Ballot Set for
 {% include "other_ballots_list.html" %}
 
 <form id="resultsForm" class="form-horizontal" action="." method="POST">
-    {% include "enter_results_ballot_set.html" %}
+    <div id="ballot_set">
+        {% include "enter_results_ballot_set.html" %}
+    </div>
     <div class="row">
         <h3 class="col-sm-12 page-header lead">Ballot Status</h3>
     </div>
@@ -54,7 +77,7 @@ Edit Ballot Set for
                 {{ form.debate_result_status|addcss:"form-control" }}
             </div>
             <div class="col-sm-2 col-md-1 col-xs-4">
-                <input class="save form-control btn btn-default" type="submit" value="Save" tabindex="101" />
+                <input id="submit" class="save form-control btn btn-default" type="submit" value="Save" tabindex="101" />
             </div>
         </div>
     </div>
