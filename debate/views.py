@@ -532,8 +532,6 @@ def edit_ballots(request, t, ballots_id):
     else:
         form = forms.BallotSetForm(ballots)
 
-    print unicode(form.fields['motion'])
-
     other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id)
 
     return r2r(request, template, dict(debate=debate, form=form,

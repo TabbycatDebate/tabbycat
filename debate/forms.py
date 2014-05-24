@@ -194,6 +194,19 @@ class BallotSetForm(forms.Form):
 
         errors = list()
 
+        # TODO this should go up to the BallotSubmission.full_clean() method.
+        # Not sure how to structure this.
+        # For now just implement the same checks here.
+        if cleaned_data['discarded'] and cleaned_data['confirmed']:
+            errors.append(forms.ValidationError(
+                _('The ballot set can\'t be both discarded and confirmed.')
+            ))
+        if cleaned_data['debate_result_status'] == Debate.STATUS_CONFIRMED and not cleaned_data['confirmed'] and self.debate.confirmed_ballot is None:
+            errors.append(forms.ValidationError(
+                _('The debate status can\'t be confirmed unless one of the ballot sets is confirmed.')
+            ))
+        # end TODO
+
         for adj in self.adjudicators:
             # Check that it was not a draw
             try:

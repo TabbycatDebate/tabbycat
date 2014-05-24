@@ -745,7 +745,7 @@ class Debate(models.Model):
         """Returns the confirmed ballot for this debate, or None if there is
         no such ballot."""
         try:
-            return self.ballot_set.get(confirmed=True)
+            return self.ballotsubmission_set.get(confirmed=True)
         except ObjectDoesNotExist: # BallotSubmission isn't defined yet, so can't use BallotSubmission.DoesNotExist
             return None
 
@@ -1042,7 +1042,10 @@ class BallotSubmission(models.Model):
 
     @property
     def timestamp_str(self):
-        return self.timestamp.strftime("%H:%M:%S.%f on %d %B %Y")
+        try:
+            return self.timestamp.strftime("%H:%M:%S.%f on %d %B %Y")
+        except AttributeError:
+            return "unknown time"
 
     def save(self, *args, **kwargs):
         # Only one ballot can be "confirmed" per debate.
