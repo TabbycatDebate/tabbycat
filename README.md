@@ -30,7 +30,7 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
 
         $ virtualenv venv
 
-3. Activate the virtualenv. Nnote you will need to activate the venv each time you want to run the project.
+3. Activate the virtualenv. Note that you'll need to activate the venv each time you want to run the project.
 
         $ source venv/bin/activate
 
@@ -49,6 +49,10 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
 6. Run using:
 
         $ foreman start
+
+Once it's installed, the next time you want to run the project you just need to run
+        $ source venv/bin/activate
+before you start.
 
 #### Deploy to Heroku
 
