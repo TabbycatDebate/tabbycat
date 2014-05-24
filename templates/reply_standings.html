@@ -35,7 +35,7 @@
         {% if not speaker.results_in %}danger{% endif%}">
         <td>{{ speaker.rank }}</td>
         <td>{{ speaker.name }}</td>
-        <td>{{ speaker.team.shortname }}</td>
+        <td>{{ speaker.team.short_name }}</td>
         {% for score in speaker.scores %}
         <td>{{ score|stringformat:".2f" }}</td>
         {% endfor %}
