@@ -1,0 +1,51 @@
+{% load add_field_css %}
+{% load debate_tags %}
+
+    {% if not new %}
+    <div class="row">
+        <div class="col-sm-12">
+        {% if ballots.submitter_type == 0 %}
+            This ballot set was entered by <b>{{ ballots.user }}</b> at {{ ballots.timestamp_str }}.
+        {% elif ballots.submitted_type == 1 %}
+            This ballot set was submitted from the public form at {{ ballots.timestamp_str }}.
+        {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if ballots.confirmed %}
+        This ballot is confirmed.
+    {% endif %}
+
+    {% if ballots.discarded %}
+        This ballot is discarded.
+    {% endif %}
+
+    {% if other_ballots_set.exists %}
+    <div class="row">
+        There is more than one ballot submission for this debate. Here are the others:
+        <ul>
+            {% for other_ballots in other_ballots_set %}
+            <li><a href="{% tournament_url edit_ballots other_ballots.id %}">
+                {% if other_ballots.submitter_type == 0 %}
+                    Entered by <b>{{ other_ballots.user }}</b> at {{ other_ballots.timestamp_str }}
+                {% elif other_ballots.submitted_type == 1 %}
+                    Submitted from the public form at {{ other_ballots.timestamp_str }}
+                {% endif %}
+                {% if other_ballots.discarded %}
+                    (discarded)
+                {% endif %}
+                {% if other_ballots.confirmed %}
+                    (confirmed)
+                {% endif %}
+            </a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if not new %}
+    <div class="row">
+        <a href="{% tournament_url new_ballots debate.id %}">Create a new ballot set for this debate</a>
+    </div>
+    {% endif %}
