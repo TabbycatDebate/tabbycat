@@ -19,7 +19,21 @@ Enter Results for
 {% block content %}
 
 <form id="resultsForm" class="form-horizontal" action="." method="POST">
-    {% include "enter_results_ballot_set.html" %}
+
+    <div class="row">
+        <!-- TODO fix this -->
+            <b>Confirmed ballot</b> {{ formset.debate_management_form.confirmed_ballot }}
+    </div>
+
+    {% for form in formset.ballotset_forms %}
+
+        <div class="row">
+            <h2 class="col-sm-12 page-header lead">{{ form.ballots }}</h3>
+        </div>
+        {% include "enter_results_ballot_set.html" %}
+
+    {% endfor %}
+
     <div class="row">
         <h3 class="col-sm-12 page-header lead">Debate Status</h3>
     </div>
@@ -27,13 +41,14 @@ Enter Results for
         <div class="form-group">
             <label class="col-sm-1 col-xs-1 control-label"></label>
             <div class="col-sm-2 col-xs-6">
-                {{ form.result_status|addcss:"form-control" }}
+                {{ formset.debate_management_form.result_status|addcss:"form-control" }}
             </div>
             <div class="col-sm-2 col-md-1 col-xs-4">
-                <input class="save form-control btn btn-default" type="submit" value="Save" tabindex="101" />
+                <input class="save form-control btn btn-default" type="submit" value="Save" tabindex="1001" />
             </div>
         </div>
     </div>
+
 </form>
 
 

@@ -745,7 +745,7 @@ class Debate(models.Model):
         """Returns the confirmed ballot for this debate, or None if there is
         no such ballot."""
         try:
-            self.ballot_set.get(confirmed=True)
+            return self.ballotsubmission_set.get(confirmed=True)
         except ObjectDoesNotExist: # BallotSubmission isn't defined yet, so can't use BallotSubmission.DoesNotExist
             return None
 
@@ -1025,9 +1025,9 @@ class BallotSubmission(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     submitter_type = models.IntegerField(choices=SUBMITTER_TYPE_CHOICES)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True) # only relevant if submitter was in tab room
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
 
-    copied_from = models.ForeignKey('BallotSubmission', null=True)
+    copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
     discarded = models.BooleanField(default=False)
     confirmed = models.BooleanField(default=False)
 
@@ -1055,8 +1055,12 @@ class BallotSubmission(models.Model):
 
     def clean(self):
         # The motion must be from the relevant round
-        if motion.round != debate.round:
+        if self.motion.round != self.debate.round:
             raise ValidationError("Debate is in round %d but motion (%s) is from round %d" % (debate.round, motion.reference, motion.round))
+        # The user is required if it's a tab room submission
+        if self.submitter_type == self.SUBMITTER_TABROOM and self.user is None:
+            raise ValidationError("User not specified for a tab room ballot submission")
+
 
     # For further discussion
     #submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions

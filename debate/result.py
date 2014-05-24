@@ -169,7 +169,9 @@ class BallotSet(object):
             self.speakers[side][sss.position] = sss.speaker
 
         try:
-            ts = TeamScore.objects.get(debate_team=dt)
+            ts = TeamScore.objects.get(
+                ballot_submission = self.ballots,
+                debate_team = dt)
             points = ts.points
             score = ts.score
         except TeamScore.DoesNotExist:
@@ -232,7 +234,7 @@ class BallotSet(object):
                 position = i,
             ).save()
 
-        self.ballots.motion = motion
+        self.ballots.motion = self.motion
         self.ballots.save()
 
 

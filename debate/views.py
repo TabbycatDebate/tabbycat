@@ -11,11 +11,11 @@ from django.conf import settings
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
 from debate.models import Person, Checkin, Motion, ActionLog
-from debate import forms
 
 from django.forms.models import modelformset_factory
 from django.forms import Textarea
 
+from debate import forms
 
 from functools import wraps
 import json
@@ -510,10 +510,6 @@ def monkey_results(request, round):
 @tournament_view
 def enter_result(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
-    if debate.ballotsubmission_set.count() > 1:
-        raise RuntimeError("Can't do debates with multiple ballots yet")
-
-    ballot = debate.ballotsubmission_set.get()
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
@@ -521,6 +517,7 @@ def enter_result(request, t, debate_id):
         template = 'enter_results.html'
 
     if request.method == 'POST':
+        raise Http404()
         form = forms.BallotSetForm(ballot, request.POST)
 
         if form.is_valid():
@@ -532,10 +529,9 @@ def enter_result(request, t, debate_id):
 
             return redirect_round('results', debate.round)
     else:
-        form = forms.BallotSetForm(ballot)
+        formset = forms.DebateResultFormSet(debate)
 
-    return r2r(request, template, dict(debate=debate, form=form,
-                                                   round=debate.round))
+    return r2r(request, template, dict(debate=debate, formset=formset, round=debate.round))
 
 
 @admin_required
