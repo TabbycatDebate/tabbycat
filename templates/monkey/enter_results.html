@@ -42,6 +42,8 @@ Enter Results for
 {% block nav %}{% include "monkey/nav.html" %}{% endblock %}{% block footer %}{% include "monkey/footer.html" %}{% endblock %}
 {% block content %}
 
+{% include "other_ballots_list.html" %}
+
 <form id="resultsForm" action="." method="POST" class="form-horizontal">
     {% include "enter_results_ballot_set.html" %}
 

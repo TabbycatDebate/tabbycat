@@ -508,8 +508,9 @@ def monkey_results(request, round):
 
 @login_required
 @tournament_view
-def enter_ballots(request, t, ballots_id):
+def edit_ballots(request, t, ballots_id):
     ballots = get_object_or_404(BallotSubmission, id=ballots_id)
+    debate = ballots.debate
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
@@ -517,22 +518,59 @@ def enter_ballots(request, t, ballots_id):
         template = 'enter_results.html'
 
     if request.method == 'POST':
-        form = forms.BallotSetForm(ballot, request.POST)
+        form = forms.BallotSetForm(ballots, request.POST)
 
         if form.is_valid():
             form.save()
 
+            # TODO add ballots to the ActionLog
             action_type = ActionLog.ACTION_TYPE_BY_RESULT_STATUS[debate.result_status]
             ActionLog.objects.log(type=action_type, user=request.user,
                 debate=debate)
 
             return redirect_round('results', debate.round)
     else:
-        form = forms.BallotSetForm(ballot)
+        form = forms.BallotSetForm(ballots)
+
+    print unicode(form.fields['motion'])
+
+    other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id)
 
     return r2r(request, template, dict(debate=debate, form=form,
-                                                   round=debate.round))
+        round=debate.round, ballots=ballots, other_ballots_set=other_ballots_set))
 
+@login_required
+@tournament_view
+def new_ballots(request, t, debate_id):
+    debate = get_object_or_404(Debate, id=debate_id)
+    ballots = BallotSubmission(
+        debate         = debate,
+        submitter_type = BallotSubmission.SUBMITTER_TABROOM,
+        user           = request.user)
+
+    if not request.user.is_superuser:
+        template = 'monkey/enter_results.html'
+    else:
+        template = 'enter_results.html'
+
+    if request.method == 'POST':
+        form = forms.BallotSetForm(ballots, request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            # TODO add ballots to the ActionLog
+            action_type = ActionLog.ACTION_TYPE_BY_RESULT_STATUS[debate.result_status]
+            ActionLog.objects.log(type=action_type, user=request.user,
+                debate=debate)
+
+            return redirect_round('results', debate.round)
+
+    else:
+        form = forms.BallotSetForm(ballots)
+
+    return r2r(request, template, dict(debate=debate, form=form,
+        round=debate.round, ballots=ballots, new=True))
 
 @admin_required
 @round_view

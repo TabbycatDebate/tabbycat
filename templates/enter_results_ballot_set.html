@@ -1,6 +1,14 @@
 {% load add_field_css %}
 {% load debate_tags %}
 
+<!-- TODO make this pretty -->
+{{ form.errors }}
+
+<div class="row">
+<!-- TODO fix how this looks -->
+    <b><label>Motion</label></b> {{ form.motion }}
+</div>
+
 {% for adj in form.adj_iter %}
 
     <div class="row">

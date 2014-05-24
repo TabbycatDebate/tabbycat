@@ -143,7 +143,7 @@ class Team(models.Model):
     @property
     def name(self):
         # TODO make this an exception so that we get rid of all of them
-        warn("Team.name is deprecated, use Team.short_name", DeprecationWarning)
+        warn("Team.name is deprecated, use Team.short_name", DeprecationWarning, stacklevel=2)
         return self.short_name
 
     @property
@@ -877,7 +877,7 @@ class Debate(models.Model):
 
     @property
     def matchup(self):
-        return u'%s vs %s' % (self.aff_team.name, self.neg_team.name)
+        return u'%s vs %s' % (self.aff_team.short_name, self.neg_team.short_name)
 
 class SRManager(models.Manager):
     use_for_related_fields = True
@@ -1025,20 +1025,24 @@ class BallotSubmission(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     submitter_type = models.IntegerField(choices=SUBMITTER_TYPE_CHOICES)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True) # only relevant if submitter was in tab room
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
 
-    copied_from = models.ForeignKey('BallotSubmission', null=True)
+    copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
     discarded = models.BooleanField(default=False)
     confirmed = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp)
+        return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp_str)
 
     @property
     def ballot_set(self):
         if not hasattr(self, "_ballot_set"):
             self._ballot_set = BallotSet(self)
         return self._ballot_set
+
+    @property
+    def timestamp_str(self):
+        return self.timestamp.strftime("%H:%M:%S.%f on %d %B %Y")
 
     def save(self, *args, **kwargs):
         # Only one ballot can be "confirmed" per debate.
@@ -1055,8 +1059,12 @@ class BallotSubmission(models.Model):
 
     def clean(self):
         # The motion must be from the relevant round
-        if motion.round != debate.round:
-            raise ValidationError("Debate is in round %d but motion (%s) is from round %d" % (debate.round, motion.reference, motion.round))
+        if self.motion.round != self.debate.round:
+                raise ValidationError("Debate is in round %d but motion (%s) is from round %d" % (self.debate.round, self.motion.reference, self.motion.round))
+        if self.confirmed and self.discarded:
+            raise ValidationError("A ballot can't be both confirmed and discarded!")
+        if self.submitter_type == self.SUBMITTER_TABROOM and self.user is None:
+            raise ValidationError("A tab room ballot must have a user associated.")
 
     # For further discussion
     #submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions

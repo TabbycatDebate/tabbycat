@@ -50,10 +50,10 @@ class BallotSetForm(forms.Form):
     controls that submit the form or anything like that.
     """
 
-    confirmed = forms.BooleanField(
-        widget = forms.Select(attrs = {'tabindex': 100}))
-    discarded = forms.BooleanField(
-        widget = forms.Select(attrs = {'tabindex': 101}))
+    confirmed = forms.BooleanField(required=False,
+        widget = forms.CheckboxInput(attrs = {'tabindex': 100}))
+    discarded = forms.BooleanField(required=False,
+        widget = forms.CheckboxInput(attrs = {'tabindex': 101}))
 
     debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES,
         widget = forms.Select(attrs = {'tabindex': 102}))
@@ -157,11 +157,12 @@ class BallotSetForm(forms.Form):
         Generate dictionary of initial form data
         """
 
-        initial = {'debate_result_status': self.debate.result_status,
-            'confirmed': self.ballots.confirmed,
-            'discarded': self.ballots.discarded}
+        initial = {'debate_result_status': self.debate.result_status}
 
         bs = BallotSet(self.ballots)
+
+        initial['confirmed'] = bs.confirmed
+        initial['discarded'] = bs.discarded
 
         # This isn't relevant if we're not showing the motions field
         # (i.e. there are no motions given for this round).
@@ -224,9 +225,14 @@ class BallotSetForm(forms.Form):
         return cleaned_data
 
     def save(self):
+        # Unconfirm the other, if necessary
+        if self.cleaned_data['confirmed']:
+            if self.debate.confirmed_ballot != self.ballots:
+                self.debate.confirmed_ballot.confirmed = False
+                self.debate.confirmed_ballot.save()
+
         bs = BallotSet(self.ballots)
 
-        bs.set_motion(self.cleaned_data['motion'])
         def do(side):
             for i in self.POSITIONS:
                 speaker = self.cleaned_data['%s_speaker_%d' % (side, i)]
@@ -237,18 +243,11 @@ class BallotSetForm(forms.Form):
         do('aff')
         do('neg')
 
+        bs.motion    = self.cleaned_data['motion']
+        bs.discarded = self.cleaned_data['discarded']
+        bs.confirmed = self.cleaned_data['confirmed']
+
         bs.save()
-
-        self.ballots.discarded = self.cleaned_data['discarded']
-        self.ballots.confirmed = self.cleaned_data['confirmed']
-
-        # Unconfirm the other, if necessary
-        if self.ballots.confirmed:
-            if self.debate.confirmed_ballot != self.ballots:
-                self.debate.confirmed_ballot.confirmed = False
-                self.debate.confirmed_ballot.save()
-
-        self.ballots.save()
 
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()

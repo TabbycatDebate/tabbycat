@@ -155,7 +155,29 @@ class BallotSet(object):
         self._init_side('aff')
         self._init_side('neg')
 
-        self.motion = self.ballots.motion
+    @property
+    def confirmed(self):
+        return self.ballots.confirmed
+
+    @confirmed.setter
+    def confirmed(self, new):
+        self.ballots.confirmed = new
+
+    @property
+    def discarded(self):
+        return self.ballots.discarded
+
+    @discarded.setter
+    def discarded(self, new):
+        self.ballots.discarded = new
+
+    @property
+    def motion(self):
+        return self.ballots.motion
+
+    @motion.setter
+    def motion(self, new):
+        self.ballots.motion = new
 
     def _init_side(self, side):
         dt = self.debate.get_dt(side)
@@ -169,7 +191,9 @@ class BallotSet(object):
             self.speakers[side][sss.position] = sss.speaker
 
         try:
-            ts = TeamScore.objects.get(debate_team=dt)
+            ts = TeamScore.objects.get(
+                ballot_submission = self.ballots,
+                debate_team = dt)
             points = ts.points
             score = ts.score
         except TeamScore.DoesNotExist:
@@ -190,6 +214,8 @@ class BallotSet(object):
         return self._adjudicator_sheets
 
     def save(self):
+        self.ballots.save()
+
         for sheet in self.adjudicator_sheets.values():
             sheet.save()
 
@@ -231,9 +257,6 @@ class BallotSet(object):
                 score = score,
                 position = i,
             ).save()
-
-        self.ballots.motion = motion
-        self.ballots.save()
 
 
     def get_speaker(self, side, position):
@@ -309,8 +332,6 @@ class BallotSet(object):
     def neg_win(self):
         return self.neg_points
 
-    def set_motion(self, motion):
-        self.motion = motion
 
 class DebateResult(object):
     def __init__(self, *args):
