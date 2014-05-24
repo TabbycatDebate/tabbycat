@@ -82,10 +82,9 @@
             </td>
 
             <td>
-                {% for ballotset in debate.ballotsubmission_set.all %}
+                {% for ballotset in debate.ballotsubmission_set_by_time %}
                     <a href="{% tournament_url edit_ballots ballotset.id %}" title="Edit Ballot">
-                        Edit {% if debate.ballotsubmission_set.count > 1%}v{{ forloop.counter }}{% endif %}
-                    </a>
+                        Edit {% if debate.ballotsubmission_set.count > 1%}v{{ forloop.counter }}{% endif %}</a>
                     {% if not forloop.last %}<br />{% endif %}
                 {% empty %}
                     <a href="{% tournament_url new_ballots debate.id %}" title="Create New Ballot">Enter</a>

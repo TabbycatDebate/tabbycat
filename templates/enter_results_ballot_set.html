@@ -24,7 +24,12 @@
             <div class="form-group aff speaker s{{ position.pos }}">
                 <label class="col-md-2 col-xs-3 control-label" >{{ position }}A</label>
                 <div class="col-md-4 col-xs-6 { position.aff_speaker.errors|yesno:'error,' }}">
-                    {{ position.aff_speaker|addcss:"form-control" }}
+                    {% if forloop.parentloop.first %}
+                        {{ position.aff_speaker|addcss:"form-control" }}
+                        {{ position.aff_speaker.errors }}
+                    {% else %}
+                    <div class="speaker-name"></div>
+                    {% endif %}
                 </div>
                 <div class="col-md-6 col-xs-2 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
                     {{ position.aff_score }}
@@ -49,7 +54,12 @@
                 <div class="form-group neg speaker s{{ position.pos }}">
                     <label class="col-md-2 col-xs-3 control-label" >{{ position }}N</label>
                     <div class="col-md-4 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
-                        {{ position.neg_speaker|addcss:"form-control" }}
+                        {% if forloop.parentloop.first %}
+                            {{ position.neg_speaker|addcss:"form-control" }}
+                            {{ position.neg_speaker.errors }}
+                        {% else %}
+                        <div class="speaker-name"></div>
+                        {% endif %}
                     </div>
                     <div class="col-md-6 col-xs-2 neg score form-control-parent {{ position.neg_score_errors|yesno:'error,' }}">
                         {{ position.neg_score }}

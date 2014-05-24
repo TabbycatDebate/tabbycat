@@ -750,6 +750,10 @@ class Debate(models.Model):
             return None
 
     @property
+    def ballotsubmission_set_by_time(self):
+        return self.ballotsubmission_set.all().order_by('timestamp')
+
+    @property
     def aff_team(self):
         self._get_teams()
         return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE].team

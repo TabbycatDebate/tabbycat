@@ -39,11 +39,13 @@
         {% ifequal debate.result_status "C" %}active{% endifequal %}
         ">
         <td>
-            <a href="{% tournament_url enter_result debate.id %}">
-            {% if debate.result_status == "B" or debate.result_status == "N" %}Enter results {% endif %}
-            {% ifequal debate.result_status "D" %}Unconfirmed{% endifequal %}
-            {% ifequal debate.result_status "C" %}Confirmed{% endifequal %}
-            </a>
+            {% for ballotset in debate.ballotsubmission_set_by_time %}
+                <a href="{% tournament_url edit_ballots ballotset.id %}" title="Edit Ballot">
+                    Show {% if debate.ballotsubmission_set.count > 1%}v{{ forloop.counter }}{% endif %}</a>
+                {% if not forloop.last %}<br />{% endif %}
+            {% empty %}
+                <a href="{% tournament_url new_ballots debate.id %}" title="Create New Ballot">Enter</a>
+            {% endfor %}
         </td>
         <td>{{ debate.venue.name }}</td>
         <td>
