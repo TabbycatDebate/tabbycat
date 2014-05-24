@@ -10,7 +10,7 @@ from django.conf import settings
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
-from debate.models import Person, Checkin, Motion, ActionLog
+from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission
 from debate import forms
 
 from django.forms.models import modelformset_factory
@@ -508,12 +508,8 @@ def monkey_results(request, round):
 
 @login_required
 @tournament_view
-def enter_result(request, t, debate_id):
-    debate = get_object_or_404(Debate, id=debate_id)
-    if debate.ballotsubmission_set.count() > 1:
-        raise RuntimeError("Can't do debates with multiple ballots yet")
-
-    ballot = debate.ballotsubmission_set.get()
+def enter_ballots(request, t, ballots_id):
+    ballots = get_object_or_404(BallotSubmission, id=ballots_id)
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'

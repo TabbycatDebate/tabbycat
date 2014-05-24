@@ -57,34 +57,34 @@
             {% ifequal debate.result_status "N" %}
                 <td>
                     <span class="hidden">0</span>
-                    <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="No Ballot">
+                    <a href="{% tournament_url enter_ballots ballots.id %}" data-toggle="tooltip" title="No Ballot">
                     <span class="glyphicon glyphicon-remove text-danger"></span>
                 </a></td>
-                <td><a href="{% tournament_url enter_result debate.id %}" title="Add Ballot">Add</a></td>
+                <td><a href="{% tournament_url enter_ballots ballots.id %}" title="Add Ballot">Add</a></td>
             {% endifequal %}
             {% ifequal debate.result_status "B" %}
                 <td>
                     <span class="hidden">1</span>
-                    <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Ballot In">
+                    <a href="{% tournament_url enter_ballots ballots.id %}" data-toggle="tooltip" title="Ballot In">
                     <span class="glyphicon glyphicon-inbox text-warning"></span>
                 </a></td>
-                <td><a href="{% tournament_url enter_result debate.id %}" title="Add Ballot">Edit</a></td>
+                <td><a href="{% tournament_url enter_ballots ballots.id %}" title="Add Ballot">Edit</a></td>
             {% endifequal %}
             {% ifequal debate.result_status "D" %}
                 <td>
                     <span class="hidden">2</span>
-                    <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Unconfirmed Ballot">
+                    <a href="{% tournament_url enter_ballots ballots.id %}" data-toggle="tooltip" title="Unconfirmed Ballot">
                     <span class="glyphicon glyphicon-adjust text-info"></span>
                 </a></td>
-                <td><a href="{% tournament_url enter_result debate.id %}" title="Confirm Ballot">Confirm</a></td>
+                <td><a href="{% tournament_url enter_ballots ballots.id %}" title="Confirm Ballot">Confirm</a></td>
             {% endifequal %}
             {% ifequal debate.result_status "C" %}
                 <td>
                     <span class="hidden">3</span>
-                    <a href="{% tournament_url enter_result debate.id %}" data-toggle="tooltip" title="Confirmed Ballot">
+                    <a href="{% tournament_url enter_ballots ballots.id %}" data-toggle="tooltip" title="Confirmed Ballot">
                     <span class="glyphicon glyphicon-ok text-success"></span>
                 </a></td>
-               <td><a href="{% tournament_url enter_result debate.id %}" title="Confirm Ballot">Re-Edit</a></td>
+               <td><a href="{% tournament_url enter_ballots ballots.id %}" title="Confirm Ballot">Re-Edit</a></td>
             {% endifequal %}
 
             <td>{{ debate.bracket }}</td>

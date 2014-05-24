@@ -21,7 +21,38 @@ Enter Results for
 <form id="resultsForm" class="form-horizontal" action="." method="POST">
     {% include "enter_results_ballot_set.html" %}
     <div class="row">
+        <h3 class="col-sm-12 page-header lead">Ballot Status</h3>
+    </div>
+    <div class="row">
+        Note: This is the status of the debate, not just this ballot set (if there is more than one for this debate).
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <label class="col-sm-1 col-xs-1 control-label">This ballot is discarded</label>
+            <div class="col-sm-2 col-xs-6">
+                {{ form.discarded }}
+            </div>
+            <div class="col-sm-2 col-md-1 col-xs-4">
+                <input class="save form-control btn btn-default" type="submit" value="Save" tabindex="101" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <label class="col-sm-1 col-xs-1 control-label">This is the confirmed ballot</label>
+            <div class="col-sm-2 col-xs-6">
+                {{ form.confirmed }}
+            </div>
+            <div class="col-sm-2 col-md-1 col-xs-4">
+                <input class="save form-control btn btn-default" type="submit" value="Save" tabindex="101" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <h3 class="col-sm-12 page-header lead">Debate Status</h3>
+    </div>
+    <div class="row">
+        Note: This is the status of the debate, not just this ballot set (if there is more than one for this debate).
     </div>
     <div class="row">
         <div class="form-group">

@@ -50,8 +50,13 @@ class BallotSetForm(forms.Form):
     controls that submit the form or anything like that.
     """
 
-    result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES,
+    confirmed = forms.BooleanField(
         widget = forms.Select(attrs = {'tabindex': 100}))
+    discarded = forms.BooleanField(
+        widget = forms.Select(attrs = {'tabindex': 101}))
+
+    debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES,
+        widget = forms.Select(attrs = {'tabindex': 102}))
 
     def __init__(self, ballots, *args, **kwargs):
         """
@@ -152,7 +157,9 @@ class BallotSetForm(forms.Form):
         Generate dictionary of initial form data
         """
 
-        initial = {'result_status': self.debate.result_status}
+        initial = {'debate_result_status': self.debate.result_status,
+            'confirmed': self.ballots.confirmed,
+            'discarded': self.ballots.discarded}
 
         bs = BallotSet(self.ballots)
 
@@ -229,9 +236,21 @@ class BallotSetForm(forms.Form):
                     bs.set_score(adj, side, i, score)
         do('aff')
         do('neg')
+
         bs.save()
 
-        self.debate.result_status = self.cleaned_data['result_status']
+        self.ballots.discarded = self.cleaned_data['discarded']
+        self.ballots.confirmed = self.cleaned_data['confirmed']
+
+        # Unconfirm the other, if necessary
+        if self.ballots.confirmed:
+            if self.debate.confirmed_ballot != self.ballots:
+                self.debate.confirmed_ballot.confirmed = False
+                self.debate.confirmed_ballot.save()
+
+        self.ballots.save()
+
+        self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()
 
     def adj_iter(self):
