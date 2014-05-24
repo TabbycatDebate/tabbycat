@@ -51,7 +51,9 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
         $ foreman start
 
 Once it's installed, the next time you want to run the project you just need to run
+
         $ source venv/bin/activate
+
 before you start.
 
 #### Deploy to Heroku
