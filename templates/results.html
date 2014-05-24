@@ -82,13 +82,18 @@
             </td>
 
             <td>
+                <!-- TODO clean this CSS stuff up -->
                 {% for ballotset in debate.ballotsubmission_set_by_time %}
-                    <a href="{% tournament_url edit_ballots ballotset.id %}" title="Edit Ballot">
-                        Edit {% if debate.ballotsubmission_set.count > 1%}v{{ ballotset.id }}{% endif %}</a>
-                    {% if not forloop.last %}<br />{% endif %}
+                <div>
+                    <a href="{% tournament_url edit_ballots ballotset.id %}" title="Edit Ballot" class="{% if ballotset.confirmed %}edit-ballot-link-confirmed{% endif %} {% if ballotset.discarded %}edit-ballot-link-discarded{% endif %}">
+                        {% if ballotset.confirmed %}Re-{% endif %}Edit {% if debate.ballotsubmission_set.count > 1%}v{{ ballotset.id }}{% endif %}</a>
+                </div>
                 {% empty %}
+                <div>
                     <a href="{% tournament_url new_ballots debate.id %}" title="Create New Ballot">Enter</a>
+                </div>
                 {% endfor %}
+                <!-- end TODO -->
             </td>
 
             <td>{{ debate.bracket }}</td>

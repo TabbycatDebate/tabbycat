@@ -822,3 +822,11 @@ p.warning {
 #correct {
   background-color: green;
   color: white; }
+
+.edit-ballot-link-confirmed {
+}
+
+.edit-ballot-link-discarded {
+    color: #808080;
+    text-decoration: line-through;
+}
