@@ -1,6 +1,9 @@
 # Tabbycat
 
-Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
+Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.  It was used at Auckland Australs 2010, [Victoria Australs 2012](http://australs2012.com) and will be used at [Otago Australs 2014](http://australs2014.com).
+
+If you're interested in using, developing or otherwise following this software,
+[join our Facebook group](https://www.facebook.com/groups/tabbycat.debate/).
 
 ## Features
 
@@ -123,15 +126,13 @@ At present the ```import_tournament``` script does not work on Heroku. For now:
 
 1. Tabs can be released using the *Tab released* option under configuration. Note that you probably want to turn off *Public ballots*, *Public feedback*, *Feedback progress*, and *Public draw* at this stage.
 
-## Developers and Development
+## Licensing and development
 
-Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010, was also used at [Victoria Australs 2012](http://australs2012.com), and will be used at [Otago Australs 2014](http://australs2014.com).
+We haven't released this under an open-source licence (so there is no formal general right to use this software), but if you're running a debating tournament, you're welcome to use it. It'd be nice if you could please let us know that you're doing so, and let us know how it went. [Our Facebook group](https://www.facebook.com/groups/tabbycat.debate/) is a great place to start. We're happy to help if you have any questions (contact below), though obviously we provide no warranty and disclaim all legal liability. Pull requests are encouraged.
 
-We haven't released this under an open-source licence (so there is no formal general right to use this software), but if you're running a debating tournament, you're welcome to use it. It'd be nice if you could please let us know that you're doing so, and let us know how it went. We're happy to help if you have any questions (contact below), though obviously we provide no warranty and disclaim all legal liability. Pull requests are encouraged.
+Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. Current active developers are Philip Belesky and Chuan-Zheng Lee. If you're interested in helping out, we'd love to have you. [Join our Facebook group](https://www.facebook.com/groups/tabbycat.debate/) and contact us as below.
 
-Contact Chuan-Zheng Lee with any questions. I shouldn't be too hard to find, but the easiest thing to do is check out the repository and find my e-mail address in the commit history. Or message me on Facebook (czlee) or Twitter (@czlee11). If you're interested in using, developing or otherwise following this software,
-[join our Facebook group](https://www.facebook.com/groups/tabbycat.debate/).
-
+If you need to contact one of us directly, contact Chuan-Zheng. I shouldn't be too hard to find, but the easiest thing to do is check out the repository and find my e-mail address in the commit history. Or message me on Facebook (czlee) or Twitter (@czlee11).
 
 
 
