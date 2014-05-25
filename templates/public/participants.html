@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block extra-head %}
+   <script type="text/javascript" charset="utf-8">
+        $(document).ready( function() {
+            var table = $("#dataTable").dataTable({
+                "aaSorting": [[ 0, "asc" ]],
+            });
+            new $.fn.dataTable.FixedHeader( table );
+        } );
+    </script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+{% endblock extra-head %}
+
+{% block head-title %}Participants{% endblock %}
+{% block page-title %}Participants{% endblock %}
+{% block body-class %}public-participants{% endblock %}
+
+{% block nav %}{% include "public/nav.html" %}{% endblock %}
+
+{% block content %}
+
+<table id="dataTable" class="table table-hover table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            {% if show_emoji > 0 %}
+                <th></th>
+            {% endif %}
+            <th>Team or Adj</th>
+            <th>Institution</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for person in speakers %}
+        <tr>
+            <td>{{ person.name }}</td>
+            {% if show_emoji > 0 %}
+                <td class="team-emoji team-{{ person.team.id }}" id=""></td>
+            {% endif %}
+            <td class="team-name">
+                <span title="{{ person.team.speakers|join:', ' }}" data-toggle="tooltip">{{ person.team.short_name }}</span>
+            </td>
+            <td>{{ person.team.institution }}</td>
+    {% endfor %}
+    {% for person in adjs %}
+        <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+            <td>{{ person.name }}</td>
+            <td></td>
+            <td>Adjudicator</td>
+            <td>{{ person.institution.code }}</td>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock content %}
