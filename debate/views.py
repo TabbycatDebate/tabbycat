@@ -120,7 +120,50 @@ def public_feedback_submit(request, t):
 @tournament_view
 def public_feedback_progress(request, t):
     if request.tournament.config.get('feedback_progress') > 0:
-        return r2r(request, 'public/feedback_tab.html')
+
+        def calculate_coverage(submitted, total):
+            if total == 0:
+                return False # Don't show these ones
+            elif submitted == 0:
+                return 0
+            else:
+                return int((float(submitted) / float(total)) * 100)
+
+        from debate.models import AdjudicatorFeedback
+        feedback = AdjudicatorFeedback.objects.all()
+        adjudicators = Adjudicator.objects.all()
+        teams = Team.objects.all()
+        current_round = request.tournament.current_round.seq
+
+        for adj in adjudicators:
+            adj.total_ballots = 0
+            adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator = adj)
+            adjudications = DebateAdjudicator.objects.filter(adjudicator = adj)
+
+            for item in adjudications:
+                # Finding out the composition of their panel, tallying owed ballots
+                if item.type == item.TYPE_CHAIR:
+                    adj.total_ballots += len(item.debate.adjudicators.trainees)
+                    adj.total_ballots += len(item.debate.adjudicators.panel)
+
+                if item.type == item.TYPE_PANEL:
+                    # Panelists owe on chairs
+                    adj.total_ballots += 1
+
+                if item.type == item.TYPE_TRAINEE:
+                    # Trainees owe on chairs
+                    adj.total_ballots += 1
+
+            adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
+            adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
+            adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
+
+        for team in teams:
+            team.submitted_ballots = max(feedback.filter(source_team__team = team).count(), 0)
+            team.owed_ballots = max((current_round - team.submitted_ballots), 0)
+            team.coverage = min(calculate_coverage(team.submitted_ballots, current_round), 100)
+
+        return r2r(request, 'public/feedback_tab.html', dict(teams=teams, adjudicators=adjudicators))
     else:
         return r2r(request, 'public_index.html')
 
