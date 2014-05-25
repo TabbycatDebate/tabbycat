@@ -440,7 +440,7 @@ def confirm_draw(request, round):
 @round_view
 def create_adj_allocation(request, round):
 
-    if round.draw_status != round.STATUS_CONFIRMED or round.STATUS_RELEASED:
+    if round.draw_status != round.STATUS_CONFIRMED:
         return HttpResponseBadRequest("Draw is not confirmed")
 
     from debate.adjudicator.hungarian import HungarianAllocator

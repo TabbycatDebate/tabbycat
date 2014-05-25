@@ -182,7 +182,9 @@ table.dataTable {
 // Editing the Draw
 
 .edit-venues, .edit-adjs {
-
+    #container {
+       min-height: 1000px;
+    }
     .btn-default.text-left {
         padding-left: 6px;
     }

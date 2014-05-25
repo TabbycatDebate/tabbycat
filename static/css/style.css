@@ -741,6 +741,8 @@ table.dataTable {
   margin-left: 0;
   list-style-type: none; }
 
+.edit-venues #container, .edit-adjs #container {
+  min-height: 1000px; }
 .edit-venues .btn-default.text-left, .edit-adjs .btn-default.text-left {
   padding-left: 6px; }
 .edit-venues #scratch, .edit-adjs #scratch {
@@ -769,11 +771,11 @@ table.dataTable {
   color: red; }
 
 .scoresheet .score input {
-  width: 70px;
+  width: 60px;
   float: left;
   margin-right: 10px; }
 .scoresheet .aff_total, .scoresheet .neg_total {
-  width: 70px;
+  width: 60px;
   font-weight: bold;
   cursor: default; }
 
@@ -807,11 +809,3 @@ p.warning {
 #correct {
   background-color: green;
   color: white; }
-
-.edit-ballot-link-confirmed {
-}
-
-.edit-ballot-link-discarded {
-    color: #808080;
-    text-decoration: line-through;
-}
