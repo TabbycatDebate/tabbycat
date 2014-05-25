@@ -16,6 +16,7 @@ SETTINGS = SortedDict([
                               10000)),
     ('show_emoji', (int, 'Shows Emoji in the draw UI', 1)),
     ('show_institutions', (int, 'Shows the institutions column in the draw UI', 1)),
+    ('public_participants', (int, 'Public interface to see all participants', 0)),
     ('public_draw', (int, 'Public interface to see RELEASED draws', 0)),
     ('public_ballots', (int, 'Public interface to add ballots', 0)),
     ('public_feedback', (int, 'Public interface to add feedback', 0)),

@@ -36,6 +36,11 @@
                     Draw for Round {{ current_round }}
                 </a></li>
                 {% endif %}
+                {% if public_participants > 0 %}
+                <li><a class="public-participants-nav" href="{% tournament_url public_participants %}">
+                    Pariticipants
+                </a></li>
+                {% endif %}
                 {% if feedback_progress > 0 %}
                 <li><a class="public-feedback-nav" href="{% tournament_url public_feedback_progress %}">
                     Feedback Progress

@@ -80,6 +80,16 @@ def index(request):
 def public_index(request, t):
     return r2r(request, 'public/index.html')
 
+
+@tournament_view
+def public_participants(request, t):
+    if request.tournament.config.get('public_participants') > 0:
+        adjs = Adjudicator.objects.all()
+        speakers = Speaker.objects.all()
+        return r2r(request, "public/participants.html", dict(adjs=adjs, speakers=speakers))
+    else:
+        return r2r(request, 'public/index.html')
+
 @tournament_view
 def public_draw(request, t):
     if request.tournament.config.get('public_draw') > 0:

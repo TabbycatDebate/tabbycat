@@ -9,6 +9,7 @@ def debate_context(request):
             'current_round'     : request.tournament.current_round,
             'show_emoji'        : request.tournament.config.get('show_emoji'),
             'show_institutions' : request.tournament.config.get('show_institutions'),
+            'public_participants': request.tournament.config.get('public_participants'),
             'public_draw'       : request.tournament.config.get('public_draw'),
             'public_ballots'    : request.tournament.config.get('public_ballots'),
             'public_feedback'   : request.tournament.config.get('public_feedback'),
