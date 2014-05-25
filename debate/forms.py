@@ -240,7 +240,7 @@ class BallotSetForm(forms.Form):
     def save(self):
         # Unconfirm the other, if necessary
         if self.cleaned_data['confirmed']:
-            if self.debate.confirmed_ballot != self.ballots:
+            if self.debate.confirmed_ballot != self.ballots and self.debate.confirmed_ballot is not None:
                 self.debate.confirmed_ballot.confirmed = False
                 self.debate.confirmed_ballot.save()
 
