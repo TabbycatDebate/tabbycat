@@ -122,10 +122,13 @@ class Command(BaseCommand):
                 try:
                     ins = m.Institution.objects.get(code=ins_name)
                     print ins
-                except Exception as inst:
-                    self.stdout.write("error with " + ins_name)
-                    print type(inst)     # the exception instance
-                    print inst           # __str__ allows args to printed directly
+                except:
+                    try:
+                        ins = m.Institution.objects.get(name=ins_name)
+                    except Exception as inst:
+                        self.stdout.write("error with " + ins_name)
+                        print type(inst)     # the exception instance
+                        print inst           # __str__ allows args to printed directly
 
                 try:
                     team = m.Team.objects.get_or_create(institution = ins, reference = team_name, use_institution_prefix = False)

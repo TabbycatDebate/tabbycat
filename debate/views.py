@@ -11,11 +11,11 @@ from django.conf import settings
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
 from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission
+from debate import forms
 
 from django.forms.models import modelformset_factory
 from django.forms import Textarea
 
-from debate import forms
 
 from functools import wraps
 import json
@@ -96,9 +96,9 @@ def public_draw(request, t):
         r = t.current_round
         if r.draw_status == r.STATUS_RELEASED:
             draw = r.get_draw()
-            return r2r(request, "public/draw.html", dict(draw=draw, round=r))
+            return r2r(request, "public/draw_released.html", dict(draw=draw, round=r))
         else:
-            return r2r(request, 'public/draw.html', dict(draw=None, round=r))
+            return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=r))
     else:
         return r2r(request, 'public/index.html')
 
@@ -572,7 +572,6 @@ def new_ballots(request, t, debate_id):
         template = 'enter_results.html'
 
     if request.method == 'POST':
-        raise Http404()
         form = forms.BallotSetForm(ballots, request.POST)
 
         if form.is_valid():

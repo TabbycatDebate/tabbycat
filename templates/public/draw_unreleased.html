@@ -1,4 +1,4 @@
-{% extends "draw_display_by_venue.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
 {% load static %}
 
@@ -6,12 +6,12 @@
 {% block footer %}{% include "public/footer.html" %}{% endblock %}
 {% block header %}{% endblock %}
 
-{% if draw == None %}
-{% block content %}
+{% block head-title %}Round {{ round }} Draw{% endblock %}
+{% block page-title %}Round {{ round }} Draw{% endblock %}
 
-<p class="lead">The draw for has yet to be released
+{% block content %}
+<p class="lead">The draw for Round {{ round }} has yet to be released
 <img src="{% static 'emoji/img/scream.png' %}" width="24" height="24" />
 </p>
-
 {% endblock %}
-{% endif %}
+
