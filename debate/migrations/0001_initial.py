@@ -162,6 +162,7 @@ class Migration(SchemaMigration):
             ('room_rank', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('importance', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('result_status', self.gf('django.db.models.fields.CharField')(default='N', max_length=1)),
+            ('ballot_in', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal(u'debate', ['Debate'])
 
@@ -508,6 +509,7 @@ class Migration(SchemaMigration):
         },
         u'debate.debate': {
             'Meta': {'object_name': 'Debate'},
+            'ballot_in': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'bracket': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'importance': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),

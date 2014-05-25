@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load add_field_css %}
-
 {% load debate_tags %}
 
 {% block extra-head %}
@@ -23,7 +22,6 @@
 
 </script>
 {% endif %}
-
 {% endblock %}
 
 {% block head-title %}
@@ -34,18 +32,18 @@ Edit Ballot Set for
 {% endif %}
 {{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>
 {% endblock %}
+
 {% block page-title %}{{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>{% endblock %}
 {% block body-class %}monkey-enter-result{% endblock %}
+{% block header %}
+    {% if not new %}
+    <a class="btn btn-default" href="{% tournament_url new_ballots debate.id %}">Create a new ballot set for this debate</a>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 
 {% include "other_ballots_list.html" %}
-
-{% if not new %}
-<div class="row">
-    <a href="{% tournament_url new_ballots debate.id %}">Create a new ballot set for this debate</a>
-</div>
-{% endif %}
 
 <form id="resultsForm" class="form-horizontal" action="." method="POST">
     <div id="ballot_set">
@@ -57,19 +55,18 @@ Edit Ballot Set for
     </div>
     <div class="row">
         <div class="form-group">
-
-            <label class="col-sm-2 col-xs-1 control-label">This ballot is discarded</label>
-            <div class="col-sm-2 col-xs-6">
-                {{ form.discarded }}
+            <label class="col-sm-3 col-xs-1 control-label">This ballot is discarded</label>
+            <div class="col-sm-1 col-xs-6">
+                {{ form.discarded|addcss:"form-control" }}
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="form-group">
-            <label class="col-sm-2 col-xs-1 control-label">This is the confirmed ballot</label>
-            <div class="col-sm-2 col-xs-6">
-                {{ form.confirmed }}
+            <label class="col-sm-3 col-xs-1 control-label">This is the confirmed ballot</label>
+            <div class="col-sm-1 col-xs-6">
+                {{ form.confirmed|addcss:"form-control" }}
             </div>
         </div>
     </div>
@@ -77,20 +74,21 @@ Edit Ballot Set for
         <h3 class="col-sm-12 page-header lead">Debate Status</h3>
     </div>
     <div class="row">
-        <div class="col-sm-12">Note: This is the status of the debate, not just this ballot set (if there is more than one for this debate).</div>
+        <div class="col-sm-2 col-sm-offset-1 col-xs-6">
+            {{ form.debate_result_status|addcss:"form-control" }}
+        </div>
+        <div class="col-sm-5">
+            Note: This is the status of the debate, not just this ballot set (if there is more than one for this debate).
+        </div>
     </div>
     <div class="row">
         <div class="form-group">
-            <label class="col-sm-1 col-xs-1 control-label"></label>
-            <div class="col-sm-2 col-xs-6">
-                {{ form.debate_result_status|addcss:"form-control" }}
-            </div>
-            <div class="col-sm-2 col-md-1 col-xs-4">
+            <div class="col-sm-2 col-md-1 col-xs-4  col-sm-offset-1 ">
                 <input id="submit" class="save form-control btn btn-default" type="submit" value="Save" tabindex="101" />
             </div>
             <!-- TODO fix this -->
             <div class="col-sm-2 col-md-1 col-xs-4">
-                <a href="{% round_url results %}">Cancel</a>
+                <button class="btn btn-default" href="{% round_url results %}">Cancel</button>
             </div>
         </div>
     </div>

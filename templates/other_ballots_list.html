@@ -1,49 +1,45 @@
 {% load add_field_css %}
 {% load debate_tags %}
 
+    <p class="lead">
+    {% if ballots.confirmed %}
+        This ballot is <strong>confirmed</strong>.
+    {% endif %}
+    {% if ballots.discarded %}
+        This ballot is <strong>discarded</strong>.
+    {% endif %}
     {% if not new %}
-    <div class="row">
-        <div class="col-sm-12">
         {% if ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
-            This ballot set was entered by <b>{{ ballots.user }}</b> at {{ ballots.timestamp_str }}.
+            This ballot set was entered by <strong>{{ ballots.user }}</strong> at {{ ballots.timestamp_str }}.
         {% elif ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
             This ballot set was submitted from the public form at {{ ballots.timestamp_str }}.
         {% endif %}
-        </div>
-    </div>
     {% endif %}
-
-    {% if ballots.confirmed %}
-        This ballot is confirmed.
-    {% endif %}
-
-    {% if ballots.discarded %}
-        This ballot is discarded.
-    {% endif %}
+    </p>
 
     {% if other_ballots_set.exists %}
-    <div class="row">
+    <p class="lead">
         {% if not new %}
             There is more than one ballot submission for this debate. Here are the others:
         {% else %}
             There are existing ballot submissions for this debate:
         {% endif %}
-        <ul>
-            {% for other_ballots in other_ballots_set %}
-            <li><a href="{% tournament_url edit_ballots other_ballots.id %}">
-                {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
-                    Version <b>{{other_ballots.id}}</b>, entered by <b>{{ other_ballots.user }}</b> at {{ other_ballots.timestamp_str }}
-                {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
-                    Version <b>{{other_ballots.id}}</b>, submitted from the public form at {{ other_ballots.timestamp_str }}
-                {% endif %}
-                {% if other_ballots.discarded %}
-                    (discarded)
-                {% endif %}
-                {% if other_ballots.confirmed %}
-                    (confirmed)
-                {% endif %}
-            </a></li>
-            {% endfor %}
-        </ul>
-    </div>
+    </p>
+    <ul>
+        {% for other_ballots in other_ballots_set %}
+        <li><a href="{% tournament_url edit_ballots other_ballots.id %}">
+            {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
+                Version <b>{{other_ballots.id}}</b>, entered by <b>{{ other_ballots.user }}</b> at {{ other_ballots.timestamp_str }}
+            {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+                Version <b>{{other_ballots.id}}</b>, submitted from the public form at {{ other_ballots.timestamp_str }}
+            {% endif %}
+            {% if other_ballots.discarded %}
+                (discarded)
+            {% endif %}
+            {% if other_ballots.confirmed %}
+                (confirmed)
+            {% endif %}
+        </a></li>
+        {% endfor %}
+    </ul>
     {% endif %}

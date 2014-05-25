@@ -20,9 +20,13 @@ class Command(BaseCommand):
         try:
             # Tournament
             self.stdout.write('Attempting to create tournament ' + folder)
-            m.Tournament.objects.filter(slug=folder).delete()
-            t = m.Tournament(slug=folder)
-            t.save()
+            try:
+                m.Tournament.objects.filter(slug=folder).delete()
+                t = m.Tournament(slug=folder)
+                t.save()
+            except Exception as inst:
+                print inst
+
             self.stdout.write('Created the tournament')
 
             self.stdout.write('Attempting to create rounds ')

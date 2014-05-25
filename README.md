@@ -43,8 +43,8 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.
 
 5. Sync and migrate the database:
 
-        $ python manage.py syncdb
-        $ python manage.py migrate
+        $ python manage.py schemamigration debate --initial
+        $ python manage.py migrate debate
 
 6. Run using:
 
