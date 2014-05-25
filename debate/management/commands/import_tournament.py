@@ -15,10 +15,12 @@ class Command(BaseCommand):
         # Where to find the data
         base_path = os.path.join(settings.PROJECT_PATH, 'data')
         data_path = os.path.join(base_path, folder)
+        self.stdout.write('importing from ' + data_path)
 
         try:
-            m.Tournament.objects.filter(slug='new-tournament').delete()
-            t = m.Tournament(slug='new-tournament')
+            self.stdout.write('Creating a new tournament called ' + folder)
+            m.Tournament.objects.filter(slug=folder).delete()
+            t = m.Tournament(slug=folder)
             t.save()
             self.stdout.write('Can create tournament')
 
