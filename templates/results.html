@@ -44,31 +44,31 @@
     <tbody>
 
     {% for debate in draw %}
-        <tr class=" {% ifequal debate.result_status "N" %}danger {% endifequal %}
-                    {% ifequal debate.result_status "B" %}warning {% endifequal %}
-                    {% ifequal debate.result_status "D" %}info {% endifequal %}
-                    {% ifequal debate.result_status "C" %}success{% endifequal %}
+        <tr class=" {% ifequal debate.result_status debate.STATUS_NONE %}{% if debate.ballot_in %}warning {% else %}danger {% endif %}{% endifequal %}
+                    {% ifequal debate.result_status debate.STATUS_DRAFT %}info {% endifequal %}
+                    {% ifequal debate.result_status debate.STATUS_CONFIRMED %}success{% endifequal %}
         ">
             <td>
-            {% ifequal debate.result_status "N" %}
+            {% ifequal debate.result_status debate.STATUS_NONE %}
+            {% if not debate.ballot_in %}
                 <span class="hidden">0</span>
                 <a data-toggle="tooltip" title="No Ballot">
                     <span class="glyphicon glyphicon-remove text-danger"></span>
                 </a>
-            {% endifequal %}
-            {% ifequal debate.result_status "B" %}
+            {% else %}
                 <span class="hidden">1</span>
                 <a data-toggle="tooltip" title="Ballot In">
                     <span class="glyphicon glyphicon-inbox text-warning"></span>
                 </a>
+            {% endif %}
             {% endifequal %}
-            {% ifequal debate.result_status "D" %}
+            {% ifequal debate.result_status debate.STATUS_DRAFT %}
                 <span class="hidden">2</span>
                 <a data-toggle="tooltip" title="Unconfirmed Ballot">
                     <span class="glyphicon glyphicon-adjust text-info"></span>
                 </a>
             {% endifequal %}
-            {% ifequal debate.result_status "C" %}
+            {% ifequal debate.result_status debate.STATUS_CONFIRMED %}
                 <span class="hidden">3</span>
                 <a data-toggle="tooltip" title="Confirmed Ballot">
                     <span class="glyphicon glyphicon-ok text-success"></span>

@@ -68,8 +68,6 @@ class BallotSetForm(forms.Form):
         <side>_score_<pos>
         """
         self.ballots = ballots
-        # In principle, debate should be used only to read information. It should not be
-        # modified or saved.
         self.debate = ballots.debate
         self.adjudicators = self.debate.adjudicators.list
 

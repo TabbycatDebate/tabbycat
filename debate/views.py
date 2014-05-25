@@ -506,8 +506,8 @@ def results(request, round):
     draw = round.get_draw()
 
     stats = {
-        'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
-        'ballot_in': draw.filter(result_status=Debate.STATUS_BALLOT_IN).count(),
+        'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
+        'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
         'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
         'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
     }
@@ -522,7 +522,7 @@ def monkey_results(request, round):
         raise Http404()
 
     draw = round.get_draw()
-    draw = draw.filter(result_status__in=(Debate.STATUS_NONE, Debate.STATUS_BALLOT_IN, Debate.STATUS_DRAFT))
+    draw = draw.filter(result_status__in=(Debate.STATUS_NONE, Debate.STATUS_DRAFT))
     return r2r(request, "monkey/results.html", dict(draw=draw))
 
 
@@ -922,13 +922,13 @@ def get_debate_from_ballot_checkin_request(request, round):
     except Debate.DoesNotExist:
         raise DebateBallotCheckinError('There wasn\'t a debate in venue ' + venue.name + ' this round.')
 
-    if debate.result_status != Debate.STATUS_NONE:
+    if debate.ballot_in:
         raise DebateBallotCheckinError('The ballot for venue ' + venue.name + ' has already been checked in.')
 
     return debate
 
 def ballot_checkin_number_left(round):
-    count = Debate.objects.filter(round=round, result_status=Debate.STATUS_NONE).count()
+    count = Debate.objects.filter(round=round, ballot_in=False).count()
     return count
 
 @admin_required
@@ -965,7 +965,7 @@ def post_ballot_checkin(request, round):
         data = {'exists': False, 'message': str(e)}
         return HttpResponse(json.dumps(data))
 
-    debate.result_status = Debate.STATUS_BALLOT_IN
+    debate.ballot_in = True
     debate.save()
 
     ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_CHECKIN,

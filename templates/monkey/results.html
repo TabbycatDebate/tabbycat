@@ -34,9 +34,8 @@
     <tbody>
         {% for debate in draw %}
         <tr class="
-        {% ifequal debate.result_status "N" %}danger {% endifequal %}
-        {% ifequal debate.result_status "B" %}warning {% endifequal %}
-        {% ifequal debate.result_status "C" %}active{% endifequal %}
+        {% ifequal debate.result_status debate.STATUS_NONE %}{% if debate.ballot_in %}warning {% else %}danger {% endif %}{% endifequal %}
+        {% ifequal debate.result_status debate.STATUS_CONFIRMED %}active{% endifequal %}
         ">
         <td>
             {% for ballotset in debate.ballotsubmission_set_by_time_except_discarded %}
