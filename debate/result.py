@@ -258,6 +258,8 @@ class BallotSet(object):
                 position = i,
             ).save()
 
+        self.ballots.motion = self.motion
+        self.ballots.save()
 
     def get_speaker(self, side, position):
         """

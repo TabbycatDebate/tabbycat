@@ -1079,6 +1079,7 @@ class BallotSubmission(models.Model):
         if self.submitter_type == self.SUBMITTER_TABROOM and self.user is None:
             raise ValidationError("A tab room ballot must have a user associated.")
 
+
     # For further discussion
     #submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
     #submitter_email = models.EmailField(max_length=254, blank=True, null=True) # only relevant for public submissions

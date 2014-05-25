@@ -35,7 +35,8 @@ def gen_results():
 
 def generate_random_results(round):
     # WARNING: This function has probably been broken by the transition to
-    # using BallotSubmissions.
+    # using BallotSubmissions.  See data/utils/add_ballot_set.py for a new
+    # example.
     from debate.models import Debate, DebateResult
 
     debates = Debate.objects.filter(round=round)

@@ -12,6 +12,8 @@ def get_or_instantiate(model, **kwargs):
     except model.DoesNotExist:
         return model(**kwargs)
 
+### Result/ballot forms
+
 class ScoreField(forms.FloatField):
     MIN_VALUE = 68
     MAX_VALUE = 82
@@ -60,39 +62,43 @@ class BallotSetForm(forms.Form):
 
     def __init__(self, ballots, *args, **kwargs):
         """
-        Dynamically generate fields for this debate
+        Dynamically generate fields for this ballot
 
         <side>_speaker_<pos> and
         <side>_score_<pos>
         """
         self.ballots = ballots
-        self.debate = ballots.debate
-        self.adjudicators = self.debate.adjudicators.list
+        # In principle, debate should be used only to read information. It should not be
+        # modified or saved.
+        debate = ballots.debate
+        self.adjudicators = debate.adjudicators.list
 
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
         # Grab info about how many positions there are
-        tournament = self.debate.round.tournament
+        tournament = debate.round.tournament
         self.POSITIONS = tournament.POSITIONS
         self.LAST_SUBSTANTIVE_POSITION = tournament.LAST_SUBSTANTIVE_POSITION
         self.REPLY_POSITION = tournament.REPLY_POSITION
 
-        # Limit the motions you can choose to the motions for this round
-        motions = self.debate.round.motion_set
-        self.show_motion = motions.exists() # this is used in the template
+        # Generate the motions field.
+        # We are only allowed to choose from the motions for this round.
+        self.motions = debate.round.motion_set
+        self.show_motion = self.motions.exists() # this is used in the template
+        # Tab index for the motion field is first if there's more than one, or last if
+        # there's only one.
+        self.fields['motion'] = forms.ModelChoiceField(
+            queryset = self.motions,
+            widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
+            required = False)
+
+        # Set the initial data
         self.initial = self._initial_data()
 
         # Grab the relevant score field configurations
         config = tournament.config
         score_kwargs = dict(min_value = config.get('score_min'), max_value = config.get('score_max'))
         reply_score_kwargs = dict(min_value = config.get('reply_score_min'), max_value = config.get('reply_score_max'))
-
-        # Select the motion first if there's more than one, or last (after the save button)
-        # if there's only one.  (This isn't shown if there are no motions.)
-        self.fields['motion'] = forms.ModelChoiceField(
-            queryset = motions,
-            widget   = forms.Select(attrs = {'tabindex': motions.count() > 1 and 1 or 200}),
-            required = False)
 
         # tab indices are as follows (example):
         #
@@ -117,7 +123,8 @@ class BallotSetForm(forms.Form):
         MAX_POSITION = max(self.POSITIONS)
 
         for side, tab_index_add in (('aff', 0), ('neg', 2 * MAX_POSITION)):
-            team = self.debate.get_team(side)
+
+            team = debate.get_team(side)
             for pos in self.POSITIONS:
                 self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(
                     queryset = team.speakers,
@@ -170,10 +177,9 @@ class BallotSetForm(forms.Form):
         # database.  But if there is only one motion and no motion is
         # currently stored in the database for this round, then default
         # to the only motion there is.
-        motions = self.debate.round.motion_set
         if self.show_motion:
-            if not bs.motion and motions.count() == 1:
-                initial['motion'] = motions[0]
+            if not bs.motion and self.motions.count() == 1:
+                initial['motion'] = self.motions[0]
             else:
                 initial['motion'] = bs.motion
 
@@ -312,6 +318,76 @@ class BallotSetForm(forms.Form):
         for adj in self.adjudicators:
             yield AdjudicatorWrapper(adj)
 
+
+class DebateManagementForm(forms.Form):
+    """Traditionally, a Django FormSet has a ManagementForm to keep track of the
+    forms on the page. In a debate result, there are some fields the relate to the
+    debate as a whole, not an individual ballot. This form is responsible for those
+    fields, and is always part of a DebateResultFormSet."""
+
+    result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES,
+        widget = forms.Select(attrs = {'tabindex': 1000}))
+
+    def __init__(self, debate, *args, **kwargs):
+        self.debate = debate
+
+        super(DebateManagementForm, self).__init__(*args, **kwargs)
+
+        self.initial['result_status'] = self.debate.result_status
+
+        # Generate the confirmed ballot field
+        self.fields['confirmed_ballot'] = forms.ModelChoiceField(
+            queryset = self.debate.ballotsubmission_set,
+            widget   = forms.Select(attrs = {'tabindex': 2}),
+            required = False)
+        self.initial['confirmed_ballot'] = self.debate.confirmed_ballot
+
+    def save(self):
+        # Unconfirm the old ballot
+        # (Technically, we could rely on BallotSubmission.save() to do this
+        # for us, but it's better to be explicit than rely on a backup check.)
+        old_confirmed_ballot = self.debate.confirmed_ballot
+        old_confirmed_ballot.confirmed = False
+        old_confirmed_ballot.save()
+
+        # Confirm the new ballot
+        new_confirmed_ballot = self.cleaned_data['confirmed_ballot']
+        new_confirmed_ballot.confirmed = True
+        new_confirmed_ballot.save()
+
+        # Update the debate status
+        # TODO catch validation errors
+        self.debate.result_status = self.cleaned_data['result_status']
+        self.debate.save()
+
+class DebateResultFormSet(object):
+    """A manager for the various forms that comprise a debate result form.
+
+    This should only be used with tab room interfaces. The public should never
+    see anything remotely resembling this form set.
+
+    In many ways, this is similar to FormSet. But it adds too much functionality
+    specific to debate results, including managing relationships between forms,
+    and uses too little of BaseFormSet's actual functionality, to be worth
+    inheriting from BaseFormSet. Maybe we'll eventually change this."""
+
+    # TODO Add a ManagementForm to this, if we ever want to add/delete forms using JavaScript
+
+    def __init__(self, debate, data=None, *args, **kwargs):
+        """Dynamically generate the ballot set forms for this debate.
+        Basically we do this by initializing the data of the formset."""
+
+        self.debate_management_form = DebateManagementForm(debate)
+        self.ballotset_forms = list()
+
+        for ballot in debate.ballotsubmission_set.all():
+            form = BallotSetForm(ballot)
+            self.ballotset_forms.append(form)
+
+    def save(self):
+        pass
+
+### Feedback forms
 
 def make_feedback_form_class(adjudicator):
 

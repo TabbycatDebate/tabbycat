@@ -45,17 +45,22 @@ Edit Ballot Set for
     <div id="ballot_set">
         {% include "enter_results_ballot_set.html" %}
     </div>
+        <!-- TODO fix this -->
     <div class="row">
         <h3 class="col-sm-12 page-header lead">Ballot Status</h3>
     </div>
     <div class="row">
         <div class="form-group">
+
             <label class="col-sm-2 col-xs-1 control-label">This ballot is discarded</label>
             <div class="col-sm-2 col-xs-6">
                 {{ form.discarded }}
             </div>
         </div>
     </div>
+
+    {% endfor %}
+
     <div class="row">
         <div class="form-group">
             <label class="col-sm-2 col-xs-1 control-label">This is the confirmed ballot</label>
@@ -81,6 +86,7 @@ Edit Ballot Set for
             </div>
         </div>
     </div>
+
 </form>
 
 
