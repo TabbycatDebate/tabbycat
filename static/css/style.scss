@@ -73,26 +73,26 @@ input.error, select.error, .error input {
 .form-control-parent input {
     @extend .form-control;
 }
-.form-group ul {
-    // Radio Buttons
-    padding-left: 0px;
-    li {
-        list-style-type: none;
-        float: left;
-        width: 50%;
-        label {
-            width: 100%;
-            float: left;
-            line-height: 34px;
-            input {
-                float: left;
-                display: inline;
-                width: 30px;
-                margin-top: 0;
-            }
-        }
-    }
-}
+// .form-group ul {
+//     // Radio Buttons
+//     padding-left: 0px;
+//     li {
+//         list-style-type: none;
+//         float: left;
+//         width: 50%;
+//         label {
+//             width: 100%;
+//             float: left;
+//             line-height: 34px;
+//             input {
+//                 float: left;
+//                 display: inline;
+//                 width: 30px;
+//                 margin-top: 0;
+//             }
+//         }
+//     }
+// }
 
 // Tables
 
