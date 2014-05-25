@@ -1,5 +1,6 @@
 local_settings.py
 staticfiles/
+migrations/
 adam2014/
 
 env/
