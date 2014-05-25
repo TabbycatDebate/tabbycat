@@ -641,7 +641,8 @@ a.text-danger:hover {
   color: #c9302c; }
 
 #header-options {
-  min-height: 30px; }
+  min-height: 30px;
+  margin-bottom: 20px; }
 
 #footer {
   margin-top: 40px; }

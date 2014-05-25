@@ -73,10 +73,12 @@
     <div id="container" class="container-fluid">
 
         <div class="row page-header">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h1 class="h2">{% block head-title %}{% endblock %}</h1>
             </div>
-            <div class="col-md-6 form-inline" id="header-options">
+        </div>
+        <div class="row">
+            <div class="col-md-12 form-inline" id="header-options">
                 {% block header %}{% endblock %}
             </div>
         </div>

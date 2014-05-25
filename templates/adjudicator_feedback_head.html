@@ -15,7 +15,9 @@
 
         var dTable;
         $(document).ready( function() {
-            dTable = $('#dataTable').dataTable();
+            dTable = $('#dataTable').dataTable({
+                "aaSorting": [[1, 'asc']],
+            });
 
             $("#dataTable a.view").each( function() {
                 $(this).click( function() {

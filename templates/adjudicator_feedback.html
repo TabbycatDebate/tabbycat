@@ -9,13 +9,13 @@
 
         var table = $('#dataTable').dataTable({
             'bPaginate': false,
-            "aaSorting": [[ 4, "desc" ]],
+            "aaSorting": [[ 6, "desc" ]],
         });
         new $.fn.dataTable.FixedHeader( table );
 
         var adjTable = $("#modal-adj-table").dataTable({
           // Grabbing the adj data into a datatable
-          'ajax': '{% tournament_url get_adj_feedback %}?id=642',
+          'ajax': '{% tournament_url get_adj_feedback %}?id={{ adjudicators.first.id }}',
           'bPaginate': false,
           'bFilter': false
         });
@@ -25,13 +25,10 @@
 
         $(".view-feedback").each( function() {
             $(this).click( function() {
-
                 var adj_row = $(this).parent().parent() // the <tr> for this adjudicator in the table
                 var adj_name = adj_row.find(".adj-name").text()
                 var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
-
                 $("#modal-adj-name").text(adj_name); // Updating header of the modal
-
                 var newUrl = '{% tournament_url get_adj_feedback %}?id=' + adj_id
                 adjTable.api().ajax.url(newUrl).load();
 
@@ -66,7 +63,6 @@
             <th>Score</th>
         </tr>
     </thead>
-
     <tbody>
         {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">

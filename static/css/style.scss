@@ -14,7 +14,8 @@
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
 #header-options {
-    min-height: 30px; // Spacer for mobile rendering (pre form relocation)
+    min-height: 30px; // Spacer for mobile rendering (pre form relocation
+    margin-bottom: 20px;
 }
 #footer {
     margin-top: 40px;

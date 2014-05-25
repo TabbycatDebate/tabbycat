@@ -1,11 +1,13 @@
 {% load add_field_css %}
 {% load debate_tags %}
 
+{% if form.non_field_errors %}
 <div class="row">
-    <div class="form-group">
-        {{ form.non_field_errors }}
+    <div class="alert alert-warning">
+        <p>{{ form.non_field_errors }}</p>
     </div>
 </div>
+{% endif %}
 
 <div class="row">
     <div class="form-group">
