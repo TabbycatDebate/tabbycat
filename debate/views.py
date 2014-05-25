@@ -534,10 +534,10 @@ def edit_ballots(request, t, ballots_id):
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
-        other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id)
+        other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id).exclude(discarded=True)
     else:
         template = 'enter_results.html'
-        other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id).exclude(discarded=True)
+        other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id)
 
     if request.method == 'POST':
         form = forms.BallotSetForm(ballots, request.POST)
