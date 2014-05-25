@@ -41,6 +41,12 @@ Edit Ballot Set for
 
 {% include "other_ballots_list.html" %}
 
+{% if not new %}
+<div class="row">
+    <a href="{% tournament_url new_ballots debate.id %}">Create a new ballot set for this debate</a>
+</div>
+{% endif %}
+
 <form id="resultsForm" class="form-horizontal" action="." method="POST">
     <div id="ballot_set">
         {% include "enter_results_ballot_set.html" %}
@@ -58,8 +64,6 @@ Edit Ballot Set for
             </div>
         </div>
     </div>
-
-    {% endfor %}
 
     <div class="row">
         <div class="form-group">
@@ -83,6 +87,10 @@ Edit Ballot Set for
             </div>
             <div class="col-sm-2 col-md-1 col-xs-4">
                 <input id="submit" class="save form-control btn btn-default" type="submit" value="Save" tabindex="101" />
+            </div>
+            <!-- TODO fix this -->
+            <div class="col-sm-2 col-md-1 col-xs-4">
+                <a href="{% round_url results %}">Cancel</a>
             </div>
         </div>
     </div>

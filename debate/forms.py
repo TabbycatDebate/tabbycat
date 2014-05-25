@@ -68,22 +68,20 @@ class BallotSetForm(forms.Form):
         <side>_score_<pos>
         """
         self.ballots = ballots
-        # In principle, debate should be used only to read information. It should not be
-        # modified or saved.
-        debate = ballots.debate
-        self.adjudicators = debate.adjudicators.list
+        self.debate = ballots.debate
+        self.adjudicators = self.debate.adjudicators.list
 
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
         # Grab info about how many positions there are
-        tournament = debate.round.tournament
+        tournament = self.debate.round.tournament
         self.POSITIONS = tournament.POSITIONS
         self.LAST_SUBSTANTIVE_POSITION = tournament.LAST_SUBSTANTIVE_POSITION
         self.REPLY_POSITION = tournament.REPLY_POSITION
 
         # Generate the motions field.
         # We are only allowed to choose from the motions for this round.
-        self.motions = debate.round.motion_set
+        self.motions = self.debate.round.motion_set
         self.show_motion = self.motions.exists() # this is used in the template
         # Tab index for the motion field is first if there's more than one, or last if
         # there's only one.
@@ -124,7 +122,7 @@ class BallotSetForm(forms.Form):
 
         for side, tab_index_add in (('aff', 0), ('neg', 2 * MAX_POSITION)):
 
-            team = debate.get_team(side)
+            team = self.debate.get_team(side)
             for pos in self.POSITIONS:
                 self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(
                     queryset = team.speakers,
@@ -246,7 +244,7 @@ class BallotSetForm(forms.Form):
     def save(self):
         # Unconfirm the other, if necessary
         if self.cleaned_data['confirmed']:
-            if self.debate.confirmed_ballot != self.ballots:
+            if self.debate.confirmed_ballot != self.ballots and self.debate.confirmed_ballot is not None:
                 self.debate.confirmed_ballot.confirmed = False
                 self.debate.confirmed_ballot.save()
 

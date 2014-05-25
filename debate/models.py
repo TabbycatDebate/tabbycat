@@ -716,12 +716,10 @@ class DebateManager(models.Manager):
 
 class Debate(models.Model):
     STATUS_NONE = 'N'
-    STATUS_BALLOT_IN = 'B'
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = (
         (STATUS_NONE, 'None'),
-        (STATUS_BALLOT_IN, 'Ballot in'),
         (STATUS_DRAFT, 'Draft'),
         (STATUS_CONFIRMED, 'Confirmed'),
     )
@@ -734,6 +732,7 @@ class Debate(models.Model):
     importance = models.IntegerField(blank=True, null=True)
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
             default=STATUS_NONE)
+    ballot_in = models.BooleanField(default=False)
 
     def _get_teams(self):
         if not hasattr(self, '_team_cache'):
@@ -1182,6 +1181,8 @@ class ActionLog(models.Model):
     # These aren't generated automatically - all generations of these should
     # be done in views (not models).
 
+    # TODO update these to account for new ballot submissions model
+
     ACTION_TYPE_BALLOT_CHECKIN    = 10
     ACTION_TYPE_BALLOT_DRAFT      = 11
     ACTION_TYPE_BALLOT_CONFIRM    = 12
@@ -1224,7 +1225,6 @@ class ActionLog(models.Model):
 
     ACTION_TYPE_BY_RESULT_STATUS = {
         Debate.STATUS_NONE:      ACTION_TYPE_BALLOT_ANNUL,
-        Debate.STATUS_BALLOT_IN: ACTION_TYPE_BALLOT_CHECKIN,
         Debate.STATUS_DRAFT:     ACTION_TYPE_BALLOT_DRAFT,
         Debate.STATUS_CONFIRMED: ACTION_TYPE_BALLOT_CONFIRM,
     }
