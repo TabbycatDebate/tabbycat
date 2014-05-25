@@ -68,13 +68,35 @@ These commands can be used to deploy to Heroku, provided you have setup the [Her
 2. Create a new Tournament object (and input the rounds)
 3. Proceed to create Venues, Institutions, Teams (which also allows you to add speakers), and Adjudicators
 
-#### Importing a Tournament (Data Import)
+#### Importing a Tournament Locally (Data Import)
 
 1. Copy and rename the ```data/dummy``` folder
 2. See the csv files in the new folder, and add/replace the data as per your tournament. Note that the institutions (ie first row) in the ```speakers.csv``` and ```adjudicators.csv``` files must match the institutions in the second row of the ```institutions.csv``` file. And that all csv files must end with a blank line.
 3. Use this command, replacing 'dummy' with your new folder's name:
 
         $ ./manage.py import_tournament dummy
+
+### Importing a Tournament on Heroku
+
+At present the ```import_tournament``` script does not work on Heroku. For now:
+
+1. Import the data on a local install
+
+        $ ./manage.py import_tournament dummy
+
+2. Add the backups plugin to Heroku
+
+        $ heroku addons:add pgbackups
+
+3. Make a copy of your local datatabase (replacing 'your_db_name') in the below:
+
+        $ pg_dump -Fc --no-acl --no-owner -h localhost your_db_name > your_db_name
+
+4. Upload the dump file to a web server somewhere
+
+5. Restore the local dump to Heroku, replacing the URL with a link to your dump file
+
+        $ heroku pgbackups:restore DATABASE 'https://s3.amazonaws.com/me/items/3H0q/mydb.dump'
 
 #### Directing a Tournament
 

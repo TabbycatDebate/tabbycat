@@ -10,6 +10,7 @@ urlpatterns = patterns('debate.views',
     url(r'^draw/$', 'draw_index', name='draw_index'),
     url(r'^round/(?P<round_seq>\d+)/$',
         'round_index', name='round_index'),
+    url(r'^feedback_progress/$', 'feedback_progress', name='feedback_progress'),
 
     url(r'^public/$', 'public_index', name='public_index'),
     url(r'^public/draw/$', 'public_draw', name='public_draw'),
