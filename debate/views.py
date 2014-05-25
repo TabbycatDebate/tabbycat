@@ -106,6 +106,14 @@ def public_feedback_submit(request, t):
     else:
         return r2r(request, 'public/index.html')
 
+
+@tournament_view
+def public_feedback_progress(request, t):
+    if request.tournament.config.get('feedback_progress') > 0:
+        return r2r(request, 'public/feedback_tab.html')
+    else:
+        return r2r(request, 'public_index.html')
+
 ## Tab
 
 @tournament_view
@@ -142,6 +150,8 @@ def public_feedback_tab(request, t):
         return r2r(request, 'public/feedback_tab.html')
     else:
         return r2r(request, 'public_index.html')
+
+
 
 
 @login_required
