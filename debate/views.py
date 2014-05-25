@@ -534,8 +534,10 @@ def edit_ballots(request, t, ballots_id):
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
+        other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id)
     else:
         template = 'enter_results.html'
+        other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id).exclude(discarded=True)
 
     if request.method == 'POST':
         form = forms.BallotSetForm(ballots, request.POST)
@@ -551,8 +553,6 @@ def edit_ballots(request, t, ballots_id):
             return redirect_round('results', debate.round)
     else:
         form = forms.BallotSetForm(ballots)
-
-    other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id)
 
     return r2r(request, template, dict(debate=debate, form=form,
         round=debate.round, ballots=ballots, other_ballots_set=other_ballots_set))

@@ -41,6 +41,12 @@ Edit Ballot Set for
 
 {% include "other_ballots_list.html" %}
 
+{% if not new %}
+<div class="row">
+    <a href="{% tournament_url new_ballots debate.id %}">Create a new ballot set for this debate</a>
+</div>
+{% endif %}
+
 <form id="resultsForm" class="form-horizontal" action="." method="POST">
     <div id="ballot_set">
         {% include "enter_results_ballot_set.html" %}
