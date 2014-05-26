@@ -5,17 +5,20 @@
 {{ block.super }}
 
 {% include "enter_results_head.html" %}
-{% if debate.result_status == debate.STATUS_DRAFT or ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+{% if not new %}
 <script>
     $(document).ready(function() {
         function preSubmit() {
             $('#resultsForm input').removeAttr('readonly');
             $('#resultsForm select').removeAttr('disabled');
         }
+        {% if disable_confirm %}
+        $('#correct').attr('disabled', 'true');
+        {% endif %}
         $('#resultsForm input[type="text"]').attr('readonly', 'true');
         $('#resultsForm select').attr('disabled', 'true');
         $('#incorrect').click(function() {
-            {% if other_ballots_set.count > 1 %}
+            {% if other_ballots_set.count > 0 %}
             $('#id_debate_result_status').val('{{ debate.STATUS_DRAFT }}');
             {% else %}
             $('#id_debate_result_status').val('{{ debate.STATUS_NONE }}');
@@ -47,13 +50,15 @@ Edit Ballot Set for
 
 {% block nav %}{% include "monkey/nav.html" %}{% endblock %}{% block footer %}{% include "monkey/footer.html" %}{% endblock %}
 {% block content %}
+
 {% include "other_ballots_list.html" %}
 
 <form id="resultsForm" action="." method="POST" class="form-horizontal">
+
     {% include "enter_results_ballot_set.html" %}
 
     <div class="row">
-        <h3 class="col-sm-12 page-header lead">Debate Status</h3>
+        <h3 class="col-sm-12 page-header lead">{% if new %}Save{% else %}Check{% endif %}</h3>
     </div>
     <div class="row">
         <div class="form-group">
@@ -75,6 +80,10 @@ Edit Ballot Set for
             </div>
         </div>
     </div>
+    <div class="lead">
+        {% if disable_confirm %}(You can't confirm this ballot set because you entered it.){% endif %}
+    </div>
+
 </form>
 
 {% endblock content %}

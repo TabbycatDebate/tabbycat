@@ -810,6 +810,10 @@ p.warning {
   background-color: green;
   color: white; }
 
+#correct[disabled="disabled"] {
+  background-color: gray;
+  color: silver; }
+
 .edit-ballot-link-discarded {
   color: #808080;
   text-decoration: line-through; }

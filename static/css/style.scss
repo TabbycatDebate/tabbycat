@@ -314,6 +314,11 @@ p.warning { color: red; font-weight: bold; }
     color: white;
 }
 
+#correct[disabled="disabled"]{
+    background-color: gray;
+    color: silver;
+}
+
 .edit-ballot-link-confirmed {
 }
 
