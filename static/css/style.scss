@@ -276,13 +276,9 @@ table.dataTable {
 .scoresheet {
     .score input {
         width: 70px;
-        text-align: right;
-        float: left;
-        margin-right: 10px
     }
     .aff_total, .neg_total {
         width: 70px;
-        text-align: right;
         font-weight: bold;
         cursor: default;
     }

@@ -47,12 +47,14 @@
         $(document).ready(function(){
             $('[data-toggle=tooltip]').tooltip();
             // Shifting the search filter around
-            if ($('.dataTables_filter').length <= 1) {
+            if ($('.dataTables_filter').length < 0) {
                 var filter = $('.dataTables_filter').detach()
                 $("#header-options").prepend(filter);
                 var input = $(".dataTables_filter .form-control").detach();
                 filter.text("").append(input).addClass("form-group has-feedback");
                 input.attr("placeholder", "Quick Search");
+            } else {
+                $("#header-options").css("min-height", 0);
             }
             $('input.number').attr("type", "number").attr("step", "any");
 

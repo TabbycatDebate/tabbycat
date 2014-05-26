@@ -773,13 +773,9 @@ table.dataTable {
   color: red; }
 
 .scoresheet .score input {
-  width: 70px;
-  text-align: right;
-  float: left;
-  margin-right: 10px; }
+  width: 70px; }
 .scoresheet .aff_total, .scoresheet .neg_total {
   width: 70px;
-  text-align: right;
   font-weight: bold;
   cursor: default; }
 

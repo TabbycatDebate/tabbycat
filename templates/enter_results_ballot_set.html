@@ -37,7 +37,7 @@
                         {{ position.aff_speaker|addcss:"form-control" }}
                         {{ position.aff_speaker.errors }}
                     {% else %}
-                    <div class="speaker-name"></div>
+                    <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
                     {% endif %}
                 </div>
                 <div class="col-md-6 col-xs-2 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
@@ -67,7 +67,7 @@
                             {{ position.neg_speaker|addcss:"form-control" }}
                             {{ position.neg_speaker.errors }}
                         {% else %}
-                        <div class="speaker-name"></div>
+                        <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
                         {% endif %}
                     </div>
                     <div class="col-md-6 col-xs-2 neg score form-control-parent {{ position.neg_score_errors|yesno:'error,' }}">
