@@ -1162,6 +1162,13 @@ class MotionManager(models.Manager):
         else:
             motions = self.filter(round=round)
 
+        # This does work, it just messes up the dataTable, I'm not sure why.
+        #motions = motions.filter(
+            #ballotsubmission__confirmed = True
+        #).annotate(
+            #chosen_in = models.Count('ballotsubmission')
+        #)
+
         # TODO is there a more efficient way to do this?
         for motion in motions:
             ballots = BallotSubmission.objects.filter(confirmed=True, motion=motion)
