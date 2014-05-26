@@ -29,9 +29,9 @@
         {% for other_ballots in other_ballots_set %}
         <li><a href="{% tournament_url edit_ballots other_ballots.id %}">
             {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
-                Version <b>{{other_ballots.id}}</b>, entered by <b>{{ other_ballots.user }}</b> at {{ other_ballots.timestamp_str }}
+                Version <b>{{other_ballots.version}}</b>, entered by <b>{{ other_ballots.user }}</b> at {{ other_ballots.timestamp_str }}
             {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
-                Version <b>{{other_ballots.id}}</b>, submitted from the public form at {{ other_ballots.timestamp_str }}
+                Version <b>{{other_ballots.version}}</b>, submitted from the public form at {{ other_ballots.timestamp_str }}
             {% endif %}
             {% if other_ballots.discarded %}
                 (discarded)
@@ -42,4 +42,9 @@
         </a></li>
         {% endfor %}
     </ul>
+    {% if not new %}
+    <p class="lead">
+        This ballot is version <b>{{ ballots.version }}</b>.
+    </p>
+    {% endif %}
     {% endif %}

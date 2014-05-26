@@ -773,11 +773,13 @@ table.dataTable {
   color: red; }
 
 .scoresheet .score input {
-  width: 60px;
+  width: 70px;
+  text-align: right;
   float: left;
   margin-right: 10px; }
 .scoresheet .aff_total, .scoresheet .neg_total {
-  width: 60px;
+  width: 70px;
+  text-align: right;
   font-weight: bold;
   cursor: default; }
 
@@ -811,3 +813,7 @@ p.warning {
 #correct {
   background-color: green;
   color: white; }
+
+.edit-ballot-link-discarded {
+  color: #808080;
+  text-decoration: line-through; }

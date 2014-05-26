@@ -10,6 +10,7 @@ from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
 
 from warnings import warn
+from threading import BoundedSemaphore
 
 class ScoreField(models.FloatField):
     pass
@@ -751,12 +752,12 @@ class Debate(models.Model):
             return None
 
     @property
-    def ballotsubmission_set_by_time(self):
-        return self.ballotsubmission_set.all().order_by('timestamp')
+    def ballotsubmission_set_by_version(self):
+        return self.ballotsubmission_set.all().order_by('version')
 
     @property
-    def ballotsubmission_set_by_time_except_discarded(self):
-        return self.ballotsubmission_set.filter(discarded=False).order_by('timestamp')
+    def ballotsubmission_set_by_version_except_discarded(self):
+        return self.ballotsubmission_set.filter(discarded=False).order_by('version')
 
     @property
     def aff_team(self):
@@ -1032,6 +1033,7 @@ class BallotSubmission(models.Model):
     motion = models.ForeignKey('Motion', blank=True, null=True, on_delete=models.SET_NULL)
 
     timestamp = models.DateTimeField(auto_now_add=True)
+    version = models.PositiveIntegerField()
     submitter_type = models.IntegerField(choices=SUBMITTER_TYPE_CHOICES)
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
@@ -1039,6 +1041,11 @@ class BallotSubmission(models.Model):
     copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
     discarded = models.BooleanField(default=False)
     confirmed = models.BooleanField(default=False)
+
+    version_semaphore = BoundedSemaphore(100)
+
+    class Meta:
+        unique_together = [('debate', 'version')]
 
     def __unicode__(self):
         return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp_str)
@@ -1064,10 +1071,22 @@ class BallotSubmission(models.Model):
             except BallotSubmission.DoesNotExist:
                 pass
             else:
-                warn("%s confirmed while %s was already confirmed, setting latter to unconfirmed" % (self, current_confirmed_ballot))
-                current_confirmed_ballot.confirmed = False
-                current_confirmed_ballot.save()
+                if current_confirmed_ballot != self:
+                    warn("%s confirmed while %s was already confirmed, setting latter to unconfirmed" % (self, current_confirmed_ballot))
+                    current_confirmed_ballot.confirmed = False
+                    current_confirmed_ballot.save()
+        # Assign the version field to one more than the current maximum version
+        # Use a semaphore to protect against the possibility that two submissions do this
+        # at the same time and get the same version number.
+        self.version_semaphore.acquire()
+        if self.pk is None:
+            existing_ballots = BallotSubmission.objects.filter(debate=self.debate)
+            if existing_ballots.exists():
+                self.version = existing_ballots.aggregate(models.Max('version'))['version__max'] + 1
+            else:
+                self.version = 1
         super(BallotSubmission, self).save(*args, **kwargs)
+        self.version_semaphore.release()
 
     def clean(self):
         # The motion must be from the relevant round
@@ -1142,6 +1161,13 @@ class MotionManager(models.Manager):
             motions = self.all()
         else:
             motions = self.filter(round=round)
+
+        # This does work, it just messes up the dataTable, I'm not sure why.
+        #motions = motions.filter(
+            #ballotsubmission__confirmed = True
+        #).annotate(
+            #chosen_in = models.Count('ballotsubmission')
+        #)
 
         # TODO is there a more efficient way to do this?
         for motion in motions:
