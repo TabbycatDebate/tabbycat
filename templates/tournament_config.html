@@ -6,8 +6,7 @@
 {% block page-title %}Configuration{% endblock %}
 {% block body-class %}config{% endblock %}
 
-{% block content %}
-
+{% block header %}
 
 {% if updated %}
 <div class="alert alert-success updated alert-dismissable" id="savedVenues">
@@ -22,6 +21,10 @@
         Please correct the errors below {{ form.errors }}
     </div>
 {% endif %}
+
+{% endblock %}
+
+{% block content %}
 
 <form id="configForm" action="." method="POST" class="form-horizontal">
     {% for field in form %}

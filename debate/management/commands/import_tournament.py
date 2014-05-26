@@ -30,23 +30,27 @@ class Command(BaseCommand):
             self.stdout.write('Created the tournament: ' + folder)
 
             self.stdout.write('Attempting to create rounds ')
-            for i in range(1, 4):
-                if i == 1:
-                    rtype = m.Round.TYPE_RANDOM
-                else:
-                    rtype = m.Round.TYPE_PRELIM
+            rounds_count = 4
+            try:
+                for i in range(1, rounds_count):
+                    if i == 1:
+                        rtype = m.Round.TYPE_RANDOM
+                    else:
+                        rtype = m.Round.TYPE_PRELIM
 
-                m.Round(
-                    tournament = t,
-                    seq = i,
-                    name = 'Round %d' % i,
-                    type = rtype,
-                    feedback_weight = min((i-1)*0.1, 0.5),
-                ).save()
+                    m.Round(
+                        tournament = t,
+                        seq = i,
+                        name = 'Round %d' % i,
+                        type = rtype,
+                        feedback_weight = min((i-1)*0.1, 0.5),
+                    ).save()
 
-            t.current_round = m.Round.objects.get(tournament=t, seq=1)
-            t.save()
-            self.stdout.write('Created ' + 4 + ' rounds')
+                t.current_round = m.Round.objects.get(tournament=t, seq=1)
+                t.save()
+                self.stdout.write('Created ' + str(rounds_count) + ' rounds')
+            except Exception as inst:
+                print inst
 
             # Venues
             self.stdout.write('Attempting to create the venues')
@@ -76,7 +80,7 @@ class Command(BaseCommand):
 
                 venue_count = venue_count + 1
 
-            self.stdout.write('Created ' + venue_count + ' venues')
+            self.stdout.write('Created ' + str(venue_count) + ' venues')
 
             # Institutions
             self.stdout.write('Attempting to create the institutions')
@@ -91,7 +95,7 @@ class Command(BaseCommand):
                 i.save()
                 institutions_count = institutions_count + 1
 
-            self.stdout.write('Created ' + institutions_count + ' institutions')
+            self.stdout.write('Created ' + str(institutions_count) + ' institutions')
 
             # Judges
             self.stdout.write('Attempting to create the judges')
@@ -100,7 +104,7 @@ class Command(BaseCommand):
             except:
                 self.stdout.write('institutions.csv file is missing or damaged')
 
-            adjs_count
+            adjs_count = 0
             reader = csv.reader(open(os.path.join(data_path, 'judges.csv')))
             for ins_name, name, score in reader:
                 try:
@@ -122,7 +126,7 @@ class Command(BaseCommand):
 
                 adjs_count = adjs_count + 1
 
-            self.stdout.write('Created ' + adjs_count + 'judges')
+            self.stdout.write('Created ' + str(adjs_count) + 'judges')
 
             # Speakers
             self.stdout.write('Attempting to create the teams/speakers')
@@ -146,10 +150,12 @@ class Command(BaseCommand):
                         print inst           # __str__ allows args to printed directly
 
                 try:
-                    team = m.Team.objects.get_or_create(institution = ins, reference = team_name, use_institution_prefix = False)
+                    team = m.Team.objects.get_or_create(institution = ins, 
+                           reference = team_name, 
+                           use_institution_prefix = False)
                     teams_count = teams_count + 1
                 except Exception as inst:
-                    self.stdout.write("error with " + team_name)
+                    self.stdout.write("error with " + str(team_name))
                     print type(inst)     # the exception instance
                     print inst           # __str__ allows args to printed directly
 
@@ -169,7 +175,8 @@ class Command(BaseCommand):
                     self.stdout.write('Couldnt make the speaker ' + name)
 
 
-            self.stdout.write('Created ' + speakers_count + ' speakers and ' + teams_count + ' teams')
+            self.stdout.write('Created ' + str(speakers_count) + 
+                              ' speakers and ' + str(teams_count) + ' teams')
 
             self.stdout.write('Successfully import all data')
 
