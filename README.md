@@ -46,6 +46,7 @@ If you're interested in using, developing or otherwise following this software,
 
 5. Sync and migrate the database:
 
+        $ python manage.py syncdb
         $ python manage.py schemamigration debate --initial
         $ python manage.py migrate debate
 

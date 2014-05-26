@@ -17,22 +17,11 @@
             });
             new $.fn.dataTable.FixedHeader( table );
             $("#release_draw").click( function() {
-                var btn = $(this)
-                btn.button('releasing...')
-                $.ajax({
-                    type: "POST",
-                    url: "{% round_url create_adj_allocation %}",
-                    success: function(data, status) {
-                        btn.button('reset')
-                    },
-                    error: function(xhr, error, ex) {
-                        btn.button('reset')
-                    }
-                });
+                $("#releaseForm").submit();
                 return false;
             } );
             $("#unrelease_draw").click( function() {
-                //$("#allocateAdjForm").submit();
+                $("#unreleaseForm").submit();
                 return false;
             } );
 
@@ -63,12 +52,15 @@
     {% if round.draw_status = 10 %}
         <button class="btn btn-default" id="release_draw">Release to Public</button>
     {% elif round.draw_status = 99 %}
-        <button class="btn btn-default" id="unrelease_draw">Unrelease</button>
+        <button class="btn btn-default" id="unrelease_draw">Unrelease to Public</button>
     {% endif %}
 </div>
 {% endblock %}
 
 {% block content %}
+
+<form id="releaseForm" method="POST" action="{% round_url release_draw %}"></form>
+<form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}"></form>
 
 {% if round.adjudicators_allocation_validity == 1 %}
     <div class="alert alert-danger alert-dismissable" id="savedVenues">

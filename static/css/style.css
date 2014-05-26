@@ -656,6 +656,7 @@ a.text-danger:hover {
 .public-feedback a.public-feedback-nav,
 .public-add-ballot a.public-add-ballot-nav,
 .public-add-feedback a.public-add-feedback-nav,
+.public-feedback-tab a.public-feedback-nav,
 .monkey-enter-result a.monkey-enter-result-nav,
 .monkey-enter-feedback a.monkey-enter-feedback-nav,
 .dash a.dash-nav,
@@ -772,13 +773,9 @@ table.dataTable {
   color: red; }
 
 .scoresheet .score input {
-  width: 70px;
-  text-align: right;
-  float: left;
-  margin-right: 10px; }
+  width: 70px; }
 .scoresheet .aff_total, .scoresheet .neg_total {
   width: 70px;
-  text-align: right;
   font-weight: bold;
   cursor: default; }
 
