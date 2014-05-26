@@ -92,6 +92,8 @@ if __name__ == "__main__":
     debate = m.Debate.objects.get(id=args.debate)
     user = User.objects.get(username=args.user)
 
+    print debate
+
     try:
         bset = add_ballot_set(debate, submitter_type, user, args.discarded, args.confirmed)
     except ValueError, e:

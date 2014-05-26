@@ -699,7 +699,7 @@ def team_standings(request, round):
 def speaker_standings(request, round):
     rounds = Round.objects.filter(tournament=round.tournament,
                                   seq__lte=round.seq).order_by('seq')
-    speakers = Speaker.objects.standings(round.tournament, round)
+    speakers = Speaker.objects.standings(round)
 
     from debate.models import SpeakerScore
     def get_score(speaker, r):
@@ -728,7 +728,7 @@ def speaker_standings(request, round):
 def reply_standings(request, round):
     rounds = Round.objects.filter(tournament=round.tournament,
                                   seq__lte=round.seq).order_by('seq')
-    speakers = Speaker.objects.reply_standings(round.tournament, round)
+    speakers = Speaker.objects.reply_standings(round)
 
     from debate.models import SpeakerScore
     def get_score(speaker, r):
