@@ -1222,13 +1222,11 @@ class SpeakerScore(models.Model):
 
 class MotionManager(models.Manager):
     def statistics(self, round=None):
-        print round
         if round is None:
             motions = self.all()
         else:
             motions = self.filter(round=round)
 
-        # This does work, it just messes up the dataTable, I'm not sure why.
         motions = motions.filter(
             ballotsubmission__confirmed = True
         ).annotate(
@@ -1238,7 +1236,6 @@ class MotionManager(models.Manager):
         # TODO is there a more efficient way to do this?
         for motion in motions:
             ballots = BallotSubmission.objects.filter(confirmed=True, motion=motion)
-            motion.chosen_in = ballots.count()
             if motion.chosen_in == 0:
                 motion.aff_wins = 0
                 motion.aff_wins_percent = 0
