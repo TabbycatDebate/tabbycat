@@ -481,6 +481,35 @@ def confirm_draw(request, round):
 @admin_required
 @expect_post
 @round_view
+def release_draw(request, round):
+    if round.draw_status != round.STATUS_CONFIRMED:
+        return HttpResponseBadRequest("Draw status is not CONFIRMED")
+
+    round.draw_status = round.STATUS_RELEASED
+    round.save()
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CONFIRM,
+        user=request.user, round=round)
+
+    return redirect_round('draw', round)
+
+
+@admin_required
+@expect_post
+@round_view
+def unrelease_draw(request, round):
+    if round.draw_status != round.STATUS_RELEASED:
+        return HttpResponseBadRequest("Draw status is not RELEASED")
+
+    round.draw_status = round.STATUS_CONFIRMED
+    round.save()
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CONFIRM,
+        user=request.user, round=round)
+
+    return redirect_round('draw', round)
+
+@admin_required
+@expect_post
+@round_view
 def create_adj_allocation(request, round):
 
     if round.draw_status != round.STATUS_CONFIRMED:
