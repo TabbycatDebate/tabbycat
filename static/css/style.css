@@ -779,37 +779,6 @@ table.dataTable {
   font-weight: bold;
   cursor: default; }
 
-#jsWarn {
-  font-weight: bold;
-  background-color: #f00;
-  color: #ff0;
-  padding: 5px; }
-
-p.warning {
-  color: red;
-  font-weight: bold; }
-
-.ballot-checkin-form .message {
-  padding: 10px 10px;
-  font-weight: bold;
-  background-color: #fc9;
-  color: #804000; }
-
-.ballot-checkin-form #success {
-  padding: 10px 10px; }
-
-.ballot-checkin-form .success {
-  background-color: #cfc;
-  color: #008000; }
-
-#incorrect {
-  background-color: red;
-  color: white; }
-
-#correct {
-  background-color: green;
-  color: white; }
-
-.edit-ballot-link-discarded {
+.edit-ballot-link-discarded, .edit-ballot-link-discarded:hover {
   color: #808080;
   text-decoration: line-through; }
