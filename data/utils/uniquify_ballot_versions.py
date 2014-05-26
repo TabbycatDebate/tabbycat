@@ -1,3 +1,7 @@
+# Use this to make BallotSubmission versions unique per debate as required.
+# See https://github.com/czlee/tabbycat/issues/38#issuecomment-44149213 for more
+# information.
+
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 import sys

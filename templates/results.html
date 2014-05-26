@@ -78,13 +78,13 @@
 
             <td>
                 <!-- TODO clean this CSS stuff up -->
-                {% for ballotset in debate.ballotsubmission_set_by_time %}
+                {% for ballotset in debate.ballotsubmission_set_by_version %}
                 <div>
                     <a href="{% tournament_url edit_ballots ballotset.id %}" title="Edit Ballot" class="{% if ballotset.confirmed %}edit-ballot-link-confirmed{% endif %} {% if ballotset.discarded %}edit-ballot-link-discarded{% endif %}">
-                        {% if ballotset.confirmed %}Re-{% endif %}Edit {% if debate.ballotsubmission_set.count > 1%}v{{ ballotset.id }}{% endif %}</a>
+                        {% if ballotset.confirmed %}Re-{% endif %}Edit {% if debate.ballotsubmission_set.count > 1%}v{{ ballotset.version }}{% endif %}</a>
                 </div>
                 {% endfor %}
-                {% if not debate.ballotsubmission_set_by_time_except_discarded.exists %}
+                {% if not debate.ballotsubmission_set_by_version_except_discarded.exists %}
                 <div>
                     <a href="{% tournament_url new_ballots debate.id %}" title="Create New Ballot">Enter</a>
                 </div>

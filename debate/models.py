@@ -752,12 +752,12 @@ class Debate(models.Model):
             return None
 
     @property
-    def ballotsubmission_set_by_time(self):
-        return self.ballotsubmission_set.all().order_by('timestamp')
+    def ballotsubmission_set_by_version(self):
+        return self.ballotsubmission_set.all().order_by('version')
 
     @property
-    def ballotsubmission_set_by_time_except_discarded(self):
-        return self.ballotsubmission_set.filter(discarded=False).order_by('timestamp')
+    def ballotsubmission_set_by_version_except_discarded(self):
+        return self.ballotsubmission_set.filter(discarded=False).order_by('version')
 
     @property
     def aff_team(self):
@@ -1082,7 +1082,7 @@ class BallotSubmission(models.Model):
         if self.pk is None:
             existing_ballots = BallotSubmission.objects.filter(debate=self.debate)
             if existing_ballots.exists():
-                self.version = existing_ballots.aggregate(models.Max('version')) + 1
+                self.version = existing_ballots.aggregate(models.Max('version'))['version__max'] + 1
             else:
                 self.version = 1
         super(BallotSubmission, self).save(*args, **kwargs)
