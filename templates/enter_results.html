@@ -36,10 +36,10 @@ Edit Ballot Set for
 {% block page-title %}{{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>{% endblock %}
 {% block body-class %}monkey-enter-result{% endblock %}
 {% block header %}
+    {% include "other_ballots_list.html" %}
     {% if not new %}
     <a class="btn btn-default" href="{% tournament_url new_ballots debate.id %}">Create a new ballot set for this debate</a>
     {% endif %}
-    {% include "other_ballots_list.html" %}
 {% endblock %}
 
 {% block content %}

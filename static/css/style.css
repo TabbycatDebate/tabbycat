@@ -641,8 +641,9 @@ a.text-danger:hover {
   color: #c9302c; }
 
 #header-options {
-  min-height: 30px;
-  margin-bottom: 20px; }
+  min-height: 60px; }
+  #header-options #dataTable_filter, #header-options .btn-group {
+    margin-right: 20px; }
 
 #footer {
   margin-top: 40px; }

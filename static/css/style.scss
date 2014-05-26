@@ -14,8 +14,11 @@
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
 #header-options {
-    min-height: 30px; // Spacer for mobile rendering (pre form relocation
-    margin-bottom: 20px;
+    min-height: 60px; // Spacer pre-form relocation via JS
+
+    #dataTable_filter, .btn-group {
+        margin-right: 20px;
+    }
 }
 #footer {
     margin-top: 40px;

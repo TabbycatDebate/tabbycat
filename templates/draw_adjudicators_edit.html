@@ -505,68 +505,68 @@
 
 {% block content %}
 
-<div id="alerts-holder" class="col-md-10"></div>
-
 <div class="row">
 
-<div id="scratch" class="col-md-2">
-    <div class="page-header">
-        <h2>Unused</h2>
-    </div>
-    <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-    <tbody>
-    </tbody>
-    </table>
-</div>
-
-<div id="main" class="col-md-10">
-    <table id="dataTable" class=" table table-bordered" cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-            <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-            <th><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Importance"></span></th>
-            <th>Affirmative</th>
-            <th>Negative</th>
-            <th>Chair</th>
-            <th>Panel</th>
-            <th>Trainee</th></tr>
-        </thead>
+    <div id="scratch" class="col-md-2">
+        <div class="page-header">
+            <h2>Unused</h2>
+        </div>
+        <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
         <tbody>
-        {% for debate in draw %}
-        <tr id="debate_{{ debate.id }}" class="debate-active">
-            <td>
-                {{ debate.bracket }}
-            </td>
-            <td class="importance">
-                {% if debate.importance == None %}
-                    .NA
-                {% else %}
-                    {{ debate.importance }}
-                {% endif %}
-            </td>
-            <td id="team_{{ debate.aff_team.id }}" class="team">
-                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.short_name }}</span>
-            </td>
-            <td id="team_{{ debate.neg_team.id }}" class="team">
-                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.short_name }}</span>
-            </td>
-            <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
-            </td>
-            <td id="panel_{{ debate.id }}" class="adj-holder panel-holder">
-            </td>
-            <td id="trainees_{{ debate.id }}" class="adj-holder trainee-holder">
-            </td>
-        </tr>
-        {% endfor %}
         </tbody>
-    </table>
-</div>
+        </table>
+    </div>
+
+    <div id="main" class="col-md-10">
+
+        <div id="alerts-holder"></div>
+        <table id="dataTable" class=" table table-bordered" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+                <th><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Importance"></span></th>
+                <th>Affirmative</th>
+                <th>Negative</th>
+                <th>Chair</th>
+                <th>Panel</th>
+                <th>Trainee</th></tr>
+            </thead>
+            <tbody>
+            {% for debate in draw %}
+            <tr id="debate_{{ debate.id }}" class="debate-active">
+                <td>
+                    {{ debate.bracket }}
+                </td>
+                <td class="importance">
+                    {% if debate.importance == None %}
+                        .NA
+                    {% else %}
+                        {{ debate.importance }}
+                    {% endif %}
+                </td>
+                <td id="team_{{ debate.aff_team.id }}" class="team">
+                    <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.short_name }}</span>
+                </td>
+                <td id="team_{{ debate.neg_team.id }}" class="team">
+                    <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.short_name }}</span>
+                </td>
+                <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
+                </td>
+                <td id="panel_{{ debate.id }}" class="adj-holder panel-holder">
+                </td>
+                <td id="trainees_{{ debate.id }}" class="adj-holder trainee-holder">
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 </div>
 {% endblock content %}

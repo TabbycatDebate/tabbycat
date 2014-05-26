@@ -1059,7 +1059,7 @@ class BallotSubmission(models.Model):
     @property
     def timestamp_str(self):
         try:
-            return self.timestamp.strftime("%H:%M:%S on %d %B %Y")
+            return self.timestamp.strftime("%H:%M on %d %B")
         except AttributeError:
             return "unknown time"
 

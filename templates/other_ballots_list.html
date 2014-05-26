@@ -7,50 +7,49 @@
     {% if ballots.discarded %}
         <div class="alert alert-warning">This ballot is <strong>discarded</strong>.</div>
     {% endif %}
-    {% if not new %}
-        {% if ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
-            <div class="alert alert-info">This ballot set was entered by <strong>{{ ballots.user }}</strong>
-            at {{ ballots.timestamp_str }}.</div>
-        {% elif ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
-            <div class="alert alert-info">This ballot set was submitted from the public form
-            at {{ ballots.timestamp_str }}.</div>
-        {% endif %}
-    {% endif %}
-
 
     {% if other_ballots_set.exists %}
         <div class="panel panel-warning">
             <div class="panel-heading">
             {% if not new %}
-                <h3 class="panel-title">There is more than one ballot submission for this debate. Here are the others:</h3>
+                <h3 class="panel-title">There is more than one ballot submission for this debate</h3>
             {% else %}
                 <h3 class="panel-title">There are existing ballot submissions for this debate:</h3>
             {% endif %}
             </div>
             <ul class="panel-body list-group">
                 {% for other_ballots in other_ballots_set %}
-                    <li class="list-group-item">
+                    {% if not new %}
+                        <li class="list-group-item">
+                            <span class="badge">CURRENT</span>
+                            Version {{ ballots.version }},
+                            {% if ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
+                                entered by <strong>{{ ballots.user }}</strong>
+                                at {{ ballots.timestamp_str }}
+                            {% elif ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+                                This ballot set was submitted from the public form
+                                at {{ ballots.timestamp_str }}
+                            {% endif %}
+                        </li>
+                    {% endif %}
                     <a href="{% tournament_url edit_ballots other_ballots.id %}">
-                    <span class="badge">Version {{ other_ballots.version }} </span>
-                    {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
-                        Entered by <strong>{{ other_ballots.user }}</strong> at {{ other_ballots.timestamp_str }}
-                    {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
-                        Submitted from the public form at {{ other_ballots.timestamp_str }}
-                    {% endif %}
-                    {% if other_ballots.discarded %}
-                        (discarded)
-                    {% endif %}
-                    {% if other_ballots.confirmed %}
-                        (confirmed)
-                    {% endif %}
-                    </a>
+                    <li class="list-group-item">
+                        {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
+                            Version {{ other_ballots.version }}, entered by <strong>{{ other_ballots.user }}</strong>
+                            at {{ other_ballots.timestamp_str }}
+                        {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+                            Version {{ other_ballots.version }}, submitted from the public form
+                            at {{ other_ballots.timestamp_str }}
+                        {% endif %}
+                        {% if other_ballots.discarded %}
+                            (discarded)
+                        {% endif %}
+                        {% if other_ballots.confirmed %}
+                            (confirmed)
+                        {% endif %}
                     </li>
+                    </a>
                 {% endfor %}
             </ul>
         </div>
-    {% if not new %}
-    <p class="lead">
-        This ballot is version <b>{{ ballots.version }}</b>.
-    </p>
-    {% endif %}
     {% endif %}
