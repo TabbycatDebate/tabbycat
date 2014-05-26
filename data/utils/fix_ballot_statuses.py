@@ -1,10 +1,15 @@
-# Use this to make BallotSubmission status consistent with debate statuses.
+"""Makes BallotSubmission status consistent with debate statuses."""
 
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 import sys
-sys.path.append(".")
+sys.path.append(os.path.abspath(os.path.join(os.environ.get("VIRTUAL_ENV"), "..")))
+
 import debate.models as m
+
+import argparse
+parser = argparse.ArgumentParser(description=__doc__)
+parser.parse_args()
 
 for bsub in m.BallotSubmission.objects.all():
     debate_status = bsub.debate.result_status

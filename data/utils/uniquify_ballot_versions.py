@@ -1,12 +1,16 @@
-# Use this to make BallotSubmission versions unique per debate as required.
-# See https://github.com/czlee/tabbycat/issues/38#issuecomment-44149213 for more
-# information.
+"""Makes BallotSubmission versions unique per debate as required.
+See https://github.com/czlee/tabbycat/issues/38#issuecomment-44149213 for more
+information."""
 
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 import sys
-sys.path.append(".")
+sys.path.append(os.path.abspath(os.path.join(os.environ.get("VIRTUAL_ENV"), "..")))
 import debate.models as m
+
+import argparse
+parser = argparse.ArgumentParser(description=__doc__)
+parser.parse_args()
 
 versions_so_far = dict.fromkeys(m.Debate.objects.all(), 1) # keys: Debates, values: version numbers
 
