@@ -213,7 +213,21 @@ def tournament_home(request, t):
     if not request.user.is_superuser:
         return redirect('results', tournament_slug=t.slug,
                         round_seq=t.current_round.seq)
-    return r2r(request, 'tournament_home.html')
+
+    r = t.current_round
+    draw = r.get_draw()
+    stats = {
+        'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
+        'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
+        'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
+    }
+    stats['in'] = stats['confirmed']
+    stats['out'] = stats['none'] + stats['draft']
+    stats['pc'] = float(stats['in']) / (stats['out'] + stats['in']) * 100
+
+    round = 6
+
+    return r2r(request, 'tournament_home.html', dict(stats=stats, round=r))
 
 @login_required
 def monkey_home(request, t):
@@ -398,22 +412,6 @@ def draw_display_by_venue(request, round):
 def draw_display_by_team(request, round):
     draw = round.get_draw()
     return r2r(request, "draw_display_by_team.html", dict(draw=draw))
-
-@round_view
-def progress(request, round):
-    draw = round.get_draw()
-
-    stats = {
-        'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
-        'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
-        'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
-    }
-    stats['in'] = stats['confirmed']
-    stats['out'] = stats['none'] + stats['draft']
-    stats['pc'] = float(stats['in']) / (stats['out'] + stats['in']) * 100
-
-    return r2r(request, "progress.html", stats)
-
 
 @admin_required
 @round_view

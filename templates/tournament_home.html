@@ -3,10 +3,20 @@
 {% block head-title %}Dashboard{% endblock %}
 {% block page-title %}Dashboard{% endblock %}
 {% block body-class %}dash{% endblock %}
+{% block extra-head %}
+<script type="text/javascript" charset="utf-8">
+    function reload() {
+        location.reload();
+    }
+    setTimeout('reload()', 10000);
+</script>
+{% endblock %}
 {% block header %}{% endblock %}
 
 {% block content %}
 
+<h4>Tab Progress for Round {{ round }} - ({{ stats.pc }}% done)</h4>
 
+<img src="http://chart.apis.google.com/chart?cht=p&chs=300x200&chd=t:{{ stats.out }},{{ stats.in }}&chl=Outstanding|Entered&chco=FF0000,00FF00" />
 
 {% endblock content %}

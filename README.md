@@ -120,8 +120,8 @@ At present the ```import_tournament``` script does not work on Heroku. For now:
 1. Each round of the tournament has a number in the top right of the menu
 2. For each round, you need to confirm the Venues, Teams, Adjudicators, and Participants are all available using the options in this menu.
 3. The draw can then be generated on the Draw page
-4. If using the public draw function, set the round to be released in the Django admin backend
-5. If you desire motion break downs, enter the motions for each round in the Motions page
+4. If using the public draw function, use the *Release to Public* button to publicly display the draw page.
+5. Enter the motions for each round in the Motions page if you'd like information about motion selection and win rates.
 
 ###### Wrapping Up
 
