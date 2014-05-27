@@ -20,7 +20,6 @@ class BaseScoreField(forms.FloatField):
         the Config object for the Tournament."""
 
         if tournament_config:
-            print tournament_config.get
             min_value  = tournament_config.get(self.CONFIG_MIN_VALUE_FIELD, default=self.DEFAULT_MIN_VALUE)
             max_value  = tournament_config.get(self.CONFIG_MAX_VALUE_FIELD, default=self.DEFAULT_MAX_VALUE)
             step_value = tournament_config.get(self.CONFIG_STEP_VALUE_FIELD, default=self.DEFAULT_STEP_VALUE)
