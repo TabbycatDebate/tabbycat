@@ -1,8 +1,9 @@
-from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden, HttpResponse, HttpResponseBadRequest
+from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib import messages
 from django.db.models import Sum, Count
@@ -645,6 +646,9 @@ def edit_ballots(request, t, ballots_id):
 @tournament_view
 def public_new_ballots(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
+    if debate.round != t.current_round:
+        raise PermissionDenied
+
     ballots = BallotSubmission(
         debate         = debate,
         submitter_type = BallotSubmission.SUBMITTER_PUBLIC)
