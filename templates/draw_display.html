@@ -59,11 +59,11 @@
                 {% for item in debate.adjudicator_names_list %}
 
                     {% if "Ⓒ" in item %}
-                        <li class=""><span class="adj-chair">{{ item }}</span>,</li>
+                        <li class=""><span class="adj-chair">{{ item }}</span></li>
                     {% elif "Ⓣ" in item %}
-                        <li class=""><span class="adj-trainee">{{ item }}</span>,</li>
+                        <li class=""><span class="adj-trainee">{{ item }}</span></li>
                     {% else %}
-                        <li class=""><span class="adj-normal">{{ item }}</span>,</li>
+                        <li class=""><span class="adj-normal">{{ item }}</span></li>
                     {% endif %}
 
                 {% endfor %}
