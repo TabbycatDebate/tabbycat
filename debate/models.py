@@ -1368,4 +1368,3 @@ class Config(models.Model):
     value = models.CharField(max_length=40)
 
     objects = ConfigManager()
-

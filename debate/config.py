@@ -32,11 +32,14 @@ class Config(object):
     def __getattr__(self, key):
         return self.get(key)
 
-    def get(self, key):
+    def get(self, key, default=None):
         from debate.models import Config
         if key in SETTINGS:
-            coerce, help, default = SETTINGS[key]
+            coerce, help, _default = SETTINGS[key]
+            default = default or _default
             return coerce(Config.objects.get_(self._t, key, default))
+        else:
+            return default
 
     def set(self, key, value):
         from debate.models import Config

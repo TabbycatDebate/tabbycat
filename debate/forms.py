@@ -14,36 +14,67 @@ def get_or_instantiate(model, **kwargs):
 
 ### Result/ballot forms
 
-class ScoreField(forms.FloatField):
-    MIN_VALUE = 68
-    MAX_VALUE = 82
+class BaseScoreField(forms.FloatField):
+    def __init__(self, tournament_config=None, *args, **kwargs):
+        """Takes an additional optional keyword argument: tournament_config,
+        the Config object for the Tournament."""
 
-    def __init__(self, *args, **kwargs):
-        if 'min_value' not in kwargs:
-            kwargs['min_value'] = self.MIN_VALUE
-        if 'max_value' not in kwargs:
-            kwargs['max_value'] = self.MAX_VALUE
-        super(ScoreField, self).__init__(*args, **kwargs)
+        if tournament_config:
+            print tournament_config.get
+            min_value  = tournament_config.get(self.CONFIG_MIN_VALUE_FIELD, default=self.DEFAULT_MIN_VALUE)
+            max_value  = tournament_config.get(self.CONFIG_MAX_VALUE_FIELD, default=self.DEFAULT_MAX_VALUE)
+            step_value = tournament_config.get(self.CONFIG_STEP_VALUE_FIELD, default=self.DEFAULT_STEP_VALUE)
+        else:
+            min_value  = self.DEFAULT_MIN_VALUE
+            max_value  = self.DEFAULT_MAX_VALUE
+            step_value = self.DEFAULT_STEP_VALUE
+        self.step_value = kwargs.get('step_value', step_value)
+
+        kwargs.setdefault('min_value', min_value)
+        kwargs.setdefault('max_value', max_value)
+
+        # Overwrite the "step" attribute.
+        # Note, this overrides everything, so it means you can't set the
+        # 'step' attribute of the widget directly - you must use the
+        # step_value keyword argument.
+        widget = kwargs.get('widget', self.widget)
+        if isinstance(widget, type):
+            widget = widget()
+        if isinstance(widget, forms.NumberInput):
+            widget.attrs['step'] = self.step_value
+        kwargs['widget'] = widget
+
+        super(BaseScoreField, self).__init__(*args, **kwargs)
 
     def validate(self, value):
         super(ScoreField, self).validate(value)
         self.check_value(value)
 
     def check_value(self, value):
-        if int(value) != value:
+        if value % self.step_value != 0:
+            if self.step_value == 1:
+                msg = 'Please enter a whole number.'
+            else:
+                msg = 'Please enter a multiple of %s.' % self.step_value
             raise forms.ValidationError(
-                _('Please enter a whole number.'), code='decimal'
+                _(msg), code='decimal'
             )
 
-class ReplyScoreField(ScoreField):
-    MIN_VALUE = 34
-    MAX_VALUE = 41
+class ScoreField(BaseScoreField):
+    CONFIG_MIN_VALUE_FIELD  = 'score_min'
+    CONFIG_MAX_VALUE_FIELD  = 'score_max'
+    CONFIG_STEP_VALUE_FIELD = 'score_step'
+    DEFAULT_MIN_VALUE = 68
+    DEFAULT_MAX_VALUE = 82
+    DEFAULT_STEP_VALUE = 1
 
-    def check_value(self, value):
-        if value % 0.5 != 0:
-            raise forms.ValidationError(
-                _('Please enter a multiple of 0.5'), code='decimal'
-            )
+class ReplyScoreField(BaseScoreField):
+    CONFIG_MIN_VALUE_FIELD  = 'reply_score_min'
+    CONFIG_MAX_VALUE_FIELD  = 'reply_score_max'
+    CONFIG_STEP_VALUE_FIELD = 'reply_score_step'
+    DEFAULT_MIN_VALUE = 34
+    DEFAULT_MAX_VALUE = 41
+    DEFAULT_STEP_VALUE = 0.5
 
 class BallotSetForm(forms.Form):
     """Form for data entry for a single set of ballots.
@@ -95,8 +126,6 @@ class BallotSetForm(forms.Form):
 
         # Grab the relevant score field configurations
         config = tournament.config
-        score_kwargs = dict(min_value = config.get('score_min'), max_value = config.get('score_max'))
-        reply_score_kwargs = dict(min_value = config.get('reply_score_min'), max_value = config.get('reply_score_max'))
 
         # tab indices are as follows (example):
         #
@@ -132,21 +161,16 @@ class BallotSetForm(forms.Form):
 
                 # css_class is for jquery validation plugin, surely this can
                 # be moved elsewhere
-                if pos == self.REPLY_POSITION:
-                    score_field = ReplyScoreField
-                    kwargs = reply_score_kwargs
-                    css_class = 'required number'
-                else:
-                    score_field = ScoreField
-                    kwargs = score_kwargs
-                    css_class = 'required number'
+                score_field = (pos == self.REPLY_POSITION) and ReplyScoreField or ScoreField
 
                 for i, adj in enumerate(self.adjudicators):
+                    attrs = {
+                        'class': 'required number',
+                        'tabindex': 20 + 2 * pos + tab_index_add + 4 * MAX_POSITION * i,
+                    }
                     self.fields[self.score_field_name(adj, side, pos)] = score_field(
-                        widget = forms.TextInput(attrs={
-                            'class': css_class,
-                            'tabindex': 20 + 2 * pos + tab_index_add + 4 * MAX_POSITION * i
-                        }), **kwargs)
+                        widget = forms.NumberInput(attrs=attrs),
+                        tournament_config=tournament.config, **kwargs)
 
     def score_field_name(self, adj, side, pos):
         """
@@ -318,7 +342,8 @@ class BallotSetForm(forms.Form):
 
 
 class DebateManagementForm(forms.Form):
-    """Traditionally, a Django FormSet has a ManagementForm to keep track of the
+    """ NOT CURRENTLY USED
+    Traditionally, a Django FormSet has a ManagementForm to keep track of the
     forms on the page. In a debate result, there are some fields the relate to the
     debate as a whole, not an individual ballot. This form is responsible for those
     fields, and is always part of a DebateResultFormSet."""
@@ -359,7 +384,8 @@ class DebateManagementForm(forms.Form):
         self.debate.save()
 
 class DebateResultFormSet(object):
-    """A manager for the various forms that comprise a debate result form.
+    """ NOT CURRENTLY USED
+    A manager for the various forms that comprise a debate result form.
 
     This should only be used with tab room interfaces. The public should never
     see anything remotely resembling this form set.
