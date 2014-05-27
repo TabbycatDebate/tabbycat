@@ -155,7 +155,7 @@ class BallotSetForm(forms.Form):
                 self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(
                     queryset = team.speakers,
                     widget = forms.Select(attrs = {
-                        'tabindex': 19 + 2 * pos + tab_index_add
+                        'tabindex': 19 + 2 * pos + tab_index_add,
                     }))
 
                 # css_class is for jquery validation plugin, surely this can
