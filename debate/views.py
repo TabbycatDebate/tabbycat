@@ -605,9 +605,11 @@ def edit_ballots(request, t, ballots_id):
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
         other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id).exclude(discarded=True)
+        disable_confirm = request.user == ballots.user
     else:
         template = 'enter_results.html'
         other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id)
+        disable_confirm = False
 
     if request.method == 'POST':
         form = forms.BallotSetForm(ballots, request.POST)
@@ -625,7 +627,8 @@ def edit_ballots(request, t, ballots_id):
         form = forms.BallotSetForm(ballots)
 
     return r2r(request, template, dict(debate=debate, form=form,
-        round=debate.round, ballots=ballots, other_ballots_set=other_ballots_set))
+        round=debate.round, ballots=ballots, other_ballots_set=other_ballots_set,
+        disable_confirm=disable_confirm))
 
 @login_required
 @tournament_view
@@ -697,7 +700,7 @@ def team_standings(request, round):
 def speaker_standings(request, round):
     rounds = Round.objects.filter(tournament=round.tournament,
                                   seq__lte=round.seq).order_by('seq')
-    speakers = Speaker.objects.standings(round.tournament, round)
+    speakers = Speaker.objects.standings(round)
 
     from debate.models import SpeakerScore
     def get_score(speaker, r):
@@ -726,7 +729,7 @@ def speaker_standings(request, round):
 def reply_standings(request, round):
     rounds = Round.objects.filter(tournament=round.tournament,
                                   seq__lte=round.seq).order_by('seq')
-    speakers = Speaker.objects.reply_standings(round.tournament, round)
+    speakers = Speaker.objects.reply_standings(round)
 
     from debate.models import SpeakerScore
     def get_score(speaker, r):

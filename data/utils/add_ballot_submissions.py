@@ -1,15 +1,24 @@
+"""Add a ballot submission to everything. Method:
+ 1. Create a BallotSubmission for every debate.
+ 2. Give it default submitted-by fields, etc.
+ 3. Make it the confirmed_ballot of the Debate
+ 4. Make it the confirmed_ballot of every SpeakerScoreByAdj, TeamScore and SpeakerScore for that debate
+
+Use this when migrating from a database that has no BallotSubmissions.
+
+This requires a user called "original" to exist. You need to set this up
+before running the script if you don't have one.
+"""
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 import sys
-sys.path.append(".")
+sys.path.append(os.path.abspath(os.path.join(os.environ.get("VIRTUAL_ENV"), "..")))
 import debate.models as m
 from django.contrib.auth.models import User
 
-# Add a ballot submission to everything. Method:
-#  1. Create a BallotSubmission for every debate.
-#  2. Give it default submitted-by fields, etc.
-#  3. Make it the confirmed_ballot of the Debate
-#  4. Make it the confirmed_ballot of every SpeakerScoreByAdj, TeamScore and SpeakerScore for that debate
+import argparse
+parser = argparse.ArgumentParser(description=__doc__)
+parser.parse_args()
 
 for debate in m.Debate.objects.all():
     bs = m.BallotSubmission(submitter_type=m.BallotSubmission.SUBMITTER_TABROOM, debate=debate)

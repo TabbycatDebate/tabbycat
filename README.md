@@ -122,6 +122,8 @@ At present the ```import_tournament``` script does not work on Heroku. For now:
 3. The draw can then be generated on the Draw page
 4. If using the public draw function, use the *Release to Public* button to publicly display the draw page.
 5. Enter the motions for each round in the Motions page if you'd like information about motion selection and win rates.
+6. Enter debate results and feedback as they come in.
+7. When ready to advance to the next round, go to the Tournament section in the admin area and increiment the *Current round*.
 
 ###### Wrapping Up
 

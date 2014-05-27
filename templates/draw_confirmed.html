@@ -32,15 +32,20 @@
 
 {% block head-title %}
     Draw for Round {{ round }}
-    <small>(Debates
+    <small>
     {% if round.draw_status = 10 %}
-        Confirmed
+        (Debates Confirmed)
     {% elif round.draw_status = 99 %}
-        Released
-    {% endif %})
+        (Debates Released)
+    {% endif %}
     </small>
 {% endblock %}
-{% block page-title %}Draw for Round {{ round }} (Debates Confirmed){% endblock %}
+{% block page-title %}Draw for Round {{ round }}
+    {% if round.draw_status = 10 %}
+        (Debates Confirmed)
+    {% elif round.draw_status = 99 %}
+        (Debates Released)
+    {% endif %}{% endblock %}
 {% block body-class %}draw{% endblock %}
 
 {% block header %}

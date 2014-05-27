@@ -6,15 +6,41 @@
     {% endif %}
     {% if ballots.discarded %}
         <div class="alert alert-warning">This ballot is <strong>discarded</strong>.</div>
+        This ballot set is <strong>discarded</strong>.
     {% endif %}
 
     {% if other_ballots_set.exists %}
         <div class="panel panel-warning">
             <div class="panel-heading">
+            There is more than one ballot set for this debate.
             {% if not new %}
+                Here are the others:
+            {% else %}
+                The other is:
+            {% endif %}
+        {% else %}
+            {% if other_ballots_set.count > 1 %}
                 <h3 class="panel-title">There is more than one ballot submission for this debate</h3>
+                There are existing ballot sets for this debate:
             {% else %}
                 <h3 class="panel-title">There are existing ballot submissions for this debate:</h3>
+                There is an existing ballot set for this debate:
+            {% endif %}
+        {% endif %}
+    </p>
+    <ul>
+        {% for other_ballots in other_ballots_set %}
+        <li><a href="{% tournament_url edit_ballots other_ballots.id %}">
+            {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
+                Version <b>{{other_ballots.version}}</b>, entered by <b>{{ other_ballots.user }}</b> at {{ other_ballots.timestamp_str }}
+            {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+                Version <b>{{other_ballots.version}}</b>, submitted from the public form at {{ other_ballots.timestamp_str }}
+            {% endif %}
+            {% if other_ballots.discarded %}
+                (discarded)
+            {% endif %}
+            {% if other_ballots.confirmed %}
+                (confirmed)
             {% endif %}
             </div>
             <ul class="panel-body list-group">

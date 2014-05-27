@@ -88,17 +88,39 @@ class Institution(models.Model):
 class TeamManager(models.Manager):
     def standings(self, round=None):
         if round is None:
-            teams = self.all()
+            teams = self.filter(
+                institution__tournament=round.tournament,
+            )
         else:
             teams = self.filter(
+                institution__tournament=round.tournament,
                 debateteam__debate__round__seq__lte = round.seq,
             )
 
-        # TODO fix this, should only aggregate over confirmed ballots
-        teams = teams.annotate(
-            points = models.Sum('debateteam__teamscore__points'),
-            speaker_score = models.Sum('debateteam__teamscore__score'),
-        ).order_by('-points', '-speaker_score')
+        # This is what might be more concisely expressed, if it were permissible
+        # in Django, as:
+        # teams = teams.annotate_if(
+        #     dict(points = models.Count('debateteam__teamscore__points'),
+        #     speaker_score = models.Count('debateteam__teamscore__score')),
+        #     dict(debateteam__teamscore__ballot_submission__confirmed = True)
+        # )
+        # That is, it adds up all the wins and points of each team on CONFIRMED
+        # ballots and adds them as columns to the table it returns.
+        EXTRA_QUERY = """
+            SELECT DISTINCT SUM({field:s})
+            FROM "debate_teamscore"
+            JOIN "debate_ballotsubmission" ON "debate_teamscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
+            JOIN "debate_debateteam" ON "debate_teamscore"."debate_team_id" = "debate_debateteam"."id"
+            JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
+            JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
+            WHERE "debate_ballotsubmission"."confirmed" = True
+            AND "debate_debateteam"."team_id" = "debate_team"."id"
+            AND "debate_round"."seq" <= {round:d}
+        """
+        teams = teams.extra({
+            "points": EXTRA_QUERY.format(field="points", round=round.seq),
+            "speaker_score": EXTRA_QUERY.format(field="score", round=round.seq)}
+        ).distinct().order_by('-points', '-speaker_score')
 
         prev_rank_value = (None, None)
         current_rank = 0
@@ -212,25 +234,44 @@ def TeamAtRound(team, round):
 
 
 class SpeakerManager(models.Manager):
-    def standings(self, tournament, round=None):
+    def standings(self, round=None):
         # only include scoresheets for up to this round, exclude replies
         if round:
             speakers = self.filter(
-                team__institution__tournament=tournament,
-                speakerscore__position__lte=tournament.LAST_SUBSTANTIVE_POSITION,
-                speakerscore__debate_team__debate__round__seq__lte =
-                round.seq,
+                team__institution__tournament=round.tournament,
+                speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
+                speakerscore__debate_team__debate__round__seq__lte = round.seq,
             )
         else:
             speakers = self.filter(
-                team__institution__tournament=tournament,
-                speakerscore__position__lte=tournament.LAST_SUBSTANTIVE_POSITION,
+                team__institution__tournament=round.tournament,
+                speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
             )
 
-        # TODO fix this, should only aggregate over confirmed ballots
-        speakers = speakers.annotate(
-            total = models.Sum('speakerscore__score'),
-        ).order_by('-total', 'name')
+        # This is what might be more concisely expressed, if it were permissible
+        # in Django, as:
+        # speakers = speakers.annotate_if(
+        #     dict(total = models.Sum('speakerscore__score')),
+        #     dict(ballot_submission__confirmed = True)
+        # )
+        # That is, it adds up all the points of each speaker on CONFIRMED
+        # ballots and adds them as columns to the table it returns.
+        EXTRA_QUERY = """
+            SELECT DISTINCT SUM("score")
+            FROM "debate_speakerscore"
+            JOIN "debate_debateteam" ON "debate_speakerscore"."debate_team_id" = "debate_debateteam"."id"
+            JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
+            JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
+            JOIN "debate_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
+            WHERE "debate_ballotsubmission"."confirmed" = True
+            AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
+            AND "debate_speakerscore"."position" <= {position:d}
+            AND "debate_round"."seq" <= {round:d}
+        """.format(
+            round = round.seq,
+            position = round.tournament.LAST_SUBSTANTIVE_POSITION
+        )
+        speakers = speakers.extra({"total": EXTRA_QUERY}).distinct().order_by('-total')
 
         prev_total = None
         current_rank = 0
@@ -242,29 +283,54 @@ class SpeakerManager(models.Manager):
 
         return speakers
 
-    def reply_standings(self, tournament, round=None):
+    def reply_standings(self, round=None):
         # If replies aren't enabled, return an empty queryset.
-        if not tournament.REPLIES_ENABLED:
+        if not round.tournament.REPLIES_ENABLED:
             return self.objects.none()
 
         if round:
             speakers = self.filter(
-                team__institution__tournament=tournament,
-                speakerscore__position=tournament.REPLY_POSITION,
+                team__institution__tournament=round.tournament,
+                speakerscore__position=round.tournament.REPLY_POSITION,
                 speakerscore__debate_team__debate__round__seq__lte =
                 round.seq,
             )
         else:
             speakers = self.filter(
-                team__institution__tournament=tournament,
-                speakerscore__position=tournament.REPLY_POSITION,
+                team__institution__tournament=round.tournament,
+                speakerscore__position=round.tournament.REPLY_POSITION,
             )
 
-        # TODO fix this, should only aggregate over confirmed ballots
-        speakers = speakers.annotate(
-            average = models.Avg('speakerscore__score'),
-            replies = models.Count('speakerscore__score'),
-        ).order_by('-average', '-replies', 'name')
+        # This is what might be more concisely expressed, if it were permissible
+        # in Django, as:
+        # speakers = speakers.annotate_if(
+        #     dict(average = models.Avg('speakerscore__score'),
+        #          count   = models.Count('speakerscore__score')),
+        #     dict(ballot_submission__confirmed = True)
+        # )
+        # That is, it adds up all the reply scores of each speaker on CONFIRMED
+        # ballots and adds them as columns to the table it returns.
+        EXTRA_QUERY = """
+            SELECT DISTINCT {aggregator:s}("score")
+            FROM "debate_speakerscore"
+            JOIN "debate_debateteam" ON "debate_speakerscore"."debate_team_id" = "debate_debateteam"."id"
+            JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
+            JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
+            JOIN "debate_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
+            WHERE "debate_ballotsubmission"."confirmed" = True
+            AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
+            AND "debate_speakerscore"."position" = {position:d}
+            AND "debate_round"."seq" <= {round:d}
+        """
+        speakers = speakers.extra({"average": EXTRA_QUERY.format(
+            aggregator = "AVG",
+            round = round.seq,
+            position = round.tournament.REPLY_POSITION
+        ), "replies": EXTRA_QUERY.format(
+            aggregator = "COUNT",
+            round = round.seq,
+            position = round.tournament.REPLY_POSITION
+        )}).distinct().order_by('-average', '-replies', 'name')
 
         prev_rank_value = (None, None)
         current_rank = 0
@@ -1156,23 +1222,20 @@ class SpeakerScore(models.Model):
 
 class MotionManager(models.Manager):
     def statistics(self, round=None):
-        print round
         if round is None:
             motions = self.all()
         else:
             motions = self.filter(round=round)
 
-        # This does work, it just messes up the dataTable, I'm not sure why.
-        #motions = motions.filter(
-            #ballotsubmission__confirmed = True
-        #).annotate(
-            #chosen_in = models.Count('ballotsubmission')
-        #)
+        motions = motions.filter(
+            ballotsubmission__confirmed = True
+        ).annotate(
+            chosen_in = models.Count('ballotsubmission')
+        )
 
         # TODO is there a more efficient way to do this?
         for motion in motions:
             ballots = BallotSubmission.objects.filter(confirmed=True, motion=motion)
-            motion.chosen_in = ballots.count()
             if motion.chosen_in == 0:
                 motion.aff_wins = 0
                 motion.aff_wins_percent = 0

@@ -63,9 +63,9 @@ _ts_round.short_description = 'Round'
 _ts_team = lambda o: o.debate_team.team.name
 _ts_team.short_description = 'Team'
 class TeamScoreAdmin(admin.ModelAdmin):
-    list_display = ('id', 'ballot_submission', _ts_round, _ts_team,)
+    list_display = ('id', 'ballot_submission', _ts_round, _ts_team, 'score')
     search_fields = ('debate_team__debate__round__seq',
-                     'debateteam__team__reference', 'debateteam__team__institution__code')
+                     'debate_team__team__reference', 'debate_team__team__institution__code')
 admin.site.register(models.TeamScore, TeamScoreAdmin)
 
 _ss_speaker = lambda o: o.speaker.name
@@ -73,10 +73,21 @@ _ss_speaker.short_description = 'Speaker'
 class SpeakerScoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ts_team, 'position', _ss_speaker, 'score')
     search_fields = ('debate_team__debate__round__seq',
-                     'debateteam__team__reference', 'debateteam__team__institution__code',
+                     'debate_team__team__reference', 'debate_team__team__institution__code',
                      'speaker__name')
     list_filter = ('score',)
 admin.site.register(models.SpeakerScore, SpeakerScoreAdmin)
+
+_ssba_speaker = lambda o: models.SpeakerScore.objects.filter(debate_team=o.debate_team, position=o.position)[0].speaker.name
+_ssba_speaker.short_description = 'Speaker'
+_ssba_adj = lambda o: o.debate_adjudicator.adjudicator.name
+_ssba_adj.short_description = 'Adjudicator'
+class SpeakerScoreByAdjAdmin(admin.ModelAdmin):
+    list_display = ('id', 'ballot_submission', _ts_round, _ssba_adj, _ts_team, 'position', _ssba_speaker, 'score')
+    search_fields = ('debate_team__debate__round__seq',
+                     'debate_team__team__reference', 'debate_team__team__institution__code',
+                     'debate_adjudicator__adjudicator__name')
+admin.site.register(models.SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)
 
 class RoundAdminInline(admin.TabularInline):
     model = models.Round
@@ -95,17 +106,17 @@ class MotionAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Motion, MotionAdmin)
 
-class SpeakerScoreByAdjInline(admin.TabularInline):
-    model = models.SpeakerScoreByAdj
-    extra = 0
+#class SpeakerScoreByAdjInline(admin.TabularInline):
+    #model = models.SpeakerScoreByAdj
+    #extra = 0
 
-class SpeakerScoreInline(admin.TabularInline):
-    model = models.SpeakerScore
-    extra = 0
+#class SpeakerScoreInline(admin.TabularInline):
+    #model = models.SpeakerScore
+    #extra = 0
 
-class TeamScoreInline(admin.TabularInline):
-    model = models.TeamScore
-    extra = 0
+#class TeamScoreInline(admin.TabularInline):
+    #model = models.TeamScore
+    #extra = 0
 
 class BallotSubmissionAdmin(admin.ModelAdmin):
     list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'user')
