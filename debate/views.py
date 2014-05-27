@@ -105,12 +105,14 @@ def public_draw(request, t):
 
 @tournament_view
 def public_ballot_submit(request, t):
+    r = t.current_round
 
     if request.tournament.config.get('public_ballots') > 0:
-        round = request.tournament.current_round
-        draw = round.get_draw()
-
-        return r2r(request, 'public/add_ballot.html', dict(draw=draw))
+        if r.draw_status == r.STATUS_RELEASED:
+            draw = r.get_draw()
+            return r2r(request, 'public/add_ballot.html', dict(draw=draw))
+        else:
+            return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=r))
     else:
         return r2r(request, 'public/index.html')
 
@@ -647,6 +649,8 @@ def edit_ballots(request, t, ballots_id):
 def public_new_ballots(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
     if debate.round != t.current_round:
+        raise PermissionDenied
+    if debate.round.draw_status != Round.STATUS_RELEASED:
         raise PermissionDenied
 
     ballots = BallotSubmission(
