@@ -609,11 +609,11 @@ def edit_ballots(request, t, ballots_id):
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
-        other_ballots_set = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
+        all_ballot_sets = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
         disable_confirm = request.user == ballots.user
     else:
         template = 'enter_results.html'
-        other_ballots_set = debate.ballotsubmission_set.order_by('version')
+        all_ballot_sets = debate.ballotsubmission_set.order_by('version')
         disable_confirm = False
 
     if request.method == 'POST':
@@ -631,9 +631,16 @@ def edit_ballots(request, t, ballots_id):
     else:
         form = forms.BallotSetForm(ballots)
 
-    return r2r(request, template, dict(debate=debate, form=form,
-        round=debate.round, ballots=ballots, other_ballots_set=other_ballots_set,
-        disable_confirm=disable_confirm))
+    return r2r(request, template, dict(
+        debate                  = debate,
+        form                    = form,
+        round                   = debate.round,
+        ballots                 = ballots,
+        all_ballot_sets         = all_ballot_sets,
+        disable_confirm         = disable_confirm,
+        new                     = False,
+        ballot_is_singleton     = all_ballot_sets.exclude(id=ballots_id).exists(),
+    ))
 
 @tournament_view
 def public_new_ballots(request, t, debate_id):
@@ -670,10 +677,10 @@ def new_ballots(request, t, debate_id):
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
-        other_ballots_set = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
+        all_ballot_sets = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
     else:
         template = 'enter_results.html'
-        other_ballots_set = debate.ballotsubmission_set.order_by('version')
+        all_ballot_sets = debate.ballotsubmission_set.order_by('version')
 
     if request.method == 'POST':
         form = forms.BallotSetForm(ballots, request.POST)
@@ -691,9 +698,15 @@ def new_ballots(request, t, debate_id):
     else:
         form = forms.BallotSetForm(ballots)
 
-    return r2r(request, template, dict(debate=debate, form=form,
-        round=debate.round, ballots=ballots, other_ballots_set=other_ballots_set,
-        new=True))
+    return r2r(request, template, dict(
+        debate                  = debate,
+        form                    = form,
+        round                   = debate.round,
+        ballots                 = ballots,
+        all_ballot_sets         = all_ballot_sets,
+        new                     = True,
+        ballot_is_singleton     = all_ballot_sets.exists(),
+    ))
 
 @admin_required
 @round_view

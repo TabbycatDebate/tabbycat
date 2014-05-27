@@ -8,21 +8,16 @@
         <div class="alert alert-warning">This ballot set is <strong>discarded</strong>.</div>
     {% endif %}
 
-    {% if other_ballots_set.exists %}
+    {% if ballot_is_singleton %}
     <div class="panel panel-warning">
         <div class="panel-heading">
         {% if not new %}
             <h3 class="panel-title">
-            There is more than one ballot set for this debate.
-            {% if other_ballots_set.count > 1 %}
-                Here are the others:
-            {% else %}
-                The other is:
-            {% endif %}
+            There is more than one ballot set for this debate:
             </h3>
         {% else %}
             <h3 class="panel-title">
-            {% if other_ballots_set.count > 1 %}
+            {% if all_ballot_sets.count > 1 %}
                 There are existing ballot sets for this debate:
             {% else %}
                 There is an existing ballot set for this debate:
@@ -32,7 +27,11 @@
         </div>
 
         <ul class="panel-body list-group">
+        {% for other_ballots in all_ballot_sets %}
             {% for other_ballots in other_ballots_set %}
+            <a href="{% tournament_url edit_ballots other_ballots.id %}">
+            {% endif %}
+            <li class="list-group-item">
                 {% if other_ballots != ballots %}
                 <a href="{% tournament_url edit_ballots other_ballots.id %}">
                 {% endif %}
@@ -59,5 +58,6 @@
                 {% endif %}
             {% endfor %}
         </ul>
+            {% endif %}
     </div>
     {% endif %}
