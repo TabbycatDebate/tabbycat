@@ -2,10 +2,12 @@ from django.utils.datastructures import SortedDict
 
 #name,  coerce, help, default
 SETTINGS = SortedDict([
-    ('score_min', (int, 'Minimum allowed score', 68)),
-    ('score_max', (int, 'Maximum allowed score', 82)),
-    ('reply_score_min', (int, 'Minimum allowed reply score', 34)),
-    ('reply_score_max', (int, 'Maximum allowed reply score', 41)),
+    ('score_min', (float, 'Minimum allowed score', 68)),
+    ('score_max', (float, 'Maximum allowed score', 82)),
+    ('score_step', (float, 'Score steps allowed', 1)),
+    ('reply_score_min', (float, 'Minimum allowed reply score', 34)),
+    ('reply_score_max', (float, 'Maximum allowed reply score', 41)),
+    ('reply_score_step', (float, 'Reply score steps allowed', 0.5)),
     ('break_size', (int, 'Number of breaking teams', 16)),
     ('adj_min_score', (float, 'Minimum adjudicator score', 1.5)),
     ('adj_max_score', (float, 'Maximum adjudicator score', 5)),
