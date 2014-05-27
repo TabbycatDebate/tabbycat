@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
-{% block head-title %}Dashboard{% endblock %}
+{% block head-title %}Dashboard <small>Round {{ round }} is
+    {% if round.draw_status == 1 %}Draft
+    {% elif round.draw_status == 10 %}Confirmed
+    {% elif round.draw_status == 99 %}Released
+</small>{% endif %}
+{% endblock %}
 {% block page-title %}Dashboard{% endblock %}
 {% block body-class %}dash{% endblock %}
 {% block extra-head %}
@@ -15,8 +20,16 @@
 
 {% block content %}
 
-<h4>Tab Progress for Round {{ round }} - ({{ stats.pc }}% done)</h4>
+<div class="col-sm-4">
+    <h4>Tab Progress is at {{ stats.pc }}%</h4>
+    <img src="http://chart.apis.google.com/chart?cht=p&chs=500x250&chd=t:{{ stats.out }},{{ stats.in }}&chl=Outstanding|Entered&chco=FF0000,00FF00" />
+</div>
+<div class="col-sm-4">
+    <h4>Col2 - speaks/time?</h4>
+</div>
+<div class="col-sm-4">
+    <h4>Col3 - motion choices?</h4>
+</div>
 
-<img src="http://chart.apis.google.com/chart?cht=p&chs=300x200&chd=t:{{ stats.out }},{{ stats.in }}&chl=Outstanding|Entered&chco=FF0000,00FF00" />
 
 {% endblock content %}
