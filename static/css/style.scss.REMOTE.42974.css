@@ -641,9 +641,8 @@ a.text-danger:hover {
   color: #c9302c; }
 
 #header-options {
-  min-height: 60px; }
-  #header-options #dataTable_filter, #header-options .btn-group {
-    margin-right: 20px; }
+  min-height: 30px;
+  margin-bottom: 20px; }
 
 #footer {
   margin-top: 40px; }
@@ -780,6 +779,41 @@ table.dataTable {
   font-weight: bold;
   cursor: default; }
 
-.edit-ballot-link-discarded, .edit-ballot-link-discarded:hover {
+#jsWarn {
+  font-weight: bold;
+  background-color: #f00;
+  color: #ff0;
+  padding: 5px; }
+
+p.warning {
+  color: red;
+  font-weight: bold; }
+
+.ballot-checkin-form .message {
+  padding: 10px 10px;
+  font-weight: bold;
+  background-color: #fc9;
+  color: #804000; }
+
+.ballot-checkin-form #success {
+  padding: 10px 10px; }
+
+.ballot-checkin-form .success {
+  background-color: #cfc;
+  color: #008000; }
+
+#incorrect {
+  background-color: red;
+  color: white; }
+
+#correct {
+  background-color: green;
+  color: white; }
+
+#correct[disabled="disabled"] {
+  background-color: gray;
+  color: silver; }
+
+.edit-ballot-link-discarded {
   color: #808080;
   text-decoration: line-through; }

@@ -1,35 +1,29 @@
 {% load add_field_css %}
 {% load debate_tags %}
 
-    <p class="lead">
     {% if ballots.confirmed %}
-        This ballot set is <strong>confirmed</strong>.
+        <div class="alert alert-success">This ballot is <strong>confirmed</strong>.</div>
     {% endif %}
     {% if ballots.discarded %}
+        <div class="alert alert-warning">This ballot is <strong>discarded</strong>.</div>
         This ballot set is <strong>discarded</strong>.
     {% endif %}
-    {% if not new %}
-        {% if ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
-            This ballot set was entered by <strong>{{ ballots.user }}</strong> at {{ ballots.timestamp_str }}.
-        {% elif ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
-            This ballot set was submitted from the public form at {{ ballots.timestamp_str }}.
-        {% endif %}
-    {% endif %}
-    </p>
 
     {% if other_ballots_set.exists %}
-    <p class="lead">
-        {% if not new %}
+        <div class="panel panel-warning">
+            <div class="panel-heading">
             There is more than one ballot set for this debate.
-            {% if other_ballots_set.count > 1 %}
+            {% if not new %}
                 Here are the others:
             {% else %}
                 The other is:
             {% endif %}
         {% else %}
             {% if other_ballots_set.count > 1 %}
+                <h3 class="panel-title">There is more than one ballot submission for this debate</h3>
                 There are existing ballot sets for this debate:
             {% else %}
+                <h3 class="panel-title">There are existing ballot submissions for this debate:</h3>
                 There is an existing ballot set for this debate:
             {% endif %}
         {% endif %}
@@ -48,12 +42,40 @@
             {% if other_ballots.confirmed %}
                 (confirmed)
             {% endif %}
-        </a></li>
-        {% endfor %}
-    </ul>
-    {% if not new %}
-    <p class="lead">
-        This ballot is version <b>{{ ballots.version }}</b>.
-    </p>
-    {% endif %}
+            </div>
+            <ul class="panel-body list-group">
+                {% for other_ballots in other_ballots_set %}
+                    {% if not new %}
+                        <li class="list-group-item">
+                            <span class="badge">CURRENT</span>
+                            Version {{ ballots.version }},
+                            {% if ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
+                                entered by <strong>{{ ballots.user }}</strong>
+                                at {{ ballots.timestamp_str }}
+                            {% elif ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+                                This ballot set was submitted from the public form
+                                at {{ ballots.timestamp_str }}
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                    <a href="{% tournament_url edit_ballots other_ballots.id %}">
+                    <li class="list-group-item">
+                        {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
+                            Version {{ other_ballots.version }}, entered by <strong>{{ other_ballots.user }}</strong>
+                            at {{ other_ballots.timestamp_str }}
+                        {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+                            Version {{ other_ballots.version }}, submitted from the public form
+                            at {{ other_ballots.timestamp_str }}
+                        {% endif %}
+                        {% if other_ballots.discarded %}
+                            (discarded)
+                        {% endif %}
+                        {% if other_ballots.confirmed %}
+                            (confirmed)
+                        {% endif %}
+                    </li>
+                    </a>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}

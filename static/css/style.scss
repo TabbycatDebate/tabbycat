@@ -14,8 +14,11 @@
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
 #header-options {
-    min-height: 30px; // Spacer for mobile rendering (pre form relocation
-    margin-bottom: 20px;
+    min-height: 60px; // Spacer pre-form relocation via JS
+
+    #dataTable_filter, .btn-group {
+        margin-right: 20px;
+    }
 }
 #footer {
     margin-top: 40px;
@@ -75,26 +78,6 @@ input.error, select.error, .error input {
 .form-control-parent input {
     @extend .form-control;
 }
-// .form-group ul {
-//     // Radio Buttons
-//     padding-left: 0px;
-//     li {
-//         list-style-type: none;
-//         float: left;
-//         width: 50%;
-//         label {
-//             width: 100%;
-//             float: left;
-//             line-height: 34px;
-//             input {
-//                 float: left;
-//                 display: inline;
-//                 width: 30px;
-//                 margin-top: 0;
-//             }
-//         }
-//     }
-// }
 
 // Tables
 
@@ -284,46 +267,9 @@ table.dataTable {
     }
 }
 
-// To sort from the old debate.css
-
-#jsWarn {
-    font-weight: bold;
-    background-color: #f00;
-    color: #ff0;
-    padding: 5px;
-}
-
-p.warning { color: red; font-weight: bold; }
-
-.ballot-checkin-form .message {
-    padding: 10px 10px;
-    font-weight: bold;
-    background-color: #fc9;
-    color: #804000;
-}
-.ballot-checkin-form #success { padding: 10px 10px; }
-.ballot-checkin-form .success { background-color: #cfc; color: #008000; }
-
-
-#incorrect {
-    background-color: red;
-    color: white;
-}
-#correct{
-    background-color: green;
-    color: white;
-}
-
-#correct[disabled="disabled"]{
-    background-color: gray;
-    color: silver;
-}
-
-.edit-ballot-link-confirmed {
-}
-
-.edit-ballot-link-discarded {
+.edit-ballot-link-discarded, .edit-ballot-link-discarded:hover {
     color: #808080;
     text-decoration: line-through;
 }
+
 

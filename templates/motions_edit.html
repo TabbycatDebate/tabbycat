@@ -22,7 +22,7 @@
 {% block page-title %}Edit Motions for Round {{ round }}{% endblock %}
 
 {% block content %}
-<p class="warning">Warning: Do not add the motions before they have been released to debaters!</p>
+<p class="alert alert-danger">Warning: Do not add the motions before they have been released to debaters!</p>
 
 <form method="post" action="" class="form-horizontal">
     {{ formset.management_form }}
