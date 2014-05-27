@@ -25,7 +25,7 @@ def redirect_round(to, round, **kwargs):
                     round_seq=round.seq, *kwargs)
 
 def redirect_tournament(to, tournament, **kwargs):
-    return redirect(to, tournament_slug=tournament.slug, *kwargs)
+    return redirect(to, tournament_slug=tournament.slug, **kwargs)
 
 def tournament_view(view_fn):
     @wraps(view_fn)
@@ -104,8 +104,12 @@ def public_draw(request, t):
 
 @tournament_view
 def public_ballot_submit(request, t):
+
     if request.tournament.config.get('public_ballots') > 0:
-        return r2r(request, 'public/add_ballot.html')
+        round = request.tournament.current_round
+        draw = round.get_draw()
+
+        return r2r(request, 'public/add_ballot.html', dict(draw=draw))
     else:
         return r2r(request, 'public/index.html')
 
@@ -604,11 +608,11 @@ def edit_ballots(request, t, ballots_id):
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
-        other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id).exclude(discarded=True)
+        other_ballots_set = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
         disable_confirm = request.user == ballots.user
     else:
         template = 'enter_results.html'
-        other_ballots_set = debate.ballotsubmission_set.exclude(id=ballots_id)
+        other_ballots_set = debate.ballotsubmission_set.order_by('version')
         disable_confirm = False
 
     if request.method == 'POST':
@@ -630,6 +634,30 @@ def edit_ballots(request, t, ballots_id):
         round=debate.round, ballots=ballots, other_ballots_set=other_ballots_set,
         disable_confirm=disable_confirm))
 
+@tournament_view
+def public_new_ballots(request, t, debate_id):
+    debate = get_object_or_404(Debate, id=debate_id)
+    ballots = BallotSubmission(
+        debate         = debate,
+        submitter_type = BallotSubmission.SUBMITTER_PUBLIC)
+
+    if request.method == 'POST':
+        form = forms.BallotSetForm(ballots, request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            # TODO add ballots to the ActionLog
+            action_type = ActionLog.ACTION_TYPE_BALLOT_PUBLIC_CHECKIN
+            ActionLog.objects.log(type=action_type, debate=debate)
+            return redirect_tournament('public_ballot_submit', t)
+
+    else:
+        form = forms.BallotSetForm(ballots)
+
+    return r2r(request, 'public/enter_results.html', dict(debate=debate, form=form,
+        round=debate.round, ballots=ballots))
+
 @login_required
 @tournament_view
 def new_ballots(request, t, debate_id):
@@ -641,10 +669,10 @@ def new_ballots(request, t, debate_id):
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
-        other_ballots_set = debate.ballotsubmission_set.exclude(discarded=True)
+        other_ballots_set = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
     else:
         template = 'enter_results.html'
-        other_ballots_set = debate.ballotsubmission_set.all()
+        other_ballots_set = debate.ballotsubmission_set.order_by('version')
 
     if request.method == 'POST':
         form = forms.BallotSetForm(ballots, request.POST)

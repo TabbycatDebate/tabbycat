@@ -47,7 +47,7 @@ class BaseScoreField(forms.FloatField):
         super(BaseScoreField, self).__init__(*args, **kwargs)
 
     def validate(self, value):
-        super(ScoreField, self).validate(value)
+        super(BaseScoreField, self).validate(value)
         self.check_value(value)
 
     def check_value(self, value):

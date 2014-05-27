@@ -1272,44 +1272,47 @@ class ActionLog(models.Model):
 
     # TODO update these to account for new ballot submissions model
 
-    ACTION_TYPE_BALLOT_CHECKIN    = 10
-    ACTION_TYPE_BALLOT_DRAFT      = 11
-    ACTION_TYPE_BALLOT_CONFIRM    = 12
-    ACTION_TYPE_BALLOT_ANNUL      = 13
-    ACTION_TYPE_FEEDBACK_SUBMIT   = 20
-    ACTION_TYPE_FEEDBACK_SAVE     = 21
-    ACTION_TYPE_DRAW_CREATE       = 30
-    ACTION_TYPE_DRAW_CONFIRM      = 31
-    ACTION_TYPE_ADJUDICATORS_SAVE = 32
-    ACTION_TYPE_VENUES_SAVE       = 33
-    ACTION_TYPE_MOTION_EDIT       = 40
+    ACTION_TYPE_BALLOT_CHECKIN          = 10
+    ACTION_TYPE_BALLOT_DRAFT            = 11
+    ACTION_TYPE_BALLOT_CONFIRM          = 12
+    ACTION_TYPE_BALLOT_ANNUL            = 13
+    ACTION_TYPE_BALLOT_PUBLIC_CHECKIN   = 14
+    ACTION_TYPE_FEEDBACK_SUBMIT         = 20
+    ACTION_TYPE_FEEDBACK_SAVE           = 21
+    ACTION_TYPE_DRAW_CREATE             = 30
+    ACTION_TYPE_DRAW_CONFIRM            = 31
+    ACTION_TYPE_ADJUDICATORS_SAVE       = 32
+    ACTION_TYPE_VENUES_SAVE             = 33
+    ACTION_TYPE_MOTION_EDIT             = 40
 
     ACTION_TYPE_CHOICES = (
-        (ACTION_TYPE_BALLOT_ANNUL     , 'Annulled ballot'),
-        (ACTION_TYPE_BALLOT_CHECKIN   , 'Checked in ballot'),
-        (ACTION_TYPE_BALLOT_DRAFT     , 'Entered draft ballot'),
-        (ACTION_TYPE_BALLOT_CONFIRM   , 'Confirmed ballot'),
-        (ACTION_TYPE_FEEDBACK_SUBMIT  , 'Submitted feedback'), # For debaters, not tab monkeys
-        (ACTION_TYPE_FEEDBACK_SAVE    , 'Saved feedback'),     # For tab monkeys, not debaters
-        (ACTION_TYPE_ADJUDICATORS_SAVE, 'Saved adjudicator allocation'),
-        (ACTION_TYPE_VENUES_SAVE      , 'Saved venues'),
-        (ACTION_TYPE_DRAW_CREATE      , 'Created draw'),
-        (ACTION_TYPE_DRAW_CONFIRM     , 'Confirmed draw'),
-        (ACTION_TYPE_MOTION_EDIT      , 'Added/edited motion'),
+        (ACTION_TYPE_BALLOT_ANNUL         , 'Annulled ballot'),
+        (ACTION_TYPE_BALLOT_CHECKIN       , 'Checked in ballot'),
+        (ACTION_TYPE_BALLOT_DRAFT         , 'Entered draft ballot'),
+        (ACTION_TYPE_BALLOT_CONFIRM       , 'Confirmed ballot'),
+        (ACTION_TYPE_BALLOT_PUBLIC_CHECKIN, 'Entered ballot from the public form'),
+        (ACTION_TYPE_FEEDBACK_SUBMIT      , 'Submitted feedback'), # For debaters, not tab monkeys
+        (ACTION_TYPE_FEEDBACK_SAVE        , 'Saved feedback'),     # For tab monkeys, not debaters
+        (ACTION_TYPE_ADJUDICATORS_SAVE    , 'Saved adjudicator allocation'),
+        (ACTION_TYPE_VENUES_SAVE          , 'Saved venues'),
+        (ACTION_TYPE_DRAW_CREATE          , 'Created draw'),
+        (ACTION_TYPE_DRAW_CONFIRM         , 'Confirmed draw'),
+        (ACTION_TYPE_MOTION_EDIT          , 'Added/edited motion'),
     )
 
     REQUIRED_FIELDS_BY_ACTION_TYPE = {
-        ACTION_TYPE_BALLOT_ANNUL     : ('debate',),
-        ACTION_TYPE_BALLOT_CHECKIN   : ('debate',),
-        ACTION_TYPE_BALLOT_DRAFT     : ('debate',),
-        ACTION_TYPE_BALLOT_CONFIRM   : ('debate',),
-        ACTION_TYPE_FEEDBACK_SUBMIT  : ('adjudicator_feedback',),
-        ACTION_TYPE_FEEDBACK_SAVE    : ('adjudicator_feedback',),
-        ACTION_TYPE_ADJUDICATORS_SAVE: ('round',),
-        ACTION_TYPE_VENUES_SAVE      : ('round',),
-        ACTION_TYPE_DRAW_CREATE      : ('round',),
-        ACTION_TYPE_DRAW_CONFIRM     : ('round',),
-        ACTION_TYPE_MOTION_EDIT      : ('motion',),
+        ACTION_TYPE_BALLOT_ANNUL          : ('debate',),
+        ACTION_TYPE_BALLOT_CHECKIN        : ('debate',),
+        ACTION_TYPE_BALLOT_DRAFT          : ('debate',),
+        ACTION_TYPE_BALLOT_CONFIRM        : ('debate',),
+        ACTION_TYPE_BALLOT_PUBLIC_CHECKIN : ('debate',),
+        ACTION_TYPE_FEEDBACK_SUBMIT       : ('adjudicator_feedback',),
+        ACTION_TYPE_FEEDBACK_SAVE         : ('adjudicator_feedback',),
+        ACTION_TYPE_ADJUDICATORS_SAVE     : ('round',),
+        ACTION_TYPE_VENUES_SAVE           : ('round',),
+        ACTION_TYPE_DRAW_CREATE           : ('round',),
+        ACTION_TYPE_DRAW_CONFIRM          : ('round',),
+        ACTION_TYPE_MOTION_EDIT           : ('motion',),
     }
 
     ACTION_TYPE_BY_RESULT_STATUS = {
@@ -1322,7 +1325,7 @@ class ActionLog(models.Model):
 
     type = models.PositiveSmallIntegerField(choices=ACTION_TYPE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
 
     debate = models.ForeignKey(Debate, blank=True, null=True)
     adjudicator_feedback = models.ForeignKey(AdjudicatorFeedback, blank=True, null=True)
