@@ -115,8 +115,9 @@ def public_ballot_submit(request, t):
 
 @tournament_view
 def public_feedback_submit(request, t):
+    adjudicators = Adjudicator.objects.all()
     if request.tournament.config.get('public_feedback') > 0:
-        return r2r(request, 'public/add_feedback.html')
+        return r2r(request, 'public/add_feedback.html', dict(adjudicators=adjudicators))
     else:
         return r2r(request, 'public/index.html')
 
@@ -976,23 +977,26 @@ def get_adj_feedback(request, t):
     return HttpResponse(json.dumps({'aaData': data}), mimetype="text/json")
 
 
-@login_required
 @tournament_view
 def enter_feedback(request, t, adjudicator_id):
 
     adj = get_object_or_404(Adjudicator, id=adjudicator_id)
 
-    if not request.user.is_superuser:
+    if not request.user.is_authenticated():
+        template = 'public/enter_feedback.html'
+    elif not request.user.is_superuser:
         template = 'monkey/enter_feedback.html'
     else:
         template = 'enter_feedback.html'
+
+    user = request.user.is_authenticated() and user or None
 
     if request.method == "POST":
         form = forms.make_feedback_form_class(adj)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
-                user=request.user, adjudicator_feedback=adj_feedback)
+                user=user, adjudicator_feedback=adj_feedback)
             return redirect_tournament('adj_feedback', t)
     else:
         form = forms.make_feedback_form_class(adj)()
