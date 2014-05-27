@@ -992,12 +992,13 @@ def enter_feedback(request, t, adjudicator_id):
     user = request.user.is_authenticated() and user or None
 
     if request.method == "POST":
+        redirect_template = request.user.is_authenticated() and 'adj_feedback' or 'public_feedback_submit'
         form = forms.make_feedback_form_class(adj)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
                 user=user, adjudicator_feedback=adj_feedback)
-            return redirect_tournament('adj_feedback', t)
+            return redirect_tournament(redirect_template, t)
     else:
         form = forms.make_feedback_form_class(adj)()
 
