@@ -25,39 +25,34 @@
             </h3>
         {% endif %}
         </div>
+    </div>
 
-        <ul class="panel-body list-group">
+    <ul class="panel-body list-group">
         {% for other_ballots in all_ballot_sets %}
-            {% for other_ballots in other_ballots_set %}
+            {% if other_ballots != ballots %}
             <a href="{% tournament_url edit_ballots other_ballots.id %}">
             {% endif %}
             <li class="list-group-item">
-                {% if other_ballots != ballots %}
-                <a href="{% tournament_url edit_ballots other_ballots.id %}">
+                {% if other_ballots == ballots %}
+                    <span class="badge">CURRENT</span>
                 {% endif %}
-                <li class="list-group-item">
-                    {% if other_ballots == ballots %}
-                        <span class="badge">CURRENT</span>
-                    {% endif %}
-                    {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
-                        Version {{ other_ballots.version }}, entered by <strong>{{ other_ballots.user }}</strong>
-                        at {{ other_ballots.timestamp_str }}
-                    {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
-                        Version {{ other_ballots.version }}, submitted from the public form
-                        at {{ other_ballots.timestamp_str }}
-                    {% endif %}
-                    {% if other_ballots.discarded %}
-                        (discarded)
-                    {% endif %}
-                    {% if other_ballots.confirmed %}
-                        (confirmed)
-                    {% endif %}
-                </li>
-                {% if other_ballots != ballots %}
-                </a>
+                {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
+                    Version {{ other_ballots.version }}, entered by <strong>{{ other_ballots.user }}</strong>
+                    at {{ other_ballots.timestamp_str }}
+                {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+                    Version {{ other_ballots.version }}, submitted from the public form
+                    at {{ other_ballots.timestamp_str }}
                 {% endif %}
-            {% endfor %}
-        </ul>
+                {% if other_ballots.discarded %}
+                    (discarded)
+                {% endif %}
+                {% if other_ballots.confirmed %}
+                    (confirmed)
+                {% endif %}
+            </li>
+            {% if other_ballots != ballots %}
+            </a>
             {% endif %}
-    </div>
+        {% endfor %}
+    </ul>
     {% endif %}
