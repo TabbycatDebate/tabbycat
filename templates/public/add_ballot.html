@@ -13,16 +13,14 @@
 </script>
 {% endblock extra-head %}
 
-{% block head-title %}Add Ballot{% endblock %}
+{% block head-title %}Who are you?<small>
+(find your name on this list)</small>{% endblock %}
 {% block page-title %}Add Ballot{% endblock %}
 {% block body-class %}public-add-ballot{% endblock %}
 
 {% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
 
 {% block content %}
-
-<!-- TODO fix this CSS -->
-<div class="lead">Find your name on this list. It's a personal link for you, so you can bookmark it and come straight back to it after each round.</div>
 
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
@@ -37,7 +35,9 @@
         {% for da in das %}
         <tr>
         <td>
-            <a href="{% tournament_url public_new_ballots da.adjudicator.id %}">{{ da.adjudicator.name }}</a>
+            <a href="{% tournament_url public_new_ballots da.adjudicator.id %}">
+            Add result from {{ da.adjudicator.name }}
+            </a>
         </td>
         <td>{{ da.debate.venue.name }}</td>
         <td>

@@ -15,10 +15,14 @@ Enter Results for
 {% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
 {% block content %}
 
-<!-- TODO fix CSS of this -->
-<div class="lead">The URL of this page is specific to you, <b>{{ adjudicator.name }}</b>, not this debate, so you can bookmark this page and come back to it after each round.</div>
+<div class="alert alert-info">This page is specific to you, <em>{{ adjudicator.name }}</em>.
+The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
 
-{% if form.adjudicators|length > 1 %}<div class="lead">You must enter <b>all</b> ballots for your panel, not just yours!</div>{% endif %}
+{% if form.adjudicators|length > 1 %}
+<div class="alert alert-danger">
+{{ adjudicator.name }}, note that as the chair you must enter <strong>all of the ballots</strong> from your panel, not just your own!
+</div>
+{% endif %}
 
 <form id="resultsForm" action="." method="POST" class="form-horizontal">
 
