@@ -1010,7 +1010,7 @@ def enter_feedback(request, t, adjudicator_id):
     else:
         template = 'enter_feedback.html'
 
-    user = request.user.is_authenticated() and user or None
+    user = request.user.is_authenticated() and request.user or None
 
     if request.method == "POST":
         redirect_template = request.user.is_authenticated() and 'adj_feedback' or 'public_feedback_submit'
@@ -1021,7 +1021,7 @@ def enter_feedback(request, t, adjudicator_id):
                 user=user, adjudicator_feedback=adj_feedback)
             return redirect_tournament(redirect_template, t)
     else:
-        form = forms.make_feedback_form_class(adj)()
+        form = forms.make_feedback_form_class(adj, released_only=not request.user.is_authenticated())()
 
     return r2r(request, template, dict(adj=adj, form=form))
 

@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
-from debate.models import SpeakerScoreByAdj, Debate, Motion
+from debate.models import SpeakerScoreByAdj, Debate, Motion, Round
 from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
 from debate.models import ActionLog
 from debate.result import BallotSet
@@ -412,10 +412,15 @@ class DebateResultFormSet(object):
 
 ### Feedback forms
 
-def make_feedback_form_class(adjudicator):
+def make_feedback_form_class(adjudicator, released_only=False):
 
-    debates = [da.debate for da in DebateAdjudicator.objects.filter(
-        adjudicator = adjudicator )]
+    if released_only:
+        das = DebateAdjudicator.objects.filter(adjudicator = adjudicator,
+            debate__round__draw_status = Round.STATUS_RELEASED)
+    else:
+        das = DebateAdjudicator.objects.filter(adjudicator = adjudicator)
+
+    debates = [da.debate for da in das]
 
     def adj_choice(da):
         return (
