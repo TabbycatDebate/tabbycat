@@ -1,9 +1,19 @@
 {% extends "enter_feedback.html" %}
 {% load add_field_css %}
 
+{% block head-title %}Add Feedback from {{ source_name }}{% endblock %}
+{% block page-title %}Add Feedback from {{ source_name }}{% endblock %}
 {% block extra-head %}{% endblock %}
 
 {% block body-class %}public-enter-feedback{% endblock %}
 
 {% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
 
+{% block content %}
+
+<!-- TODO fix this CSS -->
+<div class="lead">The URL of this page is specific to you, <b>{{ source_name }}</b>, not this debate, so you can bookmark this page and come back to it after each round.</div>
+
+{{ block.super }}
+
+{% endblock %}

@@ -22,6 +22,7 @@ SETTINGS = SortedDict([
     ('public_draw', (int, 'Public interface to see RELEASED draws', 0)),
     ('public_ballots', (int, 'Public interface to add ballots', 0)),
     ('public_feedback', (int, 'Public interface to add feedback', 0)),
+    ('panellist_feedback_enabled', (int, 'Allow public feedback to be submitted by panellists', 1)),
     ('feedback_progress', (int, 'Public interface to view unsubmitted ballots', 0)),
     ('tab_released', (int, 'Displays the tab PUBLICLY. For AFTER the tournament', 0)),
 ])

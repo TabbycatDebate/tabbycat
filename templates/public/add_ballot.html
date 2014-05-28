@@ -1,5 +1,17 @@
-{% extends "monkey/results.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
+
+{% block extra-head %}
+{{ block.super }}
+<script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+        var table = $("#dataTable").dataTable( {
+            "aaSorting": [[ 0, "asc" ]],
+        });
+        new $.fn.dataTable.FixedHeader( table );
+    } );
+</script>
+{% endblock extra-head %}
 
 {% block head-title %}Add Ballot{% endblock %}
 {% block page-title %}Add Ballot{% endblock %}
@@ -9,30 +21,31 @@
 
 {% block content %}
 
+<!-- TODO fix this CSS -->
+<div class="lead">Find your name on this list. It's a personal link for you, so you can bookmark it and come straight back to it after each round.</div>
+
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
-            <th>Ballots</th>
+            <th>Adjudicator</th>
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
             <th>Affirmative</th>
             <th>Negative</th>
-            <th>Adjudicators</th>
         </tr>
     </thead>
     <tbody>
-        {% for debate in draw %}
+        {% for da in das %}
         <tr>
         <td>
-            <a href="{% tournament_url public_new_ballots debate.id %}" title="Create New Ballot">Enter this ballot</a>
+            <a href="{% tournament_url public_new_ballots da.adjudicator.id %}">{{ da.adjudicator.name }}</a>
         </td>
-        <td>{{ debate.venue.name }}</td>
+        <td>{{ da.debate.venue.name }}</td>
         <td>
-            <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}">{{ debate.aff_team.short_name }}<span>
+            <span href="#" title="{{ da.debate.aff_team.speakers|join:', ' }}">{{ da.debate.aff_team.short_name }}<span>
         </td>
         <td>
-            <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}">{{ debate.neg_team.short_name }}</span>
+            <span href="#" title="{{ da.debate.neg_team.speakers|join:', ' }}">{{ da.debate.neg_team.short_name }}</span>
         </td>
-        <td>{{ debate.adjudicators_display }}</td>
     </tr>
     {% endfor %}
 </table>
