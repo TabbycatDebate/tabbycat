@@ -27,38 +27,45 @@ If you're interested in using, developing or otherwise following this software,
 
 #### Setup on Linux or OS X
 
-1. Install Python, pip, and virtualenv following either [this guide (Linux)](http://docs.python-guide.org/en/latest/starting/install/linux/) or [this guide (OS X)](http://docs.python-guide.org/en/latest/starting/install/osx/). You will also need Git installed along with a database engine of your choice.
+1. The project depends on having Python (2.6+), pip, virtualenv, git, postgreSQL, and a blank postgreSQL database setup on your local machine. See the following for install instructions:
 
-2. Create a virtualenv in the project's root directory:
+    - [How to setup Git](https://help.github.com/articles/set-up-git)
+    - [How to install Python, pip, and virtualenv on Linux](http://docs.python-guide.org/en/latest/starting/install/linux/)
+    - [How to install Python, pip, and virtualenv on OS X](http://docs.python-guide.org/en/latest/starting/install/osx/)
+    - [How to setup PostgreSQL on Linux](https://wiki.postgresql.org/wiki/Detailed_installation_guides#Any_UNIX-Like_Platform)
+    - [How to setup PostgreSQL on OS X](http://marcinkubala.wordpress.com/2013/11/11/postgresql-on-os-x-mavericks/)
+
+2. Once these dependencies are installed, download/clone/fork the repo and create a virtualenv in the project's root directory:
 
         $ virtualenv venv
 
-3. Activate the virtualenv. Note that you'll need to activate the venv each time you want to run the project.
+3. Activate the virtualenv. Note that you'll need to activate the venv this way **each time** you want to run the project.
 
         $ source venv/bin/activate
 
-3. Install the project's requirements. Note this requires an internet connection and can take a while:
+3. Install the project's requirements. Note this requires an internet connection and can take some time:
 
         $ pip install -r requirements.txt
 
-4. Rename ```local_settings.example``` to ```local_settings.py```
-   and edit to match your database setup.
+4. If on OS X 10.9+ or using XCode 5.1+, note that installing psycopg2 may fail. In which case run the following:
 
-5. Sync and migrate the database:
+        $ ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future pip install -r requirements.txt
+
+5. Rename ```local_settings.example``` to ```local_settings.py``` and edit the settings on lines 20-29 to match your database setup and the details of your blank database.
+
+6. Sync and migrate the database:
 
         $ python manage.py syncdb
         $ python manage.py schemamigration debate --initial
         $ python manage.py migrate debate
 
-6. Run using:
+7. Start the local server using:
 
         $ foreman start
 
-Once it's installed, the next time you want to run the project you just need to run
+8. Open the site up by visiting [http://0.0.0.0:5000/](http://0.0.0.0:5000/)
 
-        $ source venv/bin/activate
-
-before you start.
+Note that to resume running the server at a later date, you will need change to the project's directory and repeat **step 3** and **step 8** each time.
 
 #### Deploy to Heroku
 
