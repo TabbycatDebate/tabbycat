@@ -1,8 +1,64 @@
-{% extends "monkey/adjudicator_feedback.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Add Feedback{% endblock %}
+{% block extra-head %}
+{{ block.super }}
+<script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+        var table = $('#dataTable').dataTable({
+            "aaSorting": [[ 0, "asc" ]],
+        });
+        new $.fn.dataTable.FixedHeader( table );
+    } );
+</script>
+
+{% endblock extra-head %}
+
+{% block head-title %}Who are you?<small>
+(find your name or your team on this list)</small>
+{% endblock %}
 {% block page-title %}Add Feedback{% endblock %}
 {% block body-class %}public-add-feedback{% endblock %}
-
 {% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
+
+{% block content %}
+
+<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Name</th>
+            {% if show_institutions > 0 %}
+            <th>Institution</th>
+            {% endif %}
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for adj in adjudicators %}
+        <tr id="adj_{{ adj.id }}">
+            <td>
+                <a href="{% tournament_url public_enter_feedback_adjudicator adj.id %}">
+                Add feedback from {{ adj.name }}</a></td>
+            {% if show_institutions > 0 %}
+            <td>
+                {{ adj.institution }}
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        {% for team in teams %}
+        <tr id="team_{{ team.id }}">
+            <td>
+                <a href="{% tournament_url public_enter_feedback_team team.id %}">
+                Add feedback from {{ team.name }}</a>
+            </td>
+            {% if show_institutions > 0 %}
+            <td>
+                {{ team.institution }}
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}    </tbody>
+</table>
+
+{% endblock content %}

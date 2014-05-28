@@ -107,20 +107,23 @@ def public_draw(request, t):
 def public_ballot_submit(request, t):
     r = t.current_round
 
+    das = DebateAdjudicator.objects.filter(debate__round=r).select_related('adjudicator', 'debate')
+
     if request.tournament.config.get('public_ballots') > 0:
         if r.draw_status == r.STATUS_RELEASED:
             draw = r.get_draw()
-            return r2r(request, 'public/add_ballot.html', dict(draw=draw))
+            return r2r(request, 'public/add_ballot.html', dict(das=das))
         else:
-            return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=r))
+            return r2r(request, 'public/draw_unreleased.html', dict(das=None, round=r))
     else:
         return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_feedback_submit(request, t):
     adjudicators = Adjudicator.objects.all()
+    teams = Team.objects.all()
     if request.tournament.config.get('public_feedback') > 0:
-        return r2r(request, 'public/add_feedback.html', dict(adjudicators=adjudicators))
+        return r2r(request, 'public/add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
     else:
         return r2r(request, 'public/index.html')
 
@@ -646,12 +649,19 @@ def edit_ballots(request, t, ballots_id):
     ))
 
 @tournament_view
-def public_new_ballots(request, t, debate_id):
-    debate = get_object_or_404(Debate, id=debate_id)
-    if debate.round != t.current_round:
+def public_new_ballots(request, t, adj_id):
+
+    round = t.current_round
+    if round.draw_status != Round.STATUS_RELEASED:
         raise PermissionDenied
-    if debate.round.draw_status != Round.STATUS_RELEASED:
-        raise PermissionDenied
+
+    adjudicator = get_object_or_404(Adjudicator, id=adj_id)
+    try:
+        da = DebateAdjudicator.objects.get(adjudicator=adjudicator, debate__round=round)
+    except DebateAdjudicator.DoesNotExist:
+        # TODO make this a pretty template (not an error page) that just says "it looks like you don't have a debate" or something
+        return HttpResponseBadRequest('It looks like you don\'t have a debate this round!\n\nTODO make this a pretty template (not an error page) that just says the above')
+    debate = da.debate
 
     ballots = BallotSubmission(
         debate         = debate,
@@ -672,7 +682,7 @@ def public_new_ballots(request, t, debate_id):
         form = forms.BallotSetForm(ballots)
 
     return r2r(request, 'public/enter_results.html', dict(debate=debate, form=form,
-        round=debate.round, ballots=ballots))
+        round=round, ballots=ballots, adjudicator=adjudicator))
 
 @login_required
 @tournament_view
@@ -999,29 +1009,58 @@ def get_adj_feedback(request, t):
 
 
 @tournament_view
+def public_enter_feedback_adjudicator(request, t, adj_id):
+    return public_enter_feedback(request, t, Adjudicator, adj_id)
+
+@tournament_view
+def public_enter_feedback_team(request, t, team_id):
+    return public_enter_feedback(request, t, Team, team_id)
+
+@tournament_view
+def public_enter_feedback(request, t, source_type, source_id):
+
+    source = get_object_or_404(source_type, id=source_id)
+    include_panellists = request.tournament.config.get('panellist_feedback_enabled') > 0
+
+    if isinstance(source, Adjudicator):
+        source_name = source.name
+    elif isinstance(source, Team):
+        source_name = source.short_name
+    else:
+        raise TypeError('source must be Adjudicator or Team')
+
+    if request.method == "POST":
+        form = forms.make_feedback_form_class_for_source(source, released_only=True, include_panellists=include_panellists)(request.POST)
+        if form.is_valid():
+            adj_feedback = form.save()
+            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
+                user=None, adjudicator_feedback=adj_feedback)
+            return redirect_tournament('public_feedback_submit', t)
+    else:
+        form = forms.make_feedback_form_class_for_source(source, released_only=True, include_panellists=include_panellists)()
+
+    return r2r(request, 'public/enter_feedback.html', dict(source_name=source_name, form=form))
+
+@login_required
+@tournament_view
 def enter_feedback(request, t, adjudicator_id):
 
     adj = get_object_or_404(Adjudicator, id=adjudicator_id)
 
-    if not request.user.is_authenticated():
-        template = 'public/enter_feedback.html'
-    elif not request.user.is_superuser:
+    if not request.user.is_superuser:
         template = 'monkey/enter_feedback.html'
     else:
         template = 'enter_feedback.html'
 
-    user = request.user.is_authenticated() and request.user or None
-
     if request.method == "POST":
-        redirect_template = request.user.is_authenticated() and 'adj_feedback' or 'public_feedback_submit'
         form = forms.make_feedback_form_class(adj)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
                 user=user, adjudicator_feedback=adj_feedback)
-            return redirect_tournament(redirect_template, t)
+            return redirect_tournament('adj_feedback', t)
     else:
-        form = forms.make_feedback_form_class(adj, released_only=not request.user.is_authenticated())()
+        form = forms.make_feedback_form_class(adj)()
 
     return r2r(request, template, dict(adj=adj, form=form))
 

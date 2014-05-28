@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
-from debate.models import SpeakerScoreByAdj, Debate, Motion, Round
+from debate.models import SpeakerScoreByAdj, Debate, Motion, Round, Team, Adjudicator
 from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
 from debate.models import ActionLog
 from debate.result import BallotSet
@@ -458,9 +458,9 @@ def make_feedback_form_class(adjudicator, released_only=False):
         id = int(id)
 
         if obj_type.strip() == 'A':
-            return DebateAdjudicator.objects.get(pk=id)
+            return DebateAdjudicator.objects.get(id=id)
         if obj_type.strip() == 'T':
-            return DebateTeam.objects.get(pk=id)
+            return DebateTeam.objects.get(id=id)
 
     class FeedbackForm(forms.Form):
         source = forms.TypedChoiceField(
@@ -512,6 +512,100 @@ def make_feedback_form_class(adjudicator, released_only=False):
 
     return FeedbackForm
 
+# TODO decide whether to merge this with make_feedback_form_class above
+def make_feedback_form_class_for_source(source, released_only=False, include_panellists=True):
+
+    kwargs = dict()
+    if released_only:
+        kwargs['debate__round__draw_status'] = Round.STATUS_RELEASED
+
+    def adj_choice(da):
+        return (
+            da.id,
+            '%s (%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
+                           da.type)
+        )
+    choices = [(None, '-- Adjudicators --')]
+
+    if isinstance(source, Adjudicator):
+        if not include_panellists:
+            kwargs['type'] = DebateAdjudicator.TYPE_CHAIR
+
+        debates = [da.debate for da in DebateAdjudicator.objects.filter(adjudicator=source, **kwargs).select_related('debate')]
+
+        # For an adjudicator, find every adjudicator on their panel except them.
+        choices.extend ([
+            adj_choice(da) for da in DebateAdjudicator.objects.filter(
+                debate__id__in = [d.id for d in debates]
+            ).select_related('debate').order_by('debate__round') if da.adjudicator != source
+        ])
+
+    elif isinstance(source, Team):
+        debates = [dt.debate for dt in DebateTeam.objects.filter(team=source, **kwargs).select_related('debate')]
+
+        # For a team, find the chair.
+        choices.extend ([
+            adj_choice(da) for da in DebateAdjudicator.objects.filter(
+                debate__id__in = [d.id for d in debates],
+                type = DebateAdjudicator.TYPE_CHAIR
+            ).select_related('debate').order_by('debate__round')
+        ])
+
+    else:
+        raise TypeError('source must be an Adjudicator or a Team')
+
+    def coerce(value):
+        return DebateAdjudicator.objects.get(id=value)
+
+    class FeedbackForm(forms.Form):
+        debate_adjudicator = forms.TypedChoiceField(
+            choices = choices,
+            #coerce = coerce, # This seems to mess up data cleaning?
+        )
+
+        score = forms.FloatField(
+            min_value = 0,
+            max_value = 5,
+        )
+
+        comment = forms.CharField(widget=forms.Textarea, required=False)
+
+        def save(self):
+            # Saves the form and returns the AdjudicatorFeedback object
+
+            da = self.cleaned_data['debate_adjudicator']
+            da = coerce(da)
+
+            if isinstance(source, Adjudicator):
+                sa = DebateAdjudicator.objects.get(adjudicator=source, debate=da.debate)
+            else:
+                sa = None
+            if isinstance(source, Team):
+                st = DebateTeam.objects.get(team=source, debate=da.debate)
+            else:
+                st = None
+
+            try:
+                af = AdjudicatorFeedback.objects.get(
+                    adjudicator = da.adjudicator,
+                    source_adjudicator = sa,
+                    source_team = st,
+                )
+            except AdjudicatorFeedback.DoesNotExist:
+                af = AdjudicatorFeedback(
+                    adjudicator = da.adjudicator,
+                    source_adjudicator = sa,
+                    source_team = st,
+                )
+
+            af.score = self.cleaned_data['score']
+            af.comments = self.cleaned_data['comment']
+
+            af.save()
+
+            return af
+
+    return FeedbackForm
 
 def test():
     from debate.models import Debate

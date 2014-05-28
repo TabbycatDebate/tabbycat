@@ -119,10 +119,10 @@ a.text-success:hover {
   color: #2b542c; }
 
 .text-info {
-  color: #d5e615; }
+  color: #31708f; }
 
 a.text-info:hover {
-  color: #aab711; }
+  color: #245269; }
 
 .text-warning {
   color: #8a6d3b; }
@@ -152,10 +152,10 @@ a.bg-success:hover {
   background-color: #c1e2b3; }
 
 .bg-info {
-  background-color: #fcf5e3; }
+  background-color: #d9edf7; }
 
 a.bg-info:hover {
-  background-color: #f7e5b5; }
+  background-color: #afd9ee; }
 
 .bg-warning {
   background-color: #fcede3; }

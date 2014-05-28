@@ -38,6 +38,11 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline)
 admin.site.register(models.Adjudicator, AdjudicatorAdmin)
 
+class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
+    list_display = ('adjudicator', 'source_adjudicator', 'source_team', 'score', 'comments')
+    search_fields = ('source_adjudicator__adjudicator__name', 'source_team__team__institution__code', 'source_team__team__reference', 'adjudicator__name', 'adjudicator__institution__code',)
+admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
+
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority')
     search_fields = ('name',)
