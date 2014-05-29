@@ -23,7 +23,7 @@ If you're interested in using, developing or otherwise following this software,
 
 *TODO*
 
-## Installation Instructions
+## Installing Tabby Cat
 
 #### Setup on Linux or OS X
 
@@ -69,23 +69,29 @@ Note that to resume running the server at a later date, you will need change to 
 
 #### Deploy to Heroku
 
-These commands can be used to deploy to Heroku, provided you have setup the [Heroku Toolbelt](https://devcenter.heroku.com/articles/getting-started-with-python#local-workstation-setup). Note that you can skip the local setup if you are just running on Heroku.
+1. These commands can be used to deploy to Heroku, provided you have setup the [Heroku Toolbelt](https://devcenter.heroku.com/articles/getting-started-with-python#local-workstation-setup). Note that you can skip the local setup if you are just going to be running the tournament online.
 
-    $ heroku create
-    $ heroku ps:scale web=1
-    $ heroku config:set HEROKU=1
-    $ git push heroku master
-    $ heroku run python manage.py syncdb
-    $ heroku run python manage.py migrate
-    $ heroku open
+        $ heroku create
+        $ heroku ps:scale web=1
+        $ heroku config:set HEROKU=1
+        $ git push heroku master
+        $ heroku run python manage.py syncdb
+        $ heroku run python manage.py migrate
+        $ heroku addons:add pgbackups
+        $ heroku open
 
-#### Preparing a Tournament (Manual Data Entry)
+## Setting up a Tournament
 
-1. Go to <your url>/admin/
-2. Create a new Tournament object (and input the rounds)
-3. Proceed to create Venues, Institutions, Teams (which also allows you to add speakers), and Adjudicators
+#### Setting up a Tournament Manually
 
-#### Importing a Tournament Locally (Data Import)
+1. Open up your the admin area of your site by going to the local/heroku URL with /admin/ on the end, ie [*http://0.0.0.0:5000/admin/*](http://0.0.0.0:5000/admin/). 2. Then click **Debate** in the sidebar.
+3. Create a new Tournament object, and input all of its rounds
+4. Create the Venues
+5. Create the Institutions
+6. Create the Teams, and input their speakers
+7. Create the Adjudicators, and input their conflicts
+
+#### Setting up a Tournament Automatically (On a Local Install)
 
 1. Copy and rename the ```data/dummy``` folder
 2. See the csv files in the new folder, and add/replace the data as per your tournament. Note that the institutions (ie first row) in the ```speakers.csv``` and ```adjudicators.csv``` files must match the institutions in the second row of the ```institutions.csv``` file. And that all csv files must end with a blank line.
@@ -93,48 +99,43 @@ These commands can be used to deploy to Heroku, provided you have setup the [Her
 
         $ ./manage.py import_tournament dummy
 
-### Importing a Tournament on Heroku
+#### Setting up a Tournament Automatically (On Heroku)
 
-At present the ```import_tournament``` script does not work on Heroku. For now:
+At present the ```import_tournament``` script does not work on Heroku. For now, if you want to automate the import process, do as follows:
 
-1. Import the data on a local install
+1. Import and setup your tournament as per **Setting up a Tournament Automatically (On a Local Install)**
 
-        $ ./manage.py import_tournament dummy
+2. Deploy to heroku as per **Deploy to Heroku**, but skip running the lines with ```manage.py``` in them
 
-2. Add the backups plugin to Heroku
+3. Find the name of your heroku database (it will look something like ```HEROKU_POSTGRESQL_NAVY_URL```) using:
 
-        $ heroku addons:add pgbackups
+        $ heroku pg:psql
 
-3. Make a copy of your local datatabase (replacing 'your_db_name') in the below:
+3. Use [```pg:push```](https://devcenter.heroku.com/articles/heroku-postgresql#pg-push) to copy your local database to Heroku. Note that your ```APP_NAME``` is the subdomain of your app at its heroku url.
 
-        $ pg_dump -Fc --no-acl --no-owner -h localhost your_db_name > your_db_name
+        $ heroku pg:push LOCAL_DATABASE_NAME HEROKU_DATABASE_NAME --app APP_NAME
 
-4. Upload the dump file to a web server somewhere
+## Running a Tournament
 
-5. Restore the local dump to Heroku, replacing the URL with a link to your dump file
+#### Initial Configuration
 
-        $ heroku pgbackups:restore DATABASE 'https://s3.amazonaws.com/me/items/3H0q/mydb.dump'
+1. After importing all your data, log into the site as an admin, and view the tournament configuration page. Adjust the speaker ranges and interface options to your liking.
+2. Go to the /admin/ area to add any users that should have access to data-entry functions, but not the main tab backend. These should have *Active* and *Staff status* ticked.
 
-#### Directing a Tournament
-
-###### Initial Setup
-
-1. First, view the tournament configuration page and adjust the speaker ranges and interface options.
-2. Go to the /admin/ page to add any users that should have access to data-entry functions, but not the main tab backend. These should have *Active* and *Staff status* ticked.
-
-###### Round-by-Round
+#### Running a Round
 
 1. Each round of the tournament has a number in the top right of the menu
 2. For each round, you need to confirm the Venues, Teams, Adjudicators, and Participants are all available using the options in this menu.
 3. The draw can then be generated on the Draw page
 4. If using the public draw function, use the *Release to Public* button to publicly display the draw page.
 5. Enter the motions for each round in the Motions page if you'd like information about motion selection and win rates.
-6. Enter debate results and feedback as they come in.
-7. When ready to advance to the next round, go to the Tournament section in the admin area and increiment the *Current round*.
+6. Enter debate results and feedback as they come in (and/or allow online entry of results and feedback).
+7. Both results and feedback entered in the tab room or online need to be confirmed before the results are counted.
+8. When ready to advance to the next round, go to the Tournament section in the Django /admin/ area, select the current tournament, and increment the *Current Round*.
 
-###### Wrapping Up
+#### Wrapping Up
 
-1. Tabs can be released using the *Tab released* option under configuration. Note that you probably want to turn off *Public ballots*, *Public feedback*, *Feedback progress*, and *Public draw* at this stage.
+1. Tabs can be released using the *Tab released* option under configuration. Note that you probably want to turn off the *Public ballots*, *Public feedback*, *Feedback progress*, and *Public draw* options at this stage.
 
 ## Licensing and development
 
