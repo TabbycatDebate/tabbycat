@@ -640,8 +640,33 @@ a.text-warning:hover {
 a.text-danger:hover {
   color: #c9302c; }
 
+@media (max-width: 768px) {
+  .navbar-nav.navbar-left {
+    float: left;
+    width: 30%; }
+  .navbar-nav.navbar-right {
+    float: right;
+    width: 70%; }
+  .navbar-nav .dropdown-menu
+  .dropdown.open ul {
+    overflow: hidden;
+    clear: both; }
+  .navbar-nav .dropdown.open li {
+    display: inline-block;
+    width: 33%;
+    float: left;
+    overflow: hidden; }
+  .navbar-nav .dropdown.open li a {
+    padding-left: 15px;
+    padding-right: 0px; }
+  .navbar-nav .dropdown.open .divider {
+    display: none; }
+  .navbar-nav .dropdown.open .dropdown-menu {
+    overflow: hidden; } }
+
 #header-options {
-  min-height: 60px; }
+  min-height: 40px;
+  margin-bottom: 20px; }
   #header-options #dataTable_filter, #header-options .btn-group {
     margin-right: 20px; }
 

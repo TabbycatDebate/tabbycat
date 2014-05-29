@@ -22,19 +22,23 @@ No draw currently exists
 {% endblock %}
 {% block header %}
 <div class="btn-group">
-    <a class="btn btn-success" id="createDraw">Create Draw</a>
+    <a class="btn btn-success" id="createDraw">Create Draw for the following {{ active_teams|length }} teams</a>
 </div>
 {% endblock %}
 
 {% block content %}
 
-<p>Draw to be created for the following {{ active_teams|length }} teams</p>
-<form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
-<ul>
-    {% for team in active_teams %}
-    <li>{{ team.short_name }} ({{ team.institution.code }})</li>
-    {% endfor %}
-</ul>
+<br>
+<div class="row">
+    <div class="col-sm-12">
+        <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
+        <ul>
+            {% for team in active_teams %}
+            <li>{{ team.short_name }} ({{ team.institution.code }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
 {% endblock content %}
 
