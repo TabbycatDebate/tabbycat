@@ -55,9 +55,9 @@
     <a class="btn btn-default" href="{% round_url draw_display_by_venue %}">Display by Venue</a>
     <a class="btn btn-default" href="{% round_url draw_display_by_team %}">Display by Team</a>
     {% if round.draw_status = 10 %}
-        <button class="btn btn-default" id="release_draw">Release to Public</button>
+        <button class="btn btn-sucess" id="release_draw">Release to Public</button>
     {% elif round.draw_status = 99 %}
-        <button class="btn btn-default" id="unrelease_draw">Unrelease to Public</button>
+        <button class="btn btn-danger" id="unrelease_draw">Unrelease to Public</button>
     {% endif %}
 </div>
 {% endblock %}
