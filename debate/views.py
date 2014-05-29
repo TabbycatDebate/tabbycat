@@ -234,9 +234,10 @@ def tournament_home(request, t):
     }
     stats['in'] = stats['confirmed']
     stats['out'] = stats['none'] + stats['draft']
-    stats['pc'] = float(stats['in']) / (stats['out'] + stats['in']) * 100
-
-    round = 6
+    if (stats['out'] + stats['in']) > 0:
+        stats['pc'] = float(stats['in']) / (stats['out'] + stats['in']) * 100
+    else:
+        stats['pc'] = 0
 
     return r2r(request, 'tournament_home.html', dict(stats=stats, round=r))
 

@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% block head-title %}Dashboard <small>Round {{ round }} is
-    {% if round.draw_status == 1 %}Draft
+    {% if round.draw_status == 0 %}None
+    {% elif round.draw_status == 1 %}Draft
     {% elif round.draw_status == 10 %}Confirmed
     {% elif round.draw_status == 99 %}Released
 </small>{% endif %}
+
 {% endblock %}
 {% block page-title %}Dashboard{% endblock %}
 {% block body-class %}dash{% endblock %}
