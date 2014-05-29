@@ -41,7 +41,7 @@
                 Add feedback from {{ adj.name }}</a></td>
             {% if show_institutions > 0 %}
             <td>
-                {{ adj.institution }}
+                {{ adj.institution.code }}
             </td>
             {% endif %}
         </tr>
@@ -54,7 +54,7 @@
             </td>
             {% if show_institutions > 0 %}
             <td>
-                {{ team.institution }}
+                {{ team.institution.code }}
             </td>
             {% endif %}
         </tr>

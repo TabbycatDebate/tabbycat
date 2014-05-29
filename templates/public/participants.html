@@ -43,7 +43,7 @@
             <td class="team-name">
                 <span title="{{ person.team.speakers|join:', ' }}" data-toggle="tooltip">{{ person.team.short_name }}</span>
             </td>
-            <td>{{ person.team.institution }}</td>
+            <td>{{ person.team.institution.code }}</td>
     {% endfor %}
     {% for person in adjs %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">

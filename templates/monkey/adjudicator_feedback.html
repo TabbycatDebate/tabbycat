@@ -30,7 +30,7 @@
             <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
             <td>{{ adj.name }}</td>
             {% if show_institutions > 0 %}
-            <td>{{ adj.institution }}</td>
+            <td>{{ adj.institution.code }}</td>
             {% endif %}
         </tr>
         {% endfor %}

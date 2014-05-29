@@ -103,7 +103,7 @@
             </td>
             {% if show_institutions > 0 %}
             <td class="">
-                {{ entity.institution }} {{ entity.test }}
+                {{ entity.institution.code }} {{ entity.test }}
             </td>
             {% endif %}
         </tr>
@@ -126,7 +126,7 @@
                 </a>
             </td>
             <td class="">
-                {{ team.institution }}
+                {{ team.institution.code }}
             </td>
 
         </tr>

@@ -43,7 +43,7 @@
         <td>{{ speaker.name }}</td>
         <td>{{ speaker.team.short_name }}</td>
         {% if show_institutions > 0 %}
-            <td>{{ speaker.team.institution }}</td>
+            <td>{{ speaker.team.institution.code }}</td>
         {% endif %}
         {% for score in speaker.scores %}
         <td>{{ score|stringformat:".2f" }}</td>
