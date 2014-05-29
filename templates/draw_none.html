@@ -22,13 +22,12 @@ No draw currently exists
 {% endblock %}
 {% block header %}
 <div class="btn-group">
-    <a class="btn btn-success" id="createDraw">Create Draw for the following {{ active_teams|length }} teams</a>
+    <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
 </div>
 {% endblock %}
 
 {% block content %}
 
-<br>
 <div class="row">
     <div class="col-sm-12">
         <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>

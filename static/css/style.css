@@ -665,7 +665,7 @@ a.text-danger:hover {
     overflow: hidden; } }
 
 #header-options {
-  min-height: 40px;
+  min-height: 34px;
   margin-bottom: 20px; }
   #header-options #dataTable_filter, #header-options .btn-group {
     margin-right: 20px; }
