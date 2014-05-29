@@ -1009,14 +1009,6 @@ def get_adj_feedback(request, t):
 
 
 @tournament_view
-def public_enter_feedback_adjudicator(request, t, adj_id):
-    return public_enter_feedback(request, t, Adjudicator, adj_id)
-
-@tournament_view
-def public_enter_feedback_team(request, t, team_id):
-    return public_enter_feedback(request, t, Team, team_id)
-
-@tournament_view
 def public_enter_feedback(request, t, source_type, source_id):
 
     source = get_object_or_404(source_type, id=source_id)
@@ -1040,6 +1032,7 @@ def public_enter_feedback(request, t, source_type, source_id):
         form = forms.make_feedback_form_class_for_source(source, released_only=True, include_panellists=include_panellists)()
 
     return r2r(request, 'public/enter_feedback.html', dict(source_name=source_name, form=form))
+
 
 @login_required
 @tournament_view
