@@ -16,7 +16,7 @@ class BaseDraw(object):
             points = Sum('debateteam__teamscore__points'),
             speaker_score = Sum('debateteam__teamscore__score')
         ).order_by('-points', '-speaker_score')
-        self.teams = [TeamAtRound(team, round.prev) for team in teams]
+        self.teams = [TeamAtRound(team, round) for team in teams]
 
         if not len(self.teams) % 2 == 0:
             raise DrawError()

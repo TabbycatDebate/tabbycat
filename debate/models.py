@@ -86,15 +86,16 @@ class Institution(models.Model):
             return self.code[:5]
 
 class TeamManager(models.Manager):
-    def standings(self, round=None):
-        if round is None:
+    def standings(self, round):
+        # If we are on Round 1 (ie Round 0 is none)
+        if round.prev is None:
             teams = self.filter(
                 institution__tournament=round.tournament,
             )
         else:
             teams = self.filter(
-                institution__tournament=round.tournament,
-                debateteam__debate__round__seq__lte = round.seq,
+                institution__tournament=round.prev.tournament,
+                debateteam__debate__round__seq__lte = round.prev.seq,
             )
 
         # This is what might be more concisely expressed, if it were permissible
@@ -227,7 +228,8 @@ class Team(models.Model):
 
 def TeamAtRound(team, round):
     t = Team.objects.standings(round).get(id=team.id)
-    if round:
+    # This checks if we are on round 1 (ie if Round 0 is None)
+    if round.prev:
         setattr(t, 'aff_count', t.get_aff_count(round.seq))
         setattr(t, 'neg_count', t.get_neg_count(round.seq))
     return t
