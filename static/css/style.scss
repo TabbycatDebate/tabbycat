@@ -13,6 +13,7 @@
 
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
+// For the collapsedmdouble menu
 .navbar-nav {
     @media (max-width: 768px) {
         &.navbar-left {
@@ -46,6 +47,7 @@
         }
     }
 }
+
 #header-options {
     min-height: 34px; // Spacer pre-form relocation via JS
     margin-bottom: 20px;
@@ -54,6 +56,7 @@
         margin-right: 20px;
     }
 }
+
 #footer {
     margin-top: 40px;
     .navbar {
@@ -91,6 +94,10 @@
 }
 [data-toggle="tooltip"] {
     cursor: pointer // for tooltips
+}
+.alert-link {
+    text-decoration: underline;
+    font-weight: normal;
 }
 
 // Forms
@@ -220,9 +227,20 @@ table.dataTable {
     .venue, .adj {
         max-width: 300px;
     }
-    .venue-holder, .adj-holder {
+    .btn-holder {
         padding: 4px;
         border: 2px solid #ddd;
+    }
+    .importance {
+
+        width: 45px;
+        text-align: left;
+        form {
+            margin: -5px -6px;
+        }
+        select {
+            @extend .form-control;
+        }
     }
     .venue:hover, .adj:hover {
         cursor: move;
@@ -242,49 +260,6 @@ table.dataTable {
     .adj.conflict {
         color: red;
     }
-
-}
-
-// to sort
-
-.edit-adjs {
-
-    // .adj { display: block; background-color: #eee; white-space: nowrap; margin-right: 1em; cursor: move;}
-
-    // .adj:hover {background-color: #fafafa; }
-
-    // .panel-holder .adj { margin: 1px 0;}
-    // .adj span.info { margin: 0 5px; color: #44f;  }
-
-    // #scratch {
-    //     position: fixed;
-    //     top: 0;
-    //     right: 0;
-    //     background-color: #fea;
-    //     width: 300px;
-    //     height: 100%;
-    //     overflow-y: auto;
-    //     overflow-x: hidden;
-    // }
-    // .hover #unusedTable tbody td { background-color: #ffa; }
-    // #main {
-    //     width: 74%;
-    // }
-    // @media print {
-    //     #scratch { display:none; }
-    // }
-    // #scratch .adj { white-space: none; }
-    // #scratch .adj .info { display: none; }
-
-    // #unusedTable { width: 100%; }
-
-    // .incomplete { border: 1px solid #f84; }
-    // #dataTable .history-with-active { color: #f80; }
-    // #dataTable .conflict-with-active { color: red; }
-
-    // #loading {vertical-align: middle; position: fixed; left: 0; top: 0; width:100%; height:100%;
-    //     background-image:url("/static/images/80.png"); z-index: 100000; text-align: center;}
-    // #loading div {position: absolute; margin-left: 48%; top: 50%; width: 100px; background: #fff; padding: 20px;}
 
 }
 

@@ -451,7 +451,7 @@
             bFilter: false
         });
 
-        $('#dataTable td.importance').editable('{% round_url update_debate_importance %}', {
+        $('#dataTable .importance').editable('{% round_url update_debate_importance %}', {
             "callback": function(sValue, y) {
                 var aPos = dataTable.fnGetPosition(this);
                 dataTable.fnUpdate(sValue, aPos[0], aPos[1]);
@@ -493,7 +493,7 @@
 <div id="statusBar" class="btn-group">
     <a class="btn btn-default" href="#auto" id="auto_allocate">Auto Allocate</a>
     <a data-loading-text="Saving..." class="btn btn-success" href="" id="save">Save</a>
-    <a data-loading-text="Allocating..." class="btn btn-default" href="{% round_url draw %}">Quit</a>
+    <a data-loading-text="Allocating..." class="btn btn-danger" href="{% round_url draw %}">Quit</a>
 </div>
 
 <div id="statusBar" class="btn-group">
@@ -507,7 +507,7 @@
 
 <div class="row">
 
-    <div id="scratch" class="col-md-2">
+    <div id="scratch" class="col-xs-3">
         <div class="page-header">
             <h2>Unused</h2>
         </div>
@@ -523,7 +523,7 @@
         </table>
     </div>
 
-    <div id="main" class="col-md-10">
+    <div id="main" class="col-xs-9">
 
         <div id="alerts-holder"></div>
         <table id="dataTable" class=" table table-bordered" cellpadding="0" cellspacing="0">
@@ -543,9 +543,9 @@
                 <td>
                     {{ debate.bracket }}
                 </td>
-                <td class="importance">
+                <td class="btn-holder btn btn-default importance">
                     {% if debate.importance == None %}
-                        .NA
+                        n/a
                     {% else %}
                         {{ debate.importance }}
                     {% endif %}
@@ -556,11 +556,11 @@
                 <td id="team_{{ debate.neg_team.id }}" class="team">
                     <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.short_name }}</span>
                 </td>
-                <td id="chair_{{ debate.id }}" class="adj-holder chair-holder">
+                <td id="chair_{{ debate.id }}" class="btn-holder adj-holder chair-holder">
                 </td>
-                <td id="panel_{{ debate.id }}" class="adj-holder panel-holder">
+                <td id="panel_{{ debate.id }}" class="btn-holder adj-holder panel-holder">
                 </td>
-                <td id="trainees_{{ debate.id }}" class="adj-holder trainee-holder">
+                <td id="trainees_{{ debate.id }}" class="btn-holder adj-holder trainee-holder">
                 </td>
             </tr>
             {% endfor %}

@@ -345,7 +345,7 @@ output {
   line-height: 1.42857;
   color: #555555; }
 
-.form-control, .form-control-parent input {
+.form-control, .form-control-parent input, .edit-venues .importance select, .edit-adjs .importance select {
   display: block;
   width: 100%;
   height: 34px;
@@ -361,19 +361,19 @@ output {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s; }
-  .form-control:focus, .form-control-parent input:focus {
+  .form-control:focus, .form-control-parent input:focus, .edit-venues .importance select:focus, .edit-adjs .importance select:focus {
     border-color: #66afe9;
     outline: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6); }
-  .form-control::-moz-placeholder, .form-control-parent input::-moz-placeholder {
+  .form-control::-moz-placeholder, .form-control-parent input::-moz-placeholder, .edit-venues .importance select::-moz-placeholder, .edit-adjs .importance select::-moz-placeholder {
     color: #999999;
     opacity: 1; }
-  .form-control:-ms-input-placeholder, .form-control-parent input:-ms-input-placeholder {
+  .form-control:-ms-input-placeholder, .form-control-parent input:-ms-input-placeholder, .edit-venues .importance select:-ms-input-placeholder, .edit-adjs .importance select:-ms-input-placeholder {
     color: #999999; }
-  .form-control::-webkit-input-placeholder, .form-control-parent input::-webkit-input-placeholder {
+  .form-control::-webkit-input-placeholder, .form-control-parent input::-webkit-input-placeholder, .edit-venues .importance select::-webkit-input-placeholder, .edit-adjs .importance select::-webkit-input-placeholder {
     color: #999999; }
-  .form-control[disabled], .form-control-parent input[disabled], .form-control[readonly], .form-control-parent input[readonly], fieldset[disabled] .form-control, fieldset[disabled] .form-control-parent input, .form-control-parent fieldset[disabled] input {
+  .form-control[disabled], .form-control-parent input[disabled], .edit-venues .importance select[disabled], .edit-adjs .importance select[disabled], .form-control[readonly], .form-control-parent input[readonly], .edit-venues .importance select[readonly], .edit-adjs .importance select[readonly], fieldset[disabled] .form-control, fieldset[disabled] .form-control-parent input, .form-control-parent fieldset[disabled] input, fieldset[disabled] .edit-venues .importance select, .edit-venues .importance fieldset[disabled] select, fieldset[disabled] .edit-adjs .importance select, .edit-adjs .importance fieldset[disabled] select {
     cursor: not-allowed;
     background-color: #eeeeee;
     opacity: 1; }
@@ -473,7 +473,7 @@ select[multiple].input-lg {
 
 .has-feedback {
   position: relative; }
-  .has-feedback .form-control, .has-feedback .form-control-parent input, .form-control-parent .has-feedback input {
+  .has-feedback .form-control, .has-feedback .form-control-parent input, .form-control-parent .has-feedback input, .has-feedback .edit-venues .importance select, .edit-venues .importance .has-feedback select, .has-feedback .edit-adjs .importance select, .edit-adjs .importance .has-feedback select {
     padding-right: 42.5px; }
   .has-feedback .form-control-feedback {
     position: absolute;
@@ -492,11 +492,11 @@ select[multiple].input-lg {
 .has-success .radio-inline,
 .has-success .checkbox-inline {
   color: #3c763d; }
-.has-success .form-control, .has-success .form-control-parent input, .form-control-parent .has-success input {
+.has-success .form-control, .has-success .form-control-parent input, .form-control-parent .has-success input, .has-success .edit-venues .importance select, .edit-venues .importance .has-success select, .has-success .edit-adjs .importance select, .edit-adjs .importance .has-success select {
   border-color: #3c763d;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-success .form-control:focus, .has-success .form-control-parent input:focus, .form-control-parent .has-success input:focus {
+  .has-success .form-control:focus, .has-success .form-control-parent input:focus, .form-control-parent .has-success input:focus, .has-success .edit-venues .importance select:focus, .edit-venues .importance .has-success select:focus, .has-success .edit-adjs .importance select:focus, .edit-adjs .importance .has-success select:focus {
     border-color: #2b542c;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #67b168;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #67b168; }
@@ -514,11 +514,11 @@ select[multiple].input-lg {
 .has-warning .radio-inline,
 .has-warning .checkbox-inline {
   color: #8a6d3b; }
-.has-warning .form-control, .has-warning .form-control-parent input, .form-control-parent .has-warning input {
+.has-warning .form-control, .has-warning .form-control-parent input, .form-control-parent .has-warning input, .has-warning .edit-venues .importance select, .edit-venues .importance .has-warning select, .has-warning .edit-adjs .importance select, .edit-adjs .importance .has-warning select {
   border-color: #8a6d3b;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-warning .form-control:focus, .has-warning .form-control-parent input:focus, .form-control-parent .has-warning input:focus {
+  .has-warning .form-control:focus, .has-warning .form-control-parent input:focus, .form-control-parent .has-warning input:focus, .has-warning .edit-venues .importance select:focus, .edit-venues .importance .has-warning select:focus, .has-warning .edit-adjs .importance select:focus, .edit-adjs .importance .has-warning select:focus {
     border-color: #66512c;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c0a16b;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c0a16b; }
@@ -536,11 +536,11 @@ select[multiple].input-lg {
 .has-error .radio-inline,
 .has-error .checkbox-inline {
   color: #a94442; }
-.has-error .form-control, .has-error .form-control-parent input, .form-control-parent .has-error input {
+.has-error .form-control, .has-error .form-control-parent input, .form-control-parent .has-error input, .has-error .edit-venues .importance select, .edit-venues .importance .has-error select, .has-error .edit-adjs .importance select, .edit-adjs .importance .has-error select {
   border-color: #a94442;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-error .form-control:focus, .has-error .form-control-parent input:focus, .form-control-parent .has-error input:focus {
+  .has-error .form-control:focus, .has-error .form-control-parent input:focus, .form-control-parent .has-error input:focus, .has-error .edit-venues .importance select:focus, .edit-venues .importance .has-error select:focus, .has-error .edit-adjs .importance select:focus, .edit-adjs .importance .has-error select:focus {
     border-color: #843534;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483; }
@@ -565,11 +565,11 @@ select[multiple].input-lg {
     display: inline-block;
     margin-bottom: 0;
     vertical-align: middle; }
-  .form-inline .form-control, .form-inline .form-control-parent input, .form-control-parent .form-inline input {
+  .form-inline .form-control, .form-inline .form-control-parent input, .form-control-parent .form-inline input, .form-inline .edit-venues .importance select, .edit-venues .importance .form-inline select, .form-inline .edit-adjs .importance select, .edit-adjs .importance .form-inline select {
     display: inline-block;
     width: auto;
     vertical-align: middle; }
-  .form-inline .input-group > .form-control, .form-inline .form-control-parent .input-group > input, .form-control-parent .form-inline .input-group > input {
+  .form-inline .input-group > .form-control, .form-inline .form-control-parent .input-group > input, .form-control-parent .form-inline .input-group > input, .form-inline .edit-venues .importance .input-group > select, .edit-venues .importance .form-inline .input-group > select, .form-inline .edit-adjs .importance .input-group > select, .edit-adjs .importance .form-inline .input-group > select {
     width: 100%; }
   .form-inline .control-label {
     margin-bottom: 0;
@@ -700,6 +700,10 @@ a.text-danger:hover {
 [data-toggle="tooltip"] {
   cursor: pointer; }
 
+.alert-link {
+  text-decoration: underline;
+  font-weight: normal; }
+
 input.error, select.error, .error input {
   border-color: #a94442;
   color: #a94442;
@@ -782,9 +786,14 @@ table.dataTable {
     display: none; }
 .edit-venues .venue, .edit-venues .adj, .edit-adjs .venue, .edit-adjs .adj {
   max-width: 300px; }
-.edit-venues .venue-holder, .edit-venues .adj-holder, .edit-adjs .venue-holder, .edit-adjs .adj-holder {
+.edit-venues .btn-holder, .edit-adjs .btn-holder {
   padding: 4px;
   border: 2px solid #ddd; }
+.edit-venues .importance, .edit-adjs .importance {
+  width: 45px;
+  text-align: left; }
+  .edit-venues .importance form, .edit-adjs .importance form {
+    margin: -5px -6px; }
 .edit-venues .venue:hover, .edit-venues .adj:hover, .edit-adjs .venue:hover, .edit-adjs .adj:hover {
   cursor: move; }
 .edit-venues .border-success, .edit-adjs .border-success {
