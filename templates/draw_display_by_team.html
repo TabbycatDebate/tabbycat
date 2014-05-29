@@ -53,7 +53,7 @@
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td>{{ debate.aff_team.short_name }}</td>
             <td class="venue-name">
-                {{ debate.venue_splitname }}
+                {{ debate.venue.name }}
             </td>
             {% if show_emoji > 0 %}
                 <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
@@ -86,7 +86,7 @@
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td>{{ debate.neg_team.short_name }}</td>
             <td class="venue-name">
-                {{ debate.venue_splitname }}
+                {{ debate.venue.name }}
             </td>
             <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
             <td class="team-name">

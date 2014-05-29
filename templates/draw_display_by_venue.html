@@ -52,7 +52,7 @@
         {% for debate in draw %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td class="venue-name">
-                {{ debate.venue_splitname }}
+                {{ debate.venue.name }}
             </td>
             {% if show_emoji > 0 %}
                 <td class="team-emoji team-{{ debate.aff_team.id }}"></td>
