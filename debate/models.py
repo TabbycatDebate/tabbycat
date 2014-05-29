@@ -915,7 +915,7 @@ class Debate(models.Model):
     @property
     def venue_splitname(self):
         # Formatting venue names so they can split over multiple lines
-        match = re.match(r"([a-z]+)([0-9]+)", str(self.venue), re.I)
+        match = re.match(r"([a-z]+)([0-9]+)", str(self.venue.name), re.I)
         if match:
             items = match.groups()
             if len(items[1]) > 3:
@@ -923,7 +923,7 @@ class Debate(models.Model):
             else:
                 alloc = u'%s %s' % (items[0], items[1])
         else:
-            alloc = self.venue
+            alloc = self.venue.name
 
         return alloc
 

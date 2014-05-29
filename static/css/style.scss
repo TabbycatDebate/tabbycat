@@ -208,6 +208,9 @@ table.dataTable {
 // Editing the Draw
 
 .edit-venues, .edit-adjs {
+    table {
+        border-collapse: separate;
+    }
     #container {
        min-height: 1000px;
     }

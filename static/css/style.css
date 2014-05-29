@@ -773,6 +773,8 @@ table.dataTable {
   margin-left: 0;
   list-style-type: none; }
 
+.edit-venues table, .edit-adjs table {
+  border-collapse: separate; }
 .edit-venues #container, .edit-adjs #container {
   min-height: 1000px; }
 .edit-venues .btn-default.text-left, .edit-adjs .btn-default.text-left {
