@@ -137,7 +137,7 @@ At present the ```import_tournament``` script does not work on Heroku. For now, 
 
 1. Tabs can be released using the *Tab released* option under configuration. Note that you probably want to turn off the *Public ballots*, *Public feedback*, *Feedback progress*, and *Public draw* options at this stage.
 
-## Licensing and development
+## Licensing and Development
 
 We haven't released this under an open-source licence (so there is no formal general right to use this software), but if you're running a debating tournament, you're welcome to use it. It'd be nice if you could please let us know that you're doing so, and let us know how it went. [Our Facebook group](https://www.facebook.com/groups/tabbycat.debate/) is a great place to start. We're happy to help if you have any questions (contact below), though obviously we provide no warranty and disclaim all legal liability. Pull requests are encouraged.
 
