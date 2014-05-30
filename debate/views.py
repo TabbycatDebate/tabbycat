@@ -1065,7 +1065,7 @@ def enter_feedback(request, t, adjudicator_id):
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
-                user=user, adjudicator_feedback=adj_feedback)
+                user=request.user, adjudicator_feedback=adj_feedback)
             return redirect_tournament('adj_feedback', t)
     else:
         form = forms.make_feedback_form_class(adj)()
