@@ -1,10 +1,6 @@
 """Makes BallotSubmission status consistent with debate statuses."""
 
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.environ.get("VIRTUAL_ENV"), "..")))
-
+import header
 import debate.models as m
 
 import argparse

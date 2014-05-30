@@ -1,9 +1,6 @@
 """Adds a randomly generated ballot set to the given debate."""
 
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.environ.get("VIRTUAL_ENV"), "..")))
+import header
 import debate.models as m
 from django.contrib.auth.models import User
 from debate.result import BallotSet
@@ -90,7 +87,10 @@ if __name__ == "__main__":
 
     submitter_type = SUBMITTER_TYPE_MAP[args.type]
     debate = m.Debate.objects.get(id=args.debate)
-    user = User.objects.get(username=args.user)
+    if submitter_type == m.BallotSubmission.SUBMITTER_TABROOM:
+        user = User.objects.get(username=args.user)
+    else:
+        user = None
 
     print debate
 

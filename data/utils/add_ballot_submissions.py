@@ -9,10 +9,7 @@ Use this when migrating from a database that has no BallotSubmissions.
 This requires a user called "original" to exist. You need to set this up
 before running the script if you don't have one.
 """
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.environ.get("VIRTUAL_ENV"), "..")))
+import header
 import debate.models as m
 from django.contrib.auth.models import User
 

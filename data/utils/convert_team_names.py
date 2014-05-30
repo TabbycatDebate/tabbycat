@@ -1,7 +1,6 @@
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.environ.get("VIRTUAL_ENV"), "..")))
+"""Changes team names from e.g. 'Auckland 1' to '1'."""
+
+import header
 import debate.models as m
 
 import argparse

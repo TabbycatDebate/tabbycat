@@ -1,13 +1,12 @@
 """Generates randomly generated results for a given round.
 Requires a draw to exist."""
 
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.environ.get("VIRTUAL_ENV"), "..")))
+import header
 import debate.models as m
-from django.contrib.auth.models import User
 
+# Script starts here
+
+from django.contrib.auth.models import User
 from add_ballot_set import add_ballot_set, SUBMITTER_TYPE_MAP
 
 import argparse
