@@ -559,15 +559,9 @@ def update_debate_importance(request, round):
 @admin_required
 @round_view
 def motions(request, round):
-    motions = [];
+    motions = list()
 
-    rounds = Round.objects.filter(tournament=round.tournament,
-                                  seq__lte=round.seq).order_by('seq')
-
-    for r in rounds:
-        r_motions = Motion.objects.statistics(round=r)
-        for m in r_motions:
-            motions.append(m)
+    motions = Motion.objects.statistics(round=round)
 
     return r2r(request, "motions.html", dict(motions=motions))
 
@@ -777,6 +771,8 @@ def speaker_standings(request, round):
                                   seq__lte=round.seq).order_by('seq')
     speakers = Speaker.objects.standings(round)
 
+    # TODO is there a way to do this without so many database hits?
+    # Maybe using a select subquery?
     from debate.models import SpeakerScore
     def get_score(speaker, r):
         try:
@@ -786,6 +782,21 @@ def speaker_standings(request, round):
                 debate_team__debate__round=r,
                 position__lte=3).score
         except SpeakerScore.DoesNotExist:
+            return None
+
+        # This was an issue once, not sure how, but if it ever happens,
+        # fail gracefully.
+        except SpeakerScore.MultipleObjectsReturned:
+            print("Multiple speaker scores seen for speaker {0:s} in round {1:d}:".format(
+                speaker.name, r.seq))
+            for score in SpeakerScore.objects.filter(
+                ballot_submission__confirmed=True,
+                speaker=speaker,
+                debate_team__debate__round=r,
+                position__lte=3):
+                print("   {dt:s}\n        position {pos:d}, ballot submission ID {id:d} (version {v:d}): score {score}".format(
+                    dt=score.debate_team, pos=score.position, id=score.ballot_submission.id,
+                    v=score.ballot_submission.version, score=score.score))
             return None
 
     for speaker in speakers:
@@ -1149,7 +1160,7 @@ def post_ballot_checkin(request, round):
 
     obj['success'] = True
     obj['venue'] = debate.venue.name
-    obj['debate_description'] = debate.aff_team.name + " vs " + debate.neg_team.name
+    obj['debate_description'] = debate.aff_team.short_name + " vs " + debate.neg_team.short_name
 
     obj['ballots_left'] = ballot_checkin_number_left(round)
 

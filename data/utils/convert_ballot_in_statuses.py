@@ -4,10 +4,7 @@ Debate.ballot_in = True with Debate.result_status = STATUS_NONE.
 Only run this script after migrating.
 """
 
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.environ.get("VIRTUAL_ENV"), "..")))
+import header
 import debate.models as m
 
 import argparse
