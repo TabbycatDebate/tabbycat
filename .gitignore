@@ -1,6 +1,7 @@
 local_settings.py
 staticfiles/
-migrations/
+migrations
+migrations-*/
 adam2014/
 .sass-cache/
 
