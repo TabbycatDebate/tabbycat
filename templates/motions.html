@@ -35,22 +35,22 @@
         <th>Reference</th>
         <th>Motion</th>
         <th>Chosen</th>
-        <th>Affs wins</th>
-        <th>Affs win%</th>
-        <th>Negs wins</th>
-        <th>Negs win%</th>
+        <th>Aff wins</th>
+        <th>Neg wins</th>
+        <th>Aff win%</th>
+        <th>Neg win%</th>
     </tr>
     </thead>
     <tbody>
     {% for motion in motions %}
     <tr>
-        <td>{{ motion.round }}</td>
+        <td>R{{ motion.round }}</td>
         <td>{{ motion.reference }}</td>
         <td>{{ motion.text }}</td>
         <td>{{ motion.chosen_in }}</td>
         <td>{{ motion.aff_wins }}</td>
-        <td>{{ motion.aff_wins_percent }}%</td>
         <td>{{ motion.neg_wins }}</td>
+        <td>{{ motion.aff_wins_percent }}%</td>
         <td>{{ motion.neg_wins_percent }}%</td>
     </tr>
     {% endfor %}

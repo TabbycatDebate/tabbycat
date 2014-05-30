@@ -32,7 +32,6 @@
             {% endif %}
         </tr>
     </thead>
-
     <tbody>
         {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">
@@ -58,7 +57,8 @@
             </td>
             {% endif %}
         </tr>
-        {% endfor %}    </tbody>
+        {% endfor %}
+    </tbody>
 </table>
 
 {% endblock content %}
