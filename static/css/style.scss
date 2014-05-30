@@ -203,7 +203,9 @@ table.dataTable {
 // Draw displays
 
 #draw.dataTable {
-
+    td {
+        padding-bottom: 0;
+    }
     .adj-names {
         ul {
             padding-left: 0px;

@@ -775,6 +775,8 @@ table.dataTable {
 .modal-lg {
   width: 90%; }
 
+#draw.dataTable td {
+  padding-bottom: 0; }
 #draw.dataTable .adj-names ul {
   padding-left: 0px;
   margin-left: 0;
