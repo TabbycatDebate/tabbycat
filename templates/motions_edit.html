@@ -66,10 +66,14 @@
         {% endfor %}
 
         <div class="form-group">
-            <div class="col-sm-offset-1 col-sm-6">
-                <input class="btn btn-success" type="submit" name="submit" value="Save" />
-                <input class="btn btn-success" type="submit" name="submit_add_more" value="Save and add more" />
-                <a class="btn btn-default" href="{% round_url motions %}">Cancel</a>
+            <div class="col-sm-2 col-sm-offset-1">
+                <input class="btn btn-success form-control" type="submit" name="submit" value="Save" />
+            </div>
+            <div class="col-sm-2">
+                <input class="btn btn-success form-control" type="submit" name="submit_add_more" value="Save and add more" />
+            </div>
+            <div class="col-sm-2">
+                <a class="btn btn-danger form-control" href="{% round_url motions %}">Cancel</a>
             </div>
         </div>
 

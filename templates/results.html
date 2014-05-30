@@ -18,11 +18,24 @@
 
 {% block header %}
 <div class="btn-group">
-    <button class="btn btn-default btn-danger"><span class="label none">{{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span></span></button>
-    <button class="btn btn-default btn-warning"><span class="label ballotin">{{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span></span></button>
-    <button class="btn btn-default btn-info"><span class="label unconfirmed">{{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span></span></button>
-    <button class="btn btn-default btn-success"><span class="label confirmed">{{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span></span></button>
+    <button class="btn btn-default btn-danger"><span class="label none">
+        {{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span></span>
+    </button>
+    <button class="btn btn-default btn-warning"><span class="label ballotin">
+        {{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span></span>
+    </button>
+    <button class="btn btn-default btn-info"><span class="label unconfirmed">
+        {{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span></span>
+    </button>
+    <button class="btn btn-default btn-success"><span class="label confirmed">
+        {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span></span>
+    </button>
 </div>
+<!-- <div class="btn-group">
+    <a class="btn btn-default form-control btn-success" href="{% round_url confirm_increment %}">
+        Proceed to Next Round
+    </a>
+</div> -->
 {% endblock %}
 
 {% block content %}
@@ -37,7 +50,9 @@
             <th>Affirmative</th>
             <th>Negative</th>
             <th>Adjudicators</th>
-            {% if show_motions_column %}<th>Motion</th>{% endif %}
+            {% if show_motions_column %}
+                <th>Motion</th>
+            {% endif %}
         </tr>
     </thead>
 

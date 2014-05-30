@@ -84,6 +84,11 @@ urlpatterns = patterns('debate.views',
         'update_debate_importance',
         name='update_debate_importance'),
 
+    url(r'^round/(?P<round_seq>\d+)/confirm_increment/$', 'confirm_increment',
+        name='confirm_increment'),
+    url(r'^round/(?P<round_seq>\d+)/increment_round/$', 'increment_round',
+        name='increment_round'),
+
     url(r'^round/(?P<round_seq>\d+)/adj_allocation/create/$',
         'create_adj_allocation',
         name='create_adj_allocation'),

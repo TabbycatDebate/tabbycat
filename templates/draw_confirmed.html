@@ -50,14 +50,14 @@
 
 {% block header %}
 <div class="btn-group">
-    <a class="btn btn-default" href="{% round_url draw_venues_edit %}">Edit Venues</a>
-    <a class="btn btn-default" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
-    <a class="btn btn-default" href="{% round_url draw_display_by_venue %}">Display by Venue</a>
-    <a class="btn btn-default" href="{% round_url draw_display_by_team %}">Display by Team</a>
+    <a class="btn btn-default form-control" href="{% round_url draw_venues_edit %}">Edit Venues</a>
+    <a class="btn btn-default form-control" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
+    <a class="btn btn-default form-control" href="{% round_url draw_display_by_venue %}">Display by Venue</a>
+    <a class="btn btn-default form-control" href="{% round_url draw_display_by_team %}">Display by Team</a>
     {% if round.draw_status = 10 %}
-        <button class="btn btn-success" id="release_draw">Release to Public</button>
+        <button class="btn btn-success form-control" id="release_draw">Release to Public</button>
     {% elif round.draw_status = 99 %}
-        <button class="btn btn-danger" id="unrelease_draw">Unrelease to Public</button>
+        <button class="btn btn-danger form-control" id="unrelease_draw">Unrelease to Public</button>
     {% endif %}
 </div>
 {% endblock %}

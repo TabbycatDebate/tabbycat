@@ -121,9 +121,9 @@
                 {{ team.submitted_ballots }}
             </td>
             <td>
-                <a title="{{ team.speakers|join:", " }}" data-toggle="tooltip" class="entity" href="#">
+                <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" class="entity" href="#">
                     {{ team.short_name }}
-                </a>
+                </span>
                <span class="hidden">
                    {{ team.speakers|join:', ' }}
                </span>

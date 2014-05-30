@@ -215,9 +215,6 @@ def public_feedback_tab(request, t):
     else:
         return r2r(request, 'public_index.html')
 
-
-
-
 @login_required
 @tournament_view
 def tournament_home(request, t):
@@ -322,6 +319,24 @@ def draw_index(request, t):
 def round_index(request, round):
     return r2r(request, 'round_index.html')
 
+@admin_required
+@round_view
+def confirm_increment(request, round):
+    draw = round.get_draw()
+    stats = {
+        'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
+        'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
+        'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
+        'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
+    }
+    return r2r(request, "round_increment.html", dict(stats=stats))
+
+@admin_required
+@expect_post
+@round_view
+def increment_round(request, round):
+
+    return redirect_round('draw', round)
 
 @round_view
 def checkin(request, round):
@@ -445,19 +460,16 @@ def draw(request, round):
 
 
 def draw_none(request, round):
-
     active_teams = round.active_teams.all()
     return r2r(request, "draw_none.html", dict(active_teams=active_teams))
 
 
 def draw_draft(request, round):
-
     draw = round.get_draw()
     return r2r(request, "draw_draft.html", dict(draw=draw))
 
 
 def draw_confirmed(request, round):
-
     draw = round.get_draw()
     return r2r(request, "draw_confirmed.html", dict(draw=draw))
 
@@ -516,6 +528,8 @@ def unrelease_draw(request, round):
         user=request.user, round=round)
 
     return redirect_round('draw', round)
+
+
 
 @admin_required
 @expect_post
