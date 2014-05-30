@@ -68,35 +68,40 @@
 
 <body id="{% block body-id %}{% endblock %}" class="{% block body-class %}{% endblock %}">
 
-    {% block body %}
+    <div id="wrap">
 
-    {% block nav %}
-    {% include "nav.html" %}
-    {% endblock nav %}
+        {% block body %}
 
-    <div id="container" class="container-fluid">
+        {% block nav %}
+        {% include "nav.html" %}
+        {% endblock nav %}
 
-        <div class="row page-header">
-            <div class="col-md-12">
-                <h1 class="h2">{% block head-title %}{% endblock %}</h1>
+        <div id="container" class="container-fluid">
+
+            <div class="row page-header">
+                <div class="col-md-12">
+                    <h1 class="h2">{% block head-title %}{% endblock %}</h1>
+                </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12 form-inline" id="header-options">
+                    {% block header %}{% endblock %}
+                </div>
+            </div>
+
+            {% block content %}{% endblock content %}
+
         </div>
 
-        <div class="row">
-            <div class="col-md-12 form-inline" id="header-options">
-                {% block header %}{% endblock %}
-            </div>
-        </div>
-
-        {% block content %}{% endblock content %}
+        {% endblock body %}
 
     </div>
-
-    {% endblock body %}
 
     {% block footer %}
     {% include "footer.html" %}
     {% endblock footer %}
+
 
 </body>
 </html>
