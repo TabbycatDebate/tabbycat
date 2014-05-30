@@ -1160,7 +1160,7 @@ def post_ballot_checkin(request, round):
 
     obj['success'] = True
     obj['venue'] = debate.venue.name
-    obj['debate_description'] = debate.aff_team.name + " vs " + debate.neg_team.name
+    obj['debate_description'] = debate.aff_team.short_name + " vs " + debate.neg_team.short_name
 
     obj['ballots_left'] = ballot_checkin_number_left(round)
 
