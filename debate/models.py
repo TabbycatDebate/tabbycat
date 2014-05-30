@@ -1227,13 +1227,22 @@ class MotionManager(models.Manager):
         if round is None:
             motions = self.all()
         else:
-            motions = self.filter(round=round)
+            motions = self.filter(round__seq__lte=round.seq)
 
-        motions = motions.filter(
-            ballotsubmission__confirmed = True
-        ).annotate(
-            chosen_in = models.Count('ballotsubmission')
-        )
+        #motions = motions.filter(
+            #ballotsubmission__confirmed = True
+        #).annotate(
+            #chosen_in = models.Count('ballotsubmission')
+        #)
+        # Need to do it using extra() in order to include the motions that haven't been done,
+        # otherwise filter() leaves them out.
+        motions = motions.extra({"chosen_in": """
+                SELECT COUNT (*)
+                FROM "debate_ballotsubmission"
+                WHERE "debate_ballotsubmission"."confirmed" = True
+                AND "debate_ballotsubmission"."motion_id" = "debate_motion"."id"
+            """,
+        })
 
         # TODO is there a more efficient way to do this?
         for motion in motions:
