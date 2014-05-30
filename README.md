@@ -15,14 +15,6 @@ If you're interested in using, developing or otherwise following this software,
 - Optional online ballot submission
 - Optional online post-tournament tab display
 
-## Demo Page
-
-*TODO*
-
-## Screenshots
-
-*TODO*
-
 ## Installing Tabby Cat
 
 #### Setup on Linux or OS X
@@ -121,6 +113,14 @@ At present the ```import_tournament``` script does not work on Heroku. For now, 
 
 1. After importing all your data, log into the site as an admin, and view the tournament configuration page. Adjust the speaker ranges and interface options to your liking.
 2. Go to the /admin/ area to add any users that should have access to data-entry functions, but not the main tab backend. These should have *Active* and *Staff status* ticked.
+
+#### In the Briefing
+
+Some things you should probably mention in the briefing if using the online submissions feature:
+
+- Adjudicators must fill out ballots completely, including motions and venues - they are entered into the system.
+- There is a static URL for each person's ballots and feedback forms. It can be bookmarked, or the page can refreshed after each round.
+- If people submit a result or feedback online, they should indicate that they have done so on the paper copy of their ballot.
 
 #### Running a Round
 
