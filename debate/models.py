@@ -250,6 +250,9 @@ class SpeakerManager(models.Manager):
                 speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
             )
 
+        # TODO is there a way to add round scores without so many database hits?
+        # Maybe using a select subquery?
+
         # This is what might be more concisely expressed, if it were permissible
         # in Django, as:
         # speakers = speakers.annotate_if(
