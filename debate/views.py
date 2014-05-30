@@ -235,7 +235,7 @@ def tournament_home(request, t):
     stats['in'] = stats['confirmed']
     stats['out'] = stats['none'] + stats['draft']
     if (stats['out'] + stats['in']) > 0:
-        stats['pc'] = float(stats['in']) / (stats['out'] + stats['in']) * 100
+        stats['pc'] = int(float(stats['in']) / (stats['out'] + stats['in']) * 100)
     else:
         stats['pc'] = 0
 

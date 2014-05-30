@@ -22,15 +22,15 @@
 
 {% block content %}
 
-<div class="col-sm-4">
-    <h4>Tab Progress is at {{ stats.pc }}%</h4>
-    <img src="http://chart.apis.google.com/chart?cht=p&chs=500x250&chd=t:{{ stats.out }},{{ stats.in }}&chl=Outstanding|Entered&chco=FF0000,00FF00" />
+<div class="col-sm-3">
+    <h4>{{ stats.pc }}% of Ballots in</h4>
+    <img class="img-responsive" src="http://chart.apis.google.com/chart?cht=p&chs=500x500&chd=t:{{ stats.out }},{{ stats.in }}&chco=d9534f,5cb85c" />
 </div>
-<div class="col-sm-4">
-    <h4>Col2 - speaks/time?</h4>
+<div class="col-sm-3 col-sm-offset-1">
+    <h4>Average Speaks</h4>
 </div>
-<div class="col-sm-4">
-    <h4>Col3 - motion choices?</h4>
+<div class="col-sm-3 col-sm-offset-1">
+    <h4>Motion Selections</h4>
 </div>
 
 
