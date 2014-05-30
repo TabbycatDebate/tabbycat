@@ -124,6 +124,9 @@
                 <a title="{{ team.speakers|join:", " }}" data-toggle="tooltip" class="entity" href="#">
                     {{ team.short_name }}
                 </a>
+               <span class="hidden">
+                   {{ team.speakers|join:', ' }}
+               </span>
             </td>
             <td class="">
                 {{ team.institution.code }}

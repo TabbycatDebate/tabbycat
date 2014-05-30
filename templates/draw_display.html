@@ -49,10 +49,20 @@
                 {{ debate.venue.name }}
             </td>
             <td title="{% aff_count debate.aff_team round.prev %}" class="team-name" id="{{ debate.aff_team.id }}">
-                {{ debate.aff_team.short_name }}
+                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                    {{ debate.aff_team.short_name }}
+                </span>
+                <span class="hidden">
+                   {{ debate.aff_team.speakers|join:', ' }}
+                </span>
             </td>
             <td title="{% neg_count debate.neg_team round.prev %}" class="team-name" id="{{ debate.neg_team.id }}">
-                {{ debate.neg_team.short_name }}
+                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                    {{ debate.neg_team.short_name }}
+                </span>
+                <span class="hidden">
+                   {{ debate.neg_team.speakers|join:', ' }}
+                </span>
             </td>
             <td class="adj-names">
                 <ul class="">

@@ -551,10 +551,20 @@
                     {% endif %}
                 </td>
                 <td id="team_{{ debate.aff_team.id }}" class="team">
-                    <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.aff_team.short_name }}</span>
+                    <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                        {{ debate.aff_team.short_name }}
+                    </span>
+                    <span class="hidden">
+                       {{ debate.aff_team.speakers|join:', ' }}
+                    </span>
                 </td>
                 <td id="team_{{ debate.neg_team.id }}" class="team">
-                    <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.short_name }}</span>
+                    <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                        {{ debate.neg_team.short_name }}
+                    </span>
+                    <span class="hidden">
+                       {{ debate.neg_team.speakers|join:', ' }}
+                    </span>
                 </td>
                 <td id="chair_{{ debate.id }}" class="btn-holder adj-holder chair-holder">
                 </td>
