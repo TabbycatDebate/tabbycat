@@ -1,8 +1,8 @@
-from django.utils.datastructures import SortedDict
+from collections import OrderedDict
 from django.forms import Select
 
 #name,  coerce, help, default
-SETTINGS = SortedDict([
+SETTINGS = OrderedDict([
     ('score_min',                  (float, 'Minimum allowed score',                               68)),
     ('score_max',                  (float, 'Maximum allowed score',                               82)),
     ('score_step',                 (float, 'Score steps allowed',                                 1)),
@@ -64,7 +64,7 @@ def make_config_form(tournament, data=None):
         else:
             raise TypeError
 
-    fields = SortedDict()
+    fields = OrderedDict()
     initial_data = {}
     for name, (coerce, help, default) in SETTINGS.items():
         fields[name] = _field(coerce, help)
