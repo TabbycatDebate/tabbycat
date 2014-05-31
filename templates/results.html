@@ -112,9 +112,9 @@
             <td>{{ debate.venue.name }}</td>
 
             <td class="">
-                {% if debate.result.aff_win == 1 %}
+                {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-up text-success"></span>
-                {% elif debate.result.neg_win == 1 %}
+                {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
                 <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
@@ -123,15 +123,19 @@
             </td>
 
             <td class="">
-                {% if debate.result.neg_win == 1 %}
+                {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-up text-success"></span>
-                {% elif debate.result.aff_win == 1 %}
+                {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
                     <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
                 <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
-            <td>{{ debate.adjudicators_display }}</td>
+            <td>
+                {% for adj_display, split in debate.confirmed_ballot.ballot_set.adjudicator_results_display %}
+                    {{ adj_display }}{% if split %} <span class="glyphicon glyphicon-resize-full text-danger"></span>{% endif %}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            </td>
 
             {% if show_motions_column %}
                 <td class="">{{ debate.confirmed_ballot.motion.reference }}</td>
