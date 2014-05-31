@@ -29,7 +29,6 @@ urlpatterns = patterns('debate.views',
     url(r'^public/tab/speaker_tab/$', 'public_speaker_tab', name='public_speaker_tab'),
     url(r'^public/tab/replies_tab/$', 'public_replies_tab', name='public_replies_tab'),
     url(r'^public/tab/motions_tab/$', 'public_motions_tab', name='public_motions_tab'),
-    url(r'^public/tab/feedback_tab/$', 'public_feedback_tab', name='public_feedback_tab'),
 
     url(r'^round/(?P<round_seq>\d+)/venues/$',
         'availability', { 'model': 'venue', 'context_name': 'venues' }, 'venue_availability'),

@@ -183,37 +183,128 @@ def public_feedback_progress(request, t):
 @tournament_view
 def public_team_tab(request, t):
     if request.tournament.config.get('tab_released') > 0:
-        return r2r(request, 'public/team_tab.html')
+        round = t.current_round
+        from debate.models import TeamScore
+        teams = Team.objects.standings(round)
+
+        rounds = Round.objects.filter(tournament=round.tournament,
+                                      seq__lte=round.seq).order_by('seq')
+
+        def get_score(team, r):
+            try:
+                ts = TeamScore.objects.get(
+                    ballot_submission__confirmed=True,
+                    debate_team__team=team,
+                    debate_team__debate__round=r,
+                )
+                return ts.score, ts.points
+            except TeamScore.DoesNotExist:
+                return None
+
+        for team in teams:
+            setattr(team, 'results_in', get_score(team, round) is not None)
+            team.scores = [get_score(team, r) for r in rounds]
+
+        return r2r(request, 'public/team_tab.html', dict(teams=teams,
+                                                         rounds=rounds,
+                                                         round=round))
     else:
         return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_speaker_tab(request, t):
     if request.tournament.config.get('tab_released') > 0:
-        return r2r(request, 'public/speaker_tab.html')
+        round = t.current_round
+        rounds = Round.objects.filter(tournament=round.tournament,
+                                      seq__lte=round.seq).order_by('seq')
+        speakers = Speaker.objects.standings(round)
+
+        # TODO is there a way to do this without so many database hits?
+        # Maybe using a select subquery?
+        from debate.models import SpeakerScore
+        def get_score(speaker, r):
+            try:
+                return SpeakerScore.objects.get(
+                    ballot_submission__confirmed=True,
+                    speaker=speaker,
+                    debate_team__debate__round=r,
+                    position__lte=3).score
+            except SpeakerScore.DoesNotExist:
+                return None
+
+            # This was an issue once, not sure how, but if it ever happens,
+            # fail gracefully.
+            except SpeakerScore.MultipleObjectsReturned:
+                print("Multiple speaker scores seen for speaker {0:s} in round {1:d}:".format(
+                    speaker.name, r.seq))
+                for score in SpeakerScore.objects.filter(
+                    ballot_submission__confirmed=True,
+                    speaker=speaker,
+                    debate_team__debate__round=r,
+                    position__lte=3):
+                    print("   {dt:s}\n        position {pos:d}, ballot submission ID {id:d} (version {v:d}): score {score}".format(
+                        dt=score.debate_team, pos=score.position, id=score.ballot_submission.id,
+                        v=score.ballot_submission.version, score=score.score))
+                return None
+
+        for speaker in speakers:
+            speaker.scores = [get_score(speaker, r) for r in rounds]
+            speaker.results_in = get_score(speaker, round) is not None
+
+        return r2r(request, 'public/speaker_tab.html', dict(speakers=speakers,
+                                                            rounds=rounds,
+                                                            round=round))
     else:
         return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_replies_tab(request, t):
     if request.tournament.config.get('tab_released') > 0:
-        return r2r(request, 'public/reply_tab.html')
+        round = t.current_round
+        rounds = Round.objects.filter(tournament=round.tournament,
+                                      seq__lte=round.seq).order_by('seq')
+        speakers = Speaker.objects.reply_standings(round)
+
+        from debate.models import SpeakerScore
+        def get_score(speaker, r):
+            try:
+                return SpeakerScore.objects.get(
+                    ballot_submission__confirmed=True,
+                    speaker=speaker,
+                    debate_team__debate__round=r,
+                    position=4).score
+            except SpeakerScore.DoesNotExist:
+                return None
+
+        for speaker in speakers:
+            speaker.scores = [get_score(speaker, r) for r in rounds]
+            try:
+                # TODO detect if the speaker's *team's* ballot has been entered
+                # for this round, and set results_in accordingly.
+                #SpeakerScore.objects.get(speaker=speaker,
+                                         #debate_team__debate__round=r,
+                                         #position=4)
+                speaker.results_in = True
+            except SpeakerScore.DoesNotExist:
+                speaker.results_in = False
+
+        return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,
+                                                          rounds=rounds,
+                                                          round=round))
     else:
         return r2r(request, 'public/index.html')
 
 @tournament_view
 def public_motions_tab(request, t):
     if request.tournament.config.get('tab_released') > 0:
-        return r2r(request, 'public/motions_tab.html')
+        round = t.current_round
+        rounds = Round.objects.filter(tournament=round.tournament,
+                                      seq__lte=round.seq).order_by('seq')
+        motions = list()
+        motions = Motion.objects.statistics(round=round)
+        return r2r(request, 'public/motions_tab.html', dict(motions=motions))
     else:
         return r2r(request, 'public/index.html')
-
-@tournament_view
-def public_feedback_tab(request, t):
-    if request.tournament.config.get('tab_released') > 0:
-        return r2r(request, 'public/feedback_tab.html')
-    else:
-        return r2r(request, 'public_index.html')
 
 @login_required
 @tournament_view
@@ -760,9 +851,7 @@ def team_standings(request, round):
         team.scores = [get_score(team, r) for r in rounds]
 
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds))
-    # Comment out above line and uncomment below line to prevent access to team
-    # standings.
-    #return r2r(request, 'team_standings.html', dict(teams=None, rounds=rounds))
+
 
 @admin_required
 @round_view
@@ -841,7 +930,7 @@ def reply_standings(request, round):
             speaker.results_in = False
 
     return r2r(request, 'reply_standings.html', dict(speakers=speakers,
-                                                       rounds=rounds))
+                                                     rounds=rounds))
 
 @admin_required
 @round_view
