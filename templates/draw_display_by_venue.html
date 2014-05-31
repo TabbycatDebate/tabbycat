@@ -34,7 +34,7 @@
 
 {% block content %}
     <table id="draw" class="table table-hover table-bordered table-striped">
-        <thead class="h3">
+        <thead>
             <tr>
                 <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
                 {% if show_emoji > 0 %}
@@ -48,11 +48,11 @@
                 <th>Adjudicators</th>
             </tr>
         </thead>
-        <tbody class="h3">
+        <tbody>
         {% for debate in draw %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td class="venue-name">
-                {{ debate.venue.name }}
+                {{ debate.venue_splitname }}
             </td>
             {% if show_emoji > 0 %}
                 <td class="team-emoji team-{{ debate.aff_team.id }}"></td>
