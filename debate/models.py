@@ -940,6 +940,7 @@ class Debate(models.Model):
 
     @property
     def result(self):
+        warn("Debate.result is deprecated. Use Debate.confirmed_ballot.ballot_set instead.", DeprecationWarning, stacklevel=2)
         raise NotImplementedError("Debate.result is deprecated. Use Debate.confirmed_ballot.ballot_set instead.")
 
     def get_side(self, team):
