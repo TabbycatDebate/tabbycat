@@ -11,6 +11,7 @@ from debate.result import BallotSet
 
 from warnings import warn
 from threading import BoundedSemaphore
+from collections import OrderedDict
 
 class ScoreField(models.FloatField):
     pass
@@ -902,18 +903,30 @@ class Debate(models.Model):
         return alloc
 
     @property
-    def adjudicator_names_list(self):
+    def adjudicator_names_dict(self):
         alloc = self.adjudicators
 
+        d = OrderedDict()
+
         if alloc.panel:
-            l = [alloc.chair.name + " " + u"\u24B8"]
-            l.extend(p.name for p in sorted(alloc.panel, key=lambda p: p.name))
+            d[alloc.chair] = alloc.chair.name + u" \u24B8"
+            for p in sorted(alloc.panel, key=lambda p: p.name):
+                d[p] = p.name
         else:
-            l = [alloc.chair.name]
+            d[alloc.chair] = alloc.chair.name
 
-        l.extend(u"%s \u24C9" % t.name for t in sorted(alloc.trainees, key=lambda t: t.name))
+        for t in sorted(alloc.trainees, key=lambda t: t.name):
+            d[t] = t.name + u" \u24C9"
 
-        return l
+        return d
+
+    @property
+    def adjudicator_names_list(self):
+        return self.adjudicator_names_dict.values()
+
+    @property
+    def adjudicators_display(self):
+        return ", ".join(self.adjudicator_names_list)
 
     @property
     def venue_splitname(self):
@@ -929,14 +942,6 @@ class Debate(models.Model):
             alloc = self.venue.name
 
         return alloc
-
-    @property
-    def adjudicators_display(self):
-        return ", ".join(self.adjudicator_names_list)
-
-    @property
-    def adjudicators_display_with_line_breaks(self):
-        return "\n".join(self.adjudicator_names_list)
 
     @property
     def result(self):

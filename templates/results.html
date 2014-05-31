@@ -131,7 +131,11 @@
                 <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
-            <td>{{ debate.adjudicators_display }}</td>
+            <td>
+                {% for adj_display, split in debate.confirmed_ballot.ballot_set.adjudicator_results_display %}
+                    {{ adj_display }}{% if split %} <span class="glyphicon glyphicon-resize-full text-danger"></span>{% endif %}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            </td>
 
             {% if show_motions_column %}
                 <td class="">{{ debate.confirmed_ballot.motion.reference }}</td>
