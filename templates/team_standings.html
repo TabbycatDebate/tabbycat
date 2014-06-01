@@ -36,7 +36,8 @@
                 <th>Institution</th>
             {% endif %}
             {% for round in rounds %}
-            <th>Round {{ round }}</th>
+            <th>R{{ round }}</th>
+            <th></th>
             {% endfor %}
             <th>Total</th>
             <th>Wins</th>
@@ -58,19 +59,38 @@
             <td>{{ team.institution }}</td>
         {% endif %}
         {% for score in team.scores %}
-        <td>
-        {% if score.1 == 1 %}
-            <span class="glyphicon glyphicon-arrow-up text-success"></span> {{ score.0|stringformat:".2f" }}
-        {% elif score.1 == 0 %}
-            <span class="glyphicon glyphicon-arrow-down text-danger"></span> {{ score.0|stringformat:".2f" }}
-        {% else %}
-            No Result
-        {% endif %}
-        </td>
+            <td>
+                {% if score.1 == 1 %}
+                    {{ score.0|stringformat:".2f" }}
+                {% elif score.1 == 0 %}
+                    {{ score.0|stringformat:".2f" }}
+                {% else %}
+                    No Result
+                {% endif %}
+            </td>
+            {% if score.1 == 1 %}
+                <td class="team-emoji team-">
+                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
+                    vs {{ score|last }}
+                </td>
+            {% elif score.1 == 0 %}
+                <td class="team-emoji team-">
+                    <span class="glyphicon glyphicon-arrow-down text-danger"></span>
+                    vs {{ score|last }}
+                </td>
+            {% else %}
+                <td></td>
+            {% endif %}
         {% endfor %}
-        <td>{{ team.speaker_score|stringformat:".2f" }}</td>
-        <td>{{ team.points }}</td>
-        <td>{% aff_count team round %}</td>
+        <td>
+            {{ team.speaker_score|stringformat:".2f" }}
+        </td>
+        <td>
+            {{ team.points }}
+        </td>
+        <td>
+            {% aff_count team round %}
+        </td>
     </tr>
     {% endfor %}
 </table>
