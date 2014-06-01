@@ -197,8 +197,9 @@ def public_team_tab(request, t):
                     debate_team__team=team,
                     debate_team__debate__round=r,
                 )
-                side = ts.debate_team.position
-                if side is "Affirmative":
+                debate = ts.debate_team.debate
+                opposition = None
+                if debate.neg_team == team:
                     opposition = ts.debate_team.debate.aff_team
                 else:
                     opposition = ts.debate_team.debate.neg_team
@@ -848,8 +849,9 @@ def team_standings(request, round):
                 debate_team__team=team,
                 debate_team__debate__round=r,
             )
-            side = ts.debate_team.position
-            if side is "Affirmative":
+            debate = ts.debate_team.debate
+            opposition = None
+            if debate.neg_team == team:
                 opposition = ts.debate_team.debate.aff_team
             else:
                 opposition = ts.debate_team.debate.neg_team
