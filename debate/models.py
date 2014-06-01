@@ -338,16 +338,20 @@ class SpeakerManager(models.Manager):
             position = round.tournament.REPLY_POSITION
         )}).distinct().order_by('-average', '-replies', 'name')
 
+        # Use this to filter out speakers with an unconfirmed ballot submission,
+        # since they get caught up in the query above.
+        speakers_filtered = filter(lambda x: x.replies > 0, speakers)
+
         prev_rank_value = (None, None)
         current_rank = 0
-        for i, speaker in enumerate(speakers, start=1):
+        for i, speaker in enumerate(speakers_filtered, start=1):
             rank_value = (speaker.average, speaker.replies)
             if rank_value != prev_rank_value:
                 current_rank = i
                 prev_rank_value = rank_value
             speaker.rank = current_rank
 
-        return speakers
+        return speakers_filtered
 
 class Person(models.Model):
     name = models.CharField(max_length=40)
