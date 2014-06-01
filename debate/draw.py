@@ -6,20 +6,32 @@ class DrawError(Exception):
 
 class BaseDraw(object):
     def __init__(self, round):
-        from debate.models import TeamAtRound
-
+        from debate.models import Team
         self.round = round
         if not self.round.draw_status == self.round.STATUS_NONE:
             raise DrawError()
         from django.db.models import Sum
-        teams = self.round.active_teams.annotate(
-            points = Sum('debateteam__teamscore__points'),
-            speaker_score = Sum('debateteam__teamscore__score')
-        ).order_by('-points', '-speaker_score')
-        self.teams = [TeamAtRound(team, round) for team in teams]
+
+        if not round.prev:
+            teams = round.active_teams.all()
+            for team in teams:
+                team.points = 0
+                team.speaker_score = 0
+                team.aff_count = 0
+                team.neg_count = 0
+        else:
+            from debate.models import annotate_team_standings
+            teams = annotate_team_standings(round.active_teams, round.prev)
+            for team in teams:
+                team.aff_count = team.get_aff_count(round.prev.seq)
+                team.neg_count = team.get_neg_count(round.prev.seq)
+
+        self.teams = list(teams)
 
         if not len(self.teams) % 2 == 0:
-            raise DrawError()
+            raise DrawError("There was not an even number of active teams.")
+        if not self.teams:
+            raise DrawError("There were no teams for the draw.")
 
     def balance_sides(self, pairs):
         p = []

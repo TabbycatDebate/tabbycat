@@ -830,7 +830,7 @@ def new_ballots(request, t, debate_id):
 @round_view
 def team_standings(request, round):
     from debate.models import TeamScore
-    teams = Team.objects.standings(round)
+    teams = Team.objects.ranked_standings(round)
 
     rounds = Round.objects.filter(tournament=round.tournament,
                                   seq__lte=round.seq).order_by('seq')

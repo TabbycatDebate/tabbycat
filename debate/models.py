@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
 from debate.utils import pair_list, memoize
-from debate.draw import RandomDrawNoConflict, AidaDraw
+from debate.draw import RandomDrawNoConflict, AidaDraw, DrawError
 from debate.adjudicator.anneal import SAAllocator
 
 from debate.result import BallotSet
@@ -86,43 +86,50 @@ class Institution(models.Model):
         else:
             return self.code[:5]
 
+
+def annotate_team_standings(teams, round):
+    """Accepts and returns a QuerySet."""
+    # This is what might be more concisely expressed, if it were permissible
+    # in Django, as:
+    # teams = teams.annotate_if(
+    #     dict(points = models.Count('debateteam__teamscore__points'),
+    #     speaker_score = models.Count('debateteam__teamscore__score')),
+    #     dict(debateteam__teamscore__ballot_submission__confirmed = True)
+    # )
+    # That is, it adds up all the wins and points of each team on CONFIRMED
+    # ballots and adds them as columns to the table it returns.
+
+    EXTRA_QUERY = """
+        SELECT DISTINCT SUM({field:s})
+        FROM "debate_teamscore"
+        JOIN "debate_ballotsubmission" ON "debate_teamscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
+        JOIN "debate_debateteam" ON "debate_teamscore"."debate_team_id" = "debate_debateteam"."id"
+        JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
+        JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
+        WHERE "debate_ballotsubmission"."confirmed" = True
+        AND "debate_debateteam"."team_id" = "debate_team"."id"
+        AND "debate_round"."seq" <= {round:d}
+    """
+    teams = teams.extra({
+        "points": EXTRA_QUERY.format(field="points", round=round.seq),
+        "speaker_score": EXTRA_QUERY.format(field="score", round=round.seq),
+    }).distinct().order_by('-points', '-speaker_score')
+    return teams
+
+
 class TeamManager(models.Manager):
     def standings(self, round):
-        # If we are on Round 1 (ie Round 0 is none)
-        if round.prev is None:
-            teams = self.filter(
-                institution__tournament=round.tournament,
-            )
-        else:
-            teams = self.filter(
-                institution__tournament=round.prev.tournament,
-                debateteam__debate__round__seq__lte = round.prev.seq,
-            )
+        """Returns a QuerySet."""
+        teams = self.filter(
+            institution__tournament=round.tournament,
+            debateteam__debate__round__seq__lte = round.seq,
+        )
+        return annotate_team_standings(teams, round)
 
-        # This is what might be more concisely expressed, if it were permissible
-        # in Django, as:
-        # teams = teams.annotate_if(
-        #     dict(points = models.Count('debateteam__teamscore__points'),
-        #     speaker_score = models.Count('debateteam__teamscore__score')),
-        #     dict(debateteam__teamscore__ballot_submission__confirmed = True)
-        # )
-        # That is, it adds up all the wins and points of each team on CONFIRMED
-        # ballots and adds them as columns to the table it returns.
-        EXTRA_QUERY = """
-            SELECT DISTINCT SUM({field:s})
-            FROM "debate_teamscore"
-            JOIN "debate_ballotsubmission" ON "debate_teamscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-            JOIN "debate_debateteam" ON "debate_teamscore"."debate_team_id" = "debate_debateteam"."id"
-            JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-            JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-            WHERE "debate_ballotsubmission"."confirmed" = True
-            AND "debate_debateteam"."team_id" = "debate_team"."id"
-            AND "debate_round"."seq" <= {round:d}
-        """
-        teams = teams.extra({
-            "points": EXTRA_QUERY.format(field="points", round=round.seq),
-            "speaker_score": EXTRA_QUERY.format(field="score", round=round.seq)}
-        ).distinct().order_by('-points', '-speaker_score')
+    def ranked_standings(self, round):
+        """Returns a list."""
+
+        teams = self.standings(round)
 
         prev_rank_value = (None, None)
         current_rank = 0
@@ -226,14 +233,6 @@ class Team(models.Model):
     @property
     def speakers(self):
         return self.speaker_set.all()
-
-def TeamAtRound(team, round):
-    t = Team.objects.standings(round).get(id=team.id)
-    # This checks if we are on round 1 (ie if Round 0 is None)
-    if round.prev:
-        setattr(t, 'aff_count', t.get_aff_count(round.seq))
-        setattr(t, 'neg_count', t.get_neg_count(round.seq))
-    return t
 
 
 class SpeakerManager(models.Manager):
@@ -612,6 +611,10 @@ class Round(models.Model):
 
         import random
         venues = list(self.active_venues.all())[:len(pairs)]
+
+        if len(venues) < len(pairs):
+            raise DrawError("There are %d debates but only %d venues." % (len(pairs), len(venues)))
+
         random.shuffle(venues)
 
         for i, pair in enumerate(pairs):
