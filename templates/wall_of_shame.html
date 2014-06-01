@@ -7,7 +7,7 @@
     $(document).ready( function() {
 
         var table = $('#dataTable').dataTable({
-            "aaSorting": [[ 0, "desc" ]]
+            "aaSorting": [[ 0, "asc" ]]
         });
         new $.fn.dataTable.FixedHeader( table );
       $("#toggle-all").click(function () {
