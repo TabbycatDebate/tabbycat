@@ -71,12 +71,12 @@
             {% if score.1 == 1 %}
                 <td class="team-emoji team-">
                     <span class="glyphicon glyphicon-arrow-up text-success"></span>
-                    vs {{ score|last }}
+                    <span title="Win vs {{ score.2.name }} ({{ score.2.speakers|join:", " }})" data-toggle="tooltip" class="team-emoji team-{{ score.2.id }}"></span>
                 </td>
             {% elif score.1 == 0 %}
-                <td class="team-emoji team-">
+                <td class="">
                     <span class="glyphicon glyphicon-arrow-down text-danger"></span>
-                    vs {{ score|last }}
+                    <span title="Loss vs {{ score.2.name }} ({{ score.2.speakers|join:", " }})" data-toggle="tooltip" class="team-emoji team-{{ score.2.id }}"></span>
                 </td>
             {% else %}
                 <td></td>
