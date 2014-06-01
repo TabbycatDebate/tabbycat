@@ -1,16 +1,15 @@
 {% extends "draw_rbase.html" %}
-
 {% load debate_tags %}
+{% load static %}
 
 {% block extra-head %}
     <script type="text/javascript" charset="utf-8">
-
         $(document).ready( function() {
             var table = $("#dataTable").dataTable();
             new $.fn.dataTable.FixedHeader( table );
         } );
-
     </script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
 {% endblock extra-head %}
 
 {% block head-title %}Speaker Standings <small>after Round {{ round }}</small>{% endblock %}
@@ -25,6 +24,9 @@
         <tr>
             <th><span data-toggle="tooltip" title="" class="glyphicon glyphicon-signal" data-original-title="Rank"></span></th>
             <th>Name</th>
+            {% if show_emoji > 0 %}
+                <th></th>
+            {% endif %}
             <th>Team</th>
             {% if show_institutions > 0 %}
                 <th>Institution</th>
@@ -41,6 +43,9 @@
         {% if not speaker.results_in %}danger{% endif%}">
         <td>{{ speaker.rank }}</td>
         <td>{{ speaker.name }}</td>
+        {% if show_emoji > 0 %}
+            <td class="team-emoji team-{{ speaker.team.id }}"></td>
+        {% endif %}
         <td>{{ speaker.team.short_name }}</td>
         {% if show_institutions > 0 %}
             <td>{{ speaker.team.institution.code }}</td>

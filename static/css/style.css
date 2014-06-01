@@ -712,7 +712,8 @@ html, body {
   margin-top: 0; }
 
 [data-toggle="tooltip"] {
-  cursor: pointer; }
+  cursor: pointer;
+  border-bottom: 2px solid #ccc; }
 
 .alert-link {
   text-decoration: underline;

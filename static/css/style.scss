@@ -109,7 +109,8 @@ html, body {
     margin-top: 0; // fixes button alignment easily
 }
 [data-toggle="tooltip"] {
-    cursor: pointer // for tooltips
+    cursor: pointer; // for tooltips
+    border-bottom: 2px solid #ccc;
 }
 .alert-link {
     text-decoration: underline;
