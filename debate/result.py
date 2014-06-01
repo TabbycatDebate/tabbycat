@@ -334,6 +334,12 @@ class BallotSet(object):
     def neg_win(self):
         return self.neg_points
 
+    @property
+    def adjudicator_results_display(self):
+        names_dict = self.debate.adjudicator_names_dict
+        self._calc_decision()
+        splits = [adj not in self.majority_adj for adj in names_dict.keys()]
+        return zip(names_dict.itervalues(), splits)
 
 class DebateResult(object):
     def __init__(self, *args):

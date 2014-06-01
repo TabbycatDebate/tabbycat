@@ -11,6 +11,7 @@ from debate.result import BallotSet
 
 from warnings import warn
 from threading import BoundedSemaphore
+from collections import OrderedDict
 
 class ScoreField(models.FloatField):
     pass
@@ -337,16 +338,20 @@ class SpeakerManager(models.Manager):
             position = round.tournament.REPLY_POSITION
         )}).distinct().order_by('-average', '-replies', 'name')
 
+        # Use this to filter out speakers with an unconfirmed ballot submission,
+        # since they get caught up in the query above.
+        speakers_filtered = filter(lambda x: x.replies > 0, speakers)
+
         prev_rank_value = (None, None)
         current_rank = 0
-        for i, speaker in enumerate(speakers, start=1):
+        for i, speaker in enumerate(speakers_filtered, start=1):
             rank_value = (speaker.average, speaker.replies)
             if rank_value != prev_rank_value:
                 current_rank = i
                 prev_rank_value = rank_value
             speaker.rank = current_rank
 
-        return speakers
+        return speakers_filtered
 
 class Person(models.Model):
     name = models.CharField(max_length=40)
@@ -902,18 +907,30 @@ class Debate(models.Model):
         return alloc
 
     @property
-    def adjudicator_names_list(self):
+    def adjudicator_names_dict(self):
         alloc = self.adjudicators
 
+        d = OrderedDict()
+
         if alloc.panel:
-            l = [alloc.chair.name + " " + u"\u24B8"]
-            l.extend(p.name for p in sorted(alloc.panel, key=lambda p: p.name))
+            d[alloc.chair] = alloc.chair.name + u" \u24B8"
+            for p in sorted(alloc.panel, key=lambda p: p.name):
+                d[p] = p.name
         else:
-            l = [alloc.chair.name]
+            d[alloc.chair] = alloc.chair.name
 
-        l.extend(u"%s \u24C9" % t.name for t in sorted(alloc.trainees, key=lambda t: t.name))
+        for t in sorted(alloc.trainees, key=lambda t: t.name):
+            d[t] = t.name + u" \u24C9"
 
-        return l
+        return d
+
+    @property
+    def adjudicator_names_list(self):
+        return self.adjudicator_names_dict.values()
+
+    @property
+    def adjudicators_display(self):
+        return ", ".join(self.adjudicator_names_list)
 
     @property
     def venue_splitname(self):
@@ -931,15 +948,8 @@ class Debate(models.Model):
         return alloc
 
     @property
-    def adjudicators_display(self):
-        return ", ".join(self.adjudicator_names_list)
-
-    @property
-    def adjudicators_display_with_line_breaks(self):
-        return "\n".join(self.adjudicator_names_list)
-
-    @property
     def result(self):
+        warn("Debate.result is deprecated. Use Debate.confirmed_ballot.ballot_set instead.", DeprecationWarning, stacklevel=2)
         raise NotImplementedError("Debate.result is deprecated. Use Debate.confirmed_ballot.ballot_set instead.")
 
     def get_side(self, team):
