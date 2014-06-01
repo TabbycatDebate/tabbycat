@@ -111,6 +111,9 @@ html, body {
 [data-toggle="tooltip"] {
     cursor: pointer; // for tooltips
     border-bottom: 2px solid #ccc;
+    img {
+  
+    }
 }
 .alert-link {
     text-decoration: underline;
@@ -195,6 +198,16 @@ table.dataTable {
         text-align: center;
         padding: 4px 0 4px 0;
 
+    }
+    .opponent-emoji {
+        min-width: 45px;
+        line-height: 24px;
+        text-align: center;
+        padding: 4px 0 4px 0;
+        img {
+            width: 24px;
+            height: 24px;
+        }
     }
 }
 .modal-lg {

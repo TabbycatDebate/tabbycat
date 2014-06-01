@@ -772,6 +772,14 @@ table.dataTable {
     table.dataTable .team-emoji img {
       width: 28px;
       height: 28px; }
+  table.dataTable .opponent-emoji {
+    min-width: 45px;
+    line-height: 24px;
+    text-align: center;
+    padding: 4px 0 4px 0; }
+    table.dataTable .opponent-emoji img {
+      width: 24px;
+      height: 24px; }
 
 .modal-lg {
   width: 90%; }
