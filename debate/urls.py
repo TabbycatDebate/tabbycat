@@ -54,6 +54,7 @@ urlpatterns = patterns('debate.views',
     url(r'^round/(?P<round_seq>\d+)/checkin/post/$', 'post_checkin', name='post_checkin'),
 
     url(r'^round/(?P<round_seq>\d+)/draw/$', 'draw', name='draw'),
+    url(r'^round/(?P<round_seq>\d+)/draw/details/$', 'draw_with_standings', name='draw_with_standings'),
     url(r'^round/(?P<round_seq>\d+)/draw_display_by_venue/$', 'draw_display_by_venue',
         name='draw_display_by_venue'),
     url(r'^round/(?P<round_seq>\d+)/draw_display_by_team/$', 'draw_display_by_team',

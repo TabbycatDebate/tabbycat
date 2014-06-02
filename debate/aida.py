@@ -89,9 +89,10 @@ class Team(object):
     def seen(self, other):
         return self.hist.count(other.id)
 
-def swap(draw, i):
-    m1 = (draw[i][0], draw[i+1][1])
-    m2 = (draw[i+1][0], draw[i][1])
+def one_up_down_swap(draw, i):
+    from debate.models import Debate
+    m1 = (draw[i][0], draw[i+1][1], Debate.FLAG_ONE_UP_ONE_DOWN)
+    m2 = (draw[i+1][0], draw[i][1], Debate.FLAG_ONE_UP_ONE_DOWN)
     draw[i] = m1
     draw[i+1] = m2
 
@@ -109,7 +110,7 @@ def one_up_down(draw):
 
     best_score, best_swaps = dp(swap_scores)
     for s in best_swaps:
-        swap(draw, s)
+        one_up_down_swap(draw, s)
     return draw
 
 from unittest import TestCase

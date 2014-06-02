@@ -334,11 +334,18 @@ class BallotSet(object):
     def neg_win(self):
         return self.neg_points
 
+    def is_trainee(self, adj):
+        from debate import models as m
+        da = m.DebateAdjudicator.objects.get(
+            adjudicator = adj,
+            debate = self.debate)
+        return da.type == m.DebateAdjudicator.TYPE_TRAINEE
+
     @property
     def adjudicator_results_display(self):
         names_dict = self.debate.adjudicator_names_dict
         self._calc_decision()
-        splits = [adj not in self.majority_adj for adj in names_dict.keys()]
+        splits = [adj not in self.majority_adj and not self.is_trainee(adj) for adj in names_dict.keys()]
         return zip(names_dict.itervalues(), splits)
 
 class DebateResult(object):
