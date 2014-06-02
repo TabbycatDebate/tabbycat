@@ -12,28 +12,36 @@
             <th>NSP</th>
             <th>AAffs</th>
             <th>NAffs</th>
-            <th>Conflict</th>
+            <th>Conflicts/Flags</th>
         </tr>
     </thead>
     <tbody>
     {% for debate in draw %}
     <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }} {% ifchanged debate.bracket %}first-in-bracket{% endifchanged %}">
         <td>{{ debate.bracket }}</td>
-        <td>{{ debate.aff_team }}</td>
-        <td>{{ debate.neg_team }}</td>
-        <td{% if debate.bracket != debate.aff_team.points %} class="em"{% endif %}>
+        <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
+            {{ debate.aff_team }}
+        </td>
+        <td{% if debate.neg_team.pullup %} class="em"{% endif %}>
+            {{ debate.neg_team }}
+        </td>
+        <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
             {{ debate.aff_team.points }}
         </td>
-        <td{% if debate.bracket != debate.aff_team.points %} class="em"{% endif %}>
+        <td{% if debate.neg_team.pullup %} class="em"{% endif %}>
             {{ debate.neg_team.points }}
         </td>
-        <td>{{ debate.aff_team.subrank }}</td>
-        <td>{{ debate.neg_team.subrank }}</td>
+        <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
+            {{ debate.aff_team.subrank }}
+        </td>
+        <td{% if debate.neg_team.pullup %} class="em"{% endif %}>
+            {{ debate.neg_team.subrank }}
+        </td>
         <td>{{ debate.aff_team.speaker_score|stringformat:".2f" }}</td>
         <td>{{ debate.neg_team.speaker_score|stringformat:".2f" }}</td>
         <td>{{ debate.aff_team.get_aff_count }}</td>
         <td>{{ debate.neg_team.get_aff_count }}</td>
-        <td>{{ debate.draw_conflicts|join:"," }}</td>
+        <td>{{ debate.draw_conflicts|add:debate.flags_all|join:"," }}</td>
     </tr>
     {% endfor %}
 </table>

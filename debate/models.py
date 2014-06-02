@@ -641,6 +641,7 @@ class Round(models.Model):
                         team.points = annotated_team.points
                         team.speaker_score = annotated_team.speaker_score
                         team.subrank = annotated_team.subrank
+                        team.pullup = annotated_team.points != debate.bracket
         return draw
 
     def make_debates(self, pairs):
@@ -653,6 +654,10 @@ class Round(models.Model):
             debate = Debate(round=self, venue=venues.pop(0))
             debate.bracket = max(0, pair[0].points, pair[1].points)
             debate.room_rank = i+1
+            # The third part of tuple indicates flags and is not mandatory.
+            # Flags are defined in Debate as class constants.
+            if len(pair) > 2:
+                debate.flags = pair[2]
             debate.save()
 
             aff = DebateTeam(debate=debate, team=pair[0], position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -836,12 +841,23 @@ class Debate(models.Model):
         (STATUS_DRAFT, 'Draft'),
         (STATUS_CONFIRMED, 'Confirmed'),
     )
+
+    FLAG_ONE_UP_ONE_DOWN = 'o'
+    FLAGS = {
+        FLAG_ONE_UP_ONE_DOWN: 'One-up-one-down',
+    }
+
     objects = DebateManager()
 
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue, blank=True, null=True)
+
     bracket = models.IntegerField(default=0)
     room_rank = models.IntegerField(default=0)
+    # Generic flags field, extend max_length as required, all flags should
+    # be one character and defined as class constants.
+    flags = models.CharField(max_length=5, blank=True, null=True)
+
     importance = models.IntegerField(blank=True, null=True)
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
             default=STATUS_NONE)
@@ -908,6 +924,13 @@ class Debate(models.Model):
             d.append("Institution")
 
         return d
+
+    @property
+    def flags_all(self):
+        if self.flags is None:
+            return []
+        else:
+            return [self.FLAGS[f] for f in self.flags]
 
     @property
     def all_conflicts(self):
