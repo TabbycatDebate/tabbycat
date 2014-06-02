@@ -1,6 +1,12 @@
 from collections import OrderedDict
 from django.forms import Select
 
+def _bool(value):
+    try:
+        return {'True': True, 'False': False, '0': False, '1': True}[value]
+    except KeyError:
+        raise TypeError
+
 #name,  coerce, help, default
 SETTINGS = OrderedDict([
     ('score_min',                  (float, 'Minimum allowed score',                               68)),
@@ -15,15 +21,15 @@ SETTINGS = OrderedDict([
     ('adj_chair_min_score',        (float, 'Minimum chair score',                                 3.5)),
     ('adj_conflict_penalty',       (int,   'Penalty for adjudicator-team conflict',               1000000)),
     ('adj_history_penalty',        (int,   'Penalty for adjudicator-team history',                10000)),
-    ('show_emoji',                 (bool,  'Shows Emoji in the draw UI',                          True)),
-    ('show_institutions',          (bool,  'Shows the institutions column in the draw UI',        True)),
-    ('public_participants',        (bool,  'Public interface to see all participants',            False)),
-    ('public_draw',                (bool,  'Public interface to see RELEASED draws',              False)),
-    ('public_ballots',             (bool,  'Public interface to add ballots',                     False)),
-    ('public_feedback',            (bool,  'Public interface to add feedback',                    False)),
-    ('panellist_feedback_enabled', (bool,  'Allow public feedback to be submitted by panellists', True)),
-    ('feedback_progress',          (bool,  'Public interface to view unsubmitted ballots',        False)),
-    ('tab_released',               (bool,  'Displays the tab PUBLICLY. For AFTER the tournament', False)),
+    ('show_emoji',                 (_bool, 'Shows Emoji in the draw UI',                          True)),
+    ('show_institutions',          (_bool, 'Shows the institutions column in the draw UI',        True)),
+    ('public_participants',        (_bool, 'Public interface to see all participants',            False)),
+    ('public_draw',                (_bool, 'Public interface to see RELEASED draws',              False)),
+    ('public_ballots',             (_bool, 'Public interface to add ballots',                     False)),
+    ('public_feedback',            (_bool, 'Public interface to add feedback',                    False)),
+    ('panellist_feedback_enabled', (_bool, 'Allow public feedback to be submitted by panellists', True)),
+    ('feedback_progress',          (_bool, 'Public interface to view unsubmitted ballots',        False)),
+    ('tab_released',               (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament', False)),
 ])
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
@@ -40,16 +46,22 @@ class Config(object):
         if key in SETTINGS:
             coerce, help, _default = SETTINGS[key]
             default = default or _default
-            if coerce == bool:
-                coerce = lambda x: x == "True"
-            return coerce(Config.objects.get_(self._t, key, default))
+            value = Config.objects.get_(self._t, key, default)
+            try:
+                return coerce(value)
+            except TypeError:
+                print("Warning: Could not interpret configuration {key}: {value}, using {default} instead".format(
+                    key=key, value=value, default=default))
+                return default
         else:
-            return default
+            raise KeyError("Setting {0} does not exist.".format(key))
 
     def set(self, key, value):
         from debate.models import Config
-        Config.objects.set(self._t, key, value)
-
+        if key in SETTINGS:
+            Config.objects.set(self._t, key, str(value))
+        else:
+            raise KeyError("Setting {0} does not exist.".format(key))
 
 def make_config_form(tournament, data=None):
     from django import forms
@@ -59,7 +71,7 @@ def make_config_form(tournament, data=None):
             return forms.IntegerField(help_text=help)
         elif t is float:
             return forms.FloatField(help_text=help)
-        elif t is bool:
+        elif t is _bool:
             return forms.BooleanField(help_text=help, widget=Select(choices=BOOL_CHOICES), required=False)
         else:
             raise TypeError
