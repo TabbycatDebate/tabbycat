@@ -35,7 +35,7 @@
                             Version {{ other_ballots.version }}, entered by <strong>{{ other_ballots.user }}</strong>
                             at {{ other_ballots.timestamp_str }}
                         {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
-                            Version {{ other_ballots.version }}, submitted from the public form
+                            Version {{ other_ballots.version }}, submitted from the public form on <strong>{{ other_ballots.ip_address }}</strong>
                             at {{ other_ballots.timestamp_str }}
                         {% endif %}
                         {% if other_ballots.discarded %}

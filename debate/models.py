@@ -1119,6 +1119,7 @@ class BallotSubmission(models.Model):
     submitter_type = models.IntegerField(choices=SUBMITTER_TYPE_CHOICES)
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
     discarded = models.BooleanField(default=False)
@@ -1351,6 +1352,7 @@ class ActionLog(models.Model):
     type = models.PositiveSmallIntegerField(choices=ACTION_TYPE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     debate = models.ForeignKey(Debate, blank=True, null=True)
     adjudicator_feedback = models.ForeignKey(AdjudicatorFeedback, blank=True, null=True)

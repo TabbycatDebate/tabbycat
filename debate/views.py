@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib import messages
 from django.db.models import Sum, Count
 from django.conf import settings
+from ipware.ip import get_real_ip
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
@@ -738,7 +739,7 @@ def edit_ballots(request, t, ballots_id):
             # TODO add ballots to the ActionLog
             action_type = ActionLog.ACTION_TYPE_BY_RESULT_STATUS[debate.result_status]
             ActionLog.objects.log(type=action_type, user=request.user,
-                debate=debate)
+                debate=debate, ip_address=get_real_ip(request))
 
             return redirect_round('results', debate.round)
     else:
@@ -770,9 +771,12 @@ def public_new_ballots(request, t, adj_id):
         return HttpResponseBadRequest('It looks like you don\'t have a debate this round!\n\nTODO make this a pretty template (not an error page) that just says the above')
     debate = da.debate
 
+    ip_address = get_real_ip(request)
+
     ballots = BallotSubmission(
         debate         = debate,
-        submitter_type = BallotSubmission.SUBMITTER_PUBLIC)
+        submitter_type = BallotSubmission.SUBMITTER_PUBLIC,
+        ip_address     = ip_address)
 
     if request.method == 'POST':
         form = forms.BallotSetForm(ballots, request.POST)
@@ -782,7 +786,7 @@ def public_new_ballots(request, t, adj_id):
 
             # TODO add ballots to the ActionLog
             action_type = ActionLog.ACTION_TYPE_BALLOT_PUBLIC_CHECKIN
-            ActionLog.objects.log(type=action_type, debate=debate)
+            ActionLog.objects.log(type=action_type, debate=debate, ip_address=ip_address)
             return redirect_tournament('public_ballot_submit', t)
 
     else:
@@ -795,10 +799,13 @@ def public_new_ballots(request, t, adj_id):
 @tournament_view
 def new_ballots(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
+    ip_address = get_real_ip(request)
+
     ballots = BallotSubmission(
         debate         = debate,
         submitter_type = BallotSubmission.SUBMITTER_TABROOM,
-        user           = request.user)
+        user           = request.user,
+        ip_address     = ip_address)
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
@@ -816,7 +823,7 @@ def new_ballots(request, t, debate_id):
             # TODO add ballots to the ActionLog
             action_type = ActionLog.ACTION_TYPE_BY_RESULT_STATUS[debate.result_status]
             ActionLog.objects.log(type=action_type, user=request.user,
-                debate=debate)
+                debate=debate, ip_address=ip_address)
 
             return redirect_round('results', debate.round)
 
