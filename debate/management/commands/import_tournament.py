@@ -106,11 +106,12 @@ class Command(BaseCommand):
 
             adjs_count = 0
             reader = csv.reader(open(os.path.join(data_path, 'judges.csv')))
-            for ins_name, name, score in reader:
+            for ins_name, name, test_score in reader:
                 try:
-                    score = int(score)
+                    test_score = int(test_score)
                 except ValueError:
-                    score = 0
+                    self.stdout.write('Could not interpret adj score for {0}: {1}'.format(name, score))
+                    test_score = 0
 
                 # People can either input instutions as name or short name
                 try:
@@ -121,12 +122,12 @@ class Command(BaseCommand):
                 m.Adjudicator(
                     name = name,
                     institution = ins,
-                    score = score
+                    test_score = test_score
                 ).save()
 
                 adjs_count = adjs_count + 1
 
-            self.stdout.write('Created ' + str(adjs_count) + 'judges')
+            self.stdout.write('Created ' + str(adjs_count) + ' judges')
 
             # Speakers
             self.stdout.write('Attempting to create the teams/speakers')
@@ -150,10 +151,11 @@ class Command(BaseCommand):
                         print inst           # __str__ allows args to printed directly
 
                 try:
-                    team = m.Team.objects.get_or_create(institution = ins, 
-                           reference = team_name, 
+                    team, created = m.Team.objects.get_or_create(institution = ins,
+                           reference = team_name,
                            use_institution_prefix = False)
-                    teams_count = teams_count + 1
+                    if created:
+                        teams_count = teams_count + 1
                 except Exception as inst:
                     self.stdout.write("error with " + str(team_name))
                     print type(inst)     # the exception instance
@@ -175,7 +177,7 @@ class Command(BaseCommand):
                     self.stdout.write('Couldnt make the speaker ' + name)
 
 
-            self.stdout.write('Created ' + str(speakers_count) + 
+            self.stdout.write('Created ' + str(speakers_count) +
                               ' speakers and ' + str(teams_count) + ' teams')
 
             self.stdout.write('Successfully import all data')
