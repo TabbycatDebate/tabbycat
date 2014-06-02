@@ -556,6 +556,7 @@ class Round(models.Model):
     def draw(self):
         if self.draw_status != self.STATUS_NONE:
             raise RuntimeError("Tried to run draw on round that already has a draw")
+
         # delete all existing debates for this round
         Debate.objects.filter(round=self).delete()
 

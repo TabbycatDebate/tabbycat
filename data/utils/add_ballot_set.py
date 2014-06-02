@@ -1,4 +1,4 @@
-"""Adds a randomly generated ballot set to the given debate."""
+"""Adds a randomly generated ballot set to the given debates."""
 
 import header
 import debate.models as m
@@ -78,7 +78,7 @@ def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=Fals
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("debate", type=int, help="Debate ID to add to")
+    parser.add_argument("debate", type=int, nargs='+', help="Debate ID(s) to add to")
     parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=SUBMITTER_TYPE_MAP.keys(), default="tabroom")
     parser.add_argument("-u", "--user", type=str, help="User ID", default="original")
     parser.add_argument("-d", "--discarded", action="store_true", help="Ballot set is discarded")
@@ -86,17 +86,19 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     submitter_type = SUBMITTER_TYPE_MAP[args.type]
-    debate = m.Debate.objects.get(id=args.debate)
     if submitter_type == m.BallotSubmission.SUBMITTER_TABROOM:
         user = User.objects.get(username=args.user)
     else:
         user = None
 
-    print debate
+    for debate_id in args.debate:
+        debate = m.Debate.objects.get(id=debate_id)
 
-    try:
-        bset = add_ballot_set(debate, submitter_type, user, args.discarded, args.confirmed)
-    except ValueError, e:
-        print "Error:", e
+        print debate
 
-    print "Won by", bset.aff_win and "affirmative" or "negative"
+        try:
+            bset = add_ballot_set(debate, submitter_type, user, args.discarded, args.confirmed)
+        except ValueError, e:
+            print "Error:", e
+
+        print "  Won by", bset.aff_win and "affirmative" or "negative"

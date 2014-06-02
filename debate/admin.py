@@ -57,7 +57,7 @@ class DebateAdjudicatorInline(admin.TabularInline):
     extra = 1
 
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'aff_team', 'neg_team', 'adjudicators_display',)
+    list_display = ('id', 'round', 'aff_team', 'neg_team', 'adjudicators_display',)
     search_fields = ('debateteam__team__reference', 'debateteam__team__institution__code',
                      'debateadjudicator__adjudicator__name',)
     inlines = (DebateTeamInline, DebateAdjudicatorInline)

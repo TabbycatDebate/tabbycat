@@ -4,8 +4,6 @@ Requires a draw to exist."""
 import header
 import debate.models as m
 
-# Script starts here
-
 from django.contrib.auth.models import User
 from add_ballot_set import add_ballot_set, SUBMITTER_TYPE_MAP
 
