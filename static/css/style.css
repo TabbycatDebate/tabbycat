@@ -773,13 +773,13 @@ table.dataTable {
       width: 28px;
       height: 28px; }
   table.dataTable .opponent-emoji {
-    min-width: 45px;
-    line-height: 24px;
+    min-width: 60px;
+    line-height: 20px;
     text-align: center;
     padding: 4px 0 4px 0; }
     table.dataTable .opponent-emoji img {
-      width: 24px;
-      height: 24px; }
+      width: 20px;
+      height: 20px; }
 
 .modal-lg {
   width: 90%; }
