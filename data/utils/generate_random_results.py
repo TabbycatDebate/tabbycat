@@ -28,5 +28,5 @@ if args.clean:
 for debate in m.Round.objects.get(seq=args.round).get_draw():
     bset = add_ballot_set(debate, submitter_type, user, False, args.status == m.Debate.STATUS_CONFIRMED)
     debate.result_status = args.status
-    print debate, "won by", bset.aff_win and "affirmative" or "negative", "on", bset.motion.reference
+    print debate, "won by", bset.aff_win and "affirmative" or "negative", "on", bset.motion and bset.motion.reference or "<No motion>"
     debate.save()

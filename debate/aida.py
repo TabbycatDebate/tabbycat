@@ -91,8 +91,8 @@ class Team(object):
 
 def one_up_down_swap(draw, i):
     from debate.models import Debate
-    m1 = (draw[i][0], draw[i+1][1], Debate.FLAG_ONE_UP_ONE_DOWN)
-    m2 = (draw[i+1][0], draw[i][1], Debate.FLAG_ONE_UP_ONE_DOWN)
+    m1 = (draw[i][0], draw[i+1][1])
+    m2 = (draw[i+1][0], draw[i][1])
     draw[i] = m1
     draw[i+1] = m2
 

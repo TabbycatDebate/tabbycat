@@ -1,3 +1,5 @@
+{% load debate_tags %}
+
 <table id="dataTable" class="draw-with-standings table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
@@ -39,8 +41,8 @@
         </td>
         <td>{{ debate.aff_team.speaker_score|stringformat:".2f" }}</td>
         <td>{{ debate.neg_team.speaker_score|stringformat:".2f" }}</td>
-        <td>{{ debate.aff_team.get_aff_count }}</td>
-        <td>{{ debate.neg_team.get_aff_count }}</td>
+        <td>{% aff_count debate.aff_team debate.round.prev %}</td>
+        <td>{% aff_count debate.neg_team debate.round.prev %}</td>
         <td>{{ debate.draw_conflicts|add:debate.flags_all|join:"," }}</td>
     </tr>
     {% endfor %}

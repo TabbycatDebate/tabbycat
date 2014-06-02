@@ -60,8 +60,9 @@ def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=Fals
 
     # Pick a motion
     motions = debate.round.motion_set.all()
-    motion = random.choice(motions)
-    bset.motion = motion
+    if motions:
+        motion = random.choice(motions)
+        bset.motion = motion
 
     bset.discarded = discarded
     bset.confirmed = confirmed

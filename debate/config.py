@@ -3,7 +3,10 @@ from django.forms import Select
 
 def _bool(value):
     try:
-        return {'True': True, 'False': False, '0': False, '1': True}[value]
+        # 'True' and 'False' strings are stored in the database.
+        # '0' and '1' is how it used to be stored, kept for backwards compatibility.
+        # True and False (literals) are the default values.
+        return {'True': True, 'False': False, '0': False, '1': True, True: True, False: False}[value]
     except KeyError:
         raise TypeError
 

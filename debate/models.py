@@ -661,6 +661,7 @@ class Round(models.Model):
             # The third part of tuple indicates flags and is not mandatory.
             # Flags are defined in Debate as class constants.
             if len(pair) > 2:
+                print pair
                 debate.flags = pair[2]
             debate.save()
 
@@ -1456,7 +1457,7 @@ class ConfigManager(models.Manager):
 
 class Config(models.Model):
     tournament = models.ForeignKey(Tournament)
-    key = models.CharField(max_length=40)
+    key = models.CharField(max_length=40, unique=True)
     value = models.CharField(max_length=40)
 
     objects = ConfigManager()
