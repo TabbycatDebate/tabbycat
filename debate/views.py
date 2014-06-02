@@ -564,7 +564,7 @@ def draw_none(request, round):
 
 
 def draw_draft(request, round):
-    draw = round.get_draw()
+    draw = round.get_draw_with_standings(round)
     return r2r(request, "draw_draft.html", dict(draw=draw))
 
 

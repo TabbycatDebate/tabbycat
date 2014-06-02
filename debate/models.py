@@ -135,6 +135,25 @@ class TeamManager(models.Manager):
 
         return teams
 
+    def subrank_standings(self, round):
+        teams = self.standings(round)
+
+        prev_rank_value = None
+        prev_points = None
+        current_rank = 0
+        for team in teams:
+            if team.points != prev_points:
+                counter = 1
+                prev_points = team.points
+            rank_value = team.speaker_score
+            if rank_value != prev_rank_value:
+                current_rank = counter
+                prev_rank_value = rank_value
+            team.subrank = current_rank
+            counter += 1
+
+        return teams
+
 class Team(models.Model):
     reference = models.CharField(max_length=50, verbose_name="Name or suffix")
     institution = models.ForeignKey(Institution)
@@ -607,6 +626,22 @@ class Round(models.Model):
             draw_by_team.append((debate.neg_team, debate))
         draw_by_team.sort(key=lambda x: str(x[0]))
         return draw_by_team
+
+    def get_draw_with_standings(self, round):
+        draw = self.get_draw()
+        if round.prev:
+            standings = list(Team.objects.subrank_standings(round))
+            for debate in draw:
+                for side in ('aff_team', 'neg_team'):
+                    # TODO is there a more efficient way to do this?
+                    team = getattr(debate, side)
+                    annotated_team = filter(lambda x: x == team, standings)
+                    if len(annotated_team) == 1:
+                        annotated_team = annotated_team[0]
+                        team.points = annotated_team.points
+                        team.speaker_score = annotated_team.speaker_score
+                        team.subrank = annotated_team.subrank
+        return draw
 
     def make_debates(self, pairs):
 
