@@ -230,6 +230,12 @@ table.dataTable {
     }
 }
 
+.draw-with-standings em {
+    font-weight: bold;
+    color: chocolate;
+    font-style: normal;
+}
+
 // Editing the Draw
 
 .edit-venues, .edit-adjs {

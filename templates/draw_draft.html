@@ -33,7 +33,7 @@
 
 <form id="confirmForm" method="POST" action="{% round_url confirm_draw %}"></form>
 
-<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+<table id="dataTable" class="draw-with-standings table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
             <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
@@ -50,11 +50,17 @@
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.aff_team }}</td>
         <td>{{ debate.neg_team }}</td>
-        <td>{{ debate.aff_team.points }} /
+        <td>
+        {% if debate.bracket != debate.aff_team.points %}<em>{% endif %}
+        {{ debate.aff_team.points }}
+        {% if debate.bracket != debate.aff_team.points %}</em>{% endif %} /
         {{ debate.aff_team.subrank }} /
         {{ debate.aff_team.speaker_score|stringformat:".2f" }} /
         {{ debate.aff_team.get_aff_count }}</td>
-        <td>{{ debate.neg_team.points }} /
+        <td>
+        {% if debate.bracket != debate.neg_team.points %}<em>{% endif %}
+        {{ debate.neg_team.points }}
+        {% if debate.bracket != debate.neg_team.points %}</em>{% endif %} /
         {{ debate.neg_team.subrank }} /
         {{ debate.neg_team.speaker_score|stringformat:".2f" }} /
         {{ debate.neg_team.get_aff_count }}</td>
