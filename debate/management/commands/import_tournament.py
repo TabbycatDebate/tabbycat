@@ -18,10 +18,18 @@ class Command(BaseCommand):
         self.stdout.write('importing from ' + data_path)
 
         try:
+            if m.Tournament.objects.filter(slug=folder).exists():
+                self.stdout.write("WARNING! A tournament called '" + folder + "' already exists.")
+                self.stdout.write("You are about to delete EVERYTHING for this tournament.")
+                response = raw_input("Are you sure? ")
+                if response != "yes":
+                    self.stdout.write("Cancelled.")
+                    raise CommandError("Cancelled by user.")
+                m.Tournament.objects.filter(slug=folder).delete()
+
             # Tournament
             self.stdout.write('Attempting to create tournament ' + folder)
             try:
-                m.Tournament.objects.filter(slug=folder).delete()
                 t = m.Tournament(slug=folder)
                 t.save()
             except Exception as inst:
