@@ -791,10 +791,13 @@ table.dataTable {
   margin-left: 0;
   list-style-type: none; }
 
-.draw-with-standings em {
+.draw-with-standings .em {
   font-weight: bold;
   color: chocolate;
   font-style: normal; }
+
+.draw-with-standings .first-in-bracket {
+  border-top: 3px solid chocolate; }
 
 .edit-venues table, .edit-adjs table {
   border-collapse: separate; }

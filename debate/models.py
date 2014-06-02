@@ -630,7 +630,7 @@ class Round(models.Model):
     def get_draw_with_standings(self, round):
         draw = self.get_draw()
         if round.prev:
-            standings = list(Team.objects.subrank_standings(round))
+            standings = list(Team.objects.subrank_standings(round.prev))
             for debate in draw:
                 for side in ('aff_team', 'neg_team'):
                     # TODO is there a more efficient way to do this?

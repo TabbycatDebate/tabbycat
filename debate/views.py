@@ -572,6 +572,11 @@ def draw_confirmed(request, round):
     draw = round.get_draw()
     return r2r(request, "draw_confirmed.html", dict(draw=draw))
 
+@admin_required
+@round_view
+def draw_with_standings(request, round):
+    draw = round.get_draw_with_standings(round)
+    return r2r(request, "draw_with_standings.html", dict(draw=draw))
 
 @admin_required
 @expect_post
