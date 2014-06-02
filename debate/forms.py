@@ -531,8 +531,7 @@ def make_feedback_form_class_for_source(source, released_only=False, include_pan
         if not include_panellists:
             kwargs['type'] = DebateAdjudicator.TYPE_CHAIR
 
-        debates = [da.debate for da in DebateAdjudicator.objects.filter(
-            adjudicator=source, **kwargs).select_related('debate')]
+        debates = [da.debate for da in DebateAdjudicator.objects.filter(adjudicator=source, **kwargs).select_related('debate')]
 
         # For an adjudicator, find every adjudicator on their panel except them.
         choices.extend ([
@@ -542,9 +541,7 @@ def make_feedback_form_class_for_source(source, released_only=False, include_pan
         ])
 
     elif isinstance(source, Team):
-        # Only include non-silent rounds for teams.
-        debates = [dt.debate for dt in DebateTeam.objects.filter(
-            team=source, debate__round__silent=False, **kwargs).select_related('debate')]
+        debates = [dt.debate for dt in DebateTeam.objects.filter(team=source, **kwargs).select_related('debate')]
 
         # For a team, find the chair.
         choices.extend ([

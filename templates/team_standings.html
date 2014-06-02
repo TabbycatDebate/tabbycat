@@ -19,7 +19,7 @@
 {% block extra-style %}{% endblock %}
 
 {% block head-title %}Team Standings <small>after Round {{ round }}</small>{% endblock %}
-{% block page-title %}Team Standings after Round {{ round }}{% endblock %}
+{% block page-title %}Team Standings after Round {{ round }{% endblock %}
 {% block body-class %}team-standings{% endblock %}
 
 {% block content %}
@@ -69,14 +69,14 @@
                 {% endif %}
             </td>
             {% if score.1 == 1 %}
-                <td class="team-emoji team-">
-                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
-                    vs {{ score|last }}
+                <td class="opponent-emoji">
+                    <span class="glyphicon glyphicon-arrow-up text-success"></span> vs
+                    <span title="Won against {{ score.2.name }} ({{ score.2.speakers|join:", " }})" data-toggle="tooltip" class=" team-{{ score.2.id }}"></span>
                 </td>
             {% elif score.1 == 0 %}
-                <td class="team-emoji team-">
-                    <span class="glyphicon glyphicon-arrow-down text-danger"></span>
-                    vs {{ score|last }}
+                <td class="opponent-emoji">
+                    <span class="glyphicon glyphicon-arrow-down text-danger"></span> vs
+                    <span title="Lost to {{ score.2.name }} ({{ score.2.speakers|join:", " }})" data-toggle="tooltip" class="team-{{ score.2.id }}"></span>
                 </td>
             {% else %}
                 <td></td>
@@ -96,5 +96,3 @@
 </table>
 
 {% endblock content %}
-
-

@@ -543,7 +543,6 @@ class Round(models.Model):
     active_teams = models.ManyToManyField('Team', through='ActiveTeam')
 
     feedback_weight = models.FloatField(default=0)
-    silent = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('tournament', 'seq')
