@@ -1,6 +1,6 @@
 # Tabbycat
 
-Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments.  It was used at Auckland Australs 2010, [Victoria Australs 2012](http://australs2012.com) and will be used at [Otago Australs 2014](http://australs2014.com).
+Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Auckland Australs 2010, [Victoria Australs 2012](http://australs2012.com) and will be used at [Otago Australs 2014](http://australs2014.com).
 
 If you're interested in using, developing or otherwise following this software,
 [join our Facebook group](https://www.facebook.com/groups/tabbycat.debate/).
@@ -16,6 +16,10 @@ If you're interested in using, developing or otherwise following this software,
 - Optional online post-tournament tab display
 
 ## Installing Tabby Cat
+
+#### Assisted Setup
+
+If you want to run a tournament with Tabby Cat but are not able to set it up, get in touch with [Philip](http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=) and he can setup a private and online copy of the software for your use.
 
 #### Setup on Linux or OS X
 
