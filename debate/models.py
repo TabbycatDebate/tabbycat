@@ -170,18 +170,18 @@ class Team(models.Model):
     # swing/composite)
     cannot_break = models.BooleanField(default=False)
 
-    TYPE_NORMAL = 'N'
+    TYPE_NONE = 'N'
     TYPE_ESL = 'E'
     TYPE_SWING = 'S'
     TYPE_COMPOSITE = 'C'
     TYPE_CHOICES = (
-        (TYPE_NORMAL, 'Normal'),
+        (TYPE_NONE, 'None'),
         (TYPE_ESL, 'ESL'),
         (TYPE_SWING, 'Swing'),
         (TYPE_COMPOSITE, 'Composite'),
     )
     type = models.CharField(max_length=1, choices=TYPE_CHOICES,
-                            default=TYPE_NORMAL)
+                            default=TYPE_NONE)
 
     class Meta:
         unique_together = [('reference', 'institution')]
@@ -383,16 +383,6 @@ class Checkin(models.Model):
 
 class Speaker(Person):
     team = models.ForeignKey(Team)
-
-    TYPE_NORMAL = 'N'
-    TYPE_ESL = 'E'
-    TYPE_CHOICES = (
-        (TYPE_NORMAL, 'Normal'),
-        (TYPE_ESL, 'ESL'),
-    )
-
-    type = models.CharField(max_length=1, choices=TYPE_CHOICES,
-                            default=TYPE_NORMAL)
 
     objects = SpeakerManager()
 
