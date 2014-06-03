@@ -106,7 +106,7 @@ admin.site.register(models.DebateTeam)
 admin.site.register(models.DebateAdjudicator)
 
 class MotionAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'round')
+    list_display = ('round',)
     list_filter = ('round',)
 
 admin.site.register(models.Motion, MotionAdmin)
