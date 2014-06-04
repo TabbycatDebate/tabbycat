@@ -1077,6 +1077,14 @@ class AdjudicatorFeedback(models.Model):
                                            null=True)
     source_team = models.ForeignKey(DebateTeam, blank=True, null=True)
 
+    active = models.BooleanField(default=True)
+    version = models.PositiveIntegerField()
+
+    version_semaphore = BoundedSemaphore(100)
+
+    class Meta:
+        unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]
+
     @property
     def source(self):
         if self.source_adjudicator:
@@ -1091,7 +1099,6 @@ class AdjudicatorFeedback(models.Model):
         if self.source_team:
             return self.source_team.debate
 
-
     @property
     def round(self):
         return self.debate.round
@@ -1101,6 +1108,44 @@ class AdjudicatorFeedback(models.Model):
         if self.round:
             return self.round.feedback_weight
         return 1
+
+    def save(self, *args, **kwargs):
+        # Code that is basically the same is also in BallotSubmission.save().
+        # If we need to do this with any more models, probably best to abstract
+        # this to another function.
+        # Only one feedback can be "active" per category.
+        if self.active:
+            try:
+                current_active_feedback = AdjudicatorFeedback.objects.get(
+                    active             = True,
+                    adjudicator        = self.adjudicator,
+                    source_adjudicator = self.source_adjudicator,
+                    source_team        = self.source_team
+                )
+            except AdjudicatorFeedback.DoesNotExist:
+                pass
+            else:
+                if current_active_feedback != self:
+                    warn("%s active while %s was already active, setting latter to inactive" % (self, current_active_feedback))
+                    current_active_feedback.active = False
+                    current_active_feedback.save()
+
+        # Assign the version field to one more than the current maximum version.
+        # Use a semaphore to protect against the possibility that two submissions do this
+        # at the same time and get the same version number.
+        self.version_semaphore.acquire()
+        if self.pk is None:
+            existing_feedbacks = AdjudicatorFeedback.objects.filter(
+                adjudicator        = self.adjudicator,
+                source_adjudicator = self.source_adjudicator,
+                source_team        = self.source_team
+            )
+            if existing_feedbacks.exists():
+                self.version = existing_feedbacks.aggregate(models.Max('version'))['version__max'] + 1
+            else:
+                self.version = 1
+        super(BallotSubmission, self).save(*args, **kwargs)
+        self.version_semaphore.release()
 
 
 class AdjudicatorAllocation(object):
@@ -1200,6 +1245,9 @@ class BallotSubmission(models.Model):
             return "unknown time"
 
     def save(self, *args, **kwargs):
+        # Code that is basically the same is also in AdjudicatorFeedback.save().
+        # If we need to do this with any more models, probably best to abstract
+        # this to another function.
         # Only one ballot can be "confirmed" per debate.
         if self.confirmed:
             try:
@@ -1211,7 +1259,8 @@ class BallotSubmission(models.Model):
                     warn("%s confirmed while %s was already confirmed, setting latter to unconfirmed" % (self, current_confirmed_ballot))
                     current_confirmed_ballot.confirmed = False
                     current_confirmed_ballot.save()
-        # Assign the version field to one more than the current maximum version
+
+        # Assign the version field to one more than the current maximum version.
         # Use a semaphore to protect against the possibility that two submissions do this
         # at the same time and get the same version number.
         self.version_semaphore.acquire()

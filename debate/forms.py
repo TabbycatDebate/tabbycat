@@ -441,7 +441,7 @@ def make_feedback_form_class(adjudicator, released_only=False):
     def team_choice(dt):
         return (
             'T:%d' % dt.id,
-            '%s (%d)' % (dt.team.name, dt.debate.round.seq)
+            '%s (%d)' % (dt.team.short_name, dt.debate.round.seq)
         )
 
     team_choices = [(None, '-- Teams --')]
@@ -588,18 +588,11 @@ def make_feedback_form_class_for_source(source, released_only=False, include_pan
             else:
                 st = None
 
-            try:
-                af = AdjudicatorFeedback.objects.get(
-                    adjudicator = da.adjudicator,
-                    source_adjudicator = sa,
-                    source_team = st,
-                )
-            except AdjudicatorFeedback.DoesNotExist:
-                af = AdjudicatorFeedback(
-                    adjudicator = da.adjudicator,
-                    source_adjudicator = sa,
-                    source_team = st,
-                )
+            af = AdjudicatorFeedback(
+                adjudicator = da.adjudicator,
+                source_adjudicator = sa,
+                source_team = st,
+            )
 
             af.score = self.cleaned_data['score']
             af.comments = self.cleaned_data['comment']
