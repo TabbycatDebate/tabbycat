@@ -61,7 +61,7 @@ If you want to run a tournament with Tabby Cat but are not able to set it up, ge
 
 8. Open the site up by visiting [http://0.0.0.0:5000/](http://0.0.0.0:5000/)
 
-Note that to resume running the server at a later date, you will need change to the project's directory and repeat **step 3** and **step 8** each time.
+Note that to resume running the server at a later date, you will need change to the project's directory and repeat **step 2** and **step 7** each time.
 
 #### Deploy to Heroku
 
