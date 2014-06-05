@@ -42,16 +42,15 @@ def round_view(view_fn):
         return view_fn(request, request.round, *args, **kwargs)
     return foo
 
-def public_optional_view(config_option):
+def public_optional_tournament_view(config_option):
     def bar(view_fn):
         @wraps(view_fn)
-        def foo(request, *args, **kwargs):
-            if request.tournament.config.get(config_option):
-                print "Enabled!"
-                return view_fn(request, *args, **kwargs)
+        @tournament_view
+        def foo(request, tournament, *args, **kwargs):
+            if tournament.config.get(config_option):
+                return view_fn(request, tournament, *args, **kwargs)
             else:
-                print "Disabled, redirecting..."
-                return r2r(request, 'public/index.html')
+                return redirect_tournament('public_index', tournament)
         return foo
     return bar
 
@@ -96,15 +95,13 @@ def public_index(request, t):
     return r2r(request, 'public/index.html')
 
 
-@public_optional_view('public_participants')
-@tournament_view
+@public_optional_tournament_view('public_participants')
 def public_participants(request, t):
     adjs = Adjudicator.objects.all()
     speakers = Speaker.objects.all()
     return r2r(request, "public/participants.html", dict(adjs=adjs, speakers=speakers))
 
-@public_optional_view('public_draw')
-@tournament_view
+@public_optional_tournament_view('public_draw')
 def public_draw(request, t):
     r = t.current_round
     if r.draw_status == r.STATUS_RELEASED:
@@ -113,8 +110,7 @@ def public_draw(request, t):
     else:
         return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=r))
 
-@public_optional_view('public_team_standings')
-@tournament_view
+@public_optional_tournament_view('public_team_standings')
 def public_team_standings(request, t):
     round = t.current_round.prev
 
@@ -165,8 +161,7 @@ def public_team_standings(request, t):
         return r2r(request, 'public/index.html')
 
 
-@public_optional_view('public_ballots')
-@tournament_view
+@public_optional_tournament_view('public_ballots')
 def public_ballot_submit(request, t):
     r = t.current_round
 
@@ -179,16 +174,14 @@ def public_ballot_submit(request, t):
         return r2r(request, 'public/draw_unreleased.html', dict(das=None, round=r))
 
 
-@public_optional_view('public_feedback')
-@tournament_view
+@public_optional_tournament_view('public_feedback')
 def public_feedback_submit(request, t):
     adjudicators = Adjudicator.objects.all()
     teams = Team.objects.all()
     return r2r(request, 'public/add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
 
 
-@public_optional_view('feedback_progress')
-@tournament_view
+@public_optional_tournament_view('feedback_progress')
 def public_feedback_progress(request, t):
     def calculate_coverage(submitted, total):
         if total == 0:
@@ -237,8 +230,7 @@ def public_feedback_progress(request, t):
 
 ## Tab
 
-@public_optional_view('tab_released')
-@tournament_view
+@public_optional_tournament_view('tab_released')
 def public_team_tab(request, t):
     round = t.current_round
     from debate.models import TeamScore
@@ -273,8 +265,7 @@ def public_team_tab(request, t):
             rounds=rounds, round=round))
 
 
-@public_optional_view('tab_released')
-@tournament_view
+@public_optional_tournament_view('tab_released')
 def public_speaker_tab(request, t):
     round = t.current_round
     rounds = Round.objects.filter(tournament=round.tournament,
@@ -316,8 +307,7 @@ def public_speaker_tab(request, t):
     return r2r(request, 'public/speaker_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
-@public_optional_view('tab_released')
-@tournament_view
+@public_optional_tournament_view('tab_released')
 def public_replies_tab(request, t):
     round = t.current_round
     rounds = Round.objects.filter(tournament=round.tournament,
@@ -350,8 +340,7 @@ def public_replies_tab(request, t):
     return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
-@public_optional_view('motions_tab_released')
-@tournament_view
+@public_optional_tournament_view('motions_tab_released')
 def public_motions_tab(request, t):
     round = t.current_round
     rounds = Round.objects.filter(tournament=round.tournament,
@@ -408,6 +397,7 @@ def tournament_config(request, t):
     return r2r(request, 'tournament_config.html', context)
 
 
+@admin_required
 @tournament_view
 def feedback_progress(request, t):
     def calculate_coverage(submitted, total):
@@ -484,6 +474,7 @@ def increment_round(request, round):
 
     return redirect_round('draw', round)
 
+# public (for barcode checkins)
 @round_view
 def checkin(request, round):
     context = {}
@@ -503,6 +494,8 @@ def checkin(request, round):
 
     return r2r(request, 'checkin.html', context)
 
+# public (for barcode checkins)
+# public
 @round_view
 def post_checkin(request, round):
     v = request.POST.get('barcode_id')
@@ -808,8 +801,7 @@ def edit_ballots(request, t, ballots_id):
         ballot_is_singleton     = all_ballot_sets.exclude(id=ballots_id).exists(),
     ))
 
-@public_optional_view('public_ballots')
-@tournament_view
+@public_optional_tournament_view('public_ballots')
 def public_new_ballots(request, t, adj_id):
 
     round = t.current_round
@@ -1197,8 +1189,7 @@ def get_adj_feedback(request, t):
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
 
-@public_optional_view('public_feedback')
-@tournament_view
+@public_optional_tournament_view('public_feedback')
 def public_enter_feedback(request, t, source_type, source_id):
 
     source = get_object_or_404(source_type, id=source_id)
