@@ -105,6 +105,57 @@ def public_draw(request, t):
         return r2r(request, 'public/index.html')
 
 @tournament_view
+def public_team_standings(request, t):
+    round = t.current_round.prev
+
+    # Find the most recent non-silent round
+    while round is not None and round.silent:
+        round = round.prev
+
+    if request.tournament.config.get('public_team_standings') > 0 \
+            and round is not None:
+
+        from debate.models import TeamScore
+
+        # Ranking by institution__name and reference isn't the same as ordering by
+        # short_name, which is what we really want. But we can't rank by short_name,
+        # because it's not a field (it's a property). So we'll do this in JavaScript.
+        # The real purpose of this ordering is to obscure the *true* ranking of teams
+        # - teams are not supposed to know rankings between teams on the same number
+        # of wins.
+        teams = Team.objects.standings(round).order_by('-points', 'institution__code', 'reference')
+
+        rounds = Round.objects.filter(tournament=round.tournament,
+                                    seq__lte=round.seq, silent=False).order_by('seq')
+
+        def get_score(team, r):
+            try:
+                ts = TeamScore.objects.get(
+                    ballot_submission__confirmed=True,
+                    debate_team__team=team,
+                    debate_team__debate__round=r,
+                )
+                debate = ts.debate_team.debate
+                opposition = None
+                if debate.neg_team == team:
+                    opposition = ts.debate_team.debate.aff_team
+                else:
+                    opposition = ts.debate_team.debate.neg_team
+
+                return ts.points, opposition
+            except TeamScore.DoesNotExist:
+                return None
+
+        for team in teams:
+            team.scores = [get_score(team, r) for r in rounds]
+            # Do this manually, in case there are silent rounds in between
+            team.wins = sum([score and score[0] or 0 for score in team.scores])
+
+        return r2r(request, 'public/team_standings.html', dict(teams=teams, rounds=rounds, round=round))
+    else:
+        return r2r(request, 'public/index.html')
+
+@tournament_view
 def public_ballot_submit(request, t):
     r = t.current_round
 

@@ -14,6 +14,7 @@ urlpatterns = patterns('debate.views',
 
     url(r'^public/$', 'public_index', name='public_index'),
     url(r'^public/draw/$', 'public_draw', name='public_draw'),
+    url(r'^public/team_standings/$', 'public_team_standings', name='public_team_standings'),
     url(r'^public/add_ballot/$', 'public_ballot_submit', name='public_ballot_submit'),
     url(r'^public/add_ballot/adjudicator/(?P<adj_id>\d+)/$', 'public_new_ballots',
         name='public_new_ballots'),
