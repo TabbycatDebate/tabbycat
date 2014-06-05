@@ -33,8 +33,8 @@ Edit Ballot Set for
 {{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>
 {% endblock %}
 
-{% block page-title %}{{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>{% endblock %}
-{% block body-class %}monkey-enter-result{% endblock %}
+{% block page-title %}{{ debate.matchup }} Round {{ debate.round }} @ {{ debate.venue.name }}{% endblock %}
+{% block body-class %}enter-result{% endblock %}
 {% block header %}
     {% include "other_ballots_list.html" %}
     {% if not new %}

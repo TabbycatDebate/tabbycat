@@ -34,7 +34,7 @@
         }
 
         function update_speakers() {
-            $('#resultsForm select').each(update_speaker);
+            $('#resultsForm .speaker select').each(update_speaker);
         }
 
         function update_speaker() {
@@ -86,13 +86,6 @@
         });
 
         $('.speaker select').change(update_speakers).each(update_speaker);
-
-        $('#resultsForm').submit(function() {
-            if ($('select.error', this).length) {
-                alert("Please fix speaker position errors!");
-                return false;
-            }
-        });
 
     });
 </script>

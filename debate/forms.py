@@ -6,6 +6,8 @@ from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
 from debate.models import ActionLog
 from debate.result import BallotSet
 
+from collections import Counter
+
 def get_or_instantiate(model, **kwargs):
     try:
         return model.objects.get(**kwargs)
@@ -118,7 +120,7 @@ class BallotSetForm(forms.Form):
         self.fields['motion'] = forms.ModelChoiceField(
             queryset = self.motions,
             widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
-            required = False)
+            required = True)
 
         # Set the initial data
         self.initial = self._initial_data()
@@ -247,10 +249,26 @@ class BallotSetForm(forms.Form):
                     params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
                 ))
 
-        # The third speaker can't give the reply.
         for side in ('affirmative', 'negative'):
+            # The three speaker fields must be unique.
+            speakers = Counter()
+            for i in xrange(1, self.LAST_SUBSTANTIVE_POSITION + 1):
+                try:
+                    speaker = cleaned_data['%s_speaker_%d' % (side[:3], i)]
+                except KeyError:
+                    continue
+                speakers[speaker] += 1
+            for speaker, count in speakers.iteritems():
+                if count > 1:
+                    errors.append(forms.ValidationError(
+                        _('The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team.'),
+                        params={'speaker': speaker, 'side': side, 'count': count}, code='speaker'
+                    ))
+
+            # The third speaker can't give the reply.
             try:
-                reply_speaker_error = cleaned_data['%s_speaker_%d' % (side[:3], self.LAST_SUBSTANTIVE_POSITION)] == cleaned_data['%s_speaker_%d' % (side[:3], self.REPLY_POSITION)]
+                reply_speaker_error = cleaned_data['%s_speaker_%d' % (side[:3], self.LAST_SUBSTANTIVE_POSITION)] \
+                        == cleaned_data['%s_speaker_%d' % (side[:3], self.REPLY_POSITION)]
             except KeyError:
                 continue
             if reply_speaker_error:
