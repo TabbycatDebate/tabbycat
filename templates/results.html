@@ -132,9 +132,13 @@
                     {{ debate.neg_team.short_name }}
                 </span>
             <td>
-                {% for adj_display, split in debate.confirmed_ballot.ballot_set.adjudicator_results_display %}
-                    {{ adj_display }}{% if split %} <span class="glyphicon glyphicon-resize-full text-danger"></span>{% endif %}{% if not forloop.last %},{% endif %}
-                {% endfor %}
+                {% if debate.confirmed_ballot %}
+                    {% for adj_display, split in debate.confirmed_ballot.ballot_set.adjudicator_results_display %}
+                        {{ adj_display }}{% if split %} <span class="glyphicon glyphicon-resize-full text-danger"></span>{% endif %}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                {% else %}
+                    {{ debate.adjudicators_display }}
+                {% endif %}
             </td>
 
             {% if show_motions_column %}

@@ -42,6 +42,18 @@ def round_view(view_fn):
         return view_fn(request, request.round, *args, **kwargs)
     return foo
 
+def public_optional_tournament_view(config_option):
+    def bar(view_fn):
+        @wraps(view_fn)
+        @tournament_view
+        def foo(request, tournament, *args, **kwargs):
+            if tournament.config.get(config_option):
+                return view_fn(request, tournament, *args, **kwargs)
+            else:
+                return redirect_tournament('public_index', tournament)
+        return foo
+    return bar
+
 def admin_required(view_fn):
     return user_passes_test(lambda u: u.is_superuser)(view_fn)
 
@@ -83,113 +95,43 @@ def public_index(request, t):
     return r2r(request, 'public/index.html')
 
 
-@tournament_view
+@public_optional_tournament_view('public_participants')
 def public_participants(request, t):
-    if request.tournament.config.get('public_participants') > 0:
-        adjs = Adjudicator.objects.all()
-        speakers = Speaker.objects.all()
-        return r2r(request, "public/participants.html", dict(adjs=adjs, speakers=speakers))
-    else:
-        return r2r(request, 'public/index.html')
+    adjs = Adjudicator.objects.all()
+    speakers = Speaker.objects.all()
+    return r2r(request, "public/participants.html", dict(adjs=adjs, speakers=speakers))
 
-@tournament_view
+@public_optional_tournament_view('public_draw')
 def public_draw(request, t):
-    if request.tournament.config.get('public_draw') > 0:
-        r = t.current_round
-        if r.draw_status == r.STATUS_RELEASED:
-            draw = r.get_draw()
-            return r2r(request, "public/draw_released.html", dict(draw=draw, round=r))
-        else:
-            return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=r))
-    else:
-        return r2r(request, 'public/index.html')
-
-@tournament_view
-def public_ballot_submit(request, t):
     r = t.current_round
-
-    das = DebateAdjudicator.objects.filter(debate__round=r).select_related('adjudicator', 'debate')
-
-    if request.tournament.config.get('public_ballots') > 0:
-        if r.draw_status == r.STATUS_RELEASED:
-            draw = r.get_draw()
-            return r2r(request, 'public/add_ballot.html', dict(das=das))
-        else:
-            return r2r(request, 'public/draw_unreleased.html', dict(das=None, round=r))
+    if r.draw_status == r.STATUS_RELEASED:
+        draw = r.get_draw()
+        return r2r(request, "public/draw_released.html", dict(draw=draw, round=r))
     else:
-        return r2r(request, 'public/index.html')
+        return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=r))
 
-@tournament_view
-def public_feedback_submit(request, t):
-    adjudicators = Adjudicator.objects.all()
-    teams = Team.objects.all()
-    if request.tournament.config.get('public_feedback') > 0:
-        return r2r(request, 'public/add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
-    else:
-        return r2r(request, 'public/index.html')
+@public_optional_tournament_view('public_team_standings')
+def public_team_standings(request, t):
+    round = t.current_round.prev
 
+    # Find the most recent non-silent round
+    while round is not None and round.silent:
+        round = round.prev
 
-@tournament_view
-def public_feedback_progress(request, t):
-    if request.tournament.config.get('feedback_progress') > 0:
+    if round is not None:
 
-        def calculate_coverage(submitted, total):
-            if total == 0:
-                return False # Don't show these ones
-            elif submitted == 0:
-                return 0
-            else:
-                return int((float(submitted) / float(total)) * 100)
-
-        from debate.models import AdjudicatorFeedback
-        feedback = AdjudicatorFeedback.objects.all()
-        adjudicators = Adjudicator.objects.all()
-        teams = Team.objects.all()
-        current_round = request.tournament.current_round.seq
-
-        for adj in adjudicators:
-            adj.total_ballots = 0
-            adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator = adj)
-            adjudications = DebateAdjudicator.objects.filter(adjudicator = adj)
-
-            for item in adjudications:
-                # Finding out the composition of their panel, tallying owed ballots
-                if item.type == item.TYPE_CHAIR:
-                    adj.total_ballots += len(item.debate.adjudicators.trainees)
-                    adj.total_ballots += len(item.debate.adjudicators.panel)
-
-                if item.type == item.TYPE_PANEL:
-                    # Panelists owe on chairs
-                    adj.total_ballots += 1
-
-                if item.type == item.TYPE_TRAINEE:
-                    # Trainees owe on chairs
-                    adj.total_ballots += 1
-
-            adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
-            adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
-            adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
-
-        for team in teams:
-            team.submitted_ballots = max(feedback.filter(source_team__team = team).count(), 0)
-            team.owed_ballots = max((current_round - team.submitted_ballots), 0)
-            team.coverage = min(calculate_coverage(team.submitted_ballots, current_round), 100)
-
-        return r2r(request, 'public/feedback_tab.html', dict(teams=teams, adjudicators=adjudicators))
-    else:
-        return r2r(request, 'public_index.html')
-
-## Tab
-
-@tournament_view
-def public_team_tab(request, t):
-    if request.tournament.config.get('tab_released') > 0:
-        round = t.current_round
         from debate.models import TeamScore
-        teams = Team.objects.standings(round)
+
+        # Ranking by institution__name and reference isn't the same as ordering by
+        # short_name, which is what we really want. But we can't rank by short_name,
+        # because it's not a field (it's a property). So we'll do this in JavaScript.
+        # The real purpose of this ordering is to obscure the *true* ranking of teams
+        # - teams are not supposed to know rankings between teams on the same number
+        # of wins.
+        teams = Team.objects.standings(round).order_by('-points', 'institution__code', 'reference')
 
         rounds = Round.objects.filter(tournament=round.tournament,
-                                      seq__lte=round.seq).order_by('seq')
+                                    seq__lte=round.seq, silent=False).order_by('seq')
 
         def get_score(team, r):
             try:
@@ -205,114 +147,208 @@ def public_team_tab(request, t):
                 else:
                     opposition = ts.debate_team.debate.neg_team
 
-                return ts.score, ts.points, opposition
+                return ts.points, opposition
             except TeamScore.DoesNotExist:
                 return None
 
         for team in teams:
-            setattr(team, 'results_in', get_score(team, round) is not None)
             team.scores = [get_score(team, r) for r in rounds]
+            # Do this manually, in case there are silent rounds
+            team.wins = sum([score and score[0] or 0 for score in team.scores])
 
-        return r2r(request, 'public/team_tab.html', dict(teams=teams,
-                                                         rounds=rounds,
-                                                         round=round))
+        return r2r(request, 'public/team_standings.html', dict(teams=teams, rounds=rounds, round=round))
     else:
         return r2r(request, 'public/index.html')
 
-@tournament_view
+
+@public_optional_tournament_view('public_ballots')
+def public_ballot_submit(request, t):
+    r = t.current_round
+
+    das = DebateAdjudicator.objects.filter(debate__round=r).select_related('adjudicator', 'debate')
+
+    if r.draw_status == r.STATUS_RELEASED:
+        draw = r.get_draw()
+        return r2r(request, 'public/add_ballot.html', dict(das=das))
+    else:
+        return r2r(request, 'public/draw_unreleased.html', dict(das=None, round=r))
+
+
+@public_optional_tournament_view('public_feedback')
+def public_feedback_submit(request, t):
+    adjudicators = Adjudicator.objects.all()
+    teams = Team.objects.all()
+    return r2r(request, 'public/add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
+
+
+@public_optional_tournament_view('feedback_progress')
+def public_feedback_progress(request, t):
+    def calculate_coverage(submitted, total):
+        if total == 0:
+            return False # Don't show these ones
+        elif submitted == 0:
+            return 0
+        else:
+            return int((float(submitted) / float(total)) * 100)
+
+    from debate.models import AdjudicatorFeedback
+    feedback = AdjudicatorFeedback.objects.all()
+    adjudicators = Adjudicator.objects.all()
+    teams = Team.objects.all()
+    current_round = request.tournament.current_round.seq
+
+    for adj in adjudicators:
+        adj.total_ballots = 0
+        adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator = adj)
+        adjudications = DebateAdjudicator.objects.filter(adjudicator = adj)
+
+        for item in adjudications:
+            # Finding out the composition of their panel, tallying owed ballots
+            if item.type == item.TYPE_CHAIR:
+                adj.total_ballots += len(item.debate.adjudicators.trainees)
+                adj.total_ballots += len(item.debate.adjudicators.panel)
+
+            if item.type == item.TYPE_PANEL:
+                # Panelists owe on chairs
+                adj.total_ballots += 1
+
+            if item.type == item.TYPE_TRAINEE:
+                # Trainees owe on chairs
+                adj.total_ballots += 1
+
+        adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
+        adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
+        adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
+
+    for team in teams:
+        team.submitted_ballots = max(feedback.filter(source_team__team = team).count(), 0)
+        team.owed_ballots = max((current_round - team.submitted_ballots), 0)
+        team.coverage = min(calculate_coverage(team.submitted_ballots, current_round), 100)
+
+    return r2r(request, 'public/feedback_tab.html', dict(teams=teams, adjudicators=adjudicators))
+
+
+## Tab
+
+@public_optional_tournament_view('tab_released')
+def public_team_tab(request, t):
+    round = t.current_round
+    from debate.models import TeamScore
+    teams = Team.objects.standings(round)
+
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                    seq__lte=round.seq).order_by('seq')
+
+    def get_score(team, r):
+        try:
+            ts = TeamScore.objects.get(
+                ballot_submission__confirmed=True,
+                debate_team__team=team,
+                debate_team__debate__round=r,
+            )
+            debate = ts.debate_team.debate
+            opposition = None
+            if debate.neg_team == team:
+                opposition = ts.debate_team.debate.aff_team
+            else:
+                opposition = ts.debate_team.debate.neg_team
+
+            return ts.score, ts.points, opposition
+        except TeamScore.DoesNotExist:
+            return None
+
+    for team in teams:
+        setattr(team, 'results_in', get_score(team, round) is not None)
+        team.scores = [get_score(team, r) for r in rounds]
+
+    return r2r(request, 'public/team_tab.html', dict(teams=teams,
+            rounds=rounds, round=round))
+
+
+@public_optional_tournament_view('tab_released')
 def public_speaker_tab(request, t):
-    if request.tournament.config.get('tab_released') > 0:
-        round = t.current_round
-        rounds = Round.objects.filter(tournament=round.tournament,
-                                      seq__lte=round.seq).order_by('seq')
-        speakers = Speaker.objects.standings(round)
+    round = t.current_round
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                    seq__lte=round.seq).order_by('seq')
+    speakers = Speaker.objects.standings(round)
 
-        # TODO is there a way to do this without so many database hits?
-        # Maybe using a select subquery?
-        from debate.models import SpeakerScore
-        def get_score(speaker, r):
-            try:
-                return SpeakerScore.objects.get(
-                    ballot_submission__confirmed=True,
-                    speaker=speaker,
-                    debate_team__debate__round=r,
-                    position__lte=3).score
-            except SpeakerScore.DoesNotExist:
-                return None
+    # TODO is there a way to do this without so many database hits?
+    # Maybe using a select subquery?
+    from debate.models import SpeakerScore
+    def get_score(speaker, r):
+        try:
+            return SpeakerScore.objects.get(
+                ballot_submission__confirmed=True,
+                speaker=speaker,
+                debate_team__debate__round=r,
+                position__lte=3).score
+        except SpeakerScore.DoesNotExist:
+            return None
 
-            # This was an issue once, not sure how, but if it ever happens,
-            # fail gracefully.
-            except SpeakerScore.MultipleObjectsReturned:
-                print("Multiple speaker scores seen for speaker {0:s} in round {1:d}:".format(
-                    speaker.name, r.seq))
-                for score in SpeakerScore.objects.filter(
-                    ballot_submission__confirmed=True,
-                    speaker=speaker,
-                    debate_team__debate__round=r,
-                    position__lte=3):
-                    print("   {dt:s}\n        position {pos:d}, ballot submission ID {id:d} (version {v:d}): score {score}".format(
-                        dt=score.debate_team, pos=score.position, id=score.ballot_submission.id,
-                        v=score.ballot_submission.version, score=score.score))
-                return None
+        # This was an issue once, not sure how, but if it ever happens,
+        # fail gracefully.
+        except SpeakerScore.MultipleObjectsReturned:
+            print("Multiple speaker scores seen for speaker {0:s} in round {1:d}:".format(
+                speaker.name, r.seq))
+            for score in SpeakerScore.objects.filter(
+                ballot_submission__confirmed=True,
+                speaker=speaker,
+                debate_team__debate__round=r,
+                position__lte=3):
+                print("   {dt:s}\n        position {pos:d}, ballot submission ID {id:d} (version {v:d}): score {score}".format(
+                    dt=score.debate_team, pos=score.position, id=score.ballot_submission.id,
+                    v=score.ballot_submission.version, score=score.score))
+            return None
 
-        for speaker in speakers:
-            speaker.scores = [get_score(speaker, r) for r in rounds]
-            speaker.results_in = get_score(speaker, round) is not None
+    for speaker in speakers:
+        speaker.scores = [get_score(speaker, r) for r in rounds]
+        speaker.results_in = get_score(speaker, round) is not None
 
-        return r2r(request, 'public/speaker_tab.html', dict(speakers=speakers,
-                                                            rounds=rounds,
-                                                            round=round))
-    else:
-        return r2r(request, 'public/index.html')
+    return r2r(request, 'public/speaker_tab.html', dict(speakers=speakers,
+            rounds=rounds, round=round))
 
-@tournament_view
+@public_optional_tournament_view('tab_released')
 def public_replies_tab(request, t):
-    if request.tournament.config.get('tab_released') > 0:
-        round = t.current_round
-        rounds = Round.objects.filter(tournament=round.tournament,
-                                      seq__lte=round.seq).order_by('seq')
-        speakers = Speaker.objects.reply_standings(round)
+    round = t.current_round
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                    seq__lte=round.seq).order_by('seq')
+    speakers = Speaker.objects.reply_standings(round)
 
-        from debate.models import SpeakerScore
-        def get_score(speaker, r):
-            try:
-                return SpeakerScore.objects.get(
-                    ballot_submission__confirmed=True,
-                    speaker=speaker,
-                    debate_team__debate__round=r,
-                    position=4).score
-            except SpeakerScore.DoesNotExist:
-                return None
+    from debate.models import SpeakerScore
+    def get_score(speaker, r):
+        try:
+            return SpeakerScore.objects.get(
+                ballot_submission__confirmed=True,
+                speaker=speaker,
+                debate_team__debate__round=r,
+                position=4).score
+        except SpeakerScore.DoesNotExist:
+            return None
 
-        for speaker in speakers:
-            speaker.scores = [get_score(speaker, r) for r in rounds]
-            try:
-                # TODO detect if the speaker's *team's* ballot has been entered
-                # for this round, and set results_in accordingly.
-                #SpeakerScore.objects.get(speaker=speaker,
-                                         #debate_team__debate__round=r,
-                                         #position=4)
-                speaker.results_in = True
-            except SpeakerScore.DoesNotExist:
-                speaker.results_in = False
+    for speaker in speakers:
+        speaker.scores = [get_score(speaker, r) for r in rounds]
+        try:
+            # TODO detect if the speaker's *team's* ballot has been entered
+            # for this round, and set results_in accordingly.
+            #SpeakerScore.objects.get(speaker=speaker,
+                                        #debate_team__debate__round=r,
+                                        #position=4)
+            speaker.results_in = True
+        except SpeakerScore.DoesNotExist:
+            speaker.results_in = False
 
-        return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,
-                                                          rounds=rounds,
-                                                          round=round))
-    else:
-        return r2r(request, 'public/index.html')
+    return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,
+            rounds=rounds, round=round))
 
-@tournament_view
+@public_optional_tournament_view('motions_tab_released')
 def public_motions_tab(request, t):
-    if request.tournament.config.get('tab_released') > 0:
-        round = t.current_round
-        rounds = Round.objects.filter(tournament=round.tournament,
-                                      seq__lte=round.seq).order_by('seq')
-        motions = list()
-        motions = Motion.objects.statistics(round=round)
-        return r2r(request, 'public/motions_tab.html', dict(motions=motions))
-    else:
-        return r2r(request, 'public/index.html')
+    round = t.current_round
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                    seq__lte=round.seq).order_by('seq')
+    motions = list()
+    motions = Motion.objects.statistics(round=round)
+    return r2r(request, 'public/motions_tab.html', dict(motions=motions))
+
 
 @login_required
 @tournament_view
@@ -361,6 +397,7 @@ def tournament_config(request, t):
     return r2r(request, 'tournament_config.html', context)
 
 
+@admin_required
 @tournament_view
 def feedback_progress(request, t):
     def calculate_coverage(submitted, total):
@@ -437,6 +474,7 @@ def increment_round(request, round):
 
     return redirect_round('draw', round)
 
+# public (for barcode checkins)
 @round_view
 def checkin(request, round):
     context = {}
@@ -456,6 +494,8 @@ def checkin(request, round):
 
     return r2r(request, 'checkin.html', context)
 
+# public (for barcode checkins)
+# public
 @round_view
 def post_checkin(request, round):
     v = request.POST.get('barcode_id')
@@ -758,10 +798,10 @@ def edit_ballots(request, t, ballots_id):
         all_ballot_sets         = all_ballot_sets,
         disable_confirm         = disable_confirm,
         new                     = False,
-        ballot_is_singleton     = all_ballot_sets.exclude(id=ballots_id).exists(),
+        ballot_not_singleton    = all_ballot_sets.exclude(id=ballots_id).exists(),
     ))
 
-@tournament_view
+@public_optional_tournament_view('public_ballots')
 def public_new_ballots(request, t, adj_id):
 
     round = t.current_round
@@ -772,8 +812,8 @@ def public_new_ballots(request, t, adj_id):
     try:
         da = DebateAdjudicator.objects.get(adjudicator=adjudicator, debate__round=round)
     except DebateAdjudicator.DoesNotExist:
-        # TODO make this a pretty template (not an error page) that just says "it looks like you don't have a debate" or something
-        return HttpResponseBadRequest('It looks like you don\'t have a debate this round!\n\nTODO make this a pretty template (not an error page) that just says the above')
+        return HttpResponseBadRequest('It looks like you don\'t have a debate this round!')
+
     debate = da.debate
 
     ip_address = get_real_ip(request)
@@ -782,6 +822,8 @@ def public_new_ballots(request, t, adj_id):
         debate         = debate,
         submitter_type = BallotSubmission.SUBMITTER_PUBLIC,
         ip_address     = ip_address)
+
+    existing_ballots = debate.ballotsubmission_set.exclude(discarded=True).count()
 
     if request.method == 'POST':
         form = forms.BallotSetForm(ballots, request.POST)
@@ -798,7 +840,7 @@ def public_new_ballots(request, t, adj_id):
         form = forms.BallotSetForm(ballots)
 
     return r2r(request, 'public/enter_results.html', dict(debate=debate, form=form,
-        round=round, ballots=ballots, adjudicator=adjudicator))
+        round=round, ballots=ballots, adjudicator=adjudicator, existing_ballots=existing_ballots))
 
 @login_required
 @tournament_view
@@ -842,7 +884,7 @@ def new_ballots(request, t, debate_id):
         ballots                 = ballots,
         all_ballot_sets         = all_ballot_sets,
         new                     = True,
-        ballot_is_singleton     = all_ballot_sets.exists(),
+        ballot_not_singleton    = all_ballot_sets.exists(),
     ))
 
 @admin_required
@@ -1105,7 +1147,7 @@ def adj_conflicts(request, round):
         add('history', da.adjudicator_id, da.debate.aff_team.id)
         add('history', da.adjudicator_id, da.debate.neg_team.id)
 
-    return HttpResponse(json.dumps(data), mimetype="text/json")
+    return HttpResponse(json.dumps(data), content_type="text/json")
 
 
 @admin_required
@@ -1117,7 +1159,7 @@ def adj_scores(request, t):
     for adj in Adjudicator.objects.all():
         data[adj.id] = adj.score
 
-    return HttpResponse(json.dumps(data), mimetype="text/json")
+    return HttpResponse(json.dumps(data), content_type="text/json")
 
 
 @login_required
@@ -1146,10 +1188,10 @@ def get_adj_feedback(request, t):
               f.comments,
              ] for f in feedback ]
 
-    return HttpResponse(json.dumps({'aaData': data}), mimetype="text/json")
+    return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
 
-@tournament_view
+@public_optional_tournament_view('public_feedback')
 def public_enter_feedback(request, t, source_type, source_id):
 
     source = get_object_or_404(source_type, id=source_id)

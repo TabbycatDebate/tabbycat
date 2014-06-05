@@ -13,7 +13,7 @@
             $('#ballot_set input').removeAttr('readonly');
             $('#ballot_set select').removeAttr('disabled');
         }
-        $('#ballot_set input[type="text"]').attr('readonly', 'true');
+        $('#ballot_set input[type="number"]').attr('readonly', 'true');
         $('#ballot_set select').attr('disabled', 'true');
         $('#submit').click(function() {
             preSubmit();
@@ -33,8 +33,8 @@ Edit Ballot Set for
 {{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>
 {% endblock %}
 
-{% block page-title %}{{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>{% endblock %}
-{% block body-class %}monkey-enter-result{% endblock %}
+{% block page-title %}{{ debate.matchup }} Round {{ debate.round }} @ {{ debate.venue.name }}{% endblock %}
+{% block body-class %}enter-result{% endblock %}
 {% block header %}
     {% include "other_ballots_list.html" %}
     {% if not new %}

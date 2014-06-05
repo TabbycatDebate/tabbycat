@@ -33,6 +33,11 @@
                     Draw for Round {{ current_round }}
                 </a></li>
                 {% endif %}
+                {% if public_team_standings > 0 and current_round.prev %}
+                <li><a class="public-team-standings-nav" href="{% tournament_url public_team_standings %}">
+                    Standings
+                </a></li>
+                {% endif %}
                 {% if public_participants > 0 %}
                 <li><a class="public-participants-nav" href="{% tournament_url public_participants %}">
                     Participants

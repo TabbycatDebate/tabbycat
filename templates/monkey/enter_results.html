@@ -16,7 +16,7 @@
         $('#correct').attr('disabled', 'true');
         $('#correct').removeClass('btn-success');
         {% endif %}
-        $('#resultsForm input[type="text"]').attr('readonly', 'true');
+        $('#resultsForm input[type="number"]').attr('readonly', 'true');
         $('#resultsForm select').attr('disabled', 'true');
         $('#incorrect').click(function() {
             {% if other_ballots_set.count > 0 %}

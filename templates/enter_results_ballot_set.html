@@ -15,7 +15,8 @@
 
 <div class="row">
     <div class="col-md-12">
-        {{ form.motion|addcss:"form-control" }}
+        {{ form.motion|addcss:"form-control motion required" }}
+        {{ form.motion.errors }}
     </div>
 </div>
 
@@ -35,7 +36,7 @@
                 <label class="col-md-2 col-xs-3 control-label" >{{ position }}A</label>
                 <div class="col-md-4 col-xs-6 { position.aff_speaker.errors|yesno:'error,' }}">
                     {% if forloop.parentloop.first %}
-                        {{ position.aff_speaker|addcss:"form-control" }}
+                        {{ position.aff_speaker|addcss:"form-control speaker required" }}
                         {{ position.aff_speaker.errors }}
                     {% else %}
                     <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
@@ -44,7 +45,7 @@
                 <div class="col-md-6 col-xs-2 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
                     {{ position.aff_score }}
                     {{ position.aff_score_errors }}
-                    {{ position.aff_speaker.errors }}
+                    {{ position.aff_score.errors }}
                 </div>
             </div>
             {% endfor %}
@@ -65,7 +66,7 @@
                     <label class="col-md-2 col-xs-3 control-label" >{{ position }}N</label>
                     <div class="col-md-4 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
                         {% if forloop.parentloop.first %}
-                            {{ position.neg_speaker|addcss:"form-control" }}
+                            {{ position.neg_speaker|addcss:"form-control speaker required" }}
                             {{ position.neg_speaker.errors }}
                         {% else %}
                         <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
@@ -74,7 +75,7 @@
                     <div class="col-md-6 col-xs-2 neg score form-control-parent {{ position.neg_score_errors|yesno:'error,' }}">
                         {{ position.neg_score }}
                         {{ position.neg_score_errors }}
-                        {{ position.neg_speaker.errors }}
+                        {{ position.neg_score.errors }}
                     </div>
                 </div>
             {% endfor %}
