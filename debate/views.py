@@ -1105,7 +1105,7 @@ def adj_conflicts(request, round):
         add('history', da.adjudicator_id, da.debate.aff_team.id)
         add('history', da.adjudicator_id, da.debate.neg_team.id)
 
-    return HttpResponse(json.dumps(data), mimetype="text/json")
+    return HttpResponse(json.dumps(data), content_type="text/json")
 
 
 @admin_required
@@ -1117,7 +1117,7 @@ def adj_scores(request, t):
     for adj in Adjudicator.objects.all():
         data[adj.id] = adj.score
 
-    return HttpResponse(json.dumps(data), mimetype="text/json")
+    return HttpResponse(json.dumps(data), content_type="text/json")
 
 
 @login_required
@@ -1146,7 +1146,7 @@ def get_adj_feedback(request, t):
               f.comments,
              ] for f in feedback ]
 
-    return HttpResponse(json.dumps({'aaData': data}), mimetype="text/json")
+    return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
 
 @tournament_view
