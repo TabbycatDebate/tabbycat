@@ -9,7 +9,7 @@
     {% endif %}
 
     <ul class="list-group">
-        {% if ballot_is_singleton %}
+        {% if ballot_not_singleton %}
         <li class="list-group-item list-group-item-warning">
             <h4 class="list-group-item-heading">
             {% if not new %}

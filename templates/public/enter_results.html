@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load debate_tags %}
+{% load humanize %}
 
 {% block extra-head %}
 {{ block.super }}
@@ -19,8 +20,14 @@ Enter Results for
 The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
 
 {% if form.adjudicators|length > 1 %}
-<div class="alert alert-danger">
+<div class="alert alert-warning">
 {{ adjudicator.name }}, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!
+</div>
+{% endif %}
+
+{% if existing_ballots %}
+<div class="alert alert-danger">
+This form has already been submitted <strong>{{ existing_ballots|apnumber }}</strong> time{{ existing_ballots|pluralize }}. Please contact a tab official after submitting your form.
 </div>
 {% endif %}
 

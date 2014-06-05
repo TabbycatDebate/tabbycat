@@ -798,7 +798,7 @@ def edit_ballots(request, t, ballots_id):
         all_ballot_sets         = all_ballot_sets,
         disable_confirm         = disable_confirm,
         new                     = False,
-        ballot_is_singleton     = all_ballot_sets.exclude(id=ballots_id).exists(),
+        ballot_not_singleton    = all_ballot_sets.exclude(id=ballots_id).exists(),
     ))
 
 @public_optional_tournament_view('public_ballots')
@@ -812,8 +812,8 @@ def public_new_ballots(request, t, adj_id):
     try:
         da = DebateAdjudicator.objects.get(adjudicator=adjudicator, debate__round=round)
     except DebateAdjudicator.DoesNotExist:
-        # TODO make this a pretty template (not an error page) that just says "it looks like you don't have a debate" or something
-        return HttpResponseBadRequest('It looks like you don\'t have a debate this round!\n\nTODO make this a pretty template (not an error page) that just says the above')
+        return HttpResponseBadRequest('It looks like you don\'t have a debate this round!')
+
     debate = da.debate
 
     ip_address = get_real_ip(request)
@@ -822,6 +822,8 @@ def public_new_ballots(request, t, adj_id):
         debate         = debate,
         submitter_type = BallotSubmission.SUBMITTER_PUBLIC,
         ip_address     = ip_address)
+
+    existing_ballots = debate.ballotsubmission_set.exclude(discarded=True).count()
 
     if request.method == 'POST':
         form = forms.BallotSetForm(ballots, request.POST)
@@ -838,7 +840,7 @@ def public_new_ballots(request, t, adj_id):
         form = forms.BallotSetForm(ballots)
 
     return r2r(request, 'public/enter_results.html', dict(debate=debate, form=form,
-        round=round, ballots=ballots, adjudicator=adjudicator))
+        round=round, ballots=ballots, adjudicator=adjudicator, existing_ballots=existing_ballots))
 
 @login_required
 @tournament_view
@@ -882,7 +884,7 @@ def new_ballots(request, t, debate_id):
         ballots                 = ballots,
         all_ballot_sets         = all_ballot_sets,
         new                     = True,
-        ballot_is_singleton     = all_ballot_sets.exists(),
+        ballot_not_singleton    = all_ballot_sets.exists(),
     ))
 
 @admin_required
