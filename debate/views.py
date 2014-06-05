@@ -148,7 +148,7 @@ def public_team_standings(request, t):
 
         for team in teams:
             team.scores = [get_score(team, r) for r in rounds]
-            # Do this manually, in case there are silent rounds in between
+            # Do this manually, in case there are silent rounds
             team.wins = sum([score and score[0] or 0 for score in team.scores])
 
         return r2r(request, 'public/team_standings.html', dict(teams=teams, rounds=rounds, round=round))
