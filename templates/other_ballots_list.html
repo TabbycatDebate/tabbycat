@@ -34,11 +34,12 @@
                     {% endif %}
                     {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
                         Version {{ other_ballots.version }}, entered by <strong>{{ other_ballots.user }}</strong>
-                        at {{ other_ballots.timestamp_str }}
                     {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
                         Version {{ other_ballots.version }}, submitted from the public form on <strong>{{ other_ballots.ip_address }}</strong>
-                        at {{ other_ballots.timestamp_str }}
                     {% endif %}
+                        at {{ other_ballots.timestamp|time:"H:i" }}
+                        on {{ other_ballots.timestamp|date:"j F" }}
+                        ({{ other_ballots.timestamp|timesince }} ago)
                     {% if other_ballots.discarded %}
                         (discarded)
                     {% endif %}

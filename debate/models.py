@@ -1184,20 +1184,13 @@ class BallotSubmission(models.Model):
         unique_together = [('debate', 'version')]
 
     def __unicode__(self):
-        return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp_str)
+        return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp.isoformat())
 
     @property
     def ballot_set(self):
         if not hasattr(self, "_ballot_set"):
             self._ballot_set = BallotSet(self)
         return self._ballot_set
-
-    @property
-    def timestamp_str(self):
-        try:
-            return self.timestamp.strftime("%H:%M on %d %B")
-        except AttributeError:
-            return "unknown time"
 
     def save(self, *args, **kwargs):
         # Only one ballot can be "confirmed" per debate.
