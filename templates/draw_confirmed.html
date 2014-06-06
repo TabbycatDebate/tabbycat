@@ -95,7 +95,7 @@
     </thead>
     <tbody>
     {% for debate in draw %}
-    <tr class="{{ debate.all_conflicts|yesno:'conflict,' }} {% if not debate.adjudicators_display or not debate.adjudicators.valid %}inactive{% endif %}">
+    <tr class="{% if debate.all_conflicts or not debate.adjudicators_display or not debate.adjudicators.valid %}danger{% endif %}">
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td title="{% aff_count debate.aff_team round.prev %}">
