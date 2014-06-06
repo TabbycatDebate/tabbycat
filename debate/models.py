@@ -1068,7 +1068,70 @@ class DebateAdjudicator(models.Model):
         return u'%s %s' % (self.adjudicator, self.debate)
 
 
-class AdjudicatorFeedback(models.Model):
+class Submission(models.Model):
+    """Abstract base class to provide functionality common to different
+    types of submissions.
+
+    The unique_together class attribute of the Meta class MUST be set in
+    all subclasses."""
+
+    SUBMITTER_TABROOM = 0
+    SUBMITTER_PUBLIC  = 1
+    SUBMITTER_TYPE_CHOICES = (
+        (SUBMITTER_TABROOM, 'Tab room'),
+        (SUBMITTER_PUBLIC,  'Public'),
+    )
+
+    timestamp = models.DateTimeField(auto_now_add=True)
+    version = models.PositiveIntegerField()
+    submitter_type = models.IntegerField(choices=SUBMITTER_TYPE_CHOICES)
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+
+    version_semaphore = BoundedSemaphore(100)
+
+    confirmed = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
+
+    @property
+    def _unique_filter_args(self):
+        return dict((arg, getattr(self, arg)) for arg in self._meta.unique_together[0] if arg != 'version')
+
+    def save(self, *args, **kwargs):
+        # Check for uniqueness.
+        if self.confirmed:
+            try:
+                current = self.__class__.objects.get(confirmed=True, **self._unique_filter_args)
+            except self.DoesNotExist:
+                pass
+            else:
+                if current != self:
+                    warn("%s confirmed while %s was already confirmed, setting latter to unconfirmed" % (self, current))
+                    current.confirmed = False
+                    current.save()
+
+        # Assign the version field to one more than the current maximum version.
+        # Use a semaphore to protect against the possibility that two submissions do this
+        # at the same time and get the same version number.
+        self.version_semaphore.acquire()
+        if self.pk is None:
+            existing = self.__class__.objects.filter(**self._unique_filter_args)
+            if existing.exists():
+                self.version = existing.aggregate(models.Max('version'))['version__max'] + 1
+            else:
+                self.version = 1
+        super(Submission, self).save(*args, **kwargs)
+        self.version_semaphore.release()
+
+    def clean(self):
+        if self.submitter_type == self.SUBMITTER_TABROOM and self.user is None:
+            raise ValidationError("A tab room ballot must have a user associated.")
+
+
+class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey(Adjudicator)
     score = models.FloatField()
     comments = models.TextField(blank=True)
@@ -1076,11 +1139,6 @@ class AdjudicatorFeedback(models.Model):
     source_adjudicator = models.ForeignKey(DebateAdjudicator, blank=True,
                                            null=True)
     source_team = models.ForeignKey(DebateTeam, blank=True, null=True)
-
-    active = models.BooleanField(default=True)
-    version = models.PositiveIntegerField()
-
-    version_semaphore = BoundedSemaphore(100)
 
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]
@@ -1108,44 +1166,6 @@ class AdjudicatorFeedback(models.Model):
         if self.round:
             return self.round.feedback_weight
         return 1
-
-    def save(self, *args, **kwargs):
-        # Code that is basically the same is also in BallotSubmission.save().
-        # If we need to do this with any more models, probably best to abstract
-        # this to another function.
-        # Only one feedback can be "active" per category.
-        if self.active:
-            try:
-                current_active_feedback = AdjudicatorFeedback.objects.get(
-                    active             = True,
-                    adjudicator        = self.adjudicator,
-                    source_adjudicator = self.source_adjudicator,
-                    source_team        = self.source_team
-                )
-            except AdjudicatorFeedback.DoesNotExist:
-                pass
-            else:
-                if current_active_feedback != self:
-                    warn("%s active while %s was already active, setting latter to inactive" % (self, current_active_feedback))
-                    current_active_feedback.active = False
-                    current_active_feedback.save()
-
-        # Assign the version field to one more than the current maximum version.
-        # Use a semaphore to protect against the possibility that two submissions do this
-        # at the same time and get the same version number.
-        self.version_semaphore.acquire()
-        if self.pk is None:
-            existing_feedbacks = AdjudicatorFeedback.objects.filter(
-                adjudicator        = self.adjudicator,
-                source_adjudicator = self.source_adjudicator,
-                source_team        = self.source_team
-            )
-            if existing_feedbacks.exists():
-                self.version = existing_feedbacks.aggregate(models.Max('version'))['version__max'] + 1
-            else:
-                self.version = 1
-        super(BallotSubmission, self).save(*args, **kwargs)
-        self.version_semaphore.release()
 
 
 class AdjudicatorAllocation(object):
@@ -1198,32 +1218,15 @@ class AdjudicatorAllocation(object):
                     type = t,
                 ).save()
 
-class BallotSubmission(models.Model):
+class BallotSubmission(Submission):
     """Represents a single submission of ballots for a debate.
     (Not a single motion, but a single submission of all ballots for a debate.)"""
-
-    SUBMITTER_TABROOM = 0
-    SUBMITTER_PUBLIC  = 1
-    SUBMITTER_TYPE_CHOICES = (
-        (SUBMITTER_TABROOM, 'Tab room'),
-        (SUBMITTER_PUBLIC,  'Public'),
-    )
 
     debate = models.ForeignKey(Debate)
     motion = models.ForeignKey('Motion', blank=True, null=True, on_delete=models.SET_NULL)
 
-    timestamp = models.DateTimeField(auto_now_add=True)
-    version = models.PositiveIntegerField()
-    submitter_type = models.IntegerField(choices=SUBMITTER_TYPE_CHOICES)
-
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
-    ip_address = models.GenericIPAddressField(blank=True, null=True)
-
     copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
     discarded = models.BooleanField(default=False)
-    confirmed = models.BooleanField(default=False)
-
-    version_semaphore = BoundedSemaphore(100)
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -1237,44 +1240,13 @@ class BallotSubmission(models.Model):
             self._ballot_set = BallotSet(self)
         return self._ballot_set
 
-    def save(self, *args, **kwargs):
-        # Code that is basically the same is also in AdjudicatorFeedback.save().
-        # If we need to do this with any more models, probably best to abstract
-        # this to another function.
-        # Only one ballot can be "confirmed" per debate.
-        if self.confirmed:
-            try:
-                current_confirmed_ballot = BallotSubmission.objects.get(confirmed=True, debate=self.debate)
-            except BallotSubmission.DoesNotExist:
-                pass
-            else:
-                if current_confirmed_ballot != self:
-                    warn("%s confirmed while %s was already confirmed, setting latter to unconfirmed" % (self, current_confirmed_ballot))
-                    current_confirmed_ballot.confirmed = False
-                    current_confirmed_ballot.save()
-
-        # Assign the version field to one more than the current maximum version.
-        # Use a semaphore to protect against the possibility that two submissions do this
-        # at the same time and get the same version number.
-        self.version_semaphore.acquire()
-        if self.pk is None:
-            existing_ballots = BallotSubmission.objects.filter(debate=self.debate)
-            if existing_ballots.exists():
-                self.version = existing_ballots.aggregate(models.Max('version'))['version__max'] + 1
-            else:
-                self.version = 1
-        super(BallotSubmission, self).save(*args, **kwargs)
-        self.version_semaphore.release()
-
     def clean(self):
         # The motion must be from the relevant round
+        super(BallotSubmission, self).clean()
         if self.motion.round != self.debate.round:
                 raise ValidationError("Debate is in round %d but motion (%s) is from round %d" % (self.debate.round, self.motion.reference, self.motion.round))
         if self.confirmed and self.discarded:
             raise ValidationError("A ballot can't be both confirmed and discarded!")
-        if self.submitter_type == self.SUBMITTER_TABROOM and self.user is None:
-            raise ValidationError("A tab room ballot must have a user associated.")
-
 
     # For further discussion
     #submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
