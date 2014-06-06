@@ -515,6 +515,7 @@ def make_feedback_form_class_for_adj(adjudicator, submission_fields, released_on
                 adjudicator = adjudicator,
                 source_adjudicator = sa,
                 source_team = st,
+                confirmed = True, # assume confirmed on every submission
                 **submission_fields
             )
 
