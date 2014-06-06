@@ -1180,7 +1180,8 @@ def get_adj_feedback(request, t):
 
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback()
-    data = [ [unicode(f.round),
+    data = [ [unicode(str(f.version) + (f.confirmed and "*" or "")),
+              unicode(f.round),
               f.debate.bracket,
               unicode(f.debate),
               unicode(f.source),
