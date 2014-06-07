@@ -1,15 +1,20 @@
 from collections import OrderedDict
 import random
 
-class Debate(object):
-    """Simple data structure for communicating information about debates.
+class Pairing(object):
+    """Simple data structure for communicating information about pairings.
     Draws always return a list of these."""
 
-    def __init__(self, aff_team, neg_team, bracket, room_rank, flags=[]):
-        self.teams     = [aff_team, neg_team]
+    def __init__(self, teams, bracket, room_rank, flags=[]):
+        """'teams' must be a list of two teams."""
+        self.teams     = teams
         self.bracket   = bracket
         self.room_rank = room_rank
         self.flags     = flags
+
+    def __repr__(self):
+        return "<draw.Debate object: {0} vs {1} ({2}/{3})>".format(
+            self.teams[0], self.teams[1], self.bracket, self.room_rank)
 
     @property
     def aff_team(self):
@@ -18,6 +23,13 @@ class Debate(object):
     @property
     def neg_team(self):
         return self.teams[1]
+
+    def get_team(self, side):
+        try:
+            index = {"aff": 0, "neg": 1}[side]
+        except KeyError:
+            raise ValueError("side must be 'aff' or 'neg'")
+        return self.teams[index]
 
     def swap_sides(self):
         self.teams.reverse()
@@ -73,9 +85,9 @@ class PowerPairedDraw(BaseDraw):
     can_be_first_round = False
 
     DEFAULT_OPTIONS = {
-        "odd_bracket"   : "pullup_top",
-        "pairing_method": "slide",
-        "avoid_conflict": "one_up_one_down"
+        "odd_bracket"    : "pullup_top",
+        "pairing_method" : "slide",
+        "avoid_conflicts": "one_up_one_down"
     }
 
     def get_draw(self):
@@ -85,6 +97,15 @@ class PowerPairedDraw(BaseDraw):
         self._draw = self.avoid_conflicts(self._draw)
         self._draw = self.balance_affs(self._draw)
         return self._draw
+
+    def _get_option_function(self, option_name, option_dict):
+        option = self.options[option_name]
+        if callable(option):
+            return option
+        try:
+            return getattr(self, option_dict[option])
+        except KeyError:
+            raise ValueError("Invalid option for {1}: {0}".format(option, option_name))
 
     def _make_raw_brackets(self):
         """Returns an OrderedDict mapping bracket names (normally numbers)
@@ -100,7 +121,21 @@ class PowerPairedDraw(BaseDraw):
             brackets[points] = pool
         return brackets
 
-    # Odd bracket resolutions
+    ## Odd bracket resolutions
+
+    ODD_BRACKET_FUNCTIONS = {
+        "pullup_top"   : "_pullup_top",
+        "pullup_bottom": "_pullup_bottom",
+        "pullup_random": "_pullup_random",
+        "intermediate" : "_intermediate_bubbles"
+    }
+
+    def resolve_odd_brackets(self, brackets):
+        """Returns a function taking an OrderedDict as returned by
+        _make_raw_brackets(), and adjusting that OrderedDict in-place to
+        guarantee that all brackets have an even number of teams."""
+        function = self._get_option_function("odd_bracket", self.ODD_BRACKET_FUNCTIONS)
+        return function(brackets)
 
     @classmethod
     def _pullup_top(cls, brackets):
@@ -112,14 +147,17 @@ class PowerPairedDraw(BaseDraw):
 
     @classmethod
     def _pullup_random(cls, brackets):
-        cls._pullup(brackets, lambda x: random.randrange(len(x)))
+        cls._pullup(brackets, lambda x: random.randrange(x))
 
     @staticmethod
     def _pullup(brackets, pos):
+        """'brackets' is what is returned by _make_raw_brackets().
+        'pos' is a function taking the number of teams to choose from,
+        and returning an index for which team to take as the pullup."""
         pullup_needed = None
         for points, teams in brackets.iteritems():
             if pullup_needed:
-                pullup_needed.append(teams.pop(pos(teams)))
+                pullup_needed.append(teams.pop(pos(len(teams))))
                 pullup_needed = 0
             if len(teams) % 2 != 0:
                 pullup_needed = teams
@@ -143,27 +181,78 @@ class PowerPairedDraw(BaseDraw):
         brackets.clear()
         brackets.update(new)
 
-    ODD_BRACKET_FUNCTIONS = {
-        "pullup_top"   : _pullup_top,
-        "pullup_bottom": _pullup_bottom,
-        "pullup_random": _pullup_random,
-        "intermediate" : _intermediate_bubbles
+    ## Pairings generation
+
+    PAIRING_FUNCTIONS = {
+        "fold"  : "_pairings_fold",
+        "slide" : "_pairings_slide",
+        "random": "_pairings_random"
     }
 
-    @property
-    def resolve_odd_brackets(self):
+    def generate_pairings(self, brackets):
         """Returns a function taking an OrderedDict as returned by
-        _make_raw_brackets(), and returning an OrderedDict of similar
-        form but guaranteeing that all brackets have an even number
-        of teams."""
-        option = self.options["odd_bracket"]
-        if callable(option):
-            return option
-        try:
-            return self.ODD_BRACKET_FUNCTIONS[option]
-        except KeyError:
-            raise ValueError("Invalid option for odd_bracket: {0}".format(option))
+        resolve_odd_brackets(), and returning a list of Debates."""
+        function = self._get_option_function("pairing_method", self.PAIRING_FUNCTIONS)
+        return function(brackets)
 
+    @staticmethod
+    def _pairings(brackets, subpool_func):
+        pairings = list()
+        i = 1
+        for points, teams in brackets.iteritems():
+            top, bottom = subpool_func(teams)
+            for teams in zip(top, bottom):
+                pairing = Pairing(teams=teams, bracket=points, room_rank=i)
+                pairings.append(pairing)
+                i = i + 1
+        return pairings
+
+    @classmethod
+    def _pairings_slide(cls, brackets):
+        def slide(teams):
+            num_debates = len(teams) / 2
+            top = teams[:num_debates]
+            bottom = teams[num_debates:]
+            return top, bottom
+        return cls._pairings(brackets, slide)
+
+    @classmethod
+    def _pairings_fold(cls, brackets):
+        def fold(teams):
+            num_debates = len(teams) / 2
+            top = teams[:num_debates]
+            bottom = teams[num_debates:]
+            bottom.reverse()
+            return top, bottom
+        return cls._pairings(brackets, fold)
+
+    @classmethod
+    def _pairings_random(cls, brackets):
+        def shuffle(teams):
+            num_debates = len(teams) / 2
+            random.shuffle(teams)
+            top = teams[:num_debates]
+            bottom = teams[num_debates:]
+            return top, bottom
+        return cls._pairings(brackets, shuffle)
+
+    ## Conflict avoidance
+
+    AVOID_CONFLICT_FUNCTIONS = {
+        "one_up_one_down" : "_one_up_one_down",
+    }
+
+    def avoid_conflicts(self, pairings):
+        """Returns a function taking a list of Pairings returned by
+        generate_pairings(), and adjusting it in-place to avoid conflicts."""
+        if self.options["avoid_conflicts"] is None:
+            return
+        function = self._get_option_function("pairing_method", self.PAIRING_FUNCTIONS)
+        return function(pairings)
+
+
+
+# TODO make this a unittest.
 brackets = OrderedDict([
     (4, [1, 2, 3, 4, 5]),
     (3, [6, 7, 8, 9]),
@@ -172,15 +261,12 @@ brackets = OrderedDict([
 ])
 print brackets
 import copy
-ODD_BRACKET_FUNCTIONS = {
-    "pullup_top"   : PowerPairedDraw._pullup_top,
-    "pullup_bottom": PowerPairedDraw._pullup_bottom,
-    "pullup_random": PowerPairedDraw._pullup_random,
-    "intermediate" : PowerPairedDraw._intermediate_bubbles
-}
-for name, func in ODD_BRACKET_FUNCTIONS.iteritems():
+ppd = PowerPairedDraw(None, pairing_method="fold")
+for name in PowerPairedDraw.ODD_BRACKET_FUNCTIONS:
     print name
     b2 = copy.deepcopy(brackets)
-    func(b2)
+    ppd.options["odd_bracket"] = name
+    ppd.resolve_odd_brackets(b2)
     print b2
-
+    pairings = ppd.generate_pairings(b2)
+    print "\n".join(map(str, pairings))
