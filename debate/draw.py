@@ -41,8 +41,8 @@ class BaseDraw(object):
     # do that.
     DEFAULT_OPTIONS = {}
 
-    def __init__(self, standings, **kwargs):
-        self.standings = standings
+    def __init__(self, teams, **kwargs):
+        self.teams = teams
 
         # Compute the full dictionary of default options
         self.options = self.BASE_DEFAULT_OPTIONS.copy()
