@@ -124,10 +124,10 @@ class PowerPairedDraw(BaseDraw):
             if len(teams) % 2 != 0:
                 pullup_needed = teams
         if pullup_needed:
-            raise DrawError("Last bracket is odd!")
+            raise DrawError("Last bracket is still odd!")
 
     @classmethod
-    def _intermediate_bubbles(self, brackets):
+    def _intermediate_bubbles(cls, brackets):
         new = OrderedDict()
         odd_team = None
         for points, teams in brackets.iteritems():
@@ -138,6 +138,8 @@ class PowerPairedDraw(BaseDraw):
                 odd_team = teams.pop()
             if len(teams) > 0:
                 new[points] = teams
+        if odd_team:
+            raise DrawError("Last bracket is still odd!")
         brackets.clear()
         brackets.update(new)
 
