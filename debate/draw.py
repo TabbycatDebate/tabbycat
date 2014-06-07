@@ -1,156 +1,184 @@
+from collections import OrderedDict
 import random
-from debate.utils import pair_list, memoize
+
+class Debate(object):
+    """Simple data structure for communicating information about debates.
+    Draws always return a list of these."""
+
+    def __init__(self, aff_team, neg_team, bracket, room_rank, flags=[]):
+        self.teams     = [aff_team, neg_team]
+        self.bracket   = bracket
+        self.room_rank = room_rank
+        self.flags     = flags
+
+    @property
+    def aff_team(self):
+        return self.teams[0]
+
+    @property
+    def neg_team(self):
+        return self.teams[1]
+
+    def swap_sides(self):
+        self.teams.reverse()
 
 class DrawError(Exception):
     pass
 
 class BaseDraw(object):
-    def __init__(self, round):
-        from debate.models import Team
-        self.round = round
-        if not self.round.draw_status == self.round.STATUS_NONE:
-            raise DrawError()
-        from django.db.models import Sum
+    """Base class for all draw types."""
 
-        if not round.prev:
-            teams = round.active_teams.all()
-            for team in teams:
-                team.points = 0
-                team.speaker_score = 0
-                team.aff_count = 0
-                team.neg_count = 0
-        else:
-            from debate.models import annotate_team_standings
-            teams = annotate_team_standings(round.active_teams, round.prev)
-            for team in teams:
-                team.aff_count = team.get_aff_count(round.prev.seq)
-                team.neg_count = team.get_neg_count(round.prev.seq)
+    BASE_DEFAULT_OPTIONS = {
+        "balance_affs"     : True,
+        "history_limit"    : 1,
+        "institution_limit": 1,
+    }
 
-        self.teams = list(teams)
+    can_be_first_round = NotImplemented
 
-        if not len(self.teams) % 2 == 0:
-            raise DrawError("There was not an even number of active teams.")
-        if not self.teams:
-            raise DrawError("There were no teams for the draw.")
+    # All subclasses must define this with any options that may exist.
+    # It's not necessary for them to include these; the constructor will
+    # do that.
+    DEFAULT_OPTIONS = {}
 
-    def balance_sides(self, pairs):
-        p = []
-        for pair in pairs:
-            if pair[0].aff_count < pair[1].aff_count:
-                p.append((pair[0], pair[1]))
-            elif pair[0].aff_count > pair[1].aff_count:
-                p.append((pair[1], pair[0]))
-            else:
-                l = list(pair)
-                random.shuffle(l)
-                p.append(l)
-        return p
+    def __init__(self, standings, **kwargs):
+        self.standings = standings
 
-    def draw(self):
-        # get_draw is an abstract method that should be defined in derived classes.
-        return self.get_draw()
+        # Compute the full dictionary of default options
+        self.options = self.BASE_DEFAULT_OPTIONS.copy()
+        self.options.update(self.DEFAULT_OPTIONS)
+
+        # Check that all options actually exist
+        for key in kwargs:
+            if key not in self.options:
+                raise ValueError("Unrecognized option: {0}".format(key))
+
+        # Update
+        self.options.update(kwargs)
 
 
-class RandomDraw(BaseDraw):
-    def get_draw(self):
-        random.shuffle(self.teams)
-        return pair_list(self.teams)
+class PowerPairedDraw(BaseDraw):
+    """Power-paired draw.
+    Options:
+        "odd_bracket" - Odd bracket resolution method:
+            "pullup_top", "pullup_bottom", "pullup_random", "intermediate",
+            or a function.
+        "pairing_method" - How to pair teams:
+            "slide", "fold", "random" or a function.
+        "avoid_conflict"  - How to avoid conflicts.
+            "one_up_one_down"
+            can be None, which turns off conflict avoidance.
+    """
 
+    can_be_first_round = False
 
-class RandomDrawNoConflict(RandomDraw):
-    MAX_SWAP_ATTEMPTS = 10
+    DEFAULT_OPTIONS = {
+        "odd_bracket"   : "pullup_top",
+        "pairing_method": "slide",
+        "avoid_conflict": "one_up_one_down"
+    }
 
     def get_draw(self):
-        draw = super(RandomDrawNoConflict, self).get_draw()
+        self._brackets = self._make_raw_brackets()
+        self.resolve_odd_brackets(self._brackets) # operates in-place
+        self._draw = self.generate_pairings(self._brackets)
+        self._draw = self.avoid_conflicts(self._draw)
+        self._draw = self.balance_affs(self._draw)
+        return self._draw
 
-        for i, (aff, neg) in enumerate(draw):
-            if aff.institution == neg.institution:
-                for j in range(self.MAX_SWAP_ATTEMPTS):
-                    k = random.randint(0, len(draw)-1)
-                    n_aff, n_neg = draw[k]
-                    if (n_aff.institution != aff.institution and
-                        n_neg.institution != aff.institution):
-                        m1 = (aff, n_neg)
-                        m2 = (n_aff, neg)
-                        draw[i] = m1
-                        draw[k] = m2
-                        break
-        return draw
-
-
-class AidaDraw(BaseDraw):
-
-    def get_draw(self):
-        from debate.aida import one_up_down
-
-        pools = self.make_pools()
-        pairs = []
-
-        for pool in pools:
-            debates = len(pool) / 2
-            top = pool[:debates]
-            bottom = pool[debates:]
-
-            pool_draw = zip(top, bottom)
-            one_up_down(pool_draw)
-
-            pairs.extend(pool_draw)
-        return self.balance_sides(pairs)
-
-    def make_pools(self):
-        pools = []
+    def _make_raw_brackets(self):
+        """Returns an OrderedDict mapping bracket names (normally numbers)
+        to lists."""
+        brackets = OrderedDict()
         teams = list(self.teams)
-
         while len(teams) > 0:
             top_team = teams.pop(0)
-            pool = []
-            pool.append(top_team)
-            while len(teams) > 0 and teams[0].points == top_team.points:
+            points = top_team.points
+            pool = [top_team]
+            while len(teams) > 0 and teams[0].points == points:
                 pool.append(teams.pop(0))
-            if len(pool) % 2 != 0:
-                pool.append(teams.pop(0))
-            pools.append(pool)
-        return pools
+            brackets[points] = pool
+        return brackets
 
+    # Odd bracket resolutions
 
-class BracketDraw(BaseDraw):
-    def get_draw(self):
-        teams = self.teams
-        max_points = teams[0].total_points
-        brackets = ([],) * (max_points + 1)
-        for team in teams:
-            brackets[team.total_points].append(team)
-        # balance brackets from top down
-        for i in range(max_points, -1, -1):
-            if len(brackets[i]) % 2 != 0:
-                # find next non-empty bracket
-                idx = i - 1
-                while len(brackets[idx]) == 0:
-                    idx -= 1
-                brackets[i].append(brackets[idx].pop(0))
-        # construct pairs by folding non-empty brackets
-        pairs = []
-        for bracket in brackets:
-            num = len(bracket)
-            for i in range(num/2):
-                pairs.append(bracket[i], bracket[num+i])
-        return pairs
+    @classmethod
+    def _pullup_top(cls, brackets):
+        cls._pullup(brackets, lambda x: 0)
 
+    @classmethod
+    def _pullup_bottom(cls, brackets):
+        cls._pullup(brackets, lambda x: -1)
 
-def assign_importance(round):
-    debates = round.get_draw().order_by('-bracket')
-    adjudicators = list(round.active_adjudicators.all())
-    adjudicators.sort(key=lambda a:-a.score)
+    @classmethod
+    def _pullup_random(cls, brackets):
+        cls._pullup(brackets, lambda x: random.randrange(len(x)))
 
-    bs = round.tournament.config.get('break_size')
+    @staticmethod
+    def _pullup(brackets, pos):
+        pullup_needed = None
+        for points, teams in brackets.iteritems():
+            if pullup_needed:
+                pullup_needed.append(teams.pop(pos(teams)))
+                pullup_needed = 0
+            if len(teams) % 2 != 0:
+                pullup_needed = teams
+        if pullup_needed:
+            raise DrawError("Last bracket is odd!")
 
-    bubble_bracket = debates[(bs/2)-1].bracket
+    @classmethod
+    def _intermediate_bubbles(self, brackets):
+        new = OrderedDict()
+        odd_team = None
+        for points, teams in brackets.iteritems():
+            if odd_team:
+                new[points+0.5] = [odd_team, teams.pop(0)]
+                odd_team = None
+            if len(teams) % 2 != 0:
+                odd_team = teams.pop()
+            if len(teams) > 0:
+                new[points] = teams
+        brackets.clear()
+        brackets.update(new)
 
-    # TODO: impl round specific
-    nd = float(len(debates))
-    na = len(adjudicators)
+    ODD_BRACKET_FUNCTIONS = {
+        "pullup_top"   : _pullup_top,
+        "pullup_bottom": _pullup_bottom,
+        "pullup_random": _pullup_random,
+        "intermediate" : _intermediate_bubbles
+    }
 
-    for i, debate in enumerate(debates):
-        debate.importance = adjudicators[int(i*na/nd)].score
+    @property
+    def resolve_odd_brackets(self):
+        """Returns a function taking an OrderedDict as returned by
+        _make_raw_brackets(), and returning an OrderedDict of similar
+        form but guaranteeing that all brackets have an even number
+        of teams."""
+        option = self.options["odd_bracket"]
+        if callable(option):
+            return option
+        try:
+            return self.ODD_BRACKET_FUNCTIONS[option]
+        except KeyError:
+            raise ValueError("Invalid option for odd_bracket: {0}".format(option))
 
-        debate.save()
+brackets = OrderedDict([
+    (4, [1, 2, 3, 4, 5]),
+    (3, [6, 7, 8, 9]),
+    (2, [10, 11, 12, 13, 14]),
+    (1, [15, 16])
+])
+print brackets
+import copy
+ODD_BRACKET_FUNCTIONS = {
+    "pullup_top"   : PowerPairedDraw._pullup_top,
+    "pullup_bottom": PowerPairedDraw._pullup_bottom,
+    "pullup_random": PowerPairedDraw._pullup_random,
+    "intermediate" : PowerPairedDraw._intermediate_bubbles
+}
+for name, func in ODD_BRACKET_FUNCTIONS.iteritems():
+    print name
+    b2 = copy.deepcopy(brackets)
+    func(b2)
+    print b2
+
