@@ -267,7 +267,6 @@ table.dataTable {
         border: 2px solid #ddd;
     }
     .importance {
-
         width: 45px;
         text-align: left;
         form {
@@ -277,31 +276,33 @@ table.dataTable {
             @extend .form-control;
         }
     }
-    .venue:hover, .adj:hover {
-        cursor: move;
-    }
     .border-success {
         border: 2px solid $btn-success-border;
     }
-    .info {
-        display: inline-block;
-        float: right;
+    .venue:hover, .adj:hover {
+        cursor: move;
     }
-    .info:hover {
-        cursor: pointer;
-        z-index: 11;
+    .adj {
+        .info {
+            display: inline-block;
+            float: right;
+        }
+        .info:hover {
+            cursor: pointer;
+            z-index: 11;
+        }
+        &.btn-danger .info, &.btn-warning .info {
+            color: #fff;
+        }
     }
-    .adj.trainee {
-        background-color: #ffb;
-    }
-    .adj.trainee:hover {
-        background-color: #ffe;
-    }
-    .adj.history-conflict {
-        color: #f80;
-    }
-    .adj.conflict {
-        color: red;
+    #unusedTable {
+        // For compactness
+        td {
+            padding: 5px 0 0 0;
+            border: none;
+            line-height: 32px;
+            text-align: center;
+        }
     }
 
 }

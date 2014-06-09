@@ -107,20 +107,18 @@
                      if (conflicts['history'][id] == undefined) {
                          conflicts['history'][id] = [];
                      }
-                 } );
+                 });
 
                  update_all_conflicts();
 
-            } );
+            });
         } //load_conflict_data()
 
         function load_adjudicator_scores(callback) {
             $.getJSON("{% tournament_url adj_scores %}", function(data) {
                 scores = data;
-
                 if (callback) callback();
-
-            } );
+            });
         }//load_adjudicator_scores()
 
         function append_adj_scores() {
@@ -154,11 +152,11 @@
         }
         function eachConflictingTeam(adj_id, fn) {
             $.each(conflicts['conflict'][adj_id], function (i, n) {
-                $("#team_" + n).each( function() { fn('conflict', this); } );
-            } );
+                $("#team_" + n).each( function() { fn('conflict', this); });
+            });
             $.each(conflicts['history'][adj_id], function (i, n) {
-                $("#team_" + n).each( function() { fn('history', this); } );
-            } );
+                $("#team_" + n).each( function() { fn('history', this); });
+            });
         }
 
         function updateConflicts(debate_tr) {
@@ -185,7 +183,7 @@
                         ch++;
                         h++;
                     }
-                } );
+                });
                 if (a == 0) {
                     $(adj).removeClass("btn-danger");
                 }
@@ -193,7 +191,7 @@
                     $(adj).removeClass("btn-warning");
                 }
 
-            } );
+            });
 
             if (ca == 0) {
                 $(debate_tr).removeClass("debate-inactive");
@@ -226,7 +224,7 @@
                         $(elem).addClass(conflictTypeClass[type]);
                     }
                 );
-            } );
+            });
 
             el.mouseout( function(e) {
                 // check if currently being dragged
@@ -238,7 +236,7 @@
                         }
                     );
                 }
-            } );
+            });
 
             el.draggable({
                 containment: "body", // bounds that limit dragging area{
@@ -383,16 +381,16 @@
                 data['debate_' + debateId] = true;
                 $(".chair-holder .adj", this).each( function() {
                     data['chair_' + debateId] = intId(this);
-                } );
+                });
                 data['panel_' + debateId]  = [];
                 $(".panel-holder .adj", this).each( function() {
                     data['panel_' + debateId].push(intId(this));
-                } );
+                });
                 data['trainees_' + debateId]  = [];
                 $(".trainee-holder .adj", this).each( function() {
                     data['trainees_' + debateId].push(intId(this));
-                } );
-            } );
+                });
+            });
 
             $.ajax( {
                 type: "POST",
@@ -406,11 +404,11 @@
                     btn.button('reset')
                     $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved failed!</div>');
                 }
-            } );
+            });
 
             return false;
 
-        } );
+        });
 
         $('#auto_allocate').click(function() {
             var btn = $(this)
@@ -447,7 +445,7 @@
                 { "sWidth": "25%" }
             ],
             "aaSorting": [[1, 'desc']]
-        } );
+        });
 
         unusedTable = $("#unusedTable").dataTable({
             aoColumns: [
