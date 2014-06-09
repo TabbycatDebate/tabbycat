@@ -114,12 +114,24 @@ class Command(BaseCommand):
 
             adjs_count = 0
             reader = csv.reader(open(os.path.join(data_path, 'judges.csv')))
-            for ins_name, name, test_score in reader:
+            for ins_name, name, test_score, phone, email in reader:
                 try:
                     test_score = int(test_score)
                 except ValueError:
                     self.stdout.write('Could not interpret adj score for {0}: {1}'.format(name, score))
                     test_score = 0
+
+                try:
+                    phone = str(phone)
+                except ValueError:
+                    self.stdout.write('Could not interpret adj phone for {0}: {1}'.format(name, phone))
+                    phone = None
+
+                try:
+                    email = str(email)
+                except ValueError:
+                    self.stdout.write('Could not interpret adj email for {0}: {1}'.format(name, email))
+                    email = None
 
                 # People can either input instutions as name or short name
                 try:
@@ -130,7 +142,9 @@ class Command(BaseCommand):
                 m.Adjudicator(
                     name = name,
                     institution = ins,
-                    test_score = test_score
+                    test_score = test_score,
+                    phone = phone,
+                    email = email
                 ).save()
 
                 adjs_count = adjs_count + 1
@@ -172,7 +186,6 @@ class Command(BaseCommand):
 
                 # Resetting the variable incase create/get above fails
                 speakers_team = m.Team.objects.get(reference=team_name)
-
                 print team
 
                 try:

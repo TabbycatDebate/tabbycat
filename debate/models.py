@@ -24,7 +24,7 @@ class Tournament(models.Model):
     slug = models.SlugField(unique=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_')
-    welcome_msg = models.TextField(default="")
+    welcome_msg = models.TextField(blank=True, null=True)
 
     @models.permalink
     def get_absolute_url(self):
@@ -375,6 +375,8 @@ class SpeakerManager(models.Manager):
 class Person(models.Model):
     name = models.CharField(max_length=40)
     barcode_id = models.IntegerField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=40, blank=True, null=True)
 
     checkin_message = models.TextField(blank=True)
 

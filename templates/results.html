@@ -17,28 +17,33 @@
 {% block body-class %}status{% endblock %}
 
 {% block header %}
-<div class="btn-group">
-    <button class="btn btn-default btn-danger"><span class="label none">
-        {{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span></span>
-    </button>
-    <button class="btn btn-default btn-warning"><span class="label ballotin">
-        {{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span></span>
-    </button>
-    <button class="btn btn-default btn-info"><span class="label unconfirmed">
-        {{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span></span>
-    </button>
-    <button class="btn btn-default btn-success"><span class="label confirmed">
-        {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span></span>
-    </button>
-</div>
-<!-- <div class="btn-group">
-    <a class="btn btn-default form-control btn-success" href="{% round_url confirm_increment %}">
-        Proceed to Next Round
-    </a>
-</div> -->
+    <div class="btn-group">
+        <button class="btn btn-default btn-danger"><span class="label none">
+            {{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span></span>
+        </button>
+        <button class="btn btn-default btn-warning"><span class="label ballotin">
+            {{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span></span>
+        </button>
+        <button class="btn btn-default btn-info"><span class="label unconfirmed">
+            {{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span></span>
+        </button>
+        <button class="btn btn-default btn-success"><span class="label confirmed">
+            {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span></span>
+        </button>
+    </div>
+    <!-- <div class="btn-group">
+        <a class="btn btn-default form-control btn-success" href="{% round_url confirm_increment %}">
+            Proceed to Next Round
+        </a>
+    </div> -->
 {% endblock %}
 
 {% block content %}
+{% if not show_motions_column %}
+<div class="alert alert-danger">
+    Currently there are no motions entered for this round, so debate results cannot be entered. <a href="{% round_url motions current_round %}">Add Motions.</a>
+</div>
+{% endif %}
 <table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
 
     <thead>
@@ -132,9 +137,15 @@
                     {{ debate.neg_team.short_name }}
                 </span>
             <td>
+            <!-- TODO: add phone numbers here -->
                 {% if debate.confirmed_ballot %}
                     {% for adj_display, split in debate.confirmed_ballot.ballot_set.adjudicator_results_display %}
-                        {{ adj_display }}{% if split %} <span class="glyphicon glyphicon-resize-full text-danger"></span>{% endif %}{% if not forloop.last %},{% endif %}
+                        {% if split %}
+                            <span class="text-danger">{{ adj_display }} </span><span class="glyphicon glyphicon-resize-full text-danger"></span>
+                        {% else %}
+                            {{ adj_display }}
+                        {% endif %}
+                        {% if not forloop.last %},{% endif %}
                     {% endfor %}
                 {% else %}
                     {{ debate.adjudicators_display }}
@@ -142,7 +153,11 @@
             </td>
 
             {% if show_motions_column %}
-                <td class="">{{ debate.confirmed_ballot.motion.reference }}</td>
+                <td>
+                    <span data-toggle="tooltip" title="{{ debate.confirmed_ballot.motion }}">
+                    {{ debate.confirmed_ballot.motion.reference }}
+                    </span>
+                </td>
             {% endif %}
 
         </tr>

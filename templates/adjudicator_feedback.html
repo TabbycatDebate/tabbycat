@@ -28,7 +28,6 @@
                 $("#modal-adj-name").text(adj_name); // Updating header of the modal
                 var newUrl = '{% tournament_url get_adj_feedback %}?id=' + adj_id
                 adjTable.api().ajax.url(newUrl).load();
-
             });
         });
     });
@@ -65,7 +64,13 @@
         <tr id="adj_{{ adj.id }}">
             <td><a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View</a></td>
             <td><a href="{% tournament_url enter_feedback adj.id %}">Add</a></td>
-            <td class="adj-name">{{ adj.name }}</td>
+            <td class="adj-name">
+                {% if adj.phone or adj.email %}
+                    <span data-toggle="tooltip" title="{{ adj.phone }} {{ adj.email }}">{{ adj.name }}</span>
+                {% else %}
+                    <span>{{ adj.name }}</span>
+                {% endif %}
+            </td>
             {% if show_institutions > 0 %}
             <td>{{ adj.institution.code }}</td>
             {% endif %}
@@ -81,21 +86,24 @@
 <div class="modal fade" id="adj-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-        <div class="modal-header"><h3>Feedback for <span id="modal-adj-name"></span></h3></div>
+        <div class="modal-header">
+            <h3>Feedback for <span id="modal-adj-name"></span></h3>
+        </div>
         <div class="modal-body">
-        <table id="modal-adj-table" class="table table-bordered">
-            <thead>
-                <th>Version</th>
-                <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
-                <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-                <th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+            <table id="modal-adj-table" class="table table-bordered">
+                <thead>
+                    <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
+                    <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+                    <th>Debate</th>
+                    <th>Source</th>
+                    <th>Score</th>
+                    <th>Comments</th>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
   </div>
 </div>
-
 {% endblock content %}
