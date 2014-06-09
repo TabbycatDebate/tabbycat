@@ -251,6 +251,7 @@ table.dataTable {
     }
     .btn-default.text-left {
         padding-left: 6px;
+        padding-right: 6px;
     }
     #scratch {
         position: fixed;
@@ -281,6 +282,10 @@ table.dataTable {
     }
     .border-success {
         border: 2px solid $btn-success-border;
+    }
+    .info {
+        display: inline-block;
+        float: right;
     }
     .info:hover {
         cursor: pointer;

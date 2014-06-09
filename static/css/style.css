@@ -803,7 +803,8 @@ table.dataTable {
 .edit-venues #container, .edit-adjs #container {
   min-height: 1000px; }
 .edit-venues .btn-default.text-left, .edit-adjs .btn-default.text-left {
-  padding-left: 6px; }
+  padding-left: 6px;
+  padding-right: 6px; }
 .edit-venues #scratch, .edit-adjs #scratch {
   position: fixed;
   top: 0;
@@ -823,6 +824,9 @@ table.dataTable {
   cursor: move; }
 .edit-venues .border-success, .edit-adjs .border-success {
   border: 2px solid #4cae4c; }
+.edit-venues .info, .edit-adjs .info {
+  display: inline-block;
+  float: right; }
 .edit-venues .info:hover, .edit-adjs .info:hover {
   cursor: pointer;
   z-index: 11; }

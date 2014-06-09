@@ -125,7 +125,7 @@
 
         function append_adj_scores() {
             $(".adj").each( function() {
-                $(this).prepend('<a data-toggle="modal" data-target="#adj-feedback" class="info"> ' + formatScore(scores[intId(this)]) + ' </a>');
+                $(this).append('<a data-toggle="modal" data-target="#adj-feedback" class="info">' + formatScore(scores[intId(this)]) + '</a>');
                 $("a", this).attr("title", "Score: " + scores[intId(this)]);
                 $("a", this).click( function() {
                     var adj_row = $(this).parent()
