@@ -600,7 +600,11 @@ def draw(request, round):
 
 def draw_none(request, round):
     active_teams = round.active_teams.all()
-    return r2r(request, "draw_none.html", dict(active_teams=active_teams))
+    active_venues = round.active_venues.all()
+    required_rooms = float(active_teams.count()) / 2
+    return r2r(request, "draw_none.html", dict(active_teams=active_teams,
+                                               active_venues=active_venues,
+                                               required_rooms=required_rooms))
 
 
 def draw_draft(request, round):
