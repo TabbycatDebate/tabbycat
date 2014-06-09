@@ -600,7 +600,11 @@ def draw(request, round):
 
 def draw_none(request, round):
     active_teams = round.active_teams.all()
-    return r2r(request, "draw_none.html", dict(active_teams=active_teams))
+    active_venues = round.active_venues.all()
+    rooms = float(active_teams.count()) / 2
+    return r2r(request, "draw_none.html", dict(active_teams=active_teams,
+                                               active_venues=active_venues,
+                                               rooms=rooms))
 
 
 def draw_draft(request, round):
@@ -610,7 +614,11 @@ def draw_draft(request, round):
 
 def draw_confirmed(request, round):
     draw = round.get_draw()
-    return r2r(request, "draw_confirmed.html", dict(draw=draw))
+    rooms = float(round.active_teams.count()) / 2
+    active_adjs = round.active_adjudicators.all()
+    return r2r(request, "draw_confirmed.html", dict(draw=draw,
+                                                    active_adjs=active_adjs,
+                                                    rooms=rooms))
 
 @admin_required
 @round_view
@@ -1040,9 +1048,9 @@ def save_venues(request, round):
 @admin_required
 @round_view
 def draw_adjudicators_edit(request, round):
-
     draw = round.get_draw()
-    return r2r(request, "draw_adjudicators_edit.html", dict(draw=draw))
+    adj0 = Adjudicator.objects.first()
+    return r2r(request, "draw_adjudicators_edit.html", dict(draw=draw, adj0=adj0))
 
 def _json_adj_allocation(debates, unused_adj):
 

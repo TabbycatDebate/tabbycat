@@ -7,7 +7,7 @@
 
         $(document).ready( function() {
             var table = $("#dataTable").dataTable();
-            new $.fn.dataTable.FixedHeader( table );
+            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
 
         } );
 
