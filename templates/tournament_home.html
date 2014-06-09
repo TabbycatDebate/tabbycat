@@ -23,18 +23,20 @@
 {% block content %}
 
 <div class="col-sm-3">
-    <h4>{{ stats.pc }}% of Ballots are In</h4>
-    <img class="img-responsive" src="http://chart.apis.google.com/chart?cht=p&chs=500x500&chd=t:{{ stats.none }},{{ stats.draft }}{{ stats.confirmed }}&chco=d9534f,f0ad4e,5cb85c" />
-    {{ stats.none }}
-    {{ stats.draft }}
-    {{ stats.confirmed }}
+    <h4 class="text-center">{{ stats.pc }}% of Ballots In</h4>
+    <p class="text-center">
+        <span class="text-danger">{{ stats.none }} None</span> + 
+        <span class="text-info">{{ stats.draft }} Drafts</span> + 
+        <span class="text-success">{{ stats.confirmed }} Confirmed</span>
+    </p>
+    <img class="img-responsive" src="http://chart.apis.google.com/chart?cht=p&chs=500x500&chd=t:{{ stats.none }},{{ stats.draft }},{{ stats.confirmed }}&chco=d9534f,d5e615,5cb85c" />
 
 </div>
 <div class="col-sm-3 col-sm-offset-1">
-    <h4>Average Speaks</h4>
+    <h4 class="text-center">Average Speaks</h4>
 </div>
 <div class="col-sm-3 col-sm-offset-1">
-    <h4>Motion Selections</h4>
+    <h4 class="text-center">Motion Selections</h4>
 </div>
 
 

@@ -353,10 +353,6 @@ def public_motions_tab(request, t):
 @login_required
 @tournament_view
 def tournament_home(request, t):
-    if not request.user.is_superuser:
-        return redirect('results', tournament_slug=t.slug,
-                        round_seq=t.current_round.seq)
-
     r = t.current_round
     draw = r.get_draw()
     stats = {
@@ -371,12 +367,10 @@ def tournament_home(request, t):
     else:
         stats['pc'] = 0
 
-    return r2r(request, 'tournament_home.html', dict(stats=stats, round=r))
-
-@login_required
-def monkey_home(request, t):
-    return r2r(request, 'monkey/home.html')
-
+    if not request.user.is_superuser:
+        return r2r(request, 'monkey/home.html', dict(stats=stats, round=r))
+    else:
+        return r2r(request, 'tournament_home.html', dict(stats=stats, round=r))
 
 @admin_required
 @tournament_view
