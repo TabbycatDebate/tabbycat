@@ -8,7 +8,7 @@
         var table = $('#dataTable').dataTable({
             "aaSorting": [[ 0, "asc" ]],
         });
-        new $.fn.dataTable.FixedHeader( table );
+        new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
     } );
 </script>
 

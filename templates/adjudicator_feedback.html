@@ -11,7 +11,7 @@
             'bPaginate': false,
             "aaSorting": [[ 6, "desc" ]],
         });
-        new $.fn.dataTable.FixedHeader( table );
+        new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
 
         var adjTable = $("#modal-adj-table").dataTable({
           // Grabbing the adj data into a datatable

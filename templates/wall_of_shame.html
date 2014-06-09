@@ -9,7 +9,7 @@
         var table = $('#dataTable').dataTable({
             "aaSorting": [[ 0, "asc" ]],
         });
-        new $.fn.dataTable.FixedHeader( table );
+        new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
       $("#toggle-all").click(function () {
         $('.adj-row').show();
         $('.team-row').show();
