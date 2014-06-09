@@ -257,10 +257,6 @@ table.dataTable {
         top: 0;
         right: 0;
         height: 100%;
-
-        .info {
-            display: none; // hide adj score inside the button - is in table
-        }
     }
     .venue, .adj {
         max-width: 300px;
@@ -285,6 +281,10 @@ table.dataTable {
     }
     .border-success {
         border: 2px solid $btn-success-border;
+    }
+    .info:hover {
+        cursor: pointer;
+        z-index: 11;
     }
     .adj.trainee {
         background-color: #ffb;

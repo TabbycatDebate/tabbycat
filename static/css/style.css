@@ -809,8 +809,6 @@ table.dataTable {
   top: 0;
   right: 0;
   height: 100%; }
-  .edit-venues #scratch .info, .edit-adjs #scratch .info {
-    display: none; }
 .edit-venues .venue, .edit-venues .adj, .edit-adjs .venue, .edit-adjs .adj {
   max-width: 300px; }
 .edit-venues .btn-holder, .edit-adjs .btn-holder {
@@ -825,6 +823,9 @@ table.dataTable {
   cursor: move; }
 .edit-venues .border-success, .edit-adjs .border-success {
   border: 2px solid #4cae4c; }
+.edit-venues .info:hover, .edit-adjs .info:hover {
+  cursor: pointer;
+  z-index: 11; }
 .edit-venues .adj.trainee, .edit-adjs .adj.trainee {
   background-color: #ffb; }
 .edit-venues .adj.trainee:hover, .edit-adjs .adj.trainee:hover {

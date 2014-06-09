@@ -1040,9 +1040,9 @@ def save_venues(request, round):
 @admin_required
 @round_view
 def draw_adjudicators_edit(request, round):
-
     draw = round.get_draw()
-    return r2r(request, "draw_adjudicators_edit.html", dict(draw=draw))
+    adj0 = Adjudicator.objects.first()
+    return r2r(request, "draw_adjudicators_edit.html", dict(draw=draw, adj0=adj0))
 
 def _json_adj_allocation(debates, unused_adj):
 
