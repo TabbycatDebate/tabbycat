@@ -23,8 +23,12 @@
 {% block content %}
 
 <div class="col-sm-3">
-    <h4>{{ stats.pc }}% of Ballots in</h4>
-    <img class="img-responsive" src="http://chart.apis.google.com/chart?cht=p&chs=500x500&chd=t:{{ stats.out }},{{ stats.in }}&chco=d9534f,5cb85c" />
+    <h4>{{ stats.pc }}% of Ballots are In</h4>
+    <img class="img-responsive" src="http://chart.apis.google.com/chart?cht=p&chs=500x500&chd=t:{{ stats.none }},{{ stats.draft }}{{ stats.confirmed }}&chco=d9534f,f0ad4e,5cb85c" />
+    {{ stats.none }}
+    {{ stats.draft }}
+    {{ stats.confirmed }}
+
 </div>
 <div class="col-sm-3 col-sm-offset-1">
     <h4>Average Speaks</h4>
