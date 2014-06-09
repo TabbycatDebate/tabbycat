@@ -13,7 +13,7 @@ class Pairing(object):
         self.flags     = flags
 
     def __repr__(self):
-        return "<draw.Debate object: {0} vs {1} ({2}/{3})>".format(
+        return "<Pairing object: {0} vs {1} ({2}/{3})>".format(
             self.teams[0], self.teams[1], self.bracket, self.room_rank)
 
     @property
@@ -38,12 +38,23 @@ class DrawError(Exception):
     pass
 
 class BaseDraw(object):
-    """Base class for all draw types."""
+    """Base class for all draw types.
+    Options:
+        "balance_sides" - Give affirmative side to team that has affirmed less.
+            Requires teams to have 'aff_count' attribute. If off, randomizes
+            sides.
+        "avoid_history" - if True, draw tries to avoid pairing teams that have
+            seen each other before, and tries harder if they've seen each other
+            multiple times.
+        "avoid_institution" - if True, draw tries to avoid pairing teams that
+            are from the same institution, and tries harder if either team
+            has seen their own institution multiple times.
+        """
 
     BASE_DEFAULT_OPTIONS = {
-        "balance_affs"     : True,
-        "history_limit"    : 1,
-        "institution_limit": 1,
+        "balance_sides"    : True,
+        "avoid_history"    : True,
+        "avoid_institution": True
     }
 
     can_be_first_round = NotImplemented
@@ -94,8 +105,8 @@ class PowerPairedDraw(BaseDraw):
         self._brackets = self._make_raw_brackets()
         self.resolve_odd_brackets(self._brackets) # operates in-place
         self._draw = self.generate_pairings(self._brackets)
-        self._draw = self.avoid_conflicts(self._draw)
-        self._draw = self.balance_affs(self._draw)
+        self.avoid_conflicts(self._draw) # operates in-place
+        self.balance_affs(self._draw) # operates in-place
         return self._draw
 
     def _get_option_function(self, option_name, option_dict):
@@ -250,23 +261,7 @@ class PowerPairedDraw(BaseDraw):
         function = self._get_option_function("pairing_method", self.PAIRING_FUNCTIONS)
         return function(pairings)
 
+    @staticmethod
+    def _one_up_one_down(pairings):
 
 
-# TODO make this a unittest.
-brackets = OrderedDict([
-    (4, [1, 2, 3, 4, 5]),
-    (3, [6, 7, 8, 9]),
-    (2, [10, 11, 12, 13, 14]),
-    (1, [15, 16])
-])
-print brackets
-import copy
-ppd = PowerPairedDraw(None, pairing_method="fold")
-for name in PowerPairedDraw.ODD_BRACKET_FUNCTIONS:
-    print name
-    b2 = copy.deepcopy(brackets)
-    ppd.options["odd_bracket"] = name
-    ppd.resolve_odd_brackets(b2)
-    print b2
-    pairings = ppd.generate_pairings(b2)
-    print "\n".join(map(str, pairings))

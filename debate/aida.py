@@ -23,13 +23,13 @@ def dp(data):
     state = [0] * (N + 1)
     action = [0] * (N + 1)
 
+    # Bear in mind that, if we "activate" this element, then we must
+    # consequentially exclude the previous element.  Given that, we
+    # would improve the cumulative sum if, and only if, adding this
+    # element to the cumulative sum as of *two* elements ago (to form
+    # the potential cumulative sum of this element) would beat the
+    # cumulative sum as of last element.
     for i in range(2, N+1):
-        # Bear in mind that, if we "activate" this element, then we must
-        # consequentially exclude the previous element.  Given that, we
-        # would improve the cumulative sum if, and only if, adding this
-        # element to the cumulative sum as of *two* elements ago (to form
-        # the potential cumulative sum of this element) would beat the
-        # cumulative sum as of last element.
         if (state[i-2] + data[i-2]) > state[i-1]:
             action[i] = 1
             state[i] = state[i-2] + data[i-2]
@@ -80,17 +80,7 @@ def score_swap((a1, n1), (a2, n2)):
 
     return badness(inst, hist) - badness(inst_swap, hist_swap)
 
-class Team(object):
-    def __init__(self, id, inst, hist):
-        self.id = id
-        self.institution = inst
-        self.hist = hist
-
-    def seen(self, other):
-        return self.hist.count(other.id)
-
 def one_up_down_swap(draw, i):
-    from debate.models import Debate
     m1 = (draw[i][0], draw[i+1][1])
     m2 = (draw[i+1][0], draw[i][1])
     draw[i] = m1
@@ -111,11 +101,20 @@ def one_up_down(draw):
     best_score, best_swaps = dp(swap_scores)
     for s in best_swaps:
         one_up_down_swap(draw, s)
-    return draw
+    return draw, swap_scores, best_swaps
 
-from unittest import TestCase
+class Team(object):
+    def __init__(self, id, inst, hist):
+        self.id = id
+        self.institution = inst
+        self.hist = hist
 
-class TestDraw(TestCase):
+    def seen(self, other):
+        return self.hist.count(other.id)
+
+import unittest
+
+class TestDraw(unittest.TestCase):
 
     def testNoSwap(self):
         data = (((1, 'A', ()), (5, 'B', ())),
@@ -158,5 +157,7 @@ class TestDraw(TestCase):
         for ((p1, in1, hist1), (p2, in2, hist2)) in data:
             d.append((Team(p1, in1, hist1), Team(p2, in2, hist2)))
         r = one_up_down(d)
-        return [(a.id, b.id) for (a, b) in r]
+        return [(a.id, b.id) for (a, b) in r[0]]
 
+if __name__ == '__main__':
+    unittest.main()
