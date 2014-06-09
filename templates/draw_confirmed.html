@@ -68,15 +68,18 @@
 <form id="releaseForm" method="POST" action="{% round_url release_draw %}"></form>
 <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}"></form>
 
+{% if active_adjs.count < rooms %}
+    <div class="alert alert-danger alert-dismissable" id="savedVenues">
+        There are currently fewer activate adjudicators than there are rooms. <a href="{% round_url adjudicator_availability current_round %}">Check in some more adjudicators</a>.
+    </div>
+{% endif %}
 {% if round.adjudicators_allocation_validity == 1 %}
     <div class="alert alert-danger alert-dismissable" id="savedVenues">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        One or more debates don't have a chair. <a class="alert-link" href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.</p>
+        One or more debates don't have a chair. <a class="alert-link" href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
     </div>
 {% elif round.adjudicators_allocation_validity == 2 %}
     <div class="alert alert-danger alert-dismissable" id="savedVenues">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        One or more debates have panels with an even number of adjudicators. <a  class="alert-link" href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.</p>
+        One or more debates have panels with an even number of adjudicators. <a  class="alert-link" href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
     </div>
 {% endif %}
 

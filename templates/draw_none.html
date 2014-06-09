@@ -27,12 +27,7 @@ No draw currently exists
         The draw cannot be generated until some of the teams <a href="{% round_url team_availability current_round %}">have been checked in</a> for this round.
     </div>
     {% endif %}
-    {% if active_venues.count == 0 %}
-    <div class="alert alert-warning">
-        The draw cannot be generated until some of the venues <a href="{% round_url venue_availability current_round %}">have been checked in</a> for this round.
-    </div>
-    {% endif %}
-    {% if active_venues.count < required_rooms %}
+    {% if active_venues.count < rooms %}
     <div class="alert alert-warning">
         The draw cannot be generated until there are more venues than team matchups. <a href="{% round_url venue_availability current_round %}">Check in some more venues</a>.
     </div>
