@@ -36,11 +36,20 @@ class Pairing(object):
             raise ValueError("side must be 'aff' or 'neg'")
         return self.teams[index]
 
-    def swap_sides(self):
-        self.teams.reverse()
+    def balance_sides(self):
+        """Puts whoever has affirmed less on the affirmative sides,
+        or chooses randomly if they've done it equally."""
+        if self.teams[0].aff_count < self.teams[1].aff_count:
+            pass
+        elif self.teams[0].aff_count > self.teams[1].aff_count:
+            self.teams.reverse()
+        else:
+            self.teams.shuffle()
 
     @property
     def conflict_inst(self):
+        """Returns True if both teams are from the same institution.
+        Relies on the institution attribute of teams."""
         try:
             return self.teams[0].institution == self.teams[1].institution
         except AttributeError:
@@ -48,6 +57,8 @@ class Pairing(object):
 
     @property
     def conflict_hist(self):
+        """Returns True if teams have seen each other before.
+        Relies on seen() being implemented by the teams."""
         try:
             return self.teams[0].seen(self.teams[1])
         except AttributeError:
@@ -98,6 +109,11 @@ class BaseDraw(object):
         # Update
         self.options.update(kwargs)
 
+    def balance_sides(self, pairings):
+        if not self.options["balance_sides"]:
+            return
+        for pairing in pairings:
+            pairing.balance_sides()
 
 class PowerPairedDraw(BaseDraw):
     """Power-paired draw.
@@ -125,7 +141,7 @@ class PowerPairedDraw(BaseDraw):
         self.resolve_odd_brackets(self._brackets) # operates in-place
         self._draw = self.generate_pairings(self._brackets)
         self.avoid_conflicts(self._draw) # operates in-place
-        self.balance_affs(self._draw) # operates in-place
+        self.balance_sides(self._draw) # operates in-place
         return self._draw
 
     def _get_option_function(self, option_name, option_dict):
