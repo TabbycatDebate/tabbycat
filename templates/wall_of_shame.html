@@ -9,7 +9,7 @@
         var table = $('#dataTable').dataTable({
             "aaSorting": [[ 0, "asc" ]],
         });
-        new $.fn.dataTable.FixedHeader( table );
+        new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
       $("#toggle-all").click(function () {
         $('.adj-row').show();
         $('.team-row').show();
@@ -90,7 +90,7 @@
         {% if entity.coverage %}
         <tr id="adj_{{ entity.id }}" class="adj-row">
             <td class="">
-                {{ entity.coverage}}
+                {{ entity.coverage}}%
             </td>
             <td class="">
                 {{ entity.owed_ballots }}
@@ -112,7 +112,7 @@
         {% for team in teams %}
         <tr id="team_{{ team.id }}" class="team-row">
             <td class="">
-                {{ team.coverage}}
+                {{ team.coverage}}%
             </td>
             <td class="">
                 {{ team.owed_ballots }}

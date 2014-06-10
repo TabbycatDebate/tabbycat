@@ -251,16 +251,13 @@ table.dataTable {
     }
     .btn-default.text-left {
         padding-left: 6px;
+        padding-right: 6px;
     }
     #scratch {
         position: fixed;
         top: 0;
         right: 0;
         height: 100%;
-
-        .info {
-            display: none; // hide adj score inside the button - is in table
-        }
     }
     .venue, .adj {
         max-width: 300px;
@@ -270,7 +267,6 @@ table.dataTable {
         border: 2px solid #ddd;
     }
     .importance {
-
         width: 45px;
         text-align: left;
         form {
@@ -280,23 +276,33 @@ table.dataTable {
             @extend .form-control;
         }
     }
-    .venue:hover, .adj:hover {
-        cursor: move;
-    }
     .border-success {
         border: 2px solid $btn-success-border;
     }
-    .adj.trainee {
-        background-color: #ffb;
+    .venue:hover, .adj:hover {
+        cursor: move;
     }
-    .adj.trainee:hover {
-        background-color: #ffe;
+    .adj {
+        .info {
+            display: inline-block;
+            float: right;
+        }
+        .info:hover {
+            cursor: pointer;
+            z-index: 11;
+        }
+        &.btn-danger .info, &.btn-warning .info {
+            color: #fff;
+        }
     }
-    .adj.history-conflict {
-        color: #f80;
-    }
-    .adj.conflict {
-        color: red;
+    #unusedTable {
+        // For compactness
+        td {
+            padding: 5px 0 0 0;
+            border: none;
+            line-height: 32px;
+            text-align: center;
+        }
     }
 
 }

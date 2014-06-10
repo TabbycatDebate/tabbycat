@@ -13,6 +13,7 @@ from ipware.ip import get_real_ip
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
 from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission
+from debate.models import AdjudicatorFeedback
 from debate import forms
 
 from django.forms.models import modelformset_factory
@@ -191,7 +192,6 @@ def public_feedback_progress(request, t):
         else:
             return int((float(submitted) / float(total)) * 100)
 
-    from debate.models import AdjudicatorFeedback
     feedback = AdjudicatorFeedback.objects.all()
     adjudicators = Adjudicator.objects.all()
     teams = Team.objects.all()
@@ -600,7 +600,11 @@ def draw(request, round):
 
 def draw_none(request, round):
     active_teams = round.active_teams.all()
-    return r2r(request, "draw_none.html", dict(active_teams=active_teams))
+    active_venues = round.active_venues.all()
+    rooms = float(active_teams.count()) / 2
+    return r2r(request, "draw_none.html", dict(active_teams=active_teams,
+                                               active_venues=active_venues,
+                                               rooms=rooms))
 
 
 def draw_draft(request, round):
@@ -610,7 +614,11 @@ def draw_draft(request, round):
 
 def draw_confirmed(request, round):
     draw = round.get_draw()
-    return r2r(request, "draw_confirmed.html", dict(draw=draw))
+    rooms = float(round.active_teams.count()) / 2
+    active_adjs = round.active_adjudicators.all()
+    return r2r(request, "draw_confirmed.html", dict(draw=draw,
+                                                    active_adjs=active_adjs,
+                                                    rooms=rooms))
 
 @admin_required
 @round_view
@@ -1040,9 +1048,9 @@ def save_venues(request, round):
 @admin_required
 @round_view
 def draw_adjudicators_edit(request, round):
-
     draw = round.get_draw()
-    return r2r(request, "draw_adjudicators_edit.html", dict(draw=draw))
+    adj0 = Adjudicator.objects.first()
+    return r2r(request, "draw_adjudicators_edit.html", dict(draw=draw, adj0=adj0))
 
 def _json_adj_allocation(debates, unused_adj):
 
@@ -1180,7 +1188,8 @@ def get_adj_feedback(request, t):
 
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback()
-    data = [ [unicode(f.round),
+    data = [ [unicode(str(f.version) + (f.confirmed and "*" or "")),
+              unicode(f.round),
               f.debate.bracket,
               unicode(f.debate),
               unicode(f.source),
@@ -1196,6 +1205,7 @@ def public_enter_feedback(request, t, source_type, source_id):
 
     source = get_object_or_404(source_type, id=source_id)
     include_panellists = request.tournament.config.get('panellist_feedback_enabled') > 0
+    ip_address = get_real_ip(request)
 
     if isinstance(source, Adjudicator):
         source_name = source.name
@@ -1204,15 +1214,20 @@ def public_enter_feedback(request, t, source_type, source_id):
     else:
         raise TypeError('source must be Adjudicator or Team')
 
+    submission_fields = {
+        'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
+        'ip_address'    : ip_address
+    }
+
     if request.method == "POST":
-        form = forms.make_feedback_form_class_for_source(source, released_only=True, include_panellists=include_panellists)(request.POST)
+        form = forms.make_feedback_form_class_for_source(source, submission_fields, released_only=True, include_panellists=include_panellists)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
                 user=None, adjudicator_feedback=adj_feedback)
             return redirect_tournament('public_feedback_submit', t)
     else:
-        form = forms.make_feedback_form_class_for_source(source, released_only=True, include_panellists=include_panellists)()
+        form = forms.make_feedback_form_class_for_source(source, submission_fields, released_only=True, include_panellists=include_panellists)()
 
     return r2r(request, 'public/enter_feedback.html', dict(source_name=source_name, form=form))
 
@@ -1222,21 +1237,29 @@ def public_enter_feedback(request, t, source_type, source_id):
 def enter_feedback(request, t, adjudicator_id):
 
     adj = get_object_or_404(Adjudicator, id=adjudicator_id)
+    ip_address = get_real_ip(request)
 
     if not request.user.is_superuser:
         template = 'monkey/enter_feedback.html'
     else:
         template = 'enter_feedback.html'
 
+    submission_fields = {
+        'submitter_type': AdjudicatorFeedback.SUBMITTER_TABROOM,
+        'user'          : request.user,
+        'ip_address'    : ip_address
+    }
+
     if request.method == "POST":
-        form = forms.make_feedback_form_class(adj)(request.POST)
+        form = forms.make_feedback_form_class_for_adj(adj, submission_fields)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
-                user=request.user, adjudicator_feedback=adj_feedback)
+                user=request.user, adjudicator_feedback=adj_feedback,
+                ip_address=ip_address)
             return redirect_tournament('adj_feedback', t)
     else:
-        form = forms.make_feedback_form_class(adj)()
+        form = forms.make_feedback_form_class_for_adj(adj, submission_fields)()
 
     return r2r(request, template, dict(adj=adj, form=form))
 

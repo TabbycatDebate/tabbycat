@@ -803,14 +803,13 @@ table.dataTable {
 .edit-venues #container, .edit-adjs #container {
   min-height: 1000px; }
 .edit-venues .btn-default.text-left, .edit-adjs .btn-default.text-left {
-  padding-left: 6px; }
+  padding-left: 6px;
+  padding-right: 6px; }
 .edit-venues #scratch, .edit-adjs #scratch {
   position: fixed;
   top: 0;
   right: 0;
   height: 100%; }
-  .edit-venues #scratch .info, .edit-adjs #scratch .info {
-    display: none; }
 .edit-venues .venue, .edit-venues .adj, .edit-adjs .venue, .edit-adjs .adj {
   max-width: 300px; }
 .edit-venues .btn-holder, .edit-adjs .btn-holder {
@@ -821,18 +820,23 @@ table.dataTable {
   text-align: left; }
   .edit-venues .importance form, .edit-adjs .importance form {
     margin: -5px -6px; }
-.edit-venues .venue:hover, .edit-venues .adj:hover, .edit-adjs .venue:hover, .edit-adjs .adj:hover {
-  cursor: move; }
 .edit-venues .border-success, .edit-adjs .border-success {
   border: 2px solid #4cae4c; }
-.edit-venues .adj.trainee, .edit-adjs .adj.trainee {
-  background-color: #ffb; }
-.edit-venues .adj.trainee:hover, .edit-adjs .adj.trainee:hover {
-  background-color: #ffe; }
-.edit-venues .adj.history-conflict, .edit-adjs .adj.history-conflict {
-  color: #f80; }
-.edit-venues .adj.conflict, .edit-adjs .adj.conflict {
-  color: red; }
+.edit-venues .venue:hover, .edit-venues .adj:hover, .edit-adjs .venue:hover, .edit-adjs .adj:hover {
+  cursor: move; }
+.edit-venues .adj .info, .edit-adjs .adj .info {
+  display: inline-block;
+  float: right; }
+.edit-venues .adj .info:hover, .edit-adjs .adj .info:hover {
+  cursor: pointer;
+  z-index: 11; }
+.edit-venues .adj.btn-danger .info, .edit-venues .adj.btn-warning .info, .edit-adjs .adj.btn-danger .info, .edit-adjs .adj.btn-warning .info {
+  color: #fff; }
+.edit-venues #unusedTable td, .edit-adjs #unusedTable td {
+  padding: 5px 0 0 0;
+  border: none;
+  line-height: 32px;
+  text-align: center; }
 
 .scoresheet .score input {
   width: 70px; }

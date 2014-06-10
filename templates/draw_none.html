@@ -20,10 +20,21 @@
 {% block head-title %}
 No draw currently exists
 {% endblock %}
+
 {% block header %}
-<div class="btn-group">
-    <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
-</div>
+    {% if active_teams.count == 0 %}
+    <div class="alert alert-warning">
+        The draw cannot be generated until some of the teams <a href="{% round_url team_availability current_round %}">have been checked in</a> for this round.
+    </div>
+    {% endif %}
+    {% if active_venues.count < rooms %}
+    <div class="alert alert-warning">
+        The draw cannot be generated until there are more venues than team matchups. <a href="{% round_url venue_availability current_round %}">Check in some more venues</a>.
+    </div>
+    {% endif %}
+    <div class="btn-group">
+        <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
+    </div>
 {% endblock %}
 
 {% block content %}
@@ -33,7 +44,7 @@ No draw currently exists
         <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
         <ul>
             {% for team in active_teams %}
-            <li>{{ team.short_name }} ({{ team.institution.code }})</li>
+                <li>{{ team.short_name }} ({{ team.institution.code }})</li>
             {% endfor %}
         </ul>
     </div>

@@ -430,7 +430,10 @@ class DebateResultFormSet(object):
 
 ### Feedback forms
 
-def make_feedback_form_class(adjudicator, released_only=False):
+def make_feedback_form_class_for_adj(adjudicator, submission_fields, released_only=False):
+    """adjudicator is an Adjudicator.
+    submission_fields is a dict of fields for Submission.
+    released_only is a boolean."""
 
     if released_only:
         das = DebateAdjudicator.objects.filter(adjudicator = adjudicator,
@@ -459,7 +462,7 @@ def make_feedback_form_class(adjudicator, released_only=False):
     def team_choice(dt):
         return (
             'T:%d' % dt.id,
-            '%s (%d)' % (dt.team.name, dt.debate.round.seq)
+            '%s (%d)' % (dt.team.short_name, dt.debate.round.seq)
         )
 
     team_choices = [(None, '-- Teams --')]
@@ -508,18 +511,13 @@ def make_feedback_form_class(adjudicator, released_only=False):
             else:
                 st = None
 
-            try:
-                af = AdjudicatorFeedback.objects.get(
-                    adjudicator = adjudicator,
-                    source_adjudicator = sa,
-                    source_team = st,
-                )
-            except AdjudicatorFeedback.DoesNotExist:
-                af = AdjudicatorFeedback(
-                    adjudicator = adjudicator,
-                    source_adjudicator = sa,
-                    source_team = st,
-                )
+            af = AdjudicatorFeedback(
+                adjudicator = adjudicator,
+                source_adjudicator = sa,
+                source_team = st,
+                confirmed = True, # assume confirmed on every submission
+                **submission_fields
+            )
 
             af.score = self.cleaned_data['score']
             af.comments = self.cleaned_data['comment']
@@ -531,7 +529,10 @@ def make_feedback_form_class(adjudicator, released_only=False):
     return FeedbackForm
 
 # TODO decide whether to merge this with make_feedback_form_class above
-def make_feedback_form_class_for_source(source, released_only=False, include_panellists=True):
+def make_feedback_form_class_for_source(source, submission_fields, released_only=False, include_panellists=True):
+    """source is an Adjudicator or Team.
+    submission_fields is a dict of fields for Submission.
+    released_only is a boolean."""
 
     kwargs = dict()
     if released_only:
@@ -606,18 +607,12 @@ def make_feedback_form_class_for_source(source, released_only=False, include_pan
             else:
                 st = None
 
-            try:
-                af = AdjudicatorFeedback.objects.get(
-                    adjudicator = da.adjudicator,
-                    source_adjudicator = sa,
-                    source_team = st,
-                )
-            except AdjudicatorFeedback.DoesNotExist:
-                af = AdjudicatorFeedback(
-                    adjudicator = da.adjudicator,
-                    source_adjudicator = sa,
-                    source_team = st,
-                )
+            af = AdjudicatorFeedback(
+                adjudicator = da.adjudicator,
+                source_adjudicator = sa,
+                source_team = st,
+                **submission_fields
+            )
 
             af.score = self.cleaned_data['score']
             af.comments = self.cleaned_data['comment']
