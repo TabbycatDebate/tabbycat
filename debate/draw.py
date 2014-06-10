@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import random
+import copy
 from one_up_one_down import OneUpOneDownSwapper
 
 class DrawError(Exception):
@@ -276,28 +277,30 @@ class PowerPairedDraw(BaseDraw):
         generate_pairings(), and adjusting it in-place to avoid conflicts."""
         if self.options["avoid_conflicts"] is None:
             return
-        function = self._get_option_function("pairing_method", self.PAIRING_FUNCTIONS)
+        function = self._get_option_function("avoid_conflicts", self.AVOID_CONFLICT_FUNCTIONS)
         return function(pairings)
 
-    @staticmethod
-    def _one_up_one_down(pairings):
+    def _one_up_one_down(self, pairings):
         """We pass the pairings to one_up_one_down.py, then infer annotations
         based on the result."""
 
-        pairs_orig = [tuple(p.teams) for p in pairings]
+        pairs = [tuple(p.teams) for p in pairings]
+        pairs_orig = list(pairs) # keep a copy for comparison
         OPTIONS = ["avoid_history", "avoid_institution", "history_penalty",
                 "institution_penalty"]
         options = dict((key, self.options[key]) for key in OPTIONS)
-        pairs_new = OneUpOneDownSwapper(**options)(pairs_orig)
+        swapper = OneUpOneDownSwapper(**options)
+        pairs_new = swapper.run(pairs)
+        swaps = swapper.swaps
 
-        for pairing, orig, new in zip(pairings, pairs_orig, pairs_new):
+        for i, (pairing, orig, new) in enumerate(zip(pairings, pairs_orig, pairs_new)):
             assert(tuple(pairing.teams) == orig)
+            assert((i in swaps or i-1 in swaps) == (orig != new))
             if orig != new:
                 if pairing.conflict_hist:
-                    pairing.add_flag("was_history")
+                    pairing.add_flag("1u1d_history")
                 if pairing.conflict_inst:
-                    pairing.add_flag("was_institution")
+                    pairing.add_flag("1u1d_institution")
                 if not (pairing.conflict_hist or pairing.conflict_inst):
-                    pairing.add_flag("one_up_one_down")
+                    pairing.add_flag("1u1d_other")
                 pairing.teams = list(new)
-
