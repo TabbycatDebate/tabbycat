@@ -24,6 +24,8 @@ SETTINGS = OrderedDict([
     ('adj_chair_min_score',        (float, 'Minimum chair score',                                         3.5)),
     ('adj_conflict_penalty',       (int,   'Penalty for adjudicator-team conflict',                       1000000)),
     ('adj_history_penalty',        (int,   'Penalty for adjudicator-team history',                        10000)),
+    ('team_institution_penalty',   (int,   'Penalty for team-team institution conflict',                  1)),
+    ('team_history_penalty',       (int,   'Penalty for team-team history',                               100)),
     ('show_emoji',                 (_bool, 'Shows Emoji in the draw UI',                                  True)),
     ('show_institutions',          (_bool, 'Shows the institutions column in the draw UI',                True)),
     ('public_participants',        (_bool, 'Public interface to see all participants',                    False)),

@@ -32,7 +32,7 @@
 {% for adj in form.adj_iter %}
 
     <div class="row">
-        <p class="col-xs-12 lead h4 page-header">Ballot from 
+        <p class="col-xs-12 lead h4 page-header">Ballot from
         {% if adj.adj.phone or adj.adj.email %}
             <span data-toggle="tooltip" title="{{ adj.adj.phone }} {{ adj.adj.email }}">
             {{ adj.adj }}
@@ -40,7 +40,7 @@
         {% else %}
             {{ adj.adj }}
         {% endif %}
-        </p>        
+        </p>
     </div>
 
     <div class="clearfix scoresheet row">

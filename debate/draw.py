@@ -1,5 +1,9 @@
 from collections import OrderedDict
 import random
+from one_up_one_down import OneUpOneDownSwapper
+
+class DrawError(Exception):
+    pass
 
 class Pairing(object):
     """Simple data structure for communicating information about pairings.
@@ -10,7 +14,7 @@ class Pairing(object):
         self.teams     = teams
         self.bracket   = bracket
         self.room_rank = room_rank
-        self.flags     = flags
+        self.flags     = list(flags)
 
     def __repr__(self):
         return "<Pairing object: {0} vs {1} ({2}/{3})>".format(
@@ -34,8 +38,22 @@ class Pairing(object):
     def swap_sides(self):
         self.teams.reverse()
 
-class DrawError(Exception):
-    pass
+    @property
+    def conflict_inst(self):
+        try:
+            return self.teams[0].institution == self.teams[1].institution
+        except AttributeError:
+            raise DrawError("For conflict avoidance, teams must have an attribute 'institution'.")
+
+    @property
+    def conflict_hist(self):
+        try:
+            return self.teams[0].seen(self.teams[1])
+        except AttributeError:
+            raise DrawError("For conflict avoidance, teams must have an attribute 'seen'.")
+
+    def add_flag(self, flag):
+        self.flags.append(flag)
 
 class BaseDraw(object):
     """Base class for all draw types.
@@ -46,22 +64,22 @@ class BaseDraw(object):
         "avoid_history" - if True, draw tries to avoid pairing teams that have
             seen each other before, and tries harder if they've seen each other
             multiple times.
+        "history_penalty" -
         "avoid_institution" - if True, draw tries to avoid pairing teams that
-            are from the same institution, and tries harder if either team
-            has seen their own institution multiple times.
+            are from the same institution.
         """
 
     BASE_DEFAULT_OPTIONS = {
-        "balance_sides"    : True,
-        "avoid_history"    : True,
-        "avoid_institution": True
+        "balance_sides"      : True,
+        "avoid_history"      : True,
+        "avoid_institution"  : True,
+        "history_penalty"    : 1e2,
+        "institution_penalty": 1
     }
 
     can_be_first_round = NotImplemented
 
     # All subclasses must define this with any options that may exist.
-    # It's not necessary for them to include these; the constructor will
-    # do that.
     DEFAULT_OPTIONS = {}
 
     def __init__(self, teams, **kwargs):
@@ -263,5 +281,23 @@ class PowerPairedDraw(BaseDraw):
 
     @staticmethod
     def _one_up_one_down(pairings):
+        """We pass the pairings to one_up_one_down.py, then infer annotations
+        based on the result."""
 
+        pairs_orig = [tuple(p.teams) for p in pairings]
+        OPTIONS = ["avoid_history", "avoid_institution", "history_penalty",
+                "institution_penalty"]
+        options = dict((key, self.options[key]) for key in OPTIONS)
+        pairs_new = OneUpOneDownSwapper(**options)(pairs_orig)
+
+        for pairing, orig, new in zip(pairings, pairs_orig, pairs_new):
+            assert(tuple(pairing.teams) == orig)
+            if orig != new:
+                if pairing.conflict_hist:
+                    pairing.add_flag("was_history")
+                if pairing.conflict_inst:
+                    pairing.add_flag("was_institution")
+                if not (pairing.conflict_hist or pairing.conflict_inst):
+                    pairing.add_flag("one_up_one_down")
+                pairing.teams = list(new)
 
