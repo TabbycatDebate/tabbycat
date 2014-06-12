@@ -5,7 +5,7 @@ from collections import OrderedDict
 import draw
 import copy
 
-class TestPowerPairedDraw(unittest.TestCase):
+class TestPowerPairedDrawParts(unittest.TestCase):
     """Basic unit test for core functionality of power-paired draws.
     Nowhere near comprehensive."""
 
@@ -92,9 +92,9 @@ class TestPowerPairedDraw(unittest.TestCase):
         for option, value in options.iteritems():
             self.ppd.options[option] = value
         pairings = []
-        for ((p1, in1, hist1), (p2, in2, hist2)) in data:
-            team1 = TestTeam(p1, in1, hist1)
-            team2 = TestTeam(p2, in2, hist2)
+        for data1, data2 in data:
+            team1 = TestTeam(*data1)
+            team2 = TestTeam(*data2)
             pairing = draw.Pairing([team1, team2], None, None)
             pairings.append(pairing)
         self.ppd.avoid_conflicts(pairings)
@@ -105,22 +105,21 @@ class TestPowerPairedDraw(unittest.TestCase):
 
     @staticmethod
     def _1u1d_no_change(data):
-        return [((id1, id2), []) for ((id1, inst1, hist1), (id2, inst2, hist2))
-                in data]
+        return [((t1[0], t2[0]), []) for t1, t2 in data]
 
     def test_no_swap(self):
-        data = (((1, 'A', ()), (5, 'B', ())),
-                ((2, 'C', ()), (6, 'A', ())),
-                ((3, 'B', ()), (7, 'D', ())),
-                ((4, 'C', ()), (8, 'A', ())))
+        data = (((1, 'A'), (5, 'B')),
+                ((2, 'C'), (6, 'A')),
+                ((3, 'B'), (7, 'D')),
+                ((4, 'C'), (8, 'A')))
         expected = self._1u1d_no_change(data)
         self.one_up_one_down(data, expected)
 
     def test_swap_institution(self):
-        data = (((1, 'A', ()), (5, 'A', ())),
-                ((2, 'C', ()), (6, 'B', ())),
-                ((3, 'B', ()), (7, 'D', ())),
-                ((4, 'C', ()), (8, 'A', ())))
+        data = (((1, 'A'), (5, 'A')),
+                ((2, 'C'), (6, 'B')),
+                ((3, 'B'), (7, 'D')),
+                ((4, 'C'), (8, 'A')))
         expected = [((1, 6), ["1u1d_institution"]),
                     ((2, 5), ["1u1d_other"]),
                     ((3, 7), []),
@@ -128,18 +127,18 @@ class TestPowerPairedDraw(unittest.TestCase):
         self.one_up_one_down(data, expected)
 
     def test_no_swap_institution(self):
-        data = (((1, 'A', ()), (5, 'A', ())),
-                ((2, 'C', ()), (6, 'B', ())),
-                ((3, 'B', ()), (7, 'D', ())),
-                ((4, 'C', ()), (8, 'A', ())))
+        data = (((1, 'A'), (5, 'A')),
+                ((2, 'C'), (6, 'B')),
+                ((3, 'B'), (7, 'D')),
+                ((4, 'C'), (8, 'A')))
         expected = self._1u1d_no_change(data)
         self.one_up_one_down(data, expected, avoid_institution=False)
 
     def test_swap_history(self):
-        data = (((1, 'A', (5,)), (5, 'B', ())),
-                ((2, 'C', ()), (6, 'A', ())),
-                ((3, 'B', ()), (7, 'D', ())),
-                ((4, 'C', ()), (8, 'A', ())))
+        data = (((1, 'A', None, 5), (5, 'B')),
+                ((2, 'C'), (6, 'A')),
+                ((3, 'B'), (7, 'D')),
+                ((4, 'C'), (8, 'A')))
         expected = [((1, 6), ["1u1d_history"]),
                     ((2, 5), ["1u1d_other"]),
                     ((3, 7), []),
@@ -147,23 +146,27 @@ class TestPowerPairedDraw(unittest.TestCase):
         self.one_up_one_down(data, expected)
 
     def test_no_swap_history(self):
-        data = (((1, 'A', (5,)), (5, 'B', ())),
-                ((2, 'C', ()), (6, 'A', ())),
-                ((3, 'B', ()), (7, 'D', ())),
-                ((4, 'C', ()), (8, 'A', ())))
+        data = (((1, 'A', None, 5), (5, 'B')),
+                ((2, 'C'), (6, 'A')),
+                ((3, 'B'), (7, 'D')),
+                ((4, 'C'), (8, 'A')))
         expected = self._1u1d_no_change(data)
         self.one_up_one_down(data, expected, avoid_history=False)
 
     def test_last_swap(self):
-        data = (((1, 'A', ()), (5, 'B', ())),
-                ((2, 'C', ()), (6, 'A', ())),
-                ((3, 'B', ()), (7, 'D', ())),
-                ((4, 'C', (8,)), (8, 'A', ())))
+        data = (((1, 'A'), (5, 'B')),
+                ((2, 'C'), (6, 'A')),
+                ((3, 'B'), (7, 'D')),
+                ((4, 'C', None, 8), (8, 'A')))
         expected = [((1, 5), []),
                     ((2, 6), []),
                     ((3, 8), ["1u1d_other"]),
                     ((4, 7), ["1u1d_history"])]
         self.one_up_one_down(data, expected)
+
+class TestPowerPairedDraw(unittest.TestCase):
+    """Test the entire draw functions as a black box."""
+
 
 if __name__ == '__main__':
     unittest.main()
