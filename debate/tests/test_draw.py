@@ -1,3 +1,5 @@
+import os.path, sys
+if os.path.abspath("..") not in sys.path: sys.path.append(os.path.abspath(".."))
 import unittest
 from collections import OrderedDict
 import draw
@@ -86,13 +88,13 @@ class TestPowerPairedDraw(unittest.TestCase):
 
 
     def one_up_one_down(self, data, expected, **options):
-        from one_up_one_down import Team
+        from test_one_up_one_down import TestTeam
         for option, value in options.iteritems():
             self.ppd.options[option] = value
         pairings = []
         for ((p1, in1, hist1), (p2, in2, hist2)) in data:
-            team1 = Team(p1, in1, hist1)
-            team2 = Team(p2, in2, hist2)
+            team1 = TestTeam(p1, in1, hist1)
+            team2 = TestTeam(p2, in2, hist2)
             pairing = draw.Pairing([team1, team2], None, None)
             pairings.append(pairing)
         self.ppd.avoid_conflicts(pairings)

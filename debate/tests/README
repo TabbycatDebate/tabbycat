@@ -1,0 +1,5 @@
+To run tests in this directory:
+
+ $ python -m unittest discover
+
+See https://docs.python.org/2/library/unittest.html for more details.
