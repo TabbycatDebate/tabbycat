@@ -1,3 +1,5 @@
+This directory is for testing functions that don't rely on the Django framework.
+
 To run tests in this directory:
 
  $ python -m unittest discover
