@@ -6,12 +6,13 @@ from one_up_one_down import OneUpOneDownSwapper
 class TestTeam(object):
     """Basic implementation of team interface"""
 
-    def __init__(self, id, inst, points=None, hist=tuple()):
+    def __init__(self, id, inst, points=None, hist=list(), aff_count=None):
         self.id = id
         self.institution = inst
         self.points = points
+        self.aff_count = aff_count
         try:
-            self.hist = tuple(hist)
+            self.hist = list(hist)
         except TypeError:
             self.hist = (hist,)
 

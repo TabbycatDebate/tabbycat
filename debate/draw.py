@@ -12,7 +12,7 @@ class Pairing(object):
 
     def __init__(self, teams, bracket, room_rank, flags=[]):
         """'teams' must be a list of two teams."""
-        self.teams     = teams
+        self.teams     = list(teams)
         self.bracket   = bracket
         self.room_rank = room_rank
         self.flags     = list(flags)
@@ -44,7 +44,7 @@ class Pairing(object):
         elif self.teams[0].aff_count > self.teams[1].aff_count:
             self.teams.reverse()
         else:
-            self.teams.shuffle()
+            random.shuffle(self.teams)
 
     @property
     def conflict_inst(self):
@@ -139,8 +139,12 @@ class PowerPairedDraw(BaseDraw):
     def get_draw(self):
         self._brackets = self._make_raw_brackets()
         self.resolve_odd_brackets(self._brackets) # operates in-place
-        self._draw = self.generate_pairings(self._brackets)
-        self.avoid_conflicts(self._draw) # operates in-place
+        self._pairings = self.generate_pairings(self._brackets)
+        self.avoid_conflicts(self._pairings) # operates in-place
+        self._draw = list()
+        for bracket in self._pairings.itervalues():
+            self._draw.extend(bracket)
+
         self.balance_sides(self._draw) # operates in-place
         return self._draw
 
@@ -208,6 +212,7 @@ class PowerPairedDraw(BaseDraw):
             if len(teams) % 2 != 0:
                 pullup_needed = teams
         if pullup_needed:
+            print brackets
             raise DrawError("Last bracket is still odd!")
 
     @classmethod
@@ -243,14 +248,16 @@ class PowerPairedDraw(BaseDraw):
 
     @staticmethod
     def _pairings(brackets, subpool_func):
-        pairings = list()
+        pairings = OrderedDict()
         i = 1
         for points, teams in brackets.iteritems():
+            bracket = list()
             top, bottom = subpool_func(teams)
             for teams in zip(top, bottom):
                 pairing = Pairing(teams=teams, bracket=points, room_rank=i)
-                pairings.append(pairing)
+                bracket.append(pairing)
                 i = i + 1
+            pairings[points] = bracket
         return pairings
 
     @classmethod
@@ -300,23 +307,24 @@ class PowerPairedDraw(BaseDraw):
         """We pass the pairings to one_up_one_down.py, then infer annotations
         based on the result."""
 
-        pairs = [tuple(p.teams) for p in pairings]
-        pairs_orig = list(pairs) # keep a copy for comparison
-        OPTIONS = ["avoid_history", "avoid_institution", "history_penalty",
-                "institution_penalty"]
-        options = dict((key, self.options[key]) for key in OPTIONS)
-        swapper = OneUpOneDownSwapper(**options)
-        pairs_new = swapper.run(pairs)
-        swaps = swapper.swaps
+        for bracket in pairings.itervalues():
+            pairs = [tuple(p.teams) for p in bracket]
+            pairs_orig = list(pairs) # keep a copy for comparison
+            OPTIONS = ["avoid_history", "avoid_institution", "history_penalty",
+                    "institution_penalty"]
+            options = dict((key, self.options[key]) for key in OPTIONS)
+            swapper = OneUpOneDownSwapper(**options)
+            pairs_new = swapper.run(pairs)
+            swaps = swapper.swaps
 
-        for i, (pairing, orig, new) in enumerate(zip(pairings, pairs_orig, pairs_new)):
-            assert(tuple(pairing.teams) == orig)
-            assert((i in swaps or i-1 in swaps) == (orig != new))
-            if orig != new:
-                if pairing.conflict_hist:
-                    pairing.add_flag("1u1d_history")
-                if pairing.conflict_inst:
-                    pairing.add_flag("1u1d_institution")
-                if not (pairing.conflict_hist or pairing.conflict_inst):
-                    pairing.add_flag("1u1d_other")
-                pairing.teams = list(new)
+            for i, (pairing, orig, new) in enumerate(zip(bracket, pairs_orig, pairs_new)):
+                assert(tuple(pairing.teams) == orig)
+                assert((i in swaps or i-1 in swaps) == (orig != new))
+                if orig != new:
+                    if pairing.conflict_hist:
+                        pairing.add_flag("1u1d_history")
+                    if pairing.conflict_inst:
+                        pairing.add_flag("1u1d_institution")
+                    if not (pairing.conflict_hist or pairing.conflict_inst):
+                        pairing.add_flag("1u1d_other")
+                    pairing.teams = list(new)
