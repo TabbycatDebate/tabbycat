@@ -1,13 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>Debate</title>
-    </head>
-    <body>
-        <ul>
-            {% for tournament in tournaments %}
-            <li><a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a></li>
-            {% endfor %}
-        </ul>
-    </body>
-</html>
+{% extends "base.html" %}
+
+{% block head-title %}Which tournament are you after?{% endblock %}
+{% block page-title %}Home{% endblock %}
+
+{% block nav %}{% endblock %}
+
+{% block content %}
+
+<ul class="list-group">
+    {% for tournament in tournaments %}
+    <li class="list-group-item"><a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a></li>
+    {% endfor %}
+</ul>
+
+
+{% endblock content %}

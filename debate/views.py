@@ -142,13 +142,19 @@ def public_team_standings(request, t):
                     debate_team__debate__round=r,
                 )
                 debate = ts.debate_team.debate
+
+                try:
+                    motion = debate.confirmed_ballot.motion
+                except:
+                    motion = None
+
                 opposition = None
                 if debate.neg_team == team:
                     opposition = ts.debate_team.debate.aff_team
                 else:
                     opposition = ts.debate_team.debate.neg_team
 
-                return ts.points, opposition
+                return ts.points, opposition, motion
             except TeamScore.DoesNotExist:
                 return None
 
@@ -173,7 +179,6 @@ def public_ballot_submit(request, t):
         return r2r(request, 'public/add_ballot.html', dict(das=das))
     else:
         return r2r(request, 'public/draw_unreleased.html', dict(das=None, round=r))
-
 
 @public_optional_tournament_view('public_feedback')
 def public_feedback_submit(request, t):
@@ -353,11 +358,33 @@ def public_motions_tab(request, t):
 @login_required
 @tournament_view
 def tournament_home(request, t):
-    if not request.user.is_superuser:
-        return redirect('results', tournament_slug=t.slug,
-                        round_seq=t.current_round.seq)
+    # ACtions
+    from debate.models import ActionLog
+    a = ActionLog.objects.all().order_by('-id')[:25]
 
-    r = t.current_round
+    # Speaker Scores
+    from debate.models import SpeakerScore
+    round = t.current_round
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                  seq__lte=round.seq).order_by('seq')
+    def get_round_stats(r):
+        #try:
+            speaks = SpeakerScore.objects.filter(
+            ballot_submission__confirmed=True,
+            debate_team__debate__round=r,
+            position__lte=3)
+
+            round_min = min(speak.score for speak in speaks)
+            round_avg = sum(speak.score for speak in speaks) / len(speaks)
+            round_max = max(speak.score for speak in speaks)
+            return round_min, round_avg, round_max
+        #except:
+            # Lazy-catch all for possible errors
+            return 0
+
+    r_stats = [get_round_stats(r) for r in rounds]
+
+    # Draw Status
     draw = r.get_draw()
     stats = {
         'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
@@ -371,12 +398,10 @@ def tournament_home(request, t):
     else:
         stats['pc'] = 0
 
-    return r2r(request, 'tournament_home.html', dict(stats=stats, round=r))
-
-@login_required
-def monkey_home(request, t):
-    return r2r(request, 'monkey/home.html')
-
+    if not request.user.is_superuser:
+        return r2r(request, 'monkey/home.html', dict(stats=stats, round=r, actions=a, r_stats=r_stats))
+    else:
+        return r2r(request, 'tournament_home.html', dict(stats=stats, round=r, actions=a, r_stats=r_stats))
 
 @admin_required
 @tournament_view
@@ -842,7 +867,7 @@ def public_new_ballots(request, t, adj_id):
             # TODO add ballots to the ActionLog
             action_type = ActionLog.ACTION_TYPE_BALLOT_PUBLIC_CHECKIN
             ActionLog.objects.log(type=action_type, debate=debate, ip_address=ip_address)
-            return redirect_tournament('public_ballot_submit', t)
+            return r2r(request, 'public/success.html', dict(success_kind="ballot"))
 
     else:
         form = forms.BallotSetForm(ballots)
@@ -1225,7 +1250,7 @@ def public_enter_feedback(request, t, source_type, source_id):
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
                 user=None, adjudicator_feedback=adj_feedback)
-            return redirect_tournament('public_feedback_submit', t)
+            return r2r(request, 'public/success.html', dict(success_kind="feedback"))
     else:
         form = forms.make_feedback_form_class_for_source(source, submission_fields, released_only=True, include_panellists=include_panellists)()
 
