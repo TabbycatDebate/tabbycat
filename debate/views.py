@@ -142,13 +142,19 @@ def public_team_standings(request, t):
                     debate_team__debate__round=r,
                 )
                 debate = ts.debate_team.debate
+
+                try:
+                    motion = debate.confirmed_ballot.motion
+                except:
+                    motion = None
+
                 opposition = None
                 if debate.neg_team == team:
                     opposition = ts.debate_team.debate.aff_team
                 else:
                     opposition = ts.debate_team.debate.neg_team
 
-                return ts.points, opposition
+                return ts.points, opposition, motion
             except TeamScore.DoesNotExist:
                 return None
 
