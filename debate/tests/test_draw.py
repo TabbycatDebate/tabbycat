@@ -219,7 +219,7 @@ class TestPowerPairedDraw(unittest.TestCase):
         from test_one_up_one_down import TestTeam
         standings = [TestTeam(*args) for args in self.standings]
         self.ppd = draw.PowerPairedDraw(standings)
-        return self.ppd.get_draw()
+        return self.ppd.make_draw()
 
     def test_draw(self):
         draw = self.do_draw()

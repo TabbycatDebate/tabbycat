@@ -115,6 +115,47 @@ class BaseDraw(object):
         for pairing in pairings:
             pairing.balance_sides()
 
+    def make_draw(self):
+        """Abstract method."""
+        raise NotImplementedError
+
+class RandomDraw(BaseDraw):
+    """Random draw.
+    Options:
+        "max_swap_attempts": Maximum number of times to attempt to swap to
+            avoid conflict before giving up.
+    """
+
+    can_be_first_round = True
+
+    DEFAULT_OPTIONS = {"max_swap_attempts": 10}
+
+    def make_draw(self):
+        self._draw = self._make_initial_pairings()
+        self.avoid_conflicts(self._pairings) # operates in-place
+        self.balance_sides(self._draw) # operates in-place
+        return self._draw
+
+    def _make_initial_pairings(self):
+        teams = list(self.teams)
+        random.shuffle(teams)
+        debates = len(teams)/2
+        pairings = list()
+        for teams in zip(teams[:debates], teams[debates:]):
+            pairing = Pairing(teams=teams, bracket=0, room_rank=0)
+            pairings.append(pairing)
+        return pairings
+
+    def avoid_conflicts(self, pairings):
+        if not self.options["avoid_history"] or self.options["avoid_institution"]:
+            return
+        for i, pairing in enumerate(pairings):
+            if pairing.conflict_hist and self.options["avoid_history"] \
+                    or pairing.conflict_inst and self.options["avoid_institution"]:
+                for j in range(self.options["max_swap_attempts"]):
+                    swap_pairing = random.choice(pairings)
+                    # CONTINUE HERE
+
 class PowerPairedDraw(BaseDraw):
     """Power-paired draw.
     Options:
@@ -123,7 +164,7 @@ class PowerPairedDraw(BaseDraw):
             or a function.
         "pairing_method" - How to pair teams:
             "slide", "fold", "random" or a function.
-        "avoid_conflict"  - How to avoid conflicts.
+        "avoid_conflict" - How to avoid conflicts.
             "one_up_one_down"
             can be None, which turns off conflict avoidance.
     """
@@ -136,7 +177,7 @@ class PowerPairedDraw(BaseDraw):
         "avoid_conflicts": "one_up_one_down"
     }
 
-    def get_draw(self):
+    def make_draw(self):
         self._brackets = self._make_raw_brackets()
         self.resolve_odd_brackets(self._brackets) # operates in-place
         self._pairings = self.generate_pairings(self._brackets)
