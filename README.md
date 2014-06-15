@@ -10,7 +10,7 @@ If you're interested in using, developing or otherwise following this software,
 - Enter data from multiple computers simultaneously
 - Easily deployable to [Heroku](https://www.heroku.com) for a super fast setup
 - Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts
-- A drag and drop interface for adjudicator allocation that displays templates on the fly
+- A drag and drop interface for adjudicator allocation that automatically displays conflicts
 - Responsive templates designed for large screens, laptops, tablets, and phones
 - Optional online ballot submission
 - Optional online post-tournament tab display
