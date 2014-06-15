@@ -171,15 +171,18 @@ class TestPowerPairedDrawParts(unittest.TestCase):
 class TestPowerPairedDraw(unittest.TestCase):
     """Test the entire draw functions as a black box."""
 
+    # Yep, I spent a lot of time constructing this realistic hypothetical
+    # situation with lots of swaps and manually figuring out the anticipated
+    # result.
     standings = [(12, 'B', 4, [26, 11, 15, 14], 2),
                  (2, 'D', 3, [22, 16, 20, 10], 2),
                  (3, 'E', 3, [23, 20, 25, 4], 2),
-                 (4, 'B', 3, [18, 25, 5, 3], 3),
-                 (6, 'E', 3, [19, 15, 18, 9], 2),
-                 (8, 'A', 3, [15, 24, 1, 15], 2),
                  (11, 'B', 3, [1, 12, 23, 22], 2),
-                 (14, 'A', 3, [24, 17, 9, 12], 2),
+                 (6, 'E', 3, [19, 15, 18, 9], 2),
                  (17, 'E', 3, [21, 14, 7, 25], 2),
+                 (4, 'B', 3, [18, 25, 5, 3], 3),
+                 (14, 'A', 3, [24, 17, 9, 12], 2),
+                 (8, 'A', 3, [15, 24, 1, 15], 2),
                  (7, 'D', 2, [16, 9, 17, 16], 2),
                  (9, 'D', 2, [5, 7, 14, 6], 2),
                  (15, 'B', 2, [8, 6, 12, 8], 2),
@@ -192,26 +195,25 @@ class TestPowerPairedDraw(unittest.TestCase):
                  (5, 'C', 1, [9, 13, 4, 23], 1),
                  (10, 'B', 1, [25, 22, 13, 2], 1),
                  (16, 'D', 1, [7, 2, 22, 7], 2),
-                 (19, 'B', 1, [6, 23, 24, 1], 1),
                  (20, 'E', 1, [13, 3, 2, 24], 2),
                  (21, 'A', 1, [17, 18, 26, 18], 2),
+                 (19, 'B', 1, [6, 23, 24, 1], 1),
                  (26, 'B', 1, [12, 1, 21, 13], 2),
                  (13, 'C', 0, [20, 5, 10, 26], 2)]
 
-    expected = (12, 2),
-            (3, 4),
-            (11, 14),
-            (6, 8),
-            (17, 7),
-            (9, 23),
-            (15, 24),
-            (18, 25),
-            (22, 1),
-            (5, 21),
-            (10, 19),
-            (16, 26),
-            (20, 13),
-
+    expected = [(12,  2, [], True),
+                ( 3, 14, ["1u1d_history"], True),
+                (11,  4, ["1u1d_other"], False),
+                ( 6,  7, ["1u1d_other"], True),
+                (17,  8, ["1u1d_history"], True),
+                ( 9, 24, ["1u1d_other"], False),
+                (15, 23, ["1u1d_institution"], True),
+                (18, 25, [], False),
+                (22,  1, [], True),
+                ( 5, 19, ["1u1d_other"], True),
+                (10, 21, ["1u1d_institution"], False),
+                (16, 13, ["1u1d_other"], True),
+                (20, 26, ["1u1d_history"], True)]
 
     def do_draw(self):
         from test_one_up_one_down import TestTeam
@@ -221,7 +223,15 @@ class TestPowerPairedDraw(unittest.TestCase):
 
     def test_draw(self):
         draw = self.do_draw()
-        print draw
+        for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, self.expected):
+            actual_teams = (actual.aff_team.id, actual.neg_team.id)
+            expected_teams = (exp_aff, exp_neg)
+            if same_affs:
+                # sides are chosen randomly if teams on same number of affs
+                self.assertItemsEqual(actual_teams, expected_teams)
+            else:
+                self.assertEqual(actual_teams, expected_teams)
+            self.assertEqual(actual.flags, exp_flags)
 
 if __name__ == '__main__':
     unittest.main()
