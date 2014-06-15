@@ -128,33 +128,52 @@ class RandomDraw(BaseDraw):
 
     can_be_first_round = True
 
-    DEFAULT_OPTIONS = {"max_swap_attempts": 10}
+    DEFAULT_OPTIONS = {"max_swap_attempts": 20}
 
     def make_draw(self):
         self._draw = self._make_initial_pairings()
-        self.avoid_conflicts(self._pairings) # operates in-place
+        self.avoid_conflicts(self._draw) # operates in-place
         self.balance_sides(self._draw) # operates in-place
         return self._draw
 
     def _make_initial_pairings(self):
-        teams = list(self.teams)
+        teams = list(self.teams) # make a copy
         random.shuffle(teams)
         debates = len(teams)/2
         pairings = list()
-        for teams in zip(teams[:debates], teams[debates:]):
-            pairing = Pairing(teams=teams, bracket=0, room_rank=0)
-            pairings.append(pairing)
+        pairings = [Pairing(teams=t, bracket=0, room_rank=0) \
+                for t in zip(teams[:debates], teams[debates:])]
         return pairings
 
     def avoid_conflicts(self, pairings):
-        if not self.options["avoid_history"] or self.options["avoid_institution"]:
+        if not (self.options["avoid_history"] or self.options["avoid_institution"]):
             return
-        for i, pairing in enumerate(pairings):
-            if pairing.conflict_hist and self.options["avoid_history"] \
-                    or pairing.conflict_inst and self.options["avoid_institution"]:
+        for pairing in pairings:
+            if self._badness(pairing) > 0:
                 for j in range(self.options["max_swap_attempts"]):
                     swap_pairing = random.choice(pairings)
-                    # CONTINUE HERE
+                    if swap_pairing == pairing:
+                        continue
+                    badness_orig = self._badness(pairing, swap_pairing)
+                    pairing.teams[1], swap_pairing.teams[1] = swap_pairing.teams[1], pairing.teams[1]
+                    badness_new = self._badness(pairing, swap_pairing)
+                    if badness_new == 0:
+                        break # yay!
+                    elif badness_new >= badness_orig or self._badness(swap_pairing) > 0:
+                        # swap back and try again
+                        pairing.teams[1], swap_pairing.teams[1] = swap_pairing.teams[1], pairing.teams[1]
+                    # else, if improvement but not perfect, keep swap and try again
+                else:
+                    pairing.flags.append("max_swapped")
+
+    def _badness(self, *pairings):
+        """Returns a weighted conflict intensity for all of the pairings given."""
+        score = 0
+        if self.options["avoid_history"]:
+            score += sum(map(lambda x: x.conflict_hist, pairings)) * self.options["history_penalty"]
+        if self.options["avoid_institution"]:
+            score += sum(map(lambda x: x.conflict_inst, pairings)) * self.options["institution_penalty"]
+        return score
 
 class PowerPairedDraw(BaseDraw):
     """Power-paired draw.

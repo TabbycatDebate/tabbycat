@@ -5,6 +5,28 @@ from collections import OrderedDict
 import draw
 import copy
 
+class TestRandomDraw(unittest.TestCase):
+    """Basic unit test for random draws.
+    Because it's random, you can't really do much to test it."""
+
+    teams = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
+             (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
+
+    def test_draw(self):
+        from test_one_up_one_down import TestTeam
+        for i in xrange(100):
+            teams = [TestTeam(*args) for args in self.teams]
+            self.rd = draw.RandomDraw(teams)
+            _draw = self.rd.make_draw()
+            for pairing in _draw:
+                if pairing.aff_team.seen(pairing.neg_team) or \
+                        pairing.neg_team.seen(pairing.aff_team) or \
+                        pairing.aff_team.institution == pairing.neg_team.institution:
+                    print pairing
+                    self.assertEqual(pairing.flags, ["max_swapped"])
+                else:
+                    self.assertEqual(pairing.flags, [])
+
 class TestPowerPairedDrawParts(unittest.TestCase):
     """Basic unit test for core functionality of power-paired draws.
     Nowhere near comprehensive."""
