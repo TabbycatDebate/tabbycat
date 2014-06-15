@@ -15,29 +15,64 @@
     function reload() {
         location.reload();
     }
-    setTimeout('reload()', 10000);
+    setTimeout('reload()', 100000);
 </script>
 {% endblock %}
 {% block header %}{% endblock %}
 
 {% block content %}
 
-<div class="col-sm-3">
-    <h4 class="text-center">{{ stats.pc }}% of Ballots In</h4>
-    <p class="text-center">
-        <span class="text-danger">{{ stats.none }} None</span> + 
-        <span class="text-info">{{ stats.draft }} Drafts</span> + 
-        <span class="text-success">{{ stats.confirmed }} Confirmed</span>
-    </p>
-    <img class="img-responsive" src="http://chart.apis.google.com/chart?cht=p&chs=500x500&chd=t:{{ stats.none }},{{ stats.draft }},{{ stats.confirmed }}&chco=d9534f,d5e615,5cb85c" />
+<div class="row">
+
+    <div class="col-sm-7">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h4 class="text-center">{{ stats.pc }}% of Ballots In</h4>
+                <p class="text-center">
+                    <span class="text-danger">{{ stats.none }} None</span> +
+                    <span class="text-info">{{ stats.draft }} Drafts</span> +
+                    <span class="text-success">{{ stats.confirmed }} Confirmed</span>
+                </p>
+                <img class="img-responsive" src="http://chart.apis.google.com/chart?cht=p&chs=500x500&chd=t:{{ stats.none }},{{ stats.draft }},{{ stats.confirmed }}&chco=d9534f,d5e615,5cb85c" />
+
+            </div>
+            <div class="col-sm-6">
+                <h4 class="text-center">Speaker Score</h4>
+                <p class="text-center">
+                    <span class="text-danger">Lowest</span> +
+                    <span class="text-info">Average</span> +
+                    <span class="text-success">Highest</span>
+                </p>
+                <img class="img-responsive" src="http://chart.googleapis.com/chart?cht=bvg&amp;chp=-0.5&amp;chs=500x500&amp;chbh=25,0,25&amp;chco=d9534f,d5e615,5cb85c&amp;&chxt=x,y&chxr=60,90,10|1,5&amp;chd=t3:{% for r in r_stats %}{{ r.0 }}{% if forloop.last %}{% else %},{% endif %}{% endfor %}|{% for r in r_stats %}{{ r.1 }}{% if forloop.last %}{% else %},{% endif %}{% endfor %}|{% for r in r_stats %}{{ r.2 }}{% if forloop.last %}{% else %},{% endif %}{% endfor %}" />
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-sm-4 col-sm-offset-1">
+        <h4 class="text-center">Latest Actions</h4>
+        <ul class="list-group">
+            {% for action in actions %}
+            <li class="list-group-item">
+                <strong>
+                {% if action.user.username %}
+                    {{ action.user.username }}
+                {% elif action.ip_address %}
+                    {{ action.ip_address }}
+                {% else %}
+                    anonymous
+                {% endif %}
+                </strong>
+                <em>{{ action.get_type_display }}</em>
+                <span class="badge">{{ action.timestamp|time:"H:i" }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 
 </div>
-<div class="col-sm-3 col-sm-offset-1">
-    <h4 class="text-center">Average Speaks</h4>
-</div>
-<div class="col-sm-3 col-sm-offset-1">
-    <h4 class="text-center">Motion Selections</h4>
-</div>
+
 
 
 {% endblock content %}

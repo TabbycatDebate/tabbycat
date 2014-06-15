@@ -33,7 +33,11 @@ No draw currently exists
     </div>
     {% endif %}
     <div class="btn-group">
-        <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
+        {% if active_venues.count < rooms or active_teams.count == 0%}
+            <a class="btn btn-warning" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
+        {% else %}
+            <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
+        {% endif %}
     </div>
 {% endblock %}
 

@@ -358,7 +358,33 @@ def public_motions_tab(request, t):
 @login_required
 @tournament_view
 def tournament_home(request, t):
-    r = t.current_round
+    # ACtions
+    from debate.models import ActionLog
+    a = ActionLog.objects.all().order_by('-id')[:25]
+
+    # Speaker Scores
+    from debate.models import SpeakerScore
+    round = t.current_round
+    rounds = Round.objects.filter(tournament=round.tournament,
+                                  seq__lte=round.seq).order_by('seq')
+    def get_round_stats(r):
+        #try:
+            speaks = SpeakerScore.objects.filter(
+            ballot_submission__confirmed=True,
+            debate_team__debate__round=r,
+            position__lte=3)
+
+            round_min = min(speak.score for speak in speaks)
+            round_avg = sum(speak.score for speak in speaks) / len(speaks)
+            round_max = max(speak.score for speak in speaks)
+            return round_min, round_avg, round_max
+        #except:
+            # Lazy-catch all for possible errors
+            return 0
+
+    r_stats = [get_round_stats(r) for r in rounds]
+
+    # Draw Status
     draw = r.get_draw()
     stats = {
         'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
@@ -373,9 +399,9 @@ def tournament_home(request, t):
         stats['pc'] = 0
 
     if not request.user.is_superuser:
-        return r2r(request, 'monkey/home.html', dict(stats=stats, round=r))
+        return r2r(request, 'monkey/home.html', dict(stats=stats, round=r, actions=a, r_stats=r_stats))
     else:
-        return r2r(request, 'tournament_home.html', dict(stats=stats, round=r))
+        return r2r(request, 'tournament_home.html', dict(stats=stats, round=r, actions=a, r_stats=r_stats))
 
 @admin_required
 @tournament_view
