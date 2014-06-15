@@ -174,7 +174,6 @@ def public_ballot_submit(request, t):
     else:
         return r2r(request, 'public/draw_unreleased.html', dict(das=None, round=r))
 
-
 @public_optional_tournament_view('public_feedback')
 def public_feedback_submit(request, t):
     adjudicators = Adjudicator.objects.all()
@@ -836,7 +835,7 @@ def public_new_ballots(request, t, adj_id):
             # TODO add ballots to the ActionLog
             action_type = ActionLog.ACTION_TYPE_BALLOT_PUBLIC_CHECKIN
             ActionLog.objects.log(type=action_type, debate=debate, ip_address=ip_address)
-            return redirect_tournament('public_ballot_submit', t)
+            return r2r(request, 'public/success.html', dict(success_kind="ballot"))
 
     else:
         form = forms.BallotSetForm(ballots)
@@ -1219,7 +1218,7 @@ def public_enter_feedback(request, t, source_type, source_id):
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
                 user=None, adjudicator_feedback=adj_feedback)
-            return redirect_tournament('public_feedback_submit', t)
+            return r2r(request, 'public/success.html', dict(success_kind="feedback"))
     else:
         form = forms.make_feedback_form_class_for_source(source, submission_fields, released_only=True, include_panellists=include_panellists)()
 

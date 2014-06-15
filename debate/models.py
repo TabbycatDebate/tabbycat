@@ -24,7 +24,7 @@ class Tournament(models.Model):
     slug = models.SlugField(unique=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_')
-    welcome_msg = models.TextField(blank=True, null=True)
+    welcome_msg = models.TextField(blank=True, null=True, default="")
 
     @models.permalink
     def get_absolute_url(self):
