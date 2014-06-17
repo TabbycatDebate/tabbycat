@@ -2,6 +2,7 @@ from collections import OrderedDict
 import random
 import copy
 from one_up_one_down import OneUpOneDownSwapper
+from warnings import warn
 
 class DrawError(Exception):
     pass
@@ -10,12 +11,16 @@ class Pairing(object):
     """Simple data structure for communicating information about pairings.
     Draws always return a list of these."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[]):
+    def __init__(self, teams, bracket, room_rank, flags=[], winner=None):
         """'teams' must be a list of two teams."""
-        self.teams     = list(teams)
-        self.bracket   = bracket
-        self.room_rank = room_rank
-        self.flags     = list(flags)
+        self.teams         = list(teams)
+        self.bracket       = bracket
+        self.room_rank     = room_rank
+        self.flags         = list(flags)
+        if winner is None:
+            self._winner_index = None
+        else:
+            self._winner_index = self.teams.index(winner)
 
     def __repr__(self):
         return "<Pairing object: {0} vs {1} ({2}/{3})>".format(
@@ -67,6 +72,19 @@ class Pairing(object):
     def add_flag(self, flag):
         self.flags.append(flag)
 
+    def set_winner(self, team):
+        try:
+            self._winner_index = self.teams.index(team)
+        except ValueError:
+            raise ValueError('Team {0!r} not found in teams for this pairing'.format(team))
+
+    @property
+    def winner(self):
+        if self._winner_index is None:
+            return None
+        return self.teams[self._winner_index]
+
+
 class BaseDraw(object):
     """Base class for all draw types.
     Options:
@@ -90,12 +108,23 @@ class BaseDraw(object):
     }
 
     can_be_first_round = NotImplemented
+    requires_prev_results = False
+    draw_type = NotImplemented
 
     # All subclasses must define this with any options that may exist.
     DEFAULT_OPTIONS = {}
 
-    def __init__(self, teams, **kwargs):
+    def __init__(self, teams, results=None, **kwargs):
         self.teams = teams
+
+        if results is None and self.requires_prev_results:
+            raise TypeError("'results' is required for draw of type {0:s}".format(
+                    self.__class__.__name__))
+        if results is not None and not self.requires_prev_results:
+            warn("'results' not required for draw of type {0:s}, will probably be ignored".format(
+                    self.__class__.__name__))
+        if results is not None:
+            self.results = results
 
         # Compute the full dictionary of default options
         self.options = self.BASE_DEFAULT_OPTIONS.copy()
@@ -127,8 +156,11 @@ class RandomDraw(BaseDraw):
     """
 
     can_be_first_round = True
+    requires_prev_results = False
+    draw_type = "preliminary"
 
     DEFAULT_OPTIONS = {"max_swap_attempts": 20}
+
 
     def make_draw(self):
         self._draw = self._make_initial_pairings()
@@ -189,6 +221,8 @@ class PowerPairedDraw(BaseDraw):
     """
 
     can_be_first_round = False
+    requires_prev_results = False
+    draw_type = "preliminary"
 
     DEFAULT_OPTIONS = {
         "odd_bracket"    : "pullup_top",
@@ -388,3 +422,76 @@ class PowerPairedDraw(BaseDraw):
                     if not (pairing.conflict_hist or pairing.conflict_inst):
                         pairing.add_flag("1u1d_other")
                     pairing.teams = list(new)
+
+class FirstEliminationDraw(BaseDraw):
+    """Class for draw for a round that is a first w round, with
+    a number of teams breaking that is not a power of two."""
+
+    can_be_first_round = False
+    requires_prev_results = False
+    draw_type = "elimination"
+
+    DEFAULT_OPTIONS = {
+        "break_size": 8,
+    }
+
+    def make_draw(self):
+        # Determine who breaks
+        break_size = self.options["break_size"]
+        breaking_teams = self.teams[:break_size]
+        # Determine who debates
+        bypassing, debating = self._bypass_debate_split(break_size)
+        assert(bypassing + debating == break_size)
+        self._bypassing_teams = breaking_teams[:bypassing]
+        debating_teams = breaking_teams[-debating:]
+        # Pair the debating teams
+        debates = len(debating_teams)/2
+        top = debating_teams[:debates]
+        bottom = debating_teams[debates:]
+        bottom.reverse()
+        pairings = list()
+        for i, teams in enumerate(zip(top, bottom), start=bypassing+1):
+            pairing = Pairing(teams, bracket=0, room_rank=i)
+            pairings.append(pairing)
+        return pairings
+
+    @staticmethod
+    def _bypass_debate_split(number):
+        next_pow2 = 1 << (number.bit_length() - 1)
+        if next_pow2 == number: # no partial elimination
+            return number, 0
+        debates = number - next_pow2
+        return next_pow2 - debates, 2*debates
+
+    def get_bypassing_teams(self):
+        if hasattr(self, "_bypassing_teams"):
+            return self._bypassing_teams
+        raise RuntimeError("get_bypassing_teams() must not be called before make_draw().")
+
+class EliminationDraw(BaseDraw):
+    """Class for second or subsequent elimination round.
+    For this draw type, 'teams' should be the teams that automatically
+    advanced to this round (i.e., bypassed the previous break round).
+    'results' should be a list of Pairings with winners indicated."""
+
+    can_be_first_round = False
+    requires_prev_results = True
+    draw_type = "elimination"
+
+    def make_draw(self):
+        # Check for argument sanity.
+        num_teams = len(self.teams) + len(self.results)
+        if num_teams != 1 << (num_teams.bit_length() - 1):
+            raise RuntimeError("The number of teams in this round is not a power of two")
+        self.results.sort(key=lambda x: x.room_rank)
+        teams = list(self.teams)
+        teams.extend([p.winner for p in self.results])
+        debates = len(teams)/2
+        top = teams[:debates]
+        bottom = teams[debates:]
+        bottom.reverse()
+        pairings = list()
+        for i, ts in enumerate(zip(top, bottom), start=1):
+            pairing = Pairing(ts, bracket=0, room_rank=i)
+            pairings.append(pairing)
+        return pairings

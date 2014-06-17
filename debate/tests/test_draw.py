@@ -4,6 +4,7 @@ import unittest
 from collections import OrderedDict
 import draw
 import copy
+from test_one_up_one_down import TestTeam
 
 class TestRandomDraw(unittest.TestCase):
     """Basic unit test for random draws.
@@ -13,7 +14,6 @@ class TestRandomDraw(unittest.TestCase):
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
     def test_draw(self):
-        from test_one_up_one_down import TestTeam
         for i in xrange(100):
             teams = [TestTeam(*args) for args in self.teams]
             self.rd = draw.RandomDraw(teams)
@@ -43,8 +43,8 @@ class TestPowerPairedDrawParts(unittest.TestCase):
         self.ppd = draw.PowerPairedDraw(None)
 
     def tearDown(self):
-        self.b2 = None
-        self.ppd = None
+        del self.b2
+        del self.ppd
 
     def bracket(self, name, expected):
         self.ppd.options["odd_bracket"] = name
@@ -113,7 +113,6 @@ class TestPowerPairedDrawParts(unittest.TestCase):
 
 
     def one_up_one_down(self, data, expected, **options):
-        from test_one_up_one_down import TestTeam
         for option, value in options.iteritems():
             self.ppd.options[option] = value
         pairings = []
@@ -238,7 +237,6 @@ class TestPowerPairedDraw(unittest.TestCase):
                 (20, 26, ["1u1d_history"], True)]
 
     def do_draw(self):
-        from test_one_up_one_down import TestTeam
         standings = [TestTeam(*args) for args in self.standings]
         self.ppd = draw.PowerPairedDraw(standings)
         return self.ppd.make_draw()
@@ -254,6 +252,86 @@ class TestPowerPairedDraw(unittest.TestCase):
             else:
                 self.assertEqual(actual_teams, expected_teams)
             self.assertEqual(actual.flags, exp_flags)
+
+class TestPartialEliminationDraw(unittest.TestCase):
+
+    teams = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
+             (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
+
+    def test_split(self):
+        self.fed = draw.FirstEliminationDraw(None)
+        self.assertEqual(self.fed._bypass_debate_split( 3), ( 1,  2))
+        self.assertEqual(self.fed._bypass_debate_split( 5), ( 3,  2))
+        self.assertEqual(self.fed._bypass_debate_split( 8), ( 8,  0))
+        self.assertEqual(self.fed._bypass_debate_split(11), ( 5,  6))
+        self.assertEqual(self.fed._bypass_debate_split(21), (11, 10))
+        self.assertEqual(self.fed._bypass_debate_split(24), ( 8, 16))
+        self.assertEqual(self.fed._bypass_debate_split(31), ( 1, 30))
+        self.assertEqual(self.fed._bypass_debate_split(32), (32,  0))
+        del self.fed
+
+    def test_even_numbers(self):
+        self.run_draw(2, [(1, 2)])
+        self.run_draw(4, [(1, 4), (2, 3)])
+        self.run_draw(8, [(1, 8), (2, 7), (3, 6), (4, 5)])
+
+    def test_weird_numbers(self):
+        self.run_draw(3, [(2, 3)], [1])
+        self.run_draw(5, [(4, 5)], [1, 2, 3])
+        self.run_draw(6, [(3, 6), (4, 5)], [1, 2])
+        self.run_draw(12, [(5, 12), (6, 11), (7, 10), (8, 9)], [1, 2, 3, 4])
+
+    def run_draw(self, break_size, expected, exp_bypassing=None):
+        teams = [TestTeam(*args) for args in self.teams]
+        self.fed = draw.FirstEliminationDraw(teams, break_size=break_size)
+        pairings = self.fed.make_draw()
+        self.assertEqual([(p.aff_team.id, p.neg_team.id) for p in pairings], expected)
+        if exp_bypassing is not None:
+            bypassing = [t.id for t in self.fed.get_bypassing_teams()]
+            self.assertEqual(bypassing, exp_bypassing)
+
+class TestEliminationDraw(unittest.TestCase):
+
+    team_data = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
+                 (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
+
+    def setUp(self):
+        self.teams = [TestTeam(*args) for args in self.team_data]
+
+    def _results(self, *args):
+        _t = lambda id: self.teams[id-1]
+        _p = lambda ids: map(_t, ids)
+        from draw import Pairing
+        pairings = list()
+        for i, (teams, winner) in enumerate(args):
+            pairing = Pairing(_p(teams), 0, i, winner=_t(winner))
+            pairings.append(pairing)
+        return pairings
+
+    def _teams(self, *args):
+        _t = lambda id: self.teams[id-1]
+        return map(_t, args)
+
+    def test_no_bypass(self):
+        teams = list()
+        results = self._results(([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
+        self.run_draw(teams, results, [(1, 8), (7, 3)])
+
+    def test_bypass(self):
+        teams = self._teams(9, 11, 10, 12)
+        results = self._results(([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
+        self.run_draw(teams, results, [(9, 8), (11, 3), (10, 7), (12, 1)])
+
+    def test_error(self):
+        teams = self._teams(9, 11, 12)
+        results = self._results(([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
+        self.ed = draw.EliminationDraw(teams, results)
+        self.assertRaises(RuntimeError, self.ed.make_draw)
+
+    def run_draw(self, teams, results, expected):
+        self.ed = draw.EliminationDraw(teams, results)
+        pairings = self.ed.make_draw()
+        self.assertEqual([(p.aff_team.id, p.neg_team.id) for p in pairings], expected)
 
 if __name__ == '__main__':
     unittest.main()
