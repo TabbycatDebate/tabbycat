@@ -38,19 +38,20 @@ class Command(BaseCommand):
             self.stdout.write('Created the tournament: ' + folder)
 
             self.stdout.write('Attempting to create rounds ')
+            # TODO get this to use rounds.csv
             rounds_count = 4
             try:
-                for i in range(1, rounds_count):
+                for i in range(1, rounds_count+1):
                     if i == 1:
-                        rtype = m.Round.TYPE_RANDOM
+                        draw_type = m.Round.DRAW_RANDOM
                     else:
-                        rtype = m.Round.TYPE_PRELIM
+                        draw_type = m.Round.DRAW_POWERPAIRED
 
                     m.Round(
                         tournament = t,
                         seq = i,
                         name = 'Round %d' % i,
-                        type = rtype,
+                        draw_type = draw_type,
                         feedback_weight = min((i-1)*0.1, 0.5),
                     ).save()
 

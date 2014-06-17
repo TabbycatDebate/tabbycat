@@ -4,6 +4,14 @@ import copy
 from one_up_one_down import OneUpOneDownSwapper
 from warnings import warn
 
+# Flag codes must NOT have commas in them
+DRAW_FLAG_DESCRIPTIONS = {
+    "max_swapped":      "Too many swaps",
+    "1u1d_history":     "One-up-one-down (history)",
+    "1u1d_institution": "One-up-one-down (institution)",
+    "1u1d_other":       "One-up-one-down (to accommodate)"
+}
+
 class DrawError(Exception):
     pass
 
@@ -12,7 +20,9 @@ class Pairing(object):
     Draws always return a list of these."""
 
     def __init__(self, teams, bracket, room_rank, flags=[], winner=None):
-        """'teams' must be a list of two teams."""
+        """'teams' must be a list of two teams.
+        'bracket' and 'room_rank' are both integers.
+        'flags' is a list of strings."""
         self.teams         = list(teams)
         self.bracket       = bracket
         self.room_rank     = room_rank
@@ -108,6 +118,7 @@ class BaseDraw(object):
     }
 
     can_be_first_round = NotImplemented
+    requires_even_teams = True
     requires_prev_results = False
     draw_type = NotImplemented
 
@@ -116,6 +127,12 @@ class BaseDraw(object):
 
     def __init__(self, teams, results=None, **kwargs):
         self.teams = teams
+
+        if self.requires_even_teams:
+            if not len(self.teams) % 2 == 0:
+                raise DrawError("There was not an even number of active teams.")
+            if not self.teams:
+                raise DrawError("There were no teams for the draw.")
 
         if results is None and self.requires_prev_results:
             raise TypeError("'results' is required for draw of type {0:s}".format(
@@ -148,6 +165,12 @@ class BaseDraw(object):
         """Abstract method."""
         raise NotImplementedError
 
+    @classmethod
+    def available_options(cls):
+        keys = set(cls.BASE_DEFAULT_OPTIONS.keys())
+        keys |= cls.DEFAULT_OPTIONS.keys()
+        return sorted(list(keys))
+
 class RandomDraw(BaseDraw):
     """Random draw.
     Options:
@@ -156,6 +179,7 @@ class RandomDraw(BaseDraw):
     """
 
     can_be_first_round = True
+    requires_even_teams = True
     requires_prev_results = False
     draw_type = "preliminary"
 
@@ -221,6 +245,7 @@ class PowerPairedDraw(BaseDraw):
     """
 
     can_be_first_round = False
+    requires_even_teams = True
     requires_prev_results = False
     draw_type = "preliminary"
 
@@ -428,6 +453,7 @@ class FirstEliminationDraw(BaseDraw):
     a number of teams breaking that is not a power of two."""
 
     can_be_first_round = False
+    requires_even_teams = True
     requires_prev_results = False
     draw_type = "elimination"
 
@@ -475,6 +501,7 @@ class EliminationDraw(BaseDraw):
     'results' should be a list of Pairings with winners indicated."""
 
     can_be_first_round = False
+    requires_even_teams = False
     requires_prev_results = True
     draw_type = "elimination"
 

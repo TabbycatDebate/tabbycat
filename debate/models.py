@@ -4,10 +4,9 @@ from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
 from debate.utils import pair_list, memoize
-from debate.draw import RandomDrawNoConflict, AidaDraw, DrawError
 from debate.adjudicator.anneal import SAAllocator
-
 from debate.result import BallotSet
+import debate.draw as draw_module
 
 from warnings import warn
 from threading import BoundedSemaphore
@@ -37,7 +36,7 @@ class Tournament(models.Model):
     def create_next_round(self):
         curr = self.current_round
         next = curr.seq + 1
-        r = Round(name="Round %d" % next, seq=next, type=Round.TYPE_PRELIM,
+        r = Round(name="Round %d" % next, seq=next, type=Round.DRAW_POWERPAIRED,
                   tournament=self)
         r.save()
         r.activate_all()
@@ -507,52 +506,44 @@ class RoundManager(models.Manager):
 
 
 class Round(models.Model):
-    TYPE_RANDOM = 'R'
-    TYPE_PRELIM = 'P'
-    TYPE_BREAK = 'B'
-    TYPE_CHOICES = (
-        (TYPE_RANDOM, 'Random'),
-        (TYPE_PRELIM, 'Preliminary'),
-        (TYPE_BREAK, 'Break'),
+    DRAW_RANDOM      = 'R'
+    DRAW_POWERPAIRED = 'P'
+    DRAW_FIRSTBREAK  = 'F'
+    DRAW_BREAK       = 'B'
+    DRAW_CHOICES = (
+        (DRAW_RANDOM,      'Random'),
+        (DRAW_POWERPAIRED, 'Power-paired'),
+        (DRAW_FIRSTBREAK,  'First elimination'),
+        (DRAW_BREAK,       'Subsequent elimination'),
     )
 
-    DRAW_CLASS = {
-        TYPE_RANDOM: RandomDrawNoConflict,
-        TYPE_PRELIM: AidaDraw,
-    }
-
-    STATUS_NONE = 0
-    STATUS_DRAFT = 1
+    STATUS_NONE      = 0
+    STATUS_DRAFT     = 1
     STATUS_CONFIRMED = 10
-    STATUS_RELEASED = 99
+    STATUS_RELEASED  = 99
     STATUS_CHOICES = (
-        (STATUS_NONE, 'None'),
-        (STATUS_DRAFT, 'Draft'),
+        (STATUS_NONE,      'None'),
+        (STATUS_DRAFT,     'Draft'),
         (STATUS_CONFIRMED, 'Confirmed'),
-        (STATUS_RELEASED, 'Released'),
+        (STATUS_RELEASED,  'Released'),
     )
 
     objects = RoundManager()
 
     tournament = models.ForeignKey(Tournament, related_name='rounds')
-    seq = models.IntegerField()
-    name = models.CharField(max_length=40)
-    type = models.CharField(max_length=1, choices=TYPE_CHOICES)
+    seq        = models.IntegerField()
+    name       = models.CharField(max_length=40)
+    draw_type  = models.CharField(max_length=1, choices=DRAW_CHOICES)
 
-    draw_status = models.IntegerField(choices=STATUS_CHOICES,
-                                      default=STATUS_NONE)
-    venue_status = models.IntegerField(choices=STATUS_CHOICES,
-                                       default=STATUS_NONE)
-    adjudicator_status = models.IntegerField(choices=STATUS_CHOICES,
-                                             default=STATUS_NONE)
+    draw_status        = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    venue_status       = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    adjudicator_status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
 
-    checkins = models.ManyToManyField('Person', through='Checkin',
-                                      related_name='checkedin_rounds')
+    checkins = models.ManyToManyField('Person', through='Checkin', related_name='checkedin_rounds')
 
-    active_venues = models.ManyToManyField('Venue', through='ActiveVenue')
-    active_adjudicators = models.ManyToManyField('Adjudicator',
-                                                 through='ActiveAdjudicator')
-    active_teams = models.ManyToManyField('Team', through='ActiveTeam')
+    active_venues       = models.ManyToManyField('Venue', through='ActiveVenue')
+    active_adjudicators = models.ManyToManyField('Adjudicator', through='ActiveAdjudicator')
+    active_teams        = models.ManyToManyField('Team', through='ActiveTeam')
 
     feedback_weight = models.FloatField(default=0)
     silent = models.BooleanField(default=False)
@@ -563,23 +554,43 @@ class Round(models.Model):
     def __unicode__(self):
         return unicode(self.seq)
 
-    def _drawer(self):
-        return self.DRAW_CLASS[self.type]
-
     def draw(self):
         if self.draw_status != self.STATUS_NONE:
             raise RuntimeError("Tried to run draw on round that already has a draw")
 
-        # delete all existing debates for this round
+        # Delete all existing debates for this round.
         Debate.objects.filter(round=self).delete()
 
-        drawer = self._drawer()
-        d = drawer(self)
-        self.make_debates(d.draw())
+        # There is a bit of logic to go through to figure out what we need to
+        # provide to the draw class.
+        options = dict()
+        options["avoid_institution"]   = self.tournament.config.get('avoid_same_institution')
+        options["avoid_history"]       = self.tournament.config.get('avoid_team_history')
+        options["history_penalty"]     = self.tournament.config.get('team_history_penalty')
+        options["institution_penalty"] = self.tournament.config.get('team_institution_penalty')
+
+        if self.draw_type == self.DRAW_RANDOM:
+            teams = self.active_teams.all()
+            if self.prev: # not the first round, balance sides
+                for team in teams:
+                    team.aff_count = team.get_aff_count(self.prev.seq)
+            else: # otherwise, don't
+                options["balance_sides"] = False
+            drawer = draw_module.RandomDraw(teams, **options)
+        elif self.draw_type == self.DRAW_POWERPAIRED:
+            teams = annotate_team_standings(self.active_teams, self.prev)
+            for team in teams:
+                team.aff_count = team.get_aff_count(self.prev.seq)
+            drawer = draw_module.PowerPairedDraw(teams, **options)
+        else:
+            raise RuntimeError("Break rounds aren't supported yet.")
+
+        draw = drawer.make_draw()
+        self.make_debates(draw)
         self.draw_status = self.STATUS_DRAFT
         self.save()
 
-        from debate.draw import assign_importance
+        #from debate.draw import assign_importance
         #assign_importance(self)
 
     def allocate_adjudicators(self, alloc_class=SAAllocator):
@@ -637,29 +648,25 @@ class Round(models.Model):
                         team.pullup = annotated_team.points != debate.bracket
         return draw
 
-    def make_debates(self, pairs):
+    def make_debates(self, pairings):
 
         import random
-        venues = list(self.active_venues.all())[:len(pairs)]
+        venues = list(self.active_venues.all())[:len(pairings)]
 
-        if len(venues) < len(pairs):
-            raise DrawError("There are %d debates but only %d venues." % (len(pairs), len(venues)))
+        if len(venues) < len(pairings):
+            raise DrawError("There are %d debates but only %d venues." % (len(pairings), len(venues)))
 
         random.shuffle(venues)
 
-        for i, pair in enumerate(pairs):
+        for i, pairing in enumerate(pairings):
             debate = Debate(round=self, venue=venues.pop(0))
-            debate.bracket = max(0, pair[0].points, pair[1].points)
-            debate.room_rank = i+1
-            # The third part of tuple indicates flags and is not mandatory.
-            # Flags are defined in Debate as class constants.
-            if len(pair) > 2:
-                print pair
-                debate.flags = pair[2]
+            debate.bracket   = pairing.bracket
+            debate.room_rank = pairing.room_rank
+            debate.flags     = ",".join(pairing.flags) # comma-separated list
             debate.save()
 
-            aff = DebateTeam(debate=debate, team=pair[0], position=DebateTeam.POSITION_AFFIRMATIVE)
-            neg = DebateTeam(debate=debate, team=pair[1], position=DebateTeam.POSITION_NEGATIVE)
+            aff = DebateTeam(debate=debate, team=pairing.teams[0], position=DebateTeam.POSITION_AFFIRMATIVE)
+            neg = DebateTeam(debate=debate, team=pairing.teams[1], position=DebateTeam.POSITION_NEGATIVE)
 
             aff.save()
             neg.save()
@@ -831,19 +838,14 @@ class DebateManager(models.Manager):
         'round', 'venue')
 
 class Debate(models.Model):
-    STATUS_NONE = 'N'
-    STATUS_DRAFT = 'D'
+    STATUS_NONE      = 'N'
+    STATUS_DRAFT     = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = (
-        (STATUS_NONE, 'None'),
-        (STATUS_DRAFT, 'Draft'),
+        (STATUS_NONE,      'None'),
+        (STATUS_DRAFT,     'Draft'),
         (STATUS_CONFIRMED, 'Confirmed'),
     )
-
-    FLAG_ONE_UP_ONE_DOWN = 'o'
-    FLAGS = {
-        FLAG_ONE_UP_ONE_DOWN: 'One-up-one-down',
-    }
 
     objects = DebateManager()
 
@@ -852,9 +854,9 @@ class Debate(models.Model):
 
     bracket = models.IntegerField(default=0)
     room_rank = models.IntegerField(default=0)
-    # Generic flags field, extend max_length as required, all flags should
-    # be one character and defined as class constants.
-    flags = models.CharField(max_length=5, blank=True, null=True)
+
+    # comma-separated list of strings
+    flags = models.CharField(max_length=100, blank=True, null=True)
 
     importance = models.IntegerField(blank=True, null=True)
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
@@ -925,10 +927,10 @@ class Debate(models.Model):
 
     @property
     def flags_all(self):
-        if self.flags is None:
+        if not self.flags:
             return []
         else:
-            return [self.FLAGS[f] for f in self.flags]
+            return [draw_module.DRAW_FLAG_DESCRIPTIONS[f] for f in self.flags.split(",")]
 
     @property
     def all_conflicts(self):

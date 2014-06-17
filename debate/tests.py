@@ -27,12 +27,12 @@ class BaseTest(TestCase):
                 adj = Adjudicator(institution=ins, name="Adjudicator%s%s" %
                                   (i,j), test_score=0)
                 adj.save()
-        
+
         for i in range(8):
             venue = Venue(name="Venue %s" % i)
             venue.priority = i
             venue.save()
-            
+
             venue = Venue(name="IVenue %s" % i)
             venue.priority = i
             venue.save()
@@ -53,15 +53,15 @@ class BaseTest(TestCase):
         for venue in Venue.objects.all():
             if venue.name.startswith("Venue"):
                 r.activate_venue(venue, True)
-                    
+
 class TestInstitution(BaseTest):
     def test_objects(self):
         self.failUnlessEqual(4, Institution.objects.count())
-        
+
 class TestAdjudicator(BaseTest):
     def test_objects(self):
         self.failUnlessEqual(8, Adjudicator.objects.count())
-       
+
 class TestAdjudicatorDisable(BaseTest):
     def setUp(self):
         super(TestAdjudicatorDisable, self).setUp()
@@ -82,7 +82,7 @@ class RandomDrawTests(BaseTest):
 
     def setUp(self):
         super(RandomDrawTests, self).setUp()
-        self.round = Round(seq=2, type=Round.TYPE_RANDOM)
+        self.round = Round(seq=2, type=Round.DRAW_RANDOM)
         self.round.save()
         self.activate_all_adj(self.round)
         self.activate_all_teams(self.round)
@@ -90,13 +90,13 @@ class RandomDrawTests(BaseTest):
 
     def test_std(self):
         self.round.draw()
-        
-        self.failUnlessEqual(6, Debate.objects.count()) 
+
+        self.failUnlessEqual(6, Debate.objects.count())
         self.failUnlessEqual(12, DebateTeam.objects.count())
-        
+
         for team in Team.objects.all():
             self.failUnlessEqual(1, DebateTeam.objects.filter(team=team).count())
-            
+
 __test__ = {"doctest": """
 Another way to test that 1 + 1 is equal to 2.
 

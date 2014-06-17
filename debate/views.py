@@ -358,17 +358,26 @@ def public_motions_tab(request, t):
 @login_required
 @tournament_view
 def tournament_home(request, t):
-    # ACtions
+    # Actions
     from debate.models import ActionLog
     a = ActionLog.objects.all().order_by('-id')[:25]
 
     # Speaker Scores
     from debate.models import SpeakerScore
+
     round = t.current_round
-    rounds = Round.objects.filter(tournament=round.tournament,
-                                  seq__lte=round.seq).order_by('seq')
+
+    # This should never happen, but if it does, fail semi-gracefully
+    if round is None:
+        if request.user.is_superuser:
+            return HttpResponseBadRequest("You need to set the current round. <a href=\"/admin/debate/tournament\">Go to Django admin.</a>")
+        else:
+            raise Http404()
+
+    rounds = Round.objects.filter(tournament=t, seq__lte=round.seq).order_by('seq')
+
     def get_round_stats(r):
-        #try:
+        try:
             speaks = SpeakerScore.objects.filter(
             ballot_submission__confirmed=True,
             debate_team__debate__round=r,
@@ -378,14 +387,14 @@ def tournament_home(request, t):
             round_avg = sum(speak.score for speak in speaks) / len(speaks)
             round_max = max(speak.score for speak in speaks)
             return round_min, round_avg, round_max
-        #except:
+        except:
             # Lazy-catch all for possible errors
             return 0
 
     r_stats = [get_round_stats(r) for r in rounds]
 
     # Draw Status
-    draw = r.get_draw()
+    draw = round.get_draw()
     stats = {
         'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
         'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
@@ -399,7 +408,7 @@ def tournament_home(request, t):
         stats['pc'] = 0
 
     if not request.user.is_superuser:
-        return r2r(request, 'monkey/home.html', dict(stats=stats, round=r, actions=a, r_stats=r_stats))
+        return r2r(request, 'monkey/home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
     else:
         return r2r(request, 'tournament_home.html', dict(stats=stats, round=r, actions=a, r_stats=r_stats))
 

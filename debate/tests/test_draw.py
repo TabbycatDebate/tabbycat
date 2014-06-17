@@ -6,12 +6,20 @@ import draw
 import copy
 from test_one_up_one_down import TestTeam
 
+DUMMY_TEAMS = [TestTeam(1, 'A'), TestTeam(2, 'B')]
+
 class TestRandomDraw(unittest.TestCase):
     """Basic unit test for random draws.
     Because it's random, you can't really do much to test it."""
 
     teams = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
+
+    def test_invalid_option(self):
+        teams = [TestTeam(*args) for args in self.teams]
+        def go():
+            self.rd = draw.RandomDraw(teams, random=True)
+        self.assertRaises(ValueError, go)
 
     def test_draw(self):
         for i in xrange(100):
@@ -40,7 +48,7 @@ class TestPowerPairedDrawParts(unittest.TestCase):
 
     def setUp(self):
         self.b2 = copy.deepcopy(self.brackets)
-        self.ppd = draw.PowerPairedDraw(None)
+        self.ppd = draw.PowerPairedDraw(DUMMY_TEAMS)
 
     def tearDown(self):
         del self.b2
@@ -259,7 +267,7 @@ class TestPartialEliminationDraw(unittest.TestCase):
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
     def test_split(self):
-        self.fed = draw.FirstEliminationDraw(None)
+        self.fed = draw.FirstEliminationDraw(DUMMY_TEAMS)
         self.assertEqual(self.fed._bypass_debate_split( 3), ( 1,  2))
         self.assertEqual(self.fed._bypass_debate_split( 5), ( 3,  2))
         self.assertEqual(self.fed._bypass_debate_split( 8), ( 8,  0))

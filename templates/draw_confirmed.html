@@ -70,7 +70,7 @@
 
 {% if active_adjs.count < rooms %}
     <div class="alert alert-danger alert-dismissable" id="savedVenues">
-        There are currently fewer activate adjudicators than there are rooms. <a href="{% round_url adjudicator_availability current_round %}">Check in some more adjudicators</a>.
+        There are currently fewer active adjudicators than there are rooms. <a href="{% round_url adjudicator_availability current_round %}">Check in some more adjudicators</a>.
     </div>
 {% endif %}
 {% if round.adjudicators_allocation_validity == 1 %}
