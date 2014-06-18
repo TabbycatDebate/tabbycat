@@ -65,7 +65,7 @@
                 {% endif %}
                 </strong>
                 <em>{{ action.get_type_display }}</em>
-                <span class="badge">{{ action.timestamp|time:"H:i" }}</span>
+                <span class="badge">{{ action.timestamp|timesince }} ago</span>
             </li>
             {% endfor %}
         </ul>
