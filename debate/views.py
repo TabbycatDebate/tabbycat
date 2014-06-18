@@ -820,10 +820,13 @@ def public_results(request, round):
         raise Http404()
     draw = round.get_draw()
     show_motions_column = Motion.objects.filter(round=round).count() > 1
-    return r2r(request, "public/results_for_round.html", dict(draw=draw, show_motions_column=show_motions_column))
+    show_splits = round.tournament.config.get('show_splitting_adjudicators')
+    return r2r(request, "public/results_for_round.html", dict(
+            draw=draw, show_motions_column=show_motions_column, show_splits=show_splits))
 
 @public_optional_tournament_view('public_results')
 def public_results_index(request, tournament):
+    # Only rounds before current round
     rounds = Round.objects.filter(tournament=tournament,
             seq__lt=tournament.current_round.seq).order_by('seq')
     return r2r(request, "public/results_index.html", dict(rounds=rounds))

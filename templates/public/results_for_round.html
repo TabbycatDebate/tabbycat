@@ -68,8 +68,7 @@
             </td>
 
             <td>
-            <!-- TODO: add phone numbers here -->
-                {% if debate.confirmed_ballot %}
+                {% if debate.confirmed_ballot and show_splits %}
                     {% for adj_display, split in debate.confirmed_ballot.ballot_set.adjudicator_results_display %}
                         {% if split %}
                             <span class="text-danger">{{ adj_display }} </span><span class="glyphicon glyphicon-resize-full text-danger"></span>
