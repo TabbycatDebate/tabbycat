@@ -1379,55 +1379,73 @@ class ActionLog(models.Model):
     # TODO update these to account for new ballot submissions model
 
     ACTION_TYPE_BALLOT_CHECKIN          = 10
-    ACTION_TYPE_BALLOT_DRAFT            = 11
+    ACTION_TYPE_BALLOT_CREATE           = 11
     ACTION_TYPE_BALLOT_CONFIRM          = 12
-    ACTION_TYPE_BALLOT_ANNUL            = 13
-    ACTION_TYPE_BALLOT_PUBLIC_CHECKIN   = 14
+    ACTION_TYPE_BALLOT_DISCARD          = 13
+    ACTION_TYPE_BALLOT_SUBMIT           = 14
+    ACTION_TYPE_BALLOT_EDIT             = 15
     ACTION_TYPE_FEEDBACK_SUBMIT         = 20
     ACTION_TYPE_FEEDBACK_SAVE           = 21
     ACTION_TYPE_DRAW_CREATE             = 30
     ACTION_TYPE_DRAW_CONFIRM            = 31
     ACTION_TYPE_ADJUDICATORS_SAVE       = 32
     ACTION_TYPE_VENUES_SAVE             = 33
+    ACTION_TYPE_DRAW_RELEASE            = 34
+    ACTION_TYPE_DRAW_UNRELEASE          = 35
     ACTION_TYPE_MOTION_EDIT             = 40
+    ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  = 50
+    ACTION_TYPE_AVAIL_TEAMS_SAVE        = 80
+    ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE = 81
+    ACTION_TYPE_AVAIL_VENUES_SAVE       = 82
+    ACTION_TYPE_CONFIG_EDIT             = 90
 
     ACTION_TYPE_CHOICES = (
-        (ACTION_TYPE_BALLOT_ANNUL         , 'Annulled ballot'),
-        (ACTION_TYPE_BALLOT_CHECKIN       , 'Checked in ballot'),
-        (ACTION_TYPE_BALLOT_DRAFT         , 'Entered draft ballot'),
-        (ACTION_TYPE_BALLOT_CONFIRM       , 'Confirmed ballot'),
-        (ACTION_TYPE_BALLOT_PUBLIC_CHECKIN, 'Entered ballot from the public form'),
-        (ACTION_TYPE_FEEDBACK_SUBMIT      , 'Submitted feedback'), # For debaters, not tab monkeys
-        (ACTION_TYPE_FEEDBACK_SAVE        , 'Saved feedback'),     # For tab monkeys, not debaters
-        (ACTION_TYPE_ADJUDICATORS_SAVE    , 'Saved adjudicator allocation'),
-        (ACTION_TYPE_VENUES_SAVE          , 'Saved venues'),
-        (ACTION_TYPE_DRAW_CREATE          , 'Created draw'),
-        (ACTION_TYPE_DRAW_CONFIRM         , 'Confirmed draw'),
-        (ACTION_TYPE_MOTION_EDIT          , 'Added/edited motion'),
+        (ACTION_TYPE_BALLOT_DISCARD         , 'Discarded ballot set'),
+        (ACTION_TYPE_BALLOT_CHECKIN         , 'Checked in ballot set'),
+        (ACTION_TYPE_BALLOT_CREATE          , 'Created ballot set'), # For tab monkeys, not debaters
+        (ACTION_TYPE_BALLOT_EDIT            , 'Edited ballot set'),
+        (ACTION_TYPE_BALLOT_CONFIRM         , 'Confirmed ballot set'),
+        (ACTION_TYPE_BALLOT_SUBMIT          , 'Submitted ballot set from the public form'), # For debaters, not tab monkeys
+        (ACTION_TYPE_FEEDBACK_SUBMIT        , 'Submitted feedback from the public form'), # For debaters, not tab monkeys
+        (ACTION_TYPE_FEEDBACK_SAVE          , 'Saved feedback'), # For tab monkeys, not debaters
+        (ACTION_TYPE_ADJUDICATORS_SAVE      , 'Saved adjudicator allocation'),
+        (ACTION_TYPE_VENUES_SAVE            , 'Saved venues'),
+        (ACTION_TYPE_DRAW_CREATE            , 'Created draw'),
+        (ACTION_TYPE_DRAW_CONFIRM           , 'Confirmed draw'),
+        (ACTION_TYPE_DRAW_RELEASE           , 'Released draw'),
+        (ACTION_TYPE_DRAW_UNRELEASE         , 'Unreleased draw'),
+        (ACTION_TYPE_MOTION_EDIT            , 'Added/edited motion'),
+        (ACTION_TYPE_DEBATE_IMPORTANCE_EDIT , 'Edited debate importance'),
+        (ACTION_TYPE_AVAIL_TEAMS_SAVE       , 'Edited teams availability'),
+        (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE, 'Edited adjudicators availability'),
+        (ACTION_TYPE_AVAIL_VENUES_SAVE      , 'Edited venue availability'),
+        (ACTION_TYPE_CONFIG_EDIT            , 'Edited tournament configuration'),
     )
 
     REQUIRED_FIELDS_BY_ACTION_TYPE = {
-        ACTION_TYPE_BALLOT_ANNUL          : ('debate',),
-        ACTION_TYPE_BALLOT_CHECKIN        : ('debate',),
-        ACTION_TYPE_BALLOT_DRAFT          : ('debate',),
-        ACTION_TYPE_BALLOT_CONFIRM        : ('debate',),
-        ACTION_TYPE_BALLOT_PUBLIC_CHECKIN : ('debate',),
-        ACTION_TYPE_FEEDBACK_SUBMIT       : ('adjudicator_feedback',),
-        ACTION_TYPE_FEEDBACK_SAVE         : ('adjudicator_feedback',),
-        ACTION_TYPE_ADJUDICATORS_SAVE     : ('round',),
-        ACTION_TYPE_VENUES_SAVE           : ('round',),
-        ACTION_TYPE_DRAW_CREATE           : ('round',),
-        ACTION_TYPE_DRAW_CONFIRM          : ('round',),
-        ACTION_TYPE_MOTION_EDIT           : ('motion',),
+        ACTION_TYPE_BALLOT_DISCARD         : ('ballot_submission',),
+        ACTION_TYPE_BALLOT_CHECKIN         : ('ballot_submission',),
+        ACTION_TYPE_BALLOT_CREATE          : ('ballot_submission',),
+        ACTION_TYPE_BALLOT_EDIT            : ('ballot_submission',),
+        ACTION_TYPE_BALLOT_CONFIRM         : ('ballot_submission',),
+        ACTION_TYPE_BALLOT_SUBMIT          : ('ballot_submission',),
+        ACTION_TYPE_FEEDBACK_SUBMIT        : ('adjudicator_feedback',),
+        ACTION_TYPE_FEEDBACK_SAVE          : ('adjudicator_feedback',),
+        ACTION_TYPE_ADJUDICATORS_SAVE      : ('round',),
+        ACTION_TYPE_VENUES_SAVE            : ('round',),
+        ACTION_TYPE_DRAW_CREATE            : ('round',),
+        ACTION_TYPE_DRAW_CONFIRM           : ('round',),
+        ACTION_TYPE_DRAW_RELEASE           : ('round',),
+        ACTION_TYPE_DRAW_UNRELEASE         : ('round',),
+        ACTION_TYPE_DEBATE_IMPORTANCE_EDIT : ('debate',),
+        ACTION_TYPE_MOTION_EDIT            : ('motion',),
+        ACTION_TYPE_CONFIG_EDIT            : (),
+        ACTION_TYPE_AVAIL_TEAMS_SAVE       : ('round'),
+        ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE: ('round'),
+        ACTION_TYPE_AVAIL_VENUES_SAVE      : ('round'),
     }
 
-    ACTION_TYPE_BY_RESULT_STATUS = {
-        Debate.STATUS_NONE:      ACTION_TYPE_BALLOT_ANNUL,
-        Debate.STATUS_DRAFT:     ACTION_TYPE_BALLOT_DRAFT,
-        Debate.STATUS_CONFIRMED: ACTION_TYPE_BALLOT_CONFIRM,
-    }
-
-    ALL_OPTIONAL_FIELDS = ('debate', 'adjudicator_feedback', 'round', 'motion')
+    ALL_OPTIONAL_FIELDS = ('debate', 'ballot_submission', 'adjudicator_feedback', 'round', 'motion')
 
     type = models.PositiveSmallIntegerField(choices=ACTION_TYPE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -1435,6 +1453,7 @@ class ActionLog(models.Model):
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     debate = models.ForeignKey(Debate, blank=True, null=True)
+    ballot_submission = models.ForeignKey(BallotSubmission, blank=True, null=True)
     adjudicator_feedback = models.ForeignKey(AdjudicatorFeedback, blank=True, null=True)
     round = models.ForeignKey(Round, blank=True, null=True)
     motion = models.ForeignKey(Motion, blank=True, null=True)
@@ -1456,6 +1475,8 @@ class ActionLog(models.Model):
                 if getattr(self, field_name) is not None:
                     errors.append(ValidationError('A log entry of type "%s" must not have the field "%s".' %
                         (self.get_type_display(), field_name)))
+        if self.user is None and self.ip_address is None:
+            errors.append(ValidationError('All log entries require at least one of a user and an IP address.'))
         if errors:
             raise ValidationError(errors)
 

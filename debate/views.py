@@ -13,7 +13,7 @@ from ipware.ip import get_real_ip
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
 from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission
-from debate.models import AdjudicatorFeedback
+from debate.models import AdjudicatorFeedback, ActiveVenue, ActiveTeam, ActiveAdjudicator
 from debate import forms
 
 from django.forms.models import modelformset_factory
@@ -435,6 +435,7 @@ def tournament_config(request, t):
         if form.is_valid():
             form.save()
             context['updated'] = True
+            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_CONFIG_EDIT, user=request.user)
     else:
         form = make_config_form(t)
 
@@ -599,6 +600,14 @@ def _update_availability(request, round, update_method, active_model, active_att
 
     getattr(round, update_method)(available_ids)
 
+    ACTION_TYPES = {
+        ActiveVenue:       ActionLog.ACTION_TYPE_AVAIL_VENUES_SAVE,
+        ActiveTeam:        ActionLog.ACTION_TYPE_AVAIL_TEAMS_SAVE,
+        ActiveAdjudicator: ActionLog.ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE,
+    }
+    if active_model in ACTION_TYPES:
+        ActionLog.objects.log(type=ACTION_TYPES[active_model], user=request.user, round=round)
+
     return HttpResponse("ok")
 
 @admin_required
@@ -707,7 +716,7 @@ def release_draw(request, round):
 
     round.draw_status = round.STATUS_RELEASED
     round.save()
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CONFIRM,
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_RELEASE,
         user=request.user, round=round)
 
     return redirect_round('draw', round)
@@ -722,7 +731,7 @@ def unrelease_draw(request, round):
 
     round.draw_status = round.STATUS_CONFIRMED
     round.save()
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CONFIRM,
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_UNRELEASE,
         user=request.user, round=round)
 
     return redirect_round('draw', round)
@@ -752,6 +761,8 @@ def update_debate_importance(request, round):
     debate = Debate.objects.get(pk=id)
     debate.importance = im
     debate.save()
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
+            user=request.user, debate=debate)
     return HttpResponse(im)
 
 @admin_required
@@ -853,9 +864,14 @@ def edit_ballots(request, t, ballots_id):
             form.save()
 
             # TODO add ballots to the ActionLog
-            action_type = ActionLog.ACTION_TYPE_BY_RESULT_STATUS[debate.result_status]
+            if ballots.discarded:
+                action_type = ActionLog.ACTION_TYPE_BALLOT_DISCARD
+            elif ballots.confirmed:
+                action_type = ActionLog.ACTION_TYPE_BALLOT_CONFIRM
+            else:
+                action_type = ActionLog.ACTION_TYPE_BALLOT_EDIT
             ActionLog.objects.log(type=action_type, user=request.user,
-                debate=debate, ip_address=get_real_ip(request))
+                ballot_submission=ballots, ip_address=get_real_ip(request))
 
             return redirect_round('results', debate.round)
     else:
@@ -902,9 +918,8 @@ def public_new_ballots(request, t, adj_id):
         if form.is_valid():
             form.save()
 
-            # TODO add ballots to the ActionLog
-            action_type = ActionLog.ACTION_TYPE_BALLOT_PUBLIC_CHECKIN
-            ActionLog.objects.log(type=action_type, debate=debate, ip_address=ip_address)
+            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_SUBMIT,
+                    ballot_submission=ballots, ip_address=ip_address)
             return r2r(request, 'public/success.html', dict(success_kind="ballot"))
 
     else:
@@ -938,10 +953,8 @@ def new_ballots(request, t, debate_id):
         if form.is_valid():
             form.save()
 
-            # TODO add ballots to the ActionLog
-            action_type = ActionLog.ACTION_TYPE_BY_RESULT_STATUS[debate.result_status]
-            ActionLog.objects.log(type=action_type, user=request.user,
-                debate=debate, ip_address=ip_address)
+            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_CREATE, user=request.user,
+                    ballot_submission=ballots, ip_address=ip_address)
 
             return redirect_round('results', debate.round)
 
@@ -1286,8 +1299,8 @@ def public_enter_feedback(request, t, source_type, source_id):
         form = forms.make_feedback_form_class_for_source(source, submission_fields, released_only=True, include_panellists=include_panellists)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
-            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
-                user=None, adjudicator_feedback=adj_feedback)
+            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
+                    ip_address=ip_address, adjudicator_feedback=adj_feedback)
             return r2r(request, 'public/success.html', dict(success_kind="feedback"))
     else:
         form = forms.make_feedback_form_class_for_source(source, submission_fields, released_only=True, include_panellists=include_panellists)()
@@ -1318,8 +1331,7 @@ def enter_feedback(request, t, adjudicator_id):
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
-                user=request.user, adjudicator_feedback=adj_feedback,
-                ip_address=ip_address)
+                user=request.user, adjudicator_feedback=adj_feedback)
             return redirect_tournament('adj_feedback', t)
     else:
         form = forms.make_feedback_form_class_for_adj(adj, submission_fields)()
@@ -1397,7 +1409,7 @@ def post_ballot_checkin(request, round):
     debate.save()
 
     ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_CHECKIN,
-        user=request.user, debate=debate)
+            user=request.user, debate=debate)
 
     obj = dict()
 
