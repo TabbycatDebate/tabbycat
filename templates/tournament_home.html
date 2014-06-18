@@ -64,7 +64,8 @@
                     anonymous
                 {% endif %}
                 </strong>
-                <em>{{ action.get_type_display }}</em>
+                <em>{{ action.get_type_display }} -
+                {{ action.get_parameters_display }}</em>
                 <span class="badge">{{ action.timestamp|timesince }} ago</span>
             </li>
             {% endfor %}

@@ -1440,9 +1440,9 @@ class ActionLog(models.Model):
         ACTION_TYPE_DEBATE_IMPORTANCE_EDIT : ('debate',),
         ACTION_TYPE_MOTION_EDIT            : ('motion',),
         ACTION_TYPE_CONFIG_EDIT            : (),
-        ACTION_TYPE_AVAIL_TEAMS_SAVE       : ('round'),
-        ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE: ('round'),
-        ACTION_TYPE_AVAIL_VENUES_SAVE      : ('round'),
+        ACTION_TYPE_AVAIL_TEAMS_SAVE       : ('round',),
+        ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE: ('round',),
+        ACTION_TYPE_AVAIL_VENUES_SAVE      : ('round',),
     }
 
     ALL_OPTIONAL_FIELDS = ('debate', 'ballot_submission', 'adjudicator_feedback', 'round', 'motion')
@@ -1479,6 +1479,25 @@ class ActionLog(models.Model):
             errors.append(ValidationError('All log entries require at least one of a user and an IP address.'))
         if errors:
             raise ValidationError(errors)
+
+    def get_parameters_display(self):
+        required_fields = self.REQUIRED_FIELDS_BY_ACTION_TYPE[self.type]
+        strings = list()
+        for field_name in required_fields:
+            value = getattr(self, field_name)
+            if field_name == 'ballot_submission':
+                strings.append('%s vs %s' % (value.debate.aff_team, value.debate.neg_team))
+            elif field_name == 'debate':
+                strings.append('%s vs %s' % (value.aff_team, value.neg_team))
+            elif field_name == 'round':
+                strings.append('round %s' % value.seq)
+            elif field_name == 'motion':
+                strings.append(value.reference)
+            elif field_name == 'adjudicator_feedback':
+                strings.append(value.adjudicator.name)
+            else:
+                strings.append(unicode(value))
+        return ", ".join(strings)
 
 class ConfigManager(models.Manager):
     def set(self, tournament, key, value):
