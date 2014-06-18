@@ -116,7 +116,7 @@
 
             <td>{{ debate.venue.name }}</td>
 
-            <td class="">
+            <td>
                 {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-up text-success"></span>
                 {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
@@ -127,7 +127,7 @@
                 </span>
             </td>
 
-            <td class="">
+            <td>
                 {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-up text-success"></span>
                 {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
@@ -136,6 +136,8 @@
                 <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
+            </td>
+
             <td>
             <!-- TODO: add phone numbers here -->
                 {% if debate.confirmed_ballot %}

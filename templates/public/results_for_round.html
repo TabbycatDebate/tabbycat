@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block extra-head %}
+    {{ block.super }}
+       <script type="text/javascript" charset="utf-8">
+            $(document).ready( function() {
+                var table = $("#dataTable").dataTable({
+                    "aaSorting": [[ 0, "asc" ]],
+                });
+                new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+            } );
+        </script>
+        <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+{% endblock extra-head %}
+
+{% block extra-style %}{% endblock %}
+
+{% block head-title %}Results for Round {{ round }}{% endblock %}
+{% block page-title %}Results for Round {{ round }}{% endblock %}
+{% block body-class %}public-results{% endblock %}
+
+{% block nav %}{% include "public/nav.html" %}{% endblock %}
+{% block footer %}{% include "public/footer.html" %}{% endblock %}
+
+{% block content %}
+<table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
+
+    <thead>
+        <tr>
+            <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+            <th>Affirmative</th>
+            <th>Negative</th>
+            <th>Adjudicators</th>
+            {% if show_motions_column %}
+                <th>Motion</th>
+            {% endif %}
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for debate in draw %}
+        <tr>
+            <td>{{ debate.venue.name }}</td>
+
+            <td>
+                {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
+                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
+                {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
+                    <span class="glyphicon glyphicon-arrow-down text-danger"></span>
+                {% endif %}
+                <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                    {{ debate.aff_team.short_name }}
+                </span>
+            </td>
+
+            <td>
+                {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
+                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
+                {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
+                    <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
+                {% endif %}
+                <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                    {{ debate.neg_team.short_name }}
+                </span>
+            </td>
+
+            <td>
+            <!-- TODO: add phone numbers here -->
+                {% if debate.confirmed_ballot %}
+                    {% for adj_display, split in debate.confirmed_ballot.ballot_set.adjudicator_results_display %}
+                        {% if split %}
+                            <span class="text-danger">{{ adj_display }} </span><span class="glyphicon glyphicon-resize-full text-danger"></span>
+                        {% else %}
+                            {{ adj_display }}
+                        {% endif %}
+                        {% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                {% else %}
+                    {{ debate.adjudicators_display }}
+                {% endif %}
+            </td>
+
+            {% if show_motions_column %}
+                <td>
+                    <span data-toggle="tooltip" title="{{ debate.confirmed_ballot.motion }}">
+                    {{ debate.confirmed_ballot.motion.reference }}
+                    </span>
+                </td>
+            {% endif %}
+
+        </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

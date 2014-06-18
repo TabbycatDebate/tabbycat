@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Results{% endblock %}
+{% block page-title %}Results{% endblock %}
+
+{% block nav %}{% include "public/nav.html" %}{% endblock %}
+{% block footer %}{% include "public/footer.html" %}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="list-group">
+            {% for r in rounds %}
+                <li class="list-group-item"><a class="public-feedback-nav" href="{% round_url public_results r %}">
+                    Results for Round {{ r }}
+                </a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock content %}

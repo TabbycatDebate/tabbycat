@@ -32,6 +32,7 @@ SETTINGS = OrderedDict([
     ('show_institutions',          (_bool, 'Shows the institutions column in the draw UI',                True)),
     ('public_participants',        (_bool, 'Public interface to see all participants',                    False)),
     ('public_draw',                (_bool, 'Public interface to see RELEASED draws',                      False)),
+    ('public_results',             (_bool, 'Public interface to see results from previous rounds',        False)),
     ('public_team_standings',      (_bool, 'Public interface to see team standings DURING tournament',    False)),
     ('public_ballots',             (_bool, 'Public interface to add ballots',                             False)),
     ('public_feedback',            (_bool, 'Public interface to add feedback',                            False)),

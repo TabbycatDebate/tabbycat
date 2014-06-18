@@ -47,11 +47,23 @@ def public_optional_tournament_view(config_option):
     def bar(view_fn):
         @wraps(view_fn)
         @tournament_view
-        def foo(request, tournament, *args, **kwargs):
+        def foo(request, tournament, *args      , **kwargs):
             if tournament.config.get(config_option):
                 return view_fn(request, tournament, *args, **kwargs)
             else:
                 return redirect_tournament('public_index', tournament)
+        return foo
+    return bar
+
+def public_optional_round_view(config_option):
+    def bar(view_fn):
+        @wraps(view_fn)
+        @round_view
+        def foo(request, round, *args, **kwargs):
+            if round.tournament.config.get(config_option):
+                return view_fn(request, round, *args, **kwargs)
+            else:
+                return redirect_tournament('public_index', round.tournament)
         return foo
     return bar
 
@@ -801,6 +813,20 @@ def monkey_results(request, round):
     draw = draw.filter(result_status__in=(Debate.STATUS_NONE, Debate.STATUS_DRAFT))
     return r2r(request, "monkey/results.html", dict(draw=draw))
 
+@public_optional_round_view('public_results')
+def public_results(request, round):
+    # Can't see results for current round or later
+    if round.seq >= round.tournament.current_round.seq:
+        raise Http404()
+    draw = round.get_draw()
+    show_motions_column = Motion.objects.filter(round=round).count() > 1
+    return r2r(request, "public/results_for_round.html", dict(draw=draw, show_motions_column=show_motions_column))
+
+@public_optional_tournament_view('public_results')
+def public_results_index(request, tournament):
+    rounds = Round.objects.filter(tournament=tournament,
+            seq__lt=tournament.current_round.seq).order_by('seq')
+    return r2r(request, "public/results_index.html", dict(rounds=rounds))
 
 @login_required
 @tournament_view
