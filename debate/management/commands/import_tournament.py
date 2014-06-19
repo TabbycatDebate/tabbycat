@@ -140,13 +140,16 @@ class Command(BaseCommand):
                 except:
                     ins = m.Institution.objects.get(code=ins_name, tournament=t)
 
-                m.Adjudicator(
+                adj = m.Adjudicator(
                     name = name,
                     institution = ins,
                     test_score = test_score,
                     phone = phone,
                     email = email
-                ).save()
+                )
+                adj.save()
+
+                m.AdjudicatorInstitutionConflict(adjudicator=adj, institution=ins).save()
 
                 adjs_count = adjs_count + 1
 
@@ -176,7 +179,7 @@ class Command(BaseCommand):
                 try:
                     team, created = m.Team.objects.get_or_create(institution = ins,
                            reference = team_name,
-                           use_institution_prefix = False)
+                           use_institution_prefix = True)
                     if created:
                         teams_count = teams_count + 1
                 except Exception as inst:
@@ -186,7 +189,7 @@ class Command(BaseCommand):
 
 
                 # Resetting the variable incase create/get above fails
-                speakers_team = m.Team.objects.get(reference=team_name)
+                speakers_team = m.Team.objects.get(institution=ins, reference=team_name)
                 print team
 
                 try:
@@ -204,5 +207,7 @@ class Command(BaseCommand):
 
             self.stdout.write('Successfully import all data')
 
-        except:
+        except Exception:
+            import traceback
+            traceback.print_exc()
             self.stdout.write('Failed')
