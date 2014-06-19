@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib import messages
 from django.db.models import Sum, Count
 from django.conf import settings
+from django.views.decorators.cache import cache_page
 from ipware.ip import get_real_ip
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
@@ -103,17 +104,22 @@ def index(request):
 
 ## Public UI
 
+PUBLIC_PAGE_CACHE_TIMEOUT = 60
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def public_index(request, t):
     return r2r(request, 'public/index.html')
 
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_participants')
 def public_participants(request, t):
     adjs = Adjudicator.objects.all()
     speakers = Speaker.objects.all()
     return r2r(request, "public/participants.html", dict(adjs=adjs, speakers=speakers))
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_draw')
 def public_draw(request, t):
     r = t.current_round
@@ -123,6 +129,7 @@ def public_draw(request, t):
     else:
         return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=r))
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_team_standings')
 def public_team_standings(request, t):
     round = t.current_round.prev
@@ -180,6 +187,7 @@ def public_team_standings(request, t):
         return r2r(request, 'public/index.html')
 
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_ballots')
 def public_ballot_submit(request, t):
     r = t.current_round
@@ -192,6 +200,7 @@ def public_ballot_submit(request, t):
     else:
         return r2r(request, 'public/draw_unreleased.html', dict(das=None, round=r))
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_feedback')
 def public_feedback_submit(request, t):
     adjudicators = Adjudicator.objects.all()
@@ -199,6 +208,7 @@ def public_feedback_submit(request, t):
     return r2r(request, 'public/add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
 
 
+@cache_page(3) # short cache - needs to update often
 @public_optional_tournament_view('feedback_progress')
 def public_feedback_progress(request, t):
     def calculate_coverage(submitted, total):
@@ -247,6 +257,7 @@ def public_feedback_progress(request, t):
 
 ## Tab
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_team_tab(request, t):
     round = t.current_round
@@ -282,6 +293,7 @@ def public_team_tab(request, t):
             rounds=rounds, round=round))
 
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_speaker_tab(request, t):
     round = t.current_round
@@ -324,6 +336,7 @@ def public_speaker_tab(request, t):
     return r2r(request, 'public/speaker_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_replies_tab(request, t):
     round = t.current_round
@@ -357,6 +370,7 @@ def public_replies_tab(request, t):
     return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('motions_tab_released')
 def public_motions_tab(request, t):
     round = t.current_round
@@ -824,6 +838,7 @@ def monkey_results(request, round):
     draw = draw.filter(result_status__in=(Debate.STATUS_NONE, Debate.STATUS_DRAFT))
     return r2r(request, "monkey/results.html", dict(draw=draw))
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_round_view('public_results')
 def public_results(request, round):
     # Can't see results for current round or later
@@ -835,6 +850,7 @@ def public_results(request, round):
     return r2r(request, "public/results_for_round.html", dict(
             draw=draw, show_motions_column=show_motions_column, show_splits=show_splits))
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
 def public_results_index(request, tournament):
     # Only rounds before current round
@@ -888,6 +904,7 @@ def edit_ballots(request, t, ballots_id):
         ballot_not_singleton    = all_ballot_sets.exclude(id=ballots_id).exists(),
     ))
 
+# Don't cache
 @public_optional_tournament_view('public_ballots')
 def public_new_ballots(request, t, adj_id):
 
@@ -1275,7 +1292,7 @@ def get_adj_feedback(request, t):
 
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
-
+# Don't cache
 @public_optional_tournament_view('public_feedback')
 def public_enter_feedback(request, t, source_type, source_id):
 
