@@ -7,6 +7,6 @@ import sys
 venv = os.environ.get("VIRTUAL_ENV")
 if venv is None:
     print("You must be in the virtual environment to run this script.")
-    #exit()
+    exit()
 root_path = os.path.abspath(os.path.join(venv, ".."))
 if root_path not in sys.path: sys.path.append(root_path)
