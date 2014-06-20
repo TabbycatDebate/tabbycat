@@ -10,11 +10,14 @@
 </script>
 {% endblock extra-head %}
 
-{% if form.non_field_errors %}
-<div class="row">
-    <div class="alert alert-warning">
-        <p>{{ form.non_field_errors }}</p>
-    </div>
+{% if form.errors %}
+<div class="alert alert-danger">
+    <p>There are some problems with this scoresheet. Please review and correct them.</p>
+
+    {% if form.non_field_errors %}
+        <p>General errors:</p>
+        <div class="ballot-errors">{{ form.non_field_errors }}</div>
+    {% endif %}
 </div>
 {% endif %}
 

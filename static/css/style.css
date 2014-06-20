@@ -732,6 +732,11 @@ input.error, select.error, .error input {
   border-color: #a94442;
   color: #a94442; }
 
+.ballot-errors .errorlist {
+  list-style-type: disc;
+  margin: 0 2.5em;
+  padding: 0; }
+
 table.dataTable {
   margin-top: 0px !important; }
   table.dataTable thead {

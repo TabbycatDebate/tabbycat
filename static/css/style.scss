@@ -139,6 +139,11 @@ input.error, select.error, .error input {
 .form-control-parent input {
     @extend .form-control;
 }
+.ballot-errors .errorlist {
+    list-style-type: disc;
+    margin: 0 2.5em;
+    padding: 0;
+}
 
 // Tables
 
