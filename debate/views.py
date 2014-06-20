@@ -462,10 +462,8 @@ def tournament_config(request, t):
 @tournament_view
 def feedback_progress(request, t):
     def calculate_coverage(submitted, total):
-        if total == 0:
-            return False # Don't show these ones
-        elif submitted == 0:
-            return 0
+        if total == 0 or submitted == 0:
+            return 0 # avoid divide-by-zero error
         else:
             return int((float(submitted) / float(total)) * 100)
 

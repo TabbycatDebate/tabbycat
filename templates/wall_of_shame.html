@@ -87,10 +87,10 @@
         <tbody>
 
         {% for entity in adjudicators %}
-        {% if entity.coverage %}
+        {% if entity.total_ballots > 0 %}
         <tr id="adj_{{ entity.id }}" class="adj-row">
             <td class="">
-                {{ entity.coverage}}%
+                {{ entity.coverage }}%
             </td>
             <td class="">
                 {{ entity.owed_ballots }}
@@ -112,7 +112,7 @@
         {% for team in teams %}
         <tr id="team_{{ team.id }}" class="team-row">
             <td class="">
-                {{ team.coverage}}%
+                {{ team.coverage }}%
             </td>
             <td class="">
                 {{ team.owed_ballots }}
