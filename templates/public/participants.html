@@ -45,14 +45,14 @@
                     {{ person.team.short_name }}
                 </span>
             </td>
-            <td>{{ person.team.institution.code }}</td>
+            <td>{{ person.team.institution.name }}</td>
     {% endfor %}
     {% for person in adjs %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td>{{ person.name }}</td>
             <td></td>
             <td>Adjudicator</td>
-            <td>{{ person.institution.code }}</td>
+            <td>{{ person.institution.name }}</td>
     {% endfor %}
 
     </tbody>
