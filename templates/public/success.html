@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}Success!{% endblock %}
+{% block page-title %}Success!{% endblock %}
+
+{% block nav %}{% include "public/nav.html" %}{% endblock %}
+{% block footer %}{% include "public/footer.html" %}{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <p>Your {{ success_kind }} has been submitted and recorded. <img src="{% static 'emoji/img/heart_eyes.png' %}" width="24" height="24" />
+    </div>
+</div>
+
+{% endblock content %}
