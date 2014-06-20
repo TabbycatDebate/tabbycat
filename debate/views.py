@@ -24,6 +24,12 @@ from django.forms import Textarea
 from functools import wraps
 import json
 
+def get_ip_address(request):
+    ip = get_real_ip(request)
+    if ip is None:
+        return "0.0.0.0"
+    return ip
+
 def redirect_round(to, round, **kwargs):
     return redirect(to, tournament_slug=round.tournament.slug,
                     round_seq=round.seq, *kwargs)
@@ -879,7 +885,7 @@ def edit_ballots(request, t, ballots_id):
             else:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_EDIT
             ActionLog.objects.log(type=action_type, user=request.user,
-                ballot_submission=ballots, ip_address=get_real_ip(request))
+                ballot_submission=ballots, ip_address=get_ip_address(request))
 
             return redirect_round('results', debate.round)
     else:
@@ -912,7 +918,7 @@ def public_new_ballots(request, t, adj_id):
 
     debate = da.debate
 
-    ip_address = get_real_ip(request)
+    ip_address = get_ip_address(request)
 
     ballots = BallotSubmission(
         debate         = debate,
@@ -947,7 +953,7 @@ def public_new_ballots(request, t, adj_id):
 @tournament_view
 def new_ballots(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
-    ip_address = get_real_ip(request)
+    ip_address = get_ip_address(request)
 
     ballots = BallotSubmission(
         debate        =debate,
@@ -1296,7 +1302,7 @@ def public_enter_feedback(request, t, source_type, source_id):
 
     source = get_object_or_404(source_type, id=source_id)
     include_panellists = request.tournament.config.get('panellist_feedback_enabled') > 0
-    ip_address = get_real_ip(request)
+    ip_address = get_ip_address(request)
 
     if isinstance(source, Adjudicator):
         source_name = source.name
@@ -1328,7 +1334,7 @@ def public_enter_feedback(request, t, source_type, source_id):
 def enter_feedback(request, t, adjudicator_id):
 
     adj = get_object_or_404(Adjudicator, id=adjudicator_id)
-    ip_address = get_real_ip(request)
+    ip_address = get_ip_address(request)
 
     if not request.user.is_superuser:
         template = 'monkey/enter_feedback.html'
