@@ -654,7 +654,7 @@ class Round(models.Model):
         venues = list(self.active_venues.all())[:len(pairings)]
 
         if len(venues) < len(pairings):
-            raise DrawError("There are %d debates but only %d venues." % (len(pairings), len(venues)))
+            raise draw_module.DrawError("There are %d debates but only %d venues." % (len(pairings), len(venues)))
 
         random.shuffle(venues)
 
