@@ -1428,7 +1428,7 @@ class ActionLog(models.Model):
 
     REQUIRED_FIELDS_BY_ACTION_TYPE = {
         ACTION_TYPE_BALLOT_DISCARD         : ('ballot_submission',),
-        ACTION_TYPE_BALLOT_CHECKIN         : ('ballot_submission',),
+        ACTION_TYPE_BALLOT_CHECKIN         : ('debate',), # not ballot_submission
         ACTION_TYPE_BALLOT_CREATE          : ('ballot_submission',),
         ACTION_TYPE_BALLOT_EDIT            : ('ballot_submission',),
         ACTION_TYPE_BALLOT_CONFIRM         : ('ballot_submission',),
