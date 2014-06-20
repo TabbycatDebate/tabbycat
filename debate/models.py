@@ -1263,7 +1263,27 @@ class BallotSubmission(Submission):
             return False
         if self.motion != other.motion:
             return False
-        # TODO keep going...
+        # Check all of the SpeakerScoreByAdjs.
+        # For each one, we must be able to find one by the same adjudicator, team and
+        # position, and they must have the same score.
+        for this in self.speakerscorebyadj_set.all():
+            if not other.speakerscorebyadj_set.filter(debate_adjudicator=this.debate_adjudicator,
+                    debate_team=this.debate_team, position=this.position, score=this.score).exists():
+                return False
+        # Check all of the SpeakerScores.
+        # In theory, we should only need to check speaker positions, since that is
+        # the only information not inferrable from SpeakerScoreByAdj. But check
+        # everything, to be safe.
+        for this in self.speakerscore_set.all():
+            if not other.speakerscore_set.filter(debate_team=this.debate_team,
+                    speaker=this.speaker, position=this.position).exists():
+                return False
+        # Check TeamScores, to be safe
+        for this in self.teamscore_set.all():
+            if not other.teamscore_set.filter(debate_team==this.debate_team,
+                    points=this.points, score=this.score).exists():
+                return False
+        return True
 
     # For further discussion
     #submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
@@ -1286,6 +1306,7 @@ class SpeakerScoreByAdj(models.Model):
     @property
     def debate(self):
         return self.debate_team.debate
+
 
 class TeamScore(models.Model):
     """
