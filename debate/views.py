@@ -879,7 +879,6 @@ def edit_ballots(request, t, ballots_id):
         if form.is_valid():
             form.save()
 
-            # TODO add ballots to the ActionLog
             if ballots.discarded:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_DISCARD
             elif ballots.confirmed:
@@ -894,15 +893,15 @@ def edit_ballots(request, t, ballots_id):
         form = forms.BallotSetForm(ballots)
 
     return r2r(request, template, dict(
-        debate                  = debate,
-        form                    = form,
-        round                   = debate.round,
-        ballots                 = ballots,
-        all_ballot_sets         = all_ballot_sets,
-        disable_confirm         = disable_confirm,
-        new                     = False,
-        ballot_not_singleton    = all_ballot_sets.exclude(id=ballots_id).exists(),
-    ))
+        debate              =debate,
+        form                =form,
+        round               =debate.round,
+        ballots             =ballots,
+        all_ballot_sets     =all_ballot_sets,
+        disable_confirm     =disable_confirm,
+        new                 =False,
+        ballot_not_singleton=all_ballot_sets.exclude(id=ballots_id).exists(),
+        show_adj_contact    =True))
 
 # Don't cache
 @public_optional_tournament_view('public_ballots')
@@ -942,8 +941,14 @@ def public_new_ballots(request, t, adj_id):
     else:
         form = forms.BallotSetForm(ballots)
 
-    return r2r(request, 'public/enter_results.html', dict(debate=debate, form=form,
-        round=round, ballots=ballots, adjudicator=adjudicator, existing_ballots=existing_ballots))
+    return r2r(request, 'public/enter_results.html', dict(
+        debate          =debate,
+        form            =form,
+        round           =round,
+        ballots         =ballots,
+        adjudicator     =adjudicator,
+        existing_ballots=existing_ballots,
+        show_adj_contact=False))
 
 @login_required
 @tournament_view
@@ -952,10 +957,10 @@ def new_ballots(request, t, debate_id):
     ip_address = get_real_ip(request)
 
     ballots = BallotSubmission(
-        debate         = debate,
-        submitter_type = BallotSubmission.SUBMITTER_TABROOM,
-        user           = request.user,
-        ip_address     = ip_address)
+        debate        =debate,
+        submitter_type=BallotSubmission.SUBMITTER_TABROOM,
+        user          =request.user,
+        ip_address    =ip_address)
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
@@ -979,14 +984,14 @@ def new_ballots(request, t, debate_id):
         form = forms.BallotSetForm(ballots)
 
     return r2r(request, template, dict(
-        debate                  = debate,
-        form                    = form,
-        round                   = debate.round,
-        ballots                 = ballots,
-        all_ballot_sets         = all_ballot_sets,
-        new                     = True,
-        ballot_not_singleton    = all_ballot_sets.exists(),
-    ))
+        debate              =debate,
+        form                =form,
+        round               =debate.round,
+        ballots             =ballots,
+        all_ballot_sets     =all_ballot_sets,
+        new                 =True,
+        ballot_not_singleton=all_ballot_sets.exists(),
+        show_adj_contact    =True))
 
 @admin_required
 @round_view

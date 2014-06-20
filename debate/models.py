@@ -379,6 +379,10 @@ class Person(models.Model):
 
     checkin_message = models.TextField(blank=True)
 
+    @property
+    def has_contact(self):
+        return bool(self.email or self.phone)
+
 class Checkin(models.Model):
     person = models.ForeignKey('Person')
     round = models.ForeignKey('Round')

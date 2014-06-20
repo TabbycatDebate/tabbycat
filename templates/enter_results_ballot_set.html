@@ -33,7 +33,7 @@
 
     <div class="row">
         <p class="col-xs-12 lead h4 page-header">Ballot from
-        {% if adj.adj.phone or adj.adj.email %}
+        {% if show_adj_contact and adj.adj.has_contact %}
             <span data-toggle="tooltip" title="{{ adj.adj.phone }} {{ adj.adj.email }}">
             {{ adj.adj }}
             </span>
