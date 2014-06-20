@@ -447,7 +447,7 @@ def make_feedback_form_class_for_adj(adjudicator, submission_fields, released_on
         return (
             'A:%d' % da.id,
             '%s (%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
-                           da.type)
+                           da.get_type_display())
         )
 
     adj_choices = [(None, '-- Adjudicators --')]
@@ -542,7 +542,7 @@ def make_feedback_form_class_for_source(source, submission_fields, released_only
         return (
             da.id,
             '%s (%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
-                           da.type)
+                           da.get_type_display())
         )
     choices = [(None, '-- Adjudicators --')]
 

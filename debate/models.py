@@ -1062,9 +1062,9 @@ class DebateAdjudicator(models.Model):
     TYPE_TRAINEE = 'T'
 
     TYPE_CHOICES = (
-        (TYPE_CHAIR, 'Chair'),
-        (TYPE_PANEL, 'Panel'),
-        (TYPE_TRAINEE, 'Trainee'),
+        (TYPE_CHAIR,   'chair'),
+        (TYPE_PANEL,   'panellist'),
+        (TYPE_TRAINEE, 'trainee'),
     )
 
     objects = SRManager()
