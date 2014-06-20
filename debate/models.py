@@ -1,7 +1,7 @@
 import re
 from django.db import models
 from django.conf import settings
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 
 from debate.utils import pair_list, memoize
 from debate.adjudicator.anneal import SAAllocator
@@ -892,6 +892,25 @@ class Debate(models.Model):
         return self.ballotsubmission_set.filter(discarded=False).order_by('version')
 
     @property
+    def identical_ballots_dict(self):
+        """Returns a dict, keys are version numbers of BallotSubmissions,
+        values are lists of version numbers of BallotSubmissions that are
+        identical to the key's BallotSubmission. Excludes discarded
+        ballots (always)."""
+        ballots = self.ballotsubmission_set_by_version_except_discarded
+        result = dict((b.version, list()) for b in ballots)
+        for ballot1 in ballots:
+            # Save a bit of time by avoiding comparisons already done.
+            # This relies on ballots being ordered by version.
+            for ballot2 in ballots.filter(version__gt=ballot1.version):
+                if ballot1.is_identical(ballot2):
+                    result[ballot1.version].append(ballot2.version)
+                    result[ballot2.version].append(ballot1.version)
+        for l in result.itervalues():
+            l.sort()
+        return result
+
+    @property
     def aff_team(self):
         self._get_teams()
         return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE].team
@@ -1258,30 +1277,38 @@ class BallotSubmission(Submission):
             raise ValidationError("A ballot can't be both confirmed and discarded!")
 
     def is_identical(self, other):
-        """Returns True if all data fields are the same."""
+        """Returns True if all data fields are the same. Returns False in any
+        other case. Does not raise exceptions if things look weird. Possibly
+        over-conservative: it checks fields that are theoretically redundant."""
         if self.debate != other.debate:
             return False
         if self.motion != other.motion:
             return False
+        def check(this, other_set, fields):
+            """Returns True if it could find an object with the same data.
+            Using filter() doesn't seem to work on non-integer float fields,
+            so we compare score by retrieving it."""
+            try:
+                other_obj = other_set.get(**dict((f, getattr(this, f)) for f in fields))
+            except (MultipleObjectsReturned, ObjectDoesNotExist):
+                return False
+            return this.score == other_obj.score
         # Check all of the SpeakerScoreByAdjs.
         # For each one, we must be able to find one by the same adjudicator, team and
         # position, and they must have the same score.
         for this in self.speakerscorebyadj_set.all():
-            if not other.speakerscorebyadj_set.filter(debate_adjudicator=this.debate_adjudicator,
-                    debate_team=this.debate_team, position=this.position, score=this.score).exists():
+            if not check(this, other.speakerscorebyadj_set, ["debate_adjudicator", "debate_team", "position"]):
                 return False
         # Check all of the SpeakerScores.
         # In theory, we should only need to check speaker positions, since that is
         # the only information not inferrable from SpeakerScoreByAdj. But check
         # everything, to be safe.
         for this in self.speakerscore_set.all():
-            if not other.speakerscore_set.filter(debate_team=this.debate_team,
-                    speaker=this.speaker, position=this.position).exists():
+            if not check(this, other.speakerscore_set, ["debate_team", "speaker", "position"]):
                 return False
         # Check TeamScores, to be safe
         for this in self.teamscore_set.all():
-            if not other.teamscore_set.filter(debate_team==this.debate_team,
-                    points=this.points, score=this.score).exists():
+            if not check(this, other.teamscore_set, ["debate_team", "points"]):
                 return False
         return True
 
