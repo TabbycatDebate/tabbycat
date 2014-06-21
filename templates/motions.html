@@ -32,6 +32,7 @@
     <thead>
     <tr>
         <th>Round</th>
+        <th>Reference</th>
         <th>Motion</th>
         <th>Chosen</th>
         <th>Aff wins</th>
@@ -43,7 +44,8 @@
     <tbody>
     {% for motion in motions %}
     <tr>
-        <td>R{{ motion.round }}</td>
+        <td>{{ motion.round }}</td>
+        <td>{{ motion.reference }}</td>
         <td>{{ motion.text }}</td>
         <td>{{ motion.chosen_in }}</td>
         <td>{{ motion.aff_wins }}</td>
