@@ -34,7 +34,7 @@
                 </a></li>
                 {% endif %}
                 {% if public_results > 0 and current_round.prev %}
-                <li><a class="public-draw-nav" href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
+                <li><a class="public-results-nav" href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                     {% for r in tournament.rounds.all %}
                         {% if r.seq < current_round.seq %}
