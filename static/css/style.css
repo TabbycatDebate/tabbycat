@@ -677,6 +677,7 @@ a.text-danger:hover {
   margin-bottom: 0; }
 
 .public-draw a.public-draw-nav,
+.public-motions a.public-motions-nav,
 .public-feedback a.public-feedback-nav,
 .public-add-ballot a.public-add-ballot-nav,
 .public-add-feedback a.public-add-feedback-nav,

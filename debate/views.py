@@ -255,6 +255,11 @@ def public_feedback_progress(request, t):
 
     return r2r(request, 'public/feedback_tab.html', dict(teams=teams, adjudicators=adjudicators))
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('public_motions')
+def public_motions(request, t):
+    rounds = Round.objects.filter(seq__lte=t.current_round.seq).order_by('-seq')
+    return r2r(request, 'public/motions.html', dict(rounds=rounds))
 
 ## Tab
 

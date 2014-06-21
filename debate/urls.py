@@ -27,6 +27,7 @@ urlpatterns = patterns('debate.views',
     url(r'^public/add_feedback/$', 'public_feedback_submit', name='public_feedback_submit'),
     url(r'^public/feedback_progress/$', 'public_feedback_progress', name='public_feedback_progress'),
     url(r'^public/participants/$', 'public_participants', name='public_participants'),
+    url(r'^public/motions/$', 'public_motions', name='public_motions'),
 
     url(r'^public/tab/team_tab/$', 'public_team_tab', name='public_team_tab'),
     url(r'^public/tab/speaker_tab/$', 'public_speaker_tab', name='public_speaker_tab'),

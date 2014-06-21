@@ -13,6 +13,7 @@ def debate_context(request):
                                         and request.tournament.current_round.prev is not None,
             'public_participants'  : request.tournament.config.get('public_participants'),
             'public_draw'          : request.tournament.config.get('public_draw'),
+            'public_motions'       : request.tournament.config.get('public_motions'),
             'public_results'       : request.tournament.config.get('public_results'),
             'public_ballots'       : request.tournament.config.get('public_ballots'),
             'public_feedback'      : request.tournament.config.get('public_feedback'),

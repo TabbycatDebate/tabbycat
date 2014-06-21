@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load debate_tags %}
+
+{% block extra-head %}{% endblock extra-head %}
+
+{% block head-title %}Motions{% endblock %}
+{% block page-title %}Motions{% endblock %}
+{% block body-class %}public-motions{% endblock %}
+
+{% block nav %}{% include "public/nav.html" %}{% endblock %}
+{% block footer %}{% include "public/footer.html" %}{% endblock %}
+
+{% block content %}
+
+{% for round in rounds %}
+<p><strong>Round {{ round.seq }}:</strong></p>
+
+<ul>
+    {% for motion in round.motion_set.all %}
+    <li>{{ motion.text }}</li>
+    {% endfor %}
+</ul>
+
+{% endfor %}
+
+{% endblock content %}

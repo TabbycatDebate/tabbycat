@@ -33,6 +33,11 @@
                     Draw for Round {{ current_round }}
                 </a></li>
                 {% endif %}
+                {% if public_motions > 0 %}
+                <li><a class="public-motions-nav" href="{% tournament_url public_motions %}">
+                    Motions
+                </a></li>
+                {% endif %}
                 {% if public_results > 0 and current_round.prev %}
                 <li><a class="public-results-nav" href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
                     <ul class="dropdown-menu">
