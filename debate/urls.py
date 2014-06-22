@@ -104,6 +104,8 @@ urlpatterns = patterns('debate.views',
         name='release_motions'),
     url(r'^round/(?P<round_seq>\d+)/motions/unrelease/$', 'unrelease_motions',
         name='unrelease_motions'),
+    url(r'^round/(?P<round_seq>\d+)/start_time/set/$', 'set_round_start_time',
+        name='set_round_start_time'),
 
     url(r'^round/(?P<round_seq>\d+)/results/$', 'results',
         name='results'),

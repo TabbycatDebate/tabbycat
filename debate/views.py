@@ -20,7 +20,7 @@ from debate import forms
 from django.forms.models import modelformset_factory
 from django.forms import Textarea
 
-
+import datetime
 from functools import wraps
 import json
 
@@ -110,7 +110,7 @@ def index(request):
 
 ## Public UI
 
-PUBLIC_PAGE_CACHE_TIMEOUT = 60
+PUBLIC_PAGE_CACHE_TIMEOUT = 1
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
@@ -836,6 +836,22 @@ def unrelease_motions(request, round):
 
     return redirect_round('motions', round)
 
+@admin_required
+@expect_post
+@round_view
+def set_round_start_time(request, round):
+    print request.POST
+    time_text = request.POST["start_time"]
+    try:
+        time = datetime.datetime.strptime(time_text, "%H:%M").time()
+    except ValueError, e:
+        print e
+        return redirect_round('draw', round)
+
+    round.starts_at = time
+    round.save()
+
+    return redirect_round('draw', round)
 
 @login_required
 @round_view

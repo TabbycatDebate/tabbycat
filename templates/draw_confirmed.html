@@ -63,6 +63,7 @@
     {% elif round.draw_status = 99 %}
         <button class="btn btn-danger form-control" id="unrelease_draw">Unrelease to Public</button>
     {% endif %}
+    <a class="btn btn-default form-control" data-toggle="modal" data-target="#start-time-form">Change Start Time</a>
 </div>
 {% endblock %}
 
@@ -124,6 +125,23 @@
     </tr>
     {% endfor %}
 </table>
+
+<div class="modal fade" id="start-time-form" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Change Round Start Time</h3>
+        </div>
+        <div class="modal-body">
+            <form id="startTimeForm" method="POST" action="{% round_url set_round_start_time %}">
+                <input type="text" text="{{ round.starts_at }}" name="start_time"></input>
+                <button type="submit" value="Save" class="form-control btn btn-success">Save</button>
+                <button type="button" value="Cancel" class="form-control btn btn-danger">Cancel</button>
+            </form>
+        </div>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}
 
