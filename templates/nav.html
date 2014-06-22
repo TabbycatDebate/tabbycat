@@ -15,6 +15,7 @@
         <div class="collapse navbar-collapse">
             <ul id="nav" class="nav navbar-nav navbar-left">
                 <li><a class="draw-nav" href="{% round_url draw current_round %}">Draw</a></li>
+                <li><a class="motions-nav" href="{% round_url motions current_round %}">Motions</a></li>
                 <li><a class="status-nav" href="{% round_url results current_round %}">Status</a></li>
                 <li><a class="adjudicators-standings-nav" href="{% tournament_url adj_feedback %}">Adjudicators</a></li>
                 <li class="dropdown">
@@ -22,8 +23,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="team-standings-nav" href="{% round_url team_standings current_round %}">Teams</a></li>
                         <li><a class="speaker-standings-nav" href="{% round_url speaker_standings current_round %}">Speakers</a></li>
-                        <li><a class="motions-nav" href="{% round_url reply_standings current_round %}">Replies</a></li>
-                        <li><a class="motions-nav" href="{% round_url motions current_round %}">Motions</a></li>
+                        <li><a class="reply-standings-nav" href="{% round_url reply_standings current_round %}">Replies</a></li>
                         <li><a class="feedback-standings-nav" href="{% tournament_url feedback_progress %}">Feedbacks</a></li>
                     </ul>
                 </li>

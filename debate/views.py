@@ -195,7 +195,7 @@ def public_ballot_submit(request, t):
 
     das = DebateAdjudicator.objects.filter(debate__round=r).select_related('adjudicator', 'debate')
 
-    if r.draw_status == r.STATUS_RELEASED:
+    if r.draw_status == r.STATUS_RELEASED and r.motions_good_for_public:
         draw = r.get_draw()
         return r2r(request, 'public/add_ballot.html', dict(das=das))
     else:
@@ -258,7 +258,7 @@ def public_feedback_progress(request, t):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_motions')
 def public_motions(request, t):
-    rounds = Round.objects.filter(seq__lte=t.current_round.seq).order_by('-seq')
+    rounds = Round.objects.filter(motions_released=True).order_by('-seq')
     return r2r(request, 'public/motions.html', dict(rounds=rounds))
 
 ## Tab
@@ -813,6 +813,29 @@ def motions_edit(request, round):
     formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
     return r2r(request, "motions_edit.html", dict(formset=formset))
+
+@admin_required
+@expect_post
+@round_view
+def release_motions(request, round):
+    round.motions_released = True
+    round.save()
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_MOTIONS_RELEASE,
+        user=request.user, round=round)
+
+    return redirect_round('motions', round)
+
+@admin_required
+@expect_post
+@round_view
+def unrelease_motions(request, round):
+    round.motions_released = False
+    round.save()
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_MOTIONS_UNRELEASE,
+        user=request.user, round=round)
+
+    return redirect_round('motions', round)
+
 
 @login_required
 @round_view

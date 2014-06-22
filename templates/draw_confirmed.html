@@ -41,9 +41,9 @@
     </small>
 {% endblock %}
 {% block page-title %}Draw for Round {{ round }}
-    {% if round.draw_status = 10 %}
+    {% if round.draw_status = round.STATUS_CONFIRMED %}
         (Debates Confirmed)
-    {% elif round.draw_status = 99 %}
+    {% elif round.draw_status = round.STATUS_RELEASED %}
         (Debates Released)
     {% endif %}{% endblock %}
 {% block body-class %}draw{% endblock %}

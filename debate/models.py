@@ -551,6 +551,8 @@ class Round(models.Model):
 
     feedback_weight = models.FloatField(default=0)
     silent = models.BooleanField(default=False)
+    motions_released = models.BooleanField(default=False)
+    starts_at = models.TimeField(blank=True, null=True)
 
     class Meta:
         unique_together = ('tournament', 'seq')
@@ -803,6 +805,10 @@ class Round(models.Model):
             return Round.objects.get(seq=self.seq-1)
         except Round.DoesNotExist:
             return None
+
+    @property
+    def motions_good_for_public(self):
+        return self.motions_released or not self.motion_set.exists()
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
@@ -1445,6 +1451,8 @@ class ActionLog(models.Model):
     ACTION_TYPE_DRAW_RELEASE            = 34
     ACTION_TYPE_DRAW_UNRELEASE          = 35
     ACTION_TYPE_MOTION_EDIT             = 40
+    ACTION_TYPE_MOTIONS_RELEASE         = 41
+    ACTION_TYPE_MOTIONS_UNRELEASE       = 42
     ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  = 50
     ACTION_TYPE_AVAIL_TEAMS_SAVE        = 80
     ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE = 81
@@ -1467,6 +1475,8 @@ class ActionLog(models.Model):
         (ACTION_TYPE_DRAW_RELEASE           , 'Released draw'),
         (ACTION_TYPE_DRAW_UNRELEASE         , 'Unreleased draw'),
         (ACTION_TYPE_MOTION_EDIT            , 'Added/edited motion'),
+        (ACTION_TYPE_MOTIONS_RELEASE        , 'Released motions'),
+        (ACTION_TYPE_MOTIONS_UNRELEASE      , 'Unreleased motions'),
         (ACTION_TYPE_DEBATE_IMPORTANCE_EDIT , 'Edited debate importance'),
         (ACTION_TYPE_AVAIL_TEAMS_SAVE       , 'Edited teams availability'),
         (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE, 'Edited adjudicators availability'),
@@ -1491,6 +1501,8 @@ class ActionLog(models.Model):
         ACTION_TYPE_DRAW_UNRELEASE         : ('round',),
         ACTION_TYPE_DEBATE_IMPORTANCE_EDIT : ('debate',),
         ACTION_TYPE_MOTION_EDIT            : ('motion',),
+        ACTION_TYPE_MOTIONS_RELEASE        : ('round',),
+        ACTION_TYPE_MOTIONS_UNRELEASE      : ('round',),
         ACTION_TYPE_CONFIG_EDIT            : (),
         ACTION_TYPE_AVAIL_TEAMS_SAVE       : ('round',),
         ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE: ('round',),
