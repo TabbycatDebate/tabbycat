@@ -21,7 +21,12 @@
 
 {% block body-class %}draw-public-display{% endblock %}
 
-{% block head-title %}Draw for Round {{ round }}{% endblock %}
+{% block head-title %}
+    Draw for Round {{ round }}
+    {% if round.starts_at %}
+        (starts at {{ round.starts_at }})
+    {% endif %}
+{% endblock %}
 {% block page-title %}Draw for Round {{ round }}{% endblock %}
 {% block header %}
 <div class="btn-group">

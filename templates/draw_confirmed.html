@@ -46,6 +46,9 @@
     {% elif round.draw_status = round.STATUS_RELEASED %}
         (Debates Released)
     {% endif %}{% endblock %}
+    {% if round.starts_at %}
+        (starts at {{ round.starts_at }})
+    {% endif %}
 {% block body-class %}draw{% endblock %}
 
 {% block header %}
@@ -67,6 +70,7 @@
 
 <form id="releaseForm" method="POST" action="{% round_url release_draw %}"></form>
 <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}"></form>
+<form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}"></form>
 
 {% if active_adjs.count < rooms %}
     <div class="alert alert-danger alert-dismissable" id="savedVenues">
@@ -82,8 +86,6 @@
         One or more debates have panels with an even number of adjudicators. <a  class="alert-link" href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
     </div>
 {% endif %}
-
-<form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}"></form>
 
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
@@ -106,7 +108,7 @@
                 {{ debate.aff_team.short_name }}
             </span>
             <span class="hidden">
-               {{ debate.aff_team.speakers|join:', ' }}
+                {{ debate.aff_team.speakers|join:', ' }}
             </span>
         </td>
         <td title="{% neg_count debate.neg_team round.prev %}">
@@ -114,7 +116,7 @@
                 {{ debate.neg_team.short_name }}
             </span>
             <span class="hidden">
-               {{ debate.neg_team.speakers|join:', ' }}
+                {{ debate.neg_team.speakers|join:', ' }}
             </span>
         </td>
         <td>{{ debate.adjudicators_display }}</td>
