@@ -854,6 +854,9 @@ def set_round_start_time(request, round):
     round.starts_at = time
     round.save()
 
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_ROUND_START_TIME_SET,
+        user=request.user, round=round)
+
     return redirect_round('draw', round)
 
 @login_required

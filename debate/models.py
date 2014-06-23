@@ -1461,6 +1461,7 @@ class ActionLog(models.Model):
     ACTION_TYPE_MOTIONS_RELEASE         = 41
     ACTION_TYPE_MOTIONS_UNRELEASE       = 42
     ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  = 50
+    ACTION_TYPE_ROUND_START_TIME_SET    = 60
     ACTION_TYPE_AVAIL_TEAMS_SAVE        = 80
     ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE = 81
     ACTION_TYPE_AVAIL_VENUES_SAVE       = 82
@@ -1485,6 +1486,7 @@ class ActionLog(models.Model):
         (ACTION_TYPE_MOTIONS_RELEASE        , 'Released motions'),
         (ACTION_TYPE_MOTIONS_UNRELEASE      , 'Unreleased motions'),
         (ACTION_TYPE_DEBATE_IMPORTANCE_EDIT , 'Edited debate importance'),
+        (ACTION_TYPE_ROUND_START_TIME_SET   , 'Set start time'),
         (ACTION_TYPE_AVAIL_TEAMS_SAVE       , 'Edited teams availability'),
         (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE, 'Edited adjudicators availability'),
         (ACTION_TYPE_AVAIL_VENUES_SAVE      , 'Edited venue availability'),
@@ -1507,6 +1509,7 @@ class ActionLog(models.Model):
         ACTION_TYPE_DRAW_RELEASE           : ('round',),
         ACTION_TYPE_DRAW_UNRELEASE         : ('round',),
         ACTION_TYPE_DEBATE_IMPORTANCE_EDIT : ('debate',),
+        ACTION_TYPE_ROUND_START_TIME_SET   : ('round',),
         ACTION_TYPE_MOTION_EDIT            : ('motion',),
         ACTION_TYPE_MOTIONS_RELEASE        : ('round',),
         ACTION_TYPE_MOTIONS_UNRELEASE      : ('round',),
