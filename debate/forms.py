@@ -430,7 +430,7 @@ class DebateResultFormSet(object):
 
 ### Feedback forms
 
-def make_feedback_form_class_for_adj(adjudicator, submission_fields, released_only=False):
+def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, released_only=False):
     """adjudicator is an Adjudicator.
     submission_fields is a dict of fields for Submission.
     released_only is a boolean."""
@@ -536,7 +536,7 @@ def make_feedback_form_class_for_adj(adjudicator, submission_fields, released_on
 
     return FeedbackForm
 
-def make_feedback_form_class_for_source(source, submission_fields, released_only=False, include_panellists=True):
+def make_feedback_form_class_for_public(source, submission_fields, released_only=False, include_panellists=True):
     """source is an Adjudicator or Team.
     submission_fields is a dict of fields for Submission.
     released_only is a boolean."""
