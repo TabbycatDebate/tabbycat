@@ -9,7 +9,7 @@ from add_ballot_set import add_ballot_set, SUBMITTER_TYPE_MAP
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("round", type=int, help="Round to reset")
+parser.add_argument("round", type=int, help="Round to generate for.")
 parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=SUBMITTER_TYPE_MAP.keys(), default="tabroom")
 parser.add_argument("-u", "--user", type=str, help="User ID", default="original")
 parser.add_argument("--clean", help="Remove all ballots for the draw first", action="store_true")

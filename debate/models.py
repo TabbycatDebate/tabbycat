@@ -439,8 +439,7 @@ class Adjudicator(Person):
             feedback_score = 0
             weight = 0
 
-        return self.test_score * (1 - weight) + (weight *
-    feedback_score)
+        return self.test_score * (1 - weight) + (weight * feedback_score)
 
 
     @property
@@ -451,6 +450,7 @@ class Adjudicator(Person):
                     models.Q(source_team__debate__round=round)
             a = AdjudicatorFeedback.objects.filter(
                 adjudicator = self,
+                confirmed = True
             ).filter(q).aggregate(avg=models.Avg('score'))['avg']
             r.append(a)
         return r
@@ -458,6 +458,7 @@ class Adjudicator(Person):
     def _feedback_score(self):
         return AdjudicatorFeedback.objects.filter(
             adjudicator = self,
+            confirmed = True
         ).aggregate(avg=models.Avg('score'))['avg']
 
     @property
@@ -899,19 +900,20 @@ class Debate(models.Model):
 
     @property
     def identical_ballots_dict(self):
-        """Returns a dict, keys are version numbers of BallotSubmissions,
+        """Returns a dict, keys are BallotSubmissions,
         values are lists of version numbers of BallotSubmissions that are
         identical to the key's BallotSubmission. Excludes discarded
         ballots (always)."""
         ballots = self.ballotsubmission_set_by_version_except_discarded
-        result = dict((b.version, list()) for b in ballots)
+        result = dict((b, list()) for b in ballots)
         for ballot1 in ballots:
             # Save a bit of time by avoiding comparisons already done.
             # This relies on ballots being ordered by version.
             for ballot2 in ballots.filter(version__gt=ballot1.version):
+                print ballot1.version, ballot2.version
                 if ballot1.is_identical(ballot2):
-                    result[ballot1.version].append(ballot2.version)
-                    result[ballot2.version].append(ballot1.version)
+                    result[ballot1].append(ballot2.version)
+                    result[ballot2].append(ballot1.version)
         for l in result.itervalues():
             l.sort()
         return result
@@ -1200,6 +1202,11 @@ class AdjudicatorFeedback(Submission):
         if self.round:
             return self.round.feedback_weight
         return 1
+
+    def save(self, *args, **kwargs):
+        if not (self.source_adjudicator or self.source_team):
+            raise ValidationError("Either the source adjudicator or source team wasn't specified.")
+        super(AdjudicatorFeedback, self).save(*args, **kwargs)
 
 
 class AdjudicatorAllocation(object):
