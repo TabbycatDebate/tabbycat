@@ -2,8 +2,11 @@ local_settings.py
 staticfiles/
 migrations
 migrations-*/
-adam2014/
 .sass-cache/
+
+# Tournaments to ignore
+adam2014/
+preaustrals2014/
 
 env/
 venv
