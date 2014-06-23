@@ -900,19 +900,20 @@ class Debate(models.Model):
 
     @property
     def identical_ballots_dict(self):
-        """Returns a dict, keys are version numbers of BallotSubmissions,
+        """Returns a dict, keys are BallotSubmissions,
         values are lists of version numbers of BallotSubmissions that are
         identical to the key's BallotSubmission. Excludes discarded
         ballots (always)."""
         ballots = self.ballotsubmission_set_by_version_except_discarded
-        result = dict((b.version, list()) for b in ballots)
+        result = dict((b, list()) for b in ballots)
         for ballot1 in ballots:
             # Save a bit of time by avoiding comparisons already done.
             # This relies on ballots being ordered by version.
             for ballot2 in ballots.filter(version__gt=ballot1.version):
+                print ballot1.version, ballot2.version
                 if ballot1.is_identical(ballot2):
-                    result[ballot1.version].append(ballot2.version)
-                    result[ballot2.version].append(ballot1.version)
+                    result[ballot1].append(ballot2.version)
+                    result[ballot2].append(ballot1.version)
         for l in result.itervalues():
             l.sort()
         return result

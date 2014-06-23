@@ -46,6 +46,9 @@
                     {% if other_ballots.confirmed %}
                         (confirmed)
                     {% endif %}
+                    {% if other_ballots.identical_ballot_versions %}
+                        <em>(identical to version{{other_ballots.identical_ballot_versions.pluralize}} {{ other_ballots.identical_ballot_versions|join:", " }})</em>
+                    {% endif %}
                 {% if other_ballots != ballots %}
                     </a>
                 {% endif %}

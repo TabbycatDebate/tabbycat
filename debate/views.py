@@ -916,6 +916,11 @@ def edit_ballots(request, t, ballots_id):
         all_ballot_sets = debate.ballotsubmission_set.order_by('version')
         disable_confirm = False
 
+    identical_ballots_dict = debate.identical_ballots_dict
+    for b in all_ballot_sets:
+        if b in identical_ballots_dict:
+            b.identical_ballot_versions = identical_ballots_dict[b]
+
     if request.method == 'POST':
         form = forms.BallotSetForm(ballots, request.POST)
 
