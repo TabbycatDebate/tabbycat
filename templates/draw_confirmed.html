@@ -141,7 +141,7 @@
                         Start At
                     </label>
                     <div class="col-sm-6">
-                        <input text="{{ round.starts_at }}" name="start_time" type="datetime" placeholder="0:00" class="form-control"></input>
+                        <input placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time" placeholder="" class="form-control"></input>
                     </div>
                 </div>
                 <div class="form-group">
