@@ -33,7 +33,7 @@
                     Draw for R{{ current_round }}
                 </a></li>
                 {% endif %}
-                {% if public_results > 0 and current_round.prev and not current_round.prev.silent%}
+                {% if public_results > 0 and current_round.prev %}
                 <li><a class="public-results-nav" href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% for r in tournament.rounds.all %}
