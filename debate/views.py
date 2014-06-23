@@ -477,7 +477,10 @@ def feedback_progress(request, t):
     feedback = AdjudicatorFeedback.objects.all()
     adjudicators = Adjudicator.objects.all()
     teams = Team.objects.all()
-    current_round = request.tournament.current_round.seq
+
+    # Teams only owe feedback on non silent rounds
+    rounds_owed = request.tournament.rounds.filter(silent=False,
+        draw_status=request.tournament.current_round.STATUS_RELEASED).count()
 
     for adj in adjudicators:
         adj.total_ballots = 0
@@ -504,8 +507,8 @@ def feedback_progress(request, t):
 
     for team in teams:
         team.submitted_ballots = max(feedback.filter(source_team__team = team).count(), 0)
-        team.owed_ballots = max((current_round - team.submitted_ballots), 0)
-        team.coverage = min(calculate_coverage(team.submitted_ballots, current_round), 100)
+        team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
+        team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
 
     return r2r(request, 'wall_of_shame.html', dict(teams=teams, adjudicators=adjudicators))
 
