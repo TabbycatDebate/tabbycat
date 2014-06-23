@@ -39,16 +39,17 @@
         (Debates Released)
     {% endif %}
     </small>
+    {% if round.starts_at %}
+        <small>debates start at {{ round.starts_at }}</small>
+    {% endif %}
 {% endblock %}
 {% block page-title %}Draw for Round {{ round }}
     {% if round.draw_status = round.STATUS_CONFIRMED %}
         (Debates Confirmed)
     {% elif round.draw_status = round.STATUS_RELEASED %}
         (Debates Released)
-    {% endif %}{% endblock %}
-    {% if round.starts_at %}
-        <small>debates start at {{ round.starts_at }}</small>
     {% endif %}
+{% endblock %}
 {% block body-class %}draw{% endblock %}
 
 {% block header %}
@@ -153,13 +154,6 @@
                         <button type="submit" value="Save" class="form-control btn btn-success">Save</button>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}" class="col-sm-4 control-label"></label>
-                    <div class="col-sm-6">
-                        <button type="button" value="Cancel" class="form-control btn btn-danger">Cancel</button>
-                    </div>
-                </div>
-
             </form>
         </div>
     </div>
