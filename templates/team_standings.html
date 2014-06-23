@@ -47,8 +47,7 @@
     </thead>
     <tbody>
     {% for team in teams %}
-    <tr class="
-        {% if not team.results_in %}danger{% endif%}">
+    <tr class="{% if not team.results_in %}danger{% endif %}">
         <td>{{ team.rank }}</td>
         {% if show_emoji > 0 %}
             <td class="team-emoji team-{{ team.id }}"></td>
