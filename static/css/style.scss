@@ -170,14 +170,73 @@ input.error, select.error, .error input {
     padding: 0;
 }
 
-// Tables
+// Tables (Universal)
 
 .col-md-12.table-container {
     padding-left: 0;
     padding-right: 0;
 }
-table.dataTable {
+
+@media (max-width: $screen-xs-max) {
+    .page-header {
+        margin-top: 0px;
+    }
+    #header-options {
+        min-height: 82px
+    }
+}
+@media (max-width: $screen-sm-max) {
+    .col-md-12.table-container {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+}
+
+#wrap table.table, .FixedHeader_Cloned .table  {
     margin-top: 0px !important; // for the fixed header
+
+    tbody > tr > td,
+    thead > tr > th  {
+        // fix for header and icons
+        //min-width: 35px; // minimum widths so icons are jammed
+        padding: 8px;
+    }
+    // Phones
+    @media (max-width: $screen-xs-max) {
+        tbody > tr > td,
+        thead > tr > th  {
+            //min-width: auto;
+            padding: 4px;
+        }
+        .team-emoji, .th-emoji {
+            display: none;
+        }
+    }
+    .team-emoji, .th-emoji {
+        // max-width: 28px;
+        text-align: center;
+        padding: 4px 0 0 0;
+        img {
+            width: 28px;
+            height: 28px;
+        }
+    }
+    .th-emoji {
+        img {
+            max-height: 10px;
+            visibility: hidden; /* space to get the size right pre JS-resize */
+        }
+    }
+    .opponent-emoji {
+        // min-width: 60px;
+        line-height: 18px;
+        text-align: center;
+        // padding: 4px 0 4px 0;
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
 
     thead {
         background-color: #FFF; // hovering opacity
@@ -199,53 +258,27 @@ table.dataTable {
         .sorting_desc_disabled {
             background: url('../images/sort_desc_disabled.png') no-repeat center right;
         }
-        .sorting,
-        .sorting_asc,
-        .sorting_desc,
-        .sorting_asc_disabled,
-        .sorting_desc_disabled {
+        .sorting, .sorting_asc, .sorting_desc, .sorting_asc_disabled, .sorting_desc_disabled {
             cursor: pointer;
         }
     }
-    thead > tr > td, thead > tr > th  {
-        // fix for header and icons
-        min-width: 40px; // minimum widths so icons are jammed
-        padding-right: 4px;
-        padding-left: 8px;
-    }
+
     th:active {
         outline: none;
     }
 
-    .adj-chair {
-        text-decoration: underline;
-    }
-    .adj-trainee {
-        font-style: italic;
-    }
-    .team-emoji {
-        max-width: 28px;
-        img {
-            width: 28px;
-            height: 28px;
-        }
-        text-align: center;
-        padding: 4px 0 4px 0;
-
-    }
-    .opponent-emoji {
-        min-width: 60px;
-        line-height: 20px;
-        text-align: center;
-        padding: 4px 0 4px 0;
-        img {
-            width: 20px;
-            height: 20px;
-        }
-    }
 }
 .modal-lg {
     width: 90%;
+}
+
+// Tables - Specific
+
+.adj-chair {
+    text-decoration: underline;
+}
+.adj-trainee {
+    font-style: italic;
 }
 
 
@@ -270,38 +303,6 @@ table.dataTable {
 .draw-with-standings .first-in-bracket {
     border-top: 3px solid chocolate;
 }
-
-// Mobile Tables
-
-
-@media (max-width: $screen-xs-max) {
-    .page-header {
-        margin-top: 0px;
-    }
-    #header-options {
-        min-height: 82px
-    }
-    .col-md-12.table-container {
-        margin-left: -15px;
-        margin-right: -15px;
-    }
-    table.dataTable.table thead > tr > td,
-    table.dataTable.table thead > tr > th  {
-        // fix for header and icons
-        min-width: auto; // minimum widths so icons are jammed
-        padding-right: 0px !important;
-        padding-left: 4px;
-    }
-    .table > tbody > tr > th,
-    .table > tbody > tr > td {
-        padding: 4px 4px 6px 4px;
-    }
-    .table .hidden-sm {
-        display: none !important;
-        background-color: red;
-    }
-}
-
 
 // Editing the Draw
 

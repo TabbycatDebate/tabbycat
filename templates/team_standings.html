@@ -30,11 +30,11 @@
         <tr>
             <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
             {% if show_emoji > 0 %}
-                <th></th>
+                <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
             <th>Team</th>
             {% if show_institutions > 0 %}
-                <th>Institution</th>
+                <th>Inst<span class="hidden-xs">itution</span></th>
             {% endif %}
             {% for round in rounds %}
             <th>R{{ round }}</th>
@@ -47,8 +47,7 @@
     </thead>
     <tbody>
     {% for team in teams %}
-    <tr class="
-        {% if not team.results_in %}danger{% endif%}">
+    <tr class="{% if not team.results_in %}danger{% endif %}">
         <td>{{ team.rank }}</td>
         {% if show_emoji > 0 %}
             <td class="team-emoji team-{{ team.id }}"></td>
@@ -57,7 +56,7 @@
             <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">{{ team.short_name }}</span>
         </td>
         {% if show_institutions > 0 %}
-            <td>{{ team.institution }}</td>
+            <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
         {% endif %}
         {% for score in team.scores %}
             <td>

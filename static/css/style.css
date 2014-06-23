@@ -758,56 +758,72 @@ input.error, select.error, .error input {
   padding-left: 0;
   padding-right: 0; }
 
-table.dataTable {
+@media (max-width: 767px) {
+  .page-header {
+    margin-top: 0px; }
+
+  #header-options {
+    min-height: 82px; } }
+@media (max-width: 991px) {
+  .col-md-12.table-container {
+    margin-left: -15px;
+    margin-right: -15px; } }
+#wrap table.table, .FixedHeader_Cloned .table {
   margin-top: 0px !important; }
-  table.dataTable thead {
-    background-color: #FFF; }
-    table.dataTable thead .sorting {
-      background: url("../images/sort_both.png") no-repeat center right; }
-    table.dataTable thead .sorting_asc {
-      background: url("../images/sort_asc.png") no-repeat center right;
-      color: #000; }
-    table.dataTable thead .sorting_desc {
-      background: url("../images/sort_desc.png") no-repeat center right;
-      color: #000; }
-    table.dataTable thead .sorting_asc_disabled {
-      background: url("../images/sort_asc_disabled.png") no-repeat center right; }
-    table.dataTable thead .sorting_desc_disabled {
-      background: url("../images/sort_desc_disabled.png") no-repeat center right; }
-    table.dataTable thead .sorting,
-    table.dataTable thead .sorting_asc,
-    table.dataTable thead .sorting_desc,
-    table.dataTable thead .sorting_asc_disabled,
-    table.dataTable thead .sorting_desc_disabled {
-      cursor: pointer; }
-  table.dataTable thead > tr > td, table.dataTable thead > tr > th {
-    min-width: 40px;
-    padding-right: 4px;
-    padding-left: 8px; }
-  table.dataTable th:active {
-    outline: none; }
-  table.dataTable .adj-chair {
-    text-decoration: underline; }
-  table.dataTable .adj-trainee {
-    font-style: italic; }
-  table.dataTable .team-emoji {
-    max-width: 28px;
+  #wrap table.table tbody > tr > td,
+  #wrap table.table thead > tr > th, .FixedHeader_Cloned .table tbody > tr > td,
+  .FixedHeader_Cloned .table thead > tr > th {
+    padding: 8px; }
+  @media (max-width: 767px) {
+    #wrap table.table tbody > tr > td,
+    #wrap table.table thead > tr > th, .FixedHeader_Cloned .table tbody > tr > td,
+    .FixedHeader_Cloned .table thead > tr > th {
+      padding: 4px; }
+    #wrap table.table .team-emoji, #wrap table.table .th-emoji, .FixedHeader_Cloned .table .team-emoji, .FixedHeader_Cloned .table .th-emoji {
+      display: none; } }
+  #wrap table.table .team-emoji, #wrap table.table .th-emoji, .FixedHeader_Cloned .table .team-emoji, .FixedHeader_Cloned .table .th-emoji {
     text-align: center;
-    padding: 4px 0 4px 0; }
-    table.dataTable .team-emoji img {
+    padding: 4px 0 0 0; }
+    #wrap table.table .team-emoji img, #wrap table.table .th-emoji img, .FixedHeader_Cloned .table .team-emoji img, .FixedHeader_Cloned .table .th-emoji img {
       width: 28px;
       height: 28px; }
-  table.dataTable .opponent-emoji {
-    min-width: 60px;
-    line-height: 20px;
-    text-align: center;
-    padding: 4px 0 4px 0; }
-    table.dataTable .opponent-emoji img {
+  #wrap table.table .th-emoji img, .FixedHeader_Cloned .table .th-emoji img {
+    max-height: 10px;
+    visibility: hidden;
+    /* space to get the size right pre JS-resize */ }
+  #wrap table.table .opponent-emoji, .FixedHeader_Cloned .table .opponent-emoji {
+    line-height: 18px;
+    text-align: center; }
+    #wrap table.table .opponent-emoji img, .FixedHeader_Cloned .table .opponent-emoji img {
       width: 20px;
       height: 20px; }
+  #wrap table.table thead, .FixedHeader_Cloned .table thead {
+    background-color: #FFF; }
+    #wrap table.table thead .sorting, .FixedHeader_Cloned .table thead .sorting {
+      background: url("../images/sort_both.png") no-repeat center right; }
+    #wrap table.table thead .sorting_asc, .FixedHeader_Cloned .table thead .sorting_asc {
+      background: url("../images/sort_asc.png") no-repeat center right;
+      color: #000; }
+    #wrap table.table thead .sorting_desc, .FixedHeader_Cloned .table thead .sorting_desc {
+      background: url("../images/sort_desc.png") no-repeat center right;
+      color: #000; }
+    #wrap table.table thead .sorting_asc_disabled, .FixedHeader_Cloned .table thead .sorting_asc_disabled {
+      background: url("../images/sort_asc_disabled.png") no-repeat center right; }
+    #wrap table.table thead .sorting_desc_disabled, .FixedHeader_Cloned .table thead .sorting_desc_disabled {
+      background: url("../images/sort_desc_disabled.png") no-repeat center right; }
+    #wrap table.table thead .sorting, #wrap table.table thead .sorting_asc, #wrap table.table thead .sorting_desc, #wrap table.table thead .sorting_asc_disabled, #wrap table.table thead .sorting_desc_disabled, .FixedHeader_Cloned .table thead .sorting, .FixedHeader_Cloned .table thead .sorting_asc, .FixedHeader_Cloned .table thead .sorting_desc, .FixedHeader_Cloned .table thead .sorting_asc_disabled, .FixedHeader_Cloned .table thead .sorting_desc_disabled {
+      cursor: pointer; }
+  #wrap table.table th:active, .FixedHeader_Cloned .table th:active {
+    outline: none; }
 
 .modal-lg {
   width: 90%; }
+
+.adj-chair {
+  text-decoration: underline; }
+
+.adj-trainee {
+  font-style: italic; }
 
 #draw.dataTable .adj-names ul {
   padding-left: 0px;
@@ -822,30 +838,6 @@ table.dataTable {
 .draw-with-standings .first-in-bracket {
   border-top: 3px solid chocolate; }
 
-@media (max-width: 767px) {
-  .page-header {
-    margin-top: 0px; }
-
-  #header-options {
-    min-height: 82px; }
-
-  .col-md-12.table-container {
-    margin-left: -15px;
-    margin-right: -15px; }
-
-  table.dataTable.table thead > tr > td,
-  table.dataTable.table thead > tr > th {
-    min-width: auto;
-    padding-right: 0px !important;
-    padding-left: 4px; }
-
-  .table > tbody > tr > th,
-  .table > tbody > tr > td {
-    padding: 4px 4px 6px 4px; }
-
-  .table .hidden-sm {
-    display: none !important;
-    background-color: red; } }
 .edit-venues table, .edit-adjs table {
   border-collapse: separate; }
 .edit-venues #container, .edit-adjs #container {
