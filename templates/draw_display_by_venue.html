@@ -42,14 +42,14 @@
             <tr>
                 <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
                 {% if show_emoji > 0 %}
-                    <th></th>
+                    <th class="hidden-sm"></th>
                 {% endif %}
-                <th>Affirmative</th>
+                <th>Aff<span class="hidden-sm">irmative</span></th>
                 {% if show_emoji > 0 %}
-                    <th></th>
+                    <th class="hidden-sm"></th>
                 {% endif %}
-                <th>Negative</th>
-                <th>Adjudicators</th>
+                <th>Neg<span class="hidden-sm">ative</span></th>
+                <th>Adj<span class="hidden-sm">udicator</span>s</th>
             </tr>
         </thead>
         <tbody>
@@ -59,7 +59,7 @@
                 {{ debate.venue_splitname }}
             </td>
             {% if show_emoji > 0 %}
-                <td class="team-emoji team-{{ debate.aff_team.id }}"></td>
+                <td class="team-emoji team-{{ debate.aff_team.id }} hidden-sm"></td>
             {% endif %}
             <td class="team-name">
                 <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
@@ -71,7 +71,7 @@
 
             </td>
             {% if show_emoji > 0 %}
-                <td class="team-emoji team-{{ debate.neg_team.id }}"></td>
+                <td class="team-emoji team-{{ debate.neg_team.id }} hidden-sm "></td>
             {% endif %}
             <td title="{{ debate.neg_team.speakers|join:', ' }}"  class="team-name">
                 <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">

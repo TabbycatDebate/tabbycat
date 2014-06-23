@@ -26,9 +26,9 @@
         <tr>
             <th>Ballots</th>
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
-            <th>Affirmative</th>
-            <th>Negative</th>
-            <th>Adjudicators</th>
+            <th>Aff<span class="hidden-xs">irmative</span></th>
+            <th>Neg<span class="hidden-xs">ative</span></th>
+            <th>Adj<span class="hidden-xs">udicator</span>s</th>
         </tr>
     </thead>
     <tbody>
@@ -49,7 +49,7 @@
                 {% endif %}
             </td>
             <td>
-                {{ debate.venue.name }}
+                {{ debate.venue_splitname }}
             </td>
             <td>
                 <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}">

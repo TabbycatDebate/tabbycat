@@ -660,7 +660,8 @@ a.text-danger:hover {
 
 #header-options {
   min-height: 34px;
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  margin-right: 0px; }
   #header-options #dataTable_filter, #header-options .btn-group {
     margin-right: 20px; }
 
@@ -692,12 +693,14 @@ html, body {
   min-height: 100%;
   height: auto;
   margin: 0 auto -100px;
-  padding: 0 0 150px; }
+  padding: 0 0 115px; }
+  #wrap #container {
+    margin-bottom: 20px; }
 
 #footer {
-  height: 150px; }
+  height: 115px; }
   #footer .navbar {
-    height: 150px;
+    height: 115px;
     margin-bottom: 0; }
   #footer .navbar-brand {
     font-size: 14px;
@@ -806,8 +809,6 @@ table.dataTable {
 .modal-lg {
   width: 90%; }
 
-#draw.dataTable td {
-  padding-bottom: 0; }
 #draw.dataTable .adj-names ul {
   padding-left: 0px;
   margin-left: 0;
@@ -832,11 +833,19 @@ table.dataTable {
     margin-left: -15px;
     margin-right: -15px; }
 
-  .table > thead > tr > th, .table > thead > tr > td,
-  .table > tbody > tr > th, .table > tbody > tr > td,
-  .table > tfoot > tr > th, .table > tfoot > tr > td {
-    padding-left: 4px;
-    padding-right: 4px; } }
+  table.dataTable.table thead > tr > td,
+  table.dataTable.table thead > tr > th {
+    min-width: auto;
+    padding-right: 0px !important;
+    padding-left: 4px; }
+
+  .table > tbody > tr > th,
+  .table > tbody > tr > td {
+    padding: 4px 4px 6px 4px; }
+
+  .table .hidden-sm {
+    display: none !important;
+    background-color: red; } }
 .edit-venues table, .edit-adjs table {
   border-collapse: separate; }
 .edit-venues #container, .edit-adjs #container {

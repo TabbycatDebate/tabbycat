@@ -30,24 +30,24 @@
                 {% endif %}
                 {% if public_draw > 0 %}
                 <li><a class="public-draw-nav" href="{% tournament_url public_draw %}">
-                    Draw for Round {{ current_round }}
-                </a></li>
-                {% endif %}
-                {% if public_motions > 0 %}
-                <li><a class="public-motions-nav" href="{% tournament_url public_motions %}">
-                    Motions
+                    Draw for R{{ current_round }}
                 </a></li>
                 {% endif %}
                 {% if public_results > 0 and current_round.prev %}
                 <li><a class="public-results-nav" href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                    {% for r in tournament.rounds.all %}
-                        {% if r.seq < current_round.seq %}
-                            <li><a href="{% round_url public_results r %}">Round {{ r }}</a></li>
-                        {% endif %}
-                    {% endfor %}
+                        {% for r in tournament.rounds.all %}
+                            {% if r.seq < current_round.seq %}
+                                <li><a href="{% round_url public_results r %}">Round {{ r }}</a></li>
+                            {% endif %}
+                        {% endfor %}
                     </ul>
                 </li>
+                {% endif %}
+                {% if public_motions > 0 %}
+                <li><a class="public-motions-nav" href="{% tournament_url public_motions %}">
+                    Motions
+                </a></li>
                 {% endif %}
                 {% if public_team_standings > 0 and current_round.prev %}
                 <li><a class="public-team-standings-nav" href="{% tournament_url public_team_standings %}">
@@ -61,7 +61,7 @@
                 {% endif %}
                 {% if feedback_progress > 0 %}
                 <li><a class="public-feedback-nav" href="{% tournament_url public_feedback_progress %}">
-                    Feedback Progress
+                    Feedbacks
                 </a></li>
                 {% endif %}
                 {% if public_ballots > 0 %}
@@ -74,9 +74,6 @@
                     Enter Feedback
                 </a></li>
                 {% endif %}
-            </ul>
-            <ul id="nav" class="nav navbar-nav navbar-right">
-                <li id="nav-logout"><a href="/accounts/login/">Log in</a></li>
             </ul>
         </div>
     </div>

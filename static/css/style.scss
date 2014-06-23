@@ -46,6 +46,7 @@
 #header-options {
     min-height: 34px; // Spacer pre-form relocation via JS
     margin-bottom: 20px;
+    margin-right: 0px;
 
     #dataTable_filter, .btn-group {
         margin-right: 20px;
@@ -86,12 +87,15 @@ html, body {
   min-height: 100%;
   height: auto;
   margin: 0 auto -100px;
-  padding: 0 0 150px;
+  padding: 0 0 115px;
+  #container {
+    margin-bottom: 20px;
+  }
 }
 #footer {
-  height: 150px;
+  height: 115px;
     .navbar {
-        height: 150px;
+        height: 115px;
         margin-bottom: 0;
     }
     .navbar-brand {
@@ -248,9 +252,6 @@ table.dataTable {
 // Draw displays
 
 #draw.dataTable {
-    td {
-        padding-bottom: 0;
-    }
     .adj-names {
         ul {
             padding-left: 0px;
@@ -284,14 +285,22 @@ table.dataTable {
         margin-left: -15px;
         margin-right: -15px;
     }
-    .table > thead > tr > th, .table > thead > tr > td,
-    .table > tbody > tr > th, .table > tbody > tr > td,
-    .table > tfoot > tr > th, .table > tfoot > tr > td {
+    table.dataTable.table thead > tr > td,
+    table.dataTable.table thead > tr > th  {
+        // fix for header and icons
+        min-width: auto; // minimum widths so icons are jammed
+        padding-right: 0px !important;
         padding-left: 4px;
-        padding-right: 4px;
+    }
+    .table > tbody > tr > th,
+    .table > tbody > tr > td {
+        padding: 4px 4px 6px 4px;
+    }
+    .table .hidden-sm {
+        display: none !important;
+        background-color: red;
     }
 }
-
 
 
 // Editing the Draw

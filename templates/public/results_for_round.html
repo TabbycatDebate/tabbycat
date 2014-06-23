@@ -30,11 +30,11 @@
     <thead>
         <tr>
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
-            <th>Affirmative</th>
-            <th>Negative</th>
-            <th>Adjudicators</th>
+            <th>Aff<span class="hidden-xs">irmative</span></th>
+            <th>Neg<span class="hidden-xs">ative</span></th>
+            <th>Adj<span class="hidden-xs">udicator</span>s</th>
             {% if show_motions_column %}
-                <th>Motion</th>
+                <th>M<span class="hidden-xs">otion</span></th>
             {% endif %}
         </tr>
     </thead>
@@ -43,7 +43,7 @@
 
     {% for debate in draw %}
         <tr>
-            <td>{{ debate.venue.name }}</td>
+            <td>{{ debate.venue_splitname }}</td>
 
             <td>
                 {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
