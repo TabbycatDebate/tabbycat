@@ -15,25 +15,21 @@
 
 // For the collapsedmdouble menu
 .navbar-nav {
-    @media (max-width: 768px) {
+    @media (max-width: $screen-xs-max) {
         &.navbar-left {
             float: left;
-            width: 30%;
+            width: 40%;
         }
         &.navbar-right {
             float: right;
-            width: 70%;
+            width: 60%;
         }
         .dropdown-menu
         .dropdown.open ul {
-            overflow: hidden;
             clear: both;
         }
         .dropdown.open li {
-            display: inline-block;
-            width: 33%;
-            float: left;
-            overflow: hidden;
+            display: block;
         }
         .dropdown.open li a {
             padding-left: 15px;
@@ -43,7 +39,6 @@
             display: none;
         }
         .dropdown.open .dropdown-menu {
-            overflow: hidden;
         }
     }
 }
@@ -56,15 +51,7 @@
         margin-right: 20px;
     }
 }
-#footer {
-    .navbar {
-        margin-bottom: 0;
-    }
-    .navbar-brand {
-        font-size: 14px;
-        margin-bottom: 0;
-    }
-}
+
 
 // Navigation Highlights
 
@@ -98,11 +85,43 @@ html, body {
 #wrap {
   min-height: 100%;
   height: auto;
-  margin: 0 auto -50px;
-  padding: 0 0 100px;
+  margin: 0 auto -100px;
+  padding: 0 0 150px;
 }
 #footer {
-  height: 50px;
+  height: 150px;
+    .navbar {
+        height: 150px;
+        margin-bottom: 0;
+    }
+    .navbar-brand {
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+}
+@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+    #wrap {
+      margin: 0 auto -100px;
+      padding: 0 0 100px;
+    }
+    #footer {
+      height: 100px;
+        .navbar {
+            height: 100px;
+        }
+    }
+}
+@media (min-width: $screen-md-min) {
+    #wrap {
+      margin: 0 auto -50px;
+      padding: 0 0 50px;
+    }
+    #footer {
+      height: 50px;
+        .navbar {
+            height: 50px;
+        }
+    }
 }
 
 // Universal Style overrides
@@ -149,6 +168,10 @@ input.error, select.error, .error input {
 
 // Tables
 
+.col-md-12.table-container {
+    padding-left: 0;
+    padding-right: 0;
+}
 table.dataTable {
     margin-top: 0px !important; // for the fixed header
 
@@ -246,6 +269,30 @@ table.dataTable {
 .draw-with-standings .first-in-bracket {
     border-top: 3px solid chocolate;
 }
+
+// Mobile Tables
+
+
+@media (max-width: $screen-xs-max) {
+    .page-header {
+        margin-top: 0px;
+    }
+    #header-options {
+        min-height: 82px
+    }
+    .col-md-12.table-container {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+    .table > thead > tr > th, .table > thead > tr > td,
+    .table > tbody > tr > th, .table > tbody > tr > td,
+    .table > tfoot > tr > th, .table > tfoot > tr > td {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+}
+
+
 
 // Editing the Draw
 
