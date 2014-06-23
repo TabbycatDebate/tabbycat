@@ -2,7 +2,16 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block extra-head %}{% endblock extra-head %}
+{% block extra-head %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready( function() {
+            var table = $("#dataTable").dataTable( {
+                "aaSorting": [[0, 'desc']],
+            });
+            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+        } );
+    </script>
+{% endblock extra-head %}
 
 {% block head-title %}Motions{% endblock %}
 {% block page-title %}Motions{% endblock %}
@@ -13,20 +22,30 @@
 
 {% block content %}
 
-{% for round in rounds %}
-<p><strong>Round {{ round.seq }}:</strong></p>
 
-<ul>
-    {% for motion in round.motion_set.all %}
-    <li>{{ motion.text }}</li>
+<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+    <thead>
+    <tr>
+        <th><span data-toggle="tooltip" title="Round">R</span></th>
+        <th>Motion</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for round in rounds %}
+        {% for motion in round.motion_set.all %}
+        <tr>
+            <td>R{{ round.seq }}</td>
+            <td>{{ motion.text }}</td>
+        </tr>
+        {% endfor %}
+        {% empty %}
+            <tr>
+                <td><img src="{% static 'emoji/img/unamused.png' %}" width="24" height="24" />
+</td>
+                <td>There haven't been any motions released yet.</td>
+            </tr>
     {% endfor %}
-</ul>
-
-{% empty %}
-<p class="lead">There haven't been any motions released yet.
-<img src="{% static 'emoji/img/unamused.png' %}" width="24" height="24" />
-</p>
-
-{% endfor %}
+    </tbody>
+</table>
 
 {% endblock content %}
