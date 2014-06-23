@@ -38,6 +38,8 @@ SETTINGS = OrderedDict([
     ('public_team_standings',       (_bool, 'Public interface to see team standings DURING tournament',    False)),
     ('public_ballots',              (_bool, 'Public interface to add ballots',                             False)),
     ('public_feedback',             (_bool, 'Public interface to add feedback',                            False)),
+    #('public_use_password',         (_bool, 'Require password to submit public feedback and ballots',      False)),
+    #('public_password',             (str,   'Value of the password for public submissions',                "")),
     ('panellist_feedback_enabled',  (_bool, 'Allow public feedback to be submitted by panellists',         True)),
     ('feedback_progress',           (_bool, 'Public interface to view unsubmitted ballots',                False)),
     ('tab_released',                (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament',         False)),
@@ -83,6 +85,8 @@ def make_config_form(tournament, data=None):
             return forms.IntegerField(help_text=help)
         elif t is float:
             return forms.FloatField(help_text=help)
+        elif t is str:
+            return forms.CharField(help_text=help)
         elif t is _bool:
             return forms.BooleanField(help_text=help, widget=Select(choices=BOOL_CHOICES), required=False)
         else:

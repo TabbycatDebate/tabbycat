@@ -55,7 +55,6 @@
 <div class="btn-group">
     <a class="btn btn-default form-control" href="{% round_url draw_venues_edit %}">Edit Venues</a>
     <a class="btn btn-default form-control" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
-    <a class="btn btn-default form-control" href="{% round_url motions_edit %}">Edit Motions</a>
     <a class="btn btn-default form-control" href="{% round_url draw_with_standings %}">Display Details</a>
     <a class="btn btn-default form-control" href="{% round_url draw_display_by_venue %}">Display by Venue</a>
     <a class="btn btn-default form-control" href="{% round_url draw_display_by_team %}">Display by Team</a>
@@ -66,6 +65,11 @@
     {% endif %}
     <a class="btn btn-default form-control" data-toggle="modal" data-target="#start-time-form">Change Start Time</a>
 </div>
+    {% if round.motion_set.all.count == 0 %}
+    <br><br><div class="alert alert-danger">
+        There are currently no motions entered, which means results cannot be entered!. <a href="{% round_url motions_edit current_round %}">Edit the motions</a> for this round.
+    </div>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
