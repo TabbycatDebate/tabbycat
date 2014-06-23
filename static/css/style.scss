@@ -184,6 +184,8 @@ input.error, select.error, .error input {
     #header-options {
         min-height: 82px
     }
+}
+@media (max-width: $screen-sm-max) {
     .col-md-12.table-container {
         margin-left: -15px;
         margin-right: -15px;
@@ -196,7 +198,7 @@ input.error, select.error, .error input {
     tbody > tr > td,
     thead > tr > th  {
         // fix for header and icons
-        min-width: 35px; // minimum widths so icons are jammed
+        //min-width: 35px; // minimum widths so icons are jammed
         padding: 8px;
     }
     // Phones
@@ -205,6 +207,9 @@ input.error, select.error, .error input {
         thead > tr > th  {
             //min-width: auto;
             padding: 4px;
+        }
+        .team-emoji, .th-emoji {
+            display: none;
         }
     }
     .team-emoji, .th-emoji {
