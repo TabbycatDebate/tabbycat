@@ -24,7 +24,7 @@
 {% block head-title %}
     Draw for Round {{ round }}
     {% if round.starts_at %}
-        (starts at {{ round.starts_at }})
+        <small>debates start at {{ round.starts_at }}</small>
     {% endif %}
 {% endblock %}
 {% block page-title %}Draw for Round {{ round }}{% endblock %}

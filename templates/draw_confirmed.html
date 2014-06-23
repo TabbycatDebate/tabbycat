@@ -47,7 +47,7 @@
         (Debates Released)
     {% endif %}{% endblock %}
     {% if round.starts_at %}
-        (starts at {{ round.starts_at }})
+        <small>debates start at {{ round.starts_at }}</small>
     {% endif %}
 {% block body-class %}draw{% endblock %}
 
@@ -135,7 +135,6 @@
         </div>
         <div class="modal-body">
             <form id="startTimeForm" method="POST" action="{% round_url set_round_start_time %}" class="form-horizontal">
-
                 <div class="form-group">
                     <label for="{{ field.id_for_label }}" class="col-sm-4 control-label">
                         Start At
