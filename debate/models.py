@@ -439,8 +439,7 @@ class Adjudicator(Person):
             feedback_score = 0
             weight = 0
 
-        return self.test_score * (1 - weight) + (weight *
-    feedback_score)
+        return self.test_score * (1 - weight) + (weight * feedback_score)
 
 
     @property
@@ -451,6 +450,7 @@ class Adjudicator(Person):
                     models.Q(source_team__debate__round=round)
             a = AdjudicatorFeedback.objects.filter(
                 adjudicator = self,
+                confirmed = True
             ).filter(q).aggregate(avg=models.Avg('score'))['avg']
             r.append(a)
         return r
@@ -458,6 +458,7 @@ class Adjudicator(Person):
     def _feedback_score(self):
         return AdjudicatorFeedback.objects.filter(
             adjudicator = self,
+            confirmed = True
         ).aggregate(avg=models.Avg('score'))['avg']
 
     @property
@@ -1200,6 +1201,11 @@ class AdjudicatorFeedback(Submission):
         if self.round:
             return self.round.feedback_weight
         return 1
+
+    def save(self, *args, **kwargs):
+        if not (self.source_adjudicator or self.source_team):
+            raise ValidationError("Either the source adjudicator or source team wasn't specified.")
+        super(AdjudicatorFeedback, self).save(*args, **kwargs)
 
 
 class AdjudicatorAllocation(object):

@@ -457,6 +457,7 @@ def make_feedback_form_class_for_adj(adjudicator, submission_fields, released_on
         ).select_related('debate') if da.adjudicator != adjudicator
     ])
 
+    # Get rid of the heading if there aren't any adjudicators
     if len(adj_choices) == 1: adj_choices = []
 
     def team_choice(dt):
@@ -511,11 +512,18 @@ def make_feedback_form_class_for_adj(adjudicator, submission_fields, released_on
             else:
                 st = None
 
+            # Discard existing feedbacks
+            for fb in AdjudicatorFeedback.objects.filter(adjudicator=adjudicator,
+                    source_adjudicator=sa, source_team=st):
+                fb.discarded = True
+                fb.save()
+
+            # Save the new one
             af = AdjudicatorFeedback(
-                adjudicator = adjudicator,
-                source_adjudicator = sa,
-                source_team = st,
-                confirmed = True, # assume confirmed on every submission
+                adjudicator       =adjudicator,
+                source_adjudicator=sa,
+                source_team       =st,
+                confirmed         =True, # assume confirmed on every submission
                 **submission_fields
             )
 
@@ -528,7 +536,6 @@ def make_feedback_form_class_for_adj(adjudicator, submission_fields, released_on
 
     return FeedbackForm
 
-# TODO decide whether to merge this with make_feedback_form_class above
 def make_feedback_form_class_for_source(source, submission_fields, released_only=False, include_panellists=True):
     """source is an Adjudicator or Team.
     submission_fields is a dict of fields for Submission.
@@ -608,9 +615,9 @@ def make_feedback_form_class_for_source(source, submission_fields, released_only
                 st = None
 
             af = AdjudicatorFeedback(
-                adjudicator = da.adjudicator,
-                source_adjudicator = sa,
-                source_team = st,
+                adjudicator       =da.adjudicator,
+                source_adjudicator=sa,
+                source_team       =st,
                 **submission_fields
             )
 
