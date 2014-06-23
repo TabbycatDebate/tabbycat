@@ -7,7 +7,11 @@
        <script type="text/javascript" charset="utf-8">
             $(document).ready( function() {
                 var table = $("#dataTable").dataTable({
-                    "aaSorting": [[ {{ round }} + 3, "desc" ], [ 1, "asc" ]],
+                    {% if show_emoji > 0 %}
+                        "aaSorting": [[ 1, "desc" ], [ 2, "asc" ]],
+                    {% else %}
+                        "aaSorting": [[ 0, "desc" ], [ 1, "asc" ]],
+                    {% endif %}
                 });
                 new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
             } );
@@ -32,6 +36,7 @@
             {% if show_emoji > 0 %}
                 <th></th>
             {% endif %}
+            <th>Wins</th>
             <th>Team</th>
             {% if show_institutions > 0 %}
                 <th>Institution</th>
@@ -39,7 +44,6 @@
             {% for round in rounds %}
             <th>R{{ round }}</th>
             {% endfor %}
-            <th>Wins</th>
         </tr>
     </thead>
     <tbody>
@@ -48,6 +52,9 @@
         {% if show_emoji > 0 %}
             <td class="team-emoji team-{{ team.id }}"></td>
         {% endif %}
+        <td>
+            {{ team.wins }}
+        </td>
         <td>
             <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">{{ team.short_name }}</span>
         </td>
@@ -69,9 +76,6 @@
                 <td></td>
             {% endif %}
         {% endfor %}
-        <td>
-            {{ team.wins }}
-        </td>
     </tr>
     {% endfor %}
 </table>
