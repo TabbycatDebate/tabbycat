@@ -199,7 +199,7 @@ def public_ballot_submit(request, t):
         draw = r.get_draw()
         return r2r(request, 'public/add_ballot.html', dict(das=das))
     else:
-        return r2r(request, 'public/draw_unreleased.html', dict(das=None, round=r))
+        return r2r(request, 'public/add_ballot_unreleased.html', dict(das=None, round=r))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_feedback')
