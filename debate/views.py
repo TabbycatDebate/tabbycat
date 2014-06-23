@@ -154,7 +154,7 @@ def public_team_standings(request, t):
         # The real purpose of this ordering is to obscure the *true* ranking of teams
         # - teams are not supposed to know rankings between teams on the same number
         # of wins.
-        teams = Team.objects.standings(round).order_by('-points', 'institution__code', 'reference')
+        teams = Team.objects.order_by('institution__code', 'reference')
 
         rounds = Round.objects.filter(tournament=round.tournament,
                                     seq__lte=round.seq, silent=False).order_by('seq')

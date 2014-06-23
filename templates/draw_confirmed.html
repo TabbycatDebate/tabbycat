@@ -66,11 +66,6 @@
     {% endif %}
     <a class="btn btn-default form-control" data-toggle="modal" data-target="#start-time-form">Change Start Time</a>
 </div>
-    {% if round.motion_set.all.count == 0 %}
-    <br><br><div class="alert alert-danger">
-        There are currently no motions entered, which means results cannot be entered!. <a href="{% round_url motions_edit current_round %}">Edit the motions</a> for this round.
-    </div>
-    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -79,6 +74,11 @@
 <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}"></form>
 <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}"></form>
 
+{% if round.motion_set.all.count == 0 %}
+<div class="alert alert-danger">
+    There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit current_round %}">Edit the motions</a> for this round.
+</div>
+{% endif %}
 {% if active_adjs.count < rooms %}
     <div class="alert alert-danger alert-dismissable" id="savedVenues">
         There are currently fewer active adjudicators than there are rooms. <a href="{% round_url adjudicator_availability current_round %}">Check in some more adjudicators</a>.
