@@ -144,7 +144,7 @@ def public_team_standings(request, t):
     while round is not None and round.silent:
         round = round.prev
 
-    if round is not None:
+    if round is not None and round.silent is False:
 
         from debate.models import TeamScore
 
@@ -888,7 +888,7 @@ def monkey_results(request, round):
 @public_optional_round_view('public_results')
 def public_results(request, round):
     # Can't see results for current round or later
-    if round.seq >= round.tournament.current_round.seq:
+    if round.seq >= round.tournament.current_round.seq or round.silent:
         raise Http404()
     draw = round.get_draw()
     show_motions_column = Motion.objects.filter(round=round).count() > 1
