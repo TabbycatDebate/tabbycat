@@ -26,7 +26,7 @@
             <th>Rank</th>
             <th>Name</th>
             {% if show_emoji > 0 %}
-                <th></th>
+                <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
             <th>Team</th>
             {% for round in rounds %}

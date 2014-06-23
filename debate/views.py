@@ -377,7 +377,7 @@ def public_replies_tab(request, t):
             rounds=rounds, round=round))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('motions_tab_released')
+@public_optional_tournament_view('motion_tab_released')
 def public_motions_tab(request, t):
     round = t.current_round
     rounds = Round.objects.filter(tournament=round.tournament,
