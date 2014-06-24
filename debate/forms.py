@@ -430,6 +430,13 @@ class DebateResultFormSet(object):
 
 ### Feedback forms
 
+class RequiredTypedChoiceField(forms.TypedChoiceField):
+    def clean(self, value):
+        value = super(forms.TypedChoiceField, self).clean(value)
+        if value == "None":
+            raise forms.ValidationError(_("This field is required."))
+        return value
+
 def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, released_only=False):
     """adjudicator is an Adjudicator.
     submission_fields is a dict of fields for Submission.
@@ -446,7 +453,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
     def adj_choice(da):
         return (
             'A:%d' % da.id,
-            '%s (%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
+            '%s (R%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
                            da.get_type_display())
         )
 
@@ -485,7 +492,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
             return DebateTeam.objects.get(id=id)
 
     class FeedbackForm(forms.Form):
-        source = forms.TypedChoiceField(
+        source = RequiredTypedChoiceField(
             choices = choices,
             # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
             # Fix when Django 1.7 is released.
@@ -546,7 +553,7 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
     def adj_choice(da):
         return (
             da.id,
-            '%s (%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
+            '%s (R%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
                            da.get_type_display())
         )
     choices = [(None, '-- Adjudicators --')]
@@ -569,7 +576,7 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
         return DebateAdjudicator.objects.get(id=value)
 
     class FeedbackForm(forms.Form):
-        debate_adjudicator = forms.TypedChoiceField(
+        debate_adjudicator = RequiredTypedChoiceField(
             choices = choices,
             # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
             # Fix when Django 1.7 is released.
@@ -615,8 +622,8 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
     def adj_choice(da):
         return (
             da.id,
-            '%s (%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
-                           da.get_type_display())
+            '%s%s (R%d, %s)' % (da.type == DebateAdjudicator.TYPE_PANEL and " - " or "",
+                    da.adjudicator.name, da.debate.round.seq, da.get_type_display())
         )
     choices = [(None, '-- Adjudicators --')]
 
@@ -629,20 +636,15 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
     choices.extend ([
         adj_choice(da) for da in DebateAdjudicator.objects.filter(
             debate__id__in = [d.id for d in debates],
-            #type = DebateAdjudicator.TYPE_CHAIR
-        ).select_related('debate').order_by('debate__round')
+            type__in = [DebateAdjudicator.TYPE_CHAIR, DebateAdjudicator.TYPE_PANEL]
+        ).select_related('debate').order_by('debate__round', 'type')
     ])
 
     def coerce(value):
         return DebateAdjudicator.objects.get(id=value)
 
     class FeedbackForm(forms.Form):
-        #debate = forms.TypedChoiceField(
-            #choices = debate_choices,
-            ##coerce = debate_coerce,
-        #)
-
-        debate_adjudicator = forms.TypedChoiceField(
+        debate_adjudicator = RequiredTypedChoiceField(
             choices = choices,
             # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
             # Fix when Django 1.7 is released.
