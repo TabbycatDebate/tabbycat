@@ -538,18 +538,6 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
 
     return FeedbackForm
 
-def make_feedback_form_class_for_public(source, *args, **kwargs):
-    """source is an Adjudicator or Team.
-    submission_fields is a dict of fields for Submission.
-    released_only is a boolean."""
-
-    if isinstance(source, Adjudicator):
-        return make_feedback_form_class_for_public_adj(source, *args, **kwargs)
-    elif isinstance(source, Team):
-        return make_feedback_form_class_for_public_team(source, *args, **kwargs)
-    else:
-        raise TypeError('source must be an Adjudicator or a Team')
-
 def make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=True):
 
     kwargs = dict()
@@ -649,6 +637,11 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
         return DebateAdjudicator.objects.get(id=value)
 
     class FeedbackForm(forms.Form):
+        #debate = forms.TypedChoiceField(
+            #choices = debate_choices,
+            ##coerce = debate_coerce,
+        #)
+
         debate_adjudicator = forms.TypedChoiceField(
             choices = choices,
             # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397

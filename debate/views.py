@@ -1353,18 +1353,12 @@ def get_adj_feedback(request, t):
 
 # Don't cache
 @public_optional_tournament_view('public_feedback')
-def public_enter_feedback(request, t, source_type, source_id):
+def public_enter_feedback_adjudicator(request, t, adj_id):
 
-    source = get_object_or_404(source_type, id=source_id)
+    source = get_object_or_404(Adjudicator, id=adj_id)
     include_panellists = request.tournament.config.get('panellist_feedback_enabled') > 0
     ip_address = get_ip_address(request)
-
-    if isinstance(source, Adjudicator):
-        source_name = source.name
-    elif isinstance(source, Team):
-        source_name = source.short_name
-    else:
-        raise TypeError('source must be Adjudicator or Team')
+    source_name = source.name
 
     submission_fields = {
         'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
@@ -1372,23 +1366,47 @@ def public_enter_feedback(request, t, source_type, source_id):
     }
 
     if request.method == "POST":
-        form = forms.make_feedback_form_class_for_public(source, submission_fields, include_panellists=include_panellists)(request.POST)
+        form = forms.make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=include_panellists)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
                     ip_address=ip_address, adjudicator_feedback=adj_feedback)
             return r2r(request, 'public/success.html', dict(success_kind="feedback"))
     else:
-        form = forms.make_feedback_form_class_for_public(source, submission_fields, include_panellists=include_panellists)()
+        form = forms.make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=include_panellists)()
 
-    return r2r(request, 'public/enter_feedback.html', dict(source_name=source_name, form=form))
+    return r2r(request, 'public/enter_feedback_adj.html', dict(source_name=source_name, form=form))
 
+# Don't cache
+@public_optional_tournament_view('public_feedback')
+def public_enter_feedback_team(request, t, team_id):
+
+    source = get_object_or_404(Team, id=team_id)
+    ip_address = get_ip_address(request)
+    source_name = source.short_name
+
+    submission_fields = {
+        'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
+        'ip_address'    : ip_address
+    }
+
+    if request.method == "POST":
+        form = forms.make_feedback_form_class_for_public_team(source, submission_fields)(request.POST)
+        if form.is_valid():
+            adj_feedback = form.save()
+            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
+                    ip_address=ip_address, adjudicator_feedback=adj_feedback)
+            return r2r(request, 'public/success.html', dict(success_kind="feedback"))
+    else:
+        form = forms.make_feedback_form_class_for_public_team(source, submission_fields)()
+
+    return r2r(request, 'public/enter_feedback_team.html', dict(source_name=source_name, form=form))
 
 @login_required
 @tournament_view
-def enter_feedback(request, t, adjudicator_id):
+def enter_feedback(request, t, adj_id):
 
-    adj = get_object_or_404(Adjudicator, id=adjudicator_id)
+    adj = get_object_or_404(Adjudicator, id=adj_id)
     ip_address = get_ip_address(request)
 
     if not request.user.is_superuser:
