@@ -77,6 +77,22 @@ class ReplyScoreField(BaseScoreField):
     DEFAULT_MAX_VALUE = 41
     DEFAULT_STEP_VALUE = 0.5
 
+class TournamentPasswordField(forms.CharField):
+
+    def __init__(self, *args, **kwargs):
+        if 'tournament' in kwargs:
+            tournament = kwargs.pop('tournament')
+            self.password = tournament.config.get('public_password')
+        else:
+            raise TypeError("'tournament' is a required keyword argument")
+        super(TournamentPasswordField, self).__init__(*args, **kwargs)
+
+    def clean(self, value):
+        value = super(TournamentPasswordField, self).clean(value)
+        if value != self.password:
+            raise forms.ValidationError(_("Sorry, that password isn't correct."))
+        return value
+
 class BallotSetForm(forms.Form):
     """Form for data entry for a single set of ballots.
     Responsible for presenting the part that looks like a ballot, i.e.
@@ -110,6 +126,9 @@ class BallotSetForm(forms.Form):
         self.POSITIONS = tournament.POSITIONS
         self.LAST_SUBSTANTIVE_POSITION = tournament.LAST_SUBSTANTIVE_POSITION
         self.REPLY_POSITION = tournament.REPLY_POSITION
+
+        if tournament.config.get('public_use_password'):
+            self.fields['password'] = TournamentPasswordField(tournament=tournament)
 
         # Generate the motions field.
         # We are only allowed to choose from the motions for this round.
@@ -491,6 +510,8 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
         if obj_type.strip() == 'T':
             return DebateTeam.objects.get(id=id)
 
+    tournament = adjudicator.institution.tournament
+
     class FeedbackForm(forms.Form):
         source = RequiredTypedChoiceField(
             choices = choices,
@@ -505,6 +526,11 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
         )
 
         comment = forms.CharField(widget=forms.Textarea, required=False)
+
+        def __init__(self, *args, **kwargs):
+            if tournament.config.get('public_use_password'):
+                self.fields['password'] = TournamentPasswordField(tournament=tournament)
+            super(FeedbackForm, self).__init__(*args, **kwargs)
 
         def save(self):
             # Saves the form and returns the AdjudicatorFeedback object
@@ -575,6 +601,8 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
     def coerce(value):
         return DebateAdjudicator.objects.get(id=value)
 
+    tournament = source.institution.tournament
+
     class FeedbackForm(forms.Form):
         debate_adjudicator = RequiredTypedChoiceField(
             choices = choices,
@@ -589,6 +617,11 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
         )
 
         comment = forms.CharField(widget=forms.Textarea, required=False)
+
+        def __init__(self, *args, **kwargs):
+            if tournament.config.get('public_use_password'):
+                self.fields['password'] = TournamentPasswordField(tournament=tournament)
+            super(FeedbackForm, self).__init__(*args, **kwargs)
 
         def save(self):
             # Saves the form and returns the AdjudicatorFeedback object
@@ -650,6 +683,8 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
     def coerce(value):
         return DebateAdjudicator.objects.get(id=value)
 
+    tournament = source.institution.tournament
+
     class FeedbackForm(forms.Form):
         debate_adjudicator = RequiredTypedChoiceField(
             choices = choices,
@@ -664,6 +699,11 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
         )
 
         comment = forms.CharField(widget=forms.Textarea, required=False)
+
+        def __init__(self, *args, **kwargs):
+            super(FeedbackForm, self).__init__(*args, **kwargs)
+            if tournament.config.get('public_use_password'):
+                self.fields['password'] = TournamentPasswordField(tournament=tournament)
 
         def save(self):
             # Saves the form and returns the AdjudicatorFeedback object
