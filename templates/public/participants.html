@@ -50,7 +50,9 @@
     {% for person in adjs %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td>{{ person.name }}</td>
-            <td></td>
+            {% if show_emoji > 0 %}
+                <td></td>
+            {% endif %}
             <td>Adjudicator</td>
             <td>{{ person.institution.name }}</td>
     {% endfor %}
