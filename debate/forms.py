@@ -1,5 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
+from django.http import Http404
 
 from debate.models import SpeakerScoreByAdj, Debate, Motion, Round, Team, Adjudicator
 from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
@@ -76,6 +78,14 @@ class ReplyScoreField(BaseScoreField):
     DEFAULT_MIN_VALUE = 34
     DEFAULT_MAX_VALUE = 41
     DEFAULT_STEP_VALUE = 0.5
+
+class AdjudicatorFeedbackScoreField(BaseScoreField):
+    CONFIG_MIN_VALUE_FIELD = 'adj_feedback_score_min'
+    CONFIG_MAX_VALUE_FIELD = 'adj_feedback_score_max'
+    CONFIG_STEP_VALUE_FIELD = 'adj_feedback_score_step'
+    DEFAULT_MIN_VALUE = 1
+    DEFAULT_MAX_VALUE = 5
+    DEFAULT_STEP_VALUE = 1
 
 class BallotSetForm(forms.Form):
     """Form for data entry for a single set of ballots.
@@ -492,11 +502,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
             #coerce = coerce,
         )
 
-        score = forms.FloatField(
-            min_value = 1,
-            max_value = 5,
-        )
-
+        score = AdjudicatorFeedbackScoreField()
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def save(self):
@@ -576,11 +582,7 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
             #coerce = coerce,
         )
 
-        score = forms.FloatField(
-            min_value = 1,
-            max_value = 5,
-        )
-
+        score = AdjudicatorFeedbackScoreField()
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def save(self):
@@ -607,76 +609,118 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
 
     return FeedbackForm
 
-def make_feedback_form_class_for_public_team(source, submission_fields, include_panellists=True):
-    """source is an Adjudicator or Team.
+class RequiredNullBooleanSelect(forms.NullBooleanSelect):
+
+    def __init__(self, attrs=None):
+        choices = (('1', ugettext_lazy('--------')),
+                   ('2', ugettext_lazy('Yes')),
+                   ('3', ugettext_lazy('No')))
+        # skip the NullBooleanSelect constructor
+        super(forms.NullBooleanSelect, self).__init__(attrs, choices)
+
+class RequiredNullBooleanField(forms.NullBooleanField):
+
+    widget = RequiredNullBooleanSelect
+
+    def clean(self, value):
+        if value is None:
+            raise forms.ValidationError(_('Choose either Yes or No.'))
+        return super(RequiredNullBooleanField, self).clean(value)
+
+def make_feedback_form_class_for_public_team(debate_team, submission_fields, include_panellists=True):
+    """debate_team is a DebateTeam.
     submission_fields is a dict of fields for Submission.
     released_only is a boolean."""
 
-    def adj_choice(da):
-        return (
-            da.id,
-            '%s (%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
-                           da.get_type_display())
-        )
-    choices = [(None, '-- Adjudicators --')]
+    source = debate_team.team
+    debate = debate_team.debate
+    if debate.round.silent: # can't hurt to check again
+        raise Http404()
 
-    # Only include non-silent rounds for teams.
-    debates = [dt.debate for dt in DebateTeam.objects.filter(
-        team=source, debate__round__silent=False,
-        debate__round__draw_status=Round.STATUS_RELEASED).select_related('debate')]
+    panellists = DebateAdjudicator.objects.filter(
+            debate=debate, type=DebateAdjudicator.TYPE_PANEL)
 
-    # For a team, find the chair.
-    choices.extend ([
-        adj_choice(da) for da in DebateAdjudicator.objects.filter(
-            debate__id__in = [d.id for d in debates],
-            #type = DebateAdjudicator.TYPE_CHAIR
-        ).select_related('debate').order_by('debate__round')
-    ])
+    if panellists:
 
-    def coerce(value):
-        return DebateAdjudicator.objects.get(id=value)
+        def adj_choice(da):
+            return (da.id, da.adjudicator.name)
+        def coerce(value):
+            return DebateAdjudicator.objects.get(id=value)
+        panel_choices = [(None, '-- Panellists --')]
+        panel_choices.extend([adj_choice(da) for da in panellists])
 
-    class FeedbackForm(forms.Form):
-        #debate = forms.TypedChoiceField(
-            #choices = debate_choices,
-            ##coerce = debate_coerce,
-        #)
+        class FeedbackForm(forms.Form):
 
-        debate_adjudicator = forms.TypedChoiceField(
-            choices = choices,
-            # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
-            # Fix when Django 1.7 is released.
-            #coerce = coerce,
-        )
+            chair_gave_oral = RequiredNullBooleanField(label="Did the chair give the oral?")
 
-        score = forms.FloatField(
-            min_value = 1,
-            max_value = 5,
-        )
-
-        comment = forms.CharField(widget=forms.Textarea, required=False)
-
-        def save(self):
-            # Saves the form and returns the AdjudicatorFeedback object
-
-            da = self.cleaned_data['debate_adjudicator']
-            da = coerce(da) # Bug in Django 1.6.5
-
-            st = DebateTeam.objects.get(team=source, debate=da.debate)
-
-            af = AdjudicatorFeedback(
-                adjudicator       =da.adjudicator,
-                source_adjudicator=None,
-                source_team       =st,
-                **submission_fields
+            panellist = forms.TypedChoiceField(
+                choices = panel_choices,
+                label = "Who did?",
+                # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
+                # Fix when Django 1.7 is released.
+                #coerce = coerce,
             )
 
-            af.score = self.cleaned_data['score']
-            af.comments = self.cleaned_data['comment']
+            score = AdjudicatorFeedbackScoreField()
+            comment = forms.CharField(widget=forms.Textarea, required=False)
 
-            af.save()
+            @property
+            def chair(self):
+                return DebateAdjudicator.objects.get(
+                        debate=debate, type=DebateAdjudicator.TYPE_CHAIR)
 
-            return af
+            def save(self):
+                # Saves the form and returns the AdjudicatorFeedback object
+
+                chair_gave_oral = self.cleaned_data['chair_gave_oral']
+                if chair_gave_oral is None:
+                    raise ValidationError(_('You must indicate whether the chair gave the oral adjudication'))
+                elif chair_gave_oral:
+                    da = self.chair
+                else:
+                    da = self.cleaned_data['panellist']
+                    da = coerce(da) # Bug in Django 1.6.5
+
+                af = AdjudicatorFeedback(
+                    adjudicator       =da.adjudicator,
+                    source_adjudicator=None,
+                    source_team       =debate_team,
+                    **submission_fields
+                )
+
+                af.score = self.cleaned_data['score']
+                af.comments = self.cleaned_data['comment']
+
+                af.save()
+
+                return af
+    else:
+
+        class FeedbackForm(forms.Form):
+
+            score = AdjudicatorFeedbackScoreField()
+            comment = forms.CharField(widget=forms.Textarea, required=False)
+
+            @property
+            def chair(self):
+                return DebateAdjudicator.objects.get(
+                        debate=debate, type=DebateAdjudicator.TYPE_CHAIR)
+
+            def save(self):
+                # Saves the form and returns the AdjudicatorFeedback object
+                af = AdjudicatorFeedback(
+                    adjudicator       =self.chair.adjudicator,
+                    source_adjudicator=None,
+                    source_team       =debate_team,
+                    **submission_fields
+                )
+
+                af.score = self.cleaned_data['score']
+                af.comments = self.cleaned_data['comment']
+                af.save()
+
+                return af
+
 
     return FeedbackForm
 
