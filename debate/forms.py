@@ -635,13 +635,17 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
         team=source, debate__round__silent=False,
         debate__round__draw_status=Round.STATUS_RELEASED).select_related('debate')]
 
-    # For a team, find the chair.
-    choices.extend ([
-        adj_choice(da) for da in DebateAdjudicator.objects.filter(
-            debate__id__in = [d.id for d in debates],
-            type__in = [DebateAdjudicator.TYPE_CHAIR, DebateAdjudicator.TYPE_PANEL]
-        ).select_related('debate').order_by('debate__round', 'type')
-    ])
+    for debate in debates:
+        adjs = debate.adjudicators
+        if adjs.panel:
+            choices.append((adjs.chair.id, '{name} (R{r} - chair gave oral)'.format(
+                name=adjs.chair.adjudicator.name, r=debate.round.seq)))
+            for da in adjs.panel:
+                choices.append((da.id, '{name} (R{r} - chair rolled, this panellist gave oral)'.format(
+                    name=da.adjudicator.name, r=debate.round.seq)))
+        else:
+            choices.append((adjs.chair.id, '{name} (R{r})'.format(
+                name=adjs.chair.adjudicator.name, r=debate.round.seq)))
 
     def coerce(value):
         return DebateAdjudicator.objects.get(id=value)
