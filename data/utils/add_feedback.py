@@ -57,6 +57,8 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
 
         score = float(random.randrange(1, 6))
         fb.score = score
+        agree = random.choice([None, True, False])
+        fb.agree_with_decision = agree
         comments = random.choice(COMMENTS[score])
         fb.comments = comments
 

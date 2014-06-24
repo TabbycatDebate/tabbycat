@@ -1346,6 +1346,7 @@ def get_adj_feedback(request, t):
               unicode(f.debate),
               unicode(f.source),
               f.score,
+              {None: "Unsure", True: "Yes", False: "No"}[f.agree_with_decision],
               f.comments,
              ] for f in feedback ]
 
