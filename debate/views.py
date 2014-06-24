@@ -983,7 +983,7 @@ def public_new_ballots(request, t, adj_id):
     existing_ballots = debate.ballotsubmission_set.exclude(discarded=True).count()
 
     if request.method == 'POST':
-        form = forms.BallotSetForm(ballots, request.POST)
+        form = forms.BallotSetForm(ballots, request.POST, password=True)
 
         if form.is_valid():
             form.save()
@@ -993,7 +993,7 @@ def public_new_ballots(request, t, adj_id):
             return r2r(request, 'public/success.html', dict(success_kind="ballot"))
 
     else:
-        form = forms.BallotSetForm(ballots)
+        form = forms.BallotSetForm(ballots, password=True)
 
     return r2r(request, 'public/enter_results.html', dict(
         debate          =debate,

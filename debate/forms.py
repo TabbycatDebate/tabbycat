@@ -121,6 +121,8 @@ class BallotSetForm(forms.Form):
         self.debate = ballots.debate
         self.adjudicators = self.debate.adjudicators.list
 
+        password = kwargs.pop('password', False)
+
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
         # Grab info about how many positions there are
@@ -129,7 +131,7 @@ class BallotSetForm(forms.Form):
         self.LAST_SUBSTANTIVE_POSITION = tournament.LAST_SUBSTANTIVE_POSITION
         self.REPLY_POSITION = tournament.REPLY_POSITION
 
-        if tournament.config.get('public_use_password'):
+        if tournament.config.get('public_use_password') and password:
             self.fields['password'] = TournamentPasswordField(tournament=tournament)
 
         # Generate the motions field.
@@ -528,11 +530,6 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
         )
 
         comment = forms.CharField(widget=forms.Textarea, required=False)
-
-        def __init__(self, *args, **kwargs):
-            super(FeedbackForm, self).__init__(*args, **kwargs)
-            if tournament.config.get('public_use_password'):
-                self.fields['password'] = TournamentPasswordField(tournament=tournament)
 
         def save(self):
             # Saves the form and returns the AdjudicatorFeedback object
