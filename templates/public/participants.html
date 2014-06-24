@@ -51,7 +51,7 @@
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td>{{ person.name }}</td>
             {% if show_emoji > 0 %}
-                <td></td>
+                <td class="team-emoji"></td>
             {% endif %}
             <td>Adjudicator</td>
             <td>{{ person.institution.name }}</td>
