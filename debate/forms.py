@@ -175,6 +175,7 @@ class BallotSetForm(forms.Form):
                 score_field = (pos == self.REPLY_POSITION) and ReplyScoreField or ScoreField
 
                 for i, adj in enumerate(self.adjudicators):
+                    print i, adj
                     attrs = {
                         'class': 'required number',
                         'tabindex': 20 + 2 * pos + tab_index_add + 4 * MAX_POSITION * i,

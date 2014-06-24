@@ -67,17 +67,48 @@ The URL doesn't change, so if you bookmark it, you can easily return here after 
         <label for="id_debate" class="col-sm-2 control-label">Which debate?</label>
         <div class="col-sm-9 col-md-6">
             <select class="form-control" id="id_debate" name="debate">
-                <option>-------------</option>
+                <option>---------</option>
                 {% for dt in dts %}
                 <option value="{{ dt.id }}">Round {{ dt.debate.round.seq }} vs {{ dt.opposition_team.short_name }}, chaired by {{ dt.debate.adjudicators.chair }}</option>
                 {% endfor %}
             </select>
         </div>
     </div>
-</div>
 
-<div id="team-feedback-form">
+    <div class="form-group">
+        <label for="id_chair_gave_oral" class="col-sm-2 control-label">Did the chair give the oral?</label>
+        <div class="col-sm-9 col-md-6">
+            <select class="form-control" id="id_chair_gave_oral" name="chair_gave_oral">
+                <option>-------------</option>
+                <option value="True">Yes</option>
+                <option value="False">No</option>
+            </select>
+        </div>
+    </div>
 
+    <div class="form-group">
+        <label for="id_panellists" class="col-sm-2 control-label">Who did?</label>
+        <div class="col-sm-9 col-md-6">
+            <select class="form-control" id="id_panellists" name="panellists">
+                <option>-- Panellists --</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="id_panellists" class="col-sm-2 control-label">Who did?</label>
+        <div class="col-sm-9 col-md-6">
+            <select class="form-control" id="id_panellists" name="panellists">
+                <option>-- Panellists --</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-2">
+            <button type="submit" value="Submit" class="form-control btn btn-success">Submit</button>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
