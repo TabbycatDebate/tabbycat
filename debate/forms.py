@@ -487,11 +487,13 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
     class FeedbackForm(forms.Form):
         source = forms.TypedChoiceField(
             choices = choices,
-            #coerce = coerce, # This seems to mess up data cleaning?
+            # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
+            # Fix when Django 1.7 is released.
+            #coerce = coerce,
         )
 
         score = forms.FloatField(
-            min_value = 0,
+            min_value = 1,
             max_value = 5,
         )
 
@@ -501,7 +503,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
             # Saves the form and returns the AdjudicatorFeedback object
 
             source = self.cleaned_data['source']
-            source = coerce(source)
+            source = coerce(source) # Bug in Django 1.6.5
 
             if isinstance(source, DebateAdjudicator):
                 sa = source
@@ -536,14 +538,10 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
 
     return FeedbackForm
 
-def make_feedback_form_class_for_public(source, submission_fields, released_only=False, include_panellists=True):
-    """source is an Adjudicator or Team.
-    submission_fields is a dict of fields for Submission.
-    released_only is a boolean."""
+def make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=True):
 
     kwargs = dict()
-    if released_only:
-        kwargs['debate__round__draw_status'] = Round.STATUS_RELEASED
+    kwargs['debate__round__draw_status'] = Round.STATUS_RELEASED
 
     def adj_choice(da):
         return (
@@ -553,35 +551,19 @@ def make_feedback_form_class_for_public(source, submission_fields, released_only
         )
     choices = [(None, '-- Adjudicators --')]
 
-    if isinstance(source, Adjudicator):
-        if not include_panellists:
-            kwargs['type'] = DebateAdjudicator.TYPE_CHAIR
+    if not include_panellists:
+        # Include only debates for which this adj was the chair.
+        kwargs['type'] = DebateAdjudicator.TYPE_CHAIR
 
-        debates = [da.debate for da in DebateAdjudicator.objects.filter(
-            adjudicator=source, **kwargs).select_related('debate')]
+    debates = [da.debate for da in DebateAdjudicator.objects.filter(
+        adjudicator=source, **kwargs).select_related('debate')]
 
-        # For an adjudicator, find every adjudicator on their panel except them.
-        choices.extend ([
-            adj_choice(da) for da in DebateAdjudicator.objects.filter(
-                debate__id__in = [d.id for d in debates]
-            ).select_related('debate').order_by('debate__round') if da.adjudicator != source
-        ])
-
-    elif isinstance(source, Team):
-        # Only include non-silent rounds for teams.
-        debates = [dt.debate for dt in DebateTeam.objects.filter(
-            team=source, debate__round__silent=False, **kwargs).select_related('debate')]
-
-        # For a team, find the chair.
-        choices.extend ([
-            adj_choice(da) for da in DebateAdjudicator.objects.filter(
-                debate__id__in = [d.id for d in debates],
-                type = DebateAdjudicator.TYPE_CHAIR
-            ).select_related('debate').order_by('debate__round')
-        ])
-
-    else:
-        raise TypeError('source must be an Adjudicator or a Team')
+    # For an adjudicator, find every adjudicator on their panel except them.
+    choices.extend([
+        adj_choice(da) for da in DebateAdjudicator.objects.filter(
+            debate__id__in = [d.id for d in debates]
+        ).select_related('debate').order_by('debate__round') if da.adjudicator != source
+    ])
 
     def coerce(value):
         return DebateAdjudicator.objects.get(id=value)
@@ -589,11 +571,13 @@ def make_feedback_form_class_for_public(source, submission_fields, released_only
     class FeedbackForm(forms.Form):
         debate_adjudicator = forms.TypedChoiceField(
             choices = choices,
-            #coerce = coerce, # This seems to mess up data cleaning?
+            # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
+            # Fix when Django 1.7 is released.
+            #coerce = coerce,
         )
 
         score = forms.FloatField(
-            min_value = 0,
+            min_value = 1,
             max_value = 5,
         )
 
@@ -603,20 +587,86 @@ def make_feedback_form_class_for_public(source, submission_fields, released_only
             # Saves the form and returns the AdjudicatorFeedback object
 
             da = self.cleaned_data['debate_adjudicator']
-            da = coerce(da)
+            da = coerce(da) # Bug in Django 1.6.5
 
-            if isinstance(source, Adjudicator):
-                sa = DebateAdjudicator.objects.get(adjudicator=source, debate=da.debate)
-            else:
-                sa = None
-            if isinstance(source, Team):
-                st = DebateTeam.objects.get(team=source, debate=da.debate)
-            else:
-                st = None
+            sa = DebateAdjudicator.objects.get(adjudicator=source, debate=da.debate)
 
             af = AdjudicatorFeedback(
                 adjudicator       =da.adjudicator,
                 source_adjudicator=sa,
+                source_team       =None,
+                **submission_fields
+            )
+
+            af.score = self.cleaned_data['score']
+            af.comments = self.cleaned_data['comment']
+
+            af.save()
+
+            return af
+
+    return FeedbackForm
+
+def make_feedback_form_class_for_public_team(source, submission_fields, include_panellists=True):
+    """source is an Adjudicator or Team.
+    submission_fields is a dict of fields for Submission.
+    released_only is a boolean."""
+
+    def adj_choice(da):
+        return (
+            da.id,
+            '%s (%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
+                           da.get_type_display())
+        )
+    choices = [(None, '-- Adjudicators --')]
+
+    # Only include non-silent rounds for teams.
+    debates = [dt.debate for dt in DebateTeam.objects.filter(
+        team=source, debate__round__silent=False,
+        debate__round__draw_status=Round.STATUS_RELEASED).select_related('debate')]
+
+    # For a team, find the chair.
+    choices.extend ([
+        adj_choice(da) for da in DebateAdjudicator.objects.filter(
+            debate__id__in = [d.id for d in debates],
+            #type = DebateAdjudicator.TYPE_CHAIR
+        ).select_related('debate').order_by('debate__round')
+    ])
+
+    def coerce(value):
+        return DebateAdjudicator.objects.get(id=value)
+
+    class FeedbackForm(forms.Form):
+        #debate = forms.TypedChoiceField(
+            #choices = debate_choices,
+            ##coerce = debate_coerce,
+        #)
+
+        debate_adjudicator = forms.TypedChoiceField(
+            choices = choices,
+            # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
+            # Fix when Django 1.7 is released.
+            #coerce = coerce,
+        )
+
+        score = forms.FloatField(
+            min_value = 1,
+            max_value = 5,
+        )
+
+        comment = forms.CharField(widget=forms.Textarea, required=False)
+
+        def save(self):
+            # Saves the form and returns the AdjudicatorFeedback object
+
+            da = self.cleaned_data['debate_adjudicator']
+            da = coerce(da) # Bug in Django 1.6.5
+
+            st = DebateTeam.objects.get(team=source, debate=da.debate)
+
+            af = AdjudicatorFeedback(
+                adjudicator       =da.adjudicator,
+                source_adjudicator=None,
                 source_team       =st,
                 **submission_fields
             )
@@ -634,5 +684,3 @@ def test():
     from debate.models import Debate
 
     return make_results_form_class(Debate.objects.get(pk=1))
-
-

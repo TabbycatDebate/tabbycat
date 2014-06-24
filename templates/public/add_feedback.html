@@ -9,6 +9,20 @@
             "aaSorting": [[ 0, "asc" ]],
         });
         new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+
+        $('#toggle-all').click(function () {
+            $('.adj-row').show();
+            $('.team-row').show();
+        });
+        $('#toggle-teams').click(function () {
+            $('.adj-row').hide();
+            $('.team-row').show();
+        });
+        $('#toggle-adjs').click(function () {
+            $('.adj-row').show();
+            $('.team-row').hide();
+        });
+
     } );
 </script>
 
@@ -20,6 +34,20 @@
 {% block page-title %}Add Feedback{% endblock %}
 {% block body-class %}public-add-feedback{% endblock %}
 {% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
+
+{% block header %}
+<div class="btn-group" data-toggle="buttons">
+  <label class="btn btn-default active" id="toggle-all">
+    <input type="radio" name="options">Show All
+  </label>
+  <label class="btn btn-default" id="toggle-teams">
+    <input type="radio" name="options" >Only Teams
+  </label>
+  <label class="btn btn-default" id="toggle-adjs">
+    <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
+  </label>
+</div>
+{% endblock %}
 
 {% block content %}
 
@@ -34,7 +62,7 @@
     </thead>
     <tbody>
         {% for adj in adjudicators %}
-        <tr id="adj_{{ adj.id }}">
+        <tr id="adj_{{ adj.id }}" class="adj-row">
             <td>
                 <a href="{% tournament_url public_enter_feedback_adjudicator adj.id %}">
                 Add feedback from {{ adj.name }}</a></td>
@@ -46,7 +74,7 @@
         </tr>
         {% endfor %}
         {% for team in teams %}
-        <tr id="team_{{ team.id }}">
+        <tr id="team_{{ team.id }}" class="team-row">
             <td>
                 <a href="{% tournament_url public_enter_feedback_team team.id %}">
                 Add feedback from {{ team.name }}</a>
