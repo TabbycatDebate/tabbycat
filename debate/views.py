@@ -961,15 +961,15 @@ def edit_ballots(request, t, ballots_id):
 @public_optional_tournament_view('public_ballots')
 def public_new_ballots(request, t, adj_id):
 
-    round = t.current_round
-    if round.draw_status != Round.STATUS_RELEASED:
-        raise PermissionDenied
-
     adjudicator = get_object_or_404(Adjudicator, id=adj_id)
+
+    round = t.current_round
+    if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
+        return r2r(request, 'public/enter_results_error.html', dict(adjudicator=adjudicator, message='The draw and/or motions for the round haven\'t been released yet.'))
     try:
         da = DebateAdjudicator.objects.get(adjudicator=adjudicator, debate__round=round)
     except DebateAdjudicator.DoesNotExist:
-        return HttpResponseBadRequest('It looks like you don\'t have a debate this round!')
+        return r2r(request, 'public/enter_results_error.html', dict(adjudicator=adjudicator, message='It looks like you don\'t have a debate this round.'))
 
     debate = da.debate
 
