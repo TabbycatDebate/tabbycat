@@ -816,6 +816,9 @@ input.error, select.error, .error input {
   #wrap table.table th:active, .FixedHeader_Cloned .table th:active {
     outline: none; }
 
+.modal-body {
+  overflow: auto; }
+
 .modal-lg {
   width: 90%; }
 
