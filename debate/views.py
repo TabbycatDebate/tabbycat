@@ -1372,14 +1372,14 @@ def public_enter_feedback(request, t, source_type, source_id):
     }
 
     if request.method == "POST":
-        form = forms.make_feedback_form_class_for_public(source, submission_fields, released_only=True, include_panellists=include_panellists)(request.POST)
+        form = forms.make_feedback_form_class_for_public(source, submission_fields, include_panellists=include_panellists)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
                     ip_address=ip_address, adjudicator_feedback=adj_feedback)
             return r2r(request, 'public/success.html', dict(success_kind="feedback"))
     else:
-        form = forms.make_feedback_form_class_for_public(source, submission_fields, released_only=True, include_panellists=include_panellists)()
+        form = forms.make_feedback_form_class_for_public(source, submission_fields, include_panellists=include_panellists)()
 
     return r2r(request, 'public/enter_feedback.html', dict(source_name=source_name, form=form))
 
