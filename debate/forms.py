@@ -620,11 +620,14 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
     released_only is a boolean."""
 
     def adj_choice(da):
-        return (
-            da.id,
-            '%s%s (R%d, %s)' % (da.type == DebateAdjudicator.TYPE_PANEL and " - " or "",
-                    da.adjudicator.name, da.debate.round.seq, da.get_type_display())
-        )
+        if da.type == DebateAdjudicator.TYPE_CHAIR:
+            desc = '{name} (R{r} - chair gave oral)'.format(
+                name=da.adjudicator.name, r=da.debate.round.seq)
+        elif da.type == DebateAdjudicator.TYPE_PANEL:
+            desc = ' - {name} (R{r} - chair got rolled, this panellist gave oral)'.format(
+                name=da.adjudicator.name, r=da.debate.round.seq)
+        return (da.id, desc)
+
     choices = [(None, '-- Adjudicators --')]
 
     # Only include non-silent rounds for teams.
