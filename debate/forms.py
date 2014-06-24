@@ -85,12 +85,14 @@ class TournamentPasswordField(forms.CharField):
             self.password = tournament.config.get('public_password')
         else:
             raise TypeError("'tournament' is a required keyword argument")
+        if 'label' not in kwargs:
+            kwargs['label'] = "Tournament password"
         super(TournamentPasswordField, self).__init__(*args, **kwargs)
 
     def clean(self, value):
         value = super(TournamentPasswordField, self).clean(value)
         if value != self.password:
-            raise forms.ValidationError(_("Sorry, that password isn't correct."))
+            raise forms.ValidationError(_("That password isn't correct."))
         return value
 
 class BallotSetForm(forms.Form):
@@ -528,9 +530,9 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def __init__(self, *args, **kwargs):
+            super(FeedbackForm, self).__init__(*args, **kwargs)
             if tournament.config.get('public_use_password'):
                 self.fields['password'] = TournamentPasswordField(tournament=tournament)
-            super(FeedbackForm, self).__init__(*args, **kwargs)
 
         def save(self):
             # Saves the form and returns the AdjudicatorFeedback object
@@ -599,6 +601,7 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
     ])
 
     def coerce(value):
+        value = int(value)
         return DebateAdjudicator.objects.get(id=value)
 
     tournament = source.institution.tournament
@@ -619,9 +622,9 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def __init__(self, *args, **kwargs):
+            super(FeedbackForm, self).__init__(*args, **kwargs)
             if tournament.config.get('public_use_password'):
                 self.fields['password'] = TournamentPasswordField(tournament=tournament)
-            super(FeedbackForm, self).__init__(*args, **kwargs)
 
         def save(self):
             # Saves the form and returns the AdjudicatorFeedback object
@@ -652,15 +655,6 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
     submission_fields is a dict of fields for Submission.
     released_only is a boolean."""
 
-    def adj_choice(da):
-        if da.type == DebateAdjudicator.TYPE_CHAIR:
-            desc = '{name} (R{r} - chair gave oral)'.format(
-                name=da.adjudicator.name, r=da.debate.round.seq)
-        elif da.type == DebateAdjudicator.TYPE_PANEL:
-            desc = ' - {name} (R{r} - chair got rolled, this panellist gave oral)'.format(
-                name=da.adjudicator.name, r=da.debate.round.seq)
-        return (da.id, desc)
-
     choices = [(None, '-- Adjudicators --')]
 
     # Only include non-silent rounds for teams.
@@ -669,18 +663,23 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
         debate__round__draw_status=Round.STATUS_RELEASED).select_related('debate')]
 
     for debate in debates:
-        adjs = debate.adjudicators
-        if adjs.panel:
-            choices.append((adjs.chair.id, '{name} (R{r} - chair gave oral)'.format(
-                name=adjs.chair.adjudicator.name, r=debate.round.seq)))
-            for da in adjs.panel:
+        try:
+            chair = DebateAdjudicator.objects.get(debate=debate, type=DebateAdjudicator.TYPE_CHAIR)
+        except DebateAdjudicator.DoesNotExist:
+            continue
+        panel = DebateAdjudicator.objects.filter(debate=debate, type=DebateAdjudicator.TYPE_PANEL)
+        if panel.exists():
+            choices.append((chair.id, '{name} (R{r} - chair gave oral)'.format(
+                name=chair.adjudicator.name, r=debate.round.seq)))
+            for da in panel:
                 choices.append((da.id, '{name} (R{r} - chair rolled, this panellist gave oral)'.format(
                     name=da.adjudicator.name, r=debate.round.seq)))
         else:
-            choices.append((adjs.chair.id, '{name} (R{r})'.format(
-                name=adjs.chair.adjudicator.name, r=debate.round.seq)))
+            choices.append((chair.id, '{name} (R{r})'.format(
+                name=chair.adjudicator.name, r=debate.round.seq)))
 
     def coerce(value):
+        value = int(value)
         return DebateAdjudicator.objects.get(id=value)
 
     tournament = source.institution.tournament

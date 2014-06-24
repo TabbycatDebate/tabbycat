@@ -8,6 +8,17 @@
 
 {% block content %}
 
+{% if form.errors %}
+<div class="alert alert-danger">
+    <p>There are some problems with this feedback submission. Please review and correct them.</p>
+
+    {% if form.non_field_errors %}
+        <p>General errors:</p>
+        <div class="ballot-errors">{{ form.non_field_errors }}</div>
+    {% endif %}
+</div>
+{% endif %}
+
 <form id="feedbackForm" action="" method="POST" class="form-horizontal">
 
     {% for field in form %}
