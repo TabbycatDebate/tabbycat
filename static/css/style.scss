@@ -200,6 +200,7 @@ input.error, select.error, .error input {
         // fix for header and icons
         //min-width: 35px; // minimum widths so icons are jammed
         padding: 8px;
+        min-width: 35px;
     }
     // Phones
     @media (max-width: $screen-xs-max) {
@@ -208,9 +209,9 @@ input.error, select.error, .error input {
             //min-width: auto;
             padding: 4px;
         }
-        .team-emoji, .th-emoji {
-            display: none;
-        }
+        // .team-emoji, .th-emoji {
+        //     display: none;
+        // }
     }
     .team-emoji, .th-emoji {
         // max-width: 28px;
@@ -223,7 +224,8 @@ input.error, select.error, .error input {
     }
     .th-emoji {
         img {
-            max-height: 10px;
+            height: 10px;
+            width: 28px;
             visibility: hidden; /* space to get the size right pre JS-resize */
         }
     }

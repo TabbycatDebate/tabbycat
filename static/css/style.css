@@ -773,14 +773,13 @@ input.error, select.error, .error input {
   #wrap table.table tbody > tr > td,
   #wrap table.table thead > tr > th, .FixedHeader_Cloned .table tbody > tr > td,
   .FixedHeader_Cloned .table thead > tr > th {
-    padding: 8px; }
+    padding: 8px;
+    min-width: 35px; }
   @media (max-width: 767px) {
     #wrap table.table tbody > tr > td,
     #wrap table.table thead > tr > th, .FixedHeader_Cloned .table tbody > tr > td,
     .FixedHeader_Cloned .table thead > tr > th {
-      padding: 4px; }
-    #wrap table.table .team-emoji, #wrap table.table .th-emoji, .FixedHeader_Cloned .table .team-emoji, .FixedHeader_Cloned .table .th-emoji {
-      display: none; } }
+      padding: 4px; } }
   #wrap table.table .team-emoji, #wrap table.table .th-emoji, .FixedHeader_Cloned .table .team-emoji, .FixedHeader_Cloned .table .th-emoji {
     text-align: center;
     padding: 4px 0 0 0; }
@@ -788,7 +787,8 @@ input.error, select.error, .error input {
       width: 28px;
       height: 28px; }
   #wrap table.table .th-emoji img, .FixedHeader_Cloned .table .th-emoji img {
-    max-height: 10px;
+    height: 10px;
+    width: 28px;
     visibility: hidden;
     /* space to get the size right pre JS-resize */ }
   #wrap table.table .opponent-emoji, .FixedHeader_Cloned .table .opponent-emoji {

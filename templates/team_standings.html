@@ -38,7 +38,9 @@
             {% endif %}
             {% for round in rounds %}
             <th>R{{ round }}</th>
-            <th></th>
+            <th class="opponent-emoji">
+                <img class="invisible" src="{% static 'emoji/img/grey_question.png' %}" />
+            </th>
             {% endfor %}
             <th>Total</th>
             <th>Wins</th>
@@ -93,6 +95,7 @@
         </td>
     </tr>
     {% endfor %}
+    </tbody>
 </table>
 
 {% endblock content %}
