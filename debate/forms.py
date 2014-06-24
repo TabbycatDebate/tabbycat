@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 
 from debate.models import SpeakerScoreByAdj, Debate, Motion, Round, Team, Adjudicator
 from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
@@ -460,6 +461,15 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
             raise forms.ValidationError(_("This field is required."))
         return value
 
+class CustomNullBooleanSelect(forms.NullBooleanSelect):
+
+    def __init__(self, attrs=None):
+        choices = (('1', ugettext_lazy('Not sure')),
+                   ('2', ugettext_lazy('Yes')),
+                   ('3', ugettext_lazy('No')))
+        # skip the NullBooleanSelect constructor
+        super(forms.NullBooleanSelect, self).__init__(attrs, choices)
+
 def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, released_only=False):
     """adjudicator is an Adjudicator.
     submission_fields is a dict of fields for Submission.
@@ -529,6 +539,8 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
             max_value = 5,
         )
 
+        agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
+
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def save(self):
@@ -562,6 +574,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
             )
 
             af.score = self.cleaned_data['score']
+            af.agree_with_decision = self.cleaned_data['agree_with_decision']
             af.comments = self.cleaned_data['comment']
 
             af.save()
@@ -616,6 +629,8 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
             max_value = 5,
         )
 
+        agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
+
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def __init__(self, *args, **kwargs):
@@ -639,6 +654,7 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
             )
 
             af.score = self.cleaned_data['score']
+            af.agree_with_decision = self.cleaned_data['agree_with_decision']
             af.comments = self.cleaned_data['comment']
 
             af.save()
@@ -694,6 +710,8 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
             max_value = 5,
         )
 
+        agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
+
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def __init__(self, *args, **kwargs):
@@ -717,6 +735,7 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
             )
 
             af.score = self.cleaned_data['score']
+            af.agree_with_decision = self.cleaned_data['agree_with_decision']
             af.comments = self.cleaned_data['comment']
 
             af.save()

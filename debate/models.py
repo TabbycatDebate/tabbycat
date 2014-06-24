@@ -1170,6 +1170,7 @@ class Submission(models.Model):
 class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey(Adjudicator)
     score = models.FloatField()
+    agree_with_decision = models.NullBooleanField()
     comments = models.TextField(blank=True)
 
     source_adjudicator = models.ForeignKey(DebateAdjudicator, blank=True,
