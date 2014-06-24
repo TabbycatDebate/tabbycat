@@ -594,7 +594,7 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
     choices.extend([
         adj_choice(da) for da in DebateAdjudicator.objects.filter(
             debate__id__in = [d.id for d in debates]
-        ).select_related('debate').order_by('debate__round') if da.adjudicator != source
+        ).select_related('debate').order_by('-debate__round') if da.adjudicator != source
     ])
 
     def coerce(value):
@@ -657,7 +657,7 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
     # Only include non-silent rounds for teams.
     debates = [dt.debate for dt in DebateTeam.objects.filter(
         team=source, debate__round__silent=False,
-        debate__round__draw_status=Round.STATUS_RELEASED).select_related('debate')]
+        debate__round__draw_status=Round.STATUS_RELEASED).select_related('debate').order_by('-debate__round__seq')]
 
     for debate in debates:
         try:
