@@ -997,32 +997,6 @@ class Debate(models.Model):
         return alloc
 
     @property
-    def adjudicator_names_dict(self):
-        alloc = self.adjudicators
-
-        d = OrderedDict()
-
-        if alloc.panel:
-            d[alloc.chair] = alloc.chair.name + u" \u24B8"
-            for p in sorted(alloc.panel, key=lambda p: p.name):
-                d[p] = p.name
-        else:
-            d[alloc.chair] = alloc.chair.name
-
-        for t in sorted(alloc.trainees, key=lambda t: t.name):
-            d[t] = t.name + u" \u24C9"
-
-        return d
-
-    @property
-    def adjudicator_names_list(self):
-        return self.adjudicator_names_dict.values()
-
-    @property
-    def adjudicators_display(self):
-        return ", ".join(self.adjudicator_names_list)
-
-    @property
     def venue_splitname(self):
         # Formatting venue names so they can split over multiple lines
         match = re.match(r"([a-z]+)([0-9]+)", str(self.venue.name), re.I)
@@ -1223,6 +1197,9 @@ class AdjudicatorAllocation(object):
         a.extend(self.panel)
         return a
 
+    def __unicode__(self):
+        return ", ".join(map(lambda x: x.name, self.list))
+
     def __iter__(self):
         yield DebateAdjudicator.TYPE_CHAIR, self.chair
         for a in self.panel:
@@ -1243,6 +1220,10 @@ class AdjudicatorAllocation(object):
     @property
     def has_chair(self):
         return self.chair is not None
+
+    @property
+    def is_panel(self):
+        return len(self.panel) > 0
 
     @property
     def valid(self):

@@ -107,7 +107,7 @@
     </thead>
     <tbody>
     {% for debate in draw %}
-    <tr class="{% if debate.all_conflicts or not debate.adjudicators_display or not debate.adjudicators.valid %}danger{% endif %}">
+    <tr class="{% if debate.all_conflicts or not debate.adjudicators.valid %}danger{% endif %}">
         <td>{{ debate.bracket }}</td>
         <td>{{ debate.venue.name }}</td>
         <td title="{% aff_count debate.aff_team round.prev %}">
@@ -126,7 +126,11 @@
                 {{ debate.neg_team.speakers|join:', ' }}
             </span>
         </td>
-        <td>{{ debate.adjudicators_display }}</td>
+        <td>
+        {% for type, adj in debate.adjudicators %}
+            {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+        {% endfor %}
+        </td>
         <td class="text-danger">{{ debate.all_conflicts|join:", " }}</td>
     </tr>
     {% endfor %}

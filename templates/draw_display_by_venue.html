@@ -84,13 +84,13 @@
             </td>
             <td class="adj-names">
                 <ul class="">
-                {% for item in debate.adjudicator_names_list %}
-                    {% if "Ⓒ" in item %}
-                        <li class=""><span class="adj-chair">{{ item }}</span></li>
-                    {% elif "Ⓣ" in item %}
-                        <li class=""><span class="adj-trainee">{{ item }}</span></li>
+                {% for type, adj in debate.adjudicators %}
+                    {% if type == 'C' and debate.adjudicators.is_panel %}
+                        <li class=""><span class="adj-chair">{{ adj.name }}</span> Ⓒ</li>
+                    {% elif type == 'T' %}
+                        <li class=""><span class="adj-trainee">{{ adj.name }}</span> Ⓣ</li>
                     {% else %}
-                        <li class=""><span class="adj-normal">{{ item }}</span></li>
+                        <li class=""><span class="adj-normal">{{ adj.name }}</span></li>
                     {% endif %}
                 {% endfor %}
                 </ul>

@@ -342,11 +342,11 @@ class BallotSet(object):
         return da.type == m.DebateAdjudicator.TYPE_TRAINEE
 
     @property
-    def adjudicator_results_display(self):
-        names_dict = self.debate.adjudicator_names_dict
+    def adjudicator_results(self):
         self._calc_decision()
-        splits = [adj not in self.majority_adj and not self.is_trainee(adj) for adj in names_dict.keys()]
-        return zip(names_dict.itervalues(), splits)
+        splits = [adj not in self.majority_adj and not self.is_trainee(adj) for _, adj in self.debate.adjudicators]
+        for (type, adj), split in zip(self.debate.adjudicators, splits):
+            yield type, adj, split
 
 class DebateResult(object):
     def __init__(self, *args):

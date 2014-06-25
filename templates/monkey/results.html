@@ -62,7 +62,9 @@
                 </span>
             </td>
             <td>
-                {{ debate.adjudicators_display }}
+                {% for type, adj in debate.adjudicators %}
+                    {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                {% endfor %}
             </td>
         </tr>
     {% endfor %}

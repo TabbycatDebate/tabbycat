@@ -69,15 +69,17 @@
 
             <td>
                 {% if debate.confirmed_ballot and show_splits %}
-                    {% for adj_display, split in debate.confirmed_ballot.ballot_set.adjudicator_results_display %}
+                    {% for type, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results %}
                         {% if split %}
-                            <span class="text-danger">{{ adj_display }} </span><span class="glyphicon glyphicon-resize-full text-danger"></span>{% if not forloop.last %},{% endif %}
+                            <span class="text-danger">{{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}</span> <span class="glyphicon glyphicon-resize-full text-danger"></span>{% if not forloop.last %},{% endif %}
                         {% else %}
-                            {{ adj_display }}{% if not forloop.last %},{% endif %}
+                            {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    {{ debate.adjudicators_display }}
+                    {% for type, adj in debate.adjudicators %}
+                        {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
                 {% endif %}
             </td>
 
