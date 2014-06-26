@@ -1348,6 +1348,7 @@ def get_adj_feedback(request, t):
               f.score,
               {None: "Unsure", True: "Yes", False: "No"}[f.agree_with_decision],
               f.comments,
+              f.confirmed,
              ] for f in feedback ]
 
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
