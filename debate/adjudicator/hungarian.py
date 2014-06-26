@@ -112,7 +112,7 @@ class HungarianAllocator(Allocator):
             for i, debate in enumerate(panel_debates):
                 for j in range(3):
 
-                    # for the top half of these debates, the final panellist 
+                    # for the top half of these debates, the final panellist
                     # can be of lower quality than the other 2
                     if i < npan/2 and j==2:
                         adjustment = -1.0
@@ -150,7 +150,7 @@ class HungarianAllocator(Allocator):
 
         print [(a.debate, a.chair, a.panel) for a in alloc[len(chairs):]]
 
-        return alloc 
+        return alloc
 
 def test():
     from debate.models import Round
