@@ -496,6 +496,7 @@ class Adjudicator(Person):
 
 class AdjudicatorTestScoreHistory(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
+    round = models.ForeignKey('Round', blank=True, null=True)
     score = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -1438,6 +1439,7 @@ class ActionLog(models.Model):
     ACTION_TYPE_BALLOT_EDIT             = 15
     ACTION_TYPE_FEEDBACK_SUBMIT         = 20
     ACTION_TYPE_FEEDBACK_SAVE           = 21
+    ACTION_TYPE_TEST_SCORE_EDIT         = 22
     ACTION_TYPE_DRAW_CREATE             = 30
     ACTION_TYPE_DRAW_CONFIRM            = 31
     ACTION_TYPE_ADJUDICATORS_SAVE       = 32
@@ -1463,6 +1465,7 @@ class ActionLog(models.Model):
         (ACTION_TYPE_BALLOT_SUBMIT          , 'Submitted ballot set from the public form'), # For debaters, not tab monkeys
         (ACTION_TYPE_FEEDBACK_SUBMIT        , 'Submitted feedback from the public form'), # For debaters, not tab monkeys
         (ACTION_TYPE_FEEDBACK_SAVE          , 'Saved feedback'), # For tab monkeys, not debaters
+        (ACTION_TYPE_TEST_SCORE_EDIT        , 'Edited adjudicator test score'),
         (ACTION_TYPE_ADJUDICATORS_SAVE      , 'Saved adjudicator allocation'),
         (ACTION_TYPE_VENUES_SAVE            , 'Saved venues'),
         (ACTION_TYPE_DRAW_CREATE            , 'Created draw'),
@@ -1489,6 +1492,7 @@ class ActionLog(models.Model):
         ACTION_TYPE_BALLOT_SUBMIT          : ('ballot_submission',),
         ACTION_TYPE_FEEDBACK_SUBMIT        : ('adjudicator_feedback',),
         ACTION_TYPE_FEEDBACK_SAVE          : ('adjudicator_feedback',),
+        ACTION_TYPE_TEST_SCORE_EDIT        : ('adjudicator',),
         ACTION_TYPE_ADJUDICATORS_SAVE      : ('round',),
         ACTION_TYPE_VENUES_SAVE            : ('round',),
         ACTION_TYPE_DRAW_CREATE            : ('round',),
@@ -1515,6 +1519,7 @@ class ActionLog(models.Model):
 
     debate = models.ForeignKey(Debate, blank=True, null=True)
     ballot_submission = models.ForeignKey(BallotSubmission, blank=True, null=True)
+    adjudicator = models.ForeignKey(Adjudicator, blank=True, null=True)
     adjudicator_feedback = models.ForeignKey(AdjudicatorFeedback, blank=True, null=True)
     round = models.ForeignKey(Round, blank=True, null=True)
     motion = models.ForeignKey(Motion, blank=True, null=True)
@@ -1554,6 +1559,8 @@ class ActionLog(models.Model):
                 strings.append('round %s' % value.seq)
             elif field_name == 'motion':
                 strings.append(value.reference)
+            elif field_name == 'adjudicator':
+                strings.append(value.name)
             elif field_name == 'adjudicator_feedback':
                 strings.append(value.adjudicator.name)
             else:
