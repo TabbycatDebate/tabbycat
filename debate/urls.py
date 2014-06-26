@@ -30,6 +30,8 @@ urlpatterns = patterns('debate.views',
     url(r'^tab/replies/$', 'public_replies_tab', name='public_replies_tab'),
     url(r'^tab/motions/$', 'public_motions_tab', name='public_motions_tab'),
 
+    #url(r'^admin/actions/$', 'action_log', name='action_log'),
+
     url(r'^admin/round/(?P<round_seq>\d+)/venues/$', 'availability', { 'model': 'venue', 'context_name': 'venues' }, 'venue_availability'),
     url(r'^admin/round/(?P<round_seq>\d+)/venues/update/$',
         'update_availability', { 'active_attr': 'venue', 'active_model': m.ActiveVenue, 'update_method': 'set_available_venues' }, 'update_venue_availability'),
@@ -91,4 +93,5 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/adjudicators/feedback/$', 'adj_feedback', name='adj_feedback'),
     url(r'^admin/adjudicators/feedback/get/$', 'get_adj_feedback', name='get_adj_feedback'),
     url(r'^admin/adjudicators/feedback/(?P<adj_id>\d+)/$', 'enter_feedback', name='enter_feedback'),
+    url(r'^admin/adjudicators/scores/test/(?P<adj_id>\d+)/set/$', 'set_adj_test_score', name='set_adj_test_score'),
 )

@@ -494,13 +494,18 @@ class Adjudicator(Person):
             )
         return d.count()
 
+class AdjudicatorTestScoreHistory(models.Model):
+    adjudicator = models.ForeignKey(Adjudicator)
+    score = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
 class AdjudicatorConflict(models.Model):
-    adjudicator = models.ForeignKey('Adjudicator')
-    team = models.ForeignKey('Team')
+    adjudicator = models.ForeignKey(Adjudicator)
+    team = models.ForeignKey(Team)
 
 class AdjudicatorInstitutionConflict(models.Model):
-    adjudicator = models.ForeignKey('Adjudicator')
-    institution = models.ForeignKey('Institution')
+    adjudicator = models.ForeignKey(Adjudicator)
+    institution = models.ForeignKey(Institution)
 
 class RoundManager(models.Manager):
     use_for_related_Fields = True

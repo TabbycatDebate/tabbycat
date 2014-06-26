@@ -843,7 +843,33 @@ def unrelease_motions(request, round):
 @expect_post
 @round_view
 def set_round_start_time(request, round):
-    print request.POST
+
+    time_text = request.POST["start_time"]
+    try:
+        time = datetime.datetime.strptime(time_text, "%H:%M").time()
+    except ValueError, e:
+        print e
+        return redirect_round('draw', round)
+
+    round.starts_at = time
+    round.save()
+
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_ROUND_START_TIME_SET,
+        user=request.user, round=round)
+
+    return redirect_round('draw', round)
+
+@admin_required
+@expect_post
+@tournament_view
+def set_adj_test_score(request, t, adj_id):
+
+    try:
+        adjudicator = Adjudicator.objects.get(id=adj_id)
+    except (Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
+        return HttpResponseBadRequest()
+
+    # CONTINUE HERE CONTINUE HERE WORK IN PROGRESS
     time_text = request.POST["start_time"]
     try:
         time = datetime.datetime.strptime(time_text, "%H:%M").time()

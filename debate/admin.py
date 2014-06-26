@@ -32,6 +32,10 @@ class AdjudicatorInstitutionConflictInline(admin.TabularInline):
     model = models.AdjudicatorInstitutionConflict
     extra = 1
 
+class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
+    model = models.AdjudicatorTestScoreHistory
+    extra = 1
+
 class AdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution')
     search_fields = ('name', 'institution__name', 'institution__code',)
