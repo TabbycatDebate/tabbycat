@@ -28,4 +28,4 @@ sqlparse==0.1.11
 static==1.0.2
 tablib==0.9.11
 wsgiref==0.1.2
-django-pylibmc-sasl
+django-pylibmc-sasl==0.2.4
