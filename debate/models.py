@@ -1065,6 +1065,13 @@ class DebateTeam(models.Model):
     def __unicode__(self):
         return u'%s %s' % (self.debate, self.team)
 
+    @property
+    def opposition(self):
+        try:
+            return DebateTeam.objects.exclude(position=self.position).get(debate=self.debate)
+        except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
+            print "error: ", self.debate, self.position
+            return None
 
 class DebateAdjudicator(models.Model):
     TYPE_CHAIR = 'C'
