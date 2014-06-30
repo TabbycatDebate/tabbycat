@@ -4,9 +4,7 @@ import os
 # = Server Settings =
 # ===================
 
-ADMINS              = (
-    '', '',
-)
+ADMINS              = ()
 MANAGERS            = ADMINS
 DEBUG               = True
 TEMPLATE_DEBUG      = DEBUG
