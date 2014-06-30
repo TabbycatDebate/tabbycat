@@ -19,7 +19,7 @@
         $('#resultsForm input[type="number"]').attr('readonly', 'true');
         $('#resultsForm select').attr('disabled', 'true');
         $('#incorrect').click(function() {
-            {% if other_ballots_set.count > 0 %}
+            {% if ballot_not_singleton %}
             $('#id_debate_result_status').val('{{ debate.STATUS_DRAFT }}');
             {% else %}
             $('#id_debate_result_status').val('{{ debate.STATUS_NONE }}');
