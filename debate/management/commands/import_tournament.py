@@ -53,7 +53,7 @@ class Command(BaseCommand):
                         name = 'Round %d' % i,
                         draw_type = draw_type,
                         feedback_weight = 0,# min((i-1)*0.1, 0.5),
-                        silent = (i < 8),
+                        silent = (i > 7),
                     ).save()
 
                 t.current_round = m.Round.objects.get(tournament=t, seq=1)
