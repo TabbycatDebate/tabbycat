@@ -64,8 +64,8 @@
         {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">
             <td><a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View</a></td>
-            <td><a href="{% tournament_url enter_feedback adj.id %}">Add</a></td>
-            <td><a data-toggle="modal" data-target="#edit-test-score" class="edit-test-score">Edit</a></td>
+            <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
+            <td><a data-toggle="modal" data-target="#edit-test-score" class="edit-test-score">Edit Score</a></td>
             <td class="adj-name">
                 {% if adj.phone or adj.email %}
                     <span data-toggle="tooltip" title="{{ adj.phone }} {{ adj.email }}">{{ adj.name }}</span>
