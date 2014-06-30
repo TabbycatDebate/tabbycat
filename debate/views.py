@@ -920,7 +920,7 @@ def public_results(request, round):
     if round.seq >= round.tournament.current_round.seq or round.silent:
         raise Http404()
     draw = round.get_draw()
-    show_motions_column = Motion.objects.filter(round=round).count() > 1
+    show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.config.get('show_motions_in_results')
     show_splits = round.tournament.config.get('show_splitting_adjudicators')
     return r2r(request, "public/results_for_round.html", dict(
             draw=draw, show_motions_column=show_motions_column, show_splits=show_splits))
