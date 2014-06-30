@@ -83,6 +83,71 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
+    def testExhaustInstitution1(self):
+        data = (((1, 'C'), (5, 'A')),
+                ((2, 'A'), (6, 'A')),
+                ((3, 'C'), (7, 'A')),
+                ((4, 'B'), (8, 'D')))
+        result = self._1u1d_no_change(data)
+        self.assertEqual(result, self.draw(data))
+        return self.draw(data)
+
+    def testExhaustInstitution2(self):
+        data = (((1, 'A'), (5, 'C')),
+                ((2, 'A'), (6, 'A')),
+                ((3, 'A'), (7, 'D')),
+                ((4, 'B'), (8, 'D')))
+        result = self._1u1d_no_change(data)
+        self.assertEqual(result, self.draw(data))
+        return self.draw(data)
+
+    def testExhaustInstitution3(self):
+        data = (((1, 'A'), (5, 'C')),
+                ((2, 'A'), (6, 'A')),
+                ((3, 'B'), (7, 'A')),
+                ((4, 'B'), (8, 'D')))
+        result = self._1u1d_no_change(data)
+        self.assertEqual(result, self.draw(data))
+        return self.draw(data)
+
+    def testExhaustHistory1(self):
+        data = (((1, 'C'), (5, 'B')),
+                ((2, 'A', None, (5, 6, 7)), (6, 'C')),
+                ((3, 'C'), (7, 'D')),
+                ((4, 'B'), (8, 'D')))
+        result = self._1u1d_no_change(data)
+        self.assertEqual(result, self.draw(data))
+        return self.draw(data)
+
+    def testExhaustHistory2(self):
+        data = (((1, 'C'), (5, 'B')),
+                ((2, 'A', None, (5, 6)), (6, 'C')),
+                ((3, 'C', None, 6), (7, 'D')),
+                ((4, 'B'), (8, 'D')))
+        result = self._1u1d_no_change(data)
+        self.assertEqual(result, self.draw(data))
+        return self.draw(data)
+
+    def testPreferInstitutionToHistory(self):
+        data = (((1, 'C'), (5, 'B')),
+                ((2, 'A', None, (5, 7)), (6, 'A')),
+                ((3, 'C'), (7, 'D')),
+                ((4, 'B'), (8, 'D')))
+        result = self._1u1d_no_change(data)
+        self.assertEqual(result, self.draw(data))
+        return self.draw(data)
+
+    def testPreferFewerSwaps(self):
+        """It should swap the middle two debates, as opposed to the
+        top two and last two."""
+        data = (((1, 'C'), (5, 'B')),
+                ((2, 'A'), (6, 'A')),
+                ((3, 'C'), (7, 'C')),
+                ((4, 'B'), (8, 'D')))
+        result = [(1, 5), (2, 7), (3, 6), (4, 8)]
+        self.assertEqual(result, self.draw(data))
+        return self.draw(data)
+
     def draw(self, data, **options):
         d = []
         for data1, data2 in data:

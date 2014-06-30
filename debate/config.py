@@ -27,7 +27,7 @@ SETTINGS = OrderedDict([
     ('avoid_same_institution',      (_bool, 'Avoid team-team institution conflicts in draw?',              True)),
     ('avoid_team_history',          (_bool, 'Avoid team-team history conflicts in draw?',                  True)),
     ('team_institution_penalty',    (int,   'Penalty for team-team institution conflict',                  1)),
-    ('team_history_penalty',        (int,   'Penalty for team-team history conflict',                      100)),
+    ('team_history_penalty',        (int,   'Penalty for team-team history conflict',                      1000)),
     ('show_emoji',                  (_bool, 'Shows Emoji in the draw UI',                                  True)),
     ('show_institutions',           (_bool, 'Shows the institutions column in the draw UI',                True)),
     ('public_participants',         (_bool, 'Public interface to see all participants',                    False)),
