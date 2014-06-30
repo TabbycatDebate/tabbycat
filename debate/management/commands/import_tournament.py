@@ -230,6 +230,8 @@ class Command(BaseCommand):
                 adj.save()
                 print "Adjudicator", name
 
+                m.AdjudicatorTestScoreHistory(adjudicator=adj, score=test_score, round=None).save()
+
                 m.AdjudicatorInstitutionConflict(adjudicator=adj, institution=ins).save()
 
                 if institution_conflicts:
