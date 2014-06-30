@@ -98,6 +98,18 @@ class SpeakerScoreByAdjAdmin(admin.ModelAdmin):
                      'debate_adjudicator__adjudicator__name')
 admin.site.register(models.SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)
 
+_dtmp_team_name =  lambda o: o.debate_team.team.short_name
+_dtmp_team_name.short_description = 'Team'
+_dtmp_position = lambda o: o.debate_team.position
+_dtmp_position.short_description = 'Position'
+_dtmp_motion = lambda o: o.motion.reference
+_dtmp_motion.short_description = 'Motion'
+_dtmp_confirmed = lambda o: o.ballot_submission.confirmed
+_dtmp_confirmed.short_description = 'Confirmed'
+class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin):
+    list_display = ('ballot_submission', _dtmp_confirmed, _dtmp_team_name, _dtmp_position, 'preference', _dtmp_motion)
+admin.site.register(models.DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
+
 class RoundAdmin(admin.ModelAdmin):
     list_display = ('name', 'seq', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
 admin.site.register(models.Round, RoundAdmin)

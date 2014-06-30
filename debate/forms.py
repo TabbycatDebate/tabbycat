@@ -146,12 +146,12 @@ class BallotSetForm(forms.Form):
             widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
             required = True)
 
-        self.fields['aff_preference'] = forms.ModelChoiceField(
+        self.fields['aff_motion_veto'] = forms.ModelChoiceField(
             queryset = self.motions,
             widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
             required = False)
 
-        self.fields['neg_preference'] = forms.ModelChoiceField(
+        self.fields['neg_motion_veto'] = forms.ModelChoiceField(
             queryset = self.motions,
             widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
             required = False)
@@ -239,6 +239,8 @@ class BallotSetForm(forms.Form):
                 initial['motion'] = self.motions[0]
             else:
                 initial['motion'] = bs.motion
+            initial['aff_motion_veto'] = bs.aff_motion_veto
+            initial['neg_motion_veto'] = bs.neg_motion_veto
 
         for side in ('aff', 'neg'):
             for i in self.POSITIONS:
@@ -336,8 +338,8 @@ class BallotSetForm(forms.Form):
         do('neg')
 
         bs.motion           = self.cleaned_data['motion']
-        bs.aff_preference   = self.cleaned_data['aff_preference']
-        bs.neg_preference   = self.cleaned_data['neg_preference']
+        bs.aff_motion_veto  = self.cleaned_data['aff_motion_veto']
+        bs.neg_motion_veto  = self.cleaned_data['neg_motion_veto']
         bs.discarded        = self.cleaned_data['discarded']
         bs.confirmed        = self.cleaned_data['confirmed']
 

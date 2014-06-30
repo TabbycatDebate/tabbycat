@@ -152,7 +152,7 @@ class BallotSet(object):
             'neg': 'aff',
         }
 
-        self.motion_preference = {
+        self.motion_veto = {
             'aff': None,
             'neg': None,
         }
@@ -185,40 +185,24 @@ class BallotSet(object):
         self.ballots.motion = new
 
     @property
-    def aff_preference(self):
-        return self.ballots.aff_preference
+    def aff_motion_veto(self):
+        return self.motion_veto['aff']
 
-    @aff_preference.setter
-    def aff_preference(self, new):
-        from debate.models import DebateTeamMotionPreference
-        preference, created = DebateTeamMotionPreference.objects.get_or_create(
-            debate_team = self.debate.get_dt('aff'),
-            motion = new,
-            preference = 3,
-            ballot_submission = self.ballots
-        )
-        if created:
-            return preference
+    @aff_motion_veto.setter
+    def aff_motion_veto(self, new):
+        self.motion_veto['aff'] = new
 
     @property
-    def neg_preference(self):
-        return self.ballots.neg_preference
+    def neg_motion_veto(self):
+        return self.motion_veto['neg']
 
-    @neg_preference.setter
-    def neg_preference(self, new):
-        from debate.models import DebateTeamMotionPreference
-        preference, created = DebateTeamMotionPreference.objects.get_or_create(
-            debate_team = self.debate.get_dt('neg'),
-            motion = new,
-            preference = 3,
-            ballot_submission = self.ballots
-        )
-        if created:
-            return preference
+    @neg_motion_veto.setter
+    def neg_motion_veto(self, new):
+        self.motion_veto['neg'] = new
 
     def _init_side(self, side):
         dt = self.debate.get_dt(side)
-        from debate.models import SpeakerScore, TeamScore
+        from debate.models import SpeakerScore, TeamScore, DebateTeamMotionPreference
 
         for sss in SpeakerScore.objects.filter(
             debate_team = dt,
@@ -237,9 +221,20 @@ class BallotSet(object):
             points = None
             score = None
 
-        self.preferences[side] = DebateTeamMotionPreference.objects.get
         self.points[side] = points
         self.total_score[side] = score
+
+        try:
+            dtmp = DebateTeamMotionPreference.objects.get(
+                ballot_submission = self.ballots,
+                debate_team = dt,
+                preference = 3
+            )
+            veto = dtmp.motion
+        except DebateTeamMotionPreference.DoesNotExist:
+            veto = None
+        self.motion_veto[side] = veto
+
 
     @property
     def adjudicator_sheets(self):
@@ -274,7 +269,7 @@ class BallotSet(object):
 
 
     def _save(self, side):
-        from debate.models import TeamScore, SpeakerScore
+        from debate.models import TeamScore, SpeakerScore, DebateTeamMotionPreference
 
         dt = self.debate.get_dt(side)
         total = self._score(side)
@@ -294,6 +289,10 @@ class BallotSet(object):
                 score = score,
                 position = i,
             ).save()
+
+        DebateTeamMotionPreference.objects.filter(ballot_submission=self.ballots, debate_team=dt, preference=3).delete()
+        if self.motion_veto[side] is not None:
+            DebateTeamMotionPreference(ballot_submission=self.ballots, debate_team=dt, preference=3, motion=self.motion_veto[side]).save()
 
         self.ballots.motion = self.motion
         self.ballots.save()
