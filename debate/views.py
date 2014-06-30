@@ -156,7 +156,10 @@ def public_team_standings(request, t):
         # of wins.
         teams = Team.objects.order_by('institution__code', 'reference')
 
-        rounds = Round.objects.filter(tournament=round.tournament,
+        if t.release_all:
+            rounds = Round.objects.filter(tournament=t, silent=False).order_by('seq')
+        else:
+            rounds = Round.objects.filter(tournament=t,
                                     seq__lte=round.seq, silent=False).order_by('seq')
 
         def get_score(team, r):
@@ -166,14 +169,7 @@ def public_team_standings(request, t):
                     debate_team__team=team,
                     debate_team__debate__round=r,
                 )
-                debate = ts.debate_team.debate
-
-                opposition = None
-                if debate.neg_team == team:
-                    opposition = ts.debate_team.debate.aff_team
-                else:
-                    opposition = ts.debate_team.debate.neg_team
-
+                opposition = ts.debate_team.opposition.team
                 return ts.points, opposition
             except TeamScore.DoesNotExist:
                 return None
@@ -280,13 +276,7 @@ def public_team_tab(request, t):
                 debate_team__team=team,
                 debate_team__debate__round=r,
             )
-            debate = ts.debate_team.debate
-            opposition = None
-            if debate.neg_team == team:
-                opposition = ts.debate_team.debate.aff_team
-            else:
-                opposition = ts.debate_team.debate.neg_team
-
+            opposition = ts.debate_team.opposition.team
             return ts.score, ts.points, opposition
         except TeamScore.DoesNotExist:
             return None
@@ -925,7 +915,7 @@ def monkey_results(request, round):
 @public_optional_round_view('public_results')
 def public_results(request, round):
     # Can't see results for current round or later
-    if round.seq >= round.tournament.current_round.seq or round.silent:
+    if (round.seq >= round.tournament.current_round.seq or round.silent) and not round.tournament.release_all:
         raise Http404()
     draw = round.get_draw()
     show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.config.get('show_motions_in_results')
@@ -1098,12 +1088,7 @@ def team_standings(request, round):
                 debate_team__debate__round=r,
             )
             debate = ts.debate_team.debate
-            opposition = None
-            if debate.neg_team == team:
-                opposition = ts.debate_team.debate.aff_team
-            else:
-                opposition = ts.debate_team.debate.neg_team
-
+            opposition = ts.debate_team.opposition.team
             return ts.score, ts.points, opposition
         except TeamScore.DoesNotExist:
             return None

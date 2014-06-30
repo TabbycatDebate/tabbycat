@@ -4,7 +4,7 @@ class OneUpOneDownSwapper(object):
         "exclude_penalty"    : -1e10,
         "avoid_history"      : True,
         "avoid_institution"  : True,
-        "history_penalty"    : 1e2,
+        "history_penalty"    : 1e3,
         "institution_penalty": 1,
     }
 
@@ -99,7 +99,9 @@ class OneUpOneDownSwapper(object):
             return i.count(True) * self.institution_penalty + sum(h) \
                     * self.history_penalty
 
-        return badness(inst, hist) - badness(inst_swap, hist_swap)
+        # Discount by 1e-3 so that, if there are two otherwise-equivalent
+        # swap combinations, fewer swaps is preferred to more swaps
+        return badness(inst, hist) - badness(inst_swap, hist_swap) - 1e-3
 
     @staticmethod
     def one_up_down_swap(draw, i):
@@ -120,7 +122,7 @@ class OneUpOneDownSwapper(object):
         # conflict, swaps higher in the ranking are preferred to those lower.
         for i, score in enumerate(swap_scores):
             if score > 0:
-                swap_scores[i] += (len(swap_scores) - i) * 1e-2
+                swap_scores[i] += (len(swap_scores) - i) * 1e-6
 
         best_score, best_swaps = self.dp(swap_scores)
         for s in best_swaps:

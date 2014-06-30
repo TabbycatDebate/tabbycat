@@ -37,7 +37,7 @@
                 <li><a class="public-results-nav" href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% for r in tournament.rounds.all %}
-                            {% if r.seq < current_round.seq and not r.silent %}
+                            {% if r.seq < current_round.seq and not r.silent or tournament.release_all %}
                                 <li><a href="{% round_url public_results r %}">Round {{ r }}</a></li>
                             {% endif %}
                         {% endfor %}

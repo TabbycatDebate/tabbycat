@@ -24,6 +24,7 @@ class Tournament(models.Model):
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_')
     welcome_msg = models.TextField(blank=True, null=True, default="")
+    release_all = models.BooleanField(default=False)
 
     @models.permalink
     def get_absolute_url(self):
@@ -1065,8 +1066,13 @@ class DebateTeam(models.Model):
     def __unicode__(self):
         return u'%s %s' % (self.debate, self.team)
 
-class DebateMotionPreferences(models.Model):
-
+    @property
+    def opposition(self):
+        try:
+            return DebateTeam.objects.exclude(position=self.position).get(debate=self.debate)
+        except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
+            print "error: ", self.debate, self.position
+            return None
 
 class DebateAdjudicator(models.Model):
     TYPE_CHAIR = 'C'
@@ -1423,6 +1429,12 @@ class Motion(models.Model):
 
     def __unicode__(self):
         return self.text
+
+class DebateTeamMotionPreference(models.Model):
+    """Represents a motion preference submitted by a debate team."""
+    debate_team = models.ForeignKey(DebateTeam)
+    motion = models.ForeignKey(Motion)
+    preference = models.IntegerField()
 
 class ActionLogManager(models.Manager):
     def log(self, *args, **kwargs):
