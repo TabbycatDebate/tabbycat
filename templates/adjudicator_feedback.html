@@ -18,7 +18,7 @@
           'ajax': '{% tournament_url get_adj_feedback %}?id={{ adjudicators.first.id }}',
           'bPaginate': false,
           'bFilter': false
-        });
+        })
 
         $(".view-feedback").each( function() {
             $(this).click( function() {
@@ -28,9 +28,19 @@
                 $("#modal-adj-name").text(adj_name); // Updating header of the modal
                 var newUrl = '{% tournament_url get_adj_feedback %}?id=' + adj_id
                 adjTable.api().ajax.url(newUrl).load();
+                //adjTable.api().ajax.url(newUrl).load(highlightScores());
             });
         });
 
+        function highlightScores() {
+            $("#modal-adj-table tbody tr").each( function() {
+                //var score = parseFloat($(this).find("td:nth-child(6)").text())
+                //var score = $(this).text()
+                score = $(this)
+                console.log(score);
+                console.log("wtf");
+            });
+        }
 
         $(".edit-test-score").each( function() {
             $(this).click( function() {
