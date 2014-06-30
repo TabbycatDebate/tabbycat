@@ -920,7 +920,6 @@ class Debate(models.Model):
             # Save a bit of time by avoiding comparisons already done.
             # This relies on ballots being ordered by version.
             for ballot2 in ballots.filter(version__gt=ballot1.version):
-                print ballot1.version, ballot2.version
                 if ballot1.is_identical(ballot2):
                     result[ballot1].append(ballot2.version)
                     result[ballot2].append(ballot1.version)
