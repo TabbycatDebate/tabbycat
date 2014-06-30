@@ -1430,6 +1430,12 @@ class Motion(models.Model):
     def __unicode__(self):
         return self.text
 
+class DebateTeamMotionPreference(models.Model):
+    """Represents a motion preference submitted by a debate team."""
+    debate_team = models.ForeignKey(DebateTeam)
+    motion = models.ForeignKey(Motion)
+    preference = models.IntegerField()
+
 class ActionLogManager(models.Manager):
     def log(self, *args, **kwargs):
         obj = self.model(*args, **kwargs)
