@@ -13,7 +13,7 @@ from ipware.ip import get_real_ip
 
 from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
-from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission
+from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission, AdjudicatorTestScoreHistory
 from debate.models import AdjudicatorFeedback, ActiveVenue, ActiveTeam, ActiveAdjudicator
 from debate import forms
 
@@ -862,7 +862,12 @@ def set_round_start_time(request, round):
 @admin_required
 @expect_post
 @tournament_view
-def set_adj_test_score(request, t, adj_id):
+def set_adj_test_score(request, t):
+
+    try:
+        adj_id = int(request.POST["adj_id"])
+    except ValueError:
+        return HttpResponseBadRequest()
 
     try:
         adjudicator = Adjudicator.objects.get(id=adj_id)
@@ -870,20 +875,23 @@ def set_adj_test_score(request, t, adj_id):
         return HttpResponseBadRequest()
 
     # CONTINUE HERE CONTINUE HERE WORK IN PROGRESS
-    time_text = request.POST["start_time"]
+    score_text = request.POST["test_score"]
     try:
-        time = datetime.datetime.strptime(time_text, "%H:%M").time()
+        score = float(score_text)
     except ValueError, e:
         print e
-        return redirect_round('draw', round)
+        return redirect_tournament('adj_feedback', t)
 
-    round.starts_at = time
-    round.save()
+    adjudicator.test_score = score
+    adjudicator.save()
 
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_ROUND_START_TIME_SET,
-        user=request.user, round=round)
+    atsh = AdjudicatorTestScoreHistory(adjudicator=adjudicator,
+        round=t.current_round, score=score)
+    atsh.save()
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_TEST_SCORE_EDIT,
+        user=request.user, adjudicator_test_score_history=atsh)
 
-    return redirect_round('draw', round)
+    return redirect_tournament('adj_feedback', t)
 
 @login_required
 @round_view

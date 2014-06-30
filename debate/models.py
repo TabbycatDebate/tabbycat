@@ -500,6 +500,9 @@ class AdjudicatorTestScoreHistory(models.Model):
     score = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name_plural = "Adjudicator test score histories"
+
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
     team = models.ForeignKey(Team)
@@ -1550,21 +1553,24 @@ class ActionLog(models.Model):
         required_fields = self.REQUIRED_FIELDS_BY_ACTION_TYPE[self.type]
         strings = list()
         for field_name in required_fields:
-            value = getattr(self, field_name)
-            if field_name == 'ballot_submission':
-                strings.append('%s vs %s' % (value.debate.aff_team, value.debate.neg_team))
-            elif field_name == 'debate':
-                strings.append('%s vs %s' % (value.aff_team, value.neg_team))
-            elif field_name == 'round':
-                strings.append('round %s' % value.seq)
-            elif field_name == 'motion':
-                strings.append(value.reference)
-            elif field_name == 'adjudicator_test_score_history':
-                strings.append(value.adjudicator.name)
-            elif field_name == 'adjudicator_feedback':
-                strings.append(value.adjudicator.name)
-            else:
-                strings.append(unicode(value))
+            try:
+                value = getattr(self, field_name)
+                if field_name == 'ballot_submission':
+                    strings.append('%s vs %s' % (value.debate.aff_team, value.debate.neg_team))
+                elif field_name == 'debate':
+                    strings.append('%s vs %s' % (value.aff_team, value.neg_team))
+                elif field_name == 'round':
+                    strings.append('round %s' % value.seq)
+                elif field_name == 'motion':
+                    strings.append(value.reference)
+                elif field_name == 'adjudicator_test_score_history':
+                    strings.append(value.adjudicator.name + " (" + str(value.score) + ")")
+                elif field_name == 'adjudicator_feedback':
+                    strings.append(value.adjudicator.name)
+                else:
+                    strings.append(unicode(value))
+            except AttributeError:
+                strings.append("Unknown " + field_name)
         return ", ".join(strings)
 
 class ConfigManager(models.Manager):

@@ -39,7 +39,7 @@ class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
 class AdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution')
     search_fields = ('name', 'institution__name', 'institution__code',)
-    inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline)
+    inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorTestScoreHistoryInline)
 admin.site.register(models.Adjudicator, AdjudicatorAdmin)
 
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
@@ -102,10 +102,7 @@ class RoundAdmin(admin.ModelAdmin):
     list_display = ('name', 'seq', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
 admin.site.register(models.Round, RoundAdmin)
 
-class TournamentAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(models.Tournament, TournamentAdmin)
-
+admin.site.register(models.Tournament)
 admin.site.register(models.DebateTeam)
 admin.site.register(models.DebateAdjudicator)
 
@@ -134,3 +131,7 @@ class BallotSubmissionAdmin(admin.ModelAdmin):
     #inlines = (SpeakerScoreByAdjInline, SpeakerScoreInline, TeamScoreInline)
 
 admin.site.register(models.BallotSubmission, BallotSubmissionAdmin)
+
+class ActionLogAdmin(admin.ModelAdmin):
+    list_display = ('type', 'user', 'get_parameters_display')
+admin.site.register(models.ActionLog, ActionLogAdmin)
