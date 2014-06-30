@@ -3,7 +3,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 
 from debate.models import SpeakerScoreByAdj, Debate, Motion, Round, Team, Adjudicator
-from debate.models import DebateTeam, DebateAdjudicator, AdjudicatorFeedback
+from debate.models import DebateTeam, DebateTeamMotionPreference, DebateAdjudicator, AdjudicatorFeedback
 from debate.models import ActionLog
 from debate.result import BallotSet
 
@@ -145,6 +145,16 @@ class BallotSetForm(forms.Form):
             queryset = self.motions,
             widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
             required = True)
+
+        self.fields['aff_preference'] = forms.ModelChoiceField(
+            queryset = self.motions,
+            widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
+            required = False)
+
+        self.fields['neg_preference'] = forms.ModelChoiceField(
+            queryset = self.motions,
+            widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
+            required = False)
 
         # Set the initial data
         self.initial = self._initial_data()
@@ -325,9 +335,11 @@ class BallotSetForm(forms.Form):
         do('aff')
         do('neg')
 
-        bs.motion    = self.cleaned_data['motion']
-        bs.discarded = self.cleaned_data['discarded']
-        bs.confirmed = self.cleaned_data['confirmed']
+        bs.motion           = self.cleaned_data['motion']
+        bs.aff_preference   = self.cleaned_data['aff_preference']
+        bs.neg_preference   = self.cleaned_data['neg_preference']
+        bs.discarded        = self.cleaned_data['discarded']
+        bs.confirmed        = self.cleaned_data['confirmed']
 
         bs.save()
 

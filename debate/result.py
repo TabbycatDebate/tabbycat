@@ -152,6 +152,11 @@ class BallotSet(object):
             'neg': 'aff',
         }
 
+        self.motion_preference = {
+            'aff': None,
+            'neg': None,
+        }
+
         self._init_side('aff')
         self._init_side('neg')
 
@@ -179,6 +184,38 @@ class BallotSet(object):
     def motion(self, new):
         self.ballots.motion = new
 
+    @property
+    def aff_preference(self):
+        return self.ballots.aff_preference
+
+    @aff_preference.setter
+    def aff_preference(self, new):
+        from debate.models import DebateTeamMotionPreference
+        preference, created = DebateTeamMotionPreference.objects.get_or_create(
+            debate_team = self.debate.get_dt('aff'),
+            motion = new,
+            preference = 3,
+            ballot_submission = self.ballots
+        )
+        if created:
+            return preference
+
+    @property
+    def neg_preference(self):
+        return self.ballots.neg_preference
+
+    @neg_preference.setter
+    def neg_preference(self, new):
+        from debate.models import DebateTeamMotionPreference
+        preference, created = DebateTeamMotionPreference.objects.get_or_create(
+            debate_team = self.debate.get_dt('neg'),
+            motion = new,
+            preference = 3,
+            ballot_submission = self.ballots
+        )
+        if created:
+            return preference
+
     def _init_side(self, side):
         dt = self.debate.get_dt(side)
         from debate.models import SpeakerScore, TeamScore
@@ -200,7 +237,7 @@ class BallotSet(object):
             points = None
             score = None
 
-
+        self.preferences[side] = DebateTeamMotionPreference.objects.get
         self.points[side] = points
         self.total_score[side] = score
 
