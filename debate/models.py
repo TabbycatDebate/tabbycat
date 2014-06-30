@@ -1435,6 +1435,10 @@ class DebateTeamMotionPreference(models.Model):
     debate_team = models.ForeignKey(DebateTeam)
     motion = models.ForeignKey(Motion)
     preference = models.IntegerField()
+    ballot_submission = models.ForeignKey(BallotSubmission)
+
+    class Meta:
+        unique_together = [('debate_team', 'preference', 'ballot_submission')]
 
 class ActionLogManager(models.Manager):
     def log(self, *args, **kwargs):
