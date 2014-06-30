@@ -1065,6 +1065,8 @@ class DebateTeam(models.Model):
     def __unicode__(self):
         return u'%s %s' % (self.debate, self.team)
 
+class DebateMotionPreferences(models.Model):
+
 
 class DebateAdjudicator(models.Model):
     TYPE_CHAIR = 'C'
