@@ -6,10 +6,18 @@ from warnings import warn
 
 # Flag codes must NOT have commas in them
 DRAW_FLAG_DESCRIPTIONS = {
-    "max_swapped":      "Too many swaps",
-    "1u1d_history":     "One-up-one-down (history)",
-    "1u1d_institution": "One-up-one-down (institution)",
-    "1u1d_other":       "One-up-one-down (to accommodate)"
+    "max_swapped":  "Too many swaps",
+    "1u1d_hist":    "One-up-one-down (history)",
+    "1u1d_inst":    "One-up-one-down (institution)",
+    "1u1d_other":   "One-up-one-down (to accommodate)",
+    "bub_up_hist":  "Bubble up (history)",
+    "bub_dn_hist":  "Bubble down (history)",
+    "bub_up_inst":  "Bubble up (institution)",
+    "bub_dn_hist":  "Bubble down (institution)",
+    "bub_up_accom": "Bubble up (to accommodate)",
+    "bub_dn_accom": "Bubble down (to accommodate)",
+    "no_bub_updn":  "Can't bubble up/down",
+    "pullup":       "Pull-up team",
 }
 
 class DrawError(Exception):
@@ -82,6 +90,9 @@ class Pairing(object):
     def add_flag(self, flag):
         self.flags.append(flag)
 
+    def add_flags(self, flags):
+        self.flags.extend(flags)
+
     def set_winner(self, team):
         try:
             self._winner_index = self.teams.index(team)
@@ -127,6 +138,7 @@ class BaseDraw(object):
 
     def __init__(self, teams, results=None, **kwargs):
         self.teams = teams
+        self.team_flags = dict()
 
         if self.requires_even_teams:
             if not len(self.teams) % 2 == 0:
@@ -154,6 +166,22 @@ class BaseDraw(object):
 
         # Update
         self.options.update(kwargs)
+
+    def add_team_flag(self, team, flag):
+        """Attaches a flag to a team.
+        Child classes may use this when flags should follow teams, but
+        eventually be attached to pairings."""
+        flags = self.team_flags.setdefault(team, list())
+        flags.append(flag)
+
+    def annotate_team_flags(self, pairings):
+        """Applies the team flags to the pairings given.
+        Child classes that use team flags should call this method as the last
+        thing before the draw is returned."""
+        for pairing in pairings:
+            for team in pairing.teams:
+                if team in self.team_flags:
+                    pairing.add_flags(self.team_flags[team])
 
     def balance_sides(self, pairings):
         if not self.options["balance_sides"]:
@@ -250,7 +278,7 @@ class PowerPairedDraw(BaseDraw):
     draw_type = "preliminary"
 
     DEFAULT_OPTIONS = {
-        "odd_bracket"    : "pullup_top",
+        "odd_bracket"    : "intermediate_avoid_conflicts",
         "pairing_method" : "slide",
         "avoid_conflicts": "one_up_one_down"
     }
@@ -265,6 +293,7 @@ class PowerPairedDraw(BaseDraw):
             self._draw.extend(bracket)
 
         self.balance_sides(self._draw) # operates in-place
+        self.annotate_team_flags(self._draw) # operates in-place
         return self._draw
 
     def _get_option_function(self, option_name, option_dict):
@@ -293,10 +322,11 @@ class PowerPairedDraw(BaseDraw):
     ## Odd bracket resolutions
 
     ODD_BRACKET_FUNCTIONS = {
-        "pullup_top"   : "_pullup_top",
-        "pullup_bottom": "_pullup_bottom",
-        "pullup_random": "_pullup_random",
-        "intermediate" : "_intermediate_bubbles"
+        "pullup_top"                  : "_pullup_top",
+        "pullup_bottom"               : "_pullup_bottom",
+        "pullup_random"               : "_pullup_random",
+        "intermediate"                : "_intermediate_bubbles",
+        "intermediate_avoid_conflicts": "_intermediate_bubbles_avoid_conflicts"
     }
 
     def resolve_odd_brackets(self, brackets):
@@ -306,27 +336,26 @@ class PowerPairedDraw(BaseDraw):
         function = self._get_option_function("odd_bracket", self.ODD_BRACKET_FUNCTIONS)
         return function(brackets)
 
-    @classmethod
-    def _pullup_top(cls, brackets):
-        cls._pullup(brackets, lambda x: 0)
+    def _pullup_top(self, brackets):
+        self._pullup(brackets, lambda x: 0)
 
-    @classmethod
-    def _pullup_bottom(cls, brackets):
-        cls._pullup(brackets, lambda x: -1)
+    def _pullup_bottom(self, brackets):
+        self._pullup(brackets, lambda x: -1)
 
-    @classmethod
-    def _pullup_random(cls, brackets):
-        cls._pullup(brackets, lambda x: random.randrange(x))
+    def _pullup_random(self, brackets):
+        self._pullup(brackets, lambda x: random.randrange(x))
 
-    @staticmethod
-    def _pullup(brackets, pos):
+    def _pullup(self, brackets, pos):
         """'brackets' is what is returned by _make_raw_brackets().
         'pos' is a function taking the number of teams to choose from,
-        and returning an index for which team to take as the pullup."""
+        and returning an index for which team to take as the pullup.
+        Operates in-place."""
         pullup_needed = None
         for points, teams in brackets.iteritems():
             if pullup_needed:
-                pullup_needed.append(teams.pop(pos(len(teams))))
+                pullup_team = teams.pop(pos(len(teams)))
+                self.add_team_flag(pullup_team, "pullup")
+                pullup_needed.append(pullup_team)
                 pullup_needed = 0
             if len(teams) % 2 != 0:
                 pullup_needed = teams
@@ -336,6 +365,7 @@ class PowerPairedDraw(BaseDraw):
 
     @classmethod
     def _intermediate_bubbles(cls, brackets):
+        """Operates in-place."""
         new = OrderedDict()
         odd_team = None
         for points, teams in brackets.iteritems():
@@ -350,6 +380,59 @@ class PowerPairedDraw(BaseDraw):
             raise DrawError("Last bracket is still odd!")
         brackets.clear()
         brackets.update(new)
+
+    def _intermediate_bubbles_avoid_conflicts(self, brackets):
+        """Operates in-place.
+        Requires Team.institution and Team.seen() to be defined."""
+        self._intermediate_bubbles(brackets) # operates in-place
+        # Check each of the intermediate bubbles for conflicts.
+        # If there is one, try swapping the top team with the bottom team
+        # of the bracket above. Failing that, try the same with the bottom
+        # team and the top team of the bracket below. Failing that, give up.
+        # Note: Under no circumstances do we swap both teams.
+        def _check_conflict(team1, team2):
+            try:
+                if team1.institution == team2.institution:
+                    return 1 # institution
+                if team1.seen(team2):
+                    return 2 # history
+            except AttributeError:
+                raise DrawError("For conflict avoidance, teams must have attributes 'institution' and 'seen'.")
+            return 0 # no conflict
+
+        for points, teams in brackets.iteritems():
+            if int(points) == points:
+                continue # skip non-intermediate brackets
+            # a couple of checks
+            assert points % 0.5 == 0
+            assert teams[0].points > teams[1].points
+            conflict = _check_conflict(*teams)
+            if not conflict:
+                continue # leave alone if no conflict
+
+            # bubble up, if there exists such a bubble
+            # swap bottom team from higher bracket with top team from
+            # intermediate bracket.
+            if points+0.5 in brackets:
+                swap_team = brackets[points+0.5][-1] # bottom team
+                if not _check_conflict(swap_team, teams[1]):
+                    self.add_team_flag(teams[0], (conflict == 1) and "bub_up_inst" or "bub_up_hist")
+                    self.add_team_flag(swap_team, "bub_up_accom")
+                    teams[0], brackets[points+0.5][-1] = swap_team, teams[0]
+                    continue
+
+            # bubble down, if bubble up didn't work
+            if points-0.5 in brackets:
+                swap_team = brackets[points-0.5][0] # bottom team
+                if not _check_conflict(swap_team, teams[0]):
+                    self.add_team_flag(teams[1], (conflict == 1) and "bub_dn_inst" or "bub_dn_hist")
+                    self.add_team_flag(swap_team, "bub_dn_accom")
+                    teams[1], brackets[points-0.5][0] = swap_team, teams[1]
+                    continue
+
+            # if nothing worked, add a "didn't work" flag
+            self.add_team_flag(teams[0], "no_bub_updn")
+
 
     ## Pairings generation
 
@@ -441,9 +524,9 @@ class PowerPairedDraw(BaseDraw):
                 assert((i in swaps or i-1 in swaps) == (orig != new))
                 if orig != new:
                     if pairing.conflict_hist:
-                        pairing.add_flag("1u1d_history")
+                        pairing.add_flag("1u1d_hist")
                     if pairing.conflict_inst:
-                        pairing.add_flag("1u1d_institution")
+                        pairing.add_flag("1u1d_inst")
                     if not (pairing.conflict_hist or pairing.conflict_inst):
                         pairing.add_flag("1u1d_other")
                     pairing.teams = list(new)

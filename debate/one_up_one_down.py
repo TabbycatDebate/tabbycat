@@ -91,6 +91,7 @@ class OneUpOneDownSwapper(object):
                      a2.institution == n1.institution)
         hist_swap = (a1.seen(n2), a2.seen(n1))
 
+        # Definitely don't swap if you'd have more history conflicts by swapping
         if self.avoid_history and sum(hist_swap) > sum(hist):
             return self.exclude_penalty
 

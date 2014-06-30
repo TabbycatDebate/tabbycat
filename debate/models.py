@@ -869,7 +869,7 @@ class Debate(models.Model):
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue, blank=True, null=True)
 
-    bracket = models.IntegerField(default=0)
+    bracket = models.FloatField(default=0)
     room_rank = models.IntegerField(default=0)
 
     # comma-separated list of strings
@@ -956,9 +956,9 @@ class Debate(models.Model):
         d = []
         history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
         if history:
-            d.append("History (%d)" % history)
+            d.append("History conflict (%d)" % history)
         if self.aff_team.institution == self.neg_team.institution:
-            d.append("Institution")
+            d.append("Institution conflict")
 
         return d
 
@@ -1492,7 +1492,7 @@ class ActionLog(models.Model):
         ACTION_TYPE_BALLOT_SUBMIT          : ('ballot_submission',),
         ACTION_TYPE_FEEDBACK_SUBMIT        : ('adjudicator_feedback',),
         ACTION_TYPE_FEEDBACK_SAVE          : ('adjudicator_feedback',),
-        ACTION_TYPE_TEST_SCORE_EDIT        : ('adjudicator',),
+        ACTION_TYPE_TEST_SCORE_EDIT        : ('adjudicator_test_score_history',),
         ACTION_TYPE_ADJUDICATORS_SAVE      : ('round',),
         ACTION_TYPE_VENUES_SAVE            : ('round',),
         ACTION_TYPE_DRAW_CREATE            : ('round',),
@@ -1519,7 +1519,7 @@ class ActionLog(models.Model):
 
     debate = models.ForeignKey(Debate, blank=True, null=True)
     ballot_submission = models.ForeignKey(BallotSubmission, blank=True, null=True)
-    adjudicator = models.ForeignKey(Adjudicator, blank=True, null=True)
+    adjudicator_test_score_history = models.ForeignKey(AdjudicatorTestScoreHistory, blank=True, null=True)
     adjudicator_feedback = models.ForeignKey(AdjudicatorFeedback, blank=True, null=True)
     round = models.ForeignKey(Round, blank=True, null=True)
     motion = models.ForeignKey(Motion, blank=True, null=True)
@@ -1559,8 +1559,8 @@ class ActionLog(models.Model):
                 strings.append('round %s' % value.seq)
             elif field_name == 'motion':
                 strings.append(value.reference)
-            elif field_name == 'adjudicator':
-                strings.append(value.name)
+            elif field_name == 'adjudicator_test_score_history':
+                strings.append(value.adjudicator.name)
             elif field_name == 'adjudicator_feedback':
                 strings.append(value.adjudicator.name)
             else:

@@ -57,7 +57,7 @@ class TestPowerPairedDrawParts(unittest.TestCase):
     def bracket(self, name, expected):
         self.ppd.options["odd_bracket"] = name
         self.ppd.resolve_odd_brackets(self.b2)
-        self.assertEqual(self.b2, expected)
+        self.assertDictEqual(self.b2, expected)
 
     def test_pullup_top(self):
         self.bracket("pullup_top", OrderedDict([
@@ -75,7 +75,7 @@ class TestPowerPairedDrawParts(unittest.TestCase):
             (1, [15, 16])
         ]))
 
-    def test_pullup_intermediate(self):
+    def test_intermediate_brackets(self):
         self.bracket("intermediate", OrderedDict([
             (4, [1, 2, 3, 4]),
             (3.5, [5, 6]),
@@ -84,6 +84,123 @@ class TestPowerPairedDrawParts(unittest.TestCase):
             (2, [11, 12, 13, 14]),
             (1, [15, 16])
         ]))
+
+    def brackets_intermediate_avoid_conflicts(self, brackets, expected):
+        b2 = copy.deepcopy(brackets)
+        expected_team_flags = dict()
+        # Set up the brackets
+        for p, b in b2.iteritems():
+            for i, x in enumerate(b):
+                if isinstance(x[-1], str) and len(x) > 2:
+                    flags = [x[-1]]
+                    x = x[:-1]
+                else:
+                    flags = None
+                if len(x) == 2:
+                    t = TestTeam(x[0], x[1], p)
+                else:
+                    t = TestTeam(x[0], x[1], p, x[2:])
+                b[i] = t
+                expected_team_flags[t] = flags
+        # Run the odd bracket resolution
+        self.ppd.options["odd_bracket"] = "intermediate_avoid_conflicts"
+        self.ppd.resolve_odd_brackets(b2)
+        # Check that the brackets are correct
+        b3 = dict()
+        for p, b in b2.iteritems():
+            b3[p] = map(lambda x: x.id, b)
+        self.assertDictEqual(b3, expected)
+        # Check that the team flags worked
+        for team, flags in expected_team_flags.iteritems():
+            if team in self.ppd.team_flags:
+                self.assertEqual(self.ppd.team_flags[team], flags)
+            else:
+                self.assertIsNone(flags)
+
+    def test_intermediate_brackets_avoid_conflicts_1(self):
+        brackets = OrderedDict([
+            (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
+            (3, [(6, 'C'), (7, 'D'), (8, 'A', 10), (9, 'B', 10)]),
+            (2, [(10, 'D', 8, 9, 'bub_dn_hist'), (11, 'A', 'bub_dn_accom'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
+            (1, [(15, 'C', 14), (16, 'C')])
+        ])
+        expected = OrderedDict([
+            (4, [1, 2, 3, 5]),
+            (3.5, [4, 6]), # bubble-up (institution)
+            (3, [7, 8]),
+            (2.5, [9, 11]), # bubble-down (history, history)
+            (2, [10, 12, 13, 14]),
+            (1, [15, 16])
+        ])
+        self.brackets_intermediate_avoid_conflicts(brackets, expected)
+
+    def test_intermediate_brackets_avoid_conflicts_2(self):
+        brackets = OrderedDict([
+            (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
+            (3, [(6, 'C'), (7, 'D'), (8, 'A', 'bub_up_accom'), (9, 'B', 10, 'bub_up_hist')]),
+            (2, [(10, 'D', 9), (11, 'A'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
+            (1, [(15, 'C', 14), (16, 'C')])
+        ])
+        expected = OrderedDict([
+            (4, [1, 2, 3, 5]),
+            (3.5, [4, 6]), # bubble-up (institution)
+            (3, [7, 9]),
+            (2.5, [8, 10]), # bubble-up (history)
+            (2, [11, 12, 13, 14]),
+            (1, [15, 16])
+        ])
+        self.brackets_intermediate_avoid_conflicts(brackets, expected)
+
+    def test_intermediate_brackets_avoid_conflicts_3(self):
+        brackets = OrderedDict([
+            (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
+            (3, [(6, 'C'), (7, 'D'), (8, 'D'), (9, 'B', 10)]),
+            (2, [(10, 'D', 9, 'bub_dn_hist'), (11, 'A', 'bub_dn_accom'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
+            (1, [(15, 'C', 14), (16, 'C')])
+        ])
+        expected = OrderedDict([
+            (4, [1, 2, 3, 5]),
+            (3.5, [4, 6]), # bubble-up (institution)
+            (3, [7, 8]),
+            (2.5, [9, 11]), # bubble-down (history, institution)
+            (2, [10, 12, 13, 14]),
+            (1, [15, 16])
+        ])
+        self.brackets_intermediate_avoid_conflicts(brackets, expected)
+
+    def test_intermediate_brackets_avoid_conflicts_none(self):
+        brackets = OrderedDict([
+            (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A'), (5, 'C', 12)]),
+            (3, [(6, 'B'), (7, 'D'), (8, 'D'), (9, 'B')]),
+            (2, [(10, 'D'), (11, 'A'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
+            (1, [(15, 'C', 14), (16, 'C')])
+        ])
+        expected = OrderedDict([
+            (4, [1, 2, 3, 4]),
+            (3.5, [5, 6]),
+            (3, [7, 8]),
+            (2.5, [9, 10]),
+            (2, [11, 12, 13, 14]),
+            (1, [15, 16])
+        ])
+        self.brackets_intermediate_avoid_conflicts(brackets, expected)
+
+    def test_intermediate_brackets_avoid_conflicts_exhaust(self):
+        brackets = OrderedDict([
+            (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
+            (3, [(6, 'C'), (7, 'D'), (8, 'D'), (9, 'B', 10, 'no_bub_updn')]),
+            (2, [(10, 'D', 9), (11, 'B'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
+            (1, [(15, 'C', 14), (16, 'C')])
+        ])
+        expected = OrderedDict([
+            (4, [1, 2, 3, 5]),
+            (3.5, [4, 6]), # bubble-up (institution)
+            (3, [7, 8]),
+            (2.5, [9, 10]), # no bubble (exhausted)
+            (2, [11, 12, 13, 14]),
+            (1, [15, 16])
+        ])
+        self.brackets_intermediate_avoid_conflicts(brackets, expected)
 
     def test_pullup_random(self):
         for j in range(5):
@@ -153,7 +270,7 @@ class TestPowerPairedDrawParts(unittest.TestCase):
                 ((2, 'C'), (6, 'B')),
                 ((3, 'B'), (7, 'D')),
                 ((4, 'C'), (8, 'A')))
-        expected = [((1, 6), ["1u1d_institution"]),
+        expected = [((1, 6), ["1u1d_inst"]),
                     ((2, 5), ["1u1d_other"]),
                     ((3, 7), []),
                     ((4, 8), [])]
@@ -172,7 +289,7 @@ class TestPowerPairedDrawParts(unittest.TestCase):
                 ((2, 'C'), (6, 'A')),
                 ((3, 'B'), (7, 'D')),
                 ((4, 'C'), (8, 'A')))
-        expected = [((1, 6), ["1u1d_history"]),
+        expected = [((1, 6), ["1u1d_hist"]),
                     ((2, 5), ["1u1d_other"]),
                     ((3, 7), []),
                     ((4, 8), [])]
@@ -194,7 +311,7 @@ class TestPowerPairedDrawParts(unittest.TestCase):
         expected = [((1, 5), []),
                     ((2, 6), []),
                     ((3, 8), ["1u1d_other"]),
-                    ((4, 7), ["1u1d_history"])]
+                    ((4, 7), ["1u1d_hist"])]
         self.one_up_one_down(data, expected)
 
 class TestPowerPairedDraw(unittest.TestCase):
@@ -203,63 +320,88 @@ class TestPowerPairedDraw(unittest.TestCase):
     # Yep, I spent a lot of time constructing this realistic hypothetical
     # situation with lots of swaps and manually figuring out the anticipated
     # result.
-    standings = [(12, 'B', 4, [26, 11, 15, 14], 2),
-                 (2, 'D', 3, [22, 16, 20, 10], 2),
-                 (3, 'E', 3, [23, 20, 25, 4], 2),
-                 (11, 'B', 3, [1, 12, 23, 22], 2),
-                 (6, 'E', 3, [19, 15, 18, 9], 2),
-                 (17, 'E', 3, [21, 14, 7, 25], 2),
-                 (4, 'B', 3, [18, 25, 5, 3], 3),
-                 (14, 'A', 3, [24, 17, 9, 12], 2),
-                 (8, 'A', 3, [15, 24, 1, 15], 2),
-                 (7, 'D', 2, [16, 9, 17, 16], 2),
-                 (9, 'D', 2, [5, 7, 14, 6], 2),
-                 (15, 'B', 2, [8, 6, 12, 8], 2),
-                 (18, 'B', 2, [4, 21, 6, 21], 2),
-                 (22, 'A', 2, [2, 10, 16, 11], 2),
-                 (23, 'A', 2, [3, 19, 11, 5], 2),
-                 (24, 'B', 2, [14, 8, 19, 20], 3),
-                 (25, 'A', 2, [10, 4, 3, 17], 3),
-                 (1, 'C', 1, [11, 26, 8, 19], 2),
-                 (5, 'C', 1, [9, 13, 4, 23], 1),
-                 (10, 'B', 1, [25, 22, 13, 2], 1),
-                 (16, 'D', 1, [7, 2, 22, 7], 2),
-                 (20, 'E', 1, [13, 3, 2, 24], 2),
-                 (21, 'A', 1, [17, 18, 26, 18], 2),
-                 (19, 'B', 1, [6, 23, 24, 1], 1),
-                 (26, 'B', 1, [12, 1, 21, 13], 2),
-                 (13, 'C', 0, [20, 5, 10, 26], 2)]
+    standings = dict()
+    standings[1] = [(12, 'B', 4, [26, 11, 15, 14], 2),
+                    (2, 'D', 3, [22, 16, 20, 10], 2),
+                    (3, 'E', 3, [23, 20, 25, 4], 2),
+                    (11, 'B', 3, [1, 12, 23, 22], 2),
+                    (6, 'E', 3, [19, 15, 18, 9], 2),
+                    (17, 'E', 3, [21, 14, 7, 25], 2),
+                    (4, 'B', 3, [18, 25, 5, 3], 3),
+                    (14, 'A', 3, [24, 17, 9, 12], 2),
+                    (8, 'A', 3, [15, 24, 1, 15], 2),
+                    (7, 'D', 2, [16, 9, 17, 16], 2),
+                    (9, 'D', 2, [5, 7, 14, 6], 2),
+                    (15, 'B', 2, [8, 6, 12, 8], 2),
+                    (18, 'B', 2, [4, 21, 6, 21], 2),
+                    (22, 'A', 2, [2, 10, 16, 11], 2),
+                    (23, 'A', 2, [3, 19, 11, 5], 2),
+                    (24, 'B', 2, [14, 8, 19, 20], 3),
+                    (25, 'A', 2, [10, 4, 3, 17], 3),
+                    (1, 'C', 1, [11, 26, 8, 19], 2),
+                    (5, 'C', 1, [9, 13, 4, 23], 1),
+                    (10, 'B', 1, [25, 22, 13, 2], 1),
+                    (16, 'D', 1, [7, 2, 22, 7], 2),
+                    (20, 'E', 1, [13, 3, 2, 24], 2),
+                    (21, 'A', 1, [17, 18, 26, 18], 2),
+                    (19, 'B', 1, [6, 23, 24, 1], 1),
+                    (26, 'B', 1, [12, 1, 21, 13], 2),
+                    (13, 'C', 0, [20, 5, 10, 26], 2)]
 
-    expected = [(12,  2, [], True),
-                ( 3, 14, ["1u1d_history"], True),
-                (11,  4, ["1u1d_other"], False),
-                ( 6,  7, ["1u1d_other"], True),
-                (17,  8, ["1u1d_history"], True),
-                ( 9, 24, ["1u1d_other"], False),
-                (15, 23, ["1u1d_institution"], True),
-                (18, 25, [], False),
-                (22,  1, [], True),
-                ( 5, 19, ["1u1d_other"], True),
-                (10, 21, ["1u1d_institution"], False),
-                (16, 13, ["1u1d_other"], True),
-                (20, 26, ["1u1d_history"], True)]
+    expected = dict()
+    expected[1] = [dict(odd_bracket="pullup_top", pairing_method="slide",
+                        avoid_conflicts="one_up_one_down"), [
+                    (12,  2, ["pullup"], True),
+                    ( 3, 14, ["1u1d_hist"], True),
+                    (11,  4, ["1u1d_other"], False),
+                    ( 6,  7, ["1u1d_other", "pullup"], True),
+                    (17,  8, ["1u1d_hist"], True),
+                    ( 9, 24, ["1u1d_other"], False),
+                    (15, 23, ["1u1d_inst"], True),
+                    (18, 25, [], False),
+                    (22,  1, ["pullup"], True),
+                    ( 5, 19, ["1u1d_other"], True),
+                    (10, 21, ["1u1d_inst"], False),
+                    (16, 13, ["1u1d_other", "pullup"], True),
+                    (20, 26, ["1u1d_hist"], True)]]
+    expected[2] = [dict(odd_bracket="intermediate_avoid_conflicts",
+                        pairing_method="slide", avoid_conflicts="one_up_one_down"), [
+                    (12, 2, [], True),
+                    (3, 17, [], True), # institution conflict, but swapping
+                                       # would give history conflict
+                    (11, 14, ["1u1d_inst"], True),
+                    (6, 4, ["1u1d_other"], False),
+                    (8, 7, [], True),
+                    (9, 22, [], True),
+                    (15, 23, [], True),
+                    (18, 24, [], False),
+                    (1, 25, [], False),
+                    (5, 20, [], False),
+                    (10, 21, [], False),
+                    (16, 26, ["bub_up_hist"], True),
+                    (19, 13, ["bub_up_accom"], False)]]
 
-    def do_draw(self):
-        standings = [TestTeam(*args) for args in self.standings]
-        self.ppd = draw.PowerPairedDraw(standings)
+    # indices: (standings, expected)
+    cases = [(1, 1), (1, 2)]
+
+    def do_draw(self, standings, options):
+        standings = [TestTeam(*args) for args in standings]
+        self.ppd = draw.PowerPairedDraw(standings, **options)
         return self.ppd.make_draw()
 
     def test_draw(self):
-        draw = self.do_draw()
-        for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, self.expected):
-            actual_teams = (actual.aff_team.id, actual.neg_team.id)
-            expected_teams = (exp_aff, exp_neg)
-            if same_affs:
-                # sides are chosen randomly if teams on same number of affs
-                self.assertItemsEqual(actual_teams, expected_teams)
-            else:
-                self.assertEqual(actual_teams, expected_teams)
-            self.assertEqual(actual.flags, exp_flags)
+        for s, e in self.cases:
+            standings = self.standings[s]
+            kwargs, expected = self.expected[e]
+            draw = self.do_draw(standings, kwargs)
+            for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, expected):
+                actual_teams = (actual.aff_team.id, actual.neg_team.id)
+                expected_teams = (exp_aff, exp_neg)
+                if same_affs:
+                    self.assertItemsEqual(actual_teams, expected_teams)
+                else:
+                    self.assertEqual(actual_teams, expected_teams)
+                self.assertEqual(actual.flags, exp_flags)
 
 class TestPartialEliminationDraw(unittest.TestCase):
 
