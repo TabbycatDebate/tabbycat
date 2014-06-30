@@ -30,10 +30,20 @@
                 adjTable.api().ajax.url(newUrl).load();
             });
         });
+
+
+        $(".edit-test-score").each( function() {
+            $(this).click( function() {
+                var adj_row = $(this).parent().parent() // the <tr> for this adjudicator in the table
+                var adj_name = adj_row.find(".adj-name").text()
+                var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
+                console.log(adj_id)
+                $("#modal-test-name").text(adj_name); // Updating header of the modal
+                $("#adj_test_id").val(adj_id); // Updating header of the modal
+            });
+        });
+
     });
-
-
-
 
 </script>
 
@@ -64,8 +74,8 @@
         {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">
             <td><a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View</a></td>
-            <td><a href="{% tournament_url enter_feedback adj.id %}">Add</a></td>
-            <td><a data-toggle="modal" data-target="#edit-test-score" class="edit-test-score">Edit</a></td>
+            <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
+            <td><a data-toggle="modal" data-target="#edit-test-score" class="edit-test-score">Edit Score</a></td>
             <td class="adj-name">
                 {% if adj.phone or adj.email %}
                     <span data-toggle="tooltip" title="{{ adj.phone }} {{ adj.email }}">{{ adj.name }}</span>
@@ -113,24 +123,27 @@
 </div>
 
 <div class="modal fade" id="edit-test-score" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
+  <div class="modal-dialog modal-md">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Change Start Time</h3>
+            <h3>Change Test Score of <span id="modal-test-name"></span></h3>
         </div>
         <div class="modal-body">
             <form id="startTimeForm" method="POST" action="{% tournament_url set_adj_test_score  %}" class="form-horizontal">
-                <input id="id_adj_id" name="adj_id" type="hidden" value="1" />
+                <input id="adj_test_id" name="adj_id" type="hidden" value="" />
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">
+                    <label class="col-sm-3 control-label">
                         Test score
                     </label>
                     <div class="col-sm-6">
-                        <input id="id_test_score" name="test_score" placeholder="Score" class="form-control"></input>
+                        <input id="id_test_score" name="test_score" placeholder="Score" type="number" step="any" class="form-control"></input>
+                    </div>
+                    <div class="col-sm-2">
+                        <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"></label>
+                    <label class="col-sm-3 control-label"></label>
                     <div class="col-sm-6">
                         <button type="submit" value="Save" class="form-control btn btn-success">Save</button>
                     </div>

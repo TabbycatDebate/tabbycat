@@ -865,14 +865,14 @@ def set_round_start_time(request, round):
 def set_adj_test_score(request, t):
 
     try:
-        adj_id = int(request.POST["adj_id"])
+        adj_id = int(request.POST["adj_test_id"])
     except ValueError:
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest("Score value is not legit")
 
     try:
         adjudicator = Adjudicator.objects.get(id=adj_id)
     except (Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest("Adjudicator probably doesn't exist")
 
     # CONTINUE HERE CONTINUE HERE WORK IN PROGRESS
     score_text = request.POST["test_score"]
