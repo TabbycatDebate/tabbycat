@@ -668,7 +668,7 @@ class Round(models.Model):
     def make_debates(self, pairings):
 
         import random
-        venues = list(self.active_venues.all())[:len(pairings)]
+        venues = list(self.active_venues.order_by('-priority'))[:len(pairings)]
 
         if len(venues) < len(pairings):
             raise draw_module.DrawError("There are %d debates but only %d venues." % (len(pairings), len(venues)))
