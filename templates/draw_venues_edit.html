@@ -126,7 +126,7 @@
                 null,
                 { "sSortDataType": "venue" }
             ],
-            "aaSorting": [[3, 'asc']]
+            "aaSorting": [[4, 'asc']]
         });
 
         // remove the table cells without venues
@@ -175,7 +175,7 @@
 
         <table id="dataTable" class="table table-hover table-bordered h4" cellpadding="0" cellspacing="0">
             <thead>
-                <tr><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Aff<span class="hidden-xs">irmative</span></th><th>Neg<span class="hidden-xs">ative</span></th><th>Venue</th></tr>
+                <tr><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Aff<span class="hidden-xs">irmative</span></th><th>Neg<span class="hidden-xs">ative</span></th><th>Adj<span class="hidden-xs">udicator</span>s</th><th>Venue</th></tr>
             </thead>
             <tbody>
             {% for debate in draw %}
@@ -186,6 +186,11 @@
                 </td>
                 <td>
                     <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">{{ debate.neg_team.short_name }}</span>
+                </td>
+                <td>
+                {% for type, adj in debate.adjudicators %}
+                    {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                {% endfor %}
                 </td>
                 <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
                     <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default {% if debate.venue %}venue{% else %}empty{% endif %}">
