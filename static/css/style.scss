@@ -330,6 +330,7 @@ input.error, select.error, .error input {
         top: 0;
         right: 0;
         height: 100%;
+        overflow-y: scroll;
     }
     .venue, .adj {
         max-width: 300px;

@@ -852,7 +852,8 @@ input.error, select.error, .error input {
   position: fixed;
   top: 0;
   right: 0;
-  height: 100%; }
+  height: 100%;
+  overflow-y: scroll; }
 .edit-venues .venue, .edit-venues .adj, .edit-adjs .venue, .edit-adjs .adj {
   max-width: 300px; }
 .edit-venues .btn-holder, .edit-adjs .btn-holder {
