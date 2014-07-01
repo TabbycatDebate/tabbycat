@@ -49,7 +49,7 @@
                 var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
                 var adj_score = parseFloat(adj_row.find(".adj-current-test-score").text())
                 $("#modal-test-name").text(adj_name); // Updating header of the modal
-                $("#adj_test_id").val(adj_id); // Updating header of the modal
+                $("#id_adj_test_id").val(adj_id); // Updating header of the modal
                 $("#id_test_score").prop('placeholder', adj_score); // updating the form table
             });
         });
@@ -141,7 +141,7 @@
         </div>
         <div class="modal-body">
             <form id="startTimeForm" method="POST" action="{% tournament_url set_adj_test_score  %}" class="form-horizontal">
-                <input id="adj_test_id" name="adj_id" type="hidden" value="" />
+                <input id="id_adj_test_id" name="adj_test_id" type="hidden" value="" />
                 <div class="form-group">
                     <label class="col-sm-3 control-label">
                         Test score
