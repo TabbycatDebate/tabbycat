@@ -20,5 +20,4 @@ for adj in m.Adjudicator.objects.all():
         if num > 1:
             print " *** Adjudicator: {0}, from: {1}, {2:d} versions".format(adj, feedback.source, num)
             for other in others:
-                print "        {3} {0:.1f} {1:>5} {2}".format(other.score, other.agree_with_decision, other.comments, other.version)
-
+                print "       {4} {3} {0:.1f} {1:>5} {2}".format(other.score, other.agree_with_decision, other.comments, other.version, other.round)
