@@ -17,7 +17,7 @@
 
         <h3 class="lead">Round {{ round.seq }}</h3>
         <ul class="list-group">
-        {% for motion in round.motion_set.all %}
+        {% for motion in round.motions %}
             <li class="list-group-item">{{ motion.text }}</li>
         {% endfor %}
         {% empty %}

@@ -789,7 +789,6 @@ def motions(request, round):
 @round_view
 def motions_edit(request, round):
     MotionFormSet = modelformset_factory(Motion,
-        widgets={'text': Textarea()},
         can_delete=True, extra=3, exclude=['round'])
 
     if request.method == 'POST':

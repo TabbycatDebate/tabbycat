@@ -571,6 +571,9 @@ class Round(models.Model):
     def __unicode__(self):
         return unicode(self.seq)
 
+    def motions(self):
+        return self.motion_set.order_by('seq')
+
     def draw(self):
         if self.draw_status != self.STATUS_NONE:
             raise RuntimeError("Tried to run draw on round that already has a draw")
@@ -1421,6 +1424,7 @@ class MotionManager(models.Manager):
 class Motion(models.Model):
     """Represents a single motion (not a set of motions)."""
 
+    seq = models.IntegerField()
     text = models.CharField(max_length=500)
     reference = models.CharField(max_length=100)
     round = models.ForeignKey(Round)
