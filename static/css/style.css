@@ -841,6 +841,9 @@ input.error, select.error, .error input {
 .draw-with-standings .first-in-bracket {
   border-top: 3px solid chocolate; }
 
+span.esl {
+  text-transform: uppercase; }
+
 .edit-venues table, .edit-adjs table {
   border-collapse: separate; }
 .edit-venues #container, .edit-adjs #container {
