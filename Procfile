@@ -1,1 +1,1 @@
-web: python manage.py collectstatic --noinput; gunicorn wsgi --workers 12
+web: python manage.py collectstatic --noinput; gunicorn wsgi
