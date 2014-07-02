@@ -15,10 +15,10 @@ for adj in m.Adjudicator.objects.all():
         seen.append(feedback.source)
         others = m.AdjudicatorFeedback.objects.filter(adjudicator=adj,
             source_adjudicator=feedback.source_adjudicator,
-            source_team=feedback.source_team)
+            source_team=feedback.source_team).order_by('version')
         num = others.count()
         if num > 1:
             print " *** Adjudicator: {0}, from: {1}, {2:d} versions".format(adj, feedback.source, num)
             for other in others:
-                print other.timestamp.isoformat()
-                #print "       {4} {3} {0:.1f} {1:>5} {2} {3}".format(other.score, other.agree_with_decision, other.comments, other.version, other.round)
+                #print other.timestamp.isoformat()
+                print "   {6:>3} {5:<12} {4} {3} {0:.1f} {1:>5} {2}".format(other.score, other.agree_with_decision, other.comments, other.version, other.round, other.user, other.id)
