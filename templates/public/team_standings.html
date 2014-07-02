@@ -64,13 +64,13 @@
         {% for score in team.scores %}
             {% if score.0 == 1 %}
                 <td class="opponent-emoji">
-                    <span class="glyphicon glyphicon-arrow-up text-success"></span> vs
-                    <span title="{{ score.1.name }} ({{ score.1.speakers|join:", " }})" data-toggle="tooltip" class=" team-{{ score.1.id }}"></span>
+                    <span class="glyphicon glyphicon-arrow-up text-success"></span> {% if show_emoji > 0 %}vs{% endif %}
+                    <span title="{{ score.1.name }} ({{ score.1.speakers|join:", " }})" data-toggle="tooltip" class=" team-{{ score.1.id }}">{% if show_emoji == 0 %}vs{% endif %}</span>
                 </td>
             {% elif score.0 == 0 %}
                 <td class="opponent-emoji">
-                    <span class="glyphicon glyphicon-arrow-down text-danger"></span> vs
-                    <span title="{{ score.1.name }} ({{ score.1.speakers|join:", " }})" data-toggle="tooltip" class="team-{{ score.1.id }}"></span>
+                    <span class="glyphicon glyphicon-arrow-down text-danger"></span> {% if show_emoji > 0 %}vs{% endif %}
+                    <span title="{{ score.1.name }} ({{ score.1.speakers|join:", " }})" data-toggle="tooltip" class="team-{{ score.1.id }}">{% if show_emoji == 0 %}vs{% endif %}</span>
                 </td>
             {% else %}
                 <td></td>
