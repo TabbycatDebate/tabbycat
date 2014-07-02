@@ -35,9 +35,14 @@
                 Draw for Round {{ current_round }}
             </a></li>
             {% endif %}
-            {% if public_results > 0 and current_round.prev %}
+            {% if public_results > 0 %}
             <li class="list-group-item"><a class="public-results-nav" href="{% tournament_url public_results_index %}">
                 Results
+            </a></li>
+            {% endif %}
+            {% if public_motions > 0 %}
+            <li class="list-group-item"><a class="public-motions-nav" href="{% tournament_url public_motions %}">
+                Motions
             </a></li>
             {% endif %}
             {% if public_team_standings > 0 and current_round.prev %}
