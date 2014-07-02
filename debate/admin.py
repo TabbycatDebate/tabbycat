@@ -119,7 +119,7 @@ admin.site.register(models.DebateTeam)
 
 class DebateAdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('debate', 'adjudicator', 'type')
-    search_fields = ('debate', 'adjudicator', 'type')
+    search_fields = ('adjudicator__name', 'type')
 admin.site.register(models.DebateAdjudicator, DebateAdjudicatorAdmin)
 
 class MotionAdmin(admin.ModelAdmin):
@@ -150,5 +150,5 @@ admin.site.register(models.BallotSubmission, BallotSubmissionAdmin)
 
 class ActionLogAdmin(admin.ModelAdmin):
     list_display = ('type', 'user', 'timestamp', 'get_parameters_display')
-    search_fields = ('type', 'user', 'get_parameters_display')
+    search_fields = ('type', 'user__username')
 admin.site.register(models.ActionLog, ActionLogAdmin)
