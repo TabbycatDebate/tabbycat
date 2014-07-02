@@ -116,7 +116,11 @@ admin.site.register(models.Round, RoundAdmin)
 
 admin.site.register(models.Tournament)
 admin.site.register(models.DebateTeam)
-admin.site.register(models.DebateAdjudicator)
+
+class DebateAdjudicatorAdmin(admin.ModelAdmin):
+    list_display = ('debate', 'adjudicator', 'type')
+    search_fields = ('adjudicator__name', 'type')
+admin.site.register(models.DebateAdjudicator, DebateAdjudicatorAdmin)
 
 class MotionAdmin(admin.ModelAdmin):
     list_display = ('reference', 'round')
@@ -145,5 +149,6 @@ class BallotSubmissionAdmin(admin.ModelAdmin):
 admin.site.register(models.BallotSubmission, BallotSubmissionAdmin)
 
 class ActionLogAdmin(admin.ModelAdmin):
-    list_display = ('type', 'user', 'get_parameters_display')
+    list_display = ('type', 'user', 'timestamp', 'get_parameters_display')
+    search_fields = ('type', 'user__username')
 admin.site.register(models.ActionLog, ActionLogAdmin)
