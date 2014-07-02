@@ -928,7 +928,7 @@ def public_results(request, round):
 def public_results_index(request, tournament):
     # Only rounds before current round
     rounds = Round.objects.filter(tournament=tournament,
-            seq__lt=tournament.current_round.seq).order_by('seq')
+            seq__lte=tournament.current_round.seq).order_by('seq')
     return r2r(request, "public/results_index.html", dict(rounds=rounds))
 
 @login_required
