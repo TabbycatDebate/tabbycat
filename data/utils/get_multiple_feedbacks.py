@@ -21,4 +21,4 @@ for adj in m.Adjudicator.objects.all():
             print " *** Adjudicator: {0}, from: {1}, {2:d} versions".format(adj, feedback.source, num)
             for other in others:
                 #print other.timestamp.isoformat()
-                print "   {6:>3} {5:<12} {4} {3} {0:.1f} {1:>5} {2}".format(other.score, other.agree_with_decision, other.comments, other.version, other.round, other.user, other.id)
+                print "   {6:>3} {5:<12} {4} {7} {3} {0:.1f} {1} {2}".format(other.score, {None: "-", True: "y", False: "n"}[other.agree_with_decision], other.comments, other.version, other.round, other.user, other.id, other.confirmed and "c" or "-")
