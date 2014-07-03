@@ -74,6 +74,8 @@ Note that to resume running the server at a later date, you will need change to 
         $ heroku run python manage.py syncdb
         $ heroku run python manage.py migrate
         $ heroku addons:add pgbackups
+        $ heroku addons:add newrelic
+        $ heroku config:set NEW_RELIC_APP_NAME='Tabby Cats'
         $ heroku open
 
 ## Setting up a Tournament
@@ -110,7 +112,7 @@ At present the ```import_tournament``` script does not work on Heroku. For now, 
 3. Use [```pg:push```](https://devcenter.heroku.com/articles/heroku-postgresql#pg-push) to copy your local database to Heroku. Note that your ```APP_NAME``` is the subdomain of your app at its heroku url.
 
         $ heroku pg:push LOCAL_DATABASE_NAME HEROKU_DATABASE_NAME --app APP_NAME
-        
+
     You might need to add `PGUSER=username` to the beginning of the line (`PGUSER=username heroku...`) if the postgres owner of the database isn't your normal account.
 
 ## Running a Tournament
