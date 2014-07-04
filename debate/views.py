@@ -941,10 +941,9 @@ def monkey_results(request, round):
 @public_optional_round_view('public_results')
 def public_results(request, round):
     # Can't see results for current round or later
-    if (round.seq > round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
+    if (round.seq >= round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
         raise Http404()
-    draw = round.get_draw_by_room().filter(result_status=Debate.STATUS_CONFIRMED)
-    draw = filter(lambda x: x.confirmed_ballot is not None, draw)
+    draw = round.get_draw()
     show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.config.get('show_motions_in_results')
     show_splits = round.tournament.config.get('show_splitting_adjudicators')
     return r2r(request, "public/results_for_round.html", dict(
