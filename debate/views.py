@@ -953,8 +953,7 @@ def public_results(request, round):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
 def public_results_index(request, tournament):
-    # Only rounds before/including current round
-    rounds = tournament.prelim_rounds(until=round).order_by('seq')
+    rounds = tournament.prelim_rounds(before=round).order_by('seq')
     return r2r(request, "public/results_index.html", dict(rounds=rounds))
 
 @login_required
