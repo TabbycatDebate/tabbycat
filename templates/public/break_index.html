@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Break{% endblock %}
+{% block page-title %}Break{% endblock %}
+
+{% block nav %}{% include "public/nav.html" %}{% endblock %}
+{% block footer %}{% include "public/footer.html" %}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="list-group">
+            <li class="list-group-item"><a class="public-breaking-teams-open-nav" href="{% tournament_url public_breaking_teams_open %}">
+                Open Break
+            </a></li>
+            {% if esl_break %}
+                <li class="list-group-item"><a class="public-breaking-teams-esl-nav" href="{% tournament_url public_breaking_teams_esl %}">
+                    ESL Break
+                </a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+{% endblock content %}
