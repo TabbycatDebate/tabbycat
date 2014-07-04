@@ -138,7 +138,12 @@ def public_draw(request, t):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_team_standings')
 def public_team_standings(request, t):
-    round = t.current_round.prev
+    if t.release_all:
+        # Assume that the time "release all" is used, the current round
+        # is the last round.
+        round = t.current_round
+    else:
+        round = t.current_round.prev
 
     # Find the most recent non-silent round
     while round is not None and round.silent:
@@ -156,11 +161,8 @@ def public_team_standings(request, t):
         # of wins.
         teams = Team.objects.order_by('institution__code', 'reference')
 
-        if t.release_all:
-            rounds = Round.objects.filter(tournament=t, silent=False).order_by('seq')
-        else:
-            rounds = Round.objects.filter(tournament=t,
-                                    seq__lte=round.seq, silent=False).order_by('seq')
+        rounds = Round.objects.filter(tournament=t,
+                                seq__lte=round.seq, silent=False).order_by('seq')
 
         def get_score(team, r):
             try:
