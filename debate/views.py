@@ -459,7 +459,7 @@ def tournament_home(request, t):
     if not request.user.is_superuser:
         return r2r(request, 'monkey/home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
     else:
-        return r2r(request, 'tournament_home.html', dict(stats=stats, round=r, actions=a, r_stats=r_stats))
+        return r2r(request, 'tournament_home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
 
 @admin_required
 @tournament_view
@@ -952,7 +952,8 @@ def public_results(request, round):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
 def public_results_index(request, tournament):
-    rounds = tournament.prelim_rounds(before=round).order_by('seq')
+    rounds = Round.objects.filter(tournament=tournament,
+        seq__lt=tournament.current_round.seq).order_by('seq')
     return r2r(request, "public/results_index.html", dict(rounds=rounds))
 
 @login_required

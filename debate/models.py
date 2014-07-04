@@ -1307,7 +1307,7 @@ class AdjudicatorAllocation(object):
         return a
 
     def __unicode__(self):
-        return ", ".join(map(lambda x: x.name, self.list))
+        return ", ".join(map(lambda x: (x is not None) and x.name or "<None>", self.list))
 
     def __iter__(self):
         yield DebateAdjudicator.TYPE_CHAIR, self.chair
