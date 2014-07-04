@@ -673,6 +673,7 @@ a.text-danger:hover {
 .public-feedback-tab a.public-feedback-nav,
 .public-participants a.public-participants-nav,
 .public-team-standings a.public-team-standings-nav,
+.public-breaking-teams a.public-breaking-teams-nav,
 .monkey-enter-result a.monkey-enter-result-nav,
 .monkey-enter-feedback a.monkey-enter-feedback-nav,
 .dash a.dash-nav,
@@ -681,6 +682,7 @@ a.text-danger:hover {
 .status a.status-nav,
 .results a.results-nav,
 .team-standings a.team-standings-nav,
+.breaking-teams a.breaking-teams-nav,
 .speaker-standings a.speaker-standings-nav,
 .adj-feedback a.adjudicators-standings-nav,
 .config a.config-nav {
