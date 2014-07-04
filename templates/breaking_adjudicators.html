@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block extra-head %}
+    {{ block.super }}
+       <script type="text/javascript" charset="utf-8">
+            $(document).ready( function() {
+                var table = $("#dataTable").dataTable({
+                    "aaSorting": [[ 0, "asc" ]],
+                });
+                new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+
+            } );
+        </script>
+        <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+{% endblock extra-head %}
+
+{% block extra-style %}{% endblock %}
+
+{% block head-title %}Breaking Adjudicators{% endblock %}
+{% block page-title %}Breaking Adjudicators{% endblock %}
+{% block body-class %}breakk breaking-adjs{% endblock %}
+
+{% block content %}
+
+<table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Institution</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for adj in adjs %}
+    <tr>
+        <td>{{ adj.name }}</td>
+        <td>{{ adj.institution }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}

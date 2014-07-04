@@ -40,6 +40,7 @@ SETTINGS = OrderedDict([
     ('show_motions_in_results',     (_bool, 'If showing public results, show motions with results',        False)),
     ('public_team_standings',       (_bool, 'Public interface to see team standings DURING tournament',    False)),
     ('public_breaking_teams',       (_bool, 'Public interface to see breaking teams',                      False)),
+    ('public_breaking_adjs',        (_bool, 'Public interface to see breaking adjudicators',               False)),
     ('public_ballots',              (_bool, 'Public interface to add ballots',                             False)),
     ('public_feedback',             (_bool, 'Public interface to add feedback',                            False)),
     ('public_use_password',         (_bool, 'Require password to submit public feedback and ballots',      False)),

@@ -677,6 +677,7 @@ a.text-danger:hover {
 .public-breakk a.public-breakk-nav,
 .public-breaking-teams-open a.public-breaking-teams-open-nav,
 .public-breaking-teams-esl a.public-breaking-teams-esl-nav,
+.public-adjs a.public-breaking-adjs-nav,
 .monkey-enter-result a.monkey-enter-result-nav,
 .monkey-enter-feedback a.monkey-enter-feedback-nav,
 .dash a.dash-nav,
@@ -688,6 +689,7 @@ a.text-danger:hover {
 .breakk a.breakk-nav,
 .breaking-teams-open a.breaking-teams-open-nav,
 .breaking-teams-esl a.breaking-teams-esl-nav,
+.breaking-adjs a.breaking-adjs-nav,
 .speaker-standings a.speaker-standings-nav,
 .adj-feedback a.adjudicators-standings-nav,
 .config a.config-nav {

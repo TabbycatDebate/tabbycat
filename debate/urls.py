@@ -19,7 +19,7 @@ urlpatterns = patterns('debate.views',
     url(r'^break/$', 'public_break_index', name='public_break_index'),
     url(r'^break/teams/open/$', 'public_breaking_teams', {'name': 'Open Break', 'category': 'open'}, name='public_breaking_teams_open'),
     url(r'^break/teams/esl/$', 'public_breaking_teams', {'name': 'ESL Break', 'category': 'esl'}, name='public_breaking_teams_esl'),
-    #url(r'^break/adjudicators/$',  'public_breaking_adjs', name='public_breaking_adjs'),
+    url(r'^break/adjudicators/$',  'public_breaking_adjs', name='public_breaking_adjs'),
     url(r'^add_ballot/$', 'public_ballot_submit', name='public_ballot_submit'),
     url(r'^add_ballot/adjudicator/(?P<adj_id>\d+)/$', 'public_new_ballots', name='public_new_ballots'),
     url(r'^add_feedback/team/(?P<team_id>\d+)/$', 'public_enter_feedback_team', name='public_enter_feedback_team'),
@@ -101,5 +101,6 @@ urlpatterns = patterns('debate.views',
 
     url(r'^admin/break/teams/open/$', 'breaking_teams', {'name': 'Open Break', 'category': 'open'}, name='breaking_teams_open'),
     url(r'^admin/break/teams/esl/$', 'breaking_teams', {'name': 'ESL Break', 'category': 'esl'}, name='breaking_teams_esl'),
+    url(r'^admin/break/adjudicators/$',  'breaking_adjs', name='breaking_adjs'),
 
 )

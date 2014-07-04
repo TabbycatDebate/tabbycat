@@ -204,6 +204,18 @@ def breaking_teams(request, t, name, category):
     show_break_rank = t.config.get('institution_cap') > 0
     return r2r(request, 'breaking_teams.html', dict(teams=teams, show_break_rank=show_break_rank, category=category, name=name))
 
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('public_breaking_adjs')
+def public_breaking_adjs(request, t):
+    adjs = Adjudicator.objects.filter(breaking=True, institution__tournament=t)
+    return r2r(request, 'public/breaking_adjudicators.html', dict(adjs=adjs))
+
+@admin_required
+@tournament_view
+def breaking_adjs(request, t):
+    adjs = Adjudicator.objects.filter(breaking=True, institution__tournament=t)
+    return r2r(request, 'breaking_adjudicators.html', dict(adjs=adjs))
+
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_ballots')

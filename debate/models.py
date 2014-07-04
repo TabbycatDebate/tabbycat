@@ -477,6 +477,7 @@ class Adjudicator(Person):
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
 
     is_trainee = models.BooleanField(default=False)
+    breaking = models.BooleanField(default=False)
 
     objects = AdjudicatorManager()
 
@@ -598,6 +599,13 @@ class Round(models.Model):
         (DRAW_BREAK,       'Subsequent elimination'),
     )
 
+    STAGE_PRELIMINARY = 'P'
+    STAGE_ELIMINATION = 'E'
+    STAGE_CHOICES = (
+        (STAGE_PRELIMINARY, 'Preliminary'),
+        (STAGE_ELIMINATION, 'Elimination'),
+    )
+
     STATUS_NONE      = 0
     STATUS_DRAFT     = 1
     STATUS_CONFIRMED = 10
@@ -615,6 +623,7 @@ class Round(models.Model):
     seq        = models.IntegerField()
     name       = models.CharField(max_length=40)
     draw_type  = models.CharField(max_length=1, choices=DRAW_CHOICES)
+    stage      = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY)
 
     draw_status        = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
     venue_status       = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)

@@ -15,7 +15,7 @@
 
     {% for round in rounds %}
 
-        <h3 class="lead">Round {{ round.seq }}</h3>
+        <h3 class="lead">{{ round.name }}</h3>
         <ul class="list-group">
         {% for motion in round.motions %}
             <li class="list-group-item">{{ motion.text }}</li>
