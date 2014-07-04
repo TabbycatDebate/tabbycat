@@ -14,7 +14,7 @@
         <ul class="list-group">
             {% for r in rounds %}
                 {% if not r.silent %}
-                <li class="list-group-item"><a class="public-feedback-nav" href="{% round_url public_results r %}">
+                <li class="list-group-item"><a class="public-results-nav" href="{% round_url public_results r %}">
                     Results for Round {{ r }}
                 </a></li>
                 {% endif %}

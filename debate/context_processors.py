@@ -12,6 +12,7 @@ def debate_context(request):
             'public_team_standings': request.tournament.config.get('public_team_standings') \
                                         and request.tournament.current_round.prev is not None,
             'public_breaking_teams': request.tournament.config.get('public_breaking_teams'),
+            'esl_break'            : request.tournament.config.get('esl_break_size') > 0,
             'public_participants'  : request.tournament.config.get('public_participants'),
             'public_draw'          : request.tournament.config.get('public_draw'),
             'public_motions'       : request.tournament.config.get('public_motions'),

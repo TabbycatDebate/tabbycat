@@ -164,23 +164,23 @@ class TeamManager(models.Manager):
 
         return teams
 
-    def breaking_teams(self, tournament, type='main'):
+    def breaking_teams(self, tournament, category='open'):
         """Returns a list."""
 
         FILTER_ARGS = {
-            'main': dict(),
+            'open': dict(),
             'esl':  dict(type=Team.TYPE_ESL),
         }
-        filterargs = FILTER_ARGS[type]
+        filterargs = FILTER_ARGS[category]
 
         teams = self.filter(institution__tournament=tournament, **filterargs)
         teams = annotate_team_standings(teams)
 
         BREAK_SIZE_CONFIG_OPTIONS = {
-            'main': 'break_size',
+            'open': 'break_size',
             'esl':  'esl_break_size',
         }
-        break_size = tournament.config.get(BREAK_SIZE_CONFIG_OPTIONS[type])
+        break_size = tournament.config.get(BREAK_SIZE_CONFIG_OPTIONS[category])
         institution_cap = tournament.config.get('institution_cap')
 
         prev_rank_value = (None, None)

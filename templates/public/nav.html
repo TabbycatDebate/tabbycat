@@ -55,9 +55,15 @@
                 </a></li>
                 {% endif %}
                 {% if public_breaking_teams > 0 %}
-                <li><a class="public-breaking-teams-nav" href="{% tournament_url public_breaking_teams %}">
-                    Breaking Teams
-                </a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle public-breakk-nav" data-toggle="dropdown">Break<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="public-breaking-teams-open-nav" href="{% tournament_url public_breaking_teams_open %}">Open</a></li>
+                        {% if esl_break %}
+                            <li><a class="public-breaking-teams-esl-nav" href="{% tournament_url public_breaking_teams_esl %}">ESL</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
                 {% endif %}
                 {% if public_participants > 0 %}
                 <li><a class="public-participants-nav" href="{% tournament_url public_participants %}">

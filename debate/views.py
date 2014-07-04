@@ -185,25 +185,24 @@ def public_team_standings(request, t):
     else:
         return r2r(request, 'public/index.html')
 
-def get_breaking_teams(t):
-    return [
-        ("Main Break", Team.objects.breaking_teams(t, type="main")),
-        ("ESL Break", Team.objects.breaking_teams(t, type="esl")),
-    ]
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('public_results')
+def public_break_index(request, t):
+    return r2r(request, "public/break_index.html")
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_teams')
-def public_breaking_teams(request, t):
-    breaking_teams = get_breaking_teams(t)
+def public_breaking_teams(request, t, name, category):
+    teams = Team.objects.breaking_teams(t, category)
     show_break_rank = t.config.get('institution_cap') > 0
-    return r2r(request, 'public/breaking_teams.html', dict(breaking_teams=breaking_teams, show_break_rank=show_break_rank))
+    return r2r(request, 'public/breaking_teams.html', dict(teams=teams, show_break_rank=show_break_rank, category=category, name=name))
 
 @admin_required
 @tournament_view
-def breaking_teams(request, t):
-    breaking_teams = get_breaking_teams(t)
+def breaking_teams(request, t, name, category):
+    teams = Team.objects.breaking_teams(t, category)
     show_break_rank = t.config.get('institution_cap') > 0
-    return r2r(request, 'breaking_teams.html', dict(breaking_teams=breaking_teams, show_break_rank=show_break_rank))
+    return r2r(request, 'breaking_teams.html', dict(teams=teams, show_break_rank=show_break_rank, category=category, name=name))
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)

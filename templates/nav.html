@@ -27,7 +27,15 @@
                         <li><a class="feedback-standings-nav" href="{% tournament_url feedback_progress %}">Feedbacks</a></li>
                     </ul>
                 </li>
-                <li><a class="breaking-teams-nav" href="{% tournament_url breaking_teams %}">Breaking Teams</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle breakk-nav" data-toggle="dropdown">Break<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="breaking-teams-open-nav" href="{% tournament_url breaking_teams_open %}">Open</a></li>
+                        {% if esl_break %}
+                            <li><a class="breaking-teams-esl-nav" href="{% tournament_url breaking_teams_esl %}">ESL</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
                 <li><a class="config-nav" href="{% tournament_url tournament_config %}">Config</a></li>
             </ul>
             <ul id="nav" class="nav navbar-nav navbar-right">

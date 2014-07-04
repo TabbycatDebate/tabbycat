@@ -50,6 +50,11 @@
                 Team Standings
             </a></li>
             {% endif %}
+            {% if public_breaking_teams > 0 %}
+            <li class="list-group-item"><a class="public-breakk-nav" href="{% tournament_url public_break_index %}">
+                Break
+            </a></li>
+            {% endif %}
             {% if public_participants > 0 %}
             <li class="list-group-item"><a class="public-participants-nav" href="{% tournament_url public_participants %}">
                 Participants
