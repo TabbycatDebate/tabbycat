@@ -16,6 +16,8 @@ urlpatterns = patterns('debate.views',
     url(r'^results/$', 'public_results_index', name='public_results_index'),
     url(r'^results/round/(?P<round_seq>\d+)/$', 'public_results', name='public_results'),
     url(r'^standings/$', 'public_team_standings', name='public_team_standings'),
+    url(r'^break/teams/$', 'public_breaking_teams', name='public_breaking_teams'),
+    #url(r'^break/adjudicators/$',  'public_breaking_adjs', name='public_breaking_adjs'),
     url(r'^add_ballot/$', 'public_ballot_submit', name='public_ballot_submit'),
     url(r'^add_ballot/adjudicator/(?P<adj_id>\d+)/$', 'public_new_ballots', name='public_new_ballots'),
     url(r'^add_feedback/team/(?P<team_id>\d+)/$', 'public_enter_feedback_team', name='public_enter_feedback_team'),
@@ -94,4 +96,7 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/adjudicators/feedback/get/$', 'get_adj_feedback', name='get_adj_feedback'),
     url(r'^admin/adjudicators/feedback/(?P<adj_id>\d+)/$', 'enter_feedback', name='enter_feedback'),
     url(r'^admin/adjudicators/scores/test/set/$', 'set_adj_test_score', name='set_adj_test_score'),
+
+    url(r'^admin/break/teams/$', 'breaking_teams', name='breaking_teams'),
+
 )

@@ -187,6 +187,21 @@ def public_team_standings(request, t):
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('public_breaking_teams')
+def public_breaking_teams(request, t):
+    teams = Team.objects.breaking_teams(t)
+    show_break_rank = t.config.get('institution_cap') > 0
+    return r2r(request, 'public/breaking_teams.html', dict(teams=teams, show_break_rank=show_break_rank))
+
+@admin_required
+@tournament_view
+def breaking_teams(request, t):
+    teams = Team.objects.breaking_teams(t)
+    show_break_rank = t.config.get('institution_cap') > 0
+    return r2r(request, 'breaking_teams.html', dict(teams=teams, show_break_rank=show_break_rank))
+
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_ballots')
 def public_ballot_submit(request, t):
     r = t.current_round

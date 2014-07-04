@@ -88,7 +88,7 @@ class Institution(models.Model):
             return self.code[:5]
 
 
-def annotate_team_standings(teams, round):
+def annotate_team_standings(teams, round=None):
     """Accepts and returns a QuerySet."""
     # This is what might be more concisely expressed, if it were permissible
     # in Django, as:
@@ -109,11 +109,13 @@ def annotate_team_standings(teams, round):
         JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
         WHERE "debate_ballotsubmission"."confirmed" = True
         AND "debate_debateteam"."team_id" = "debate_team"."id"
-        AND "debate_round"."seq" <= {round:d}
     """
+    if round is not None:
+        EXTRA_QUERY += """AND "debate_round"."seq" <= {round:d}""".format(round=round.seq)
+
     teams = teams.extra({
-        "points": EXTRA_QUERY.format(field="points", round=round.seq),
-        "speaker_score": EXTRA_QUERY.format(field="score", round=round.seq),
+        "points": EXTRA_QUERY.format(field="points"),
+        "speaker_score": EXTRA_QUERY.format(field="score"),
     }).distinct().order_by('-points', '-speaker_score')
     return teams
 
@@ -161,6 +163,70 @@ class TeamManager(models.Manager):
             counter += 1
 
         return teams
+
+    def breaking_teams(self, tournament, type='main'):
+        """Returns a list."""
+
+        FILTER_ARGS = {
+            'main': dict(),
+            'esl':  dict(type=Team.TYPE_ESL),
+        }
+        filterargs = FILTER_ARGS[type]
+
+        teams = self.filter(institution__tournament=tournament, **filterargs)
+        teams = annotate_team_standings(teams)
+
+        BREAK_SIZE_CONFIG_OPTIONS = {
+            'main': 'break_size',
+            'esl':  'esl_break_size',
+        }
+        break_size = tournament.config.get(BREAK_SIZE_CONFIG_OPTIONS[type])
+        institution_cap = tournament.config.get('institution_cap')
+
+        prev_rank_value = (None, None)
+        current_rank = 0
+        breaking_teams = list()
+
+        # If there's an institution cap, variables for it:
+        if institution_cap > 0:
+            current_break_rank = 0
+            current_break_seq = 0
+            from collections import Counter
+            teams_from_institution = Counter()
+
+        for i, team in enumerate(teams, start=1):
+
+            # Overall rank
+            rank_value = (team.points, team.speaker_score)
+            new_rank = rank_value != prev_rank_value
+            if new_rank:
+                current_rank = i
+                prev_rank_value = rank_value
+            team.rank = current_rank
+
+            if institution_cap > 0:
+                # Increment current_break_seq if it won't violate institution cap
+                if teams_from_institution[team.institution] >= institution_cap:
+                    if new_rank and current_break_rank == break_size:
+                        break
+                    team.break_rank = "-"
+
+                else:
+                    current_break_seq += 1
+                    if new_rank:
+                        if current_break_rank == break_size:
+                            break
+                        current_break_rank = current_break_seq
+                    team.break_rank = current_break_rank
+                # Take note of the institution
+                teams_from_institution[team.institution] += 1
+            else:
+                if current_rank > break_size:
+                    break
+
+            breaking_teams.append(team)
+
+        return breaking_teams
 
 class Team(models.Model):
     reference = models.CharField(max_length=50, verbose_name="Name or suffix")
