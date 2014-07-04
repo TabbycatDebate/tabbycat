@@ -209,7 +209,7 @@ class TeamManager(models.Manager):
                 if teams_from_institution[team.institution] >= institution_cap:
                     if new_rank and current_break_rank == break_size:
                         break
-                    team.break_rank = "-"
+                    team.break_rank = None
 
                 else:
                     current_break_seq += 1

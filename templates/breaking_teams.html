@@ -47,7 +47,7 @@
     <tr>
         <td>{{ team.rank }}</td>
         {% if show_break_rank %}
-            <td>{{ team.break_rank }}</td>
+            <td>{{ team.break_rank|default_if_none:"&ndash;" }}</td>
         {% endif %}
         {% if show_emoji > 0 %}
             <td class="team-emoji team-{{ team.id }}"></td>
