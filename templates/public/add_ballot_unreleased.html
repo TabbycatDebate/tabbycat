@@ -11,7 +11,7 @@
 {% block body-class %}public-add-ballot{% endblock %}
 
 {% block content %}
-<p class="lead">The draw and/or motions for Round {{ round }} have yet to be released.
+<p class="lead">The draw and/or motions for {{ round.name }} have yet to be released.
 <img src="{% static 'emoji/img/scream.png' %}" width="24" height="24" />
 </p>
 {% endblock %}

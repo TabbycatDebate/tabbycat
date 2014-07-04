@@ -21,8 +21,8 @@
 
 {% block extra-style %}{% endblock %}
 
-{% block head-title %}Team Standings <small>after Round {{ round }}</small>{% endblock %}
-{% block page-title %}Team Standings after Round {{ round }}{% endblock %}
+{% block head-title %}Team Standings <small>after {{ round.name }}</small>{% endblock %}
+{% block page-title %}Team Standings after {{ round.name }}{% endblock %}
 {% block body-class %}public-team-standings{% endblock %}
 
 {% block nav %}{% include "public/nav.html" %}{% endblock %}
@@ -42,7 +42,7 @@
                 <th>Institution</th>
             {% endif %}
             {% for round in rounds %}
-            <th>R{{ round }}</th>
+            <th>{{ round.abbreviation }}</th>
             {% endfor %}
         </tr>
     </thead>

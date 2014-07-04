@@ -22,6 +22,7 @@ def debate_context(request):
             'public_feedback'      : request.tournament.config.get('public_feedback'),
             'feedback_progress'    : request.tournament.config.get('feedback_progress'),
             'tab_released'         : request.tournament.config.get('tab_released'),
+            'motion_tab_released'  : request.tournament.config.get('motion_tab_released'),
         }
         if hasattr(request, 'round'):
             d['round'] = request.round

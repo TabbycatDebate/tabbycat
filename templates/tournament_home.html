@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block head-title %}Dashboard <small>Round {{ round }} is
+{% block head-title %}Dashboard <small>{{ round.name }} is
     {% if round.draw_status == 0 %}None
     {% elif round.draw_status == 1 %}Draft
     {% elif round.draw_status == 10 %}Confirmed

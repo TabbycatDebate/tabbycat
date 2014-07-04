@@ -111,7 +111,7 @@ class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin):
 admin.site.register(models.DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
 
 class RoundAdmin(admin.ModelAdmin):
-    list_display = ('name', 'seq', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
+    list_display = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
 admin.site.register(models.Round, RoundAdmin)
 
 admin.site.register(models.Tournament)

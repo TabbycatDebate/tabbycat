@@ -4,8 +4,8 @@
 {% block update-url %}{% round_url update_people_availability  %}{% endblock %}
 {% block post-success %}location.reload();{% endblock %}
 
-{% block head-title %}Checkins for Round {{ round }}{% endblock %}
-{% block page-title %}Checkins for Round {{ round }}{% endblock %}
+{% block head-title %}Checkins for {{ round.name }}{% endblock %}
+{% block page-title %}Checkins for {{ round.name }}{% endblock %}
 
 {% block copy_btn %}{% endblock %}
 

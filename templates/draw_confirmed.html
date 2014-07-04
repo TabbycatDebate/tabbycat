@@ -31,7 +31,7 @@
 {% endblock extra-head %}
 
 {% block head-title %}
-    Draw for Round {{ round }}
+    Draw for {{ round.name }}
     <small>
     {% if round.draw_status = 10 %}
         (Debates Confirmed)
@@ -43,7 +43,7 @@
         <small>debates start at {{ round.starts_at }}</small>
     {% endif %}
 {% endblock %}
-{% block page-title %}Draw for Round {{ round }}
+{% block page-title %}Draw for {{ round.name }}
     {% if round.draw_status = round.STATUS_CONFIRMED %}
         (Debates Confirmed)
     {% elif round.draw_status = round.STATUS_RELEASED %}

@@ -22,12 +22,12 @@
 {% block body-class %}draw-public-display{% endblock %}
 
 {% block head-title %}
-    Draw for Round {{ round }}
+    Draw for {{ round.name }}
     {% if round.starts_at %}
         <small>debates start at {{ round.starts_at }}</small>
     {% endif %}
 {% endblock %}
-{% block page-title %}Draw for Round {{ round }}{% endblock %}
+{% block page-title %}Draw for {{ round.name }}{% endblock %}
 {% block header %}
 <div class="btn-group">
     <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>

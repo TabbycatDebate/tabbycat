@@ -503,9 +503,9 @@
 
 {% block body-class %}edit-adjs{% endblock %}
 
-{% block head-title %}Edit Adjudicators <small>for Round {{ round }}</small>
+{% block head-title %}Edit Adjudicators <small>for {{ round.name }}</small>
 {% endblock %}
-{% block page-title %}Edit Adjudicators for Round {{ round }}{% endblock %}
+{% block page-title %}Edit Adjudicators for {{ round.name }}{% endblock %}
 
 {% block header %}
 <div id="statusBar" class="btn-group">

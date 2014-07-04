@@ -34,6 +34,14 @@ class Tournament(models.Model):
     def teams(self):
         return Team.objects.filter(institution__tournament=self)
 
+    def prelim_rounds(self, before=None, until=None):
+        qs = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=self)
+        if until:
+            qs = qs.filter(seq__lte=until.seq)
+        if before:
+            qs = qs.filter(seq__lt=before.seq)
+        return qs
+
     def create_next_round(self):
         curr = self.current_round
         next = curr.seq + 1
@@ -67,6 +75,7 @@ class Tournament(models.Model):
 
     def __unicode__(self):
         return unicode(self.slug)
+
 
 class Institution(models.Model):
     tournament = models.ForeignKey(Tournament)
@@ -109,7 +118,8 @@ def annotate_team_standings(teams, round=None):
         JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
         WHERE "debate_ballotsubmission"."confirmed" = True
         AND "debate_debateteam"."team_id" = "debate_team"."id"
-    """
+        AND "debate_round"."stage" = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
+
     if round is not None:
         EXTRA_QUERY += """AND "debate_round"."seq" <= {round:d}""".format(round=round.seq)
 
@@ -358,9 +368,11 @@ class SpeakerManager(models.Manager):
             AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
             AND "debate_speakerscore"."position" <= {position:d}
             AND "debate_round"."seq" <= {round:d}
+            AND "debate_round"."stage" = '{stage}'
         """.format(
             round = round.seq,
-            position = round.tournament.LAST_SUBSTANTIVE_POSITION
+            position = round.tournament.LAST_SUBSTANTIVE_POSITION,
+            stage = round.STAGE_PRELIMINARY,
         )
         speakers = speakers.extra({"total": EXTRA_QUERY}).distinct().order_by('-total')
 
@@ -412,15 +424,18 @@ class SpeakerManager(models.Manager):
             AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
             AND "debate_speakerscore"."position" = {position:d}
             AND "debate_round"."seq" <= {round:d}
+            AND "debate_round"."stage" = '{stage}'
         """
         speakers = speakers.extra({"average": EXTRA_QUERY.format(
             aggregator = "AVG",
             round = round.seq,
-            position = round.tournament.REPLY_POSITION
+            position = round.tournament.REPLY_POSITION,
+            stage = round.STAGE_PRELIMINARY
         ), "replies": EXTRA_QUERY.format(
             aggregator = "COUNT",
             round = round.seq,
-            position = round.tournament.REPLY_POSITION
+            position = round.tournament.REPLY_POSITION,
+            stage = round.STAGE_PRELIMINARY
         )}).distinct().order_by('-average', '-replies', 'name')
 
         # Use this to filter out speakers with an unconfirmed ballot submission,
@@ -586,7 +601,6 @@ class RoundManager(models.Manager):
         return super(RoundManager,
                      self).get_query_set().select_related('tournament').order_by('seq')
 
-
 class Round(models.Model):
     DRAW_RANDOM      = 'R'
     DRAW_POWERPAIRED = 'P'
@@ -619,11 +633,12 @@ class Round(models.Model):
 
     objects = RoundManager()
 
-    tournament = models.ForeignKey(Tournament, related_name='rounds')
-    seq        = models.IntegerField()
-    name       = models.CharField(max_length=40)
-    draw_type  = models.CharField(max_length=1, choices=DRAW_CHOICES)
-    stage      = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY)
+    tournament   = models.ForeignKey(Tournament, related_name='rounds')
+    seq          = models.IntegerField()
+    name         = models.CharField(max_length=40)
+    abbreviation = models.CharField(max_length=10)
+    draw_type    = models.CharField(max_length=1, choices=DRAW_CHOICES)
+    stage        = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY)
 
     draw_status        = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
     venue_status       = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
@@ -644,7 +659,7 @@ class Round(models.Model):
         unique_together = ('tournament', 'seq')
 
     def __unicode__(self):
-        return unicode(self.seq)
+        return unicode(self.name)
 
     def motions(self):
         return self.motion_set.order_by('seq')

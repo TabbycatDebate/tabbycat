@@ -24,13 +24,15 @@
                 <li><a class="public-replies-tab" href="{% tournament_url public_replies_tab %}">
                     Replies Tab
                 </a></li>
+                {% endif %}
+                {% if motion_tab_released > 0 %}
                 <li><a class="public-motions-tab" href="{% tournament_url public_motions_tab %}">
                     Motions Tab
                 </a></li>
                 {% endif %}
                 {% if public_draw > 0 %}
                 <li><a class="public-draw-nav" href="{% tournament_url public_draw %}">
-                    Draw for R{{ current_round }}
+                    Draw for {{ current_round.name }}
                 </a></li>
                 {% endif %}
                 {% if public_results > 0 %}
@@ -38,7 +40,7 @@
                     <ul class="dropdown-menu">
                         {% for r in tournament.rounds.all %}
                             {% if r.seq <= current_round.seq and not r.silent or tournament.release_all %}
-                                <li><a href="{% round_url public_results r %}">Round {{ r }}</a></li>
+                                <li><a href="{% round_url public_results r %}">{{ r.name }}</a></li>
                             {% endif %}
                         {% endfor %}
                     </ul>

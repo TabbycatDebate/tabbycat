@@ -19,8 +19,8 @@
 
 {% block extra-style %}{% endblock %}
 
-{% block head-title %}Team Standings <small>after Round {{ round }}</small>{% endblock %}
-{% block page-title %}Team Standings after Round {{ round }}{% endblock %}
+{% block head-title %}Team Standings <small>after {{ round.name }}</small>{% endblock %}
+{% block page-title %}Team Standings after {{ round.name }}{% endblock %}
 {% block body-class %}team-standings{% endblock %}
 
 {% block content %}
@@ -37,7 +37,7 @@
                 <th>Inst<span class="hidden-xs">itution</span></th>
             {% endif %}
             {% for round in rounds %}
-            <th>R{{ round }}</th>
+            <th>{{ round.abbreviation }}</th>
             <th class="opponent-emoji">
                 <img class="invisible" src="{% static 'emoji/img/grey_question.png' %}" />
             </th>

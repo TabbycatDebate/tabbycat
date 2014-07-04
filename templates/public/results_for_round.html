@@ -17,8 +17,8 @@
 
 {% block extra-style %}{% endblock %}
 
-{% block head-title %}Results for Round {{ round }}{% endblock %}
-{% block page-title %}Results for Round {{ round }}{% endblock %}
+{% block head-title %}Results for {{ round.name }}{% endblock %}
+{% block page-title %}Results for {{ round.name }}{% endblock %}
 {% block body-class %}public-results{% endblock %}
 
 {% block nav %}{% include "public/nav.html" %}{% endblock %}

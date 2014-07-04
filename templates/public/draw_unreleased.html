@@ -6,12 +6,12 @@
 {% block footer %}{% include "public/footer.html" %}{% endblock %}
 {% block header %}{% endblock %}
 
-{% block head-title %}Round {{ round }} Draw{% endblock %}
-{% block page-title %}Round {{ round }} Draw{% endblock %}
+{% block head-title %}{{ round.name }} Draw{% endblock %}
+{% block page-title %}{{ round.name }} Draw{% endblock %}
 {% block body-class %}public-draw{% endblock %}
 
 {% block content %}
-<p class="lead">The draw for Round {{ round }} has yet to be released.
+<p class="lead">The draw for {{ round.name }} has yet to be released.
 <img src="{% static 'emoji/img/scream.png' %}" width="24" height="24" />
 </p>
 {% endblock %}

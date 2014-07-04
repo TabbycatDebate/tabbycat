@@ -1,7 +1,7 @@
 {% load debate_tags %}
 <html>
     <head>
-        <title>Draw for Round {{ round }}</title>
+        <title>Draw for {{ round.name }}</title>
     </head>
     <script>
         function reload() {
@@ -39,7 +39,7 @@
         <div style="text-align: center;" id="container">
             <div id="logo">
             </div>
-            <h1>Tab Progress for Round {{ round }} - ({{ pc }}% done)</h1>
+            <h1>Tab Progress for {{ round.name }} - ({{ pc }}% done)</h1>
 
             <img style="margin: auto; padding-top:80px;" src="http://chart.apis.google.com/chart?cht=p3&chs=600x200&chd=t:{{ out }},{{ in }}&chl=Outstanding|Entered&chco=FF0000,00FF00" />
 

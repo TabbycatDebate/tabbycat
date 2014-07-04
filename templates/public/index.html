@@ -26,13 +26,15 @@
             <li class="list-group-item"><a class="public-replies-tab" href="{% tournament_url public_replies_tab %}">
                 Replies Tab
             </a></li>
+            {% endif %}
+            {% if motion_tab_released > 0 %}
             <li class="list-group-item"><a class="public-motions-tab" href="{% tournament_url public_motions_tab %}">
                 Motions Tab
             </a></li>
             {% endif %}
             {% if public_draw > 0 %}
             <li class="list-group-item"><a class="public-draw-nav" href="{% tournament_url public_draw %}">
-                Draw for Round {{ current_round }}
+                Draw for {{ current_round.name }}
             </a></li>
             {% endif %}
             {% if public_results > 0 %}

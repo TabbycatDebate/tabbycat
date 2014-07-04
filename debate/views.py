@@ -145,8 +145,8 @@ def public_team_standings(request, t):
     else:
         round = t.current_round.prev
 
-    # Find the most recent non-silent round
-    while round is not None and round.silent:
+    # Find the most recent non-silent preliminary round
+    while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
         round = round.prev
 
     if round is not None and round.silent is False:
@@ -160,9 +160,7 @@ def public_team_standings(request, t):
         # - teams are not supposed to know rankings between teams on the same number
         # of wins.
         teams = Team.objects.order_by('institution__code', 'reference')
-
-        rounds = Round.objects.filter(tournament=t,
-                                seq__lte=round.seq, silent=False).order_by('seq')
+        rounds = t.prelim_rounds(until=round).filter(silent=False).order_by('seq')
 
         def get_score(team, r):
             try:
@@ -299,8 +297,7 @@ def public_team_tab(request, t):
     from debate.models import TeamScore
     teams = Team.objects.ranked_standings(round)
 
-    rounds = Round.objects.filter(tournament=round.tournament,
-                                    seq__lte=round.seq).order_by('seq')
+    rounds = t.prelim_rounds(until=round).order_by('seq')
 
     def get_score(team, r):
         try:
@@ -315,7 +312,7 @@ def public_team_tab(request, t):
             return None
 
     for team in teams:
-        setattr(team, 'results_in', get_score(team, round) is not None)
+        team.results_in = True # always
         team.scores = [get_score(team, r) for r in rounds]
 
     return r2r(request, 'public/team_tab.html', dict(teams=teams,
@@ -326,8 +323,7 @@ def public_team_tab(request, t):
 @public_optional_tournament_view('tab_released')
 def public_speaker_tab(request, t):
     round = t.current_round
-    rounds = Round.objects.filter(tournament=round.tournament,
-                                    seq__lte=round.seq).order_by('seq')
+    rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = Speaker.objects.standings(round)
 
     # TODO is there a way to do this without so many database hits?
@@ -360,7 +356,7 @@ def public_speaker_tab(request, t):
 
     for speaker in speakers:
         speaker.scores = [get_score(speaker, r) for r in rounds]
-        speaker.results_in = get_score(speaker, round) is not None
+        speaker.results_in = True # always
 
     return r2r(request, 'public/speaker_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
@@ -369,8 +365,7 @@ def public_speaker_tab(request, t):
 @public_optional_tournament_view('tab_released')
 def public_replies_tab(request, t):
     round = t.current_round
-    rounds = Round.objects.filter(tournament=round.tournament,
-                                    seq__lte=round.seq).order_by('seq')
+    rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = Speaker.objects.reply_standings(round)
 
     from debate.models import SpeakerScore
@@ -403,8 +398,7 @@ def public_replies_tab(request, t):
 @public_optional_tournament_view('motion_tab_released')
 def public_motions_tab(request, t):
     round = t.current_round
-    rounds = Round.objects.filter(tournament=round.tournament,
-                                    seq__lte=round.seq).order_by('seq')
+    rounds = t.prelim_rounds(until=round).order_by('seq')
     motions = list()
     motions = Motion.objects.statistics(round=round)
     return r2r(request, 'public/motions_tab.html', dict(motions=motions))
@@ -429,7 +423,7 @@ def tournament_home(request, t):
         else:
             raise Http404()
 
-    rounds = Round.objects.filter(tournament=t, seq__lte=round.seq).order_by('seq')
+    rounds = t.prelim_rounds(until=round).order_by('seq')
 
     def get_round_stats(r):
         try:
@@ -959,9 +953,8 @@ def public_results(request, round):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
 def public_results_index(request, tournament):
-    # Only rounds before current round
-    rounds = Round.objects.filter(tournament=tournament,
-            seq__lte=tournament.current_round.seq).order_by('seq')
+    # Only rounds before/including current round
+    rounds = tournament.prelim_rounds(until=round).order_by('seq')
     return r2r(request, "public/results_index.html", dict(rounds=rounds))
 
 @login_required
@@ -1110,8 +1103,7 @@ def team_standings(request, round):
     from debate.models import TeamScore
     teams = Team.objects.ranked_standings(round)
 
-    rounds = Round.objects.filter(tournament=round.tournament,
-                                  seq__lte=round.seq).order_by('seq')
+    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
 
     def get_score(team, r):
         try:
@@ -1127,7 +1119,7 @@ def team_standings(request, round):
             return None
 
     for team in teams:
-        setattr(team, 'results_in', get_score(team, round) is not None)
+        team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_score(team, round) is not None
         team.scores = [get_score(team, r) for r in rounds]
 
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds))
@@ -1136,8 +1128,7 @@ def team_standings(request, round):
 @admin_required
 @round_view
 def speaker_standings(request, round):
-    rounds = Round.objects.filter(tournament=round.tournament,
-                                  seq__lte=round.seq).order_by('seq')
+    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = Speaker.objects.standings(round)
 
     # TODO is there a way to do this without so many database hits?
@@ -1170,7 +1161,7 @@ def speaker_standings(request, round):
 
     for speaker in speakers:
         speaker.scores = [get_score(speaker, r) for r in rounds]
-        speaker.results_in = get_score(speaker, round) is not None
+        speaker.results_in = round.stage != Round.STAGE_PRELIMINARY or get_score(speaker, round) is not None
 
     return r2r(request, 'speaker_standings.html', dict(speakers=speakers,
                                                        rounds=rounds))
@@ -1182,8 +1173,8 @@ def speaker_standings(request, round):
 @admin_required
 @round_view
 def reply_standings(request, round):
-    rounds = Round.objects.filter(tournament=round.tournament,
-                                  seq__lte=round.seq).order_by('seq')
+
+    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = Speaker.objects.reply_standings(round)
 
     from debate.models import SpeakerScore

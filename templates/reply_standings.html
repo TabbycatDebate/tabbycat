@@ -15,8 +15,8 @@
     <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
 {% endblock extra-head %}
 
-{% block head-title %}Reply Standings <small>after Round {{ round }}</small>{% endblock %}
-{% block page-title %}Reply Standings after Round {{ round }}{% endblock %}
+{% block head-title %}Reply Standings <small>after {{ round.name }}</small>{% endblock %}
+{% block page-title %}Reply Standings after {{ round.name }}{% endblock %}
 
 {% block content %}
 
@@ -30,7 +30,7 @@
             {% endif %}
             <th>Team</th>
             {% for round in rounds %}
-            <th>{{ round }}</th>
+            <th>{{ round.abbreviation }}</th>
             {% endfor %}
             <th>Av<span class="hidden-xs">erage</span></th>
             <th>Replies</th>

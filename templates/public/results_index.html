@@ -15,7 +15,7 @@
             {% for r in rounds %}
                 {% if not r.silent %}
                 <li class="list-group-item"><a class="public-results-nav" href="{% round_url public_results r %}">
-                    Results for Round {{ r }}
+                    Results for {{ r.name }}
                 </a></li>
                 {% endif %}
             {% endfor %}

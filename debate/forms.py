@@ -236,7 +236,7 @@ class BallotSetForm(forms.Form):
         # to the only motion there is.
         if self.show_motion:
             if not bs.motion and self.motions.count() == 1:
-                initial['motion'] = self.motions[0]
+                initial['motion'] = self.motions.get()
             else:
                 initial['motion'] = bs.motion
             initial['aff_motion_veto'] = bs.aff_motion_veto

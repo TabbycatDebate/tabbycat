@@ -21,8 +21,8 @@
     </script>
 {% endblock extra-head %}
 
-{% block head-title %}Draw for Round {{ round }} <small>(DRAFT)</small>{% endblock %}
-{% block page-title %}Draw for Round {{ round }} (DRAFT){% endblock %}
+{% block head-title %}Draw for {{ round.name }} <small>(DRAFT)</small>{% endblock %}
+{% block page-title %}Draw for {{ round.name }} (DRAFT){% endblock %}
 {% block header %}
     <div class="status btn-group">
         <button id="confirmDraw" class="btn btn-success">Confirm Draw</button>
