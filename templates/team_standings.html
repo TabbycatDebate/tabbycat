@@ -37,9 +37,7 @@
                 <th>Inst<span class="hidden-xs">itution</span></th>
             {% endif %}
             {% for round in rounds %}
-            <th class="opponent-emoji">
-                <img class="invisible" src="{% static 'emoji/img/grey_question.png' %}" />
-            </th>
+            <th>{{ round.abbreviation }}</th>
             <th>{{ round.abbreviation }}</th>
             {% endfor %}
             <th>Total</th>
