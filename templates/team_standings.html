@@ -28,7 +28,11 @@
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
         <tr>
-            <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
+            {% if for_print %}
+                <th>Rank</th>
+            {% else %}
+                <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
+            {% endif %}
             {% if show_emoji > 0 and not for_print %}
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
