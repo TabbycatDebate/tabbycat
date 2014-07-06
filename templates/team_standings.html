@@ -37,10 +37,10 @@
                 <th>Inst<span class="hidden-xs">itution</span></th>
             {% endif %}
             {% for round in rounds %}
-            <th>{{ round.abbreviation }}</th>
             <th class="opponent-emoji">
                 <img class="invisible" src="{% static 'emoji/img/grey_question.png' %}" />
             </th>
+            <th>{{ round.abbreviation }}</th>
             {% endfor %}
             <th>Total</th>
             <th>Wins</th>
@@ -63,15 +63,6 @@
             <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
         {% endif %}
         {% for score in team.scores %}
-            <td>
-                {% if score.1 == 1 %}
-                    {{ score.0|stringformat:".2f" }}
-                {% elif score.1 == 0 %}
-                    {{ score.0|stringformat:".2f" }}
-                {% else %}
-                    No Result
-                {% endif %}
-            </td>
             {% if for_print %}
                 <td>{{ score.1|yesno:"win,loss" }}</td>
             {% else %}
@@ -89,6 +80,15 @@
                     <td></td>
                 {% endif %}
             {% endif %}
+            <td>
+                {% if score.1 == 1 %}
+                    {{ score.0|stringformat:".2f" }}
+                {% elif score.1 == 0 %}
+                    {{ score.0|stringformat:".2f" }}
+                {% else %}
+                    No Result
+                {% endif %}
+            </td>
         {% endfor %}
         <td>
             {{ team.speaker_score|stringformat:".2f" }}
