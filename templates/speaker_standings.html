@@ -24,7 +24,7 @@
         <tr>
             <th><span data-toggle="tooltip" title="" class="glyphicon glyphicon-signal" data-original-title="Rank"></span></th>
             <th>Name</th>
-            {% if show_emoji > 0 %}
+            {% if show_emoji > 0 and not for_print %}
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
             <th>Team</th>
@@ -44,7 +44,7 @@
         {% if not speaker.results_in %}danger{% endif%}">
         <td>{{ speaker.rank }}</td>
         <td>{{ speaker.name }}</td>
-        {% if show_emoji > 0 %}
+        {% if show_emoji > 0 and not for_print %}
             <td class="team-emoji team-{{ speaker.team.id }}"></td>
         {% endif %}
         <td>{{ speaker.team.short_name }}</td>

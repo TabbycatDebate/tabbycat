@@ -29,7 +29,7 @@
     <thead>
         <tr>
             <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
-            {% if show_emoji > 0 %}
+            {% if show_emoji > 0 and not for_print %}
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
             <th>Team</th>
@@ -51,7 +51,7 @@
     {% for team in teams %}
     <tr class="{% if not team.results_in %}danger{% endif %}">
         <td>{{ team.rank }}</td>
-        {% if show_emoji > 0 %}
+        {% if show_emoji > 0 and not for_print %}
             <td class="team-emoji team-{{ team.id }}"></td>
         {% endif %}
         <td>
@@ -72,18 +72,22 @@
                     No Result
                 {% endif %}
             </td>
-            {% if score.1 == 1 %}
-                <td class="opponent-emoji">
-                    <span class="glyphicon glyphicon-arrow-up text-success"></span> {% if show_emoji > 0 %}vs{% endif %}
-                    <span title="Won against {{ score.2.name }} ({{ score.2.speakers|join:", " }})" data-toggle="tooltip" class=" team-{{ score.2.id }}">{% if show_emoji == 0 %}vs{% endif %}</span>
-                </td>
-            {% elif score.1 == 0 %}
-                <td class="opponent-emoji">
-                    <span class="glyphicon glyphicon-arrow-down text-danger"></span> {% if show_emoji > 0 %}vs{% endif %}
-                    <span title="Lost to {{ score.2.name }} ({{ score.2.speakers|join:", " }})" data-toggle="tooltip" class="team-{{ score.2.id }}">{% if show_emoji == 0 %}vs{% endif %}</span>
-                </td>
+            {% if for_print %}
+                <td>{{ score.1|yesno:"win,loss" }}</td>
             {% else %}
-                <td></td>
+                {% if score.1 == 1 %}
+                    <td class="opponent-emoji">
+                        <span class="glyphicon glyphicon-arrow-up text-success"></span> {% if show_emoji > 0 %}vs{% endif %}
+                        <span title="Won against {{ score.2.name }} ({{ score.2.speakers|join:", " }})" data-toggle="tooltip" class=" team-{{ score.2.id }}">{% if show_emoji == 0 %}vs{% endif %}</span>
+                    </td>
+                {% elif score.1 == 0 %}
+                    <td class="opponent-emoji">
+                        <span class="glyphicon glyphicon-arrow-down text-danger"></span> {% if show_emoji > 0 %}vs{% endif %}
+                        <span title="Lost to {{ score.2.name }} ({{ score.2.speakers|join:", " }})" data-toggle="tooltip" class="team-{{ score.2.id }}">{% if show_emoji == 0 %}vs{% endif %}</span>
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
             {% endif %}
         {% endfor %}
         <td>
