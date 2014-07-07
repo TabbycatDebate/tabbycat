@@ -105,7 +105,6 @@ class Scoresheet(object):
             return 0
         return sum(scores)
 
-
 class BallotSet(object):
     """
     Encapsulates a set of ballots
@@ -316,9 +315,6 @@ class BallotSet(object):
         return sum(self.adjudicator_sheets[adj].get_score(side, position)
                    for adj in self.majority_adj) / len(self.majority_adj)
 
-    def get_speaker_score(self, adj, side, position):
-        return (self.get_speaker(side, position), self.get_score(side, position))
-
     def set_speaker(self, side, pos, speaker):
         self.speakers[side][pos] = speaker
 
@@ -384,6 +380,47 @@ class BallotSet(object):
         for (type, adj), split in zip(self.debate.adjudicators, splits):
             yield type, adj, split
 
-class DebateResult(object):
-    def __init__(self, *args):
-        raise TypeError("DebateResult no longer exists, use BallotSet instead.")
+    def sheet_iter(self):
+        REPLY_POSITION = self.debate.round.tournament.REPLY_POSITION
+        POSITIONS = self.debate.round.tournament.POSITIONS
+
+        class Position(object):
+
+            def __init__(self2, sheet, side, pos):
+                self2.sheet = sheet
+                self2.pos = pos
+                self2.side = side
+
+            def name(self2):
+                return (self2.pos == REPLY_POSITION) and "Reply" or str(self2.pos)
+
+            def speaker(self2):
+                return self.get_speaker(self2.side, self2.pos)
+
+            def score(self2):
+                return self2.sheet.data[self2.side][self2.pos]
+
+        class ScoresheetWrapper(object):
+
+            def __init__(self2, adj):
+                self2.sheet = self.adjudicator_sheets[adj]
+                self2.adjudicator = adj
+
+            def position_iter(self2, side):
+                for pos in POSITIONS:
+                    yield Position(self2.sheet, side, pos)
+
+            def affs(self2):
+                return self2.position_iter('aff')
+
+            def negs(self2):
+                return self2.position_iter('neg')
+
+            def aff_score(self2):
+                return self2.sheet.aff_score
+
+            def neg_score(self2):
+                return self2.sheet.neg_score
+
+        for adj in self.adjudicators:
+            yield ScoresheetWrapper(adj)

@@ -15,6 +15,7 @@ from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
 from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission, AdjudicatorTestScoreHistory
 from debate.models import AdjudicatorFeedback, ActiveVenue, ActiveTeam, ActiveAdjudicator
+from debate.result import BallotSet
 from debate import forms
 
 from django.forms.models import modelformset_factory
@@ -403,6 +404,16 @@ def public_motions_tab(request, t):
     motions = Motion.objects.statistics(round=round)
     return r2r(request, 'public/motions_tab.html', dict(motions=motions))
 
+
+#@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('ballots_released')
+def public_ballot_view(request, t, debate_id):
+    debate = get_object_or_404(Debate, id=debate_id)
+    ballot_submission = debate.confirmed_ballot
+    if ballot_submission is None:
+        raise Http404()
+    ballot_set = BallotSet(ballot_submission)
+    return r2r(request, 'public/ballot_set.html', dict(debate=debate, ballot_set=ballot_set))
 
 @login_required
 @tournament_view

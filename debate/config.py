@@ -49,6 +49,7 @@ SETTINGS = OrderedDict([
     ('feedback_progress',           (_bool, 'Public interface to view unsubmitted ballots',                False)),
     ('tab_released',                (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament',         False)),
     ('motion_tab_released',         (_bool, 'Displays the motions tab PUBLICLY. For AFTER the tournament', False)),
+    ('ballots_released',            (_bool, 'Displays ballots PUBLICLY. For AFTER the tournament',         False)),
 ])
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))

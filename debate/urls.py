@@ -33,6 +33,7 @@ urlpatterns = patterns('debate.views',
     url(r'^tab/speaker/$', 'public_speaker_tab', name='public_speaker_tab'),
     url(r'^tab/replies/$', 'public_replies_tab', name='public_replies_tab'),
     url(r'^tab/motions/$', 'public_motions_tab', name='public_motions_tab'),
+    url(r'^ballots/debate/(?P<debate_id>\d+)/$', 'public_ballot_view', name='public_ballot_view'),
 
     #url(r'^admin/actions/$', 'action_log', name='action_log'),
 
