@@ -22,7 +22,7 @@
 {% endif %}
 
 <div class="row">
-    <p class="col-xs-12 lead h4 page-header">Motion</p>
+    <p class="col-xs-12 lead h3 page-header">Motion</p>
 </div>
 
 <div class="form-group">
@@ -51,7 +51,7 @@
 {% for adj in form.adj_iter %}
 
     <div class="row">
-        <p class="col-xs-12 lead h4 page-header">Ballot from
+        <p class="col-xs-12 lead h3 page-header">Ballot from
         {% if show_adj_contact and adj.adj.has_contact %}
             <span data-toggle="tooltip" title="{{ adj.adj.phone }} {{ adj.adj.email }}">
             {{ adj.adj }}
@@ -65,7 +65,7 @@
     <div class="clearfix scoresheet row">
         <div class="col-md-6">
             <div class="form-group">
-                <label class="h3 col-xs-offset-1 control-label" >{{ debate.aff_team }}</label>
+                <label class="h4 col-xs-offset-1 control-label" >{{ debate.aff_team }}</label>
             </div>
             {% for position in adj.position_iter %}
             <div class="form-group aff speaker s{{ position.pos }}">
@@ -95,7 +95,7 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                <label class="h3 col-xs-offset-1 control-label" >{{ debate.neg_team }}</label>
+                <label class="h4 col-xs-offset-1 control-label" >{{ debate.neg_team }}</label>
             </div>
            {% for position in adj.position_iter %}
                 <div class="form-group neg speaker s{{ position.pos }}">

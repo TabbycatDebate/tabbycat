@@ -105,6 +105,14 @@ class Scoresheet(object):
             return 0
         return sum(scores)
 
+    @property
+    def aff_win(self):
+        return self.aff_score > self.neg_score
+
+    @property
+    def neg_win(self):
+        return self.neg_score > self.aff_score
+
 class BallotSet(object):
     """
     Encapsulates a set of ballots
@@ -421,6 +429,12 @@ class BallotSet(object):
 
             def neg_score(self2):
                 return self2.sheet.neg_score
+
+            def aff_win(self2):
+                return self2.sheet.aff_win
+
+            def neg_win(self2):
+                return self2.sheet.neg_win
 
         for adj in self.adjudicators:
             yield ScoresheetWrapper(adj)

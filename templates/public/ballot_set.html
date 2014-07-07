@@ -12,7 +12,7 @@
 {% for sheet in ballot_set.sheet_iter %}
 
     <div class="row">
-        <p class="col-xs-12 lead h4 page-header">Ballot from
+        <p class="col-xs-12 lead h3 page-header">Ballot from
             {{ sheet.adjudicator }}
         </p>
     </div>
@@ -20,7 +20,7 @@
     <div class="clearfix scoresheet row">
         <div class="col-md-6">
             <div class="row">
-                <label class="h3 col-xs-offset-1 control-label" >{{ debate.aff_team }}</label>
+                <label class="h4 col-xs-offset-1 control-label" >{{ debate.aff_team }}</label>
             </div>
             {% for position in sheet.affs %}
             <div class="row aff speaker s{{ position.pos }}">
@@ -36,14 +36,14 @@
             <div class="row">
                 <label class="col-md-2 col-xs-3 control-label" >Total</label>
                 <div class="form-control-parent col-md-offset-4 col-xs-1 col-xs-offset-6">
-                    <div name="aff_total" class="btn btn-default aff_total" type="text" readonly />{{ sheet.aff_score }}</div>
+                    <div name="aff_total" class="btn btn-default aff_total {{ sheet.aff_win|yesno:"btn-success,btn-danger" }}" type="text" readonly />{{ sheet.aff_score }}</div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="row">
-                <label class="h3 col-xs-offset-1 control-label" >{{ debate.neg_team }}</label>
+                <label class="h4 col-xs-offset-1 control-label" >{{ debate.neg_team }}</label>
             </div>
             {% for position in sheet.negs %}
             <div class="row neg speaker s{{ position.pos }}">
@@ -59,7 +59,7 @@
             <div class="row">
                 <label class="col-md-2 col-xs-3 control-label" >Total</label>
                 <div class="form-control-parent col-md-offset-4 col-xs-1 col-xs-offset-6">
-                    <div name="neg_total" class="btn btn-default neg_total" type="text" readonly />{{ sheet.neg_score }}</div>
+                    <div name="neg_total" class="btn btn-default neg_total {{ sheet.neg_win|yesno:"btn-success,btn-danger" }}" type="text" readonly />{{ sheet.neg_score }}</div>
                 </div>
             </div>
         </div>
