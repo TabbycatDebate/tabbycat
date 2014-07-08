@@ -409,9 +409,18 @@ def public_motions_tab(request, t):
 @public_optional_tournament_view('ballots_released')
 def public_ballot_view(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
+    if debate.result_status != Debate.STATUS_CONFIRMED:
+        raise Http404()
+
+    round = debate.round
+    # Can't see results for current round or later
+    if (round.seq > round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
+        raise Http404()
+
     ballot_submission = debate.confirmed_ballot
     if ballot_submission is None:
         raise Http404()
+
     ballot_set = BallotSet(ballot_submission)
     return r2r(request, 'public/ballot_set.html', dict(debate=debate, ballot_set=ballot_set))
 
