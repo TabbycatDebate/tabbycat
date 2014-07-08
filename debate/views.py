@@ -111,7 +111,8 @@ def index(request):
 
 ## Public UI
 
-PUBLIC_PAGE_CACHE_TIMEOUT = 28800
+PUBLIC_PAGE_CACHE_TIMEOUT = 60
+TAB_PAGES_CACHE_TIMEOUT = 28800
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
@@ -291,7 +292,7 @@ def public_motions(request, t):
 
 ## Tab
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_team_tab(request, t):
     round = t.current_round
@@ -323,7 +324,7 @@ def public_team_tab(request, t):
             rounds=rounds, round=round, show_ballots=show_ballots))
 
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_speaker_tab(request, t):
     round = t.current_round
@@ -365,7 +366,7 @@ def public_speaker_tab(request, t):
     return r2r(request, 'public/speaker_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_replies_tab(request, t):
     round = t.current_round
@@ -398,7 +399,7 @@ def public_replies_tab(request, t):
     return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('motion_tab_released')
 def public_motions_tab(request, t):
     round = t.current_round
@@ -408,7 +409,7 @@ def public_motions_tab(request, t):
     return r2r(request, 'public/motions_tab.html', dict(motions=motions))
 
 
-#@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('ballots_released')
 def public_ballots_view(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
