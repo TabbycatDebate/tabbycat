@@ -5,6 +5,9 @@
 {% block head-title %}{{ debate.matchup }} <small>{{ debate.round.name }} @ {{ debate.venue.name }}</small>{% endblock %}
 {% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {{ debate.venue.name }}{% endblock %}
 
+{% block nav %}{% include "public/nav.html" %}{% endblock %}
+{% block footer %}{% include "public/footer.html" %}{% endblock %}
+
 {% block header %}
 <div class="btn-group">
     <a class="btn btn-default form-control" href="{% round_url public_results debate.round %}">Return to Results for {{ debate.round.name }}</a>
