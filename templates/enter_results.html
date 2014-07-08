@@ -30,10 +30,10 @@ New Ballot Set for
 {% else %}
 Edit Ballot Set for
 {% endif %}
-{{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>
+{{ debate.matchup }} <small> {{ debate.round.name }} @ {{ debate.venue.name }}</small>
 {% endblock %}
 
-{% block page-title %}{{ debate.matchup }} Round {{ debate.round }} @ {{ debate.venue.name }}{% endblock %}
+{% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {{ debate.venue.name }}{% endblock %}
 {% block body-class %}enter-result{% endblock %}
 {% block header %}
     {% include "other_ballots_list.html" %}

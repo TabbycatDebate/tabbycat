@@ -18,10 +18,11 @@ def get_or_instantiate(model, **kwargs):
 ### Result/ballot forms
 
 class BaseScoreField(forms.FloatField):
-    def __init__(self, tournament_config=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """Takes an additional optional keyword argument: tournament_config,
         the Config object for the Tournament."""
 
+        tournament_config = kwargs.pop('tournament_config')
         if tournament_config:
             min_value  = tournament_config.get(self.CONFIG_MIN_VALUE_FIELD, default=self.DEFAULT_MIN_VALUE)
             max_value  = tournament_config.get(self.CONFIG_MAX_VALUE_FIELD, default=self.DEFAULT_MAX_VALUE)
@@ -352,10 +353,13 @@ class BallotSetForm(forms.Form):
         form = self
 
         class Position(object):
-            def __init__(self, adj, pos, name):
+            def __init__(self, adj, pos):
                 self.adj = adj
                 self.pos = pos
-                self.name = name
+
+            @property
+            def name(self):
+                return (self.pos == form.REPLY_POSITION) and "Reply" or str(self.pos)
 
             def __unicode__(self):
                 return unicode(self.name)
@@ -388,8 +392,7 @@ class BallotSetForm(forms.Form):
 
             def position_iter(self):
                 for i in form.POSITIONS:
-                    name = (i == form.REPLY_POSITION) and "Reply" or str(i)
-                    yield Position(self.adj, i, name)
+                    yield Position(self.adj, i)
 
 
         for adj in self.adjudicators:

@@ -414,4 +414,36 @@ span.esl {
     text-decoration: line-through;
 }
 
+// Scoresheets
 
+.scoresheet-view {
+    .control-label {
+        text-align: right;
+        vertical-align: middle;
+    }
+    .score {
+        width: 70px;
+        text-align: right;
+    }
+    .total {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .total.score {
+        font-weight: bold;
+        border-radius: 3px;
+    }
+    .win {
+        background-color: #47a447;
+        color: white;
+        border-color: #398439;
+    }
+    .loss {
+        background-color: #d2322d;
+        color: white;
+        border-color: #ac2925;
+    }
+    .motion-veto {
+        text-decoration: line-through
+    }
+}
