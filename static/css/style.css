@@ -930,3 +930,6 @@ span.esl {
   border-color: #ac2925; }
 .scoresheet-view .motion-veto {
   text-decoration: line-through; }
+
+.team-tab a.team-score {
+  color: #285379; }
