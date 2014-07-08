@@ -407,7 +407,7 @@ def public_motions_tab(request, t):
 
 #@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('ballots_released')
-def public_ballot_view(request, t, debate_id):
+def public_ballots_view(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
     if debate.result_status != Debate.STATUS_CONFIRMED:
         raise Http404()

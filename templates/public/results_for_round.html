@@ -30,6 +30,7 @@
     <thead>
         <tr>
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+            {% if ballots_released %}<th>Ballots</th>{% endif %}
             <th>Aff<span class="hidden-xs">irmative</span></th>
             <th>Neg<span class="hidden-xs">ative</span></th>
             <th>Adj<span class="hidden-xs">udicator</span>s</th>
@@ -44,6 +45,11 @@
     {% for debate in draw %}
         <tr>
             <td>{{ debate.venue_splitname }}</td>
+            {% if ballots_released %}
+                <td>
+                    <a href="{% tournament_url public_ballots_view debate.id %}">View ballots</a>
+                </td>
+            {% endif %}
 
             <td>
                 {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}

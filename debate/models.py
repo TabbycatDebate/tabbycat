@@ -774,8 +774,9 @@ class Round(models.Model):
             raise draw_module.DrawError("There are %d debates but only %d venues." % (len(pairings), len(venues)))
 
         random.shuffle(venues)
+        random.shuffle(pairings) # to avoid IDs indicating room raks
 
-        for i, pairing in enumerate(pairings):
+        for pairing in pairings:
             debate = Debate(round=self, venue=venues.pop(0))
             debate.bracket   = pairing.bracket
             debate.room_rank = pairing.room_rank
