@@ -904,3 +904,26 @@ span.esl {
 .edit-ballot-link-discarded, .edit-ballot-link-discarded:hover {
   color: #808080;
   text-decoration: line-through; }
+
+.scoresheet-view .control-label {
+  text-align: right;
+  vertical-align: middle; }
+.scoresheet-view .score {
+  width: 70px;
+  text-align: right; }
+.scoresheet-view .total {
+  padding-top: 5px;
+  padding-bottom: 5px; }
+.scoresheet-view .total.score {
+  font-weight: bold;
+  border-radius: 3px; }
+.scoresheet-view .win {
+  background-color: #47a447;
+  color: white;
+  border-color: #398439; }
+.scoresheet-view .loss {
+  background-color: #d2322d;
+  color: white;
+  border-color: #ac2925; }
+.scoresheet-view .motion-veto {
+  text-decoration: line-through; }
