@@ -308,7 +308,8 @@ def public_team_tab(request, t):
                 debate_team__debate__round=r,
             )
             opposition = ts.debate_team.opposition.team
-            return ts.score, ts.points, opposition
+            debate_id = ts.debate_team.debate.id
+            return ts.score, ts.points, opposition, debate_id
         except TeamScore.DoesNotExist:
             return None
 
@@ -316,8 +317,10 @@ def public_team_tab(request, t):
         team.results_in = True # always
         team.scores = [get_score(team, r) for r in rounds]
 
+    show_ballots = round.tournament.config.get('ballots_released')
+
     return r2r(request, 'public/team_tab.html', dict(teams=teams,
-            rounds=rounds, round=round))
+            rounds=rounds, round=round, show_ballots=show_ballots))
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -966,8 +969,10 @@ def public_results(request, round):
     draw = round.get_draw()
     show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.config.get('show_motions_in_results')
     show_splits = round.tournament.config.get('show_splitting_adjudicators')
+    show_ballots = round.tournament.config.get('ballots_released')
     return r2r(request, "public/results_for_round.html", dict(
-            draw=draw, show_motions_column=show_motions_column, show_splits=show_splits))
+            draw=draw, show_motions_column=show_motions_column, show_splits=show_splits,
+            show_ballots=show_ballots))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
@@ -1141,7 +1146,8 @@ def team_standings(request, round, for_print=False):
         team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_score(team, round) is not None
         team.scores = [get_score(team, r) for r in rounds]
 
-    return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds, for_print=for_print))
+    return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds, for_print=for_print,
+        show_ballots=False))
 
 
 @admin_required
