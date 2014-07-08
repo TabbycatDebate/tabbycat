@@ -108,6 +108,7 @@ def annotate_team_standings(teams, round=None):
     # )
     # That is, it adds up all the wins and points of each team on CONFIRMED
     # ballots and adds them as columns to the table it returns.
+    # The standings include only preliminary rounds.
 
     EXTRA_QUERY = """
         SELECT DISTINCT SUM({field:s})
@@ -295,7 +296,7 @@ class Team(models.Model):
         return self._get_count(DebateTeam.POSITION_NEGATIVE, seq)
 
     def _get_count(self, position, seq):
-        dts = DebateTeam.objects.filter(team=self, position=position)
+        dts = DebateTeam.objects.filter(team=self, position=position, debate__round__stage=Round.STAGE_PRELIMINARY)
         if seq is not None:
             dts = dts.filter(debate__round__seq__lte=seq)
         return dts.count()
@@ -358,7 +359,7 @@ class SpeakerManager(models.Manager):
         # That is, it adds up all the points of each speaker on CONFIRMED
         # ballots and adds them as columns to the table it returns.
         EXTRA_QUERY = """
-            SELECT DISTINCT SUM("score")
+            SELECT DISTINCT {aggregator:s}("score")
             FROM "debate_speakerscore"
             JOIN "debate_debateteam" ON "debate_speakerscore"."debate_team_id" = "debate_debateteam"."id"
             JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
@@ -369,12 +370,18 @@ class SpeakerManager(models.Manager):
             AND "debate_speakerscore"."position" <= {position:d}
             AND "debate_round"."seq" <= {round:d}
             AND "debate_round"."stage" = '{stage}'
-        """.format(
+        """
+        speakers = speakers.extra({"total": EXTRA_QUERY.format(
+            aggregator = "SUM",
             round = round.seq,
             position = round.tournament.LAST_SUBSTANTIVE_POSITION,
             stage = round.STAGE_PRELIMINARY,
-        )
-        speakers = speakers.extra({"total": EXTRA_QUERY}).distinct().order_by('-total')
+        ), "average": EXTRA_QUERY.format(
+            aggregator = "AVG",
+            round = round.seq,
+            position = round.tournament.LAST_SUBSTANTIVE_POSITION,
+            stage = round.STAGE_PRELIMINARY,
+        )}).distinct().order_by('-total')
 
         prev_total = None
         current_rank = 0
@@ -1307,7 +1314,7 @@ class AdjudicatorAllocation(object):
         return a
 
     def __unicode__(self):
-        return ", ".join(map(lambda x: x.name, self.list))
+        return ", ".join(map(lambda x: (x is not None) and x.name or "<None>", self.list))
 
     def __iter__(self):
         yield DebateAdjudicator.TYPE_CHAIR, self.chair

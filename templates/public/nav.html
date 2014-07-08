@@ -15,18 +15,18 @@
         <div class="collapse navbar-collapse">
             <ul id="nav" class="nav navbar-nav navbar-left">
                 {% if tab_released > 0 %}
-                <li><a class="public-feedback-nav" href="{% tournament_url public_team_tab %}">
+                <li><a class="public-team-tab-nav" href="{% tournament_url public_team_tab %}">
                     Team Tab
                 </a></li>
-                <li><a class="public-speaker-tab" href="{% tournament_url public_speaker_tab %}">
+                <li><a class="public-speaker-tab-nav" href="{% tournament_url public_speaker_tab %}">
                     Speaker Tab
                 </a></li>
-                <li><a class="public-replies-tab" href="{% tournament_url public_replies_tab %}">
+                <li><a class="public-replies-tab-nav" href="{% tournament_url public_replies_tab %}">
                     Replies Tab
                 </a></li>
                 {% endif %}
                 {% if motion_tab_released > 0 %}
-                <li><a class="public-motions-tab" href="{% tournament_url public_motions_tab %}">
+                <li><a class="public-motions-tab-nav" href="{% tournament_url public_motions_tab %}">
                     Motions Tab
                 </a></li>
                 {% endif %}
@@ -35,11 +35,11 @@
                     Draw for {{ current_round.name }}
                 </a></li>
                 {% endif %}
-                {% if public_results > 0 %}
+                {% if public_results > 0 and current_round.prev %}
                 <li><a class="public-results-nav" href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% for r in tournament.rounds.all %}
-                            {% if r.seq <= current_round.seq and not r.silent or tournament.release_all %}
+                            {% if r.seq < current_round.seq and not r.silent or tournament.release_all %}
                                 <li><a href="{% round_url public_results r %}">{{ r.name }}</a></li>
                             {% endif %}
                         {% endfor %}

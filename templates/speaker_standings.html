@@ -22,19 +22,24 @@
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
         <tr>
-            <th><span data-toggle="tooltip" title="" class="glyphicon glyphicon-signal" data-original-title="Rank"></span></th>
+            {% if for_print %}
+                <th>Rank</th>
+            {% else %}
+                <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
+            {% endif %}
             <th>Name</th>
-            {% if show_emoji > 0 %}
+            {% if show_emoji > 0 and not for_print %}
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
             <th>Team</th>
-            {% if show_institutions > 0 %}
+{% comment %}            {% if show_institutions > 0 %}
                 <th>Institution</th>
-            {% endif %}
+            {% endif %}{% endcomment %}
             {% for round in rounds %}
             <th>{{ round.abbreviation }}</th>
             {% endfor %}
             <th>Total</th>
+            <th>Av<span class="hidden-sm">era</span>g<span class="hidden-sm">e</span></th>
         </tr>
     </thead>
     <tbody>
@@ -43,17 +48,18 @@
         {% if not speaker.results_in %}danger{% endif%}">
         <td>{{ speaker.rank }}</td>
         <td>{{ speaker.name }}</td>
-        {% if show_emoji > 0 %}
+        {% if show_emoji > 0 and not for_print %}
             <td class="team-emoji team-{{ speaker.team.id }}"></td>
         {% endif %}
         <td>{{ speaker.team.short_name }}</td>
-        {% if show_institutions > 0 %}
+{% comment %}        {% if show_institutions > 0 %}
             <td>{{ speaker.team.institution.code }}</td>
-        {% endif %}
+        {% endif %}{% endcomment %}
         {% for score in speaker.scores %}
         <td>{{ score|stringformat:".2f" }}</td>
         {% endfor %}
         <td>{{ speaker.total|stringformat:".2f" }}</td>
+        <td>{{ speaker.average|stringformat:".2f" }}</td>
     </tr>
     {% endfor %}
 </table>

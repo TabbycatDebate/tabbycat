@@ -479,7 +479,7 @@ def tournament_home(request, t):
     if not request.user.is_superuser:
         return r2r(request, 'monkey/home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
     else:
-        return r2r(request, 'tournament_home.html', dict(stats=stats, round=r, actions=a, r_stats=r_stats))
+        return r2r(request, 'tournament_home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
 
 @admin_required
 @tournament_view
@@ -961,10 +961,9 @@ def monkey_results(request, round):
 @public_optional_round_view('public_results')
 def public_results(request, round):
     # Can't see results for current round or later
-    if (round.seq > round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
+    if (round.seq >= round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
         raise Http404()
-    draw = round.get_draw_by_room().filter(result_status=Debate.STATUS_CONFIRMED)
-    draw = filter(lambda x: x.confirmed_ballot is not None, draw)
+    draw = round.get_draw()
     show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.config.get('show_motions_in_results')
     show_splits = round.tournament.config.get('show_splitting_adjudicators')
     return r2r(request, "public/results_for_round.html", dict(
@@ -973,8 +972,8 @@ def public_results(request, round):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
 def public_results_index(request, tournament):
-    # Only rounds before/including current round
-    rounds = tournament.prelim_rounds(until=round).order_by('seq')
+    rounds = Round.objects.filter(tournament=tournament,
+        seq__lt=tournament.current_round.seq).order_by('seq')
     return r2r(request, "public/results_index.html", dict(rounds=rounds))
 
 @login_required
@@ -1119,7 +1118,7 @@ def new_ballots(request, t, debate_id):
 
 @admin_required
 @round_view
-def team_standings(request, round):
+def team_standings(request, round, for_print=False):
     from debate.models import TeamScore
     teams = Team.objects.ranked_standings(round)
 
@@ -1142,12 +1141,12 @@ def team_standings(request, round):
         team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_score(team, round) is not None
         team.scores = [get_score(team, r) for r in rounds]
 
-    return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds))
+    return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds, for_print=for_print))
 
 
 @admin_required
 @round_view
-def speaker_standings(request, round):
+def speaker_standings(request, round, for_print=False):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = Speaker.objects.standings(round)
 
@@ -1184,7 +1183,7 @@ def speaker_standings(request, round):
         speaker.results_in = round.stage != Round.STAGE_PRELIMINARY or get_score(speaker, round) is not None
 
     return r2r(request, 'speaker_standings.html', dict(speakers=speakers,
-                                                       rounds=rounds))
+                                        rounds=rounds, for_print=for_print))
     # Comment out above line and uncomment below line to prevent access to
     # speaker standings.
     #return r2r(request, 'speaker_standings.html', dict(speakers=None,
@@ -1192,7 +1191,7 @@ def speaker_standings(request, round):
 
 @admin_required
 @round_view
-def reply_standings(request, round):
+def reply_standings(request, round, for_print=False):
 
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = Speaker.objects.reply_standings(round)
@@ -1221,7 +1220,7 @@ def reply_standings(request, round):
             speaker.results_in = False
 
     return r2r(request, 'reply_standings.html', dict(speakers=speakers,
-                                                     rounds=rounds))
+                                        rounds=rounds, for_print=for_print))
 
 @admin_required
 @round_view
