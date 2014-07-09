@@ -45,9 +45,13 @@
     {% for debate in draw %}
         <tr>
             <td>{{ debate.venue_splitname }}</td>
-            {% if show_ballots and debate.confirmed_ballot %}
+            {% if show_ballots %}
                 <td>
-                    <a href="{% tournament_url public_ballots_view debate.id %}">View ballots</a>
+                    {% if debate.confirmed_ballot %}
+                        <a href="{% tournament_url public_ballots_view debate.id %}">View ballots</a>
+                    {% else %}
+                        No result
+                    {% endif %}
                 </td>
             {% endif %}
 
