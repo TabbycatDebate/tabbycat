@@ -31,7 +31,13 @@
         <tr>
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
             {% if show_ballots %}<th>Ballots</th>{% endif %}
+            {% if show_emoji > 0 %}
+                <th class="hidden-sm th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+            {% endif %}
             <th>Aff<span class="hidden-xs">irmative</span></th>
+            {% if show_emoji > 0 %}
+                <th class="hidden-sm th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+            {% endif %}
             <th>Neg<span class="hidden-xs">ative</span></th>
             <th>Adj<span class="hidden-xs">udicator</span>s</th>
             {% if show_motions_column %}
@@ -55,6 +61,9 @@
                 </td>
             {% endif %}
 
+            {% if show_emoji > 0 %}
+                <td class="team-emoji team-{{ debate.aff_team.id }} hidden-sm"></td>
+            {% endif %}
             <td>
                 {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-up text-success"></span>
@@ -66,6 +75,9 @@
                 </span>
             </td>
 
+            {% if show_emoji > 0 %}
+                <td class="team-emoji team-{{ debate.neg_team.id }} hidden-sm "></td>
+            {% endif %}
             <td>
                 {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-up text-success"></span>
