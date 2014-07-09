@@ -28,18 +28,6 @@
             {{ ballot_set.motion.text }}
         </div>
     </div>
-    <div class="row">
-        <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Aff Veto</label>
-        <div class="col-sm-10 motion-veto">
-            {{ ballot_set.aff_motion_veto.text }}
-        </div>
-    </div>
-    <div class="row">
-        <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Neg Veto</label>
-        <div class="col-sm-10 motion-veto">
-            {{ ballot_set.neg_motion_veto.text }}
-        </div>
-    </div>
 
     {% for sheet in ballot_set.sheet_iter %}
 
