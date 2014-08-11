@@ -60,7 +60,7 @@ class Pairing(object):
         return self.teams[index]
 
     def balance_sides(self):
-        """Puts whoever has affirmed less on the affirmative sides,
+        """Puts whoever has affirmed less on the affirmative side,
         or chooses randomly if they've done it equally."""
         if self.teams[0].aff_count < self.teams[1].aff_count:
             pass
@@ -76,6 +76,8 @@ class Pairing(object):
         try:
             return self.teams[0].institution == self.teams[1].institution
         except AttributeError:
+            # In theory redundant, since DrawGenerators should use check_teams_for_attribute
+            # to check for this.
             raise DrawError("For conflict avoidance, teams must have an attribute 'institution'.")
 
     @property
@@ -85,6 +87,8 @@ class Pairing(object):
         try:
             return self.teams[0].seen(self.teams[1])
         except AttributeError:
+            # In theory redundant, since DrawGenerators should use check_teams_for_attribute
+            # to check for this.
             raise DrawError("For conflict avoidance, teams must have an attribute 'seen'.")
 
     def add_flag(self, flag):
@@ -106,8 +110,33 @@ class Pairing(object):
         return self.teams[self._winner_index]
 
 
-class BaseDraw(object):
-    """Base class for all draw types.
+def DrawGenerator(draw_type, teams, results=None, **kwargs):
+    """Factory for draw objects.
+    Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
+    'draw_type' is mandatory and can be any of 'random', 'power_paired',
+        'first_elimination' and 'elimination'.
+    """
+
+    if draw_type == "random":
+        if kwargs.pop('side_constraints', False):
+            klass = RandomWithSideConstraintsDrawGenerator
+        else:
+            klass = RandomDrawGenerator
+    elif draw_type == "power_paired":
+        if kwargs.pop('side_constraints', False):
+            klass = PowerPairedWithSideConstraintsDrawGenerator
+        else:
+            klass = PowerPairedDrawGenerator
+    elif draw_type == "first_elimination":
+        klass = FirstEliminationDrawGenerator
+    elif draw_type == "elimination":
+        klass = EliminationDrawGenerator
+
+    return klass(teams, results, **kwargs)
+
+
+class BaseDrawGenerator(object):
+    """Base class for generators for all draw types.
     Options:
         "balance_sides" - Give affirmative side to team that has affirmed less.
             Requires teams to have 'aff_count' attribute. If off, randomizes
@@ -167,6 +196,22 @@ class BaseDraw(object):
         # Update
         self.options.update(kwargs)
 
+        # Check for required team attributes.
+        # Subclasses might do more.
+        if self.options["avoid_history"]:
+            self.check_teams_for_attribute("seen", checkfunc=callable)
+        if self.options["avoid_institution"]:
+            self.check_teams_for_attribute("institution")
+
+    def get_option_function(self, option_name, option_dict):
+        option = self.options[option_name]
+        if callable(option):
+            return option
+        try:
+            return getattr(self, option_dict[option])
+        except KeyError:
+            raise ValueError("Invalid option for {1}: {0}".format(option, option_name))
+
     def add_team_flag(self, team, flag):
         """Attaches a flag to a team.
         Child classes may use this when flags should follow teams, but
@@ -199,8 +244,34 @@ class BaseDraw(object):
         keys |= cls.DEFAULT_OPTIONS.keys()
         return sorted(list(keys))
 
-class RandomDraw(BaseDraw):
+    def check_teams_for_attribute(self, name, choices=None, checkfunc=None):
+        """Checks that all teams have the specified attribute, and raises a
+        DrawError if they don't. This should be called during the constructor.
+        Note: Whether to run this check will sometimes be conditional on options
+        supplied to the DrawGenerator.
+        'name' is the name of the attribute.
+        'choices', if specified, is a list of allowed values for the attribute.
+        """
+        has_attribute = map(lambda x: hasattr(x, name), self.teams)
+        if not all(has_attribute):
+            offending_teams = has_attribute.count(False)
+            raise DrawError("{0} out of {1} teams don't have a '{name}' attribute.".format(
+                    offending_teams, len(self.teams), name=name))
+        if choices:
+            attribute_value_valid = map(lambda x: getattr(x, name) in choices, self.teams)
+        elif checkfunc:
+            attribute_value_valid = map(lambda x: checkfunc(getattr(x, name)), self.teams)
+        else:
+            return
+        if not all(attribute_value_valid):
+            offending_teams = attribute_value_valid.count(False)
+            raise DrawError("{0} out of {1} teams has an invalid '{name}' attribute. Valid choices: ".format(
+                    offending_teams, len(self.teams), name=name) + ", ".join(map(repr, choices)))
+
+
+class RandomDrawGenerator(BaseDrawGenerator):
     """Random draw.
+    If there are side constraints, use RandomDrawWithSideConstraints instead.
     Options:
         "max_swap_attempts": Maximum number of times to attempt to swap to
             avoid conflict before giving up.
@@ -213,7 +284,6 @@ class RandomDraw(BaseDraw):
 
     DEFAULT_OPTIONS = {"max_swap_attempts": 20}
 
-
     def make_draw(self):
         self._draw = self._make_initial_pairings()
         self.avoid_conflicts(self._draw) # operates in-place
@@ -224,12 +294,13 @@ class RandomDraw(BaseDraw):
         teams = list(self.teams) # make a copy
         random.shuffle(teams)
         debates = len(teams)/2
-        pairings = list()
         pairings = [Pairing(teams=t, bracket=0, room_rank=0) \
                 for t in zip(teams[:debates], teams[debates:])]
         return pairings
 
     def avoid_conflicts(self, pairings):
+        # Don't swap sides! The child class RandomDrawWithSideConstraints assumes
+        # that in this algorithm, affs will stay affs and negs will stay negs.
         if not (self.options["avoid_history"] or self.options["avoid_institution"]):
             return
         for pairing in pairings:
@@ -259,12 +330,42 @@ class RandomDraw(BaseDraw):
             score += sum(map(lambda x: x.conflict_inst, pairings)) * self.options["institution_penalty"]
         return score
 
-class PowerPairedDraw(BaseDraw):
+class RandomWithSideConstraintsDrawGenerator(RandomDrawGenerator):
+    """Random draw with side constraints.
+    Overrides functions of RandomDrawGenerator where sides need to be constrained.
+    All teams must have an 'allocated_side' attribute which must be either
+    'aff' or 'neg' (case-sensitive)."""
+
+    def __init__(self, *args, **kwargs):
+        super(RandomWithSideConstraintsDrawGenerator, self).__init__(*args, **kwargs)
+        self.check_teams_for_attribute("allocated_side", choices=["aff", "neg"])
+
+    def _make_initial_pairings(self):
+        if not all(hasattr(t, 'allocated_side') for t in self.teams):
+            raise DrawError("To use side constraints, all teams must have an 'allocated_side' attribute, which must be 'aff' or 'neg'.")
+
+        aff_teams = filter(lambda t: t.allocated_side == "aff", self.teams)
+        neg_teams = filter(lambda t: t.allocated_side == "neg", self.teams)
+
+        if len(aff_teams) != len(neg_teams):
+            raise DrawError("There were {0} aff teams but {1} neg teams.".format(len(aff_teams), len(neg_teams)))
+        if len(aff_teams) + len(neg_teams) != len(teams):
+            raise DrawError("One or more teams had an allocated side that wasn't 'aff' or 'neg'.")
+
+        random.shuffle(aff_teams)
+        random.shuffle(neg_teams)
+        debates = len(aff_teams)
+        pairings = [Pairing(teams=t, bracket=0, room_rank=0) \
+                for t in zip(aff_teams, neg_teams)]
+        return pairings
+
+class PowerPairedDrawGenerator(BaseDrawGenerator):
     """Power-paired draw.
+    If there are side constraints, use PowerPairedWithSideConstraintsDrawGenerator instead.
     Options:
         "odd_bracket" - Odd bracket resolution method:
             "pullup_top", "pullup_bottom", "pullup_random", "intermediate",
-            or a function.
+            "intermediate_avoid_conflicts" or a function.
         "pairing_method" - How to pair teams:
             "slide", "fold", "random" or a function.
         "avoid_conflict" - How to avoid conflicts.
@@ -283,6 +384,10 @@ class PowerPairedDraw(BaseDraw):
         "avoid_conflicts": "one_up_one_down"
     }
 
+    def __init__(self, *args, **kwargs):
+        super(PowerPairedDrawGenerator, self).__init__(*args, **kwargs)
+        self.check_teams_for_attribute("points")
+
     def make_draw(self):
         self._brackets = self._make_raw_brackets()
         self.resolve_odd_brackets(self._brackets) # operates in-place
@@ -295,15 +400,6 @@ class PowerPairedDraw(BaseDraw):
         self.balance_sides(self._draw) # operates in-place
         self.annotate_team_flags(self._draw) # operates in-place
         return self._draw
-
-    def _get_option_function(self, option_name, option_dict):
-        option = self.options[option_name]
-        if callable(option):
-            return option
-        try:
-            return getattr(self, option_dict[option])
-        except KeyError:
-            raise ValueError("Invalid option for {1}: {0}".format(option, option_name))
 
     def _make_raw_brackets(self):
         """Returns an OrderedDict mapping bracket names (normally numbers)
@@ -333,7 +429,7 @@ class PowerPairedDraw(BaseDraw):
         """Returns a function taking an OrderedDict as returned by
         _make_raw_brackets(), and adjusting that OrderedDict in-place to
         guarantee that all brackets have an even number of teams."""
-        function = self._get_option_function("odd_bracket", self.ODD_BRACKET_FUNCTIONS)
+        function = self.get_option_function("odd_bracket", self.ODD_BRACKET_FUNCTIONS)
         return function(brackets)
 
     def _pullup_top(self, brackets):
@@ -349,19 +445,18 @@ class PowerPairedDraw(BaseDraw):
         """'brackets' is what is returned by _make_raw_brackets().
         'pos' is a function taking the number of teams to choose from,
         and returning an index for which team to take as the pullup.
-        Operates in-place."""
-        pullup_needed = None
+        Operates in-place. Does not remove empty brackets."""
+        pullup_needed_for = None
         for points, teams in brackets.iteritems():
-            if pullup_needed:
+            if pullup_needed_for:
                 pullup_team = teams.pop(pos(len(teams)))
                 self.add_team_flag(pullup_team, "pullup")
-                pullup_needed.append(pullup_team)
-                pullup_needed = 0
+                pullup_needed_for.append(pullup_team)
+                pullup_needed_for = None
             if len(teams) % 2 != 0:
-                pullup_needed = teams
-        if pullup_needed:
-            print brackets
-            raise DrawError("Last bracket is still odd!")
+                pullup_needed_for = teams
+        if pullup_needed_for:
+            raise DrawError("Last bracket is still odd!\n" + repr(pullup_needed_for))
 
     @classmethod
     def _intermediate_bubbles(cls, brackets):
@@ -377,7 +472,7 @@ class PowerPairedDraw(BaseDraw):
             if len(teams) > 0:
                 new[points] = teams
         if odd_team:
-            raise DrawError("Last bracket is still odd!")
+            raise DrawError("Last bracket is still odd!\n" + repr(odd_team))
         brackets.clear()
         brackets.update(new)
 
@@ -445,7 +540,7 @@ class PowerPairedDraw(BaseDraw):
     def generate_pairings(self, brackets):
         """Returns a function taking an OrderedDict as returned by
         resolve_odd_brackets(), and returning a list of Debates."""
-        function = self._get_option_function("pairing_method", self.PAIRING_FUNCTIONS)
+        function = self.get_option_function("pairing_method", self.PAIRING_FUNCTIONS)
         return function(brackets)
 
     @staticmethod
@@ -502,7 +597,7 @@ class PowerPairedDraw(BaseDraw):
         generate_pairings(), and adjusting it in-place to avoid conflicts."""
         if self.options["avoid_conflicts"] is None:
             return
-        function = self._get_option_function("avoid_conflicts", self.AVOID_CONFLICT_FUNCTIONS)
+        function = self.get_option_function("avoid_conflicts", self.AVOID_CONFLICT_FUNCTIONS)
         return function(pairings)
 
     def _one_up_one_down(self, pairings):
@@ -531,7 +626,155 @@ class PowerPairedDraw(BaseDraw):
                         pairing.add_flag("1u1d_other")
                     pairing.teams = list(new)
 
-class FirstEliminationDraw(BaseDraw):
+class PowerPairedWithSideConstraintsDrawGenerator(PowerPairedDrawGenerator):
+    """Power-paired draw with side constraints.
+    Overrides functions of PowerPairedDrawGenerator where sides need to be constrained.
+    All teams must have an 'allocated_side' attribute which must be either
+    'aff' or 'neg' (case-sensitive)."""
+
+    DEFAULT_OPTIONS = {
+        "odd_bracket"    : "intermediate",
+        "pairing_method" : "fold",
+        "avoid_conflicts": None,
+    }
+
+    def __init__(self, *args, **kwargs):
+        super(PowerPairedWithSideConstraintsDrawGenerator, self).__init__(*args, **kwargs)
+        self.check_teams_for_attribute("allocated_side", choices=["aff", "neg"])
+
+    def _make_raw_brackets(self):
+        """Returns an OrderedDict mapping bracket names (normally numbers)
+        to (unordered) dicts. Each unordered dict has an 'aff' and a 'neg' key,
+        each mapping to a list of teams."""
+        brackets = OrderedDict()
+        teams = list(self.teams)
+        while len(teams) > 0:
+            top_team = teams.pop(0)
+            points = top_team.points
+            pool = {"aff": list(), "neg": list()}
+            while len(teams) > 0 and teams[0].points == points:
+                team = teams.pop(0)
+                side = team.allocated_side
+                pool[side].append(team)
+            brackets[points] = pool
+        return brackets
+
+    def _pullup_top(self, brackets):
+        self._pullup(brackets, lambda x, num: xrange(0, num))
+
+    def _pullup_bottom(self, brackets):
+        self._pullup(brackets, lambda x, num: xrange(-num, 0))
+
+    def _pullup_random(self, brackets):
+        self._pullup(brackets, lambda x, num: random.sample(range(x), num))
+
+    # Overriding functions for resolving odd brackets:
+    def _pullup(self, brackets, indices):
+        """'brackets' is what is returned by _make_raw_brackets().
+        'pos' is a function taking the number of teams to choose from
+        and number of teams required, and returning a list of indices
+        for which teams to take as the pullup.
+        Operates in-place. Does not remove empty brackets."""
+
+        # Tuples: (teams_list, side, number_needed)
+        # List by highest bracket first.
+        pullups_needed_for = list()
+
+        for points, pool in brackets.iteritems():
+
+            # First, try to fulfil any pullups needed from higher brackets.
+            # There's no guarantee we will have enough teams in this bracket to
+            # fulfil all requirements.
+            new_pullups_needed_for = list()
+            for pullups_needed_teams, side, number_needed in pullups_needed_for:
+                # Figure out which team indices we're pulling up.
+                if len(pool[side]) < number_needed:
+                    # If there are an unsufficient number of teams, pull up all of them
+                    # and add to next pullups needed list.
+                    pullup_indices = xrange(len(pool[side]))
+                    new_pullups_needed_for.append((pullups_needed_teams, side, number_needed - len(pool[side])))
+                else:
+                    # Otherwise, pull up the number required.
+                    pullup_indices = indices(len(pool[side]), number_needed)
+
+                pullup_teams = list()
+                for i in pullup_indices:
+                    # Don't use pop, because that mucks up the indices.
+                    pullup_team = pool[side][i]
+                    self.add_team_flag(pullup_team, "pullup")
+                    pullup_teams.append(pullup_team)
+
+                # Now remove those teams from the bracket.
+                # Again, avoiding pop, because it changes the indices.
+                for team in pullup_teams:
+                    pool[side].remove(team)
+
+                # Finally, add our pullup teams to the destination list.
+                pullups_needed_teams.extend(pullup_teams)
+
+            # Then, figure out if we need any pullups in *this* bracket.
+            aff_surplus = len(pool["aff"]) - len(pool["neg"]) # could be negative
+            if aff_surplus > 0:
+                new_pullups_needed_for.append((pool["neg"], "neg", aff_surplus))
+            elif aff_surplus < 0:
+                new_pullups_needed_for.append((pool["aff"], "aff", -aff_surplus))
+
+            # Assign the new pullups-needed list, then start again!
+            pullups_needed_for = new_pullups_needed_for
+
+        if pullups_needed_for:
+            raise DrawError("Last bracket still needed pullups!\n" + repr(pullups_needed_for))
+
+    @classmethod
+    def _intermediate_bubbles(cls, brackets):
+        """Operates in-place."""
+        new = OrderedDict()
+        unfilled = OrderedDict()
+        for points, pool in brackets.iteritems():
+
+            # First, check for unfilled intermediate brackets
+            for unfilled_points, unfilled_pool in unfilled.iteritems():
+                aff_surplus = len(unfilled_pool["aff"]) - len(unfilled_pool["neg"])
+                if aff_surplus > 0:
+                    # Take the top teams from negative pool as appropriate.
+                    # Note that there may not be enough teams; if there aren't,
+                    # then this line just takes all of them.
+                    unfilled_pool["neg"].extend(pool["neg"][:aff_surplus])
+                    del pool["neg"][:aff_surplus]
+                elif aff_surplus < 0:
+                    # Take the top teams from affirmative pool as appropriate.
+                    unfilled_pool["aff"].extend(pool["aff"][:-aff_surplus])
+                    del pool["aff"][:-aff_surplus]
+                # If the bubble now looks good, move it to the main brackets and
+                # remove from the unfilled buffer.
+                if len(unfilled_pool["aff"]) == len(unfilled_pool["neg"]):
+                    new[unfilled_points] = unfilled_pool
+                    del unfilled[unfilled_points]
+
+            # Find lesser and greater of number of aff and neg teams.
+            nums_teams = map(len, pool.values())
+            n = min(nums_teams)
+            m = max(nums_teams)
+
+            # Assign the main bracket
+            new[points] = {"aff": pool["aff"][:n], "neg": pool["neg"][:n]}
+
+            # Assign the intermediate bracket, if any
+            if m > n:
+                new[points-0.5] = dict() # Placeholder for order
+                unfilled[points-0.5] = {"aff": pool["aff"][n:], "neg": pool["neg"][n:]}
+
+        if unfilled:
+            raise DrawError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
+
+        brackets.clear()
+        brackets.update(new)
+
+    def _intermediate_bubbles_avoid_conflicts():
+        raise DrawError("Intermediate bubbles with conflict avoidance isn't supported with side constraints.")
+
+
+class FirstEliminationDrawGenerator(BaseDrawGenerator):
     """Class for draw for a round that is a first w round, with
     a number of teams breaking that is not a power of two."""
 
@@ -577,7 +820,7 @@ class FirstEliminationDraw(BaseDraw):
             return self._bypassing_teams
         raise RuntimeError("get_bypassing_teams() must not be called before make_draw().")
 
-class EliminationDraw(BaseDraw):
+class EliminationDrawGenerator(BaseDrawGenerator):
     """Class for second or subsequent elimination round.
     For this draw type, 'teams' should be the teams that automatically
     advanced to this round (i.e., bypassed the previous break round).
