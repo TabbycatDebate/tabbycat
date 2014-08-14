@@ -418,9 +418,9 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                 self.assertEqual(actual.flags, exp_flags)
 
 
-class TestPowerPairedWithSideConstraintsDrawGeneratorPartOddBrackets(unittest.TestCase):
-    """Basic unit test for core functionality of power-paired draws with side
-    constraints. Not comprehensive."""
+class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.TestCase):
+    """Basic unit test for core functionality of power-paired draws with allocated
+    sides. Not comprehensive."""
 
     brackets = dict()
     brackets[1] = OrderedDict([
@@ -457,7 +457,7 @@ class TestPowerPairedWithSideConstraintsDrawGeneratorPartOddBrackets(unittest.Te
     ])
 
     def setUp(self):
-        self.ppd = DrawGenerator("power_paired", DUMMY_TEAMS, side_constraints=True)
+        self.ppd = DrawGenerator("power_paired", DUMMY_TEAMS, side_allocations="allocated")
 
     def tearDown(self):
         del self.ppd

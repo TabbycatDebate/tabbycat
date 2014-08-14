@@ -117,14 +117,15 @@ def DrawGenerator(draw_type, teams, results=None, **kwargs):
         'first_elimination' and 'elimination'.
     """
 
+    default_side_allocations = BaseDrawGenerator.BASE_DEFAULT_OPTIONS['side_allocations']
     if draw_type == "random":
-        if kwargs.pop('side_constraints', False):
-            klass = RandomWithSideConstraintsDrawGenerator
+        if kwargs.get('side_allocations', default_side_allocations) == "allocated":
+            klass = RandomWithAllocatedSidesDrawGenerator
         else:
             klass = RandomDrawGenerator
     elif draw_type == "power_paired":
-        if kwargs.pop('side_constraints', False):
-            klass = PowerPairedWithSideConstraintsDrawGenerator
+        if kwargs.get('side_allocations', default_side_allocations) == "allocated":
+            klass = PowerPairedWithAllocatedSidesDrawGenerator
         else:
             klass = PowerPairedDrawGenerator
     elif draw_type == "first_elimination":
@@ -138,9 +139,13 @@ def DrawGenerator(draw_type, teams, results=None, **kwargs):
 class BaseDrawGenerator(object):
     """Base class for generators for all draw types.
     Options:
-        "balance_sides" - Give affirmative side to team that has affirmed less.
-            Requires teams to have 'aff_count' attribute. If off, randomizes
-            sides.
+        "side_allocations" - Side allocation method, one of:
+            "balance" - the team that has affirmed less in prior rounds affirms,
+                or randomly if both teams have affirmed the same number of times.
+                If used, team objects must have an 'aff_count' attribute.
+            "allocated" - teams were pre-allocated sides. If used, teams must have
+                an 'allocated_side' attribute.
+            "random" - allocate randomly.
         "avoid_history" - if True, draw tries to avoid pairing teams that have
             seen each other before, and tries harder if they've seen each other
             multiple times.
@@ -150,7 +155,7 @@ class BaseDrawGenerator(object):
         """
 
     BASE_DEFAULT_OPTIONS = {
-        "balance_sides"      : True,
+        "side_allocations"   : "balance",
         "avoid_history"      : True,
         "avoid_institution"  : True,
         "history_penalty"    : 1e3,
@@ -229,7 +234,7 @@ class BaseDrawGenerator(object):
                     pairing.add_flags(self.team_flags[team])
 
     def balance_sides(self, pairings):
-        if not self.options["balance_sides"]:
+        if self.options["side_allocations"] != "balance":
             return
         for pairing in pairings:
             pairing.balance_sides()
@@ -271,7 +276,7 @@ class BaseDrawGenerator(object):
 
 class RandomDrawGenerator(BaseDrawGenerator):
     """Random draw.
-    If there are side constraints, use RandomDrawWithSideConstraints instead.
+    If there are allocated sides, use RandomDrawWithSideConstraints instead.
     Options:
         "max_swap_attempts": Maximum number of times to attempt to swap to
             avoid conflict before giving up.
@@ -330,19 +335,19 @@ class RandomDrawGenerator(BaseDrawGenerator):
             score += sum(map(lambda x: x.conflict_inst, pairings)) * self.options["institution_penalty"]
         return score
 
-class RandomWithSideConstraintsDrawGenerator(RandomDrawGenerator):
-    """Random draw with side constraints.
+class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
+    """Random draw with allocated sides.
     Overrides functions of RandomDrawGenerator where sides need to be constrained.
     All teams must have an 'allocated_side' attribute which must be either
     'aff' or 'neg' (case-sensitive)."""
 
     def __init__(self, *args, **kwargs):
-        super(RandomWithSideConstraintsDrawGenerator, self).__init__(*args, **kwargs)
+        super(RandomWithAllocatedSidesDrawGenerator, self).__init__(*args, **kwargs)
         self.check_teams_for_attribute("allocated_side", choices=["aff", "neg"])
 
     def _make_initial_pairings(self):
         if not all(hasattr(t, 'allocated_side') for t in self.teams):
-            raise DrawError("To use side constraints, all teams must have an 'allocated_side' attribute, which must be 'aff' or 'neg'.")
+            raise DrawError("To use allocated sides, all teams must have an 'allocated_side' attribute, which must be 'aff' or 'neg'.")
 
         aff_teams = filter(lambda t: t.allocated_side == "aff", self.teams)
         neg_teams = filter(lambda t: t.allocated_side == "neg", self.teams)
@@ -361,16 +366,30 @@ class RandomWithSideConstraintsDrawGenerator(RandomDrawGenerator):
 
 class PowerPairedDrawGenerator(BaseDrawGenerator):
     """Power-paired draw.
-    If there are side constraints, use PowerPairedWithSideConstraintsDrawGenerator instead.
+    If there are allocated sides, use PowerPairedWithAllocatedSidesDrawGenerator instead.
     Options:
-        "odd_bracket" - Odd bracket resolution method:
-            "pullup_top", "pullup_bottom", "pullup_random", "intermediate",
-            "intermediate_avoid_conflicts" or a function.
-        "pairing_method" - How to pair teams:
-            "slide", "fold", "random" or a function.
+        "odd_bracket" - Odd bracket resolution method, values can be one of:
+            "pullup_top" - pull up the top team from the next bracket down.
+            "pullup_bottom" - pull up the bottom team from the next bracket down.
+            "pullup_random" - pull up a random team from the next bracket down.
+            "intermediate" - the bottom team from the odd bracket and the top team
+                from the next bracket down face each other in an intermediate bubble.
+            "intermediate_avoid_conflicts" - like "intermediate", but will swap teams
+                that conflict by history or institution.
+            or a function taking a dict mapping floats to lists of Team-like objects,
+                and operating on the dict in-place.
+        "pairing_method" - How to pair teams, values can be one of:
+            (best explained by example, this examples have a ten-team bracket)
+            "slide" - 1 vs 6, 2 vs 7, ..., 5 vs 10.
+            "fold" - 1 vs 10, 2 vs 9, ..., 5 vs 6.
+            "random" - pairs chosen randomly.
+            or a function taking a dict mapping floats to even-length lists of
+                Team-like objects, and returning a list of Pairing objects with
+                those teams.
         "avoid_conflict" - How to avoid conflicts.
-            "one_up_one_down"
-            can be None, which turns off conflict avoidance.
+            "one_up_one_down" - swap conflicted teams with the debate above or below,
+                in accordance with Australasian Intervarsity Debating Association rules.
+            None - which turns off conflict avoidance.
     """
 
     can_be_first_round = False
@@ -626,8 +645,8 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
                         pairing.add_flag("1u1d_other")
                     pairing.teams = list(new)
 
-class PowerPairedWithSideConstraintsDrawGenerator(PowerPairedDrawGenerator):
-    """Power-paired draw with side constraints.
+class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
+    """Power-paired draw with allocated sides.
     Overrides functions of PowerPairedDrawGenerator where sides need to be constrained.
     All teams must have an 'allocated_side' attribute which must be either
     'aff' or 'neg' (case-sensitive)."""
@@ -639,7 +658,7 @@ class PowerPairedWithSideConstraintsDrawGenerator(PowerPairedDrawGenerator):
     }
 
     def __init__(self, *args, **kwargs):
-        super(PowerPairedWithSideConstraintsDrawGenerator, self).__init__(*args, **kwargs)
+        super(PowerPairedWithAllocatedSidesDrawGenerator, self).__init__(*args, **kwargs)
         self.check_teams_for_attribute("allocated_side", choices=["aff", "neg"])
 
     def _make_raw_brackets(self):
@@ -771,7 +790,7 @@ class PowerPairedWithSideConstraintsDrawGenerator(PowerPairedDrawGenerator):
         brackets.update(new)
 
     def _intermediate_bubbles_avoid_conflicts():
-        raise DrawError("Intermediate bubbles with conflict avoidance isn't supported with side constraints.")
+        raise DrawError("Intermediate bubbles with conflict avoidance isn't supported with allocated sides.")
 
 
 class FirstEliminationDrawGenerator(BaseDrawGenerator):
