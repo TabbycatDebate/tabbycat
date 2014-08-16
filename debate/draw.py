@@ -4,7 +4,7 @@ import copy
 from one_up_one_down import OneUpOneDownSwapper
 from warnings import warn
 
-# Flag codes must NOT have commas in them
+# Flag codes must NOT have commas in them, because they go into a comma-delimited list.
 DRAW_FLAG_DESCRIPTIONS = {
     "max_swapped":  "Too many swaps",
     "1u1d_hist":    "One-up-one-down (history)",
@@ -118,6 +118,7 @@ def DrawGenerator(draw_type, teams, results=None, **kwargs):
     """
 
     default_side_allocations = BaseDrawGenerator.BASE_DEFAULT_OPTIONS['side_allocations']
+
     if draw_type == "random":
         if kwargs.get('side_allocations', default_side_allocations) == "allocated":
             klass = RandomWithAllocatedSidesDrawGenerator
@@ -369,19 +370,19 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     If there are allocated sides, use PowerPairedWithAllocatedSidesDrawGenerator instead.
     Options:
         "odd_bracket" - Odd bracket resolution method, values can be one of:
-            "pullup_top" - pull up the top team from the next bracket down.
+            "pullup_top"    - pull up the top team from the next bracket down.
             "pullup_bottom" - pull up the bottom team from the next bracket down.
             "pullup_random" - pull up a random team from the next bracket down.
-            "intermediate" - the bottom team from the odd bracket and the top team
+            "intermediate"  - the bottom team from the odd bracket and the top team
                 from the next bracket down face each other in an intermediate bubble.
             "intermediate_avoid_conflicts" - like "intermediate", but will swap teams
                 that conflict by history or institution.
             or a function taking a dict mapping floats to lists of Team-like objects,
                 and operating on the dict in-place.
         "pairing_method" - How to pair teams, values can be one of:
-            (best explained by example, this examples have a ten-team bracket)
-            "slide" - 1 vs 6, 2 vs 7, ..., 5 vs 10.
-            "fold" - 1 vs 10, 2 vs 9, ..., 5 vs 6.
+            (best explained by example, these examples have a ten-team bracket)
+            "slide"  - 1 vs 6, 2 vs 7, ..., 5 vs 10.
+            "fold"   - 1 vs 10, 2 vs 9, ..., 5 vs 6.
             "random" - pairs chosen randomly.
             or a function taking a dict mapping floats to even-length lists of
                 Team-like objects, and returning a list of Pairing objects with
@@ -649,10 +650,28 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
     """Power-paired draw with allocated sides.
     Overrides functions of PowerPairedDrawGenerator where sides need to be constrained.
     All teams must have an 'allocated_side' attribute which must be either
-    'aff' or 'neg' (case-sensitive)."""
+    'aff' or 'neg' (case-sensitive).
+    Options are as for PowerPairedDrawGenerator, except that the allowable values
+    for "odd_bracket" are:
+        "pullup_top"
+        "pullup_bottom"
+        "pullup_random"
+        "intermediate1" - the excess teams in a bracket begin an intermediate bubble,
+            which is filled by teams allocated to the other side from lower brackets,
+            starting from the top of the next bracket down and pulling up as many
+            teams as necessary. This may involve pulling up teams from multiple
+            brackets if there aren't enough in the next bracket down.
+        "intermediate2" - the excess teams in a bracket begin an intermediate bubble,
+            which is filled by teams allocated to the other side from lower brackets.
+            However, if there aren't enough teams in the next bracket down, then only
+            those teams are pulled up into this intermediate bracket, and the excess
+            teams (of the original excess) form a new, lower, intermediate bubble (but
+            still higher than the next bracket down). So there can be multiple
+            intermediate bubbles between two brackets.
+    """
 
     DEFAULT_OPTIONS = {
-        "odd_bracket"    : "intermediate",
+        "odd_bracket"    : "intermediate1",
         "pairing_method" : "fold",
         "avoid_conflicts": None,
     }
@@ -677,6 +696,14 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                 pool[side].append(team)
             brackets[points] = pool
         return brackets
+
+    ODD_BRACKET_FUNCTIONS = {
+        "pullup_top"                  : "_pullup_top",
+        "pullup_bottom"               : "_pullup_bottom",
+        "pullup_random"               : "_pullup_random",
+        "intermediate1"               : "_intermediate_bubbles_1",
+        "intermediate2"               : "_intermediate_bubbles_2"
+    }
 
     def _pullup_top(self, brackets):
         self._pullup(brackets, lambda x, num: xrange(0, num))
@@ -745,8 +772,12 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
             raise DrawError("Last bracket still needed pullups!\n" + repr(pullups_needed_for))
 
     @classmethod
-    def _intermediate_bubbles(cls, brackets):
-        """Operates in-place."""
+    def _intermediate_bubbles_1(cls, brackets):
+        """Operates in-place.
+        This implements the first intermediate bubbles method, where there is at most
+        one intermediate bubble between brackets, but may have pullups from multiple
+        brackets.
+        """
         new = OrderedDict()
         unfilled = OrderedDict()
         for points, pool in brackets.iteritems():
@@ -780,17 +811,90 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
 
             # Assign the intermediate bracket, if any
             if m > n:
-                new[points-0.5] = dict() # Placeholder for order
                 unfilled[points-0.5] = {"aff": pool["aff"][n:], "neg": pool["neg"][n:]}
 
         if unfilled:
             raise DrawError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
 
+        # Currently, the brackets are out of order, since e.g. 3.5 would have been
+        # inserted after 3 (or maybe even after 2). Let's change that:
+        new_sorted = sorted(new.items(), key=lambda x: x[0], reverse=True)
+
         brackets.clear()
-        brackets.update(new)
+        brackets.update(new_sorted)
+
+    @classmethod
+    def _intermediate_bubbles_2(cls, brackets):
+        """Operates in-place.
+        This implements the second intermediate bubbles method, where all debates
+        in the same intermediate bubble have the same number of wins, but there
+        might be multiple intermediate bubbles between brackets.
+        """
+
+        new = OrderedDict()
+        unfilled = OrderedDict()
+        intermediates = OrderedDict() # values are lists of {"aff", "neg"} dicts
+        for points, pool in brackets.iteritems():
+
+            # First, check for unfilled intermediate brackets
+            for unfilled_points, unfilled_pool in unfilled.iteritems():
+                intermediates.setdefault(unfilled_points, list())
+                if unfilled_pool["aff"] and unfilled_pool["neg"]:
+                    raise DrawError("An unfilled pool unexpectedly had both affirmative and negative teams.")
+                elif unfilled_pool["aff"]:
+                    # In a new bracket, take the lesser of how many excess affirmative
+                    # teams there are, and how many negative teams in the pool we have.
+                    num_teams = min(len(unfilled_pool["aff"]), len(pool["neg"]))
+                    intermediates[unfilled_points].append({
+                        "aff": unfilled_pool["aff"][:num_teams],
+                        "neg": pool["neg"][:num_teams]
+                    })
+                    del unfilled_pool["aff"][:num_teams]
+                    del pool["neg"][:num_teams]
+                elif unfilled_pool["neg"]:
+                    # Take the top teams from affirmative pool as appropriate.
+                    num_teams = min(len(unfilled_pool["neg"]), len(pool["aff"]))
+                    intermediates[unfilled_points].append({
+                        "aff": pool["aff"][:num_teams],
+                        "neg": unfilled_pool["neg"][:num_teams]
+                    })
+                    del pool["aff"][:num_teams]
+                    del unfilled_pool["neg"][:num_teams]
+                # If we've exhausted the unfilled pool, add all these intermediate
+                # brackets to the main list of brackets.
+                if not unfilled_pool["aff"] and not unfilled_pool["neg"]:
+                    num_brackets = len(intermediates[unfilled_points])
+                    for i, intermediate_pool in enumerate(intermediates[unfilled_points], start=1):
+                        intermediate_points = unfilled_points - float(i) / (num_brackets + 1)
+                        new[intermediate_points] = intermediate_pool
+                    del unfilled[unfilled_points]
+
+            # Find lesser and greater of number of aff and neg teams.
+            nums_teams = map(len, pool.values())
+            n = min(nums_teams)
+            m = max(nums_teams)
+
+            # Assign the main bracket
+            new[points] = {"aff": pool["aff"][:n], "neg": pool["neg"][:n]}
+
+            # Take note of the excess teams, if any
+            if m > n:
+                unfilled[points] = {"aff": pool["aff"][n:], "neg": pool["neg"][n:]}
+
+        if unfilled:
+            raise DrawError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
+
+        # Currently, the brackets are out of order, since e.g. 3.5 would have been
+        # inserted after 3 (or maybe even after 2). Let's change that:
+        new_sorted = sorted(new.items(), key=lambda x: x[0], reverse=True)
+
+        brackets.clear()
+        brackets.update(new_sorted)
 
     def _intermediate_bubbles_avoid_conflicts():
-        raise DrawError("Intermediate bubbles with conflict avoidance isn't supported with allocated sides.")
+        """This should never be called - the associated option string is removed
+        from the allowable list above."""
+        raise NotImplementedError("Intermediate bubbles with conflict avoidance isn't supported with allocated sides.")
 
 
 class FirstEliminationDrawGenerator(BaseDrawGenerator):

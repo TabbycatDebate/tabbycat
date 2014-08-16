@@ -471,7 +471,8 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             del self.b2
 
     def test_pullup_invalid(self):
-        for name in ["pullup_top", "pullup_bottom", "pullup_random", "intermediate"]:
+        for name in ["pullup_top", "pullup_bottom", "pullup_random", "intermediate1", "intermediate2"]:
+            self.ppd.options["odd_bracket"] = name
             self.b2 = copy.deepcopy(self.brackets[99])
             self.assertRaises(DrawError, self.ppd.resolve_odd_brackets, self.b2)
 
@@ -531,45 +532,88 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
         ])
         self.bracket_resolve_odd("pullup_bottom", expecteds)
 
-    def test_intermediate_brackets(self):
+    def test_intermediate_brackets_1(self):
         expecteds = dict()
         expecteds[1] = OrderedDict([
-            (5, {"aff": [1], "neg": [14]}),
-            (4, {"aff": [2], "neg": [15]}),
+            (5,   {"aff": [1], "neg": [14]}),
+            (4,   {"aff": [2], "neg": [15]}),
             (3.5, {"aff": [3], "neg": [16]}),
-            (3, {"aff": [4, 5], "neg": [17, 18]}),
+            (3,   {"aff": [4, 5], "neg": [17, 18]}),
             (2.5, {"aff": [6, 7, 8], "neg": [19, 20, 21]}),
-            (2, {"aff": [], "neg": []}),
+            (2,   {"aff": [], "neg": []}),
             (1.5, {"aff": [9, 10], "neg": [22, 23]}),
-            (1, {"aff": [11, 12], "neg": [24, 25]}),
-            (0, {"aff": [13], "neg": [26]}),
+            (1,   {"aff": [11, 12], "neg": [24, 25]}),
+            (0,   {"aff": [13], "neg": [26]}),
         ])
         expecteds[2] = OrderedDict([
-            (5, {"aff": [], "neg": []}),
+            (5,   {"aff": [], "neg": []}),
             (4.5, {"aff": [1, 2], "neg": [16, 17]}),
-            (4, {"aff": [3, 4], "neg": [18, 19]}),
+            (4,   {"aff": [3, 4], "neg": [18, 19]}),
             (3.5, {"aff": [5, 6], "neg": [20, 21]}),
-            (3, {"aff": [7], "neg": [22]}),
+            (3,   {"aff": [7], "neg": [22]}),
             (2.5, {"aff": [8], "neg": [23]}),
-            (2, {"aff": [], "neg": []}),
+            (2,   {"aff": [], "neg": []}),
             (1.5, {"aff": [9, 10], "neg": [24, 25]}),
-            (1, {"aff": [11, 12], "neg": [26, 27]}),
+            (1,   {"aff": [11, 12], "neg": [26, 27]}),
             (0.5, {"aff": [13, 14], "neg": [28, 29]}),
-            (0, {"aff": [15], "neg": [30]}),
+            (0,   {"aff": [15], "neg": [30]}),
         ])
         expecteds[3] = OrderedDict([
-            (5, {"aff": [], "neg": []}),
+            (5,   {"aff": [], "neg": []}),
             (4.5, {"aff": [1, 2], "neg": [13, 14]}),
-            (4, {"aff": [], "neg": []}),
+            (4,   {"aff": [], "neg": []}),
             (3.5, {"aff": [3, 4], "neg": [15, 16]}),
-            (3, {"aff": [], "neg": []}),
+            (3,   {"aff": [], "neg": []}),
             (2.5, {"aff": [5, 6, 7, 8, 9], "neg":[17, 18, 19, 20, 21]}),
-            (2, {"aff": [], "neg": []}),
-            (1, {"aff": [10, 11], "neg": [22, 23]}),
+            (2,   {"aff": [], "neg": []}),
+            (1,   {"aff": [10, 11], "neg": [22, 23]}),
             (0.5, {"aff": [12], "neg": [24]}),
-            (0, {"aff": [], "neg": []}),
+            (0,   {"aff": [], "neg": []}),
         ])
-        self.bracket_resolve_odd("intermediate", expecteds)
+        self.bracket_resolve_odd("intermediate1", expecteds)
+
+    def test_intermediate_brackets_2(self):
+        expecteds = dict()
+        expecteds[1] = OrderedDict([
+            (5,   {"aff": [1], "neg": [14]}),
+            (4,   {"aff": [2], "neg": [15]}),
+            (3.5, {"aff": [3], "neg": [16]}),
+            (3,   {"aff": [4, 5], "neg": [17, 18]}),
+            (2.5, {"aff": [6, 7, 8], "neg": [19, 20, 21]}),
+            (2,   {"aff": [], "neg": []}),
+            (1.5, {"aff": [9, 10], "neg": [22, 23]}),
+            (1,   {"aff": [11, 12], "neg": [24, 25]}),
+            (0,   {"aff": [13], "neg": [26]}),
+        ])
+        expecteds[2] = OrderedDict([
+            (5,   {"aff": [], "neg": []}),
+            (4.5, {"aff": [1, 2], "neg": [16, 17]}),
+            (4,   {"aff": [3, 4], "neg": [18, 19]}),
+            (3.5, {"aff": [5, 6], "neg": [20, 21]}),
+            (3,   {"aff": [7], "neg": [22]}),
+            (2.5, {"aff": [8], "neg": [23]}),
+            (2,   {"aff": [], "neg": []}),
+            (1.5, {"aff": [9, 10], "neg": [24, 25]}),
+            (1,   {"aff": [11, 12], "neg": [26, 27]}),
+            (0.5, {"aff": [13, 14], "neg": [28, 29]}),
+            (0,   {"aff": [15], "neg": [30]}),
+        ])
+        expecteds[3] = OrderedDict([
+            (5,      {"aff": [], "neg": []}),
+            (4+2./3, {"aff": [1], "neg": [13]}),
+            (4+1./3, {"aff": [2], "neg": [14]}),
+            (4,      {"aff": [], "neg": []}),
+            (3.5,    {"aff": [3, 4], "neg": [15, 16]}),
+            (3,      {"aff": [], "neg": []}),
+            (2+2./3, {"aff": [5, 6, 7], "neg":[17, 18, 19]}),
+            (2+1./3, {"aff": [8, 9], "neg": [20, 21]}),
+            (2,      {"aff": [], "neg": []}),
+            (1,      {"aff": [10, 11], "neg": [22, 23]}),
+            (0.5,    {"aff": [12], "neg": [24]}),
+            (0,      {"aff": [], "neg": []}),
+        ])
+        self.maxDiff = None
+        self.bracket_resolve_odd("intermediate2", expecteds)
 
     def test_pullup_random(self):
         for j in range(10):
