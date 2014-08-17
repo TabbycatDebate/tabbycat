@@ -32,6 +32,9 @@ def get_ip_address(request):
         return "0.0.0.0"
     return ip
 
+def decide_show_draw_strength(tournament):
+    return tournament.config.get('team_standings_rule') == "nz"
+
 def redirect_round(to, round, **kwargs):
     return redirect(to, tournament_slug=round.tournament.slug,
                     round_seq=round.seq, *kwargs)
@@ -744,7 +747,8 @@ def draw_none(request, round):
 
 def draw_draft(request, round):
     draw = round.get_draw_with_standings(round)
-    return r2r(request, "draw_draft.html", dict(draw=draw))
+    show_draw_strength = decide_show_draw_strength(round.tournament)
+    return r2r(request, "draw_draft.html", dict(draw=draw, show_draw_strength=show_draw_strength))
 
 
 def draw_confirmed(request, round):
@@ -759,7 +763,8 @@ def draw_confirmed(request, round):
 @round_view
 def draw_with_standings(request, round):
     draw = round.get_draw_with_standings(round)
-    return r2r(request, "draw_with_standings.html", dict(draw=draw))
+    show_draw_strength = decide_show_draw_strength(round.tournament)
+    return r2r(request, "draw_with_standings.html", dict(draw=draw, show_draw_strength=show_draw_strength))
 
 @admin_required
 @expect_post
@@ -1182,10 +1187,10 @@ def team_standings(request, round, for_print=False):
         team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_score(team, round) is not None
         team.scores = [get_score(team, r) for r in rounds]
 
-    use_draw_strength = round.tournament.config.get('team_standings_rule') == "nz"
+    show_draw_strength = decide_show_draw_strength(round.tournament)
 
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds, for_print=for_print,
-        show_ballots=False, use_draw_strength=use_draw_strength))
+        show_ballots=False, show_draw_strength=show_draw_strength))
 
 
 @admin_required

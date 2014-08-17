@@ -159,7 +159,10 @@ def annotate_team_standings(teams, round=None, shuffle=False):
         for team in teams:
             draw_strength = 0
             # Find all teams that they've faced.
-            for dt in team.debateteam_set.all():
+            debateteam_set = team.debateteam_set.all()
+            if round is not None:
+                debateteam_set = debateteam_set.filter(debate__round__seq__lte=round.seq)
+            for dt in debateteam_set:
                 # Can't just use dt.opposition.team.points, as dt.opposition.team isn't annotated.
                 draw_strength += teams.get(id=dt.opposition.team.id).points
             team.draw_strength = draw_strength
@@ -878,6 +881,7 @@ class Round(models.Model):
                         team.speaker_score = annotated_team.speaker_score
                         team.subrank = annotated_team.subrank
                         team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
+                        team.draw_strength = annotated_team.draw_strength
         return draw
 
     def make_debates(self, pairings):

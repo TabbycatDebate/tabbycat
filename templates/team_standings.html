@@ -45,7 +45,7 @@
             <th>{{ round.abbreviation }}</th>
             {% endfor %}
             <th>Total</th>
-            {% if use_draw_strength %}
+            {% if show_draw_strength %}
                 <th><span data-toggle="tooltip" title="Draw strength">DS</span></th>
             {% endif %}
             <th>Wins</th>
@@ -100,7 +100,7 @@
         <td>
             {{ team.speaker_score|stringformat:".2f" }}
         </td>
-        {% if use_draw_strength %}
+        {% if show_draw_strength %}
         <td>
             {{ team.draw_strength }}
         </td>

@@ -12,6 +12,10 @@
             <th><span data-toggle="tooltip" title="Subrank (rank within bracket) (neg)">NSR</span></th>
             <th><span data-toggle="tooltip" title="Total speaker score (aff)">ATS</span></th>
             <th><span data-toggle="tooltip" title="Total speaker score (neg)">NTS</span></th>
+            {% if show_draw_strength %}
+            <th><span data-toggle="tooltip" title="Draw strength (aff)">ADS</span></th>
+            <th><span data-toggle="tooltip" title="Draw strength (neg)">NDS</span></th>
+            {% endif %}
             <th><span data-toggle="tooltip" title="Debates on aff before this round (aff)">AAffs</span></th>
             <th><span data-toggle="tooltip" title="Debates on aff before this round (neg)">NAffs</span></th>
             <th>Conflicts/Flags</th>
@@ -41,6 +45,10 @@
         </td>
         <td>{{ debate.aff_team.speaker_score|stringformat:".2f" }}</td>
         <td>{{ debate.neg_team.speaker_score|stringformat:".2f" }}</td>
+        {% if show_draw_strength %}
+        <td>{{ debate.aff_team.draw_strength }}</td>
+        <td>{{ debate.neg_team.draw_strength }}</td>
+        {% endif %}
         <td>{% aff_count debate.aff_team debate.round.prev %}</td>
         <td>{% aff_count debate.neg_team debate.round.prev %}</td>
         <td>{{ debate.draw_conflicts|add:debate.flags_all|join:", " }}</td>
