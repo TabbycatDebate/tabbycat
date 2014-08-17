@@ -988,9 +988,11 @@ def results(request, round):
         'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
     }
 
-    show_motions_column = Motion.objects.filter(round=round).count() > 1
+    num_motions = Motion.objects.filter(round=round).count()
+    show_motions_column = num_motions > 1
+    has_motions = num_motions > 0
 
-    return r2r(request, "results.html", dict(draw=draw, stats=stats, show_motions_column=show_motions_column))
+    return r2r(request, "results.html", dict(draw=draw, stats=stats, show_motions_column=show_motions_column, has_motions=has_motions))
 
 def monkey_results(request, round):
 

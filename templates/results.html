@@ -39,7 +39,7 @@
 {% endblock %}
 
 {% block content %}
-{% if not show_motions_column %}
+{% if not has_motions %}
 <div class="alert alert-danger">
     Currently there are no motions entered for this round, so debate results cannot be entered. <a href="{% round_url motions current_round %}">Add Motions.</a>
 </div>
