@@ -1147,7 +1147,7 @@ def team_standings(request, round, for_print=False):
         team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_score(team, round) is not None
         team.scores = [get_score(team, r) for r in rounds]
 
-    use_draw_strength = round.tournament.config.get('team_ranking_rule') == "nz"
+    use_draw_strength = round.tournament.config.get('team_standings_rule') == "nz"
 
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds, for_print=for_print,
         show_ballots=False, use_draw_strength=use_draw_strength))

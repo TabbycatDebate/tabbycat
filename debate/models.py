@@ -137,7 +137,7 @@ def annotate_team_standings(teams, round=None):
         tournament = round.tournament
     else:
         tournament = teams[0].institution.tournament
-    rule = tournament.config.get('team_ranking_rule')
+    rule = tournament.config.get('team_standings_rule')
 
     if rule == "australs":
 
