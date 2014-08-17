@@ -379,7 +379,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
             "pullup_random" - pull up a random team from the next bracket down.
             "intermediate"  - the bottom team from the odd bracket and the top team
                 from the next bracket down face each other in an intermediate bubble.
-            "intermediate_avoid_conflicts" - like "intermediate", but will swap teams
+            "intermediate_bubble_up_down" - like "intermediate", but will swap teams
                 that conflict by history or institution.
             or a function taking a dict mapping floats to lists of Team-like objects,
                 and operating on the dict in-place.
@@ -403,7 +403,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     draw_type = "preliminary"
 
     DEFAULT_OPTIONS = {
-        "odd_bracket"    : "intermediate_avoid_conflicts",
+        "odd_bracket"    : "intermediate_bubble_up_down",
         "pairing_method" : "slide",
         "avoid_conflicts": "one_up_one_down"
     }
@@ -446,7 +446,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         "pullup_bottom"               : "_pullup_bottom",
         "pullup_random"               : "_pullup_random",
         "intermediate"                : "_intermediate_bubbles",
-        "intermediate_avoid_conflicts": "_intermediate_bubbles_avoid_conflicts"
+        "intermediate_bubble_up_down": "_intermediate_bubbles_with_up_down"
     }
 
     def resolve_odd_brackets(self, brackets):
@@ -500,7 +500,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         brackets.clear()
         brackets.update(new)
 
-    def _intermediate_bubbles_avoid_conflicts(self, brackets):
+    def _intermediate_bubbles_with_up_down(self, brackets):
         """Operates in-place.
         Requires Team.institution and Team.seen() to be defined."""
         self._intermediate_bubbles(brackets) # operates in-place
@@ -898,7 +898,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         brackets.clear()
         brackets.update(new_sorted)
 
-    def _intermediate_bubbles_avoid_conflicts():
+    def _intermediate_bubbles_with_up_down():
         """This should never be called - the associated option string is removed
         from the allowable list above."""
         raise NotImplementedError("Intermediate bubbles with conflict avoidance isn't supported with allocated sides.")

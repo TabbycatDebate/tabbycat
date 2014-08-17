@@ -110,7 +110,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             self.assertEqual([i in b2[2] for i in [10, 11, 12, 13, 14]].count(True), 4)
             self.assertEqual([15, 16], b2[1])
 
-    def brackets_intermediate_avoid_conflicts(self, brackets, expected):
+    def brackets_intermediate_bubble_up_down(self, brackets, expected):
         b2 = copy.deepcopy(brackets)
         expected_team_flags = dict()
         # Set up the brackets
@@ -128,7 +128,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
                 b[i] = t
                 expected_team_flags[t] = flags
         # Run the odd bracket resolution
-        self.ppd.options["odd_bracket"] = "intermediate_avoid_conflicts"
+        self.ppd.options["odd_bracket"] = "intermediate_bubble_up_down"
         self.ppd.resolve_odd_brackets(b2)
         # Check that the brackets are correct
         b3 = dict()
@@ -157,7 +157,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (2, [10, 12, 13, 14]),
             (1, [15, 16])
         ])
-        self.brackets_intermediate_avoid_conflicts(brackets, expected)
+        self.brackets_intermediate_bubble_up_down(brackets, expected)
 
     def test_intermediate_brackets_avoid_conflicts_2(self):
         brackets = OrderedDict([
@@ -174,7 +174,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (2, [11, 12, 13, 14]),
             (1, [15, 16])
         ])
-        self.brackets_intermediate_avoid_conflicts(brackets, expected)
+        self.brackets_intermediate_bubble_up_down(brackets, expected)
 
     def test_intermediate_brackets_avoid_conflicts_3(self):
         brackets = OrderedDict([
@@ -191,7 +191,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (2, [10, 12, 13, 14]),
             (1, [15, 16])
         ])
-        self.brackets_intermediate_avoid_conflicts(brackets, expected)
+        self.brackets_intermediate_bubble_up_down(brackets, expected)
 
     def test_intermediate_brackets_avoid_conflicts_none(self):
         brackets = OrderedDict([
@@ -208,7 +208,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (2, [11, 12, 13, 14]),
             (1, [15, 16])
         ])
-        self.brackets_intermediate_avoid_conflicts(brackets, expected)
+        self.brackets_intermediate_bubble_up_down(brackets, expected)
 
     def test_intermediate_brackets_avoid_conflicts_exhaust(self):
         brackets = OrderedDict([
@@ -225,7 +225,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (2, [11, 12, 13, 14]),
             (1, [15, 16])
         ])
-        self.brackets_intermediate_avoid_conflicts(brackets, expected)
+        self.brackets_intermediate_bubble_up_down(brackets, expected)
 
     def pairings(self, name, expected):
         ppd = self.ppd
@@ -378,7 +378,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     (10, 21, ["1u1d_inst"], False),
                     (16, 13, ["1u1d_other", "pullup"], True),
                     (20, 26, ["1u1d_hist"], True)]]
-    expected[2] = [dict(odd_bracket="intermediate_avoid_conflicts",
+    expected[2] = [dict(odd_bracket="intermediate_bubble_up_down",
                         pairing_method="slide", avoid_conflicts="one_up_one_down",
                         side_allocations="balance"), [
                     (12, 2, [], True),
