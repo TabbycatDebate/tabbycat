@@ -38,6 +38,7 @@ SETTINGS = OrderedDict([
     ('show_emoji',                  (_bool, 'Shows Emoji in the draw UI',                                          True)),
     ('show_institutions',           (_bool, 'Shows the institutions column in the draw UI',                        True)),
     ('public_participants',         (_bool, 'Public interface to see all participants',                            False)),
+    ('public_side_allocations',     (_bool, 'Public interface to see side pre-allocations',                        False)),
     ('public_draw',                 (_bool, 'Public interface to see RELEASED draws',                              False)),
     ('public_motions',              (_bool, 'Public interface to see RELEASED motions',                            False)),
     ('public_results',              (_bool, 'Public interface to see results from previous rounds',                False)),

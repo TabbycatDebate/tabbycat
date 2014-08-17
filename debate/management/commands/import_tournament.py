@@ -5,12 +5,16 @@ import csv
 import debate.models as m
 
 class Command(BaseCommand):
-    args = '<folder>'
+    args = '<folder> <num_rounds>'
     help = 'Imports data from a folder in the data directory'
 
     def handle(self, *args, **options):
+        if len(args) < 2:
+            raise CommandError("Not enough arguments.")
+
         # Getting the command line variable
         folder = args[0]
+        rounds_count = int(args[1])
 
         # Where to find the data
         base_path = os.path.join(settings.PROJECT_PATH, 'data')
@@ -39,7 +43,6 @@ class Command(BaseCommand):
 
             self.stdout.write('*** Attempting to create rounds ')
             # TODO get this to use rounds.csv
-            rounds_count = 8
             try:
                 for i in range(1, rounds_count+1):
                     if i == 1:
@@ -51,9 +54,10 @@ class Command(BaseCommand):
                         tournament = t,
                         seq = i,
                         name = 'Round %d' % i,
+                        abbreviation = 'R%d' % i,
                         draw_type = draw_type,
-                        feedback_weight = 0,# min((i-1)*0.1, 0.5),
-                        silent = (i > 7),
+                        feedback_weight = min((i-1)*0.1, 0.5),
+                        silent = (i >= rounds_count),
                     ).save()
 
                 t.current_round = m.Round.objects.get(tournament=t, seq=1)
@@ -264,7 +268,23 @@ class Command(BaseCommand):
 
             self.stdout.write('*** Created ' + str(adjs_count) + ' judges')
 
-            self.stdout.write('*** Successfully import all data')
+            # Motions
+            if os.path.isfile(os.path.join(data_path, 'motions.csv')):
+                motions_count = 0
+                reader = csv.reader(open(os.path.join(data_path, 'motions.csv')))
+                for r, seq, reference, text in reader:
+                    try:
+                        round = m.Round.objects.get(abbreviation=r)
+                    except m.Round.DoesNotExist:
+                        round = m.Round.objects.get(seq=int(r))
+                    seq = int(seq)
+                    m.Motion(round=round, seq=seq, reference=reference, text=text).save()
+                    print text
+                    motions_count += 1
+
+            self.stdout.write('*** Created ' + str(motions_count) + ' motions')
+
+            self.stdout.write('*** Successfully imported all data')
 
         except Exception:
             import traceback

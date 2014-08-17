@@ -51,6 +51,9 @@
                     Motions
                 </a></li>
                 {% endif %}
+                {% if public_side_allocations %}
+                <li><a class="public-side-allocations-nav" href="{% tournament_url public_side_allocations %}">Sides</a></li>
+                {% endif %}
                 {% if public_team_standings > 0 and current_round.prev %}
                 <li><a class="public-team-standings-nav" href="{% tournament_url public_team_standings %}">
                     Standings

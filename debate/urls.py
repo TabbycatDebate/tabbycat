@@ -28,6 +28,7 @@ urlpatterns = patterns('debate.views',
     url(r'^feedback_progress/$', 'public_feedback_progress', name='public_feedback_progress'),
     url(r'^participants/$', 'public_participants', name='public_participants'),
     url(r'^motions/$', 'public_motions', name='public_motions'),
+    url(r'^side_allocations/$', 'public_side_allocations', name='public_side_allocations'),
 
     url(r'^tab/team/$', 'public_team_tab', name='public_team_tab'),
     url(r'^tab/speaker/$', 'public_speaker_tab', name='public_speaker_tab'),
@@ -106,5 +107,7 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/break/teams/open/$', 'breaking_teams', {'name': 'Open Break', 'category': 'open'}, name='breaking_teams_open'),
     url(r'^admin/break/teams/esl/$', 'breaking_teams', {'name': 'ESL Break', 'category': 'esl'}, name='breaking_teams_esl'),
     url(r'^admin/break/adjudicators/$',  'breaking_adjs', name='breaking_adjs'),
+
+    url(r'^admin/side_allocations/$', 'side_allocations', name='side_allocations'),
 
 )

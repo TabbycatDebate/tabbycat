@@ -15,6 +15,7 @@ from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
 from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission, AdjudicatorTestScoreHistory
 from debate.models import AdjudicatorFeedback, ActiveVenue, ActiveTeam, ActiveAdjudicator
+from debate.models import TeamPositionAllocation
 from debate.result import BallotSet
 from debate import forms
 
@@ -289,6 +290,23 @@ def public_feedback_progress(request, t):
 def public_motions(request, t):
     rounds = Round.objects.filter(motions_released=True).order_by('-seq')
     return r2r(request, 'public/motions.html', dict(rounds=rounds))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('public_side_allocations')
+def public_side_allocations(request, t):
+    teams = Team.objects.filter(institution__tournament=t)
+    rounds = Round.objects.filter(tournament=t).order_by("seq")
+    tpas = dict()
+    TPA_MAP = {
+        TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
+        TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
+        None: "-"
+    }
+    for tpa in TeamPositionAllocation.objects.all():
+        tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
+    for team in teams:
+        team.side_allocations = [tpas[(team.id, round.id)] for round in rounds]
+    return r2r(request, "public/side_allocations.html", dict(teams=teams, rounds=rounds))
 
 ## Tab
 
@@ -798,6 +816,23 @@ def unrelease_draw(request, round):
 
     return redirect_round('draw', round)
 
+
+@admin_required
+@tournament_view
+def side_allocations(request, t):
+    teams = Team.objects.filter(institution__tournament=t)
+    rounds = Round.objects.filter(tournament=t).order_by("seq")
+    tpas = dict()
+    TPA_MAP = {
+        TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
+        TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
+        None: "-"
+    }
+    for tpa in TeamPositionAllocation.objects.all():
+        tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
+    for team in teams:
+        team.side_allocations = [tpas[(team.id, round.id)] for round in rounds]
+    return r2r(request, "side_allocations.html", dict(teams=teams, rounds=rounds))
 
 
 @admin_required

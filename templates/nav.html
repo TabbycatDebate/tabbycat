@@ -16,6 +16,9 @@
             <ul id="nav" class="nav navbar-nav navbar-left">
                 <li><a class="draw-nav" href="{% round_url draw current_round %}">Draw</a></li>
                 <li><a class="motions-nav" href="{% round_url motions current_round %}">Motions</a></li>
+                {% if side_allocations_enabled %}
+                <li><a class="side-allocations-nav" href="{% tournament_url side_allocations %}">Sides</a></li>
+                {% endif %}
                 <li><a class="status-nav" href="{% round_url results current_round %}">Status</a></li>
                 <li><a class="adjudicators-standings-nav" href="{% tournament_url adj_feedback %}">Adjudicators</a></li>
                 <li class="dropdown">
