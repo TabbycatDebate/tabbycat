@@ -396,7 +396,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     (16, 26, ["bub_up_hist"], True),
                     (19, 13, ["bub_up_accom"], False)]]
     expected[3] = [dict(odd_bracket="intermediate1", pairing_method="fold",
-                        avoid_conflicts="off", side_allocations="allocated"), [
+                        avoid_conflicts="off", side_allocations="preallocated"), [
                     (12, 11, [], False),
                     ( 2,  8, [], False),
                     ( 3, 17, [], False),
@@ -411,7 +411,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     (20, 19, [], False),
                     (21, 13, [], False)]]
     expected[4] = [dict(odd_bracket="intermediate2", pairing_method="fold",
-                        avoid_conflicts="off", side_allocations="allocated"), [
+                        avoid_conflicts="off", side_allocations="preallocated"), [
                     (12, 11, [], False),
                     ( 2,  8, [], False),
                     ( 3, 17, [], False),
@@ -494,7 +494,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
     ])
 
     def setUp(self):
-        self.ppd = DrawGenerator("power_paired", DUMMY_TEAMS, side_allocations="allocated")
+        self.ppd = DrawGenerator("power_paired", DUMMY_TEAMS, side_allocations="preallocated")
 
     def tearDown(self):
         del self.ppd

@@ -122,12 +122,12 @@ def DrawGenerator(draw_type, teams, results=None, **kwargs):
     default_side_allocations = BaseDrawGenerator.BASE_DEFAULT_OPTIONS['side_allocations']
 
     if draw_type == "random":
-        if kwargs.get('side_allocations', default_side_allocations) == "allocated":
+        if kwargs.get('side_allocations', default_side_allocations) == "preallocated":
             klass = RandomWithAllocatedSidesDrawGenerator
         else:
             klass = RandomDrawGenerator
     elif draw_type == "power_paired":
-        if kwargs.get('side_allocations', default_side_allocations) == "allocated":
+        if kwargs.get('side_allocations', default_side_allocations) == "preallocated":
             klass = PowerPairedWithAllocatedSidesDrawGenerator
         else:
             klass = PowerPairedDrawGenerator
@@ -146,7 +146,7 @@ class BaseDrawGenerator(object):
             "balance" - the team that has affirmed less in prior rounds affirms,
                 or randomly if both teams have affirmed the same number of times.
                 If used, team objects must have an 'aff_count' attribute.
-            "allocated" - teams were pre-allocated sides. If used, teams must have
+            "preallocated" - teams were pre-allocated sides. If used, teams must have
                 an 'allocated_side' attribute.
             "random" - allocate randomly.
         "avoid_history" - if True, draw tries to avoid pairing teams that have

@@ -10,11 +10,15 @@ admin.site.register(models.Institution, InstitutionAdmin)
 
 class SpeakerInline(admin.TabularInline):
     model = models.Speaker
+    fields = ('name', 'barcode_id', 'email', 'phone')
+
+class TeamPositionAllocationInline(admin.TabularInline):
+    model = models.TeamPositionAllocation
 
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution',)
     search_fields = ('name','institution__name', 'institution__code',)
-    inlines = (SpeakerInline,)
+    inlines = (SpeakerInline, TeamPositionAllocationInline)
 
 admin.site.register(models.Team, TeamAdmin)
 
