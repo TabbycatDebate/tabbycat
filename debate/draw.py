@@ -283,6 +283,9 @@ class RandomDrawGenerator(BaseDrawGenerator):
     Options:
         "max_swap_attempts": Maximum number of times to attempt to swap to
             avoid conflict before giving up.
+        "avoid_conflicts": Whether to avoid conflicts, should be a string (for
+            compatibility with other types of DrawGenerator).  Turned off if
+            this values is "off", turned on if anything else.
     """
 
     can_be_first_round = True
@@ -290,7 +293,7 @@ class RandomDrawGenerator(BaseDrawGenerator):
     requires_prev_results = False
     draw_type = "preliminary"
 
-    DEFAULT_OPTIONS = {"max_swap_attempts": 20}
+    DEFAULT_OPTIONS = {"max_swap_attempts": 20, "avoid_conflicts": "off"}
 
     def make_draw(self):
         self._draw = self._make_initial_pairings()
@@ -310,6 +313,8 @@ class RandomDrawGenerator(BaseDrawGenerator):
         # Don't swap sides! The child class RandomDrawWithSideConstraints assumes
         # that in this algorithm, affs will stay affs and negs will stay negs.
         if not (self.options["avoid_history"] or self.options["avoid_institution"]):
+            return
+        if self.options["avoid_conflicts"] == "off":
             return
         for pairing in pairings:
             if self._badness(pairing) > 0:

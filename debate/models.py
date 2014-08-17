@@ -779,6 +779,9 @@ class Round(models.Model):
         if self.draw_type == self.DRAW_RANDOM:
             teams = self.active_teams.all()
             draw_type = "random"
+            OPTIONS_TO_CONFIG_MAPPING.update({
+                "avoid_conflicts" : "draw_avoid_conflicts",
+            })
         elif self.draw_type == self.DRAW_POWERPAIRED:
             teams = annotate_team_standings(self.active_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
