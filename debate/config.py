@@ -41,6 +41,7 @@ SETTINGS = OrderedDict([
     ('public_side_allocations',     (_bool, 'Public interface to see side pre-allocations',                        False)),
     ('public_draw',                 (_bool, 'Public interface to see RELEASED draws',                              False)),
     ('public_motions',              (_bool, 'Public interface to see RELEASED motions',                            False)),
+    ('public_motions_descending',   (_bool, 'List motions by round in descending order (as opposed to ascending)', True)),
     ('public_results',              (_bool, 'Public interface to see results from previous rounds',                False)),
     ('show_splitting_adjudicators', (_bool, 'If showing public results, show splitting adjudicators',              False)),
     ('show_motions_in_results',     (_bool, 'If showing public results, show motions with results',                False)),

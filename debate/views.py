@@ -288,7 +288,8 @@ def public_feedback_progress(request, t):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_motions')
 def public_motions(request, t):
-    rounds = Round.objects.filter(motions_released=True).order_by('-seq')
+    order_by = t.config.get('public_motions_descending') and '-seq' or 'seq'
+    rounds = Round.objects.filter(motions_released=True).order_by(order_by)
     return r2r(request, 'public/motions.html', dict(rounds=rounds))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -300,12 +301,11 @@ def public_side_allocations(request, t):
     TPA_MAP = {
         TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
         TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
-        None: "-"
     }
     for tpa in TeamPositionAllocation.objects.all():
         tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
     for team in teams:
-        team.side_allocations = [tpas[(team.id, round.id)] for round in rounds]
+        team.side_allocations = [tpas.get((team.id, round.id), "-") for round in rounds]
     return r2r(request, "public/side_allocations.html", dict(teams=teams, rounds=rounds))
 
 ## Tab
@@ -831,7 +831,7 @@ def side_allocations(request, t):
     for tpa in TeamPositionAllocation.objects.all():
         tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
     for team in teams:
-        team.side_allocations = [tpas[(team.id, round.id)] for round in rounds]
+        team.side_allocations = [tpas.get((team.id, round.id), "-") for round in rounds]
     return r2r(request, "side_allocations.html", dict(teams=teams, rounds=rounds))
 
 
