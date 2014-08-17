@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist, Multiple
 from debate.utils import pair_list, memoize
 from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
-import debate.draw as draw_module
+from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
 
 from warnings import warn
 from threading import BoundedSemaphore
@@ -680,28 +680,42 @@ class Round(models.Model):
 
         # There is a bit of logic to go through to figure out what we need to
         # provide to the draw class.
-        options = dict()
-        options["avoid_institution"]   = self.tournament.config.get('avoid_same_institution')
-        options["avoid_history"]       = self.tournament.config.get('avoid_team_history')
-        options["history_penalty"]     = self.tournament.config.get('team_history_penalty')
-        options["institution_penalty"] = self.tournament.config.get('team_institution_penalty')
+        OPTIONS_TO_CONFIG_MAPPING = {
+            "avoid_conflicts"    : "draw_avoid_conflicts",
+            "avoid_institution"  : "avoid_same_institution",
+            "avoid_history"      : "avoid_team_history",
+            "history_penalty"    : "team_history_penalty",
+            "institution_penalty": "team_institution_penalty",
+            "side_allocations"   : "draw_side_allocations",
+        }
 
+        # Set type-specific options
         if self.draw_type == self.DRAW_RANDOM:
             teams = self.active_teams.all()
-            if self.prev: # not the first round, balance sides
-                for team in teams:
-                    team.aff_count = team.get_aff_count(self.prev.seq)
-            else: # otherwise, don't
-                options["balance_sides"] = False
-            drawer = draw_module.RandomDraw(teams, **options)
+            draw_type = "random"
         elif self.draw_type == self.DRAW_POWERPAIRED:
             teams = annotate_team_standings(self.active_teams, self.prev)
-            for team in teams:
-                team.aff_count = team.get_aff_count(self.prev.seq)
-            drawer = draw_module.PowerPairedDraw(teams, **options)
+            draw_type = "power_paired"
+            OPTIONS_TO_CONFIG_MAPPING.update({
+                "odd_bracket"   : "draw_odd_bracket",
+                "pairing_method": "draw_pairing_method",
+            })
         else:
             raise RuntimeError("Break rounds aren't supported yet.")
 
+        # Annotate aff_count
+        if self.prev:
+            for team in teams:
+                team.aff_count = team.get_aff_count(self.prev.seq)
+        else:
+            for team in teams:
+                team.aff_count = 0
+
+        options = dict()
+        for key, value in OPTIONS_TO_CONFIG_MAPPING.iteritems():
+            options[key] = self.tournament.config.get(value)
+
+        drawer = DrawGenerator(draw_type, teams, results=None, **options)
         draw = drawer.make_draw()
         self.make_debates(draw)
         self.draw_status = self.STATUS_DRAFT
@@ -771,7 +785,7 @@ class Round(models.Model):
         venues = list(self.active_venues.order_by('-priority'))[:len(pairings)]
 
         if len(venues) < len(pairings):
-            raise draw_module.DrawError("There are %d debates but only %d venues." % (len(pairings), len(venues)))
+            raise DrawError("There are %d debates but only %d venues." % (len(pairings), len(venues)))
 
         random.shuffle(venues)
         random.shuffle(pairings) # to avoid IDs indicating room raks
@@ -1071,7 +1085,7 @@ class Debate(models.Model):
         if not self.flags:
             return []
         else:
-            return [draw_module.DRAW_FLAG_DESCRIPTIONS[f] for f in self.flags.split(",")]
+            return [DRAW_FLAG_DESCRIPTIONS[f] for f in self.flags.split(",")]
 
     @property
     def all_conflicts(self):

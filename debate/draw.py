@@ -387,10 +387,10 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
             or a function taking a dict mapping floats to even-length lists of
                 Team-like objects, and returning a list of Pairing objects with
                 those teams.
-        "avoid_conflict" - How to avoid conflicts.
+        "avoid_conflicts" - How to avoid conflicts.
             "one_up_one_down" - swap conflicted teams with the debate above or below,
                 in accordance with Australasian Intervarsity Debating Association rules.
-            None - which turns off conflict avoidance.
+            "off" - which turns off conflict avoidance.
     """
 
     can_be_first_round = False
@@ -615,7 +615,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     def avoid_conflicts(self, pairings):
         """Returns a function taking a list of Pairings returned by
         generate_pairings(), and adjusting it in-place to avoid conflicts."""
-        if self.options["avoid_conflicts"] is None:
+        if self.options["avoid_conflicts"] == "off":
             return
         function = self.get_option_function("avoid_conflicts", self.AVOID_CONFLICT_FUNCTIONS)
         return function(pairings)
