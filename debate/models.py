@@ -12,11 +12,13 @@ from warnings import warn
 from threading import BoundedSemaphore
 from collections import OrderedDict
 
+
 class ScoreField(models.FloatField):
     pass
 
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([], ["^debate\.models\.ScoreField"])
+
 
 class Tournament(models.Model):
 
@@ -84,7 +86,7 @@ class Institution(models.Model):
     abbreviation = models.CharField(max_length=8, default="")
 
     class Meta:
-        unique_together = ('tournament', 'code')
+        unique_together = [('tournament', 'code')]
 
     def __unicode__(self):
         return unicode(self.name)
@@ -238,6 +240,7 @@ class TeamManager(models.Manager):
             breaking_teams.append(team)
 
         return breaking_teams
+
 
 class Team(models.Model):
     reference = models.CharField(max_length=50, verbose_name="Name or suffix")
@@ -460,6 +463,7 @@ class SpeakerManager(models.Manager):
 
         return speakers_filtered
 
+
 class Person(models.Model):
     name = models.CharField(max_length=40)
     barcode_id = models.IntegerField(blank=True, null=True)
@@ -472,9 +476,11 @@ class Person(models.Model):
     def has_contact(self):
         return bool(self.email or self.phone)
 
+
 class Checkin(models.Model):
     person = models.ForeignKey('Person')
     round = models.ForeignKey('Round')
+
 
 class Speaker(Person):
     team = models.ForeignKey(Team)
@@ -490,6 +496,7 @@ class AdjudicatorManager(models.Manager):
 
     def accredited(self):
         return self.filter(is_trainee=False)
+
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
@@ -584,6 +591,7 @@ class Adjudicator(Person):
             )
         return d.count()
 
+
 class AdjudicatorTestScoreHistory(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
     round = models.ForeignKey('Round', blank=True, null=True)
@@ -593,13 +601,16 @@ class AdjudicatorTestScoreHistory(models.Model):
     class Meta:
         verbose_name_plural = "Adjudicator test score histories"
 
+
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
     team = models.ForeignKey(Team)
 
+
 class AdjudicatorInstitutionConflict(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
     institution = models.ForeignKey(Institution)
+
 
 class RoundManager(models.Manager):
     use_for_related_Fields = True
@@ -607,6 +618,7 @@ class RoundManager(models.Manager):
     def get_query_set(self):
         return super(RoundManager,
                      self).get_query_set().select_related('tournament').order_by('seq')
+
 
 class Round(models.Model):
     DRAW_RANDOM      = 'R'
@@ -663,7 +675,7 @@ class Round(models.Model):
     starts_at = models.TimeField(blank=True, null=True)
 
     class Meta:
-        unique_together = ('tournament', 'seq')
+        unique_together = [('tournament', 'seq')]
 
     def __unicode__(self):
         return unicode(self.name)
@@ -703,13 +715,24 @@ class Round(models.Model):
         else:
             raise RuntimeError("Break rounds aren't supported yet.")
 
-        # Annotate aff_count
+        # Annotate attributes as required by DrawGenerator.
         if self.prev:
             for team in teams:
                 team.aff_count = team.get_aff_count(self.prev.seq)
         else:
             for team in teams:
                 team.aff_count = 0
+
+        # Evaluate this query set first to avoid hitting the database inside a loop.
+        tpas = dict()
+        TPA_MAP = {TeamPositionAllocation.POSITION_AFFIRMATIVE: "aff",
+            TeamPositionAllocation.POSITION_NEGATIVE: "neg"}
+        for tpa in self.teampositionallocation_set.all():
+            tpas[tpa.team] = TPA_MAP[tpa.position]
+        for team in teams:
+            if team in tpas:
+                team.allocated_side = tpas[team]
+        del tpas
 
         options = dict()
         for key, value in OPTIONS_TO_CONFIG_MAPPING.iteritems():
@@ -776,7 +799,7 @@ class Round(models.Model):
                         team.points = annotated_team.points
                         team.speaker_score = annotated_team.speaker_score
                         team.subrank = annotated_team.subrank
-                        team.pullup = annotated_team.points != debate.bracket
+                        team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
         return draw
 
     def make_debates(self, pairings):
@@ -936,6 +959,7 @@ class Round(models.Model):
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
 
+
 class Venue(models.Model):
     name = models.CharField(max_length=40)
     group = models.IntegerField(null=True, blank=True)
@@ -945,12 +969,14 @@ class Venue(models.Model):
     def __unicode__(self):
         return u'%s (%d)' % (self.name, self.priority)
 
+
 class ActiveVenue(models.Model):
     venue = models.ForeignKey(Venue)
     round = models.ForeignKey(Round)
 
     class Meta:
         unique_together = [('venue', 'round')]
+
 
 class ActiveTeam(models.Model):
     team = models.ForeignKey(Team)
@@ -959,6 +985,7 @@ class ActiveTeam(models.Model):
     class Meta:
         unique_together = [('team', 'round')]
 
+
 class ActiveAdjudicator(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
     round = models.ForeignKey(Round)
@@ -966,12 +993,14 @@ class ActiveAdjudicator(models.Model):
     class Meta:
         unique_together = [('adjudicator', 'round')]
 
+
 class DebateManager(models.Manager):
     use_for_related_fields = True
 
     def get_query_set(self):
         return super(DebateManager, self).get_query_set().select_related(
         'round', 'venue')
+
 
 class Debate(models.Model):
     STATUS_NONE      = 'N'
@@ -1158,10 +1187,12 @@ class Debate(models.Model):
     def matchup(self):
         return u'%s vs %s' % (self.aff_team.short_name, self.neg_team.short_name)
 
+
 class SRManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
         return super(SRManager, self).get_query_set().select_related('debate', 'team', 'position')
+
 
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
@@ -1175,6 +1206,9 @@ class DebateTeam(models.Model):
 
     debate = models.ForeignKey(Debate)
     team = models.ForeignKey(Team)
+
+    # South can't (easily) handle custom fields, so we'll just duplicate this
+    # in class TeamPositionAllocation.
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __unicode__(self):
@@ -1187,6 +1221,7 @@ class DebateTeam(models.Model):
         except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
             print "error: ", self.debate, self.position
             return None
+
 
 class DebateAdjudicator(models.Model):
     TYPE_CHAIR = 'C'
@@ -1207,6 +1242,23 @@ class DebateAdjudicator(models.Model):
 
     def __unicode__(self):
         return u'%s %s' % (self.adjudicator, self.debate)
+
+
+class TeamPositionAllocation(models.Model):
+    """Model to store team position allocations for tournaments like Joynt Scroll
+    (New Zealand). Each team-round combination should have one of these.
+    In tournaments without team position allocations, just don't use this model."""
+
+    POSITION_AFFIRMATIVE = DebateTeam.POSITION_AFFIRMATIVE
+    POSITION_NEGATIVE = DebateTeam.POSITION_NEGATIVE
+    POSITION_CHOICES = DebateTeam.POSITION_CHOICES
+
+    round = models.ForeignKey(Round)
+    team = models.ForeignKey(Team)
+    position = models.CharField(max_length=1, choices=POSITION_CHOICES)
+
+    class Meta:
+        unique_together = [('round', 'team')]
 
 
 class Submission(models.Model):
@@ -1372,6 +1424,7 @@ class AdjudicatorAllocation(object):
                     type = t,
                 ).save()
 
+
 class BallotSubmission(Submission):
     """Represents a single submission of ballots for a debate.
     (Not a single motion, but a single submission of all ballots for a debate.)"""
@@ -1443,6 +1496,7 @@ class BallotSubmission(Submission):
     #submitter_email = models.EmailField(max_length=254, blank=True, null=True) # only relevant for public submissions
     #submitter_phone = models.CharField(max_length=40, blank=True, null=True)   # only relevant for public submissions
 
+
 class SpeakerScoreByAdj(models.Model):
     """
     Holds score given by a particular adjudicator in a debate
@@ -1473,12 +1527,14 @@ class TeamScore(models.Model):
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]
 
+
 class SpeakerScoreManager(models.Manager):
     use_for_related_fields = True
 
     def get_query_set(self):
         return super(SpeakerScoreManager,
                      self).get_query_set().select_related('speaker')
+
 
 class SpeakerScore(models.Model):
     """
@@ -1494,6 +1550,7 @@ class SpeakerScore(models.Model):
 
     class Meta:
         unique_together = [('debate_team', 'speaker', 'position', 'ballot_submission')]
+
 
 class MotionManager(models.Manager):
     def statistics(self, round=None):
@@ -1533,6 +1590,7 @@ class MotionManager(models.Manager):
 
         return motions
 
+
 class Motion(models.Model):
     """Represents a single motion (not a set of motions)."""
 
@@ -1545,6 +1603,7 @@ class Motion(models.Model):
     def __unicode__(self):
         return self.text
 
+
 class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""
     debate_team = models.ForeignKey(DebateTeam)
@@ -1555,11 +1614,13 @@ class DebateTeamMotionPreference(models.Model):
     class Meta:
         unique_together = [('debate_team', 'preference', 'ballot_submission')]
 
+
 class ActionLogManager(models.Manager):
     def log(self, *args, **kwargs):
         obj = self.model(*args, **kwargs)
         obj.full_clean()
         obj.save()
+
 
 class ActionLog(models.Model):
     # These aren't generated automatically - all generations of these should
@@ -1705,6 +1766,7 @@ class ActionLog(models.Model):
             except AttributeError:
                 strings.append("Unknown " + field_name)
         return ", ".join(strings)
+
 
 class ConfigManager(models.Manager):
     def set(self, tournament, key, value):

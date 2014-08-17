@@ -16,14 +16,14 @@ class TestRandomDrawGenerator(unittest.TestCase):
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
     def test_invalid_option(self):
-        teams = [TestTeam(*args) for args in self.teams]
+        teams = [TestTeam(*args, aff_count=0) for args in self.teams]
         def go():
             self.rd = DrawGenerator("random", teams, random=True)
         self.assertRaises(ValueError, go)
 
     def test_draw(self):
         for i in xrange(100):
-            teams = [TestTeam(*args) for args in self.teams]
+            teams = [TestTeam(*args, aff_count=0) for args in self.teams]
             self.rd = DrawGenerator("random", teams)
             _draw = self.rd.make_draw()
             for pairing in _draw:
@@ -335,36 +335,36 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
     # situation with lots of swaps and manually figuring out the anticipated
     # result.
     standings = dict()
-    standings[1] = [(12, 'B', 4, [26, 11, 15, 14], 2),
-                    (2, 'D', 3, [22, 16, 20, 10], 2),
-                    (3, 'E', 3, [23, 20, 25, 4], 2),
-                    (11, 'B', 3, [1, 12, 23, 22], 2),
-                    (6, 'E', 3, [19, 15, 18, 9], 2),
-                    (17, 'E', 3, [21, 14, 7, 25], 2),
-                    (4, 'B', 3, [18, 25, 5, 3], 3),
-                    (14, 'A', 3, [24, 17, 9, 12], 2),
-                    (8, 'A', 3, [15, 24, 1, 15], 2),
-                    (7, 'D', 2, [16, 9, 17, 16], 2),
-                    (9, 'D', 2, [5, 7, 14, 6], 2),
-                    (15, 'B', 2, [8, 6, 12, 8], 2),
-                    (18, 'B', 2, [4, 21, 6, 21], 2),
-                    (22, 'A', 2, [2, 10, 16, 11], 2),
-                    (23, 'A', 2, [3, 19, 11, 5], 2),
-                    (24, 'B', 2, [14, 8, 19, 20], 3),
-                    (25, 'A', 2, [10, 4, 3, 17], 3),
-                    (1, 'C', 1, [11, 26, 8, 19], 2),
-                    (5, 'C', 1, [9, 13, 4, 23], 1),
-                    (10, 'B', 1, [25, 22, 13, 2], 1),
-                    (16, 'D', 1, [7, 2, 22, 7], 2),
-                    (20, 'E', 1, [13, 3, 2, 24], 2),
-                    (21, 'A', 1, [17, 18, 26, 18], 2),
-                    (19, 'B', 1, [6, 23, 24, 1], 1),
-                    (26, 'B', 1, [12, 1, 21, 13], 2),
-                    (13, 'C', 0, [20, 5, 10, 26], 2)]
+    standings[1] = [((12, 'B', 4, [26, 11, 15, 14]), {"aff_count": 2, "allocated_side": "aff"}),
+                    (( 2, 'D', 3, [22, 16, 20, 10]), {"aff_count": 2, "allocated_side": "aff"}),
+                    (( 3, 'E', 3, [23, 20, 25,  4]), {"aff_count": 2, "allocated_side": "aff"}),
+                    ((11, 'B', 3, [ 1, 12, 23, 22]), {"aff_count": 2, "allocated_side": "neg"}),
+                    (( 6, 'E', 3, [19, 15, 18,  9]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((17, 'E', 3, [21, 14,  7, 25]), {"aff_count": 2, "allocated_side": "neg"}),
+                    (( 4, 'B', 3, [18, 25,  5,  3]), {"aff_count": 3, "allocated_side": "aff"}),
+                    ((14, 'A', 3, [24, 17,  9, 12]), {"aff_count": 2, "allocated_side": "aff"}),
+                    (( 8, 'A', 3, [15, 24,  1, 15]), {"aff_count": 2, "allocated_side": "neg"}),
+                    (( 7, 'D', 2, [16,  9, 17, 16]), {"aff_count": 2, "allocated_side": "aff"}),
+                    (( 9, 'D', 2, [ 5,  7, 14,  6]), {"aff_count": 2, "allocated_side": "aff"}),
+                    ((15, 'B', 2, [ 8,  6, 12,  8]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((18, 'B', 2, [ 4, 21,  6, 21]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((22, 'A', 2, [ 2, 10, 16, 11]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((23, 'A', 2, [ 3, 19, 11,  5]), {"aff_count": 2, "allocated_side": "aff"}),
+                    ((24, 'B', 2, [14,  8, 19, 20]), {"aff_count": 3, "allocated_side": "aff"}),
+                    ((25, 'A', 2, [10,  4,  3, 17]), {"aff_count": 3, "allocated_side": "aff"}),
+                    (( 1, 'C', 1, [11, 26,  8, 19]), {"aff_count": 2, "allocated_side": "neg"}),
+                    (( 5, 'C', 1, [ 9, 13,  4, 23]), {"aff_count": 1, "allocated_side": "neg"}),
+                    ((10, 'B', 1, [25, 22, 13,  2]), {"aff_count": 1, "allocated_side": "aff"}),
+                    ((16, 'D', 1, [ 7,  2, 22,  7]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((20, 'E', 1, [13,  3,  2, 24]), {"aff_count": 2, "allocated_side": "aff"}),
+                    ((21, 'A', 1, [17, 18, 26, 18]), {"aff_count": 2, "allocated_side": "aff"}),
+                    ((19, 'B', 1, [ 6, 23, 24,  1]), {"aff_count": 1, "allocated_side": "neg"}),
+                    ((26, 'B', 1, [12,  1, 21, 13]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((13, 'C', 0, [20,  5, 10, 26]), {"aff_count": 2, "allocated_side": "neg"})]
 
     expected = dict()
     expected[1] = [dict(odd_bracket="pullup_top", pairing_method="slide",
-                        avoid_conflicts="one_up_one_down"), [
+                        avoid_conflicts="one_up_one_down", side_allocations="balance"), [
                     (12,  2, ["pullup"], True),
                     ( 3, 14, ["1u1d_hist"], True),
                     (11,  4, ["1u1d_other"], False),
@@ -379,7 +379,8 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     (16, 13, ["1u1d_other", "pullup"], True),
                     (20, 26, ["1u1d_hist"], True)]]
     expected[2] = [dict(odd_bracket="intermediate_avoid_conflicts",
-                        pairing_method="slide", avoid_conflicts="one_up_one_down"), [
+                        pairing_method="slide", avoid_conflicts="one_up_one_down",
+                        side_allocations="balance"), [
                     (12, 2, [], True),
                     (3, 17, [], True), # institution conflict, but swapping
                                        # would give history conflict
@@ -394,12 +395,42 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     (10, 21, [], False),
                     (16, 26, ["bub_up_hist"], True),
                     (19, 13, ["bub_up_accom"], False)]]
+    expected[3] = [dict(odd_bracket="intermediate1", pairing_method="fold",
+                        avoid_conflicts="off", side_allocations="allocated"), [
+                    (12, 11, [], False),
+                    ( 2,  8, [], False),
+                    ( 3, 17, [], False),
+                    ( 4,  6, [], False),
+                    (14, 15, [], False),
+                    ( 7, 22, [], False),
+                    ( 9, 18, [], False),
+                    (23, 16, [], False),
+                    (24,  5, [], False),
+                    (25,  1, [], False),
+                    (10, 26, [], False),
+                    (20, 19, [], False),
+                    (21, 13, [], False)]]
+    expected[4] = [dict(odd_bracket="intermediate2", pairing_method="fold",
+                        avoid_conflicts="off", side_allocations="allocated"), [
+                    (12, 11, [], False),
+                    ( 2,  8, [], False),
+                    ( 3, 17, [], False),
+                    ( 4,  6, [], False),
+                    (14, 15, [], False),
+                    ( 7, 22, [], False),
+                    ( 9, 18, [], False),
+                    (23, 16, [], False),
+                    (24,  5, [], False),
+                    (25,  1, [], False),
+                    (10, 26, [], False),
+                    (20, 19, [], False),
+                    (21, 13, [], False)]]
 
     # indices: (standings, expected)
-    cases = [(1, 1), (1, 2)]
+    cases = [(1, 1), (1, 2), (1, 3), (1, 4)]
 
     def do_draw(self, standings, options):
-        standings = [TestTeam(*args) for args in standings]
+        standings = [TestTeam(*args, **kwargs) for args, kwargs in standings]
         self.ppd = DrawGenerator("power_paired", standings, **options)
         return self.ppd.make_draw()
 
@@ -446,6 +477,12 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
         (2, {"aff": [], "neg": [17, 18, 19]}),
         (1, {"aff": [10, 11], "neg": [20, 21, 22, 23, 24]}),
         (0, {"aff": [12], "neg": []}),
+    ])
+    brackets[4] = OrderedDict([
+        (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": []}),
+        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1", "Caltech 3"]}),
+        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),
+        (0, {"aff": [], "neg": ["Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
     ])
     brackets[99] = OrderedDict([ # Uneven aff/neg, should raise exception
         (5, {"aff": [1, 2], "neg": []}),
@@ -502,6 +539,12 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             (1, {"aff": [10, 11, 12], "neg": [22, 23, 24]}),
             (0, {"aff": [], "neg": []}),
         ])
+        expecteds[4] = OrderedDict([
+            (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
+            (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Caltech 3", "Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),
+            (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Princeton 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
+            (0, {"aff": [], "neg": []}),
+        ])
         self.bracket_resolve_odd("pullup_top", expecteds)
 
     def test_pullup_bottom(self):
@@ -528,6 +571,12 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             (3, {"aff": [5, 6, 7, 8, 9], "neg": [17, 18, 19, 23, 24]}),
             (2, {"aff": [], "neg": []}),
             (1, {"aff": [10, 11, 12], "neg": [20, 21, 22]}),
+            (0, {"aff": [], "neg": []}),
+        ])
+        expecteds[4] = OrderedDict([
+            (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["Columbia 1", "Caltech 1", "Caltech 3"]}),
+            (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),
+            (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
             (0, {"aff": [], "neg": []}),
         ])
         self.bracket_resolve_odd("pullup_bottom", expecteds)
@@ -568,6 +617,15 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             (2,   {"aff": [], "neg": []}),
             (1,   {"aff": [10, 11], "neg": [22, 23]}),
             (0.5, {"aff": [12], "neg": [24]}),
+            (0,   {"aff": [], "neg": []}),
+        ])
+        expecteds[4] = OrderedDict([
+            (3,   {"aff": [], "neg": []}),
+            (2.5, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
+            (2,   {"aff": ["John Hopkins 1"], "neg": ["Caltech 3"]}),
+            (1.5, {"aff": ["Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),
+            (1,   {"aff": ["Caltech 2"], "neg": ["Princeton 2"]}),
+            (0.5, {"aff": ["Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
             (0,   {"aff": [], "neg": []}),
         ])
         self.bracket_resolve_odd("intermediate1", expecteds)
@@ -611,6 +669,15 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             (1,      {"aff": [10, 11], "neg": [22, 23]}),
             (0.5,    {"aff": [12], "neg": [24]}),
             (0,      {"aff": [], "neg": []}),
+        ])
+        expecteds[4] = OrderedDict([
+            (3,   {"aff": [], "neg": []}),
+            (2.5, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
+            (2,   {"aff": ["John Hopkins 1"], "neg": ["Caltech 3"]}),
+            (1.5, {"aff": ["Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),
+            (1,   {"aff": ["Caltech 2"], "neg": ["Princeton 2"]}),
+            (0.5, {"aff": ["Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
+            (0,   {"aff": [], "neg": []}),
         ])
         self.maxDiff = None
         self.bracket_resolve_odd("intermediate2", expecteds)

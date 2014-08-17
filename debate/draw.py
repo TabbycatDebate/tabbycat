@@ -20,8 +20,10 @@ DRAW_FLAG_DESCRIPTIONS = {
     "pullup":       "Pull-up team",
 }
 
+
 class DrawError(Exception):
     pass
+
 
 class Pairing(object):
     """Simple data structure for communicating information about pairings.
@@ -336,6 +338,7 @@ class RandomDrawGenerator(BaseDrawGenerator):
             score += sum(map(lambda x: x.conflict_inst, pairings)) * self.options["institution_penalty"]
         return score
 
+
 class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
     """Random draw with allocated sides.
     Overrides functions of RandomDrawGenerator where sides need to be constrained.
@@ -364,6 +367,7 @@ class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
         pairings = [Pairing(teams=t, bracket=0, room_rank=0) \
                 for t in zip(aff_teams, neg_teams)]
         return pairings
+
 
 class PowerPairedDrawGenerator(BaseDrawGenerator):
     """Power-paired draw.
@@ -646,6 +650,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
                         pairing.add_flag("1u1d_other")
                     pairing.teams = list(new)
 
+
 class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
     """Power-paired draw with allocated sides.
     Overrides functions of PowerPairedDrawGenerator where sides need to be constrained.
@@ -690,6 +695,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
             top_team = teams.pop(0)
             points = top_team.points
             pool = {"aff": list(), "neg": list()}
+            pool[top_team.allocated_side].append(top_team)
             while len(teams) > 0 and teams[0].points == points:
                 team = teams.pop(0)
                 side = team.allocated_side
@@ -780,6 +786,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         """
         new = OrderedDict()
         unfilled = OrderedDict()
+
         for points, pool in brackets.iteritems():
 
             # First, check for unfilled intermediate brackets
@@ -896,6 +903,40 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         from the allowable list above."""
         raise NotImplementedError("Intermediate bubbles with conflict avoidance isn't supported with allocated sides.")
 
+    @staticmethod
+    def _pairings(brackets, presort_func):
+        pairings = OrderedDict()
+        i = 1
+        for points, pool in brackets.iteritems():
+            assert len(pool["aff"]) == len(pool["neg"])
+            bracket = list()
+            presort_func(pool)
+            for teams in zip(pool["aff"], pool["neg"]):
+                pairing = Pairing(teams=teams, bracket=points, room_rank=i)
+                bracket.append(pairing)
+                i = i + 1
+            pairings[points] = bracket
+        return pairings
+
+    @classmethod
+    def _pairings_slide(cls, brackets):
+        def slide(pool):
+            pass # do nothing
+        return cls._pairings(brackets, slide)
+
+    @classmethod
+    def _pairings_fold(cls, brackets):
+        def fold(pool):
+            pool["neg"].reverse()
+        return cls._pairings(brackets, fold)
+
+    @classmethod
+    def _pairings_random(cls, brackets):
+        def shuffle(pool):
+            random.shuffle(pool["aff"])
+            random.shuffle(pool["neg"])
+        return cls._pairings(brackets, shuffle)
+
 
 class FirstEliminationDrawGenerator(BaseDrawGenerator):
     """Class for draw for a round that is a first w round, with
@@ -942,6 +983,7 @@ class FirstEliminationDrawGenerator(BaseDrawGenerator):
         if hasattr(self, "_bypassing_teams"):
             return self._bypassing_teams
         raise RuntimeError("get_bypassing_teams() must not be called before make_draw().")
+
 
 class EliminationDrawGenerator(BaseDrawGenerator):
     """Class for second or subsequent elimination round.
