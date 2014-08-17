@@ -1,3 +1,4 @@
+import random
 import re
 from django.db import models
 from django.conf import settings
@@ -129,25 +130,68 @@ def annotate_team_standings(teams, round=None):
     teams = teams.extra({
         "points": EXTRA_QUERY.format(field="points"),
         "speaker_score": EXTRA_QUERY.format(field="score"),
-    }).distinct().order_by('-points', '-speaker_score')
+    }).distinct()
 
-    # Add draw strength annotation.
-    for team in teams:
-        draw_strength = 0
-        # Find all teams that they've faced.
-        for dt in team.debateteam_set.all():
-            draw_strength += teams.get(id=dt.opposition.team.id).points
-        team.draw_strength = draw_strength
+    # Extract which rule to use from the tournament config
+    if round is not None:
+        tournament = round.tournament
+    else:
+        tournament = teams[0].institution.tournament
+    rule = tournament.config.get('team_ranking_rule')
 
-    def who_beat_whom(team1, team2):
-        """Returns True if a swap is in order, False if not."""
-        # Find all debates between these two teams
+    if rule == "australs":
 
+        teams = teams.order_by("-points", "-speaker_score")
+        return list(teams)
 
+    elif rule == "nz":
 
-    # Now, sort CONTINUE HERE
+        # Add draw strength annotation.
+        for team in teams:
+            draw_strength = 0
+            # Find all teams that they've faced.
+            for dt in team.debateteam_set.all():
+                # Can't just use dt.opposition.team.points, as dt.opposition.team isn't annotated.
+                draw_strength += teams.get(id=dt.opposition.team.id).points
+            team.draw_strength = draw_strength
 
-    return teams
+        def who_beat_whom(team1, team2):
+            """Returns a positive value if team1 won more debates, a negative value
+            if team2 won more, 0 if the teams won the same number against each other
+            or haven't faced each other."""
+            # Find all debates between these two teams
+            def get_wins(team, other):
+                ts =  TeamScore.objects.filter(
+                    ballot_submission__confirmed=True,
+                    debate_team__team=team,
+                    debate_team__debate__debateteam__team=other).aggregate(models.Sum('points'))
+                return ts["points__sum"]
+            wins1 = get_wins(team1, team2)
+            wins2 = get_wins(team2, team1)
+            # Print this to the logs, just so we know it happened
+            print "who beat whom, {0} vs {1}: {2} wins against {3}".format(team1, team2, wins1, wins2)
+            return cmp(wins1, wins2)
+
+        def cmp_teams(team1, team2):
+            """Returns 1 if team1 ranks ahead of team2, -1 if team2 ranks ahead of team1,
+            and 0 if they rank the same. Requires access to teams, so that it knows whether
+            it can apply who-beat-whom."""
+            # If there are only two teams on this number of points, or points/speakers,
+            # or points/speaks/draw-strength, then use who-beat-whom.
+            def two_teams_left(key):
+                return key(team1) == key(team2) and len(filter(lambda x: key(x) == key(team1), teams)) == 2
+            if two_teams_left(lambda x: x.points) or two_teams_left(lambda x: (x.points, x.speaker_score)) \
+                    or two_teams_left(lambda x: (x.points, x.speaker_score, x.draw_strength)):
+                winner = who_beat_whom(team1, team2)
+                if winner != 0: # if this doesn't help, keep going
+                    return winner
+            key = lambda x: (x.points, x.speaker_score, x.draw_strength)
+            return cmp(key(team1), key(team2))
+
+        sorted_teams = list(teams)
+        random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
+        sorted_teams.sort(cmp=cmp_teams, reverse=True)
+        return sorted_teams
 
 
 class TeamManager(models.Manager):

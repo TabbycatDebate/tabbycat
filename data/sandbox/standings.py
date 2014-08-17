@@ -1,9 +1,6 @@
 """Sandbox for figuring out how to do standings and other aggregates."""
 
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.environ.get("VIRTUAL_ENV"), "..")))
+import header
 import debate.models as m
 from django.db import models
 
