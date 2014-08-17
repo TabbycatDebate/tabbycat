@@ -100,7 +100,7 @@ class Institution(models.Model):
 
 
 def annotate_team_standings(teams, round=None):
-    """Accepts and returns a QuerySet."""
+    """Accepts a QuerySet, returns a list."""
     # This is what might be more concisely expressed, if it were permissible
     # in Django, as:
     # teams = teams.annotate_if(
@@ -130,12 +130,29 @@ def annotate_team_standings(teams, round=None):
         "points": EXTRA_QUERY.format(field="points"),
         "speaker_score": EXTRA_QUERY.format(field="score"),
     }).distinct().order_by('-points', '-speaker_score')
+
+    # Add draw strength annotation.
+    for team in teams:
+        draw_strength = 0
+        # Find all teams that they've faced.
+        for dt in team.debateteam_set.all():
+            draw_strength += teams.get(id=dt.opposition.team.id).points
+        team.draw_strength = draw_strength
+
+    def who_beat_whom(team1, team2):
+        """Returns True if a swap is in order, False if not."""
+        # Find all debates between these two teams
+
+
+
+    # Now, sort CONTINUE HERE
+
     return teams
 
 
 class TeamManager(models.Manager):
     def standings(self, round):
-        """Returns a QuerySet."""
+        """Returns a list."""
         teams = self.filter(
             institution__tournament=round.tournament,
             debateteam__debate__round__seq__lte = round.seq,
@@ -159,6 +176,7 @@ class TeamManager(models.Manager):
         return teams
 
     def subrank_standings(self, round):
+        """Returns a list."""
         teams = self.standings(round)
 
         prev_rank_value = None
