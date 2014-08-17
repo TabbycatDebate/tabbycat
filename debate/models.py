@@ -100,8 +100,11 @@ class Institution(models.Model):
             return self.code[:5]
 
 
-def annotate_team_standings(teams, round=None):
-    """Accepts a QuerySet, returns a list."""
+def annotate_team_standings(teams, round=None, shuffle=False):
+    """Accepts a QuerySet, returns a list.
+    If 'shuffle' is True, it shuffles the list before sorting so that teams that
+    are equal are in random order. This should be turned on for draw generation,
+    and turned off for display."""
     # This is what might be more concisely expressed, if it were permissible
     # in Django, as:
     # teams = teams.annotate_if(
@@ -141,8 +144,14 @@ def annotate_team_standings(teams, round=None):
 
     if rule == "australs":
 
-        teams = teams.order_by("-points", "-speaker_score")
-        return list(teams)
+        if shuffle:
+            sorted_teams = list(teams)
+            random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
+            sorted_teams.sort(key=lambda x: (x.points, x.speaker_score), reverse=True)
+            return sorted_teams
+        else:
+            teams = teams.order_by("-points", "-speaker_score")
+            return list(teams)
 
     elif rule == "nz":
 
@@ -189,7 +198,8 @@ def annotate_team_standings(teams, round=None):
             return cmp(key(team1), key(team2))
 
         sorted_teams = list(teams)
-        random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
+        if shuffle:
+            random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
         sorted_teams.sort(cmp=cmp_teams, reverse=True)
         return sorted_teams
 
@@ -768,7 +778,7 @@ class Round(models.Model):
             teams = self.active_teams.all()
             draw_type = "random"
         elif self.draw_type == self.DRAW_POWERPAIRED:
-            teams = annotate_team_standings(self.active_teams, self.prev)
+            teams = annotate_team_standings(self.active_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "odd_bracket"   : "draw_odd_bracket",
