@@ -768,7 +768,6 @@ class Round(models.Model):
         # There is a bit of logic to go through to figure out what we need to
         # provide to the draw class.
         OPTIONS_TO_CONFIG_MAPPING = {
-            "avoid_conflicts"    : "draw_avoid_conflicts",
             "avoid_institution"  : "avoid_same_institution",
             "avoid_history"      : "avoid_team_history",
             "history_penalty"    : "team_history_penalty",
@@ -784,8 +783,9 @@ class Round(models.Model):
             teams = annotate_team_standings(self.active_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
-                "odd_bracket"   : "draw_odd_bracket",
-                "pairing_method": "draw_pairing_method",
+                "avoid_conflicts" : "draw_avoid_conflicts",
+                "odd_bracket"     : "draw_odd_bracket",
+                "pairing_method"  : "draw_pairing_method",
             })
         else:
             raise RuntimeError("Break rounds aren't supported yet.")

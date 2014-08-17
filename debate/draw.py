@@ -358,7 +358,7 @@ class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
 
         if len(aff_teams) != len(neg_teams):
             raise DrawError("There were {0} aff teams but {1} neg teams.".format(len(aff_teams), len(neg_teams)))
-        if len(aff_teams) + len(neg_teams) != len(teams):
+        if len(aff_teams) + len(neg_teams) != len(self.teams):
             raise DrawError("One or more teams had an allocated side that wasn't 'aff' or 'neg'.")
 
         random.shuffle(aff_teams)
