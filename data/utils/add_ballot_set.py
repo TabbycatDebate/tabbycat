@@ -11,7 +11,7 @@ SUBMITTER_TYPE_MAP = {
     'public':  m.BallotSubmission.SUBMITTER_PUBLIC
 }
 
-def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=False):
+def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=False, min_score=72, max_score=78):
 
     if discarded and confirmed:
         raise ValueError("Ballot can't be both discarded and confirmed!")
@@ -25,8 +25,8 @@ def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=Fals
     def gen_results():
         r = {'aff': (0,), 'neg': (0,)}
         def do():
-            s = [random.randint(72, 78) for i in range(3)]
-            s.append(random.randint(72,78)/2.0)
+            s = [random.randint(min_score, max_score) for i in range(3)]
+            s.append(random.randint(min_score, max_score)/2.0)
             return s
         while sum(r['aff']) == sum(r['neg']):
             r['aff'] = do()
@@ -85,6 +85,8 @@ if __name__ == "__main__":
     status = parser.add_mutually_exclusive_group(required=True)
     status.add_argument("-d", "--discarded", action="store_true", help="Ballot set is discarded")
     status.add_argument("-c", "--confirmed", action="store_true", help="Ballot set is confirmed")
+    parser.add_argument("-m", "--min-score", type=float, help="Minimum speaker score (for substantive)", default=72)
+    parser.add_argument("-M", "--max-score", type=float, help="Maximum speaker score (for substantive)", default=78)
     args = parser.parse_args()
 
     submitter_type = SUBMITTER_TYPE_MAP[args.type]
@@ -99,7 +101,7 @@ if __name__ == "__main__":
         print debate
 
         try:
-            bset = add_ballot_set(debate, submitter_type, user, args.discarded, args.confirmed)
+            bset = add_ballot_set(debate, submitter_type, user, args.discarded, args.confirmed, args.min_score, args.max_score)
         except ValueError, e:
             print "Error:", e
 

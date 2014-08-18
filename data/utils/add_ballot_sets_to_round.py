@@ -18,6 +18,8 @@ parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choi
 parser.add_argument("-u", "--user", type=str, help="User ID", default="original")
 parser.add_argument("-d", "--discarded", action="store_true", help="Ballot set is discarded")
 parser.add_argument("-c", "--confirmed", action="store_true", help="Ballot set is confirmed")
+parser.add_argument("-m", "--min-score", type=float, help="Minimum speaker score (for substantive)", default=72)
+parser.add_argument("-M", "--max-score", type=float, help="Maximum speaker score (for substantive)", default=78)
 args = parser.parse_args()
 
 submitter_type = SUBMITTER_TYPE_MAP[args.type]
@@ -36,7 +38,7 @@ for i in xrange(args.no_ballots):
     print debate
 
     try:
-        bset = add_ballot_set(debate, submitter_type, user, args.discarded, args.confirmed)
+        bset = add_ballot_set(debate, submitter_type, user, args.discarded, args.confirmed, args.min_score, args.max_score)
     except ValueError, e:
         print "Error:", e
 

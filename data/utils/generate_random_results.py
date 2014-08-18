@@ -16,6 +16,8 @@ parser.add_argument("--clean", help="Remove all ballots for the draw first", act
 status = parser.add_mutually_exclusive_group(required=True)
 status.add_argument("-d", "--draft", help="Generate a draft draw", action="store_const", dest="status", const=m.Debate.STATUS_DRAFT)
 status.add_argument("-c", "--confirmed", help="Generate a confirmed draw", action="store_const", dest="status", const=m.Debate.STATUS_CONFIRMED)
+parser.add_argument("-m", "--min-score", type=float, help="Minimum speaker score (for substantive)", default=72)
+parser.add_argument("-M", "--max-score", type=float, help="Maximum speaker score (for substantive)", default=78)
 args = parser.parse_args()
 
 submitter_type = SUBMITTER_TYPE_MAP[args.type]
@@ -27,7 +29,7 @@ for round in args.rounds:
         m.BallotSubmission.objects.filter(debate__round__seq=round).delete()
 
     for debate in m.Round.objects.get(seq=round).get_draw():
-        bset = add_ballot_set(debate, submitter_type, user, False, args.status == m.Debate.STATUS_CONFIRMED)
+        bset = add_ballot_set(debate, submitter_type, user, False, args.status == m.Debate.STATUS_CONFIRMED, args.min_score, args.max_score)
         debate.result_status = args.status
         print debate, "won by", bset.aff_win and "affirmative" or "negative", "on", bset.motion and bset.motion.reference or "<No motion>"
         debate.save()
