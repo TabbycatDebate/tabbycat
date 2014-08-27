@@ -1133,6 +1133,9 @@ def new_ballots(request, t, debate_id):
         user          =request.user,
         ip_address    =ip_address)
 
+    if not debate.adjudicators.has_chair:
+        return HttpResponseBadRequest("Whoops! This debate doesn't have a chair, so you can't enter results for it.")
+
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
         all_ballot_sets = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
