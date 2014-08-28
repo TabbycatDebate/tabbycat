@@ -139,7 +139,6 @@ class Command(BaseCommand):
             for name, ins_name, team_name in reader:
                 try:
                     ins = m.Institution.objects.get(code=ins_name)
-                    print ins
                 except:
                     try:
                         ins = m.Institution.objects.get(name=ins_name)
@@ -188,15 +187,11 @@ class Command(BaseCommand):
             adjs_count = 0
             reader = csv.reader(open(os.path.join(data_path, 'judges.csv')))
             for line in reader:
-                ins_name, name, test_score, phone, email = line[0:5]
-                if len(line) > 5:
-                    institution_conflicts = line[5]
-                else:
-                    institution_conflicts = None
-                if len(line) > 6:
-                    team_conflicts = line[6]
-                else:
-                    team_conflicts = None
+                ins_name, name, test_score = line[0:3]
+                phone = len(line) > 3 and line[3] or None
+                email = len(line) > 4 and line[4] or None
+                institution_conflicts = len(line) > 5 and line[5] or None
+                team_conflicts = len(line) > 6 and line[6] or None
 
                 try:
                     test_score = float(test_score)
@@ -279,10 +274,38 @@ class Command(BaseCommand):
                         round = m.Round.objects.get(seq=int(r))
                     seq = int(seq)
                     m.Motion(round=round, seq=seq, reference=reference, text=text).save()
-                    print text
+                    self.stdout.write(text)
                     motions_count += 1
 
-            self.stdout.write('*** Created ' + str(motions_count) + ' motions')
+                self.stdout.write('*** Created ' + str(motions_count) + ' motions')
+
+            # Sides
+            if os.path.isfile(os.path.join(data_path, 'sides.csv')):
+                sides_count = 0
+                reader = csv.reader(open(os.path.join(data_path, 'sides.csv')))
+                for line in reader:
+                    ins_name = line[0]
+                    team_name = line[1]
+                    ins_name = ins_name.strip()
+                    try:
+                        ins = m.Institution.objects.get(name=ins_name, tournament=t)
+                    except m.Institution.DoesNotExist:
+                        ins = m.Institution.objects.get(code=ins_name, tournament=t)
+                    team = m.Team.objects.get(institution=ins, reference=team_name)
+                    for seq, side in enumerate(line[2:], start=1):
+                        round = m.Round.objects.get(seq=seq)
+                        if side.lower() in ["a", "aff"]:
+                            pos = m.TeamPositionAllocation.POSITION_AFFIRMATIVE
+                        elif side.lower() in ["n", "neg"]:
+                            pos = m.TeamPositionAllocation.POSITION_NEGATIVE
+                        else:
+                            self.stdout.write("Skipping round {0} allocation for team {1}, invalid side: {2}".format(seq, team.short_name, side))
+                        m.TeamPositionAllocation(round=round, team=team, position=pos).save()
+                        sides_count += 1
+                    self.stdout.write(team.short_name)
+
+                self.stdout.write('*** Created ' + str(sides_count) + ' side allocations')
+
 
             self.stdout.write('*** Successfully imported all data')
 
