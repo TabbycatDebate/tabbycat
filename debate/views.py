@@ -845,8 +845,10 @@ def side_allocations(request, t):
 @round_view
 def create_adj_allocation(request, round):
 
+    if round.draw_status == round.STATUS_RELEASED:
+        return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocation.")
     if round.draw_status != round.STATUS_CONFIRMED:
-        return HttpResponseBadRequest("Draw is not confirmed")
+        return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocation.")
 
     from debate.adjudicator.hungarian import HungarianAllocator
     round.allocate_adjudicators(HungarianAllocator)

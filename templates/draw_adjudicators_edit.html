@@ -425,7 +425,8 @@
                     btn.button('reset')
                 },
                 error: function(xhr, error, ex) {
-                    $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Auto-allocation failed!</div>');
+                    $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Auto-allocation failed! '
+                        + xhr.responseText + ' (' + xhr.status + ')</div>');
                     $(this).button('reset');
                     btn.button('reset')
                 }
