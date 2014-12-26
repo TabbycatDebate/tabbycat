@@ -10,7 +10,6 @@ class ConfigurationSetting(object):
 
     def __init__(self, key, type="int", desc="", help="", default=None, **kwargs):
 
-
         self.key = key
         self.desc = desc
         self.help = help
@@ -43,6 +42,7 @@ class ConfigurationGroup(object):
     pass
 
 class Configuration(object):
+    """Represents the entire configurtion for a tournament."""
 
     settings = dict()
     groups = dict()
