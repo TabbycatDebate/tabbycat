@@ -1500,8 +1500,9 @@ def adj_feedback(request, t):
                     # For each unique ballot id, total its scores
                     single_round = adjs_scores.filter(ballot_submission = ballot_id)
                     scores = [s.score for s in single_round]
-                    teamA = sum(scores[0:4])
-                    teamB = sum(scores[4:8])
+                    slice_end = len(scores)
+                    teamA = sum(scores[:len(A)/2])
+                    teamB = sum(scores[en(A)/2:])
                     ballot_margins.append(max(teamA, teamB) - min(teamA, teamB))
 
                 adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
