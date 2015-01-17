@@ -1470,12 +1470,47 @@ def adj_scores(request, t):
 @login_required
 @tournament_view
 def adj_feedback(request, t):
+
+    adjudicators = Adjudicator.objects.all()
+
     if not request.user.is_superuser:
         template = 'monkey/adjudicator_feedback.html'
     else:
         template = 'adjudicator_feedback.html'
 
-    adjudicators = Adjudicator.objects.all()
+        from debate.models import SpeakerScoreByAdj
+        all_adjs_rooms = DebateAdjudicator.objects
+        all_adjs_scores = SpeakerScoreByAdj.objects
+        for adj in adjudicators:
+            adjs_rooms  = all_adjs_rooms.filter(adjudicator = adj)
+            adj.debates = len(adjs_rooms)
+
+            adjs_scores = all_adjs_scores.filter(debate_adjudicator = adjs_rooms)
+            if len(adjs_scores) > 0:
+                adj.avg_score = sum(s.score for s in adjs_scores) / len(adjs_scores)
+
+                ballot_ids = []
+                ballot_margins = []
+                for score in adjs_scores:
+                    ballot_ids.append(score.ballot_submission)
+
+                ballot_ids = sorted(set([b.id for b in ballot_ids])) # Deduplication of ballot IDS
+
+                for ballot_id in ballot_ids:
+                    # For each unique ballot id, total its scores
+                    single_round = adjs_scores.filter(ballot_submission = ballot_id)
+                    scores = [s.score for s in single_round]
+                    teamA = sum(scores[0:4])
+                    teamB = sum(scores[4:8])
+                    ballot_margins.append(max(teamA, teamB) - min(teamA, teamB))
+
+                adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
+
+            else:
+                adj.avg_score = 0
+                adj.avg_margin = 0
+
+
     return r2r(request, template, dict(adjudicators=adjudicators))
 
 
