@@ -1680,6 +1680,7 @@ class Motion(models.Model):
     seq = models.IntegerField(help_text="The order in which motions display")
     text = models.CharField(max_length=500, help_text="The motion itself")
     reference = models.CharField(max_length=100, help_text="Shortcode for the motion")
+    flagged = models.BooleanField(default=False, help_text="WADL: Allows for particular motions to be flagged as contentious")
     round = models.ForeignKey(Round)
     objects = MotionManager()
 

@@ -57,6 +57,8 @@ SETTINGS = OrderedDict([
     ('tab_released',                (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament',                 False)),
     ('motion_tab_released',         (_bool, 'Displays the motions tab PUBLICLY. For AFTER the tournament',         False)),
     ('ballots_released',            (_bool, 'Displays ballots PUBLICLY. For AFTER the tournament',                 False)),
+    # WADL-Specific
+    ('enable_flagged_motions',      (_bool, 'WADL: Allow particular motions to be flagged as contentious',         False)),
 ])
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
