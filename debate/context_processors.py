@@ -26,7 +26,8 @@ def debate_context(request):
             'tab_released'            : request.tournament.config.get('tab_released'),
             'motion_tab_released'     : request.tournament.config.get('motion_tab_released'),
             'side_allocations_enabled': request.tournament.config.get('draw_side_allocations') == "preallocated",
-            'enable_flagged_motions'  : request.tournament.config.get('enable_flagged_motions')
+            'enable_flagged_motions'  : request.tournament.config.get('enable_flagged_motions'),
+            'enable_adj_notes'        : request.tournament.config.get('enable_adj_notes')
 
         }
         if hasattr(request, 'round'):

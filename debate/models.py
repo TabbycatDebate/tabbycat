@@ -550,6 +550,7 @@ class Person(models.Model):
     phone = models.CharField(max_length=40, blank=True, null=True)
 
     checkin_message = models.TextField(blank=True)
+    notes = models.TextField(blank=True)
 
     @property
     def has_contact(self):
