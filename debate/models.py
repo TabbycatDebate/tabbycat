@@ -17,8 +17,9 @@ from collections import OrderedDict
 class ScoreField(models.FloatField):
     pass
 
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules([], ["^debate\.models\.ScoreField"])
+#Commented out - potential bug source for testing if core migrations doesn't account for this
+#from south.modelsinspector import add_introspection_rules
+#add_introspection_rules([], ["^debate\.models\.ScoreField"])
 
 
 class Tournament(models.Model):
