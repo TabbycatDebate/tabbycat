@@ -59,6 +59,7 @@ SETTINGS = OrderedDict([
     ('ballots_released',            (_bool, 'Displays ballots PUBLICLY. For AFTER the tournament',                 False)),
     # WADL-Specific
     ('enable_flagged_motions',      (_bool, 'WADL: Allow particular motions to be flagged as contentious',         False)),
+    ('enable_adj_notes',            (_bool, 'WADL: Enables a general-purpose notes field for adjudicators',        False)),
 ])
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))

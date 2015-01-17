@@ -973,6 +973,35 @@ def set_adj_test_score(request, t):
 
     return redirect_tournament('adj_feedback', t)
 
+
+@admin_required
+@expect_post
+@tournament_view
+def set_adj_note(request, t):
+
+    try:
+        adj_id = str(request.POST["adj_test_id"])
+    except ValueError:
+        return HttpResponseBadRequest("Note value is not legit")
+
+    try:
+        adjudicator = Adjudicator.objects.get(id=adj_id)
+    except (Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
+        return HttpResponseBadRequest("Adjudicator probably doesn't exist")
+
+    # CONTINUE HERE CONTINUE HERE WORK IN PROGRESS
+    note_text = request.POST["note"]
+    try:
+        note = str(note_text)
+    except ValueError, e:
+        print e
+        return redirect_tournament('adj_feedback', t)
+
+    adjudicator.notes = note
+    adjudicator.save()
+
+    return redirect_tournament('adj_feedback', t)
+
 @login_required
 @round_view
 def results(request, round):
