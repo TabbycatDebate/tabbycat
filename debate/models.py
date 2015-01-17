@@ -694,9 +694,9 @@ class AdjudicatorInstitutionConflict(models.Model):
 class RoundManager(models.Manager):
     use_for_related_Fields = True
 
-    def get_query_set(self):
+    def get_queryset(self):
         return super(RoundManager,
-                     self).get_query_set().select_related('tournament').order_by('seq')
+                     self).get_queryset().select_related('tournament').order_by('seq')
 
 
 class Round(models.Model):
@@ -1080,8 +1080,8 @@ class ActiveAdjudicator(models.Model):
 class DebateManager(models.Manager):
     use_for_related_fields = True
 
-    def get_query_set(self):
-        return super(DebateManager, self).get_query_set().select_related(
+    def get_queryset(self):
+        return super(DebateManager, self).get_queryset().select_related(
         'round', 'venue')
 
 
@@ -1273,8 +1273,8 @@ class Debate(models.Model):
 
 class SRManager(models.Manager):
     use_for_related_fields = True
-    def get_query_set(self):
-        return super(SRManager, self).get_query_set().select_related('debate', 'team', 'position')
+    def get_queryset(self):
+        return super(SRManager, self).get_queryset().select_related('debate', 'team', 'position')
 
 
 class DebateTeam(models.Model):
@@ -1614,9 +1614,9 @@ class TeamScore(models.Model):
 class SpeakerScoreManager(models.Manager):
     use_for_related_fields = True
 
-    def get_query_set(self):
+    def get_queryset(self):
         return super(SpeakerScoreManager,
-                     self).get_query_set().select_related('speaker')
+                     self).get_queryset().select_related('speaker')
 
 
 class SpeakerScore(models.Model):
