@@ -1677,9 +1677,9 @@ class MotionManager(models.Manager):
 class Motion(models.Model):
     """Represents a single motion (not a set of motions)."""
 
-    seq = models.IntegerField()
-    text = models.CharField(max_length=500)
-    reference = models.CharField(max_length=100)
+    seq = models.IntegerField(help_text="The order in which motions display")
+    text = models.CharField(max_length=500, help_text="The motion itself")
+    reference = models.CharField(max_length=100, help_text="Shortcode for the motion")
     round = models.ForeignKey(Round)
     objects = MotionManager()
 
