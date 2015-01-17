@@ -18,7 +18,14 @@
         <h3 class="lead">{{ round.name }}</h3>
         <ul class="list-group">
         {% for motion in round.motions %}
-            <li class="list-group-item">{{ motion.text }}</li>
+            <li class="list-group-item">
+                {% if enable_flagged_motions %}
+                    {% if motion.flagged %}
+                        <span class="badge">Contentious</span>
+                    {% endif %}
+                {% endif %}
+                {{ motion.text }}
+            </li>
         {% endfor %}
         {% empty %}
             <li class="list-group-item">There haven't been any motions released yet <img src="{% static 'emoji/img/unamused.png' %}" width="24" height="24" /></li>

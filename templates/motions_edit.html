@@ -1,5 +1,4 @@
 {% extends "draw_rbase.html" %}
-
 {% load add_field_css %}
 {% load debate_tags %}
 
@@ -28,68 +27,81 @@
 {% block content %}
 
 <form method="post" action="" class="form-horizontal">
-    {{ formset.management_form }}
 
-        {% for form in formset %}
+    <div class="panel panel-default">
 
-            {% if form.errors %}
-            <div class="error">
-                {{ form.errors }}
-            </div>
-            {% endif %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
-                    {{ form.reference.label }}
-                </label>
-                <div class="col-sm-6">
-                    {{form.reference|addcss:"form-control"}}
+        <div class="panel-heading">Motion Options</div>
+        <ul class="list-group">
+
+            {{ formset.management_form }}
+
+            {% for form in formset %}
+            <li class="list-group-item">
+
+                {% if form.errors %}
+                <div class="error">
+                    {{ form.errors }}
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
-                    {{ form.text.label }}
-                </label>
-                <div class="col-sm-6">
-                    {{form.text|addcss:"form-control"}}
+                {% endif %}
+                <div class="form-group">
+                    <label for="{{ form.text.id_for_label }}" class="col-sm-1 control-label" {% if form.text.help_text %}data-toggle="tooltip" title="{{ form.text.help_text }}"{% endif %}>
+                        {{ form.text.label }}
+                    </label>
+                    <div class="col-sm-6">
+                        {{form.text|addcss:"form-control help-anchor"}}
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
-                    {{ form.seq.label }}
-                </label>
-                <div class="col-sm-3">
-                    {{form.seq|addcss:"form-control"}}{{ form.id }}
+                <div class="form-group">
+                    <label for="{{ form.reference.id_for_label }}" class="col-sm-1 control-label" {% if form.reference.help_text %}data-toggle="tooltip" title="{{ form.reference.help_text }}"{% endif %}>
+                        {{ form.reference.label }}
+                    </label>
+                    <div class="col-sm-6">
+                        {{form.reference|addcss:"form-control"}}
+                    </div>
                 </div>
-                <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
-                    {{ form.DELETE.label }}
-                </label>
-                <div class="col-sm-2">
-                    {{form.DELETE|addcss:"form-control"}}{{ form.id }}
+                <div class="form-group">
+                    <label for="{{ form.seq.id_for_label }}" class="col-sm-1 control-label" {% if form.seq.help_text %}data-toggle="tooltip" title="{{ form.seq.help_text }}"{% endif %}>
+                        {{ form.seq.label }}
+                    </label>
+                    <div class="col-sm-3">
+                        {{form.seq|addcss:"form-control"}}{{ form.id }}
+                    </div>
+                    <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
+                        {{ form.DELETE.label }}
+                    </label>
+                    <div class="col-sm-2">
+                        {{form.DELETE|addcss:"form-control"}}{{ form.id }}
+                    </div>
                 </div>
-            </div>
 
-            {% if not forloop.last %}
-            <div class="form-group">
-                <div class="col-sm-7">
-                    <hr style="border: 1px solid black"/>
+                {% if enable_flagged_motions %}
+                <div class="form-group">
+                    <label for="{{ form.flagged.id_for_label }}" class="col-sm-1 control-label" {% if form.flagged.help_text %}data-toggle="tooltip" title="{{ form.flagged.help_text }}"{% endif %}>
+                        {{ form.flagged.label }}
+                    </label>
+                    <div class="col-sm-6">
+                        {{form.flagged|addcss:"form-control help-anchor"}}
+                    </div>
                 </div>
-            </div>
-            {% endif %}
+                {% endif %}
 
-        {% endfor %}
 
-        <div class="form-group">
-            <div class="col-sm-2 col-sm-offset-1">
-                <input class="btn btn-success form-control" type="submit" name="submit" value="Save" />
-            </div>
-            <div class="col-sm-2">
-                <input class="btn btn-success form-control" type="submit" name="submit_add_more" value="Save & add more" />
-            </div>
-            <div class="col-sm-2">
-                <a class="btn btn-danger form-control" href="{% round_url motions %}">Cancel</a>
-            </div>
-        </div>
+            </li>
+            {% endfor %}
 
+        </ul>
+
+    </div>
+
+    <div class="col-sm-2 col-sm-offset-1">
+        <input class="btn btn-success form-control" type="submit" name="submit" value="Save All" />
+    </div>
+    <div class="col-sm-2">
+        <input class="btn btn-success form-control" type="submit" name="submit_add_more" value="Save & Add More" />
+    </div>
+    <div class="col-sm-2">
+        <a class="btn btn-danger form-control" href="{% round_url motions %}">Cancel</a>
+    </div>
 
 </form>
 
