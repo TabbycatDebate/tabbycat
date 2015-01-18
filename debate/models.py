@@ -341,7 +341,7 @@ class Team(models.Model):
     cannot_break = models.BooleanField(default=False)
 
     # Records the list of venues a team is willing to debate in
-    venue_group_preferences = models.ManyToManyField(VenueGroup)
+    venue_group_preferences = models.ManyToManyField(VenueGroup, blank=True, verbose_name='For when a team can only debate in specific venues')
 
     TYPE_NONE = 'N'
     TYPE_ESL = 'E'
