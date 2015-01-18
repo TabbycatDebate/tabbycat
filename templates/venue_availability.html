@@ -23,7 +23,12 @@
             <td>{% if venue.group %}{{ venue.group }} {% endif %}{{ venue.name }}</td>
             <td>{{ venue.priority }}</td>
             {% if enable_venue_times %}
-            <td>{% if venue.time %}{{ venue.time|date:"D dS M h:i" }} {% endif %}</td>
+            <td>
+                {% if venue.time %}
+                <span class="hidden">{{ venue.time|date:"d m o H:i" }}</span>
+                {{ venue.time|date:"D jS M h:i" }}
+                {% endif %}
+            </td>
             {% endif %}
             <td><input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="check_{{ venue.id }}"  value="{{ venue.id }}" /></td>
         </tr>
