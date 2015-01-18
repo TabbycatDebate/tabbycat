@@ -1,9 +1,15 @@
-"""Generates randomly-generated (but simulated) standings for a given
-number of rounds and teams"""
+"""Simulates a competition with a given number of teams and institutions, up to
+a given number of rounds. Prints out the teams (identified by numbers),
+institutions (letters), number of wins, history (team numbers) and aff counts.
+
+This script does not interact with the database at all. It is used for
+generating test cases for the tests in test_draw.py. It also does not have any
+unit tests itself: it is used to generate test cases to insert into
+test_draw.py."""
 from test_one_up_one_down import TestTeam
 import os.path, sys
 if os.path.abspath("..") not in sys.path: sys.path.append(os.path.abspath(".."))
-from draw import PowerPairedDraw
+from draw import DrawGenerator
 
 import string
 import random
@@ -23,7 +29,7 @@ assert(T % 2 == 0)
 
 teams = list()
 for i in range(1,T+1):
-    team = TestTeam(i, random.choice(string.uppercase[:I]), 0, list(), 0)
+    team = TestTeam(i, random.choice(string.uppercase[:I]), 0, list(), aff_count=0)
     teams.append(team)
 
 brackets = dict()
@@ -33,7 +39,8 @@ for i in range(R):
     brackets.clear()
     for wins in wins_set:
         brackets[wins] = [t for t in teams if t.points == wins]
-    PowerPairedDraw._pullup_top(brackets)
+    ppdg = DrawGenerator("power_paired", teams)
+    ppdg._pullup_top(brackets)
 
     for wins, bracket_teams in brackets.iteritems():
         random.shuffle(bracket_teams)
