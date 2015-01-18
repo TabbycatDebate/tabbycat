@@ -32,6 +32,18 @@ All installation instructions and user guidelines are on the [wiki for this repo
 
 If you want to run a tournament with Tabby Cat but are not able to set it up, get in touch with [Philip](http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=) and he can setup a private and online copy of the software for your use.
 
+#### Directory structure
+* `data` contains import data for past tournaments and demonstration tournaments
+    * Most directories have data for a particular tournament
+    * `utils` contains Python scripts that can be useful for back-end database manipulation, _e.g._ generating random results
+* `debate` contains the source code for the app (the real stuff)
+    * `adjudicator` contains adjudicator allocation algorithms
+    * `management` contains [management scripts](https://docs.djangoproject.com/en/dev/howto/custom-management-commands/) for `manage.py`
+    * `templatetags` contains [custom template tags](https://docs.djangoproject.com/en/dev/howto/custom-template-tags/)
+    * `tests` contains [unit tests](https://docs.djangoproject.com/en/dev/topics/testing/overview/)
+* `static` contains static files
+* `templates` contains Django templates
+
 ## Licensing, development and contact
 
 We haven't released this under an open-source licence (so there is no formal general right to use this software), but if you're running a debating tournament, you're welcome to use it. It'd be nice if you could please let us know that you're doing so, and let us know how it went. [Our Facebook group](https://www.facebook.com/groups/tabbycat.debate/) is a great place to start. We're happy to help if you have any questions (contact below) or feature requests (see [above](#something-missing)), though obviously we provide no warranty and disclaim all legal liability. Pull requests are encouraged.
