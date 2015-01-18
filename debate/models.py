@@ -408,7 +408,6 @@ class Team(models.Model):
     def speakers(self):
         return self.speaker_set.all()
 
-
 class SpeakerManager(models.Manager):
     def standings(self, round=None):
         # only include scoresheets for up to this round, exclude replies
@@ -1038,15 +1037,22 @@ class Round(models.Model):
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
 
+class VenueGroup(models.Model):
+    name = models.CharField(max_length=40)
+    tournament = models.ForeignKey(Tournament)
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
-    group = models.IntegerField(null=True, blank=True)
+    group = models.ForeignKey(VenueGroup, blank=True, null=True)
     priority = models.IntegerField()
     tournament = models.ForeignKey(Tournament)
 
     def __unicode__(self):
         return u'%s (%d)' % (self.name, self.priority)
+
 
 
 class ActiveVenue(models.Model):
