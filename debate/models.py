@@ -87,6 +87,7 @@ class Venue(models.Model):
     group = models.ForeignKey(VenueGroup, blank=True, null=True)
     priority = models.IntegerField()
     tournament = models.ForeignKey(Tournament)
+    time = models.DateTimeField(blank=True, null=True)
 
     def __unicode__(self):
         return u'%s %s (%d)' % (self.group, self.name, self.priority)

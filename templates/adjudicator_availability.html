@@ -6,7 +6,41 @@
 {% block head-title %}Adjudicator Availability for {{ round.name }}{% endblock %}
 {% block page-title %}Adjudicator Availability for {{ round.name }}{% endblock %}
 
-{% block table-contents %}
+{% block extra-head %}
+{% if enable_adj_notes > 0 %}
+<script type="text/javascript" charset="utf-8">
+
+    $(document).ready( function() {
+
+        var table = $('#dataTable').dataTable({
+            'bPaginate': false,
+            "aaSorting": [[ 0, "asc" ]],
+        });
+        new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+
+        $(".view-note").each( function() {
+            $(this).click( function() {
+                var adj_row = $(this).parent().parent() // the <tr> for this adjudicator in the table
+                var adj_name = adj_row.find(".adj-name").text()
+                var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
+                var adj_note = adj_row.find(".adj-current-note").text()
+                $("#modal-adj-name").text(adj_name); // Updating header of the modal
+                $("#id_note").text(adj_note); // updating the form with the note
+                console.log(adj_name);
+                console.log(adj_note);
+            });
+        });
+
+    });
+
+</script>
+{% endif %}
+{% endblock extra-head %}
+
+{% block content %}
+
+<form id="form">
+    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0", cellspacing="0">
     <thead>
         <tr>
             <th>Adjudicator</th>
@@ -19,13 +53,16 @@
             {% endfor %}
             <th>Avg</th>
             <th>Score</th>
+            {% if enable_adj_notes > 0 %}
+                <th>Notes</th>
+            {% endif %}
             <th>Active</th>
         </tr>
     </thead>
     <tbody>
         {% for adj in adjudicators %}
-        <tr>
-            <td>{{ adj.name }}</td>
+        <tr id="adj_{{ adj.id }}">
+            <td class="adj-name">{{ adj.name }}</td>
             {% if show_institutions > 0 %}
             <td>{{ adj.institution.code }}</td>
             {% endif %}
@@ -39,9 +76,35 @@
             {% endfor %}
             <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
             <td>{{ adj.score|stringformat:".2f" }}</td>
+            {% if enable_adj_notes > 0 %}
+            <td>
+                {% if adj.notes %}
+                <a data-toggle="modal" data-target="#edit-note" class="view-note">View</a>
+                <span class="adj-current-note hidden">{{ adj.notes }}</span>
+                {% endif %}
+            </td>
+            {% endif %}
             <td><input type="checkbox" {{ adj.is_active|yesno:'checked="yes",'  }} class="adj-check" name="check_{{ adj.id }}"  value="{{ adj.id }}" /></td>
         </tr>
         {% endfor %}
     </tbody>
-{% endblock table-contents %}
+    </table>
+    <div class="status"></div>
+</form>
 
+{% if enable_adj_notes > 0 %}
+<div class="modal fade" id="edit-note" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Notes on <span id="modal-adj-name"></span></h3>
+        </div>
+        <div class="modal-body">
+            <p id="id_note"></p>
+        </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock content %}

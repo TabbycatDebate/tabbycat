@@ -64,8 +64,8 @@ class VenueGroupAdmin(admin.ModelAdmin):
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
 
 class VenueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'priority')
-    search_fields = ('name', 'group__name')
+    list_display = ('name', 'group', 'priority', 'time')
+    search_fields = ('name', 'group__name', 'time')
 admin.site.register(models.Venue, VenueAdmin)
 
 class DebateTeamInline(admin.TabularInline):
