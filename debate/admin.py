@@ -15,10 +15,17 @@ class SpeakerInline(admin.TabularInline):
 class TeamPositionAllocationInline(admin.TabularInline):
     model = models.TeamPositionAllocation
 
+class TeamLocationPreferencesInline(admin.TabularInline):
+    model = models.Team.venue_group_preferences.through
+    verbose_name = "Team Venue Group Preferences"
+    verbose_name_plural = "Team Venue Group Preferences"
+    extra = 1
+
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution',)
+    list_display = ('name', 'institution')
     search_fields = ('name','institution__name', 'institution__code',)
-    inlines = (SpeakerInline, TeamPositionAllocationInline)
+    inlines = (SpeakerInline, TeamPositionAllocationInline, TeamLocationPreferencesInline)
+    exclude = ("venue_group_preferences",)
 
 admin.site.register(models.Team, TeamAdmin)
 
@@ -51,9 +58,14 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     search_fields = ('source_adjudicator__adjudicator__name', 'source_team__team__institution__code', 'source_team__team__reference', 'adjudicator__name', 'adjudicator__institution__code',)
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
+class VenueGroupAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+admin.site.register(models.VenueGroup, VenueGroupAdmin)
+
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority')
-    search_fields = ('name',)
+    search_fields = ('name', 'group__name')
 admin.site.register(models.Venue, VenueAdmin)
 
 class DebateTeamInline(admin.TabularInline):

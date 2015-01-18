@@ -75,6 +75,21 @@ class Tournament(models.Model):
     def __unicode__(self):
         return unicode(self.slug)
 
+class VenueGroup(models.Model):
+    name = models.CharField(max_length=40)
+    tournament = models.ForeignKey(Tournament)
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+class Venue(models.Model):
+    name = models.CharField(max_length=40)
+    group = models.ForeignKey(VenueGroup, blank=True, null=True)
+    priority = models.IntegerField()
+    tournament = models.ForeignKey(Tournament)
+
+    def __unicode__(self):
+        return u'%s %s (%d)' % (self.group, self.name, self.priority)
 
 class Institution(models.Model):
     tournament = models.ForeignKey(Tournament)
@@ -325,6 +340,9 @@ class Team(models.Model):
     # swing/composite)
     cannot_break = models.BooleanField(default=False)
 
+    # Records the list of venues a team is willing to debate in
+    venue_group_preferences = models.ManyToManyField(VenueGroup, blank=True, verbose_name='For when a team can only debate in specific venues')
+
     TYPE_NONE = 'N'
     TYPE_ESL = 'E'
     TYPE_SWING = 'S'
@@ -407,7 +425,6 @@ class Team(models.Model):
     @property
     def speakers(self):
         return self.speaker_set.all()
-
 
 class SpeakerManager(models.Manager):
     def standings(self, round=None):
@@ -1039,16 +1056,6 @@ class Round(models.Model):
         return self.motions_released or not self.motion_set.exists()
 
 
-class Venue(models.Model):
-    name = models.CharField(max_length=40)
-    group = models.IntegerField(null=True, blank=True)
-    priority = models.IntegerField()
-    tournament = models.ForeignKey(Tournament)
-
-    def __unicode__(self):
-        return u'%s (%d)' % (self.name, self.priority)
-
-
 class ActiveVenue(models.Model):
     venue = models.ForeignKey(Venue)
     round = models.ForeignKey(Round)
@@ -1231,6 +1238,7 @@ class Debate(models.Model):
     @property
     def venue_splitname(self):
         # Formatting venue names so they can split over multiple lines
+        # TODO: integrate venue group name into here
         match = re.match(r"([a-z]+)([0-9]+)", str(self.venue.name), re.I)
         if match:
             items = match.groups()
@@ -1242,6 +1250,7 @@ class Debate(models.Model):
             alloc = self.venue.name
 
         return alloc
+
 
     @property
     def result(self):

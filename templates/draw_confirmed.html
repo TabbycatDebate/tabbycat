@@ -109,7 +109,7 @@
     {% for debate in draw %}
     <tr class="{% if debate.all_conflicts or not debate.adjudicators.valid %}danger{% endif %}">
         <td>{{ debate.bracket }}</td>
-        <td>{{ debate.venue.name }}</td>
+        <td>{% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}</td>
         <td title="{% aff_count debate.aff_team round.prev %}">
             <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
                 {{ debate.aff_team.short_name }}

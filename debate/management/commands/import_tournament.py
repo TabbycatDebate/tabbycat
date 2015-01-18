@@ -74,16 +74,20 @@ class Command(BaseCommand):
                 self.stdout.write('venues.csv file is missing or damaged')
 
             venue_count = 0
+            venue_group_count = 0
             for line in reader:
                 if len(line) == 3:
                     room, priority, group = line
                     try:
-                        group = int(group)
+                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                               name=group, tournament=t)
+                        if created:
+                            venue_group_count = venue_group_count + 1
                     except ValueError:
-                        group = None
+                        venue_group = None
                 elif len(line) == 2:
                     room, priority = line
-                    group = None
+                    venue_group = None
                 else:
                     continue
 
@@ -94,7 +98,7 @@ class Command(BaseCommand):
 
                 m.Venue(
                     tournament = t,
-                    group = group,
+                    group = venue_group,
                     name = room,
                     priority = priority
                 ).save()
@@ -102,6 +106,7 @@ class Command(BaseCommand):
 
                 venue_count = venue_count + 1
 
+            self.stdout.write('*** Created ' + str(venue_group_count) + ' venue groups')
             self.stdout.write('*** Created ' + str(venue_count) + ' venues')
 
             # Institutions
