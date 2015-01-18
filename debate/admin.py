@@ -15,10 +15,15 @@ class SpeakerInline(admin.TabularInline):
 class TeamPositionAllocationInline(admin.TabularInline):
     model = models.TeamPositionAllocation
 
+# class TeamLocationPreferencesInline(admin.TabularInline):
+#     model = models.VenueGroup.through
+#     extra = 1
+
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution',)
     search_fields = ('name','institution__name', 'institution__code',)
     inlines = (SpeakerInline, TeamPositionAllocationInline)
+    exclude = ("venue_group_preferences",)
 
 admin.site.register(models.Team, TeamAdmin)
 

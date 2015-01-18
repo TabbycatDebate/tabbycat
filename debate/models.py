@@ -75,6 +75,21 @@ class Tournament(models.Model):
     def __unicode__(self):
         return unicode(self.slug)
 
+class VenueGroup(models.Model):
+    name = models.CharField(max_length=40)
+    tournament = models.ForeignKey(Tournament)
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+class Venue(models.Model):
+    name = models.CharField(max_length=40)
+    group = models.ForeignKey(VenueGroup, blank=True, null=True)
+    priority = models.IntegerField()
+    tournament = models.ForeignKey(Tournament)
+
+    def __unicode__(self):
+        return u'%s %s (%d)' % (self.group, self.name, self.priority)
 
 class Institution(models.Model):
     tournament = models.ForeignKey(Tournament)
@@ -324,6 +339,9 @@ class Team(models.Model):
     # set to True if a team is ineligible to break (other than being
     # swing/composite)
     cannot_break = models.BooleanField(default=False)
+
+    # Records the list of venues a team is willing to debate in
+    venue_group_preferences = models.ManyToManyField(VenueGroup)
 
     TYPE_NONE = 'N'
     TYPE_ESL = 'E'
@@ -1036,23 +1054,6 @@ class Round(models.Model):
     @property
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
-
-class VenueGroup(models.Model):
-    name = models.CharField(max_length=40)
-    tournament = models.ForeignKey(Tournament)
-
-    def __unicode__(self):
-        return u'%s' % (self.name)
-
-class Venue(models.Model):
-    name = models.CharField(max_length=40)
-    group = models.ForeignKey(VenueGroup, blank=True, null=True)
-    priority = models.IntegerField()
-    tournament = models.ForeignKey(Tournament)
-
-    def __unicode__(self):
-        return u'%s %s (%d)' % (self.group, self.name, self.priority)
-
 
 
 class ActiveVenue(models.Model):
