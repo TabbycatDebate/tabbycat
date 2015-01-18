@@ -65,7 +65,7 @@
                 </span>
             </td>
             <td class="venue-name">
-                {{ debate.venue.name }}
+                {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}
             </td>
             {% if show_emoji > 0 %}
                 <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
@@ -108,7 +108,7 @@
                 </span>
             </td>
             <td class="venue-name">
-                {{ debate.venue.name }}
+                {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}
             </td>
             <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
             <td class="team-name">

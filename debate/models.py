@@ -1051,7 +1051,7 @@ class Venue(models.Model):
     tournament = models.ForeignKey(Tournament)
 
     def __unicode__(self):
-        return u'%s (%d)' % (self.name, self.priority)
+        return u'%s %s (%d)' % (self.group, self.name, self.priority)
 
 
 
@@ -1237,6 +1237,7 @@ class Debate(models.Model):
     @property
     def venue_splitname(self):
         # Formatting venue names so they can split over multiple lines
+        # TODO: integrate venue group name into here
         match = re.match(r"([a-z]+)([0-9]+)", str(self.venue.name), re.I)
         if match:
             items = match.groups()
@@ -1248,6 +1249,7 @@ class Debate(models.Model):
             alloc = self.venue.name
 
         return alloc
+
 
     @property
     def result(self):

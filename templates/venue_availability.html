@@ -17,7 +17,7 @@
     <tbody>
         {% for venue in venues %}
         <tr>
-            <td>{{ venue.name }}</td>
+            <td>{% if venue.group %}{{ venue.group }} {% endif %}{{ venue.name }}</td>
             <td>{{ venue.priority }}</td>
             <td><input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="check_{{ venue.id }}"  value="{{ venue.id }}" /></td>
         </tr>
