@@ -19,6 +19,8 @@ class Command(BaseCommand):
         except:
             rounds_to_auto_make = 0
 
+        total_errors = 0
+
         # Where to find the data
         base_path = os.path.join(settings.PROJECT_PATH, 'data')
         data_path = os.path.join(base_path, folder)
@@ -40,6 +42,7 @@ class Command(BaseCommand):
                 t = m.Tournament(slug=folder)
                 t.save()
             except Exception as inst:
+                total_errors += 1
                 print inst
 
             self.stdout.write('*** Created the tournament: ' + folder)
@@ -68,9 +71,8 @@ class Command(BaseCommand):
                         ).save()
                         rounds_count += 1
 
-                    t.current_round = m.Round.objects.get(tournament=t, seq=1)
-                    t.save()
                 except Exception as inst:
+                    total_errors += 1
                     print inst
             else:
                 # If importing from the CSV
@@ -81,24 +83,38 @@ class Command(BaseCommand):
                     self.stdout.write('rounds.csv file is missing or damaged')
 
                 for line in reader:
-                    seq,name,abbv = line[0],line[1], line[2]
+                    seq = line[0]
+                    name = line[1]
+                    abbv = len(line) > 2 and line[2] or "R%d" % seq
                     draw_type = len(line) > 3 and line[3] or "R"
                     is_silent = len(line) > 4 and line[4] or 0
                     feedback_weight = len(line) > 5 and line[5] or 0.7
 
-                    i = int(seq)
-                    m.Round(
-                        tournament = t,
-                        seq = seq,
-                        name = name,
-                        abbreviation = abbv,
-                        draw_type = draw_type,
-                        feedback_weight = min((i-1)*0.1, 0.5),
-                        silent = False
-                    ).save()
-                    rounds_count += 1
+                    if is_silent > 0:
+                        is_silent = True
+                    else:
+                        is_silent = False
+
+                    try:
+                        m.Round(
+                            tournament = t,
+                            seq = seq,
+                            name = name,
+                            abbreviation = abbv,
+                            draw_type = draw_type,
+                            feedback_weight = min((int(seq)-1)*0.1, 0.5),
+                            silent = is_silent
+                        ).save()
+                        rounds_count += 1
+                    except Exception as inst:
+                        total_errors += 1
+                        self.stdout.write('Couldnt make round ' + name)
+                        print inst
 
 
+
+            t.current_round = m.Round.objects.get(tournament=t, seq=1)
+            t.save()
             self.stdout.write('*** Created ' + str(rounds_count) + ' rounds')
 
             # Venues
@@ -108,6 +124,7 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('venues.csv file is missing or damaged')
+                total_errors += 1
 
             venue_count = 0
             venue_group_count = 0
@@ -117,24 +134,32 @@ class Command(BaseCommand):
                 group = len(line) > 2 and line[2] or None
                 time = len(line) > 3 and str(line[3]) or None
 
+                if group:
+                    try:
+                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                               name=group, tournament=t)
+                        if created:
+                            venue_group_count = venue_group_count + 1
+                    except ValueError:
+                        total_errors += 1
+                        self.stdout.write('Couldnt venue group ' + group)
+                        venue_group = None
+
                 try:
-                    venue_group, created = m.VenueGroup.objects.get_or_create(
-                           name=group, tournament=t)
-                    if created:
-                        venue_group_count = venue_group_count + 1
-                except ValueError:
-                    venue_group = None
+                    m.Venue(
+                        tournament = t,
+                        group = venue_group,
+                        name = room_name,
+                        priority = priority,
+                        time = time
+                    ).save()
+                    print room_name
+                    venue_count = venue_count + 1
+                except Exception as inst:
+                    total_errors += 1
+                    self.stdout.write('Couldnt make venue ' + room_name)
+                    print inst
 
-                m.Venue(
-                    tournament = t,
-                    group = venue_group,
-                    name = room_name,
-                    priority = priority,
-                    time = time
-                ).save()
-                print room_name
-
-                venue_count = venue_count + 1
 
             self.stdout.write('*** Created ' + str(venue_group_count) + ' venue groups')
             self.stdout.write('*** Created ' + str(venue_count) + ' venues')
@@ -146,6 +171,7 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('institutions.csv file is missing or damaged')
+                total_errors += 1
 
             institutions_count = 0
             for line in reader:
@@ -153,10 +179,20 @@ class Command(BaseCommand):
                 code = str(line[1])
                 abbv = len(line) > 2 and line[2] or ""
 
-                i = m.Institution(code=code, name=name, abbreviation=abbv, tournament=t)
-                i.save()
-                institutions_count = institutions_count + 1
-                print name
+                try:
+                    i = m.Institution(
+                        code=code,
+                        name=name,
+                        abbreviation=abbv,
+                        tournament=t
+                    )
+                    i.save()
+                    institutions_count = institutions_count + 1
+                    print name
+                except Exception as inst:
+                    total_errors += 1
+                    self.stdout.write('Couldnt make institution ' + name)
+                    print inst
 
             self.stdout.write('*** Created ' + str(institutions_count) + ' institutions')
 
@@ -167,6 +203,7 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('speakers.csv file is missing or damaged')
+                total_errors += 1
 
             speakers_count = 0
             teams_count = 0
@@ -178,6 +215,7 @@ class Command(BaseCommand):
                         ins = m.Institution.objects.get(name=ins_name)
                     except Exception as inst:
                         self.stdout.write("error with " + ins_name)
+                        total_errors += 1
                         print type(inst)     # the exception instance
                         print inst           # __str__ allows args to printed directly
 
@@ -188,6 +226,7 @@ class Command(BaseCommand):
                     if created:
                         teams_count = teams_count + 1
                 except Exception as inst:
+                    total_errors += 1
                     self.stdout.write("error with " + str(team_name))
                     print type(inst)     # the exception instance
                     print inst           # __str__ allows args to printed directly
@@ -203,8 +242,10 @@ class Command(BaseCommand):
                         team = speakers_team
                     ).save()
                     speakers_count = speakers_count + 1
-                except:
+                except Exception as inst:
                     self.stdout.write('Couldnt make the speaker ' + name)
+                    total_errors += 1
+                    print inst
 
                 print team, "-", name
 
@@ -218,6 +259,7 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('institutions.csv file is missing or damaged')
+                total_errors += 1
 
             adjs_count = 0
             reader = csv.reader(open(os.path.join(data_path, 'judges.csv')))
@@ -235,24 +277,28 @@ class Command(BaseCommand):
                 except ValueError:
                     self.stdout.write('Could not interpret adj score for {0}: {1}'.format(name, test_score))
                     test_score = 0
+                    total_errors += 1
 
                 try:
                     phone = str(phone)
                 except ValueError:
                     self.stdout.write('Could not interpret adj phone for {0}: {1}'.format(name, phone))
                     phone = None
+                    total_errors += 1
 
                 try:
                     email = str(email)
                 except ValueError:
                     self.stdout.write('Could not interpret adj email for {0}: {1}'.format(name, email))
                     email = None
+                    total_errors += 1
 
                 try:
                     notes = str(notes)
                 except ValueError:
                     self.stdout.write('Could not interpret adj note for {0}: {1}'.format(name, notes))
                     notes = None
+                    total_errors += 1
 
                 # People can either input instutions as name or short name
                 ins_name = ins_name.strip()
@@ -299,6 +345,7 @@ class Command(BaseCommand):
                             team_conflict = m.Team.objects.get(institution=team_conflict_ins, reference=team_conflict_ref)
                         except m.Team.DoesNotExist:
                             self.stdout.write('No team exists to conflict with {0}: {1}'.format(name, team_conflict_name))
+                            total_errors += 1
                         m.AdjudicatorConflict(adjudicator=adj, team=team_conflict).save()
                         print "    conflicts with", team_conflict.short_name
 
@@ -351,8 +398,11 @@ class Command(BaseCommand):
 
                 self.stdout.write('*** Created ' + str(sides_count) + ' side allocations')
 
+            if total_errors == 0:
+                self.stdout.write('*** Successfully imported all data')
+            else:
+                self.stdout.write('*** Successfully all data but with %d ERRORS' % total_errors)
 
-            self.stdout.write('*** Successfully imported all data')
 
         except Exception:
             import traceback
