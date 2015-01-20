@@ -113,6 +113,9 @@ CACHES = get_cache()
 # ==================
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
 
 # Heroku
 if 'HEROKU' in os.environ:
