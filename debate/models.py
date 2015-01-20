@@ -881,7 +881,7 @@ class Round(models.Model):
                         team.speaker_score = annotated_team.speaker_score
                         team.subrank = annotated_team.subrank
                         team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
-                        team.draw_strength = annotated_team.draw_strength
+                        team.draw_strength = getattr(annotated_team, 'draw_strength', None) # only exists in NZ standings rules
         return draw
 
     def make_debates(self, pairings):
