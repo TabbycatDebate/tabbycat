@@ -82,12 +82,16 @@ class Command(BaseCommand):
                 except:
                     self.stdout.write('rounds.csv file is missing or damaged')
 
+                i = 1
                 for line in reader:
                     seq = line[0]
+                    if not seq:
+                        seq = i
+
                     name = line[1]
                     abbv = len(line) > 2 and line[2] or "R%d" % seq
                     draw_type = len(line) > 3 and line[3] or "R"
-                    is_silent = len(line) > 4 and line[4] or 0
+                    is_silent = len(line) > 4 and int(line[4]) or 0
                     feedback_weight = len(line) > 5 and line[5] or 0.7
 
                     if is_silent > 0:
@@ -106,12 +110,12 @@ class Command(BaseCommand):
                             silent = is_silent
                         ).save()
                         rounds_count += 1
+                        i += 1
+                        print name
                     except Exception as inst:
                         total_errors += 1
                         self.stdout.write('Couldnt make round ' + name)
                         print inst
-
-
 
             t.current_round = m.Round.objects.get(tournament=t, seq=1)
             t.save()
@@ -139,6 +143,7 @@ class Command(BaseCommand):
                         venue_group, created = m.VenueGroup.objects.get_or_create(
                                name=group, tournament=t)
                         if created:
+                            print group
                             venue_group_count = venue_group_count + 1
                     except ValueError:
                         total_errors += 1
