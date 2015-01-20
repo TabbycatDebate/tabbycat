@@ -9,6 +9,9 @@
 {% block table-contents %}
     <thead>
         <tr>
+            {% if enable_venue_groups %}
+            <th>Group</th>
+            {% endif %}
             <th>Name</th>
             <th>Priority</th>
             {% if enable_venue_times %}
@@ -20,7 +23,12 @@
     <tbody>
         {% for venue in venues %}
         <tr>
-            <td>{% if venue.group %}{{ venue.group }} {% endif %}{{ venue.name }}</td>
+            {% if enable_venue_groups %}
+            <td>
+                {% if venue.group %}{{ venue.group }} {% endif %}
+            </td>
+            {% endif %}
+            <td>{{ venue.name }}</td>
             <td>{{ venue.priority }}</td>
             {% if enable_venue_times %}
             <td>

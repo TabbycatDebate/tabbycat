@@ -28,7 +28,8 @@ def debate_context(request):
             'side_allocations_enabled': request.tournament.config.get('draw_side_allocations') == "preallocated",
             'enable_flagged_motions'  : request.tournament.config.get('enable_flagged_motions'),
             'enable_adj_notes'        : request.tournament.config.get('enable_adj_notes'),
-            'enable_venue_times'      : request.tournament.config.get('enable_venue_times')
+            'enable_venue_times'      : request.tournament.config.get('enable_venue_times'),
+            'enable_venue_groups'     : request.tournament.config.get('enable_venue_groups')
 
         }
         if hasattr(request, 'round'):
