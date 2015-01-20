@@ -13,7 +13,7 @@ django-emoji==1.2.0
 django-import-export==0.2.2
 django-ipware==0.0.8
 django-pylibmc-sasl==0.2.4
-django-suit==0.2.8
+django-suit==0.2.12
 django-toolbelt==0.0.1
 ecdsa==0.11
 ## FIXME: could not find svn URL in dependency_links for this package:

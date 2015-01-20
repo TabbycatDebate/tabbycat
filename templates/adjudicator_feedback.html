@@ -2,7 +2,6 @@
 {% load debate_tags %}
 
 {% block extra-head %}
-
 <script type="text/javascript" charset="utf-8">
 
     $(document).ready( function() {
@@ -28,7 +27,7 @@
                 $("#modal-adj-name").text(adj_name); // Updating header of the modal
                 var newUrl = '{% tournament_url get_adj_feedback %}?id=' + adj_id
                 adjTable.api().ajax.url(newUrl).load();
-                //adjTable.api().ajax.url(newUrl).load(highlightScores());
+
             });
         });
 
@@ -69,7 +68,6 @@
     });
 
 </script>
-
 {% endblock extra-head %}
 
 {% block head-title %}Adjudicator Feedback{% endblock %}

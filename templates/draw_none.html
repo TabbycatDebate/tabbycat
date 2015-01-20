@@ -32,6 +32,12 @@ No draw currently exists
         The draw cannot be generated until there are more venues than team matchups. <a href="{% round_url venue_availability current_round %}">Check in some more venues</a>.
     </div>
     {% endif %}
+    {% if active_teams.count|divisibleby:2 %}
+    {% else %}
+    <div class="alert alert-danger">
+        There is an odd number of teams, which will probably the draw generator. Reduce the number of checked in teams by one</a>.
+    </div>
+    {% endif %}
     <div class="btn-group">
         {% if active_venues.count < rooms or active_teams.count == 0%}
             <a class="btn btn-success"  disabled="disabled" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
