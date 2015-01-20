@@ -1,4 +1,4 @@
-institution,name,rating,cellphone,email
+institution,name,rating,cellphone,email,notes,institution_conflicts,team_conflicts
 Adjudication Core,Muje,5,+614444444,test@gmail.com
 Young Hacks,Wion,5,+614444444,test@gmail.com
 Social Justice League,Hall,1,+614444444,test@gmail.com

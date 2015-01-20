@@ -1,16 +1,12 @@
-institution,name,rating,cellphone,email
-Adjudication Core,Muje,5,+614444444,test@gmail.com
-Young Hacks,Wion,5,+614444444,test@gmail.com
-Social Justice League,Hall,1,+614444444,test@gmail.com
-University of University,Lest,2,+614444444,test@gmail.com
-Social Justice League,Heet,5,+614444444,test@gmail.com
-University of University,Moet,4,+614444444,test@gmail.com
-Business School of Business,Swst,3,+614444444,test@gmail.com
-Old Hacks,Beon,1,+614444444,test@gmail.com
-Business School of Business,Shoy,3,+614444444,test@gmail.com
-University of University,More,5,+614444444,test@gmail.com
-University of Foreignland,Tele,5,+614444444,test@gmail.com
-Moderate Cabal,Biop,2,+614444444,test@gmail.com
-Moderate Cabal,Chol,3,+614444444,test@gmail.com
-University of Foreignland,Coel,1,+614444444,
-Old Hacks,Besk,4,,
+institution,name,rating,cellphone,email,notes,institution_conflicts,team_conflicts
+WADL,Chris Burch, 3, 3333333, chris.burch@wadl.org, available anytime anywhere
+WADL,Anish Badgeri, 3, 3333333, anish.badgeri@wadl.org, available anytime anywhere
+WADL,Chelsea Moran, 3, 3333333, chelsea.moran@wadl.org, available anytime anywhere
+WADL,Emma Boogaerdt, 3, 3333333, emma.boogaerdt@wadl.org, available anytime anywhere
+WADL,David Forster, 3, 3333333, david.forster@wadl.org, available anytime anywhere
+WADL,Ben Manifold, 3, 3333333, ben.manifold@wadl.org, available anytime anywhere
+WADL,Xavier Evans, 3, 3333333, xavier.evans@wadl.org, available anytime anywhere
+WADL,Katie McAllister, 3, 3333333, katie.mcallister@wadl.org, available anytime anywhere
+WADL,Josh Cahill, 3, 3333333, josh.cahill@wadl.org, available anytime anywhere
+WADL,Ali Matthews, 3, 3333333, ali.matthews@wadl.org, available anytime anywhere
+WADL,Jordi Lockhart, 3, 3333333, jordi.lockhart@wadl.org, available anytime anywhere

@@ -76,7 +76,7 @@ class Tournament(models.Model):
         return unicode(self.slug)
 
 class VenueGroup(models.Model):
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=120)
     tournament = models.ForeignKey(Tournament)
 
     def __unicode__(self):
