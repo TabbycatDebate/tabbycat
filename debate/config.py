@@ -53,7 +53,7 @@ SETTINGS = OrderedDict([
     ('public_use_password',         (_bool, 'Require password to submit public feedback and ballots',              False)),
     ('public_password',             (str,   'Value of the password for public submissions',                        '')),
     ('panellist_feedback_enabled',  (_bool, 'Allow public feedback to be submitted by panellists',                 True)),
-    ('feedback_progress',           (_bool, 'Public interface to view unsubmitted ballots',                        False)),
+    ('feedback_progress',           (_bool, 'Public interface to show who has unsubmitted ballots',                        False)),
     ('tab_released',                (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament',                 False)),
     ('motion_tab_released',         (_bool, 'Displays the motions tab PUBLICLY. For AFTER the tournament',         False)),
     ('ballots_released',            (_bool, 'Displays ballots PUBLICLY. For AFTER the tournament',                 False)),
