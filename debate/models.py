@@ -969,12 +969,15 @@ class Round(models.Model):
         return relevant_adjs
 
     def unused_adjudicators(self):
-        result =  self.adjudicator_availability().extra(
-            select = {'is_used': """EXISTS (SELECT 1
-                      FROM debate_debateadjudicator da
-                      LEFT JOIN debate_debate d ON da.debate_id = d.id
-                      WHERE d.round_id = %d AND
-                      da.adjudicator_id = debate_adjudicator.person_ptr_id)""" % self.id },
+        result = self.base_availability(Adjudicator, 'debate_activeadjudicator',
+                                      'adjudicator_id',
+                                      'debate_adjudicator',
+                                      id_field='person_ptr_id').extra(
+                                        select = {'is_used': """EXISTS (SELECT 1
+                                                  FROM debate_debateadjudicator da
+                                                  LEFT JOIN debate_debate d ON da.debate_id = d.id
+                                                  WHERE d.round_id = %d AND
+                                                  da.adjudicator_id = debate_adjudicator.person_ptr_id)""" % self.id },
         )
         return [a for a in result if a.is_active and not a.is_used]
 
