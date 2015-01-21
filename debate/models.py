@@ -944,10 +944,12 @@ class Round(models.Model):
                                       'debate_person')
 
 
-
     def venue_availability(self):
-        return self.base_availability(Venue, 'debate_activevenue', 'venue_id',
+        all_venues = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
                                       'debate_venue')
+        all_venues = [v for v in all_venues if v.tournament == self.tournament]
+        return all_venues
+
     def unused_venues(self):
         result = self.venue_availability().extra(
             select = {'is_used': """EXISTS (SELECT 1
