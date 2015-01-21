@@ -46,8 +46,6 @@ class Command(BaseCommand):
                 print inst
 
             self.stdout.write('*** Created the tournament: ' + folder)
-
-            # TODO get this to use rounds.csv
             self.stdout.write('*** Attempting to create rounds ')
             rounds_count = 0
 
