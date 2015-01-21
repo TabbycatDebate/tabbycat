@@ -940,6 +940,7 @@ class Round(models.Model):
                                                  drav.round_id=%(id)d)""" % d })
 
     def person_availability(self):
+        # all_people = [p for p in all_people if p.institution.tournament == self.tournament]
         return self.base_availability(Person, 'debate_checkin', 'person_id',
                                       'debate_person')
 
@@ -947,8 +948,8 @@ class Round(models.Model):
     def venue_availability(self):
         all_venues = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
                                       'debate_venue')
-        all_venues = [v for v in all_venues if v.tournament == self.tournament]
-        return all_venues
+        relevant_venues = [v for v in all_venues if v.tournament == self.tournament]
+        return relevant_venues
 
     def unused_venues(self):
         result = self.venue_availability().extra(
@@ -962,9 +963,11 @@ class Round(models.Model):
         return [v for v in result if v.is_active and not v.is_used]
 
     def adjudicator_availability(self):
-        return self.base_availability(Adjudicator, 'debate_activeadjudicator',
+        all_adjs = self.base_availability(Adjudicator, 'debate_activeadjudicator',
                                       'adjudicator_id',
                                       'debate_adjudicator', id_field='person_ptr_id')
+        relevant_adjs = [a for a in all_adjs if a.tournament == self.tournament]
+        return relevant_adjs
 
     def unused_adjudicators(self):
         result =  self.adjudicator_availability().extra(
@@ -977,8 +980,10 @@ class Round(models.Model):
         return [a for a in result if a.is_active and not a.is_used]
 
     def team_availability(self):
-        return self.base_availability(Team, 'debate_activeteam', 'team_id',
+        all_teams = self.base_availability(Team, 'debate_activeteam', 'team_id',
                                       'debate_team')
+        relevant_teams = [t for t in all_teams if t.institution.tournament == self.tournament]
+        return relevant_teams
 
     def set_available_base(self, ids, model, active_model, get_active,
                              id_column, active_id_column, remove=True):
