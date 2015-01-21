@@ -2,7 +2,7 @@
 
 {% block head-title %}
     {% if tournaments.count > 0 %}
-    Which tournament are you after?
+{% block head-title %}Welcome! <small>Which tournament are you after?</small>{% endblock %}
     {% else %}
     Sorry, there are no configured tournaments
     {% endif %}
@@ -13,10 +13,29 @@
 
 {% block content %}
 
+
 <ul class="list-group">
-    {% for tournament in tournaments %}
-    <li class="list-group-item"><a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a></li>
-    {% endfor %}
+
+    {% if user.is_authenticated %}
+        {% for tournament in tournaments %}
+
+        <li class="list-group-item list-group-item-info">
+            <a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a>
+            <span class="badge">ADMIN</span>
+        </li>
+        <li class="list-group-item list-group-item-success">
+            <a href="{{ tournament.get_public_url }}">{{ tournament }}</a>
+            <span class="badge">PUBLIC</span>
+        </li>
+        {% endfor %}
+    {% else %}
+        {% for tournament in tournaments %}
+        <li class="list-group-item">
+            <a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a>
+        </li>
+        {% endfor %}
+    {% endif %}
+
 </ul>
 
 {% endblock content %}

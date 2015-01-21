@@ -287,7 +287,7 @@
         }
 
         $("#dataTable tbody .adj-holder").droppable( {
-            hoverClass: 'border-success',
+            hoverClass: 'bg-success',
             drop: function(event, ui) {
                 var adj = ui.draggable;
                 var oldHolder = adj[0].oldHolder;
@@ -517,8 +517,8 @@
 
 <div id="statusBar" class="btn-group">
     <div class="btn btn-default">Legend:</div>
-    <div class="btn btn-default btn-warning">History Warning</div>
-    <div class="btn btn-default btn-danger">Conflict</div>
+    <div class="btn btn-default btn-warning" disabled="disabled">History Warning</div>
+    <div class="btn btn-default btn-danger" disabled="disabled">Conflict</div>
 </div>
 {% endblock %}
 

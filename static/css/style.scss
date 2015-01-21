@@ -148,13 +148,13 @@ html, body {
 [data-toggle="tooltip"] {
     cursor: pointer; // for tooltips
     border-bottom: 2px dotted #ccc;
-    img {
-
-    }
 }
 .alert-link {
     text-decoration: underline;
     font-weight: normal;
+}
+.check_target {
+    cursor: pointer;
 }
 
 // Forms
@@ -187,6 +187,9 @@ input.error, select.error, .error input {
 .col-md-12.table-container {
     padding-left: 0;
     padding-right: 0;
+}
+table a:hover {
+    cursor: pointer;
 }
 
 @media (max-width: $screen-xs-max) {
@@ -350,10 +353,6 @@ span.esl {
     }
     .venue, .adj {
         max-width: 300px;
-    }
-    .btn-holder {
-        padding: 4px;
-        border: 2px solid #ddd;
     }
     .importance {
         width: 60px;

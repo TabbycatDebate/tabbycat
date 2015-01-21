@@ -31,6 +31,10 @@ class Tournament(models.Model):
     def get_absolute_url(self):
         return ('tournament_home', [self.slug])
 
+    @models.permalink
+    def get_public_url(self):
+        return ('public_index', [self.slug])
+
     @property
     def teams(self):
         return Team.objects.filter(institution__tournament=self)
@@ -950,10 +954,12 @@ class Round(models.Model):
                                       'debate_person')
 
 
-
     def venue_availability(self):
-        return self.base_availability(Venue, 'debate_activevenue', 'venue_id',
+        all_venues = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
                                       'debate_venue')
+        relevant_venues = [v for v in all_venues if v.tournament == self.tournament]
+        return relevant_venues
+
     def unused_venues(self):
         result = self.venue_availability().extra(
             select = {'is_used': """EXISTS (SELECT 1
@@ -966,23 +972,30 @@ class Round(models.Model):
         return [v for v in result if v.is_active and not v.is_used]
 
     def adjudicator_availability(self):
-        return self.base_availability(Adjudicator, 'debate_activeadjudicator',
+        all_adjs = self.base_availability(Adjudicator, 'debate_activeadjudicator',
                                       'adjudicator_id',
                                       'debate_adjudicator', id_field='person_ptr_id')
+        relevant_adjs = [a for a in all_adjs if a.tournament == self.tournament]
+        return relevant_adjs
 
     def unused_adjudicators(self):
-        result =  self.adjudicator_availability().extra(
-            select = {'is_used': """EXISTS (SELECT 1
-                      FROM debate_debateadjudicator da
-                      LEFT JOIN debate_debate d ON da.debate_id = d.id
-                      WHERE d.round_id = %d AND
-                      da.adjudicator_id = debate_adjudicator.person_ptr_id)""" % self.id },
+        result = self.base_availability(Adjudicator, 'debate_activeadjudicator',
+                                      'adjudicator_id',
+                                      'debate_adjudicator',
+                                      id_field='person_ptr_id').extra(
+                                        select = {'is_used': """EXISTS (SELECT 1
+                                                  FROM debate_debateadjudicator da
+                                                  LEFT JOIN debate_debate d ON da.debate_id = d.id
+                                                  WHERE d.round_id = %d AND
+                                                  da.adjudicator_id = debate_adjudicator.person_ptr_id)""" % self.id },
         )
         return [a for a in result if a.is_active and not a.is_used]
 
     def team_availability(self):
-        return self.base_availability(Team, 'debate_activeteam', 'team_id',
+        all_teams = self.base_availability(Team, 'debate_activeteam', 'team_id',
                                       'debate_team')
+        relevant_teams = [t for t in all_teams if t.institution.tournament == self.tournament]
+        return relevant_teams
 
     def set_available_base(self, ids, model, active_model, get_active,
                              id_column, active_id_column, remove=True):
