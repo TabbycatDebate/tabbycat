@@ -2,36 +2,32 @@
 
 {% block head-title %}
     {% if tournaments.count > 0 %}
-{% block head-title %}Welcome! <small>Which tournament are you after?</small>{% endblock %}
+        Welcome! <small>Which tournament are you after?</small>
     {% else %}
-    Sorry, there are no configured tournaments
+        Sorry, there are no configured tournaments
     {% endif %}
 {% endblock %}
 {% block page-title %}Home{% endblock %}
-
 {% block nav %}{% endblock %}
-
 {% block content %}
-
 
 <ul class="list-group">
 
     {% if user.is_authenticated %}
         {% for tournament in tournaments %}
-
         <li class="list-group-item list-group-item-info">
-            <a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a>
+            <a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
             <span class="badge">ADMIN</span>
         </li>
         <li class="list-group-item list-group-item-success">
-            <a href="{{ tournament.get_public_url }}">{{ tournament }}</a>
+            <a href="{{ tournament.get_public_url }}">{{ tournament.name }}</a>
             <span class="badge">PUBLIC</span>
         </li>
         {% endfor %}
     {% else %}
         {% for tournament in tournaments %}
         <li class="list-group-item">
-            <a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a>
+            <a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
         </li>
         {% endfor %}
     {% endif %}
