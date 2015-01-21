@@ -940,7 +940,6 @@ class Round(models.Model):
                                                  drav.round_id=%(id)d)""" % d })
 
     def person_availability(self):
-        # all_people = [p for p in all_people if p.institution.tournament == self.tournament]
         return self.base_availability(Person, 'debate_checkin', 'person_id',
                                       'debate_person')
 
