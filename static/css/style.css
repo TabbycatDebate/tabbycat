@@ -747,6 +747,9 @@ html, body {
   text-decoration: underline;
   font-weight: normal; }
 
+.check_target {
+  cursor: pointer; }
+
 input.error, select.error, .error input {
   border-color: #a94442;
   color: #a94442;
@@ -769,6 +772,9 @@ input.error, select.error, .error input {
 .col-md-12.table-container {
   padding-left: 0;
   padding-right: 0; }
+
+table a:hover {
+  cursor: pointer; }
 
 @media (max-width: 767px) {
   .page-header {

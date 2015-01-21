@@ -20,7 +20,9 @@
             <td>{{ person.adjudicator.institution.code }} Judge</td>
             {% endif %}
             <td>{{ person.name }}</td>
-            <td><input type="checkbox" {{ person.is_active|yesno:'checked="yes",'  }} name="check_{{ person.id }}"  value="{{ person.id }}" /></td>
+            <td class="check_target">
+                <input type="checkbox" {{ person.is_active|yesno:'checked="yes",'  }} name="check_{{ person.id }}" value="{{ person.id }}" />
+            </td>
             <td>{{ person.barcode_id }}</td>
         </tr>
         {% endfor %}

@@ -38,7 +38,9 @@
                 {% endif %}
             </td>
             {% endif %}
-            <td><input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="check_{{ venue.id }}"  value="{{ venue.id }}" /></td>
+            <td class="check_target">
+                <input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="check_{{ venue.id }}" value="{{ venue.id }}" />
+            </td>
         </tr>
         {% endfor %}
     </tbody>

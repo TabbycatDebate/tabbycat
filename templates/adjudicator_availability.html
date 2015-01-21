@@ -84,7 +84,9 @@
                 {% endif %}
             </td>
             {% endif %}
-            <td><input type="checkbox" {{ adj.is_active|yesno:'checked="yes",'  }} class="adj-check" name="check_{{ adj.id }}"  value="{{ adj.id }}" /></td>
+            <td class="check_target">
+                <input type="checkbox" {{ adj.is_active|yesno:'checked="yes",'  }} class="adj-check" name="check_{{ adj.id }}" value="{{ adj.id }}" />
+            </td>
         </tr>
         {% endfor %}
     </tbody>
