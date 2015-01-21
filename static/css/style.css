@@ -877,9 +877,6 @@ span.esl {
   overflow-y: scroll; }
 .edit-venues .venue, .edit-venues .adj, .edit-adjs .venue, .edit-adjs .adj {
   max-width: 300px; }
-.edit-venues .btn-holder, .edit-adjs .btn-holder {
-  padding: 4px;
-  border: 2px solid #ddd; }
 .edit-venues .importance, .edit-adjs .importance {
   width: 60px;
   text-align: left; }
