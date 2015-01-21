@@ -15,7 +15,7 @@
 
 <ul class="list-group">
     {% for tournament in tournaments %}
-    <li class="list-group-item"><a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a></li>
+    <li class="list-group-item"><a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a></li>
     {% endfor %}
 </ul>
 

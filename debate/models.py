@@ -75,7 +75,11 @@ class Tournament(models.Model):
         return range(1, 5)
 
     def __unicode__(self):
-        return unicode(self.slug)
+        if self.short_name:
+            return unicode(self.short_name)
+        else:
+            return unicode(self.name)
+
 
 class VenueGroup(models.Model):
     name = models.CharField(max_length=120)
