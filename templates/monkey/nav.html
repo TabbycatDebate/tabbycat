@@ -19,7 +19,9 @@
             </ul>
             <ul id="" class="nav navbar-nav navbar-right">
                 <li><a>Logged in as {{ user }}</a></li>
+                {% if user.is_authenticated %}
                 <li><a href="{% url 'logout' %}">Log out</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>

@@ -9,9 +9,11 @@
                 Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> (Android) and
                  <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
             </p>
+            {% if user.is_authenticated %}
             <p class="navbar-brand text-muted pull-right">
                 <a href="/accounts/logout/" title="Log out of {{ user }}">Log out</a>
             </p>
+            {% endif %}
         </div>
     </nav>
 </div>
