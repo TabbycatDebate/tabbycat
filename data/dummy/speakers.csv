@@ -1,36 +1,37 @@
-1A,Social Justice League,Cynical Team
-2A,Social Justice League,Cynical Team
-3A,Social Justice League,Cynical Team
-1B,Moderate Cabal,Complainey Team
-2B,Moderate Cabal,Complainey Team
-3B,Moderate Cabal,Complainey Team
-1C,Obligatory Schools Team,Fun Team
-2C,Obligatory Schools Team,Fun Team
-3C,Obligatory Schools Team,Fun Team
-1D,Business School of Business,Durrie Team
-2D,Business School of Business,Durrie Team
-3D,Business School of Business,Durrie Team
-1G,University of Major Capital,Prepared Team
-2G,University of Major Capital,Prepared Team
-3G,University of Major Capital,Prepared Team
-1H,University of Barely a City,Apathetic Team
-2H,University of Barely a City,Apathetic Team
-3H,University of Barely a City,Apathetic Team
-1I,University of Barely a City,Interesting Team
-2I,University of Barely a City,Interesting Team
-3I,University of Barely a City,Interesting Team
-1J,University of Foreignland,Writing Team
-2J,University of Foreignland,Writing Team
-3J,University of Foreignland,Writing Team
-1K,University of Foreignland,Something Team
-2K,University of Foreignland,Something Team
-3K,University of Foreignland,Something Team
-1L,University of University,Jaded Team
-2L,University of University,Jaded Team
-3L,University of University,Jaded Team
-1M,Colonial University of Colony,Water Team
-2M,Colonial University of Colony,Water Team
-3M,Colonial University of Colony,Water Team
-1N,Colonial University of Colony,Space Team
-2N,Colonial University of Colony,Space Team
-3N,Colonial University of Colony,Space Team
+name,institution,team_name
+Dummy 1A,Social Justice League,Cynical Team
+Dummy 2A,Social Justice League,Cynical Team
+Dummy 3A,Social Justice League,Cynical Team
+Dummy 1B,Moderate Cabal,Complainey Team
+Dummy 2B,Moderate Cabal,Complainey Team
+Dummy 3B,Moderate Cabal,Complainey Team
+Dummy 1C,Obligatory Schools Team,Fun Team
+Dummy 2C,Obligatory Schools Team,Fun Team
+Dummy 3C,Obligatory Schools Team,Fun Team
+Dummy 1D,Business School of Business,Durrie Team
+Dummy 2D,Business School of Business,Durrie Team
+Dummy 3D,Business School of Business,Durrie Team
+Dummy 1G,University of Major Capital,Prepared Team
+Dummy 2G,University of Major Capital,Prepared Team
+Dummy 3G,University of Major Capital,Prepared Team
+Dummy 1H,University of Barely a City,Apathetic Team
+Dummy 2H,University of Barely a City,Apathetic Team
+Dummy 3H,University of Barely a City,Apathetic Team
+Dummy 1I,University of Barely a City,Interesting Team
+Dummy 2I,University of Barely a City,Interesting Team
+Dummy 3I,University of Barely a City,Interesting Team
+Dummy 1J,University of Foreignland,Writing Team
+Dummy 2J,University of Foreignland,Writing Team
+Dummy 3J,University of Foreignland,Writing Team
+Dummy 1K,University of Foreignland,Something Team
+Dummy 2K,University of Foreignland,Something Team
+Dummy 3K,University of Foreignland,Something Team
+Dummy 1L,University of University,Jaded Team
+Dummy 2L,University of University,Jaded Team
+Dummy 3L,University of University,Jaded Team
+Dummy 1M,Colonial University of Colony,Water Team
+Dummy 2M,Colonial University of Colony,Water Team
+Dummy 3M,Colonial University of Colony,Water Team
+Dummy 1N,Colonial University of Colony,Space Team
+Dummy 2N,Colonial University of Colony,Space Team
+Dummy 3N,Colonial University of Colony,Space Team

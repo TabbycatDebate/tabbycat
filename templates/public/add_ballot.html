@@ -39,7 +39,7 @@
             <span class="hidden-xs">Add result from </span>{{ da.adjudicator.name }}
             </a>
         </td>
-        <td>{{ da.debate.venue.name }}</td>
+        <td>{% if da.debate.venue.group %}{{ venue.group }} {% endif %}{{ da.debate.venue.name }}</td>
         <td>
             <span href="#" title="{{ da.debate.aff_team.speakers|join:', ' }}">{{ da.debate.aff_team.short_name }}<span>
         </td>

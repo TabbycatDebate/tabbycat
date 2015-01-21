@@ -1,5 +1,5 @@
-id,tournament,seq,name,type,feedback_weight
-,2,1,Round 1,R,0.7
-,2,2,Round 2,P,0.7
-,2,3,Round 3,P,0.7
-,2,4,Round 4,P,0.7
+seq,name,abbv,type,is_silent,feedback_weight
+,DRound 1,R1,R,0,0.7
+,DRound 2,R2,P,0,0.7
+,DRound 3,R3,P,0,0.7
+,DRound 4,R4,P,1,0.7

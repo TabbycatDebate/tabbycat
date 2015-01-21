@@ -63,6 +63,9 @@
         <th>Round</th>
         <th>Reference</th>
         <th>M<span class="hidden-xs">otion</span></th>
+        {% if enable_flagged_motions %}
+        <th>Flagged</th>
+        {% endif %}
         <th>Chosen</th>
         <th>Aff vetoes</th>
         <th>Neg vetoes</th>
@@ -79,6 +82,15 @@
         <td>{{ motion.round }}</td>
         <td>{{ motion.reference }}</td>
         <td>{{ motion.text }}</td>
+        {% if enable_flagged_motions %}
+        <td>
+            {% if motion.flagged %}
+                Yes
+            {% else %}
+                No
+            {% endif %}
+        </td>
+        {% endif %}
         <td>{{ motion.chosen_in }}</td>
         <td></td>
         <td></td>

@@ -9,16 +9,35 @@
 {% block table-contents %}
     <thead>
         <tr>
+            {% if enable_venue_groups %}
+            <th>Group</th>
+            {% endif %}
             <th>Name</th>
             <th>Priority</th>
+            {% if enable_venue_times %}
+            <th>Time</th>
+            {% endif %}
             <th>Active</th>
         </tr>
     </thead>
     <tbody>
         {% for venue in venues %}
         <tr>
+            {% if enable_venue_groups %}
+            <td>
+                {% if venue.group %}{{ venue.group }} {% endif %}
+            </td>
+            {% endif %}
             <td>{{ venue.name }}</td>
             <td>{{ venue.priority }}</td>
+            {% if enable_venue_times %}
+            <td>
+                {% if venue.time %}
+                <span class="hidden">{{ venue.time|date:"d m o H:i" }}</span>
+                {{ venue.time|date:"D jS M h:i" }}
+                {% endif %}
+            </td>
+            {% endif %}
             <td><input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="check_{{ venue.id }}"  value="{{ venue.id }}" /></td>
         </tr>
         {% endfor %}

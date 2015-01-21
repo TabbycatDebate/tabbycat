@@ -17,10 +17,6 @@ from collections import OrderedDict
 class ScoreField(models.FloatField):
     pass
 
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules([], ["^debate\.models\.ScoreField"])
-
-
 class Tournament(models.Model):
 
     slug = models.SlugField(unique=True)
@@ -79,6 +75,22 @@ class Tournament(models.Model):
     def __unicode__(self):
         return unicode(self.slug)
 
+class VenueGroup(models.Model):
+    name = models.CharField(max_length=120)
+    tournament = models.ForeignKey(Tournament)
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+class Venue(models.Model):
+    name = models.CharField(max_length=40)
+    group = models.ForeignKey(VenueGroup, blank=True, null=True)
+    priority = models.IntegerField()
+    tournament = models.ForeignKey(Tournament)
+    time = models.DateTimeField(blank=True, null=True)
+
+    def __unicode__(self):
+        return u'%s %s (%d)' % (self.group, self.name, self.priority)
 
 class Institution(models.Model):
     tournament = models.ForeignKey(Tournament)
@@ -329,6 +341,9 @@ class Team(models.Model):
     # swing/composite)
     cannot_break = models.BooleanField(default=False)
 
+    # Records the list of venues a team is willing to debate in
+    venue_group_preferences = models.ManyToManyField(VenueGroup, blank=True, verbose_name='For when a team can only debate in specific venues')
+
     TYPE_NONE = 'N'
     TYPE_ESL = 'E'
     TYPE_SWING = 'S'
@@ -411,7 +426,6 @@ class Team(models.Model):
     @property
     def speakers(self):
         return self.speaker_set.all()
-
 
 class SpeakerManager(models.Manager):
     def standings(self, round=None):
@@ -549,6 +563,7 @@ class Person(models.Model):
     phone = models.CharField(max_length=40, blank=True, null=True)
 
     checkin_message = models.TextField(blank=True)
+    notes = models.TextField(blank=True)
 
     @property
     def has_contact(self):
@@ -693,9 +708,9 @@ class AdjudicatorInstitutionConflict(models.Model):
 class RoundManager(models.Manager):
     use_for_related_Fields = True
 
-    def get_query_set(self):
+    def get_queryset(self):
         return super(RoundManager,
-                     self).get_query_set().select_related('tournament').order_by('seq')
+                     self).get_queryset().select_related('tournament').order_by('seq')
 
 
 class Round(models.Model):
@@ -1042,16 +1057,6 @@ class Round(models.Model):
         return self.motions_released or not self.motion_set.exists()
 
 
-class Venue(models.Model):
-    name = models.CharField(max_length=40)
-    group = models.IntegerField(null=True, blank=True)
-    priority = models.IntegerField()
-    tournament = models.ForeignKey(Tournament)
-
-    def __unicode__(self):
-        return u'%s (%d)' % (self.name, self.priority)
-
-
 class ActiveVenue(models.Model):
     venue = models.ForeignKey(Venue)
     round = models.ForeignKey(Round)
@@ -1079,8 +1084,8 @@ class ActiveAdjudicator(models.Model):
 class DebateManager(models.Manager):
     use_for_related_fields = True
 
-    def get_query_set(self):
-        return super(DebateManager, self).get_query_set().select_related(
+    def get_queryset(self):
+        return super(DebateManager, self).get_queryset().select_related(
         'round', 'venue')
 
 
@@ -1234,6 +1239,7 @@ class Debate(models.Model):
     @property
     def venue_splitname(self):
         # Formatting venue names so they can split over multiple lines
+        # TODO: integrate venue group name into here
         match = re.match(r"([a-z]+)([0-9]+)", str(self.venue.name), re.I)
         if match:
             items = match.groups()
@@ -1245,6 +1251,7 @@ class Debate(models.Model):
             alloc = self.venue.name
 
         return alloc
+
 
     @property
     def result(self):
@@ -1272,8 +1279,8 @@ class Debate(models.Model):
 
 class SRManager(models.Manager):
     use_for_related_fields = True
-    def get_query_set(self):
-        return super(SRManager, self).get_query_set().select_related('debate', 'team', 'position')
+    def get_queryset(self):
+        return super(SRManager, self).get_queryset().select_related('debate', 'team', 'position')
 
 
 class DebateTeam(models.Model):
@@ -1613,9 +1620,9 @@ class TeamScore(models.Model):
 class SpeakerScoreManager(models.Manager):
     use_for_related_fields = True
 
-    def get_query_set(self):
+    def get_queryset(self):
         return super(SpeakerScoreManager,
-                     self).get_query_set().select_related('speaker')
+                     self).get_queryset().select_related('speaker')
 
 
 class SpeakerScore(models.Model):
@@ -1676,9 +1683,10 @@ class MotionManager(models.Manager):
 class Motion(models.Model):
     """Represents a single motion (not a set of motions)."""
 
-    seq = models.IntegerField()
-    text = models.CharField(max_length=500)
-    reference = models.CharField(max_length=100)
+    seq = models.IntegerField(help_text="The order in which motions display")
+    text = models.CharField(max_length=500, help_text="The motion itself")
+    reference = models.CharField(max_length=100, help_text="Shortcode for the motion")
+    flagged = models.BooleanField(default=False, help_text="WADL: Allows for particular motions to be flagged as contentious")
     round = models.ForeignKey(Round)
     objects = MotionManager()
 

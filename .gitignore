@@ -7,6 +7,8 @@ migrations-*/
 # Tournaments to ignore
 adam2014/
 preaustrals2014/
+wadl*/
+WADL*/
 
 env/
 venv

@@ -57,6 +57,11 @@ SETTINGS = OrderedDict([
     ('tab_released',                (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament',                 False)),
     ('motion_tab_released',         (_bool, 'Displays the motions tab PUBLICLY. For AFTER the tournament',         False)),
     ('ballots_released',            (_bool, 'Displays ballots PUBLICLY. For AFTER the tournament',                 False)),
+    # WADL-Specific
+    ('enable_flagged_motions',      (_bool, 'WADL: Allow particular motions to be flagged as contentious',         False)),
+    ('enable_adj_notes',            (_bool, 'WADL: Enables a general-purpose notes field for adjudicators',        False)),
+    ('enable_venue_groups',         (_bool, 'WADL: Enables the display of a venues grouping',                      False)),
+    ('enable_venue_times',          (_bool, 'WADL: Enables dates and times to be set for venues',                  False)),
 ])
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))

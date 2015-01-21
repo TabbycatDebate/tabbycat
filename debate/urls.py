@@ -103,6 +103,7 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/adjudicators/feedback/get/$', 'get_adj_feedback', name='get_adj_feedback'),
     url(r'^admin/adjudicators/feedback/(?P<adj_id>\d+)/$', 'enter_feedback', name='enter_feedback'),
     url(r'^admin/adjudicators/scores/test/set/$', 'set_adj_test_score', name='set_adj_test_score'),
+    url(r'^admin/adjudicators/notes/test/set/$', 'set_adj_note', name='set_adj_note'),
 
     url(r'^admin/break/teams/open/$', 'breaking_teams', {'name': 'Open Break', 'category': 'open'}, name='breaking_teams_open'),
     url(r'^admin/break/teams/esl/$', 'breaking_teams', {'name': 'ESL Break', 'category': 'esl'}, name='breaking_teams_esl'),
