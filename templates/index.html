@@ -25,7 +25,7 @@
     {% else %}
         {% for tournament in tournaments %}
         <li class="list-group-item">
-            <a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a>
+            <a href="{{ tournament.get_public_url }}">{{ tournament }}</a>
         </li>
         {% endfor %}
     {% endif %}
