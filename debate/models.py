@@ -29,6 +29,10 @@ class Tournament(models.Model):
     def get_absolute_url(self):
         return ('tournament_home', [self.slug])
 
+    @models.permalink
+    def get_public_url(self):
+        return ('public_index', [self.slug])
+
     @property
     def teams(self):
         return Team.objects.filter(institution__tournament=self)

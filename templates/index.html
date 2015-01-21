@@ -9,9 +9,27 @@
 
 
 <ul class="list-group">
-    {% for tournament in tournaments %}
-    <li class="list-group-item"><a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a></li>
-    {% endfor %}
+
+    {% if user.is_authenticated %}
+        {% for tournament in tournaments %}
+
+        <li class="list-group-item list-group-item-info">
+            <a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a>
+            <span class="badge">ADMIN</span>
+        </li>
+        <li class="list-group-item list-group-item-success">
+            <a href="{{ tournament.get_public_url }}">{{ tournament }}</a>
+            <span class="badge">PUBLIC</span>
+        </li>
+        {% endfor %}
+    {% else %}
+        {% for tournament in tournaments %}
+        <li class="list-group-item">
+            <a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a>
+        </li>
+        {% endfor %}
+    {% endif %}
+
 </ul>
 
 
