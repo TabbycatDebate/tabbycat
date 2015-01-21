@@ -13,7 +13,7 @@ HSDC*/
 Schools*/
 
 env/
-venv
+venv/
 *.pyc
 *.swp
 *~
