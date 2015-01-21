@@ -1,11 +1,9 @@
 {% extends "base_availability.html" %}
-
 {% load debate_tags %}
-{% block update-url %}{% round_url update_team_availability %}{% endblock %}
 
+{% block update-url %}{% round_url update_team_availability %}{% endblock %}
 {% block page-title %}Team Availability for {{ round.name }}{% endblock %}
 {% block head-title %}Team Availability <small>for {{ round.name }}</small>{% endblock %}
-
 {% block table-contents %}
     <thead>
         <tr>
@@ -30,7 +28,9 @@
             {% if show_institutions > 0 %}
             <td>{{ team.institution.code }}</td>
             {% endif %}
-            <td><input type="checkbox" {{ team.is_active|yesno:'checked="yes",'  }} name="check_{{ team.id }}"  value="{{ team.id }}" /></td>
+            <td class="check_target">
+                <input type="checkbox" {{ team.is_active|yesno:'checked="yes",'  }} name="check_{{ team.id }}" value="{{ team.id }}" />
+            </td>
         </tr>
         {% endfor %}
     </tbody>
