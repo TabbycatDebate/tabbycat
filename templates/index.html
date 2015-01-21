@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
-{% block head-title %}Which tournament are you after?{% endblock %}
+{% block head-title %}
+    {% if tournaments.count > 0 %}
+    Which tournament are you after?
+    {% else %}
+    Sorry, there are no configured tournaments
+    {% endif %}
+{% endblock %}
 {% block page-title %}Home{% endblock %}
 
 {% block nav %}{% endblock %}
@@ -12,6 +18,5 @@
     <li class="list-group-item"><a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a></li>
     {% endfor %}
 </ul>
-
 
 {% endblock content %}
