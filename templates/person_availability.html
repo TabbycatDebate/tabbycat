@@ -1,15 +1,13 @@
 {% extends "base_availability.html" %}
-
 {% load debate_tags %}
+
 {% block update-url %}{% round_url update_people_availability  %}{% endblock %}
 {% block post-success %}location.reload();{% endblock %}
-
 {% block head-title %}Checkins for {{ round.name }}{% endblock %}
 {% block page-title %}Checkins for {{ round.name }}{% endblock %}
-
 {% block copy_btn %}{% endblock %}
-
 {% block table-contents %}
+
     <thead><tr><th>Team</th><th>Name</th><th>Checked in</th><th>Barcode</th></tr></thead>
     <tbody>
         {% for person in people %}
@@ -27,5 +25,6 @@
         </tr>
         {% endfor %}
     </tbody>
+
 {% endblock table-contents %}
 

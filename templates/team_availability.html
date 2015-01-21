@@ -1,11 +1,9 @@
 {% extends "base_availability.html" %}
-
 {% load debate_tags %}
-{% block update-url %}{% round_url update_team_availability %}{% endblock %}
 
+{% block update-url %}{% round_url update_team_availability %}{% endblock %}
 {% block page-title %}Team Availability for {{ round.name }}{% endblock %}
 {% block head-title %}Team Availability <small>for {{ round.name }}</small>{% endblock %}
-
 {% block table-contents %}
     <thead>
         <tr>
