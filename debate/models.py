@@ -58,7 +58,9 @@ class Tournament(models.Model):
     def advance_round(self):
         next_round_seq = self.current_round.seq + 1
         next_round = Round.objects.get(seq=next_round_seq, tournament=self)
-        self.current_round = next_round
+        if next_round in self.prelim_rounds():
+            self.current_round = next_round
+            self.save()
 
     @property
     def config(self):
@@ -1076,7 +1078,7 @@ class Round(models.Model):
     @memoize
     def prev(self):
         try:
-            return Round.objects.get(seq=self.seq-1)
+            return Round.objects.get(seq=self.seq-1, tournament=self.tournament)
         except Round.DoesNotExist:
             return None
 

@@ -49,7 +49,9 @@
                 <ul id="nav" class="nav navbar-nav navbar-right">
                     {% for r in tournament.rounds.all %}
                     <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ r.abbreviation }}<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            {% if current_round.seq = r.seq %}<strong>{% endif %}{{ r.abbreviation }}<b class="caret"></b>{% if current_round.seq = r.seq %}</strong>{% endif %}
+                        </a>
                         <ul class="dropdown-menu">
                             <li><a href="{% round_url venue_availability r %}">Venue Checkins</a></li>
                             <li><a href="{% round_url adjudicator_availability r %}">Adj Checkins</a></li>
