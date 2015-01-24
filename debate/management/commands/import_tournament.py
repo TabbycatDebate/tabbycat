@@ -39,7 +39,7 @@ class Command(BaseCommand):
             # Tournament
             self.stdout.write('*** Attempting to create tournament ' + folder)
             try:
-                t = m.Tournament(slug=folder)
+                t = m.Tournament(slug=folder, name=folder)
                 t.save()
             except Exception as inst:
                 total_errors += 1
