@@ -196,16 +196,16 @@ class BallotSetForm(forms.Form):
                     }))
 
                 # css_class is for jquery validation plugin, surely this can be moved elsewhere
-                score_field = (pos == self.REPLY_POSITION) and ReplyScoreField or ScoreField
+                    score_field = (pos == self.REPLY_POSITION) and ReplyScoreField or ScoreField
 
-                for i, adj in enumerate(self.adjudicators):
-                    attrs = {
-                        'class': 'required number',
-                        'tabindex': 20 + 2 * pos + tab_index_add + 4 * MAX_POSITION * i,
-                    }
-                    self.fields[self.score_field_name(adj, side, pos)] = score_field(
-                        widget = forms.NumberInput(attrs=attrs),
-                        tournament_config=tournament.config, **kwargs)
+                    for i, adj in enumerate(self.adjudicators):
+                        attrs = {
+                            'class': 'required number',
+                            'tabindex': 20 + 2 * pos + tab_index_add + 4 * MAX_POSITION * i,
+                        }
+                        self.fields[self.score_field_name(adj, side, pos)] = score_field(
+                            widget = forms.NumberInput(attrs=attrs),
+                            tournament_config=tournament.config, **kwargs)
 
     def score_field_name(self, adj, side, pos):
         """
