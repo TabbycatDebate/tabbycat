@@ -68,22 +68,22 @@
                 <label class="h4 col-xs-offset-1 control-label" >{{ debate.aff_team }}</label>
             </div>
             {% for position in adj.position_iter %}
-            <div class="form-group aff speaker s{{ position.pos }}">
-                <label class="col-md-2 col-xs-3 control-label" >{{ position }}A</label>
-                <div class="col-md-4 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
-                    {% if forloop.parentloop.first %}
-                        {{ position.aff_speaker|addcss:"form-control speaker required" }}
-                        {{ position.aff_speaker.errors }}
-                    {% else %}
-                    <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
-                    {% endif %}
+                <div class="form-group aff speaker s{{ position.pos }}">
+                    <label class="col-md-2 col-xs-3 control-label" >{{ position }}A</label>
+                    <div class="col-md-4 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
+                        {% if forloop.parentloop.first %}
+                            {{ position.aff_speaker|addcss:"form-control speaker required" }}
+                            {{ position.aff_speaker.errors }}
+                        {% else %}
+                        <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 col-xs-2 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
+                        {{ position.aff_score }}
+                        {{ position.aff_score_errors }}
+                        {{ position.aff_score.errors }}
+                    </div>
                 </div>
-                <div class="col-md-6 col-xs-2 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
-                    {{ position.aff_score }}
-                    {{ position.aff_score_errors }}
-                    {{ position.aff_score.errors }}
-                </div>
-            </div>
             {% endfor %}
             <div class="form-group">
                 <label class="col-md-2 col-xs-3 control-label" >Total</label>

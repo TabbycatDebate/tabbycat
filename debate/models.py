@@ -62,15 +62,18 @@ class Tournament(models.Model):
 
     @property
     def REPLY_POSITION(self):
-        return 4
-
-    @property
-    def REPLIES_ENABLED(self):
-        return True
+        if self.config.get('reply_scores_enabled'):
+            return 4
+        else:
+            return None
 
     @property
     def POSITIONS(self):
-        return range(1, 5)
+        if self.config.get('reply_scores_enabled'):
+            return range(1, 5)
+        else:
+            return range(1, 4)
+
 
     def __unicode__(self):
         return unicode(self.slug)
@@ -490,7 +493,7 @@ class SpeakerManager(models.Manager):
 
     def reply_standings(self, round=None):
         # If replies aren't enabled, return an empty queryset.
-        if not round.tournament.REPLIES_ENABLED:
+        if not tournament.reply_scores_enabled:
             return self.objects.none()
 
         if round:

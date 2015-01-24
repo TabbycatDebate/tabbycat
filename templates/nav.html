@@ -26,9 +26,9 @@
                     <ul class="dropdown-menu">
                         <li><a class="team-standings-nav" href="{% round_url team_standings current_round %}">Teams</a></li>
                         <li><a class="speaker-standings-nav" href="{% round_url speaker_standings current_round %}">Speakers</a></li>
-                        {% if reply_scores %}
+                        {% if reply_scores_enabled %}{% endif %}
                         <li><a class="reply-standings-nav" href="{% round_url reply_standings current_round %}">Replies</a></li>
-                        {% endif %}
+
                         <li><a class="feedback-standings-nav" href="{% tournament_url feedback_progress %}">Feedbacks</a></li>
                     </ul>
                 </li>
@@ -61,7 +61,7 @@
                         <li class="divider"></li>
                         <li><a href="{% round_url team_standings r %}">Team Standings</a></li>
                         <li><a href="{% round_url speaker_standings r %}">Speaker Standings</a></li>
-                        {% if reply_scores %}
+                        {% if reply_scores_enabled %}
                         <li><a href="{% round_url reply_standings r %}">Reply Standings</a></li>
                         {% endif %}
                     </ul>
