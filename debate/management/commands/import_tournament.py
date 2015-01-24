@@ -39,7 +39,9 @@ class Command(BaseCommand):
             # Tournament
             self.stdout.write('*** Attempting to create tournament ' + folder)
             try:
-                t = m.Tournament(slug=folder, name=folder)
+                slug = slugify(unicode(folder))
+                short_name = (folder[:24] + '..') if len(folder) > 75 else folder
+                t = m.Tournament(name=folder, short_name=short_name, slug=slug)
                 t.save()
             except Exception as inst:
                 total_errors += 1
