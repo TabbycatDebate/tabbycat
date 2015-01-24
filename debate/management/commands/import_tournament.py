@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.template.defaultfilters import slugify
 import os
 import csv
 import debate.models as m
