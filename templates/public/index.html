@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Welcome to {{ tournament.name }}{% endblock %}
-{% block page-title %}Welcome to {{ tournament.name }}{% endblock %}
+{% block head-title %}Welcome to {{ tournament }}{% endblock %}
+{% block page-title %}Welcome to {{ tournament }}{% endblock %}
 
 {% block nav %}{% include "public/nav.html" %}{% endblock %}
-
+{% block footer %}{% include "public/footer.html" %}{% endblock %}
 
 {% block header %}
     {{ tournament.welcome_msg|safe|linebreaks }}

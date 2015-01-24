@@ -15,6 +15,7 @@ SETTINGS = OrderedDict([
     ('score_min',                   (float, 'Minimum allowed score',                                               68)),
     ('score_max',                   (float, 'Maximum allowed score',                                               82)),
     ('score_step',                  (float, 'Score steps allowed',                                                 1)),
+    ('reply_scores_enabled',        (_bool, 'Whether this style features reply speeches',                          True)),
     ('reply_score_min',             (float, 'Minimum allowed reply score',                                         34)),
     ('reply_score_max',             (float, 'Maximum allowed reply score',                                         41)),
     ('reply_score_step',            (float, 'Reply score steps allowed',                                           0.5)),

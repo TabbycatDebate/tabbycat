@@ -9,7 +9,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-        <a class="navbar-brand" href="{% tournament_url public_index %}">{{ tournament.short_name }}</a>
+        <a class="navbar-brand" href="{% tournament_url public_index %}">{{ tournament }}</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -21,6 +21,7 @@
                 <li><a class="public-speaker-tab-nav" href="{% tournament_url public_speaker_tab %}">
                     Speaker Tab
                 </a></li>
+                {% if reply_scores_enabled %}
                 <li><a class="public-replies-tab-nav" href="{% tournament_url public_replies_tab %}">
                     Replies Tab
                 </a></li>
@@ -29,6 +30,7 @@
                 <li><a class="public-motions-tab-nav" href="{% tournament_url public_motions_tab %}">
                     Motions Tab
                 </a></li>
+                {% endif %}
                 {% endif %}
                 {% if public_draw > 0 %}
                 <li><a class="public-draw-nav" href="{% tournament_url public_draw %}">

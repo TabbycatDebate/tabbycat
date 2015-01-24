@@ -99,9 +99,19 @@ def r2r(request, template, extra_context=None):
     return render_to_response(template, context_instance=rc)
 
 
-def site_index(request):
+def index(request):
     tournaments = Tournament.objects.all()
-    return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
+
+    if request.user.is_authenticated():
+        if len(tournaments) == 1:
+            return redirect('tournament_home', tournament_slug=tournaments[0].slug)
+        else:
+            return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
+    else:
+        if len(tournaments) == 1:
+            return redirect('public_index', tournament_slug=tournaments[0].slug)
+        else:
+            return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
 
 ## Public UI
 
@@ -111,7 +121,7 @@ TAB_PAGES_CACHE_TIMEOUT = 28800
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def public_index(request, t):
-    return r2r(request, 'public/tournament_index.html')
+    return r2r(request, 'public/index.html')
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -177,7 +187,7 @@ def public_team_standings(request, t):
 
         return r2r(request, 'public/team_standings.html', dict(teams=teams, rounds=rounds, round=round))
     else:
-        return r2r(request, 'public/tournament_index.html')
+        return r2r(request, 'public/index.html')
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')

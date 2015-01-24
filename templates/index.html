@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block head-title %}Which tournament are you after?{% endblock %}
+{% block page-title %}Home{% endblock %}
+
+{% block nav %}{% endblock %}
+
+{% block content %}
+
+<ul class="list-group">
+    {% for tournament in tournaments %}
+    <li class="list-group-item"><a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a></li>
+    {% endfor %}
+</ul>
+
+
+{% endblock content %}

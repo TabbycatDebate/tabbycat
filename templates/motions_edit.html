@@ -11,7 +11,7 @@
                     e.preventDefault();
                     return false;
                 }
-            });
+            } );
         } );
 
     </script>
@@ -21,7 +21,7 @@
 {% block page-title %}Edit Motions for {{ round.name }}{% endblock %}
 
 {% block header %}
-<p class="alert alert-warning">Warning: You probably shouldn't add the motions before they have been released to debaters!</p>
+<p class="alert alert-danger">Warning: Do not add the motions before they have been released to debaters!</p>
 {% endblock %}
 
 {% block content %}
@@ -30,23 +30,17 @@
 
     <div class="panel panel-default">
 
+        <div class="panel-heading">Motion Options</div>
         <ul class="list-group">
 
             {{ formset.management_form }}
-
-
-            {% if formset.errors %}
-            <div class="error">
-                {{ formset.errors }}
-            </div>
-            {% endif %}
 
             {% for form in formset %}
             <li class="list-group-item">
 
                 {% if form.errors %}
                 <div class="error">
-                    {{ form.errors }}ERRORS
+                    {{ form.errors }}
                 </div>
                 {% endif %}
                 <div class="form-group">
@@ -69,27 +63,27 @@
                     <label for="{{ form.seq.id_for_label }}" class="col-sm-1 control-label" {% if form.seq.help_text %}data-toggle="tooltip" title="{{ form.seq.help_text }}"{% endif %}>
                         {{ form.seq.label }}
                     </label>
-                    <div class="col-sm-3" >
+                    <div class="col-sm-3">
                         {{form.seq|addcss:"form-control"}}{{ form.id }}
                     </div>
-                </div>
-
-                <div class="form-group">
-                    {% if enable_flagged_motions %}
-                    <label for="{{ form.flagged.id_for_label }}" class="col-sm-1 control-label" {% if form.flagged.help_text %}data-toggle="tooltip" title="{{ form.flagged.help_text }}"{% endif %}>
-                        {{ form.flagged.label }}
-                    </label>
-                    <div class="col-sm-1">
-                        {{form.flagged|addcss:"form-control help-anchor"}}
-                    </div>
-                    {% endif %}
                     <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
                         {{ form.DELETE.label }}
                     </label>
-                    <div class="col-sm-1">
+                    <div class="col-sm-2">
                         {{form.DELETE|addcss:"form-control"}}{{ form.id }}
                     </div>
                 </div>
+
+                {% if enable_flagged_motions %}
+                <div class="form-group">
+                    <label for="{{ form.flagged.id_for_label }}" class="col-sm-1 control-label" {% if form.flagged.help_text %}data-toggle="tooltip" title="{{ form.flagged.help_text }}"{% endif %}>
+                        {{ form.flagged.label }}
+                    </label>
+                    <div class="col-sm-6">
+                        {{form.flagged|addcss:"form-control help-anchor"}}
+                    </div>
+                </div>
+                {% endif %}
 
 
             </li>

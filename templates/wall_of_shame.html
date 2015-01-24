@@ -52,7 +52,7 @@ $(document).ready( function() {
 
 {% block body-class %}public-feedback{% endblock %}
 
-{% block nav %}{% include "nav.html" %}{% endblock %}
+{% block nav %}{% include "nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
 
 {% block head-title %}Unsubmitted Feedback Ballots{% endblock %}
 {% block page-title %}Unsubmitted Feedback Ballots{% endblock %}

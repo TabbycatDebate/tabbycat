@@ -8,10 +8,12 @@ class Scoresheet(object):
     self.data[side][pos] = score
     """
 
+
     def __init__(self, ballots, adjudicator):
         self.ballots = ballots
         self.debate = ballots.debate
         self.adjudicator = adjudicator
+        self.POSITIONS_RANGE = self.debate.round.tournament.POSITIONS
 
         from debate import models as m
 
@@ -29,7 +31,7 @@ class Scoresheet(object):
         self._init_side('neg')
 
     def _no_scores(self):
-        return dict((i, None) for i in range(1, 5))
+        return dict((i, None) for i in self.POSITIONS_RANGE)
 
     def _init_side(self, side):
         """
@@ -72,7 +74,7 @@ class Scoresheet(object):
         dt = self.debate.get_dt(side)
 
         # create new ones
-        for pos in range(1, 5):
+        for pos in self.POSITIONS_RANGE:
             m.SpeakerScoreByAdj(
                 ballot_submission = self.ballots,
                 debate_adjudicator = self.da,
@@ -100,7 +102,7 @@ class Scoresheet(object):
         """
         Return total score for side
         """
-        scores = [self.data[side][p] for p in range(1, 5)]
+        scores = [self.data[side][p] for p in self.POSITIONS_RANGE]
         if None in scores:
             return 0
         return sum(scores)
@@ -135,6 +137,7 @@ class BallotSet(object):
         self.ballots = ballots
         self.debate = ballots.debate
         self.adjudicators = self.debate.adjudicators.list
+        self.POSITIONS_RANGE = self.debate.round.tournament.POSITIONS
 
         self.loaded_sheets = False
         self._adjudicator_sheets = None
@@ -286,7 +289,7 @@ class BallotSet(object):
         TeamScore(ballot_submission=self.ballots, debate_team=dt, score=total, points=points).save()
 
         SpeakerScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
-        for i in range(1, 5):
+        for i in self.POSITIONS_RANGE:
             speaker = self.speakers[side][i]
             score = self.get_avg_score(side, i)
             SpeakerScore(

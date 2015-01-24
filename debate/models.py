@@ -19,8 +19,6 @@ class ScoreField(models.FloatField):
 
 class Tournament(models.Model):
 
-    name = models.CharField(max_length=100)
-    short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
     slug = models.SlugField(unique=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_')
@@ -30,10 +28,6 @@ class Tournament(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('tournament_home', [self.slug])
-
-    @models.permalink
-    def get_public_url(self):
-        return ('public_index', [self.slug])
 
     @property
     def teams(self):
@@ -68,22 +62,23 @@ class Tournament(models.Model):
 
     @property
     def REPLY_POSITION(self):
-        return 4
-
-    @property
-    def REPLIES_ENABLED(self):
-        return True
+        if self.config.get('reply_scores_enabled'):
+            return 4
+        else:
+            # A bit hackish; but ensures when looping through positions it will
+            # never hit the reply position
+            return 99
 
     @property
     def POSITIONS(self):
-        return range(1, 5)
+        if self.config.get('reply_scores_enabled'):
+            return range(1, 5)
+        else:
+            return range(1, 4)
+
 
     def __unicode__(self):
         return unicode(self.slug)
-        if self.short_name:
-            return unicode(self.short_name)
-        else:
-            return unicode(self.name)
 
 class VenueGroup(models.Model):
     name = models.CharField(max_length=120)
@@ -500,7 +495,7 @@ class SpeakerManager(models.Manager):
 
     def reply_standings(self, round=None):
         # If replies aren't enabled, return an empty queryset.
-        if not round.tournament.REPLIES_ENABLED:
+        if not tournament.reply_scores_enabled:
             return self.objects.none()
 
         if round:

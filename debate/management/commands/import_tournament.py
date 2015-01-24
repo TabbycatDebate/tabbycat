@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-from django.utils.text import slugify
 import os
 import csv
 import debate.models as m
@@ -28,25 +27,22 @@ class Command(BaseCommand):
         self.stdout.write('importing from ' + data_path)
 
         try:
-            if m.Tournament.objects.filter(name=folder).exists():
+            if m.Tournament.objects.filter(slug=folder).exists():
                 self.stdout.write("WARNING! A tournament called '" + folder + "' already exists.")
                 self.stdout.write("You are about to delete EVERYTHING for this tournament.")
                 response = raw_input("Are you sure? ")
                 if response != "yes":
                     self.stdout.write("Cancelled.")
                     raise CommandError("Cancelled by user.")
-                m.Tournament.objects.filter(name=folder).delete()
+                m.Tournament.objects.filter(slug=folder).delete()
 
             # Tournament
             self.stdout.write('*** Attempting to create tournament ' + folder)
             try:
-                slug = slugify(unicode(folder))
-                short_name = (folder[:24] + '..') if len(folder) > 75 else folder
-                t = m.Tournament(name=folder, short_name=short_name, slug=slug)
+                t = m.Tournament(slug=folder)
                 t.save()
             except Exception as inst:
                 total_errors += 1
-                self.stdout.write("Error creating a tournament")
                 print inst
 
             self.stdout.write('*** Created the tournament: ' + folder)
