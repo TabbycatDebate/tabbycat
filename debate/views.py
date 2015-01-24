@@ -101,17 +101,7 @@ def r2r(request, template, extra_context=None):
 
 def index(request):
     tournaments = Tournament.objects.all()
-
-    if request.user.is_authenticated():
-        if len(tournaments) == 1:
-            return redirect('tournament_home', tournament_slug=tournaments[0].slug)
-        else:
-            return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
-    else:
-        if len(tournaments) == 1:
-            return redirect('public_index', tournament_slug=tournaments[0].slug)
-        else:
-            return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
+    return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
 
 ## Public UI
 
@@ -121,7 +111,7 @@ TAB_PAGES_CACHE_TIMEOUT = 28800
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def public_index(request, t):
-    return r2r(request, 'public/index.html')
+    return r2r(request, 'public/tournament_index.html')
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)

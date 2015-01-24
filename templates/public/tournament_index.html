@@ -4,9 +4,6 @@
 {% block head-title %}Welcome to {{ tournament }}{% endblock %}
 {% block page-title %}Welcome to {{ tournament }}{% endblock %}
 
-{% block nav %}{% include "public/nav.html" %}{% endblock %}
-
-
 {% block header %}
     {{ tournament.welcome_msg|safe|linebreaks }}
 {% endblock %}
