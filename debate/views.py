@@ -99,19 +99,9 @@ def r2r(request, template, extra_context=None):
     return render_to_response(template, context_instance=rc)
 
 
-def index(request):
+def site_index(request):
     tournaments = Tournament.objects.all()
-
-    if request.user.is_authenticated():
-        if len(tournaments) == 1:
-            return redirect('tournament_home', tournament_slug=tournaments[0].slug)
-        else:
-            return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
-    else:
-        if len(tournaments) == 1:
-            return redirect('public_index', tournament_slug=tournaments[0].slug)
-        else:
-            return r2r(request, 'index.html', dict(tournaments=Tournament.objects.all()))
+    return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
 
 ## Public UI
 
