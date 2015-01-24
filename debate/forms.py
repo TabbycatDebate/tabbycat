@@ -196,7 +196,6 @@ class BallotSetForm(forms.Form):
                     }))
 
                 # css_class is for jquery validation plugin, surely this can be moved elsewhere
-                # If reply_position is not none; ie the style features replies
                 score_field = (pos == self.REPLY_POSITION) and ReplyScoreField or ScoreField
 
                 for i, adj in enumerate(self.adjudicators):
