@@ -577,7 +577,7 @@ def round_index(request, round):
 
 @admin_required
 @round_view
-def confirm_increment(request, round):
+def round_increment_check(request, round):
     draw = round.get_draw()
     stats = {
         'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
@@ -585,14 +585,14 @@ def confirm_increment(request, round):
         'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
         'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
     }
-    return r2r(request, "round_increment.html", dict(stats=stats))
+    return r2r(request, "round_increment_check.html", dict(stats=stats))
 
 @admin_required
 @expect_post
 @round_view
-def increment_round(request, round):
-
-    return redirect_round('draw', round)
+def round_increment(request, round):
+    request.tournament.advance_round()
+    return redirect_round('draw', request.tournament.current_round )
 
 # public (for barcode checkins)
 @round_view
