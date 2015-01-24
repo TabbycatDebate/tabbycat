@@ -18,7 +18,10 @@
                  <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
             </p>
             <p class="navbar-brand text-muted pull-right">
+                <a href="/">Home</a> |
                 {% if user.is_authenticated %}
+                <a href="{{ tournament.get_absolute_url }}">Tournament Admin</a>
+                 |
                 <a href="/admin/">Django Admin</a>
                  | <a href="/accounts/logout/" title="Log out of {{ user }}">Log out</a>
                 {% else %}

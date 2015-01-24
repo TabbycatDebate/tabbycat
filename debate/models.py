@@ -19,6 +19,8 @@ class ScoreField(models.FloatField):
 
 class Tournament(models.Model):
 
+    name = models.CharField(max_length=100)
+    short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
     slug = models.SlugField(unique=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_')
@@ -78,6 +80,10 @@ class Tournament(models.Model):
 
     def __unicode__(self):
         return unicode(self.slug)
+        if self.short_name:
+            return unicode(self.short_name)
+        else:
+            return unicode(self.name)
 
 class VenueGroup(models.Model):
     name = models.CharField(max_length=120)

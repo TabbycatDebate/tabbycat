@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 
-{% block head-title %}Welcome! <small>Which tournament are you after?</small>{% endblock %}
+{% block head-title %}
+    {% if tournaments.count > 0 %}
+        Welcome! <small>Which tournament are you after?</small>
+    {% else %}
+        Sorry, there are no configured tournaments
+    {% endif %}
+{% endblock %}
 {% block page-title %}Home{% endblock %}
-
 {% block nav %}{% endblock %}
-
 {% block content %}
 
 
@@ -12,7 +16,6 @@
 
     {% if user.is_authenticated %}
         {% for tournament in tournaments %}
-
         <li class="list-group-item list-group-item-info">
             <a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
             <span class="badge">ADMIN</span>
@@ -25,12 +28,15 @@
     {% else %}
         {% for tournament in tournaments %}
         <li class="list-group-item">
+<<<<<<< HEAD:templates/site_index.html
             <a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
+=======
+            <a href="{{ tournament.get_public_url }}">{{ tournament }}</a>
+>>>>>>> develop:templates/index.html
         </li>
         {% endfor %}
     {% endif %}
 
 </ul>
-
 
 {% endblock content %}
