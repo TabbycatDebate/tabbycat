@@ -4,7 +4,7 @@
     {% if tournaments.count > 0 %}
         Welcome! <small>Which tournament are you after?</small>
     {% else %}
-        Sorry, there are no configured tournaments
+        Sorry, there are no tournaments currently setup
     {% endif %}
 {% endblock %}
 {% block page-title %}Home{% endblock %}
@@ -28,11 +28,7 @@
     {% else %}
         {% for tournament in tournaments %}
         <li class="list-group-item">
-<<<<<<< HEAD:templates/site_index.html
-            <a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
-=======
-            <a href="{{ tournament.get_public_url }}">{{ tournament }}</a>
->>>>>>> develop:templates/index.html
+            <a href="{{ tournament.get_public_url }}">{{ tournament.name }}</a>
         </li>
         {% endfor %}
     {% endif %}

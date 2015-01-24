@@ -111,7 +111,7 @@ TAB_PAGES_CACHE_TIMEOUT = 28800
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def public_index(request, t):
-    return r2r(request, 'public/index.html')
+    return r2r(request, 'public/tournament_index.html')
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -177,7 +177,7 @@ def public_team_standings(request, t):
 
         return r2r(request, 'public/team_standings.html', dict(teams=teams, rounds=rounds, round=round))
     else:
-        return r2r(request, 'public/index.html')
+        return r2r(request, 'public/tournament_index.html')
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
