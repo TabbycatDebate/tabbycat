@@ -19,8 +19,8 @@ class ScoreField(models.FloatField):
 
 class Tournament(models.Model):
 
-    name = models.CharField(unique=True, max_length=100)
-    short_name  = models.CharField(unique=True, max_length=25, blank=True, null=True, default="")
+    name = models.CharField(max_length=100)
+    short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
     slug = models.SlugField(unique=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_')
