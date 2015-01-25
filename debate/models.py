@@ -898,6 +898,13 @@ class Round(models.Model):
             return 2
         return 0
 
+    def venue_allocation_validity(self):
+        debates = self.get_draw()
+        if all(debate.venue for debate in debates):
+            return True
+        else:
+            return False
+
     def get_draw(self):
         # -bracket is included for ateneo data, which doesn't have room_rank
         return self.debate_set.order_by('room_rank', '-bracket')
@@ -984,15 +991,16 @@ class Round(models.Model):
         return relevant_venues
 
     def unused_venues(self):
-        result = self.venue_availability().extra(
-            select = {'is_used': """EXISTS (SELECT 1
-                      FROM debate_debate da
-                      WHERE da.round_id=%d AND
-                      da.venue_id = debate_venue.id)""" % self.id},
+        # Had to replicate venue_availability via base_availability so extra()
+        # could still function on the query set
+        result = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
+                                      'debate_venue').extra(select =
+                                      {'is_used': """EXISTS (SELECT 1
+                                      FROM debate_debate da
+                                      WHERE da.round_id=%d AND
+                                      da.venue_id = debate_venue.id)""" % self.id},
         )
-        # if we wanted to do this with sql we'd need to use a subselect, this is much
-        # easier
-        return [v for v in result if v.is_active and not v.is_used]
+        return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
 
     def adjudicator_availability(self):
         all_adjs = self.base_availability(Adjudicator, 'debate_activeadjudicator',

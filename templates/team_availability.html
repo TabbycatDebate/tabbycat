@@ -2,6 +2,7 @@
 {% load debate_tags %}
 
 {% block update-url %}{% round_url update_team_availability %}{% endblock %}
+{% block draw-url %}{% round_url draw round %}{% endblock %}
 {% block page-title %}Team Availability for {{ round.name }}{% endblock %}
 {% block head-title %}Team Availability <small>for {{ round.name }}</small>{% endblock %}
 {% block table-contents %}
