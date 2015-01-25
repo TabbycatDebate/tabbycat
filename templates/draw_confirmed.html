@@ -58,7 +58,7 @@
 <div class="btn-group">
     <a class="btn {% if round.venue_allocation_validity %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_venues_edit %}">Edit Venues</a>
     <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
-    <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}">Edit Motions</a>
+    <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url motions_edit current_round %}">Edit Motions</a>
     <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
 </div>
 <div class="btn-group">
@@ -83,7 +83,7 @@
 
 {% if round.motion_set.all.count == 0 %}
 <div class="alert alert-danger">
-    There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit current_round %}" class="alert-link">Edit the motions</a> for this round.
+    There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit current_round %}" class="alert-link">Edit the motions.</a>
 </div>
 {% endif %}
 
