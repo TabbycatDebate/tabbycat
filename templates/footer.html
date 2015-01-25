@@ -1,31 +1,28 @@
+{% load debate_tags %}
+
 <div id="footer" class="clearfix">
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
-            <p class="navbar-brand text-muted">
-                {% if tournament %}
-                {{ tournament }} runs on
-                {% endif %}
-                <a href="https://github.com/czlee/tabbycat/" target="_new">Tabby Cat</a>
-                {% if tournament %}
-                , as
-                {% else %}
-                 is
-                {% endif %}
+            <p class="navbar-brand text-muted"><small>
+                {% if tournament %}{{ tournament }} runs on {% endif %}
+                <a href="https://github.com/czlee/tabbycat/" target="_new">Tabby Cat, </a>
+                {% if tournament %}as {% else %}is {% endif %}
                  developed by Qi-Shan,
                 <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>,
                 and <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
                 Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> (Android) and
                  <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
-            </p>
+            </small></p>
             <p class="navbar-brand text-muted pull-right">
                 <a href="/">Home</a> |
                 {% if user.is_authenticated %}
-                <a href="{{ tournament.get_absolute_url }}">Tournament Admin</a>
-                 |
-                <a href="/admin/">Django Admin</a>
-                 | <a href="/accounts/logout/" title="Log out of {{ user }}">Log out</a>
+                    {% if tournament %}
+                        <a href="{% tournament_url tournament_config %}">Tournament Config</a> |
+                    {% endif %}
+                    <a href="/admin/">Django Admin</a> |
+                    <a href="/accounts/logout/" title="Log out of {{ user }}">Log out</a>
                 {% else %}
-                <a href="/accounts/login/" title="Log in">Log in</a>
+                    <a href="/accounts/login/" title="Log in">Log in</a>
                 {% endif %}
             </p>
         </div>
