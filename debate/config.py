@@ -29,7 +29,7 @@ SETTINGS = OrderedDict([
     ('draw_side_allocations',       (str,   'Side allocations method, see wiki for allowed values',                'balance')),
     ('draw_pairing_method',         (str,   'Pairing method, see wiki for allowed values',                         'slide')),
     ('draw_avoid_conflicts',        (str,   'Conflict avoidance method, see wiki for allowed values',              'one_up_one_down')),
-    ('team_standings_rule',         (str,   'Rule for ordering teams, "australs" or "nz", see wiki',               'australs')),
+    ('team_standings_rule',         (str,   'Rule for ordering teams, "australs" or "nz" or "wadl" see wiki',      'australs')),
     ('adj_conflict_penalty',        (int,   'Penalty for adjudicator-team conflict',                               1000000)),
     ('adj_history_penalty',         (int,   'Penalty for adjudicator-team history',                                10000)),
     ('avoid_same_institution',      (_bool, 'Avoid team-team institution conflicts in draw?',                      True)),

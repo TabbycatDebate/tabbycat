@@ -239,6 +239,18 @@ def annotate_team_standings(teams, round=None, shuffle=False):
         sorted_teams.sort(cmp=cmp_teams, reverse=True)
         return sorted_teams
 
+    elif rule == "wadl":
+
+        # Sort by points
+
+        # Sort by avg scores
+
+        # Sort by winning margin
+        teams = teams.order_by("-speaker_score")
+
+        return list(teams)
+
+
     else:
         raise ValueError("Invalid team_standings_rule option: {0}".format(rule))
 
