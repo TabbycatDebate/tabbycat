@@ -886,6 +886,13 @@ class Round(models.Model):
             return 2
         return 0
 
+    def venue_allocation_validity(self):
+        debates = self.get_draw()
+        if all(debate.venue for debate in debates):
+            return True
+        else:
+            return False
+
     def get_draw(self):
         # -bracket is included for ateneo data, which doesn't have room_rank
         return self.debate_set.order_by('room_rank', '-bracket')

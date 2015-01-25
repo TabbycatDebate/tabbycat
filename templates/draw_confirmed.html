@@ -56,10 +56,9 @@
 
 
 <div class="btn-group">
-
-    <a class="btn btn-default" href="{% round_url draw_venues_edit %}">Edit Venues</a>
+    <a class="btn {% if round.venue_allocation_validity %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_venues_edit %}">Edit Venues</a>
     <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
-    <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-warning{% endif %}">Edit Motions</a>
+    <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}">Edit Motions</a>
     <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
 </div>
 <div class="btn-group">
@@ -93,6 +92,12 @@
 </div>
 {% endif %}
 
+
+{% if not round.venue_allocation_validity %}
+    <div class="alert alert-danger alert-dismissable" id="">
+        One or more debates does not have a venue <a href="{% round_url draw_venues_edit current_round %}" class="alert-link">Edit the venues</a>.
+    </div>
+{% endif %}
 
 {% if active_adjs.count < rooms %}
     <div class="alert alert-danger alert-dismissable" id="">
