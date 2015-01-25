@@ -16,12 +16,13 @@
             <p class="navbar-brand text-muted pull-right">
                 <a href="/">Home</a> |
                 {% if user.is_authenticated %}
-                <a href="{% tournament_url tournament_config %}">Tournament Config</a>
-                 |
-                <a href="/admin/">Django Admin</a>
-                 | <a href="/accounts/logout/" title="Log out of {{ user }}">Log out</a>
+                    {% if tournament %}
+                        <a href="{% tournament_url tournament_config %}">Tournament Config</a> |
+                    {% endif %}
+                    <a href="/admin/">Django Admin</a> |
+                    <a href="/accounts/logout/" title="Log out of {{ user }}">Log out</a>
                 {% else %}
-                <a href="/accounts/login/" title="Log in">Log in</a>
+                    <a href="/accounts/login/" title="Log in">Log in</a>
                 {% endif %}
             </p>
         </div>
