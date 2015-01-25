@@ -21,7 +21,7 @@
                     <li><a class="side-allocations-nav" href="{% tournament_url side_allocations %}">Sides</a></li>
                     {% endif %}
                     <li><a class="status-nav" href="{% round_url results current_round %}">Status</a></li>
-                    <li><a class="adjudicators-standings-nav" href="{% tournament_url adj_feedback %}">Adjudicators</a></li>
+                    <li><a class="adjudicators-standings-nav" href="{% tournament_url adj_feedback %}">Adjs</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standings<b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -49,7 +49,7 @@
                     {% for r in tournament.rounds.all %}
                     <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="{% if current_round.seq = r.seq %}text-warning{% elif r.draw_status = r.STATUS_CONFIRMED %}text-info{% elif r.draw_status = r.STATUS_RELEASED %}text-success{% endif %}">
+                            <span class="{% if r.draw_status = r.STATUS_RELEASED %}text-success{% endif %}">
                                 {{ r.abbreviation }}<b class="caret"></b>
                             </span>
                         </a>

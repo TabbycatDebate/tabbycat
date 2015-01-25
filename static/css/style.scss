@@ -43,6 +43,16 @@
     }
 }
 
+// Override
+.nav {
+  > li {
+    > a {
+      padding: 15px 10px;
+    }
+  }
+}
+
+
 #header-options {
     min-height: 34px; // Spacer pre-form relocation via JS
     margin-bottom: 20px;

@@ -36,7 +36,7 @@
     {% if round.draw_status = 10 %}
         (Debates Confirmed)
     {% elif round.draw_status = 99 %}
-        (Debates Released)
+        (Debates Released to Public)
     {% endif %}
     </small>
     {% if round.starts_at %}
@@ -47,7 +47,7 @@
     {% if round.draw_status = round.STATUS_CONFIRMED %}
         (Debates Confirmed)
     {% elif round.draw_status = round.STATUS_RELEASED %}
-        (Debates Released)
+        (Debates Released to Public)
     {% endif %}
 {% endblock %}
 {% block body-class %}draw{% endblock %}
