@@ -1196,22 +1196,22 @@ def team_standings(request, round, for_print=False):
 
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
 
-    def get_score(team, r):
+    def get_round_result(team, r):
         try:
             ts = TeamScore.objects.get(
                 ballot_submission__confirmed=True,
                 debate_team__team=team,
                 debate_team__debate__round=r,
             )
-            debate = ts.debate_team.debate
-            opposition = ts.debate_team.opposition.team
-            return ts.score, ts.points, opposition
+            ts.opposition = ts.debate_team.opposition.team
+            return ts
         except TeamScore.DoesNotExist:
             return None
 
     for team in teams:
-        team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_score(team, round) is not None
-        team.scores = [get_score(team, r) for r in rounds]
+        team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(team, round) is not None
+        team.round_results = [get_round_result(team, r) for r in rounds]
+        team.wins = [ts.win for ts in team.round_results if ts].count(True)
 
     show_draw_strength = decide_show_draw_strength(round.tournament)
 

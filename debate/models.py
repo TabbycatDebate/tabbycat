@@ -1662,6 +1662,7 @@ class TeamScore(models.Model):
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_team = models.ForeignKey(DebateTeam)
     points = models.PositiveSmallIntegerField()
+    win = models.BooleanField()
     score = ScoreField()
 
     class Meta:
