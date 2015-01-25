@@ -71,11 +71,6 @@
         <button class="btn btn-danger form-control" id="unrelease_draw">Unrelease</button>
     {% endif %}
 </div>
-<div class="btn-group pull-right">
-    {% if round.seq < tournament.prelim_rounds.count and r == round %}
-        <a class="btn btn-default form-control btn-success" href="{% round_url round_increment_check %}">Advance to R{{ round.seq|add:"1"  }}</a>
-    {% endif %}
-</div>
 {% endblock %}
 
 
