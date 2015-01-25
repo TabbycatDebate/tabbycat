@@ -173,6 +173,7 @@ def annotate_team_standings(teams, round=None, shuffle=False):
         tournament = round.tournament
     else:
         tournament = teams[0].institution.tournament
+
     rule = tournament.config.get('team_standings_rule')
 
     if rule == "australs":
@@ -242,14 +243,14 @@ def annotate_team_standings(teams, round=None, shuffle=False):
     elif rule == "wadl":
 
         # Sort by points
-
-        # Sort by avg scores
-
-        # Sort by winning margin
-        teams = teams.order_by("-speaker_score")
-
-        return list(teams)
-
+        if shuffle:
+            sorted_teams = list(teams)
+            random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
+            sorted_teams.sort(key=lambda x: (x.points), reverse=True)
+            return sorted_teams
+        else:
+            teams = teams.order_by("-points")
+            return list(teams)
 
     else:
         raise ValueError("Invalid team_standings_rule option: {0}".format(rule))

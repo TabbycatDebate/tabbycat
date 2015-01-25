@@ -30,7 +30,8 @@ def debate_context(request):
             'enable_flagged_motions'  : request.tournament.config.get('enable_flagged_motions'),
             'enable_adj_notes'        : request.tournament.config.get('enable_adj_notes'),
             'enable_venue_times'      : request.tournament.config.get('enable_venue_times'),
-            'enable_venue_groups'     : request.tournament.config.get('enable_venue_groups')
+            'enable_venue_groups'     : request.tournament.config.get('enable_venue_groups'),
+            'show_team_points'        : request.tournament.config.get('team_points_rule') != 'normal',
 
         }
         if hasattr(request, 'round'):
