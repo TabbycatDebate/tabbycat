@@ -8,7 +8,6 @@ class Scoresheet(object):
     self.data[side][pos] = score
     """
 
-
     def __init__(self, ballots, adjudicator):
         self.ballots = ballots
         self.debate = ballots.debate
@@ -157,6 +156,11 @@ class BallotSet(object):
             'neg': None,
         }
 
+        self.wins = {
+            'aff': None,
+            'neg': None,
+        }
+
         self._other = {
             'aff': 'neg',
             'neg': 'aff',
@@ -227,12 +231,15 @@ class BallotSet(object):
                 debate_team = dt)
             points = ts.points
             score = ts.score
+            win = ts.win
         except TeamScore.DoesNotExist:
             points = None
             score = None
+            win = None
 
         self.points[side] = points
         self.total_score[side] = score
+        self.wins[side] = win
 
         try:
             dtmp = DebateTeamMotionPreference.objects.get(
@@ -284,9 +291,10 @@ class BallotSet(object):
         dt = self.debate.get_dt(side)
         total = self._score(side)
         points = self._points(side)
+        win = self._win(side)
 
         TeamScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
-        TeamScore(ballot_submission=self.ballots, debate_team=dt, score=total, points=points).save()
+        TeamScore(ballot_submission=self.ballots, debate_team=dt, score=total, points=points, win=win).save()
 
         SpeakerScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
         for i in self.POSITIONS_RANGE:
@@ -351,14 +359,45 @@ class BallotSet(object):
     def neg_score(self):
         return self._score('neg')
 
+    # Abstracted to not be tied to wins
     def _points(self, side):
+        import logging
+        logger = logging.getLogger(__name__)
+
+        logger.error("logging for %s" % side)
         if not self.loaded_sheets:
+            logger.error("returning loaded")
             return self.points[side]
+
+        if self.debate.round.tournament.config.get('team_points_rule') != 'wadl':
+            logger.error("not wadl rules")
+            if self._score(side):
+                if self._score(side) > self._score(self._other[side]):
+                    return 1
+                return 0
+        else:
+            logger.error("wadl rules")
+            if self._score(side):
+                if self._score(side) > self._score(self._other[side]):
+                    logger.error("won so 2 pts")
+                    return 2 # 2pts for a win
+                else:
+                    logger.error("lost so 1pts")
+                    return 1 # 1pt for a loss
+                return 0 # TODO: 0 for a forfeit
+
+        return None
+
+    # Supplants _points; ie its a count of the number of wins
+    def _win(self, side):
+        if not self.loaded_sheets:
+            return self.win[side]
 
         if self._score(side):
             if self._score(side) > self._score(self._other[side]):
-                return 1
-            return 0
+                return True
+            return False
+
         return None
 
     @property
