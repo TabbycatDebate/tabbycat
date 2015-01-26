@@ -701,6 +701,9 @@ a.text-danger:hover {
 .config a.config-nav {
   font-weight: bold; }
 
+.public-draw #header-options .btn-group {
+  display: none; }
+
 html, body {
   height: 100%; }
 
