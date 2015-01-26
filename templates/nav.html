@@ -31,6 +31,7 @@
                             <li><a class="reply-standings-nav" href="{% round_url reply_standings current_round %}">Replies</a></li>
                             {% endif %}
                             <li><a class="feedback-standings-nav" href="{% tournament_url feedback_progress %}">Feedbacks</a></li>
+                            <li><a class="motions-standings-nav" href="{% round_url motions current_round %}">Motions</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -48,7 +49,14 @@
                     {% for r in tournament.rounds.all %}
                     <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="{% if r.draw_status = r.STATUS_RELEASED %}text-success{% endif %}">
+                            <span class="
+                                {% if r.seq < current_round.seq %}
+                                    text-success
+                                {% elif r.draw_status == r.STATUS_RELEASED %}
+                                    text-primary
+                                {% elif r.draw_status != r.STATUS_NONE %}
+                                    text-warning
+                                {% endif %}">
                                 {{ r.abbreviation }}<b class="caret"></b>
                             </span>
                         </a>

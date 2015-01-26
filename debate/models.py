@@ -1723,6 +1723,23 @@ class MotionManager(models.Manager):
         # TODO is there a more efficient way to do this?
         for motion in motions:
             ballots = BallotSubmission.objects.filter(confirmed=True, motion=motion)
+
+            all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
+            motion.aff_vetoes = 0
+            motion.neg_vetoes = 0
+            if all_vetoes:
+                for veto in all_vetoes:
+                    if veto.debate_team.position == "A":
+                        motion.aff_vetoes += 1
+                    elif veto.debate_team.position == "N":
+                        motion.neg_vetoes += 1
+
+            # preferences = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
+            # if preferences:
+            #     logger.error("logging for %s rules" % prefs)
+            #     for p in preferences:
+            #         if p.ballot_submission.debate_team ==
+
             if motion.chosen_in == 0:
                 motion.aff_wins = 0
                 motion.aff_wins_percent = 0
