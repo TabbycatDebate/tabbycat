@@ -158,22 +158,24 @@ def public_team_standings(request, t):
         teams = Team.objects.order_by('institution__code', 'reference')
         rounds = t.prelim_rounds(until=round).filter(silent=False).order_by('seq')
 
-        def get_score(team, r):
+        def get_round_result(team, r):
             try:
                 ts = TeamScore.objects.get(
                     ballot_submission__confirmed=True,
                     debate_team__team=team,
                     debate_team__debate__round=r,
                 )
-                opposition = ts.debate_team.opposition.team
-                return ts.points, opposition
+                ts.opposition = ts.debate_team.opposition.team
+                return ts
             except TeamScore.DoesNotExist:
                 return None
 
         for team in teams:
-            team.scores = [get_score(team, r) for r in rounds]
+            team.round_results = [get_round_result(team, r) for r in rounds]
             # Do this manually, in case there are silent rounds
-            team.wins = sum([score and score[0] or 0 for score in team.scores])
+            team.wins = [ts.win for ts in team.round_results if ts].count(True)
+            team.points = sum([ts.points for ts in team.round_results if ts])
+
 
         return r2r(request, 'public/team_standings.html', dict(teams=teams, rounds=rounds, round=round))
     else:
@@ -1212,6 +1214,9 @@ def team_standings(request, round, for_print=False):
         team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(team, round) is not None
         team.round_results = [get_round_result(team, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
+        team.points = sum([ts.points for ts in team.round_results if ts])
+        margins = [ts.margin for ts in team.round_results if ts]
+        team.avg_margin = sum(margins) / float(len(margins))
 
     show_draw_strength = decide_show_draw_strength(round.tournament)
 

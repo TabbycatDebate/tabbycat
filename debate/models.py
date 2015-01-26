@@ -166,6 +166,7 @@ def annotate_team_standings(teams, round=None, shuffle=False):
     teams = teams.extra({
         "points": EXTRA_QUERY.format(field="points"),
         "speaker_score": EXTRA_QUERY.format(field="score"),
+        "margins": EXTRA_QUERY.format(field="margin"),
     }).distinct()
 
     # Extract which rule to use from the tournament config
@@ -241,15 +242,18 @@ def annotate_team_standings(teams, round=None, shuffle=False):
         return sorted_teams
 
     elif rule == "wadl":
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error("logging for %s rules" % rule)
 
         # Sort by points
         if shuffle:
             sorted_teams = list(teams)
             random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
-            sorted_teams.sort(key=lambda x: (x.points), reverse=True)
+            sorted_teams.sort(key=lambda x: (x.points, x.margins), reverse=True)
             return sorted_teams
         else:
-            teams = teams.order_by("-points")
+            teams = teams.order_by("-points", "-margins")
             return list(teams)
 
     else:
@@ -1662,6 +1666,7 @@ class TeamScore(models.Model):
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_team = models.ForeignKey(DebateTeam)
     points = models.PositiveSmallIntegerField()
+    margin = ScoreField()
     win = models.BooleanField()
     score = ScoreField()
 

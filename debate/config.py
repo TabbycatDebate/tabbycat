@@ -63,6 +63,7 @@ SETTINGS = OrderedDict([
     ('enable_adj_notes',            (_bool, 'WADL: Enables a general-purpose notes field for adjudicators',        False)),
     ('enable_venue_groups',         (_bool, 'WADL: Enables the display of a venues grouping',                      False)),
     ('enable_venue_times',          (_bool, 'WADL: Enables dates and times to be set for venues',                  False)),
+    ('show_avg_margin',             (_bool, 'WADL: Enables a display of average margins in the team standings',    False)),
     ('team_points_rule',            (str,   'WADL: Point awards, where "normal" means 1 point is 1 win; "wadl" uses 2/1/0 for win/loss/forfeit', 'normal')),
 ])
 

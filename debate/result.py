@@ -161,6 +161,11 @@ class BallotSet(object):
             'neg': None,
         }
 
+        self.margins = {
+            'aff': None,
+            'neg': None,
+        }
+
         self._other = {
             'aff': 'neg',
             'neg': 'aff',
@@ -232,14 +237,17 @@ class BallotSet(object):
             points = ts.points
             score = ts.score
             win = ts.win
+            margin = ts.margin
         except TeamScore.DoesNotExist:
             points = None
             score = None
             win = None
+            margin = None
 
         self.points[side] = points
         self.total_score[side] = score
         self.wins[side] = win
+        self.margins[side] = margin
 
         try:
             dtmp = DebateTeamMotionPreference.objects.get(
@@ -292,9 +300,10 @@ class BallotSet(object):
         total = self._score(side)
         points = self._points(side)
         win = self._win(side)
+        margin = self._margin(side)
 
         TeamScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
-        TeamScore(ballot_submission=self.ballots, debate_team=dt, score=total, points=points, win=win).save()
+        TeamScore(ballot_submission=self.ballots, debate_team=dt, score=total, points=points, win=win, margin=margin).save()
 
         SpeakerScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
         for i in self.POSITIONS_RANGE:
@@ -361,28 +370,19 @@ class BallotSet(object):
 
     # Abstracted to not be tied to wins
     def _points(self, side):
-        import logging
-        logger = logging.getLogger(__name__)
-
-        logger.error("logging for %s" % side)
         if not self.loaded_sheets:
-            logger.error("returning loaded")
             return self.points[side]
 
         if self.debate.round.tournament.config.get('team_points_rule') != 'wadl':
-            logger.error("not wadl rules")
             if self._score(side):
                 if self._score(side) > self._score(self._other[side]):
                     return 1
                 return 0
         else:
-            logger.error("wadl rules")
             if self._score(side):
                 if self._score(side) > self._score(self._other[side]):
-                    logger.error("won so 2 pts")
                     return 2 # 2pts for a win
                 else:
-                    logger.error("lost so 1pts")
                     return 1 # 1pt for a loss
                 return 0 # TODO: 0 for a forfeit
 
@@ -397,6 +397,15 @@ class BallotSet(object):
             if self._score(side) > self._score(self._other[side]):
                 return True
             return False
+
+        return None
+
+    def _margin(self, side):
+        if not self.loaded_sheets:
+            return self.margin[side]
+
+        if self._score(side) and self._score(self._other[side]):
+            return self._score(side) - self._score(self._other[side])
 
         return None
 

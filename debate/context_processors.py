@@ -31,6 +31,7 @@ def debate_context(request):
             'enable_adj_notes'        : request.tournament.config.get('enable_adj_notes'),
             'enable_venue_times'      : request.tournament.config.get('enable_venue_times'),
             'enable_venue_groups'     : request.tournament.config.get('enable_venue_groups'),
+            'show_avg_margin'         : request.tournament.config.get('show_avg_margin'),
             'show_team_points'        : request.tournament.config.get('team_points_rule') != 'normal',
 
         }

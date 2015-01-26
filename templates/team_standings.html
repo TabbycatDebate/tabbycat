@@ -33,6 +33,12 @@
             {% else %}
                 <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
             {% endif %}
+            {% if show_team_points %}
+                <th>Points</th>
+            {% endif %}
+            {% if show_avg_margin %}
+                <th><span data-toggle="tooltip" title="Average Winning Margin">AWM</span></th>
+            {% endif %}
             {% if show_emoji > 0 and not for_print %}
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
@@ -45,9 +51,6 @@
                 <th>{{ round.abbreviation }}</th>
             {% endfor %}
                 <th>Total</th>
-            {% if show_team_points %}
-                <th>Points</th>
-            {% endif %}
             {% if show_draw_strength %}
                 <th><span data-toggle="tooltip" title="Draw strength">DS</span></th>
             {% endif %}
@@ -59,6 +62,12 @@
     {% for team in teams %}
     <tr class="{% if not team.results_in %}danger{% endif %}">
         <td>{{ team.rank }}</td>
+        {% if show_team_points %}
+            <td>{{ team.points }}</td>
+        {% endif %}
+        {% if show_avg_margin %}
+            <td>{{ team.avg_margin|stringformat:".2f" }}</td>
+        {% endif %}
         {% if show_emoji > 0 and not for_print %}
             <td class="team-emoji team-{{ team.id }}"></td>
         {% endif %}
@@ -73,7 +82,6 @@
                 <span class="visible-xs">{{ team.institution.code }}</span>
             </td>
         {% endif %}
-
         {% for round_results in team.round_results %}
             {% if round_results.win >= 0 %}
                 {% if for_print %}
@@ -88,7 +96,6 @@
             {% else %}
                 <td></td>
             {% endif %}
-
             {% if round_results.win >= 0 %}
                 {% if show_ballots and round_results.oppositon %}
                     <td><a class="team-score" href="{% tournament_url public_ballots_view round_results.opposition %}">{{ round_results.score|stringformat:".2f" }}</a></td>
@@ -98,15 +105,10 @@
             {% else %}
                 <td></td>
             {% endif %}
-
         {% endfor %}
-
         <td>{{ team.speaker_score|stringformat:".2f" }}</td>
         {% if show_draw_strength %}
             <td>{{ team.draw_strength }}</td>
-        {% endif %}
-        {% if show_team_points %}
-            <td>{{ team.points }}</td>
         {% endif %}
         <td>{{ team.wins }}</td>
         <td>{% aff_count team round %}</td>
