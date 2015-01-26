@@ -22,6 +22,7 @@ SETTINGS = OrderedDict([
     ('break_size',                  (int,   'Number of breaking teams',                                            16)),
     ('esl_break_size',              (int,   'Number of ESL breaking teams',                                        4)),
     ('institution_cap',             (int,   'Maximum number of teams from one institution that can break',         3)),
+    ('motion_vetoes_enabled',       (_bool, 'Whether teams can veto motions',                                      True)),
     ('adj_min_score',               (float, 'Minimum adjudicator score',                                           1.5)),
     ('adj_max_score',               (float, 'Maximum adjudicator score',                                           5)),
     ('adj_chair_min_score',         (float, 'Minimum chair score',                                                 3.5)),

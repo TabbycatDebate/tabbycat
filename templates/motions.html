@@ -67,12 +67,14 @@
         <th>Flagged</th>
         {% endif %}
         <th>Chosen</th>
-        <th>Aff vetoes</th>
-        <th>Neg vetoes</th>
-        <th>Aff wins</th>
-        <th>Neg wins</th>
-        <th>Aff win%</th>
-        <th>Neg win%</th>
+        {% if motion_vetoes_enabled %}
+        <th><span title="Aff vetoes" data-toggle="tooltip">AV</th>
+        <th><span title="Neg vetoes" data-toggle="tooltip">NV</th>
+        {% endif %}
+        <th><span title="Aff wins" data-toggle="tooltip">AW</span></th>
+        <th><span title="Neg wins" data-toggle="tooltip">NW</span></th>
+        <th><span title="Aff win %" data-toggle="tooltip">AW%</span></th>
+        <th><span title="Neg win %" data-toggle="tooltip">NW%</span></th>
     </tr>
     </thead>
     <tbody>
@@ -92,8 +94,10 @@
         </td>
         {% endif %}
         <td>{{ motion.chosen_in }}</td>
-        <td></td>
-        <td></td>
+        {% if motion_vetoes_enabled %}
+        <td>{{ motion.aff_vetoes }}</td>
+        <td>{{ motion.neg_vetoes }}</td>
+        {% endif %}
         <td>{{ motion.aff_wins }}</td>
         <td>{{ motion.neg_wins }}</td>
         <td>{{ motion.aff_wins_percent }}%</td>

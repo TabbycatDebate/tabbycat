@@ -10,6 +10,7 @@ def debate_context(request):
             'reply_scores_enabled'    : request.tournament.config.get('reply_scores_enabled'),
             'show_emoji'              : request.tournament.config.get('show_emoji'),
             'show_institutions'       : request.tournament.config.get('show_institutions'),
+            'motion_vetoes_enabled'   : request.tournament.config.get('motion_vetoes_enabled'),
             'public_team_standings'   : request.tournament.config.get('public_team_standings') \
                                            and request.tournament.current_round.prev is not None,
             'public_breaking_teams'   : request.tournament.config.get('public_breaking_teams'),
