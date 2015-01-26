@@ -121,7 +121,17 @@
             <td class="venue-name">
                 {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}
             </td>
-            <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
+            {% if enable_venue_times %}
+            <td>
+                {% if venue.time %}
+                    <span class="hidden">{{ venue.time|date:"d m o H:i" }}</span>
+                    {{ venue.time|date:"D jS M h:i" }}
+                {% endif %}
+            </td>
+            {% endif %}
+            {% if show_emoji > 0 %}
+                <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
+            {% endif %}
             <td class="team-name">
                 <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
                     {{ debate.aff_team.short_name }}
@@ -130,7 +140,9 @@
                    {{ debate.aff_team.speakers|join:', ' }}
                 </span>
             </td>
-            <td class="team-emoji team-{{ debate.neg_team.id }}" id=""></td>
+            {% if show_emoji > 0 %}
+                <td class="team-emoji team-{{ debate.neg_team.id }}" id=""></td>
+            {% endif %}
             <td class="team-name">
                 <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
