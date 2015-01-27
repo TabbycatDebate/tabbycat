@@ -191,6 +191,10 @@ class BallotSubmissionAdmin(admin.ModelAdmin):
 admin.site.register(models.BallotSubmission, BallotSubmissionAdmin)
 
 class ActionLogAdmin(admin.ModelAdmin):
-    list_display = ('type', 'user', 'timestamp', 'get_parameters_display')
+    if models.Tournament.objects.count() > 1:
+        list_display = ('type', 'user', 'timestamp', 'get_parameters_display', 'tournament')
+    else:
+        list_display = ('type', 'user', 'timestamp', 'get_parameters_display')
+
     search_fields = ('type', 'user__username')
 admin.site.register(models.ActionLog, ActionLogAdmin)

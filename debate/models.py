@@ -1863,6 +1863,7 @@ class ActionLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
+    tournament = models.ForeignKey(Tournament, blank=True, null=True)
 
     debate = models.ForeignKey(Debate, blank=True, null=True)
     ballot_submission = models.ForeignKey(BallotSubmission, blank=True, null=True)
