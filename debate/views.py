@@ -448,9 +448,7 @@ def tournament_home(request, t):
 
     # Speaker Scores
     from debate.models import SpeakerScore
-
     round = t.current_round
-
     # This should never happen, but if it does, fail semi-gracefully
     if round is None:
         if request.user.is_superuser:

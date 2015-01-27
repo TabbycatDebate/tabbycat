@@ -41,7 +41,13 @@ class TeamAdmin(admin.ModelAdmin):
 admin.site.register(models.Team, TeamAdmin)
 
 class SpeakerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'team', )
+    if models.Tournament.objects.count() > 1:
+        _speaker_tournament = lambda o: o.team.institution.tournament
+        _speaker_tournament.short_description = 'Tournament'
+        list_display = ('name', 'team', _speaker_tournament)
+    else:
+        list_display = ('name', 'team')
+
     search_fields = ('name', 'team__name', 'team__institution__name',
                      'team__institution__code',)
 admin.site.register(models.Speaker, SpeakerAdmin)
@@ -103,7 +109,13 @@ class DebateAdjudicatorInline(admin.TabularInline):
     extra = 1
 
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'round', 'aff_team', 'neg_team', 'adjudicators',)
+    if models.Tournament.objects.count() > 1:
+        _debate_tournament = lambda o: o.round.tournament
+        _debate_tournament.short_description = 'Tournament'
+        list_display = ('id', 'round', 'aff_team', 'neg_team', 'adjudicators', _debate_tournament)
+    else:
+        list_display = ('id', 'round', 'aff_team', 'neg_team', 'adjudicators',)
+
     search_fields = ('debateteam__team__reference', 'debateteam__team__institution__code',
                      'debateadjudicator__adjudicator__name',)
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
@@ -153,7 +165,11 @@ class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin):
 admin.site.register(models.DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
 
 class RoundAdmin(admin.ModelAdmin):
-    list_display = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
+    if models.Tournament.objects.count() > 1:
+        list_display = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at', 'tournament')
+    else:
+        list_display = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
+
 admin.site.register(models.Round, RoundAdmin)
 
 admin.site.register(models.Tournament)

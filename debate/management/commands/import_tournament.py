@@ -6,11 +6,11 @@ import csv
 import debate.models as m
 
 class Command(BaseCommand):
-    args = '<folder> <num_rounds>'
+    args = '<folder> <num_rounds> <share_data>'
     help = 'Imports data from a folder in the data directory'
 
     def handle(self, *args, **options):
-        if len(args) < 1:
+        if len(args) < 3:
             raise CommandError("Not enough arguments.")
 
         # Getting the command line variable
@@ -19,6 +19,14 @@ class Command(BaseCommand):
             rounds_to_auto_make = int(args[1])
         except:
             rounds_to_auto_make = 0
+
+        try:
+            if args[2] == "share":
+                sharing_data = True
+            else:
+                sharing_data = False
+        except:
+            sharing_data = False
 
         total_errors = 0
 
@@ -141,8 +149,13 @@ class Command(BaseCommand):
 
                 if group:
                     try:
-                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                        if sharing_data:
+                            venue_group, created = m.VenueGroup.objects.get_or_create(
+                               name=group, defaults={'tournament': t})
+                        else:
+                            venue_group, created = m.VenueGroup.objects.get_or_create(
                                name=group, tournament=t)
+
                         if created:
                             print group
                             venue_group_count = venue_group_count + 1
@@ -152,15 +165,28 @@ class Command(BaseCommand):
                         venue_group = None
 
                 try:
-                    m.Venue(
-                        tournament = t,
-                        group = venue_group,
-                        name = room_name,
-                        priority = priority,
-                        time = time
-                    ).save()
-                    print room_name
+                    if sharing_data:
+                        venue, created = m.Venue.objects.get_or_create(
+                            tournament = t,
+                            group = venue_group,
+                            name = room_name,
+                            priority = priority,
+                            time = time,
+                            defaults = {'tournament': t}
+                        )
+                        print "Matched %s" % room_name
+                    else:
+                        m.Venue(
+                            tournament = t,
+                            group = venue_group,
+                            name = room_name,
+                            priority = priority,
+                            time = time
+                        ).save()
+                        print "Made %s" % room_name
+
                     venue_count = venue_count + 1
+
                 except Exception as inst:
                     total_errors += 1
                     self.stdout.write('Couldnt make venue ' + room_name)
@@ -186,15 +212,25 @@ class Command(BaseCommand):
                 abbv = len(line) > 2 and line[2] or ""
 
                 try:
-                    i = m.Institution(
-                        code=code,
-                        name=name,
-                        abbreviation=abbv,
-                        tournament=t
-                    )
-                    i.save()
+                    if sharing_data:
+                        inst, created = m.Institution.objects.get_or_create(
+                            code=code,
+                            name=name,
+                            abbreviation=abbv,
+                            defaults={'tournament': t}
+                        )
+                        print "Matched %s" % name
+                    else:
+                        i = m.Institution(
+                            code=code,
+                            name=name,
+                            abbreviation=abbv,
+                            tournament=t
+                        )
+                        i.save()
+                        print "Made %s" % name
+
                     institutions_count = institutions_count + 1
-                    print name
                 except Exception as inst:
                     total_errors += 1
                     self.stdout.write('Couldnt make institution ' + name)
@@ -253,7 +289,7 @@ class Command(BaseCommand):
                     total_errors += 1
                     print inst
 
-                print team, "-", name
+                print "Made", team, "-", name
 
             self.stdout.write('*** Created ' + str(speakers_count) +
                               ' speakers and ' + str(teams_count) + ' teams')
