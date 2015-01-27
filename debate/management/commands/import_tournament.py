@@ -217,16 +217,14 @@ class Command(BaseCommand):
                         inst, created = m.Institution.objects.get_or_create(
                             code=code,
                             name=name,
-                            abbreviation=abbv,
-                            defaults={'tournament': t}
+                            abbreviation=abbv
                         )
                         print "Matched %s" % name
                     else:
                         i = m.Institution(
                             code=code,
                             name=name,
-                            abbreviation=abbv,
-                            tournament=t
+                            abbreviation=abbv
                         )
                         i.save()
                         print "Made %s" % name
@@ -266,7 +264,9 @@ class Command(BaseCommand):
                     team, created = m.Team.objects.get_or_create(
                             institution = ins,
                             reference = team_name,
-                            use_institution_prefix = True)
+                            use_institution_prefix = True,
+                            tournament=t
+                    )
                     if created:
                         teams_count = teams_count + 1
                 except Exception as inst:
@@ -277,7 +277,7 @@ class Command(BaseCommand):
 
 
                 # Resetting the variable incase create/get above fails
-                speakers_team = m.Team.objects.get(institution=ins, reference=team_name)
+                speakers_team = m.Team.objects.get(institution=ins, reference=team_name, tournament=t)
 
                 name = name.strip()
                 try:
@@ -299,10 +299,10 @@ class Command(BaseCommand):
             # Judges
             self.stdout.write('**** Attempting to create the judges')
             try:
-                reader = csv.reader(open(os.path.join(data_path, 'institutions.csv')))
+                reader = csv.reader(open(os.path.join(data_path, 'judges.csv')))
                 reader.next() # Skipping header row
             except:
-                self.stdout.write('institutions.csv file is missing or damaged')
+                self.stdout.write('judges.csv file is missing or damaged')
                 total_errors += 1
 
             adjs_count = 0
@@ -345,9 +345,9 @@ class Command(BaseCommand):
                 # People can either input instutions as name or short name
                 ins_name = ins_name.strip()
                 try:
-                    ins = m.Institution.objects.get(name=ins_name, tournament=t)
+                    ins = m.Institution.objects.get(name=ins_name)
                 except m.Institution.DoesNotExist:
-                    ins = m.Institution.objects.get(code=ins_name, tournament=t)
+                    ins = m.Institution.objects.get(code=ins_name)
 
                 name = name.strip()
                 adj = m.Adjudicator(
@@ -356,7 +356,8 @@ class Command(BaseCommand):
                     test_score = test_score,
                     phone = phone,
                     email = email,
-                    notes = notes
+                    notes = notes,
+                    tournament = t
                 )
                 adj.save()
                 print "Made Adjudicator", name
@@ -368,10 +369,10 @@ class Command(BaseCommand):
                     for ins_conflict_name in institution_conflicts.split(","):
                         ins_conflict_name = ins_conflict_name.strip()
                         try:
-                            ins_conflict = m.Institution.objects.get(name=ins_conflict_name, tournament=t)
+                            ins_conflict = m.Institution.objects.get(name=ins_conflict_name)
                         except m.Institution.DoesNotExist:
                             print ins_conflict_name
-                            ins_conflict = m.Institution.objects.get(code=ins_conflict_name, tournament=t)
+                            ins_conflict = m.Institution.objects.get(code=ins_conflict_name)
                         m.AdjudicatorInstitutionConflict(adjudicator=adj, institution=ins_conflict).save()
                         print "    conflicts with", ins_conflict.name
 
@@ -380,9 +381,9 @@ class Command(BaseCommand):
                         team_conflict_ins_name, team_conflict_ref = team_conflict_name.rsplit(None, 1)
                         team_conflict_ins_name = team_conflict_ins_name.strip()
                         try:
-                            team_conflict_ins = m.Institution.objects.get(name=team_conflict_ins_name, tournament=t)
+                            team_conflict_ins = m.Institution.objects.get(name=team_conflict_ins_name)
                         except m.Institution.DoesNotExist:
-                            team_conflict_ins = m.Institution.objects.get(code=team_conflict_ins_name, tournament=t)
+                            team_conflict_ins = m.Institution.objects.get(code=team_conflict_ins_name)
                         try:
                             team_conflict = m.Team.objects.get(institution=team_conflict_ins, reference=team_conflict_ref)
                         except m.Team.DoesNotExist:
@@ -422,10 +423,10 @@ class Command(BaseCommand):
                     team_name = line[1]
                     ins_name = ins_name.strip()
                     try:
-                        ins = m.Institution.objects.get(name=ins_name, tournament=t)
+                        ins = m.Institution.objects.get(name=ins_name)
                     except m.Institution.DoesNotExist:
-                        ins = m.Institution.objects.get(code=ins_name, tournament=t)
-                    team = m.Team.objects.get(institution=ins, reference=team_name)
+                        ins = m.Institution.objects.get(code=ins_name)
+                    team = m.Team.objects.get(institution=ins, reference=team_name, tournament=t)
                     for seq, side in enumerate(line[2:], start=1):
                         round = m.Round.objects.get(seq=seq)
                         if side.lower() in ["a", "aff"]:
