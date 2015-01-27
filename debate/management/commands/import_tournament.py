@@ -36,7 +36,7 @@ class Command(BaseCommand):
         self.stdout.write('importing from ' + data_path)
 
         try:
-            if m.Tournament.objects.filter(slug=folder).exists():
+            if m.Tournament.objects.filter(slug=slugify(unicode(folder))).exists():
                 self.stdout.write("WARNING! A tournament called '" + folder + "' already exists.")
                 self.stdout.write("You are about to delete EVERYTHING for this tournament.")
                 response = raw_input("Are you sure? ")
