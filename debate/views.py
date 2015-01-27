@@ -1462,8 +1462,10 @@ def adj_scores(request, t):
 @login_required
 @tournament_view
 def adj_feedback(request, t):
-
     adjudicators = Adjudicator.objects.all()
+
+    if not t.config.get('share_adjs'):
+        adjudicators = [a for a in adjudicators if a.tournament == t]
 
     if not request.user.is_superuser:
         template = 'monkey/adjudicator_feedback.html'

@@ -3,7 +3,12 @@ from django.contrib import admin
 import debate.models as models
 
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    if models.Tournament.objects.count() > 1:
+        list_display = ('name', 'tournament')
+    else:
+        list_display = ('name',)
+
+    ordering = ('name',)
     search_fields = ('name',)
 
 admin.site.register(models.Institution, InstitutionAdmin)
@@ -22,7 +27,13 @@ class TeamLocationPreferencesInline(admin.TabularInline):
     extra = 1
 
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution')
+    if models.Tournament.objects.count() > 1:
+        _team_tournament = lambda o: o.institution.tournament
+        _team_tournament.short_description = 'Tournament'
+        list_display = ('name', 'institution', _team_tournament)
+    else:
+        list_display = ('name', 'institution')
+
     search_fields = ('name','institution__name', 'institution__code',)
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamLocationPreferencesInline)
     exclude = ("venue_group_preferences",)
@@ -48,7 +59,13 @@ class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
     extra = 1
 
 class AdjudicatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution')
+    if models.Tournament.objects.count() > 1:
+        _adj_tournament = lambda o: o.institution.tournament
+        _adj_tournament.short_description = 'Tournament'
+        list_display = ('name', 'institution', _adj_tournament)
+    else:
+        list_display = ('name', 'institution')
+
     search_fields = ('name', 'institution__name', 'institution__code',)
     inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorTestScoreHistoryInline)
 admin.site.register(models.Adjudicator, AdjudicatorAdmin)
@@ -59,12 +76,21 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 class VenueGroupAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    if models.Tournament.objects.count() > 1:
+        list_display = ('tournament',)
+    else:
+        list_display = ('name',)
+
     search_fields = ('name',)
+
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
 
 class VenueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'priority', 'time')
+    if models.Tournament.objects.count() > 1:
+        list_display = ('tournament', 'name', 'group', 'priority', 'time')
+    else:
+        list_display = ('name', 'group', 'priority', 'time')
+
     search_fields = ('name', 'group__name', 'time')
 admin.site.register(models.Venue, VenueAdmin)
 

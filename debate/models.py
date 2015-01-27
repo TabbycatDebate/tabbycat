@@ -996,6 +996,7 @@ class Round(models.Model):
         all_adjs = self.base_availability(Adjudicator, 'debate_activeadjudicator',
                                       'adjudicator_id',
                                       'debate_adjudicator', id_field='person_ptr_id')
+
         if not self.tournament.config.get('share_adjs'):
             all_adjs = [a for a in all_adjs if a.tournament == self.tournament]
 
