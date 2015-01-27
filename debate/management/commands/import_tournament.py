@@ -43,21 +43,21 @@ class Command(BaseCommand):
                 if response != "yes":
                     self.stdout.write("Cancelled.")
                     raise CommandError("Cancelled by user.")
-                m.Tournament.objects.filter(slug=folder).delete()
+                m.Tournament.objects.filter(slug=slugify(unicode(folder))).delete()
 
             # Tournament
-            self.stdout.write('*** Attempting to create tournament ' + folder)
+            self.stdout.write('**** Attempting to create tournament ' + folder)
             try:
                 slug = slugify(unicode(folder))
                 short_name = (folder[:24] + '..') if len(folder) > 75 else folder
-                t = m.Tournament(name=folder, short_name=short_name, slug=slug)
+                t = m.Tournament(name=folder, short_name=short_name, slug=slugify(unicode(folder)))
                 t.save()
             except Exception as inst:
                 total_errors += 1
                 print inst
 
-            self.stdout.write('*** Created the tournament: ' + folder)
-            self.stdout.write('*** Attempting to create rounds ')
+            self.stdout.write('**** Created the tournament: ' + folder)
+            self.stdout.write('**** Attempting to create rounds ')
             rounds_count = 0
 
             if rounds_to_auto_make > 0:
@@ -78,6 +78,7 @@ class Command(BaseCommand):
                             feedback_weight = min((i-1)*0.1, 0.5),
                             silent = (i >= rounds_to_auto_make),
                         ).save()
+                        print "Made %s" % name
                         rounds_count += 1
 
                 except Exception as inst:
@@ -120,7 +121,7 @@ class Command(BaseCommand):
                         ).save()
                         rounds_count += 1
                         i += 1
-                        print name
+                        print "Made %s" % name
                     except Exception as inst:
                         total_errors += 1
                         self.stdout.write('Couldnt make round ' + name)
@@ -128,10 +129,10 @@ class Command(BaseCommand):
 
             t.current_round = m.Round.objects.get(tournament=t, seq=1)
             t.save()
-            self.stdout.write('*** Created ' + str(rounds_count) + ' rounds')
+            self.stdout.write('**** Created ' + str(rounds_count) + ' rounds')
 
             # Venues
-            self.stdout.write('*** Attempting to create the venues')
+            self.stdout.write('**** Attempting to create the venues')
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'venues.csv')))
                 reader.next() # Skipping header row
@@ -157,7 +158,7 @@ class Command(BaseCommand):
                                name=group, tournament=t)
 
                         if created:
-                            print group
+                            print "Made %s" % group
                             venue_group_count = venue_group_count + 1
                     except ValueError:
                         total_errors += 1
@@ -193,11 +194,11 @@ class Command(BaseCommand):
                     print inst
 
 
-            self.stdout.write('*** Created ' + str(venue_group_count) + ' venue groups')
-            self.stdout.write('*** Created ' + str(venue_count) + ' venues')
+            self.stdout.write('**** Created ' + str(venue_group_count) + ' venue groups')
+            self.stdout.write('**** Created ' + str(venue_count) + ' venues')
 
             # Institutions
-            self.stdout.write('*** Attempting to create the institutions')
+            self.stdout.write('**** Attempting to create the institutions')
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'institutions.csv')))
                 reader.next() # Skipping header row
@@ -236,10 +237,10 @@ class Command(BaseCommand):
                     self.stdout.write('Couldnt make institution ' + name)
                     print inst
 
-            self.stdout.write('*** Created ' + str(institutions_count) + ' institutions')
+            self.stdout.write('**** Created ' + str(institutions_count) + ' institutions')
 
             # Speakers
-            self.stdout.write('*** Attempting to create the teams/speakers')
+            self.stdout.write('**** Attempting to create the teams/speakers')
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'speakers.csv'), 'rU'))
                 reader.next() # Skipping header row
@@ -262,9 +263,10 @@ class Command(BaseCommand):
                         print inst           # __str__ allows args to printed directly
 
                 try:
-                    team, created = m.Team.objects.get_or_create(institution = ins,
-                           reference = team_name,
-                           use_institution_prefix = True)
+                    team, created = m.Team.objects.get_or_create(
+                            institution = ins,
+                            reference = team_name,
+                            use_institution_prefix = True)
                     if created:
                         teams_count = teams_count + 1
                 except Exception as inst:
@@ -289,13 +291,13 @@ class Command(BaseCommand):
                     total_errors += 1
                     print inst
 
-                print "Made", team, "-", name
+                print "Made team:%s \t\tspeaker:%s \t\tinstituion:%s" % (team, name, ins)
 
-            self.stdout.write('*** Created ' + str(speakers_count) +
+            self.stdout.write('**** Created ' + str(speakers_count) +
                               ' speakers and ' + str(teams_count) + ' teams')
 
             # Judges
-            self.stdout.write('*** Attempting to create the judges')
+            self.stdout.write('**** Attempting to create the judges')
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'institutions.csv')))
                 reader.next() # Skipping header row
@@ -304,8 +306,6 @@ class Command(BaseCommand):
                 total_errors += 1
 
             adjs_count = 0
-            reader = csv.reader(open(os.path.join(data_path, 'judges.csv')))
-            reader.next() # Skipping header row
             for line in reader:
                 ins_name, name, test_score = line[0:3]
                 phone = len(line) > 3 and line[3] or None
@@ -359,7 +359,7 @@ class Command(BaseCommand):
                     notes = notes
                 )
                 adj.save()
-                print "Adjudicator", name
+                print "Made Adjudicator", name
 
                 m.AdjudicatorTestScoreHistory(adjudicator=adj, score=test_score, round=None).save()
                 m.AdjudicatorInstitutionConflict(adjudicator=adj, institution=ins).save()
@@ -393,7 +393,7 @@ class Command(BaseCommand):
 
                 adjs_count = adjs_count + 1
 
-            self.stdout.write('*** Created ' + str(adjs_count) + ' judges')
+            self.stdout.write('**** Created ' + str(adjs_count) + ' judges')
 
             # Motions
             if os.path.isfile(os.path.join(data_path, 'motions.csv')):
@@ -410,7 +410,7 @@ class Command(BaseCommand):
                     self.stdout.write(text)
                     motions_count += 1
 
-                self.stdout.write('*** Created ' + str(motions_count) + ' motions')
+                self.stdout.write('**** Created ' + str(motions_count) + ' motions')
 
             # Sides
             if os.path.isfile(os.path.join(data_path, 'sides.csv')):
@@ -438,12 +438,12 @@ class Command(BaseCommand):
                         sides_count += 1
                     self.stdout.write(team.short_name)
 
-                self.stdout.write('*** Created ' + str(sides_count) + ' side allocations')
+                self.stdout.write('**** Created ' + str(sides_count) + ' side allocations')
 
             if total_errors == 0:
-                self.stdout.write('*** Successfully imported all data')
+                self.stdout.write('**** Successfully imported all data')
             else:
-                self.stdout.write('*** Successfully all data but with %d ERRORS' % total_errors)
+                self.stdout.write('**** Successfully all data but with %d ERRORS' % total_errors)
 
 
         except Exception:
