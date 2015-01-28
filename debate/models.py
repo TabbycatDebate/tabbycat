@@ -1931,7 +1931,7 @@ class ConfigManager(models.Manager):
 
 class Config(models.Model):
     tournament = models.ForeignKey(Tournament)
-    key = models.CharField(max_length=40, unique=True)
+    key = models.CharField(max_length=40)
     value = models.CharField(max_length=40)
 
     objects = ConfigManager()
