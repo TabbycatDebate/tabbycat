@@ -29,6 +29,7 @@ class TeamLocationPreferencesInline(admin.TabularInline):
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution', 'tournament')
     search_fields = ('name','institution__name', 'institution__code', 'tournament')
+    list_filter = ('tournament', 'institution')
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamLocationPreferencesInline)
     exclude = ("venue_group_preferences",)
 
@@ -36,11 +37,6 @@ admin.site.register(models.Team, TeamAdmin)
 
 class SpeakerAdmin(admin.ModelAdmin):
     list_display = ('name', 'team')
-    # if models.Tournament.objects.count() > 1:
-    #     _speaker_tournament = lambda o: o.team.tournament
-    #     _speaker_tournament.short_description = 'Tournament'
-    #     list_display = ('name', 'team', _speaker_tournament)
-
     search_fields = ('name', 'team__name', 'team__institution__name',
                      'team__institution__code',)
 admin.site.register(models.Speaker, SpeakerAdmin)
@@ -60,6 +56,7 @@ class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
 class AdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution', 'tournament')
     search_fields = ('name', 'tournament', 'institution__name', 'institution__code',)
+    list_filter = ('tournament', 'name')
     inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorTestScoreHistoryInline)
 admin.site.register(models.Adjudicator, AdjudicatorAdmin)
 
@@ -81,6 +78,7 @@ class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time', 'tournament')
     # if models.Tournament.objects.count() > 1:
     #     list_display = ('tournament', 'name', 'group', 'priority', 'time')
+    list_filter = ('tournament', 'group', 'priority', 'time')
 
     search_fields = ('name', 'group__name', 'time')
 admin.site.register(models.Venue, VenueAdmin)
@@ -150,6 +148,8 @@ admin.site.register(models.DebateTeamMotionPreference, DebateTeamMotionPreferenc
 
 class RoundAdmin(admin.ModelAdmin):
     list_display = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at', 'tournament')
+    list_filter = ('tournament',)
+    search_fields = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status')
 
 admin.site.register(models.Round, RoundAdmin)
 
@@ -186,6 +186,7 @@ admin.site.register(models.BallotSubmission, BallotSubmissionAdmin)
 
 class ActionLogAdmin(admin.ModelAdmin):
     list_display = ('type', 'user', 'timestamp', 'get_parameters_display', 'tournament')
+    list_filter = ('tournament', 'user', 'type')
 
-    search_fields = ('type', 'user__username')
+    search_fields = ('type', 'tournament', 'user__username')
 admin.site.register(models.ActionLog, ActionLogAdmin)
