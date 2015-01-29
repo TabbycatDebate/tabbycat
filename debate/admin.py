@@ -2,8 +2,13 @@ from django.contrib import admin
 
 import debate.models as models
 
+
+admin.site.register(models.Tournament)
+admin.site.register(models.DebateTeam)
+
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ('name',)
+    ordering = ('name',)
     search_fields = ('name',)
 
 admin.site.register(models.Institution, InstitutionAdmin)
@@ -22,15 +27,20 @@ class TeamLocationPreferencesInline(admin.TabularInline):
     extra = 1
 
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution')
-    search_fields = ('name','institution__name', 'institution__code',)
+    list_display = ('name', 'institution', 'tournament')
+    search_fields = ('name','institution__name', 'institution__code', 'tournament')
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamLocationPreferencesInline)
     exclude = ("venue_group_preferences",)
 
 admin.site.register(models.Team, TeamAdmin)
 
 class SpeakerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'team', )
+    list_display = ('name', 'team')
+    # if models.Tournament.objects.count() > 1:
+    #     _speaker_tournament = lambda o: o.team.tournament
+    #     _speaker_tournament.short_description = 'Tournament'
+    #     list_display = ('name', 'team', _speaker_tournament)
+
     search_fields = ('name', 'team__name', 'team__institution__name',
                      'team__institution__code',)
 admin.site.register(models.Speaker, SpeakerAdmin)
@@ -48,8 +58,8 @@ class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
     extra = 1
 
 class AdjudicatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution')
-    search_fields = ('name', 'institution__name', 'institution__code',)
+    list_display = ('name', 'institution', 'tournament')
+    search_fields = ('name', 'tournament', 'institution__name', 'institution__code',)
     inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorTestScoreHistoryInline)
 admin.site.register(models.Adjudicator, AdjudicatorAdmin)
 
@@ -60,11 +70,18 @@ admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 class VenueGroupAdmin(admin.ModelAdmin):
     list_display = ('name',)
+    # if models.Tournament.objects.count() > 1:
+    #     list_display = ('tournament',)
+
     search_fields = ('name',)
+
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
 
 class VenueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'priority', 'time')
+    list_display = ('name', 'group', 'priority', 'time', 'tournament')
+    # if models.Tournament.objects.count() > 1:
+    #     list_display = ('tournament', 'name', 'group', 'priority', 'time')
+
     search_fields = ('name', 'group__name', 'time')
 admin.site.register(models.Venue, VenueAdmin)
 
@@ -78,6 +95,11 @@ class DebateAdjudicatorInline(admin.TabularInline):
 
 class DebateAdmin(admin.ModelAdmin):
     list_display = ('id', 'round', 'aff_team', 'neg_team', 'adjudicators',)
+    # if models.Tournament.objects.count() > 1:
+    #     _debate_tournament = lambda o: o.round.tournament
+    #     _debate_tournament.short_description = 'Tournament'
+    #     list_display = ('id', 'round', 'aff_team', 'neg_team', 'adjudicators', _debate_tournament)
+
     search_fields = ('debateteam__team__reference', 'debateteam__team__institution__code',
                      'debateadjudicator__adjudicator__name',)
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
@@ -127,11 +149,9 @@ class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin):
 admin.site.register(models.DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
 
 class RoundAdmin(admin.ModelAdmin):
-    list_display = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
-admin.site.register(models.Round, RoundAdmin)
+    list_display = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at', 'tournament')
 
-admin.site.register(models.Tournament)
-admin.site.register(models.DebateTeam)
+admin.site.register(models.Round, RoundAdmin)
 
 class DebateAdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('debate', 'adjudicator', 'type')
@@ -165,6 +185,7 @@ class BallotSubmissionAdmin(admin.ModelAdmin):
 admin.site.register(models.BallotSubmission, BallotSubmissionAdmin)
 
 class ActionLogAdmin(admin.ModelAdmin):
-    list_display = ('type', 'user', 'timestamp', 'get_parameters_display')
+    list_display = ('type', 'user', 'timestamp', 'get_parameters_display', 'tournament')
+
     search_fields = ('type', 'user__username')
 admin.site.register(models.ActionLog, ActionLogAdmin)

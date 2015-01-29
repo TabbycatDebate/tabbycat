@@ -11,13 +11,8 @@
         <tr>
             <th>Adjudicator</th>
             {% if show_institutions > 0 %}
-            <th>Institution</th>
+                <th>Institution</th>
             {% endif %}
-            <th>Test</th>
-            {% for round in tournament.rounds.all %}
-            <th>{{ round.abbreviation }}</th>
-            {% endfor %}
-            <th>Avg</th>
             <th>Score</th>
             {% if enable_adj_notes > 0 %}
                 <th>Notes</th>
@@ -30,24 +25,15 @@
         <tr id="adj_{{ adj.id }}">
             <td class="adj-name">{{ adj.name }}</td>
             {% if show_institutions > 0 %}
-            <td>{{ adj.institution.code }}</td>
+                <td>{{ adj.institution.code }}</td>
             {% endif %}
-            <td>{{ adj.test_score }}</td>
-            {% for rscore in adj.rscores %}
-            {% if rscore %}
-            <td>{{ rscore|stringformat:".2f" }}</td>
-            {% else %}
-            <td>-</td>
-            {% endif %}
-            {% endfor %}
-            <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
             <td>{{ adj.score|stringformat:".2f" }}</td>
             {% if enable_adj_notes > 0 %}
-            <td>
-                {% if adj.notes %}
-                <a data-toggle="tooltip" data-placement="left" title="{{ adj.notes }}">View</a>
-                {% endif %}
-            </td>
+                <td>
+                    {% if adj.notes %}
+                        <a data-toggle="tooltip" data-placement="left" title="{{ adj.notes }}">View</a>
+                    {% endif %}
+                </td>
             {% endif %}
             <td class="check_target">
                 <input type="checkbox" {{ adj.is_active|yesno:'checked="yes",'  }} class="adj-check" name="check_{{ adj.id }}" value="{{ adj.id }}" />

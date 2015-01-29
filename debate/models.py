@@ -37,7 +37,7 @@ class Tournament(models.Model):
 
     @property
     def teams(self):
-        return Team.objects.filter(institution__tournament=self)
+        return Team.objects.filter(tournament=self)
 
     def prelim_rounds(self, before=None, until=None):
         qs = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=self)
@@ -114,13 +114,12 @@ class Venue(models.Model):
         return u'%s %s (%d)' % (self.group, self.name, self.priority)
 
 class Institution(models.Model):
-    tournament = models.ForeignKey(Tournament)
     code = models.CharField(max_length=20)
     name = models.CharField(max_length=100)
     abbreviation = models.CharField(max_length=8, default="")
 
     class Meta:
-        unique_together = [('tournament', 'code')]
+        unique_together = [('code')]
 
     def __unicode__(self):
         return unicode(self.name)
@@ -173,8 +172,7 @@ def annotate_team_standings(teams, round=None, shuffle=False):
     if round is not None:
         tournament = round.tournament
     else:
-        tournament = teams[0].institution.tournament
-
+        tournament = teams[0].tournament
     rule = tournament.config.get('team_standings_rule')
 
     if rule == "australs":
@@ -264,7 +262,7 @@ class TeamManager(models.Manager):
     def standings(self, round):
         """Returns a list."""
         teams = self.filter(
-            institution__tournament=round.tournament,
+            tournament = round.tournament,
             debateteam__debate__round__seq__lte = round.seq,
         )
         return annotate_team_standings(teams, round)
@@ -314,7 +312,7 @@ class TeamManager(models.Manager):
         }
         filterargs = FILTER_ARGS[category]
 
-        teams = self.filter(institution__tournament=tournament, **filterargs)
+        teams = self.filter(tournament=tournament, **filterargs)
         teams = annotate_team_standings(teams)
 
         BREAK_SIZE_CONFIG_OPTIONS = {
@@ -373,6 +371,7 @@ class TeamManager(models.Manager):
 class Team(models.Model):
     reference = models.CharField(max_length=50, verbose_name="Name or suffix")
     institution = models.ForeignKey(Institution)
+    tournament = models.ForeignKey(Tournament)
     use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
 
     # set to True if a team is ineligible to break (other than being
@@ -396,7 +395,7 @@ class Team(models.Model):
                             default=TYPE_NONE)
 
     class Meta:
-        unique_together = [('reference', 'institution')]
+        unique_together = [('reference', 'institution', 'tournament')]
 
     objects = TeamManager()
 
@@ -470,13 +469,13 @@ class SpeakerManager(models.Manager):
         # only include scoresheets for up to this round, exclude replies
         if round:
             speakers = self.filter(
-                team__institution__tournament=round.tournament,
+                team__tournament=round.tournament,
                 speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
                 speakerscore__debate_team__debate__round__seq__lte = round.seq,
             )
         else:
             speakers = self.filter(
-                team__institution__tournament=round.tournament,
+                team__tournament=round.tournament,
                 speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
             )
 
@@ -528,19 +527,19 @@ class SpeakerManager(models.Manager):
 
     def reply_standings(self, round=None):
         # If replies aren't enabled, return an empty queryset.
-        if not tournament.reply_scores_enabled:
+        if not round.tournament.config.get('reply_scores_enabled'):
             return self.objects.none()
 
         if round:
             speakers = self.filter(
-                team__institution__tournament=round.tournament,
+                team__tournament=round.tournament,
                 speakerscore__position=round.tournament.REPLY_POSITION,
                 speakerscore__debate_team__debate__round__seq__lte =
                 round.seq,
             )
         else:
             speakers = self.filter(
-                team__institution__tournament=round.tournament,
+                team__tournament=round.tournament,
                 speakerscore__position=round.tournament.REPLY_POSITION,
             )
 
@@ -631,6 +630,7 @@ class AdjudicatorManager(models.Manager):
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
+    tournament = models.ForeignKey(Tournament)
     test_score = models.FloatField(default=0)
 
     institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adjudicator_institution_conflicts')
@@ -655,10 +655,6 @@ class Adjudicator(Person):
         return team.id in self._conflict_cache or team.institution_id in self._institution_conflict_cache
 
     @property
-    def tournament(self):
-        return self.institution.tournament
-
-    @property
     def score(self):
         weight = self.tournament.current_round.feedback_weight
 
@@ -673,7 +669,7 @@ class Adjudicator(Person):
     @property
     def rscores(self):
         r = []
-        for round in self.institution.tournament.rounds.all():
+        for round in self.tournament.rounds.all():
             q = models.Q(source_adjudicator__debate__round=round) | \
                     models.Q(source_team__debate__round=round)
             a = AdjudicatorFeedback.objects.filter(
@@ -992,8 +988,10 @@ class Round(models.Model):
     def venue_availability(self):
         all_venues = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
                                       'debate_venue')
-        relevant_venues = [v for v in all_venues if v.tournament == self.tournament]
-        return relevant_venues
+        if not self.tournament.config.get('share_venues'):
+            all_venues = [v for v in all_venues if v.tournament == self.tournament]
+
+        return all_venues
 
     def unused_venues(self):
         # Had to replicate venue_availability via base_availability so extra()
@@ -1011,8 +1009,11 @@ class Round(models.Model):
         all_adjs = self.base_availability(Adjudicator, 'debate_activeadjudicator',
                                       'adjudicator_id',
                                       'debate_adjudicator', id_field='person_ptr_id')
-        relevant_adjs = [a for a in all_adjs if a.tournament == self.tournament]
-        return relevant_adjs
+
+        if not self.tournament.config.get('share_adjs'):
+            all_adjs = [a for a in all_adjs if a.tournament == self.tournament]
+
+        return all_adjs
 
     def unused_adjudicators(self):
         result = self.base_availability(Adjudicator, 'debate_activeadjudicator',
@@ -1030,7 +1031,7 @@ class Round(models.Model):
     def team_availability(self):
         all_teams = self.base_availability(Team, 'debate_activeteam', 'team_id',
                                       'debate_team')
-        relevant_teams = [t for t in all_teams if t.institution.tournament == self.tournament]
+        relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
         return relevant_teams
 
     def set_available_base(self, ids, model, active_model, get_active,
@@ -1877,6 +1878,7 @@ class ActionLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
+    tournament = models.ForeignKey(Tournament, blank=True, null=True)
 
     debate = models.ForeignKey(Debate, blank=True, null=True)
     ballot_submission = models.ForeignKey(BallotSubmission, blank=True, null=True)
@@ -1947,7 +1949,7 @@ class ConfigManager(models.Manager):
 
 class Config(models.Model):
     tournament = models.ForeignKey(Tournament)
-    key = models.CharField(max_length=40, unique=True)
+    key = models.CharField(max_length=40)
     value = models.CharField(max_length=40)
 
     objects = ConfigManager()
