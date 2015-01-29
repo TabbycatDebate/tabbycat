@@ -53,7 +53,7 @@ SETTINGS = OrderedDict([
     ('public_ballots',              (_bool, 'Public interface to add ballots',                                     False)),
     ('public_feedback',             (_bool, 'Public interface to add feedback',                                    False)),
     ('public_use_password',         (_bool, 'Require password to submit public feedback and ballots',              False)),
-    ('public_password',             (str,   'Value of the password for public submissions',                        '')),
+    ('public_password',             (str,   'Value of the password for public submissions',                        ' ')),
     ('panellist_feedback_enabled',  (_bool, 'Allow public feedback to be submitted by panellists',                 True)),
     ('feedback_progress',           (_bool, 'Public interface to show who has unsubmitted ballots',                False)),
     ('tab_released',                (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament',                 False)),
@@ -64,7 +64,6 @@ SETTINGS = OrderedDict([
     ('enable_adj_notes',            (_bool, 'Enables a general-purpose notes field for adjudicators',              False)),
     ('enable_venue_groups',         (_bool, 'Enables the display of a venues grouping',                            False)),
     ('enable_venue_times',          (_bool, 'Enables dates and times to be set for venues',                        False)),
-    ('share_institions',            (_bool, 'Display institutions from other tournaments',                         False)),
     ('share_venues',                (_bool, 'Display venues from other tournaments',                               False)),
     ('share_adjs',                  (_bool, 'Display adjudicators from other tournaments',                         False)),
 ])
