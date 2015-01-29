@@ -53,17 +53,19 @@ SETTINGS = OrderedDict([
     ('public_ballots',              (_bool, 'Public interface to add ballots',                                     False)),
     ('public_feedback',             (_bool, 'Public interface to add feedback',                                    False)),
     ('public_use_password',         (_bool, 'Require password to submit public feedback and ballots',              False)),
-    ('public_password',             (str,   'Value of the password for public submissions',                        '')),
+    ('public_password',             (str,   'Value of the password for public submissions',                        ' ')),
     ('panellist_feedback_enabled',  (_bool, 'Allow public feedback to be submitted by panellists',                 True)),
-    ('feedback_progress',           (_bool, 'Public interface to show who has unsubmitted ballots',                        False)),
+    ('feedback_progress',           (_bool, 'Public interface to show who has unsubmitted ballots',                False)),
     ('tab_released',                (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament',                 False)),
     ('motion_tab_released',         (_bool, 'Displays the motions tab PUBLICLY. For AFTER the tournament',         False)),
     ('ballots_released',            (_bool, 'Displays ballots PUBLICLY. For AFTER the tournament',                 False)),
     # WADL-Specific
-    ('enable_flagged_motions',      (_bool, 'WADL: Allow particular motions to be flagged as contentious',         False)),
-    ('enable_adj_notes',            (_bool, 'WADL: Enables a general-purpose notes field for adjudicators',        False)),
-    ('enable_venue_groups',         (_bool, 'WADL: Enables the display of a venues grouping',                      False)),
-    ('enable_venue_times',          (_bool, 'WADL: Enables dates and times to be set for venues',                  False)),
+    ('enable_flagged_motions',      (_bool, 'Allow particular motions to be flagged as contentious',               False)),
+    ('enable_adj_notes',            (_bool, 'Enables a general-purpose notes field for adjudicators',              False)),
+    ('enable_venue_groups',         (_bool, 'Enables the display of a venues grouping',                            False)),
+    ('enable_venue_times',          (_bool, 'Enables dates and times to be set for venues',                        False)),
+    ('share_venues',                (_bool, 'Display venues from other tournaments',                               False)),
+    ('share_adjs',                  (_bool, 'Display adjudicators from other tournaments',                         False)),
 ])
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
