@@ -41,6 +41,12 @@ class SpeakerAdmin(admin.ModelAdmin):
                      'team__institution__code',)
 admin.site.register(models.Speaker, SpeakerAdmin)
 
+class DivisionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'tournament', 'venue_group')
+
+admin.site.register(models.Division, DivisionAdmin)
+
+
 class AdjudicatorConflictInline(admin.TabularInline):
     model = models.AdjudicatorConflict
     extra = 1
@@ -67,17 +73,12 @@ admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 class VenueGroupAdmin(admin.ModelAdmin):
     list_display = ('name',)
-    # if models.Tournament.objects.count() > 1:
-    #     list_display = ('tournament',)
-
     search_fields = ('name',)
 
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
 
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time', 'tournament')
-    # if models.Tournament.objects.count() > 1:
-    #     list_display = ('tournament', 'name', 'group', 'priority', 'time')
     list_filter = ('tournament', 'group', 'priority', 'time')
 
     search_fields = ('name', 'group__name', 'time')

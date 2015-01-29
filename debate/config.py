@@ -68,6 +68,7 @@ SETTINGS = OrderedDict([
     ('share_adjs',                  (_bool, 'Display adjudicators from other tournaments',                         False)),
     ('show_avg_margin',             (_bool, 'WADL: Enables a display of average margins in the team standings',    False)),
     ('team_points_rule',            (str,   'WADL: Point awards, where "normal" means 1 point is 1 win; "wadl" uses 2/1/0 for win/loss/forfeit', 'normal')),
+    ('enable_divisions',            (_bool, 'WADL: Enables the sorting and display of teams into divisions',       False)),
 ])
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))

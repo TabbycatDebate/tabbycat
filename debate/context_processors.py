@@ -34,6 +34,7 @@ def debate_context(request):
             'enable_venue_groups'     : request.tournament.config.get('enable_venue_groups'),
             'show_avg_margin'         : request.tournament.config.get('show_avg_margin'),
             'show_team_points'        : request.tournament.config.get('team_points_rule') != 'normal',
+            'enable_divisions'        : request.tournament.config.get('enable_divisions'),
 
         }
         if hasattr(request, 'round'):

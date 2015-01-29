@@ -18,7 +18,6 @@ class ScoreField(models.FloatField):
     pass
 
 class Tournament(models.Model):
-
     name = models.CharField(max_length=100)
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
     slug = models.SlugField(unique=True)
@@ -99,6 +98,10 @@ class Tournament(models.Model):
 class VenueGroup(models.Model):
     name = models.CharField(max_length=120)
     tournament = models.ForeignKey(Tournament)
+
+    @property
+    def venues(self):
+        return self.venue_set.all()
 
     def __unicode__(self):
         return u'%s' % (self.name)
@@ -368,10 +371,28 @@ class TeamManager(models.Manager):
         return breaking_teams
 
 
+class Division(models.Model):
+    name = models.CharField(max_length=50, verbose_name="Name or suffix")
+    tournament = models.ForeignKey(Tournament)
+    venue_group = models.ForeignKey(VenueGroup, blank=True, null=True)
+
+    @property
+    def teams(self):
+        return self.team_set.all()
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        unique_together = [('tournament', 'name')]
+
+
+
 class Team(models.Model):
     reference = models.CharField(max_length=50, verbose_name="Name or suffix")
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament)
+    division = models.ForeignKey('Division', blank=True, null=True)
     use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
 
     # set to True if a team is ineligible to break (other than being
