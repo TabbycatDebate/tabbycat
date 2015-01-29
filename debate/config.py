@@ -66,6 +66,8 @@ SETTINGS = OrderedDict([
     ('enable_venue_times',          (_bool, 'Enables dates and times to be set for venues',                        False)),
     ('share_venues',                (_bool, 'Display venues from other tournaments',                               False)),
     ('share_adjs',                  (_bool, 'Display adjudicators from other tournaments',                         False)),
+    ('show_avg_margin',             (_bool, 'WADL: Enables a display of average margins in the team standings',    False)),
+    ('team_points_rule',            (str,   'WADL: Point awards, where "normal" means 1 point is 1 win; "wadl" uses 2/1/0 for win/loss/forfeit', 'normal')),
 ])
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
