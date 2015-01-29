@@ -119,7 +119,7 @@ class Institution(models.Model):
     abbreviation = models.CharField(max_length=8, default="")
 
     class Meta:
-        unique_together = [('code')]
+        unique_together = [('name', 'code')]
 
     def __unicode__(self):
         return unicode(self.name)
