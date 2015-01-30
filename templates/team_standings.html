@@ -42,7 +42,10 @@
             {% if show_emoji > 0 and not for_print %}
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
-                <th>Team</th>
+            <th>Team</th>
+            {% if enable_divisions %}
+                <th>Division</th>
+            {% endif %}
             {% if show_institutions > 0 %}
                 <th>Inst<span class="hidden-xs">itution</span></th>
             {% endif %}
@@ -76,6 +79,9 @@
             {{ team.short_name }} {% if team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
             </span>
         </td>
+        {% if enable_divisions %}
+            <td>{{ team.division }}</td>
+        {% endif %}
         {% if show_institutions > 0 %}
             <td>
                 <span class="hidden-xs">{{ team.institution }}</span>

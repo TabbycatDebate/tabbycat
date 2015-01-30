@@ -16,6 +16,7 @@ from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, D
 from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission, AdjudicatorTestScoreHistory
 from debate.models import AdjudicatorFeedback, ActiveVenue, ActiveTeam, ActiveAdjudicator
 from debate.models import TeamPositionAllocation
+from debate.models import Division, VenueGroup
 from debate.result import BallotSet
 from debate import forms
 
@@ -816,7 +817,7 @@ def unrelease_draw(request, round):
 @admin_required
 @tournament_view
 def side_allocations(request, t):
-    teams = Team.objects.filter(institution__tournament=t)
+    teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
     TPA_MAP = {
@@ -829,6 +830,14 @@ def side_allocations(request, t):
     for team in teams:
         team.side_allocations = [tpas.get((team.id, round.id), "-") for round in rounds]
     return r2r(request, "side_allocations.html", dict(teams=teams, rounds=rounds))
+
+
+@admin_required
+@tournament_view
+def division_allocations(request, t):
+    teams = Team.objects.filter(tournament=t)
+    divisions = Division.objects.filter(tournament=t)
+    return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions))
 
 
 @admin_required

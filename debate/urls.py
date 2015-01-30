@@ -110,5 +110,6 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/break/adjudicators/$',  'breaking_adjs', name='breaking_adjs'),
 
     url(r'^admin/side_allocations/$', 'side_allocations', name='side_allocations'),
+    url(r'^admin/division_allocations/$', 'division_allocations', name='division_allocations'),
 
 )

@@ -1180,6 +1180,7 @@ class Debate(models.Model):
 
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue, blank=True, null=True)
+    division = models.ForeignKey('Division', blank=True, null=True)
 
     bracket = models.FloatField(default=0)
     room_rank = models.IntegerField(default=0)
