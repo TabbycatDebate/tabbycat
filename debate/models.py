@@ -399,8 +399,9 @@ class Team(models.Model):
     # swing/composite)
     cannot_break = models.BooleanField(default=False)
 
-    # Records the list of venues a team is willing to debate in
-    venue_group_preferences = models.ManyToManyField(VenueGroup, blank=True, verbose_name='For when a team can only debate in specific venues')
+    first_venue_preference = models.ForeignKey(VenueGroup, blank=True, null=True, verbose_name='1st Venue Preference', related_name='+')
+    second_venue_preference = models.ForeignKey(VenueGroup, blank=True, null=True, verbose_name='2nd Venue Preference', related_name='+')
+    tertiary_venue_preferences = models.ManyToManyField(VenueGroup, blank=True, null=True, verbose_name='3rd Venue Preferences', related_name='+')
 
     TYPE_NONE = 'N'
     TYPE_ESL = 'E'
@@ -1830,6 +1831,7 @@ class ActionLog(models.Model):
     ACTION_TYPE_VENUES_SAVE             = 33
     ACTION_TYPE_DRAW_RELEASE            = 34
     ACTION_TYPE_DRAW_UNRELEASE          = 35
+    ACTION_TYPE_DIVISIONS_SAVE          = 36
     ACTION_TYPE_MOTION_EDIT             = 40
     ACTION_TYPE_MOTIONS_RELEASE         = 41
     ACTION_TYPE_MOTIONS_UNRELEASE       = 42
@@ -1856,6 +1858,7 @@ class ActionLog(models.Model):
         (ACTION_TYPE_DRAW_CONFIRM           , 'Confirmed draw'),
         (ACTION_TYPE_DRAW_RELEASE           , 'Released draw'),
         (ACTION_TYPE_DRAW_UNRELEASE         , 'Unreleased draw'),
+        (ACTION_TYPE_DRAW_UNRELEASE         , 'Saved divisions'),
         (ACTION_TYPE_MOTION_EDIT            , 'Added/edited motion'),
         (ACTION_TYPE_MOTIONS_RELEASE        , 'Released motions'),
         (ACTION_TYPE_MOTIONS_UNRELEASE      , 'Unreleased motions'),

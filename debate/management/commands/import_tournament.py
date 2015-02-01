@@ -152,6 +152,19 @@ class Command(BaseCommand):
             t.save()
             self.stdout.write('**** Created ' + str(rounds_count) + ' rounds')
 
+
+
+            # Venues
+            self.stdout.write('**** Attempting to create the venue groups')
+            try:
+                reader = csv.reader(open(os.path.join(data_path, 'venue_groups.csv')))
+                reader.next() # Skipping header row
+            except:
+                self.stdout.write('venues.csv file is missing or damaged')
+                total_errors += 1
+
+
+
             # Venues
             self.stdout.write('**** Attempting to create the venues')
             try:

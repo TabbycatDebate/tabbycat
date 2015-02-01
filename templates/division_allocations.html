@@ -1,19 +1,66 @@
 {% extends "draw_base.html" %}
-
+{% load debate_tags %}
 {% load static %}
 
 {% block extra-head %}
-    {{ block.super }}
+<script type="text/javascript" language="javascript" src="{% static 'js/jquery-ui-1.10.4.custom.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'js/jquery.jeditable.js' %}"></script>
+
        <script type="text/javascript" charset="utf-8">
             $(document).ready( function() {
+
                 var table = $("#dataTable").dataTable({
-                    "aaSorting": [[ 1, "asc" ]],
+                    "aaSorting": [[ 1, "asc" ], [0, "asc"]],
                 });
-                new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+
+                $('#save').click( function() {
+                    var teams = {};
+                    $("#dataTable .division").each( function() {
+                        teams[$(this).attr("id")] = $("select", this).val();
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: "{% tournament_url save_divisions %}",
+                        data: teams,
+                        success: function(data, status) {
+                            $("#alerts-holder").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Saved successfully!</div>');
+                        },
+                        error: function(xhr, error, ex) {
+                            console.log(xhr.responseText);
+                            alert(xhr.responseText); //throw actual error, just for debugging purpose
+                            $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Save failed!</div>');
+                        }
+                    });
+                    return false;
+                });
+
+                $('#auto_allocate').click(function() {
+                    var btn = $(this)
+                    btn.button('loading')
+                    $.ajax({
+                        type: "POST",
+                        url: "{% tournament_url create_division_allocation %}",
+                        success: function(data, status) {
+                            reset();
+                            // load_allocation_data($.parseJSON(data));
+                            // update_all_conflicts();
+                            // append_adj_scores();
+                            // $('#loading').hide();
+                            // btn.button('reset')
+                        },
+                        error: function(xhr, error, ex) {
+                            $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Auto-allocation failed! '
+                                + xhr.responseText + ' (' + xhr.status + ')</div>');
+                            $(this).button('reset');
+                            btn.button('reset')
+                        }
+                    });
+
+                });
 
             } );
         </script>
-        <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+
 {% endblock extra-head %}
 
 {% block extra-style %}{% endblock %}
@@ -22,7 +69,30 @@
 {% block page-title %}Allocate Divisions{% endblock %}
 {% block body-class %}Allocate Divisions{% endblock %}
 
+{% block header %}
+<div id="statusBar" class="btn-group">
+    <a class="btn form-control btn-default" href="#auto" id="auto_allocate">Auto Allocate</a>
+    <a data-loading-text="Saving..." class="btn form-control btn-success" href="" id="save">Save</a>
+    <a data-loading-text="Allocating..." class="btn form-control btn-danger" href="{% round_url draw current_round %}">Quit</a>
+</div>
+
+<div id="" class="btn-group">
+    <a class="btn form-control btn-default" data-toggle="modal" data-target="#view-numbers">View Division Numbers</a>
+</div>
+
+
+<div id="" class="btn-group">
+    <div class="btn btn-default">Legend:</div>
+    <div class="btn btn-default btn-success" disabled="disabled">Has 1st Preference</div>
+    <div class="btn btn-default btn-primary" disabled="disabled">Has a 2nd Preference</div>
+    <div class="btn btn-default btn-warning" disabled="disabled">Has a 3rd Preference</div>
+    <div class="btn btn-default btn-danger" disabled="disabled">Has none of their preferences</div>
+</div>
+{% endblock %}
+
 {% block content %}
+
+<div id="alerts-holder" class=""></div>
 
 <table id="dataTable" class="team-tab table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
@@ -35,7 +105,10 @@
                 <th>Inst<span class="hidden-xs">itution</span></th>
             {% endif %}
             <th>Division</th>
-            <th>Venue Preferences</th>
+            <th>Status</th>
+            <th>1st Preference</th>
+            <th>2nd Preference</th>
+            <th>3rd Preferences</th>
         </tr>
     </thead>
     <tbody>
@@ -45,22 +118,76 @@
             <td class="team-emoji team-{{ team.id }}"></td>
         {% endif %}
         <td>
-            <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
+            <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="" class="team" href="#">
             {{ team.short_name }} {% if team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
             </span>
         </td>
         {% if show_institutions > 0 %}
             <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
         {% endif %}
-        <td>{{ team.division }} ({{ team.division.venue_group }})</td>
-        <td>
-        {% for preference in team.venue_group_preferences.all %}
-            {{ preference }},
-        {% endfor %}
+        <td id="{{ team.id }}" class="division">
+            <span class="hidden">{{ team.division }}</span>
+            <select class="form-control">
+                <option value="">None</option>
+                {% for d in divisions %}
+                    <option value="{{ d.id }}" {% if team.division == d %}selected{% endif %}>
+                        {{ d.name }} {% if d.venue_group %}({{ d.venue_group }}){% endif %}
+                    </option>
+                {% endfor %}
+            </select>
         </td>
+        <td class="
+            {% if team.division.venue_group %}
+                {% if team.first_venue_preference or team.second_venue_preference or team.tertiary_venue_preferences.count > 0 %}
+                    {% if team.division.venue_group == team.first_venue_preference %}success
+                    {% elif team.division.venue_group == team.second_venue_preference %}info
+                    {% elif team.division.venue_group in team.tertiary_venue_preferences.all %}warning
+                    {% else %}danger{% endif %}
+                {% endif %}
+            {% endif %}
+        ">
+            {% if team.division.venue_group %}
+                {% if team.first_venue_preference or team.second_venue_preference or team.tertiary_venue_preferences.count > 0 %}
+                    {% if team.division.venue_group == team.first_venue_preference %}1st
+                    {% elif team.division.venue_group == team.second_venue_preference %}2nd
+                    {% elif team.division.venue_group in team.tertiary_venue_preferences.all %}3rd
+                    {% else %}None{% endif %}
+                {% endif %}
+            {% else %}
+
+            {% endif %}
+        </td>
+        <td>{% if team.first_venue_preference %}{{ team.first_venue_preference }}{% endif %}</td>
+        <td>{% if team.second_venue_preference %}{{ team.second_venue_preference }}{% endif %}</td>
+        <td>{% for preference in team.tertiary_venue_preferences.all %}{{ preference }}, {% endfor %}</td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
+
+<div class="modal fade" id="view-numbers" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+        <div class="modal-body">
+            <table class="table">
+                <thead>
+                    <th>Division</th>
+                    <th>Venue</th>
+                    <th>Teams</th>
+                </thead>
+                <tbody>
+                    {% for d in divisions %}
+                        <tr>
+                            <td>{{ d.name }} </td>
+                            <td>{{ d.venue_group }}</td>
+                            <td>{{ d.teams.count }} teams</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}

@@ -747,9 +747,12 @@ def draw_confirmed(request, round):
     draw = round.get_draw()
     rooms = float(round.active_teams.count()) / 2
     active_adjs = round.active_adjudicators.all()
+    divisions_assigned = sum(t.division != None for t in round.active_teams.all())
+
     return r2r(request, "draw_confirmed.html", dict(draw=draw,
                                                     active_adjs=active_adjs,
-                                                    rooms=rooms))
+                                                    rooms=rooms,
+                                                    divs=divisions_assigned))
 
 @admin_required
 @round_view
@@ -839,6 +842,36 @@ def division_allocations(request, t):
     divisions = Division.objects.filter(tournament=t)
     return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions))
 
+
+@admin_required
+@expect_post
+@tournament_view
+def save_divisions(request, t):
+    culled_dict = dict((int(k), int(v)) for k, v in request.POST.iteritems() if v)
+
+    teams = Team.objects.in_bulk([t_id for t_id in culled_dict.keys()])
+    divisions = Division.objects.in_bulk([d_id for d_id in culled_dict.values()])
+
+    for team_id, division_id in culled_dict.iteritems():
+        teams[team_id].division = divisions[division_id]
+        teams[team_id].save()
+
+    # ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DIVISIONS_SAVE,
+    #     user=request.user, tournament=t)
+
+    return HttpResponse("ok")
+
+@admin_required
+@expect_post
+@tournament_view
+def create_division_allocation(request, t):
+
+    # from debate.adjudicator.hungarian import HungarianAllocator
+    # round.allocate_adjudicators(HungarianAllocator)
+
+    # return _json_adj_allocation(round.get_draw(), round.unused_adjudicators())
+
+    return HttpResponse("ok")
 
 @admin_required
 @expect_post

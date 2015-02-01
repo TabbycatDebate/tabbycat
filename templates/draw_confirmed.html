@@ -60,7 +60,7 @@
     <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
     <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url motions_edit current_round %}">Edit Motions</a>
     {% if enable_divisions %}
-        <a class="btn " href="{% tournament_url division_allocations %}">Edit Divisions</a>
+        <a class="btn {% if not enable_divisions and divs >= round.active_teams.count %}btn-success{% else %}btn-danger{% endif %}" href="{% tournament_url division_allocations %}">Edit Divisions</a>
     {% endif %}
     <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
 </div>
@@ -82,12 +82,10 @@
 <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}"></form>
 <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}"></form>
 
-{% if enable_divisions %}
-    {% if draw.debates.division.all.count != draw.debates.division.all.count  %}
+{% if enable_divisions and divs < round.active_teams.count %}
     <div class="alert alert-danger">
-        Not all teams have been <a href="{% round_url motions_edit current_round %}" class="alert-link">assigned a division.</a>
+        Not all teams have been assigned a division. <a href="{% tournament_url division_allocations %}" class="alert-link">Edit the divisions.</a>
     </div>
-    {% endif %}
 {% endif %}
 
 {% if round.motion_set.all.count == 0 %}
