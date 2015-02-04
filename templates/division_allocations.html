@@ -10,7 +10,12 @@
             $(document).ready( function() {
 
                 var table = $("#dataTable").dataTable({
-                    "aaSorting": [[ 2, "asc" ], [0, "asc"]],
+                    "aaSorting": [[3, "asc"], [ 2, "asc" ], [0, "asc"]],
+                    "aoColumnDefs": [
+                        { "bVisible": false, "aTargets": [2] }, //set column visibility
+                        {"sType": "numeric", "aTargets": [2] }, //define data type for specified columns
+                        {"iDataSort": 2, "aTargets": [3] } //sort based on a hidden column when another column is clicked
+                    ]
                 });
 
                 $('#save').click( function() {
@@ -108,11 +113,12 @@
             {% if show_institutions > 0 %}
                 <th>Inst<span class="hidden-xs">itution</span></th>
             {% endif %}
+            <th>D</th>
             <th>Division</th>
+            <th>Venue</th>
+            <th>Size</th>
             <th>Status</th>
-            <th>1st Preference</th>
-            <th>2nd Preference</th>
-            <th>3rd Preferences</th>
+            <th>Preferences</th>
         </tr>
     </thead>
     <tbody>
@@ -129,41 +135,43 @@
         {% if show_institutions > 0 %}
             <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
         {% endif %}
+        <td>{{ team.division }}</td>
         <td id="{{ team.id }}" class="division">
-            <span class="hidden">{{ team.division }}</span>
             <select class="form-control">
                 <option value="">None</option>
                 {% for d in divisions %}
                     <option value="{{ d.id }}" {% if team.division == d %}selected{% endif %}>
-                        {{ d.name }} {% if d.venue_group %}({{ d.venue_group }}){% endif %}
+                        {{ d.name }} ({{ d.teams.count }} teams at {{ d.venue_group }})
                     </option>
                 {% endfor %}
             </select>
         </td>
-        <td class="
+        <td>{% if team.division.venue_group %}{{ team.division.venue_group }}{% endif %}</td>
+        <td>{{ team.division.teams.count }}</td>
+        <td>
             {% if team.division.venue_group %}
                 {% if team.first_venue_preference or team.second_venue_preference or team.tertiary_venue_preferences.count > 0 %}
-                    {% if team.division.venue_group == team.first_venue_preference %}success
-                    {% elif team.division.venue_group == team.second_venue_preference %}info
-                    {% elif team.division.venue_group in team.tertiary_venue_preferences.all %}warning
-                    {% else %}danger{% endif %}
-                {% endif %}
-            {% endif %}
-        ">
-            {% if team.division.venue_group %}
-                {% if team.first_venue_preference or team.second_venue_preference or team.tertiary_venue_preferences.count > 0 %}
-                    {% if team.division.venue_group == team.first_venue_preference %}1st
-                    {% elif team.division.venue_group == team.second_venue_preference %}2nd
-                    {% elif team.division.venue_group in team.tertiary_venue_preferences.all %}3rd
-                    {% else %}None{% endif %}
+                    {% if team.division.venue_group == team.first_venue_preference %}
+                        <span class="hidden">1</span><span class="text-success">1st</span>
+                    {% elif team.division.venue_group == team.second_venue_preference %}
+                        <span class="hidden">2</span><span class="text-primary">2nd</span>
+                    {% elif team.division.venue_group in team.tertiary_venue_preferences.all %}
+                        <span class="hidden">3</span><span class="text-warning">3rd</span>
+                    {% else %}
+                        <span class="hidden">0</span><span class="text-danger">None</span>
+                    {% endif %}
+                {% else %}
+                    <span class="hidden">0</span><span class="text-danger">None</span>
                 {% endif %}
             {% else %}
-
+                <span class="hidden">0</span><span class="text-danger">None</span>
             {% endif %}
         </td>
-        <td>{% if team.first_venue_preference %}{{ team.first_venue_preference }}{% endif %}</td>
-        <td>{% if team.second_venue_preference %}{{ team.second_venue_preference }}{% endif %}</td>
-        <td>{% for preference in team.tertiary_venue_preferences.all %}{{ preference }},<br> {% endfor %}</td>
+        <td>
+            {% if team.first_venue_preference %}<span class="text-success small">{{ team.first_venue_preference }}, </span>{% endif %}
+            {% if team.second_venue_preference %}<span class="text-primary small">{{ team.second_venue_preference }}, </span>{% endif %}
+            {% for preference in team.tertiary_venue_preferences.all %}<span class="text-warning small">{{ preference }}, </span>{% endfor %}
+        </td>
     </tr>
     {% endfor %}
     </tbody>
