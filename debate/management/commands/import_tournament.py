@@ -160,9 +160,30 @@ class Command(BaseCommand):
                 reader = csv.reader(open(os.path.join(data_path, 'venue_groups.csv')))
                 reader.next() # Skipping header row
             except:
-                self.stdout.write('venues.csv file is missing or damaged')
+                self.stdout.write('venues_groups.csv file is missing or damaged')
                 total_errors += 1
 
+            venue_count = 0
+            venue_group_count = 0
+            for line in reader:
+                group = line[0] or None
+                rooms = line[1] or None
+                try:
+                    if sharing_data:
+                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                           name=group, defaults={'tournament': t})
+                    else:
+                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                           name=group, tournament=t)
+
+                    if created:
+                        print "Made venue group: \t%s" % group
+                        venue_group_count = venue_group_count + 1
+
+                except ValueError:
+                    total_errors += 1
+                    self.stdout.write('Couldnt make venue group ' + group)
+                    venue_group = None
 
 
             # Venues
@@ -263,6 +284,78 @@ class Command(BaseCommand):
                     print inst
 
             self.stdout.write('**** Created ' + str(institutions_count) + ' institutions')
+
+            # Teams
+            self.stdout.write('**** Attempting to create the teams')
+            try:
+                reader = csv.reader(open(os.path.join(data_path, 'teams.csv'), 'rU'))
+                reader.next() # Skipping header row
+            except:
+                self.stdout.write('teams.csv file is missing or damaged')
+                total_errors += 1
+
+            teams_count = 0
+            for line in reader:
+                try:
+                    name = line[0]
+                    ins = line[1]
+                    try:
+                        ins = m.Institution.objects.get(name=ins)
+                    except:
+                        try:
+                            ins = m.Institution.objects.get(code=ins)
+                        except Exception as inst:
+                            self.stdout.write("error with finding inst " + ins)
+                            total_errors += 1
+                            print type(inst)     # the exception instance
+                            print inst           # __str__ allows args to printed directly
+
+                    first_pref = line[2] or None
+                    if first_pref:
+                        try:
+                            first_pref = m.VenueGroup.objects.get(name=first_pref)
+                        except:
+                            print "probably couldn't find venue %s" % first_pref
+
+
+                    second_pref = line[3] or None
+                    if second_pref:
+                        try:
+                            second_pref = m.VenueGroup.objects.get(name=second_pref)
+                        except:
+                            print "probably couldn't find venue %s" % second_pref
+
+                    team, created = m.Team.objects.get_or_create(
+                        institution = ins,
+                        reference = name,
+                        tournament=t,
+                        first_venue_preference = first_pref,
+                        second_venue_preference = second_pref,
+                    )
+                    team.save()
+
+                    third_a = line[4] or None
+                    third_b = line[5] or None
+                    third_c = line[6] or None
+                    third_d = line[7] or None
+                    third_e = line[8] or None
+                    third_prefs = filter(None, [third_a, third_b, third_c, third_d, third_e])
+                    for pref in third_prefs:
+                        try:
+                            team.tertiary_venue_preferences.add(m.VenueGroup.objects.get(name=pref))
+                            team.save()
+                        except:
+                            print "Couldn't add third pref: %s" % pref
+
+                    m.Speaker(name = "Speaker A", team = team).save()
+                    m.Speaker(name = "Speaker B", team = team).save()
+                    m.Speaker(name = "Speaker C", team = team).save()
+                    teams_count = teams_count + 1
+                    print "Made team:\t\t%s of %s" % (name, ins)
+                except Exception as inst:
+                    self.stdout.write('Couldnt make the team ' + line[0] + ' of ' + line[1])
+                    total_errors += 1
+                    print inst
 
             # Speakers
             self.stdout.write('**** Attempting to create the teams/speakers')

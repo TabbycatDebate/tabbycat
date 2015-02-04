@@ -866,10 +866,126 @@ def save_divisions(request, t):
 @tournament_view
 def create_division_allocation(request, t):
 
-    # from debate.adjudicator.hungarian import HungarianAllocator
-    # round.allocate_adjudicators(HungarianAllocator)
+    print "creating divisions"
 
-    # return _json_adj_allocation(round.get_draw(), round.unused_adjudicators())
+    teams = Team.objects.filter(tournament=t)
+    allocated_teams = []
+    venue_groups = VenueGroup.objects.filter()
+
+    # division size is in practice 5 to 8
+    minimum_division_size = 5 # cannot see teams more than once
+    ideal_division_size = 6
+    maximum_division_size = 8 # shouldn't have more than two byes?
+
+    division_dict = {v:[] for v in venue_groups}
+
+    for group,group_teams in division_dict.iteritems():
+        for team in teams:
+            if len(group_teams) <= len(group.venues) and team.first_venue_preference == group:
+                group_teams.append(team)
+                allocated_teams.append(team)
+
+    for group,group_teams in division_dict.iteritems():
+        availables = (te for te in teams if not te in allocated_teams)
+        for team in availables:
+            if len(group_teams) <= len(group.venues) and team.second_venue_preference == group:
+                group_teams.append(team)
+                allocated_teams.append(team)
+
+    for group,group_teams in division_dict.iteritems():
+        availables = (te for te in teams if not te in allocated_teams)
+        for te in availables:
+            if len(group_teams) <= len(group.venues) and group in team.tertiary_venue_preferences.all():
+                group_teams.append(team)
+                allocated_teams.append(team)
+
+    for group,group_teams in division_dict.iteritems():
+        assigned_teams = len(group_teams)
+        team_capacity = len(group.venues) * 2
+        print "%s has %s teams (capacity of %s teams given %s rooms)" % (group, assigned_teams, team_capacity, len(group.venues))
+
+        # Using the ideal division size, how many divisions can we support?
+        # say 11 teams are assigned
+        possible_ideal_divisions = assigned_teams / ideal_division_size
+        possible_ideal_remainder = assigned_teams % ideal_division_size
+        print "\t %s possible_ideal_division of 6 with %s leftover" % (possible_ideal_divisions, possible_ideal_remainder)
+
+        possible_small_divisions = assigned_teams / minimum_division_size
+        possible_small_remainder = assigned_teams % minimum_division_size
+        print "\t %s possible_small_division of 5 with %s leftover" % (possible_small_divisions, possible_small_remainder)
+
+        # possible_big_divisions = assigned_teams / maximum_division_size
+        # possible_big_remainder = assigned_teams % maximum_division_size
+        # print "\t %s possible_big_division of 8 with %s leftover" % (possible_big_divisions, possible_big_remainder)
+
+
+        if min(possible_ideal_remainder, possible_small_remainder) == possible_ideal_remainder and possible_ideal_divisions > 0:
+            print "\t ideal is ideal"
+            base_division_size = ideal_division_size
+            possible_divisions = possible_ideal_divisions
+            remainder = possible_ideal_remainder
+        elif min(possible_ideal_remainder, possible_small_remainder) == possible_small_remainder and possible_small_divisions > 0:
+            print "\t smallest is ideal"
+            base_division_size = minimum_division_size
+            possible_divisions = possible_small_divisions
+            remainder = possible_small_remainder
+        else:
+            print "\t no options"
+
+        divisions = []
+        for i in range(0, possible_divisions):
+            divisions.append(base_division_size)
+
+        for i in range(0, remainder):
+            divisions.sort()
+            divisions[0] += 1
+            print "\t added 1 to a bit"
+
+        for index, size in enumerate(divisions):
+            print "\t\t div %s of %s" % (index, size)
+
+        # smallest_remainder = min(possible_ideal_remainder, possible_big_remainder, possible_small_remainder)
+        # if minimum_division_size <= smallest_remainder >= maximum_division_size:
+        #     # if the remainder can be distributed
+        #     pass
+
+        # if minimum_division_size <= possible_ideal_remainder + possible_ideal_divisions <= maximum_division_size:
+        #     # If we can subtract from the ideal division size and redistribute them
+        #     actual_divisions = possible_ideal_divisions + 1
+        #     for i in range(0,possible_ideal_divisions):
+        #         print "\t Div %s will have %s" % (i, minimum_division_size)
+
+        # try:
+        #     minimum_divisions = len(group_teams) / minimum_division_size
+        #     division_size = len(group_teams) / minimum_divisions
+        #     remainder = len(group_teams)%minimum_divisions
+        #     print "\tmax: %s divisions of %s with %s leftovers" % (minimum_divisions, division_size ,remainder)
+        # except:
+        #     print "\t zero error"
+
+        # try:
+        #     maximum_divisions = int(float(len(group_teams)) / float(maximum_division_size))
+        #     division_size = float(len(group_teams)) / float(maximum_divisions)
+        #     remainder = len(group_teams) % maximum_divisions
+        #     print "\tmin: %s divisions of %s with %s leftovers" % (maximum_divisions, division_size ,remainder)
+        # except:
+        #     print "\t zero error"
+
+        print "------"
+
+    print t
+    i = 1
+    for group,group_teams in division_dict.iteritems():
+        new_division, created = Division.objects.get_or_create(
+            name = str(i),
+            tournament = t,
+            venue_group = group
+        )
+        i += 1
+        #print "made %s" % new_division
+        for team in group_teams:
+            team.division = new_division
+            team.save()
 
     return HttpResponse("ok")
 

@@ -10,11 +10,13 @@
             $(document).ready( function() {
 
                 var table = $("#dataTable").dataTable({
-                    "aaSorting": [[ 1, "asc" ], [0, "asc"]],
+                    "aaSorting": [[ 2, "asc" ], [0, "asc"]],
                 });
 
                 $('#save').click( function() {
                     var teams = {};
+                    var btn = $(this)
+                    btn.button('loading')
                     $("#dataTable .division").each( function() {
                         teams[$(this).attr("id")] = $("select", this).val();
                     });
@@ -24,19 +26,21 @@
                         data: teams,
                         success: function(data, status) {
                             $("#alerts-holder").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Saved successfully!</div>');
+                            btn.button('reset')
                         },
                         error: function(xhr, error, ex) {
                             console.log(xhr.responseText);
                             alert(xhr.responseText); //throw actual error, just for debugging purpose
                             $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Save failed!</div>');
+                            btn.button('reset')
                         }
                     });
                     return false;
                 });
 
                 $('#auto_allocate').click(function() {
-                    var btn = $(this)
-                    btn.button('loading')
+                    //var btn = $(this)
+                    //btn.button('loading')
                     $.ajax({
                         type: "POST",
                         url: "{% tournament_url create_division_allocation %}",
@@ -77,16 +81,16 @@
 </div>
 
 <div id="" class="btn-group">
-    <a class="btn form-control btn-default" data-toggle="modal" data-target="#view-numbers">View Division Numbers</a>
+    <a class="btn form-control btn-default" data-toggle="modal" data-target="#view-numbers">View Division Stats</a>
 </div>
 
 
 <div id="" class="btn-group">
-    <div class="btn btn-default">Legend:</div>
-    <div class="btn btn-default btn-success" disabled="disabled">Has 1st Preference</div>
-    <div class="btn btn-default btn-primary" disabled="disabled">Has a 2nd Preference</div>
-    <div class="btn btn-default btn-warning" disabled="disabled">Has a 3rd Preference</div>
-    <div class="btn btn-default btn-danger" disabled="disabled">Has none of their preferences</div>
+    <div class="btn btn-default">Preference Allocated:</div>
+    <div class="btn btn-default btn-success" disabled="disabled">1st</div>
+    <div class="btn btn-default btn-primary" disabled="disabled">2nd</div>
+    <div class="btn btn-default btn-warning" disabled="disabled">3rd</div>
+    <div class="btn btn-default btn-danger" disabled="disabled">None</div>
 </div>
 {% endblock %}
 
@@ -159,14 +163,14 @@
         </td>
         <td>{% if team.first_venue_preference %}{{ team.first_venue_preference }}{% endif %}</td>
         <td>{% if team.second_venue_preference %}{{ team.second_venue_preference }}{% endif %}</td>
-        <td>{% for preference in team.tertiary_venue_preferences.all %}{{ preference }}, {% endfor %}</td>
+        <td>{% for preference in team.tertiary_venue_preferences.all %}{{ preference }},<br> {% endfor %}</td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
 
 <div class="modal fade" id="view-numbers" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-body">
             <table class="table">
@@ -174,6 +178,7 @@
                     <th>Division</th>
                     <th>Venue</th>
                     <th>Teams</th>
+                    <th>Capacity</th>
                 </thead>
                 <tbody>
                     {% for d in divisions %}
@@ -181,6 +186,7 @@
                             <td>{{ d.name }} </td>
                             <td>{{ d.venue_group }}</td>
                             <td>{{ d.teams.count }} teams</td>
+                            <td>{{ d.venue_group.venues.count|add:d.venue_group.venues.count }} teams</td>
                         </tr>
                     {% endfor %}
                 </tbody>
