@@ -103,6 +103,7 @@ class VenueGroup(models.Model):
     def venues(self):
         return self.venue_set.all()
 
+
     def __unicode__(self):
         return u'%s' % (self.name)
 

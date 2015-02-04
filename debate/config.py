@@ -64,6 +64,7 @@ SETTINGS = OrderedDict([
     ('enable_adj_notes',            (_bool, 'Enables a general-purpose notes field for adjudicators',              False)),
     ('enable_venue_groups',         (_bool, 'Enables the display of a venues grouping',                            False)),
     ('enable_venue_times',          (_bool, 'Enables dates and times to be set for venues',                        False)),
+    ('share_venue_groups',          (_bool, 'Display venue groups from other tournaments',                         True)),
     ('share_venues',                (_bool, 'Display venues from other tournaments',                               False)),
     ('share_adjs',                  (_bool, 'Display adjudicators from other tournaments',                         False)),
     ('show_avg_margin',             (_bool, 'WADL: Enables a display of average margins in the team standings',    False)),

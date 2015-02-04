@@ -10,7 +10,7 @@
             $(document).ready( function() {
 
                 var table = $("#dataTable").dataTable({
-                    "aaSorting": [[3, "asc"], [ 2, "asc" ], [0, "asc"]],
+                    "aaSorting": [[4, "asc"], [ 2, "asc" ], [0, "asc"]],
                     "aoColumnDefs": [
                         { "bVisible": false, "aTargets": [2] }, //set column visibility
                         {"sType": "numeric", "aTargets": [2] }, //define data type for specified columns
@@ -86,7 +86,7 @@
 </div>
 
 <div id="" class="btn-group">
-    <a class="btn form-control btn-default" data-toggle="modal" data-target="#view-numbers">View Division Stats</a>
+    <a class="btn form-control btn-default" data-toggle="modal" data-target="#view-numbers">View Venue Stats</a>
 </div>
 
 
@@ -178,23 +178,21 @@
 </table>
 
 <div class="modal fade" id="view-numbers" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-md">
     <div class="modal-content">
         <div class="modal-body">
             <table class="table">
                 <thead>
-                    <th>Division</th>
                     <th>Venue</th>
-                    <th>Teams</th>
-                    <th>Capacity</th>
+                    <th>Divisions</th>
+                    <th>Team Capacity</th>
                 </thead>
                 <tbody>
-                    {% for d in divisions %}
+                    {% for vg in venue_groups %}
                         <tr>
-                            <td>{{ d.name }} </td>
-                            <td>{{ d.venue_group }}</td>
-                            <td>{{ d.teams.count }} teams</td>
-                            <td>{{ d.venue_group.venues.count|add:d.venue_group.venues.count }} teams</td>
+                            <td>{{ vg.name }} </td>
+                            <td>{{ vg.total_divs }}</td>
+                            <td>{{ vg.total_teams }}/{{ vg.capacity }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
