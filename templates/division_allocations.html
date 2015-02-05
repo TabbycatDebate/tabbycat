@@ -44,23 +44,18 @@
                 });
 
                 $('#auto_allocate').click(function() {
-                    //var btn = $(this)
-                    //btn.button('loading')
+                    var btn = $(this)
+                    btn.button('loading')
                     $.ajax({
                         type: "POST",
                         url: "{% tournament_url create_division_allocation %}",
                         success: function(data, status) {
-                            reset();
-                            // load_allocation_data($.parseJSON(data));
-                            // update_all_conflicts();
-                            // append_adj_scores();
-                            // $('#loading').hide();
+                            $("#alerts-holder").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Allocated successfully, please refresh the page to see it!</div>');
                             btn.button('reset')
                         },
                         error: function(xhr, error, ex) {
                             $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Auto-allocation failed! '
                                 + xhr.responseText + ' (' + xhr.status + ')</div>');
-                            $(this).button('reset');
                             btn.button('reset')
                         }
                     });

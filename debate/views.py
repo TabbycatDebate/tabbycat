@@ -879,134 +879,23 @@ def save_divisions(request, t):
 @expect_post
 @tournament_view
 def create_division_allocation(request, t):
+    from debate.division_allocator import DivisionAllocator
 
-    def create_division(di, group, group_teams, team_index, division_size):
-        new_division, created = Division.objects.get_or_create(
-            name = str(di),
-            tournament = t,
-            venue_group = group
-        )
-        for i in range(team_index,team_index+division_size):
-            group_teams[i].division = new_division
-            group_teams[i].save()
-
-        print "\t Made division #%s of size %s" % (new_division, division_size)
-
-
-    def create_venue_divisions(group,group_teams,di,base_division_size,possible_divisions,remainder):
-        divisions = [base_division_size] * possible_divisions
-        for i in range(0, remainder):
-            # Re-distributing the excess numbers to the other divisions
-            divisions.sort()
-            divisions[0] += 1
-
-        team_index = 0
-        for division_size in divisions:
-            create_division(di,group,group_teams,team_index,division_size)
-            team_index += division_size
-            di += 1
-
-        return di
-
-    def cull_venues(division_dict,allocated_teams):
-        culled_division_dict = {}
-        for group,group_teams in division_dict.iteritems():
-            if len(group_teams) > 0 and len(group_teams) < minimum_division_size:
-                # If the amount of allocated teams is not enough for one division
-                print "\t culling %s because too few teams (%s)" % (group, len(group_teams))
-                for ttr in group_teams:
-                    allocated_teams.remove(ttr)
-            else:
-                culled_division_dict[group] = group_teams
-
-        return culled_division_dict, allocated_teams
-
-    def allocate_teams(division_dict,allocated_teams,teams_to_allocate):
-        for group, group_teams in division_dict.iteritems():
-            for team in teams_to_allocate:
-                if len(group_teams) < (len(group.venues) * 2) and team.first_venue_preference == group:
-                    group_teams.append(team)
-                    allocated_teams.append(team)
-
-        for group, group_teams in division_dict.iteritems():
-            availables = (te for te in teams_to_allocate if not te in allocated_teams)
-            for team in availables:
-                if len(group_teams) < (len(group.venues) * 2) and team.second_venue_preference == group:
-                    group_teams.append(team)
-                    allocated_teams.append(team)
-
-        for group, group_teams in division_dict.iteritems():
-            availables = (te for te in teams_to_allocate if not te in allocated_teams)
-            for te in availables:
-                if len(group_teams) < (len(group.venues) * 2) and group in team.tertiary_venue_preferences.all():
-                    group_teams.append(team)
-                    allocated_teams.append(team)
-
-        return division_dict, allocated_teams
-
-    print "creating divisions for %s" % t
-
-    all_teams = Team.objects.filter(tournament=t)
-    all_teams.update(division=None) # Wipe all current division sets
+    teams = list(Team.objects.filter(tournament=t))
     divisions = Division.objects.filter(tournament=t).delete() # Delete all existing divisions
+
     if t.config.get('share_venue_groups'):
         venue_groups = VenueGroup.objects.all()
     else:
         venue_groups = VenueGroup.objects.filter(tournament=t)
 
-    division_dict = {v:[] for v in venue_groups}
-    allocated_teams = []
+    alloc = DivisionAllocator(teams=teams, divisions=divisions,venue_groups=venue_groups, tournament=t)
+    success = alloc.allocate()
 
-    minimum_division_size = 5 # cannot see teams more than once
-    ideal_division_size = 6
-    maximum_division_size = 8 # shouldn't have more than two byes?
-
-    # First sweep of allocations
-    division_dict, allocated_teams = allocate_teams(division_dict,allocated_teams,all_teams)
-    print "Post-Allocate 1: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict))
-
-    # First round of culls
-    division_dict, allocated_teams = cull_venues(division_dict,allocated_teams)
-    print "Post-Cull 1: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict))
-
-    # Second sweep of allocations
-    unalloacted_teams = [te for te in all_teams if not te in allocated_teams]
-    division_dict, allocated_teams = allocate_teams(division_dict,allocated_teams,unalloacted_teams)
-    print "Post-Allocate 2: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict))
-
-    di = 1
-    for group,group_teams in division_dict.iteritems():
-
-        print "------"
-        assigned_teams = len(group_teams)
-        team_capacity = len(group.venues) * 2
-        print "%s has %s/%s teams" % (group, assigned_teams, team_capacity)
-
-        # Using the ideal division size, how many divisions can we support?
-        possible_ideal_divisions = assigned_teams / ideal_division_size
-        possible_ideal_remainder = assigned_teams % ideal_division_size
-        #print "\t %s possible_ideal_division of 6 with %s leftover" % (possible_ideal_divisions, possible_ideal_remainder)
-        possible_small_divisions = assigned_teams / minimum_division_size
-        possible_small_remainder = assigned_teams % minimum_division_size
-        #print "\t %s possible_small_division of 5 with %s leftover" % (possible_small_divisions, possible_small_remainder)
-
-        if min(possible_ideal_remainder, possible_small_remainder) == possible_ideal_remainder and possible_ideal_divisions > 0:
-            #print "\t ideal is ideal"
-            di = create_venue_divisions(group,group_teams,di,
-                                   ideal_division_size,possible_ideal_divisions,possible_ideal_remainder)
-        elif min(possible_ideal_remainder, possible_small_remainder) == possible_small_remainder and possible_small_divisions > 0:
-            #print "\t smallest is ideal"
-            di = create_venue_divisions(group,group_teams,di,
-                                   minimum_division_size,possible_small_divisions,possible_small_remainder)
-        else:
-            print "\t no options - this shouldn't happen"
-
-    print "------"
-    print "Made %s divisions over %s venues, Allocated %s / %s teams" % (di, len(division_dict), len(allocated_teams), len(all_teams))
-    unalloacted_teams = [te for te in all_teams if not te in allocated_teams]
-    for t in unalloacted_teams:
-        print "\t %s not allocated" % t.name
-    return HttpResponse("ok")
+    if success:
+        return HttpResponse("ok")
+    else:
+        return HttpResponseBadRequest("Couldn't create divisions")
 
 @admin_required
 @expect_post
