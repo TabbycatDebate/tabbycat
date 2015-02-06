@@ -133,6 +133,16 @@ def public_draw(request, t):
         return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=r))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_round_view('show_all_draws')
+def public_draw_by_round(request, round):
+    if round.draw_status == round.STATUS_RELEASED:
+        draw = round.get_draw()
+        return r2r(request, "public/draw_released.html", dict(draw=draw, round=round))
+    else:
+        return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=round))
+
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_team_standings')
 def public_team_standings(request, t):
     if t.release_all:

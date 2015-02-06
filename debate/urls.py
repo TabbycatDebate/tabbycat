@@ -13,6 +13,7 @@ urlpatterns = patterns('debate.views',
 
     url(r'^$', 'public_index', name='public_index'),
     url(r'^draw/$', 'public_draw', name='public_draw'),
+    url(r'^draw/round/(?P<round_seq>\d+)/$', 'public_draw_by_round', name='public_draw_by_round'),
     url(r'^results/$', 'public_results_index', name='public_results_index'),
     url(r'^results/round/(?P<round_seq>\d+)/$', 'public_results', name='public_results'),
     url(r'^standings/$', 'public_team_standings', name='public_team_standings'),

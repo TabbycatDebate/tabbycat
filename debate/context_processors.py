@@ -20,6 +20,7 @@ def debate_context(request):
             'public_side_allocations' : request.tournament.config.get('public_side_allocations') \
                                             and request.tournament.config.get('draw_side_allocations') == "preallocated",
             'public_draw'             : request.tournament.config.get('public_draw'),
+            'show_all_draws'          : request.tournament.config.get('show_all_draws'),
             'public_motions'          : request.tournament.config.get('public_motions'),
             'public_results'          : request.tournament.config.get('public_results'),
             'public_ballots'          : request.tournament.config.get('public_ballots'),

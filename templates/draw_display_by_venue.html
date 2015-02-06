@@ -40,7 +40,12 @@
     <table id="draw" class="table table-hover table-bordered table-striped">
         <thead>
             <tr>
-                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+                {% if enable_divisions %}
+                    <th>Division</th>
+                {% endif %}
+                <th>
+                    <span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span>
+                </th>
                 {% if enable_venue_times %}
                     <th>Time</th>
                 {% endif %}
@@ -58,6 +63,9 @@
         <tbody>
         {% for debate in draw %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+            {% if enable_divisions %}
+                <td>{{ debate.aff_team.division }}</td>
+            {% endif %}
             <td class="venue-name">
                 {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue_splitname }}
             </td>
