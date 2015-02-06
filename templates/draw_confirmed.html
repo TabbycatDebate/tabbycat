@@ -60,7 +60,7 @@
     <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
     <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url motions_edit current_round %}">Edit Motions</a>
     {% if enable_divisions %}
-        <a class="btn {% if not enable_divisions and divs >= round.active_teams.count %}btn-success{% else %}btn-danger{% endif %}" href="{% tournament_url division_allocations %}">Edit Divisions</a>
+        <a class="btn {% if divs > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% tournament_url division_allocations %}">Edit Divisions</a>
     {% endif %}
     <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
 </div>
@@ -138,7 +138,7 @@
     {% for debate in draw %}
     <tr class="{% if debate.all_conflicts or not debate.adjudicators.valid %}danger{% endif %}">
         {% if enable_divisions %}
-            <td>{{ debate.division }}</td>
+            <td>{{ debate.aff_team.division }}</td>
         {% endif %}
         <td>{{ debate.bracket }}</td>
         <td>

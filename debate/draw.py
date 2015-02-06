@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import random
+import math
 import copy
 from one_up_one_down import OneUpOneDownSwapper
 from warnings import warn
@@ -1035,6 +1036,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
     def make_draw(self):
         self._brackets = self._make_raw_brackets()
+        print "made brackets"
         # TODO: resolving brackets with odd numbers here (see resolve_odd_brackets)
         self._pairings = self.generate_pairings(self._brackets)
         # TODO: avoiding history conflicts here
@@ -1061,27 +1063,49 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         return brackets
 
     def generate_pairings(self, brackets):
-        def shuffle(teams):
-            num_debates = len(teams) / 2
-            random.shuffle(teams)
-            top = teams[:num_debates]
-            bottom = teams[num_debates:]
-            return top, bottom
-
         pairings = OrderedDict()
-        i = 1
         for points, teams in brackets.iteritems():
-            bracket = list()
-            top, bottom = shuffle(teams)
-            if top.seen(bottom):
-                # TODO - implement a resursive swapper here?
-                pass
-            for teams in zip(top, bottom):
-                pairing = Pairing(teams=teams, bracket=points, room_rank=i)
-                bracket.append(pairing)
-                i = i + 1
-            pairings[points] = bracket
-        return pairings
+            num_debates = len(teams) / 2 # this rounds down the debates
+            #num_debates = int(math.ceil(len(teams) / 2.0)) # this rounds up
+            if num_debates % 2 != 0:
+                print "There are an odd number of teams in bracket %s" % points
+                # TODO things here when I get around to dealing with Byes
 
-    def check_teams_for_attribute()
+            bracket = list()
+            assigned_teams = []
+
+            for aff in teams:
+                if aff not in assigned_teams:
+                    print "Looking with %s" % aff
+                    opposition = None
+
+                    for neg in teams:
+                        if neg in assigned_teams:
+                            continue
+                        elif aff == neg:
+                            continue
+                        elif aff.seen(neg):
+                            print "\t %s already seen %s" % (aff, neg)
+                            continue
+                        else:
+                            print "\t %s not already seen %s" % (aff, neg)
+                            opposition = neg
+                            break # Stop searching
+
+                    if opposition:
+                        pairing = Pairing(teams=(aff,opposition), bracket=points, room_rank=1)
+                        print "\t made a pairing %s" % pairing
+                        bracket.append(pairing)
+                        assigned_teams.append(aff)
+                        assigned_teams.append(opposition)
+                    else:
+                        # Need to deal with Byes and the like here
+                        print "couldn't find an opposition"
+
+
+                print "---"
+
+            pairings[points] = bracket
+
+        return pairings
 

@@ -349,9 +349,10 @@ class Command(BaseCommand):
                         except:
                             print "Couldn't add third pref: %s" % pref
 
-                    m.Speaker(name = "Speaker A", team = team).save()
-                    m.Speaker(name = "Speaker B", team = team).save()
-                    m.Speaker(name = "Speaker C", team = team).save()
+                    m.Speaker(name = "1st Speaker", team = team).save()
+                    m.Speaker(name = "2nd Speaker", team = team).save()
+                    m.Speaker(name = "3rd Speaker", team = team).save()
+                    m.Speaker(name = "Reply Speaker", team = team).save()
                     teams_count = teams_count + 1
                     print "Made team:\t\t%s of %s" % (name, ins)
                 except Exception as inst:
