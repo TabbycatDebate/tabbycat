@@ -7,9 +7,15 @@
     {{ block.super }}
        <script type="text/javascript" charset="utf-8">
             $(document).ready( function() {
-                var table = $("#dataTable").dataTable({
-                    "aaSorting": [[ 0, "asc" ]],
-                });
+                {% if enable_divisions %}
+                    var table = $("#dataTable").dataTable({
+                        "aaSorting": [[ 0, "asc" ], [ 1, "asc" ]],
+                    });
+                {% else %}
+                    var table = $("#dataTable").dataTable({
+                        "aaSorting": [[ 0, "asc" ]],
+                    });
+                {% endif %}
                 new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
 
             } );
@@ -28,6 +34,9 @@
 <table id="dataTable" class="team-tab table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
         <tr>
+            {% if enable_divisions %}
+                <th>Division</th>
+            {% endif %}
             {% if for_print %}
                 <th>Rank</th>
             {% else %}
@@ -43,9 +52,6 @@
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
             <th>Team</th>
-            {% if enable_divisions %}
-                <th>Division</th>
-            {% endif %}
             {% if show_institutions > 0 %}
                 <th>Inst<span class="hidden-xs">itution</span></th>
             {% endif %}
@@ -64,6 +70,9 @@
     <tbody>
     {% for team in teams %}
     <tr class="{% if not team.results_in %}danger{% endif %}">
+        {% if enable_divisions %}
+            <td>{{ team.division }}</td>
+        {% endif %}
         <td>{{ team.rank }}</td>
         {% if show_team_points %}
             <td>{{ team.points }}</td>
@@ -79,9 +88,6 @@
             {{ team.short_name }} {% if team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
             </span>
         </td>
-        {% if enable_divisions %}
-            <td>{{ team.division }}</td>
-        {% endif %}
         {% if show_institutions > 0 %}
             <td>
                 <span class="hidden-xs">{{ team.institution }}</span>

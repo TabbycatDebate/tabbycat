@@ -1036,7 +1036,6 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
     def make_draw(self):
         self._brackets = self._make_raw_brackets()
-        print "made brackets"
         # TODO: resolving brackets with odd numbers here (see resolve_odd_brackets)
         self._pairings = self.generate_pairings(self._brackets)
         # TODO: avoiding history conflicts here
@@ -1076,7 +1075,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
             for aff in teams:
                 if aff not in assigned_teams:
-                    print "Looking with %s" % aff
+                    print "Looking for an opposition for %s" % aff
                     opposition = None
 
                     for neg in teams:
@@ -1085,10 +1084,10 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                         elif aff == neg:
                             continue
                         elif aff.seen(neg):
-                            print "\t %s already seen %s" % (aff, neg)
+                            print "\t already seen %s" % neg
                             continue
                         else:
-                            print "\t %s not already seen %s" % (aff, neg)
+                            print "\t hasn't seen %s" % neg
                             opposition = neg
                             break # Stop searching
 
@@ -1103,7 +1102,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                         print "couldn't find an opposition"
 
 
-                print "---"
+                    print "---"
 
             pairings[points] = bracket
 
