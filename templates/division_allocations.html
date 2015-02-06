@@ -9,14 +9,26 @@
        <script type="text/javascript" charset="utf-8">
             $(document).ready( function() {
 
-                var table = $("#dataTable").dataTable({
-                    "aaSorting": [[4, "asc"], [ 2, "asc" ], [0, "asc"]],
-                    "aoColumnDefs": [
-                        { "bVisible": false, "aTargets": [2] }, //set column visibility
-                        {"sType": "numeric", "aTargets": [2] }, //define data type for specified columns
-                        {"iDataSort": 2, "aTargets": [3] } //sort based on a hidden column when another column is clicked
-                    ]
-                });
+                {% if show_institutions > 0 %}
+                    var table = $("#dataTable").dataTable({
+                        "aaSorting": [[4, "asc"], [ 2, "asc" ], [0, "asc"]],
+                        "aoColumnDefs": [
+                            { "bVisible": false, "aTargets": [2] }, //set column visibility
+                            {"sType": "numeric", "aTargets": [2] }, //define data type for specified columns
+                            {"iDataSort": 2, "aTargets": [3] } //sort based on a hidden column when another column is clicked
+                        ]
+                    });
+                {% else %}
+                    var table = $("#dataTable").dataTable({
+                        "aaSorting": [[3, "asc"], [ 1, "asc" ], [0, "asc"]],
+                        "aoColumnDefs": [
+                            { "bVisible": false, "aTargets": [1] }, //set column visibility
+                            {"sType": "numeric", "aTargets": [1] }, //define data type for specified columns
+                            {"iDataSort": 1, "aTargets": [2] } //sort based on a hidden column when another column is clicked
+                        ]
+                    });
+                {% endif %}
+
 
                 $('#save').click( function() {
                     var teams = {};
@@ -101,9 +113,6 @@
 <table id="dataTable" class="team-tab table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
         <tr>
-            {% if show_emoji > 0 and not for_print %}
-                <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
-            {% endif %}
             <th>Team</th>
             {% if show_institutions > 0 %}
                 <th>Inst<span class="hidden-xs">itution</span></th>
@@ -119,9 +128,6 @@
     <tbody>
     {% for team in teams %}
     <tr>
-        {% if show_emoji > 0 and not for_print %}
-            <td class="team-emoji team-{{ team.id }}"></td>
-        {% endif %}
         <td>
             <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="" class="team" href="#">
             {{ team.short_name }} {% if team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}

@@ -114,6 +114,8 @@ class Command(BaseCommand):
 
                     if draw_type.lower() in ("random", "r"):
                         draw_type = "R"
+                    elif draw_type.lower() in ("round-robin", "round robin", "d"z):
+                        draw_type = "D"
                     elif draw_type.lower() in ("power-paired", "power paired", "p"):
                         draw_type = "P"
                     elif draw_type.lower() in ("first elimination", "first-elimination", "1st elimination", "1", "e"):

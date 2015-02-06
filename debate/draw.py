@@ -126,6 +126,8 @@ def DrawGenerator(draw_type, teams, results=None, **kwargs):
             klass = RandomWithAllocatedSidesDrawGenerator
         else:
             klass = RandomDrawGenerator
+    elif draw_type == "round_robin":
+        klass = RoundRobinDrawGenerator
     elif draw_type == "power_paired":
         if kwargs.get('side_allocations', default_side_allocations) == "preallocated":
             klass = PowerPairedWithAllocatedSidesDrawGenerator
@@ -1018,3 +1020,68 @@ class EliminationDrawGenerator(BaseDrawGenerator):
             pairing = Pairing(ts, bracket=0, room_rank=i)
             pairings.append(pairing)
         return pairings
+
+class RoundRobinDrawGenerator(BaseDrawGenerator):
+    """ Class for round-robin stype matchups using divisions """
+
+    can_be_first_round = True
+    requires_even_teams = False
+    requires_prev_results = False
+    draw_type = "elimination"
+
+    PAIRING_FUNCTIONS = {
+        "random": "_pairings_random"
+    }
+
+    def make_draw(self):
+        self._brackets = self._make_raw_brackets()
+        # TODO: resolving brackets with odd numbers here (see resolve_odd_brackets)
+        self._pairings = self.generate_pairings(self._brackets)
+        # TODO: avoiding history conflicts here
+        self._draw = list()
+        for bracket in self._pairings.itervalues():
+            print bracket
+            self._draw.extend(bracket)
+
+        return self._draw
+
+    def _make_raw_brackets(self):
+        """Returns an OrderedDict mapping bracket names (normally numbers)
+        to lists."""
+        brackets = OrderedDict()
+        teams = list(self.teams)
+        for team in teams:
+            # Converting from bracket's name to a float (so it can pretend to be a Bracket)
+            division = float(team.division.name)
+            if division in brackets:
+                brackets[division].append(team)
+            else:
+                brackets[division] = [team]
+
+        return brackets
+
+    def generate_pairings(self, brackets):
+        def shuffle(teams):
+            num_debates = len(teams) / 2
+            random.shuffle(teams)
+            top = teams[:num_debates]
+            bottom = teams[num_debates:]
+            return top, bottom
+
+        pairings = OrderedDict()
+        i = 1
+        for points, teams in brackets.iteritems():
+            bracket = list()
+            top, bottom = shuffle(teams)
+            if top.seen(bottom):
+                # TODO - implement a resursive swapper here?
+                pass
+            for teams in zip(top, bottom):
+                pairing = Pairing(teams=teams, bracket=points, room_rank=i)
+                bracket.append(pairing)
+                i = i + 1
+            pairings[points] = bracket
+        return pairings
+
+    def check_teams_for_attribute()
+

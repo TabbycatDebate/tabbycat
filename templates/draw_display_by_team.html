@@ -74,7 +74,7 @@
             <td>
                 {% if venue.time %}
                     <span class="hidden">{{ venue.time|date:"d m o H:i" }}</span>
-                    {{ venue.time|date:"D jS M h:i" }}
+                    {{ venue.time|date:"D jS F h:iA" }}
                 {% endif %}
             </td>
             {% endif %}
@@ -125,7 +125,7 @@
             <td>
                 {% if venue.time %}
                     <span class="hidden">{{ venue.time|date:"d m o H:i" }}</span>
-                    {{ venue.time|date:"D jS M h:i" }}
+                    {{ venue.time|date:"D jS F h:iA" }}
                 {% endif %}
             </td>
             {% endif %}

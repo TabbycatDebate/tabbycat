@@ -772,11 +772,13 @@ class RoundManager(models.Manager):
 
 class Round(models.Model):
     DRAW_RANDOM      = 'R'
+    DRAW_ROUNDROBIN       = 'D'
     DRAW_POWERPAIRED = 'P'
     DRAW_FIRSTBREAK  = 'F'
     DRAW_BREAK       = 'B'
     DRAW_CHOICES = (
         (DRAW_RANDOM,      'Random'),
+        (DRAW_ROUNDROBIN,       'Round-robin'),
         (DRAW_POWERPAIRED, 'Power-paired'),
         (DRAW_FIRSTBREAK,  'First elimination'),
         (DRAW_BREAK,       'Subsequent elimination'),
@@ -865,6 +867,9 @@ class Round(models.Model):
                 "odd_bracket"     : "draw_odd_bracket",
                 "pairing_method"  : "draw_pairing_method",
             })
+        elif self.draw_type == self.DRAW_ROUNDROBIN:
+            teams = self.active_teams.all()
+            draw_type = "round_robin"
         else:
             raise RuntimeError("Break rounds aren't supported yet.")
 

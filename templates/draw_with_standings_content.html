@@ -28,7 +28,7 @@
     {% for debate in draw %}
     <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }} {% ifchanged debate.bracket %}first-in-bracket{% endifchanged %}">
         {% if enable_divisions %}
-            <td>{{ debate.division }}</td>
+            <td>{{ debate.aff_team.division }}</td>
         {% endif %}
         <td>{{ debate.bracket }}</td>
         <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
