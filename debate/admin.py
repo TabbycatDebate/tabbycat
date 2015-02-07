@@ -20,13 +20,26 @@ class SpeakerInline(admin.TabularInline):
 class TeamPositionAllocationInline(admin.TabularInline):
     model = models.TeamPositionAllocation
 
+class TeamVenuePreferenceInline(admin.TabularInline):
+    model = models.TeamVenuePreference
+    extra = 6
+
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution', 'tournament')
     search_fields = ('name','institution__name', 'institution__code', 'tournament')
     list_filter = ('tournament', 'institution')
-    inlines = (SpeakerInline, TeamPositionAllocationInline)
+    inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
 
 admin.site.register(models.Team, TeamAdmin)
+
+
+class TeamVenuePreferenceAdmin(admin.ModelAdmin):
+    list_display = ('team', 'venue_group', 'priority')
+    search_fields = ('team','venue_group', 'priority')
+    list_filter = ('team','venue_group', 'priority')
+
+admin.site.register(models.TeamVenuePreference, TeamVenuePreferenceAdmin)
+
 
 class SpeakerAdmin(admin.ModelAdmin):
     list_display = ('name', 'team')
@@ -38,7 +51,6 @@ class DivisionAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'venue_group')
 
 admin.site.register(models.Division, DivisionAdmin)
-
 
 class AdjudicatorConflictInline(admin.TabularInline):
     model = models.AdjudicatorConflict

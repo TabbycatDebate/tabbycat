@@ -99,9 +99,9 @@
 
 <div id="" class="btn-group">
     <div class="btn btn-default">Preference Allocated:</div>
-    <div class="btn btn-default btn-success" disabled="disabled">1st</div>
-    <div class="btn btn-default btn-primary" disabled="disabled">2nd</div>
-    <div class="btn btn-default btn-warning" disabled="disabled">3rd</div>
+    <div class="btn btn-default btn-success" disabled="disabled">1/2</div>
+    <div class="btn btn-default btn-primary" disabled="disabled">3/4</div>
+    <div class="btn btn-default btn-warning" disabled="disabled">5+</div>
     <div class="btn btn-default btn-danger" disabled="disabled">None</div>
 </div>
 {% endblock %}
@@ -120,7 +120,6 @@
             <th>D</th>
             <th>Division</th>
             <th>Venue</th>
-            <th>Size</th>
             <th>Status</th>
             <th>Preferences</th>
         </tr>
@@ -148,19 +147,14 @@
             </select>
         </td>
         <td>{% if team.division.venue_group %}{{ team.division.venue_group }}{% endif %}</td>
-        <td>{{ team.division.teams.count }}</td>
         <td>
             {% if team.division.venue_group %}
-                {% if team.first_venue_preference or team.second_venue_preference or team.tertiary_venue_preferences.count > 0 %}
-                    {% if team.division.venue_group == team.first_venue_preference %}
-                        <span class="hidden">1</span><span class="text-success">1st</span>
-                    {% elif team.division.venue_group == team.second_venue_preference %}
-                        <span class="hidden">2</span><span class="text-primary">2nd</span>
-                    {% elif team.division.venue_group in team.tertiary_venue_preferences.all %}
-                        <span class="hidden">3</span><span class="text-warning">3rd</span>
-                    {% else %}
-                        <span class="hidden">0</span><span class="text-danger">None</span>
-                    {% endif %}
+                {% if team.division.venue_group == team.get_preferences.0.venue_group %}
+                    <span class="hidden">1</span><span class="text-success">1st</span>
+                {% elif team.division.venue_group == team.get_preferences.1.venue_group %}
+                    <span class="hidden">2</span><span class="text-primary">2nd</span>
+                {% elif team.division.venue_group in team.get_preferences.2.venue_group %}
+                    <span class="hidden">3</span><span class="text-warning">3rd</span>
                 {% else %}
                     <span class="hidden">0</span><span class="text-danger">None</span>
                 {% endif %}
@@ -169,9 +163,11 @@
             {% endif %}
         </td>
         <td>
-            {% if team.first_venue_preference %}<span class="text-success small">{{ team.first_venue_preference }}, </span>{% endif %}
-            {% if team.second_venue_preference %}<span class="text-primary small">{{ team.second_venue_preference }}, </span>{% endif %}
-            {% for preference in team.tertiary_venue_preferences.all %}<span class="text-warning small">{{ preference }}, </span>{% endfor %}
+        {% for pref in team.get_preferences.all %}
+            {% if pref.venue_group %}
+                <span class="small">{{ pref.priority }}: {{ pref.venue_group }}</span>,
+            {% endif %}
+        {% endfor %}
         </td>
     </tr>
     {% endfor %}

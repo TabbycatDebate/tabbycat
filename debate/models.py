@@ -387,22 +387,22 @@ class Division(models.Model):
     class Meta:
         unique_together = [('tournament', 'name')]
 
-
-
 class Team(models.Model):
     reference = models.CharField(max_length=50, verbose_name="Name or suffix")
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament)
-    division = models.ForeignKey('Division', blank=True, null=True)
+    division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
 
     # set to True if a team is ineligible to break (other than being
     # swing/composite)
     cannot_break = models.BooleanField(default=False)
 
-    first_venue_preference = models.ForeignKey(VenueGroup, blank=True, null=True, verbose_name='1st Venue Preference', related_name='+')
-    second_venue_preference = models.ForeignKey(VenueGroup, blank=True, null=True, verbose_name='2nd Venue Preference', related_name='+')
-    tertiary_venue_preferences = models.ManyToManyField(VenueGroup, blank=True, null=True, verbose_name='3rd Venue Preferences', related_name='+')
+    venue_preferences = models.ManyToManyField(VenueGroup,
+        through = 'TeamVenuePreference',
+        related_name = 'VenueGroup',
+        verbose_name = 'Venue Group Preference'
+    )
 
     TYPE_NONE = 'N'
     TYPE_ESL = 'E'
@@ -463,6 +463,10 @@ class Team(models.Model):
             dts = dts.filter(debate__round__seq__lt=before_round)
         return [dt.debate for dt in dts]
 
+    def get_preferences(self):
+        prefs = TeamVenuePreference.objects.filter(team=self)
+        return prefs
+
     @property
     def debates(self):
         return self.get_debates(None)
@@ -486,6 +490,20 @@ class Team(models.Model):
     @property
     def speakers(self):
         return self.speaker_set.all()
+
+
+class TeamVenuePreference(models.Model):
+    team = models.ForeignKey(Team)
+    venue_group = models.ForeignKey(VenueGroup)
+    priority = models.IntegerField()
+
+    class Meta:
+        ordering = ['priority',]
+
+    def __unicode__(self):
+        return u'%s with priority %s for %s' % (self.team, self.priority, self.venue_group)
+
+
 
 class SpeakerManager(models.Manager):
     def standings(self, round=None):

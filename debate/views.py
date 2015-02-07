@@ -16,7 +16,7 @@ from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, D
 from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission, AdjudicatorTestScoreHistory
 from debate.models import AdjudicatorFeedback, ActiveVenue, ActiveTeam, ActiveAdjudicator
 from debate.models import TeamPositionAllocation
-from debate.models import Division, VenueGroup
+from debate.models import Division, TeamVenuePreference, VenueGroup
 from debate.result import BallotSet
 from debate import forms
 
@@ -892,7 +892,12 @@ def create_division_allocation(request, t):
     from debate.division_allocator import DivisionAllocator
 
     teams = list(Team.objects.filter(tournament=t))
-    divisions = Division.objects.filter(tournament=t).delete() # Delete all existing divisions
+    for team in teams:
+        preferences = list(TeamVenuePreference.objects.filter(team=team))
+        team.preferences_dict = dict((p.priority, p.venue_group) for p in preferences)
+
+    # Delete all existing divisions - this shouldn't affect teams (on_delete=models.SET_NULL))
+    divisions = Division.objects.filter(tournament=t).delete()
 
     if t.config.get('share_venue_groups'):
         venue_groups = VenueGroup.objects.all()

@@ -114,7 +114,7 @@ class Command(BaseCommand):
 
                     if draw_type.lower() in ("random", "r"):
                         draw_type = "R"
-                    elif draw_type.lower() in ("round-robin", "round robin", "d"z):
+                    elif draw_type.lower() in ("round-robin", "round robin", "d"):
                         draw_type = "D"
                     elif draw_type.lower() in ("power-paired", "power paired", "p"):
                         draw_type = "P"
@@ -312,42 +312,36 @@ class Command(BaseCommand):
                             print type(inst)     # the exception instance
                             print inst           # __str__ allows args to printed directly
 
-                    first_pref = line[2] or None
-                    if first_pref:
-                        try:
-                            first_pref = m.VenueGroup.objects.get(name=first_pref)
-                        except:
-                            print "probably couldn't find venue %s" % first_pref
-
-
-                    second_pref = line[3] or None
-                    if second_pref:
-                        try:
-                            second_pref = m.VenueGroup.objects.get(name=second_pref)
-                        except:
-                            print "probably couldn't find venue %s" % second_pref
-
                     team, created = m.Team.objects.get_or_create(
                         institution = ins,
                         reference = name,
-                        tournament=t,
-                        first_venue_preference = first_pref,
-                        second_venue_preference = second_pref,
+                        tournament=t
                     )
                     team.save()
 
-                    third_a = line[4] or None
-                    third_b = line[5] or None
-                    third_c = line[6] or None
-                    third_d = line[7] or None
-                    third_e = line[8] or None
-                    third_prefs = filter(None, [third_a, third_b, third_c, third_d, third_e])
-                    for pref in third_prefs:
-                        try:
-                            team.tertiary_venue_preferences.add(m.VenueGroup.objects.get(name=pref))
-                            team.save()
-                        except:
-                            print "Couldn't add third pref: %s" % pref
+                    pref1 = line[2] or None
+                    pref2 = line[3] or None
+                    pref3 = line[4] or None
+                    pref4 = line[5] or None
+                    pref5 = line[6] or None
+                    pref6 = line[7] or None
+                    pref7 = line[8] or None
+                    pref8 = line[9] or None
+                    pref9 = line[10] or None
+                    pref10 = line[11] or None
+                    pref11 = line[12] or None
+                    pref12 = line[13] or None
+
+                    venue_preferences = [pref1,pref2,pref3,pref4,pref5,pref6,pref7,pref8,pref9,pref10,pref11,pref12]
+                    for index, venue in enumerate(venue_preferences):
+                        if venue:
+                            venue_group = m.VenueGroup.objects.get(name=venue)
+                            preference = m.TeamVenuePreference(
+                                team = team,
+                                venue_group = venue_group,
+                                priority = index
+                            )
+                            preference.save()
 
                     m.Speaker(name = "1st Speaker", team = team).save()
                     m.Speaker(name = "2nd Speaker", team = team).save()

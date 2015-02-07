@@ -17,7 +17,9 @@ class DivisionAllocator():
     def allocate(self):
         division_dict = {v:[] for v in self.venue_groups}
         allocated_teams = []
-        all_teams = self.shuffle_for_diversity(self.teams)
+
+        all_teams = self.teams
+        random.shuffle(all_teams)
 
         # First sweep of allocations
         division_dict, allocated_teams = self.allocate_teams(division_dict, allocated_teams, all_teams)
@@ -36,35 +38,28 @@ class DivisionAllocator():
 
         return True
 
-
-    def shuffle_for_diversity(self, teams):
-        # We re-order the teams so that teams of the same institution are as far away as possible
-        random.shuffle(teams)
-        random.shuffle(teams)
-        random.shuffle(teams)
-        return teams
-
     def determine_division_size(self,division_dict, allocated_teams,all_teams):
         di = 1 # index of current division
 
 
         for group,group_teams in division_dict.iteritems():
-            print "------\n%s has %s/%s teams" % (group, len(group_teams), len(group.venues) * 2)
+            if len(group_teams) > 0:
+                print "------\n%s has %s/%s teams" % (group, len(group_teams), len(group.venues) * 2)
 
-            # Using the ideal division size, how many divisions can we support?
-            possible_ideal_divisions = len(group_teams) / self.ideal_division_size
-            possible_ideal_remainder = len(group_teams) % self.ideal_division_size
-            #print "\t %s possible_ideal_division of 6 with %s leftover" % (possible_ideal_divisions, possible_ideal_remainder)
-            possible_small_divisions = len(group_teams) / self.minimum_division_size
-            possible_small_remainder = len(group_teams) % self.minimum_division_size
-            #print "\t %s possible_small_division of 5 with %s leftover" % (possible_small_divisions, possible_small_remainder)
+                # Using the ideal division size, how many divisions can we support?
+                possible_ideal_divisions = len(group_teams) / self.ideal_division_size
+                possible_ideal_remainder = len(group_teams) % self.ideal_division_size
+                #print "\t %s possible_ideal_division of 6 with %s leftover" % (possible_ideal_divisions, possible_ideal_remainder)
+                possible_small_divisions = len(group_teams) / self.minimum_division_size
+                possible_small_remainder = len(group_teams) % self.minimum_division_size
+                #print "\t %s possible_small_division of 5 with %s leftover" % (possible_small_divisions, possible_small_remainder)
 
-            if min(possible_ideal_remainder, possible_small_remainder) == possible_ideal_remainder and possible_ideal_divisions > 0:
-                di = self.create_venue_divisions(group,group_teams,di,self.ideal_division_size,possible_ideal_divisions,possible_ideal_remainder)
-            elif min(possible_ideal_remainder, possible_small_remainder) == possible_small_remainder and possible_small_divisions > 0:
-                di = self.create_venue_divisions(group,group_teams,di,self.minimum_division_size,possible_small_divisions,possible_small_remainder)
-            else:
-                print "\t no options - this shouldn't happen"
+                if min(possible_ideal_remainder, possible_small_remainder) == possible_ideal_remainder and possible_ideal_divisions > 0:
+                    di = self.create_venue_divisions(group,group_teams,di,self.ideal_division_size,possible_ideal_divisions,possible_ideal_remainder)
+                elif min(possible_ideal_remainder, possible_small_remainder) == possible_small_remainder and possible_small_divisions > 0:
+                    di = self.create_venue_divisions(group,group_teams,di,self.minimum_division_size,possible_small_divisions,possible_small_remainder)
+                else:
+                    print "\t no options - this shouldn't happen"
 
         print "------"
         print "Made %s divisions over %s venues, Allocated %s / %s teams" % (di, len(division_dict), len(allocated_teams), len(all_teams))
@@ -89,7 +84,10 @@ class DivisionAllocator():
 
 
     def create_venue_divisions(self,group,group_teams,di,base_division_size,possible_divisions,remainder):
+
+        random.shuffle(group_teams)
         divisions = [base_division_size] * possible_divisions
+
         for i in range(0, remainder):
             # Re-distributing the excess numbers to the other divisions
             divisions.sort()
@@ -117,26 +115,26 @@ class DivisionAllocator():
 
         return culled_division_dict, allocated_teams
 
-    def allocate_teams(self, division_dict,allocated_teams,teams_to_allocate):
-        for group, group_teams in division_dict.iteritems():
-            for team in teams_to_allocate:
-                if len(group_teams) < (len(group.venues) * 2) and team.first_venue_preference == group:
-                    group_teams.append(team)
-                    allocated_teams.append(team)
+    def allocate_teams(self, division_dict,allocated_teams,all_teams):
+        teams_to_allocate = list(all_teams)
 
-        for group, group_teams in division_dict.iteritems():
-            availables = (te for te in teams_to_allocate if not te in allocated_teams)
-            for team in availables:
-                if len(group_teams) < (len(group.venues) * 2) and team.second_venue_preference == group:
-                    group_teams.append(team)
-                    allocated_teams.append(team)
-
-        for group, group_teams in division_dict.iteritems():
-            availables = (te for te in teams_to_allocate if not te in allocated_teams)
-            for te in availables:
-                if len(group_teams) < (len(group.venues) * 2) and group in team.tertiary_venue_preferences.all():
-                    group_teams.append(team)
-                    allocated_teams.append(team)
+        for i in range(0, 12):
+            # For each possible preference priority (0 through 12)
+            #print "%sst round" % i
+            for group, group_teams in division_dict.iteritems():
+                # We go through each group
+                if len(group_teams) <= (len(group.venues) * 2):
+                    for team in teams_to_allocate:
+                        # And find a team which has them as a preference
+                        if i in team.preferences_dict and team.preferences_dict[i] == group:
+                            # And there is space
+                            #print "\t%s given %s" % (group, team)
+                            group_teams.append(team)
+                            allocated_teams.append(team)
+                            teams_to_allocate.remove(team)
+                else:
+                    #print "\t%s is full" % group
+                    pass
 
         for group, group_teams in division_dict.iteritems():
             # Trying to mix up the distributions within divisions
