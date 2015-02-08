@@ -49,7 +49,7 @@
     {% for debate in draw %}
         <tr>
             {% if enable_divisions %}
-                <td>{{ debate.aff_team.division }}</td>
+                <td>{{ debate.division }}</td>
             {% endif %}
             <td>{{ debate.venue_splitname }}</td>
             {% if show_ballots %}
@@ -89,7 +89,6 @@
                     {{ debate.neg_team.short_name }}
                 </span>
             </td>
-
             <td>
                 {% if debate.confirmed_ballot and show_splits %}
                     {% for type, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results %}
@@ -105,7 +104,6 @@
                     {% endfor %}
                 {% endif %}
             </td>
-
             {% if show_motions_column %}
                 <td>
                     <span data-toggle="tooltip" title="{{ debate.confirmed_ballot.motion }}">

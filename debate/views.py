@@ -106,7 +106,7 @@ def index(request):
 
 ## Public UI
 
-PUBLIC_PAGE_CACHE_TIMEOUT = 60
+PUBLIC_PAGE_CACHE_TIMEOUT = 1
 TAB_PAGES_CACHE_TIMEOUT = 28800
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -297,6 +297,17 @@ def public_motions(request, t):
     order_by = t.config.get('public_motions_descending') and '-seq' or 'seq'
     rounds = Round.objects.filter(motions_released=True).order_by(order_by)
     return r2r(request, 'public/motions.html', dict(rounds=rounds))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('public_divisions')
+def public_divisions(request, t):
+    divisions = Division.objects.filter(tournament=t)
+    venue_groups = set(d.venue_group for d in divisions)
+    for uvg in venue_groups:
+        uvg.divisions = [d for d in divisions if d.venue_group == uvg]
+
+    return r2r(request, 'public/divisions.html', dict(venue_groups=venue_groups))
+
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
@@ -991,11 +1002,7 @@ def motions_assign(request, round):
             model = Motion
             fields = ("divisions",)
 
-
-
-
     MotionFormSet = modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
-
 
     if request.method == 'POST':
         print request.POST

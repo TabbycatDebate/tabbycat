@@ -48,6 +48,7 @@ SETTINGS = OrderedDict([
     ('public_results',              (_bool, 'Public interface to see results from previous rounds',                False)),
     ('show_splitting_adjudicators', (_bool, 'If showing public results, show splitting adjudicators',              False)),
     ('show_motions_in_results',     (_bool, 'If showing public results, show motions with results',                False)),
+    ('public_divisions',            (_bool, 'Public interface to see divisions',                                   False)),
     ('public_team_standings',       (_bool, 'Public interface to see team standings DURING tournament',            False)),
     ('public_breaking_teams',       (_bool, 'Public interface to see breaking teams',                              False)),
     ('public_breaking_adjs',        (_bool, 'Public interface to see breaking adjudicators',                       False)),

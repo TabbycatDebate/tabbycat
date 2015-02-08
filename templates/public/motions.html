@@ -2,34 +2,60 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block extra-head %}{% endblock extra-head %}
+{% block extra-head %}
+<script type="text/javascript">
+
+    $(document).ready( function() {
+        var table = $("#dataTable").dataTable({
+            "aaSorting": [[0, "asc"], [1, "asc"]]
+        });
+        new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+    });
+
+</script>
+{% endblock extra-head %}
 
 {% block head-title %}Motions{% endblock %}
 {% block page-title %}Motions{% endblock %}
 {% block body-class %}public-motions{% endblock %}
 
-
 {% block content %}
 
+<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Round</th>
+            {% if enable_divisions and enable_division_motions %}
+                <th>Divisions</th>
+            {% endif %}
+            <th>Text</th>
+            {% if enable_flagged_motions %}
+                <th>Contentious</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
     {% for round in rounds %}
-
-        <h3 class="lead">{{ round.name }}</h3>
-        <ul class="list-group">
         {% for motion in round.motions %}
-            <li class="list-group-item">
-                {% if enable_flagged_motions %}
-                    {% if motion.flagged %}
-                        <span class="badge">Contentious</span>
-                    {% endif %}
+            <tr>
+                <td>{{ round }}</td>
+                {% if enable_divisions and enable_division_motions %}
+                    <td>
+                    {% for division in motion.divisions.all %}
+                        <span data-toggle="tooltip" title="{{ division.venue_group }}: {% for team in division.teams.all %}{{ team }}, {% endfor %}">
+                            {{ division }}
+                        </span>,
+                    {% endfor %}
+                    </td>
                 {% endif %}
-                {{ motion.text }}
-            </li>
+                <td>{{ motion.text }}</td>
+                {% if enable_flagged_motions %}
+                    <td>{% if motion.flagged %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+                {% endif %}
+            </tr>
         {% endfor %}
-        {% empty %}
-            <li class="list-group-item">There haven't been any motions released yet</li>
-        </ul>
-
     {% endfor %}
-
+    </tbody>
+</table>
 
 {% endblock content %}

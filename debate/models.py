@@ -96,16 +96,16 @@ class Tournament(models.Model):
             return unicode(self.name)
 
 class VenueGroup(models.Model):
-    name = models.CharField(max_length=120)
+    name = models.CharField(max_length=200)
+    short_name = models.CharField(max_length=25, blank=True, null=True, default="")
     tournament = models.ForeignKey(Tournament)
 
     @property
     def venues(self):
         return self.venue_set.all()
 
-
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return u'%s' % (self.short_name)
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
@@ -1002,6 +1002,7 @@ class Round(models.Model):
             debate.bracket   = pairing.bracket
             debate.room_rank = pairing.room_rank
             debate.flags     = ",".join(pairing.flags) # comma-separated list
+            debate.division  = pairing.division
             debate.save()
 
             aff = DebateTeam(debate=debate, team=pairing.teams[0], position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -1277,6 +1278,10 @@ class Debate(models.Model):
     def get_dt(self, side):
         """dt = DebateTeam"""
         return getattr(self, '%s_dt' % side)
+
+    @property
+    def division_motion(self):
+        return Motion.objects.filter(round=self.round, divisions=self.division)
 
     @property
     def aff_dt(self):

@@ -13,7 +13,7 @@
             } );
             var table = $('#dataTable').dataTable({
                 'bPaginate': false,
-                "aaSorting": [[ 0, "desc" ]],
+                "aaSorting": [[ 0, "asc" ], [ 1, "asc" ]],
             });
             new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
             $("#release_draw").click( function() {
@@ -62,7 +62,9 @@
     {% if enable_divisions %}
         <a class="btn {% if divs > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% tournament_url division_allocations %}">Edit Divisions</a>
     {% endif %}
-    <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
+    {% if not enable_venue_times %}
+        <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
+    {% endif %}
 </div>
 <div class="btn-group">
     <a class="btn btn-default form-control" href="{% round_url draw_with_standings %}">View Details</a>
@@ -71,7 +73,7 @@
     {% if round.draw_status = 10 %}
         <button class="btn btn-success form-control" id="release_draw">Release to Public</button>
     {% elif round.draw_status = 99 %}
-        <button class="btn btn-danger form-control" id="unrelease_draw">Unrelease</button>
+        <button class="btn btn-danger form-control" id="unrelease_draw">Unrelease to Public</button>
     {% endif %}
 </div>
 {% endblock %}
@@ -122,11 +124,15 @@
         <tr>
             {% if enable_divisions %}
                 <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip"title="Division">{{ debate.division }}</span></th>
+            {% else %}
+                <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
             {% endif %}
-            <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-            <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+            {% if enable_venue_groups %}
+                <th>Venue</th>
+            {% endif %}
+            <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Room"></span></th>
             {% if enable_venue_times %}
-            <th><span class="glyphicon glyphicon-time" data-toggle="tooltip"title="Time"></span></th>
+                <th><span class="glyphicon glyphicon-time" data-toggle="tooltip"title="Time"></span></th>
             {% endif %}
             <th>Aff<span class="hidden-xs">irmative</span></th>
             <th>Neg<span class="hidden-xs">ative</span></th>
@@ -138,17 +144,19 @@
     {% for debate in draw %}
     <tr class="{% if debate.all_conflicts or not debate.adjudicators.valid %}danger{% endif %}">
         {% if enable_divisions %}
-            <td>{{ debate.aff_team.division }}</td>
+            <td>{{ debate.division }}</td>
+        {% else %}
+            <td>{{ debate.bracket }}</td>
         {% endif %}
-        <td>{{ debate.bracket }}</td>
-        <td>
-            {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}
-        </td>
+        {% if enable_venue_groups %}
+            <td>{{ debate.venue.group }}</td>
+        {% endif %}
+        <td>{{ debate.venue.name }}</td>
         {% if enable_venue_times %}
         <td>
             {% if debate.venue.time %}
             <span class="hidden">{{ debate.venue.time|date:"d m o H:i" }}</span>
-            {{ debate.venue.time|date:"D jS M h:i" }}
+            {{ debate.venue.time|date:"D jS F h:iA" }}
             {% endif %}
         </td>
         {% endif %}

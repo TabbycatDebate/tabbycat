@@ -30,7 +30,7 @@ class Pairing(object):
     """Simple data structure for communicating information about pairings.
     Draws always return a list of these."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[], winner=None):
+    def __init__(self, teams, bracket, room_rank, flags=[], winner=None, division=None):
         """'teams' must be a list of two teams.
         'bracket' and 'room_rank' are both integers.
         'flags' is a list of strings."""
@@ -38,6 +38,7 @@ class Pairing(object):
         self.bracket       = bracket
         self.room_rank     = room_rank
         self.flags         = list(flags)
+        self.division      = division
         if winner is None:
             self._winner_index = None
         else:
@@ -1035,7 +1036,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     }
 
     def make_draw(self):
-        self._brackets = self._make_raw_brackets()
+        self._brackets = self._make_raw_brackets_from_divisions()
         # TODO: resolving brackets with odd numbers here (see resolve_odd_brackets)
         self._pairings = self.generate_pairings(self._brackets)
         # TODO: avoiding history conflicts here
@@ -1046,7 +1047,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
         return self._draw
 
-    def _make_raw_brackets(self):
+    def _make_raw_brackets_from_divisions(self):
         """Returns an OrderedDict mapping bracket names (normally numbers)
         to lists."""
         brackets = OrderedDict()
@@ -1092,7 +1093,12 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                             break # Stop searching
 
                     if opposition:
-                        pairing = Pairing(teams=(aff,opposition), bracket=points, room_rank=1)
+                        pairing = Pairing(
+                            teams=(aff,opposition),
+                            bracket=points,
+                            room_rank=1,
+                            division=aff.division
+                        )
                         print "\t made a pairing %s" % pairing
                         bracket.append(pairing)
                         assigned_teams.append(aff)

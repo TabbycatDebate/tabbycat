@@ -168,15 +168,20 @@ class Command(BaseCommand):
             venue_count = 0
             venue_group_count = 0
             for line in reader:
-                group = line[0] or None
+                long_name = line[0] or None
+                short_name = line[0] or None
                 rooms = line[1] or None
                 try:
                     if sharing_data:
                         venue_group, created = m.VenueGroup.objects.get_or_create(
-                           name=group, defaults={'tournament': t})
+                           name=long_name,
+                           short_name=short_name,
+                           defaults={'tournament': t})
                     else:
                         venue_group, created = m.VenueGroup.objects.get_or_create(
-                           name=group, tournament=t)
+                           name=long_name,
+                           short_name=short_name,
+                           tournament=t)
 
                     if created:
                         print "Made venue group: \t%s" % group
