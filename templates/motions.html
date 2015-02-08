@@ -44,6 +44,11 @@
 <a href="{% round_url motions_edit %}" class="btn btn-default form-control">
     Edit Motions for {{ round.name }}
 </a>
+{% if enable_division_motions %}
+    <a href="{% round_url motions_assign %}" class="btn btn-default form-control">
+        Assign {{ round.name }} Motions to Divisions
+    </a>
+{% endif %}
 {% if round.motions_released %}
     <button class="btn btn-danger form-control" id="unrelease_motions">Unrelease {{ round.name }} Motions to Public</button>
 {% else %}
@@ -64,12 +69,15 @@
         <th>Reference</th>
         <th>M<span class="hidden-xs">otion</span></th>
         {% if enable_flagged_motions %}
-        <th>Flagged</th>
+            <th>Flagged</th>
+        {% endif %}
+        {% if enable_division_motions %}
+            <th>Divisions</th>
         {% endif %}
         <th>Chosen</th>
         {% if motion_vetoes_enabled %}
-        <th><span title="Aff vetoes" data-toggle="tooltip">AV</th>
-        <th><span title="Neg vetoes" data-toggle="tooltip">NV</th>
+            <th><span title="Aff vetoes" data-toggle="tooltip">AV</th>
+            <th><span title="Neg vetoes" data-toggle="tooltip">NV</th>
         {% endif %}
         <th><span title="Aff wins" data-toggle="tooltip">AW</span></th>
         <th><span title="Neg wins" data-toggle="tooltip">NW</span></th>
@@ -92,6 +100,13 @@
                 No
             {% endif %}
         </td>
+        {% endif %}
+        {% if enable_division_motions %}
+            <td>
+            {% for d in motion.divisions.all %}
+                {{ d }},
+            {% endfor %}
+            </td>
         {% endif %}
         <td>{{ motion.chosen_in }}</td>
         {% if motion_vetoes_enabled %}

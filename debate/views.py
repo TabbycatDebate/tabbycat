@@ -20,7 +20,7 @@ from debate.models import Division, TeamVenuePreference, VenueGroup
 from debate.result import BallotSet
 from debate import forms
 
-from django.forms.models import modelformset_factory
+from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
 
 import datetime
@@ -970,6 +970,48 @@ def motions_edit(request, round):
     formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
     return r2r(request, "motions_edit.html", dict(formset=formset))
+
+
+@admin_required
+@round_view
+def motions_assign(request, round):
+
+    from django.forms import ModelForm
+    from django.forms.widgets import CheckboxSelectMultiple
+    from django.forms.models import ModelMultipleChoiceField
+
+    class MyModelChoiceField(ModelMultipleChoiceField):
+        def label_from_instance(self, obj):
+            return "%s %s" % (obj.name, obj.venue_group)
+
+    class ModelAssignForm(ModelForm):
+        divisions = MyModelChoiceField(widget=CheckboxSelectMultiple, queryset=Division.objects.all())
+
+        class Meta:
+            model = Motion
+            fields = ("divisions",)
+
+
+
+
+    MotionFormSet = modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
+
+
+    if request.method == 'POST':
+        print request.POST
+        formset = MotionFormSet(request.POST)
+        print formset
+        if formset.is_valid():
+            print "valid"
+            formset.save()
+            if 'submit' in request.POST:
+                return redirect_round('motions', round)
+
+    formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
+
+    return r2r(request, "motions_assign.html", dict(formset=formset))
+
+
 
 @admin_required
 @expect_post
