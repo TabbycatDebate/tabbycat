@@ -94,7 +94,6 @@ class Command(BaseCommand):
 
                 i = 1
                 for line in reader:
-
                     seq = line[0]
                     if not seq:
                         seq = i
@@ -163,14 +162,13 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('venues_groups.csv file is missing or damaged')
-                total_errors += 1
 
             venue_count = 0
             venue_group_count = 0
             for line in reader:
                 long_name = line[0] or None
-                short_name = line[0] or None
-                rooms = line[1] or None
+                short_name = line[1] or None
+                rooms = line[2] or None
                 try:
                     if sharing_data:
                         venue_group, created = m.VenueGroup.objects.get_or_create(
@@ -184,7 +182,7 @@ class Command(BaseCommand):
                            tournament=t)
 
                     if created:
-                        print "Made venue group: \t%s" % group
+                        print "Made venue group: \t%s" % venue_group
                         venue_group_count = venue_group_count + 1
 
                 except ValueError:
@@ -200,7 +198,6 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('venues.csv file is missing or damaged')
-                total_errors += 1
 
             venue_count = 0
             venue_group_count = 0
@@ -237,7 +234,12 @@ class Command(BaseCommand):
                             time = time,
                             defaults = {'tournament': t}
                         )
-                        print "Matched venue: \t\t%s" % room_name
+                        if created:
+                            #print "Matched venue: \t\t%s" % room_name
+                            pass
+                        else:
+                            #print "Made venue: \t\t%s" % room_name
+                            pass
                     else:
                         m.Venue(
                             tournament = t,
@@ -246,7 +248,7 @@ class Command(BaseCommand):
                             priority = priority,
                             time = time
                         ).save()
-                        print "Made venue: \t\t%s" % room_name
+                        #print "Made venue: \t\t%s" % room_name
 
                     venue_count = venue_count + 1
 
@@ -266,7 +268,6 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('institutions.csv file is missing or damaged')
-                total_errors += 1
 
             institutions_count = 0
             for line in reader:
@@ -299,7 +300,6 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('teams.csv file is missing or damaged')
-                total_errors += 1
 
             teams_count = 0
             for line in reader:
@@ -366,7 +366,6 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('speakers.csv file is missing or damaged')
-                total_errors += 1
 
             speakers_count = 0
             teams_count = 0
@@ -427,7 +426,6 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('judges.csv file is missing or damaged')
-                total_errors += 1
 
             adjs_count = 0
             for line in reader:

@@ -1720,7 +1720,7 @@ class TeamScore(models.Model):
     debate_team = models.ForeignKey(DebateTeam)
     points = models.PositiveSmallIntegerField()
     margin = ScoreField()
-    win = models.BooleanField()
+    win = models.NullBooleanField()
     score = ScoreField()
 
     class Meta:
