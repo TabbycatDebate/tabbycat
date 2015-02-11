@@ -658,6 +658,9 @@ a.text-danger:hover {
   .navbar-nav .dropdown.open .divider {
     display: none; } }
 
+.nav > li > a {
+  padding: 15px 10px; }
+
 #header-options {
   min-height: 34px;
   margin-bottom: 20px;
@@ -697,6 +700,9 @@ a.text-danger:hover {
 .adj-feedback a.adjudicators-standings-nav,
 .config a.config-nav {
   font-weight: bold; }
+
+.public-draw #header-options .btn-group {
+  display: none; }
 
 html, body {
   height: 100%; }

@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block head-title %}Welcome! <small>Which tournament are you after?</small>{% endblock %}
@@ -24,12 +25,11 @@
     {% else %}
         {% for tournament in tournaments %}
         <li class="list-group-item">
-            <a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
+            <a href="{{ tournament.get_public_url }}">{{ tournament.name }}</a>
         </li>
         {% endfor %}
     {% endif %}
 
 </ul>
-
 
 {% endblock content %}

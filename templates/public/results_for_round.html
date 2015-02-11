@@ -24,9 +24,11 @@
 
 {% block content %}
 <table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
-
     <thead>
         <tr>
+            {% if enable_divisions %}
+                <th>Division</th>
+            {% endif %}
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
             {% if show_ballots %}<th>Ballots</th>{% endif %}
             {% if show_emoji > 0 %}
@@ -43,11 +45,12 @@
             {% endif %}
         </tr>
     </thead>
-
     <tbody>
-
     {% for debate in draw %}
         <tr>
+            {% if enable_divisions %}
+                <td>{{ debate.division }}</td>
+            {% endif %}
             <td>{{ debate.venue_splitname }}</td>
             {% if show_ballots %}
                 <td>
@@ -86,7 +89,6 @@
                     {{ debate.neg_team.short_name }}
                 </span>
             </td>
-
             <td>
                 {% if debate.confirmed_ballot and show_splits %}
                     {% for type, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results %}
@@ -102,7 +104,6 @@
                     {% endfor %}
                 {% endif %}
             </td>
-
             {% if show_motions_column %}
                 <td>
                     <span data-toggle="tooltip" title="{{ debate.confirmed_ballot.motion }}">

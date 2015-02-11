@@ -3,6 +3,9 @@
 <table id="dataTable" class="draw-with-standings table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
+            {% if enable_divisions %}
+                <th>Division</th>
+            {% endif %}
             <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
             <th>Aff<span class="hidden-xs">irmative</span></th>
             <th>Neg<span class="hidden-xs">ative</span></th>
@@ -24,6 +27,9 @@
     <tbody>
     {% for debate in draw %}
     <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }} {% ifchanged debate.bracket %}first-in-bracket{% endifchanged %}">
+        {% if enable_divisions %}
+            <td>{{ debate.division }}</td>
+        {% endif %}
         <td>{{ debate.bracket }}</td>
         <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
             {{ debate.aff_team }}

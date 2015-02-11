@@ -170,10 +170,9 @@
 
     <div id="main" class="col-md-10">
 
-
         <div id="alerts-holder" class=""></div>
 
-        <table id="dataTable" class="table table-hover table-bordered h4" cellpadding="0" cellspacing="0">
+        <table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
             <thead>
                 <tr><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Aff<span class="hidden-xs">irmative</span></th><th>Neg<span class="hidden-xs">ative</span></th><th>Adj<span class="hidden-xs">udicator</span>s</th><th>Venue</th></tr>
             </thead>
@@ -193,9 +192,11 @@
                 {% endfor %}
                 </td>
                 <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
-                    <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default {% if debate.venue %}venue{% else %}empty{% endif %}">
-                        <span class="">{% if debate.venue %}{{ debate.venue }}{% else %}.None{% endif %}</span>
+                    {% if debate.venue %}
+                    <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
+                        <span class="">{{ debate.venue }}</span>
                     </div>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

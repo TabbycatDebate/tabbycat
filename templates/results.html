@@ -31,11 +31,12 @@
             {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span></span>
         </button>
     </div>
-    <!-- <div class="btn-group">
-        <a class="btn btn-default form-control btn-success" href="{% round_url confirm_increment %}">
-            Proceed to Next Round
-        </a>
-    </div> -->
+    {% if round.seq < tournament.prelim_rounds.count and current_round == round %}
+        <div class="btn-group">
+            <a class="btn btn-default form-control btn-success" href="{% round_url round_increment_check %}">Advance to Next Round</a>
+        </div>
+    {% endif %}
+
 {% endblock %}
 
 {% block content %}

@@ -1,15 +1,16 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.template.defaultfilters import slugify
 import os
 import csv
 import debate.models as m
 
 class Command(BaseCommand):
-    args = '<folder> <num_rounds>'
+    args = '<folder> <num_rounds> <share_data>'
     help = 'Imports data from a folder in the data directory'
 
     def handle(self, *args, **options):
-        if len(args) < 1:
+        if len(args) < 3:
             raise CommandError("Not enough arguments.")
 
         # Getting the command line variable
@@ -19,6 +20,14 @@ class Command(BaseCommand):
         except:
             rounds_to_auto_make = 0
 
+        try:
+            if args[2] == "share":
+                sharing_data = True
+            else:
+                sharing_data = False
+        except:
+            sharing_data = False
+
         total_errors = 0
 
         # Where to find the data
@@ -27,26 +36,28 @@ class Command(BaseCommand):
         self.stdout.write('importing from ' + data_path)
 
         try:
-            if m.Tournament.objects.filter(slug=folder).exists():
+            if m.Tournament.objects.filter(slug=slugify(unicode(folder))).exists():
                 self.stdout.write("WARNING! A tournament called '" + folder + "' already exists.")
                 self.stdout.write("You are about to delete EVERYTHING for this tournament.")
                 response = raw_input("Are you sure? ")
                 if response != "yes":
                     self.stdout.write("Cancelled.")
                     raise CommandError("Cancelled by user.")
-                m.Tournament.objects.filter(slug=folder).delete()
+                m.Tournament.objects.filter(slug=slugify(unicode(folder))).delete()
 
             # Tournament
-            self.stdout.write('*** Attempting to create tournament ' + folder)
+            self.stdout.write('**** Attempting to create tournament ' + folder)
             try:
-                t = m.Tournament(slug=folder)
+                slug = slugify(unicode(folder))
+                short_name = (folder[:24] + '..') if len(folder) > 75 else folder
+                t = m.Tournament(name=folder, short_name=short_name, slug=slugify(unicode(folder)))
                 t.save()
             except Exception as inst:
                 total_errors += 1
                 print inst
 
-            self.stdout.write('*** Created the tournament: ' + folder)
-            self.stdout.write('*** Attempting to create rounds ')
+            self.stdout.write('Made tournament: \t' + folder)
+            self.stdout.write('**** Attempting to create rounds ')
             rounds_count = 0
 
             if rounds_to_auto_make > 0:
@@ -67,6 +78,7 @@ class Command(BaseCommand):
                             feedback_weight = min((i-1)*0.1, 0.5),
                             silent = (i >= rounds_to_auto_make),
                         ).save()
+                        print "Auto-made round: \tRound %s" % i
                         rounds_count += 1
 
                 except Exception as inst:
@@ -82,15 +94,37 @@ class Command(BaseCommand):
 
                 i = 1
                 for line in reader:
+
                     seq = line[0]
                     if not seq:
                         seq = i
+                    name = str(line[1])
+                    abbv = str(line[2])
+                    draw_stage = str(line[3]) or "Preliminary"
+                    draw_type = str(line[4]) or "Random"
+                    is_silent = int(line[5]) or 0
+                    feedback_weight = float(line[6]) or 0.7
 
-                    name = line[1]
-                    abbv = len(line) > 2 and line[2] or "R%d" % seq
-                    draw_type = len(line) > 3 and line[3] or "R"
-                    is_silent = len(line) > 4 and int(line[4]) or 0
-                    feedback_weight = len(line) > 5 and line[5] or 0.7
+                    if draw_stage.lower() in ("preliminary", "p"):
+                        draw_stage = "P"
+                    elif draw_stage.lower() in ("elimination", "break", "e", "b"):
+                        draw_stage = "E"
+                    else:
+                        draw_stage = None
+
+                    if draw_type.lower() in ("random", "r"):
+                        draw_type = "R"
+                    elif draw_type.lower() in ("round-robin", "round robin", "d"):
+                        draw_type = "D"
+                    elif draw_type.lower() in ("power-paired", "power paired", "p"):
+                        draw_type = "P"
+                    elif draw_type.lower() in ("first elimination", "first-elimination", "1st elimination", "1", "e"):
+                        draw_type = "F"
+                    elif draw_type.lower() in ("subsequent elimination", "subsequent-elimination", "2nd elimination", "2"):
+                        draw_type = "B"
+                    else:
+                        draw_type = None
+
 
                     if is_silent > 0:
                         is_silent = True
@@ -104,12 +138,13 @@ class Command(BaseCommand):
                             name = name,
                             abbreviation = abbv,
                             draw_type = draw_type,
+                            stage = draw_stage,
                             feedback_weight = min((int(seq)-1)*0.1, 0.5),
                             silent = is_silent
                         ).save()
                         rounds_count += 1
                         i += 1
-                        print name
+                        print "Made round: \t\t%s" % name
                     except Exception as inst:
                         total_errors += 1
                         self.stdout.write('Couldnt make round ' + name)
@@ -117,10 +152,49 @@ class Command(BaseCommand):
 
             t.current_round = m.Round.objects.get(tournament=t, seq=1)
             t.save()
-            self.stdout.write('*** Created ' + str(rounds_count) + ' rounds')
+            self.stdout.write('**** Created ' + str(rounds_count) + ' rounds')
+
+
 
             # Venues
-            self.stdout.write('*** Attempting to create the venues')
+            self.stdout.write('**** Attempting to create the venue groups')
+            try:
+                reader = csv.reader(open(os.path.join(data_path, 'venue_groups.csv')))
+                reader.next() # Skipping header row
+            except:
+                self.stdout.write('venues_groups.csv file is missing or damaged')
+                total_errors += 1
+
+            venue_count = 0
+            venue_group_count = 0
+            for line in reader:
+                long_name = line[0] or None
+                short_name = line[0] or None
+                rooms = line[1] or None
+                try:
+                    if sharing_data:
+                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                           name=long_name,
+                           short_name=short_name,
+                           defaults={'tournament': t})
+                    else:
+                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                           name=long_name,
+                           short_name=short_name,
+                           tournament=t)
+
+                    if created:
+                        print "Made venue group: \t%s" % group
+                        venue_group_count = venue_group_count + 1
+
+                except ValueError:
+                    total_errors += 1
+                    self.stdout.write('Couldnt make venue group ' + group)
+                    venue_group = None
+
+
+            # Venues
+            self.stdout.write('**** Attempting to create the venues')
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'venues.csv')))
                 reader.next() # Skipping header row
@@ -138,37 +212,55 @@ class Command(BaseCommand):
 
                 if group:
                     try:
-                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                        if sharing_data:
+                            venue_group, created = m.VenueGroup.objects.get_or_create(
+                               name=group, defaults={'tournament': t})
+                        else:
+                            venue_group, created = m.VenueGroup.objects.get_or_create(
                                name=group, tournament=t)
+
                         if created:
-                            print group
+                            print "Made venue group: \t%s" % group
                             venue_group_count = venue_group_count + 1
                     except ValueError:
                         total_errors += 1
-                        self.stdout.write('Couldnt venue group ' + group)
+                        self.stdout.write('Couldnt make venue group ' + group)
                         venue_group = None
 
                 try:
-                    m.Venue(
-                        tournament = t,
-                        group = venue_group,
-                        name = room_name,
-                        priority = priority,
-                        time = time
-                    ).save()
-                    print room_name
+                    if sharing_data:
+                        venue, created = m.Venue.objects.get_or_create(
+                            tournament = t,
+                            group = venue_group,
+                            name = room_name,
+                            priority = priority,
+                            time = time,
+                            defaults = {'tournament': t}
+                        )
+                        print "Matched venue: \t\t%s" % room_name
+                    else:
+                        m.Venue(
+                            tournament = t,
+                            group = venue_group,
+                            name = room_name,
+                            priority = priority,
+                            time = time
+                        ).save()
+                        print "Made venue: \t\t%s" % room_name
+
                     venue_count = venue_count + 1
+
                 except Exception as inst:
                     total_errors += 1
                     self.stdout.write('Couldnt make venue ' + room_name)
                     print inst
 
 
-            self.stdout.write('*** Created ' + str(venue_group_count) + ' venue groups')
-            self.stdout.write('*** Created ' + str(venue_count) + ' venues')
+            self.stdout.write('**** Created ' + str(venue_group_count) + ' venue groups')
+            self.stdout.write('**** Created ' + str(venue_count) + ' venues')
 
             # Institutions
-            self.stdout.write('*** Attempting to create the institutions')
+            self.stdout.write('**** Attempting to create the institutions')
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'institutions.csv')))
                 reader.next() # Skipping header row
@@ -183,24 +275,92 @@ class Command(BaseCommand):
                 abbv = len(line) > 2 and line[2] or ""
 
                 try:
-                    i = m.Institution(
+                    inst, created = m.Institution.objects.get_or_create(
                         code=code,
-                        name=name,
-                        abbreviation=abbv,
-                        tournament=t
+                        name=name
                     )
-                    i.save()
+                    if created:
+                        print "Made institution: \t%s" % name
+                    else:
+                        print "Matched institution: \t%s" % name
+
                     institutions_count = institutions_count + 1
-                    print name
                 except Exception as inst:
                     total_errors += 1
                     self.stdout.write('Couldnt make institution ' + name)
                     print inst
 
-            self.stdout.write('*** Created ' + str(institutions_count) + ' institutions')
+            self.stdout.write('**** Created ' + str(institutions_count) + ' institutions')
+
+            # Teams
+            self.stdout.write('**** Attempting to create the teams')
+            try:
+                reader = csv.reader(open(os.path.join(data_path, 'teams.csv'), 'rU'))
+                reader.next() # Skipping header row
+            except:
+                self.stdout.write('teams.csv file is missing or damaged')
+                total_errors += 1
+
+            teams_count = 0
+            for line in reader:
+                try:
+                    name = line[0]
+                    ins = line[1]
+                    try:
+                        ins = m.Institution.objects.get(name=ins)
+                    except:
+                        try:
+                            ins = m.Institution.objects.get(code=ins)
+                        except Exception as inst:
+                            self.stdout.write("error with finding inst " + ins)
+                            total_errors += 1
+                            print type(inst)     # the exception instance
+                            print inst           # __str__ allows args to printed directly
+
+                    team, created = m.Team.objects.get_or_create(
+                        institution = ins,
+                        reference = name,
+                        tournament=t
+                    )
+                    team.save()
+
+                    pref1 = line[2] or None
+                    pref2 = line[3] or None
+                    pref3 = line[4] or None
+                    pref4 = line[5] or None
+                    pref5 = line[6] or None
+                    pref6 = line[7] or None
+                    pref7 = line[8] or None
+                    pref8 = line[9] or None
+                    pref9 = line[10] or None
+                    pref10 = line[11] or None
+                    pref11 = line[12] or None
+                    pref12 = line[13] or None
+
+                    venue_preferences = [pref1,pref2,pref3,pref4,pref5,pref6,pref7,pref8,pref9,pref10,pref11,pref12]
+                    for index, venue in enumerate(venue_preferences):
+                        if venue:
+                            venue_group = m.VenueGroup.objects.get(name=venue)
+                            preference = m.TeamVenuePreference(
+                                team = team,
+                                venue_group = venue_group,
+                                priority = index
+                            )
+                            preference.save()
+
+                    m.Speaker(name = "1st Speaker", team = team).save()
+                    m.Speaker(name = "2nd Speaker", team = team).save()
+                    m.Speaker(name = "3rd Speaker", team = team).save()
+                    m.Speaker(name = "Reply Speaker", team = team).save()
+                    teams_count = teams_count + 1
+                    print "Made team:\t\t%s of %s" % (name, ins)
+                except Exception as inst:
+                    self.stdout.write('Couldnt make the team ' + line[0] + ' of ' + line[1])
+                    total_errors += 1
+                    print inst
 
             # Speakers
-            self.stdout.write('*** Attempting to create the teams/speakers')
+            self.stdout.write('**** Attempting to create the teams/speakers')
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'speakers.csv'), 'rU'))
                 reader.next() # Skipping header row
@@ -223,11 +383,16 @@ class Command(BaseCommand):
                         print inst           # __str__ allows args to printed directly
 
                 try:
-                    team, created = m.Team.objects.get_or_create(institution = ins,
-                           reference = team_name,
-                           use_institution_prefix = True)
+                    team, created = m.Team.objects.get_or_create(
+                            institution = ins,
+                            reference = team_name,
+                            use_institution_prefix = True,
+                            tournament=t
+                    )
                     if created:
                         teams_count = teams_count + 1
+                        print "Made team:\t\t%s of %s" % (team_name, ins)
+
                 except Exception as inst:
                     total_errors += 1
                     self.stdout.write("error with " + str(team_name))
@@ -236,7 +401,7 @@ class Command(BaseCommand):
 
 
                 # Resetting the variable incase create/get above fails
-                speakers_team = m.Team.objects.get(institution=ins, reference=team_name)
+                speakers_team = m.Team.objects.get(institution=ins, reference=team_name, tournament=t)
 
                 name = name.strip()
                 try:
@@ -250,23 +415,21 @@ class Command(BaseCommand):
                     total_errors += 1
                     print inst
 
-                print team, "-", name
+                print "Made speaker:\t\t%s of %s" % (name, ins)
 
-            self.stdout.write('*** Created ' + str(speakers_count) +
+            self.stdout.write('**** Created ' + str(speakers_count) +
                               ' speakers and ' + str(teams_count) + ' teams')
 
             # Judges
-            self.stdout.write('*** Attempting to create the judges')
+            self.stdout.write('**** Attempting to create the judges')
             try:
-                reader = csv.reader(open(os.path.join(data_path, 'institutions.csv')))
+                reader = csv.reader(open(os.path.join(data_path, 'judges.csv')))
                 reader.next() # Skipping header row
             except:
-                self.stdout.write('institutions.csv file is missing or damaged')
+                self.stdout.write('judges.csv file is missing or damaged')
                 total_errors += 1
 
             adjs_count = 0
-            reader = csv.reader(open(os.path.join(data_path, 'judges.csv')))
-            reader.next() # Skipping header row
             for line in reader:
                 ins_name, name, test_score = line[0:3]
                 phone = len(line) > 3 and line[3] or None
@@ -306,9 +469,13 @@ class Command(BaseCommand):
                 # People can either input instutions as name or short name
                 ins_name = ins_name.strip()
                 try:
-                    ins = m.Institution.objects.get(name=ins_name, tournament=t)
+                    ins = m.Institution.objects.get(name=ins_name)
                 except m.Institution.DoesNotExist:
-                    ins = m.Institution.objects.get(code=ins_name, tournament=t)
+                    try:
+                        ins = m.Institution.objects.get(code=ins_name)
+                    except:
+                        self.stdout.write('Could not find the institution of {0} for {1}'.format(ins_name, name))
+
 
                 name = name.strip()
                 adj = m.Adjudicator(
@@ -317,10 +484,11 @@ class Command(BaseCommand):
                     test_score = test_score,
                     phone = phone,
                     email = email,
-                    notes = notes
+                    notes = notes,
+                    tournament = t
                 )
                 adj.save()
-                print "Adjudicator", name
+                print "Made adjudicator: \t%s of %s" % (name, ins)
 
                 m.AdjudicatorTestScoreHistory(adjudicator=adj, score=test_score, round=None).save()
                 m.AdjudicatorInstitutionConflict(adjudicator=adj, institution=ins).save()
@@ -329,10 +497,10 @@ class Command(BaseCommand):
                     for ins_conflict_name in institution_conflicts.split(","):
                         ins_conflict_name = ins_conflict_name.strip()
                         try:
-                            ins_conflict = m.Institution.objects.get(name=ins_conflict_name, tournament=t)
+                            ins_conflict = m.Institution.objects.get(name=ins_conflict_name)
                         except m.Institution.DoesNotExist:
                             print ins_conflict_name
-                            ins_conflict = m.Institution.objects.get(code=ins_conflict_name, tournament=t)
+                            ins_conflict = m.Institution.objects.get(code=ins_conflict_name)
                         m.AdjudicatorInstitutionConflict(adjudicator=adj, institution=ins_conflict).save()
                         print "    conflicts with", ins_conflict.name
 
@@ -341,9 +509,9 @@ class Command(BaseCommand):
                         team_conflict_ins_name, team_conflict_ref = team_conflict_name.rsplit(None, 1)
                         team_conflict_ins_name = team_conflict_ins_name.strip()
                         try:
-                            team_conflict_ins = m.Institution.objects.get(name=team_conflict_ins_name, tournament=t)
+                            team_conflict_ins = m.Institution.objects.get(name=team_conflict_ins_name)
                         except m.Institution.DoesNotExist:
-                            team_conflict_ins = m.Institution.objects.get(code=team_conflict_ins_name, tournament=t)
+                            team_conflict_ins = m.Institution.objects.get(code=team_conflict_ins_name)
                         try:
                             team_conflict = m.Team.objects.get(institution=team_conflict_ins, reference=team_conflict_ref)
                         except m.Team.DoesNotExist:
@@ -354,24 +522,32 @@ class Command(BaseCommand):
 
                 adjs_count = adjs_count + 1
 
-            self.stdout.write('*** Created ' + str(adjs_count) + ' judges')
+            self.stdout.write('**** Created ' + str(adjs_count) + ' judges')
 
             # Motions
-            if os.path.isfile(os.path.join(data_path, 'motions.csv')):
-                motions_count = 0
+            try:
                 reader = csv.reader(open(os.path.join(data_path, 'motions.csv')))
                 reader.next() # Skipping header row
-                for r, seq, reference, text in reader:
-                    try:
-                        round = m.Round.objects.get(abbreviation=r)
-                    except m.Round.DoesNotExist:
-                        round = m.Round.objects.get(seq=int(r))
-                    seq = int(seq)
-                    m.Motion(round=round, seq=seq, reference=reference, text=text).save()
-                    self.stdout.write(text)
-                    motions_count += 1
+            except:
+                self.stdout.write('motions.csv file is missing or damaged')
 
-                self.stdout.write('*** Created ' + str(motions_count) + ' motions')
+            motions_count = 0
+            for line in reader:
+                round_abbv = str(line[0])
+                motion_seq = int(line[1])
+                reference = str(line[2])
+                text = str(line[3])
+
+                try:
+                    round = m.Round.objects.get(abbreviation=round_abbv, tournament=t)
+                    m.Motion(round=round, seq=motion_seq, reference=reference, text=text).save()
+                    self.stdout.write('Made motion: \t\t' + round_abbv + ': ' + text )
+                    motions_count += 1
+                except m.Round.DoesNotExist:
+                    total_errors += 1
+                    self.stdout.write('Couldnt find round with abbreviation: ' + round_abbv)
+
+            self.stdout.write('**** Created ' + str(motions_count) + ' motions')
 
             # Sides
             if os.path.isfile(os.path.join(data_path, 'sides.csv')):
@@ -383,10 +559,10 @@ class Command(BaseCommand):
                     team_name = line[1]
                     ins_name = ins_name.strip()
                     try:
-                        ins = m.Institution.objects.get(name=ins_name, tournament=t)
+                        ins = m.Institution.objects.get(name=ins_name)
                     except m.Institution.DoesNotExist:
-                        ins = m.Institution.objects.get(code=ins_name, tournament=t)
-                    team = m.Team.objects.get(institution=ins, reference=team_name)
+                        ins = m.Institution.objects.get(code=ins_name)
+                    team = m.Team.objects.get(institution=ins, reference=team_name, tournament=t)
                     for seq, side in enumerate(line[2:], start=1):
                         round = m.Round.objects.get(seq=seq)
                         if side.lower() in ["a", "aff"]:
@@ -399,12 +575,12 @@ class Command(BaseCommand):
                         sides_count += 1
                     self.stdout.write(team.short_name)
 
-                self.stdout.write('*** Created ' + str(sides_count) + ' side allocations')
+                self.stdout.write('**** Created ' + str(sides_count) + ' side allocations')
 
             if total_errors == 0:
-                self.stdout.write('*** Successfully imported all data')
+                self.stdout.write('**** Successfully imported all data')
             else:
-                self.stdout.write('*** Successfully all data but with %d ERRORS' % total_errors)
+                self.stdout.write('**** Successfully all data but with %d ERRORS' % total_errors)
 
 
         except Exception:

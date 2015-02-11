@@ -2,14 +2,18 @@
 {% load debate_tags %}
 
 {% block update-url %}{% round_url update_team_availability %}{% endblock %}
+{% block draw-url %}{% round_url draw round %}{% endblock %}
 {% block page-title %}Team Availability for {{ round.name }}{% endblock %}
 {% block head-title %}Team Availability <small>for {{ round.name }}</small>{% endblock %}
 {% block table-contents %}
     <thead>
         <tr>
             <th>Team</th>
+            {% if enable_divisions %}
+                <th>Division</th>
+            {% endif %}
             {% if show_institutions > 0 %}
-            <th>Institution</th>
+                <th>Institution</th>
             {% endif %}
             <th>Active</th>
         </tr>
@@ -25,8 +29,11 @@
                    {{ team.speakers|join:', ' }}
                </span>
             </td>
+            {% if enable_divisions %}
+                <td>{{ team.division }}</td>
+            {% endif %}
             {% if show_institutions > 0 %}
-            <td>{{ team.institution.code }}</td>
+                <td>{{ team.institution.code }}</td>
             {% endif %}
             <td class="check_target">
                 <input type="checkbox" {{ team.is_active|yesno:'checked="yes",'  }} name="check_{{ team.id }}" value="{{ team.id }}" />

@@ -540,7 +540,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
         if obj_type.strip() == 'T':
             return DebateTeam.objects.get(id=id)
 
-    tournament = adjudicator.institution.tournament
+    tournament = adjudicator.tournament
 
     class FeedbackForm(forms.Form):
         source = RequiredTypedChoiceField(
@@ -630,7 +630,7 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
         value = int(value)
         return DebateAdjudicator.objects.get(id=value)
 
-    tournament = source.institution.tournament
+    tournament = source.tournament
 
     class FeedbackForm(forms.Form):
         debate_adjudicator = RequiredTypedChoiceField(
@@ -711,7 +711,7 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
         value = int(value)
         return DebateAdjudicator.objects.get(id=value)
 
-    tournament = source.institution.tournament
+    tournament = source.tournament
 
     class FeedbackForm(forms.Form):
         debate_adjudicator = RequiredTypedChoiceField(
@@ -760,7 +760,9 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
 
     return FeedbackForm
 
+
 def test():
     from debate.models import Debate
 
     return make_results_form_class(Debate.objects.get(pk=1))
+
