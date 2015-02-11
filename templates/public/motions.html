@@ -26,6 +26,7 @@
         <tr>
             <th>Round</th>
             {% if enable_divisions and enable_division_motions %}
+                <th>Venue</th>
                 <th>Divisions</th>
             {% endif %}
             <th>Text</th>
@@ -40,9 +41,10 @@
             <tr>
                 <td>{{ round }}</td>
                 {% if enable_divisions and enable_division_motions %}
+                    <td><span title="{{ motion.divisions.0.venue_group.name }}" data-toggle="tooltip">{{ motion.divisions.0.venue_group }}</td>
                     <td>
                     {% for division in motion.divisions.all %}
-                        <span data-toggle="tooltip" title="{{ division.venue_group }}: {% for team in division.teams.all %}{{ team }}, {% endfor %}">
+                        <span data-toggle="tooltip" title="{% for team in division.teams.all %}{{ team }}, {% endfor %}">
                             {{ division }}
                         </span>,
                     {% endfor %}
