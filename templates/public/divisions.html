@@ -12,7 +12,7 @@
 
 {% for venue_group in venue_groups %}
 <div class="col-sm-12">
-    <h2 class="page-header">At {{ venue_group }}</h2>
+    <h2 class="page-header">At {{ venue_group.name }}</h2>
 
     {% for division in venue_group.divisions %}
         <ul class="list-group col-sm-2">

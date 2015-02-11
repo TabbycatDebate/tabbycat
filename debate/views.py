@@ -867,7 +867,6 @@ def division_allocations(request, t):
         venue_groups = VenueGroup.objects.filter(tournament=t)
 
     for vg in venue_groups:
-        vg.capacity = vg.venues.count() * 2
         vg.total_divs = len([d for d in divisions if d.venue_group == vg])
         vg.total_teams = 0
         for t in teams:

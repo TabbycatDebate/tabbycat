@@ -168,18 +168,14 @@ class Command(BaseCommand):
             for line in reader:
                 long_name = line[0] or None
                 short_name = line[1] or None
-                rooms = line[2] or None
+                team_capacity = line[2] or None
                 try:
-                    if sharing_data:
-                        venue_group, created = m.VenueGroup.objects.get_or_create(
-                           name=long_name,
-                           short_name=short_name,
-                           defaults={'tournament': t})
-                    else:
-                        venue_group, created = m.VenueGroup.objects.get_or_create(
-                           name=long_name,
-                           short_name=short_name,
-                           tournament=t)
+                    venue_group, created = m.VenueGroup.objects.get_or_create(
+                       name=long_name,
+                       short_name=short_name,
+                       team_capacity=team_capacity,
+                       tournament=t
+                    )
 
                     if created:
                         print "Made venue group: \t%s" % venue_group
@@ -212,12 +208,9 @@ class Command(BaseCommand):
 
                 if group_name:
                     try:
-                        if sharing_data:
-                            venue_group, created = m.VenueGroup.objects.get_or_create(
-                               name=group_name, defaults={'tournament': t})
-                        else:
-                            venue_group, created = m.VenueGroup.objects.get_or_create(
-                               name=group_name, tournament=t)
+                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                            name=group_name, tournament=t
+                        )
 
                         if created:
                             print "Made venue group: \t%s" % group_name
@@ -231,30 +224,14 @@ class Command(BaseCommand):
                     venue_group = None
 
                 try:
-                    if sharing_data:
-                        venue, created = m.Venue.objects.get_or_create(
-                            tournament = t,
-                            group = venue_group,
-                            name = room_name,
-                            priority = priority,
-                            time = time,
-                            defaults = {'tournament': t}
-                        )
-                        if created:
-                            #print "Matched venue: \t\t%s" % room_name
-                            pass
-                        else:
-                            #print "Made venue: \t\t%s" % room_name
-                            pass
-                    else:
-                        m.Venue(
-                            tournament = t,
-                            group = venue_group,
-                            name = room_name,
-                            priority = priority,
-                            time = time
-                        ).save()
-                        #print "Made venue: \t\t%s" % room_name
+                    m.Venue(
+                        tournament = t,
+                        group = venue_group,
+                        name = room_name,
+                        priority = priority,
+                        time = time
+                    ).save()
+                    print "Made venue: \t\t%s" % room_name
 
                     venue_count = venue_count + 1
 
@@ -346,7 +323,7 @@ class Command(BaseCommand):
                     venue_preferences = [pref1,pref2,pref3,pref4,pref5,pref6,pref7,pref8,pref9,pref10,pref11,pref12]
                     for index, venue in enumerate(venue_preferences):
                         if venue:
-                            venue_group = m.VenueGroup.objects.get(name=venue)
+                            venue_group = m.VenueGroup.objects.get(name=venue,tournament=t)
                             preference = m.TeamVenuePreference(
                                 team = team,
                                 venue_group = venue_group,

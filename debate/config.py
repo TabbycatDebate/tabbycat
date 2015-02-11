@@ -42,7 +42,7 @@ SETTINGS = OrderedDict([
     ('public_participants',         (_bool, 'Public interface to see all participants',                            False)),
     ('public_side_allocations',     (_bool, 'Public interface to see side pre-allocations',                        False)),
     ('public_draw',                 (_bool, 'Public interface to see RELEASED draws',                              False)),
-    ('show_all_draws',              (_bool, 'If showing public draws, show all (including future) draws',          False)),
+    ('show_all_draws',              (_bool, 'If showing public draws, show all (past & future) RELEASED draws',    False)),
     ('public_motions',              (_bool, 'Public interface to see RELEASED motions',                            False)),
     ('public_motions_descending',   (_bool, 'List motions by round in descending order (as opposed to ascending)', True)),
     ('public_results',              (_bool, 'Public interface to see results from previous rounds',                False)),

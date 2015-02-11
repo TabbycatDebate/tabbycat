@@ -41,10 +41,9 @@ class DivisionAllocator():
     def determine_division_size(self,division_dict, allocated_teams,all_teams):
         di = 1 # index of current division
 
-
         for group,group_teams in division_dict.iteritems():
             if len(group_teams) > 0:
-                print "------\n%s has %s/%s teams" % (group, len(group_teams), len(group.venues) * 2)
+                print "------\n%s has %s/%s teams" % (group, len(group_teams), group.team_capacity)
 
                 # Using the ideal division size, how many divisions can we support?
                 possible_ideal_divisions = len(group_teams) / self.ideal_division_size
@@ -123,7 +122,7 @@ class DivisionAllocator():
             #print "%sst round" % i
             for group, group_teams in division_dict.iteritems():
                 # We go through each group
-                if len(group_teams) <= (len(group.venues) * 2):
+                if len(group_teams) <= group.team_capacity:
                     for team in teams_to_allocate:
                         # And find a team which has them as a preference
                         if i in team.preferences_dict and team.preferences_dict[i] == group:
