@@ -184,6 +184,9 @@ class Command(BaseCommand):
                     if created:
                         print "Made venue group: \t%s" % venue_group
                         venue_group_count = venue_group_count + 1
+                    else:
+                        print "Matched venue group: \t%s" % venue_group
+
 
                 except ValueError:
                     total_errors += 1
@@ -204,25 +207,28 @@ class Command(BaseCommand):
             for line in reader:
                 room_name = line[0]
                 priority = len(line) > 1 and line[1] or 10
-                group = len(line) > 2 and line[2] or None
+                group_name = len(line) > 2 and line[2] or None
                 time = len(line) > 3 and str(line[3]) or None
 
-                if group:
+                if group_name:
                     try:
                         if sharing_data:
                             venue_group, created = m.VenueGroup.objects.get_or_create(
-                               name=group, defaults={'tournament': t})
+                               name=group_name, defaults={'tournament': t})
                         else:
                             venue_group, created = m.VenueGroup.objects.get_or_create(
-                               name=group, tournament=t)
+                               name=group_name, tournament=t)
 
                         if created:
-                            print "Made venue group: \t%s" % group
+                            print "Made venue group: \t%s" % group_name
                             venue_group_count = venue_group_count + 1
+
                     except ValueError:
                         total_errors += 1
-                        self.stdout.write('Couldnt make venue group ' + group)
+                        self.stdout.write('Couldnt make venue group ' + group_name)
                         venue_group = None
+                else:
+                    venue_group = None
 
                 try:
                     if sharing_data:
