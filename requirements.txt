@@ -9,7 +9,8 @@ static3==0.5.1
 wsgiref==0.1.2
 # Plugged in modules:
 newrelic>=2.42.0.35 # For performance tracking
-pylibmc>=1.3.0 # For Mem-Caching
+pylibmc==1.3.0 # For Mem-Caching
+django-pylibmc==1.4.0
 django-suit>=0.2.12 # Admin Backend
 django-debug-toolbar>=1.2 # Debug Toolbar
 django-emoji>=1.2.0 # Emoji Support
