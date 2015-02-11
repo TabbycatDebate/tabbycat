@@ -16,10 +16,11 @@ from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, D
 from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission, AdjudicatorTestScoreHistory
 from debate.models import AdjudicatorFeedback, ActiveVenue, ActiveTeam, ActiveAdjudicator
 from debate.models import TeamPositionAllocation
+from debate.models import Division, TeamVenuePreference, VenueGroup
 from debate.result import BallotSet
 from debate import forms
 
-from django.forms.models import modelformset_factory
+from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
 
 import datetime
@@ -105,7 +106,7 @@ def index(request):
 
 ## Public UI
 
-PUBLIC_PAGE_CACHE_TIMEOUT = 60
+PUBLIC_PAGE_CACHE_TIMEOUT = 1
 TAB_PAGES_CACHE_TIMEOUT = 28800
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -130,6 +131,16 @@ def public_draw(request, t):
         return r2r(request, "public/draw_released.html", dict(draw=draw, round=r))
     else:
         return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=r))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_round_view('show_all_draws')
+def public_draw_by_round(request, round):
+    if round.draw_status == round.STATUS_RELEASED:
+        draw = round.get_draw()
+        return r2r(request, "public/draw_released.html", dict(draw=draw, round=round))
+    else:
+        return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=round))
+
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_team_standings')
@@ -286,6 +297,17 @@ def public_motions(request, t):
     order_by = t.config.get('public_motions_descending') and '-seq' or 'seq'
     rounds = Round.objects.filter(motions_released=True).order_by(order_by)
     return r2r(request, 'public/motions.html', dict(rounds=rounds))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('public_divisions')
+def public_divisions(request, t):
+    divisions = Division.objects.filter(tournament=t)
+    venue_groups = set(d.venue_group for d in divisions)
+    for uvg in venue_groups:
+        uvg.divisions = [d for d in divisions if d.venue_group == uvg]
+
+    return r2r(request, 'public/divisions.html', dict(venue_groups=venue_groups))
+
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
@@ -746,9 +768,12 @@ def draw_confirmed(request, round):
     draw = round.get_draw()
     rooms = float(round.active_teams.count()) / 2
     active_adjs = round.active_adjudicators.all()
+    divisions_assigned = sum(t.division != None for t in round.active_teams.all())
+
     return r2r(request, "draw_confirmed.html", dict(draw=draw,
                                                     active_adjs=active_adjs,
-                                                    rooms=rooms))
+                                                    rooms=rooms,
+                                                    divs=divisions_assigned))
 
 @admin_required
 @round_view
@@ -816,7 +841,7 @@ def unrelease_draw(request, round):
 @admin_required
 @tournament_view
 def side_allocations(request, t):
-    teams = Team.objects.filter(institution__tournament=t)
+    teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
     TPA_MAP = {
@@ -830,6 +855,73 @@ def side_allocations(request, t):
         team.side_allocations = [tpas.get((team.id, round.id), "-") for round in rounds]
     return r2r(request, "side_allocations.html", dict(teams=teams, rounds=rounds))
 
+
+@admin_required
+@tournament_view
+def division_allocations(request, t):
+    teams = Team.objects.filter(tournament=t)
+    divisions = Division.objects.filter(tournament=t)
+    if t.config.get('share_venue_groups'):
+        venue_groups = VenueGroup.objects.all()
+    else:
+        venue_groups = VenueGroup.objects.filter(tournament=t)
+
+    for vg in venue_groups:
+        vg.capacity = vg.venues.count() * 2
+        vg.total_divs = len([d for d in divisions if d.venue_group == vg])
+        vg.total_teams = 0
+        for t in teams:
+            if t.division:
+                if t.division.venue_group == vg:
+                    vg.total_teams += 1
+
+    return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
+
+
+@admin_required
+@expect_post
+@tournament_view
+def save_divisions(request, t):
+    culled_dict = dict((int(k), int(v)) for k, v in request.POST.iteritems() if v)
+
+    teams = Team.objects.in_bulk([t_id for t_id in culled_dict.keys()])
+    divisions = Division.objects.in_bulk([d_id for d_id in culled_dict.values()])
+
+    for team_id, division_id in culled_dict.iteritems():
+        teams[team_id].division = divisions[division_id]
+        teams[team_id].save()
+
+    # ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DIVISIONS_SAVE,
+    #     user=request.user, tournament=t)
+
+    return HttpResponse("ok")
+
+@admin_required
+@expect_post
+@tournament_view
+def create_division_allocation(request, t):
+    from debate.division_allocator import DivisionAllocator
+
+    teams = list(Team.objects.filter(tournament=t))
+    for team in teams:
+        preferences = list(TeamVenuePreference.objects.filter(team=team))
+        team.preferences_dict = dict((p.priority, p.venue_group) for p in preferences)
+
+    # Delete all existing divisions - this shouldn't affect teams (on_delete=models.SET_NULL))
+    divisions = Division.objects.filter(tournament=t).delete()
+
+    if t.config.get('share_venue_groups'):
+        venue_groups = VenueGroup.objects.all()
+    else:
+        venue_groups = VenueGroup.objects.filter(tournament=t)
+
+    alloc = DivisionAllocator(teams=teams, divisions=divisions,venue_groups=venue_groups, tournament=t)
+    success = alloc.allocate()
+
+    if success:
+        return HttpResponse("ok")
+    else:
+        return HttpResponseBadRequest("Couldn't create divisions")
 
 @admin_required
 @expect_post
@@ -889,6 +981,44 @@ def motions_edit(request, round):
     formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
     return r2r(request, "motions_edit.html", dict(formset=formset))
+
+
+@admin_required
+@round_view
+def motions_assign(request, round):
+
+    from django.forms import ModelForm
+    from django.forms.widgets import CheckboxSelectMultiple
+    from django.forms.models import ModelMultipleChoiceField
+
+    class MyModelChoiceField(ModelMultipleChoiceField):
+        def label_from_instance(self, obj):
+            return "%s %s" % (obj.name, obj.venue_group)
+
+    class ModelAssignForm(ModelForm):
+        divisions = MyModelChoiceField(widget=CheckboxSelectMultiple, queryset=Division.objects.all())
+
+        class Meta:
+            model = Motion
+            fields = ("divisions",)
+
+    MotionFormSet = modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
+
+    if request.method == 'POST':
+        print request.POST
+        formset = MotionFormSet(request.POST)
+        print formset
+        if formset.is_valid():
+            print "valid"
+            formset.save()
+            if 'submit' in request.POST:
+                return redirect_round('motions', round)
+
+    formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
+
+    return r2r(request, "motions_assign.html", dict(formset=formset))
+
+
 
 @admin_required
 @expect_post

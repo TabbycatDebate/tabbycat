@@ -760,7 +760,9 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
 
     return FeedbackForm
 
+
 def test():
     from debate.models import Debate
 
     return make_results_form_class(Debate.objects.get(pk=1))
+

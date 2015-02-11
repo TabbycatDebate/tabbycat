@@ -20,26 +20,37 @@ class SpeakerInline(admin.TabularInline):
 class TeamPositionAllocationInline(admin.TabularInline):
     model = models.TeamPositionAllocation
 
-class TeamLocationPreferencesInline(admin.TabularInline):
-    model = models.Team.venue_group_preferences.through
-    verbose_name = "Team Venue Group Preferences"
-    verbose_name_plural = "Team Venue Group Preferences"
-    extra = 1
+class TeamVenuePreferenceInline(admin.TabularInline):
+    model = models.TeamVenuePreference
+    extra = 6
 
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution', 'tournament')
     search_fields = ('name','institution__name', 'institution__code', 'tournament')
     list_filter = ('tournament', 'institution')
-    inlines = (SpeakerInline, TeamPositionAllocationInline, TeamLocationPreferencesInline)
-    exclude = ("venue_group_preferences",)
+    inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
 
 admin.site.register(models.Team, TeamAdmin)
+
+
+class TeamVenuePreferenceAdmin(admin.ModelAdmin):
+    list_display = ('team', 'venue_group', 'priority')
+    search_fields = ('team','venue_group', 'priority')
+    list_filter = ('team','venue_group', 'priority')
+
+admin.site.register(models.TeamVenuePreference, TeamVenuePreferenceAdmin)
+
 
 class SpeakerAdmin(admin.ModelAdmin):
     list_display = ('name', 'team')
     search_fields = ('name', 'team__name', 'team__institution__name',
                      'team__institution__code',)
 admin.site.register(models.Speaker, SpeakerAdmin)
+
+class DivisionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'tournament', 'venue_group')
+
+admin.site.register(models.Division, DivisionAdmin)
 
 class AdjudicatorConflictInline(admin.TabularInline):
     model = models.AdjudicatorConflict
@@ -67,17 +78,12 @@ admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 class VenueGroupAdmin(admin.ModelAdmin):
     list_display = ('name',)
-    # if models.Tournament.objects.count() > 1:
-    #     list_display = ('tournament',)
-
     search_fields = ('name',)
 
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
 
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time', 'tournament')
-    # if models.Tournament.objects.count() > 1:
-    #     list_display = ('tournament', 'name', 'group', 'priority', 'time')
     list_filter = ('tournament', 'group', 'priority', 'time')
 
     search_fields = ('name', 'group__name', 'time')

@@ -114,6 +114,8 @@ class Command(BaseCommand):
 
                     if draw_type.lower() in ("random", "r"):
                         draw_type = "R"
+                    elif draw_type.lower() in ("round-robin", "round robin", "d"):
+                        draw_type = "D"
                     elif draw_type.lower() in ("power-paired", "power paired", "p"):
                         draw_type = "P"
                     elif draw_type.lower() in ("first elimination", "first-elimination", "1st elimination", "1", "e"):
@@ -151,6 +153,45 @@ class Command(BaseCommand):
             t.current_round = m.Round.objects.get(tournament=t, seq=1)
             t.save()
             self.stdout.write('**** Created ' + str(rounds_count) + ' rounds')
+
+
+
+            # Venues
+            self.stdout.write('**** Attempting to create the venue groups')
+            try:
+                reader = csv.reader(open(os.path.join(data_path, 'venue_groups.csv')))
+                reader.next() # Skipping header row
+            except:
+                self.stdout.write('venues_groups.csv file is missing or damaged')
+                total_errors += 1
+
+            venue_count = 0
+            venue_group_count = 0
+            for line in reader:
+                long_name = line[0] or None
+                short_name = line[0] or None
+                rooms = line[1] or None
+                try:
+                    if sharing_data:
+                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                           name=long_name,
+                           short_name=short_name,
+                           defaults={'tournament': t})
+                    else:
+                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                           name=long_name,
+                           short_name=short_name,
+                           tournament=t)
+
+                    if created:
+                        print "Made venue group: \t%s" % group
+                        venue_group_count = venue_group_count + 1
+
+                except ValueError:
+                    total_errors += 1
+                    self.stdout.write('Couldnt make venue group ' + group)
+                    venue_group = None
+
 
             # Venues
             self.stdout.write('**** Attempting to create the venues')
@@ -250,6 +291,73 @@ class Command(BaseCommand):
                     print inst
 
             self.stdout.write('**** Created ' + str(institutions_count) + ' institutions')
+
+            # Teams
+            self.stdout.write('**** Attempting to create the teams')
+            try:
+                reader = csv.reader(open(os.path.join(data_path, 'teams.csv'), 'rU'))
+                reader.next() # Skipping header row
+            except:
+                self.stdout.write('teams.csv file is missing or damaged')
+                total_errors += 1
+
+            teams_count = 0
+            for line in reader:
+                try:
+                    name = line[0]
+                    ins = line[1]
+                    try:
+                        ins = m.Institution.objects.get(name=ins)
+                    except:
+                        try:
+                            ins = m.Institution.objects.get(code=ins)
+                        except Exception as inst:
+                            self.stdout.write("error with finding inst " + ins)
+                            total_errors += 1
+                            print type(inst)     # the exception instance
+                            print inst           # __str__ allows args to printed directly
+
+                    team, created = m.Team.objects.get_or_create(
+                        institution = ins,
+                        reference = name,
+                        tournament=t
+                    )
+                    team.save()
+
+                    pref1 = line[2] or None
+                    pref2 = line[3] or None
+                    pref3 = line[4] or None
+                    pref4 = line[5] or None
+                    pref5 = line[6] or None
+                    pref6 = line[7] or None
+                    pref7 = line[8] or None
+                    pref8 = line[9] or None
+                    pref9 = line[10] or None
+                    pref10 = line[11] or None
+                    pref11 = line[12] or None
+                    pref12 = line[13] or None
+
+                    venue_preferences = [pref1,pref2,pref3,pref4,pref5,pref6,pref7,pref8,pref9,pref10,pref11,pref12]
+                    for index, venue in enumerate(venue_preferences):
+                        if venue:
+                            venue_group = m.VenueGroup.objects.get(name=venue)
+                            preference = m.TeamVenuePreference(
+                                team = team,
+                                venue_group = venue_group,
+                                priority = index
+                            )
+                            preference.save()
+
+                    m.Speaker(name = "1st Speaker", team = team).save()
+                    m.Speaker(name = "2nd Speaker", team = team).save()
+                    m.Speaker(name = "3rd Speaker", team = team).save()
+                    m.Speaker(name = "Reply Speaker", team = team).save()
+                    teams_count = teams_count + 1
+                    print "Made team:\t\t%s of %s" % (name, ins)
+                except Exception as inst:
+                    self.stdout.write('Couldnt make the team ' + line[0] + ' of ' + line[1])
+                    total_errors += 1
+                    print inst
 
             # Speakers
             self.stdout.write('**** Attempting to create the teams/speakers')

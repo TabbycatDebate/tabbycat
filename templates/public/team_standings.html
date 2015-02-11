@@ -6,9 +6,15 @@
     {{ block.super }}
        <script type="text/javascript" charset="utf-8">
             $(document).ready( function() {
-                var table = $("#dataTable").dataTable({
+                {% if enable_divisions %}
+                    var table = $("#dataTable").dataTable({
+                        "aaSorting": [[ 0, "asc" ], [1, "desc" ]],
+                    });
+                {% else %}
+                    var table = $("#dataTable").dataTable({
                         "aaSorting": [[ 0, "desc" ], [2, "asc" ]],
-                });
+                    });
+                {% endif %}
                 new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
             } );
         </script>
@@ -26,6 +32,9 @@
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
     <thead>
         <tr>
+            {% if enable_divisions %}
+                <th>Division</th>
+            {% endif %}
             {% if show_team_points %}
                 <th>Pts</th>
             {% endif %}
@@ -45,6 +54,9 @@
     <tbody>
     {% for team in teams %}
     <tr>
+        {% if enable_divisions %}
+            <td>{{ team.division }}</td>
+        {% endif %}
         {% if show_team_points %}
             <td>{{ team.points }}</td>
         {% endif %}
