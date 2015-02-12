@@ -485,7 +485,7 @@ class Command(BaseCommand):
                 else:
                     tournament = t
 
-                adj = m.Adjudicator.get_or_create(
+                adj = m.Adjudicator(
                     name = name,
                     institution = ins,
                     test_score = test_score,
@@ -494,6 +494,7 @@ class Command(BaseCommand):
                     notes = notes,
                     tournament = tournament
                 )
+                adj.save()
                 print "Made adjudicator: \t%s of %s" % (name, ins)
 
                 m.AdjudicatorTestScoreHistory(adjudicator=adj, score=test_score, round=None).save()

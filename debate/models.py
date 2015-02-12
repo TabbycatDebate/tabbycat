@@ -392,7 +392,7 @@ class Division(models.Model):
         unique_together = [('tournament', 'name')]
 
 class Team(models.Model):
-    reference = models.CharField(max_length=50, verbose_name="Name or suffix")
+    reference = models.CharField(max_length=150, verbose_name="Name or suffix")
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament)
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)

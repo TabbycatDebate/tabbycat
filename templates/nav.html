@@ -134,10 +134,10 @@
                             </ul>
                         </li>
                     {% endif %}
+                    {% if public_divisions > 0 %}
                         <li><a class="public-divisions-nav" href="{% tournament_url public_divisions %}">
                             Divisions
                         </a></li>
-                    {% if public_divisions > 0 %}
                     {% endif %}
                     {% if public_motions > 0 %}
                         <li><a class="public-motions-nav" href="{% tournament_url public_motions %}">
