@@ -121,19 +121,19 @@ class DivisionAllocator():
             # For each possible preference priority (0 through 12)
             #print "%sst round" % i
             for group, group_teams in division_dict.iteritems():
-                # We go through each group
-                if len(group_teams) <= group.team_capacity:
-                    for team in teams_to_allocate:
+                for team in teams_to_allocate:
+                    # We go through each group
+                    if len(group_teams) <= group.team_capacity - 1:
                         # And find a team which has them as a preference
                         if i in team.preferences_dict and team.preferences_dict[i] == group:
                             # And there is space
-                            #print "\t%s given %s" % (group, team)
                             group_teams.append(team)
                             allocated_teams.append(team)
                             teams_to_allocate.remove(team)
-                else:
-                    #print "\t%s is full" % group
-                    pass
+                            #print "\t\t %s given %s (%s/%s)" % (team, group, len(group_teams), group.team_capacity)
+                    else:
+                        #print "\t\t%s is full (%s/%s)" % (group, len(group_teams), group.team_capacity)
+                        pass
 
         for group, group_teams in division_dict.iteritems():
             # Trying to mix up the distributions within divisions

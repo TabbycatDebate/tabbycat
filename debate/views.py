@@ -861,10 +861,7 @@ def side_allocations(request, t):
 def division_allocations(request, t):
     teams = Team.objects.filter(tournament=t)
     divisions = Division.objects.filter(tournament=t)
-    if t.config.get('share_venue_groups'):
-        venue_groups = VenueGroup.objects.all()
-    else:
-        venue_groups = VenueGroup.objects.filter(tournament=t)
+    venue_groups = VenueGroup.objects.filter(tournament=t).order_by('name')
 
     for vg in venue_groups:
         vg.total_divs = len([d for d in divisions if d.venue_group == vg])
@@ -909,10 +906,7 @@ def create_division_allocation(request, t):
     # Delete all existing divisions - this shouldn't affect teams (on_delete=models.SET_NULL))
     divisions = Division.objects.filter(tournament=t).delete()
 
-    if t.config.get('share_venue_groups'):
-        venue_groups = VenueGroup.objects.all()
-    else:
-        venue_groups = VenueGroup.objects.filter(tournament=t)
+    venue_groups = VenueGroup.objects.filter(tournament=t)
 
     alloc = DivisionAllocator(teams=teams, divisions=divisions,venue_groups=venue_groups, tournament=t)
     success = alloc.allocate()

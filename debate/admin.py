@@ -77,8 +77,9 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 class VenueGroupAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name','tournament')
     search_fields = ('name',)
+    list_filter = ('tournament',)
 
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
 

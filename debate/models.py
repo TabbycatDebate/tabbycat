@@ -1037,11 +1037,7 @@ class Round(models.Model):
 
 
     def venue_availability(self):
-        all_venues = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
-                                      'debate_venue')
-        if not self.tournament.config.get('share_venues'):
-            all_venues = [v for v in all_venues if v.tournament == self.tournament]
-
+        all_venues = [v for v in all_venues if v.tournament == self.tournament]
         return all_venues
 
     def unused_venues(self):
