@@ -173,7 +173,7 @@ class Command(BaseCommand):
                     value = bool(line[2])
 
                 t.config.set(key, value)
-                print "Made setting %s as %s" % (key, value)
+                print "Made setting \t%s as %s" % (key, value)
 
             # Venues
             self.stdout.write('**** Attempting to create the venue groups')
@@ -251,7 +251,7 @@ class Command(BaseCommand):
                         priority = priority,
                         time = time
                     ).save()
-                    print "Made venue: \t\t%s" % room_name
+                    #print "Made venue: \t\t%s" % room_name
 
                     venue_count = venue_count + 1
 
@@ -485,7 +485,7 @@ class Command(BaseCommand):
                 else:
                     tournament = t
 
-                adj = m.Adjudicator(
+                adj = m.Adjudicator.get_or_create(
                     name = name,
                     institution = ins,
                     test_score = test_score,
@@ -494,7 +494,6 @@ class Command(BaseCommand):
                     notes = notes,
                     tournament = tournament
                 )
-                adj.save()
                 print "Made adjudicator: \t%s of %s" % (name, ins)
 
                 m.AdjudicatorTestScoreHistory(adjudicator=adj, score=test_score, round=None).save()
