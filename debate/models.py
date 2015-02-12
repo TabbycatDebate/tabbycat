@@ -18,7 +18,6 @@ class ScoreField(models.FloatField):
     pass
 
 class Tournament(models.Model):
-
     name = models.CharField(max_length=100)
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
     slug = models.SlugField(unique=True)
@@ -97,17 +96,26 @@ class Tournament(models.Model):
             return unicode(self.name)
 
 class VenueGroup(models.Model):
-    name = models.CharField(max_length=120)
+    name = models.CharField(max_length=200)
+    short_name = models.CharField(max_length=25, blank=True, null=True, default="")
     tournament = models.ForeignKey(Tournament)
+    team_capacity = models.IntegerField()
+
+    @property
+    def venues(self):
+        return self.venue_set.all()
+
+    class Meta:
+        unique_together = [('name', 'tournament')]
 
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return u'%s' % (self.short_name)
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
     group = models.ForeignKey(VenueGroup, blank=True, null=True)
     priority = models.IntegerField()
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, blank=True, null=True)
     time = models.DateTimeField(blank=True, null=True)
 
     def __unicode__(self):
@@ -165,6 +173,7 @@ def annotate_team_standings(teams, round=None, shuffle=False):
     teams = teams.extra({
         "points": EXTRA_QUERY.format(field="points"),
         "speaker_score": EXTRA_QUERY.format(field="score"),
+        "margins": EXTRA_QUERY.format(field="margin"),
     }).distinct()
 
     # Extract which rule to use from the tournament config
@@ -237,6 +246,21 @@ def annotate_team_standings(teams, round=None, shuffle=False):
             random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
         sorted_teams.sort(cmp=cmp_teams, reverse=True)
         return sorted_teams
+
+    elif rule == "wadl":
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error("logging for %s rules" % rule)
+
+        # Sort by points
+        if shuffle:
+            sorted_teams = list(teams)
+            random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
+            sorted_teams.sort(key=lambda x: (x.points, x.margins), reverse=True)
+            return sorted_teams
+        else:
+            teams = teams.order_by("-points", "-margins")
+            return list(teams)
 
     else:
         raise ValueError("Invalid team_standings_rule option: {0}".format(rule))
@@ -352,18 +376,37 @@ class TeamManager(models.Manager):
         return breaking_teams
 
 
+class Division(models.Model):
+    name = models.CharField(max_length=50, verbose_name="Name or suffix")
+    tournament = models.ForeignKey(Tournament)
+    venue_group = models.ForeignKey(VenueGroup, blank=True, null=True)
+
+    @property
+    def teams(self):
+        return self.team_set.all().order_by('institution','reference')
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        unique_together = [('tournament', 'name')]
+
 class Team(models.Model):
     reference = models.CharField(max_length=50, verbose_name="Name or suffix")
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament)
+    division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
 
     # set to True if a team is ineligible to break (other than being
     # swing/composite)
     cannot_break = models.BooleanField(default=False)
 
-    # Records the list of venues a team is willing to debate in
-    venue_group_preferences = models.ManyToManyField(VenueGroup, blank=True, verbose_name='For when a team can only debate in specific venues')
+    venue_preferences = models.ManyToManyField(VenueGroup,
+        through = 'TeamVenuePreference',
+        related_name = 'VenueGroup',
+        verbose_name = 'Venue Group Preference'
+    )
 
     TYPE_NONE = 'N'
     TYPE_ESL = 'E'
@@ -424,6 +467,10 @@ class Team(models.Model):
             dts = dts.filter(debate__round__seq__lt=before_round)
         return [dt.debate for dt in dts]
 
+    def get_preferences(self):
+        prefs = TeamVenuePreference.objects.filter(team=self)
+        return prefs
+
     @property
     def debates(self):
         return self.get_debates(None)
@@ -447,6 +494,20 @@ class Team(models.Model):
     @property
     def speakers(self):
         return self.speaker_set.all()
+
+
+class TeamVenuePreference(models.Model):
+    team = models.ForeignKey(Team)
+    venue_group = models.ForeignKey(VenueGroup)
+    priority = models.IntegerField()
+
+    class Meta:
+        ordering = ['priority',]
+
+    def __unicode__(self):
+        return u'%s with priority %s for %s' % (self.team, self.priority, self.venue_group)
+
+
 
 class SpeakerManager(models.Manager):
     def standings(self, round=None):
@@ -614,7 +675,7 @@ class AdjudicatorManager(models.Manager):
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, blank=True, null=True)
     test_score = models.FloatField(default=0)
 
     institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adjudicator_institution_conflicts')
@@ -733,11 +794,13 @@ class RoundManager(models.Manager):
 
 class Round(models.Model):
     DRAW_RANDOM      = 'R'
+    DRAW_ROUNDROBIN       = 'D'
     DRAW_POWERPAIRED = 'P'
     DRAW_FIRSTBREAK  = 'F'
     DRAW_BREAK       = 'B'
     DRAW_CHOICES = (
         (DRAW_RANDOM,      'Random'),
+        (DRAW_ROUNDROBIN,       'Round-robin'),
         (DRAW_POWERPAIRED, 'Power-paired'),
         (DRAW_FIRSTBREAK,  'First elimination'),
         (DRAW_BREAK,       'Subsequent elimination'),
@@ -826,6 +889,9 @@ class Round(models.Model):
                 "odd_bracket"     : "draw_odd_bracket",
                 "pairing_method"  : "draw_pairing_method",
             })
+        elif self.draw_type == self.DRAW_ROUNDROBIN:
+            teams = self.active_teams.all()
+            draw_type = "round_robin"
         else:
             raise RuntimeError("Break rounds aren't supported yet.")
 
@@ -940,6 +1006,7 @@ class Round(models.Model):
             debate.bracket   = pairing.bracket
             debate.room_rank = pairing.room_rank
             debate.flags     = ",".join(pairing.flags) # comma-separated list
+            debate.division  = pairing.division
             debate.save()
 
             aff = DebateTeam(debate=debate, team=pairing.teams[0], position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -970,11 +1037,7 @@ class Round(models.Model):
 
 
     def venue_availability(self):
-        all_venues = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
-                                      'debate_venue')
-        if not self.tournament.config.get('share_venues'):
-            all_venues = [v for v in all_venues if v.tournament == self.tournament]
-
+        all_venues = [v for v in all_venues if v.tournament == self.tournament]
         return all_venues
 
     def unused_venues(self):
@@ -1143,6 +1206,7 @@ class Debate(models.Model):
 
     round = models.ForeignKey(Round)
     venue = models.ForeignKey(Venue, blank=True, null=True)
+    division = models.ForeignKey('Division', blank=True, null=True)
 
     bracket = models.FloatField(default=0)
     room_rank = models.IntegerField(default=0)
@@ -1214,6 +1278,10 @@ class Debate(models.Model):
     def get_dt(self, side):
         """dt = DebateTeam"""
         return getattr(self, '%s_dt' % side)
+
+    @property
+    def division_motion(self):
+        return Motion.objects.filter(round=self.round, divisions=self.division)
 
     @property
     def aff_dt(self):
@@ -1651,6 +1719,8 @@ class TeamScore(models.Model):
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_team = models.ForeignKey(DebateTeam)
     points = models.PositiveSmallIntegerField()
+    margin = ScoreField()
+    win = models.NullBooleanField()
     score = ScoreField()
 
     class Meta:
@@ -1746,6 +1816,7 @@ class Motion(models.Model):
     flagged = models.BooleanField(default=False, help_text="WADL: Allows for particular motions to be flagged as contentious")
     round = models.ForeignKey(Round)
     objects = MotionManager()
+    divisions = models.ManyToManyField('Division', blank=True, null=True)
 
     def __unicode__(self):
         return self.text
@@ -1790,6 +1861,7 @@ class ActionLog(models.Model):
     ACTION_TYPE_VENUES_SAVE             = 33
     ACTION_TYPE_DRAW_RELEASE            = 34
     ACTION_TYPE_DRAW_UNRELEASE          = 35
+    ACTION_TYPE_DIVISIONS_SAVE          = 36
     ACTION_TYPE_MOTION_EDIT             = 40
     ACTION_TYPE_MOTIONS_RELEASE         = 41
     ACTION_TYPE_MOTIONS_UNRELEASE       = 42
@@ -1816,6 +1888,7 @@ class ActionLog(models.Model):
         (ACTION_TYPE_DRAW_CONFIRM           , 'Confirmed draw'),
         (ACTION_TYPE_DRAW_RELEASE           , 'Released draw'),
         (ACTION_TYPE_DRAW_UNRELEASE         , 'Unreleased draw'),
+        (ACTION_TYPE_DRAW_UNRELEASE         , 'Saved divisions'),
         (ACTION_TYPE_MOTION_EDIT            , 'Added/edited motion'),
         (ACTION_TYPE_MOTIONS_RELEASE        , 'Released motions'),
         (ACTION_TYPE_MOTIONS_UNRELEASE      , 'Unreleased motions'),

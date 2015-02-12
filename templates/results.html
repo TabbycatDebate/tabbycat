@@ -33,7 +33,7 @@
     </div>
     {% if round.seq < tournament.prelim_rounds.count and current_round == round %}
         <div class="btn-group">
-            <a class="btn btn-default form-control btn-success" href="{% round_url round_increment_check %}">Advance to R{{ round.seq|add:"1"  }}</a>
+            <a class="btn btn-default form-control btn-success" href="{% round_url round_increment_check %}">Advance to Next Round</a>
         </div>
     {% endif %}
 

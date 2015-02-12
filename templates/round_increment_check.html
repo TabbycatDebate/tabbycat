@@ -27,8 +27,7 @@
 {% endif %}
 
 <form action="{% round_url round_increment %}" method="POST">
-    <button class="btn btn-success" id="createDraw" type="submit">Advance to Round {{ round.seq|add:"1" }}</button>
+    <button class="btn btn-success" id="createDraw" type="submit">Advance to Next Round</button>
 </form>
-
 
 {% endblock %}
