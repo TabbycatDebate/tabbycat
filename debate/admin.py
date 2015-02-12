@@ -49,6 +49,7 @@ admin.site.register(models.Speaker, SpeakerAdmin)
 
 class DivisionAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'venue_group')
+    list_filter = ('tournament','venue_group',)
 
 admin.site.register(models.Division, DivisionAdmin)
 

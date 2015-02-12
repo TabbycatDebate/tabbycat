@@ -860,16 +860,21 @@ def side_allocations(request, t):
 @tournament_view
 def division_allocations(request, t):
     teams = Team.objects.filter(tournament=t)
-    divisions = Division.objects.filter(tournament=t)
-    venue_groups = VenueGroup.objects.filter(tournament=t).order_by('name')
+    for team in teams:
+        team.preferences = team.get_preferences
 
+    divisions = Division.objects.filter(tournament=t)
+    for division in divisions:
+        division.teams_count = len(division.teams)
+
+    venue_groups = VenueGroup.objects.filter(tournament=t).order_by('name')
     for vg in venue_groups:
-        vg.total_divs = len([d for d in divisions if d.venue_group == vg])
+        vg.total_divs = len([division for division in divisions
+                            if division.venue_group == vg])
         vg.total_teams = 0
-        for t in teams:
-            if t.division:
-                if t.division.venue_group == vg:
-                    vg.total_teams += 1
+        for division in divisions:
+            if division.venue_group == vg:
+                    vg.total_teams += division.teams_count
 
     return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 

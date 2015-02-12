@@ -115,7 +115,7 @@ class Venue(models.Model):
     name = models.CharField(max_length=40)
     group = models.ForeignKey(VenueGroup, blank=True, null=True)
     priority = models.IntegerField()
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, blank=True, null=True)
     time = models.DateTimeField(blank=True, null=True)
 
     def __unicode__(self):
@@ -383,7 +383,7 @@ class Division(models.Model):
 
     @property
     def teams(self):
-        return self.team_set.all()
+        return self.team_set.all().order_by('institution','reference')
 
     def __unicode__(self):
         return self.name
@@ -675,7 +675,7 @@ class AdjudicatorManager(models.Manager):
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, blank=True, null=True)
     test_score = models.FloatField(default=0)
 
     institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adjudicator_institution_conflicts')

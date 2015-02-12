@@ -459,6 +459,12 @@ class Command(BaseCommand):
 
 
                 name = name.strip()
+
+                if sharing_data:
+                    tournament = None
+                else:
+                    tournament = t
+
                 adj = m.Adjudicator(
                     name = name,
                     institution = ins,
@@ -466,7 +472,7 @@ class Command(BaseCommand):
                     phone = phone,
                     email = email,
                     notes = notes,
-                    tournament = t
+                    tournament = tournament
                 )
                 adj.save()
                 print "Made adjudicator: \t%s of %s" % (name, ins)
