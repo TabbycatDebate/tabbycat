@@ -153,7 +153,27 @@ class Command(BaseCommand):
             t.save()
             self.stdout.write('**** Created ' + str(rounds_count) + ' rounds')
 
+            # Config
+            try:
+                reader = csv.reader(open(os.path.join(data_path, 'config.csv')))
+                reader.next() # Skipping header row
+            except:
+                self.stdout.write('config.csv file is missing or damaged')
 
+            for line in reader:
+                key = line[0]
+                value_type = line[1]
+                if value_type == "string":
+                    value = str(line[2])
+                elif value_type == "int":
+                    value = int(line[2])
+                elif value_type == "float":
+                    value = float(line[2])
+                elif value_type == "bool":
+                    value = bool(line[2])
+
+                t.config.set(key, value)
+                print "Made setting %s as %s" % (key, value)
 
             # Venues
             self.stdout.write('**** Attempting to create the venue groups')
