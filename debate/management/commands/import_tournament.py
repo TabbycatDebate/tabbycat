@@ -372,7 +372,16 @@ class Command(BaseCommand):
 
             speakers_count = 0
             teams_count = 0
-            for name, ins_name, team_name in reader:
+            for line in reader:
+                name = line[0]
+                ins_name = line[1]
+                team_name = line[2]
+                prefix = int(line[3]) or 0
+                if prefix > 0:
+                    prefix = True
+                else:
+                    prefix = False
+
                 try:
                     ins = m.Institution.objects.get(code=ins_name)
                 except:
@@ -388,7 +397,7 @@ class Command(BaseCommand):
                     team, created = m.Team.objects.get_or_create(
                             institution = ins,
                             reference = team_name,
-                            use_institution_prefix = True,
+                            use_institution_prefix = prefix,
                             tournament=t
                     )
                     if created:
