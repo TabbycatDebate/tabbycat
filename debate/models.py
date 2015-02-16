@@ -1037,6 +1037,8 @@ class Round(models.Model):
 
 
     def venue_availability(self):
+        all_venues = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
+                                      'debate_venue')
         all_venues = [v for v in all_venues if v.tournament == self.tournament]
         return all_venues
 
