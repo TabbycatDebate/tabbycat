@@ -118,7 +118,8 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 # Heroku
-DEBUG = False
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', ''))
+DEBUG = DEBUG
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 DATABASES = {
