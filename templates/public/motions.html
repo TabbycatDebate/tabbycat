@@ -20,13 +20,13 @@
 {% block page-title %}Motions{% endblock %}
 {% block body-class %}public-motions{% endblock %}
 
-{% if rounds.all.count == 0 %}
-    {% block header %}
+{% block header %}
+    {% if rounds.all.count == 0 %}
         <p class="lead">No motions have been released yet.
         <img src="{% static 'emoji/img/cry.png' %}" width="24" height="24" />
         </p>
-    {% endblock %}
-{% endif %}
+    {% endif %}
+{% endblock %}
 
 {% block content %}
     {% if rounds.all.count > 0 %}
