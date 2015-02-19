@@ -28,7 +28,9 @@
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
             <th>Team or Adj</th>
-            <th>Institution</th>
+            {% if show_institutions > 0 %}
+                <th>Institution</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -45,7 +47,9 @@
                     {{ person.team.short_name }}
                 </span>
             </td>
-            <td>{{ person.team.institution.name }}</td>
+            {% if show_institutions > 0 %}
+                <td>{{ person.team.institution.name }}</td>
+            {% endif %}
     {% endfor %}
     {% for person in adjs %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
@@ -54,7 +58,9 @@
                 <td class="no-emoji"></td>
             {% endif %}
             <td>Adjudicator</td>
-            <td>{{ person.institution.name }}</td>
+            {% if show_institutions > 0 %}
+                <td>{{ person.institution.name }}</td>
+            {% endif %}
     {% endfor %}
 
     </tbody>
