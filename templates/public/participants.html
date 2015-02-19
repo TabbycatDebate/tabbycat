@@ -36,7 +36,9 @@
         <tr>
             <td>{{ person.name }}</td>
             {% if show_emoji > 0 %}
-                <td class="team-emoji team-{{ person.team.id }}" id=""></td>
+                <td class="team-emoji team-{{ person.team.id }}" id="">
+
+                </td>
             {% endif %}
             <td class="team-name">
                 <span title="{{ person.team.speakers|join:', ' }}" data-toggle="tooltip">
@@ -49,7 +51,7 @@
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td>{{ person.name }}</td>
             {% if show_emoji > 0 %}
-                <td class="team-emoji"></td>
+                <td class="no-emoji"></td>
             {% endif %}
             <td>Adjudicator</td>
             <td>{{ person.institution.name }}</td>
