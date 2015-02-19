@@ -95,17 +95,17 @@
                 </span>
             </td>
             <td class="adj-names">
-                <ul class="">
                 {% for type, adj in debate.adjudicators %}
+                    {% if debate.adjudicators.panel %}<li>{% endif %}
                     {% if type == 'C' and debate.adjudicators.is_panel %}
-                        <li class=""><span class="adj-chair">{{ adj.name }}</span> Ⓒ</li>
+                        <span class="adj-chair">{{ adj.name }} Ⓒ</span>
                     {% elif type == 'T' %}
-                        <li class=""><span class="adj-trainee">{{ adj.name }}</span> Ⓣ</li>
+                        <span class="adj-trainee">{{ adj.name }} Ⓣ</span>
                     {% else %}
-                        <li class=""><span class="adj-normal">{{ adj.name }}</span></li>
+                        <span class="adj-normal">{{ adj.name }}</span>
                     {% endif %}
+                    {% if debate.adjudicators.panel %}</li>{% endif %}
                 {% endfor %}
-                </ul>
             </td>
     {% endfor %}
     {% for debate in draw %}
@@ -152,17 +152,17 @@
                 </span>
             </td>
             <td class="adj-names">
-                <ul class="">
                 {% for type, adj in debate.adjudicators %}
+                    {% if debate.adjudicators.panel %}<li>{% endif %}
                     {% if type == 'C' and debate.adjudicators.is_panel %}
-                        <li class=""><span class="adj-chair">{{ adj.name }}</span> Ⓒ</li>
+                        <span class="adj-chair">{{ adj.name }} Ⓒ</span>
                     {% elif type == 'T' %}
-                        <li class=""><span class="adj-trainee">{{ adj.name }}</span> Ⓣ</li>
+                        <span class="adj-trainee">{{ adj.name }} Ⓣ</span>
                     {% else %}
-                        <li class=""><span class="adj-normal">{{ adj.name }}</span></li>
+                        <span class="adj-normal">{{ adj.name }}</span>
                     {% endif %}
+                    {% if debate.adjudicators.panel %}</li>{% endif %}
                 {% endfor %}
-                </ul>
             </td>
     {% endfor %}
     </tbody>
