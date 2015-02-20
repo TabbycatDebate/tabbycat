@@ -15,3 +15,9 @@ $(document).ready( function() {
         return false;
     });
 });
+$(document).keydown(function(e) {
+    e.stopPropagation();
+    if (e.keyCode === 27 || e.keyCode === 38) {
+        $('html, body').stop()
+    }
+});
