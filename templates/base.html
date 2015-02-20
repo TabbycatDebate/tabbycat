@@ -45,7 +45,10 @@
 
     <script>
         $(document).ready(function(){
-            $('[data-toggle=tooltip]').tooltip();
+            $('[data-toggle=tooltip]').tooltip({
+                'html': true,
+                'placement': 'bottom'
+            });
             // Shifting the search filter around
             if ($('.dataTables_filter').length > 0) {
                 var filter = $('.dataTables_filter').detach()

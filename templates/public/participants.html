@@ -43,8 +43,8 @@
                 </td>
             {% endif %}
             <td class="team-name">
-                <span title="{{ person.team.speakers|join:', ' }}" data-toggle="tooltip">
-                    {{ person.team.short_name }}
+                <span title="{{ person.team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                    {{ person.team.long_name }}
                 </span>
             </td>
             {% if show_institutions > 0 %}

@@ -82,7 +82,7 @@
                 <td class="team-emoji team-{{ debate.aff_team.id }} hidden-sm"></td>
             {% endif %}
             <td class="team-name">
-                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span title="<h5>{{ debate.aff_team.long_name }}</h5>{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.aff_team.short_name }}
                 </span>
                 <span class="hidden">
@@ -92,8 +92,8 @@
             {% if show_emoji > 0 %}
                 <td class="team-emoji team-{{ debate.neg_team.id }} hidden-sm "></td>
             {% endif %}
-            <td title="{{ debate.neg_team.speakers|join:', ' }}"  class="team-name">
-                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+            <td class="team-name">
+                <span title="<h5>{{ debate.neg_team.long_name }}</h5>{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
                 <span class="hidden">

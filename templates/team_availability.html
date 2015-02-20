@@ -22,8 +22,8 @@
         {% for team in teams %}
         <tr>
             <td title="">
-                <span title="{{ team.speakers|join:', ' }}" data-toggle="tooltip">
-                   {{ team.short_name }}
+                <span title="{{ team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                   {{ team.long_name }}
                </span>
                <span class="hidden">
                    {{ team.speakers|join:', ' }}

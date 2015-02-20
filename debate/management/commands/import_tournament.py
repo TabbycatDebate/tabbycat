@@ -309,6 +309,7 @@ class Command(BaseCommand):
                 try:
                     name = line[0]
                     ins = line[1]
+                    short_name = name[:34]
                     try:
                         ins = m.Institution.objects.get(name=ins)
                     except:
@@ -323,6 +324,7 @@ class Command(BaseCommand):
                     team, created = m.Team.objects.get_or_create(
                         institution = ins,
                         reference = name,
+                        short_reference = short_name,
                         tournament=t
                     )
                     team.save()
