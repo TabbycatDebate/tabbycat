@@ -36,14 +36,18 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Institution</th>
+                    {% if show_institutions > 0 %}
+                        <th>Institution</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
             {% for adj in adjs %}
             <tr>
                 <td>{{ adj.name }}</td>
-                <td>{{ adj.institution }}</td>
+                {% if show_institutions > 0 %}
+                    <td>{{ adj.institution }}</td>
+                {% endif %}
             </tr>
             {% endfor %}
             </tbody>

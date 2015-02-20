@@ -12,7 +12,7 @@
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
     <tr>
-        <th>R<span title="{{ team.speakers|join:", " }}" data-toggle="tooltip"></span></th>
+        <th>R<span title="{{ team.speakers|join:"<br>" }}" data-toggle="tooltip"></span></th>
         <th>M<span class="hidden-xs">otion</span></th>
         <th><span title="Picked in" data-toggle="tooltip">P</span></th>
         {% if motion_vetoes_enabled %}

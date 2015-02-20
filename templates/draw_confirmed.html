@@ -155,14 +155,14 @@
         {% if enable_venue_times %}
         <td>
             {% if debate.venue.time %}
-            <span class="hidden">{{ debate.venue.time|date:"d m o H:i" }}</span>
-            {{ debate.venue.time|date:"D jS F h:iA" }}
+                <span class="hidden">{{ debate.venue.time|date:"d m o H:i" }}</span>
+                {{ debate.venue.time|date:"D jS F h:iA" }}
             {% endif %}
         </td>
         {% endif %}
         <td title="{% aff_count debate.aff_team round.prev %}">
             <span href="#" title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-                {{ debate.aff_team.short_name }}
+                {{ debate.aff_team.long_name }}
             </span>
             <span class="hidden">
                 {{ debate.aff_team.speakers|join:', ' }}
@@ -170,7 +170,7 @@
         </td>
         <td title="{% neg_count debate.neg_team round.prev %}">
             <span href="#" title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-                {{ debate.neg_team.short_name }}
+                {{ debate.neg_team.long_name }}
             </span>
             <span class="hidden">
                 {{ debate.neg_team.speakers|join:', ' }}

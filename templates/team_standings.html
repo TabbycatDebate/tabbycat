@@ -84,7 +84,7 @@
             <td class="team-emoji team-{{ team.id }}"></td>
         {% endif %}
         <td>
-            <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
+            <span title="<h5>{{ team.long_name }}</h5>{{ team.speakers|join:"<br>" }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
             {{ team.short_name }} {% if team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
             </span>
         </td>
