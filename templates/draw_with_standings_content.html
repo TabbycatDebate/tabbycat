@@ -32,10 +32,14 @@
         {% endif %}
         <td>{{ debate.bracket }}</td>
         <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
+            <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
             {{ debate.aff_team }}
+            </span>
         </td>
         <td{% if debate.neg_team.pullup %} class="em"{% endif %}>
+            <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
             {{ debate.neg_team }}
+            </span>
         </td>
         <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
             {{ debate.aff_team.points }}

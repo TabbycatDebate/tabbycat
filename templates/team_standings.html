@@ -100,9 +100,15 @@
                     <td>{{ round_results.win|yesno:"win,loss" }}</td>
                 {% else %}
                     <td class="opponent-emoji">
-                        <span class="glyphicon {{ round_results.win|yesno:"glyphicon-arrow-up text-success,glyphicon-arrow-down text-danger" }}"></span>
-                        {% if show_emoji > 0 %}vs{% endif %}
-                        <span title="{{ round_results.win|yesno:"Won,Lost" }} against {{ round_results.opposition.name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip" class=" team-{{ score.opposition.id }}">{% if show_emoji == 0 %}vs{% endif %}</span>
+                        <span title="{{ round_results.win|yesno:"Won,Lost" }} against {{ round_results.opposition.name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
+                            <span class="glyphicon {{ round_results.win|yesno:"glyphicon-arrow-up text-success,glyphicon-arrow-down text-danger" }}"></span>
+                            vs
+                            {% if show_emoji > 0 %}
+                                <span class="team-emoji team-{{ round_results.opposition.id }}"></span>
+                            {% else %}
+                                {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
+                            {% endif %}
+                        </span>
                     </td>
                 {% endif %}
             {% else %}

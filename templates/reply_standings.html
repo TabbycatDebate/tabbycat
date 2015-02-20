@@ -69,8 +69,10 @@
             <td class="team-emoji team-{{ speaker.team.id }}">
             </td>
         {% endif %}
-        <td title="<h5>{{ speaker.team.long_name }}</h5>{{ speaker.team.speakers|join:'<br>' }}" data-toggle="tooltip">
-            {{ speaker.team.short_name }}
+        <td>
+            <span title="<h5>{{ speaker.team.long_name }}</h5>{{ speaker.team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                {{ speaker.team.short_name }}
+            </span>
         </td>
         {% for score in speaker.scores %}
             <td>

@@ -51,8 +51,10 @@
         {% if show_emoji > 0 and not for_print %}
             <td class="team-emoji team-{{ speaker.team.id }}"></td>
         {% endif %}
-        <td title="<h5>{{ debate.aff_team.long_name }}</h5>{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-            {{ speaker.team.short_name }}
+        <td>
+            <span title="<h5>{{ speaker.team.long_name }}</h5>{{ speaker.team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                {{ speaker.team.short_name }}
+            </span>
         </td>
         {% if show_institutions > 0 %}
             <td>{{ speaker.team.institution.code }}</td>
