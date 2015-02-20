@@ -336,6 +336,18 @@ def public_team_tab(request, t):
 
     rounds = t.prelim_rounds(until=round).order_by('seq')
 
+    def get_round_result(team, r):
+        try:
+            ts = TeamScore.objects.get(
+                ballot_submission__confirmed=True,
+                debate_team__team=team,
+                debate_team__debate__round=r,
+            )
+            ts.opposition = ts.debate_team.opposition.team
+            return ts
+        except TeamScore.DoesNotExist:
+            return None
+
     def get_score(team, r):
         try:
             ts = TeamScore.objects.get(
@@ -352,6 +364,9 @@ def public_team_tab(request, t):
     for team in teams:
         team.results_in = True # always
         team.scores = [get_score(team, r) for r in rounds]
+        team.round_results = [get_round_result(team, r) for r in rounds]
+        team.wins = [ts.win for ts in team.round_results if ts].count(True)
+        team.points = sum([ts.points for ts in team.round_results if ts])
 
     show_ballots = round.tournament.config.get('ballots_released')
 
