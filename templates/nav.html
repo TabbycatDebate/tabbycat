@@ -107,7 +107,7 @@
                         </a></li>
                         {% endif %}
                     {% endif %}
-                    {% if public_draw > 0 %}
+                    {% if public_draw > 0 and tab_released == 0 %}
                         <li>
                             <a class="public-draw-nav" href="{% tournament_url public_draw %}">
                                 Draw for {{ current_round.name }}
@@ -139,7 +139,7 @@
                             Divisions
                         </a></li>
                     {% endif %}
-                    {% if public_motions > 0 %}
+                    {% if public_motions > 0 and motion_tab_released == 0 %}
                         <li><a class="public-motions-nav" href="{% tournament_url public_motions %}">
                             Motions
                         </a></li>
@@ -147,7 +147,7 @@
                     {% if public_side_allocations %}
                         <li><a class="public-side-allocations-nav" href="{% tournament_url public_side_allocations %}">Sides</a></li>
                     {% endif %}
-                    {% if public_team_standings > 0 and current_round.prev %}
+                    {% if public_team_standings > 0 and current_round.prev and tab_released == 0 %}
                         <li><a class="public-team-standings-nav" href="{% tournament_url public_team_standings %}">
                             Standings
                         </a></li>
