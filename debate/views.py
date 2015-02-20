@@ -1342,8 +1342,11 @@ def team_standings(request, round, for_print=False):
         team.round_results = [get_round_result(team, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
-        margins = [ts.margin for ts in team.round_results if ts]
-        team.avg_margin = sum(margins) / float(len(margins))
+        try:
+            margins = [ts.margin for ts in team.round_results if ts]
+            team.avg_margin = sum(margins) / float(len(margins))
+        except ZeroDivisionError:
+            team.avg_margin = 0
 
     show_draw_strength = decide_show_draw_strength(round.tournament)
 
