@@ -45,8 +45,8 @@
                     <td>
                     {% for division in motion.divisions.all %}
                         <span data-toggle="tooltip" title="{% for team in division.teams.all %}{{ team }}, {% endfor %}">
-                            {{ division }}
-                        </span>,
+                            {{ division }},
+                        </span>
                     {% endfor %}
                     </td>
                 {% endif %}
