@@ -39,6 +39,11 @@
                 Results
             </a></li>
             {% endif %}
+            {% if public_divisions > 0 %}
+            <li class="list-group-item"><a href="{% tournament_url public_divisions %}">
+                Divisions
+            </a></li>
+            {% endif %}
             {% if public_motions > 0 %}
             <li class="list-group-item"><a class="public-motions-nav" href="{% tournament_url public_motions %}">
                 Motions
