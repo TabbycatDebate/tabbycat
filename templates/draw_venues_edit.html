@@ -114,19 +114,11 @@
                     $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Save failed!</div>');
                 }
             } );
-
             return false;
-
         });
 
         $("#dataTable").dataTable({
-            "aoColumns": [
-                null,
-                null,
-                null,
-                { "sSortDataType": "venue" }
-            ],
-            "aaSorting": [[4, 'asc']]
+            "aaSorting": [[0, 'desc']]
         });
 
         // remove the table cells without venues

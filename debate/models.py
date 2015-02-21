@@ -119,7 +119,10 @@ class Venue(models.Model):
     time = models.DateTimeField(blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s %s (%d)' % (self.group, self.name, self.priority)
+        if self.group:
+            return u'%s %s (%d)' % (self.group, self.name, self.priority)
+        else:
+            return u'%s (%d)' % (self.name, self.priority)
 
 class Institution(models.Model):
     code = models.CharField(max_length=20)
