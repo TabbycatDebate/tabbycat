@@ -15,49 +15,58 @@
 </script>
 {% endblock extra-head %}
 
+
 {% block head-title %}Motions{% endblock %}
 {% block page-title %}Motions{% endblock %}
 {% block body-class %}public-motions{% endblock %}
 
+{% block header %}
+    {% if rounds.all.count == 0 %}
+        <p class="lead">No motions have been released yet.
+        <img src="{% static 'emoji/img/cry.png' %}" width="24" height="24" />
+        </p>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
-
-<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Round</th>
-            {% if enable_divisions and enable_division_motions %}
-                <th>Venue</th>
-                <th>Divisions</th>
-            {% endif %}
-            <th>Text</th>
-            {% if enable_flagged_motions %}
-                <th>Contentious</th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-    {% for round in rounds %}
-        {% for motion in round.motions %}
-            <tr>
-                <td>{{ round }}</td>
-                {% if enable_divisions and enable_division_motions %}
-                    <td><span title="{{ motion.divisions.0.venue_group.name }}" data-toggle="tooltip">{{ motion.divisions.0.venue_group }}</td>
-                    <td>
-                    {% for division in motion.divisions.all %}
-                        <span data-toggle="tooltip" title="{% for team in division.teams.all %}{{ team }}, {% endfor %}">
-                            {{ division }},
-                        </span>
-                    {% endfor %}
-                    </td>
-                {% endif %}
-                <td>{{ motion.text }}</td>
-                {% if enable_flagged_motions %}
-                    <td>{% if motion.flagged %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-                {% endif %}
-            </tr>
-        {% endfor %}
-    {% endfor %}
-    </tbody>
-</table>
-
+    {% if rounds.all.count > 0 %}
+        <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Round</th>
+                    {% if enable_divisions and enable_division_motions %}
+                        <th>Venue</th>
+                        <th>Divisions</th>
+                    {% endif %}
+                    <th>Text</th>
+                    {% if enable_flagged_motions %}
+                        <th>Contentious</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for round in rounds %}
+                {% for motion in round.motions %}
+                    <tr>
+                        <td>{{ round }}</td>
+                        {% if enable_divisions and enable_division_motions %}
+                            <td><span title="{{ motion.divisions.0.venue_group.name }}" data-toggle="tooltip">{{ motion.divisions.0.venue_group }}</td>
+                            <td>
+                            {% for division in motion.divisions.all %}
+                                <span data-toggle="tooltip" title="{% for team in division.teams.all %}{{ team }}, {% endfor %}">
+                                    {{ division }}
+                                </span>,
+                            {% endfor %}
+                            </td>
+                        {% endif %}
+                        <td>{{ motion.text }}</td>
+                        {% if enable_flagged_motions %}
+                            <td>{% if motion.flagged %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock content %}

@@ -71,7 +71,7 @@
                 {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
-                <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span href="#" title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.aff_team.short_name }}
                 </span>
             </td>
@@ -85,7 +85,7 @@
                 {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
                     <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
-                <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span href="#" title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
             </td>

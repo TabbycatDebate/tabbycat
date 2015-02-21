@@ -14,7 +14,7 @@
 
         var adjTable = $("#modal-adj-table").dataTable({
           // Grabbing the adj data into a datatable
-          'ajax': '{% tournament_url get_adj_feedback %}?id={{ adjudicators.first.id }}',
+          'ajax': '{% tournament_url get_adj_feedback %}?id={{ adjudicators.0.id }}',
           'bPaginate': false,
           'bFilter': false
         })
@@ -27,19 +27,8 @@
                 $("#modal-adj-name").text(adj_name); // Updating header of the modal
                 var newUrl = '{% tournament_url get_adj_feedback %}?id=' + adj_id
                 adjTable.api().ajax.url(newUrl).load();
-
             });
         });
-
-        function highlightScores() {
-            $("#modal-adj-table tbody tr").each( function() {
-                //var score = parseFloat($(this).find("td:nth-child(6)").text())
-                //var score = $(this).text()
-                score = $(this)
-                console.log(score);
-                console.log("wtf");
-            });
-        }
 
         $(".edit-test-score").each( function() {
             $(this).click( function() {
@@ -189,30 +178,30 @@
 </div>
 
 {% if enable_adj_notes > 0 %}
-<div class="modal fade" id="edit-note" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Edit Note of <span id="modal-note-name"></span></h3>
-        </div>
-        <div class="modal-body">
-            <form id="startTimeForm" method="POST" action="{% tournament_url set_adj_note  %}" class="form-horizontal">
-                <input id="id_adj_test_id_note" name="adj_test_id" type="hidden" value="" />
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <textarea id="id_note" name="note" placeholder="" rows="20" class="form-control"></textarea>
+    <div class="modal fade" id="edit-note" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Note of <span id="modal-note-name"></span></h3>
+            </div>
+            <div class="modal-body">
+                <form id="startTimeForm" method="POST" action="{% tournament_url set_adj_note  %}" class="form-horizontal">
+                    <input id="id_adj_test_id_note" name="adj_test_id" type="hidden" value="" />
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <textarea id="id_note" name="note" placeholder="" rows="20" class="form-control"></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-4">
-                        <button type="submit" value="Save" class="form-control btn btn-success">Save</button>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <button type="submit" value="Save" class="form-control btn btn-success">Save</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
+      </div>
     </div>
-  </div>
-</div>
 {% endif %}
 
 {% endblock content %}

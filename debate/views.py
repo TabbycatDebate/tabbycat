@@ -214,13 +214,13 @@ def breaking_teams(request, t, name, category):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')
 def public_breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, institution__tournament=t)
+    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
     return r2r(request, 'public/breaking_adjudicators.html', dict(adjs=adjs))
 
 @admin_required
 @tournament_view
 def breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, institution__tournament=t)
+    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
     return r2r(request, 'breaking_adjudicators.html', dict(adjs=adjs))
 
 
@@ -312,7 +312,7 @@ def public_divisions(request, t):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
 def public_side_allocations(request, t):
-    teams = Team.objects.filter(institution__tournament=t)
+    teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
     TPA_MAP = {

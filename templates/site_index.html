@@ -13,11 +13,11 @@
 
     {% if user.is_authenticated %}
         {% for tournament in tournaments %}
-        <li class="list-group-item list-group-item-info">
+    <li class="list-group-item">
             <a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
             <span class="badge">ADMIN</span>
         </li>
-        <li class="list-group-item list-group-item-success">
+        <li class="list-group-item">
             <a href="{{ tournament.get_public_url }}">{{ tournament.name }}</a>
             <span class="badge">PUBLIC</span>
         </li>

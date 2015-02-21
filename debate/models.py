@@ -392,7 +392,8 @@ class Division(models.Model):
         unique_together = [('tournament', 'name')]
 
 class Team(models.Model):
-    reference = models.CharField(max_length=50, verbose_name="Name or suffix")
+    reference = models.CharField(max_length=150, verbose_name="Name or suffix")
+    short_reference = models.CharField(max_length=35, verbose_name="Shortened name or suffix")
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament)
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
@@ -432,15 +433,15 @@ class Team(models.Model):
     @property
     def name(self):
         # TODO make this an exception so that we get rid of all of them
-        warn("Team.name is deprecated, use Team.short_name", DeprecationWarning, stacklevel=2)
+        warn("Team.name is deprecated, use Team.short_name or Team.long_name", DeprecationWarning, stacklevel=2)
         return self.short_name
 
     @property
     def short_name(self):
         if self.use_institution_prefix:
-            return unicode(self.institution.code + " " + self.reference)
+            return unicode(self.institution.code + " " + self.short_reference)
         else:
-            return unicode(self.reference)
+            return unicode(self.short_reference)
 
     @property
     def long_name(self):
@@ -1037,6 +1038,8 @@ class Round(models.Model):
 
 
     def venue_availability(self):
+        all_venues = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
+                                      'debate_venue')
         all_venues = [v for v in all_venues if v.tournament == self.tournament]
         return all_venues
 

@@ -53,8 +53,8 @@
             <td class="team-emoji team-{{ team.id }}"></td>
         {% endif %}
         <td>
-            <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
-            {{ team.short_name }}
+            <span title="{{ team.speakers|join:"<br>" }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
+            {{ team.long_name }}
             </span>
         </td>
         {% if show_institutions > 0 %}

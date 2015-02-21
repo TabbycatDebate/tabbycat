@@ -309,6 +309,7 @@ class Command(BaseCommand):
                 try:
                     name = line[0]
                     ins = line[1]
+                    short_name = name[:34]
                     try:
                         ins = m.Institution.objects.get(name=ins)
                     except:
@@ -323,6 +324,7 @@ class Command(BaseCommand):
                     team, created = m.Team.objects.get_or_create(
                         institution = ins,
                         reference = name,
+                        short_reference = short_name,
                         tournament=t
                     )
                     team.save()
@@ -372,7 +374,16 @@ class Command(BaseCommand):
 
             speakers_count = 0
             teams_count = 0
-            for name, ins_name, team_name in reader:
+            for line in reader:
+                name = line[0]
+                ins_name = line[1]
+                team_name = line[2]
+                prefix = int(line[3]) or 0
+                if prefix > 0:
+                    prefix = True
+                else:
+                    prefix = False
+
                 try:
                     ins = m.Institution.objects.get(code=ins_name)
                 except:
@@ -388,7 +399,7 @@ class Command(BaseCommand):
                     team, created = m.Team.objects.get_or_create(
                             institution = ins,
                             reference = team_name,
-                            use_institution_prefix = True,
+                            use_institution_prefix = prefix,
                             tournament=t
                     )
                     if created:
@@ -485,7 +496,7 @@ class Command(BaseCommand):
                 else:
                     tournament = t
 
-                adj = m.Adjudicator.get_or_create(
+                adj = m.Adjudicator(
                     name = name,
                     institution = ins,
                     test_score = test_score,
@@ -494,6 +505,7 @@ class Command(BaseCommand):
                     notes = notes,
                     tournament = tournament
                 )
+                adj.save()
                 print "Made adjudicator: \t%s of %s" % (name, ins)
 
                 m.AdjudicatorTestScoreHistory(adjudicator=adj, score=test_score, round=None).save()
