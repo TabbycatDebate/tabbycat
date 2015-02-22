@@ -323,7 +323,7 @@ class TeamManager(models.Manager):
         }
         filterargs = FILTER_ARGS[category]
 
-        teams = self.filter(tournament=tournament, **filterargs)
+        teams = self.filter(cannot_break=False, tournament=tournament, **filterargs)
         teams = annotate_team_standings(teams)
 
         BREAK_SIZE_CONFIG_OPTIONS = {
