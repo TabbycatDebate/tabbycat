@@ -1477,7 +1477,7 @@ def save_venues(request, round):
         debates[debate_id].save()
 
     ActionLog.objects.log(type=ActionLog.ACTION_TYPE_VENUES_SAVE,
-        user=request.user, round=round, tournament=t)
+        user=request.user, round=round, tournament=round.tournament)
 
     return HttpResponse("ok")
 
