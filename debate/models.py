@@ -353,15 +353,18 @@ class TeamManager(models.Manager):
                 prev_rank_value = rank_value
             team.rank = current_rank
 
+
             # Increment current_break_seq if it won't violate institution cap
             if institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
                 if new_rank and current_break_rank == break_size:
                     break
                 team.break_rank = "- (Capped)"
-            elif team.cannot_break:
+                break_size += 1
+            elif team.cannot_break == True:
                 if new_rank and current_break_rank == break_size:
                     break
                 team.break_rank = "- (Ineligible)"
+                break_size += 1
             else:
                 current_break_seq += 1
                 if new_rank:
@@ -370,11 +373,31 @@ class TeamManager(models.Manager):
                     current_break_rank = current_break_seq
                 team.break_rank = current_break_rank
 
+            if current_rank > break_size:
+                print "broke as bigger"
+                break
             # Take note of the institution
             teams_from_institution[team.institution] += 1
 
-            if current_rank > break_size:
-                break
+
+            # # Increment current_break_seq if it won't violate institution cap
+            # if institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
+            #     team.break_rank = "- (Capped)"
+            # elif team.cannot_break:
+            #     team.break_rank = "- (Ineligible)"
+            # else:
+            #     current_break_seq += 1
+            #     if new_rank:
+            #         current_break_rank = current_break_seq
+            #         team.break_rank = current_break_rank
+
+            # # Take note of the institution
+            # teams_from_institution[team.institution] += 1
+
+            print "%s %s %s" % (i, current_rank, current_break_rank)
+
+            # if current_rank == break_size:
+            #     break
 
             breaking_teams.append(team)
 

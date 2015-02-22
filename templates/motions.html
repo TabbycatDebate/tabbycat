@@ -7,7 +7,7 @@
 
         $(document).ready( function() {
             var table = $("#dataTable").dataTable( {
-                "aaSorting": [[1, 'desc'], [0, 'asc']],
+                "aaSorting": [[0, 'asc'],[1, 'asc']],
             });
             new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
 
@@ -64,8 +64,8 @@
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
     <thead>
     <tr>
-        <th>Seq</th>
         <th>Round</th>
+        <th>Seq</th>
         <th>Reference</th>
         <th>M<span class="hidden-xs">otion</span></th>
         {% if enable_flagged_motions %}
@@ -88,8 +88,8 @@
     <tbody>
     {% for motion in motions %}
     <tr>
+        <td><span class="hidden">{{ motion.round.seq }}</span>{{ motion.round }}</td>
         <td>{{ motion.seq }}</td>
-        <td>{{ motion.round }}</td>
         <td>{{ motion.reference }}</td>
         <td>{{ motion.text }}</td>
         {% if enable_flagged_motions %}

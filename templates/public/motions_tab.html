@@ -28,7 +28,7 @@
     <tbody>
     {% for motion in motions %}
     <tr>
-        <td>{{ motion.round }}</td>
+        <td><span class="hidden">{{ motion.round.seq }}</span>{{ motion.round }}</td>
         <td>{{ motion.text }}</td>
         <td>{{ motion.chosen_in }}</td>
         {% if motion_vetoes_enabled %}
