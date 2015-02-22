@@ -649,6 +649,7 @@ class Person(models.Model):
     barcode_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=40, blank=True, null=True)
+    novice = models.BooleanField(default=False)
 
     checkin_message = models.TextField(blank=True)
     notes = models.TextField(blank=True)

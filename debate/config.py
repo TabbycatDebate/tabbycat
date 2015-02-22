@@ -39,6 +39,7 @@ SETTINGS = OrderedDict([
     ('team_history_penalty',        (int,   'Penalty for team-team history conflict',                              1000)),
     ('show_emoji',                  (_bool, 'Shows Emoji in the draw UI',                                          False)),
     ('show_institutions',           (_bool, 'Shows the institutions column in draw and other UIs',                 True)),
+    ('show_novices',                (_bool, 'Show if a speaker is a novice in the released tab',                   False)),
     ('public_participants',         (_bool, 'Public interface to see all participants',                            False)),
     ('public_side_allocations',     (_bool, 'Public interface to see side pre-allocations',                        False)),
     ('public_draw',                 (_bool, 'Public interface to see RELEASED draws',                              False)),
