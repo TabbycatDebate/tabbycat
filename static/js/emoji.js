@@ -15,7 +15,7 @@ $(document).ready( function() {
         console.log(team_ids.length + ' to make emoji');
         console.log(team_ids);
         for (var i = 0; i < team_ids.length; i++) {
-            var base_id = team_ids[i] - team_ids[0] // Starting from Emoji[0]
+            var base_id = team_ids[i] // Starting from Emoji[0]
             $(".team-" + team_ids[i]).html('<img src="' + emoji_arr[base_id] + '" />');
         }
     });
