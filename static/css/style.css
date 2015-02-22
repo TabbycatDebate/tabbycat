@@ -1,5 +1,5 @@
 h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
+.h1, .h2, .h3, .h4, .h4_minus, .h4_plus, .h5, .h6 {
   font-family: inherit;
   font-weight: 500;
   line-height: 1.1;
@@ -14,8 +14,10 @@ h1, h2, h3, h4, h5, h6,
   .h1 small,
   .h1 .small, .h2 small,
   .h2 .small, .h3 small,
-  .h3 .small, .h4 small,
-  .h4 .small, .h5 small,
+  .h3 .small, .h4 small, .h4_minus small, .h4_plus small,
+  .h4 .small,
+  .h4_minus .small,
+  .h4_plus .small, .h5 small,
   .h5 .small, .h6 small,
   .h6 .small {
     font-weight: normal;
@@ -38,14 +40,16 @@ h3, .h3 {
   .h3 .small {
     font-size: 65%; }
 
-h4, .h4,
+h4, .h4, .h4_minus, .h4_plus,
 h5, .h5,
 h6, .h6 {
   margin-top: 10px;
   margin-bottom: 10px; }
   h4 small,
-  h4 .small, .h4 small,
+  h4 .small, .h4 small, .h4_minus small, .h4_plus small,
   .h4 .small,
+  .h4_minus .small,
+  .h4_plus .small,
   h5 small,
   h5 .small, .h5 small,
   .h5 .small,
@@ -63,7 +67,7 @@ h2, .h2 {
 h3, .h3 {
   font-size: 24px; }
 
-h4, .h4 {
+h4, .h4, .h4_minus, .h4_plus {
   font-size: 18px; }
 
 h5, .h5 {
@@ -639,6 +643,12 @@ a.text-warning:hover {
 
 a.text-danger:hover {
   color: #c9302c; }
+
+.h4_minus {
+  font-size: 16px; }
+
+.h4_plus {
+  font-size: 21px; }
 
 @media (max-width: 767px) {
   .navbar-nav.navbar-left {

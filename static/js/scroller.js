@@ -14,6 +14,38 @@ $(document).ready( function() {
             scrollTop: $(document).height() - $(window).height()}, 120000, "linear");
         return false;
     });
+
+
+    $("#tiny_text").click(function(event){
+        $(this).siblings().removeClass("active");
+        $(this).addClass("active");
+        $( "#draw" ).removeClass( "h1 h2 h3 h4_plus h4 h4_minus h5 h6" ).addClass( "h5" );
+        return false;
+    });
+    $("#small_text").click(function(event){
+        $(this).siblings().removeClass("active");
+        $(this).addClass("active");
+        $( "#draw" ).removeClass( "h1 h2 h3 h4_plus h4 h4_minus h5 h6" ).addClass( "h4_minus" );
+        return false;
+    });
+    $("#medium_text").click(function(event){
+        $(this).siblings().removeClass("active");
+        $(this).addClass("active");
+        $( "#draw" ).removeClass( "h1 h2 h3 h4_plus h4 h4_minus h5 h6" ).addClass( "h4" );
+        return false;
+    });
+    $("#large_text").click(function(event){
+        $(this).siblings().removeClass("active");
+        $(this).addClass("active");
+        $( "#draw" ).removeClass( "h1 h2 h3 h4_plus h4 h4_minus h5 h6" ).addClass( "h4_plus" );
+        return false;
+    });
+    $("#huge_text").click(function(event){
+        $(this).siblings().removeClass("active");
+        $(this).addClass("active");
+        $( "#draw" ).removeClass( "h1 h2 h3 h4_plus h4 h4_minus h5 h6" ).addClass( "h3" );
+        return false;
+    });
 });
 $(document).keydown(function(e) {
     e.stopPropagation();
