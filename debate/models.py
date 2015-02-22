@@ -373,7 +373,7 @@ class TeamManager(models.Manager):
 
             print "%s %s %s" % (i, current_rank, current_break_rank)
 
-            if current_break_rank == break_size:
+            if current_break_rank > break_size:
                 print "broke as bigger"
                 break
 
