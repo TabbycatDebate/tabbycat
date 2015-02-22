@@ -323,7 +323,7 @@ class TeamManager(models.Manager):
         }
         filterargs = FILTER_ARGS[category]
 
-        teams = self.filter(cannot_break=False, tournament=tournament, **filterargs)
+        teams = self.filter(tournament=tournament, **filterargs)
         teams = annotate_team_standings(teams)
 
         BREAK_SIZE_CONFIG_OPTIONS = {
@@ -337,12 +337,11 @@ class TeamManager(models.Manager):
         current_rank = 0
         breaking_teams = list()
 
-        # If there's an institution cap, variables for it:
-        if institution_cap > 0:
-            current_break_rank = 0
-            current_break_seq = 0
-            from collections import Counter
-            teams_from_institution = Counter()
+        # Variables for insutitional caps and non-breaking teams:
+        current_break_rank = 0
+        current_break_seq = 0
+        from collections import Counter
+        teams_from_institution = Counter()
 
         for i, team in enumerate(teams, start=1):
 
@@ -354,25 +353,28 @@ class TeamManager(models.Manager):
                 prev_rank_value = rank_value
             team.rank = current_rank
 
-            if institution_cap > 0:
-                # Increment current_break_seq if it won't violate institution cap
-                if teams_from_institution[team.institution] >= institution_cap:
-                    if new_rank and current_break_rank == break_size:
-                        break
-                    team.break_rank = None
-
-                else:
-                    current_break_seq += 1
-                    if new_rank:
-                        if current_break_rank == break_size:
-                            break
-                        current_break_rank = current_break_seq
-                    team.break_rank = current_break_rank
-                # Take note of the institution
-                teams_from_institution[team.institution] += 1
-            else:
-                if current_rank > break_size:
+            # Increment current_break_seq if it won't violate institution cap
+            if institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
+                if new_rank and current_break_rank == break_size:
                     break
+                team.break_rank = "- (Capped)"
+            elif team.cannot_break:
+                if new_rank and current_break_rank == break_size:
+                    break
+                team.break_rank = "- (Ineligible)"
+            else:
+                current_break_seq += 1
+                if new_rank:
+                    if current_break_rank == break_size:
+                        break
+                    current_break_rank = current_break_seq
+                team.break_rank = current_break_rank
+
+            # Take note of the institution
+            teams_from_institution[team.institution] += 1
+
+            if current_rank > break_size:
+                break
 
             breaking_teams.append(team)
 

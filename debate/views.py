@@ -201,15 +201,13 @@ def public_break_index(request, t):
 @public_optional_tournament_view('public_breaking_teams')
 def public_breaking_teams(request, t, name, category):
     teams = Team.objects.breaking_teams(t, category)
-    show_break_rank = t.config.get('institution_cap') > 0
-    return r2r(request, 'public/breaking_teams.html', dict(teams=teams, show_break_rank=show_break_rank, category=category, name=name))
+    return r2r(request, 'public/breaking_teams.html', dict(teams=teams, category=category, name=name))
 
 @admin_required
 @tournament_view
 def breaking_teams(request, t, name, category):
     teams = Team.objects.breaking_teams(t, category)
-    show_break_rank = t.config.get('institution_cap') > 0
-    return r2r(request, 'breaking_teams.html', dict(teams=teams, show_break_rank=show_break_rank, category=category, name=name))
+    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=category, name=name))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')
