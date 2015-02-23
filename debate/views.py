@@ -308,6 +308,12 @@ def public_divisions(request, t):
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def all_tournament_divisions(request, t):
+    teams = Team.objects.all()
+    return r2r(request, 'public/public_all_tournament_teams.html', dict(teams=teams))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
 def public_side_allocations(request, t):
     teams = Team.objects.filter(tournament=t)

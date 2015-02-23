@@ -34,6 +34,10 @@ class Tournament(models.Model):
     def get_public_url(self):
         return ('public_index', [self.slug])
 
+    @models.permalink
+    def get_all_divisions_url(self):
+        return ('all_tournament_divisions', [self.slug])
+
     @property
     def teams(self):
         return Team.objects.filter(tournament=self)

@@ -29,7 +29,11 @@
         </li>
         {% endfor %}
     {% endif %}
-
+    {% if tournaments.all.count > 1 and tournaments.0.config.public_divisions > 0 %}
+    <li class="list-group-item">
+        <a href="{{ tournaments.0.get_all_divisions_url }}">View All Team Information</a>
+    </li>
+    {% endif %}
 </ul>
 
 {% endblock content %}

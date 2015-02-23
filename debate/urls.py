@@ -30,6 +30,7 @@ urlpatterns = patterns('debate.views',
     url(r'^participants/$', 'public_participants', name='public_participants'),
     url(r'^motions/$', 'public_motions', name='public_motions'),
     url(r'^divisions/$', 'public_divisions', name='public_divisions'),
+    url(r'^all_tournament_divisions/$', 'all_tournament_divisions', name='all_tournament_divisions'),
     url(r'^side_allocations/$', 'public_side_allocations', name='public_side_allocations'),
 
     url(r'^tab/team/$', 'public_team_tab', name='public_team_tab'),
@@ -117,5 +118,6 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/division_allocations/$', 'division_allocations', name='division_allocations'),
     url(r'^admin/division_allocations/save/$', 'save_divisions', name='save_divisions'),
     url(r'^admin/division_allocations/create/$', 'create_division_allocation', name='create_division_allocation')
+
 
 )
