@@ -7,7 +7,7 @@ admin.site.register(models.Tournament)
 admin.site.register(models.DebateTeam)
 
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name','code')
     ordering = ('name',)
     search_fields = ('name',)
 
@@ -78,7 +78,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 class VenueGroupAdmin(admin.ModelAdmin):
-    list_display = ('name','tournament')
+    list_display = ('name','tournament','team_capacity')
     search_fields = ('name',)
     list_filter = ('tournament',)
 
