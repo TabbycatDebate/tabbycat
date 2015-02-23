@@ -170,7 +170,12 @@ class Command(BaseCommand):
                 elif value_type == "float":
                     value = float(line[2])
                 elif value_type == "bool":
-                    value = bool(line[2])
+                    if line[2] == "True":
+                        value = True
+                    elif line[2] == "False":
+                        value = False
+                    else:
+                        print "Error %s not properly set" % key
 
                 t.config.set(key, value)
                 print "Made setting \t%s as %s" % (key, value)
