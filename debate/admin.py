@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 
 import debate.models as models
 
@@ -45,9 +46,20 @@ class SpeakerAdmin(admin.ModelAdmin):
                      'team__institution__code',)
 admin.site.register(models.Speaker, SpeakerAdmin)
 
+
+class CustomModelChoiceField(forms.ModelChoiceField):
+     def label_from_instance(self, obj):
+         return "%s - %s" % (obj.tournament, obj.name)
+
+class AddCustomDisplayForVenueGroups(forms.ModelForm):
+    venue_group = CustomModelChoiceField(queryset=models.VenueGroup.objects.all())
+    class Meta:
+          model = models.VenueGroup
+
 class DivisionAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'venue_group')
     list_filter = ('tournament','venue_group',)
+    form = AddCustomDisplayForVenueGroups
 
 admin.site.register(models.Division, DivisionAdmin)
 

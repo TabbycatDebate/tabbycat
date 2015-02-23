@@ -111,6 +111,10 @@ class VenueGroup(models.Model):
     def __unicode__(self):
         return u'%s' % (self.short_name)
 
+    @property
+    def full_name(self):
+        return unicode(self.name + self.tournament)
+
 class Venue(models.Model):
     name = models.CharField(max_length=40)
     group = models.ForeignKey(VenueGroup, blank=True, null=True)
