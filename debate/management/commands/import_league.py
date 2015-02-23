@@ -129,7 +129,7 @@ class Command(BaseCommand):
             for line in reader:
                 key = line[0]
                 value_type = line[1]
-                if value_type == "string":
+                if value_type == "str":
                     value = str(line[2])
                 elif value_type == "int":
                     value = int(line[2])
