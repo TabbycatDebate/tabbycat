@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block extra-head %}
+   <script type="text/javascript" charset="utf-8">
+        $(document).ready( function() {
+            var table = $("#dataTable").dataTable({
+                "aaSorting": [[ 0, "asc" ],[ 1, "asc" ],[ 2, "asc" ]],
+                "aoColumnDefs": [
+                    { "bSearchable": false, "aTargets": [2] }, //set column visibility
+                ]
+            });
+            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+        } );
+    </script>
+{% endblock extra-head %}
+
+{% block head-title %}All Teams{% endblock %}
+{% block page-title %}All Teams{% endblock %}
+{% block body-class %}all-teams{% endblock %}
+
+{% block content %}
+
+<table id="dataTable" class="table table-hover table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Institution</th>
+            <th>Team & Level</th>
+            <th>Venue</th>
+            <th>Division</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for team in teams %}
+        <tr>
+            <td>{{ team.institution }}</td>
+            <td>{{ team.tournament }} {{ team.reference }}</td>
+            <td>{{ team.division.venue_group.name }}</td>
+            <td>{{ team.division }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}
