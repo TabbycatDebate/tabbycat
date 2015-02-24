@@ -433,6 +433,14 @@ span.esl {
     text-decoration: line-through;
 }
 
+// Motions
+
+.assign-motions .list-group-item-text {
+    height: 54px;
+    overflow: hidden;
+}
+
+
 // Scoresheets
 
 .scoresheet-view {

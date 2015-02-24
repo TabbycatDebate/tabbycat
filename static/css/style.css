@@ -927,6 +927,10 @@ span.esl {
   color: #808080;
   text-decoration: line-through; }
 
+.assign-motions .list-group-item-text {
+  height: 54px;
+  overflow: hidden; }
+
 .scoresheet-view .control-label {
   text-align: right;
   vertical-align: middle; }

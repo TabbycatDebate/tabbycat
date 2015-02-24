@@ -12,6 +12,19 @@
                     return false;
                 }
             } );
+            $('.toggler').click( function() {
+                var toggled_value = $(this).text();
+                $(this).parent().parent().parent().children(".division").each(function(){
+                    var label = $(this).children("label").text();
+                    var checkbox = $(this).children("label").children("input:checkbox");
+                    checkbox.prop( "checked", false );
+                    if (label.indexOf(toggled_value) > -1) {
+                        console.log(label);
+                        checkbox.prop( "checked", true );
+                    }
+                });
+            });
+
         } );
 
     </script>
@@ -19,6 +32,7 @@
 
 {% block head-title %}Assign Motions for {{ round.name }}{% endblock %}
 {% block page-title %}Assign Motions for {{ round.name }}{% endblock %}
+{% block body-class %}assign-motions{% endblock %}
 
 {% block header %}{% endblock %}
 
@@ -37,13 +51,21 @@
                     <h4 class="list-group-item-heading">{{ form.instance.reference }}</h4>
                     <p class="list-group-item-text">{{ form.instance.text }}</p>
                 </li>
+                <li class="list-group-item">
+                    <div class="btn-group">
+                        <a class="btn btn-default toggler" id="">W1 Tue</a>
+                        <a class="btn btn-default toggler" id="">W1 Wed</a>
+                        <a class="btn btn-default toggler" id="">W2 Tue</a>
+                        <a class="btn btn-default toggler" id="">W2 Wed</a>
+                    </div>
+                </li>
                 {% if form.errors %}
                     <li class="list-group-item">
                         <div class="error">{{ form.errors }}</div>
                     </li>
                 {% endif %}
                 {% for d in form.divisions %}
-                    <li class="list-group-item ">
+                    <li class="list-group-item division">
                         {{ d }}
                     </li>
                 {% endfor %}
