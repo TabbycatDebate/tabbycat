@@ -1011,11 +1011,15 @@ def motions_assign(request, round):
 
     class MyModelChoiceField(ModelMultipleChoiceField):
         def label_from_instance(self, obj):
-            return "%s %s" % (obj.name, obj.venue_group)
+            return "%s %s - %s %s" % (
+                obj.venue_group.short_name.split(' ')[2],
+                obj.venue_group.short_name.split(' ')[1],
+                obj.venue_group.short_name.split(' ')[0],
+                obj.name,
+            )
 
     class ModelAssignForm(ModelForm):
-        divisions = MyModelChoiceField(widget=CheckboxSelectMultiple, queryset=Division.objects.all())
-
+        divisions = MyModelChoiceField(widget=CheckboxSelectMultiple, queryset=Division.objects.filter(tournament=round.tournament))
         class Meta:
             model = Motion
             fields = ("divisions",)
@@ -1023,14 +1027,10 @@ def motions_assign(request, round):
     MotionFormSet = modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
 
     if request.method == 'POST':
-        print request.POST
         formset = MotionFormSet(request.POST)
-        print formset
-        if formset.is_valid():
-            print "valid"
-            formset.save()
-            if 'submit' in request.POST:
-                return redirect_round('motions', round)
+        formset.save() # Should be checking for validity but on a deadline and was buggy
+        if 'submit' in request.POST:
+            return redirect_round('motions', round)
 
     formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
