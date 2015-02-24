@@ -25,10 +25,25 @@ class TeamVenuePreferenceInline(admin.TabularInline):
     model = models.TeamVenuePreference
     extra = 6
 
+
+class CustomDivisionChoiceField(forms.ModelChoiceField):
+     def label_from_instance(self, obj):
+         return "%s - %s" % (obj.tournament, obj.name)
+
+class AddCustomDisplayForDivisions(forms.ModelForm):
+    division = CustomDivisionChoiceField(queryset=models.Division.objects.all())
+    class Meta:
+          model = models.Division
+          exclude = () # Needed
+
+#fields = ('use_institution_prefix','tournament','institution','division','cannot_break')
+
+
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('long_name', 'short_name', 'institution', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
     list_filter = ('tournament', 'institution')
+    form = AddCustomDisplayForDivisions
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
 
 admin.site.register(models.Team, TeamAdmin)
@@ -47,14 +62,15 @@ class SpeakerAdmin(admin.ModelAdmin):
 admin.site.register(models.Speaker, SpeakerAdmin)
 
 
-class CustomModelChoiceField(forms.ModelChoiceField):
+class CustomVenueChoiceField(forms.ModelChoiceField):
      def label_from_instance(self, obj):
          return "%s - %s" % (obj.tournament, obj.name)
 
 class AddCustomDisplayForVenueGroups(forms.ModelForm):
-    venue_group = CustomModelChoiceField(queryset=models.VenueGroup.objects.all())
+    venue_group = CustomVenueChoiceField(queryset=models.VenueGroup.objects.all())
     class Meta:
           model = models.VenueGroup
+          exclude = () # Needed
 
 class DivisionAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'venue_group')
