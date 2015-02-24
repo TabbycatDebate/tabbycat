@@ -304,7 +304,7 @@ def public_divisions(request, t):
     for uvg in venue_groups:
         uvg.divisions = [d for d in divisions if d.venue_group == uvg]
 
-    return r2r(request, 'public/divisions.html', dict(venue_groups=venue_groups))
+    return r2r(request, 'public/public_divisions.html', dict(venue_groups=venue_groups))
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -882,7 +882,7 @@ def division_allocations(request, t):
     for team in teams:
         team.preferences = team.get_preferences
 
-    divisions = Division.objects.filter(tournament=t)
+    divisions = Division.objects.filter(tournament=t).order_by('name')
     for division in divisions:
         division.teams_count = len(division.teams)
 

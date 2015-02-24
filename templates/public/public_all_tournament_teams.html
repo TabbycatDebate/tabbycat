@@ -29,6 +29,7 @@
             <th>Team & Level</th>
             <th>Venue</th>
             <th>Division</th>
+            <th>Time Slot</th>
         </tr>
     </thead>
     <tbody>
@@ -38,6 +39,7 @@
             <td>{{ team.tournament }} {{ team.reference }}</td>
             <td>{{ team.division.venue_group.name }}</td>
             <td>{{ team.division }}</td>
+            <td>{{ team.division.time_slot|time:'h:i A' }}</td>
         </tr>
     {% endfor %}
     </tbody>

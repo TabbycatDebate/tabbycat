@@ -105,6 +105,7 @@
             <th>D</th>
             <th>Division</th>
             <th>Venue</th>
+            <th>Time</th>
             <th>Status</th>
             <th>Preferences</th>
         </tr>
@@ -130,6 +131,7 @@
             </select>
         </td>
         <td>{% if team.division.venue_group %}{{ team.division.venue_group }}{% endif %}</td>
+        <td>{{ team.division.time_slot|time:'h:i A' }}</td>
         <td>
             {% if team.division.venue_group %}
                 {% if team.division.venue_group == team.preferences.0.venue_group %}
@@ -206,6 +208,7 @@
                 <thead>
                     <th>Division</th>
                     <th>Venue</th>
+                    <th>Time</th>
                     <th>Teams</th>
                 </thead>
                 <tbody>
@@ -213,6 +216,7 @@
                         <tr>
                             <td>{{ d.name }} </td>
                             <td>{{ d.venue_group }}</td>
+                            <td>{{ d.time_slot|time:'h:i A' }}</td>
                             <td>{{ d.teams_count }}</td>
                         </tr>
                     {% endfor %}

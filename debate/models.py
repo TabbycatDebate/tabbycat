@@ -393,6 +393,7 @@ class TeamManager(models.Manager):
 class Division(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name or suffix")
     tournament = models.ForeignKey(Tournament)
+    time_slot = models.TimeField(blank=True, null=True)
     venue_group = models.ForeignKey(VenueGroup, blank=True, null=True)
 
     @property

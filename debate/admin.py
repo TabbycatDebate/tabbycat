@@ -73,8 +73,9 @@ class AddCustomDisplayForVenueGroups(forms.ModelForm):
           exclude = () # Needed
 
 class DivisionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'tournament', 'venue_group')
+    list_display = ('name', 'tournament', 'venue_group','time_slot')
     list_filter = ('tournament','venue_group',)
+    ordering = ('tournament','name',)
     form = AddCustomDisplayForVenueGroups
 
 admin.site.register(models.Division, DivisionAdmin)

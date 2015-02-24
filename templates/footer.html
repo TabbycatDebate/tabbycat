@@ -4,6 +4,7 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <p class="navbar-brand text-muted"><small>
+            {% if tournament and enable_divisions == 0 %}
                 {% if tournament %}{{ tournament }} runs on {% endif %}
                 <a href="https://github.com/czlee/tabbycat/" target="_new">Tabby Cat, </a>
                 {% if tournament %}as {% else %}is {% endif %}
@@ -13,6 +14,7 @@
                 Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> (Android) and
                  <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
             </small></p>
+            {% endif %}
             <p class="navbar-brand text-muted pull-right">
                 <a href="/">Home</a> |
                 {% if user.is_authenticated %}
