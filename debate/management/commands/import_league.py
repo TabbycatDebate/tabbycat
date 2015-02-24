@@ -27,29 +27,32 @@ class Command(BaseCommand):
         self.stdout.write('using template from ' + data_path)
 
         try:
-            if m.Tournament.objects.filter(slug=slugify(unicode(folder))).exists():
-                self.stdout.write("WARNING! A tournament called '" + folder + "' already exists.")
-                self.stdout.write("You are about to delete EVERYTHING for this tournament.")
-                response = raw_input("Are you sure? ")
-                if response != "yes":
-                    self.stdout.write("Cancelled.")
-                    raise CommandError("Cancelled by user.")
-                m.Tournament.objects.filter(slug=slugify(unicode(folder))).delete()
+            # if m.Tournament.objects.filter(slug=slugify(unicode(folder))).exists():
+            #     self.stdout.write("WARNING! A tournament called '" + folder + "' already exists.")
+            #     self.stdout.write("You are about to delete EVERYTHING for this tournament.")
+            #     response = raw_input("Are you sure? ")
+            #     if response != "yes":
+            #         self.stdout.write("Cancelled.")
+            #         raise CommandError("Cancelled by user.")
+            #     m.Tournament.objects.filter(slug=slugify(unicode(folder))).delete()
 
-            # Tournament
-            self.stdout.write('**** Attempting to create tournament ' + folder)
-            try:
-                slug = slugify(unicode(folder))
-                short_name = (folder[:24] + '..') if len(folder) > 75 else folder
-                t = m.Tournament(name=folder, short_name=short_name, slug=slugify(unicode(folder)))
-                t.save()
-            except Exception as inst:
-                total_errors += 1
-                print inst
+            # # Tournament
+            # self.stdout.write('**** Attempting to create tournament ' + folder)
+            # try:
+            #     slug = slugify(unicode(folder))
+            #     short_name = (folder[:24] + '..') if len(folder) > 75 else folder
+            #     t = m.Tournament(name=folder, short_name=short_name, slug=slugify(unicode(folder)))
+            #     t.save()
+            # except Exception as inst:
+            #     total_errors += 1
+            #     print inst
 
-            self.stdout.write('Made tournament: \t' + folder)
+            # self.stdout.write('Made tournament: \t' + folder)
+
+            t = m.Tournament.objects.get(slug=slugify(unicode(folder)))
+            self.stdout.write('Found tournament: \t' + folder)
+
             self.stdout.write('**** Attempting to create rounds ')
-
 
             # If importing from the CSV
             try:
@@ -57,67 +60,70 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('rounds.csv file is missing or damaged')
+                reader = None
 
-            rounds_count = 0
-            i = 1
-            for line in reader:
-                seq = line[0]
-                if not seq:
-                    seq = i
-                name = str(line[1])
-                abbv = str(line[2])
-                draw_stage = str(line[3]) or "Preliminary"
-                draw_type = str(line[4]) or "Random"
-                is_silent = int(line[5]) or 0
-                feedback_weight = float(line[6]) or 0.7
+            if reader:
+                rounds_count = 0
+                i = 1
+                for line in reader:
+                    seq = line[0]
+                    if not seq:
+                        seq = i
+                    name = str(line[1])
+                    abbv = str(line[2])
+                    draw_stage = str(line[3]) or "Preliminary"
+                    draw_type = str(line[4]) or "Random"
+                    is_silent = int(line[5]) or 0
+                    feedback_weight = float(line[6]) or 0.7
 
-                if draw_stage.lower() in ("preliminary", "p"):
-                    draw_stage = "P"
-                elif draw_stage.lower() in ("elimination", "break", "e", "b"):
-                    draw_stage = "E"
-                else:
-                    draw_stage = None
+                    if draw_stage.lower() in ("preliminary", "p"):
+                        draw_stage = "P"
+                    elif draw_stage.lower() in ("elimination", "break", "e", "b"):
+                        draw_stage = "E"
+                    else:
+                        draw_stage = None
 
-                if draw_type.lower() in ("random", "r"):
-                    draw_type = "R"
-                elif draw_type.lower() in ("round-robin", "round robin", "d"):
-                    draw_type = "D"
-                elif draw_type.lower() in ("power-paired", "power paired", "p"):
-                    draw_type = "P"
-                elif draw_type.lower() in ("first elimination", "first-elimination", "1st elimination", "1", "e"):
-                    draw_type = "F"
-                elif draw_type.lower() in ("subsequent elimination", "subsequent-elimination", "2nd elimination", "2"):
-                    draw_type = "B"
-                else:
-                    draw_type = None
+                    if draw_type.lower() in ("random", "r"):
+                        draw_type = "R"
+                    elif draw_type.lower() in ("round-robin", "round robin", "d"):
+                        draw_type = "D"
+                    elif draw_type.lower() in ("power-paired", "power paired", "p"):
+                        draw_type = "P"
+                    elif draw_type.lower() in ("first elimination", "first-elimination", "1st elimination", "1", "e"):
+                        draw_type = "F"
+                    elif draw_type.lower() in ("subsequent elimination", "subsequent-elimination", "2nd elimination", "2"):
+                        draw_type = "B"
+                    else:
+                        draw_type = None
 
-                if is_silent > 0:
-                    is_silent = True
-                else:
-                    is_silent = False
+                    if is_silent > 0:
+                        is_silent = True
+                    else:
+                        is_silent = False
 
-                try:
-                    m.Round(
-                        tournament = t,
-                        seq = seq,
-                        name = name,
-                        abbreviation = abbv,
-                        draw_type = draw_type,
-                        stage = draw_stage,
-                        feedback_weight = min((int(seq)-1)*0.1, 0.5),
-                        silent = is_silent
-                    ).save()
-                    rounds_count += 1
-                    i += 1
-                    print "Made round: \t\t%s" % name
-                except Exception as inst:
-                    total_errors += 1
-                    self.stdout.write('Couldnt make round ' + name)
-                    print inst
+                    try:
+                        the_round, created = m.Round.objects.get_or_create(
+                            tournament = t,
+                            seq = seq,
+                            name = name,
+                            abbreviation = abbv,
+                            draw_type = draw_type,
+                            stage = draw_stage,
+                            feedback_weight = min((int(seq)-1)*0.1, 0.5),
+                            silent = is_silent
+                        )
+                        if created:
+                            rounds_count += 1
+                            i += 1
+                            print "Made round: \t\t%s" % name
+                    except Exception as inst:
+                        total_errors += 1
+                        self.stdout.write('Couldnt make round ' + name)
+                        print inst
 
-            t.current_round = m.Round.objects.get(tournament=t, seq=1)
-            t.save()
-            self.stdout.write('**** Created ' + str(rounds_count) + ' rounds')
+                t.current_round = m.Round.objects.get(tournament=t, seq=1)
+                t.save()
+                self.stdout.write('**** Created ' + str(rounds_count) + ' rounds')
 
             # Config
             try:
@@ -125,27 +131,29 @@ class Command(BaseCommand):
                 reader.next() # Skipping header row
             except:
                 self.stdout.write('config.csv file is missing or damaged')
+                reader = None
 
-            for line in reader:
-                key = line[0]
-                value_type = line[1]
-                if value_type == "str":
-                    value = str(line[2])
-                elif value_type == "int":
-                    value = int(line[2])
-                elif value_type == "float":
-                    value = float(line[2])
-                elif value_type == "bool":
-                    if line[2] == "True":
-                        value = True
-                    elif line[2] == "False":
-                        value = False
-                    else:
-                        print "Error %s not properly set" % key
+            if reader:
+                for line in reader:
+                    key = line[0]
+                    value_type = line[1]
+                    if value_type == "str":
+                        value = str(line[2])
+                    elif value_type == "int":
+                        value = int(line[2])
+                    elif value_type == "float":
+                        value = float(line[2])
+                    elif value_type == "bool":
+                        if line[2] == "True":
+                            value = True
+                        elif line[2] == "False":
+                            value = False
+                        else:
+                            print "Error %s not properly set" % key
 
 
-                t.config.set(key, value)
-                print "Made setting \t%s as %s" % (key, value)
+                    t.config.set(key, value)
+                    print "Made setting \t%s as %s" % (key, value)
 
             # Venues
             self.stdout.write('**** Attempting to create the venue groups')
@@ -207,20 +215,33 @@ class Command(BaseCommand):
                         total_errors += 1
                         print inst
 
+                try:
+                    round_obj = m.Round.objects.get(abbreviation=round_abbv, tournament=t)
+                except Exception as inst:
+                    self.stdout.write('Couldnt find the round ' + round_abbv)
+                    total_errors += 1
+                    print inst
+
                 venue_rooms = int(float(venue_group.team_capacity) / 2)
                 venue_round = m.Round.objects.get(abbreviation=round_abbv, tournament=t)
 
                 for i in range(1, venue_rooms + 1):
                     room_name = "Room %s" % i
                     try:
-                        m.Venue(
+                        venue = m.Venue(
                             tournament = t,
                             group = venue_group,
                             name = room_name,
-                            priority = venue_round.seq,
+                            priority = 100 - i,
                             time = time
-                        ).save()
+                        )
+                        venue.save()
                         venue_count = venue_count + 1
+
+                        active_venue = m.ActiveVenue(
+                            venue = venue,
+                            round = round_obj
+                        ).save()
 
                     except Exception as inst:
                         total_errors += 1

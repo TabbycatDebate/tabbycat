@@ -22,7 +22,7 @@ class Tournament(models.Model):
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
     slug = models.SlugField(unique=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
-                                     related_name='tournament_')
+                                     related_name='tournament_',)
     welcome_msg = models.TextField(blank=True, null=True, default="")
     release_all = models.BooleanField(default=False)
 

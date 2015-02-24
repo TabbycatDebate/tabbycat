@@ -32,7 +32,7 @@
             {% if enable_venue_times %}
             <td>
                 {% if venue.time %}
-                <span class="hidden">{{ venue.time|date:"d m o H:i" }}</span>
+                <span class="hidden">{{ venue.time|date:"o m d" }}</span>
                 {{ venue.time|date:"D jS F h:iA" }}
                 {% endif %}
             </td>

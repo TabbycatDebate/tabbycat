@@ -4,8 +4,26 @@ from django import forms
 import debate.models as models
 
 
-admin.site.register(models.Tournament)
 admin.site.register(models.DebateTeam)
+
+class CustomRoundChoiceField(forms.ModelChoiceField):
+     def label_from_instance(self, obj):
+         return "%s - %s" % (obj.tournament, obj.name)
+
+class AddCustomDisplayForRound(forms.ModelForm):
+    current_round = CustomRoundChoiceField(queryset=models.Round.objects.all().order_by('tournament','name'))
+    class Meta:
+          model = models.Round
+          exclude = () # Needed
+
+class TournamentAdmin(admin.ModelAdmin):
+    list_display = ('name','short_name','current_round')
+    ordering = ('name',)
+    form = AddCustomDisplayForRound
+
+
+admin.site.register(models.Tournament,TournamentAdmin)
+
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ('name','code')
@@ -111,8 +129,7 @@ admin.site.register(models.VenueGroup, VenueGroupAdmin)
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time', 'tournament')
     list_filter = ('tournament', 'group', 'priority', 'time')
-
-    search_fields = ('name', 'group__name', 'time')
+    search_fields = ('name', 'group', 'time')
 admin.site.register(models.Venue, VenueAdmin)
 
 class DebateTeamInline(admin.TabularInline):

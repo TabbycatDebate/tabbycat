@@ -134,6 +134,9 @@
             {% endif %}
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Room"></span></th>
             {% if enable_venue_times %}
+                <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip"title="Date"></span></th>
+            {% endif %}
+            {% if enable_venue_times %}
                 <th><span class="glyphicon glyphicon-time" data-toggle="tooltip"title="Time"></span></th>
             {% endif %}
             <th>Aff<span class="hidden-xs">irmative</span></th>
@@ -157,9 +160,12 @@
         {% if enable_venue_times %}
         <td>
             {% if debate.venue.time %}
-                <span class="hidden">{{ debate.venue.time|date:"d m o H:i" }}</span>
-                {{ debate.venue.time|date:"D jS F h:iA" }}
+                <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
+                {{ debate.venue.time|date:"D jS F" }}
             {% endif %}
+        </td>
+        <td>
+            {{ debate.division.time_slot|time:'h:i A' }}
         </td>
         {% endif %}
         <td title="{% aff_count debate.aff_team round.prev %} prior aff">
