@@ -36,9 +36,6 @@ class AddCustomDisplayForDivisions(forms.ModelForm):
           model = models.Division
           exclude = () # Needed
 
-#fields = ('use_institution_prefix','tournament','institution','division','cannot_break')
-
-
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('long_name', 'short_name', 'institution', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
@@ -188,8 +185,9 @@ class DebateAdjudicatorAdmin(admin.ModelAdmin):
     search_fields = ('adjudicator__name', 'type')
 admin.site.register(models.DebateAdjudicator, DebateAdjudicatorAdmin)
 
+_m_tournament = lambda o: o.round.tournament
 class MotionAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'round')
+    list_display = ('reference', 'round','seq',_m_tournament)
     list_filter = ('round',)
 
 admin.site.register(models.Motion, MotionAdmin)
