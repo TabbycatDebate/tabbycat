@@ -31,7 +31,7 @@ class CustomDivisionChoiceField(forms.ModelChoiceField):
          return "%s - %s" % (obj.tournament, obj.name)
 
 class AddCustomDisplayForDivisions(forms.ModelForm):
-    division = CustomDivisionChoiceField(queryset=models.Division.objects.all())
+    division = CustomDivisionChoiceField(queryset=models.Division.objects.all().order_by('tournament','name'))
     class Meta:
           model = models.Division
           exclude = () # Needed
