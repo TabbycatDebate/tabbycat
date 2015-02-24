@@ -8,10 +8,10 @@ admin.site.register(models.DebateTeam)
 
 class CustomRoundChoiceField(forms.ModelChoiceField):
      def label_from_instance(self, obj):
-         return "%s - %s" % (obj.tournament, obj.name)
+         return "%s (%s)" % (obj.name, obj.tournament)
 
 class AddCustomDisplayForRound(forms.ModelForm):
-    current_round = CustomRoundChoiceField(queryset=models.Round.objects.all().order_by('tournament','name'))
+    current_round = CustomRoundChoiceField(queryset=models.Round.objects.all().order_by('tournament','seq'))
     class Meta:
           model = models.Round
           exclude = () # Needed
