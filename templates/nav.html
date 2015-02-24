@@ -107,7 +107,7 @@
                         </a></li>
                         {% endif %}
                     {% endif %}
-                    {% if public_draw > 0 and tab_released == 0 %}
+                    {% if public_draw > 0 and tab_released == 0 and show_all_draws == 0 %}
                         <li>
                             <a class="public-draw-nav" href="{% tournament_url public_draw %}">
                                 Draw for {{ current_round.name }}

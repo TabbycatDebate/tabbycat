@@ -24,6 +24,12 @@
                     }
                 });
             });
+            $('#all').click( function() {
+                $(this).parent().parent().parent().children(".division").each(function(){
+                    var checkbox = $(this).children("label").children("input:checkbox");
+                    checkbox.prop( "checked", true );
+                });
+            });
 
         } );
 
@@ -57,6 +63,7 @@
                         <a class="btn btn-default toggler" id="">W1 Wed</a>
                         <a class="btn btn-default toggler" id="">W2 Tue</a>
                         <a class="btn btn-default toggler" id="">W2 Wed</a>
+                        <a class="btn btn-default " id="all">All</a>
                     </div>
                 </li>
                 {% if form.errors %}
