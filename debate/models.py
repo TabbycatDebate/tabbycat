@@ -996,23 +996,20 @@ class Round(models.Model):
         if round.prev:
             if round.tournament.config.get('team_points_rule') != "wadl":
                 standings = list(Team.objects.subrank_standings(round.prev))
-            else:
-                standings = list(Team.objects.standings(round.prev))
-
-            for debate in draw:
-                for side in ('aff_team', 'neg_team'):
-                    # TODO is there a more efficient way to do this?
-                    team = getattr(debate, side)
-                    annotated_team = filter(lambda x: x == team, standings)
-                    if len(annotated_team) == 1:
-                        annotated_team = annotated_team[0]
-                        team.points = annotated_team.points
-                        team.speaker_score = annotated_team.speaker_score
-
-                        if round.tournament.config.get('team_points_rule') != "wadl":
+                for debate in draw:
+                    for side in ('aff_team', 'neg_team'):
+                        # TODO is there a more efficient way to do this?
+                        team = getattr(debate, side)
+                        annotated_team = filter(lambda x: x == team, standings)
+                        if len(annotated_team) == 1:
+                            annotated_team = annotated_team[0]
+                            team.points = annotated_team.points
+                            team.speaker_score = annotated_team.speaker_score
                             team.subrank = annotated_team.subrank
                             team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
                             team.draw_strength = getattr(annotated_team, 'draw_strength', None) # only exists in NZ standings rules
+            else:
+                standings = list(Team.objects.standings(round.prev))
 
         return draw
 

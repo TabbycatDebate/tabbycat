@@ -140,8 +140,10 @@ class DebateAdjudicatorInline(admin.TabularInline):
     model = models.DebateAdjudicator
     extra = 1
 
+_da_tournament = lambda o: o.round.tournament.name
+_da_tournament.short_description = 'Tournament'
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'round', 'aff_team', 'neg_team', 'adjudicators',)
+    list_display = ('id', _da_tournament, 'round', 'aff_team', 'neg_team', 'adjudicators',)
     search_fields = ('debateteam__team__reference', 'debateteam__team__institution__code',
                      'debateadjudicator__adjudicator__name',)
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
