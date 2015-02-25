@@ -45,7 +45,7 @@
 
 {% block content %}
 
-    <table id="draw" class="h4 table table-hover table-bordered table-striped">
+    <table id="draw" class="h4 table table-hover table-bordered">
         <thead>
             <tr>
                 {% if enable_divisions %}
@@ -74,11 +74,9 @@
         {% for debate in draw %}
 
             {% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}
-                <tr>
+                <tr class="active">
                     {% if enable_divisions %}<td>{{ debate.division }}</td>{% endif %}
-                    <td class="text-danger">
-                        No Debate
-                    </td>
+                    <td></td>
                     {% if enable_venue_times %}<td></td><td></td>{% endif %}
                     <td class="team-name">
                         {% if debate.aff_team.type != 'B' %}
@@ -88,7 +86,7 @@
                             <span class="hidden">
                                {{ debate.aff_team.speakers|join:', ' }}
                         {% else %}
-                             Bye
+                             <span class="text-danger">Bye (No Debate)</span>
                         {% endif %}
                     </td>
                     <td class="team-name">
@@ -100,7 +98,7 @@
                            {{ debate.neg_team.speakers|join:', ' }}
                         </span>
                         {% else %}
-                             Bye
+                             <span class="text-danger">Bye (No Debate)</span>
                         {% endif %}
                     </td>
                     {% if enable_division_motions %}<td></td>{% endif %}
