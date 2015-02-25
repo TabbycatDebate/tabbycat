@@ -232,7 +232,7 @@ class Command(BaseCommand):
                             tournament = t,
                             group = venue_group,
                             name = room_name,
-                            priority = 100 - i,
+                            priority = 100,
                             time = time
                         )
                         venue.save()

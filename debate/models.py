@@ -1025,11 +1025,27 @@ class Round(models.Model):
         random.shuffle(pairings) # to avoid IDs indicating room raks
 
         for pairing in pairings:
-            debate = Debate(round=self, venue=venues.pop(0))
+            try:
+                if pairing.division:
+                    print pairing.teams[1].type
+                    if (pairing.teams[0].type == "B") or (pairing.teams[1].type == "N"):
+                        # If the match is a bye then they don't get a venue
+                        selected_venue = None
+                    else:
+                        selected_venue = next(v for v in venues if v.group == pairing.division.venue_group)
+                        venues.pop(venues.index(selected_venue))
+                else:
+                    selected_venue = venues.pop(0)
+            except:
+                print "Error assigning venues"
+                selected_venue = None
+
+            debate = Debate(round=self, venue=selected_venue)
+
+            debate.division = pairing.division
             debate.bracket   = pairing.bracket
             debate.room_rank = pairing.room_rank
             debate.flags     = ",".join(pairing.flags) # comma-separated list
-            debate.division  = pairing.division
             debate.save()
 
             aff = DebateTeam(debate=debate, team=pairing.teams[0], position=DebateTeam.POSITION_AFFIRMATIVE)
