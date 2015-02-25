@@ -428,11 +428,13 @@ class Team(models.Model):
     TYPE_ESL = 'E'
     TYPE_SWING = 'S'
     TYPE_COMPOSITE = 'C'
+    TYPE_BYE = 'B'
     TYPE_CHOICES = (
         (TYPE_NONE, 'None'),
         (TYPE_ESL, 'ESL'),
         (TYPE_SWING, 'Swing'),
         (TYPE_COMPOSITE, 'Composite'),
+        (TYPE_BYE, 'Bye'),
     )
     type = models.CharField(max_length=1, choices=TYPE_CHOICES,
                             default=TYPE_NONE)

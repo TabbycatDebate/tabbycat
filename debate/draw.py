@@ -1027,9 +1027,9 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     """ Class for round-robin stype matchups using divisions """
 
     can_be_first_round = True
-    requires_even_teams = False
+    requires_even_teams = True
     requires_prev_results = False
-    draw_type = "elimination"
+    draw_type = "preliminary"
 
     PAIRING_FUNCTIONS = {
         "random": "_pairings_random"
