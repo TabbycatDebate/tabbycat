@@ -18,7 +18,7 @@
 {% endblock extra-head %}
 
 {% block head-title %}
-No draw currently exists
+No draw for {{ round.name }} currently exists
 {% endblock %}
 
 {% block header %}
@@ -34,9 +34,9 @@ No draw currently exists
     {% endif %}
     <div class="btn-group">
         {% if active_venues.count < rooms or active_teams.count == 0%}
-            <a class="btn btn-success"  disabled="disabled" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
+            <a class="btn btn-success"  disabled="disabled" id="createDraw">Create draw for {{ active_teams|length }}/{{ all_teams_count }} teams</a>
         {% else %}
-            <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
+            <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams|length }}/{{ all_teams_count }} teams</a>
         {% endif %}
     </div>
 {% endblock %}

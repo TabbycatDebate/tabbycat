@@ -88,7 +88,9 @@
             {% endif %}
             {% if show_all_draws > 0 %}
                 {% for r in tournament.rounds.all %}
-                    <li class="list-group-item"><a href="{% round_url public_draw_by_round r %}">Draw for {{ r.name }}</a></li>
+                    {% if r.draw_status == r.STATUS_RELEASED %}
+                        <li class="list-group-item"><a href="{% round_url public_draw_by_round r %}">Draw for {{ r.name }}</a></li>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         </ul>

@@ -769,12 +769,15 @@ def draw(request, round):
 
 
 def draw_none(request, round):
+    all_teams_count = Team.objects.filter(tournament=round.tournament).count()
     active_teams = round.active_teams.all()
     active_venues = round.active_venues.all()
     rooms = float(active_teams.count()) / 2
     return r2r(request, "draw_none.html", dict(active_teams=active_teams,
                                                active_venues=active_venues,
-                                               rooms=rooms))
+                                               rooms=rooms,
+                                               round=round,
+                                               all_teams_count=all_teams_count))
 
 
 def draw_draft(request, round):

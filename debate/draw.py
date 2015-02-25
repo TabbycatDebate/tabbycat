@@ -70,6 +70,7 @@ class Pairing(object):
             pass
         elif self.teams[0].aff_count > self.teams[1].aff_count:
             self.teams.reverse()
+            print "balancing sides"
         else:
             random.shuffle(self.teams)
 
@@ -1030,10 +1031,14 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     requires_even_teams = True
     requires_prev_results = False
     draw_type = "preliminary"
+    side_allocations = "balance"
 
     PAIRING_FUNCTIONS = {
         "random": "_pairings_random"
     }
+
+
+    DEFAULT_OPTIONS = {"max_swap_attempts": 20, "avoid_conflicts": "off"}
 
     def make_draw(self):
         self._brackets = self._make_raw_brackets_from_divisions()
@@ -1044,6 +1049,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         for bracket in self._pairings.itervalues():
             self._draw.extend(bracket)
 
+        self.balance_sides(self._draw) # operates in-place
         return self._draw
 
     def _make_raw_brackets_from_divisions(self):
@@ -1073,7 +1079,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         # Essentially figures out (ignore draw.seq) what the previous matchups
         # have been. TODO: This is pretty flawed.
         effective_round = 1
-        for i in range(1, len(teams_list) / 2):
+        for i in range(1, len(teams_list)):
             print "\ttesting round %s" % i
             right_team_index = -1 * i
             if teams_list[0].seen(teams_list[right_team_index]):
