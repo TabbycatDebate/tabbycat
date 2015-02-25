@@ -1027,8 +1027,7 @@ class Round(models.Model):
         for pairing in pairings:
             try:
                 if pairing.division:
-                    print pairing.teams[1].type
-                    if (pairing.teams[0].type == "B") or (pairing.teams[1].type == "N"):
+                    if (pairing.teams[0].type == "B") or (pairing.teams[1].type == "B"):
                         # If the match is a bye then they don't get a venue
                         selected_venue = None
                     else:

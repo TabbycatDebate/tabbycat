@@ -1042,7 +1042,6 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         # TODO: avoiding history conflicts here
         self._draw = list()
         for bracket in self._pairings.itervalues():
-            print bracket
             self._draw.extend(bracket)
 
         return self._draw
@@ -1146,8 +1145,6 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                     print "couldn't find an opposition"
 
             pairings[points] = assigned_pairings
-
-        # return False
 
         return pairings
 

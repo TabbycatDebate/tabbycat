@@ -79,7 +79,7 @@
                 </span>
             </td>
             <td class="venue-name">
-                {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}
+                {% if debate.division.venue_group %}{{ debate.division.venue_group }} {% endif %}{{ debate.venue.name }}
             </td>
             {% if enable_venue_times %}
                 <td>
@@ -133,7 +133,7 @@
                 </span>
             </td>
             <td class="venue-name">
-                {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}
+                {% if debate.division.venue_group %}{{ debate.division.venue_group }} {% endif %}{{ debate.venue.name }}
             </td>
             {% if enable_venue_times %}
                 <td>

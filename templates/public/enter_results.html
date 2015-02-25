@@ -10,7 +10,7 @@
 
 {% block head-title %}
 Enter Results for
-{{ debate.matchup }} <small>Round {{ debate.round }} @ {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}</small>
+{{ debate.matchup }} <small>Round {{ debate.round }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group}} {% endif %}{{ debate.venue.name }}</small>
 {% endblock %}
 {% block page-title %}
 Enter Results for {{ debate.matchup }}
