@@ -119,7 +119,9 @@
                             <li><a class="public-results-nav" href="#" data-toggle="dropdown">All Draws<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     {% for r in tournament.rounds.all %}
-                                        <li><a href="{% round_url public_draw_by_round r %}">{{ r.name }}</a></li>
+                                        {% if r.draw_status == r.STATUS_RELEASED %}
+                                            <li><a href="{% round_url public_draw_by_round r %}">{{ r.name }}</a></li>
+                                        {% endif %}
                                     {% endfor %}
                                 </ul>
                             </li>
