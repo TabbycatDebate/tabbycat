@@ -10,11 +10,12 @@
     $(document).ready( function() {
 
         var table = $("#dataTable").dataTable({
-            "aaSorting": [[4, "asc"], [ 2, "asc" ], [0, "asc"]],
+            "aaSorting": [[1, "asc"], [ 0, "asc" ]],
             "aoColumnDefs": [
-                { "bVisible": false, "aTargets": [1] }, //set column visibility
-                {"sType": "numeric", "aTargets": [1] }, //define data type for specified columns
-                {"iDataSort": 1, "aTargets": [2] } //sort based on a hidden column when another column is clicked
+                //{ "bVisible": false, "aTargets": [1] }, //set column visibility
+                //{"iDataSort": 1, "aTargets": [2] }, //sort based on a hidden column when another column is clicked
+                {"sType": "num", "aTargets": [1] }, //define data type for specified columns - note num rather than numeric - numeric is depricated
+                { "bSearchable": false, "aTargets": [1,2,3,4,5,6] }, //set column visibility
             ]
         });
 
@@ -23,7 +24,11 @@
             var btn = $(this)
             btn.button('loading')
             $("#dataTable .division").each( function() {
-                teams[$(this).attr("id")] = $("select", this).val();
+                var new_division_id = $("select", this).val()
+                console.log(new_division_id)
+                if (new_division_id != "") {
+                    teams[$(this).attr("id")] = new_division_id;
+                }
             });
             $.ajax({
                 type: "POST",
@@ -102,8 +107,8 @@
     <thead>
         <tr>
             <th>Team</th>
-            <th>D</th>
             <th>Division</th>
+            <th>Switch</th>
             <th>Venue</th>
             <th>Time</th>
             <th>Status</th>
@@ -118,14 +123,13 @@
             {{ team.short_name }} {% if team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
             </span>
         </td>
-        <td>{{ team.division }}</td>
+        <td>{{ team.division.name }}</td>
         <td id="{{ team.id }}" class="division">
-            {{ divisions.teams.all.count }}
             <select class="form-control">
-                <option value="">None</option>
+                <option value=""></option>
                 {% for d in divisions %}
-                    <option value="{{ d.id }}" {% if team.division == d %}selected{% endif %}>
-                        {{ d.name }} ({{ d.teams_count }} teams at {{ d.venue_group }})
+                    <option value="{{ d.id }}">
+                        {{ d.name }} {% comment %} ({{ d.teams_count }} teams at {{ d.venue_group }}) {% endcomment %}
                     </option>
                 {% endfor %}
             </select>
@@ -164,7 +168,7 @@
             {% endif %}
         </td>
         <td>
-        {% for pref in team.preferences.all %}
+        {% for pref in team.get_preferences.all %}
             {% if pref.venue_group %}
                 <span class="small">{{ pref.priority }}: {{ pref.venue_group }}</span>,{% if pref.counter == 4 %}<br>{% endif %}
             {% endif %}
@@ -189,8 +193,8 @@
                     {% for vg in venue_groups %}
                         <tr>
                             <td>{{ vg.name }} </td>
-                            <td>{{ vg.total_divs }}</td>
-                            <td>{{ vg.total_teams }}/{{ vg.team_capacity }}</td>
+                            <td>{{ vg.divisions_count }}</td>
+                            <td>{{ vg.team_capacity }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -212,14 +216,14 @@
                     <th>Teams</th>
                 </thead>
                 <tbody>
-                    {% for d in divisions %}
-                        <tr>
-                            <td>{{ d.name }} </td>
-                            <td>{{ d.venue_group }}</td>
-                            <td>{{ d.time_slot|time:'h:i A' }}</td>
-                            <td>{{ d.teams_count }}</td>
-                        </tr>
-                    {% endfor %}
+                {% for d in divisions %}
+                    <tr>
+                        <td>{{ d.name }} </td>
+                        <td>{{ d.venue_group }}</td>
+                        <td>{{ d.time_slot|time:'h:i A' }}</td>
+                        <td>{{ d.teams_count }}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>

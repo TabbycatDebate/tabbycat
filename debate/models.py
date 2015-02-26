@@ -106,6 +106,10 @@ class VenueGroup(models.Model):
     team_capacity = models.IntegerField()
 
     @property
+    def divisions_count(self):
+        return self.division_set.count()
+
+    @property
     def venues(self):
         return self.venue_set.all()
 
@@ -397,6 +401,10 @@ class Division(models.Model):
     venue_group = models.ForeignKey(VenueGroup, blank=True, null=True)
 
     @property
+    def teams_count(self):
+        return self.team_set.count()
+
+    @property
     def teams(self):
         return self.team_set.all().order_by('institution','reference')
 
@@ -445,7 +453,10 @@ class Team(models.Model):
     objects = TeamManager()
 
     def __unicode__(self):
-        return self.short_name
+        if self.type == "B":
+            return "Bye"
+        else:
+            return self.short_name
 
     @property
     def name(self):
@@ -485,6 +496,8 @@ class Team(models.Model):
             dts = dts.filter(debate__round__seq__lt=before_round)
         return [dt.debate for dt in dts]
 
+    @property
+    @memoize
     def get_preferences(self):
         prefs = TeamVenuePreference.objects.filter(team=self)
         return prefs

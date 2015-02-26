@@ -299,7 +299,8 @@ def public_motions(request, t):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')
 def public_divisions(request, t):
-    divisions = Division.objects.filter(tournament=t)
+    divisions = Division.objects.filter(tournament=t).all()
+    divisions = sorted(divisions, key=lambda x: float(x.name))
     venue_groups = set(d.venue_group for d in divisions)
     for uvg in venue_groups:
         uvg.divisions = [d for d in divisions if d.venue_group == uvg]
@@ -881,22 +882,10 @@ def side_allocations(request, t):
 @admin_required
 @tournament_view
 def division_allocations(request, t):
-    teams = Team.objects.filter(tournament=t)
-    for team in teams:
-        team.preferences = team.get_preferences
-
-    divisions = Division.objects.filter(tournament=t).order_by('name')
-    for division in divisions:
-        division.teams_count = len(division.teams)
-
+    teams = Team.objects.filter(tournament=t).all()
+    divisions = Division.objects.filter(tournament=t).all()
+    divisions = sorted(divisions, key=lambda x: float(x.name))
     venue_groups = VenueGroup.objects.filter(tournament=t).order_by('name')
-    for vg in venue_groups:
-        vg.total_divs = len([division for division in divisions
-                            if division.venue_group == vg])
-        vg.total_teams = 0
-        for division in divisions:
-            if division.venue_group == vg:
-                    vg.total_teams += division.teams_count
 
     return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 
@@ -1022,7 +1011,7 @@ def motions_assign(request, round):
             )
 
     class ModelAssignForm(ModelForm):
-        divisions = MyModelChoiceField(widget=CheckboxSelectMultiple, queryset=Division.objects.filter(tournament=round.tournament))
+        divisions = MyModelChoiceField(widget=CheckboxSelectMultiple, queryset=Division.objects.filter(tournament=round.tournament).order_by('venue_group'))
         class Meta:
             model = Motion
             fields = ("divisions",)
@@ -1036,7 +1025,6 @@ def motions_assign(request, round):
             return redirect_round('motions', round)
 
     formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
-
     return r2r(request, "motions_assign.html", dict(formset=formset))
 
 

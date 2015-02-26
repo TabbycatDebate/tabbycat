@@ -55,7 +55,7 @@ class AddCustomDisplayForDivisions(forms.ModelForm):
           exclude = () # Needed
 
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('long_name', 'short_name', 'institution', 'division', 'tournament')
+    list_display = ('long_name','short_reference','institution', 'division', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
     list_filter = ('tournament', 'institution')
     form = AddCustomDisplayForDivisions
@@ -90,6 +90,7 @@ class AddCustomDisplayForVenueGroups(forms.ModelForm):
 class DivisionAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'venue_group','time_slot')
     list_filter = ('tournament','venue_group',)
+    search_fields = ('name',)
     ordering = ('tournament','name',)
     form = AddCustomDisplayForVenueGroups
 
