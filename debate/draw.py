@@ -1028,7 +1028,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     """ Class for round-robin stype matchups using divisions """
 
     can_be_first_round = True
-    requires_even_teams = True
+    requires_even_teams = False
     requires_prev_results = False
     draw_type = "preliminary"
     side_allocations = "balance"
@@ -1087,9 +1087,10 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                     division = bye_division,
                     cannot_break = True
                 )
+                bye_team.aff_count = 0
+                bye_team.neg_count = 0
                 bye_team.save()
                 bracket.append(bye_team)
-                self.teams.append(bye_team)
                 print "\t Created a bye team for divison %s" % bracket[0].division
 
         # Assigning subranks - fixed based on alphabetical
