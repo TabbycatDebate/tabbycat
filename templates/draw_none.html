@@ -38,16 +38,14 @@ No draw for {{ round.name }} currently exists
         The draw cannot be generated until there are more venues than team matchups. <a class="alert-link" href="{% round_url venue_availability current_round %}">Check in some more venues</a>.
     </div>
     {% endif %}
-    <div class="btn-group">
-        {% if active_venues_count < rooms or active_teams.count == 0%}
-            <a class="btn btn-success"  disabled="disabled" id="createDraw">Create draw for {{ active_teams.count }}/{{ all_teams_count }} teams</a>
-        {% else %}
-            <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams.count }}/{{ all_teams_count }} teams</a>
-            {% if active_teams.count < all_teams_count %}
-                <a class="btn btn-warning" id="createDrawWithAllTeams">Create draw for ALL teams</a>
-            {% endif %}
+    {% if active_venues_count < rooms or active_teams.count == 0%}
+        <a class="btn btn-success"  disabled="disabled" id="createDraw">Create draw for {{ active_teams.count }}/{{ all_teams_count }} teams</a>
+    {% else %}
+        <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams.count }}/{{ all_teams_count }} teams</a>
+        {% if active_teams.count < all_teams_count %}
+            <a class="btn btn-warning" id="createDrawWithAllTeams">Create draw for ALL teams</a>
         {% endif %}
-    </div>
+    {% endif %}
 {% endblock %}
 
 {% block content %}

@@ -1065,6 +1065,32 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             else:
                 brackets[division] = [team]
 
+        print "------"
+
+        # Assigning bye teams as needed
+        for bracket in brackets.itervalues():
+            if len(bracket) % 2 != 0:
+                from debate.models import Institution,Team
+                bye_tournament = bracket[0].tournament
+                bye_institution, created = Institution.objects.get_or_create(
+                    name="Byes"
+                )
+                bye_reference = "Bye %s" % bracket[0].division
+                bye_division = bracket[0].division
+                bye_team = Team(
+                    institution = bye_institution,
+                    reference = bye_reference,
+                    short_reference = "Bye",
+                    tournament= bye_tournament,
+                    type = "B",
+                    use_institution_prefix = False,
+                    division = bye_division,
+                    cannot_break = True
+                )
+                bye_team.save()
+                bracket.append(bye_team)
+                print "\t Created a bye team for divison" % bracket[0].division
+
         # Assigning subranks - fixed based on alphabetical
         for bracket in brackets.itervalues():
             bracket.sort(key=lambda x: x.short_name, reverse=False)
@@ -1109,8 +1135,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             folded_list = list(fold_top)
             folded_list.extend(fold_bottom)
 
-            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
-            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
+            # print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
+            # print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
 
             for i in range(1, effective_round):
                  # left-most bottom goes to position[1] on the top
@@ -1119,8 +1145,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                 folded_list.append(folded_list.pop(total_debates))
                 print "popping %s iteration %s" % (i, total_debates)
 
-            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
-            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
+            # print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
+            # print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
 
             # IE For Round 2 - before and after
             # ['1 - Aquinas 1', '2 - Aquinas 2', '3 - Penrhos 1']
