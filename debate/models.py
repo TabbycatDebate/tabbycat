@@ -889,7 +889,7 @@ class Round(models.Model):
     def motions(self):
         return self.motion_set.order_by('seq')
 
-    def draw(self):
+    def draw(self, override_team_checkins=False):
         if self.draw_status != self.STATUS_NONE:
             raise RuntimeError("Tried to run draw on round that already has a draw")
 
@@ -906,15 +906,20 @@ class Round(models.Model):
             "side_allocations"   : "draw_side_allocations",
         }
 
+        if override_team_checkins is True:
+            draw_teams = Team.objects.filter(tournament=self.tournament).all()
+        else:
+            draw_teams = self.active_teams.all()
+
         # Set type-specific options
         if self.draw_type == self.DRAW_RANDOM:
-            teams = self.active_teams.all()
+            teams = draw_teams
             draw_type = "random"
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts" : "draw_avoid_conflicts",
             })
         elif self.draw_type == self.DRAW_POWERPAIRED:
-            teams = annotate_team_standings(self.active_teams, self.prev, shuffle=True)
+            teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts" : "draw_avoid_conflicts",
@@ -922,7 +927,7 @@ class Round(models.Model):
                 "pairing_method"  : "draw_pairing_method",
             })
         elif self.draw_type == self.DRAW_ROUNDROBIN:
-            teams = self.active_teams.all()
+            teams = draw_teams
             draw_type = "round_robin"
         else:
             raise RuntimeError("Break rounds aren't supported yet.")

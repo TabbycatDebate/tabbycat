@@ -1152,5 +1152,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
             pairings[points] = assigned_pairings
 
+
+        return False
+
         return pairings
 

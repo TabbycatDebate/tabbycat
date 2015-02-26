@@ -772,10 +772,10 @@ def draw(request, round):
 def draw_none(request, round):
     all_teams_count = Team.objects.filter(tournament=round.tournament).count()
     active_teams = round.active_teams.all()
-    active_venues = round.active_venues.all()
+    active_venues_count = round.active_venues.count()
     rooms = float(active_teams.count()) / 2
     return r2r(request, "draw_none.html", dict(active_teams=active_teams,
-                                               active_venues=active_venues,
+                                               active_venues_count=active_venues_count,
                                                rooms=rooms,
                                                round=round,
                                                all_teams_count=all_teams_count))
@@ -814,6 +814,14 @@ def create_draw(request, round):
         user=request.user, round=round, tournament=round.tournament)
     return redirect_round('draw', round)
 
+@admin_required
+@expect_post
+@round_view
+def create_draw_with_all_teams(request, round):
+    round.draw(override_team_checkins=True)
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CREATE,
+        user=request.user, round=round, tournament=round.tournament)
+    return redirect_round('draw', round)
 
 @admin_required
 @expect_post
