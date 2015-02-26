@@ -1089,7 +1089,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                 )
                 bye_team.save()
                 bracket.append(bye_team)
-                print "\t Created a bye team for divison" % bracket[0].division
+                self.teams.append(bye_team)
+                print "\t Created a bye team for divison %s" % bracket[0].division
 
         # Assigning subranks - fixed based on alphabetical
         for bracket in brackets.itervalues():
@@ -1135,8 +1136,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             folded_list = list(fold_top)
             folded_list.extend(fold_bottom)
 
-            # print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
-            # print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
+            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
+            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
 
             for i in range(1, effective_round):
                  # left-most bottom goes to position[1] on the top
@@ -1145,8 +1146,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                 folded_list.append(folded_list.pop(total_debates))
                 print "popping %s iteration %s" % (i, total_debates)
 
-            # print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
-            # print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
+            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
+            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
 
             # IE For Round 2 - before and after
             # ['1 - Aquinas 1', '2 - Aquinas 2', '3 - Penrhos 1']
@@ -1177,6 +1178,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                     print "couldn't find an opposition"
 
             pairings[points] = assigned_pairings
+
+
 
         return pairings
 
