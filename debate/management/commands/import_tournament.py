@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = 'Imports data from a folder in the data directory'
 
     def handle(self, *args, **options):
-        if len(args) < 3:
+        if len(args) < 2:
             raise CommandError("Not enough arguments.")
 
         # Getting the command line variable
@@ -19,14 +19,6 @@ class Command(BaseCommand):
             rounds_to_auto_make = int(args[1])
         except:
             rounds_to_auto_make = 0
-
-        try:
-            if args[2] == "share":
-                sharing_data = True
-            else:
-                sharing_data = False
-        except:
-            sharing_data = False
 
         total_errors = 0
 
@@ -170,7 +162,12 @@ class Command(BaseCommand):
                 elif value_type == "float":
                     value = float(line[2])
                 elif value_type == "bool":
-                    value = bool(line[2])
+                    if line[2] == "True":
+                        value = True
+                    elif line[2] == "False":
+                        value = False
+                    else:
+                        print "Error %s not properly set" % key
 
                 t.config.set(key, value)
                 print "Made setting \t%s as %s" % (key, value)
@@ -329,30 +326,6 @@ class Command(BaseCommand):
                     )
                     team.save()
 
-                    pref1 = line[2] or None
-                    pref2 = line[3] or None
-                    pref3 = line[4] or None
-                    pref4 = line[5] or None
-                    pref5 = line[6] or None
-                    pref6 = line[7] or None
-                    pref7 = line[8] or None
-                    pref8 = line[9] or None
-                    pref9 = line[10] or None
-                    pref10 = line[11] or None
-                    pref11 = line[12] or None
-                    pref12 = line[13] or None
-
-                    venue_preferences = [pref1,pref2,pref3,pref4,pref5,pref6,pref7,pref8,pref9,pref10,pref11,pref12]
-                    for index, venue in enumerate(venue_preferences):
-                        if venue:
-                            venue_group = m.VenueGroup.objects.get(name=venue,tournament=t)
-                            preference = m.TeamVenuePreference(
-                                team = team,
-                                venue_group = venue_group,
-                                priority = index
-                            )
-                            preference.save()
-
                     m.Speaker(name = "1st Speaker", team = team).save()
                     m.Speaker(name = "2nd Speaker", team = team).save()
                     m.Speaker(name = "3rd Speaker", team = team).save()
@@ -378,10 +351,9 @@ class Command(BaseCommand):
                 name = line[0]
                 ins_name = line[1]
                 team_name = line[2]
-                prefix = int(line[3]) or 0
-                if prefix > 0:
-                    prefix = True
-                else:
+                try:
+                    prefix = int(line[3]) or 0
+                except:
                     prefix = False
 
                 try:
@@ -397,10 +369,10 @@ class Command(BaseCommand):
 
                 try:
                     team, created = m.Team.objects.get_or_create(
-                            institution = ins,
-                            reference = team_name,
-                            use_institution_prefix = prefix,
-                            tournament=t
+                        institution = ins,
+                        reference = team_name,
+                        use_institution_prefix = prefix,
+                        tournament=t
                     )
                     if created:
                         teams_count = teams_count + 1
@@ -491,11 +463,6 @@ class Command(BaseCommand):
 
                 name = name.strip()
 
-                if sharing_data:
-                    tournament = None
-                else:
-                    tournament = t
-
                 adj = m.Adjudicator(
                     name = name,
                     institution = ins,
@@ -503,7 +470,7 @@ class Command(BaseCommand):
                     phone = phone,
                     email = email,
                     notes = notes,
-                    tournament = tournament
+                    tournament = t
                 )
                 adj.save()
                 print "Made adjudicator: \t%s of %s" % (name, ins)

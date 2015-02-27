@@ -103,7 +103,7 @@ class VenueGroup(models.Model):
     name = models.CharField(max_length=200)
     short_name = models.CharField(max_length=25, blank=True, null=True, default="")
     tournament = models.ForeignKey(Tournament)
-    team_capacity = models.IntegerField()
+    team_capacity = models.IntegerField(blank=True, null=True)
 
     @property
     def divisions_count(self):
