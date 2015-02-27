@@ -1,5 +1,5 @@
 h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
+.h1, .h2, .h3, .h4, .h4_minus, .h4_plus, .h5, .h6 {
   font-family: inherit;
   font-weight: 500;
   line-height: 1.1;
@@ -14,8 +14,10 @@ h1, h2, h3, h4, h5, h6,
   .h1 small,
   .h1 .small, .h2 small,
   .h2 .small, .h3 small,
-  .h3 .small, .h4 small,
-  .h4 .small, .h5 small,
+  .h3 .small, .h4 small, .h4_minus small, .h4_plus small,
+  .h4 .small,
+  .h4_minus .small,
+  .h4_plus .small, .h5 small,
   .h5 .small, .h6 small,
   .h6 .small {
     font-weight: normal;
@@ -38,14 +40,16 @@ h3, .h3 {
   .h3 .small {
     font-size: 65%; }
 
-h4, .h4,
+h4, .h4, .h4_minus, .h4_plus,
 h5, .h5,
 h6, .h6 {
   margin-top: 10px;
   margin-bottom: 10px; }
   h4 small,
-  h4 .small, .h4 small,
+  h4 .small, .h4 small, .h4_minus small, .h4_plus small,
   .h4 .small,
+  .h4_minus .small,
+  .h4_plus .small,
   h5 small,
   h5 .small, .h5 small,
   .h5 .small,
@@ -63,7 +67,7 @@ h2, .h2 {
 h3, .h3 {
   font-size: 24px; }
 
-h4, .h4 {
+h4, .h4, .h4_minus, .h4_plus {
   font-size: 18px; }
 
 h5, .h5 {
@@ -640,6 +644,12 @@ a.text-warning:hover {
 a.text-danger:hover {
   color: #c9302c; }
 
+.h4_minus {
+  font-size: 16px; }
+
+.h4_plus {
+  font-size: 21px; }
+
 @media (max-width: 767px) {
   .navbar-nav.navbar-left {
     float: left;
@@ -657,6 +667,9 @@ a.text-danger:hover {
     padding-right: 0px; }
   .navbar-nav .dropdown.open .divider {
     display: none; } }
+
+.nav > li > a {
+  padding: 15px 10px; }
 
 #header-options {
   min-height: 34px;
@@ -697,6 +710,9 @@ a.text-danger:hover {
 .adj-feedback a.adjudicators-standings-nav,
 .config a.config-nav {
   font-weight: bold; }
+
+.public-draw #header-options .btn-group {
+  display: none; }
 
 html, body {
   height: 100%; }
@@ -741,11 +757,14 @@ html, body {
 
 [data-toggle="tooltip"] {
   cursor: pointer;
-  border-bottom: 2px solid #ccc; }
+  border-bottom: 2px dotted #ccc; }
 
 .alert-link {
   text-decoration: underline;
   font-weight: normal; }
+
+.check_target {
+  cursor: pointer; }
 
 input.error, select.error, .error input {
   border-color: #a94442;
@@ -769,6 +788,9 @@ input.error, select.error, .error input {
 .col-md-12.table-container {
   padding-left: 0;
   padding-right: 0; }
+
+table a:hover {
+  cursor: pointer; }
 
 @media (max-width: 767px) {
   .page-header {
@@ -871,9 +893,6 @@ span.esl {
   overflow-y: scroll; }
 .edit-venues .venue, .edit-venues .adj, .edit-adjs .venue, .edit-adjs .adj {
   max-width: 300px; }
-.edit-venues .btn-holder, .edit-adjs .btn-holder {
-  padding: 4px;
-  border: 2px solid #ddd; }
 .edit-venues .importance, .edit-adjs .importance {
   width: 60px;
   text-align: left; }

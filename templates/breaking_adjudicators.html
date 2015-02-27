@@ -22,23 +22,35 @@
 {% block page-title %}Breaking Adjudicators{% endblock %}
 {% block body-class %}breakk breaking-adjs{% endblock %}
 
+{% if adjs.all.count == 0 %}
+    {% block header %}
+        <p class="lead">The breaking adjudicators have not been released yet.
+        <img src="{% static 'emoji/img/cry.png' %}" width="24" height="24" />
+        </p>
+    {% endblock %}
+{% endif %}
+
 {% block content %}
-
-<table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Institution</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for adj in adjs %}
-    <tr>
-        <td>{{ adj.name }}</td>
-        <td>{{ adj.institution }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
+    {% if adjs.all.count > 0 %}
+        <table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    {% if show_institutions > 0 %}
+                        <th>Institution</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for adj in adjs %}
+            <tr>
+                <td>{{ adj.name }}</td>
+                {% if show_institutions > 0 %}
+                    <td>{{ adj.institution }}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock content %}

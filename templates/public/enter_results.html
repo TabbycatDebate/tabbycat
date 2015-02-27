@@ -10,14 +10,13 @@
 
 {% block head-title %}
 Enter Results for
-{{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>
+{{ debate.matchup }} <small>Round {{ debate.round }} @ {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}</small>
 {% endblock %}
 {% block page-title %}
 Enter Results for {{ debate.matchup }}
 {% endblock %}
 {% block body-class %}public-enter-result{% endblock %}
 
-{% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
 {% block content %}
 
 <div class="alert alert-info">This page is specific to you, {{ adjudicator.name }}.

@@ -24,36 +24,67 @@
     <thead>
         <tr>
             {% if for_print %}
-                <th>Rank</th>
+                <th>
+                    Rank
+                </th>
             {% else %}
-                <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
+                <th>
+                    <span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span>
+                </th>
             {% endif %}
-            <th>Name</th>
+            <th>
+                Name
+            </th>
             {% if show_emoji > 0 and not for_print %}
-                <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+                <th class="th-emoji">
+                    <img src="{% static 'emoji/img/grey_question.png' %}" />
+                </th>
             {% endif %}
-            <th>Team</th>
+            <th>
+                Team
+            </th>
             {% for round in rounds %}
-            <th>{{ round.abbreviation }}</th>
+            <th>
+                {{ round.abbreviation }}
+            </th>
             {% endfor %}
-            <th>Av<span class="hidden-xs">erage</span></th>
-            <th>Replies</th>
+            <th>
+                Av<span class="hidden-xs">erage</span>
+            </th>
+            <th>
+                Replies
+            </th>
         </tr>
     </thead>
     <tbody>
     {% for speaker in speakers %}
     <tr class="{% if not speaker.results_in %}danger{% endif%}">
-        <td>{{ speaker.rank }}</td>
-        <td>{{ speaker.name }}</td>
+        <td>
+            {{ speaker.rank }}
+        </td>
+        <td>
+            {{ speaker.name }}
+        </td>
         {% if show_emoji > 0 and not for_print %}
-            <td class="team-emoji team-{{ speaker.team.id }}"></td>
+            <td class="team-emoji team-{{ speaker.team.id }}">
+            </td>
         {% endif %}
-        <td>{{ speaker.team.short_name }}</td>
+        <td>
+            <span title="<h5>{{ speaker.team.long_name }}</h5>{{ speaker.team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                {{ speaker.team.short_name }}
+            </span>
+        </td>
         {% for score in speaker.scores %}
-            <td>{{ score|stringformat:".2f" }}</td>
+            <td>
+                {{ score|stringformat:".2f" }}
+            </td>
         {% endfor %}
-        <td>{{ speaker.average|stringformat:".2f" }}</td>
-        <td>{{ speaker.replies }}</td>
+        <td>
+            {{ speaker.average|stringformat:".2f" }}
+        </td>
+        <td>
+            {{ speaker.replies }}
+        </td>
     </tr>
     {% endfor %}
 </table>

@@ -52,12 +52,12 @@
                 {{ debate.venue_splitname }}
             </td>
             <td>
-                <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}">
+                <span href="#" title="{{ debate.aff_team.speakers|join:'<br>' }}">
                     {{ debate.aff_team.short_name }}
                 <span>
             </td>
             <td>
-                <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}">
+                <span href="#" title="{{ debate.neg_team.speakers|join:'<br>' }}">
                     {{ debate.neg_team.short_name }}
                 </span>
             </td>

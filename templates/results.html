@@ -31,17 +31,18 @@
             {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span></span>
         </button>
     </div>
-    <!-- <div class="btn-group">
-        <a class="btn btn-default form-control btn-success" href="{% round_url confirm_increment %}">
-            Proceed to Next Round
-        </a>
-    </div> -->
+    {% if round.seq < tournament.prelim_rounds.count and current_round == round %}
+        <div class="btn-group">
+            <a class="btn btn-default form-control btn-success" href="{% round_url round_increment_check %}">Advance to Next Round</a>
+        </div>
+    {% endif %}
+
 {% endblock %}
 
 {% block content %}
 {% if not has_motions %}
 <div class="alert alert-danger">
-    Currently there are no motions entered for this round, so debate results cannot be entered. <a href="{% round_url motions current_round %}">Add Motions.</a>
+    Currently there are no motions entered for this round, so debate results cannot be entered. <a href="{% round_url motions current_round %}" class="alert-link">Add Motions.</a>
 </div>
 {% endif %}
 <table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
@@ -114,7 +115,7 @@
 
             <td>{{ debate.bracket }}</td>
 
-            <td>{{ debate.venue.name }}</td>
+            <td>{% if venue.group %}{{ venue.group }} {% endif %}{{ debate.venue.name }}</td>
 
             <td>
                 {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
@@ -122,7 +123,7 @@
                 {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
-                <span href="#" title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span href="#" title="<h5>{{ debate.aff_team.long_name }}</h5>{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.aff_team.short_name }}
                 </span>
             </td>
@@ -133,7 +134,7 @@
                 {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
                     <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
-                <span href="#" title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span href="#" title="<h5>{{ debate.neg_team.long_name }}</h5>{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
             </td>

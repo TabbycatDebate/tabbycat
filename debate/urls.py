@@ -13,6 +13,7 @@ urlpatterns = patterns('debate.views',
 
     url(r'^$', 'public_index', name='public_index'),
     url(r'^draw/$', 'public_draw', name='public_draw'),
+    url(r'^draw/round/(?P<round_seq>\d+)/$', 'public_draw_by_round', name='public_draw_by_round'),
     url(r'^results/$', 'public_results_index', name='public_results_index'),
     url(r'^results/round/(?P<round_seq>\d+)/$', 'public_results', name='public_results'),
     url(r'^standings/$', 'public_team_standings', name='public_team_standings'),
@@ -28,6 +29,7 @@ urlpatterns = patterns('debate.views',
     url(r'^feedback_progress/$', 'public_feedback_progress', name='public_feedback_progress'),
     url(r'^participants/$', 'public_participants', name='public_participants'),
     url(r'^motions/$', 'public_motions', name='public_motions'),
+    url(r'^divisions/$', 'public_divisions', name='public_divisions'),
     url(r'^side_allocations/$', 'public_side_allocations', name='public_side_allocations'),
 
     url(r'^tab/team/$', 'public_team_tab', name='public_team_tab'),
@@ -74,12 +76,13 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/save/$', 'save_adjudicators', name='save_adjudicators'),
     url(r'^admin/round/(?P<round_seq>\d+)/_update_importance/$', 'update_debate_importance', name='update_debate_importance'),
 
-    url(r'^admin/round/(?P<round_seq>\d+)/confirm_increment/$', 'confirm_increment', name='confirm_increment'),
-    url(r'^admin/round/(?P<round_seq>\d+)/increment_round/$', 'increment_round', name='increment_round'),
+    url(r'^admin/round/(?P<round_seq>\d+)/round_increment_check/$', 'round_increment_check', name='round_increment_check'),
+    url(r'^admin/round/(?P<round_seq>\d+)/round_increment/$', 'round_increment', name='round_increment'),
 
     url(r'^admin/round/(?P<round_seq>\d+)/adj_allocation/create/$', 'create_adj_allocation', name='create_adj_allocation'),
     url(r'^admin/round/(?P<round_seq>\d+)/motions/$', 'motions', name='motions'),
     url(r'^admin/round/(?P<round_seq>\d+)/motions/edit/$', 'motions_edit', name='motions_edit'),
+    url(r'^admin/round/(?P<round_seq>\d+)/motions/assign/$', 'motions_assign', name='motions_assign'),
     url(r'^admin/round/(?P<round_seq>\d+)/motions/release/$', 'release_motions', name='release_motions'),
     url(r'^admin/round/(?P<round_seq>\d+)/motions/unrelease/$', 'unrelease_motions', name='unrelease_motions'),
     url(r'^admin/round/(?P<round_seq>\d+)/start_time/set/$', 'set_round_start_time', name='set_round_start_time'),
@@ -103,11 +106,16 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/adjudicators/feedback/get/$', 'get_adj_feedback', name='get_adj_feedback'),
     url(r'^admin/adjudicators/feedback/(?P<adj_id>\d+)/$', 'enter_feedback', name='enter_feedback'),
     url(r'^admin/adjudicators/scores/test/set/$', 'set_adj_test_score', name='set_adj_test_score'),
+    url(r'^admin/adjudicators/notes/test/set/$', 'set_adj_note', name='set_adj_note'),
 
     url(r'^admin/break/teams/open/$', 'breaking_teams', {'name': 'Open Break', 'category': 'open'}, name='breaking_teams_open'),
     url(r'^admin/break/teams/esl/$', 'breaking_teams', {'name': 'ESL Break', 'category': 'esl'}, name='breaking_teams_esl'),
     url(r'^admin/break/adjudicators/$',  'breaking_adjs', name='breaking_adjs'),
 
     url(r'^admin/side_allocations/$', 'side_allocations', name='side_allocations'),
+
+    url(r'^admin/division_allocations/$', 'division_allocations', name='division_allocations'),
+    url(r'^admin/division_allocations/save/$', 'save_divisions', name='save_divisions'),
+    url(r'^admin/division_allocations/create/$', 'create_division_allocation', name='create_division_allocation')
 
 )

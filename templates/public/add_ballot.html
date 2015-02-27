@@ -18,8 +18,6 @@
 {% block page-title %}Add Ballot{% endblock %}
 {% block body-class %}public-add-ballot{% endblock %}
 
-{% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
-
 {% block content %}
 
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
@@ -39,12 +37,12 @@
             <span class="hidden-xs">Add result from </span>{{ da.adjudicator.name }}
             </a>
         </td>
-        <td>{{ da.debate.venue.name }}</td>
+        <td>{% if da.debate.venue.group %}{{ venue.group }} {% endif %}{{ da.debate.venue.name }}</td>
         <td>
-            <span href="#" title="{{ da.debate.aff_team.speakers|join:', ' }}">{{ da.debate.aff_team.short_name }}<span>
+            <span href="#" title="{{ da.debate.aff_team.speakers|join:'<br>' }}">{{ da.debate.aff_team.short_name }}<span>
         </td>
         <td>
-            <span href="#" title="{{ da.debate.neg_team.speakers|join:', ' }}">{{ da.debate.neg_team.short_name }}</span>
+            <span href="#" title="{{ da.debate.neg_team.speakers|join:'<br>' }}">{{ da.debate.neg_team.short_name }}</span>
         </td>
     </tr>
     {% endfor %}

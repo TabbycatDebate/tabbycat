@@ -7,9 +7,6 @@
         $(document).ready( function() {
             var table = $('#draw').dataTable({
                 "aaSorting": [[ 0, "asc" ]],
-                "aoColumnDefs": [
-                  { "sType": "string", aTargets: [ '_all' ] }
-                ]
             });
             new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
 
@@ -34,66 +31,106 @@
     <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-xs">Medium</span></a>
     <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
 </div>
+<div id="statusBar" class="btn-group">
+    <div class="btn btn-default">Hit ESC to stop scrolling</div>
+</div>
+<div class="btn-group">
+    <a class="btn btn-default" href="" id="tiny_text">Tiny Text</a>
+    <a class="btn btn-default" href="" id="small_text">Small Text</a>
+    <a class="btn btn-default active" href="" id="medium_text">Medium Text</a>
+    <a class="btn btn-default" href="" id="large_text">Large Text</a>
+    <a class="btn btn-default" href="" id="huge_text">Huge Text</a>
+</div>
 {% endblock %}
 
 {% block content %}
-    <table id="draw" class="table table-hover table-bordered table-striped">
+
+    <table id="draw" class="h4 table table-hover table-bordered table-striped">
         <thead>
             <tr>
+                {% if enable_divisions %}
+                    <th>Division</th>
+                {% endif %}
                 <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-                {% if show_emoji > 0 %}
-                    <th class="hidden-sm th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+                {% if enable_venue_times %}
+                    <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Venue"></span></th>
                 {% endif %}
-                <th>Aff<span class="hidden-sm">irmative</span></th>
                 {% if show_emoji > 0 %}
-                    <th class="hidden-sm th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+                    <th class="hidden-xs th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
                 {% endif %}
-                <th>Neg<span class="hidden-sm">ative</span></th>
-                <th>Adj<span class="hidden-sm">udicator</span>s</th>
+                <th>Aff<span class="hidden-xs">irmative</span></th>
+                {% if show_emoji > 0 %}
+                    <th class="hidden-xs th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+                {% endif %}
+                <th>Neg<span class="hidden-xs">ative</span></th>
+                {% if enable_division_motions %}
+                    <th>Motion</th>
+                {% endif %}
+                <th>Adj<span class="hidden-xs">udicator</span>s</th>
             </tr>
         </thead>
         <tbody>
         {% for debate in draw %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
-            <td class="venue-name">
-                {{ debate.venue_splitname }}
-            </td>
+            {% if enable_divisions %}
+                <td>{{ debate.division }}</td>
+            {% endif %}
+            {% if enable_venue_groups %}
+                <td>
+                    <span title="{{ debate.venue.group.name }}" data-toggle="tooltip">{{ debate.venue.group }}</span>
+                </td>
+            {% else %}
+                <td class="venue-name">{{ debate.venue_splitname }}</td>
+            {% endif %}
+            {% if enable_venue_times %}
+                <td>
+                    <span class="hidden">{{ venue.time|date:"d m o H:i" }}</span>
+                    {{ debate.venue.time|date:"D jS F h:iA" }}
+                </td>
+            {% endif %}
             {% if show_emoji > 0 %}
                 <td class="team-emoji team-{{ debate.aff_team.id }} hidden-sm"></td>
             {% endif %}
             <td class="team-name">
-                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span title="<h5>{{ debate.aff_team.long_name }}</h5>{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.aff_team.short_name }}
                 </span>
                 <span class="hidden">
                    {{ debate.aff_team.speakers|join:', ' }}
                 </span>
-
             </td>
             {% if show_emoji > 0 %}
                 <td class="team-emoji team-{{ debate.neg_team.id }} hidden-sm "></td>
             {% endif %}
-            <td title="{{ debate.neg_team.speakers|join:', ' }}"  class="team-name">
-                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+            <td class="team-name">
+                <span title="<h5>{{ debate.neg_team.long_name }}</h5>{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
                 <span class="hidden">
                    {{ debate.neg_team.speakers|join:', ' }}
                 </span>
-
+            </td>
+            {% if enable_division_motions %}
+            <td>
+                {% for m in debate.division_motion %}
+                <span title="{{ m.text }}" data-toggle="tooltip">
+                    {{ m.reference }}
+                </span>
+                {% endfor %}
+            {% endif %}
             </td>
             <td class="adj-names">
-                <ul class="">
                 {% for type, adj in debate.adjudicators %}
                     {% if type == 'C' and debate.adjudicators.is_panel %}
-                        <li class=""><span class="adj-chair">{{ adj.name }}</span> Ⓒ</li>
+                        <span class="adj-chair">{{ adj.name }} Ⓒ</span>
                     {% elif type == 'T' %}
-                        <li class=""><span class="adj-trainee">{{ adj.name }}</span> Ⓣ</li>
+                        <br><span class="adj-trainee">{{ adj.name }} Ⓣ</span>
                     {% else %}
-                        <li class=""><span class="adj-normal">{{ adj.name }}</span></li>
+                        {% if debate.adjudicators.panel %}<br>{% endif %}
+                        <span class="adj-normal">{{ adj.name }}</span>
                     {% endif %}
+                    {% if debate.adjudicators.panel %}</li>{% endif %}
                 {% endfor %}
-                </ul>
             </td>
         </tr>
         {% endfor %}

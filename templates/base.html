@@ -20,7 +20,7 @@
 
     {% load debate_tags %}
 
-    <script type="text/javascript" language="javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
     <script type="text/javascript" language="javascript" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
     <script type="text/javascript" language="javascript" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" language="javascript" src="{% static 'js/jquery.validate.min.js' %}"></script>
@@ -45,7 +45,10 @@
 
     <script>
         $(document).ready(function(){
-            $('[data-toggle=tooltip]').tooltip();
+            $('[data-toggle=tooltip]').tooltip({
+                'html': true,
+                'placement': 'bottom'
+            });
             // Shifting the search filter around
             if ($('.dataTables_filter').length > 0) {
                 var filter = $('.dataTables_filter').detach()
@@ -69,9 +72,7 @@
 
         {% block body %}
 
-        {% block nav %}
-        {% include "nav.html" %}
-        {% endblock nav %}
+        {% block nav %}{% include "nav.html" %}{% endblock nav %}
 
         <div id="container" class="container-fluid">
 
@@ -95,9 +96,18 @@
 
     </div>
 
-    {% block footer %}
     {% include "footer.html" %}
-    {% endblock footer %}
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-314178-25', 'auto');
+      ga('send', 'pageview');
+
+    </script>
 
 </body>
 </html>

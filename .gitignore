@@ -5,11 +5,17 @@ migrations-*/
 .sass-cache/
 
 # Tournaments to ignore
-adam2014/
-preaustrals2014/
+adam*/
+preaustrals*/
+data/Schools*
+data/Schools*
+data/Schools*
+Dummy*/
+MAD*/
+*.dump
 
 env/
-venv
+venv/
 *.pyc
 *.swp
 *~
@@ -50,3 +56,6 @@ nosetests.xml
 *.log
 *.pot
 *.pyc
+data/Schools Junior 2014
+data/Schools Novice 2014
+data/Schools Senior 2014

@@ -45,7 +45,7 @@ New Ballot Set for
 {% else %}
 Edit Ballot Set for
 {% endif %}
-{{ debate.matchup }} <small>Round {{ debate.round }} @ {{ debate.venue.name }}</small>
+{{ debate.matchup }} <small>Round {{ debate.round }} @ {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}</small>
 {% endblock %}
 {% block body-class %}monkey-enter-result{% endblock %}
 

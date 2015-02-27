@@ -287,7 +287,7 @@
         }
 
         $("#dataTable tbody .adj-holder").droppable( {
-            hoverClass: 'border-success',
+            hoverClass: 'bg-success',
             drop: function(event, ui) {
                 var adj = ui.draggable;
                 var oldHolder = adj[0].oldHolder;
@@ -517,15 +517,14 @@
 
 <div id="statusBar" class="btn-group">
     <div class="btn btn-default">Legend:</div>
-    <div class="btn btn-default btn-warning">History Warning</div>
-    <div class="btn btn-default btn-danger">Conflict</div>
+    <div class="btn btn-default btn-warning" disabled="disabled">History Warning</div>
+    <div class="btn btn-default btn-danger" disabled="disabled">Conflict</div>
 </div>
 {% endblock %}
 
 {% block content %}
 
 <div class="row">
-
 
     <div id="scratch" class="col-xs-3">
         <div class="page-header">
@@ -538,8 +537,7 @@
                     <th><span class="glyphicon glyphicon-sort"></span></th>
                 </tr>
             </thead>
-        <tbody>
-        </tbody>
+            <tbody></tbody>
         </table>
     </div>
 
@@ -571,7 +569,7 @@
                     {% endif %}
                 </td>
                 <td id="team_{{ debate.aff_team.id }}" class="team">
-                    <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                    <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                         {{ debate.aff_team.short_name }} {% if debate.aff_team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
                     </span>
                     <span class="hidden">
@@ -579,7 +577,7 @@
                     </span>
                 </td>
                 <td id="team_{{ debate.neg_team.id }}" class="team">
-                    <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                    <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                         {{ debate.neg_team.short_name }} {% if debate.neg_team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
                     </span>
                     <span class="hidden">

@@ -6,12 +6,18 @@
 //@import "datatables/dataTables.bootstrap.css";
 
 @include text-emphasis-variant('.text-success', $brand-success);
-
 @include text-emphasis-variant('.text-info', $brand-info);
-
 @include text-emphasis-variant('.text-warning', $brand-warning);
-
 @include text-emphasis-variant('.text-danger', $brand-danger);
+
+.h4_minus {
+  @extend .h4;
+  font-size: ceil(($font-size-base * 1.12));
+}
+.h4_plus {
+  @extend .h4;
+  font-size: ceil(($font-size-base * 1.50));
+}
 
 // For the collapsedmdouble menu
 .navbar-nav {
@@ -42,6 +48,16 @@
         }
     }
 }
+
+// Override
+.nav {
+  > li {
+    > a {
+      padding: 15px 10px;
+    }
+  }
+}
+
 
 #header-options {
     min-height: 34px; // Spacer pre-form relocation via JS
@@ -88,6 +104,10 @@
 .adj-feedback a.adjudicators-standings-nav,
 .config a.config-nav {
     font-weight: bold;
+}
+
+.public-draw #header-options .btn-group {
+    display: none;
 }
 
 // Sticky Footer
@@ -147,14 +167,14 @@ html, body {
 }
 [data-toggle="tooltip"] {
     cursor: pointer; // for tooltips
-    border-bottom: 2px solid #ccc;
-    img {
-
-    }
+    border-bottom: 2px dotted #ccc;
 }
 .alert-link {
     text-decoration: underline;
     font-weight: normal;
+}
+.check_target {
+    cursor: pointer;
 }
 
 // Forms
@@ -187,6 +207,9 @@ input.error, select.error, .error input {
 .col-md-12.table-container {
     padding-left: 0;
     padding-right: 0;
+}
+table a:hover {
+    cursor: pointer;
 }
 
 @media (max-width: $screen-xs-max) {
@@ -350,10 +373,6 @@ span.esl {
     }
     .venue, .adj {
         max-width: 300px;
-    }
-    .btn-holder {
-        padding: 4px;
-        border: 2px solid #ddd;
     }
     .importance {
         width: 60px;

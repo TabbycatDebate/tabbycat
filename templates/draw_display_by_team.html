@@ -34,14 +34,27 @@
     <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-md">Medium</span></a>
     <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
 </div>
+<div id="statusBar" class="btn-group">
+    <div class="btn btn-default">Hit ESC to stop scrolling</div>
+</div>
+<div class="btn-group">
+    <a class="btn btn-default" href="" id="tiny_text">Tiny Text</a>
+    <a class="btn btn-default" href="" id="small_text">Small Text</a>
+    <a class="btn btn-default active" href="" id="medium_text">Medium Text</a>
+    <a class="btn btn-default" href="" id="large_text">Large Text</a>
+    <a class="btn btn-default" href="" id="huge_text">Huge Text</a>
+</div>
 {% endblock %}
 
 {% block content %}
-<table id="draw" class="table table-hover table-bordered table-striped">
+<table id="draw" class="h4 table table-hover table-bordered table-striped">
     <thead>
         <tr>
             <th>Team</th>
             <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+            {% if enable_venue_times %}
+                <th>Time</th>
+            {% endif %}
             {% if show_emoji > 0 %}
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
@@ -57,7 +70,7 @@
     {% for debate in draw %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td>
-                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span title="<h5>{{ debate.aff_team.long_name }}</h5>{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.aff_team.short_name }}
                 </span>
                 <span class="hidden">
@@ -65,13 +78,21 @@
                 </span>
             </td>
             <td class="venue-name">
-                {{ debate.venue.name }}
+                {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}
             </td>
+            {% if enable_venue_times %}
+            <td>
+                {% if venue.time %}
+                    <span class="hidden">{{ venue.time|date:"d m o H:i" }}</span>
+                    {{ venue.time|date:"D jS F h:iA" }}
+                {% endif %}
+            </td>
+            {% endif %}
             {% if show_emoji > 0 %}
                 <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
             {% endif %}
             <td class="team-name" id="">
-                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span title="<h5>{{ debate.aff_team.long_name }}</h5>{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.aff_team.short_name }}
                 </span>
             </td>
@@ -79,28 +100,28 @@
                 <td class="team-emoji team-{{ debate.neg_team.id }}" id=""></td>
             {% endif %}
             <td class="team-name">
-                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span title="<h5>{{ debate.neg_team.long_name }}</h5>{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
             </td>
             <td class="adj-names">
-                <ul class="">
                 {% for type, adj in debate.adjudicators %}
                     {% if type == 'C' and debate.adjudicators.is_panel %}
-                        <li class=""><span class="adj-chair">{{ adj.name }}</span> Ⓒ</li>
+                        <span class="adj-chair">{{ adj.name }} Ⓒ</span>
                     {% elif type == 'T' %}
-                        <li class=""><span class="adj-trainee">{{ adj.name }}</span> Ⓣ</li>
+                        <br><span class="adj-trainee">{{ adj.name }} Ⓣ</span>
                     {% else %}
-                        <li class=""><span class="adj-normal">{{ adj.name }}</span></li>
+                        {% if debate.adjudicators.panel %}<br>{% endif %}
+                        <span class="adj-normal">{{ adj.name }}</span>
                     {% endif %}
+                    {% if debate.adjudicators.panel %}</li>{% endif %}
                 {% endfor %}
-                </ul>
             </td>
     {% endfor %}
     {% for debate in draw %}
         <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
             <td>
-                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span title="<h5>{{ debate.neg_team.long_name }}</h5>{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
                 <span class="hidden">
@@ -108,20 +129,32 @@
                 </span>
             </td>
             <td class="venue-name">
-                {{ debate.venue.name }}
+                {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}
             </td>
-            <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
+            {% if enable_venue_times %}
+            <td>
+                {% if venue.time %}
+                    <span class="hidden">{{ venue.time|date:"d m o H:i" }}</span>
+                    {{ venue.time|date:"D jS F h:iA" }}
+                {% endif %}
+            </td>
+            {% endif %}
+            {% if show_emoji > 0 %}
+                <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
+            {% endif %}
             <td class="team-name">
-                <span title="{{ debate.aff_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span title="<h5>{{ debate.aff_team.long_name }}</h5>{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.aff_team.short_name }}
                 </span>
                 <span class="hidden">
                    {{ debate.aff_team.speakers|join:', ' }}
                 </span>
             </td>
-            <td class="team-emoji team-{{ debate.neg_team.id }}" id=""></td>
+            {% if show_emoji > 0 %}
+                <td class="team-emoji team-{{ debate.neg_team.id }}" id=""></td>
+            {% endif %}
             <td class="team-name">
-                <span title="{{ debate.neg_team.speakers|join:', ' }}" data-toggle="tooltip">
+                <span title="<h5>{{ debate.neg_team.long_name }}</h5>{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
                 <span class="hidden">
@@ -129,17 +162,17 @@
                 </span>
             </td>
             <td class="adj-names">
-                <ul class="">
                 {% for type, adj in debate.adjudicators %}
                     {% if type == 'C' and debate.adjudicators.is_panel %}
-                        <li class=""><span class="adj-chair">{{ adj.name }}</span> Ⓒ</li>
+                        <span class="adj-chair">{{ adj.name }} Ⓒ</span>
                     {% elif type == 'T' %}
-                        <li class=""><span class="adj-trainee">{{ adj.name }}</span> Ⓣ</li>
+                        <br><span class="adj-trainee">{{ adj.name }} Ⓣ</span>
                     {% else %}
-                        <li class=""><span class="adj-normal">{{ adj.name }}</span></li>
+                        {% if debate.adjudicators.panel %}<br>{% endif %}
+                        <span class="adj-normal">{{ adj.name }}</span>
                     {% endif %}
+                    {% if debate.adjudicators.panel %}</li>{% endif %}
                 {% endfor %}
-                </ul>
             </td>
     {% endfor %}
     </tbody>

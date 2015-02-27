@@ -20,7 +20,7 @@
 
 {% block head-title %}{{ name }}{% endblock %}
 {% block page-title %}{{ name }}{% endblock %}
-{% block body-class %}breakk breaking-teams-{{ category }}{% endblock %}
+{% block body-class %}breaking-teams-{{ category }}{% endblock %}
 
 {% block content %}
 
@@ -28,9 +28,7 @@
     <thead>
         <tr>
             <th>Rank</th>
-            {% if show_break_rank %}
-                <th>Break</th>
-            {% endif %}
+            <th>Break</th>
             {% if show_emoji > 0 %}
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
@@ -46,15 +44,13 @@
     {% for team in teams %}
     <tr>
         <td>{{ team.rank }}</td>
-        {% if show_break_rank %}
-            <td>{{ team.break_rank|default_if_none:"&ndash;" }}</td>
-        {% endif %}
+        <td>{{ team.break_rank|default_if_none:"&ndash;" }}</td>
         {% if show_emoji > 0 %}
             <td class="team-emoji team-{{ team.id }}"></td>
         {% endif %}
         <td>
-            <span title="{{ team.speakers|join:", " }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
-            {{ team.short_name }}
+            <span title="{{ team.speakers|join:"<br>" }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
+            {{ team.long_name }}
             </span>
         </td>
         {% if show_institutions > 0 %}

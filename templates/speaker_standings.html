@@ -31,10 +31,13 @@
             {% if show_emoji > 0 and not for_print %}
                 <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
             {% endif %}
+            {% if show_novices > 0 %}
+                <th>Novice</th>
+            {% endif %}
             <th>Team</th>
-{% comment %}            {% if show_institutions > 0 %}
+            {% if show_institutions > 0 %}
                 <th>Institution</th>
-            {% endif %}{% endcomment %}
+            {% endif %}
             {% for round in rounds %}
             <th>{{ round.abbreviation }}</th>
             {% endfor %}
@@ -51,10 +54,17 @@
         {% if show_emoji > 0 and not for_print %}
             <td class="team-emoji team-{{ speaker.team.id }}"></td>
         {% endif %}
-        <td>{{ speaker.team.short_name }}</td>
-{% comment %}        {% if show_institutions > 0 %}
+        {% if show_novices > 0 %}
+            <td>{% if speaker.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
+        {% endif %}
+        <td>
+            <span title="<h5>{{ speaker.team.long_name }}</h5>{{ speaker.team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                {{ speaker.team.short_name }}
+            </span>
+        </td>
+        {% if show_institutions > 0 %}
             <td>{{ speaker.team.institution.code }}</td>
-        {% endif %}{% endcomment %}
+        {% endif %}
         {% for score in speaker.scores %}
         <td>{{ score|stringformat:".2f" }}</td>
         {% endfor %}
