@@ -293,7 +293,7 @@ def public_feedback_progress(request, t):
 @public_optional_tournament_view('public_motions')
 def public_motions(request, t):
     order_by = t.config.get('public_motions_descending') and '-seq' or 'seq'
-    rounds = Round.objects.filter(motions_released=True).order_by(order_by)
+    rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
     return r2r(request, 'public/motions.html', dict(rounds=rounds))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
