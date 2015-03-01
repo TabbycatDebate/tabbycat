@@ -149,13 +149,6 @@ class AddCustomDisplayForVenue(forms.ModelForm):
           model = models.VenueGroup
           exclude = () # Needed
 
-    def __init__(self, *args, **kwargs):
-        super(AddCustomDisplayForVenue, self).__init__(*args, **kwargs)
-        try:
-            self.fields['group'].queryset = models.VenueGroup.objects.filter(tournament=self.instance.tournament).order_by('name')
-        except:
-            self.fields['group'].queryset = models.VenueGroup.objects.all().order_by('tournament','name')
-
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time', 'tournament')
     list_filter = ('tournament', 'group', 'priority', 'time')
