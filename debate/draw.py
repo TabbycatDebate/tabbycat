@@ -1114,7 +1114,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                 effective_round += 1
 
         print "effective roud of %s" % effective_round
-        return 5
+        return effective_round
 
 
     def generate_pairings(self, brackets):
