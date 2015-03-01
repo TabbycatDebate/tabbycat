@@ -149,9 +149,37 @@ class AddCustomDisplayForVenue(forms.ModelForm):
           model = models.VenueGroup
           exclude = () # Needed
 
+class CustomVenueGroupListFilter(admin.SimpleListFilter):
+    title = 'group'
+    parameter_name = 'group'
+
+    def lookups(self, request, model_admin):
+                """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        groups = models.VenueGroup.objects.all().order_by('tournament','name')
+        for g in groups:
+            g.admin_name = "%s - %s" % (g.tournament, g.short_name)
+        return [(c.id, c.admin_name) for c in groups]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        if self.value():
+            return queryset.filter(group=self.value())
+        else:
+            return queryset
+
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time', 'tournament')
-    list_filter = ('tournament', 'group', 'priority', 'time')
+    list_filter = ('tournament', CustomVenueGroupListFilter, 'priority', 'time')
     search_fields = ('name', 'group', 'time')
     form = AddCustomDisplayForVenue
 
