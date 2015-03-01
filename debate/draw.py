@@ -1113,7 +1113,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             if teams_list[0].seen(teams_list[right_team_index]):
                 effective_round += 1
 
-        return effective_round
+        print "effective roud of %s" % effective_round
+        return 5
 
 
     def generate_pairings(self, brackets):
@@ -1145,7 +1146,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                 folded_list.insert(1, (folded_list.pop(total_debates)))
                 # right-most top goes to right-most bottom
                 folded_list.append(folded_list.pop(total_debates))
-                print "popping %s iteration %s" % (i, total_debates)
+                #print "popping %s iteration %s" % (i, total_debates)
 
             print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
             print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
