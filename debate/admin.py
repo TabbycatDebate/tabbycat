@@ -154,7 +154,7 @@ class CustomVenueGroupListFilter(admin.SimpleListFilter):
     parameter_name = 'group'
 
     def lookups(self, request, model_admin):
-                """
+        """
         Returns a list of tuples. The first element in each
         tuple is the coded value for the option that will
         appear in the URL query. The second element is the
