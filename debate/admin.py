@@ -280,7 +280,7 @@ class DebateAdmin(admin.ModelAdmin):
     search_fields = ('debateteam__team__reference', 'debateteam__team__institution__code',
                      'debateadjudicator__adjudicator__name',)
     list_filter = ('round__tournament', CustomRoundListFilter, CustomDivisionListFilter)
-    #form = AddCustomDisplayForDebates
+    form = AddCustomDisplayForDebates
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
 admin.site.register(models.Debate, DebateAdmin)
 
