@@ -17,3 +17,5 @@ class Command(LabelCommand):
             help='If specified, all institutions and adjudicators will not be tournament-specific.'),
     )
 
+    def handle_label(self, label, **options):
+        pass
