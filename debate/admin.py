@@ -193,12 +193,94 @@ class DebateAdjudicatorInline(admin.TabularInline):
     model = models.DebateAdjudicator
     extra = 1
 
+class CustomDivisionListFilter(admin.SimpleListFilter):
+    title = 'division'
+    parameter_name = 'division'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        divisions = models.Division.objects.all().order_by('tournament','name')
+        for g in divisions:
+            g.admin_name = "%s - %s" % (g.tournament, g.name)
+        return [(c.id, c.admin_name) for c in divisions]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        if self.value():
+            print self.value()
+            return queryset.filter(division=self.value())
+        else:
+            return queryset
+
+class CustomRoundListFilter(admin.SimpleListFilter):
+    title = 'round'
+    parameter_name = 'round'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        rounds = models.Round.objects.all().order_by('tournament','name')
+        for g in rounds:
+            g.admin_name = "%s - %s" % (g.tournament, g.name)
+        return [(c.id, c.admin_name) for c in rounds]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        if self.value(): # self.value is the id of the round
+            return queryset.filter(round=self.value())
+        else:
+            return queryset
+
+
+class AddCustomDisplayForDebates(forms.ModelForm):
+    division = CustomTournamentAwareChoiceField(queryset=models.Division.objects.all().order_by('tournament','name'))
+    round = CustomTournamentAwareChoiceField(queryset=models.Round.objects.all().order_by('tournament','name'))
+    venue = CustomTournamentAwareChoiceField(queryset=models.Venue.objects.all().order_by('tournament','name'))
+
+    class Meta:
+          model = models.Debate
+          exclude = () # Needed
+
+    def __init__(self, *args, **kwargs):
+        super(AddCustomDisplayForDebates, self).__init__(*args, **kwargs)
+        try:
+            self.fields['division'].queryset = models.Division.objects.filter(tournament=self.instance.tournament).order_by('name')
+            self.fields['round'].queryset = models.Round.objects.filter(tournament=self.instance.tournament).order_by('tournament','name')
+            self.fields['venue'].queryset = models.Venue.objects.filter(tournament=self.instance.tournament).order_by('tournament','name')
+        except:
+            self.fields['division'].queryset = models.Division.objects.all().order_by('tournament','name')
+            self.fields['round'].queryset = models.Round.objects.all().order_by('tournament','name')
+            self.fields['venue'].queryset = models.Venue.objects.all().order_by('tournament','name')
+
+
+
 _da_tournament = lambda o: o.round.tournament.name
 _da_tournament.short_description = 'Tournament'
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', _da_tournament, 'round', 'aff_team', 'neg_team', 'adjudicators',)
+    list_display = ('id', _da_tournament, 'round', 'aff_team', 'neg_team', 'adjudicators', 'division')
     search_fields = ('debateteam__team__reference', 'debateteam__team__institution__code',
                      'debateadjudicator__adjudicator__name',)
+    list_filter = ('round__tournament', CustomRoundListFilter, CustomDivisionListFilter)
+    #form = AddCustomDisplayForDebates
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
 admin.site.register(models.Debate, DebateAdmin)
 

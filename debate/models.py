@@ -143,6 +143,7 @@ class Institution(models.Model):
 
     class Meta:
         unique_together = [('name', 'code')]
+        ordering = ['name']
 
     def __unicode__(self):
         return unicode(self.name)
