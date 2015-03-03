@@ -22,7 +22,7 @@ class AddCustomDisplayForRound(forms.ModelForm):
         try:
             self.fields['current_round'].queryset = models.Round.objects.filter(tournament=self.instance).order_by('seq')
         except:
-            self.fields['current_round'].queryset = models.Round.objects.all().order_by('tournament','name')
+            self.fields['current_round'].queryset = models.Round.objects.all().order_by('tournament','seq')
 
 class TournamentAdmin(admin.ModelAdmin):
     list_display = ('name','short_name','current_round')
@@ -234,7 +234,7 @@ class CustomRoundListFilter(admin.SimpleListFilter):
         human-readable name for the option that will appear
         in the right sidebar.
         """
-        rounds = models.Round.objects.all().order_by('tournament','name')
+        rounds = models.Round.objects.all().order_by('tournament','seq')
         for g in rounds:
             g.admin_name = "%s - %s" % (g.tournament, g.name)
         return [(c.id, c.admin_name) for c in rounds]
@@ -253,7 +253,7 @@ class CustomRoundListFilter(admin.SimpleListFilter):
 
 class AddCustomDisplayForDebates(forms.ModelForm):
     division = CustomTournamentAwareChoiceField(queryset=models.Division.objects.all().order_by('tournament','name'))
-    round = CustomTournamentAwareChoiceField(queryset=models.Round.objects.all().order_by('tournament','name'))
+    round = CustomTournamentAwareChoiceField(queryset=models.Round.objects.all().order_by('tournament','seq'))
     venue = CustomTournamentAwareChoiceField(queryset=models.Venue.objects.all().order_by('tournament','name'))
 
     class Meta:
@@ -264,11 +264,11 @@ class AddCustomDisplayForDebates(forms.ModelForm):
         super(AddCustomDisplayForDebates, self).__init__(*args, **kwargs)
         try:
             self.fields['division'].queryset = models.Division.objects.filter(tournament=self.instance.tournament).order_by('name')
-            self.fields['round'].queryset = models.Round.objects.filter(tournament=self.instance.tournament).order_by('tournament','name')
+            self.fields['round'].queryset = models.Round.objects.filter(tournament=self.instance.tournament).order_by('tournament','seq')
             self.fields['venue'].queryset = models.Venue.objects.filter(tournament=self.instance.tournament).order_by('tournament','name')
         except:
             self.fields['division'].queryset = models.Division.objects.all().order_by('tournament','name')
-            self.fields['round'].queryset = models.Round.objects.all().order_by('tournament','name')
+            self.fields['round'].queryset = models.Round.objects.all().order_by('tournament','seq')
             self.fields['venue'].queryset = models.Venue.objects.all().order_by('tournament','name')
 
 
@@ -342,7 +342,7 @@ admin.site.register(models.DebateAdjudicator, DebateAdjudicatorAdmin)
 
 
 class AddCustomDisplayForRounds(forms.ModelForm):
-    round = CustomTournamentAwareChoiceField(queryset=models.Round.objects.all().order_by('tournament','name'))
+    round = CustomTournamentAwareChoiceField(queryset=models.Round.objects.all().order_by('tournament','seq'))
     class Meta:
           model = models.Round
           exclude = () # Needed
