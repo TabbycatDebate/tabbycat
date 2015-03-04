@@ -9,9 +9,9 @@ def tournament_name(self):
     # Adding in tournament name to easily select between duplicates
     try:
         float(self.name)
-        return "N%s - %s" % (self.tournament.short_name, str(self.name).zfill(2))
+        return "%s - %s" % (self.tournament.short_name, str(self.name).zfill(2))
     except ValueError:
-        return "N%s - %s" % (self.tournament.short_name, self.name)
+        return "%s - %s" % (self.tournament.short_name, self.name)
 
 
 class TournamentAdmin(admin.ModelAdmin):
