@@ -130,6 +130,9 @@ class Venue(models.Model):
     tournament = models.ForeignKey(Tournament, blank=True, null=True)
     time = models.DateTimeField(blank=True, null=True)
 
+    class Meta:
+        ordering = ['tournament', 'group', 'name']
+
     def __unicode__(self):
         if self.group:
             return u'%s %s (%d)' % (self.group, self.name, self.priority)
@@ -451,6 +454,7 @@ class Team(models.Model):
 
     class Meta:
         unique_together = [('reference', 'institution', 'tournament')]
+        ordering = ['tournament', 'institution', 'short_reference']
 
     objects = TeamManager()
 
@@ -719,6 +723,9 @@ class Adjudicator(Person):
     breaking = models.BooleanField(default=False)
 
     objects = AdjudicatorManager()
+
+    class Meta:
+        ordering = ['tournament', 'institution', 'name']
 
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
