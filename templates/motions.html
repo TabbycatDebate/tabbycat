@@ -103,8 +103,8 @@
         {% endif %}
         {% if enable_division_motions %}
             <td>
-            {% for d in motion.divisions.all %}
-                {{ d }},
+            {% for division in motion.divisions.all %}
+                {{ division.name }},
             {% endfor %}
             </td>
         {% endif %}

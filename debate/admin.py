@@ -5,15 +5,6 @@ import debate.models as models
 
 admin.site.register(models.DebateTeam)
 
-def tournament_name(self):
-    # Adding in tournament name to easily select between duplicates
-    try:
-        float(self.name)
-        return "%s - %s" % (self.tournament.short_name, str(self.name).zfill(2))
-    except ValueError:
-        return "%s - %s" % (self.tournament.short_name, self.name)
-
-
 class TournamentAdmin(admin.ModelAdmin):
     list_display = ('name','short_name','current_round')
     ordering = ('name',)
@@ -42,7 +33,6 @@ class TeamVenuePreferenceInline(admin.TabularInline):
     extra = 6
 
 
-#models.Team.__unicode__ = tournament_name
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('long_name','short_reference','institution', 'division', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
@@ -67,7 +57,6 @@ class SpeakerAdmin(admin.ModelAdmin):
 admin.site.register(models.Speaker, SpeakerAdmin)
 
 
-##models.Division.__unicode__ = tournament_name
 class DivisionAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'venue_group','time_slot')
     list_filter = ('tournament', 'venue_group')
@@ -75,7 +64,6 @@ class DivisionAdmin(admin.ModelAdmin):
     ordering = ('tournament', 'name',)
 
 admin.site.register(models.Division, DivisionAdmin)
-
 
 class AdjudicatorConflictInline(admin.TabularInline):
     model = models.AdjudicatorConflict
@@ -102,7 +90,6 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 
-##models.VenueGroup.__unicode__ = tournament_name
 class VenueGroupAdmin(admin.ModelAdmin):
     list_display = ('name','tournament','team_capacity')
     search_fields = ('name',)
@@ -124,7 +111,6 @@ class CustomVenueGroupListFilter(admin.SimpleListFilter):
         else:
             return queryset
 
-##models.Venue.__unicode__ = tournament_name
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time', 'tournament')
     list_filter = ('tournament', CustomVenueGroupListFilter, 'priority', 'time')
@@ -236,7 +222,6 @@ class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin):
     list_display = ('ballot_submission', _dtmp_confirmed, _dtmp_team_name, _dtmp_position, 'preference', _dtmp_motion)
 admin.site.register(models.DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
 
-##models.Round.__unicode__ = tournament_name
 class RoundAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
     list_filter = ('tournament',)

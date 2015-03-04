@@ -48,18 +48,18 @@
             {% for round in rounds %}
                 {% for motion in round.motions %}
                     <tr>
-                        <td>{{ round }}</td>
+                        <td>{{ round.name }}</td>
                         {% if enable_divisions and enable_division_motions %}
                             <td>
                                 {% regroup motion.divisions.all by venue_group as unique_venues %}
                                 {% for venue_group in unique_venues %}
-                                    {{ venue_group.grouper }},
+                                    {{ venue_group.grouper.short_name }},
                                 {% endfor %}
                             </td>
                             <td>
                             {% for division in motion.divisions.all %}
-                                <span data-toggle="tooltip" title="{% for team in division.teams.all %}{{ team }}<br> {% endfor %}">
-                                    {{ division }},
+                                <span data-toggle="tooltip" title="{% for team in division.teams.all %}{{ team.long_name }}<br> {% endfor %}">
+                                    {{ division.name }},
                                 </span>
                             {% endfor %}
                             </td>

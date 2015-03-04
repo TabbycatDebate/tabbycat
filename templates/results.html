@@ -115,7 +115,7 @@
 
             <td>{{ debate.bracket }}</td>
 
-            <td>{% if venue.group %}{{ venue.group }} {% endif %}{{ debate.venue.name }}</td>
+            <td>{% if venue.group %}{{ venue.group.name }} {% endif %}{{ debate.venue.name }}</td>
 
             <td>
                 {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}

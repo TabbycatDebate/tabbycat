@@ -49,7 +49,7 @@
     {% for debate in draw %}
         <tr>
             {% if enable_divisions %}
-                <td>{{ debate.division }}</td>
+                <td>{{ debate.division.name }}</td>
             {% endif %}
             <td>{{ debate.venue_splitname }}</td>
             {% if show_ballots %}

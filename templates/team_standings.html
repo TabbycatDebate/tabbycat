@@ -71,7 +71,7 @@
     {% for team in teams %}
     <tr class="{% if not team.results_in %}danger{% endif %}">
         {% if enable_divisions %}
-            <td>{{ team.division }}</td>
+            <td>{{ team.division.name }}</td>
         {% endif %}
         <td>{{ team.rank }}</td>
         {% if show_team_points %}

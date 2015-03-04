@@ -42,9 +42,9 @@ No draw for {{ round.name }} currently exists
         <a class="btn btn-success"  disabled="disabled" id="createDraw">Create draw for {{ active_teams.count }}/{{ all_teams_count }} teams</a>
     {% else %}
         <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams.count }}/{{ all_teams_count }} teams</a>
-        {% if active_teams.count < all_teams_count %}
-            <a class="btn btn-warning" id="createDrawWithAllTeams">Create draw for ALL teams</a>
-        {% endif %}
+    {% endif %}
+    {% if active_teams.count < all_teams_count %}
+        <a class="btn btn-warning" id="createDrawWithAllTeams">Create draw for ALL teams</a>
     {% endif %}
 {% endblock %}
 

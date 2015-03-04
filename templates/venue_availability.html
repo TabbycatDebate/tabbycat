@@ -24,7 +24,7 @@
         <tr>
             {% if enable_venue_groups %}
             <td>
-                {% if venue.group %}{{ venue.group }} {% endif %}
+                {% if venue.group %}{{ venue.group.short_name }} {% endif %}
             </td>
             {% endif %}
             <td>{{ venue.name }}</td>

@@ -37,8 +37,8 @@
         <tr>
             <td>{{ team.institution }}</td>
             <td>{{ team.tournament }} {{ team.reference }}</td>
-            <td>{{ team.division.venue_group.name }}</td>
-            <td>{{ team.division }}</td>
+            <td>{{ team.division.venue_group.short_name }}</td>
+            <td>{{ team.division.name }}</td>
             <td>{{ team.division.time_slot|time:'h:i A' }}</td>
         </tr>
     {% endfor %}

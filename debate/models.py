@@ -19,6 +19,7 @@ class ScoreField(models.FloatField):
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
+    seq = models.IntegerField(blank=True, null=True)
     slug = models.SlugField(unique=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_',)
@@ -91,6 +92,8 @@ class Tournament(models.Model):
         else:
             return range(1, 4)
 
+    class Meta:
+        ordering = ['seq',]
 
     def __unicode__(self):
         if self.short_name:
@@ -117,7 +120,7 @@ class VenueGroup(models.Model):
         ordering = ['tournament', 'short_name']
 
     def __unicode__(self):
-        return u'%s' % (self.short_name)
+        return u"%s - %s" % (self.tournament, self.short_name)
 
     @property
     def full_name(self):
@@ -135,9 +138,9 @@ class Venue(models.Model):
 
     def __unicode__(self):
         if self.group:
-            return u'%s %s (%d)' % (self.group, self.name, self.priority)
+            return u'%s - %s - %s (%d)' % (self.tournament, self.group, self.name)
         else:
-            return u'%s (%d)' % (self.name, self.priority)
+            return u'%s - %s - (%d)' % (self.tournament, self.name)
 
 class Institution(models.Model):
     code = models.CharField(max_length=20)
@@ -400,6 +403,7 @@ class TeamManager(models.Manager):
 
 class Division(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name or suffix")
+    seq = models.IntegerField(blank=True, null=True)
     tournament = models.ForeignKey(Tournament)
     time_slot = models.TimeField(blank=True, null=True)
     venue_group = models.ForeignKey(VenueGroup, blank=True, null=True)
@@ -413,7 +417,7 @@ class Division(models.Model):
         return self.team_set.all().order_by('institution','reference')
 
     def __unicode__(self):
-        return self.name
+        return u"%s - %s" % (self.tournament.short_name, self.name)
 
     class Meta:
         unique_together = [('tournament', 'name')]
@@ -462,13 +466,7 @@ class Team(models.Model):
         if self.type == "B":
             return "Bye"
         else:
-            return self.short_name
-
-    @property
-    def name(self):
-        # TODO make this an exception so that we get rid of all of them
-        warn("Team.name is deprecated, use Team.short_name or Team.long_name", DeprecationWarning, stacklevel=2)
-        return self.short_name
+            return u"%s - %s" % (self.tournament.short_name, self.short_name)
 
     @property
     def short_name(self):
@@ -894,7 +892,7 @@ class Round(models.Model):
         ordering = ['tournament', str('seq')]
 
     def __unicode__(self):
-        return unicode(self.name)
+        return u"%s - %s" % (self.tournament.short_name, self.name)
 
     def motions(self):
         return self.motion_set.order_by('seq')

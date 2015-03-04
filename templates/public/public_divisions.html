@@ -21,7 +21,7 @@
                 <h5 class="list-group-item-heading">Division {{ division.name }}</h5>
             </li>
             {% for team in division.teams.all %}
-                <li class="list-group-item small">{{ team }}</li>
+                <li class="list-group-item small">{{ team.long_name }}</li>
             {% endfor %}
         </ul>
     {% endfor %}

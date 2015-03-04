@@ -111,7 +111,7 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                <label class="h4 col-xs-offset-1 control-label" >{{ debate.neg_team }}</label>
+                <label class="h4 col-xs-offset-1 control-label" >{{ debate.neg_team.short_name }}</label>
             </div>
            {% for position in adj.position_iter %}
                 <div class="form-group neg speaker s{{ position.pos }}">
