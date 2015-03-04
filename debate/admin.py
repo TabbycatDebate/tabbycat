@@ -3,31 +3,20 @@ from django import forms
 
 import debate.models as models
 
-
 admin.site.register(models.DebateTeam)
 
-class CustomTournamentAwareChoiceField(forms.ModelChoiceField):
-    # For displaying information that may be duplicated across tournaments
-    def label_from_instance(self, obj):
-         return "%s - %s" % (obj.tournament, obj.name)
+def tournament_name(self):
+    # Adding in tournament name to easily select between duplicates
+    try:
+        float(self.name)
+        return "N%s - %s" % (self.tournament.short_name, str(self.name).zfill(2))
+    except ValueError:
+        return "N%s - %s" % (self.tournament.short_name, self.name)
 
-class AddCustomDisplayForRound(forms.ModelForm):
-    current_round = CustomTournamentAwareChoiceField(queryset=models.Round.objects.all().order_by('tournament','seq'))
-    class Meta:
-          model = models.Round
-          exclude = () # Needed
-
-    def __init__(self, *args, **kwargs):
-        super(AddCustomDisplayForRound, self).__init__(*args, **kwargs)
-        try:
-            self.fields['current_round'].queryset = models.Round.objects.filter(tournament=self.instance).order_by('seq')
-        except:
-            self.fields['current_round'].queryset = models.Round.objects.all().order_by('tournament','seq')
 
 class TournamentAdmin(admin.ModelAdmin):
     list_display = ('name','short_name','current_round')
     ordering = ('name',)
-    form = AddCustomDisplayForRound
 
 admin.site.register(models.Tournament,TournamentAdmin)
 
@@ -39,9 +28,11 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Institution, InstitutionAdmin)
 
+
 class SpeakerInline(admin.TabularInline):
     model = models.Speaker
     fields = ('name', 'barcode_id', 'email', 'phone')
+
 
 class TeamPositionAllocationInline(admin.TabularInline):
     model = models.TeamPositionAllocation
@@ -50,28 +41,16 @@ class TeamVenuePreferenceInline(admin.TabularInline):
     model = models.TeamVenuePreference
     extra = 6
 
-class AddCustomDisplayForDivisions(forms.ModelForm):
-    division = CustomTournamentAwareChoiceField(queryset=models.Division.objects.all().order_by('tournament','name'))
-    class Meta:
-          model = models.Division
-          exclude = () # Needed
 
-    def __init__(self, *args, **kwargs):
-        super(AddCustomDisplayForDivisions, self).__init__(*args, **kwargs)
-        try:
-            self.fields['division'].queryset = models.Division.objects.filter(tournament=self.instance.tournament).order_by('name')
-        except:
-            self.fields['division'].queryset = models.Division.objects.all().order_by('tournament','name')
-
-
+models.Team.__unicode__ = tournament_name
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('long_name','short_reference','institution', 'division', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
     list_filter = ('tournament', 'institution')
-    form = AddCustomDisplayForDivisions
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
 
 admin.site.register(models.Team, TeamAdmin)
+
 
 class TeamVenuePreferenceAdmin(admin.ModelAdmin):
     list_display = ('team', 'venue_group', 'priority')
@@ -80,6 +59,7 @@ class TeamVenuePreferenceAdmin(admin.ModelAdmin):
 
 admin.site.register(models.TeamVenuePreference, TeamVenuePreferenceAdmin)
 
+
 class SpeakerAdmin(admin.ModelAdmin):
     list_display = ('name', 'team')
     search_fields = ('name', 'team__name', 'team__institution__name',
@@ -87,28 +67,15 @@ class SpeakerAdmin(admin.ModelAdmin):
 admin.site.register(models.Speaker, SpeakerAdmin)
 
 
-class AddCustomDisplayForVenueGroups(forms.ModelForm):
-    venue_group = CustomTournamentAwareChoiceField(queryset=models.VenueGroup.objects.all().order_by('tournament','name'))
-
-    class Meta:
-          model = models.VenueGroup
-          exclude = () # Needed
-
-    def __init__(self, *args, **kwargs):
-        super(AddCustomDisplayForVenueGroups, self).__init__(*args, **kwargs)
-        try:
-            self.fields['venue_group'].queryset = models.VenueGroup.objects.filter(tournament=self.instance.tournament).order_by('name')
-        except:
-            self.fields['venue_group'].queryset = models.VenueGroup.objects.all().order_by('tournament','name')
-
+models.Division.__unicode__ = tournament_name
 class DivisionAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'venue_group','time_slot')
-    list_filter = ('tournament','venue_group',)
+    list_filter = ('tournament', 'venue_group')
     search_fields = ('name',)
-    ordering = ('tournament','name',)
-    form = AddCustomDisplayForVenueGroups
+    ordering = ('tournament', 'name',)
 
 admin.site.register(models.Division, DivisionAdmin)
+
 
 class AdjudicatorConflictInline(admin.TabularInline):
     model = models.AdjudicatorConflict
@@ -134,6 +101,8 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     search_fields = ('source_adjudicator__adjudicator__name', 'source_team__team__institution__code', 'source_team__team__reference', 'adjudicator__name', 'adjudicator__institution__code',)
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
+
+models.VenueGroup.__unicode__ = tournament_name
 class VenueGroupAdmin(admin.ModelAdmin):
     list_display = ('name','tournament','team_capacity')
     search_fields = ('name',)
@@ -141,47 +110,25 @@ class VenueGroupAdmin(admin.ModelAdmin):
 
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
 
-
-
-class AddCustomDisplayForVenue(forms.ModelForm):
-    group = CustomTournamentAwareChoiceField(queryset=models.VenueGroup.objects.all().order_by('tournament','name'))
-    class Meta:
-          model = models.VenueGroup
-          exclude = () # Needed
-
 class CustomVenueGroupListFilter(admin.SimpleListFilter):
     title = 'group'
     parameter_name = 'group'
 
     def lookups(self, request, model_admin):
-        """
-        Returns a list of tuples. The first element in each
-        tuple is the coded value for the option that will
-        appear in the URL query. The second element is the
-        human-readable name for the option that will appear
-        in the right sidebar.
-        """
         groups = models.VenueGroup.objects.all().order_by('tournament','name')
-        for g in groups:
-            g.admin_name = "%s - %s" % (g.tournament, g.short_name)
         return [(c.id, c.admin_name) for c in groups]
 
     def queryset(self, request, queryset):
-        """
-        Returns the filtered queryset based on the value
-        provided in the query string and retrievable via
-        `self.value()`.
-        """
         if self.value():
             return queryset.filter(group=self.value())
         else:
             return queryset
 
+models.Venue.__unicode__ = tournament_name
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time', 'tournament')
     list_filter = ('tournament', CustomVenueGroupListFilter, 'priority', 'time')
     search_fields = ('name', 'group', 'time')
-    form = AddCustomDisplayForVenue
 
 admin.site.register(models.Venue, VenueAdmin)
 
@@ -206,9 +153,7 @@ class CustomDivisionListFilter(admin.SimpleListFilter):
         in the right sidebar.
         """
         divisions = models.Division.objects.all().order_by('tournament','name')
-        for g in divisions:
-            g.admin_name = "%s - %s" % (g.tournament, g.name)
-        return [(c.id, c.admin_name) for c in divisions]
+        return [(c.id, c) for c in divisions]
 
     def queryset(self, request, queryset):
         """
@@ -227,50 +172,14 @@ class CustomRoundListFilter(admin.SimpleListFilter):
     parameter_name = 'round'
 
     def lookups(self, request, model_admin):
-        """
-        Returns a list of tuples. The first element in each
-        tuple is the coded value for the option that will
-        appear in the URL query. The second element is the
-        human-readable name for the option that will appear
-        in the right sidebar.
-        """
         rounds = models.Round.objects.all().order_by('tournament','seq')
-        for g in rounds:
-            g.admin_name = "%s - %s" % (g.tournament, g.name)
-        return [(c.id, c.admin_name) for c in rounds]
+        return [(c.id, c) for c in rounds]
 
     def queryset(self, request, queryset):
-        """
-        Returns the filtered queryset based on the value
-        provided in the query string and retrievable via
-        `self.value()`.
-        """
         if self.value(): # self.value is the id of the round
             return queryset.filter(round=self.value())
         else:
             return queryset
-
-
-class AddCustomDisplayForDebates(forms.ModelForm):
-    division = CustomTournamentAwareChoiceField(queryset=models.Division.objects.all().order_by('tournament','name'))
-    round = CustomTournamentAwareChoiceField(queryset=models.Round.objects.all().order_by('tournament','seq'))
-    venue = CustomTournamentAwareChoiceField(queryset=models.Venue.objects.all().order_by('tournament','name'))
-
-    class Meta:
-          model = models.Debate
-          exclude = () # Needed
-
-    def __init__(self, *args, **kwargs):
-        super(AddCustomDisplayForDebates, self).__init__(*args, **kwargs)
-        try:
-            self.fields['division'].queryset = models.Division.objects.filter(tournament=self.instance.tournament).order_by('name')
-            self.fields['round'].queryset = models.Round.objects.filter(tournament=self.instance.tournament).order_by('tournament','seq')
-            self.fields['venue'].queryset = models.Venue.objects.filter(tournament=self.instance.tournament).order_by('tournament','name')
-        except:
-            self.fields['division'].queryset = models.Division.objects.all().order_by('tournament','name')
-            self.fields['round'].queryset = models.Round.objects.all().order_by('tournament','seq')
-            self.fields['venue'].queryset = models.Venue.objects.all().order_by('tournament','name')
-
 
 
 _da_tournament = lambda o: o.round.tournament.name
@@ -280,8 +189,8 @@ class DebateAdmin(admin.ModelAdmin):
     search_fields = ('debateteam__team__reference', 'debateteam__team__institution__code',
                      'debateadjudicator__adjudicator__name',)
     list_filter = ('round__tournament', CustomRoundListFilter, CustomDivisionListFilter)
-    form = AddCustomDisplayForDebates
-    inlines = (DebateTeamInline, DebateAdjudicatorInline)
+    #inlines = (DebateTeamInline, DebateAdjudicatorInline)
+
 admin.site.register(models.Debate, DebateAdmin)
 
 _ts_round = lambda o: o.debate_team.debate.round.seq
@@ -327,6 +236,7 @@ class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin):
     list_display = ('ballot_submission', _dtmp_confirmed, _dtmp_team_name, _dtmp_position, 'preference', _dtmp_motion)
 admin.site.register(models.DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
 
+models.Round.__unicode__ = tournament_name
 class RoundAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
     list_filter = ('tournament',)
@@ -340,25 +250,10 @@ class DebateAdjudicatorAdmin(admin.ModelAdmin):
 admin.site.register(models.DebateAdjudicator, DebateAdjudicatorAdmin)
 
 
-
-class AddCustomDisplayForRounds(forms.ModelForm):
-    round = CustomTournamentAwareChoiceField(queryset=models.Round.objects.all().order_by('tournament','seq'))
-    class Meta:
-          model = models.Round
-          exclude = () # Needed
-
-    def __init__(self, *args, **kwargs):
-        super(AddCustomDisplayForRounds, self).__init__(*args, **kwargs)
-        try:
-            self.fields['round'].queryset = models.Round.objects.filter(tournament=self.instance.round.tournament).order_by('seq')
-        except:
-            self.fields['round'].queryset = models.Round.objects.all().order_by('tournament','seq')
-
 _m_tournament = lambda o: o.round.tournament
 class MotionAdmin(admin.ModelAdmin):
     list_display = ('reference', 'round','seq',_m_tournament)
-    list_filter = ('round',)
-    form = AddCustomDisplayForRounds
+    list_filter = (CustomRoundListFilter, CustomDivisionListFilter)
 
 admin.site.register(models.Motion, MotionAdmin)
 

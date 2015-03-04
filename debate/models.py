@@ -13,7 +13,6 @@ from warnings import warn
 from threading import BoundedSemaphore
 from collections import OrderedDict
 
-
 class ScoreField(models.FloatField):
     pass
 
@@ -115,6 +114,7 @@ class VenueGroup(models.Model):
 
     class Meta:
         unique_together = [('name', 'tournament')]
+        ordering = ['tournament', 'short_name']
 
     def __unicode__(self):
         return u'%s' % (self.short_name)
@@ -414,6 +414,7 @@ class Division(models.Model):
 
     class Meta:
         unique_together = [('tournament', 'name')]
+        ordering = ['tournament', 'name']
 
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Name or suffix")
@@ -883,6 +884,7 @@ class Round(models.Model):
 
     class Meta:
         unique_together = [('tournament', 'seq')]
+        ordering = ['tournament', str('seq')]
 
     def __unicode__(self):
         return unicode(self.name)
