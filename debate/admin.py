@@ -42,11 +42,11 @@ class TeamVenuePreferenceInline(admin.TabularInline):
     extra = 6
 
 
-models.Team.__unicode__ = tournament_name
+#models.Team.__unicode__ = tournament_name
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('long_name','short_reference','institution', 'division', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
-    list_filter = ('tournament', 'institution')
+    list_filter = ('tournament', 'division', 'institution')
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
 
 admin.site.register(models.Team, TeamAdmin)
@@ -67,7 +67,7 @@ class SpeakerAdmin(admin.ModelAdmin):
 admin.site.register(models.Speaker, SpeakerAdmin)
 
 
-models.Division.__unicode__ = tournament_name
+##models.Division.__unicode__ = tournament_name
 class DivisionAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'venue_group','time_slot')
     list_filter = ('tournament', 'venue_group')
@@ -102,7 +102,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 
-models.VenueGroup.__unicode__ = tournament_name
+##models.VenueGroup.__unicode__ = tournament_name
 class VenueGroupAdmin(admin.ModelAdmin):
     list_display = ('name','tournament','team_capacity')
     search_fields = ('name',)
@@ -116,7 +116,7 @@ class CustomVenueGroupListFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         groups = models.VenueGroup.objects.all().order_by('tournament','name')
-        return [(c.id, c.admin_name) for c in groups]
+        return [(c.id, c) for c in groups]
 
     def queryset(self, request, queryset):
         if self.value():
@@ -124,7 +124,7 @@ class CustomVenueGroupListFilter(admin.SimpleListFilter):
         else:
             return queryset
 
-models.Venue.__unicode__ = tournament_name
+##models.Venue.__unicode__ = tournament_name
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time', 'tournament')
     list_filter = ('tournament', CustomVenueGroupListFilter, 'priority', 'time')
@@ -236,7 +236,7 @@ class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin):
     list_display = ('ballot_submission', _dtmp_confirmed, _dtmp_team_name, _dtmp_position, 'preference', _dtmp_motion)
 admin.site.register(models.DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
 
-models.Round.__unicode__ = tournament_name
+##models.Round.__unicode__ = tournament_name
 class RoundAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
     list_filter = ('tournament',)
