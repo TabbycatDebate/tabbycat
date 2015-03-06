@@ -792,6 +792,12 @@ input.error, select.error, .error input {
 table a:hover {
   cursor: pointer; }
 
+.table-division-bottom {
+  border-bottom: 5px solid #dddddd; }
+
+.table-division-top {
+  border-top: 5px solid #dddddd; }
+
 @media (max-width: 767px) {
   .page-header {
     margin-top: 0px; }
@@ -956,3 +962,18 @@ span.esl {
 
 .team-tab a.team-score {
   color: #285379; }
+
+@media print {
+  .master-sheet-print #header-options {
+    display: none; }
+
+  .page-header {
+    margin-bottom: 0px; }
+    .page-header .col-md-12 {
+      padding-left: 0px; }
+
+  table {
+    page-break-inside: avoid; }
+
+  #djDebug {
+    display: none !important; } }

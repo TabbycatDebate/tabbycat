@@ -25,6 +25,7 @@ class Tournament(models.Model):
                                      related_name='tournament_',)
     welcome_msg = models.TextField(blank=True, null=True, default="")
     release_all = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
 
     @models.permalink
     def get_absolute_url(self):

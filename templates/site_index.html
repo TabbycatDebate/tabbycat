@@ -13,7 +13,7 @@
 
     {% if user.is_authenticated %}
         {% for tournament in tournaments %}
-    <li class="list-group-item">
+        <li class="list-group-item">
             <a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
             <span class="badge">ADMIN</span>
         </li>

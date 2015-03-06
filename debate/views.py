@@ -533,10 +533,7 @@ def tournament_home(request, t):
     else:
         stats['pc'] = 0
 
-    if not request.user.is_superuser:
-        return r2r(request, 'monkey/home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
-    else:
-        return r2r(request, 'tournament_home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
+    return r2r(request, 'tournament_home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
 
 @admin_required
 @tournament_view
@@ -1601,6 +1598,33 @@ def adj_conflicts(request, round):
     return HttpResponse(json.dumps(data), content_type="text/json")
 
 
+@login_required
+@round_view
+def master_sheets_list(request, round):
+    venue_groups = VenueGroup.objects.filter(tournament=round.tournament)
+    return r2r(request, 'master_sheets_list.html', dict(venue_groups=venue_groups))
+
+
+@login_required
+@round_view
+def master_sheets_view(request, round, venue_group_id):
+    # Temporary - pre unified venue groups
+    base_venue_group = VenueGroup.objects.get(id=venue_group_id)
+    active_tournaments = Tournament.objects.filter(active=True)
+
+    all_debates = Debate.objects.filter(
+        # All Debates, with a matching round number, at the same venue group name
+        round__seq=round.seq,
+        round__tournament__active=True,
+        division__venue_group__short_name=base_venue_group.short_name # hack - remove when venue groups are unified
+    )
+
+    return r2r(request, 'master_sheets_view.html', dict(
+        base_venue_group=base_venue_group,
+        all_debates=all_debates
+    ))
+
+
 @admin_required
 @tournament_view
 def adj_scores(request, t):
@@ -1682,6 +1706,7 @@ def get_adj_feedback(request, t):
 
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
+
 # Don't cache
 @public_optional_tournament_view('public_feedback')
 def public_enter_feedback_adjudicator(request, t, adj_id):
@@ -1740,11 +1765,6 @@ def enter_feedback(request, t, adj_id):
     adj = get_object_or_404(Adjudicator, id=adj_id)
     ip_address = get_ip_address(request)
 
-    if not request.user.is_superuser:
-        template = 'monkey/enter_feedback.html'
-    else:
-        template = 'enter_feedback.html'
-
     submission_fields = {
         'submitter_type': AdjudicatorFeedback.SUBMITTER_TABROOM,
         'user'          : request.user,
@@ -1761,7 +1781,7 @@ def enter_feedback(request, t, adj_id):
     else:
         form = forms.make_feedback_form_class_for_tabroom(adj, submission_fields)()
 
-    return r2r(request, template, dict(adj=adj, form=form))
+    return r2r(request, 'enter_feedback.html', dict(adj=adj, form=form))
 
 @admin_required
 @round_view

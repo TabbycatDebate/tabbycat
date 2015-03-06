@@ -103,6 +103,10 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/ballot_checkin/post/$', 'post_ballot_checkin', name='post_ballot_checkin'),
 
     url(r'^admin/round/(?P<round_seq>\d+)/adjudicators/conflicts/$', 'adj_conflicts', name='adj_conflicts'),
+
+    url(r'^admin/round/(?P<round_seq>\d+)/master_sheets/list/$', 'master_sheets_list', name='master_sheets_list'),
+    url(r'^admin/round/(?P<round_seq>\d+)/master_sheets/venue_group/(?P<venue_group_id>\d+)/$', 'master_sheets_view', name='master_sheets_view'),
+
     url(r'^admin/adjudicators/scores/$', 'adj_scores', name='adj_scores'),
     url(r'^admin/adjudicators/feedback/$', 'adj_feedback', name='adj_feedback'),
     url(r'^admin/adjudicators/feedback/get/$', 'get_adj_feedback', name='get_adj_feedback'),
@@ -119,6 +123,5 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/division_allocations/$', 'division_allocations', name='division_allocations'),
     url(r'^admin/division_allocations/save/$', 'save_divisions', name='save_divisions'),
     url(r'^admin/division_allocations/create/$', 'create_division_allocation', name='create_division_allocation')
-
 
 )

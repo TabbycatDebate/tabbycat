@@ -211,6 +211,12 @@ input.error, select.error, .error input {
 table a:hover {
     cursor: pointer;
 }
+.table-division-bottom {
+    border-bottom: 5px solid #dddddd;
+}
+.table-division-top {
+    border-top: 5px solid #dddddd;
+}
 
 @media (max-width: $screen-xs-max) {
     .page-header {
@@ -478,4 +484,30 @@ span.esl {
 .team-tab a.team-score {
     // Darker than normal link, but not black
     color: #285379;
+}
+
+//
+// Basic print styles
+// --------------------------------------------------
+// Source: https://github.com/h5bp/html5-boilerplate/blob/master/css/main.css
+
+@media print {
+
+    .master-sheet-print {
+        #header-options {
+            display: none;
+        }
+    }
+    .page-header {
+        margin-bottom: 0px;
+        .col-md-12 {
+            padding-left: 0px;
+        }
+    }
+    table {
+        page-break-inside: avoid; // Don't split a table across multiple pages
+    }
+    #djDebug {
+        display: none !important;
+    }
 }
