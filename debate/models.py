@@ -138,9 +138,9 @@ class Venue(models.Model):
 
     def __unicode__(self):
         if self.group:
-            return u'%s - %s - %s (%d)' % (self.tournament, self.group, self.name)
+            return u'%s - %s - %s' % (self.tournament, self.group, self.name)
         else:
-            return u'%s - %s - (%d)' % (self.tournament, self.name)
+            return u'%s - %s' % (self.tournament, self.name)
 
 class Institution(models.Model):
     code = models.CharField(max_length=20)
@@ -421,7 +421,7 @@ class Division(models.Model):
 
     class Meta:
         unique_together = [('tournament', 'name')]
-        ordering = ['tournament', 'name']
+        ordering = ['tournament', 'seq', 'name']
 
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Name or suffix")
@@ -463,10 +463,7 @@ class Team(models.Model):
     objects = TeamManager()
 
     def __unicode__(self):
-        if self.type == "B":
-            return "Bye"
-        else:
-            return u"%s - %s" % (self.tournament.short_name, self.short_name)
+        return u"%s - %s" % (self.tournament.short_name, self.short_name)
 
     @property
     def short_name(self):
@@ -839,7 +836,7 @@ class Round(models.Model):
     DRAW_BREAK       = 'B'
     DRAW_CHOICES = (
         (DRAW_RANDOM,      'Random'),
-        (DRAW_ROUNDROBIN,       'Round-robin'),
+        (DRAW_ROUNDROBIN,  'Round-robin'),
         (DRAW_POWERPAIRED, 'Power-paired'),
         (DRAW_FIRSTBREAK,  'First elimination'),
         (DRAW_BREAK,       'Subsequent elimination'),
@@ -1443,8 +1440,9 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __unicode__(self):
-        return u'[%s] %s vs %s (%s)' % (self.round.seq, self.aff_team, self.neg_team,
-                                   self.venue)
+        return u"%s - [%s] %s vs %s (%s)" % (self.aff_team.tournament,
+            self.round.seq, self.aff_team.short_name,
+            self.neg_team.short_name, self.venue)
 
     @property
     def matchup(self):

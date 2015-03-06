@@ -24,7 +24,6 @@ class SpeakerInline(admin.TabularInline):
     model = models.Speaker
     fields = ('name', 'barcode_id', 'email', 'phone')
 
-
 class TeamPositionAllocationInline(admin.TabularInline):
     model = models.TeamPositionAllocation
 
@@ -97,23 +96,9 @@ class VenueGroupAdmin(admin.ModelAdmin):
 
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
 
-class CustomVenueGroupListFilter(admin.SimpleListFilter):
-    title = 'group'
-    parameter_name = 'group'
-
-    def lookups(self, request, model_admin):
-        groups = models.VenueGroup.objects.all().order_by('tournament','name')
-        return [(c.id, c) for c in groups]
-
-    def queryset(self, request, queryset):
-        if self.value():
-            return queryset.filter(group=self.value())
-        else:
-            return queryset
-
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time', 'tournament')
-    list_filter = ('tournament', CustomVenueGroupListFilter, 'priority', 'time')
+    list_filter = ('tournament', 'group', 'priority', 'time')
     search_fields = ('name', 'group', 'time')
 
 admin.site.register(models.Venue, VenueAdmin)
@@ -126,55 +111,13 @@ class DebateAdjudicatorInline(admin.TabularInline):
     model = models.DebateAdjudicator
     extra = 1
 
-class CustomDivisionListFilter(admin.SimpleListFilter):
-    title = 'division'
-    parameter_name = 'division'
-
-    def lookups(self, request, model_admin):
-        """
-        Returns a list of tuples. The first element in each
-        tuple is the coded value for the option that will
-        appear in the URL query. The second element is the
-        human-readable name for the option that will appear
-        in the right sidebar.
-        """
-        divisions = models.Division.objects.all().order_by('tournament','name')
-        return [(c.id, c) for c in divisions]
-
-    def queryset(self, request, queryset):
-        """
-        Returns the filtered queryset based on the value
-        provided in the query string and retrievable via
-        `self.value()`.
-        """
-        if self.value():
-            print self.value()
-            return queryset.filter(division=self.value())
-        else:
-            return queryset
-
-class CustomRoundListFilter(admin.SimpleListFilter):
-    title = 'round'
-    parameter_name = 'round'
-
-    def lookups(self, request, model_admin):
-        rounds = models.Round.objects.all().order_by('tournament','seq')
-        return [(c.id, c) for c in rounds]
-
-    def queryset(self, request, queryset):
-        if self.value(): # self.value is the id of the round
-            return queryset.filter(round=self.value())
-        else:
-            return queryset
-
-
-_da_tournament = lambda o: o.round.tournament.name
-_da_tournament.short_description = 'Tournament'
+# _da_tournament = lambda o: o.round.tournament.name
+# _da_tournament.short_description = 'Tournament'
+_da_division = lambda o: o.division.name
+_da_division.short_description = 'Division'
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', _da_tournament, 'round', 'aff_team', 'neg_team', 'adjudicators', 'division')
-    search_fields = ('debateteam__team__reference', 'debateteam__team__institution__code',
-                     'debateadjudicator__adjudicator__name',)
-    list_filter = ('round__tournament', CustomRoundListFilter, CustomDivisionListFilter)
+    list_display = ('id','round',_da_division,'bracket','aff_team', 'neg_team',)
+    list_filter = ('round__tournament','round', 'division')
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
 
 admin.site.register(models.Debate, DebateAdmin)
@@ -237,8 +180,8 @@ admin.site.register(models.DebateAdjudicator, DebateAdjudicatorAdmin)
 
 _m_tournament = lambda o: o.round.tournament
 class MotionAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'round','seq',_m_tournament)
-    list_filter = (CustomRoundListFilter, CustomDivisionListFilter)
+    list_display = ('reference', 'round','seq', _m_tournament)
+    list_filter = ('round', 'divisions')
 
 admin.site.register(models.Motion, MotionAdmin)
 

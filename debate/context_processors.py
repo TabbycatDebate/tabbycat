@@ -46,3 +46,11 @@ def debate_context(request):
         return d
     return {}
 
+def in_production(request):
+    try:
+        from local_settings import *
+        return False
+    except ImportError as e:
+        return True
+
+
