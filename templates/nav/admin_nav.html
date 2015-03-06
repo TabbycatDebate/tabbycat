@@ -1,0 +1,75 @@
+{% load debate_tags %}
+
+<ul id="nav" class="nav navbar-nav navbar-left">
+    {% if side_allocations_enabled %}
+        <li><a class="side-allocations-nav" href="{% tournament_url side_allocations %}">Sides</a></li>
+    {% endif %}
+    {% if enable_divisions %}
+        <li><a class="division-allocations-nav" href="{% tournament_url division_allocations %}">Divisions</a></li>
+    {% endif %}
+    <li><a class="draw-nav" href="{% round_url draw current_round %}">Draw</a></li>
+    <li><a class="status-nav" href="{% round_url results current_round %}">Ballots</a></li>
+    <li><a class="adjudicators-standings-nav" href="{% tournament_url adj_feedback %}">Feedbacks</a></li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standings<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a class="team-standings-nav" href="{% round_url team_standings current_round %}">Teams</a></li>
+            <li><a class="speaker-standings-nav" href="{% round_url speaker_standings current_round %}">Speakers</a></li>
+            {% if reply_scores_enabled %}
+                <li><a class="reply-standings-nav" href="{% round_url reply_standings current_round %}">Replies</a></li>
+            {% endif %}
+            <li><a class="feedback-standings-nav" href="{% tournament_url feedback_progress %}">Feedback Stats</a></li>
+            <li><a class="motions-standings-nav" href="{% round_url motions current_round %}">Motion Stats</a></li>
+        </ul>
+    </li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle breakk-nav" data-toggle="dropdown">Break<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a class="breaking-teams-open-nav" href="{% tournament_url breaking_teams_open %}">Open</a></li>
+            {% if esl_break %}
+                <li><a class="breaking-teams-esl-nav" href="{% tournament_url breaking_teams_esl %}">ESL</a></li>
+            {% endif %}
+            <li><a class="breaking-adjs-nav" href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
+        </ul>
+    </li>
+</ul>
+
+<ul id="nav" class="nav navbar-nav navbar-right">
+    {% for r in tournament.rounds.all %}
+        <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="
+                    {% if r.seq < current_round.seq %}
+                        text-success
+                    {% elif r.draw_status == r.STATUS_RELEASED %}
+                        text-primary
+                    {% elif r.draw_status != r.STATUS_NONE %}
+                        text-warning
+                    {% endif %}">
+                    {{ r.abbreviation }}<b class="caret"></b>
+                </span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="{% round_url team_availability r %}">Team Checkins</a></li>
+                <li><a href="{% round_url venue_availability r %}">Venue Checkins</a></li>
+                <li><a href="{% round_url adjudicator_availability r %}">Adj Checkins</a></li>
+                <li><a href="{% round_url people_availability r %}">Participant Checkins</a></li>
+                <li class="divider"></li>
+                <li><a href="{% round_url draw r %}">Draw</a></li>
+                <li><a href="{% round_url motions r %}">Motions</a></li>
+                <li><a href="{% round_url results r %}">Round Status</a></li>
+                <li><a href="{% round_url ballot_checkin r %}">Ballot Checkin</a></li>
+                <li class="divider"></li>
+                <li><a href="{% round_url team_standings r %}">Team Standings</a></li>
+                <li><a href="{% round_url speaker_standings r %}">Speaker Standings</a></li>
+                {% if reply_scores_enabled %}
+                <li><a href="{% round_url reply_standings r %}">Reply Standings</a></li>
+                {% endif %}
+                {% if enable_divisions %}
+                    <li class="divider"></li>
+                    <li><a class="" href="{% round_url master_sheets_list r %}">Mastersheets</a></li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
