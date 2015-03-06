@@ -964,7 +964,7 @@ span.esl {
   color: #285379; }
 
 @media print {
-  .master-sheet-print #header-options {
+  #header-options, .fixedHeader {
     display: none; }
 
   .page-header {
@@ -974,6 +974,15 @@ span.esl {
 
   table {
     page-break-inside: avoid; }
+    table tr {
+      page-break-inside: avoid;
+      page-break-after: auto; }
+    table [data-toggle="tooltip"] {
+      border-bottom: none; }
+
+  table.h4, table.h4_minus, table.h4_plus {
+    font-size: 75%;
+    font-weight: normal; }
 
   #djDebug {
     display: none !important; } }
