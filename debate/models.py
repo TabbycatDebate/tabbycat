@@ -738,7 +738,11 @@ class Adjudicator(Person):
 
     @property
     def score(self):
-        weight = self.tournament.current_round.feedback_weight
+        if self.tournament:
+            weight = self.tournament.current_round.feedback_weight
+        else:
+            # For shared ajudicators
+            weight = 1
 
         feedback_score = self._feedback_score()
         if feedback_score is None:
@@ -1137,7 +1141,10 @@ class Round(models.Model):
                                                   WHERE d.round_id = %d AND
                                                   da.adjudicator_id = debate_adjudicator.person_ptr_id)""" % self.id },
         )
-        return [a for a in result if a.is_active and not a.is_used]
+        if not self.tournament.config.get('draw_skip_adj_checkins'):
+            return [a for a in result if a.is_active and not a.is_used]
+        else:
+            return [a for a in result if not a.is_used]
 
     def team_availability(self):
         all_teams = self.base_availability(Team, 'debate_activeteam', 'team_id',
