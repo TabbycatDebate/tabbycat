@@ -1147,9 +1147,13 @@ class Round(models.Model):
             return [a for a in result if not a.is_used]
 
     def team_availability(self):
-        all_teams = self.base_availability(Team, 'debate_activeteam', 'team_id',
+        if not self.tournament.config.get('draw_skip_team_checkins'):
+            all_teams = self.base_availability(Team, 'debate_activeteam', 'team_id',
                                       'debate_team')
-        relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
+            relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
+        else:
+            relevant_teams = Team.objects.filter(tournament=self.tournament)
+
         return relevant_teams
 
     def set_available_base(self, ids, model, active_model, get_active,

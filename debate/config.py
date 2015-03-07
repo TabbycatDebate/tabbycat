@@ -31,6 +31,8 @@ SETTINGS = OrderedDict([
     ('draw_pairing_method',         (str,   'Pairing method, see wiki for allowed values',                         'slide')),
     ('draw_avoid_conflicts',        (str,   'Conflict avoidance method, see wiki for allowed values',              'one_up_one_down')),
     ('draw_skip_adj_checkins',      (_bool, 'Automatically make all adjudicators available for all rounds',        False)),
+    ('draw_skip_venue_checkins',    (_bool, 'Automatically make all teams available for all rounds',               False)),
+    ('draw_skip_team_checkins',     (_bool, 'Automatically make all venues available for all rounds',              False)),
     ('team_standings_rule',         (str,   'Rule for ordering teams, "australs" or "nz" or "wadl" see wiki',      'australs')),
     ('adj_conflict_penalty',        (int,   'Penalty for adjudicator-team conflict',                               1000000)),
     ('adj_history_penalty',         (int,   'Penalty for adjudicator-team history',                                10000)),
