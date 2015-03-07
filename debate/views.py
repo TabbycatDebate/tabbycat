@@ -890,7 +890,7 @@ def division_allocations(request, t):
     teams = Team.objects.filter(tournament=t).all()
     divisions = Division.objects.filter(tournament=t).all()
     divisions = sorted(divisions, key=lambda x: float(x.name))
-    venue_groups = VenueGroup.objects.filter(tournament=t).order_by('name')
+    venue_groups = VenueGroup.objects.order_by('name')
 
     return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 
@@ -927,7 +927,7 @@ def create_division_allocation(request, t):
     # Delete all existing divisions - this shouldn't affect teams (on_delete=models.SET_NULL))
     divisions = Division.objects.filter(tournament=t).delete()
 
-    venue_groups = VenueGroup.objects.filter(tournament=t)
+    venue_groups = VenueGroup.objects.all()
 
     alloc = DivisionAllocator(teams=teams, divisions=divisions,venue_groups=venue_groups, tournament=t)
     success = alloc.allocate()
@@ -1601,7 +1601,7 @@ def adj_conflicts(request, round):
 @login_required
 @round_view
 def master_sheets_list(request, round):
-    venue_groups = VenueGroup.objects.filter(tournament=round.tournament)
+    venue_groups = VenueGroup.objects.all()
     return r2r(request, 'master_sheets_list.html', dict(venue_groups=venue_groups))
 
 

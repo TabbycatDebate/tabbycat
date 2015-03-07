@@ -105,7 +105,7 @@ class Tournament(models.Model):
 class VenueGroup(models.Model):
     name = models.CharField(max_length=200)
     short_name = models.CharField(max_length=25, blank=True, null=True, default="")
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, blank=True, null=True) #deprecate
     team_capacity = models.IntegerField(blank=True, null=True)
 
     @property

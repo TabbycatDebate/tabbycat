@@ -45,8 +45,12 @@
                         text-primary
                     {% elif r.draw_status != r.STATUS_NONE %}
                         text-warning
-                    {% endif %}">
-                    {{ r.abbreviation }}<b class="caret"></b>
+                    {% endif %}
+                ">
+                    {% if r.seq == current_round.seq %}<strong>{% endif %}
+                    {{ r.abbreviation }}
+                    {% if r.seq == current_round.seq %}</strong>{% endif %}
+                    <b class="caret"></b>
                 </span>
             </a>
             <ul class="dropdown-menu">

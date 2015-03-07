@@ -174,7 +174,6 @@ class Command(BaseCommand):
                        name=long_name,
                        short_name=short_name,
                        team_capacity=team_capacity,
-                       tournament=t
                     )
 
                     if created:
@@ -206,10 +205,10 @@ class Command(BaseCommand):
                 time = line[2]
 
                 try:
-                    venue_group = m.VenueGroup.objects.get(name=group_name, tournament=t)
+                    venue_group = m.VenueGroup.objects.get(name=group_name)
                 except:
                     try:
-                        venue_group = m.VenueGroup.objects.get(short_name=group_name, tournament=t)
+                        venue_group = m.VenueGroup.objects.get(short_name=group_name)
                     except Exception as inst:
                         self.stdout.write('Couldnt find the venue group ' + group_name)
                         total_errors += 1
@@ -308,10 +307,10 @@ class Command(BaseCommand):
                         for index, venue in enumerate(venue_preferences):
                             if venue:
                                 try:
-                                    venue_group = m.VenueGroup.objects.get(name=venue,tournament=t)
+                                    venue_group = m.VenueGroup.objects.get(name=venue)
                                 except:
                                     try:
-                                        venue_group = m.VenueGroup.objects.get(short_name=venue,tournament=t)
+                                        venue_group = m.VenueGroup.objects.get(short_name=venue)
                                     except Exception as inst:
                                         self.stdout.write("error with finding venue: " + venue)
                                         total_errors += 1
