@@ -46,13 +46,12 @@ def debate_context(request):
             d['round'] = request.round
         d['all_tournaments'] = Tournament.objects.filter(active=True)
         return d
+
+        server = request.META.get('wsgi.file_wrapper', None)
+        if server is not None and server.__module__ == 'django.core.servers.basehttp':
+            d['in_production'] = False
+        else:
+            d['in_production'] = True
+
     return {}
-
-def in_production(request):
-    try:
-        from local_settings import *
-        return False
-    except ImportError as e:
-        return True
-
 
