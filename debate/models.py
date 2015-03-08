@@ -1449,11 +1449,11 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __unicode__(self):
-        return u"%s - [%s] %s vs %s" % (
+        return u"%s - [%s] %s vs %s" % ( # bug
             self.round.tournament,
-            self.round.seq,
-            self.aff_team,
-            self.neg_team
+            self.round.abbreviation,
+            self.aff_team.short_name,
+            self.neg_team.short_name
         )
 
     @property
@@ -1485,7 +1485,7 @@ class DebateTeam(models.Model):
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __unicode__(self):
-        return u'%s %s' % (self.debate, self.team)
+        return u'%s (%s)' % (self.team, self.debate)
 
     @property
     def opposition(self):
