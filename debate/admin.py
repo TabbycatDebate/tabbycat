@@ -22,8 +22,8 @@ _dt_tournament = lambda o: o.debate.round.tournament
 _dt_tournament.short_description = 'Tournament'
 class DebateTeamAdmin(admin.ModelAdmin):
     list_display = ('team', _dt_tournament, _dt_round, 'position')
-    search_fields = ('team')
-    raw_id_fields = ('debate','team')
+    search_fields = ('team',)
+    raw_id_fields = ('debate','team',)
 
     def get_queryset(self, request):
         return super(DebateTeamAdmin, self).queryset(request).select_related('tournament','institution')
@@ -48,7 +48,7 @@ class TeamAdmin(admin.ModelAdmin):
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
     list_filter = ('tournament', 'division', 'institution')
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
-    raw_id_fields = ('division')
+    raw_id_fields = ('division',)
 
     def get_queryset(self, request):
         return super(TeamAdmin, self).queryset(request).prefetch_related('institution','division')
@@ -60,7 +60,7 @@ class TeamVenuePreferenceAdmin(admin.ModelAdmin):
     list_display = ('team', 'venue_group', 'priority')
     search_fields = ('team','venue_group', 'priority')
     list_filter = ('team','venue_group', 'priority')
-    raw_id_fields = ('team')
+    raw_id_fields = ('team',)
 
 admin.site.register(models.TeamVenuePreference, TeamVenuePreferenceAdmin)
 
@@ -69,7 +69,7 @@ class SpeakerAdmin(admin.ModelAdmin):
     list_display = ('name', 'team')
     search_fields = ('name', 'team__name', 'team__institution__name',
                      'team__institution__code',)
-    raw_id_fields = ('team')
+    raw_id_fields = ('team',)
 admin.site.register(models.Speaker, SpeakerAdmin)
 
 
@@ -84,7 +84,7 @@ admin.site.register(models.Division, DivisionAdmin)
 class AdjudicatorConflictInline(admin.TabularInline):
     model = models.AdjudicatorConflict
     extra = 1
-    raw_id_fields = ('team')
+    raw_id_fields = ('team',)
 
 class AdjudicatorInstitutionConflictInline(admin.TabularInline):
     model = models.AdjudicatorInstitutionConflict
@@ -104,7 +104,7 @@ admin.site.register(models.Adjudicator, AdjudicatorAdmin)
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'source_adjudicator', 'source_team', 'confirmed', 'score', 'comments')
     search_fields = ('source_adjudicator__adjudicator__name', 'source_team__team__institution__code', 'source_team__team__reference', 'adjudicator__name', 'adjudicator__institution__code',)
-    raw_id_fields = ('source_team')
+    raw_id_fields = ('source_team',)
 
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
@@ -128,7 +128,7 @@ admin.site.register(models.Venue, VenueAdmin)
 class DebateTeamInline(admin.TabularInline):
     model = models.DebateTeam
     extra = 1
-    raw_id_fields = ('team')
+    raw_id_fields = ('team',)
 
 class DebateAdjudicatorInline(admin.TabularInline):
     model = models.DebateAdjudicator
