@@ -28,9 +28,17 @@
         <caption><h3>{{ debate.grouper }}</h3></caption>
         <thead>
             <tr class="h5 table-division">
+                <col style="width:3%">
+                <col style="width:20%">
+                <col style="width:20%">
+                <col style="width:20%">
+                <col style="width:20%">
+                <col style="width:8%">
+                <col style="width:8%">
                 <th>Div</th>
                 <th>Affirmative</th>
                 <th>Negative</th>
+                <th>Adjudicator</th>
                 <th>Winner of the Debate</th>
                 <th>Aff Score</th>
                 <th>Neg Score</th>
@@ -42,6 +50,7 @@
                     <td>{{ debate.division.name }}</td>
                     <td>{{ debate.aff_team.short_name }}</td>
                     <td>{{ debate.neg_team.short_name }}</td>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

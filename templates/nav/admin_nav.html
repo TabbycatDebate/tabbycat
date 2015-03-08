@@ -1,6 +1,6 @@
 {% load debate_tags %}
 
-<ul id="nav" class="nav navbar-nav navbar-left">
+<ul id="nav_left" class="nav navbar-nav navbar-left">
     {% if side_allocations_enabled %}
         <li><a class="side-allocations-nav" href="{% tournament_url side_allocations %}">Sides</a></li>
     {% endif %}
@@ -34,7 +34,7 @@
     </li>
 </ul>
 
-<ul id="nav" class="nav navbar-nav navbar-right">
+<ul id="nav_right" class="nav navbar-nav navbar-right">
     {% for r in tournament.rounds.all %}
         <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">

@@ -43,6 +43,7 @@ def debate_context(request):
         }
         if hasattr(request, 'round'):
             d['round'] = request.round
+        d['all_tournaments'] = Tournament.objects.filter(active=True)
         return d
     return {}
 
