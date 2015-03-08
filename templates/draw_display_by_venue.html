@@ -84,13 +84,19 @@
                     <td class="venue-name">{{ debate.venue_splitname }}</td>
                 {% endif %}
                 {% if enable_venue_times %}
-                    <td>
-                        <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
-                        {{ debate.venue.time|date:"D jS F" }}
-                    </td>
-                    <td>
-                        {{ debate.division.time_slot|time:'h:i A' }}
-                    </td>
+                    {% if debate.aff_team.type != 'B' and debate.neg_team.type != 'B'%}
+                        <td>
+                            <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
+                            {{ debate.venue.time|date:"D jS F" }}
+                        </td>
+                        <td>
+                            {{ debate.division.time_slot|time:'h:i A' }}
+                        </td>
+                    {% else %}
+                        <td>
+                            <span class="text-warning">Bye (No Debate)</span></td>
+                        <td></td>
+                    {% endif %}
                 {% endif %}
                 {% if show_emoji > 0 %}
                     <td class="team-emoji team-{{ debate.aff_team.id }} hidden-sm"></td>
@@ -102,8 +108,6 @@
                         </span>
                         <span class="hidden">
                            {{ debate.aff_team.speakers|join:', ' }}
-                    {% else %}
-                         <span class="text-warning">Bye (No Debate)</span>
                     {% endif %}
                 </td>
                 {% if show_emoji > 0 %}
@@ -117,8 +121,6 @@
                     <span class="hidden">
                        {{ debate.neg_team.speakers|join:', ' }}
                     </span>
-                    {% else %}
-                         <span class="text-warning">Bye (No Debate)</span>
                     {% endif %}
                 </td>
                 {% if enable_division_motions %}

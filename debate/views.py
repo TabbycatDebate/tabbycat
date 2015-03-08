@@ -890,7 +890,7 @@ def division_allocations(request, t):
     teams = Team.objects.filter(tournament=t).all()
     divisions = Division.objects.filter(tournament=t).all()
     divisions = sorted(divisions, key=lambda x: float(x.name))
-    venue_groups = VenueGroup.objects.order_by('name')
+    venue_groups = VenueGroup.objects.all()
 
     return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 

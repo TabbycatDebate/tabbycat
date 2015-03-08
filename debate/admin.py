@@ -90,9 +90,8 @@ admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 
 class VenueGroupAdmin(admin.ModelAdmin):
-    list_display = ('name','tournament','team_capacity')
+    list_display = ('name','team_capacity')
     search_fields = ('name',)
-    list_filter = ('tournament',)
 
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
 
@@ -111,14 +110,11 @@ class DebateAdjudicatorInline(admin.TabularInline):
     model = models.DebateAdjudicator
     extra = 1
 
-# _da_tournament = lambda o: o.round.tournament.name
-# _da_tournament.short_description = 'Tournament'
-_da_division = lambda o: o.division.name
-_da_division.short_description = 'Division'
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id','round',_da_division,'bracket','aff_team', 'neg_team',)
+    list_display = ('id','round','bracket','aff_team', 'neg_team',)
     list_filter = ('round__tournament','round', 'division')
-    inlines = (DebateTeamInline, DebateAdjudicatorInline)
+    #inlines = (DebateTeamInline, DebateAdjudicatorInline)
+    exclude = ('round','venue')
 
 admin.site.register(models.Debate, DebateAdmin)
 

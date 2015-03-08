@@ -19,7 +19,7 @@ class ScoreField(models.FloatField):
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
-    seq = models.IntegerField(blank=True, null=True)
+    seq = models.IntegerField(db_index=True, blank=True, null=True)
     slug = models.SlugField(unique=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_',)
@@ -103,9 +103,8 @@ class Tournament(models.Model):
             return unicode(self.name)
 
 class VenueGroup(models.Model):
-    name = models.CharField(max_length=200)
-    short_name = models.CharField(max_length=25, blank=True, null=True, default="")
-    tournament = models.ForeignKey(Tournament, blank=True, null=True) #deprecate
+    name = models.CharField(unique=True, max_length=200)
+    short_name = models.CharField(db_index=True, max_length=25)
     team_capacity = models.IntegerField(blank=True, null=True)
 
     @property
@@ -117,8 +116,7 @@ class VenueGroup(models.Model):
         return self.venue_set.all()
 
     class Meta:
-        unique_together = [('name', 'tournament')]
-        ordering = ['tournament', 'short_name']
+        ordering = ['short_name']
 
     def __unicode__(self):
         return u"%s - %s" % (self.tournament, self.short_name)
@@ -135,17 +133,18 @@ class Venue(models.Model):
     time = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        ordering = ['tournament', 'group', 'name']
+        ordering = ['group', 'name']
+        index_together = ['group', 'name']
 
     def __unicode__(self):
         if self.group:
-            return u'%s - %s - %s' % (self.tournament, self.group, self.name)
+            return u'%s - %s - %s' % (self.group, self.name)
         else:
-            return u'%s - %s' % (self.tournament, self.name)
+            return u'%s - %s' % (self.name)
 
 class Institution(models.Model):
     code = models.CharField(max_length=20)
-    name = models.CharField(max_length=100)
+    name = models.CharField(db_index=True, max_length=100)
     abbreviation = models.CharField(max_length=8, default="")
 
     class Meta:
@@ -422,7 +421,8 @@ class Division(models.Model):
 
     class Meta:
         unique_together = [('tournament', 'name')]
-        ordering = ['tournament', 'seq', 'name']
+        ordering = ['tournament', 'seq']
+        index_together = ['tournament', 'seq']
 
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Name or suffix")
@@ -460,6 +460,7 @@ class Team(models.Model):
     class Meta:
         unique_together = [('reference', 'institution', 'tournament')]
         ordering = ['tournament', 'institution', 'short_reference']
+        index_together = ['tournament', 'institution', 'short_reference']
 
     objects = TeamManager()
 
@@ -530,7 +531,7 @@ class Team(models.Model):
 
 
 class TeamVenuePreference(models.Model):
-    team = models.ForeignKey(Team)
+    team = models.ForeignKey(Team, db_index=True)
     venue_group = models.ForeignKey(VenueGroup)
     priority = models.IntegerField()
 
@@ -672,7 +673,7 @@ class SpeakerManager(models.Manager):
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=40, db_index=True)
     barcode_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=40, blank=True, null=True)
@@ -685,6 +686,8 @@ class Person(models.Model):
     def has_contact(self):
         return bool(self.email or self.phone)
 
+    class Meta:
+        ordering = ['name']
 
 class Checkin(models.Model):
     person = models.ForeignKey('Person')
@@ -867,7 +870,7 @@ class Round(models.Model):
 
     objects = RoundManager()
 
-    tournament   = models.ForeignKey(Tournament, related_name='rounds')
+    tournament   = models.ForeignKey(Tournament, related_name='rounds',db_index=True)
     seq          = models.IntegerField()
     name         = models.CharField(max_length=40)
     abbreviation = models.CharField(max_length=10)
@@ -892,6 +895,7 @@ class Round(models.Model):
     class Meta:
         unique_together = [('tournament', 'seq')]
         ordering = ['tournament', str('seq')]
+        index_together = ['tournament', 'seq']
 
     def __unicode__(self):
         return u"%s - %s" % (self.tournament.short_name, self.name)
@@ -1147,13 +1151,9 @@ class Round(models.Model):
             return [a for a in result if not a.is_used]
 
     def team_availability(self):
-        if not self.tournament.config.get('draw_skip_team_checkins'):
-            all_teams = self.base_availability(Team, 'debate_activeteam', 'team_id',
+        all_teams = self.base_availability(Team, 'debate_activeteam', 'team_id',
                                       'debate_team')
-            relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
-        else:
-            relevant_teams = Team.objects.filter(tournament=self.tournament)
-
+        relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
         return relevant_teams
 
     def set_available_base(self, ids, model, active_model, get_active,
@@ -1237,7 +1237,7 @@ class Round(models.Model):
 
 class ActiveVenue(models.Model):
     venue = models.ForeignKey(Venue)
-    round = models.ForeignKey(Round)
+    round = models.ForeignKey(Round, db_index=True)
 
     class Meta:
         unique_together = [('venue', 'round')]
@@ -1245,7 +1245,7 @@ class ActiveVenue(models.Model):
 
 class ActiveTeam(models.Model):
     team = models.ForeignKey(Team)
-    round = models.ForeignKey(Round)
+    round = models.ForeignKey(Round, db_index=True)
 
     class Meta:
         unique_together = [('team', 'round')]
@@ -1253,7 +1253,7 @@ class ActiveTeam(models.Model):
 
 class ActiveAdjudicator(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
-    round = models.ForeignKey(Round)
+    round = models.ForeignKey(Round, db_index=True)
 
     class Meta:
         unique_together = [('adjudicator', 'round')]
@@ -1269,17 +1269,19 @@ class DebateManager(models.Manager):
 
 class Debate(models.Model):
     STATUS_NONE      = 'N'
+    STATUS_POSTPONED = 'P'
     STATUS_DRAFT     = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = (
         (STATUS_NONE,      'None'),
+        (STATUS_POSTPONED, 'Postponed'),
         (STATUS_DRAFT,     'Draft'),
         (STATUS_CONFIRMED, 'Confirmed'),
     )
 
     objects = DebateManager()
 
-    round = models.ForeignKey(Round)
+    round = models.ForeignKey(Round, db_index=True)
     venue = models.ForeignKey(Venue, blank=True, null=True)
     division = models.ForeignKey('Division', blank=True, null=True)
 
@@ -1297,7 +1299,6 @@ class Debate(models.Model):
     def _get_teams(self):
         if not hasattr(self, '_team_cache'):
             self._team_cache = {}
-
             for t in DebateTeam.objects.filter(debate=self):
                 self._team_cache[t.position] = t
 
@@ -1452,9 +1453,13 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __unicode__(self):
-        return u"%s - [%s] %s vs %s (%s)" % (self.aff_team.tournament,
-            self.round.seq, self.aff_team.short_name,
-            self.neg_team.short_name, self.venue)
+        return u"%s - [%s] %s vs %s (%s)" % (
+            self.round.tournament.short_name,
+            self.round.seq,
+            self.aff_team.short_reference,
+            self.neg_team.short_reference,
+            self.venue.name
+        )
 
     @property
     def matchup(self):
@@ -1477,7 +1482,7 @@ class DebateTeam(models.Model):
 
     objects = SRManager()
 
-    debate = models.ForeignKey(Debate)
+    debate = models.ForeignKey(Debate, db_index=True)
     team = models.ForeignKey(Team)
 
     # South can't (easily) handle custom fields, so we'll just duplicate this
@@ -1510,7 +1515,7 @@ class DebateAdjudicator(models.Model):
     objects = SRManager()
 
     debate = models.ForeignKey(Debate)
-    adjudicator = models.ForeignKey(Adjudicator)
+    adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
     def __unicode__(self):
@@ -1598,7 +1603,7 @@ class Submission(models.Model):
 
 
 class AdjudicatorFeedback(Submission):
-    adjudicator = models.ForeignKey(Adjudicator)
+    adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     score = models.FloatField()
     agree_with_decision = models.NullBooleanField()
     comments = models.TextField(blank=True)
@@ -1782,6 +1787,7 @@ class SpeakerScoreByAdj(models.Model):
 
     class Meta:
         unique_together = [('debate_adjudicator', 'debate_team', 'position', 'ballot_submission')]
+        index_together = ['ballot_submission','debate_adjudicator']
 
     @property
     def debate(self):
@@ -1793,7 +1799,7 @@ class TeamScore(models.Model):
     Holds a teams total score and points in a debate
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_team = models.ForeignKey(DebateTeam)
+    debate_team = models.ForeignKey(DebateTeam, db_index=True)
     points = models.PositiveSmallIntegerField()
     margin = ScoreField()
     win = models.NullBooleanField()
@@ -1817,7 +1823,7 @@ class SpeakerScore(models.Model):
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_team = models.ForeignKey(DebateTeam)
-    speaker = models.ForeignKey(Speaker)
+    speaker = models.ForeignKey(Speaker, db_index=True)
     score = ScoreField()
     position = models.IntegerField()
 
@@ -1890,7 +1896,7 @@ class Motion(models.Model):
     text = models.CharField(max_length=500, help_text="The motion itself")
     reference = models.CharField(max_length=100, help_text="Shortcode for the motion")
     flagged = models.BooleanField(default=False, help_text="WADL: Allows for particular motions to be flagged as contentious")
-    round = models.ForeignKey(Round)
+    round = models.ForeignKey(Round, db_index=True)
     objects = MotionManager()
     divisions = models.ManyToManyField('Division', blank=True, null=True)
 
@@ -1900,8 +1906,8 @@ class Motion(models.Model):
 
 class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""
-    debate_team = models.ForeignKey(DebateTeam)
-    motion = models.ForeignKey(Motion)
+    debate_team = models.ForeignKey(DebateTeam, db_index=True)
+    motion = models.ForeignKey(Motion, db_index=True)
     preference = models.IntegerField()
     ballot_submission = models.ForeignKey(BallotSubmission)
 
@@ -2006,7 +2012,7 @@ class ActionLog(models.Model):
     ALL_OPTIONAL_FIELDS = ('debate', 'ballot_submission', 'adjudicator_feedback', 'round', 'motion')
 
     type = models.PositiveSmallIntegerField(choices=ACTION_TYPE_CHOICES)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
     tournament = models.ForeignKey(Tournament, blank=True, null=True)
@@ -2079,7 +2085,7 @@ class ConfigManager(models.Manager):
 
 
 class Config(models.Model):
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, db_index=True)
     key = models.CharField(max_length=40)
     value = models.CharField(max_length=40)
 
