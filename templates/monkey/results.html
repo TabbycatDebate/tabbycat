@@ -50,12 +50,12 @@
                 {{ debate.venue_splitname }}
             </td>
             <td>
-                <span href="#" title="{{ debate.aff_team.speakers|join:'<br>' }}">
+                <span href="#" title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}">
                     {{ debate.aff_team.short_name }}
                 <span>
             </td>
             <td>
-                <span href="#" title="{{ debate.neg_team.speakers|join:'<br>' }}">
+                <span href="#" title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}">
                     {{ debate.neg_team.short_name }}
                 </span>
             </td>

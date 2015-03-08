@@ -123,7 +123,7 @@
                 {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
-                <span href="#" title="<h5>{{ debate.aff_team.long_name }}</h5>{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                <span href="#" title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
                     {{ debate.aff_team.short_name }}
                 </span>
             </td>
@@ -134,7 +134,7 @@
                 {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
                     <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
                 {% endif %}
-                <span href="#" title="<h5>{{ debate.neg_team.long_name }}</h5>{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                <span href="#" title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
                     {{ debate.neg_team.short_name }}
                 </span>
             </td>

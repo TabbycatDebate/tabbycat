@@ -20,6 +20,9 @@
                                 <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament.name }}</a></li>
                             {% endif %}
                         {% endfor %}
+                        {% if all_tournaments.all.count > 1 and all_tournaments.0.config.public_divisions > 0 %}
+                            <li><a href="{{ all_tournaments.0.get_all_divisions_url }}">All Tournament's Teams</a></li>
+                        {% endif %}
                     </ul>
                 </li>
             </ul>

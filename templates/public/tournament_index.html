@@ -92,6 +92,9 @@
                         <li class="list-group-item"><a href="{% round_url public_draw_by_round r %}">Draw for {{ r.name }}</a></li>
                     {% endif %}
                 {% endfor %}
+                <li class="list-group-item">
+                    <a class="public-draw-nav" href="{% tournament_url public_all_draws %}">View All Draws</a>
+                </li>
             {% endif %}
         </ul>
     </div>

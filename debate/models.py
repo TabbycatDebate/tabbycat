@@ -1449,12 +1449,11 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __unicode__(self):
-        return u"%s - [%s] %s vs %s (%s)" % (
+        return u"%s - [%s] %s vs %s" % (
             self.round.tournament,
             self.round.seq,
             self.aff_team,
-            self.neg_team,
-            self.venue.name
+            self.neg_team
         )
 
     @property

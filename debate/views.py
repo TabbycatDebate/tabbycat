@@ -314,6 +314,16 @@ def all_tournament_divisions(request, t):
     teams = Team.objects.all()
     return r2r(request, 'public/public_all_tournament_teams.html', dict(teams=teams))
 
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def public_all_draws(request, t):
+    all_rounds = list(Round.objects.filter(tournament=t))
+    for r in all_rounds:
+        r.draw = r.get_draw()
+
+    return r2r(request, 'public/public_draw_display_all.html', dict(all_rounds=all_rounds))
+
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
 def public_side_allocations(request, t):

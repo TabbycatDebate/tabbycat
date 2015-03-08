@@ -28,13 +28,18 @@
         </li>
         {% endif %}
         {% if show_all_draws > 0 %}
-            <li><a class="public-results-nav" href="#" data-toggle="dropdown">All Draws<b class="caret"></b></a>
+            <li><a class="public-results-nav" href="#" data-toggle="dropdown">Draws<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     {% for r in tournament.rounds.all %}
                         {% if r.draw_status == r.STATUS_RELEASED %}
                             <li><a href="{% round_url public_draw_by_round r %}">{{ r.name }}</a></li>
                         {% endif %}
                     {% endfor %}
+                    <li>
+                        <a class="public-draw-nav" href="{% tournament_url public_all_draws %}">
+                            View All
+                        </a>
+                    </li>
                 </ul>
             </li>
         {% endif %}

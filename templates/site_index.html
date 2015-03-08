@@ -8,9 +8,7 @@
 
 {% block content %}
 
-
 <ul class="list-group">
-
     {% if user.is_authenticated %}
         {% for tournament in tournaments %}
         <li class="list-group-item">
@@ -31,7 +29,7 @@
     {% endif %}
     {% if tournaments.all.count > 1 and tournaments.0.config.public_divisions > 0 %}
     <li class="list-group-item">
-        <a href="{{ tournaments.0.get_all_divisions_url }}">View All Team Information</a>
+        <a href="{{ tournaments.0.get_all_divisions_url }}">All Tournament's Teams</a>
     </li>
     {% endif %}
 </ul>

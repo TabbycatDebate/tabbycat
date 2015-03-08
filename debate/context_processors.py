@@ -23,6 +23,7 @@ def debate_context(request):
             'public_divisions'        : request.tournament.config.get('public_divisions'),
             'public_draw'             : request.tournament.config.get('public_draw'),
             'show_all_draws'          : request.tournament.config.get('show_all_draws'),
+            'show_speakers_in_draw'   : request.tournament.config.get('show_speakers_in_draw'),
             'public_motions'          : request.tournament.config.get('public_motions'),
             'public_results'          : request.tournament.config.get('public_results'),
             'public_ballots'          : request.tournament.config.get('public_ballots'),

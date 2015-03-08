@@ -41,6 +41,7 @@ SETTINGS = OrderedDict([
     ('show_emoji',                  (_bool, 'Shows Emoji in the draw UI',                                          False)),
     ('show_institutions',           (_bool, 'Shows the institutions column in draw and other UIs',                 True)),
     ('show_novices',                (_bool, 'Show if a speaker is a novice in the released tab',                   False)),
+    ('show_speakers_in_draw',       (_bool, 'Disable/Enable a hover element showing each teams speakers',          True)),
     ('public_participants',         (_bool, 'Public interface to see all participants',                            False)),
     ('public_side_allocations',     (_bool, 'Public interface to see side pre-allocations',                        False)),
     ('public_draw',                 (_bool, 'Public interface to see RELEASED draws',                              False)),
