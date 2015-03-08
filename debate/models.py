@@ -119,11 +119,7 @@ class VenueGroup(models.Model):
         ordering = ['short_name']
 
     def __unicode__(self):
-        return u"%s - %s" % (self.tournament, self.short_name)
-
-    @property
-    def full_name(self):
-        return unicode(self.name + self.tournament)
+        return u"%s" % (self.short_name)
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
@@ -138,9 +134,9 @@ class Venue(models.Model):
 
     def __unicode__(self):
         if self.group:
-            return u'%s - %s - %s' % (self.group, self.name)
+            return u'%s - %s' % (self.group, self.name)
         else:
-            return u'%s - %s' % (self.name)
+            return u'%s' % (self.name)
 
 class Institution(models.Model):
     code = models.CharField(max_length=20)
@@ -417,7 +413,7 @@ class Division(models.Model):
         return self.team_set.all().order_by('institution','reference')
 
     def __unicode__(self):
-        return u"%s - %s" % (self.tournament.short_name, self.name)
+        return u"%s - %s" % (self.tournament, self.name)
 
     class Meta:
         unique_together = [('tournament', 'name')]
@@ -465,7 +461,7 @@ class Team(models.Model):
     objects = TeamManager()
 
     def __unicode__(self):
-        return u"%s - %s" % (self.tournament.short_name, self.short_name)
+        return u"%s - %s" % (self.tournament, self.short_name)
 
     @property
     def short_name(self):
@@ -898,7 +894,7 @@ class Round(models.Model):
         index_together = ['tournament', 'seq']
 
     def __unicode__(self):
-        return u"%s - %s" % (self.tournament.short_name, self.name)
+        return u"%s - %s" % (self.tournament, self.name)
 
     def motions(self):
         return self.motion_set.order_by('seq')
@@ -1454,10 +1450,10 @@ class Debate(models.Model):
 
     def __unicode__(self):
         return u"%s - [%s] %s vs %s (%s)" % (
-            self.round.tournament.short_name,
+            self.round.tournament,
             self.round.seq,
-            self.aff_team.short_reference,
-            self.neg_team.short_reference,
+            self.aff_team,
+            self.neg_team,
             self.venue.name
         )
 

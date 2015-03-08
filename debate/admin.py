@@ -38,6 +38,9 @@ class TeamAdmin(admin.ModelAdmin):
     list_filter = ('tournament', 'division', 'institution')
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
 
+    def get_queryset(self, request):
+        return super(TeamAdmin, self).queryset(request).prefetch_related('institution','division')
+
 admin.site.register(models.Team, TeamAdmin)
 
 
@@ -96,9 +99,12 @@ class VenueGroupAdmin(admin.ModelAdmin):
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
 
 class VenueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'priority', 'time', 'tournament')
-    list_filter = ('tournament', 'group', 'priority', 'time')
+    list_display = ('name', 'group', 'priority', 'time',)
+    list_filter = ('group', 'priority', 'time')
     search_fields = ('name', 'group', 'time')
+
+    def get_queryset(self, request):
+        return super(VenueAdmin, self).queryset(request).select_related('group')
 
 admin.site.register(models.Venue, VenueAdmin)
 
@@ -114,18 +120,25 @@ class DebateAdmin(admin.ModelAdmin):
     list_display = ('id','round','bracket','aff_team', 'neg_team',)
     list_filter = ('round__tournament','round', 'division')
     #inlines = (DebateTeamInline, DebateAdjudicatorInline)
-    exclude = ('round','venue')
+    exclude = ('venue','round')
+
+    def get_queryset(self, request):
+        return super(DebateAdmin, self).queryset(request).select_related(
+            'round__tournament','division__tournament'
+        )
+
 
 admin.site.register(models.Debate, DebateAdmin)
 
 _ts_round = lambda o: o.debate_team.debate.round.seq
 _ts_round.short_description = 'Round'
-_ts_team = lambda o: o.debate_team.team.name
+_ts_team = lambda o: o.debate_team.team
 _ts_team.short_description = 'Team'
 class TeamScoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ts_team, 'score')
     search_fields = ('debate_team__debate__round__seq',
                      'debate_team__team__reference', 'debate_team__team__institution__code')
+
 admin.site.register(models.TeamScore, TeamScoreAdmin)
 
 _ss_speaker = lambda o: o.speaker.name
@@ -136,6 +149,13 @@ class SpeakerScoreAdmin(admin.ModelAdmin):
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'speaker__name')
     list_filter = ('score',)
+
+    def get_queryset(self, request):
+        return super(SpeakerScoreAdmin, self).queryset(request).select_related(
+            'debate_team__debate__round',
+            'debate_team__team__institution','debate_team__team__tournament',
+            'ballot_submission')
+
 admin.site.register(models.SpeakerScore, SpeakerScoreAdmin)
 
 _ssba_speaker = lambda o: models.SpeakerScore.objects.filter(debate_team=o.debate_team, position=o.position)[0].speaker.name
@@ -166,6 +186,7 @@ class RoundAdmin(admin.ModelAdmin):
     list_filter = ('tournament',)
     search_fields = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status')
 
+
 admin.site.register(models.Round, RoundAdmin)
 
 class DebateAdjudicatorAdmin(admin.ModelAdmin):
@@ -193,4 +214,10 @@ class ActionLogAdmin(admin.ModelAdmin):
     list_display = ('type', 'user', 'timestamp', 'get_parameters_display', 'tournament')
     list_filter = ('tournament', 'user', 'type')
     search_fields = ('type', 'tournament__name', 'user__username')
+
+    def get_queryset(self, request):
+        return super(ActionLogAdmin, self).queryset(request).select_related(
+            'tournament','user'
+        )
+
 admin.site.register(models.ActionLog, ActionLogAdmin)
