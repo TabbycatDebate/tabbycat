@@ -47,10 +47,4 @@ def debate_context(request):
         d['all_tournaments'] = Tournament.objects.filter(active=True)
         return d
 
-        try:
-            from local_settings import *
-            d['in_production'] = True
-        except Exception as e:
-            d['in_production'] = False
-
     return {}
