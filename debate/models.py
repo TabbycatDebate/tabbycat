@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 
+from django.utils.functional import cached_property
 from debate.utils import pair_list, memoize
 from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
@@ -1334,15 +1335,15 @@ class Debate(models.Model):
             l.sort()
         return result
 
-    @property
+    @cached_property
     def aff_team(self):
-        self._get_teams()
-        return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE].team
+        aff_dt = self.aff_dt
+        return aff_dt.team
 
-    @property
+    @cached_property
     def neg_team(self):
-        self._get_teams()
-        return self._team_cache[DebateTeam.POSITION_NEGATIVE].team
+        neg_dt = self.neg_dt
+        return neg_dt.team
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
@@ -1355,15 +1356,15 @@ class Debate(models.Model):
     def division_motion(self):
         return Motion.objects.filter(round=self.round, divisions=self.division)
 
-    @property
+    @cached_property
     def aff_dt(self):
-        self._get_teams()
-        return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE]
+        aff_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
+        return aff_dt
 
-    @property
+    @cached_property
     def neg_dt(self):
-        self._get_teams()
-        return self._team_cache[DebateTeam.POSITION_NEGATIVE]
+        neg_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
+        return neg_dt
 
     @property
     def draw_conflicts(self):
