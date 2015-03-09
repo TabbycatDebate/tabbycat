@@ -3,7 +3,6 @@
 @import "../bootstrap/stylesheets/bootstrap/mixins";
 @import "../bootstrap/stylesheets/bootstrap/type";
 @import "../bootstrap/stylesheets/bootstrap/forms";
-//@import "datatables/dataTables.bootstrap.css";
 
 @include text-emphasis-variant('.text-success', $brand-success);
 @include text-emphasis-variant('.text-info', $brand-info);
@@ -308,6 +307,10 @@ table a:hover {
 
     th:active {
         outline: none;
+    }
+
+    .debate-status {
+
     }
 
 }

@@ -1,10 +1,8 @@
 import sys
 import os
 
-PROJECT_PATH         = os.path.dirname(os.path.abspath(__file__))
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_PATH, 'static'),
-)
+PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
+STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
 STATIC_ROOT         = 'staticfiles'
 STATIC_URL          = '/static/'
 TEMPLATE_DIRS       = (os.path.join(PROJECT_PATH, 'templates'),)
@@ -79,47 +77,27 @@ INSTALLED_APPS = (
     'debate',
     'emoji',
     'debug_toolbar',
-    'pipeline',
+    'compressor',
     'gunicorn',
 )
 
 LOGIN_REDIRECT_URL = '/'
 
 # =========
-# = Pipeline =
+# = Pipelines =
 # =========
 
-STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'pipeline.finders.PipelineFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
 )
-
-PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.cssmin.CssminCompressor'
-PIPELINE_CSS = {
-    'base': {
-        'source_filenames': (
-          'css/style.scss',
-        ),
-        'output_filename': 'css/style.css',
-    },
-}
-PIPELINE_COMPILERS = (
-  'pipeline.compilers.sass.SASSCompiler',
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'), # SASS for stylesheets
 )
-PIPELINE_SASS_BINARY = 'usr/bin/sass'
-# PIPELINE_JS = {
-#     'stats': {
-#         'source_filenames': (
-#           'js/jquery.js',
-#           'js/d3.js',
-#           'js/collections/*.js',
-#           'js/application.js',
-#         ),
-#         'output_filename': 'js/stats.js',
-#     }
-# }
+LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
+COMPRESS_ENABLED = True
 
 # =========
 # = Cache =

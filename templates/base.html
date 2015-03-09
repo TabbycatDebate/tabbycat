@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +10,10 @@
 
     <title>{% block page-title %}{% endblock %}</title>
 
-    <link href="{% static 'bootstrap/stylesheets/bootstrap.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'bootstrap/stylesheets/bootstrap.scss' %}">
+    <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/style.scss' %}" />
+    {% endcompress %}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -20,14 +23,16 @@
 
     {% load debate_tags %}
 
-    <script type="text/javascript" language="javascript" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/jquery.validate.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
+    {% compress js %}
+        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
+        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
+        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
+        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
+        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
+        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
+    {% endcompress %}
 
-     <script type="text/javascript">
+    <script type="text/javascript">
         $.extend( true, $.fn.dataTable.defaults, {
             // Default Data Table options
             "sDom":
@@ -42,27 +47,6 @@
     </script>
 
     {% block extra-head %}{% endblock extra-head %}
-
-    <script>
-        $(document).ready(function(){
-            $('[data-toggle=tooltip]').tooltip({
-                'html': true,
-                'placement': 'bottom'
-            });
-            // Shifting the search filter around
-            if ($('.dataTables_filter').length > 0) {
-                var filter = $('.dataTables_filter').detach()
-                $("#header-options").prepend(filter);
-                var input = $(".dataTables_filter .form-control").detach();
-                filter.text("").append(input).addClass("form-group");
-                //filter.append('<span class="glyphicon glyphicon-search form-control-feedback"></span>');
-                input.attr("placeholder", "Quick Search");
-                input.removeClass("input-sm");
-            } else {
-                $("#header-options").css("min-height", 0);
-            }
-        });
-    </script>
 
 </head>
 
@@ -97,6 +81,28 @@
     </div>
 
     {% include "footer.html" %}
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle=tooltip]').tooltip({
+                'html': true,
+                'placement': 'bottom'
+            });
+            // Shifting the search filter around
+            if ($('.dataTables_filter').length > 0) {
+                var filter = $('.dataTables_filter').detach()
+                $("#header-options").prepend(filter);
+                var input = $(".dataTables_filter .form-control").detach();
+                filter.text("").append(input).addClass("form-group");
+                //filter.append('<span class="glyphicon glyphicon-search form-control-feedback"></span>');
+                input.attr("placeholder", "Quick Search");
+                input.removeClass("input-sm");
+            } else {
+                $("#header-options").css("min-height", 0);
+            }
+        });
+    </script>
+    {% block footer-js %}{% endblock %}
 
     {% if debug %}
         <!-- No Analytics -->

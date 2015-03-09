@@ -10,14 +10,6 @@
 {% endblock %}
 {% block page-title %}Dashboard{% endblock %}
 {% block body-class %}dash{% endblock %}
-{% block extra-head %}
-<script type="text/javascript" charset="utf-8">
-    function reload() {
-        location.reload();
-    }
-    setTimeout('reload()', 100000);
-</script>
-{% endblock %}
 {% block header %}{% endblock %}
 
 {% block content %}
@@ -73,7 +65,13 @@
     </div>
 
 </div>
-
-
-
 {% endblock content %}
+
+{% block footer-js %}
+<script type="text/javascript" charset="utf-8">
+    function reload() {
+        location.reload();
+    }
+    setTimeout('reload()', 100000);
+</script>
+{% endblock %}

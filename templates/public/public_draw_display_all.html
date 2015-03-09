@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block extra-head %}
+    <script type="text/javascript">
+        $(document).ready( function() {
+            var table = $('#draw').dataTable({
+                "aaSorting": [[ 0, "asc" ],[ 1, "asc" ]],
+            });
+            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+
+        });
+    </script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/scroller.js' %}"></script>
+{% endblock extra-head %}
+
+{% block body-class %}draw-public-display{% endblock %}
+
+{% block head-title %}All Draws{% endblock %}
+{% block page-title %}All Draws{% endblock %}
+{% block header %}{% endblock %}
+
+{% block content %}
+
+    <table id="draw" class="h4 table table-bordered">
+        <thead>
+            <tr>
+                <th><span data-toggle="tooltip" title="Round">R</span></th>
+                {% if enable_divisions %}
+                    <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+                {% endif %}
+                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+                {% if enable_venue_times %}
+                    <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
+                    <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
+                {% endif %}
+                <th>Aff<span class="hidden-xs">irmative</span></th>
+                <th>Neg<span class="hidden-xs">ative</span></th>
+                {% if enable_division_motions %}
+                    <th>Motion</th>
+                {% endif %}
+                {% if not enable_divisions %}
+                    <th>Adj<span class="hidden-xs">udicator</span>s</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for round in all_rounds %}
+                {% for debate in round.draw %}
+                    <tr class="{% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}active text-muted{% endif %}">
+                        <td>{{ round.seq }}</td>
+                        <td>{{ debate.division.name }}</td>
+                        <td>
+                            <span title="{{ debate.division.venue_group.name }}" data-toggle="tooltip">{{ debate.division.venue_group.short_name }}</span>
+                        </td>
+                        <td>{{ debate.venue.time|date:"D jS F" }}</td>
+                        <td>{{ debate.division.time_slot|time:'h:i A' }}</td>
+                        <td class="team-name">
+                            {{ debate.aff_team.short_name }}
+                        </td>
+                        <td class="team-name">
+                            {{ debate.neg_team.short_name }}
+                        </td>
+                        <td>
+                            {% for motion in debate.division_motion %}
+                                <span>{{ motion.reference }}</span>
+                                <small title="{{ motion.text }}" data-toggle="tooltip">(view motion)</small>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}
