@@ -308,11 +308,15 @@ table a:hover {
     th:active {
         outline: none;
     }
+}
 
-    .debate-status {
-
-    }
-
+@include table-row-variant('debate-status-N', $state-warning-bg);
+@include table-row-variant('debate-status-D', $state-info-bg);
+@include table-row-variant('debate-status-C', $state-success-bg);
+@include table-row-variant('debate-status-P', $table-bg-active);
+@include table-row-variant('debate-status-B', $table-bg-active);
+.debate-status-B {
+    @extend .text-muted;
 }
 
 // Modals

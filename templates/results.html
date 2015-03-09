@@ -66,7 +66,7 @@
     <tbody>
 
     {% for debate in draw %}
-        <tr class="debate-status-{{debate.result_status}}">
+        <tr class="debate-status-{% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}B{% else %}{{debate.result_status}}{% endif %}">
             <td>
                 {% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}
                     <span class="hidden">5</span>

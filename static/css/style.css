@@ -107,7 +107,7 @@ cite {
 .text-justify {
   text-align: justify; }
 
-.text-muted {
+.text-muted, .debate-status-B {
   color: #999999; }
 
 .text-primary {
@@ -855,6 +855,86 @@ table a:hover {
       cursor: pointer; }
   #wrap table.table th:active, .FixedHeader_Cloned .table th:active {
     outline: none; }
+
+.table > thead > tr > td.debate-status-N,
+.table > thead > tr > th.debate-status-N, .table > thead > tr.debate-status-N > td, .table > thead > tr.debate-status-N > th,
+.table > tbody > tr > td.debate-status-N,
+.table > tbody > tr > th.debate-status-N,
+.table > tbody > tr.debate-status-N > td,
+.table > tbody > tr.debate-status-N > th,
+.table > tfoot > tr > td.debate-status-N,
+.table > tfoot > tr > th.debate-status-N,
+.table > tfoot > tr.debate-status-N > td,
+.table > tfoot > tr.debate-status-N > th {
+  background-color: #fcede3; }
+
+.table-hover > tbody > tr > td.debate-status-N:hover,
+.table-hover > tbody > tr > th.debate-status-N:hover, .table-hover > tbody > tr.debate-status-N:hover > td, .table-hover > tbody > tr.debate-status-N:hover > th {
+  background-color: #fadecc; }
+
+.table > thead > tr > td.debate-status-D,
+.table > thead > tr > th.debate-status-D, .table > thead > tr.debate-status-D > td, .table > thead > tr.debate-status-D > th,
+.table > tbody > tr > td.debate-status-D,
+.table > tbody > tr > th.debate-status-D,
+.table > tbody > tr.debate-status-D > td,
+.table > tbody > tr.debate-status-D > th,
+.table > tfoot > tr > td.debate-status-D,
+.table > tfoot > tr > th.debate-status-D,
+.table > tfoot > tr.debate-status-D > td,
+.table > tfoot > tr.debate-status-D > th {
+  background-color: #d9edf7; }
+
+.table-hover > tbody > tr > td.debate-status-D:hover,
+.table-hover > tbody > tr > th.debate-status-D:hover, .table-hover > tbody > tr.debate-status-D:hover > td, .table-hover > tbody > tr.debate-status-D:hover > th {
+  background-color: #c4e3f3; }
+
+.table > thead > tr > td.debate-status-C,
+.table > thead > tr > th.debate-status-C, .table > thead > tr.debate-status-C > td, .table > thead > tr.debate-status-C > th,
+.table > tbody > tr > td.debate-status-C,
+.table > tbody > tr > th.debate-status-C,
+.table > tbody > tr.debate-status-C > td,
+.table > tbody > tr.debate-status-C > th,
+.table > tfoot > tr > td.debate-status-C,
+.table > tfoot > tr > th.debate-status-C,
+.table > tfoot > tr.debate-status-C > td,
+.table > tfoot > tr.debate-status-C > th {
+  background-color: #dff0d8; }
+
+.table-hover > tbody > tr > td.debate-status-C:hover,
+.table-hover > tbody > tr > th.debate-status-C:hover, .table-hover > tbody > tr.debate-status-C:hover > td, .table-hover > tbody > tr.debate-status-C:hover > th {
+  background-color: #d0e9c6; }
+
+.table > thead > tr > td.debate-status-P,
+.table > thead > tr > th.debate-status-P, .table > thead > tr.debate-status-P > td, .table > thead > tr.debate-status-P > th,
+.table > tbody > tr > td.debate-status-P,
+.table > tbody > tr > th.debate-status-P,
+.table > tbody > tr.debate-status-P > td,
+.table > tbody > tr.debate-status-P > th,
+.table > tfoot > tr > td.debate-status-P,
+.table > tfoot > tr > th.debate-status-P,
+.table > tfoot > tr.debate-status-P > td,
+.table > tfoot > tr.debate-status-P > th {
+  background-color: whitesmoke; }
+
+.table-hover > tbody > tr > td.debate-status-P:hover,
+.table-hover > tbody > tr > th.debate-status-P:hover, .table-hover > tbody > tr.debate-status-P:hover > td, .table-hover > tbody > tr.debate-status-P:hover > th {
+  background-color: #e8e8e8; }
+
+.table > thead > tr > td.debate-status-B,
+.table > thead > tr > th.debate-status-B, .table > thead > tr.debate-status-B > td, .table > thead > tr.debate-status-B > th,
+.table > tbody > tr > td.debate-status-B,
+.table > tbody > tr > th.debate-status-B,
+.table > tbody > tr.debate-status-B > td,
+.table > tbody > tr.debate-status-B > th,
+.table > tfoot > tr > td.debate-status-B,
+.table > tfoot > tr > th.debate-status-B,
+.table > tfoot > tr.debate-status-B > td,
+.table > tfoot > tr.debate-status-B > th {
+  background-color: whitesmoke; }
+
+.table-hover > tbody > tr > td.debate-status-B:hover,
+.table-hover > tbody > tr > th.debate-status-B:hover, .table-hover > tbody > tr.debate-status-B:hover > td, .table-hover > tbody > tr.debate-status-B:hover > th {
+  background-color: #e8e8e8; }
 
 .modal-body {
   overflow: auto; }
