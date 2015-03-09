@@ -1005,8 +1005,7 @@ class Round(models.Model):
             return False
 
     def get_draw(self):
-        # -bracket is included for ateneo data, which doesn't have room_rank
-        return self.debate_set.order_by('room_rank', '-bracket')
+        return self.debate_set.order_by('room_rank')
 
     def get_draw_by_room(self):
         return self.debate_set.order_by('venue__name')

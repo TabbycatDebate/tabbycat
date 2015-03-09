@@ -1162,13 +1162,16 @@ def results(request, round):
         'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
         'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
         'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
+        'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
     }
 
     num_motions = Motion.objects.filter(round=round).count()
     show_motions_column = num_motions > 1
     has_motions = num_motions > 0
 
-    return r2r(request, "results.html", dict(draw=draw, stats=stats, show_motions_column=show_motions_column, has_motions=has_motions))
+    return r2r(request, "results.html", dict(draw=draw, stats=stats,
+        show_motions_column=show_motions_column, has_motions=has_motions)
+    )
 
 def monkey_results(request, round):
 
@@ -1622,16 +1625,19 @@ def master_sheets_view(request, round, venue_group_id):
     base_venue_group = VenueGroup.objects.get(id=venue_group_id)
     active_tournaments = Tournament.objects.filter(active=True)
 
-    all_debates = Debate.objects.filter(
-        # All Debates, with a matching round number, at the same venue group name
-        round__seq=round.seq,
-        round__tournament__active=True,
-        division__venue_group__short_name=base_venue_group.short_name # hack - remove when venue groups are unified
-    )
+    for tournament in list(active_tournaments):
+        tournament.debates = Debate.objects.select_related(
+            'division','division__venue_group__short_name','round','round__tournament','aff_team','neg_team'
+        ).filter(
+            # All Debates, with a matching round, at the same venue group name
+            round__seq=round.seq,
+            round__tournament=tournament,
+            division__venue_group__short_name=base_venue_group.short_name # hack - remove when venue groups are unified
+        ).order_by('round','division__venue_group__short_name','division')
 
     return r2r(request, 'master_sheets_view.html', dict(
         base_venue_group=base_venue_group,
-        all_debates=all_debates
+        active_tournaments=active_tournaments
     ))
 
 
