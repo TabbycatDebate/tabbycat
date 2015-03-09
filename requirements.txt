@@ -14,3 +14,4 @@ django-suit>=0.2.12 # Admin Backend
 django-debug-toolbar>=1.2 # Debug Toolbar
 django-emoji>=1.2.0 # Emoji Support
 django-ipware>=0.0.8 # IP Address logging
+django-pipeline==1.4.6 # SASS and JS compilation
