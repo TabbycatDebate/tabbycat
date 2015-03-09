@@ -97,10 +97,12 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'), # SASS for stylesheets
 )
 LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
+
 COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = False # Whether to compress outside of request/response
 COMPRESS_URL = STATIC_URL
-COMPRESS_OFFLINE = True
-COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_OFFLINE_MANIFEST = "manifest.json"
+COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
 
 # =========
 # = Cache =

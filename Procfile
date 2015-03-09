@@ -1,1 +1,1 @@
-web: run-program python manage.py compress; gunicorn wsgi --workers 12
+web: run-program python manage.py collectstatic --noinput; gunicorn wsgi --workers 12
