@@ -10,8 +10,10 @@
 
     <title>{% block page-title %}{% endblock %}</title>
 
-    <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'bootstrap/stylesheets/bootstrap.css' %}" />
-    <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/style.css' %}" />
+    {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'bootstrap/stylesheets/bootstrap.scss' %}">
+    <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/style.scss' %}" />
+    {% endcompress %}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -21,13 +23,13 @@
 
     {% load debate_tags %}
 
-        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
-        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
-        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
-        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
-        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
-        <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
-
+    {% compress js %}
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
     <script type="text/javascript">
         $.extend( true, $.fn.dataTable.defaults, {
             // Default Data Table options
@@ -41,6 +43,7 @@
             }
         });
     </script>
+    {% endcompress %}
 
     {% block extra-head %}{% endblock extra-head %}
 
