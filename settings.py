@@ -149,20 +149,20 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
-# if os.environ.get('MEMCACHE_SERVERS', ''):
-#     os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
-#     os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
-#     os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
-#     CACHES = {
-#         'default': {
-#             'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-#             'TIMEOUT': 500,
-#             'BINARY': True,
-#             'OPTIONS': {
-#                 'tcp_nodelay': True
-#             }
-#         }
-#     }
+if os.environ.get('MEMCACHE_SERVERS', ''):
+    os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
+    os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
+    os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+            'TIMEOUT': 500,
+            'BINARY': True,
+            'OPTIONS': {
+                'tcp_nodelay': True
+            }
+        }
+    }
 
 # if os.environ.get('REDISTOGO_URL', ''):
 #     redis_url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', ''))
