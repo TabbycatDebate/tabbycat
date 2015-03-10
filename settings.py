@@ -173,6 +173,7 @@ ALLOWED_HOSTS = ['*']
 #     SESSION_REDIS_PASSWORD = redis_url.password
 #     SESSION_REDIS_PREFIX = 'session'
 
+DEBUG = True
 
 # ===========================
 # = Local Overrides
