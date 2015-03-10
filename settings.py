@@ -1,5 +1,6 @@
 import sys
 import os
+import urlparse
 
 PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
 STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
@@ -15,7 +16,7 @@ SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 ADMINS              = ('Test', 'test@test.com')
 MANAGERS            = ADMINS
-DEBUG               = True
+DEBUG               = os.path.exists('.debug') or (os.environ.has_key('DEBUG') and os.environ['DEBUG'] == "1")
 TEMPLATE_DEBUG      = DEBUG
 DEBUG_ASSETS        = DEBUG
 
@@ -99,36 +100,24 @@ COMPRESS_PRECOMPILERS = (
 LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
 
 COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = False # Whether to compress outside of request/response
+COMPRESS_OFFLINE = False # If true doesnt compress as pages are requested
 COMPRESS_URL = STATIC_URL
 COMPRESS_OFFLINE_MANIFEST = "manifest.json"
 COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
 
-# =========
-# = Cache =
-# =========
-def get_cache():
-  import os
-  try:
-    os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
-    os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
-    os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
-    return {
-      'default': {
-        'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-        'TIMEOUT': 500,
-        'BINARY': True,
-        'OPTIONS': { 'tcp_nodelay': True }
-      }
+# Default non-heroku cache is to use local memory
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake'
     }
-  except:
-    return {
-      'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-      }
-    }
-
-CACHES = get_cache()
+}
+# This is a dummy cache for development
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+#     }
+# }
 
 # ==================
 # = Configurations =
@@ -139,20 +128,49 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
 }
 
-# Heroku
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', ''))
-DEBUG = DEBUG
+# ===========================
+# = Heroku
+# ===========================
+
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
+
 DATABASES = {
     'default': dj_database_url.config(default='postgres://localhost')
 }
+
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
-# Local
+if os.environ.get('MEMCACHE_SERVERS', ''):
+    os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
+    os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
+    os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
+    CACHES = {
+        'default': {
+        'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+        'TIMEOUT': 500,
+        'BINARY': True,
+        'OPTIONS': { 'tcp_nodelay': True }
+        }
+    }
+
+if os.environ.get('REDISTOGO_URL', ''):
+    redis_url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', ''))
+    SESSION_ENGINE = 'redis_sessions.session'
+    SESSION_REDIS_HOST = redis_url.hostname
+    SESSION_REDIS_PORT = redis_url.port
+    SESSION_REDIS_DB = 0
+    SESSION_REDIS_PASSWORD = redis_url.password
+    SESSION_REDIS_PREFIX = 'session'
+
+
+# ===========================
+# = Local Overrides
+# ===========================
+
 try:
     from local_settings import *
 except Exception as e:
