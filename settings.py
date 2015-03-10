@@ -36,13 +36,6 @@ USE_I18N            = True
 # = Django-specific Modules =
 # ===========================
 
-# Caching enabled
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -85,6 +78,32 @@ INSTALLED_APPS = (
 LOGIN_REDIRECT_URL = '/'
 
 # =========
+# = Caching =
+# =========
+
+# Caching enabled
+TEMPLATE_LOADERS = (
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
+)
+
+# Default non-heroku cache is to use local memory
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake'
+    }
+}
+# This is a dummy cache for development
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+#     }
+# }
+
+# =========
 # = Pipelines =
 # =========
 
@@ -100,24 +119,11 @@ COMPRESS_PRECOMPILERS = (
 LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
 
 COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = False # If true doesnt compress as pages are requested
+COMPRESS_OFFLINE = True
 COMPRESS_URL = STATIC_URL
 COMPRESS_OFFLINE_MANIFEST = "manifest.json"
 COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
 
-# Default non-heroku cache is to use local memory
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake'
-    }
-}
-# This is a dummy cache for development
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-#     }
-# }
 
 # ==================
 # = Configurations =
