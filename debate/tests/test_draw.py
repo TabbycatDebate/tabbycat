@@ -1,8 +1,7 @@
 import os.path, sys
-if os.path.abspath("..") not in sys.path: sys.path.append(os.path.abspath(".."))
 import unittest
 from collections import OrderedDict
-from draw import DrawGenerator, Pairing, DrawError
+from debate.draw import DrawGenerator, Pairing, DrawError
 import copy
 from test_one_up_one_down import TestTeam
 
@@ -753,7 +752,7 @@ class TestEliminationDrawGenerator(unittest.TestCase):
     def _results(self, *args):
         _t = lambda id: self.teams[id-1]
         _p = lambda ids: map(_t, ids)
-        from draw import Pairing
+        from debate.draw import Pairing
         pairings = list()
         for i, (teams, winner) in enumerate(args):
             pairing = Pairing(_p(teams), 0, i, winner=_t(winner))
