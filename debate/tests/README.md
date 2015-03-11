@@ -1,7 +1,7 @@
-This directory is for testing functions that don't rely on the Django framework.
+To run tests in this directory, go to the root directory of this repository and:
 
-To run tests in this directory:
+ $ ./manage.py test
 
- $ python -m unittest discover
-
-See https://docs.python.org/2/library/unittest.html for more details.
+For more information:
+ - https://docs.djangoproject.com/en/1.7/topics/testing/
+ - https://docs.python.org/2/library/unittest.html

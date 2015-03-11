@@ -5,10 +5,10 @@ unittest). These will both pass when you run "manage.py test".
 Replace these with more appropriate tests for your application.
 """
 
+from django.conf import settings
+settings.configure()
 from django.test import TestCase
 from debate.models import Institution, Team, Speaker, Adjudicator, Debate, Round, Venue, DebateTeam
-from debate.draw import RandomDraw, AidaDraw
-from debate.aida import TestDraw
 
 class BaseTest(TestCase):
     def setUp(self):
