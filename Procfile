@@ -1,1 +1,1 @@
-web: waitress-serve --port=$PORT debate.wsgi:application
+web: waitress-serve --port=$PORT --threads=4 wsgi:application
