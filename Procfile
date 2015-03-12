@@ -1,1 +1,1 @@
-web: newrelic-admin run-program waitress-serve --port=$PORT --threads=4 wsgi:application
+web: NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program waitress-serve --port=$PORT --threads=4 wsgi:application
