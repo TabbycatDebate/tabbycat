@@ -55,7 +55,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.csrf",
     "django.core.context_processors.static",
     "debate.context_processors.debate_context",
-    'django.core.context_processors.request',
+    'django.core.context_processors.request', # For SUIT
 )
 
 INSTALLED_APPS = (
