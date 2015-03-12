@@ -9,3 +9,5 @@ django-redis-sessions==0.4.0
 
 # For web serving
 waitress==0.8.9
+
+newrelic
