@@ -1,1 +1,1 @@
-web: waitress-serve --port=$PORT --threads=4 wsgi:application
+web: newric-admin run-program waitress-serve --port=$PORT --threads=4 wsgi:application
