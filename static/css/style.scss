@@ -325,13 +325,28 @@ table a:hover {
 
 @include table-row-variant('debate-status-N', $state-warning-bg);
 .debate-status-N a {
-    color: darken($state-warning-bg, 40%);
+    color: darken($state-warning-bg, 60%);
 }
 
 @include table-row-variant('debate-status-D', $state-info-bg);
+.debate-status-D a {
+    color: darken($state-info-bg, 60%);
+}
+
 @include table-row-variant('debate-status-C', $state-success-bg);
+.debate-status-C a {
+    color: darken($state-success-bg, 60%);
+}
+
 @include table-row-variant('debate-status-P', $table-bg-active);
+.debate-status-P a {
+    color: darken($table-bg-active, 60%);
+}
+
 @include table-row-variant('debate-status-B', $table-bg-active);
+.debate-status-B a {
+    color: darken($table-bg-active, 60%);
+}
 
 .debate-status-B {
     @extend .text-muted;
