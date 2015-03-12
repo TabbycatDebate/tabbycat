@@ -1,1 +1,1 @@
-web: newrelic-admin run-program python manage.py collectstatic --noinput; gunicorn wsgi
+web: waitress-serve --port=$PORT debate.wsgi:application
