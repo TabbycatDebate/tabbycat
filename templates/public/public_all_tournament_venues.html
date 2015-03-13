@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}All Venues{% endblock %}
+{% block page-title %}All Venues{% endblock %}
+{% block body-class %}all-venues{% endblock %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for venue in venues %}
+            <a href="{% tournament_url all_draws_for_venue venue.id %}"class="list-group-item">
+                <span>{{ venue.name }}</span>
+                <span class="badge">VIEW ALL DRAWS</span>
+            </a>
+        {% endfor %}
+    </ul>
+{% endblock content %}

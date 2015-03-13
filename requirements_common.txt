@@ -1,0 +1,10 @@
+# This file contains the necessary dependencies for a local install
+
+Django==1.7.3
+
+django-suit>=0.2.12 # Admin Backend
+django-debug-toolbar>=1.2 # Debug Toolbar
+django-emoji>=1.2.0 # Emoji Support
+django-ipware>=0.0.8 # IP Address logging
+django-libsass==0.2 # SASS Compilation
+dj-cmd==0.3 # Provides the dj command alias
