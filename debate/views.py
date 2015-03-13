@@ -11,14 +11,9 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 from ipware.ip import get_real_ip
 
-from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
-from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
-from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission, AdjudicatorTestScoreHistory
-from debate.models import AdjudicatorFeedback, ActiveVenue, ActiveTeam, ActiveAdjudicator
-from debate.models import TeamPositionAllocation
-from debate.models import Division, TeamVenuePreference, VenueGroup
 from debate.result import BallotSet
 from debate import forms
+from debate.models import *
 
 from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
@@ -308,11 +303,44 @@ def public_divisions(request, t):
     return r2r(request, 'public/public_divisions.html', dict(venue_groups=venue_groups))
 
 
+
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
-def all_tournament_divisions(request, t):
-    teams = Team.objects.all()
-    return r2r(request, 'public/public_all_tournament_teams.html', dict(teams=teams))
+def all_tournaments_all_venues(request, t):
+    venues = VenueGroup.objects.all()
+    return r2r(request, 'public/public_all_tournament_venues.html', dict(venues=venues))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def all_draws_for_venue(request, t, venue_id):
+    venue_group = VenueGroup.objects.get(pk=venue_id)
+    debates = Debate.objects.filter(division__venue_group=venue_group)
+    return r2r(request, 'public/all_draws_for_venue.html', dict(
+        venue_group=venue_group, debates=debates))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def all_tournaments_all_institutions(request, t):
+    institutions = Institution.objects.all()
+    return r2r(request, 'public/public_all_tournament_institutions.html', dict(
+        institutions=institutions))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def all_draws_for_institution(request, t, institution_id):
+    institution = Institution.objects.get(pk=institution_id)
+    debate_teams = DebateTeam.objects.filter(team__institution=institution)
+    debates = [dt.debate for dt in debate_teams]
+
+    return r2r(request, 'public/all_draws_for_institution.html', dict(
+        institution=institution, debates=debates))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def all_tournaments_all_teams(request, t):
+    teams = Team.objects.filter(tournament__active=True)
+    return r2r(request, 'public/public_all_tournament_teams.html', dict(
+        teams=teams))
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -322,7 +350,8 @@ def public_all_draws(request, t):
     for r in all_rounds:
         r.draw = r.get_draw()
 
-    return r2r(request, 'public/public_draw_display_all.html', dict(all_rounds=all_rounds))
+    return r2r(request, 'public/public_draw_display_all.html', dict(
+        all_rounds=all_rounds))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')

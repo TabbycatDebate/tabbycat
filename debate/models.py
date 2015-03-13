@@ -37,8 +37,16 @@ class Tournament(models.Model):
         return ('public_index', [self.slug])
 
     @models.permalink
-    def get_all_divisions_url(self):
-        return ('all_tournament_divisions', [self.slug])
+    def get_all_tournaments_all_venues(self):
+        return ('all_tournaments_all_venues', [self.slug])
+
+    @models.permalink
+    def get_all_tournaments_all_institutions(self):
+        return ('all_tournaments_all_institutions', [self.slug])
+
+    @models.permalink
+    def get_all_tournaments_all_teams(self):
+        return ('all_tournaments_all_teams', [self.slug])
 
     @property
     def teams(self):
@@ -678,6 +686,16 @@ class Person(models.Model):
 
     checkin_message = models.TextField(blank=True)
     notes = models.TextField(blank=True)
+
+    GENDER_MALE = 'M'
+    GENDER_FEMALE = 'F'
+    GENDER_OTHER = 'O'
+    GENDER_CHOICES = (
+        (GENDER_MALE,     'Male'),
+        (GENDER_FEMALE,   'Female'),
+        (GENDER_OTHER,    'Other'),
+    )
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES,blank=True, null=True)
 
     @property
     def has_contact(self):

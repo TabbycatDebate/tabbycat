@@ -138,11 +138,13 @@ DEBUG_TOOLBAR_CONFIG = {
 # ===========================
 
 # Parse database configuration from $DATABASE_URL
-import dj_database_url
-
-DATABASES = {
-    'default': dj_database_url.config(default='postgres://localhost')
-}
+try:
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(default='postgres://localhost')
+    }
+except:
+    pass
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -172,8 +174,6 @@ if os.environ.get('REDISTOGO_URL', ''):
     SESSION_REDIS_DB = 0
     SESSION_REDIS_PASSWORD = redis_url.password
     SESSION_REDIS_PREFIX = 'session'
-
-DEBUG = True
 
 # ===========================
 # = Local Overrides
