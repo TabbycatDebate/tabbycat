@@ -6,13 +6,14 @@
 {% block page-title %}Breaking Adjudicators{% endblock %}
 {% block body-class %}breakk breaking-adjs{% endblock %}
 
-{% if adjs.all.count == 0 %}
-    {% block header %}
+{% block header %}
+    {% if adjs.all.count == 0 %}
         <p class="lead">The breaking adjudicators have not been released yet.
         <img src="{% static 'emoji/img/cry.png' %}" width="24" height="24" />
         </p>
-    {% endblock %}
-{% endif %}
+    {% endif %}
+    {% include "table_search.html" %}
+{% endblock %}
 
 {% block content %}
     {% if adjs.all.count > 0 %}
@@ -43,12 +44,11 @@
     {{ block.super }}
     <script type="text/javascript" charset="utf-8">
         $(document).ready( function() {
-            var table = $("#dataTable").dataTable({
+            var dTable = $("#dataTable").DataTable({
                 "aaSorting": [[ 0, "asc" ]],
             });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-
-        } );
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+        });
     </script>
     <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
 {% endblock extra-js %}

@@ -55,12 +55,14 @@
     {{ block.super }}
     <script type="text/javascript" charset="utf-8">
         $(document).ready( function() {
-            var table = $("#dataTable").dataTable({
+            var dTable = $("#dataTable").DataTable({
                 "aaSorting": [[ 0, "asc" ]],
             });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-
-        } );
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
+        });
     </script>
     <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
 {% endblock extra-js %}

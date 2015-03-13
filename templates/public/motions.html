@@ -11,6 +11,8 @@
         <p class="lead">No motions have been released yet.
         <img src="{% static 'emoji/img/cry.png' %}" width="24" height="24" />
         </p>
+    {% else %}
+        {% include "table_search.html" %}
     {% endif %}
 {% endblock %}
 
@@ -62,16 +64,16 @@
     {% endif %}
 {% endblock content %}
 
-
 {% block extra-js %}
     <script type="text/javascript">
-
         $(document).ready( function() {
-            var table = $("#dataTable").dataTable({
+            var dTable = $("#dataTable").DataTable({
                 "aaSorting": [[0, "asc"], [1, "asc"]]
             });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
         });
-
     </script>
 {% endblock extra-js %}

@@ -17,6 +17,7 @@
         <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
       </label>
     </div>
+    {% include "table_search.html" %}
 {% endblock %}
 
 {% block content %}
@@ -61,10 +62,13 @@
     {{ block.super }}
     <script type="text/javascript" charset="utf-8">
         $(document).ready( function() {
-            var table = $('#dataTable').dataTable({
+            var dTable = $('#dataTable').DataTable({
                 "aaSorting": [[ 0, "asc" ]],
             });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
 
             $('#toggle-all').click(function () {
                 $('.adj-row').show();

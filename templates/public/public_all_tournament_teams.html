@@ -6,6 +6,8 @@
 {% block page-title %}All Teams{% endblock %}
 {% block body-class %}all-teams{% endblock %}
 
+{% block header %}{% include "table_search.html" %}{% endblock %}
+
 {% block content %}
     <table id="dataTable" class="table table-hover table-bordered table-striped">
         <thead>
@@ -34,13 +36,16 @@
 {% block extra-js %}
    <script type="text/javascript" charset="utf-8">
         $(document).ready( function() {
-            var table = $("#dataTable").dataTable({
+            var dTable = $("#dataTable").DataTable({
                 "aaSorting": [[ 0, "asc" ],[ 1, "asc" ],[ 2, "asc" ]],
                 "aoColumnDefs": [
                     { "bSearchable": false, "aTargets": [2] }, //set column visibility
                 ]
             });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
         } );
     </script>
 {% endblock extra-js %}

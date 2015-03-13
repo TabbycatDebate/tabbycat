@@ -5,6 +5,8 @@
 {% block page-title %}Side Allocations{% endblock %}
 {% block body-class %}side-allocations{% endblock %}
 
+{% block header %}{% include "table_search.html" %}{% endblock %}
+
 {% block content %}
     <table id="dataTable" class="team-tab table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
         <thead>
@@ -48,12 +50,14 @@
     {{ block.super }}
    <script type="text/javascript" charset="utf-8">
         $(document).ready( function() {
-            var table = $("#dataTable").dataTable({
+            var dTable = $("#dataTable").DataTable({
                 "aaSorting": [[ 1, "asc" ]],
             });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-
-        } );
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
+        });
     </script>
     <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
 {% endblock extra-js %}

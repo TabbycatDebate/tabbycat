@@ -28,6 +28,7 @@
         <a class="btn btn-default" href="" id="large_text">Large Text</a>
         <a class="btn btn-default" href="" id="huge_text">Huge Text</a>
     </div>
+    {% include "table_search.html" %}
 {% endblock %}
 
 {% block content %}
@@ -177,14 +178,17 @@
 {% block extra-js %}
     <script type="text/javascript">
         $(document).ready( function() {
-            var table = $('#draw').dataTable({
+            var dTable = $('#draw').DataTable({
                 'bPaginate': false,
                 "aaSorting": [[ 0, "asc" ]],
                 "aoColumnDefs": [
                   { "sType": "string", aTargets: [ '_all' ] }
                 ]
             });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
         });
     </script>
     <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>

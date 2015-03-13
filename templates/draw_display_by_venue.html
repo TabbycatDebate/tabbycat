@@ -18,15 +18,17 @@
         <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
     </div>
     <div id="statusBar" class="btn-group">
-        <div class="btn btn-default">Hit ESC to stop scrolling</div>
+        <div class="btn btn-default">ESC stops scroll</div>
     </div>
     <div class="btn-group">
-        <a class="btn btn-default" href="" id="tiny_text">Tiny Text</a>
-        <a class="btn btn-default" href="" id="small_text">Small Text</a>
-        <a class="btn btn-default active" href="" id="medium_text">Medium Text</a>
-        <a class="btn btn-default" href="" id="large_text">Large Text</a>
-        <a class="btn btn-default" href="" id="huge_text">Huge Text</a>
+        <a class="btn btn-default" href="" id="tiny_text">XS Text</a>
+        <a class="btn btn-default" href="" id="small_text">S Text</a>
+        <a class="btn btn-default active" href="" id="medium_text">M Text</a>
+        <a class="btn btn-default" href="" id="large_text">L Text</a>
+        <a class="btn btn-default" href="" id="huge_text">XL Text</a>
     </div>
+    {% include "table_search.html" %}
+
 {% endblock %}
 
 {% block content %}
@@ -154,11 +156,13 @@
 {% block extra-js %}
     <script type="text/javascript">
         $(document).ready( function() {
-            var table = $('#draw').dataTable({
+            var dTable = $('#draw').DataTable({
                 "aaSorting": [[ 0, "asc" ]],
             });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
         });
     </script>
     <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>

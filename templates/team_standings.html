@@ -6,6 +6,8 @@
 {% block page-title %}Team Standings after {{ round.name }}{% endblock %}
 {% block body-class %}team-standings{% endblock %}
 
+{% block header %}{% include "table_search.html" %}{% endblock %}
+
 {% block content %}
     <table id="dataTable" class="team-tab table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
         <thead>
@@ -116,17 +118,17 @@
     {{ block.super }}
    <script type="text/javascript" charset="utf-8">
         $(document).ready( function() {
+            var dTable = $("#dataTable").DataTable({
             {% if enable_divisions %}
-                var table = $("#dataTable").dataTable({
-                    "aaSorting": [[ 0, "asc" ], [ 1, "asc" ]],
-                });
+                "aaSorting": [[ 0, "asc" ], [ 1, "asc" ]],
             {% else %}
-                var table = $("#dataTable").dataTable({
-                    "aaSorting": [[ 0, "asc" ]],
-                });
+                "aaSorting": [[ 0, "asc" ]],
             {% endif %}
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-
+            });
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
         } );
     </script>
     <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>

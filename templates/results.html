@@ -25,6 +25,7 @@
             <a class="btn btn-default form-control btn-success" href="{% round_url round_increment_check %}">Advance to Next Round</a>
         </div>
     {% endif %}
+    {% include "table_search.html" %}
 {% endblock %}
 
 {% block content %}
@@ -170,10 +171,13 @@
 {% block extra-js %}
     <script type="text/javascript">
         $(document).ready(function(){
-            var table = $('#dataTable').dataTable({
+            var dTable = $('#dataTable').DataTable({
                 "aaSorting": [[ 0, "asc" ], [ 2, "desc" ], [ 3, "asc" ]],
             });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
         });
     </script>
 {% endblock %}

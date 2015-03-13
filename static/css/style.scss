@@ -224,6 +224,17 @@ table a:hover {
 .table-division-top {
     border-top: 5px solid #dddddd;
 }
+.dataTables_filter {
+    visibility: hidden;
+}
+#table-search-group {
+    margin-right:0;
+    padding-right: 0px;
+
+    .form-control {
+        height: 33px;
+    }
+}
 
 @media (max-width: $screen-xs-max) {
     .page-header {
@@ -241,7 +252,6 @@ table a:hover {
 }
 
 #wrap table.table, .FixedHeader_Cloned .table  {
-    margin-top: 0px !important; // for the fixed header
 
     tbody > tr > td,
     thead > tr > th  {

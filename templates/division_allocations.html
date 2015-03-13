@@ -163,7 +163,7 @@
 
         $(document).ready( function() {
 
-            var table = $("#dataTable").dataTable({
+            var dTable = $("#dataTable").DataTable({
                 "aaSorting": [[1, "asc"], [ 0, "asc" ]],
                 "aoColumnDefs": [
                     //{ "bVisible": false, "aTargets": [1] }, //set column visibility
@@ -172,6 +172,9 @@
                     { "bSearchable": false, "aTargets": [1,2,3,4,5,6] }, //set column visibility
                 ]
             });
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
 
             $('#save').click( function() {
                 var teams = {};

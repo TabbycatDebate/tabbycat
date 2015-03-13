@@ -6,7 +6,7 @@
 {% block head-title %}All Draws{% endblock %}
 {% block page-title %}All Draws{% endblock %}
 
-{% block header %}{% endblock %}
+{% block header %}{% include "table_search.html" %}{% endblock %}
 
 {% block content %}
 
@@ -66,11 +66,13 @@
 {% block extra-js %}
     <script type="text/javascript">
         $(document).ready( function() {
-            var table = $('#draw').dataTable({
+            var dTable = $('#draw').DataTable({
                 "aaSorting": [[ 0, "asc" ],[ 1, "asc" ]],
             });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
         });
     </script>
     <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
