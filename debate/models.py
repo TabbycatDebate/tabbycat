@@ -147,10 +147,16 @@ class Venue(models.Model):
         else:
             return u'%s' % (self.name)
 
+
+class Region(models.Model):
+    name = models.CharField(db_index=True, max_length=100)
+
+
 class Institution(models.Model):
     code = models.CharField(max_length=20)
     name = models.CharField(db_index=True, max_length=100)
     abbreviation = models.CharField(max_length=8, default="")
+    region = models.ForeignKey(Region, blank=True, null=True)
 
     class Meta:
         unique_together = [('name', 'code')]
