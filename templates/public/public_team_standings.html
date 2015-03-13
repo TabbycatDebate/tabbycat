@@ -2,31 +2,9 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block extra-head %}
-    {{ block.super }}
-       <script type="text/javascript" charset="utf-8">
-            $(document).ready( function() {
-                {% if enable_divisions %}
-                    var table = $("#dataTable").dataTable({
-                        "aaSorting": [[1, "desc" ], [ 0, "asc" ]],
-                    });
-                {% else %}
-                    var table = $("#dataTable").dataTable({
-                        "aaSorting": [[ 0, "asc" ]],
-                    });
-                {% endif %}
-                new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-            } );
-        </script>
-        <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
-{% endblock extra-head %}
-
-{% block extra-style %}{% endblock %}
-
 {% block head-title %}Team Standings <small>after {{ round.name }}</small>{% endblock %}
 {% block page-title %}Team Standings after {{ round.name }}{% endblock %}
 {% block body-class %}public-team-standings{% endblock %}
-
 {% block content %}
 
 <table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
@@ -129,3 +107,23 @@
 </table>
 
 {% endblock content %}
+
+
+{% block extra-js %}
+    {{ block.super }}
+   <script type="text/javascript" charset="utf-8">
+        $(document).ready( function() {
+            {% if enable_divisions %}
+                var table = $("#dataTable").dataTable({
+                    "aaSorting": [[1, "desc" ], [ 0, "asc" ]],
+                });
+            {% else %}
+                var table = $("#dataTable").dataTable({
+                    "aaSorting": [[ 0, "asc" ]],
+                });
+            {% endif %}
+            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+        } );
+    </script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+{% endblock extra-js %}

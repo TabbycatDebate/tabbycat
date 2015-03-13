@@ -1,89 +1,79 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block extra-head %}
-{{ block.super }}
-
-{% include "enter_results_head.html" %}
-{% if not new %}
-<script>
-    $(document).ready(function() {
-        function preSubmit() {
-            $('#resultsForm input').removeAttr('readonly');
-            $('#resultsForm select').removeAttr('disabled');
-        }
-        {% if disable_confirm %}
-        $('#correct').attr('disabled', 'true');
-        $('#correct').removeClass('btn-success');
-        {% endif %}
-        $('#resultsForm input[type="number"]').attr('readonly', 'true');
-        $('#resultsForm select').attr('disabled', 'true');
-        $('#incorrect').click(function() {
-            {% if ballot_not_singleton %}
-            $('#id_debate_result_status').val('{{ debate.STATUS_DRAFT }}');
-            {% else %}
-            $('#id_debate_result_status').val('{{ debate.STATUS_NONE }}');
-            {% endif %}
-            $('#id_discarded').attr('value', 'True');
-            $('#id_confirmed').attr('value', 'False');
-            preSubmit();
-            $('#resultsForm').submit();
-            return false;
-        });
-        $('#correct').click(function() {
-            preSubmit();
-        });
-    });
-
-</script>
-{% endif %}
-{% endblock %}
-
 {% block head-title %}
-{% if new %}
-New Ballot Set for
-{% else %}
-Edit Ballot Set for
-{% endif %}
-{{ debate.matchup }} <small>Round {{ debate.round }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}</small>
+    {% if new %}New Ballot Set for{% else %}Edit Ballot Set for{% endif %}
+    {{ debate.matchup }} <small>Round {{ debate.round }}
+    @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}
+    {{ debate.venue.name }}</small>
 {% endblock %}
 {% block body-class %}monkey-enter-result{% endblock %}
 
 {% block content %}
-
-{% include "other_ballots_list.html" %}
-
-<form id="resultsForm" action="." method="POST" class="form-horizontal">
-
-    {% include "enter_results_ballot_set.html" %}
-
-    <div class="row">
-        <p class="col-sm-12 page-header h4 lead">{% if new %}Save{% else %}Check{% endif %}</p>
-        <div class="col-sm-12">
-            {% if new %}
-                <!-- After a new ballot, always go into DRAFT, and the new ballot is neither discarded nor confirmed. -->
-                <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
-                <input id="id_discarded" type="hidden" name="discarded" />
-                <input id="id_confirmed" type="hidden" name="confirmed" />
-                <input class="btn save form-control btn-success" type="submit" value="Save results" tabindex="100" />
-            {% else %}
-                <!-- If confirming, always go into CONFIRMED. If incorrect, go into DRAFT or NONE depending on whether there are still ballots left. -->
-                <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_CONFIRMED }}" />
-                <input id="id_discarded" type="hidden" name="discarded" value="False" />
-                <input id="id_confirmed" type="hidden" name="confirmed" value="True" />
-                <input id="correct" class="save btn form-control btn-success" type="submit" value="Confirm results" />
-                <input id="incorrect" class="save btn form-control btn-danger" type="button" value="Results are incorrect" />
-            {% endif %}
+    {% include "other_ballots_list.html" %}
+    <form id="resultsForm" action="." method="POST" class="form-horizontal">
+        {% include "enter_results_ballot_set.html" %}
+        <div class="row">
+            <p class="col-sm-12 page-header h4 lead">{% if new %}Save{% else %}Check{% endif %}</p>
+            <div class="col-sm-12">
+                {% if new %}
+                    <!-- After a new ballot, always go into DRAFT, and the new ballot is neither discarded nor confirmed. -->
+                    <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
+                    <input id="id_discarded" type="hidden" name="discarded" />
+                    <input id="id_confirmed" type="hidden" name="confirmed" />
+                    <input class="btn save form-control btn-success" type="submit" value="Save results" tabindex="100" />
+                {% else %}
+                    <!-- If confirming, always go into CONFIRMED. If incorrect, go into DRAFT or NONE depending on whether there are still ballots left. -->
+                    <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_CONFIRMED }}" />
+                    <input id="id_discarded" type="hidden" name="discarded" value="False" />
+                    <input id="id_confirmed" type="hidden" name="confirmed" value="True" />
+                    <input id="correct" class="save btn form-control btn-success" type="submit" value="Confirm results" />
+                    <input id="incorrect" class="save btn form-control btn-danger" type="button" value="Results are incorrect" />
+                {% endif %}
+            </div>
         </div>
-    </div>
-    {% if disable_confirm %}
-    <br>
-    <div class="alert alert-danger">
-        You can't confirm this ballot set because you entered it.
-    </div>
-    {% endif %}
-
-</form>
-
+        {% if disable_confirm %}
+        <br>
+        <div class="alert alert-danger">
+            You can't confirm this ballot set because you entered it.
+        </div>
+        {% endif %}
+    </form>
 {% endblock content %}
 
+{% block extra-js %}
+    {{ block.super }}
+    {% include "enter_results_head.html" %}
+    {% if not new %}
+        <script>
+            $(document).ready(function() {
+                function preSubmit() {
+                    $('#resultsForm input').removeAttr('readonly');
+                    $('#resultsForm select').removeAttr('disabled');
+                }
+                {% if disable_confirm %}
+                $('#correct').attr('disabled', 'true');
+                $('#correct').removeClass('btn-success');
+                {% endif %}
+                $('#resultsForm input[type="number"]').attr('readonly', 'true');
+                $('#resultsForm select').attr('disabled', 'true');
+                $('#incorrect').click(function() {
+                    {% if ballot_not_singleton %}
+                    $('#id_debate_result_status').val('{{ debate.STATUS_DRAFT }}');
+                    {% else %}
+                    $('#id_debate_result_status').val('{{ debate.STATUS_NONE }}');
+                    {% endif %}
+                    $('#id_discarded').attr('value', 'True');
+                    $('#id_confirmed').attr('value', 'False');
+                    preSubmit();
+                    $('#resultsForm').submit();
+                    return false;
+                });
+                $('#correct').click(function() {
+                    preSubmit();
+                });
+            });
+
+        </script>
+    {% endif %}
+{% endblock %}

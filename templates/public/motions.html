@@ -2,20 +2,6 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block extra-head %}
-<script type="text/javascript">
-
-    $(document).ready( function() {
-        var table = $("#dataTable").dataTable({
-            "aaSorting": [[0, "asc"], [1, "asc"]]
-        });
-        new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-    });
-
-</script>
-{% endblock extra-head %}
-
-
 {% block head-title %}Motions{% endblock %}
 {% block page-title %}Motions{% endblock %}
 {% block body-class %}public-motions{% endblock %}
@@ -75,3 +61,17 @@
         </table>
     {% endif %}
 {% endblock content %}
+
+
+{% block extra-js %}
+    <script type="text/javascript">
+
+        $(document).ready( function() {
+            var table = $("#dataTable").dataTable({
+                "aaSorting": [[0, "asc"], [1, "asc"]]
+            });
+            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+        });
+
+    </script>
+{% endblock extra-js %}

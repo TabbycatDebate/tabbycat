@@ -1,38 +1,15 @@
 {% load add_field_css %}
 {% load debate_tags %}
 
-{% block extra-head %}
-<script>
-    $(document).ready(function(){
-        $('.s1 input.number,.s2 input.number,.s3 input.number').attr("type", "number").attr("step", "1");
-        $('.s4 input.number').attr("type", "number").attr("step", "0.5");
-        // When using anonymous speaker names prepopulate the form to save time
-        aff_speakers = $("#id_aff_speaker_1 option").text()
-        neg_speakers = $("#id_neg_speaker_1 option").text()
-        if (aff_speakers.indexOf("1st Speaker") != -1 && neg_speakers.indexOf("1st Speaker") != -1) {
-            $("div.aff.s1").find("select :nth-child(2)").prop('selected', true);
-            $("div.aff.s2").find("select :nth-child(3)").prop('selected', true);
-            $("div.aff.s3").find("select :nth-child(4)").prop('selected', true);
-            $("div.aff.s4").find("select :nth-child(5)").prop('selected', true);
-            $("div.neg.s1").find("select :nth-child(2)").prop('selected', true);
-            $("div.neg.s2").find("select :nth-child(3)").prop('selected', true);
-            $("div.neg.s3").find("select :nth-child(4)").prop('selected', true);
-            $("div.aff.s4").find("select :nth-child(5)").prop('selected', true);
-            $("select.required.error").removeClass("error");
-        }
-    });
-</script>
-{% endblock extra-head %}
-
 {% if form.errors %}
-<div class="alert alert-danger">
-    <p>There are some problems with this scoresheet. Please review and correct them.</p>
+    <div class="alert alert-danger">
+        <p>There are some problems with this scoresheet. Please review and correct them.</p>
 
-    {% if form.non_field_errors %}
-        <p>General errors:</p>
-        <div class="ballot-errors">{{ form.non_field_errors }}</div>
-    {% endif %}
-</div>
+        {% if form.non_field_errors %}
+            <p>General errors:</p>
+            <div class="ballot-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+    </div>
 {% endif %}
 
 <div class="row">
@@ -47,25 +24,23 @@
     </div>
 </div>
 {% if motion_vetoes_enabled %}
-<div class="form-group">
-    <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Aff Veto</label>
-    <div class="col-sm-10">
-        {{ form.aff_motion_veto|addcss:"form-control motion" }}
-        {{ form.aff_motion_veto.errors }}
+    <div class="form-group">
+        <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Aff Veto</label>
+        <div class="col-sm-10">
+            {{ form.aff_motion_veto|addcss:"form-control motion" }}
+            {{ form.aff_motion_veto.errors }}
+        </div>
     </div>
-</div>
-<div class="form-group">
-    <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Neg Veto</label>
-    <div class="col-sm-10">
-        {{ form.neg_motion_veto|addcss:"form-control motion" }}
-        {{ form.neg_motion_veto.errors }}
+    <div class="form-group">
+        <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Neg Veto</label>
+        <div class="col-sm-10">
+            {{ form.neg_motion_veto|addcss:"form-control motion" }}
+            {{ form.neg_motion_veto.errors }}
+        </div>
     </div>
-</div>
 {% endif %}
 
-
 {% for adj in form.adj_iter %}
-
     <div class="row">
         <p class="col-xs-12 lead h3 page-header">Ballot from
         {% if show_adj_contact and adj.adj.has_contact %}
@@ -144,3 +119,26 @@
     </div>
 
 {% endfor %}
+
+{% block extra-js %}
+<script>
+    $(document).ready(function(){
+        $('.s1 input.number,.s2 input.number,.s3 input.number').attr("type", "number").attr("step", "1");
+        $('.s4 input.number').attr("type", "number").attr("step", "0.5");
+        // When using anonymous speaker names prepopulate the form to save time
+        aff_speakers = $("#id_aff_speaker_1 option").text()
+        neg_speakers = $("#id_neg_speaker_1 option").text()
+        if (aff_speakers.indexOf("1st Speaker") != -1 && neg_speakers.indexOf("1st Speaker") != -1) {
+            $("div.aff.s1").find("select :nth-child(2)").prop('selected', true);
+            $("div.aff.s2").find("select :nth-child(3)").prop('selected', true);
+            $("div.aff.s3").find("select :nth-child(4)").prop('selected', true);
+            $("div.aff.s4").find("select :nth-child(5)").prop('selected', true);
+            $("div.neg.s1").find("select :nth-child(2)").prop('selected', true);
+            $("div.neg.s2").find("select :nth-child(3)").prop('selected', true);
+            $("div.neg.s3").find("select :nth-child(4)").prop('selected', true);
+            $("div.aff.s4").find("select :nth-child(5)").prop('selected', true);
+            $("select.required.error").removeClass("error");
+        }
+    });
+</script>
+{% endblock extra-js %}

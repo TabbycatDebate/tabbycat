@@ -1,78 +1,25 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block extra-head %}
-<script type="text/javascript">
-
-$(document).ready( function() {
-
-    var table = $('#dataTable').dataTable({
-        "aaSorting": [[ 0, "asc" ]],
-    });
-    new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-
-    $('#toggle-all').click(function () {
-        $('.adj-row').show();
-        $('.team-row').show();
-    });
-    $('#toggle-teams').click(function () {
-        $('.adj-row').hide();
-        $('.team-row').show();
-    });
-    $('#toggle-adjs').click(function () {
-        $('.adj-row').show();
-        $('.team-row').hide();
-    });
-
-    // the standard header to be re-added to the modal
-    var tableHead = '<table id="modal-adj-table" class="table table-bordered"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
-
-    $(".view-missing-adjs").each(function() {
-        $(this).click( function() {
-
-            var adj_row = $(this).parent().parent() // the <tr> for this adjudicator in the table
-            var adj_name = adj_row.find(".entity-name").text()
-            var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator objec
-
-
-            $("#modal-adj-table_wrapper").remove(); // removing the previously loaded table
-            $("#modal-adj-name").text(adj_name); // Updating header of the modal
-            $("#adj-feedback .modal-body").append(tableHead);
-            $("#adj-feedback #modal-adj-table").dataTable({
-              // Grabbing the adj data into a datatable
-              'sAjaxSource': '{% tournament_url get_adj_feedback %}?id=' + adj_id,
-              'bPaginate': false,
-            });
-
-        });
-    });
-});
-</script>
-{% endblock extra-head %}
-
-{% block body-class %}public-feedback{% endblock %}
-
-{% block nav %}{% include "nav.html" %}{% endblock %}
-
 {% block head-title %}Unsubmitted Feedback Ballots{% endblock %}
 {% block page-title %}Unsubmitted Feedback Ballots{% endblock %}
+{% block body-class %}public-feedback{% endblock %}
 
 {% block header %}
-<div class="btn-group" data-toggle="buttons">
-  <label class="btn btn-default active" id="toggle-all">
-    <input type="radio" name="options">Show All
-  </label>
-  <label class="btn btn-default" id="toggle-teams">
-    <input type="radio" name="options" >Only Teams
-  </label>
-  <label class="btn btn-default" id="toggle-adjs">
-    <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
-  </label>
-</div>
+    <div class="btn-group" data-toggle="buttons">
+      <label class="btn btn-default active" id="toggle-all">
+        <input type="radio" name="options">Show All
+      </label>
+      <label class="btn btn-default" id="toggle-teams">
+        <input type="radio" name="options" >Only Teams
+      </label>
+      <label class="btn btn-default" id="toggle-adjs">
+        <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
+      </label>
+    </div>
 {% endblock %}
 
 {% block content %}
-
     <table id="dataTable" class="table table-hover table-bordered table-striped">
         <thead>
             <tr>
@@ -139,24 +86,72 @@ $(document).ready( function() {
         </tbody>
     </table>
 
-<div class="modal fade" id="adj-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <div class="modal-header"><h3>Missing Ballots for <span id="modal-adj-name"></span></h3></div>
-        <div class="modal-body">
+    <div class="modal fade" id="adj-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Missing Ballots for <span id="modal-adj-name"></span></h3></div>
+            <div class="modal-body">
+            </div>
         </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<div class="modal fade" id="team-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <div class="modal-header"><h3>Missing Ballots for <span id="modal-adj-name"></span></h3></div>
-        <div class="modal-body">
+    <div class="modal fade" id="team-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Missing Ballots for <span id="modal-adj-name"></span></h3></div>
+            <div class="modal-body">
+            </div>
         </div>
+      </div>
     </div>
-  </div>
-</div>
-
 {% endblock content %}
+
+{% block extra-js %}
+    <script type="text/javascript">
+
+    $(document).ready( function() {
+
+        var table = $('#dataTable').dataTable({
+            "aaSorting": [[ 0, "asc" ]],
+        });
+        new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+
+        $('#toggle-all').click(function () {
+            $('.adj-row').show();
+            $('.team-row').show();
+        });
+        $('#toggle-teams').click(function () {
+            $('.adj-row').hide();
+            $('.team-row').show();
+        });
+        $('#toggle-adjs').click(function () {
+            $('.adj-row').show();
+            $('.team-row').hide();
+        });
+
+        // the standard header to be re-added to the modal
+        var tableHead = '<table id="modal-adj-table" class="table table-bordered"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
+
+        $(".view-missing-adjs").each(function() {
+            $(this).click( function() {
+
+                var adj_row = $(this).parent().parent() // the <tr> for this adjudicator in the table
+                var adj_name = adj_row.find(".entity-name").text()
+                var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator objec
+
+
+                $("#modal-adj-table_wrapper").remove(); // removing the previously loaded table
+                $("#modal-adj-name").text(adj_name); // Updating header of the modal
+                $("#adj-feedback .modal-body").append(tableHead);
+                $("#adj-feedback #modal-adj-table").dataTable({
+                  // Grabbing the adj data into a datatable
+                  'sAjaxSource': '{% tournament_url get_adj_feedback %}?id=' + adj_id,
+                  'bPaginate': false,
+                });
+
+            });
+        });
+    });
+    </script>
+{% endblock extra-js %}

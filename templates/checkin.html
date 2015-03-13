@@ -1,67 +1,60 @@
 {% extends "base.html" %}
-
 {% load debate_tags %}
 
 {% block head-title %}Checkin{% endblock %}
 
-{% block extra-head %}
+{% block content %}
+    <div id="container">
+        <div id="logo">
+        <img src="/static/images/australs.png" />
+        </div>
+        <h1>Check in for {{ round.name }}</h1>
 
-<script>
-    $(document).ready(function() {
-        setInterval( function() {
-            $('#barcode_id').focus();
-        }, 50);
+        <h2>
+            Please scan your ID card.
+        </h2>
 
-        $('#checkin_btn').click(function() {
-            $('#success').html("Checking....");
-            var val = $('#barcode_id').val();
-            $('#barcode_id').val('').focus();
-            $.ajax({
-                type: "POST",
-                url: "{% round_url post_checkin %}",
-                data: { barcode_id: val },
-                success: function(data, txtStatus) {
-                    $('#success').html(data);
-                },
-                error: function() {
-                    $('#success').html("Error checking card");
-                }
+        <div id="success" class="alert alert-success">
 
+        </div>
+        {% if unknown_id %}
+        <div class="error box">
+            Unknown ID: {{ unknown_id }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action=".">
+            <input id="barcode_id" type="text" name="barcode_id" />
+            <input id="checkin_btn" type="submit" name="submit" value="checkin" />
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra-js %}
+    <script>
+        $(document).ready(function() {
+            setInterval( function() {
+                $('#barcode_id').focus();
+            }, 50);
+
+            $('#checkin_btn').click(function() {
+                $('#success').html("Checking....");
+                var val = $('#barcode_id').val();
+                $('#barcode_id').val('').focus();
+                $.ajax({
+                    type: "POST",
+                    url: "{% round_url post_checkin %}",
+                    data: { barcode_id: val },
+                    success: function(data, txtStatus) {
+                        $('#success').html(data);
+                    },
+                    error: function() {
+                        $('#success').html("Error checking card");
+                    }
+
+                });
+                return false;
             });
-            return false;
         });
-    });
-</script>
+    </script>
 {% endblock %}
-
-{% block body %}
-<div id="container">
-    <div id="logo">
-    <img src="/static/images/australs.png" />
-    </div>
-    <h1>Check in for {{ round.name }}</h1>
-
-    <h2>
-        Please scan your ID card.
-    </h2>
-
-    <div id="success" class="alert alert-success">
-
-    </div>
-    {% if unknown_id %}
-    <div class="error box">
-        Unknown ID: {{ unknown_id }}
-    </div>
-    {% endif %}
-
-    <form method="POST" action=".">
-        <input id="barcode_id" type="text" name="barcode_id" />
-        <input id="checkin_btn" type="submit" name="submit" value="checkin" />
-    </form>
-
-</div>
-
-{% endblock %}
-
-
-

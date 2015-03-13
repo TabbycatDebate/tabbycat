@@ -2,24 +2,10 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block extra-head %}
-    <script type="text/javascript">
-        $(document).ready( function() {
-            var table = $('#draw').dataTable({
-                "aaSorting": [[ 0, "asc" ],[ 1, "asc" ]],
-            });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-
-        });
-    </script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/scroller.js' %}"></script>
-{% endblock extra-head %}
-
 {% block body-class %}draw-public-display{% endblock %}
-
 {% block head-title %}All Draws{% endblock %}
 {% block page-title %}All Draws{% endblock %}
+
 {% block header %}{% endblock %}
 
 {% block content %}
@@ -76,3 +62,17 @@
     </table>
 
 {% endblock content %}
+
+{% block extra-js %}
+    <script type="text/javascript">
+        $(document).ready( function() {
+            var table = $('#draw').dataTable({
+                "aaSorting": [[ 0, "asc" ],[ 1, "asc" ]],
+            });
+            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+
+        });
+    </script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/scroller.js' %}"></script>
+{% endblock extra-js %}

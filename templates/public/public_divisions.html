@@ -2,30 +2,28 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block extra-head %}{% endblock extra-head %}
-
 {% block head-title %}All Divisions{% endblock %}
 {% block page-title %}All Divisions{% endblock %}
 {% block body-class %}public-divisions{% endblock %}
 
 {% block content %}
+    {% for venue_group in venue_groups %}
+    <div class="col-sm-12">
+        <h2 class="page-header">At {{ venue_group.name }}</h2>
 
-{% for venue_group in venue_groups %}
-<div class="col-sm-12">
-    <h2 class="page-header">At {{ venue_group.name }}</h2>
-
-    {% for division in venue_group.divisions %}
-        <ul class="list-group col-sm-2">
-            <li class="list-group-item">
-                <span class="badge">{{ division.time_slot|time:'h:i A' }}</span>
-                <h5 class="list-group-item-heading">Division {{ division.name }}</h5>
-            </li>
-            {% for team in division.teams.all %}
-                <li class="list-group-item small">{{ team.long_name }}</li>
-            {% endfor %}
-        </ul>
+        {% for division in venue_group.divisions %}
+            <ul class="list-group col-sm-2">
+                <li class="list-group-item">
+                    <span class="badge">{{ division.time_slot|time:'h:i A' }}</span>
+                    <h5 class="list-group-item-heading">Division {{ division.name }}</h5>
+                </li>
+                {% for team in division.teams.all %}
+                    <li class="list-group-item small">{{ team.long_name }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </div>
     {% endfor %}
-</div>
-{% endfor %}
-
 {% endblock content %}
+
+{% block extra-js %}{% endblock extra-js %}

@@ -2,22 +2,6 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block extra-head %}
-    {{ block.super }}
-       <script type="text/javascript" charset="utf-8">
-            $(document).ready( function() {
-                var table = $("#dataTable").dataTable({
-                    "aaSorting": [[ 0, "asc" ]],
-                });
-                new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-
-            } );
-        </script>
-        <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
-{% endblock extra-head %}
-
-{% block extra-style %}{% endblock %}
-
 {% block head-title %}Breaking Adjudicators{% endblock %}
 {% block page-title %}Breaking Adjudicators{% endblock %}
 {% block body-class %}breakk breaking-adjs{% endblock %}
@@ -54,3 +38,17 @@
         </table>
     {% endif %}
 {% endblock content %}
+
+{% block extra-js %}
+    {{ block.super }}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready( function() {
+            var table = $("#dataTable").dataTable({
+                "aaSorting": [[ 0, "asc" ]],
+            });
+            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+
+        } );
+    </script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+{% endblock extra-js %}

@@ -1,17 +1,6 @@
 {% extends "draw_rbase.html" %}
 {% load debate_tags %}
 
-{% block extra-head %}
-    <script type="text/javascript">
-        $(document).ready(function(){
-            var table = $('#dataTable').dataTable({
-                "aaSorting": [[ 0, "asc" ], [ 2, "desc" ], [ 3, "asc" ]],
-            });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-        });
-    </script>
-{% endblock %}
-
 {% block head-title %}Status <small>of {{ round.name }}</small>{% endblock %}
 {% block page-title %}Status of {{ round.name }}{% endblock %}
 {% block body-class %}status{% endblock %}
@@ -36,147 +25,155 @@
             <a class="btn btn-default form-control btn-success" href="{% round_url round_increment_check %}">Advance to Next Round</a>
         </div>
     {% endif %}
-
 {% endblock %}
 
 {% block content %}
+    {% if not has_motions %}
+        <div class="alert alert-danger">
+            Currently there are no motions entered for this round, so debate results cannot be entered. <a href="{% round_url motions current_round %}" class="alert-link">Add Motions.</a>
+        </div>
+    {% endif %}
 
-{% if not has_motions %}
-    <div class="alert alert-danger">
-        Currently there are no motions entered for this round, so debate results cannot be entered. <a href="{% round_url motions current_round %}" class="alert-link">Add Motions.</a>
-    </div>
-{% endif %}
+    <table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="Ballot Status"></span></th>
+                <th>Ballots</th>
+                <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+                <th>Aff<span class="hidden-xs">irmative</span></th>
+                <th>Neg<span class="hidden-xs">ative</span></th>
+                <th>Adj<span class="hidden-xs">udicator</span>s</th>
+                {% if show_motions_column %}
+                    <th>M<span class="hidden-xs">otion</span></th>
+                {% endif %}
+            </tr>
+        </thead>
 
-<table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
-    <thead>
-        <tr>
-            <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="Ballot Status"></span></th>
-            <th>Ballots</th>
-            <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-            <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
-            <th>Aff<span class="hidden-xs">irmative</span></th>
-            <th>Neg<span class="hidden-xs">ative</span></th>
-            <th>Adj<span class="hidden-xs">udicator</span>s</th>
-            {% if show_motions_column %}
-                <th>M<span class="hidden-xs">otion</span></th>
-            {% endif %}
-        </tr>
-    </thead>
+        <tbody>
 
-    <tbody>
-
-    {% for debate in draw %}
-        <tr class="debate-status-{% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}B{% else %}{{debate.result_status}}{% endif %}">
-            <td>
-                {% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}
-                    <span class="hidden">5</span>
-                    <a title="Bye Debate" data-toggle="tooltip">
-                        <span class="glyphicon glyphicon-fast-forward"></span>
-                    </a>
-                {% elif debate.result_status == debate.STATUS_NONE %}
-                    {% if not debate.ballot_in %}
-                        <span class="hidden">0</span>
-                        <a title="No Ballot" data-toggle="tooltip">
-                            <span class="glyphicon glyphicon-remove text-danger"></span>
+        {% for debate in draw %}
+            <tr class="debate-status-{% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}B{% else %}{{debate.result_status}}{% endif %}">
+                <td>
+                    {% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}
+                        <span class="hidden">5</span>
+                        <a title="Bye Debate" data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-fast-forward"></span>
                         </a>
-                    {% else %}
-                        <span class="hidden">1</span>
-                        <a data-toggle="tooltip" title="Ballot In">
-                            <span class="glyphicon glyphicon-inbox text-warning"></span>
+                    {% elif debate.result_status == debate.STATUS_NONE %}
+                        {% if not debate.ballot_in %}
+                            <span class="hidden">0</span>
+                            <a title="No Ballot" data-toggle="tooltip">
+                                <span class="glyphicon glyphicon-remove text-danger"></span>
+                            </a>
+                        {% else %}
+                            <span class="hidden">1</span>
+                            <a data-toggle="tooltip" title="Ballot In">
+                                <span class="glyphicon glyphicon-inbox text-warning"></span>
+                            </a>
+                        {% endif %}
+                    {% elif debate.result_status == debate.STATUS_DRAFT %}
+                        <span class="hidden">2</span>
+                        <a title="Unconfirmed Ballot" data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-adjust text-info"></span>
+                        </a>
+                    {% elif debate.result_status == debate.STATUS_CONFIRMED %}
+                        <span class="hidden">3</span>
+                        <a title="Confirmed Ballot" data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-ok text-success"></span>
+                        </a>
+                    {% elif debate.result_status == debate.STATUS_POSTPONED %}
+                        <span class="hidden">4</span>
+                        <a title="Debate Postponed" data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-pause"></span>
                         </a>
                     {% endif %}
-                {% elif debate.result_status == debate.STATUS_DRAFT %}
-                    <span class="hidden">2</span>
-                    <a title="Unconfirmed Ballot" data-toggle="tooltip">
-                        <span class="glyphicon glyphicon-adjust text-info"></span>
-                    </a>
-                {% elif debate.result_status == debate.STATUS_CONFIRMED %}
-                    <span class="hidden">3</span>
-                    <a title="Confirmed Ballot" data-toggle="tooltip">
-                        <span class="glyphicon glyphicon-ok text-success"></span>
-                    </a>
-                {% elif debate.result_status == debate.STATUS_POSTPONED %}
-                    <span class="hidden">4</span>
-                    <a title="Debate Postponed" data-toggle="tooltip">
-                        <span class="glyphicon glyphicon-pause"></span>
-                    </a>
-                {% endif %}
-            </td>
-            <td>
-                <!-- TODO clean this CSS stuff up -->
-                {% for ballotset in debate.ballotsubmission_set_by_version %}
-                <div>
-                    <a href="{% tournament_url edit_ballots ballotset.id %}" title="Edit Ballot" class="
-                        {% if ballotset.confirmed %}edit-ballot-link-confirmed{% endif %}
-                        {% if ballotset.discarded %}edit-ballot-link-discarded{% endif %}
-                    ">
-                        {% if ballotset.confirmed %}Re-{% endif %}Edit
-                        {% if debate.ballotsubmission_set.count > 1%}
-                            v{{ ballotset.version }}
-                        {% endif %}
-                    </a>
-                </div>
-                {% endfor %}
-                {% if not debate.ballotsubmission_set_by_version_except_discarded.exists %}
-                    <div>
-                        <a href="{% tournament_url new_ballots debate.id %}" title="Create New Ballot">Enter</a>
-                    </div>
-                {% endif %}
-                <!-- end TODO -->
-            </td>
-
-            <td>{{ debate.bracket }}</td>
-
-            <td>{% if venue.group %}{{ venue.group.name }} {% endif %}{{ debate.venue.name }}</td>
-
-            <td>
-                {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
-                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
-                {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
-                    <span class="glyphicon glyphicon-arrow-down text-danger"></span>
-                {% endif %}
-                <span href="#" title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
-                    {{ debate.aff_team.short_name }}
-                </span>
-            </td>
-
-            <td>
-                {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
-                    <span class="glyphicon glyphicon-arrow-up text-success"></span>
-                {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
-                    <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
-                {% endif %}
-                <span href="#" title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
-                    {{ debate.neg_team.short_name }}
-                </span>
-            </td>
-
-            <td>
-                {% if debate.confirmed_ballot %}
-                    {% for type, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results %}
-                        {% if split %}
-                            <span class="text-danger">{{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}</span> <span class="glyphicon glyphicon-resize-full text-danger"></span>{% if not forloop.last %},{% endif %}
-                        {% else %}
-                            {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    {% for type, adj in debate.adjudicators %}
-                        {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
-                    {% endfor %}
-                {% endif %}
-            </td>
-
-            {% if show_motions_column %}
+                </td>
                 <td>
-                    <span data-toggle="tooltip" title="{{ debate.confirmed_ballot.motion }}">
-                    {{ debate.confirmed_ballot.motion.reference }}
+                    <!-- TODO clean this CSS stuff up -->
+                    {% for ballotset in debate.ballotsubmission_set_by_version %}
+                    <div>
+                        <a href="{% tournament_url edit_ballots ballotset.id %}" title="Edit Ballot" class="
+                            {% if ballotset.confirmed %}edit-ballot-link-confirmed{% endif %}
+                            {% if ballotset.discarded %}edit-ballot-link-discarded{% endif %}
+                        ">
+                            {% if ballotset.confirmed %}Re-{% endif %}Edit
+                            {% if debate.ballotsubmission_set.count > 1%}
+                                v{{ ballotset.version }}
+                            {% endif %}
+                        </a>
+                    </div>
+                    {% endfor %}
+                    {% if not debate.ballotsubmission_set_by_version_except_discarded.exists %}
+                        <div>
+                            <a href="{% tournament_url new_ballots debate.id %}" title="Create New Ballot">Enter</a>
+                        </div>
+                    {% endif %}
+                    <!-- end TODO -->
+                </td>
+
+                <td>{{ debate.bracket }}</td>
+
+                <td>{% if venue.group %}{{ venue.group.name }} {% endif %}{{ debate.venue.name }}</td>
+
+                <td>
+                    {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
+                        <span class="glyphicon glyphicon-arrow-up text-success"></span>
+                    {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
+                        <span class="glyphicon glyphicon-arrow-down text-danger"></span>
+                    {% endif %}
+                    <span href="#" title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+                        {{ debate.aff_team.short_name }}
                     </span>
                 </td>
-            {% endif %}
 
-        </tr>
-    {% endfor %}
-</table>
+                <td>
+                    {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
+                        <span class="glyphicon glyphicon-arrow-up text-success"></span>
+                    {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
+                        <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
+                    {% endif %}
+                    <span href="#" title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+                        {{ debate.neg_team.short_name }}
+                    </span>
+                </td>
 
+                <td>
+                    {% if debate.confirmed_ballot %}
+                        {% for type, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results %}
+                            {% if split %}
+                                <span class="text-danger">{{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}</span> <span class="glyphicon glyphicon-resize-full text-danger"></span>{% if not forloop.last %},{% endif %}
+                            {% else %}
+                                {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for type, adj in debate.adjudicators %}
+                            {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </td>
+
+                {% if show_motions_column %}
+                    <td>
+                        <span data-toggle="tooltip" title="{{ debate.confirmed_ballot.motion }}">
+                        {{ debate.confirmed_ballot.motion.reference }}
+                        </span>
+                    </td>
+                {% endif %}
+
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock content %}
+
+{% block extra-js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var table = $('#dataTable').dataTable({
+                "aaSorting": [[ 0, "asc" ], [ 2, "desc" ], [ 3, "asc" ]],
+            });
+            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+        });
+    </script>
+{% endblock %}

@@ -23,29 +23,6 @@
 
     {% load debate_tags %}
 
-    {% compress js %}
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
-    <script type="text/javascript">
-        $.extend( true, $.fn.dataTable.defaults, {
-            // Default Data Table options
-            "sDom":
-                "<'row'<'col-md-12 table-container'lr"+ // f = the filter
-                "t"+
-                "f<p>",
-            "bPaginate": false,
-            "oLanguage": {
-                "sSearch": "Search: "
-            }
-        });
-    </script>
-    {% endcompress %}
-    {% block extra-head %}{% endblock extra-head %}
-
 </head>
 
 <body id="{% block body-id %}{% endblock %}" class="{% block body-class %}{% endblock %}">
@@ -80,7 +57,25 @@
 
     {% include "footer.html" %}
 
-    <script>
+    {% compress js %}
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
+    <script type="text/javascript">
+        $.extend( true, $.fn.dataTable.defaults, {
+            // Default Data Table options
+            "sDom":
+                "<'row'<'col-md-12 table-container'lr"+ // f = the filter
+                "t"+
+                "f<p>",
+            "bPaginate": false,
+            "oLanguage": {
+                "sSearch": "Search: "
+            }
+        });
         $(document).ready(function(){
             $('[data-toggle=tooltip]').tooltip({
                 'html': true,
@@ -100,7 +95,8 @@
             }
         });
     </script>
-    {% block footer-js %}{% endblock %}
+    {% endcompress %}
+    {% block extra-js %}{% endblock extra-js %}
 
     {% if debug %}
         <!-- No Analytics -->
