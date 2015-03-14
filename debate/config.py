@@ -74,6 +74,7 @@ SETTINGS = OrderedDict([
     ('show_avg_margin',             (_bool, 'Enables a display of average margins in the team standings',          False)),
     ('team_points_rule',            (str,   'Normally 1 win = 1 point, "wadl" uses 2/1/0 for win/loss/forfeit',    'normal')),
     ('enable_divisions',            (_bool, 'Enables the sorting and display of teams into divisions',             False)),
+    ('enable_postponements',        (_bool, 'Enables debates to have their status set to postponed',               False)),
     ('enable_division_motions',     (_bool, 'Enables assigning motions to a division',                             False)),
     ('minimum_division_size',       (int,   'Smallest allowed size for a division',                                5)),
     ('ideal_division_size',         (int,   'Ideal size for a division',                                           6)),

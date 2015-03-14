@@ -303,7 +303,9 @@ class BallotSet(object):
         margin = self._margin(side)
 
         TeamScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
-        TeamScore(ballot_submission=self.ballots, debate_team=dt, score=total, points=points, win=win, margin=margin).save()
+        TeamScore(ballot_submission=self.ballots,
+                  debate_team=dt, score=total, points=points, win=win,
+                  margin=margin).save()
 
         SpeakerScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
         for i in self.POSITIONS_RANGE:
@@ -373,18 +375,19 @@ class BallotSet(object):
         if not self.loaded_sheets:
             return self.points[side]
 
-        if self.debate.round.tournament.config.get('team_points_rule') != 'wadl':
-            if self._score(side):
-                if self._score(side) > self._score(self._other[side]):
-                    return 1
-                return 0
-        else:
+        if self.debate.round.tournament.config.get('team_points_rule') == 'wadl':
             if self._score(side):
                 if self._score(side) > self._score(self._other[side]):
                     return 2 # 2pts for a win
                 else:
                     return 1 # 1pt for a loss
                 return 0 # TODO: 0 for a forfeit
+        else:
+            if self._score(side):
+                if self._score(side) > self._score(self._other[side]):
+                    return 1
+                return 0
+
 
         return None
 

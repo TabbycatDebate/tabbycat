@@ -1726,11 +1726,13 @@ class BallotSubmission(Submission):
     """Represents a single submission of ballots for a debate.
     (Not a single motion, but a single submission of all ballots for a debate.)"""
 
-    debate = models.ForeignKey(Debate)
+    debate = models.ForeignKey(Debate, db_index=True)
     motion = models.ForeignKey('Motion', blank=True, null=True, on_delete=models.SET_NULL)
 
     copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
     discarded = models.BooleanField(default=False)
+
+    forefeit = models.ForeignKey(DebateTeam, blank=True, null=True)
 
     class Meta:
         unique_together = [('debate', 'version')]

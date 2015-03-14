@@ -348,7 +348,7 @@ table a:hover {
     color: darken($state-success-bg, 60%);
 }
 
-@include table-row-variant('debate-status-P', $table-bg-active);
+@include table-row-variant('debate-status-P', $state-info-bg);
 .debate-status-P a {
     color: darken($table-bg-active, 60%);
 }

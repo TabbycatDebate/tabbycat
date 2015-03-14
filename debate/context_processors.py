@@ -40,7 +40,7 @@ def debate_context(request):
             'show_team_points'        : request.tournament.config.get('team_points_rule') != 'normal',
             'enable_divisions'        : request.tournament.config.get('enable_divisions'),
             'enable_division_motions' : request.tournament.config.get('enable_division_motions'),
-
+            'enable_postponements'    : request.tournament.config.get('enable_postponements'),
         }
         if hasattr(request, 'round'):
             d['round'] = request.round

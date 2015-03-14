@@ -7,18 +7,38 @@
 
 {% block header %}
     <div class="btn-group">
-        <button class="btn btn-default btn-danger"><span class="label none">
-            {{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span></span>
+        <button class="btn btn-default btn-danger">
+            <span class="label none">
+                {{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span>
+            </span>
         </button>
-        <button class="btn btn-default btn-warning"><span class="label ballotin">
-            {{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span></span>
+        <button class="btn btn-default btn-warning">
+            <span class="label ballotin">
+                {{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span>
+            </span>
         </button>
-        <button class="btn btn-default btn-info"><span class="label unconfirmed">
-            {{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span></span>
+        <button class="btn btn-default btn-info">
+            <span class="label unconfirmed">
+                {{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span>
+            </span>
         </button>
-        <button class="btn btn-default btn-success"><span class="label confirmed">
-            {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span></span>
+        <button class="btn btn-default btn-success">
+            <span class="label confirmed">
+                {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span>
+            </span>
         </button>
+        {% if enable_postponements %}
+        <button class="btn btn-default btn-primary">
+            <span class="label confirmed">
+                {{ stats.postponed }} Postponed <span class="glyphicon glyphicon-pause"></span>
+            </span>
+        </button>
+        <button class="btn btn-default active">
+            <span class="label confirmed text-muted">
+                Bye <span class="glyphicon glyphicon-fast-forward"></span>
+            </span>
+        </button>
+        {% endif %}
     </div>
     {% if round.seq < tournament.prelim_rounds.count and current_round == round %}
         <div class="btn-group">
@@ -40,6 +60,9 @@
             <tr>
                 <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="Ballot Status"></span></th>
                 <th>Ballots</th>
+                {% if enable_postponements %}
+                    <th><span class="glyphicon glyphicon-pause" data-toggle="tooltip" title="Postponements"></span></th>
+                {% endif %}
                 <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
                 <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
                 <th>Aff<span class="hidden-xs">irmative</span></th>
@@ -106,12 +129,24 @@
                     </div>
                     {% endfor %}
                     {% if not debate.ballotsubmission_set_by_version_except_discarded.exists %}
+                        {% if debate.result_status != debate.STATUS_POSTPONED and debate.aff_team.type != 'B' and debate.neg_team.type != 'B' %}
                         <div>
                             <a href="{% tournament_url new_ballots debate.id %}" title="Create New Ballot">Enter</a>
                         </div>
+                        {% endif %}
                     {% endif %}
                     <!-- end TODO -->
                 </td>
+
+                {% if enable_postponements %}
+                    <td>
+                    {% if debate.result_status == debate.STATUS_POSTPONED %}
+                        <a href="">Un-postpone</a>
+                    {% elif debate.result_status != debate.STATUS_CONFIRMED and debate.aff_team.type != 'B' and debate.neg_team.type != 'B' %}
+                        <a href="">Postpone</a>
+                    {% endif %}
+                    </td>
+                {% endif %}
 
                 <td>{{ debate.bracket }}</td>
 
