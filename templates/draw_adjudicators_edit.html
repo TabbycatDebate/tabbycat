@@ -281,7 +281,6 @@
                     unusedIDs.push(intId(this));
                 });
                 var id = intId(adj);
-                console.log(id);
 
                 if (unusedIDs.indexOf(id) == -1) {
                     // If the adj isn't already in the table
@@ -294,7 +293,12 @@
                     td.append(adj);
                     $(adj).removeClass("btn-danger");
                 } else {
-                    $(adj).remove();
+                    var oldHolder = adj[0].oldHolder;
+                    if ($(oldHolder).hasClass("unused") === false) {
+                        // Only remove it if its not dragging from the unused
+                        // table (can drag from unused to unused)
+                        $(adj).remove();
+                    }
                 }
             }
             function eachConflictingTeam(adj_id, fn) {
@@ -365,29 +369,25 @@
 
             function init_adj(el) {
                 el.mouseover( function(e) {
-                    eachConflictingTeam(
-                        intId(e.currentTarget),
+                    eachConflictingTeam(intId(e.currentTarget),
                         function (type, elem) {
+                            console.log("adding conflict on" + elem);
                             $(elem).addClass(conflictTypeClass[type]);
                         }
                     );
                 });
 
                 el.mouseout( function(e) {
-                    // check if currently being dragged
-                    if (! $(e.currentTarget).hasClass("dragging")) {
-                        eachConflictingTeam(
-                            intId(e.currentTarget),
-                            function (type, elem) {
-                                $(elem).removeClass(conflictTypeClass[type]);
-                            }
-                        );
-                    }
+                    eachConflictingTeam(intId(e.currentTarget),
+                        function (type, elem) {
+                            console.log("removing conflict on" + elem);
+                            $(elem).removeClass(conflictTypeClass[type]);
+                        }
+                    );
                 });
 
                 el.draggable({
                     containment: "body", // bounds that limit dragging area{
-                    //handle: 'div',
                     helper: function() {
                         var offset = $(this).offset();
                         $(this).css('position', 'relative');
@@ -413,7 +413,6 @@
                     },
                     stop: function(event, ui) {
                         e = $("#" + ui.helper.attr("id"));
-                        e.removeClass("dragging");
                         // If the mouse isn't over the original position, stop highlighting.
                         // Set a timeout to run shortly after to give the element time to get
                         // back where it belongs. (If there's a way to do this without setTimeout,
@@ -463,6 +462,16 @@
                         }
                     }
 
+
+                    {% if duplicate_adjs %}
+                    if ($(oldHolder).hasClass("unused")) {
+                        // If duplicate we clone a (deep) copy to leave behind
+                        var clone = $(adj).clone().appendTo(oldHolder);
+                        clone.removeAttr('style');
+                        init_adj(clone);
+                    }
+                    {% endif %}
+
                     $(this).append(adj);
 
                     adj.css('top', curOff.top - newHomeOff.top);
@@ -473,9 +482,12 @@
 
                     // if from scratch, delete row
                     if ($(oldHolder).hasClass("unused")) {
-                        var idx = unusedTable.fnGetPosition(oldHolder[0]);
-                        unusedTable.fnDeleteRow(idx[0]);
+                        {% if not duplicate_adjs %}
+                            var idx = unusedTable.fnGetPosition(oldHolder[0]);
+                            unusedTable.fnDeleteRow(idx[0]);
+                        {% endif %}
                     }
+
                 }
 
             });
