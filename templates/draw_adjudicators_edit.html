@@ -176,22 +176,37 @@
             }
             function load_allocation_data(data) {
                 $.each(data.debates, function(debate_id, adj_data) {
-                    if (adj_data.chair)
+                    if (adj_data.chair) {
                         set_chair(debate_id, adj_data.chair);
+                        {% if duplicate_adjs %}
+                        // If duplicating adjs need to copy over those allocated
+                        var adj = _make_adj(adj_data.chair);
+                        moveToUnused(adj);
+                        {% endif %}
+                    }
                     clear_panel(debate_id);
                     $.each(adj_data.panel, function(idx, adj) {
                         add_panellist(debate_id, adj);
+                        {% if duplicate_adjs %}
+                        // If duplicating adjs need to copy over those allocated
+                        var adj = _make_adj(adj);
+                        moveToUnused(adj);
+                        {% endif %}
                     });
                     clear_trainees(debate_id);
                     $.each(adj_data.trainees, function(idx, adj) {
                         add_trainee(debate_id, adj);
+                        {% if duplicate_adjs %}
+                        // If duplicating adjs need to copy over those allocated
+                        var adj = _make_adj(adj);
+                        moveToUnused(adj);
+                        {% endif %}
                     });
 
                 });
                 $.each(data.unused, function(idx, adj_data) {
                     var adj = _make_adj(adj_data);
                     moveToUnused(adj);
-
                 });
             }
 
@@ -261,15 +276,26 @@
 
             function moveToUnused(adj) {
                 // add data
+                var unusedIDs = [];
+                $("#unusedTable .adj").each(function(){
+                    unusedIDs.push(intId(this));
+                });
                 var id = intId(adj);
-                var idxs = unusedTable.fnAddData([adj.html(), scores[id].toPrecision(2)]);
-                var trNode = unusedTable.fnGetNodes(idxs[0]);
-                var td = $("td:first", trNode);
-                td.addClass("unused");
-                // append node (to preserve events)
-                td.children().remove();
-                td.append(adj);
-                $(adj).removeClass("btn-danger");
+                console.log(id);
+
+                if (unusedIDs.indexOf(id) == -1) {
+                    // If the adj isn't already in the table
+                    var idxs = unusedTable.fnAddData([adj.html(), scores[id].toPrecision(2)]);
+                    var trNode = unusedTable.fnGetNodes(idxs[0]);
+                    var td = $("td:first", trNode);
+                    td.addClass("unused");
+                    // append node (to preserve events)
+                    td.children().remove();
+                    td.append(adj);
+                    $(adj).removeClass("btn-danger");
+                } else {
+                    $(adj).remove();
+                }
             }
             function eachConflictingTeam(adj_id, fn) {
                 $.each(conflicts['conflict'][adj_id], function (i, n) {

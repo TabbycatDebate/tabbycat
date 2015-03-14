@@ -1532,7 +1532,9 @@ def save_venues(request, round):
 def draw_adjudicators_edit(request, round):
     draw = round.get_draw()
     adj0 = Adjudicator.objects.first()
-    return r2r(request, "draw_adjudicators_edit.html", dict(draw=draw, adj0=adj0))
+    duplicate_adjs = round.tournament.config.get('duplicate_adjs')
+    return r2r(request, "draw_adjudicators_edit.html", dict(
+        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs))
 
 def _json_adj_allocation(debates, unused_adj):
 
