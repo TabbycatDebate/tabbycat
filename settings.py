@@ -16,7 +16,7 @@ SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 ADMINS              = ('Test', 'test@test.com')
 MANAGERS            = ADMINS
-DEBUG               = os.path.exists('.debug') or (os.environ.has_key('DEBUG') and os.environ['DEBUG'] == "1")
+DEBUG               = False
 TEMPLATE_DEBUG      = DEBUG
 DEBUG_ASSETS        = DEBUG
 
@@ -174,6 +174,10 @@ if os.environ.get('REDISTOGO_URL', ''):
     SESSION_REDIS_DB = 0
     SESSION_REDIS_PASSWORD = redis_url.password
     SESSION_REDIS_PREFIX = 'session'
+
+
+if os.environ.get('DEBUG', ''):
+    DEBUG = os.environ['DEBUG']
 
 # ===========================
 # = Local Overrides
