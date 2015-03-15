@@ -359,7 +359,7 @@ table a:hover {
 
 @include table-row-variant('debate-status-D', lighten($brand-info, 40%));
 .debate-status-D a {
-    color: darken($brand-info, 80%);
+    color: darken($brand-info, 20%);
 }
 
 @include table-row-variant('debate-status-C', $state-success-bg);
