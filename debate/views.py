@@ -1181,11 +1181,8 @@ def set_adj_note(request, t):
 @login_required
 @round_view
 def results(request, round):
-    if not request.user.is_superuser:
-        return monkey_results(request, round)
 
     draw = round.get_draw()
-
     stats = {
         'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
         'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
@@ -1194,22 +1191,22 @@ def results(request, round):
         'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
     }
 
+    if not request.user.is_superuser:
+        if round != request.tournament.current_round:
+            raise Http404()
+        template = "monkey/results.html"
+        draw = draw.filter(result_status__in=(
+            Debate.STATUS_NONE, Debate.STATUS_DRAFT, Debate.STATUS_POSTPONED))
+    else:
+        template = "results.html"
+
     num_motions = Motion.objects.filter(round=round).count()
     show_motions_column = num_motions > 1
     has_motions = num_motions > 0
 
-    return r2r(request, "results.html", dict(draw=draw, stats=stats,
+    return r2r(request, template, dict(draw=draw, stats=stats,
         show_motions_column=show_motions_column, has_motions=has_motions)
     )
-
-def monkey_results(request, round):
-
-    if round != request.tournament.current_round:
-        raise Http404()
-
-    draw = round.get_draw()
-    draw = draw.filter(result_status__in=(Debate.STATUS_NONE, Debate.STATUS_DRAFT))
-    return r2r(request, "monkey/results.html", dict(draw=draw))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_round_view('public_results')
