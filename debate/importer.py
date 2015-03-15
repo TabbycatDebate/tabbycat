@@ -26,6 +26,7 @@ class TournamentDataImporter(object):
     def __init__(self, tournament, **kwargs):
         self.tournament = tournament
         self.strict = kwargs.get('strict', False)
+        self.header_row = kwargs.get('header_row', True)
 
     def _lookup(self, d, code, name):
         for k, v in d.iteritems():
@@ -36,9 +37,9 @@ class TournamentDataImporter(object):
 
     def auto_make_rounds(self, num_rounds):
         """Makes the number of rounds specified. The first one is random and the
-        rest are all silent. The last one is This is intended as a convenience function. For
-        anything more complicated, the user should use import_rounds()
-        instead."""
+        rest are all power-paired. The last one is silent. This is intended as a
+        convenience function. For anything more complicated, the user should use
+        import_rounds() instead."""
         for i in range(1, num_rounds+1):
             m.Round(
                 tournament=self.tournament,
@@ -51,44 +52,69 @@ class TournamentDataImporter(object):
             ).save()
         logger.info("Auto-made %d rounds", num_rounds)
 
-    def import_rounds(self, f):
-        """Makes rounds according to the given file."""
-        reader = csv.reader(f)
-        reader.next() # header row
+    def _log(self, message):
+        self.logger.log(logging.ERROR if self.strict else logging.WARNING, e.message)
 
-        i = 1
-        total_errors = 0
-        rounds_count = 0
-        for line in reader:
-            seq = int(line[0])
-            if not seq:
-                seq = i
-            name = str(line[1])
-            abbreviation = str(line[2])
-            draw_stage = self._lookup(self.ROUND_DRAW_STAGES, str(line[3]) or "p", "draw stage")
-            draw_type = self._lookup(self.ROUND_DRAW_TYPES, str(line[4]) or "r", "draw type")
-            is_silent = bool(int(line[5]))
-            feedback_weight = float(line[6]) or 0.7
+    def _import(self, f, line_parser, model):
+        """Parses the file object given in f, using the callable line_parser to
+        parse each line, and passing the arguments to the given model's
+        constructor.
+
+        'line_parser' must take two arguments: a tuple (the CSV line) and the
+        line number, and return a dict of arguments that can be passed to the
+        model constructor.
+        """
+        reader = csv.reader(f)
+        if self.header_row:
+            reader.next()
+        insts = list()
+        errors = list()
+
+        for i, line in enumerate(reader, start=1):
+            try:
+                kwargs = line_parser(line, i)
+            except (DoesNotExist, MultipleObjectsReturned, ValueError,
+                    TypeError, IndexError) as e:
+                message = "Couldn't parse file to create %s, in line %d: " % (model.__class__.__name__, i) + e.message
+                errors.append(message)
+                self._log(message)
+
+            inst = model(**kwargs)
 
             try:
-                m.Round(
-                    tournament=self.tournament,
-                    seq=seq,
-                    name=name,
-                    abbreviation=abbreviation,
-                    draw_type=draw_type,
-                    stage=draw_stage,
-                    feedback_weight=feedback_weight,
-                    silent=is_silent
-                ).save()
-                rounds_count += 1
-                i += 1
-                logger.debug("Made round %d: %s", seq, name)
-            except Exception as e:
-                total_errors += 1
-                logger.error('Error making round %s: %s', name, e)
+                inst.full_clean()
+            except ValidationError as e:
+                e.message = "Couldn't parse file to create %s, in line %d: " % (model.__class__.__name__, i) + e.message
+                errors.append(e)
+                self._log(e)
+                continue
+
+            insts.append(inst)
+
+        if self.strict and errors:
+            raise ValidationError(errors)
+
+        for inst in insts:
+            self.logger.debug("Made %s: %s" % (model, inst))
+            inst.save()
+
+        return insts.count()
+
+    def import_rounds(self, f):
+        def _rounds_line_parser(line, i):
+            kwargs = dict()
+            kwargs['tournament'] = self.tournament
+            kwargs['seq'] = int(line[0]) or i
+            kwargs['name'] = str(line[1])
+            kwargs['abbreviation'] = str(line[2])
+            kwargs['draw_stage'] = self._lookup(self.ROUND_DRAW_STAGES, str(line[3]) or "p", "draw stage")
+            kwargs['draw_type'] = self._lookup(self.ROUND_DRAW_TYPES, str(line[4]) or "r", "draw type")
+            kwargs['is_silent'] = bool(int(line[5]))
+            kwargs['feedback_weight'] = float(line[6]) or 0.7
+            return kwargs
+        self._import(f, _rounds_line_parser, m.Round)
 
         self.tournament.current_round = m.Round.objects.get(
                 tournament=self.tournament, seq=1)
         self.tournament.save()
-        return rounds_count, total_errors
+        return count, total_errors
