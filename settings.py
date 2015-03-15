@@ -178,6 +178,10 @@ if os.environ.get('REDISTOGO_URL', ''):
 
 if os.environ.get('DEBUG', ''):
     DEBUG = os.environ['DEBUG']
+    TEMPLATE_DEBUG = DEBUG
+
+DEBUG = True
+TEMPLATE_DEBUG = True
 
 # ===========================
 # = Local Overrides
