@@ -12,9 +12,6 @@
     <table id="dataTable" class="team-tab table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
         <thead>
             <tr>
-                {% if enable_divisions %}
-                    <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
-                {% endif %}
                 {% if for_print %}
                     <th>Rank</th>
                 {% else %}
@@ -25,6 +22,9 @@
                 {% endif %}
                 {% if show_avg_margin %}
                     <th><span data-toggle="tooltip" title="Average Winning Margin">AWM</span></th>
+                {% endif %}
+                {% if enable_divisions %}
+                    <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
                 {% endif %}
                 {% if show_emoji > 0 and not for_print %}
                     <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
@@ -48,15 +48,15 @@
         <tbody>
         {% for team in teams %}
         <tr class="{% if not team.results_in %}danger{% endif %}">
-            {% if enable_divisions %}
-                <td>{{ team.division.name }}</td>
-            {% endif %}
             <td>{{ team.rank }}</td>
             {% if show_team_points %}
                 <td>{{ team.points }}</td>
             {% endif %}
             {% if show_avg_margin %}
                 <td>{{ team.avg_margin|stringformat:".2f" }}</td>
+            {% endif %}
+            {% if enable_divisions %}
+                <td>{{ team.division.name }}</td>
             {% endif %}
             {% if show_emoji > 0 and not for_print %}
                 <td class="team-emoji team-{{ team.id }}"></td>

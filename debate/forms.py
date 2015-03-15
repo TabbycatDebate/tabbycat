@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy
 from debate.models import SpeakerScoreByAdj, Debate, Motion, Round, Team, Adjudicator
 from debate.models import DebateTeam, DebateTeamMotionPreference, DebateAdjudicator, AdjudicatorFeedback
 from debate.models import ActionLog
-from debate.result import BallotSet
+from debate.result import BallotSet, ForfeitBallotSet
 
 from collections import Counter
 
@@ -54,14 +54,15 @@ class BaseScoreField(forms.FloatField):
         self.check_value(value)
 
     def check_value(self, value):
-        if value % self.step_value != 0:
-            if self.step_value == 1:
-                msg = 'Please enter a whole number.'
-            else:
-                msg = 'Please enter a multiple of %s.' % self.step_value
-            raise forms.ValidationError(
-                _(msg), code='decimal'
-            )
+        if value:
+            if value % self.step_value != 0:
+                if self.step_value == 1:
+                    msg = 'Please enter a whole number.'
+                else:
+                    msg = 'Please enter a multiple of %s.' % self.step_value
+                raise forms.ValidationError(
+                    _(msg), code='decimal'
+                )
 
 class ScoreField(BaseScoreField):
     CONFIG_MIN_VALUE_FIELD  = 'score_min'
@@ -119,9 +120,11 @@ class BallotSetForm(forms.Form):
         <side>_speaker_<pos> and
         <side>_score_<pos>
         """
+
         self.ballots = ballots
         self.debate = ballots.debate
         self.adjudicators = self.debate.adjudicators.list
+        self.forfeit_declared = False
 
         password = kwargs.pop('password', False)
 
@@ -207,6 +210,15 @@ class BallotSetForm(forms.Form):
                         widget = forms.NumberInput(attrs=attrs),
                         tournament_config=tournament.config, **kwargs)
 
+                    if config.get('enable_forfeits'):
+                        self.fields[self.score_field_name(adj, side, pos)].required = False
+
+        if config.get('enable_forfeits'):
+            self.fields['motion'].required = False
+            CHOICES = (('aff_forfeit', 'By the Affirmative',), ('neg_forfeit', 'By the Negative',))
+            self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=False)
+
+
     def score_field_name(self, adj, side, pos):
         """
         Return the name of the score field for adj/side/pos
@@ -256,8 +268,11 @@ class BallotSetForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(BallotSetForm, self).clean()
-
         errors = list()
+
+        if 'forfeits' in cleaned_data:
+            if cleaned_data['forfeits'] == "aff_forfeit" or cleaned_data['forfeits'] == "neg_forfeit":
+                self.forfeit_declared = True
 
         # TODO this should go up to the BallotSubmission.full_clean() method.
         # Not sure how to structure this.
@@ -272,46 +287,47 @@ class BallotSetForm(forms.Form):
             ))
         # end TODO
 
-        for adj in self.adjudicators:
-            # Check that it was not a draw
-            try:
-                aff_total = sum(cleaned_data[self.score_field_name(adj, 'aff', pos)] for pos in self.POSITIONS)
-                neg_total = sum(cleaned_data[self.score_field_name(adj, 'neg', pos)] for pos in self.POSITIONS)
-            except KeyError:
-                continue
-            if aff_total == neg_total:
-                errors.append(forms.ValidationError(
-                    _('The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)'),
-                    params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
-                ))
-
-        for side in ('affirmative', 'negative'):
-            # The three speaker fields must be unique.
-            speakers = Counter()
-            for i in xrange(1, self.LAST_SUBSTANTIVE_POSITION + 1):
+        if not self.forfeit_declared:
+            for adj in self.adjudicators:
+                # Check that it was not a draw
                 try:
-                    speaker = cleaned_data['%s_speaker_%d' % (side[:3], i)]
+                    aff_total = sum(cleaned_data[self.score_field_name(adj, 'aff', pos)] for pos in self.POSITIONS)
+                    neg_total = sum(cleaned_data[self.score_field_name(adj, 'neg', pos)] for pos in self.POSITIONS)
                 except KeyError:
                     continue
-                speakers[speaker] += 1
-            for speaker, count in speakers.iteritems():
-                if count > 1:
+                if aff_total == neg_total:
                     errors.append(forms.ValidationError(
-                        _('The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team.'),
-                        params={'speaker': speaker, 'side': side, 'count': count}, code='speaker'
+                        _('The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)'),
+                        params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
                     ))
 
-            # The third speaker can't give the reply.
-            try:
-                reply_speaker_error = cleaned_data['%s_speaker_%d' % (side[:3], self.LAST_SUBSTANTIVE_POSITION)] \
-                        == cleaned_data['%s_speaker_%d' % (side[:3], self.REPLY_POSITION)]
-            except KeyError:
-                continue
-            if reply_speaker_error:
-                errors.append(forms.ValidationError(
-                    _('The last substantive speaker and reply speaker for the %(side)s team are the same.'),
-                    params={'side': side}, code='reply_speaker'
-                ))
+            for side in ('affirmative', 'negative'):
+                # The three speaker fields must be unique.
+                speakers = Counter()
+                for i in xrange(1, self.LAST_SUBSTANTIVE_POSITION + 1):
+                    try:
+                        speaker = cleaned_data['%s_speaker_%d' % (side[:3], i)]
+                    except KeyError:
+                        continue
+                    speakers[speaker] += 1
+                for speaker, count in speakers.iteritems():
+                    if count > 1:
+                        errors.append(forms.ValidationError(
+                            _('The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team.'),
+                            params={'speaker': speaker, 'side': side, 'count': count}, code='speaker'
+                        ))
+
+                # The third speaker can't give the reply.
+                try:
+                    reply_speaker_error = cleaned_data['%s_speaker_%d' % (side[:3], self.LAST_SUBSTANTIVE_POSITION)] \
+                            == cleaned_data['%s_speaker_%d' % (side[:3], self.REPLY_POSITION)]
+                except KeyError:
+                    continue
+                if reply_speaker_error:
+                    errors.append(forms.ValidationError(
+                        _('The last substantive speaker and reply speaker for the %(side)s team are the same.'),
+                        params={'side': side}, code='reply_speaker'
+                    ))
 
         if errors:
             raise forms.ValidationError(errors)
@@ -319,13 +335,22 @@ class BallotSetForm(forms.Form):
         return cleaned_data
 
     def save(self):
+
         # Unconfirm the other, if necessary
         if self.cleaned_data['confirmed']:
             if self.debate.confirmed_ballot != self.ballots and self.debate.confirmed_ballot is not None:
                 self.debate.confirmed_ballot.confirmed = False
                 self.debate.confirmed_ballot.save()
 
-        bs = BallotSet(self.ballots)
+        if self.forfeit_declared:
+            if self.cleaned_data['forfeits'] == "aff_forfeit":
+                forfeiter = self.debate.aff_dt
+            if self.cleaned_data['forfeits'] == "neg_forfeit":
+                forfeiter = self.debate.neg_dt
+
+            bs = ForfeitBallotSet(self.ballots, forfeiter)
+        else:
+            bs = BallotSet(self.ballots)
 
         def do(side):
             for i in self.POSITIONS:
@@ -334,14 +359,16 @@ class BallotSetForm(forms.Form):
                 for adj in self.adjudicators:
                     score = self.cleaned_data[self.score_field_name(adj, side, i)]
                     bs.set_score(adj, side, i, score)
-        do('aff')
-        do('neg')
 
-        bs.motion           = self.cleaned_data['motion']
-        bs.aff_motion_veto  = self.cleaned_data['aff_motion_veto']
-        bs.neg_motion_veto  = self.cleaned_data['neg_motion_veto']
-        bs.discarded        = self.cleaned_data['discarded']
-        bs.confirmed        = self.cleaned_data['confirmed']
+        if not self.forfeit_declared:
+            do('aff')
+            do('neg')
+            bs.motion           = self.cleaned_data['motion']
+            bs.aff_motion_veto  = self.cleaned_data['aff_motion_veto']
+            bs.neg_motion_veto  = self.cleaned_data['neg_motion_veto']
+
+        bs.discarded = self.cleaned_data['discarded']
+        bs.confirmed = self.cleaned_data['confirmed']
 
         bs.save()
 

@@ -1732,7 +1732,7 @@ class BallotSubmission(Submission):
     copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
     discarded = models.BooleanField(default=False)
 
-    forefeit = models.ForeignKey(DebateTeam, blank=True, null=True)
+    forfeit = models.ForeignKey(DebateTeam, blank=True, null=True)
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -1825,6 +1825,8 @@ class TeamScore(models.Model):
     margin = ScoreField()
     win = models.NullBooleanField()
     score = ScoreField()
+    affects_averages = models.BooleanField(default=True, blank=False, null=False,
+        help_text="Whether to count this when determining average speaker points and/or margins")
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]

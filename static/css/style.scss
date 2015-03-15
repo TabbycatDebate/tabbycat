@@ -208,6 +208,25 @@ input.error, select.error, .error input {
     margin: 0 2.5em;
     padding: 0;
 }
+.forfeits-group ul {
+    list-style-type: none;
+    label {
+        width: 200px;
+        input[type="radio"].form-control {
+            margin-right: 6px;
+            float:left;
+            margin-top: -8px;
+        }
+    }
+    li {
+        display: inline;
+    }
+}
+input[type="radio"].form-control, input[type="checkbox"].form-control {
+    margin-top: 0px;
+    max-width: 20px;
+    display: inline;
+}
 
 // Tables (Universal)
 
@@ -338,9 +357,9 @@ table a:hover {
     color: darken($state-warning-bg, 60%);
 }
 
-@include table-row-variant('debate-status-D', $state-info-bg);
+@include table-row-variant('debate-status-D', lighten($brand-info, 40%));
 .debate-status-D a {
-    color: darken($state-info-bg, 60%);
+    color: darken($brand-info, 80%);
 }
 
 @include table-row-variant('debate-status-C', $state-success-bg);

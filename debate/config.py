@@ -75,6 +75,7 @@ SETTINGS = OrderedDict([
     ('team_points_rule',            (str,   'Normally 1 win = 1 point, "wadl" uses 2/1/0 for win/loss/forfeit',    'normal')),
     ('enable_divisions',            (_bool, 'Enables the sorting and display of teams into divisions',             False)),
     ('enable_postponements',        (_bool, 'Enables debates to have their status set to postponed',               False)),
+    ('enable_forfeits',             (_bool, 'Enables one side of a debate to be in forfeit',                       False)),
     ('enable_division_motions',     (_bool, 'Enables assigning motions to a division',                             False)),
     ('minimum_division_size',       (int,   'Smallest allowed size for a division',                                5)),
     ('ideal_division_size',         (int,   'Ideal size for a division',                                           6)),
