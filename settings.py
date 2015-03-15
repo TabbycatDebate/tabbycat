@@ -20,9 +20,6 @@ DEBUG               = False
 TEMPLATE_DEBUG      = DEBUG
 DEBUG_ASSETS        = DEBUG
 
-DEBUG = True
-TEMPLATE_DEBUG = True
-
 # ===================
 # = Global Settings =
 # ===================
