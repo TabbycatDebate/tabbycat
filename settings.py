@@ -20,6 +20,9 @@ DEBUG               = False
 TEMPLATE_DEBUG      = DEBUG
 DEBUG_ASSETS        = DEBUG
 
+DEBUG = True
+TEMPLATE_DEBUG = True
+
 # ===================
 # = Global Settings =
 # ===================
@@ -180,8 +183,6 @@ if os.environ.get('DEBUG', ''):
     DEBUG = os.environ['DEBUG']
     TEMPLATE_DEBUG = DEBUG
 
-DEBUG = True
-TEMPLATE_DEBUG = True
 
 # ===========================
 # = Local Overrides
