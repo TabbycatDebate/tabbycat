@@ -78,7 +78,7 @@
 
         {% for debate in draw %}
             <tr class="debate-status-{% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}B{% else %}{{debate.result_status}}{% endif %}">
-                <td>
+                <td class="icon_holder">
                     {% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}
                         <span class="hidden">5</span>
                         <a title="Bye Debate" data-toggle="tooltip">
@@ -113,10 +113,9 @@
                         </a>
                     {% endif %}
                 </td>
-                <td>
+                <td class="ballot_links">
                     <!-- TODO clean this CSS stuff up -->
                     {% for ballotset in debate.ballotsubmission_set_by_version %}
-                    <div>
                         <a href="{% tournament_url edit_ballots ballotset.id %}" title="Edit Ballot" class="
                             {% if ballotset.confirmed %}edit-ballot-link-confirmed{% endif %}
                             {% if ballotset.discarded %}edit-ballot-link-discarded{% endif %}
@@ -125,14 +124,11 @@
                             {% if debate.ballotsubmission_set.count > 1%}
                                 v{{ ballotset.version }}
                             {% endif %}
-                        </a>
-                    </div>
+                        </a><br>
                     {% endfor %}
                     {% if not debate.ballotsubmission_set_by_version_except_discarded.exists %}
-                        {% if debate.result_status != debate.STATUS_POSTPONED and debate.aff_team.type != 'B' and debate.neg_team.type != 'B' %}
-                        <div>
+                        {% if debate.aff_team.type != 'B' and debate.neg_team.type != 'B' %}
                             <a href="{% tournament_url new_ballots debate.id %}" title="Create New Ballot">Enter</a>
-                        </div>
                         {% endif %}
                     {% endif %}
                     <!-- end TODO -->
@@ -141,9 +137,9 @@
                 {% if enable_postponements %}
                     <td>
                     {% if debate.result_status == debate.STATUS_POSTPONED %}
-                        <a href="">Un-postpone</a>
+                        <a class="postpone-toggle" id="{{ debate.id }}" href="{% tournament_url toggle_postponed %}">Un-postpone</a>
                     {% elif debate.result_status != debate.STATUS_CONFIRMED and debate.aff_team.type != 'B' and debate.neg_team.type != 'B' %}
-                        <a href="">Postpone</a>
+                        <a class="postpone-toggle" id="{{ debate.id }}" href="{% tournament_url toggle_postponed %}">Postpone</a>
                     {% endif %}
                     </td>
                 {% endif %}
@@ -213,6 +209,36 @@
             $('#table-search').keyup(function(){
                 dTable.search($(this).val()).draw();
             })
+            $("tr.debate-status-P td.ballot_links a").hide()
+
+            $('.postpone-toggle').click( function() {
+                $.ajax( {
+                    type: "POST",
+                    context: $(this),
+                    data: { 'debate' : $(this).attr('id') },
+                    url: $(this).attr('href'),
+                    success: function(data, status) {
+                        var row = $(this).parent().parent()
+                        if ($(this).text() === "Postpone") {
+                            $(this).text('Un-postpone');
+                            row.attr( "class", "debate-status-P" );
+                            row.find("td.icon_holder a span.glyphicon").attr( "class", "glyphicon glyphicon-pause");
+                            row.find("td.ballot_links a").hide()
+                        } else {
+                            $(this).text('Postpone');
+                            row.attr( "class", "debate-status-N" );
+                            row.find("td.icon_holder a span.glyphicon").attr( "class", "glyphicon glyphicon-remove");
+                            row.find("td.ballot_links a").show()
+                        }
+                    },
+                    error: function(xhr, error, ex) {
+                        $(this).text('Save Failed');
+                    }
+                } );
+                return false;
+            });
+
+
         });
     </script>
 {% endblock %}

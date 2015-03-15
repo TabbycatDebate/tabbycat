@@ -1375,6 +1375,22 @@ def new_ballots(request, t, debate_id):
         ballot_not_singleton=all_ballot_sets.exists(),
         show_adj_contact    =True))
 
+@login_required
+@tournament_view
+@expect_post
+def toggle_postponed(request, t):
+    debate_id = request.POST.get('debate')
+    debate = Debate.objects.get(pk=debate_id)
+    if debate.result_status == debate.STATUS_POSTPONED:
+        debate.result_status = debate.STATUS_NONE
+    else:
+        debate.result_status = debate.STATUS_POSTPONED
+
+    print debate.result_status
+    debate.save()
+    return HttpResponse("ok")
+
+
 @admin_required
 @round_view
 def team_standings(request, round, for_print=False):
