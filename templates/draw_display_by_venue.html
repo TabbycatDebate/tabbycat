@@ -61,7 +61,7 @@
         </thead>
         <tbody>
         {% for debate in draw %}
-            <tr class="{% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' or debate.result_status == 'P'%}active text-muted{% endif %}">
+            <tr class="{% debate_draw_status_class debate %}">
                 {% if enable_divisions %}
                     <td>{{ debate.division.name }}</td>
                 {% endif %}
@@ -73,25 +73,7 @@
                     <td class="venue-name">{{ debate.venue_splitname }}</td>
                 {% endif %}
                 {% if enable_venue_times %}
-                    {% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B'%}
-                        <td></td>
-                        <td>
-                            <span class="text-primary">Bye (No Debate)</span></td>
-                        </td>
-                    {% elif debate.result_status = "P" %}
-                        <td></td>
-                        <td>
-                            <span class="text-primary">Postponed</span></td>
-                        </td>
-                    {% else %}
-                        <td>
-                            <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
-                            {{ debate.venue.time|date:"D jS F" }}
-                        </td>
-                        <td>
-                            {{ debate.division.time_slot|time:'h:i A' }}
-                        </td>
-                    {% endif %}
+                    {% include "tables/debate_status.html" %}
                 {% endif %}
                 {% if show_emoji > 0 %}
                     <td class="team-emoji team-{{ debate.aff_team.id }} hidden-sm"></td>
@@ -127,7 +109,7 @@
                     <td style="max-width: 10%">
                         {% for motion in debate.division_motion %}
                             <span>{{ motion.reference }}</span>
-                            <small title="{{ motion.text }}" data-toggle="tooltip">(view motion)</small>
+                            <small title="{{ motion.text }}" data-toggle="tooltip">(view)</small>
                         {% endfor %}
                     </td>
                 {% endif %}
