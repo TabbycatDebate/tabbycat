@@ -183,7 +183,7 @@ def public_team_standings(request, t):
             team.points = sum([ts.points for ts in team.round_results if ts])
 
 
-        return r2r(request, 'public/team_standings.html', dict(teams=teams, rounds=rounds, round=round))
+        return r2r(request, 'public/public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
     else:
         return r2r(request, 'public/index.html')
 
@@ -325,7 +325,6 @@ def all_tournaments_all_institutions(request, t):
     return r2r(request, 'public/public_all_tournament_institutions.html', dict(
         institutions=institutions))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_draws_for_institution(request, t, institution_id):
     institution = Institution.objects.get(pk=institution_id)
@@ -1414,10 +1413,15 @@ def team_standings(request, round, for_print=False):
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
         try:
-            margins = [ts.margin for ts in team.round_results if ts]
+            margins = []
+            for ts in team.round_results:
+                if ts:
+                    if ts.get_margin is not None:
+                        margins.append(ts.get_margin)
+
             team.avg_margin = sum(margins) / float(len(margins))
         except ZeroDivisionError:
-            team.avg_margin = 0
+            team.avg_margin = None
 
     show_draw_strength = decide_show_draw_strength(round.tournament)
 

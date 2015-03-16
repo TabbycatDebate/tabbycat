@@ -9,7 +9,9 @@ django-emoji==2.0.0 # Emoji Support
 django-ipware==0.1.0 # IP Address logging
 django-libsass==0.2  # SASS Compilation
 django-suit==0.2.12 # Admin Backend
+psycopg2==2.5.4 # For Django to talk to postgres
 libsass==0.7.0 # SASS Compilation Dependency
 six==1.9.0
 sqlparse==0.1.14
 wsgiref==0.1.2
+gunicorn==19.3.0 # Needed for local server

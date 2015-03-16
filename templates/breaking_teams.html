@@ -32,7 +32,7 @@
                 <td class="team-emoji team-{{ team.id }}"></td>
             {% endif %}
             <td>
-                <span title="{{ team.speakers|join:"<br>" }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
+                <span title="{% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
                 {{ team.long_name }}
                 </span>
             </td>

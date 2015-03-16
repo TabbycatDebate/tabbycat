@@ -59,9 +59,11 @@
                     <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
                         {{ debate.aff_team.short_name }}
                     </span>
+                    {% if show_speakers_in_draw %}
                     <span class="hidden">
                        {{ debate.aff_team.speakers|join:', ' }}
                     </span>
+                    {% endif %}
                 </td>
                 <td class="venue-name">
                     {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}
@@ -153,9 +155,11 @@
                     <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
                         {{ debate.neg_team.short_name }}
                     </span>
+                    {% if show_speakers_in_draw %}
                     <span class="hidden">
                        {{ debate.neg_team.speakers|join:', ' }}
                     </span>
+                    {% endif %}
                 </td>
                 <td class="adj-names">
                     {% for type, adj in debate.adjudicators %}

@@ -1828,6 +1828,20 @@ class TeamScore(models.Model):
     affects_averages = models.BooleanField(default=True, blank=False, null=False,
         help_text="Whether to count this when determining average speaker points and/or margins")
 
+    @property
+    def get_margin(self):
+        if self.affects_averages == True:
+            return self.margin
+        else:
+            return None
+
+    @property
+    def get_score(self):
+        if self.affects_averages == True:
+            return self.score
+        else:
+            return None
+
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]
 

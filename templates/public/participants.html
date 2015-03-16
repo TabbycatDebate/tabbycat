@@ -32,7 +32,7 @@
                     </td>
                 {% endif %}
                 <td class="team-name">
-                    <span title="{{ person.team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                    <span title="{% if show_speakers_in_draw %}{{ person.team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
                         {{ person.team.long_name }}
                     </span>
                 </td>

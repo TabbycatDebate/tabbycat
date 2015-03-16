@@ -61,7 +61,7 @@
                 <td class="team-emoji team-{{ team.id }}"></td>
             {% endif %}
             <td>
-                <span title="<h5>{{ team.long_name }}</h5>{{ team.speakers|join:"<br>" }}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
+                <span title="<h5>{{ team.long_name }}</h5>{% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
                     {{ team.short_name }}
                 </span>
             </td>
@@ -75,15 +75,24 @@
                         <td>{{ round_results.win|yesno:"win,loss" }}</td>
                     {% else %}
                         <td class="opponent-emoji">
-                            <span title="{{ round_results.win|yesno:"Won,Lost" }} against {{ round_results.opposition.name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
-                                <span class="glyphicon {{ round_results.win|yesno:"glyphicon-arrow-up text-success,glyphicon-arrow-down text-danger" }}"></span>
-                                vs
-                                {% if show_emoji > 0 %}
-                                    <span class="team-emoji team-{{ round_results.opposition.id }}"></span>
-                                {% else %}
-                                    {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
-                                {% endif %}
-                            </span>
+                            {% if round_results.score == 0 %}
+                                {% with status=round_results.win|yesno:"Won (via forfeit),Forfeitted" icon=round_results.win|yesno:"glyphicon-share-alt text-success,glyphicon-eye-close text-danger" %}
+                                <span title="{{ status }} against {{ round_results.opposition.name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
+                                    <span class="glyphicon {{ icon }}"></span>
+                                {% endwith %}
+                            {% else %}
+                                {% with status=round_results.win|yesno:"Won,Lost" icon=round_results.win|yesno:"glyphicon-arrow-up text-success,glyphicon-arrow-down text-danger" %}
+                                <span title="{{ status }} against {{ round_results.opposition.name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
+                                    <span class="glyphicon {{ icon }}"></span>
+                                {% endwith %}
+                            {% endif %}
+                                    vs
+                                    {% if show_emoji > 0 %}
+                                        <span class="team-emoji team-{{ round_results.opposition.id }}"></span>
+                                    {% else %}
+                                        {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
+                                    {% endif %}
+                                </span>
                         </td>
                     {% endif %}
                 {% else %}

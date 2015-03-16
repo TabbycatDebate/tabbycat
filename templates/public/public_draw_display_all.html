@@ -36,7 +36,7 @@
             {% for round in all_rounds %}
                 {% for debate in round.draw %}
                     <tr class="{% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}active text-muted{% endif %}">
-                        <td>{{ round.seq }}</td>
+                        <td><span title="{{ debate.round.name }}" data-toggle="tooltip">{{ debate.round.abbreviation }}</span></td>
                         <td>{{ debate.division.name }}</td>
                         <td>
                             <span title="{{ debate.division.venue_group.name }}" data-toggle="tooltip">{{ debate.division.venue_group.short_name }}</span>

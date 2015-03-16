@@ -300,6 +300,7 @@
                         $(adj).remove();
                     }
                 }
+
             }
             function eachConflictingTeam(adj_id, fn) {
                 $.each(conflicts['conflict'][adj_id], function (i, n) {
@@ -612,9 +613,9 @@
                     { "sWdith": "90%", "sType": "string" },
                     { "sWidth": "10%", "sType": "string" }
                 ],
-                "aaSorting": [[1, 'desc']],
+                "aaSorting": [[1, 'desc'], [0, 'desc']],
                 bFilter: false
-            });
+            })
 
             $('#dataTable .importance').editable('{% round_url update_debate_importance %}', {
                 "callback": function(sValue, y) {

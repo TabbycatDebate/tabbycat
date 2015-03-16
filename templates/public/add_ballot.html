@@ -25,10 +25,10 @@
             </td>
             <td>{% if da.debate.venue.group %}{{ venue.group.name }} {% endif %}{{ da.debate.venue.name }}</td>
             <td>
-                <span href="#" title="{{ da.debate.aff_team.speakers|join:'<br>' }}">{{ da.debate.aff_team.short_name }}<span>
+                <span href="#" title="{% if show_speakers_in_draw %}{{ da.debate.aff_team.speakers|join:'<br>' }}{% endif %}">{{ da.debate.aff_team.short_name }}<span>
             </td>
             <td>
-                <span href="#" title="{{ da.debate.neg_team.speakers|join:'<br>' }}">{{ da.debate.neg_team.short_name }}</span>
+                <span href="#" title="{% if show_speakers_in_draw %}{{ da.debate.neg_team.speakers|join:'<br>' }}{% endif %}">{{ da.debate.neg_team.short_name }}</span>
             </td>
         </tr>
         {% endfor %}

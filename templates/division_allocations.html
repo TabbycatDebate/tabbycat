@@ -43,7 +43,7 @@
         {% for team in teams %}
         <tr>
             <td>
-                <span title="{{ team.speakers|join:"<br>" }}" data-toggle="tooltip" id="" class="team" href="#">
+                <span title="{% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %}" data-toggle="tooltip" id="" class="team" href="#">
                 {{ team.short_name }} {% if team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
                 </span>
             </td>
