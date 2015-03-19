@@ -124,5 +124,16 @@ class TournamentDataImporter(object):
 
         return result
 
-    def import_config(self, f):
+    def import_venues(self, f):
         pass
+
+    def import_config(self, f):
+        VALUE_TYPES = {"string": str, "int": int, "float": float, "bool", bool}
+        def _config_line_parser(line, i):
+            kwargs = dict()
+            key = line[0]
+            try:
+                coerce = VALUE_TYPES[line[1]]
+            except KeyError:
+                raise ValueError("Unrecognized value type in config: {0:r}".format(line[1]))
+            value = coerce(line[2])
