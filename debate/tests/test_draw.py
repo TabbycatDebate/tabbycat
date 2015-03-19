@@ -23,7 +23,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
     def test_draw(self):
         for i in xrange(100):
             teams = [TestTeam(*args, aff_count=0) for args in self.teams]
-            self.rd = DrawGenerator("random", teams)
+            self.rd = DrawGenerator("random", teams, avoid_conflicts="on")
             _draw = self.rd.make_draw()
             for pairing in _draw:
                 if pairing.aff_team.seen(pairing.neg_team) or \
