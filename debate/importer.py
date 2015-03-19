@@ -25,7 +25,7 @@ class TournamentDataImporter(object):
 
     def __init__(self, tournament, **kwargs):
         self.tournament = tournament
-        self.strict = kwargs.get('strict', False)
+        self.strict = kwargs.get('strict', True)
         self.header_row = kwargs.get('header_row', True)
 
     def _lookup(self, d, code, name):
@@ -84,7 +84,7 @@ class TournamentDataImporter(object):
             try:
                 inst.full_clean()
             except ValidationError as e:
-                e.message = "Couldn't parse file to create %s, in line %d: " % (model.__class__.__name__, i) + e.message
+                e.message = "Model validation for %s failed, in line %d: " % (model.__class__.__name__, i) + e.message
                 errors.append(e)
                 self._log(e)
                 continue
@@ -98,7 +98,7 @@ class TournamentDataImporter(object):
             self.logger.debug("Made %s: %s" % (model, inst))
             inst.save()
 
-        return insts.count()
+        return insts.count(), errors.count()
 
     def import_rounds(self, f):
         def _rounds_line_parser(line, i):
@@ -112,9 +112,12 @@ class TournamentDataImporter(object):
             kwargs['is_silent'] = bool(int(line[5]))
             kwargs['feedback_weight'] = float(line[6]) or 0.7
             return kwargs
-        self._import(f, _rounds_line_parser, m.Round)
+        result = self._import(f, _rounds_line_parser, m.Round)
 
+        # Set the round with the lowest known seqno to be the current round.
+        # TODO (as above)
         self.tournament.current_round = m.Round.objects.get(
                 tournament=self.tournament, seq=1)
         self.tournament.save()
-        return count, total_errors
+
+        return result
