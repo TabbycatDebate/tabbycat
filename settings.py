@@ -14,8 +14,7 @@ SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # = Overwritten in Local =
 # ===================
 
-ADMINS              = ('Test', 'test@test.com')
-MANAGERS            = ADMINS
+MANAGERS            = ('Test', 'test@test.com')
 DEBUG               = False
 TEMPLATE_DEBUG      = DEBUG
 DEBUG_ASSETS        = DEBUG
@@ -29,7 +28,6 @@ MEDIA_URL           = '/media/'
 STATIC_URL          = '/static/'
 TIME_ZONE           = 'Australia/Perth'
 LANGUAGE_CODE       = 'en-us'
-SITE_ID             = 1
 USE_I18N            = True
 
 # ===========================
