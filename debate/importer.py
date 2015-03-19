@@ -75,7 +75,7 @@ class TournamentDataImporter(object):
                 kwargs = line_parser(line, i)
             except (DoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
-                message = "Couldn't parse file to create %s, in line %d: " % (model.__name__, i) + e.message
+                message = "Couldn't parse file to create %s, in line %d: " % (model._meta.verbose_name, i) + e.message
                 errors.append(message)
                 self._log(message)
 
@@ -84,7 +84,7 @@ class TournamentDataImporter(object):
             try:
                 inst.full_clean()
             except ValidationError as e:
-                e.message = "Model validation for %s failed, in line %d: " % (model.__name__, i) + e.message
+                e.message = "Model validation for %s failed, in line %d: " % (model._meta.verbose_name, i) + e.message
                 errors.append(e)
                 self._log(e)
                 continue
@@ -95,8 +95,10 @@ class TournamentDataImporter(object):
             raise ValidationError(errors)
 
         for inst in insts:
-            self.logger.debug("Made %s: %s" % (model.__name__, inst))
+            self.logger.debug("Made %s: %s", model._meta.verbose_name, inst)
             inst.save()
+
+        self.logger.info("Imported %d %ss", len(insts), model._meta.verbose_name)
 
         return len(insts), len(errors)
 
@@ -121,3 +123,6 @@ class TournamentDataImporter(object):
         self.tournament.save()
 
         return result
+
+    def import_config(self, f):
+        pass
