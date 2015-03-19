@@ -1,28 +1,25 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
+"""Some very basic tests to check model creation and a few basic functions."""
 
 from django.test import TestCase
-from debate.models import Institution, Team, Speaker, Adjudicator, Debate, Round, Venue, DebateTeam
+from debate.models import Tournament, Institution, Team, Speaker, Adjudicator, Debate, Round, Venue, DebateTeam
 
 class BaseTest(TestCase):
     def setUp(self):
         super(BaseTest, self).setUp()
         # add test models
+        self.t = Tournament(slug="tournament")
+        self.t.save()
         for i in range(4):
             ins = Institution(code="INS%s"%i, name="Institution %s"%i)
             ins.save()
             for j in range(3):
-                team = Team(institution=ins, name="Team%s%s" % (i,j))
+                team = Team(tournament=self.t, institution=ins, reference="Team%s%s" % (i,j))
                 team.save()
                 for k in range(2):
                     speaker = Speaker(team=team, name="Speaker%s%s%s" % (i,j,k))
                     speaker.save()
             for j in range(2):
-                adj = Adjudicator(institution=ins, name="Adjudicator%s%s" %
+                adj = Adjudicator(tournament=self.t, institution=ins, name="Adjudicator%s%s" %
                                   (i,j), test_score=0)
                 adj.save()
 
@@ -63,7 +60,7 @@ class TestAdjudicator(BaseTest):
 class TestAdjudicatorDisable(BaseTest):
     def setUp(self):
         super(TestAdjudicatorDisable, self).setUp()
-        self.round = Round(seq=1)
+        self.round = Round(tournament=self.t, seq=1)
         self.round.save()
         self.activate_all_adj(self.round)
 
@@ -80,7 +77,7 @@ class RandomDrawTests(BaseTest):
 
     def setUp(self):
         super(RandomDrawTests, self).setUp()
-        self.round = Round(seq=2, type=Round.DRAW_RANDOM)
+        self.round = Round(tournament=self.t, seq=2, draw_type=Round.DRAW_RANDOM)
         self.round.save()
         self.activate_all_adj(self.round)
         self.activate_all_teams(self.round)
@@ -95,10 +92,4 @@ class RandomDrawTests(BaseTest):
         for team in Team.objects.all():
             self.failUnlessEqual(1, DebateTeam.objects.filter(team=team).count())
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
-
->>> 1 + 1 == 2
-True
-"""}
 
