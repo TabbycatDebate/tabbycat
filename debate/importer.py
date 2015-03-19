@@ -79,7 +79,10 @@ class TournamentDataImporter(object):
                 errors.append(message)
                 self._log(message)
 
-            inst = model(**kwargs)
+            inst, created = model.objects.get_or_create(**kwargs)
+
+            if not created:
+                continue
 
             try:
                 inst.full_clean()
@@ -103,7 +106,7 @@ class TournamentDataImporter(object):
         return len(insts), len(errors)
 
     def import_rounds(self, f):
-        def _rounds_line_parser(line, i):
+        def _round_line_parser(line, i):
             kwargs = dict()
             kwargs['tournament'] = self.tournament
             kwargs['seq'] = int(line[0]) or i
@@ -114,7 +117,7 @@ class TournamentDataImporter(object):
             kwargs['silent'] = bool(int(line[5]))
             kwargs['feedback_weight'] = float(line[6]) or 0.7
             return kwargs
-        result = self._import(f, _rounds_line_parser, m.Round)
+        result = self._import(f, _round_line_parser, m.Round)
 
         # Set the round with the lowest known seqno to be the current round.
         # TODO (as above)
@@ -124,8 +127,20 @@ class TournamentDataImporter(object):
 
         return result
 
-    def import_venues(self, f):
-        pass
+    def import_institutions(self, f):
+        def _institution_line_parser(line, i):
+
+
+
+    def import_venue_groups(self, f):
+        def _venue_group_line_parser(line, i):
+            kwargs = dict()
+            kwargs['tournanent'] = self.tournament
+            kwargs['name'] = line[0] or None
+            kwargs['short_name'] = line[1] or None
+            kwargs['team_capacity'] = line[2] or None
+        #TODO
+
 
     def import_config(self, f):
         VALUE_TYPES = {"string": str, "int": int, "float": float, "bool", bool}
