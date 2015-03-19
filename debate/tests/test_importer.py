@@ -3,6 +3,7 @@
 from django.test import TestCase
 import debate.models as m
 import debate.importer
+import os.path
 
 class TestImporter(TestCase):
 
@@ -13,12 +14,12 @@ class TestImporter(TestCase):
         super(TestImporter, self).setUp()
 
         # create tournament
-        self.t = Tournament(slug="import-test")
+        self.t = m.Tournament(slug="import-test")
         self.t.save()
         self.importer = debate.importer.TournamentDataImporter(self.t)
 
     def _open_csv_file(self, filename):
-        path = os.path.join(TESTDIR, filename + ".csv")
+        path = os.path.join(self.TESTDIR, filename + ".csv")
         return open(path, 'r')
 
     def test_rounds(self):

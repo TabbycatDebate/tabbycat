@@ -3,14 +3,13 @@ All 'file' arguments must be """
 
 import csv
 import logging
-logger = logging.getLogger(__name__)
 
 import debate.models as m
 
 class TournamentDataImporter(object):
     """Imports data for a tournament from CSV files passed as arguments."""
 
-    ROUND_DRAW_STAGES = {
+    ROUND_STAGES = {
         ("preliminary", "p"): "P",
         ("elimination", "break", "e", "b"): "E",
     }
@@ -27,12 +26,13 @@ class TournamentDataImporter(object):
         self.tournament = tournament
         self.strict = kwargs.get('strict', True)
         self.header_row = kwargs.get('header_row', True)
+        self.logger = kwargs.get('logger', None) or logging.getLogger(__name__)
 
     def _lookup(self, d, code, name):
         for k, v in d.iteritems():
             if code.lower() in k:
                 return v
-        logger.warning("Unrecognized code for %s: %s", name, code)
+        self.logger.warning("Unrecognized code for %s: %s", name, code)
         return None
 
     def auto_make_rounds(self, num_rounds):
@@ -50,7 +50,7 @@ class TournamentDataImporter(object):
                 feedback_weight=min((i-1)*0.1, 0.5),
                 silent=(i == num_rounds),
             ).save()
-        logger.info("Auto-made %d rounds", num_rounds)
+        self.logger.info("Auto-made %d rounds", num_rounds)
 
     def _log(self, message):
         self.logger.log(logging.ERROR if self.strict else logging.WARNING, e.message)
@@ -75,7 +75,7 @@ class TournamentDataImporter(object):
                 kwargs = line_parser(line, i)
             except (DoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
-                message = "Couldn't parse file to create %s, in line %d: " % (model.__class__.__name__, i) + e.message
+                message = "Couldn't parse file to create %s, in line %d: " % (model.__name__, i) + e.message
                 errors.append(message)
                 self._log(message)
 
@@ -84,7 +84,7 @@ class TournamentDataImporter(object):
             try:
                 inst.full_clean()
             except ValidationError as e:
-                e.message = "Model validation for %s failed, in line %d: " % (model.__class__.__name__, i) + e.message
+                e.message = "Model validation for %s failed, in line %d: " % (model.__name__, i) + e.message
                 errors.append(e)
                 self._log(e)
                 continue
@@ -95,10 +95,10 @@ class TournamentDataImporter(object):
             raise ValidationError(errors)
 
         for inst in insts:
-            self.logger.debug("Made %s: %s" % (model, inst))
+            self.logger.debug("Made %s: %s" % (model.__name__, inst))
             inst.save()
 
-        return insts.count(), errors.count()
+        return len(insts), len(errors)
 
     def import_rounds(self, f):
         def _rounds_line_parser(line, i):
@@ -107,9 +107,9 @@ class TournamentDataImporter(object):
             kwargs['seq'] = int(line[0]) or i
             kwargs['name'] = str(line[1])
             kwargs['abbreviation'] = str(line[2])
-            kwargs['draw_stage'] = self._lookup(self.ROUND_DRAW_STAGES, str(line[3]) or "p", "draw stage")
+            kwargs['stage'] = self._lookup(self.ROUND_STAGES, str(line[3]) or "p", "draw stage")
             kwargs['draw_type'] = self._lookup(self.ROUND_DRAW_TYPES, str(line[4]) or "r", "draw type")
-            kwargs['is_silent'] = bool(int(line[5]))
+            kwargs['silent'] = bool(int(line[5]))
             kwargs['feedback_weight'] = float(line[6]) or 0.7
             return kwargs
         result = self._import(f, _rounds_line_parser, m.Round)
