@@ -53,6 +53,9 @@ def debate_draw_status_class(debate):
 
 register.simple_tag(debate_draw_status_class)
 
+
+
+
 class RoundURLNode(template.Node):
     def __init__(self, view_name, round=None):
         self.view_name = view_name
