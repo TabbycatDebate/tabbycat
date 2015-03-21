@@ -186,6 +186,9 @@ html, body {
 
 // Forms
 
+#resultsForm {
+    overflow: hidden;
+}
 input.error, select.error, .error input {
     border-color: $state-danger-text;
     color: $state-danger-text;
