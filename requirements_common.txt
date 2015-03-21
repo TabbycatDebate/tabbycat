@@ -13,4 +13,3 @@ psycopg2==2.5.4 # For Django to talk to postgres
 libsass==0.7.0 # SASS Compilation Dependency
 six==1.9.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.1.14
-wsgiref==0.1.2
