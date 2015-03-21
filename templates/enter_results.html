@@ -18,10 +18,7 @@
 
 {% block content %}
     <form id="resultsForm" class="form-horizontal" action="." method="POST">
-        <div id="ballot_set">
-            {% include "enter_results_ballot_set.html" %}
-        </div>
-
+        {% include "enter_results_ballot_set.html" %}
         <div class="row">
             <h3 class="col-sm-12 page-header lead">Ballot Status</h3>
         </div>

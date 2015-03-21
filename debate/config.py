@@ -71,6 +71,7 @@ SETTINGS = OrderedDict([
     ('enable_venue_overlaps',       (_bool, 'Allow and automatically debates to be placed in the first room',      False)),
     ('share_adjs',                  (_bool, 'Display adjudicators from other tournaments',                         False)),
     ('duplicate_adjs',              (_bool, 'Allow each adjudicator to be allocated to multiple rooms',            False)),
+    ('enable_assistant_confirms',   (_bool, 'Enables Assistant users to confirm their own ballots',                False)),
     ('show_avg_margin',             (_bool, 'Enables a display of average margins in the team standings',          False)),
     ('team_points_rule',            (str,   'Normally 1 win = 1 point, "wadl" uses 2/1/0 for win/loss/forfeit',    'normal')),
     ('enable_divisions',            (_bool, 'Enables the sorting and display of teams into divisions',             False)),
