@@ -3,6 +3,7 @@ All 'file' arguments must be """
 
 import csv
 import logging
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
 
 import debate.models as m
 
@@ -26,7 +27,7 @@ class TournamentDataImporter(object):
         self.tournament = tournament
         self.strict = kwargs.get('strict', True)
         self.header_row = kwargs.get('header_row', True)
-        self.logger = kwargs.get('logger', None) or logging.getLogger(__name__)
+        self.logger = kwargs.get('logger', None) or logging.getLogger(__name__) # don't evaluate default unless necessary
 
     def _lookup(self, d, code, name):
         for k, v in d.iteritems():
@@ -53,9 +54,9 @@ class TournamentDataImporter(object):
         self.logger.info("Auto-made %d rounds", num_rounds)
 
     def _log(self, message):
-        self.logger.log(logging.ERROR if self.strict else logging.WARNING, e.message)
+        self.logger.log(logging.ERROR if self.strict else logging.WARNING, message)
 
-    def _import(self, f, line_parser, model):
+    def _import(self, f, line_parser, model, expect_unique=True):
         """Parses the file object given in f, using the callable line_parser to
         parse each line, and passing the arguments to the given model's
         constructor.
@@ -73,15 +74,27 @@ class TournamentDataImporter(object):
         for i, line in enumerate(reader, start=1):
             try:
                 kwargs = line_parser(line, i)
-            except (DoesNotExist, MultipleObjectsReturned, ValueError,
+            except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
                 message = "Couldn't parse file to create %s, in line %d: " % (model._meta.verbose_name, i) + e.message
                 errors.append(message)
                 self._log(message)
+                continue
 
-            inst, created = model.objects.get_or_create(**kwargs)
+            if kwargs is None:
+                continue
 
-            if not created:
+            try:
+                inst = model.objects.get(**kwargs)
+            except MultipleObjectsReturned as e:
+                if expect_unique:
+                    errors.append(e.message)
+                    self._log(e.message)
+                continue
+            except ObjectDoesNotExist as e:
+                inst = model(**kwargs)
+            else:
+                self.logger.info("Skipping %s: %s, already exists", model._meta.verbose_name, inst)
                 continue
 
             try:
@@ -129,8 +142,13 @@ class TournamentDataImporter(object):
 
     def import_institutions(self, f):
         def _institution_line_parser(line, i):
-
-
+            kwargs = dict()
+            kwargs['name'] = line[0] or None
+            kwargs['code'] = line[1] or None
+            if len(line) > 2:
+                kwargs['abbreviation'] = line[2]
+            return kwargs
+        return self._import(f, _institution_line_parser, m.Institution)
 
     def import_venue_groups(self, f):
         def _venue_group_line_parser(line, i):
@@ -138,12 +156,34 @@ class TournamentDataImporter(object):
             kwargs['tournanent'] = self.tournament
             kwargs['name'] = line[0] or None
             kwargs['short_name'] = line[1] or None
-            kwargs['team_capacity'] = line[2] or None
-        #TODO
+            if len(line) > 2:
+                kwargs['team_capacity'] = line[2]
+            return kwargs
+        return self._import(f, _venue_group_line_parser, m.VenueGroup)
+
+    def import_venues(self, f):
+        def _venue_group_line_parser(line, i):
+            if not line[2]:
+                return None
+            kwargs = dict()
+            kwargs['tournament'] = self.tournament
+            kwargs['name'] = line[2] or None
+            return kwargs
+        self._import(f, _venue_group_line_parser, m.VenueGroup, expect_unique=False)
+
+        def _venue_line_parser(line, i):
+            kwargs = dict()
+            kwargs['tournament'] = self.tournament
+            kwargs['name'] = line[0]
+            kwargs['priority'] = line[1] if len(line) > 1 else 10
+            kwargs['group'] = m.VenueGroup.objects.get(tournament=self.tournament, name=line[2]) if len(line) > 2 else None
+            kwargs['time'] = line[3] if len(line) > 3 else None
+            return kwargs
+        self._import(f, _venue_line_parser, m.Venue)
 
 
     def import_config(self, f):
-        VALUE_TYPES = {"string": str, "int": int, "float": float, "bool", bool}
+        VALUE_TYPES = {"string": str, "int": int, "float": float, "bool": bool}
         def _config_line_parser(line, i):
             kwargs = dict()
             key = line[0]

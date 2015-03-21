@@ -25,3 +25,11 @@ class TestImporter(TestCase):
     def test_rounds(self):
         f = self._open_csv_file("rounds")
         rounds, errors = self.importer.import_rounds(f)
+
+    def test_venues(self):
+        f = self._open_csv_file("venues")
+        institutions, errors = self.importer.import_venues(f)
+
+    def test_institutions(self):
+        f = self._open_csv_file("institutions")
+        institutions, errors = self.importer.import_institutions(f)
