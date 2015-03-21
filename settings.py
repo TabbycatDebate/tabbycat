@@ -68,10 +68,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'debate',
-    'emoji',
     'debug_toolbar',
     'compressor',
-    'gunicorn',
 )
 
 LOGIN_REDIRECT_URL = '/'

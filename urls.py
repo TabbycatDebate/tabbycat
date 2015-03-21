@@ -20,7 +20,6 @@ urlpatterns = patterns('',
 
     (r'^t/(?P<tournament_slug>[-\w_]+)/', include('debate.urls')),
 
-    (r'^emoji/', include('emoji.urls')),
     (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
 )
 
