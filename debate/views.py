@@ -1584,7 +1584,6 @@ def _json_adj_allocation(debates, unused_adj):
 @admin_required
 @round_view
 def draw_adjudicators_get(request, round):
-
     draw = round.get_draw()
 
     return _json_adj_allocation(draw, round.unused_adjudicators())

@@ -83,12 +83,12 @@
                         <td class="opponent-emoji">
                             {% if round_results.score == 0 %}
                                 {% with status=round_results.win|yesno:"Won (via forfeit),Forfeitted" icon=round_results.win|yesno:"glyphicon-share-alt text-success,glyphicon-eye-close text-danger" %}
-                                <span title="{{ status }} against {{ round_results.opposition.name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
+                                <span title="{{ status }} against {{ round_results.opposition.short_name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
                                     <span class="glyphicon {{ icon }}"></span>
                                 {% endwith %}
                             {% else %}
                                 {% with status=round_results.win|yesno:"Won,Lost" icon=round_results.win|yesno:"glyphicon-arrow-up text-success,glyphicon-arrow-down text-danger" %}
-                                <span title="{{ status }} against {{ round_results.opposition.name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
+                                <span title="{{ status }} against {{ round_results.opposition.short_name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
                                     <span class="glyphicon {{ icon }}"></span>
                                 {% endwith %}
                             {% endif %}

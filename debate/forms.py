@@ -215,9 +215,8 @@ class BallotSetForm(forms.Form):
 
         if config.get('enable_forfeits'):
             self.fields['motion'].required = False
-            CHOICES = (('aff_forfeit', 'By the Affirmative',), ('neg_forfeit', 'By the Negative',))
+            CHOICES = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
             self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=False)
-
 
     def score_field_name(self, adj, side, pos):
         """

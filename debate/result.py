@@ -364,6 +364,11 @@ class BallotSet(object):
         return sum(self.adjudicator_sheets[adj].get_total(side) for adj in
                    self.majority_adj) / len(self.majority_adj)
 
+    def _dissenting_inclusive_score(self, side):
+        dissenting_score = sum(self.adjudicator_sheets[adj].get_total(side) for adj in
+                   self.adjudicators) / len(self.adjudicators)
+        return dissenting_score
+
     @property
     def aff_score(self):
         return self._score('aff')
@@ -400,8 +405,13 @@ class BallotSet(object):
         if not self.loaded_sheets:
             return self.margin[side]
 
-        if self._score(side) and self._score(self._other[side]):
-            return self._score(side) - self._score(self._other[side])
+        if self.debate.round.tournament.config.get('margin_includes_dissenters') is False:
+            if self._score(side) and self._score(self._other[side]):
+                return self._score(side) - self._score(self._other[side])
+        else:
+            if self._dissenting_inclusive_score(side) and self._dissenting_inclusive_score(self._other[side]):
+                dissenting_inclusive_margin = self._dissenting_inclusive_score(side) - self._dissenting_inclusive_score(self._other[side])
+                return dissenting_inclusive_margin
 
         return None
 

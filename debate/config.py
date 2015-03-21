@@ -73,6 +73,7 @@ SETTINGS = OrderedDict([
     ('duplicate_adjs',              (_bool, 'Allow each adjudicator to be allocated to multiple rooms',            False)),
     ('enable_assistant_confirms',   (_bool, 'Enables Assistant users to confirm their own ballots',                False)),
     ('show_avg_margin',             (_bool, 'Enables a display of average margins in the team standings',          False)),
+    ('margin_includes_dissenters',  (_bool, 'Whether a teams winning margin includes dissenting adj scores',       False)),
     ('team_points_rule',            (str,   'Normally 1 win = 1 point, "wadl" uses 2/1/0 for win/loss/forfeit',    'normal')),
     ('enable_divisions',            (_bool, 'Enables the sorting and display of teams into divisions',             False)),
     ('enable_postponements',        (_bool, 'Enables debates to have their status set to postponed',               False)),
