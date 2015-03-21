@@ -4,9 +4,10 @@
     <thead>
         <tr>
             {% if enable_divisions %}
-                <th>Division</th>
+                <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+            {% else %}
+                <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
             {% endif %}
-            <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
             <th>Aff<span class="hidden-xs">irmative</span></th>
             <th>Neg<span class="hidden-xs">ative</span></th>
             <th><span data-toggle="tooltip" title="Wins (aff)">AW</span></th>
@@ -27,18 +28,15 @@
     <tbody>
     {% for debate in draw %}
     <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }} {% ifchanged debate.bracket %}first-in-bracket{% endifchanged %}">
-        {% if enable_divisions %}
-            <td>{{ debate.division }}</td>
-        {% endif %}
         <td>{{ debate.bracket }}</td>
         <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
             <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-            {{ debate.aff_team }}
+            {{ debate.aff_team.short_name }}
             </span>
         </td>
         <td{% if debate.neg_team.pullup %} class="em"{% endif %}>
             <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-            {{ debate.neg_team }}
+            {{ debate.neg_team.short_name }}
             </span>
         </td>
         <td{% if debate.aff_team.pullup %} class="em"{% endif %}>

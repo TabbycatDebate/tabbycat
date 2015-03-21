@@ -42,6 +42,20 @@ def neg_count(team, round):
     return team.get_neg_count(round.seq)
 register.simple_tag(neg_count)
 
+def debate_draw_status_class(debate):
+    if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
+        return "active text-muted"
+    elif debate.result_status == "P":
+        return "active text-muted"
+    elif debate.confirmed_ballot:
+        if debate.confirmed_ballot.forfeit:
+            return "active text-muted"
+
+register.simple_tag(debate_draw_status_class)
+
+
+
+
 class RoundURLNode(template.Node):
     def __init__(self, view_name, round=None):
         self.view_name = view_name

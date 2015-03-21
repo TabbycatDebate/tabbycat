@@ -1,74 +1,44 @@
-{% extends "base.html" %}
+{% extends "results.html" %}
 {% load debate_tags %}
-
-{% block extra-head %}
-{{ block.super }}
-<script type="text/javascript" charset="utf-8">
-    $(document).ready( function() {
-        var table = $("#dataTable").dataTable( {
-            "aaSorting": [[ 1, "asc" ]],
-        });
-        new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-    } );
-</script>
-{% endblock extra-head %}
 
 {% block head-title %}Enter Results for {{ current_round.name }}{% endblock %}
 {% block page-title %}Enter Results for {{ current_round.name }}{% endblock %}
 {% block body-class %}monkey-enter-result{% endblock %}
 
-{% block nav %}{% include "monkey/nav.html" %}{% endblock %}{% block footer %}{% include "monkey/footer.html" %}{% endblock %}
-
-{% block content %}
-
-<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Ballots</th>
-            <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
-            <th>Aff<span class="hidden-xs">irmative</span></th>
-            <th>Neg<span class="hidden-xs">ative</span></th>
-            <th>Adj<span class="hidden-xs">udicator</span>s</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for debate in draw %}
-        <tr class="
-        {% ifequal debate.result_status debate.STATUS_NONE %}{% if debate.ballot_in %}warning {% else %}danger {% endif %}{% endifequal %}
-        {% ifequal debate.result_status debate.STATUS_CONFIRMED %}active{% endifequal %}
-        ">
-            <td>
-                {% if debate.result_status == debate.STATUS_NONE or not debate.ballotsubmission_set_by_version_except_discarded.exists %}
-                    <a href="{% tournament_url new_ballots debate.id %}" title="Create New Ballot">Enter</a>
-                {% else %}
-                    {% for ballotset in debate.ballotsubmission_set_by_version_except_discarded %}
-                        <a href="{% tournament_url edit_ballots ballotset.id %}" title="Edit Ballot">
-                            Show {% if debate.ballotsubmission_set.count > 1%}v{{ ballotset.version }}{% endif %}</a>
-                        {% if not forloop.last %}<br />{% endif %}
-                    {% endfor %}
-                {% endif %}
-            </td>
-            <td>
-                {{ debate.venue_splitname }}
-            </td>
-            <td>
-                <span href="#" title="{{ debate.aff_team.speakers|join:'<br>' }}">
-                    {{ debate.aff_team.short_name }}
-                <span>
-            </td>
-            <td>
-                <span href="#" title="{{ debate.neg_team.speakers|join:'<br>' }}">
-                    {{ debate.neg_team.short_name }}
-                </span>
-            </td>
-            <td>
-                {% for type, adj in debate.adjudicators %}
-                    {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
-                {% endfor %}
-            </td>
-        </tr>
-    {% endfor %}
-</table>
-
+{% block header %}
+    <div class="btn-group">
+        <button class="btn btn-default btn-danger">
+            <span class="label none">
+                {{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span>
+            </span>
+        </button>
+        <button class="btn btn-default btn-warning">
+            <span class="label ballotin">
+                {{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span>
+            </span>
+        </button>
+        <button class="btn btn-default btn-info">
+            <span class="label unconfirmed">
+                {{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span>
+            </span>
+        </button>
+        <button class="btn btn-default btn-success">
+            <span class="label confirmed">
+                {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span>
+            </span>
+        </button>
+        {% if enable_postponements %}
+        <button class="btn btn-default btn-primary">
+            <span class="label confirmed">
+                {{ stats.postponed }} Postponed <span class="glyphicon glyphicon-pause"></span>
+            </span>
+        </button>
+        <button class="btn btn-default active">
+            <span class="label confirmed text-muted">
+                Bye <span class="glyphicon glyphicon-fast-forward"></span>
+            </span>
+        </button>
+        {% endif %}
+    </div>
+    {% include "table_search.html" %}
 {% endblock %}
-

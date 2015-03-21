@@ -70,6 +70,7 @@ class Pairing(object):
             pass
         elif self.teams[0].aff_count > self.teams[1].aff_count:
             self.teams.reverse()
+            print "balancing sides"
         else:
             random.shuffle(self.teams)
 
@@ -1029,11 +1030,15 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     can_be_first_round = True
     requires_even_teams = False
     requires_prev_results = False
-    draw_type = "elimination"
+    draw_type = "preliminary"
+    side_allocations = "balance"
 
     PAIRING_FUNCTIONS = {
         "random": "_pairings_random"
     }
+
+
+    DEFAULT_OPTIONS = {"max_swap_attempts": 20, "avoid_conflicts": "off"}
 
     def make_draw(self):
         self._brackets = self._make_raw_brackets_from_divisions()
@@ -1042,9 +1047,9 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         # TODO: avoiding history conflicts here
         self._draw = list()
         for bracket in self._pairings.itervalues():
-            print bracket
             self._draw.extend(bracket)
 
+        self.balance_sides(self._draw) # operates in-place
         return self._draw
 
     def _make_raw_brackets_from_divisions(self):
@@ -1060,57 +1065,123 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             else:
                 brackets[division] = [team]
 
+        print "------"
+
+        # Assigning bye teams as needed
+        for bracket in brackets.itervalues():
+            if len(bracket) % 2 != 0:
+                from debate.models import Institution,Team
+                bye_tournament = bracket[0].tournament
+                bye_institution, created = Institution.objects.get_or_create(
+                    name="Byes"
+                )
+                bye_reference = "Bye %s" % bracket[0].division
+                bye_division = bracket[0].division
+                bye_team = Team(
+                    institution = bye_institution,
+                    reference = bye_reference,
+                    short_reference = "Bye",
+                    tournament= bye_tournament,
+                    type = "B",
+                    use_institution_prefix = False,
+                    division = bye_division,
+                    cannot_break = True
+                )
+                bye_team.aff_count = 0
+                bye_team.neg_count = 0
+                bye_team.save()
+                bracket.append(bye_team)
+                print "\t Created a bye team for divison %s" % bracket[0].division
+
+        # Assigning subranks - fixed based on alphabetical
+        for bracket in brackets.itervalues():
+            bracket.sort(key=lambda x: x.short_name, reverse=False)
+            for i, team in enumerate(bracket):
+                i += 1
+                team.subrank = i
+
         return brackets
+
+    def determine_effective_round(self, teams_list):
+        # This uses previous matchups to determine the offset
+        # Essentially figures out (ignore draw.seq) what the previous matchups
+        # have been. TODO: This is pretty flawed.
+        effective_round = 1
+        for i in range(1, len(teams_list)):
+            print "\ttesting round %s" % i
+            right_team_index = -1 * i
+            if teams_list[0].seen(teams_list[right_team_index]):
+                effective_round += 1
+
+        print "effective roud of %s" % effective_round
+        return effective_round
+
 
     def generate_pairings(self, brackets):
         pairings = OrderedDict()
-        for points, teams in brackets.iteritems():
-            num_debates = len(teams) / 2 # this rounds down the debates
-            #num_debates = int(math.ceil(len(teams) / 2.0)) # this rounds up
-            if num_debates % 2 != 0:
-                print "There are an odd number of teams in bracket %s" % points
-                # TODO things here when I get around to dealing with Byes
 
-            bracket = list()
+        first_bracket_teams = brackets.itervalues().next()
+        effective_round = self.determine_effective_round(first_bracket_teams)
+        print "-------\nTaking as effective round of %s" % effective_round
+
+        for bracket in brackets.iteritems():
+            teams_list = bracket[1] # Team Array is second item
+            points =  bracket[0]
+            total_debates = int(len(teams_list) / 2)
+            print "BRACKET %s with %s teams" % (points, len(teams_list))
+
+            fold_top = teams_list[:total_debates]
+            fold_bottom = teams_list[total_debates:]
+            fold_bottom.reverse() # Bottom half ranks high to low
+
+            # Reforming the list for the shuffle
+            folded_list = list(fold_top)
+            folded_list.extend(fold_bottom)
+
+            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
+            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
+
+            for i in range(1, effective_round):
+                 # left-most bottom goes to position[1] on the top
+                folded_list.insert(1, (folded_list.pop(total_debates)))
+                # right-most top goes to right-most bottom
+                folded_list.append(folded_list.pop(total_debates))
+                #print "popping %s iteration %s" % (i, total_debates)
+
+            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
+            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
+
+            # IE For Round 2 - before and after
+            # ['1 - Aquinas 1', '2 - Aquinas 2', '3 - Penrhos 1']
+            # ['6 - Santa Maria 1', '5 - Rossmoyne 2', '4 - Rossmoyne 1']
+            # popping 1 iteration 3
+            # ['1 - Aquinas 1', '6 - Santa Maria 1', '2 - Aquinas 2']
+            # ['5 - Rossmoyne 2', '4 - Rossmoyne 1', '3 - Penrhos 1']
+
             assigned_teams = []
+            assigned_pairings = []
+            for paired_teams in zip(folded_list[:total_debates], folded_list[total_debates:]):
+                aff = paired_teams[0]
+                neg = paired_teams[1]
+                # Iterating through each half and matching - ie 1-4, 2-5, 3-6
+                if neg:
+                    pairing = Pairing(
+                        teams=(paired_teams),
+                        bracket=points,
+                        room_rank=1,
+                        division=aff.division
+                    )
+                    print "\t matchup is %s (%s) vs %s (%s)" % (aff, teams_list.index(aff) + 1, neg, teams_list.index(neg) + 1)
+                    assigned_pairings.append(pairing)
+                    assigned_teams.append(aff)
+                    assigned_teams.append(neg)
+                else:
+                    # Need to deal with Byes and the like here
+                    print "couldn't find an opposition"
 
-            for aff in teams:
-                if aff not in assigned_teams:
-                    print "Looking for an opposition for %s" % aff
-                    opposition = None
-
-                    for neg in teams:
-                        if neg in assigned_teams:
-                            continue
-                        elif aff == neg:
-                            continue
-                        elif aff.seen(neg):
-                            print "\t already seen %s" % neg
-                            continue
-                        else:
-                            print "\t hasn't seen %s" % neg
-                            opposition = neg
-                            break # Stop searching
-
-                    if opposition:
-                        pairing = Pairing(
-                            teams=(aff,opposition),
-                            bracket=points,
-                            room_rank=1,
-                            division=aff.division
-                        )
-                        print "\t made a pairing %s" % pairing
-                        bracket.append(pairing)
-                        assigned_teams.append(aff)
-                        assigned_teams.append(opposition)
-                    else:
-                        # Need to deal with Byes and the like here
-                        print "couldn't find an opposition"
+            pairings[points] = assigned_pairings
 
 
-                    print "---"
-
-            pairings[points] = bracket
 
         return pairings
 

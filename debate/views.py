@@ -11,14 +11,9 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 from ipware.ip import get_real_ip
 
-from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
-from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
-from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission, AdjudicatorTestScoreHistory
-from debate.models import AdjudicatorFeedback, ActiveVenue, ActiveTeam, ActiveAdjudicator
-from debate.models import TeamPositionAllocation
-from debate.models import Division, TeamVenuePreference, VenueGroup
 from debate.result import BallotSet
 from debate import forms
+from debate.models import *
 
 from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
@@ -188,7 +183,7 @@ def public_team_standings(request, t):
             team.points = sum([ts.points for ts in team.round_results if ts])
 
 
-        return r2r(request, 'public/team_standings.html', dict(teams=teams, rounds=rounds, round=round))
+        return r2r(request, 'public/public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
     else:
         return r2r(request, 'public/index.html')
 
@@ -299,13 +294,63 @@ def public_motions(request, t):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')
 def public_divisions(request, t):
-    divisions = Division.objects.filter(tournament=t)
+    divisions = Division.objects.filter(tournament=t).all()
+    divisions = sorted(divisions, key=lambda x: float(x.name))
     venue_groups = set(d.venue_group for d in divisions)
     for uvg in venue_groups:
         uvg.divisions = [d for d in divisions if d.venue_group == uvg]
 
-    return r2r(request, 'public/divisions.html', dict(venue_groups=venue_groups))
+    return r2r(request, 'public/public_divisions.html', dict(venue_groups=venue_groups))
 
+
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def all_tournaments_all_venues(request, t):
+    venues = VenueGroup.objects.all()
+    return r2r(request, 'public/public_all_tournament_venues.html', dict(venues=venues))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def all_draws_for_venue(request, t, venue_id):
+    venue_group = VenueGroup.objects.get(pk=venue_id)
+    debates = Debate.objects.filter(division__venue_group=venue_group)
+    return r2r(request, 'public/all_draws_for_venue.html', dict(
+        venue_group=venue_group, debates=debates))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def all_tournaments_all_institutions(request, t):
+    institutions = Institution.objects.all()
+    return r2r(request, 'public/public_all_tournament_institutions.html', dict(
+        institutions=institutions))
+
+@tournament_view
+def all_draws_for_institution(request, t, institution_id):
+    institution = Institution.objects.get(pk=institution_id)
+    debate_teams = DebateTeam.objects.filter(team__institution=institution)
+    debates = [dt.debate for dt in debate_teams]
+
+    return r2r(request, 'public/all_draws_for_institution.html', dict(
+        institution=institution, debates=debates))
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def all_tournaments_all_teams(request, t):
+    teams = Team.objects.filter(tournament__active=True)
+    return r2r(request, 'public/public_all_tournament_teams.html', dict(
+        teams=teams))
+
+
+@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@tournament_view
+def public_all_draws(request, t):
+    all_rounds = list(Round.objects.filter(tournament=t))
+    for r in all_rounds:
+        r.draw = r.get_draw()
+
+    return r2r(request, 'public/public_draw_display_all.html', dict(
+        all_rounds=all_rounds))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
@@ -526,10 +571,7 @@ def tournament_home(request, t):
     else:
         stats['pc'] = 0
 
-    if not request.user.is_superuser:
-        return r2r(request, 'monkey/home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
-    else:
-        return r2r(request, 'tournament_home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
+    return r2r(request, 'tournament_home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
 
 @admin_required
 @tournament_view
@@ -763,12 +805,15 @@ def draw(request, round):
 
 
 def draw_none(request, round):
+    all_teams_count = Team.objects.filter(tournament=round.tournament).count()
     active_teams = round.active_teams.all()
-    active_venues = round.active_venues.all()
+    active_venues_count = round.active_venues.count()
     rooms = float(active_teams.count()) / 2
     return r2r(request, "draw_none.html", dict(active_teams=active_teams,
-                                               active_venues=active_venues,
-                                               rooms=rooms))
+                                               active_venues_count=active_venues_count,
+                                               rooms=rooms,
+                                               round=round,
+                                               all_teams_count=all_teams_count))
 
 
 def draw_draft(request, round):
@@ -804,6 +849,14 @@ def create_draw(request, round):
         user=request.user, round=round, tournament=round.tournament)
     return redirect_round('draw', round)
 
+@admin_required
+@expect_post
+@round_view
+def create_draw_with_all_teams(request, round):
+    round.draw(override_team_checkins=True)
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CREATE,
+        user=request.user, round=round, tournament=round.tournament)
+    return redirect_round('draw', round)
 
 @admin_required
 @expect_post
@@ -872,22 +925,10 @@ def side_allocations(request, t):
 @admin_required
 @tournament_view
 def division_allocations(request, t):
-    teams = Team.objects.filter(tournament=t)
-    for team in teams:
-        team.preferences = team.get_preferences
-
-    divisions = Division.objects.filter(tournament=t)
-    for division in divisions:
-        division.teams_count = len(division.teams)
-
-    venue_groups = VenueGroup.objects.filter(tournament=t).order_by('name')
-    for vg in venue_groups:
-        vg.total_divs = len([division for division in divisions
-                            if division.venue_group == vg])
-        vg.total_teams = 0
-        for division in divisions:
-            if division.venue_group == vg:
-                    vg.total_teams += division.teams_count
+    teams = Team.objects.filter(tournament=t).all()
+    divisions = Division.objects.filter(tournament=t).all()
+    divisions = sorted(divisions, key=lambda x: float(x.name))
+    venue_groups = VenueGroup.objects.all()
 
     return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 
@@ -924,7 +965,7 @@ def create_division_allocation(request, t):
     # Delete all existing divisions - this shouldn't affect teams (on_delete=models.SET_NULL))
     divisions = Division.objects.filter(tournament=t).delete()
 
-    venue_groups = VenueGroup.objects.filter(tournament=t)
+    venue_groups = VenueGroup.objects.all()
 
     alloc = DivisionAllocator(teams=teams, divisions=divisions,venue_groups=venue_groups, tournament=t)
     success = alloc.allocate()
@@ -1005,11 +1046,15 @@ def motions_assign(request, round):
 
     class MyModelChoiceField(ModelMultipleChoiceField):
         def label_from_instance(self, obj):
-            return "%s %s" % (obj.name, obj.venue_group)
+            return "%s %s - Division %s @ %s" % (
+                obj.venue_group.short_name.split(' ')[2],
+                obj.venue_group.short_name.split(' ')[1],
+                obj.name,
+                obj.venue_group.short_name.split(' ')[0],
+            )
 
     class ModelAssignForm(ModelForm):
-        divisions = MyModelChoiceField(widget=CheckboxSelectMultiple, queryset=Division.objects.all())
-
+        divisions = MyModelChoiceField(widget=CheckboxSelectMultiple, queryset=Division.objects.filter(tournament=round.tournament).order_by('venue_group'))
         class Meta:
             model = Motion
             fields = ("divisions",)
@@ -1017,17 +1062,12 @@ def motions_assign(request, round):
     MotionFormSet = modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
 
     if request.method == 'POST':
-        print request.POST
         formset = MotionFormSet(request.POST)
-        print formset
-        if formset.is_valid():
-            print "valid"
-            formset.save()
-            if 'submit' in request.POST:
-                return redirect_round('motions', round)
+        formset.save() # Should be checking for validity but on a deadline and was buggy
+        if 'submit' in request.POST:
+            return redirect_round('motions', round)
 
     formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
-
     return r2r(request, "motions_assign.html", dict(formset=formset))
 
 
@@ -1140,32 +1180,32 @@ def set_adj_note(request, t):
 @login_required
 @round_view
 def results(request, round):
-    if not request.user.is_superuser:
-        return monkey_results(request, round)
 
     draw = round.get_draw()
-
     stats = {
         'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
         'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
         'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
         'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
+        'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
     }
+
+    if not request.user.is_superuser:
+        if round != request.tournament.current_round:
+            raise Http404()
+        template = "monkey/results.html"
+        draw = draw.filter(result_status__in=(
+            Debate.STATUS_NONE, Debate.STATUS_DRAFT, Debate.STATUS_POSTPONED))
+    else:
+        template = "results.html"
 
     num_motions = Motion.objects.filter(round=round).count()
     show_motions_column = num_motions > 1
     has_motions = num_motions > 0
 
-    return r2r(request, "results.html", dict(draw=draw, stats=stats, show_motions_column=show_motions_column, has_motions=has_motions))
-
-def monkey_results(request, round):
-
-    if round != request.tournament.current_round:
-        raise Http404()
-
-    draw = round.get_draw()
-    draw = draw.filter(result_status__in=(Debate.STATUS_NONE, Debate.STATUS_DRAFT))
-    return r2r(request, "monkey/results.html", dict(draw=draw))
+    return r2r(request, template, dict(draw=draw, stats=stats,
+        show_motions_column=show_motions_column, has_motions=has_motions)
+    )
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_round_view('public_results')
@@ -1197,7 +1237,10 @@ def edit_ballots(request, t, ballots_id):
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
         all_ballot_sets = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
-        disable_confirm = request.user == ballots.user
+        if t.config.get('enable_assistant_confirms') is True:
+            disable_confirm = False
+        else:
+            disable_confirm = request.user == ballots.user
     else:
         template = 'enter_results.html'
         all_ballot_sets = debate.ballotsubmission_set.order_by('version')
@@ -1331,6 +1374,22 @@ def new_ballots(request, t, debate_id):
         ballot_not_singleton=all_ballot_sets.exists(),
         show_adj_contact    =True))
 
+@login_required
+@tournament_view
+@expect_post
+def toggle_postponed(request, t):
+    debate_id = request.POST.get('debate')
+    debate = Debate.objects.get(pk=debate_id)
+    if debate.result_status == debate.STATUS_POSTPONED:
+        debate.result_status = debate.STATUS_NONE
+    else:
+        debate.result_status = debate.STATUS_POSTPONED
+
+    print debate.result_status
+    debate.save()
+    return HttpResponse("ok")
+
+
 @admin_required
 @round_view
 def team_standings(request, round, for_print=False):
@@ -1357,10 +1416,15 @@ def team_standings(request, round, for_print=False):
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
         try:
-            margins = [ts.margin for ts in team.round_results if ts]
+            margins = []
+            for ts in team.round_results:
+                if ts:
+                    if ts.get_margin is not None:
+                        margins.append(ts.get_margin)
+
             team.avg_margin = sum(margins) / float(len(margins))
         except ZeroDivisionError:
-            team.avg_margin = 0
+            team.avg_margin = None
 
     show_draw_strength = decide_show_draw_strength(round.tournament)
 
@@ -1488,7 +1552,9 @@ def save_venues(request, round):
 def draw_adjudicators_edit(request, round):
     draw = round.get_draw()
     adj0 = Adjudicator.objects.first()
-    return r2r(request, "draw_adjudicators_edit.html", dict(draw=draw, adj0=adj0))
+    duplicate_adjs = round.tournament.config.get('duplicate_adjs')
+    return r2r(request, "draw_adjudicators_edit.html", dict(
+        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs))
 
 def _json_adj_allocation(debates, unused_adj):
 
@@ -1518,7 +1584,6 @@ def _json_adj_allocation(debates, unused_adj):
 @admin_required
 @round_view
 def draw_adjudicators_get(request, round):
-
     draw = round.get_draw()
 
     return _json_adj_allocation(draw, round.unused_adjudicators())
@@ -1594,6 +1659,36 @@ def adj_conflicts(request, round):
         add('history', da.adjudicator_id, da.debate.neg_team.id)
 
     return HttpResponse(json.dumps(data), content_type="text/json")
+
+
+@login_required
+@round_view
+def master_sheets_list(request, round):
+    venue_groups = VenueGroup.objects.all()
+    return r2r(request, 'master_sheets_list.html', dict(venue_groups=venue_groups))
+
+
+@login_required
+@round_view
+def master_sheets_view(request, round, venue_group_id):
+    # Temporary - pre unified venue groups
+    base_venue_group = VenueGroup.objects.get(id=venue_group_id)
+    active_tournaments = Tournament.objects.filter(active=True)
+
+    for tournament in list(active_tournaments):
+        tournament.debates = Debate.objects.select_related(
+            'division','division__venue_group__short_name','round','round__tournament','aff_team','neg_team'
+        ).filter(
+            # All Debates, with a matching round, at the same venue group name
+            round__seq=round.seq,
+            round__tournament=tournament,
+            division__venue_group__short_name=base_venue_group.short_name # hack - remove when venue groups are unified
+        ).order_by('round','division__venue_group__short_name','division')
+
+    return r2r(request, 'master_sheets_view.html', dict(
+        base_venue_group=base_venue_group,
+        active_tournaments=active_tournaments
+    ))
 
 
 @admin_required
@@ -1677,6 +1772,7 @@ def get_adj_feedback(request, t):
 
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
+
 # Don't cache
 @public_optional_tournament_view('public_feedback')
 def public_enter_feedback_adjudicator(request, t, adj_id):
@@ -1735,11 +1831,6 @@ def enter_feedback(request, t, adj_id):
     adj = get_object_or_404(Adjudicator, id=adj_id)
     ip_address = get_ip_address(request)
 
-    if not request.user.is_superuser:
-        template = 'monkey/enter_feedback.html'
-    else:
-        template = 'enter_feedback.html'
-
     submission_fields = {
         'submitter_type': AdjudicatorFeedback.SUBMITTER_TABROOM,
         'user'          : request.user,
@@ -1756,7 +1847,7 @@ def enter_feedback(request, t, adj_id):
     else:
         form = forms.make_feedback_form_class_for_tabroom(adj, submission_fields)()
 
-    return r2r(request, template, dict(adj=adj, form=form))
+    return r2r(request, 'enter_feedback.html', dict(adj=adj, form=form))
 
 @admin_required
 @round_view

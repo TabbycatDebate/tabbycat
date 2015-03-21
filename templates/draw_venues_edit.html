@@ -5,7 +5,73 @@
 {% block nav %}{% endblock %}
 {% block footer %}{% endblock %}
 
-{% block extra-head %}
+{% block body-class %}edit-venues{% endblock %}
+{% block head-title %}Edit Venues for {{ round.name }}{% endblock %}
+{% block page-title %}Edit Venues for {{ round.name }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-9">
+        <div id="statusBar" class="btn-group">
+            <a class="btn btn-success form-control" href="" id="save">Save</a>
+            <a class="btn btn-danger form-control" href="{% round_url draw %}">Quit</a>
+        </div>
+        {% include "table_search.html" %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+
+        <div id="scratch" class="col-md-3">
+            <div class="page-header">
+                <h2>Unused</h2>
+            </div>
+            {% for venue in round.unused_venues %}
+            <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
+                <span>{{ venue.name }} {% if venue.time %}<em>{{ venue.time|date:"d/m" }}</em>{% endif %}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="main" class="col-md-9">
+
+            <div id="alerts-holder" class=""></div>
+
+            <table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Aff<span class="hidden-xs">irmative</span></th><th>Neg<span class="hidden-xs">ative</span></th><th>Adj<span class="hidden-xs">udicator</span>s</th><th>Venue</th></tr>
+                </thead>
+                <tbody>
+                {% for debate in draw %}
+                <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+                    <td>{{ debate.bracket }}</td>
+                    <td>
+                        <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">{{ debate.aff_team.short_name }}</span>
+                    </td>
+                    <td>
+                        <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">{{ debate.neg_team.short_name }}</span>
+                    </td>
+                    <td>
+                    {% for type, adj in debate.adjudicators %}
+                        {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                    </td>
+                    <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
+                        {% if debate.venue %}
+                        <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
+                            <span class="">{{ debate.venue.name }} {% if debate.venue.time %}<em>{{ debate.venue.time|date:"d/m" }}</em>{% endif %}</span>
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+    </div>
+{% endblock content %}
+
+{% block extra-js %}
 <script type="text/javascript" language="javascript" src="{% static 'js/jquery-ui-1.10.4.custom.min.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
@@ -117,9 +183,12 @@
             return false;
         });
 
-        $("#dataTable").dataTable({
+        var dTable = $("#dataTable").DataTable({
             "aaSorting": [[0, 'desc']]
         });
+        $('#table-search').keyup(function(){
+            dTable.search($(this).val()).draw();
+        })
 
         // remove the table cells without venues
         $("#dataTable div.empty").each( function() {
@@ -131,70 +200,4 @@
     });
 
 </script>
-{% endblock extra-head %}
-
-{% block body-class %}edit-venues{% endblock %}
-{% block head-title %}Edit Venues for {{ round.name }}{% endblock %}
-{% block page-title %}Edit Venues for {{ round.name }}{% endblock %}
-
-{% block header %}
-<div id="statusBar" class="btn-group">
-    <a class="btn btn-success form-control" href="" id="save">Save</a>
-    <a class="btn btn-danger form-control" href="{% round_url draw %}">Quit</a>
-</div>
-
-{% endblock %}
-
-{% block content %}
-
-<div class="row">
-
-    <div id="scratch" class="col-md-2">
-        <div class="page-header">
-            <h2>Unused</h2>
-        </div>
-        {% for venue in round.unused_venues %}
-        <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
-            <span>{{ venue }}</span>
-        </div>
-        {% endfor %}
-    </div>
-
-    <div id="main" class="col-md-10">
-
-        <div id="alerts-holder" class=""></div>
-
-        <table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">
-            <thead>
-                <tr><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Aff<span class="hidden-xs">irmative</span></th><th>Neg<span class="hidden-xs">ative</span></th><th>Adj<span class="hidden-xs">udicator</span>s</th><th>Venue</th></tr>
-            </thead>
-            <tbody>
-            {% for debate in draw %}
-            <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
-                <td>{{ debate.bracket }}</td>
-                <td>
-                    <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">{{ debate.aff_team.short_name }}</span>
-                </td>
-                <td>
-                    <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">{{ debate.neg_team.short_name }}</span>
-                </td>
-                <td>
-                {% for type, adj in debate.adjudicators %}
-                    {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
-                {% endfor %}
-                </td>
-                <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
-                    {% if debate.venue %}
-                    <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
-                        <span class="">{{ debate.venue }}</span>
-                    </div>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-
-</div>
-
-{% endblock content %}
+{% endblock extra-js %}

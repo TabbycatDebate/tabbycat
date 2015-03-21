@@ -10,7 +10,7 @@
         <tr>
             <th>Team</th>
             {% if enable_divisions %}
-                <th>Division</th>
+                <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
             {% endif %}
             {% if show_institutions > 0 %}
                 <th>Institution</th>
@@ -22,15 +22,17 @@
         {% for team in teams %}
         <tr>
             <td>
-                <span title="{{ team.speakers|join:'<br>' }}" data-toggle="tooltip">
+               <span title="<h5>{{ team.long_name }}</h5>{% if show_speakers_in_draw %}{{ team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
                    {{ team.long_name }}
                </span>
+               {% if show_speakers_in_draw %}
                <span class="hidden">
                    {{ team.speakers|join:', ' }}
                </span>
+               {% endif %}
             </td>
             {% if enable_divisions %}
-                <td>{{ team.division }}</td>
+                <td>{{ team.division.name }}</td>
             {% endif %}
             {% if show_institutions > 0 %}
                 <td>{{ team.institution.code }}</td>

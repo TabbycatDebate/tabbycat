@@ -2,33 +2,18 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block extra-head %}
-    {{ block.super }}
-       <script type="text/javascript" charset="utf-8">
-            $(document).ready( function() {
-                var table = $("#dataTable").dataTable({
-                    "aaSorting": [[ 0, "asc" ]],
-                });
-                new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-
-            } );
-        </script>
-        <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
-{% endblock extra-head %}
-
-{% block extra-style %}{% endblock %}
-
 {% block head-title %}Breaking Adjudicators{% endblock %}
 {% block page-title %}Breaking Adjudicators{% endblock %}
 {% block body-class %}breakk breaking-adjs{% endblock %}
 
-{% if adjs.all.count == 0 %}
-    {% block header %}
+{% block header %}
+    {% if adjs.all.count == 0 %}
         <p class="lead">The breaking adjudicators have not been released yet.
         <img src="{% static 'emoji/img/cry.png' %}" width="24" height="24" />
         </p>
-    {% endblock %}
-{% endif %}
+    {% endif %}
+    {% include "table_search.html" %}
+{% endblock %}
 
 {% block content %}
     {% if adjs.all.count > 0 %}
@@ -54,3 +39,16 @@
         </table>
     {% endif %}
 {% endblock content %}
+
+{% block extra-js %}
+    {{ block.super }}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready( function() {
+            var dTable = $("#dataTable").DataTable({
+                "aaSorting": [[ 0, "asc" ]],
+            });
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+        });
+    </script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+{% endblock extra-js %}

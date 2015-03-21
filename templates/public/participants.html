@@ -2,68 +2,71 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block extra-head %}
-   <script type="text/javascript" charset="utf-8">
-        $(document).ready( function() {
-            var table = $("#dataTable").dataTable({
-                "aaSorting": [[ 0, "asc" ]],
-            });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-        } );
-    </script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
-{% endblock extra-head %}
-
 {% block head-title %}Participants{% endblock %}
 {% block page-title %}Participants{% endblock %}
 {% block body-class %}public-participants{% endblock %}
 
+{% block header %}{% include "table_search.html" %}{% endblock %}
+
 {% block content %}
+    <table id="dataTable" class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                {% if show_emoji > 0 %}
+                    <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+                {% endif %}
+                <th>Team or Adj</th>
+                {% if show_institutions > 0 %}
+                    <th>Institution</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for person in speakers %}
+            <tr>
+                <td>{{ person.name }}</td>
+                {% if show_emoji > 0 %}
+                    <td class="team-emoji team-{{ person.team.id }}" id="">
 
-<table id="dataTable" class="table table-hover table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            {% if show_emoji > 0 %}
-                <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
-            {% endif %}
-            <th>Team or Adj</th>
-            {% if show_institutions > 0 %}
-                <th>Institution</th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-    {% for person in speakers %}
-        <tr>
-            <td>{{ person.name }}</td>
-            {% if show_emoji > 0 %}
-                <td class="team-emoji team-{{ person.team.id }}" id="">
-
+                    </td>
+                {% endif %}
+                <td class="team-name">
+                    <span title="{% if show_speakers_in_draw %}{{ person.team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+                        {{ person.team.long_name }}
+                    </span>
                 </td>
-            {% endif %}
-            <td class="team-name">
-                <span title="{{ person.team.speakers|join:'<br>' }}" data-toggle="tooltip">
-                    {{ person.team.long_name }}
-                </span>
-            </td>
-            {% if show_institutions > 0 %}
-                <td>{{ person.team.institution.name }}</td>
-            {% endif %}
-    {% endfor %}
-    {% for person in adjs %}
-        <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
-            <td>{{ person.name }}</td>
-            {% if show_emoji > 0 %}
-                <td class="no-emoji"></td>
-            {% endif %}
-            <td>Adjudicator</td>
-            {% if show_institutions > 0 %}
-                <td>{{ person.institution.name }}</td>
-            {% endif %}
-    {% endfor %}
+                {% if show_institutions > 0 %}
+                    <td>{{ person.team.institution.name }}</td>
+                {% endif %}
+        {% endfor %}
+        {% for person in adjs %}
+            <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+                <td>{{ person.name }}</td>
+                {% if show_emoji > 0 %}
+                    <td class="no-emoji"></td>
+                {% endif %}
+                <td>Adjudicator</td>
+                {% if show_institutions > 0 %}
+                    <td>{{ person.institution.name }}</td>
+                {% endif %}
+        {% endfor %}
 
-    </tbody>
-</table>
-
+        </tbody>
+    </table>
 {% endblock content %}
+
+{% block extra-js %}
+   <script type="text/javascript" charset="utf-8">
+        $(document).ready( function() {
+            var dTable = $("#dataTable").DataTable({
+                "aaSorting": [[ 0, "asc" ]],
+            });
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
+        } );
+    </script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+{% endblock extra-js %}

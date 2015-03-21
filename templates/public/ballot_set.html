@@ -2,8 +2,8 @@
 {% load add_field_css %}
 {% load debate_tags %}
 
-{% block head-title %}{{ debate.matchup }} <small>{{ debate.round.name }} @ {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}</small>{% endblock %}
-{% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}{% endblock %}
+{% block head-title %}{{ debate.matchup }} <small>{{ debate.round.name }} @ {% if debatedivision.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}</small>{% endblock %}
+{% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debatedivision.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}{% endblock %}
 
 {% block header %}
 <div class="btn-group">
@@ -18,7 +18,6 @@
     <div class="row">
         <p class="col-xs-12 lead h3 page-header">Motion</p>
     </div>
-
     <div class="row">
         <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Motion</label>
         <div class="col-sm-10">
@@ -27,13 +26,11 @@
     </div>
 
     {% for sheet in ballot_set.sheet_iter %}
-
         <div class="row">
             <p class="col-xs-12 lead h3 page-header">Ballot from
                 {{ sheet.adjudicator }}
             </p>
         </div>
-
         <div class="clearfix row">
             <div class="col-md-6">
                 <div class="row">
@@ -60,7 +57,7 @@
 
             <div class="col-md-6">
                 <div class="row">
-                    <label class="h4 col-xs-offset-1 control-label" >{{ debate.neg_team }}</label>
+                    <label class="h4 col-xs-offset-1 control-label" >{{ debate.neg_team.short_name }}</label>
                 </div>
                 {% for position in sheet.negs %}
                 <div class="row neg speaker s{{ position.pos }}">
@@ -80,11 +77,8 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-{% endfor %}
-
+    {% endfor %}
 </div>
 
 {% endblock %}

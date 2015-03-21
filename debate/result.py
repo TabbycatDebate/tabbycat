@@ -276,8 +276,10 @@ class BallotSet(object):
         for sheet in self.adjudicator_sheets.values():
             sheet.save()
 
+        # Tally scores per adjudicator and determine majority
         self._calc_decision()
 
+        # Create team score, speaker score, and motion preference objects
         self._save('aff')
         self._save('neg')
 
@@ -303,7 +305,9 @@ class BallotSet(object):
         margin = self._margin(side)
 
         TeamScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
-        TeamScore(ballot_submission=self.ballots, debate_team=dt, score=total, points=points, win=win, margin=margin).save()
+        TeamScore(ballot_submission=self.ballots,
+                  debate_team=dt, score=total, points=points, win=win,
+                  margin=margin).save()
 
         SpeakerScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
         for i in self.POSITIONS_RANGE:
@@ -360,6 +364,11 @@ class BallotSet(object):
         return sum(self.adjudicator_sheets[adj].get_total(side) for adj in
                    self.majority_adj) / len(self.majority_adj)
 
+    def _dissenting_inclusive_score(self, side):
+        dissenting_score = sum(self.adjudicator_sheets[adj].get_total(side) for adj in
+                   self.adjudicators) / len(self.adjudicators)
+        return dissenting_score
+
     @property
     def aff_score(self):
         return self._score('aff')
@@ -373,18 +382,10 @@ class BallotSet(object):
         if not self.loaded_sheets:
             return self.points[side]
 
-        if self.debate.round.tournament.config.get('team_points_rule') != 'wadl':
-            if self._score(side):
-                if self._score(side) > self._score(self._other[side]):
-                    return 1
-                return 0
-        else:
-            if self._score(side):
-                if self._score(side) > self._score(self._other[side]):
-                    return 2 # 2pts for a win
-                else:
-                    return 1 # 1pt for a loss
-                return 0 # TODO: 0 for a forfeit
+        if self._score(side):
+            if self._score(side) > self._score(self._other[side]):
+                return 1
+            return 0
 
         return None
 
@@ -404,8 +405,13 @@ class BallotSet(object):
         if not self.loaded_sheets:
             return self.margin[side]
 
-        if self._score(side) and self._score(self._other[side]):
-            return self._score(side) - self._score(self._other[side])
+        if self.debate.round.tournament.config.get('margin_includes_dissenters') is False:
+            if self._score(side) and self._score(self._other[side]):
+                return self._score(side) - self._score(self._other[side])
+        else:
+            if self._dissenting_inclusive_score(side) and self._dissenting_inclusive_score(self._other[side]):
+                dissenting_inclusive_margin = self._dissenting_inclusive_score(side) - self._dissenting_inclusive_score(self._other[side])
+                return dissenting_inclusive_margin
 
         return None
 
@@ -489,3 +495,49 @@ class BallotSet(object):
 
         for adj in self.adjudicators:
             yield ScoresheetWrapper(adj)
+
+
+class ForfeitBallotSet(BallotSet):
+    # This is WADL-specific for now
+
+    def __init__(self, ballots, forfeiter):
+        """Constructor.
+        'ballots' must be a BallotSubmission.
+        """
+        self.ballots = ballots
+        self.debate = ballots.debate
+        self.adjudicators = self.debate.adjudicators.list
+        self.forfeiter = forfeiter
+
+    def save_side(self, side):
+
+        dt = self.debate.get_dt(side)
+
+        if self.forfeiter == dt:
+            points = 0
+            win = False
+        else:
+            points = 2
+            win = True
+
+
+        from debate.models import TeamScore
+        # Note: forfeited debates have fake scores/margins, thus the affects_average toggle
+        TeamScore.objects.filter(ballot_submission=self.ballots, debate_team=dt).delete()
+        TeamScore(
+            ballot_submission=self.ballots,
+            debate_team=dt,
+            points=points,
+            win=win,
+            score=0,
+            margin=0,
+            affects_averages=False).save()
+
+
+    def save(self):
+        self.ballots.forfeit = self.forfeiter
+        self.ballots.save()
+        self.save_side('aff')
+        self.save_side('neg')
+
+

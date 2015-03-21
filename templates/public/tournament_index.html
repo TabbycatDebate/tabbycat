@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Welcome to {{ tournament }}{% endblock %}
-{% block page-title %}Welcome to {{ tournament }}{% endblock %}
+{% block head-title %}Welcome to {{ tournament.name }}{% endblock %}
+{% block page-title %}Welcome to {{ tournament.name }}{% endblock %}
 
 {% block header %}
     {{ tournament.welcome_msg|safe|linebreaks }}
@@ -31,7 +31,7 @@
                     Motions Tab
                 </a></li>
             {% endif %}
-            {% if public_draw > 0  and tab_released == 0 %}
+            {% if public_draw > 0  and tab_released == 0 and show_all_draws == 0 %}
                 <li class="list-group-item"><a class="public-draw-nav" href="{% tournament_url public_draw %}">
                     Draw for {{ current_round.name }}
                 </a></li>
@@ -51,7 +51,7 @@
                     Motions
                 </a></li>
             {% endif %}
-            {% if public_motions > 0 and motion_tab_released == 0 %}
+            {% if public_motions > 0 and motion_tab_released == 0 and draw_side_allocations > 0%}
                 <li class="list-group-item"><a class="public-side-allocations-nav" href="{% tournament_url public_side_allocations %}">
                     Sides
                 </a></li>
@@ -85,6 +85,16 @@
                 <li class="list-group-item"><a class="public-add-feedback-nav" href="{% tournament_url public_feedback_submit %}">
                     Enter Feedback
                 </a></li>
+            {% endif %}
+            {% if show_all_draws > 0 %}
+                {% for r in tournament.rounds.all %}
+                    {% if r.draw_status == r.STATUS_RELEASED %}
+                        <li class="list-group-item"><a href="{% round_url public_draw_by_round r %}">Draw for {{ r.name }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                <li class="list-group-item">
+                    <a class="public-draw-nav" href="{% tournament_url public_all_draws %}">View All Draws</a>
+                </li>
             {% endif %}
         </ul>
     </div>

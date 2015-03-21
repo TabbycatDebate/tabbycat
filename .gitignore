@@ -12,6 +12,7 @@ data/Schools*
 data/Schools*
 Dummy*/
 MAD*/
+wadl*/
 *.dump
 
 env/
@@ -21,6 +22,7 @@ venv/
 *~
 *.db
 .DS_Store
+.debug
 
 # C extensions
 *.so
@@ -32,7 +34,6 @@ dist
 build
 eggs
 parts
-bin
 var
 sdist
 develop-eggs

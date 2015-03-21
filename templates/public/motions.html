@@ -2,20 +2,6 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block extra-head %}
-<script type="text/javascript">
-
-    $(document).ready( function() {
-        var table = $("#dataTable").dataTable({
-            "aaSorting": [[0, "asc"], [1, "asc"]]
-        });
-        new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-    });
-
-</script>
-{% endblock extra-head %}
-
-
 {% block head-title %}Motions{% endblock %}
 {% block page-title %}Motions{% endblock %}
 {% block body-class %}public-motions{% endblock %}
@@ -25,6 +11,8 @@
         <p class="lead">No motions have been released yet.
         <img src="{% static 'emoji/img/cry.png' %}" width="24" height="24" />
         </p>
+    {% else %}
+        {% include "table_search.html" %}
     {% endif %}
 {% endblock %}
 
@@ -35,7 +23,7 @@
                 <tr>
                     <th>Round</th>
                     {% if enable_divisions and enable_division_motions %}
-                        <th>Venue</th>
+                        <th>Venue(s)</th>
                         <th>Divisions</th>
                     {% endif %}
                     <th>Text</th>
@@ -48,13 +36,18 @@
             {% for round in rounds %}
                 {% for motion in round.motions %}
                     <tr>
-                        <td>{{ round }}</td>
+                        <td>{{ round.name }}</td>
                         {% if enable_divisions and enable_division_motions %}
-                            <td>{{ motion.divisions.all.0.venue_group.name }}</td>
+                            <td>
+                                {% regroup motion.divisions.all by venue_group as unique_venues %}
+                                {% for venue_group in unique_venues %}
+                                    {{ venue_group.grouper.short_name }},
+                                {% endfor %}
+                            </td>
                             <td>
                             {% for division in motion.divisions.all %}
-                                <span data-toggle="tooltip" title="{% for team in division.teams.all %}{{ team }}<br> {% endfor %}">
-                                    {{ division }},
+                                <span data-toggle="tooltip" title="{% for team in division.teams.all %}{{ team.long_name }}<br> {% endfor %}">
+                                    {{ division.name }},
                                 </span>
                             {% endfor %}
                             </td>
@@ -70,3 +63,17 @@
         </table>
     {% endif %}
 {% endblock content %}
+
+{% block extra-js %}
+    <script type="text/javascript">
+        $(document).ready( function() {
+            var dTable = $("#dataTable").DataTable({
+                "aaSorting": [[0, "asc"], [1, "asc"]]
+            });
+            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+            $('#table-search').keyup(function(){
+                dTable.search($(this).val()).draw();
+            })
+        });
+    </script>
+{% endblock extra-js %}

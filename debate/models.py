@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 
+from django.utils.functional import cached_property
 from debate.utils import pair_list, memoize
 from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
@@ -13,18 +14,19 @@ from warnings import warn
 from threading import BoundedSemaphore
 from collections import OrderedDict
 
-
 class ScoreField(models.FloatField):
     pass
 
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
+    seq = models.IntegerField(db_index=True, blank=True, null=True)
     slug = models.SlugField(unique=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
-                                     related_name='tournament_')
+                                     related_name='tournament_',)
     welcome_msg = models.TextField(blank=True, null=True, default="")
     release_all = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
 
     @models.permalink
     def get_absolute_url(self):
@@ -33,6 +35,18 @@ class Tournament(models.Model):
     @models.permalink
     def get_public_url(self):
         return ('public_index', [self.slug])
+
+    @models.permalink
+    def get_all_tournaments_all_venues(self):
+        return ('all_tournaments_all_venues', [self.slug])
+
+    @models.permalink
+    def get_all_tournaments_all_institutions(self):
+        return ('all_tournaments_all_institutions', [self.slug])
+
+    @models.permalink
+    def get_all_tournaments_all_teams(self):
+        return ('all_tournaments_all_teams', [self.slug])
 
     @property
     def teams(self):
@@ -88,6 +102,8 @@ class Tournament(models.Model):
         else:
             return range(1, 4)
 
+    class Meta:
+        ordering = ['seq',]
 
     def __unicode__(self):
         if self.short_name:
@@ -96,20 +112,23 @@ class Tournament(models.Model):
             return unicode(self.name)
 
 class VenueGroup(models.Model):
-    name = models.CharField(max_length=200)
-    short_name = models.CharField(max_length=25, blank=True, null=True, default="")
-    tournament = models.ForeignKey(Tournament)
+    name = models.CharField(unique=True, max_length=200)
+    short_name = models.CharField(db_index=True, max_length=25)
     team_capacity = models.IntegerField(blank=True, null=True)
+
+    @property
+    def divisions_count(self):
+        return self.division_set.count()
 
     @property
     def venues(self):
         return self.venue_set.all()
 
     class Meta:
-        unique_together = [('name', 'tournament')]
+        ordering = ['short_name']
 
     def __unicode__(self):
-        return u'%s' % (self.short_name)
+        return u"%s" % (self.short_name)
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
@@ -118,19 +137,30 @@ class Venue(models.Model):
     tournament = models.ForeignKey(Tournament, blank=True, null=True)
     time = models.DateTimeField(blank=True, null=True)
 
+    class Meta:
+        ordering = ['group', 'name']
+        index_together = ['group', 'name']
+
     def __unicode__(self):
         if self.group:
-            return u'%s %s (%d)' % (self.group, self.name, self.priority)
+            return u'%s - %s' % (self.group, self.name)
         else:
-            return u'%s (%d)' % (self.name, self.priority)
+            return u'%s' % (self.name)
+
+
+class Region(models.Model):
+    name = models.CharField(db_index=True, max_length=100)
+
 
 class Institution(models.Model):
     code = models.CharField(max_length=20)
-    name = models.CharField(max_length=100)
+    name = models.CharField(db_index=True, max_length=100)
     abbreviation = models.CharField(max_length=8, default="")
+    region = models.ForeignKey(Region, blank=True, null=True)
 
     class Meta:
         unique_together = [('name', 'code')]
+        ordering = ['name']
 
     def __unicode__(self):
         return unicode(self.name)
@@ -384,18 +414,26 @@ class TeamManager(models.Manager):
 
 class Division(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name or suffix")
+    seq = models.IntegerField(blank=True, null=True)
     tournament = models.ForeignKey(Tournament)
+    time_slot = models.TimeField(blank=True, null=True)
     venue_group = models.ForeignKey(VenueGroup, blank=True, null=True)
+
+    @property
+    def teams_count(self):
+        return self.team_set.count()
 
     @property
     def teams(self):
         return self.team_set.all().order_by('institution','reference')
 
     def __unicode__(self):
-        return self.name
+        return u"%s - %s" % (self.tournament, self.name)
 
     class Meta:
         unique_together = [('tournament', 'name')]
+        ordering = ['tournament', 'seq']
+        index_together = ['tournament', 'seq']
 
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Name or suffix")
@@ -419,28 +457,26 @@ class Team(models.Model):
     TYPE_ESL = 'E'
     TYPE_SWING = 'S'
     TYPE_COMPOSITE = 'C'
+    TYPE_BYE = 'B'
     TYPE_CHOICES = (
         (TYPE_NONE, 'None'),
         (TYPE_ESL, 'ESL'),
         (TYPE_SWING, 'Swing'),
         (TYPE_COMPOSITE, 'Composite'),
+        (TYPE_BYE, 'Bye'),
     )
     type = models.CharField(max_length=1, choices=TYPE_CHOICES,
                             default=TYPE_NONE)
 
     class Meta:
         unique_together = [('reference', 'institution', 'tournament')]
+        ordering = ['tournament', 'institution', 'short_reference']
+        index_together = ['tournament', 'institution', 'short_reference']
 
     objects = TeamManager()
 
     def __unicode__(self):
-        return self.short_name
-
-    @property
-    def name(self):
-        # TODO make this an exception so that we get rid of all of them
-        warn("Team.name is deprecated, use Team.short_name or Team.long_name", DeprecationWarning, stacklevel=2)
-        return self.short_name
+        return u"%s - %s" % (self.tournament, self.short_name)
 
     @property
     def short_name(self):
@@ -474,6 +510,8 @@ class Team(models.Model):
             dts = dts.filter(debate__round__seq__lt=before_round)
         return [dt.debate for dt in dts]
 
+    @property
+    @memoize
     def get_preferences(self):
         prefs = TeamVenuePreference.objects.filter(team=self)
         return prefs
@@ -504,7 +542,7 @@ class Team(models.Model):
 
 
 class TeamVenuePreference(models.Model):
-    team = models.ForeignKey(Team)
+    team = models.ForeignKey(Team, db_index=True)
     venue_group = models.ForeignKey(VenueGroup)
     priority = models.IntegerField()
 
@@ -646,7 +684,7 @@ class SpeakerManager(models.Manager):
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=40, db_index=True)
     barcode_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=40, blank=True, null=True)
@@ -655,10 +693,22 @@ class Person(models.Model):
     checkin_message = models.TextField(blank=True)
     notes = models.TextField(blank=True)
 
+    GENDER_MALE = 'M'
+    GENDER_FEMALE = 'F'
+    GENDER_OTHER = 'O'
+    GENDER_CHOICES = (
+        (GENDER_MALE,     'Male'),
+        (GENDER_FEMALE,   'Female'),
+        (GENDER_OTHER,    'Other'),
+    )
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES,blank=True, null=True)
+
     @property
     def has_contact(self):
         return bool(self.email or self.phone)
 
+    class Meta:
+        ordering = ['name']
 
 class Checkin(models.Model):
     person = models.ForeignKey('Person')
@@ -694,6 +744,9 @@ class Adjudicator(Person):
 
     objects = AdjudicatorManager()
 
+    class Meta:
+        ordering = ['tournament', 'institution', 'name']
+
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.institution.code)
 
@@ -709,7 +762,11 @@ class Adjudicator(Person):
 
     @property
     def score(self):
-        weight = self.tournament.current_round.feedback_weight
+        if self.tournament:
+            weight = self.tournament.current_round.feedback_weight
+        else:
+            # For shared ajudicators
+            weight = 1
 
         feedback_score = self._feedback_score()
         if feedback_score is None:
@@ -808,7 +865,7 @@ class Round(models.Model):
     DRAW_BREAK       = 'B'
     DRAW_CHOICES = (
         (DRAW_RANDOM,      'Random'),
-        (DRAW_ROUNDROBIN,       'Round-robin'),
+        (DRAW_ROUNDROBIN,  'Round-robin'),
         (DRAW_POWERPAIRED, 'Power-paired'),
         (DRAW_FIRSTBREAK,  'First elimination'),
         (DRAW_BREAK,       'Subsequent elimination'),
@@ -834,7 +891,7 @@ class Round(models.Model):
 
     objects = RoundManager()
 
-    tournament   = models.ForeignKey(Tournament, related_name='rounds')
+    tournament   = models.ForeignKey(Tournament, related_name='rounds',db_index=True)
     seq          = models.IntegerField()
     name         = models.CharField(max_length=40)
     abbreviation = models.CharField(max_length=10)
@@ -858,14 +915,16 @@ class Round(models.Model):
 
     class Meta:
         unique_together = [('tournament', 'seq')]
+        ordering = ['tournament', str('seq')]
+        index_together = ['tournament', 'seq']
 
     def __unicode__(self):
-        return unicode(self.name)
+        return u"%s - %s" % (self.tournament, self.name)
 
     def motions(self):
         return self.motion_set.order_by('seq')
 
-    def draw(self):
+    def draw(self, override_team_checkins=False):
         if self.draw_status != self.STATUS_NONE:
             raise RuntimeError("Tried to run draw on round that already has a draw")
 
@@ -882,15 +941,20 @@ class Round(models.Model):
             "side_allocations"   : "draw_side_allocations",
         }
 
+        if override_team_checkins is True:
+            draw_teams = Team.objects.filter(tournament=self.tournament).all()
+        else:
+            draw_teams = self.active_teams.all()
+
         # Set type-specific options
         if self.draw_type == self.DRAW_RANDOM:
-            teams = self.active_teams.all()
+            teams = draw_teams
             draw_type = "random"
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts" : "draw_avoid_conflicts",
             })
         elif self.draw_type == self.DRAW_POWERPAIRED:
-            teams = annotate_team_standings(self.active_teams, self.prev, shuffle=True)
+            teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts" : "draw_avoid_conflicts",
@@ -898,7 +962,7 @@ class Round(models.Model):
                 "pairing_method"  : "draw_pairing_method",
             })
         elif self.draw_type == self.DRAW_ROUNDROBIN:
-            teams = self.active_teams.all()
+            teams = draw_teams
             draw_type = "round_robin"
         else:
             raise RuntimeError("Break rounds aren't supported yet.")
@@ -965,8 +1029,7 @@ class Round(models.Model):
             return False
 
     def get_draw(self):
-        # -bracket is included for ateneo data, which doesn't have room_rank
-        return self.debate_set.order_by('room_rank', '-bracket')
+        return self.debate_set.order_by('room_rank')
 
     def get_draw_by_room(self):
         return self.debate_set.order_by('venue__name')
@@ -983,19 +1046,23 @@ class Round(models.Model):
     def get_draw_with_standings(self, round):
         draw = self.get_draw()
         if round.prev:
-            standings = list(Team.objects.subrank_standings(round.prev))
-            for debate in draw:
-                for side in ('aff_team', 'neg_team'):
-                    # TODO is there a more efficient way to do this?
-                    team = getattr(debate, side)
-                    annotated_team = filter(lambda x: x == team, standings)
-                    if len(annotated_team) == 1:
-                        annotated_team = annotated_team[0]
-                        team.points = annotated_team.points
-                        team.speaker_score = annotated_team.speaker_score
-                        team.subrank = annotated_team.subrank
-                        team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
-                        team.draw_strength = getattr(annotated_team, 'draw_strength', None) # only exists in NZ standings rules
+            if round.tournament.config.get('team_points_rule') != "wadl":
+                standings = list(Team.objects.subrank_standings(round.prev))
+                for debate in draw:
+                    for side in ('aff_team', 'neg_team'):
+                        # TODO is there a more efficient way to do this?
+                        team = getattr(debate, side)
+                        annotated_team = filter(lambda x: x == team, standings)
+                        if len(annotated_team) == 1:
+                            annotated_team = annotated_team[0]
+                            team.points = annotated_team.points
+                            team.speaker_score = annotated_team.speaker_score
+                            team.subrank = annotated_team.subrank
+                            team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
+                            team.draw_strength = getattr(annotated_team, 'draw_strength', None) # only exists in NZ standings rules
+            else:
+                standings = list(Team.objects.standings(round.prev))
+
         return draw
 
     def make_debates(self, pairings):
@@ -1010,11 +1077,26 @@ class Round(models.Model):
         random.shuffle(pairings) # to avoid IDs indicating room raks
 
         for pairing in pairings:
-            debate = Debate(round=self, venue=venues.pop(0))
+            try:
+                if pairing.division:
+                    if (pairing.teams[0].type == "B") or (pairing.teams[1].type == "B"):
+                        # If the match is a bye then they don't get a venue
+                        selected_venue = None
+                    else:
+                        selected_venue = next(v for v in venues if v.group == pairing.division.venue_group)
+                        venues.pop(venues.index(selected_venue))
+                else:
+                    selected_venue = venues.pop(0)
+            except:
+                print "Error assigning venues"
+                selected_venue = None
+
+            debate = Debate(round=self, venue=selected_venue)
+
+            debate.division = pairing.division
             debate.bracket   = pairing.bracket
             debate.room_rank = pairing.room_rank
             debate.flags     = ",".join(pairing.flags) # comma-separated list
-            debate.division  = pairing.division
             debate.save()
 
             aff = DebateTeam(debate=debate, team=pairing.teams[0], position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -1083,7 +1165,10 @@ class Round(models.Model):
                                                   WHERE d.round_id = %d AND
                                                   da.adjudicator_id = debate_adjudicator.person_ptr_id)""" % self.id },
         )
-        return [a for a in result if a.is_active and not a.is_used]
+        if not self.tournament.config.get('draw_skip_adj_checkins'):
+            return [a for a in result if a.is_active and not a.is_used]
+        else:
+            return [a for a in result if not a.is_used]
 
     def team_availability(self):
         all_teams = self.base_availability(Team, 'debate_activeteam', 'team_id',
@@ -1172,7 +1257,7 @@ class Round(models.Model):
 
 class ActiveVenue(models.Model):
     venue = models.ForeignKey(Venue)
-    round = models.ForeignKey(Round)
+    round = models.ForeignKey(Round, db_index=True)
 
     class Meta:
         unique_together = [('venue', 'round')]
@@ -1180,7 +1265,7 @@ class ActiveVenue(models.Model):
 
 class ActiveTeam(models.Model):
     team = models.ForeignKey(Team)
-    round = models.ForeignKey(Round)
+    round = models.ForeignKey(Round, db_index=True)
 
     class Meta:
         unique_together = [('team', 'round')]
@@ -1188,7 +1273,7 @@ class ActiveTeam(models.Model):
 
 class ActiveAdjudicator(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
-    round = models.ForeignKey(Round)
+    round = models.ForeignKey(Round, db_index=True)
 
     class Meta:
         unique_together = [('adjudicator', 'round')]
@@ -1204,17 +1289,19 @@ class DebateManager(models.Manager):
 
 class Debate(models.Model):
     STATUS_NONE      = 'N'
+    STATUS_POSTPONED = 'P'
     STATUS_DRAFT     = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = (
         (STATUS_NONE,      'None'),
+        (STATUS_POSTPONED, 'Postponed'),
         (STATUS_DRAFT,     'Draft'),
         (STATUS_CONFIRMED, 'Confirmed'),
     )
 
     objects = DebateManager()
 
-    round = models.ForeignKey(Round)
+    round = models.ForeignKey(Round, db_index=True)
     venue = models.ForeignKey(Venue, blank=True, null=True)
     division = models.ForeignKey('Division', blank=True, null=True)
 
@@ -1232,7 +1319,6 @@ class Debate(models.Model):
     def _get_teams(self):
         if not hasattr(self, '_team_cache'):
             self._team_cache = {}
-
             for t in DebateTeam.objects.filter(debate=self):
                 self._team_cache[t.position] = t
 
@@ -1272,15 +1358,15 @@ class Debate(models.Model):
             l.sort()
         return result
 
-    @property
+    @cached_property
     def aff_team(self):
-        self._get_teams()
-        return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE].team
+        aff_dt = self.aff_dt
+        return aff_dt.team
 
-    @property
+    @cached_property
     def neg_team(self):
-        self._get_teams()
-        return self._team_cache[DebateTeam.POSITION_NEGATIVE].team
+        neg_dt = self.neg_dt
+        return neg_dt.team
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
@@ -1293,15 +1379,15 @@ class Debate(models.Model):
     def division_motion(self):
         return Motion.objects.filter(round=self.round, divisions=self.division)
 
-    @property
+    @cached_property
     def aff_dt(self):
-        self._get_teams()
-        return self._team_cache[DebateTeam.POSITION_AFFIRMATIVE]
+        aff_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
+        return aff_dt
 
-    @property
+    @cached_property
     def neg_dt(self):
-        self._get_teams()
-        return self._team_cache[DebateTeam.POSITION_NEGATIVE]
+        neg_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
+        return neg_dt
 
     @property
     def draw_conflicts(self):
@@ -1387,8 +1473,12 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __unicode__(self):
-        return u'[%s] %s vs %s (%s)' % (self.round.seq, self.aff_team, self.neg_team,
-                                   self.venue)
+        return u"%s - [%s] %s vs %s" % ( # bug
+            self.round.tournament,
+            self.round.abbreviation,
+            self.aff_team.short_name,
+            self.neg_team.short_name
+        )
 
     @property
     def matchup(self):
@@ -1411,7 +1501,7 @@ class DebateTeam(models.Model):
 
     objects = SRManager()
 
-    debate = models.ForeignKey(Debate)
+    debate = models.ForeignKey(Debate, db_index=True)
     team = models.ForeignKey(Team)
 
     # South can't (easily) handle custom fields, so we'll just duplicate this
@@ -1419,7 +1509,7 @@ class DebateTeam(models.Model):
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __unicode__(self):
-        return u'%s %s' % (self.debate, self.team)
+        return u'%s (%s)' % (self.team, self.debate)
 
     @property
     def opposition(self):
@@ -1444,7 +1534,7 @@ class DebateAdjudicator(models.Model):
     objects = SRManager()
 
     debate = models.ForeignKey(Debate)
-    adjudicator = models.ForeignKey(Adjudicator)
+    adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
     def __unicode__(self):
@@ -1532,7 +1622,7 @@ class Submission(models.Model):
 
 
 class AdjudicatorFeedback(Submission):
-    adjudicator = models.ForeignKey(Adjudicator)
+    adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     score = models.FloatField()
     agree_with_decision = models.NullBooleanField()
     comments = models.TextField(blank=True)
@@ -1636,11 +1726,13 @@ class BallotSubmission(Submission):
     """Represents a single submission of ballots for a debate.
     (Not a single motion, but a single submission of all ballots for a debate.)"""
 
-    debate = models.ForeignKey(Debate)
+    debate = models.ForeignKey(Debate, db_index=True)
     motion = models.ForeignKey('Motion', blank=True, null=True, on_delete=models.SET_NULL)
 
     copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
     discarded = models.BooleanField(default=False)
+
+    forfeit = models.ForeignKey(DebateTeam, blank=True, null=True)
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -1716,6 +1808,7 @@ class SpeakerScoreByAdj(models.Model):
 
     class Meta:
         unique_together = [('debate_adjudicator', 'debate_team', 'position', 'ballot_submission')]
+        index_together = ['ballot_submission','debate_adjudicator']
 
     @property
     def debate(self):
@@ -1727,11 +1820,27 @@ class TeamScore(models.Model):
     Holds a teams total score and points in a debate
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_team = models.ForeignKey(DebateTeam)
+    debate_team = models.ForeignKey(DebateTeam, db_index=True)
     points = models.PositiveSmallIntegerField()
     margin = ScoreField()
     win = models.NullBooleanField()
     score = ScoreField()
+    affects_averages = models.BooleanField(default=True, blank=False, null=False,
+        help_text="Whether to count this when determining average speaker points and/or margins")
+
+    @property
+    def get_margin(self):
+        if self.affects_averages == True:
+            return self.margin
+        else:
+            return None
+
+    @property
+    def get_score(self):
+        if self.affects_averages == True:
+            return self.score
+        else:
+            return None
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]
@@ -1751,7 +1860,7 @@ class SpeakerScore(models.Model):
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_team = models.ForeignKey(DebateTeam)
-    speaker = models.ForeignKey(Speaker)
+    speaker = models.ForeignKey(Speaker, db_index=True)
     score = ScoreField()
     position = models.IntegerField()
 
@@ -1824,7 +1933,7 @@ class Motion(models.Model):
     text = models.CharField(max_length=500, help_text="The motion itself")
     reference = models.CharField(max_length=100, help_text="Shortcode for the motion")
     flagged = models.BooleanField(default=False, help_text="WADL: Allows for particular motions to be flagged as contentious")
-    round = models.ForeignKey(Round)
+    round = models.ForeignKey(Round, db_index=True)
     objects = MotionManager()
     divisions = models.ManyToManyField('Division', blank=True, null=True)
 
@@ -1834,8 +1943,8 @@ class Motion(models.Model):
 
 class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""
-    debate_team = models.ForeignKey(DebateTeam)
-    motion = models.ForeignKey(Motion)
+    debate_team = models.ForeignKey(DebateTeam, db_index=True)
+    motion = models.ForeignKey(Motion, db_index=True)
     preference = models.IntegerField()
     ballot_submission = models.ForeignKey(BallotSubmission)
 
@@ -1940,7 +2049,7 @@ class ActionLog(models.Model):
     ALL_OPTIONAL_FIELDS = ('debate', 'ballot_submission', 'adjudicator_feedback', 'round', 'motion')
 
     type = models.PositiveSmallIntegerField(choices=ACTION_TYPE_CHOICES)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
     tournament = models.ForeignKey(Tournament, blank=True, null=True)
@@ -2013,7 +2122,7 @@ class ConfigManager(models.Manager):
 
 
 class Config(models.Model):
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, db_index=True)
     key = models.CharField(max_length=40)
     value = models.CharField(max_length=40)
 
