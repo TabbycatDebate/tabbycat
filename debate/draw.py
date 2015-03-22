@@ -74,6 +74,10 @@ class Pairing(object):
         else:
             random.shuffle(self.teams)
 
+    def shuffle_sides(self):
+        """Randomly allocate sides."""
+        random.shuffle(self.teams)
+
     @property
     def conflict_inst(self):
         """Returns True if both teams are from the same institution.
@@ -151,8 +155,10 @@ class BaseDrawGenerator(object):
             "balance" - the team that has affirmed less in prior rounds affirms,
                 or randomly if both teams have affirmed the same number of times.
                 If used, team objects must have an 'aff_count' attribute.
-            "preallocated" - teams were pre-allocated sides. If used, teams must have
-                an 'allocated_side' attribute.
+            "preallocated" - teams were pre-allocated sides. If used, teams must
+                have an 'allocated_side' attribute.
+            "none" - leave sides as they were when the pairings were drawn.
+                (This is almost never desirable.)
             "random" - allocate randomly.
         "avoid_history" - if True, draw tries to avoid pairing teams that have
             seen each other before, and tries harder if they've seen each other
@@ -242,10 +248,14 @@ class BaseDrawGenerator(object):
                     pairing.add_flags(self.team_flags[team])
 
     def balance_sides(self, pairings):
-        if self.options["side_allocations"] != "balance":
-            return
-        for pairing in pairings:
-            pairing.balance_sides()
+        if self.options["side_allocations"] == "balance":
+            for pairing in pairings:
+                pairing.balance_sides()
+        elif self.options["side_allocations"] == "random":
+            for pairing in pairings:
+                pairing.shuffle_sides()
+        elif self.options["side_allocations"] != "none":
+            raise ValueError("side_allocations setting not recognized: {0!r}".format(self.options["side_allocations"]))
 
     def make_draw(self):
         """Abstract method."""

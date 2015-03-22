@@ -1504,18 +1504,17 @@ class SRManager(models.Manager):
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
     POSITION_NEGATIVE = 'N'
+    POSITION_UNALLOCATED = 'u'
     POSITION_CHOICES = (
         (POSITION_AFFIRMATIVE, 'Affirmative'),
         (POSITION_NEGATIVE, 'Negative'),
+        (POSITION_UNALLOCATED, 'Unallocated'),
     )
 
     objects = SRManager()
 
     debate = models.ForeignKey(Debate, db_index=True)
     team = models.ForeignKey(Team)
-
-    # South can't (easily) handle custom fields, so we'll just duplicate this
-    # in class TeamPositionAllocation.
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __unicode__(self):
@@ -1552,12 +1551,14 @@ class DebateAdjudicator(models.Model):
 
 
 class TeamPositionAllocation(models.Model):
-    """Model to store team position allocations for tournaments like Joynt Scroll
-    (New Zealand). Each team-round combination should have one of these.
-    In tournaments without team position allocations, just don't use this model."""
+    """Model to store team position allocations for tournaments like Joynt
+    Scroll (New Zealand). Each team-round combination should have one of these.
+    In tournaments without team position allocations, just don't use this
+    model."""
 
     POSITION_AFFIRMATIVE = DebateTeam.POSITION_AFFIRMATIVE
     POSITION_NEGATIVE = DebateTeam.POSITION_NEGATIVE
+    POSITION_UNALLOCATED = DebateTeam.POSITION_UNALLOCATED
     POSITION_CHOICES = DebateTeam.POSITION_CHOICES
 
     round = models.ForeignKey(Round)
