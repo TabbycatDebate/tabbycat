@@ -1084,7 +1084,7 @@ class Round(models.Model):
             raise DrawError("There are %d debates but only %d venues." % (len(pairings), len(venues)))
 
         random.shuffle(venues)
-        random.shuffle(pairings) # to avoid IDs indicating room raks
+        random.shuffle(pairings) # to avoid IDs indicating room ranks
 
         for pairing in pairings:
             try:
