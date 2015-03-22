@@ -135,6 +135,7 @@ class BallotSetForm(forms.Form):
         self.POSITIONS = tournament.POSITIONS
         self.LAST_SUBSTANTIVE_POSITION = tournament.LAST_SUBSTANTIVE_POSITION
         self.REPLY_POSITION = tournament.REPLY_POSITION
+        self.MAXIMUM_MARGIN = tournament.config.get('maximum_margin')
 
         if tournament.config.get('public_use_password') and password:
             self.fields['password'] = TournamentPasswordField(tournament=tournament)
@@ -299,6 +300,14 @@ class BallotSetForm(forms.Form):
                         _('The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)'),
                         params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
                     ))
+                elif self.MAXIMUM_MARGIN > 0.0:
+                    # There may be a maximum margin
+                    print self.MAXIMUM_MARGIN
+                    if (max(aff_total,neg_total) - min(aff_total,neg_total)) > self.MAXIMUM_MARGIN:
+                        errors.append(forms.ValidationError(
+                            _('The total margins for the winning team from %(adj)s are higher than what is allowed (%(max_margin)s)'),
+                            params={'adj': adj.name, 'max_margin': self.MAXIMUM_MARGIN}, code='draw'
+                        ))
 
             for side in ('affirmative', 'negative'):
                 # The three speaker fields must be unique.
@@ -327,6 +336,7 @@ class BallotSetForm(forms.Form):
                         _('The last substantive speaker and reply speaker for the %(side)s team are the same.'),
                         params={'side': side}, code='reply_speaker'
                     ))
+
 
         if errors:
             raise forms.ValidationError(errors)

@@ -19,6 +19,7 @@ SETTINGS = OrderedDict([
     ('reply_score_min',             (float, 'Minimum allowed reply score',                                         34)),
     ('reply_score_max',             (float, 'Maximum allowed reply score',                                         41)),
     ('reply_score_step',            (float, 'Reply score steps allowed',                                           0.5)),
+    ('maximum_margin',              (float, 'The largest amount one team can beat another by (0 means no limit)',  0.0)),
     ('break_size',                  (int,   'Number of breaking teams',                                            16)),
     ('esl_break_size',              (int,   'Number of ESL breaking teams',                                        8)),
     ('institution_cap',             (int,   'Maximum number of teams from one institution that can break. Set to 0 if there is no cap',         3)),
