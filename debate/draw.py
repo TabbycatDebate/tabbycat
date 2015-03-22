@@ -254,7 +254,7 @@ class BaseDrawGenerator(object):
         elif self.options["side_allocations"] == "random":
             for pairing in pairings:
                 pairing.shuffle_sides()
-        elif self.options["side_allocations"] != "none":
+        elif self.options["side_allocations"] not in ["none", "preallocated"]:
             raise ValueError("side_allocations setting not recognized: {0!r}".format(self.options["side_allocations"]))
 
     def make_draw(self):
