@@ -54,7 +54,9 @@
                     <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
                     <th><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Importance"></span></th>
                     <th>Aff<span class="hidden-xs">irmative</span></th>
+                    <th><span class="glyphicon glyphicon-off" data-toggle="tooltip" title="Aff's % of Previous Male Adjudicators"></span></th>
                     <th>Neg<span class="hidden-xs">ative</span></th>
+                    <th><span class="glyphicon glyphicon-off" data-toggle="tooltip" title="Neg's % of Previous Male Adjudicators"></span></th>
                     <th>Chair</th>
                     <th>Panel</th>
                     <th>Trainee</th></tr>
@@ -80,6 +82,7 @@
                            {{ debate.aff_team.speakers|join:', ' }}
                         </span>
                     </td>
+                    <td> {{ debate.aff_team.male_adj_percent }}</td>
                     <td id="team_{{ debate.neg_team.id }}" class="team">
                         <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                             {{ debate.neg_team.short_name }} {% if debate.neg_team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
@@ -88,6 +91,7 @@
                            {{ debate.neg_team.speakers|join:', ' }}
                         </span>
                     </td>
+                    <td>{{ debate.neg_team.male_adj_percent }}</td>
                     <td id="chair_{{ debate.id }}" class="btn-holder adj-holder chair-holder">
                     </td>
                     <td id="panel_{{ debate.id }}" class="btn-holder adj-holder panel-holder">
@@ -622,13 +626,15 @@
             dataTable = $("#dataTable").dataTable( {
                 "bAutoWidth": false,
                 "aoColumns": [
-                    { "sWidth": "2.5%" },
-                    { "sWidth": "2.5%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "25%" },
-                    { "sWidth": "25%" },
-                    { "sWidth": "25%" }
+                    { "sWidth": "3%" },
+                    { "sWidth": "3%" },
+                    { "sWidth": "11%" },
+                    { "sWidth": "3%" },
+                    { "sWidth": "11%" },
+                    { "sWidth": "3%" },
+                    { "sWidth": "22%" },
+                    { "sWidth": "22%" },
+                    { "sWidth": "22%" }
                 ],
                 "aaSorting": [[1, 'desc']]
             });

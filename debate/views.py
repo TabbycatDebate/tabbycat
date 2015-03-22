@@ -1523,6 +1523,18 @@ def draw_adjudicators_edit(request, round):
     draw = round.get_draw()
     adj0 = Adjudicator.objects.first()
     duplicate_adjs = round.tournament.config.get('duplicate_adjs')
+
+    for debate in draw:
+        aff_debates = debate.aff_team.get_debates(round.seq)
+        aff_adjs = DebateAdjudicator.objects.filter(debate__in=aff_debates).count()
+        aff_male_adjs = DebateAdjudicator.objects.filter(debate__in=aff_debates,adjudicator__gender="M").count()
+        debate.aff_team.male_adj_percent = int((float(aff_male_adjs) / float(aff_adjs)) * 100)
+
+        neg_debates = debate.neg_team.get_debates(round.seq)
+        neg_adjs = DebateAdjudicator.objects.filter(debate__in=neg_debates).count()
+        neg_male_adjs = DebateAdjudicator.objects.filter(debate__in=neg_debates,adjudicator__gender="M").count()
+        debate.neg_team.male_adj_percent = int((float(neg_male_adjs) / float(neg_adjs)) * 100)
+
     return r2r(request, "draw_adjudicators_edit.html", dict(
         draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs))
 
@@ -1535,6 +1547,7 @@ def _json_adj_allocation(debates, unused_adj):
             'id': a.id,
             'name': a.name + " (" + a.institution.short_code + ")",
             'is_unaccredited': a.is_unaccredited,
+            'gender': a.gender
         }
 
     def _debate(d):

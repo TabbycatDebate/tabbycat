@@ -1543,7 +1543,7 @@ class DebateAdjudicator(models.Model):
 
     objects = SRManager()
 
-    debate = models.ForeignKey(Debate)
+    debate = models.ForeignKey(Debate, db_index=True)
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
