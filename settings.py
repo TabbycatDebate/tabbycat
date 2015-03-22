@@ -31,6 +31,7 @@ TIME_ZONE           = 'Australia/Perth'
 LANGUAGE_CODE       = 'en-us'
 SITE_ID             = 1
 USE_I18N            = True
+TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
 
 # ===========================
 # = Django-specific Modules =
