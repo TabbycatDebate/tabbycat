@@ -419,39 +419,6 @@ def public_team_tab(request, t):
 
 
 @cache_page(TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
-def public_replies_tab(request, t):
-    round = t.current_round
-    rounds = t.prelim_rounds(until=round).order_by('seq')
-    speakers = Speaker.objects.reply_standings(round)
-
-    from debate.models import SpeakerScore
-    def get_score(speaker, r):
-        try:
-            return SpeakerScore.objects.get(
-                ballot_submission__confirmed=True,
-                speaker=speaker,
-                debate_team__debate__round=r,
-                position=4).score
-        except SpeakerScore.DoesNotExist:
-            return None
-
-    for speaker in speakers:
-        speaker.scores = [get_score(speaker, r) for r in rounds]
-        try:
-            # TODO detect if the speaker's *team's* ballot has been entered
-            # for this round, and set results_in accordingly.
-            #SpeakerScore.objects.get(speaker=speaker,
-                                        #debate_team__debate__round=r,
-                                        #position=4)
-            speaker.results_in = True
-        except SpeakerScore.DoesNotExist:
-            speaker.results_in = False
-
-    return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,
-            rounds=rounds, round=round))
-
-@cache_page(TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('motion_tab_released')
 def public_motions_tab(request, t):
     round = t.current_round
@@ -1469,13 +1436,9 @@ def public_novices_tab(request, t):
     return r2r(request, 'public/novices_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
-
-@admin_required
-@round_view
-def reply_standings(request, round, for_print=False):
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = Speaker.objects.reply_standings(round)
-
+def calculate_reply_rankings(speakers, rounds, round):
+    # TODO is there a way to do this without so many database hits?
+    # Maybe using a select subquery?
     from debate.models import SpeakerScore
     def get_score(speaker, r):
         try:
@@ -1490,17 +1453,32 @@ def reply_standings(request, round, for_print=False):
     for speaker in speakers:
         speaker.scores = [get_score(speaker, r) for r in rounds]
         try:
-            # TODO detect if the speaker's *team's* ballot has been entered
-            # for this round, and set results_in accordingly.
-            #SpeakerScore.objects.get(speaker=speaker,
-                                     #debate_team__debate__round=r,
-                                     #position=4)
             speaker.results_in = True
         except SpeakerScore.DoesNotExist:
             speaker.results_in = False
 
+    return speakers
+
+@admin_required
+@round_view
+def reply_standings(request, round, for_print=False):
+    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
+    speakers = Speaker.objects.reply_standings(round)
+    speakers = calculate_speaker_rankings(speakers, rounds, round)
+
     return r2r(request, 'reply_standings.html', dict(speakers=speakers,
                                         rounds=rounds, for_print=for_print))
+
+@cache_page(TAB_PAGES_CACHE_TIMEOUT)
+@public_optional_tournament_view('tab_released')
+def public_replies_tab(request, t):
+    round = t.current_round
+    rounds = t.prelim_rounds(until=round).order_by('seq')
+    speakers = Speaker.objects.reply_standings(round)
+    speakers = calculate_speaker_rankings(speakers, rounds, round)
+
+    return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,
+            rounds=rounds, round=round))
 
 @admin_required
 @round_view

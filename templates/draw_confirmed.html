@@ -198,7 +198,7 @@
             } );
             var dTable = $('#dataTable').DataTable({
                 'bPaginate': false,
-                "aaSorting": [[ 0, "asc" ], [ 1, "asc" ]],
+                "aaSorting": [[ 0, "desc" ], [ 2, "asc" ]],
             });
             new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
             $('#table-search').keyup(function(){

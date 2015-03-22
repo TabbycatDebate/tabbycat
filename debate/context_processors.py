@@ -38,7 +38,7 @@ def debate_context(request):
             'enable_venue_times'      : request.tournament.config.get('enable_venue_times'),
             'enable_venue_groups'     : request.tournament.config.get('enable_venue_groups'),
             'show_avg_margin'         : request.tournament.config.get('show_avg_margin'),
-            'show_team_points'        : request.tournament.config.get('team_points_rule') != 'normal',
+            'show_team_points'        : request.tournament.config.get('team_points_rule') == 'wadl',
             'enable_divisions'        : request.tournament.config.get('enable_divisions'),
             'enable_division_motions' : request.tournament.config.get('enable_division_motions'),
             'enable_forfeits'         : request.tournament.config.get('enable_forfeits'),

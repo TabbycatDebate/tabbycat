@@ -55,7 +55,6 @@ register.simple_tag(debate_draw_status_class)
 
 
 
-
 class RoundURLNode(template.Node):
     def __init__(self, view_name, round=None):
         self.view_name = view_name
@@ -98,3 +97,16 @@ def tournament_url(parser, token):
     args = tuple([parser.compile_filter(b) for b in bits[2:]])
     return TournamentURLNode(bits[1], args)
 
+@register.filter
+def next_value(value, arg):
+    try:
+        return value[int(arg)+1]
+    except:
+        return None
+
+@register.filter
+def prev_value(value, arg):
+    try:
+        return value[int(arg)-1]
+    except:
+        return None
