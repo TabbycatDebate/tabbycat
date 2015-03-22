@@ -7,12 +7,12 @@ migrations-*/
 # Tournaments to ignore
 adam*/
 preaustrals*/
-data/Schools*
-data/Schools*
-data/Schools*
+Schools*
 Dummy*/
 MAD*/
 wadl*/
+au_easters*/
+nz_easters*/
 *.dump
 
 env/
