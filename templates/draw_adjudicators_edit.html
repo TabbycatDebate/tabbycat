@@ -15,7 +15,10 @@
             <a data-loading-text="Saving..." class="btn form-control btn-success" href="" id="save">Save</a>
             <a data-loading-text="Allocating..." class="btn form-control btn-danger" href="{% round_url draw %}">Quit</a>
         </div>
-        <div id="statusBar" class="btn-group">
+        <a class="btn form-control btn-default" href="" id="display_gender">Show Gender</a>
+        <a class="btn form-control btn-default" href="" id="hide_gender">Hide Gender</a>
+        {% include "table_search.html" %}
+        <div id="statusBar" class="btn-group pull-right">
             <div class="btn btn-default">Legend:</div>
             <div class="btn btn-default btn-warning">History Warning</div>
             <div class="btn btn-default btn-danger">Conflict</div>
@@ -23,11 +26,11 @@
             <div class="btn btn-default active is_unaccredited">Unaccredited</div>
             {% endif %}
         </div>
-        {% include "table_search.html" %}
     </div>
 {% endblock %}
 
 {% block content %}
+
     <div class="row">
 
         <div id="scratch" class="col-xs-3">
@@ -63,7 +66,7 @@
                 </thead>
                 <tbody>
                 {% for debate in draw %}
-                <tr id="debate_{{ debate.id }}" class="debate-active">
+                <tr id="debate_{{ debate.id }}">
                     <td>
                         {{ debate.bracket }}
                     </td>
@@ -82,7 +85,9 @@
                            {{ debate.aff_team.speakers|join:', ' }}
                         </span>
                     </td>
-                    <td> {{ debate.aff_team.male_adj_percent }}</td>
+                    <td class="{% if debate.aff_team.male_adj_percent >= debate.neg_team.male_adj_percent %}gender-parity-{{ debate.gender_class }} gender-highlight{% endif %}">
+                        {{ debate.aff_team.male_adj_percent }}
+                    </td>
                     <td id="team_{{ debate.neg_team.id }}" class="team">
                         <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
                             {{ debate.neg_team.short_name }} {% if debate.neg_team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
@@ -91,7 +96,9 @@
                            {{ debate.neg_team.speakers|join:', ' }}
                         </span>
                     </td>
-                    <td>{{ debate.neg_team.male_adj_percent }}</td>
+                    <td class="{% if debate.neg_team.male_adj_percent >= debate.aff_team.male_adj_percent %}gender-parity-{{ debate.gender_class }} gender-highlight{% endif %}">
+                        {{ debate.neg_team.male_adj_percent }}
+                    </td>
                     <td id="chair_{{ debate.id }}" class="btn-holder adj-holder chair-holder">
                     </td>
                     <td id="panel_{{ debate.id }}" class="btn-holder adj-holder panel-holder">
@@ -156,8 +163,11 @@
                 var adj = $('<div></div>').addClass('adj btn btn-block btn-default text-left')
                     .attr('id', 'adj_' + data.id)
                     .append($('<span></span> ').html(data.name))
-                if (data.is_unaccredited) {
-                    adj.addClass('active is_unaccredited');
+                if (data.gender == "M") {
+                    adj.addClass('male');
+                }
+                if (data.gender == "F") {
+                    adj.addClass('female');
                 }
                 init_adj(adj);
                 return adj;
@@ -378,8 +388,6 @@
             function init_adj(el) {
 
                 function display_conflicts(target) {
-                    console.log('displaying conflicts');
-                    console.log(target);
                     eachConflictingTeam(intId(target),
                         function (type, elem) {
                             $(elem).addClass(conflictTypeClass[type]);
@@ -388,8 +396,6 @@
                 }
 
                 function remove_conflicts(target) {
-                    console.log('hiding conflicts');
-                    console.log(target);
                     eachConflictingTeam(intId(target),
                         function (type, elem) {
                             $(elem).removeClass(conflictTypeClass[type]);
@@ -433,7 +439,6 @@
                         // we unbind the event
                         display_conflicts(event.currentTarget);
                         $(event.currentTarget).unbind('mouseover mouseout');
-                        console.log(event.currentTarget);
                     },
                     stop: function(event, ui) {
                         target_id = $("#" + ui.helper.attr("id"));
@@ -600,6 +605,10 @@
             });
 
             $('#auto_allocate').click(function() {
+
+                $('#hide_gender').hide()
+                $('#show_gender').show()
+
                 var btn = $(this)
                 btn.button('loading')
                 $.ajax({
@@ -621,6 +630,23 @@
                     }
                 });
 
+            });
+
+            function toggle_gender() {
+                $("#display_gender").toggle()
+                $("#hide_gender").toggle()
+                $(".adj").toggleClass("gender-display");
+                $(".gender-highlight").toggleClass("gender-display");
+            }
+
+            $('#hide_gender').hide()
+            $('#display_gender').click(function() {
+                toggle_gender();
+                return false
+            });
+            $('#hide_gender').click(function() {
+                toggle_gender();
+                return false
             });
 
             dataTable = $("#dataTable").dataTable( {

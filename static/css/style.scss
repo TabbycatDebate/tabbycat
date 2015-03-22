@@ -484,7 +484,6 @@ span.esl {
         }
     }
     .adj {
-
         .info {
             display: inline-block;
             float: right;
@@ -496,6 +495,46 @@ span.esl {
         &.btn-danger .info, &.btn-warning .info {
             color: #fff;
         }
+        &.gender-display.male span, &.gender-display.female a {
+            color: #fff;
+        }
+        &.gender-display.male {
+            background-color: #0000FF;
+        }
+        &.gender-display.female {
+            background-color: #D600FF;
+        }
+    }
+
+    .gender-display.gender-parity-3 {
+        background-color: lighten(#0000FF, 45%);
+    }
+    .gender-display.gender-parity-4 {
+        background-color: lighten(#0000FF, 40%);
+    }
+    .gender-display.gender-parity-5 {
+        background-color: lighten(#0000FF, 30%);
+        color: #fff;
+    }
+    .gender-display.gender-parity-6 {
+        background-color: lighten(#0000FF, 20%);
+        color: #fff;
+    }
+    .gender-display.gender-parity-7 {
+        background-color: lighten(#0000FF, 10%);
+        color: #fff;
+    }
+    .gender-display.gender-parity-8 {
+        background-color: #0000FF;
+        color: #fff;
+    }
+    .gender-display.gender-parity-9 {
+        background-color: darken(#0000FF, 25%);
+        color: #fff;
+    }
+    .gender-display.gender-parity-10 {
+        background-color: darken(#0000FF, 35%);
+        color: #fff;
     }
     #unusedTable {
         // For compactness

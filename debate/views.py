@@ -1524,16 +1524,24 @@ def draw_adjudicators_edit(request, round):
     adj0 = Adjudicator.objects.first()
     duplicate_adjs = round.tournament.config.get('duplicate_adjs')
 
-    for debate in draw:
-        aff_debates = debate.aff_team.get_debates(round.seq)
-        aff_adjs = DebateAdjudicator.objects.filter(debate__in=aff_debates).count()
-        aff_male_adjs = DebateAdjudicator.objects.filter(debate__in=aff_debates,adjudicator__gender="M").count()
-        debate.aff_team.male_adj_percent = int((float(aff_male_adjs) / float(aff_adjs)) * 100)
+    def calculate_prior_adj_genders(team):
+        debates = team.get_debates(round.seq)
+        adjs = DebateAdjudicator.objects.filter(debate__in=debates).count()
+        male_adjs = DebateAdjudicator.objects.filter(debate__in=debates,adjudicator__gender="M").count()
+        male_adj_percent = int((float(male_adjs) / float(adjs)) * 100)
+        return male_adj_percent
 
-        neg_debates = debate.neg_team.get_debates(round.seq)
-        neg_adjs = DebateAdjudicator.objects.filter(debate__in=neg_debates).count()
-        neg_male_adjs = DebateAdjudicator.objects.filter(debate__in=neg_debates,adjudicator__gender="M").count()
-        debate.neg_team.male_adj_percent = int((float(neg_male_adjs) / float(neg_adjs)) * 100)
+    for debate in draw:
+        aff_male_adj_percent = calculate_prior_adj_genders(debate.aff_team)
+        debate.aff_team.male_adj_percent = aff_male_adj_percent
+
+        neg_male_adj_percent = calculate_prior_adj_genders(debate.neg_team)
+        debate.neg_team.male_adj_percent = neg_male_adj_percent
+
+        if neg_male_adj_percent > aff_male_adj_percent:
+            debate.gender_class = (neg_male_adj_percent / 5) - 10
+        else:
+            debate.gender_class = (aff_male_adj_percent / 5) - 10
 
     return r2r(request, "draw_adjudicators_edit.html", dict(
         draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs))
