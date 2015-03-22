@@ -480,14 +480,18 @@ class Team(models.Model):
 
     @property
     def short_name(self):
-        if self.use_institution_prefix:
-            return unicode(self.institution.code + " " + self.short_reference)
+        if self.short_reference:
+            name = self.short_reference
         else:
-            return unicode(self.short_reference)
+            name = self.reference
+        if self.use_institution_prefix is True:
+            return unicode(self.institution.code + " " + name)
+        else:
+            return unicode(name)
 
     @property
     def long_name(self):
-        if self.use_institution_prefix:
+        if self.use_institution_prefix is True:
             return unicode(self.institution.name + " " + self.reference)
         else:
             return unicode(self.reference)

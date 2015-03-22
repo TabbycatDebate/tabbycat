@@ -4,6 +4,12 @@
 {% block head-title %}No draw for {{ round.name }} currently exists{% endblock %}
 
 {% block header %}
+
+    {% if not active_teams.count|divisibleby:2  %}
+    <div class="alert alert-danger">
+        Note: there is an uneven number of teams checked in for this round.
+    </div>
+    {% endif %}
     {% if 0 < active_teams.count < all_teams_count %}
     <div class="alert alert-warning">
         Note: not all teams <a class="alert-link" href="{% round_url team_availability current_round %}">have been checked in</a> for this round.
@@ -49,8 +55,8 @@
 
         $(document).ready( function() {
             $("#createDraw").click( function() {
-                // $("#createForm").submit();
-                // return false;
+                $("#createForm").submit();
+                return false;
             } );
             $("#createDrawWithAllTeams").click( function() {
                 $("#createFormWithAllTeams").submit();

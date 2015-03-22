@@ -11,6 +11,7 @@ def debate_context(request):
             'show_emoji'              : request.tournament.config.get('show_emoji'),
             'show_institutions'       : request.tournament.config.get('show_institutions'),
             'show_novices'            : request.tournament.config.get('show_novices'),
+            'show_unaccredited'       : request.tournament.config.get('show_unaccredited'),
             'motion_vetoes_enabled'   : request.tournament.config.get('motion_vetoes_enabled'),
             'public_team_standings'   : request.tournament.config.get('public_team_standings') \
                                            and request.tournament.current_round.prev is not None,
