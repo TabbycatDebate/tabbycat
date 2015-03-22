@@ -82,7 +82,7 @@ class Command(BaseCommand):
                     reader = csv.reader(open(os.path.join(data_path, 'rounds.csv')))
                     reader.next() # Skipping header row
                 except:
-                    self.stdout.write('rounds.csv file is missing or damaged')
+                    self.stdout.write('rounds.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
                 i = 1
                 for line in reader:
@@ -150,27 +150,29 @@ class Command(BaseCommand):
                 reader = csv.reader(open(os.path.join(data_path, 'config.csv')))
                 reader.next() # Skipping header row
             except:
-                self.stdout.write('config.csv file is missing or damaged')
+                self.stdout.write('config.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
+                reader = None
 
-            for line in reader:
-                key = line[0]
-                value_type = line[1]
-                if value_type == "string":
-                    value = str(line[2])
-                elif value_type == "int":
-                    value = int(line[2])
-                elif value_type == "float":
-                    value = float(line[2])
-                elif value_type == "bool":
-                    if line[2] == "True":
-                        value = True
-                    elif line[2] == "False":
-                        value = False
-                    else:
-                        print "Error %s not properly set" % key
+            if reader:
+                for line in reader:
+                    key = line[0]
+                    value_type = line[1]
+                    if value_type == "string":
+                        value = str(line[2])
+                    elif value_type == "int":
+                        value = int(line[2])
+                    elif value_type == "float":
+                        value = float(line[2])
+                    elif value_type == "bool":
+                        if line[2] == "True":
+                            value = True
+                        elif line[2] == "False":
+                            value = False
+                        else:
+                            print "Error %s not properly set" % key
 
-                t.config.set(key, value)
-                print "Made setting \t%s as %s" % (key, value)
+                    t.config.set(key, value)
+                    print "Made setting \t%s as %s" % (key, value)
 
             # Venues
             self.stdout.write('**** Attempting to create the venue groups')
@@ -178,33 +180,35 @@ class Command(BaseCommand):
                 reader = csv.reader(open(os.path.join(data_path, 'venue_groups.csv')))
                 reader.next() # Skipping header row
             except:
-                self.stdout.write('venues_groups.csv file is missing or damaged')
+                self.stdout.write('venues_groups.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
+                reader = None
 
-            venue_count = 0
-            venue_group_count = 0
-            for line in reader:
-                long_name = line[0] or None
-                short_name = line[1] or None
-                team_capacity = line[2] or None
-                try:
-                    venue_group, created = m.VenueGroup.objects.get_or_create(
-                       name=long_name,
-                       short_name=short_name,
-                       team_capacity=team_capacity,
-                       tournament=t
-                    )
+            if reader:
+                venue_count = 0
+                venue_group_count = 0
+                for line in reader:
+                    long_name = line[0] or None
+                    short_name = line[1] or None
+                    team_capacity = line[2] or None
+                    try:
+                        venue_group, created = m.VenueGroup.objects.get_or_create(
+                           name=long_name,
+                           short_name=short_name,
+                           team_capacity=team_capacity,
+                           tournament=t
+                        )
 
-                    if created:
-                        print "Made venue group: \t%s" % venue_group
-                        venue_group_count = venue_group_count + 1
-                    else:
-                        print "Matched venue group: \t%s" % venue_group
+                        if created:
+                            print "Made venue group: \t%s" % venue_group
+                            venue_group_count = venue_group_count + 1
+                        else:
+                            print "Matched venue group: \t%s" % venue_group
 
 
-                except ValueError:
-                    total_errors += 1
-                    self.stdout.write('Couldnt make venue group ' + group)
-                    venue_group = None
+                    except ValueError:
+                        total_errors += 1
+                        self.stdout.write('Couldnt make venue group ' + group)
+                        venue_group = None
 
 
             # Venues
@@ -213,49 +217,51 @@ class Command(BaseCommand):
                 reader = csv.reader(open(os.path.join(data_path, 'venues.csv')))
                 reader.next() # Skipping header row
             except:
-                self.stdout.write('venues.csv file is missing or damaged')
+                self.stdout.write('venues.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
+                reader = None
 
-            venue_count = 0
-            venue_group_count = 0
-            for line in reader:
-                room_name = line[0]
-                priority = len(line) > 1 and line[1] or 10
-                group_name = len(line) > 2 and line[2] or None
-                time = len(line) > 3 and str(line[3]) or None
+            if reader:
+                venue_count = 0
+                venue_group_count = 0
+                for line in reader:
+                    room_name = line[0]
+                    priority = len(line) > 1 and line[1] or 10
+                    group_name = len(line) > 2 and line[2] or None
+                    time = len(line) > 3 and str(line[3]) or None
 
-                if group_name:
-                    try:
-                        venue_group, created = m.VenueGroup.objects.get_or_create(
-                            name=group_name, tournament=t
-                        )
+                    if group_name:
+                        try:
+                            venue_group, created = m.VenueGroup.objects.get_or_create(
+                                name=group_name
+                            )
 
-                        if created:
-                            print "Made venue group: \t%s" % group_name
-                            venue_group_count = venue_group_count + 1
+                            if created:
+                                print "Made venue group: \t%s" % group_name
+                                venue_group_count = venue_group_count + 1
 
-                    except ValueError:
-                        total_errors += 1
-                        self.stdout.write('Couldnt make venue group ' + group_name)
+                        except ValueError:
+                            total_errors += 1
+                            self.stdout.write('Couldnt make venue group ' + group_name)
+                            venue_group = None
+                    else:
                         venue_group = None
-                else:
-                    venue_group = None
 
-                try:
-                    m.Venue(
-                        tournament = t,
-                        group = venue_group,
-                        name = room_name,
-                        priority = priority,
-                        time = time
-                    ).save()
-                    #print "Made venue: \t\t%s" % room_name
+                    try:
+                        m.Venue(
+                            tournament = t,
+                            group = venue_group,
+                            name = room_name,
+                            priority = priority,
+                            time = time
+                        ).save()
+                        #print "Made venue: \t\t%s" % room_name
 
-                    venue_count = venue_count + 1
+                        venue_count = venue_count + 1
 
-                except Exception as inst:
-                    total_errors += 1
-                    self.stdout.write('Couldnt make venue ' + room_name)
-                    print inst
+                    except Exception as inst:
+                        total_errors += 1
+                        self.stdout.write('Couldnt make venue ' + room_name)
+                        print inst
 
 
             self.stdout.write('**** Created ' + str(venue_group_count) + ' venue groups')
@@ -267,7 +273,7 @@ class Command(BaseCommand):
                 reader = csv.reader(open(os.path.join(data_path, 'institutions.csv')))
                 reader.next() # Skipping header row
             except:
-                self.stdout.write('institutions.csv file is missing or damaged')
+                self.stdout.write('institutions.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
             institutions_count = 0
             for line in reader:
@@ -299,7 +305,7 @@ class Command(BaseCommand):
                 reader = csv.reader(open(os.path.join(data_path, 'teams.csv'), 'rU'))
                 reader.next() # Skipping header row
             except:
-                self.stdout.write('teams.csv file is missing or damaged')
+                self.stdout.write('teams.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
             teams_count = 0
             for line in reader:
@@ -343,7 +349,7 @@ class Command(BaseCommand):
                 reader = csv.reader(open(os.path.join(data_path, 'speakers.csv'), 'rU'))
                 reader.next() # Skipping header row
             except:
-                self.stdout.write('speakers.csv file is missing or damaged')
+                self.stdout.write('speakers.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
             speakers_count = 0
             teams_count = 0
@@ -355,6 +361,16 @@ class Command(BaseCommand):
                     prefix = int(line[3]) or 0
                 except:
                     prefix = False
+                try:
+                    gender = str(line[4]) or None
+                    if gender != "M" and gender != "F" and gender != "O":
+                        gender = None
+                except:
+                    gender = None
+                try:
+                    novice_status = int(line[5]) or 0
+                except:
+                    novice_status = 0
 
                 try:
                     ins = m.Institution.objects.get(code=ins_name)
@@ -392,7 +408,9 @@ class Command(BaseCommand):
                 try:
                     m.Speaker(
                         name = name,
-                        team = speakers_team
+                        team = speakers_team,
+                        gender = gender,
+                        novice = novice_status
                     ).save()
                     speakers_count = speakers_count + 1
                 except Exception as inst:
@@ -400,7 +418,7 @@ class Command(BaseCommand):
                     total_errors += 1
                     print inst
 
-                print "Made speaker:\t\t%s of %s" % (name, ins)
+                print "Made speaker:\t\t%s (%s) of %s" % (name, gender, ins)
 
             self.stdout.write('**** Created ' + str(speakers_count) +
                               ' speakers and ' + str(teams_count) + ' teams')
@@ -410,17 +428,28 @@ class Command(BaseCommand):
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'judges.csv')))
                 reader.next() # Skipping header row
-            except:
-                self.stdout.write('judges.csv file is missing or damaged')
+            except Exception as e:
+                print e
+                self.stdout.write('judges.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
             adjs_count = 0
             for line in reader:
-                ins_name, name, test_score = line[0:3]
-                phone = len(line) > 3 and line[3] or None
-                email = len(line) > 4 and line[4] or None
-                notes = len(line) > 5 and line[5] or None
-                institution_conflicts = len(line) > 6 and line[6] or None
-                team_conflicts = len(line) > 7 and line[7] or None
+                name, ins_name, test_score = line[0:3]
+                try:
+                    gender = str(line[3]) or None
+                    if gender != "M" and gender != "F" and gender != "O":
+                        gender = None
+                except:
+                    gender = None
+                try:
+                    novice_status = int(line[4]) or 0
+                except:
+                    novice_status = 0
+                phone = len(line) > 4 and line[5] or None
+                email = len(line) > 5 and line[6] or None
+                notes = len(line) > 6 and line[7] or None
+                institution_conflicts = len(line) > 8 and line[8] or None
+                team_conflicts = len(line) > 9 and line[9] or None
 
                 try:
                     test_score = float(test_score)
@@ -467,13 +496,15 @@ class Command(BaseCommand):
                     name = name,
                     institution = ins,
                     test_score = test_score,
+                    gender = gender,
+                    novice = novice_status,
                     phone = phone,
                     email = email,
                     notes = notes,
                     tournament = t
                 )
                 adj.save()
-                print "Made adjudicator: \t%s of %s" % (name, ins)
+                print "Made adjudicator: \t%s (%s) of %s" % (name, gender, ins)
 
                 m.AdjudicatorTestScoreHistory(adjudicator=adj, score=test_score, round=None).save()
                 m.AdjudicatorInstitutionConflict(adjudicator=adj, institution=ins).save()
@@ -514,7 +545,7 @@ class Command(BaseCommand):
                 reader = csv.reader(open(os.path.join(data_path, 'motions.csv')))
                 reader.next() # Skipping header row
             except:
-                self.stdout.write('motions.csv file is missing or damaged')
+                self.stdout.write('motions.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
             motions_count = 0
             for line in reader:

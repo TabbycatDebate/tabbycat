@@ -66,7 +66,7 @@ admin.site.register(models.TeamVenuePreference, TeamVenuePreferenceAdmin)
 
 
 class SpeakerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'team')
+    list_display = ('name', 'team', 'novice')
     search_fields = ('name', 'team__name', 'team__institution__name',
                      'team__institution__code',)
     raw_id_fields = ('team',)
@@ -95,7 +95,7 @@ class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
     extra = 1
 
 class AdjudicatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution', 'tournament')
+    list_display = ('name', 'institution', 'tournament','novice')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code',)
     list_filter = ('tournament', 'name')
     inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorTestScoreHistoryInline)
