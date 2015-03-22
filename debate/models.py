@@ -559,7 +559,7 @@ class TeamVenuePreference(models.Model):
 
 
 class SpeakerManager(models.Manager):
-    def standings(self, round=None):
+    def standings(self, round=None, only_novices=False):
         # only include scoresheets for up to this round, exclude replies
         if round:
             speakers = self.filter(
@@ -572,6 +572,9 @@ class SpeakerManager(models.Manager):
                 team__tournament=round.tournament,
                 speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
             )
+
+        if only_novices is True:
+            speakers = speakers.filter(novice=True)
 
         # TODO is there a way to add round scores without so many database hits?
         # Maybe using a select subquery?

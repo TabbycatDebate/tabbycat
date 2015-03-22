@@ -15,6 +15,9 @@
         <ul class="dropdown-menu">
             <li><a class="team-standings-nav" href="{% round_url team_standings current_round %}">Teams</a></li>
             <li><a class="speaker-standings-nav" href="{% round_url speaker_standings current_round %}">Speakers</a></li>
+            {% if show_novices %}
+                <li><a class="novice-standings-nav" href="{% round_url novice_standings current_round %}">Novices Speakers</a></li>
+            {% endif %}
             {% if reply_scores_enabled %}
                 <li><a class="reply-standings-nav" href="{% round_url reply_standings current_round %}">Replies</a></li>
             {% endif %}
