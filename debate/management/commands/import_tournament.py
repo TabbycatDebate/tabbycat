@@ -81,7 +81,8 @@ class Command(BaseCommand):
                 try:
                     reader = csv.reader(open(os.path.join(data_path, 'rounds.csv')))
                     reader.next() # Skipping header row
-                except:
+                except Exception as e:
+                    print e
                     self.stdout.write('rounds.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
                 i = 1
@@ -149,37 +150,50 @@ class Command(BaseCommand):
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'config.csv')))
                 reader.next() # Skipping header row
-            except:
+            except Exception as e:
+                print e
                 self.stdout.write('config.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
                 reader = None
 
             if reader:
+                config_count = 0
                 for line in reader:
                     key = line[0]
                     value_type = line[1]
-                    if value_type == "string":
+                    if str(line[2]) == '':
+                        value = None
+                    elif value_type == "string" or value_type == "str" :
                         value = str(line[2])
                     elif value_type == "int":
                         value = int(line[2])
                     elif value_type == "float":
-                        value = float(line[2])
-                    elif value_type == "bool":
-                        if line[2] == "True":
+                        try:
+                            value = float(line[2])
+                        except:
+                            value = float(int(line[2]))
+                    elif value_type == "bool" or value_type == "_bool":
+                        if line[2] == "True" or line[2] == "1":
                             value = True
-                        elif line[2] == "False":
+                        elif line[2] == "False" or line[2] == "0":
                             value = False
                         else:
                             print "Error %s not properly set" % key
 
-                    t.config.set(key, value)
-                    print "Made setting \t%s as %s" % (key, value)
+                    if value is not None:
+                        t.config.set(key, value)
+                        config_count += 1
+                        print "Made setting \t%s as %s" % (key, value)
+
+
+                self.stdout.write('**** Created ' + str(config_count) + ' settings')
 
             # Venues
             self.stdout.write('**** Attempting to create the venue groups')
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'venue_groups.csv')))
                 reader.next() # Skipping header row
-            except:
+            except Exception as e:
+                print e
                 self.stdout.write('venues_groups.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
                 reader = None
 
@@ -216,7 +230,8 @@ class Command(BaseCommand):
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'venues.csv')))
                 reader.next() # Skipping header row
-            except:
+            except Exception as e:
+                print e
                 self.stdout.write('venues.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
                 reader = None
 
@@ -272,7 +287,8 @@ class Command(BaseCommand):
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'institutions.csv')))
                 reader.next() # Skipping header row
-            except:
+            except Exception as e:
+                print e
                 self.stdout.write('institutions.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
             institutions_count = 0
@@ -304,7 +320,8 @@ class Command(BaseCommand):
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'teams.csv'), 'rU'))
                 reader.next() # Skipping header row
-            except:
+            except Exception as e:
+                print e
                 self.stdout.write('teams.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
             teams_count = 0
@@ -348,7 +365,8 @@ class Command(BaseCommand):
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'speakers.csv'), 'rU'))
                 reader.next() # Skipping header row
-            except:
+            except Exception as e:
+                print e
                 self.stdout.write('speakers.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
             speakers_count = 0
@@ -544,7 +562,8 @@ class Command(BaseCommand):
             try:
                 reader = csv.reader(open(os.path.join(data_path, 'motions.csv')))
                 reader.next() # Skipping header row
-            except:
+            except Exception as e:
+                print e
                 self.stdout.write('motions.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
             motions_count = 0
