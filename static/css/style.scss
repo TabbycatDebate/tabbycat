@@ -16,7 +16,6 @@
   src: url('../../css/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../css/bootstrap/glyphicons-halflings-regular.woff') format('woff'), url('../../css/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), url('../../css/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 
-
 .h4_minus {
   @extend .h4;
   font-size: ceil(($font-size-base * 1.12));
@@ -448,9 +447,13 @@ span.esl {
         right: 0;
         height: 100%;
         overflow-y: scroll;
+        padding-bottom: 50px; // ensure no footer overlaps
     }
     .venue, .adj {
         max-width: 300px;
+    }
+    .is_unaccredited {
+        box-shadow: none;
     }
     .importance {
         width: 60px;
@@ -465,10 +468,23 @@ span.esl {
     .border-success {
         border: 2px solid $btn-success-border;
     }
-    .venue:hover, .adj:hover {
+    .border-primary {
+        border: 2px solid $btn-primary-border;
+    }
+    .venue:hover, .adj:hover, .venue.dragging, .adj.dragging {
         cursor: move;
+        border: 1px solid $btn-primary-border;
+        @extend .text-primary;
+        @extend .border-primary;
+        &.is_unaccredited {
+            background: $table-bg-active;
+        }
+        &.btn-danger, &.btn-warning {
+            color: #fff;
+        }
     }
     .adj {
+
         .info {
             display: inline-block;
             float: right;

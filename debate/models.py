@@ -732,7 +732,7 @@ class AdjudicatorManager(models.Manager):
     use_for_related_fields = True
 
     def accredited(self):
-        return self.filter(is_trainee=False)
+        return self.filter(novice=False)
 
 
 class Adjudicator(Person):
@@ -743,7 +743,6 @@ class Adjudicator(Person):
     institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adjudicator_institution_conflicts')
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
 
-    is_trainee = models.BooleanField(default=False)
     breaking = models.BooleanField(default=False)
 
     objects = AdjudicatorManager()
@@ -763,6 +762,10 @@ class Adjudicator(Person):
                 AdjudicatorInstitutionConflict.objects.filter(adjudicator=self).values('institution_id')
             )
         return team.id in self._conflict_cache or team.institution_id in self._institution_conflict_cache
+
+    @property
+    def is_unaccredited(self):
+        return self.novice
 
     @property
     def score(self):

@@ -1564,7 +1564,7 @@ def _json_adj_allocation(debates, unused_adj):
         return {
             'id': a.id,
             'name': a.name + " (" + a.institution.short_code + ")",
-            'is_trainee': a.is_trainee,
+            'is_unaccredited': a.is_unaccredited,
         }
 
     def _debate(d):

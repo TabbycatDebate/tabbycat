@@ -17,8 +17,11 @@
         </div>
         <div id="statusBar" class="btn-group">
             <div class="btn btn-default">Legend:</div>
-            <div class="btn btn-default btn-warning" disabled="disabled">History Warning</div>
-            <div class="btn btn-default btn-danger" disabled="disabled">Conflict</div>
+            <div class="btn btn-default btn-warning">History Warning</div>
+            <div class="btn btn-default btn-danger">Conflict</div>
+            {% if show_unaccredited %}
+            <div class="btn btn-default active is_unaccredited">Unaccredited</div>
+            {% endif %}
         </div>
         {% include "table_search.html" %}
     </div>
@@ -149,8 +152,8 @@
                 var adj = $('<div></div>').addClass('adj btn btn-block btn-default text-left')
                     .attr('id', 'adj_' + data.id)
                     .append($('<span></span> ').html(data.name))
-                if (data.is_trainee) {
-                    adj.addClass('trainee');
+                if (data.is_unaccredited) {
+                    adj.addClass('active is_unaccredited');
                 }
                 init_adj(adj);
                 return adj;
@@ -369,22 +372,33 @@
             }
 
             function init_adj(el) {
-                el.mouseover( function(e) {
-                    eachConflictingTeam(intId(e.currentTarget),
+
+                function display_conflicts(target) {
+                    console.log('displaying conflicts');
+                    console.log(target);
+                    eachConflictingTeam(intId(target),
                         function (type, elem) {
-                            console.log("adding conflict on" + elem);
                             $(elem).addClass(conflictTypeClass[type]);
                         }
                     );
-                });
+                }
 
-                el.mouseout( function(e) {
-                    eachConflictingTeam(intId(e.currentTarget),
+                function remove_conflicts(target) {
+                    console.log('hiding conflicts');
+                    console.log(target);
+                    eachConflictingTeam(intId(target),
                         function (type, elem) {
-                            console.log("removing conflict on" + elem);
                             $(elem).removeClass(conflictTypeClass[type]);
                         }
                     );
+                }
+
+                el.mouseover( function(e) {
+                    display_conflicts(e.currentTarget);
+                });
+
+                el.mouseout( function(e) {
+                    remove_conflicts(e.currentTarget);
                 });
 
                 el.draggable({
@@ -409,11 +423,16 @@
                     // },
                     revert: 'invalid',
                     start: function(event, ui) {
-                        console.log("dragging");
                         $("#" + ui.helper.attr("id")).addClass("dragging");
+                        $(ui.helper).addClass("dragging");
+                        // We want to keep showing conflicts during drag, so
+                        // we unbind the event
+                        display_conflicts(event.currentTarget);
+                        $(event.currentTarget).unbind('mouseover mouseout');
+                        console.log(event.currentTarget);
                     },
                     stop: function(event, ui) {
-                        e = $("#" + ui.helper.attr("id"));
+                        target_id = $("#" + ui.helper.attr("id"));
                         // If the mouse isn't over the original position, stop highlighting.
                         // Set a timeout to run shortly after to give the element time to get
                         // back where it belongs. (If there's a way to do this without setTimeout,
@@ -421,7 +440,7 @@
                         setTimeout( function() {
                             if ($("#" + ui.helper.attr("id") + ":hover").length == 0) {
                                 eachConflictingTeam(
-                                    intId(e),
+                                    intId(target_id),
                                     function (type, elem) {
                                         $(elem).removeClass(conflictTypeClass[type]);
                                     }
@@ -429,12 +448,18 @@
                             }
                         }, 50)
                         $(ui.helper).remove();
+                        // When dropping need to remove the drag class and rebind unbound events
+                        $("#" + ui.helper.attr("id")).bind( "mouseover", function(e) {
+                            display_conflicts(e.currentTarget);
+                        }).bind( "mouseout", function(e) {
+                            remove_conflicts(e.currentTarget);
+                        }).removeClass("dragging");
                     }
                 });
             }
 
             $("#dataTable tbody .adj-holder").droppable( {
-                hoverClass: 'bg-success',
+                hoverClass: 'bg-info',
                 drop: function(event, ui) {
                     var adj = ui.draggable;
                     var oldHolder = adj[0].oldHolder;
