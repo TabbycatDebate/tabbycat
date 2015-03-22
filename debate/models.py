@@ -999,6 +999,8 @@ class Round(models.Model):
         options = dict()
         for key, value in OPTIONS_TO_CONFIG_MAPPING.iteritems():
             options[key] = self.tournament.config.get(value)
+        if options["side_allocations"] == "manual-ballot":
+            options["side_allocations"] = "balance"
 
         drawer = DrawGenerator(draw_type, teams, results=None, **options)
         draw = drawer.make_draw()

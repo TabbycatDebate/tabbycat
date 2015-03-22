@@ -9,13 +9,10 @@ from debate.result import BallotSet, ForfeitBallotSet
 
 from collections import Counter
 
-def get_or_instantiate(model, **kwargs):
-    try:
-        return model.objects.get(**kwargs)
-    except model.DoesNotExist:
-        return model(**kwargs)
+class FormConstructionError(Exception):
+    pass
 
-### Result/ballot forms
+### Custom fields
 
 class BaseScoreField(forms.FloatField):
     def __init__(self, *args, **kwargs):
@@ -98,6 +95,24 @@ class TournamentPasswordField(forms.CharField):
             raise forms.ValidationError(_("That password isn't correct."))
         return value
 
+class RequiredTypedChoiceField(forms.TypedChoiceField):
+    def clean(self, value):
+        value = super(forms.TypedChoiceField, self).clean(value)
+        if value == "None":
+            raise forms.ValidationError(_("This field is required."))
+        return value
+
+class CustomNullBooleanSelect(forms.NullBooleanSelect):
+
+    def __init__(self, attrs=None):
+        choices = (('1', ugettext_lazy('Not sure')),
+                   ('2', ugettext_lazy('Yes')),
+                   ('3', ugettext_lazy('No')))
+        # skip the NullBooleanSelect constructor
+        super(forms.NullBooleanSelect, self).__init__(attrs, choices)
+
+### Result/ballot forms
+
 class BallotSetForm(forms.Form):
     """Form for data entry for a single set of ballots.
     Responsible for presenting the part that looks like a ballot, i.e.
@@ -138,6 +153,20 @@ class BallotSetForm(forms.Form):
 
         if tournament.config.get('public_use_password') and password:
             self.fields['password'] = TournamentPasswordField(tournament=tournament)
+
+        if tournament.config.get('draw_side_allocations') == 'manual-ballot':
+            dts = self.debate.debateteam_set.all()
+            if len(dts) != 2:
+                raise FormConstructionError('Whoops! There are %d teams in this debate, was expecting 2.' % len(dts))
+            side_choices = [
+                ((dts[0].id, dts[1].id), "%s affirmed, %s negated" % (dts[0].team.short_name, dts[1].team.short_name)),
+                ((dts[1].id, dts[0].id), "%s affirmed, %s negated" % (dts[1].team.short_name, dts[0].team.short_name))
+            ]
+            def coerce(value):
+                return tuple(DebateTeam.objects.get(id=v) for v in value)
+            self.fields['choose_sides'] = forms.TypedChoiceField(
+                choices=side_choices, coerce=coerce
+            )
 
         # Generate the motions field.
         # We are only allowed to choose from the motions for this round.
@@ -495,22 +524,6 @@ class DebateResultFormSet(object):
         pass
 
 ### Feedback forms
-
-class RequiredTypedChoiceField(forms.TypedChoiceField):
-    def clean(self, value):
-        value = super(forms.TypedChoiceField, self).clean(value)
-        if value == "None":
-            raise forms.ValidationError(_("This field is required."))
-        return value
-
-class CustomNullBooleanSelect(forms.NullBooleanSelect):
-
-    def __init__(self, attrs=None):
-        choices = (('1', ugettext_lazy('Not sure')),
-                   ('2', ugettext_lazy('Yes')),
-                   ('3', ugettext_lazy('No')))
-        # skip the NullBooleanSelect constructor
-        super(forms.NullBooleanSelect, self).__init__(attrs, choices)
 
 def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, released_only=False):
     """adjudicator is an Adjudicator.

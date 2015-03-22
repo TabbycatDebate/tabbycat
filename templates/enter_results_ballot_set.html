@@ -14,6 +14,16 @@
         </div>
     {% endif %}
 
+    {% if form.choose_sides %}
+        <div class="form-group">
+            <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Sides</label>
+            <div class="col-sm-10">
+                {{ form.choose_sides|addcss:"form-control choose-sides required" }}
+                {{ form.choose_sides.errors }}
+            </div>
+        </div>
+    {% endif %}
+
     <div class="row">
         <p class="col-xs-12 lead h3 page-header">Motion</p>
     </div>
