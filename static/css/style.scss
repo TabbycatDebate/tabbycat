@@ -439,6 +439,9 @@ span.esl {
 // Editing the Draw
 
 .edit-venues, .edit-adjs {
+    #table-search-group.btn-group.pull-right {
+        margin-right: 16.66667% // Making way for the unused column
+    }
     table {
         border-collapse: separate;
     }
@@ -457,9 +460,10 @@ span.esl {
         padding-left: 0px;
         overflow-y: scroll;
         padding-bottom: 50px; // ensure no footer overlaps
-        margin-top: 169px;
+        margin-top: 0px;
         .unused {
             padding-left: 0px;
+            padding-right: 0px;
         }
     }
     .venue, .adj {
@@ -504,7 +508,8 @@ span.esl {
         &.btn-danger .info, &.btn-warning .info {
             color: #fff;
         }
-        &.gender-display.male span, &.gender-display.female a {
+        &.gender-display.male span, &.gender-display.male a,
+        &.gender-display.female span, &.gender-display.female a {
             color: #fff;
         }
         &.gender-display.male {
