@@ -3,6 +3,7 @@
 
 {% block head-title %}Who are you?<small>(click your name or your team on this list)</small>{% endblock %}
 {% block page-title %}Add Feedback{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 {% block body-class %}public-add-feedback{% endblock %}
 
 {% block header %}
@@ -17,7 +18,6 @@
         <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
       </label>
     </div>
-    {% include "table_search.html" %}
 {% endblock %}
 
 {% block content %}

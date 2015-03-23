@@ -65,11 +65,16 @@
   }
 }
 
-#header-options {
-    min-height: 34px; // Spacer pre-form relocation via JS
+.page-header {
     margin-bottom: 20px;
+}
+#header-options {
+    //min-height: 34px; // Spacer pre-form relocation via JS
     margin-right: 0px;
 
+    .btn {
+        margin-bottom: 20px;
+    }
     #dataTable_filter, .btn-group {
         margin-right: 20px;
     }
@@ -112,7 +117,7 @@
     font-weight: bold;
 }
 
-.public-draw #header-options .btn-group {
+.public-draw #header-options .btn {
     display: none;
 }
 
@@ -278,15 +283,18 @@ table a:hover {
     thead > tr > th  {
         // fix for header and icons
         //min-width: 35px; // minimum widths so icons are jammed
-        padding: 8px 0 8px 8px;
-        min-width: 40px;
+        padding: 8px;
+        min-width: 37px;
+        .glyphicon {
+            margin-left: -1px;
+        }
     }
     // Phones
     @media (max-width: $screen-xs-max) {
         tbody > tr > td,
         thead > tr > th  {
             //min-width: auto;
-            padding: 4px;
+            padding: 8px;
         }
         // .team-emoji, .th-emoji {
         //     display: none;
@@ -446,8 +454,13 @@ span.esl {
         top: 0;
         right: 0;
         height: 100%;
+        padding-left: 0px;
         overflow-y: scroll;
         padding-bottom: 50px; // ensure no footer overlaps
+        margin-top: 169px;
+        .unused {
+            padding-left: 0px;
+        }
     }
     .venue, .adj {
         max-width: 300px;
@@ -456,10 +469,10 @@ span.esl {
         box-shadow: none;
     }
     .importance {
-        width: 60px;
         text-align: left;
+        width: 48px;
         form {
-            margin: -5px -6px;
+            margin: -8px -8px -8px -8px;
         }
         select {
             @extend .form-control;
@@ -484,10 +497,6 @@ span.esl {
         }
     }
     .adj {
-        .info {
-            display: inline-block;
-            float: right;
-        }
         .info:hover {
             cursor: pointer;
             z-index: 11;
@@ -621,9 +630,11 @@ span.esl {
         display: none;
     }
     .page-header {
-        margin-bottom: 0px;
         .col-md-12 {
             padding-left: 0px;
+        }
+        h1,h2,h3,h4 {
+
         }
     }
     table {

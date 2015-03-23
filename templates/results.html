@@ -3,6 +3,7 @@
 
 {% block head-title %}Status <small>of {{ round.name }} Results</small>{% endblock %}
 {% block page-title %}Status of {{ round.name }} Results{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 {% block body-class %}status{% endblock %}
 
 {% block header %}
@@ -45,7 +46,6 @@
             <a class="btn btn-default form-control btn-success" href="{% round_url round_increment_check %}">Advance to Next Round</a>
         </div>
     {% endif %}
-    {% include "table_search.html" %}
     {% if not has_motions %}
         <div class="alert alert-danger">
             Currently there are no motions entered for this round, so debate results cannot be entered. <a href="{% round_url motions current_round %}" class="alert-link">Add Motions.</a>

@@ -4,6 +4,7 @@
 
 {% block head-title %}Breaking Adjudicators{% endblock %}
 {% block page-title %}Breaking Adjudicators{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 {% block body-class %}breakk breaking-adjs{% endblock %}
 
 {% block header %}
@@ -12,7 +13,6 @@
         <img src="{% static 'emoji/img/cry.png' %}" width="24" height="24" />
         </p>
     {% endif %}
-    {% include "table_search.html" %}
 {% endblock %}
 
 {% block content %}

@@ -4,9 +4,8 @@
 
 {% block head-title %}Results for {{ round.name }}{% endblock %}
 {% block page-title %}Results for {{ round.name }}{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 {% block body-class %}public-results{% endblock %}
-
-{% block header %}{% include "table_search.html" %}{% endblock %}
 
 {% block content %}
     <table id="dataTable" class="table table-hover table-bordered" cellpadding="0" cellspacing="0">

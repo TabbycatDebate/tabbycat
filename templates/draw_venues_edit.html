@@ -8,6 +8,7 @@
 {% block body-class %}edit-venues{% endblock %}
 {% block head-title %}Edit Venues for {{ round.name }}{% endblock %}
 {% block page-title %}Edit Venues for {{ round.name }}{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 
 {% block header %}
     <div class="col-md-9">
@@ -15,7 +16,6 @@
             <a class="btn btn-success form-control" href="" id="save">Save</a>
             <a class="btn btn-danger form-control" href="{% round_url draw %}">Quit</a>
         </div>
-        {% include "table_search.html" %}
     </div>
 {% endblock %}
 

@@ -7,6 +7,7 @@
 {% block body-class %}edit-adjs{% endblock %}
 {% block head-title %}Edit Adjudicators <small>for {{ round.name }}</small>{% endblock %}
 {% block page-title %}Edit Adjudicators for {{ round.name }}{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 
 {% block header %}
     <div id="main" class="col-xs-9">
@@ -15,17 +16,16 @@
             <a data-loading-text="Saving..." class="btn form-control btn-success" href="" id="save">Save</a>
             <a data-loading-text="Allocating..." class="btn form-control btn-danger" href="{% round_url draw %}">Quit</a>
         </div>
-        <a class="btn form-control btn-default" href="" id="display_gender">Show Gender</a>
-        <a class="btn form-control btn-default" href="" id="hide_gender">Hide Gender</a>
-        {% include "table_search.html" %}
-        <div id="statusBar" class="btn-group pull-right">
+        <div id="statusBar" class="btn-group">
             <div class="btn btn-default">Legend:</div>
-            <div class="btn btn-default btn-warning">History Warning</div>
-            <div class="btn btn-default btn-danger">Conflict</div>
+            <div class="btn btn-default btn-warning">Has Seen</div>
+            <div class="btn btn-default btn-danger">Has Conflict</div>
             {% if show_unaccredited %}
             <div class="btn btn-default active is_unaccredited">Unaccredited</div>
             {% endif %}
         </div>
+        <a class="btn form-control btn-default" href="" id="display_gender">Show Gender</a>
+        <a class="btn form-control btn-default" href="" id="hide_gender">Hide Gender</a>
     </div>
 {% endblock %}
 
@@ -33,14 +33,11 @@
 
     <div class="row">
 
-        <div id="scratch" class="col-xs-3">
-            <div class="page-header">
-                <h2>Unused</h2>
-            </div>
+        <div id="scratch" class="col-xs-2">
             <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Unused Adjudicators</th>
                         <th><span class="glyphicon glyphicon-sort"></span></th>
                     </tr>
                 </thead>
@@ -48,7 +45,7 @@
             </table>
         </div>
 
-        <div id="main" class="col-xs-9">
+        <div id="main" class="col-xs-10">
 
             <div id="alerts-holder"></div>
             <table id="dataTable" class=" table table-bordered" cellpadding="0" cellspacing="0">
@@ -276,7 +273,7 @@
 
             function append_adj_scores() {
                 $(".adj").each( function() {
-                    $(this).append('<a data-toggle="modal" data-target="#adj-feedback" class="info">' + formatScore(scores[intId(this)]) + '</a>');
+                    $(this).children("span").prepend('<a data-toggle="modal" data-target="#adj-feedback" class="info">' + formatScore(scores[intId(this)]) + '</a> ');
                     $("a", this).attr("title", "Score: " + scores[intId(this)]);
                     $("a", this).click( function() {
                         var adj_row = $(this).parent()
@@ -671,6 +668,10 @@
                     { "sWidth": "10%", "sType": "string" }
                 ],
                 "aaSorting": [[1, 'desc'], [0, 'desc']],
+                "aoColumnDefs": [
+                    {"iDataSort": 1, "aTargets": [0] }, //sort based on a hidden column when another column is clicked
+                    { "bVisible": false, "aTargets": [1] }, //set column visibility
+                ],
                 bFilter: false
             })
 

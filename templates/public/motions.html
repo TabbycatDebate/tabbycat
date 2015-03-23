@@ -4,6 +4,7 @@
 
 {% block head-title %}Motions{% endblock %}
 {% block page-title %}Motions{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 {% block body-class %}public-motions{% endblock %}
 
 {% block header %}
@@ -11,8 +12,6 @@
         <p class="lead">No motions have been released yet.
         <img src="{% static 'emoji/img/cry.png' %}" width="24" height="24" />
         </p>
-    {% else %}
-        {% include "table_search.html" %}
     {% endif %}
 {% endblock %}
 

@@ -3,7 +3,6 @@
 {% load static %}
 
 {% block body-class %}draw-public-display{% endblock %}
-
 {% block head-title %}
     Draw for {{ round.name }}
     {% if round.starts_at %}
@@ -11,6 +10,7 @@
     {% endif %}
 {% endblock %}
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 
 {% block header %}
     <div class="btn-group">
@@ -28,7 +28,6 @@
         <a class="btn btn-default" href="" id="large_text">Large Text</a>
         <a class="btn btn-default" href="" id="huge_text">Huge Text</a>
     </div>
-    {% include "table_search.html" %}
 {% endblock %}
 
 {% block content %}

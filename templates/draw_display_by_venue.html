@@ -9,6 +9,7 @@
     {% endif %}
 {% endblock %}
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 {% block body-class %}draw-public-display{% endblock %}
 
 {% block header %}
@@ -27,8 +28,6 @@
         <a class="btn btn-default" href="" id="large_text">L Text</a>
         <a class="btn btn-default" href="" id="huge_text">XL Text</a>
     </div>
-    {% include "table_search.html" %}
-
 {% endblock %}
 
 {% block content %}
