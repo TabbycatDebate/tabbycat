@@ -29,7 +29,7 @@
       <td>{{ team.rank }}</td>
       <td>{{ team.break_rank|default_if_none:"&ndash;" }}</td>
       {% if show_emoji > 0 %}
-        <td class="team-emoji">{% team_emoji team.id %}</td>
+        <td class="team-emoji">{% team_emoji team %}</td>
       {% endif %}
       <td>
         <span title="{% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">

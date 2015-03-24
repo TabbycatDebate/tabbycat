@@ -52,7 +52,7 @@
           <td>{% if speaker.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
         {% endif %}
         {% if show_emoji > 0 and not for_print %}
-          <td class="team-emoji">{% team_emoji speaker.team.id %}</td>
+          <td class="team-emoji">{% team_emoji speaker.team %}</td>
         {% endif %}
         <td>
           <span title="<h5>{{ speaker.team.long_name }}</h5>{% if show_speakers_in_draw %}{{ speaker.team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">

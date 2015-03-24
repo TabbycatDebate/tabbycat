@@ -43,8 +43,14 @@ def neg_count(team, round):
     return team.get_neg_count(round.seq)
 register.simple_tag(neg_count)
 
-def team_emoji(team_id):
-    return b"%s" % EMOJI_LIST[team_id]
+def team_emoji(team):
+    if team.emoji_seq:
+        return b"%s" % EMOJI_LIST[team.emoji_seq]
+    else:
+        if team.id > len(EMOJI_LIST):
+            return b"%s" % EMOJI_LIST[team.id]
+        else:
+            return b"%s" % EMOJI_LIST[(team.id) - len(EMOJI_LIST)]
 register.simple_tag(team_emoji)
 
 def debate_draw_status_class(debate):

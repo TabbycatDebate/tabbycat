@@ -440,6 +440,7 @@ class Team(models.Model):
     short_reference = models.CharField(max_length=35, verbose_name="Shortened name or suffix")
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament)
+    emoji_seq = models.IntegerField(blank=True, null=True)
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
 

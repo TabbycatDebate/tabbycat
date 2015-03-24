@@ -26,7 +26,7 @@
       <tr>
         <td>{{ person.name }}</td>
         {% if show_emoji > 0 %}
-          <td class="team-emoji">{% team_emoji person.team.id %}</td>
+          <td class="team-emoji">{% team_emoji person.team %}</td>
         {% endif %}
         <td class="team-name">
           <span title="{% if show_speakers_in_draw %}{{ person.team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
