@@ -67,7 +67,6 @@
 
 {% block extra-js %}
     {% include "enter_results_head.html" %}
-    {% block extra-extra-js %}{% endblock %}
     {% if ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
         <script>
             $(document).ready(function() {

@@ -129,12 +129,33 @@
         {% endif %}
 
         {% if side_allocations_unknown %}
-
             $(".scoresheet").hide();
             $('#id_choose_sides').change(function() {
-                $(".scoresheet").show();
-            });
+                var selected_option = $(this).val()
+                if (selected_option != "") {
+                    $(".scoresheet").show();
+                    $(".adj-ballot .text-warning").hide();
 
+                    selected_option = selected_option.replace("(", "").replace(")", "").replace(" ", "");
+                    var selected_aff_id = selected_option.split(',')[0];
+                    var current_aff_id = $(".position-aff").first().attr('id').replace("team-", "");
+
+                    if (selected_aff_id != current_aff_id) {
+                        $(".position .speaker-position-label").each(function() {
+                            var new_label = $(this).text()
+                            $(this).text(new_label.replace("A", "N"));
+                        });
+                        $(".position-neg .speaker-position-label").each(function() {
+                            var new_label = $(this).text()
+                            $(this).text(new_label.replace("N", "A"));
+                        });
+                        $(".position").toggleClass("position-aff").toggleClass("pull-left").toggleClass("position-neg").toggleClass("pull-right");
+                    }
+                } else {
+                    $(".scoresheet").hide();
+                    $(".adj-ballot .text-warning").show();
+                }
+            });
         {% endif %}
 
     });
