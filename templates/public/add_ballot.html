@@ -6,43 +6,43 @@
 {% block body-class %}public-add-ballot{% endblock %}
 
 {% block content %}
-    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Adj<span class="hidden-xs">udicator</span></th>
-                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
-                <th>Aff<span class="hidden-xs">irmative</span></th>
-                <th>Neg<span class="hidden-xs">ative</span></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for da in das %}
-            <tr>
-            <td>
-                <a href="{% tournament_url public_new_ballots da.adjudicator.id %}">
-                <span class="hidden-xs">Add result from </span>{{ da.adjudicator.name }}
-                </a>
-            </td>
-            <td>{% if da.debate.venue.group %}{{ venue.group.name }} {% endif %}{{ da.debate.venue.name }}</td>
-            <td>
-                <span href="#" title="{% if show_speakers_in_draw %}{{ da.debate.aff_team.speakers|join:'<br>' }}{% endif %}">{{ da.debate.aff_team.short_name }}<span>
-            </td>
-            <td>
-                <span href="#" title="{% if show_speakers_in_draw %}{{ da.debate.neg_team.speakers|join:'<br>' }}{% endif %}">{{ da.debate.neg_team.short_name }}</span>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+  <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Adj<span class="hidden-xs">udicator</span></th>
+        <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+        <th>Aff<span class="hidden-xs">irmative</span></th>
+        <th>Neg<span class="hidden-xs">ative</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for da in das %}
+      <tr>
+      <td>
+        <a href="{% tournament_url public_new_ballots da.adjudicator.id %}">
+        <span class="hidden-xs">Add result from </span>{{ da.adjudicator.name }}
+        </a>
+      </td>
+      <td>{% if da.debate.venue.group %}{{ venue.group.name }} {% endif %}{{ da.debate.venue.name }}</td>
+      <td>
+        <span href="#" title="{% if show_speakers_in_draw %}{{ da.debate.aff_team.speakers|join:'<br>' }}{% endif %}">{{ da.debate.aff_team.short_name }}<span>
+      </td>
+      <td>
+        <span href="#" title="{% if show_speakers_in_draw %}{{ da.debate.neg_team.speakers|join:'<br>' }}{% endif %}">{{ da.debate.neg_team.short_name }}</span>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
 {% endblock %}
 
 {% block extra-js %}
-    {{ block.super }}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready( function() {
-            var table = $("#dataTable").dataTable( {
-                "aaSorting": [[ 0, "asc" ]],
-            });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-        } );
-    </script>
+  {{ block.super }}
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+      var table = $("#dataTable").dataTable( {
+        "aaSorting": [[ 0, "asc" ]],
+      });
+      new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+    } );
+  </script>
 {% endblock extra-js %}

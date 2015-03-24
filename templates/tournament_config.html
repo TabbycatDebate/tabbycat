@@ -10,16 +10,16 @@
 
 {% if updated %}
 <div class="alert alert-success updated alert-dismissable" id="savedVenues">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    Saved successfully!
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  Saved successfully!
 </div>
 {% endif %}
 
 {% if form.errors %}
-    <div class="alert alert-danger alert-dismissable" id="savedVenues">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        Please correct the errors below {{ form.errors }}
-    </div>
+  <div class="alert alert-danger alert-dismissable" id="savedVenues">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    Please correct the errors below {{ form.errors }}
+  </div>
 {% endif %}
 
 {% endblock %}
@@ -27,25 +27,25 @@
 {% block content %}
 
 <form id="configForm" action="." method="POST" class="form-horizontal">
-    {% for field in form %}
-    <div class="form-group">
-        <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">{{ field.label }}</label>
-        <div class="col-sm-2">
-            {{field|addcss:"form-control"}}
-        </div>
-        <div class="col-sm-5">
-            <span class="help-block">{{ field.help_text }}</span>
-        </div>
-        {% if field.errors %}
-            {{ field.errors }}
-        {% endif %}
+  {% for field in form %}
+  <div class="form-group">
+    <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">{{ field.label }}</label>
+    <div class="col-sm-2">
+      {{field|addcss:"form-control"}}
     </div>
-    {% endfor %}
-    <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-2">
-            <button type="submit" class="btn btn-success form-control">Save</button>
-        </div>
+    <div class="col-sm-5">
+      <span class="help-block">{{ field.help_text }}</span>
     </div>
+    {% if field.errors %}
+      {{ field.errors }}
+    {% endif %}
+  </div>
+  {% endfor %}
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-2">
+      <button type="submit" class="btn btn-success form-control">Save</button>
+    </div>
+  </div>
 </form>
 
 {% endblock content %}
