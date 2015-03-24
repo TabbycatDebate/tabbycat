@@ -1,0 +1,33 @@
+// Basic print styles
+
+@media print {
+
+  #header-options, .fixedHeader {
+    display: none;
+  }
+  .page-header {
+    .col-md-12 {
+      padding-left: 0;
+    }
+    h1,h2,h3,h4 {
+
+    }
+  }
+  table {
+    page-break-inside: avoid; // Don't split a table across multiple pages
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto
+    }
+    [data-toggle="tooltip"] {
+      border-bottom: none;
+    }
+  }
+  table.h4 {
+    font-size: 75%;
+    font-weight: normal;
+  }
+  #djDebug {
+    display: none !important;
+  }
+}

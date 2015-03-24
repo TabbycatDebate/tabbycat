@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover table-bordered table-striped">
+  <table id="dataTable" class="table table-hover table-striped">
     <thead>
       <tr>
         <th><span class="glyphicon glyphicon-eye-open" data-toggle="tooltip" title="Percentage Returned"></span></th>
@@ -136,7 +136,7 @@
     });
 
     // the standard header to be re-added to the modal
-    var tableHead = '<table id="modal-adj-table" class="table table-bordered"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
+    var tableHead = '<table id="modal-adj-table" class="table"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
 
     $(".view-missing-adjs").each(function() {
       $(this).click( function() {
