@@ -92,10 +92,12 @@ thead {
 
 // Table Emoji
 
-.team-emoji {
-  padding-top: 4px;
-  padding-right: 4px;
-  font-size: 18px;
+.table > thead > tr > th.team-emoji,
+.table > tbody > tr > td.team-emoji {
+  padding: 2px 0 0 0;
+  min-width: 20px;
+  font-size: 22px;
+  text-align: center;
 }
 
 // Tables (to refactor)

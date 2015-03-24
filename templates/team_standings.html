@@ -27,7 +27,7 @@
           <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
         {% endif %}
         {% if show_emoji > 0 and not for_print %}
-          <th>E</th>
+          <th class="team-emoji"></th>
         {% endif %}
         <th>Team</th>
         {% if show_institutions > 0 %}
@@ -72,7 +72,7 @@
           <td>{{ team.division.name }}</td>
         {% endif %}
         {% if show_emoji > 0 and not for_print %}
-          <td class="team-emoji team-{{ team.id }}">😁</td>
+          <td class="team-emoji">{% team_emoji team.id %}</td>
         {% endif %}
         <td>
           <span title="<h5>{{ team.long_name }}</h5>{% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
@@ -95,7 +95,7 @@
             {% if for_print %}
               <td>{{ round_results.win|yesno:"win,loss" }}</td>
             {% else %}
-              <td class="opponent-emoji">
+              <td>
                 {% if round_results.score == 0 %}
                   {% with status=round_results.win|yesno:"Won (via forfeit),Forfeitted" icon=round_results.win|yesno:"glyphicon-share-alt text-success,glyphicon-eye-close text-danger" %}
                   <span title="{{ status }} against {{ round_results.opposition.short_name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
@@ -109,7 +109,7 @@
                 {% endif %}
                     vs
                     {% if show_emoji > 0 %}
-                      <span class="team-emoji team-{{ round_results.opposition.id }}"></span>
+                      <span>{% team_emoji round_results.opposition.id %}</span>
                     {% else %}
                       {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
                     {% endif %}
