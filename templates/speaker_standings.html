@@ -22,7 +22,7 @@
           <th><span class="glyphicon glyphicon-leaf" data-toggle="tooltip" title="Speaker's Novice Status"></span></th>
         {% endif %}
         {% if show_emoji > 0 and not for_print %}
-          <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+          <th>❔</th>
         {% endif %}
         <th>Team</th>
         {% if show_institutions > 0 %}
@@ -86,5 +86,4 @@
       new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
     } );
   </script>
-  <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
 {% endblock extra-js %}

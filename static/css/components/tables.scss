@@ -90,6 +90,13 @@ thead {
   color: darken($table-bg-active, 60%);
 }
 
+// Table Emoji
+
+.team-emoji {
+  padding-top: 4px;
+  padding-right: 4px;
+  font-size: 18px;
+}
 
 // Tables (to refactor)
 
@@ -124,32 +131,6 @@ table a:hover {
 
 
 
-.team-emoji, .th-emoji {
-  // max-width: 28px;
-  text-align: center;
-  padding: 4px 0 0 0;
-  img {
-    width: 28px;
-    height: 28px;
-  }
-}
-.th-emoji {
-  img {
-    height: 10px;
-    width: 28px;
-    visibility: hidden; /* space to get the size right pre JS-resize */
-  }
-}
-.opponent-emoji {
-  // min-width: 60px;
-  line-height: 18px;
-  text-align: center;
-  // padding: 4px 0 4px 0;
-  img {
-    width: 20px;
-    height: 20px;
-  }
-}
 
 
 
