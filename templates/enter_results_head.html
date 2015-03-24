@@ -100,7 +100,7 @@
         $('.scoresheet').each(function() {
             refresh_totals($(this));
         });
-    $('.score input').change(function() {
+        $('.score input').change(function() {
             refresh_totals($(this).parents('.scoresheet'));
         });
 
@@ -128,6 +128,14 @@
 
         {% endif %}
 
+        {% if side_allocations_unknown %}
+
+            $(".scoresheet").hide();
+            $('#id_choose_sides').change(function() {
+                $(".scoresheet").show();
+            });
+
+        {% endif %}
 
     });
 </script>
