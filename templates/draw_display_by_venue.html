@@ -46,11 +46,11 @@
                 {% if show_emoji > 0 %}
                     <th class="hidden-xs th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
                 {% endif %}
-                <th>Aff<span class="hidden-xs">irmative</span></th>
+                <th>{% if side_allocations_unknown %}Team 1{% else %}Affirmative{% endif %}</th>
                 {% if show_emoji > 0 %}
                     <th class="hidden-xs th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
                 {% endif %}
-                <th>Neg<span class="hidden-xs">ative</span></th>
+                <th>{% if side_allocations_unknown %}Team 2{% else %}Negative{% endif %}</th>
                 {% if enable_division_motions %}
                     <th>Motion</th>
                 {% endif %}
