@@ -1528,8 +1528,11 @@ def draw_adjudicators_edit(request, round):
         debates = team.get_debates(round.seq)
         adjs = DebateAdjudicator.objects.filter(debate__in=debates).count()
         male_adjs = DebateAdjudicator.objects.filter(debate__in=debates,adjudicator__gender="M").count()
-        male_adj_percent = int((float(male_adjs) / float(adjs)) * 100)
-        return male_adj_percent
+        if male_adjs > 0:
+            male_adj_percent = int((float(male_adjs) / float(adjs)) * 100)
+            return male_adj_percent
+        else:
+            return 0
 
     for debate in draw:
         aff_male_adj_percent = calculate_prior_adj_genders(debate.aff_team)
