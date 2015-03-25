@@ -282,6 +282,9 @@ span.esl {
 // Editing the Draw
 
 .edit-venues, .edit-adjs {
+  #table-search-group.btn-group.pull-right {
+    margin-right: 16.66667% // Making way for the unused column
+  }
   table {
     border-collapse: separate;
   }

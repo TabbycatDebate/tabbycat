@@ -532,7 +532,7 @@
           var oldHolder = adj[0].oldHolder;
           moveToUnused(adj);
           adj.animate({'top': '0', 'left': '0'}, 300);
-          adj.removeClass("btn-danger");
+          adj.removeClass("btn-danger").removeClass("btn-warning"); // Remove conflict classes when dropped
           updateConflicts($(oldHolder).parent("tr"));
         }
       });
@@ -651,13 +651,13 @@
         "aoColumns": [
           { "sWidth": "3%" },
           { "sWidth": "3%" },
-          { "sWidth": "11%" },
+          { "sWidth": "13%" },
           { "sWidth": "3%" },
-          { "sWidth": "11%" },
+          { "sWidth": "13%" },
           { "sWidth": "3%" },
-          { "sWidth": "22%" },
-          { "sWidth": "22%" },
-          { "sWidth": "22%" }
+          { "sWidth": "21%" },
+          { "sWidth": "21%" },
+          { "sWidth": "21%" }
         ],
         "aaSorting": [[1, 'desc']]
       });
