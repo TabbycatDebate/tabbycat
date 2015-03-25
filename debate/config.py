@@ -39,7 +39,7 @@ SETTINGS = OrderedDict([
     ('avoid_team_history',          (_bool, 'Avoid team-team history conflicts in draw?',                          True)),
     ('team_institution_penalty',    (int,   'Penalty for team-team institution conflict',                          1)),
     ('team_history_penalty',        (int,   'Penalty for team-team history conflict',                              1000)),
-    ('show_emoji',                  (_bool, 'Shows Emoji in the draw UI',                                          False)),
+    ('show_emoji',                  (_bool, 'Shows Emoji in the draw UI',                                          True)),
     ('show_institutions',           (_bool, 'Shows the institutions column in draw and other UIs',                 True)),
     ('show_novices',                (_bool, 'Show if a speaker is a novice',                                       False)),
     ('show_unaccredited',           (_bool, 'Show if an adjudicator is a novice (unaccredited)',                   False)),

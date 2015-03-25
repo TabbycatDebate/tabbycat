@@ -331,7 +331,15 @@ class Command(BaseCommand):
             unassigned_emoji_teams = m.Team.objects.filter(emoji_seq__isnull=True).values_list('id', flat=True)
 
             # The list of possible emoji, then culled to prevent duplicates
-            emoji_options = range(0, len(EMOJI_LIST))
+            emoji_options = range(0, len(EMOJI_LIST) - 1)
+
+            def get_emoji(emoji_options):
+                try:
+                    emoji_id = random.choice(emoji_options)
+                    emoji_options.remove(emoji_id)
+                except:
+                    emoji_id = random.randint(0, len(EMOJI_LIST) - 1)
+                return emoji_id
 
             for index in assigned_emoji_teams:
                 if index in emoji_options:
@@ -348,8 +356,7 @@ class Command(BaseCommand):
                     name = line[0]
                     ins = line[1]
                     short_name = name[:34]
-                    emoji_id = random.choice(emoji_options)
-                    emoji_options.remove(emoji_id)
+                    emoji_id = get_emoji(emoji_options)
                     try:
                         ins = m.Institution.objects.get(name=ins)
                     except:
@@ -430,12 +437,10 @@ class Command(BaseCommand):
                         tournament=t
                     )
                     if created:
-                        emoji_id = random.choice(emoji_options)
-                        emoji_options.remove(emoji_id)
-                        team.emoji_seq = emoji_id
+                        team.emoji_seq = get_emoji(emoji_options)
                         team.save()
                         teams_count = teams_count + 1
-                        print "Made team:\t\t%s  %s of %s" % (EMOJI_LIST[emoji_id], name, ins)
+                        print "Made team:\t\t%s  %s of %s" % (EMOJI_LIST[team.emoji_seq], name, ins)
 
                 except Exception as inst:
                     total_errors += 1
@@ -461,7 +466,7 @@ class Command(BaseCommand):
                     total_errors += 1
                     print inst
 
-                print "Made speaker:\t\t%s  %s (%s) of %s" % (EMOJI_LIST[emoji_id], name, gender, ins)
+                print "Made speaker:\t\t%s  %s (%s) of %s" % (EMOJI_LIST[speakers_team.emoji_seq], name, gender, ins)
 
             self.stdout.write('**** Created ' + str(speakers_count) +
                               ' speakers and ' + str(teams_count) + ' teams')

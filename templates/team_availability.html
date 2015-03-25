@@ -9,6 +9,9 @@
   <thead>
     <tr>
       <th>Team</th>
+      {% if show_emoji > 0 and not for_print %}
+        <th class="team-emoji"></th>
+      {% endif %}
       {% if enable_divisions %}
         <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
       {% endif %}
@@ -31,6 +34,9 @@
          </span>
          {% endif %}
       </td>
+      {% if show_emoji > 0 and not for_print %}
+        <td class="team-emoji">{% team_emoji team %}</td>
+      {% endif %}
       {% if enable_divisions %}
         <td>{{ team.division.name }}</td>
       {% endif %}
