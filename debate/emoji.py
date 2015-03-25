@@ -120,16 +120,16 @@ EMOJI_LIST = [
     '\xF0\x9F\x9A\x94',     #  🚔 oncoming police car
     '\xF0\x9F\x9A\x9C',     #  🚜 tractor
     '\xF0\x9F\x9A\x9D',     #  🚝 monorail
-    '\xF0\x9F\x9A\xA6',     # 🚦 vertical traffic light
-    '\xF0\x9F\x9A\xB4',     # 🚴 bicyclist
-    '\xF0\x9F\x9B\x81',     # 🛁 bathtub
-    '\xF0\x9F\x8C\x9D',     # 🌝 full moon with face
-    '\xF0\x9F\x8C\xB2',     # 🌲 evergreen tree
-    '\xF0\x9F\x8D\x8B',     # 🍋 lemon
-    '\xF0\x9F\x8D\xBC',     # 🍼 baby bottle
-    '\xF0\x9F\x8F\x89',     # 🏉 rugby football
-    '\xF0\x9F\x91\xAC',     # 👬 two men holding hands
-    '\xF0\x9F\x91\xAD',     # 👭 two women holding hands
-    '\xF0\x9F\x94\x89',     # 🔉 speaker with one sound wave
-    '\xF0\x9F\x94\xAC',     # 🔬 microscope
+    '\xF0\x9F\x9A\xA6',     #  🚦 vertical traffic light
+    '\xF0\x9F\x9A\xB4',     #  🚴 bicyclist
+    '\xF0\x9F\x9B\x81',     #  🛁 bathtub
+    '\xF0\x9F\x8C\x9D',     #  🌝 full moon with face
+    '\xF0\x9F\x8C\xB2',     #  🌲 evergreen tree
+    '\xF0\x9F\x8D\x8B',     #  🍋 lemon
+    '\xF0\x9F\x8D\xBC',     #  🍼 baby bottle
+    '\xF0\x9F\x8F\x89',     #  🏉 rugby football
+    '\xF0\x9F\x91\xAC',     #  👬 two men holding hands
+    '\xF0\x9F\x91\xAD',     #  👭 two women holding hands
+    '\xF0\x9F\x94\x89',     #  🔉 speaker with one sound wave
+    '\xF0\x9F\x94\xAC',     #  🔬 microscope
 ]
