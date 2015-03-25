@@ -1,42 +1,42 @@
 {% load debate_tags %}
 
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <ul id="nav_brand" class="nav navbar-nav navbar-left">
-                <li class="dropdown">
-                    <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament.name }}<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        {% for tournament in all_tournaments %}
-                            {% if user.is_authenticated %}
-                                <li><a class="" href="{{ tournament.get_absolute_url  }}">{{ tournament.name }}</a></li>
-                            {% else %}
-                                <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament.name }}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        {% if all_tournaments.all.count > 1 and all_tournaments.0.config.public_divisions > 0 %}
-                            <li><a href="{{ all_tournaments.0.get_all_divisions_url }}">All Tournament's Teams</a></li>
-                        {% endif %}
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <div class="collapse navbar-collapse">
-            {% if user.is_authenticated %}
-                {% if user.is_superuser %}
-                    {% include "nav/admin_nav.html" %}
-                {% else %}
-                    {% include "nav/monkey_nav.html" %}
-                {% endif %}
-            {% else %}
-                {% include "nav/public_nav.html" %}
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <ul id="nav_brand" class="nav navbar-nav navbar-left">
+        <li class="dropdown">
+          <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament.name }}<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            {% for tournament in all_tournaments %}
+              {% if user.is_authenticated %}
+                <li><a class="" href="{{ tournament.get_absolute_url  }}">{{ tournament.name }}</a></li>
+              {% else %}
+                <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament.name }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if all_tournaments.all.count > 1 and all_tournaments.0.config.public_divisions > 0 %}
+              <li><a href="{{ all_tournaments.0.get_all_divisions_url }}">All Tournament's Teams</a></li>
             {% endif %}
-        </div>
+          </ul>
+        </li>
+      </ul>
     </div>
+    <div class="collapse navbar-collapse">
+      {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+          {% include "nav/admin_nav.html" %}
+        {% else %}
+          {% include "nav/monkey_nav.html" %}
+        {% endif %}
+      {% else %}
+        {% include "nav/public_nav.html" %}
+      {% endif %}
+    </div>
+  </div>
 </nav>

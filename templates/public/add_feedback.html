@@ -7,82 +7,82 @@
 {% block body-class %}public-add-feedback{% endblock %}
 
 {% block header %}
-    <div class="btn-group" data-toggle="buttons">
-      <label class="btn btn-default active" id="toggle-all">
-        <input type="radio" name="options">Show All
-      </label>
-      <label class="btn btn-default" id="toggle-teams">
-        <input type="radio" name="options" >Only Teams
-      </label>
-      <label class="btn btn-default" id="toggle-adjs">
-        <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
-      </label>
-    </div>
+  <div class="btn-group" data-toggle="buttons">
+    <label class="btn btn-default active" id="toggle-all">
+    <input type="radio" name="options">Show All
+    </label>
+    <label class="btn btn-default" id="toggle-teams">
+    <input type="radio" name="options" >Only Teams
+    </label>
+    <label class="btn btn-default" id="toggle-adjs">
+    <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
+    </label>
+  </div>
 {% endblock %}
 
 {% block content %}
-    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Name</th>
-                {% if show_institutions > 0 %}
-                <th>Institution</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for adj in adjudicators %}
-            <tr id="adj_{{ adj.id }}" class="adj-row">
-                <td>
-                    <a href="{% tournament_url public_enter_feedback_adjudicator adj.id %}">
-                    Add feedback from {{ adj.name }}</a></td>
-                {% if show_institutions > 0 %}
-                <td>
-                    {{ adj.institution.name }}
-                </td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-            {% for team in teams %}
-            <tr id="team_{{ team.id }}" class="team-row">
-                <td>
-                    <a href="{% tournament_url public_enter_feedback_team team.id %}">
-                    Add feedback from {{ team.long_name }}</a>
-                </td>
-                {% if show_institutions > 0 %}
-                    <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Name</th>
+        {% if show_institutions > 0 %}
+        <th>Institution</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for adj in adjudicators %}
+      <tr id="adj_{{ adj.id }}" class="adj-row">
+        <td>
+          <a href="{% tournament_url public_enter_feedback_adjudicator adj.id %}">
+          Add feedback from {{ adj.name }}</a></td>
+        {% if show_institutions > 0 %}
+        <td>
+          {{ adj.institution.name }}
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+      {% for team in teams %}
+      <tr id="team_{{ team.id }}" class="team-row">
+        <td>
+          <a href="{% tournament_url public_enter_feedback_team team.id %}">
+          Add feedback from {{ team.long_name }}</a>
+        </td>
+        {% if show_institutions > 0 %}
+          <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock content %}
 
 {% block extra-js %}
-    {{ block.super }}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready( function() {
-            var dTable = $('#dataTable').DataTable({
-                "aaSorting": [[ 0, "asc" ]],
-            });
-            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
-            $('#table-search').keyup(function(){
-                dTable.search($(this).val()).draw();
-            })
+  {{ block.super }}
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+      var dTable = $('#dataTable').DataTable({
+        "aaSorting": [[ 0, "asc" ]],
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
 
-            $('#toggle-all').click(function () {
-                $('.adj-row').show();
-                $('.team-row').show();
-            });
-            $('#toggle-teams').click(function () {
-                $('.adj-row').hide();
-                $('.team-row').show();
-            });
-            $('#toggle-adjs').click(function () {
-                $('.adj-row').show();
-                $('.team-row').hide();
-            });
+      $('#toggle-all').click(function () {
+        $('.adj-row').show();
+        $('.team-row').show();
+      });
+      $('#toggle-teams').click(function () {
+        $('.adj-row').hide();
+        $('.team-row').show();
+      });
+      $('#toggle-adjs').click(function () {
+        $('.adj-row').show();
+        $('.team-row').hide();
+      });
 
-        } );
-    </script>
+    } );
+  </script>
 {% endblock extra-js %}

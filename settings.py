@@ -27,7 +27,7 @@ DEBUG_ASSETS        = DEBUG
 ADMIN_MEDIA_PREFIX  = '/media/'
 MEDIA_URL           = '/media/'
 STATIC_URL          = '/static/'
-TIME_ZONE           = 'Australia/Perth'
+TIME_ZONE           = 'Australia/Melbourne'
 LANGUAGE_CODE       = 'en-us'
 SITE_ID             = 1
 USE_I18N            = True
@@ -120,7 +120,6 @@ COMPRESS_OFFLINE = True
 COMPRESS_URL = STATIC_URL
 COMPRESS_OFFLINE_MANIFEST = "manifest.json"
 COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
-
 
 # ==================
 # = Configurations =

@@ -4,6 +4,8 @@ from django.template.defaultfilters import slugify
 import os
 import csv
 import debate.models as m
+from debate.emoji import EMOJI_LIST
+import random
 
 class Command(BaseCommand):
     args = '<folder> <num_rounds> <share_data>'
@@ -324,12 +326,37 @@ class Command(BaseCommand):
                 print e
                 self.stdout.write('teams.csv file is missing or damaged - ensure saved as plain CSV (or MS-DOS CSV)')
 
+            # Getting a list of all assigned emoji
+            assigned_emoji_teams = m.Team.objects.filter(emoji_seq__isnull=False).values_list('emoji_seq', flat=True)
+            unassigned_emoji_teams = m.Team.objects.filter(emoji_seq__isnull=True).values_list('id', flat=True)
+
+            # The list of possible emoji, then culled to prevent duplicates
+            emoji_options = range(0, len(EMOJI_LIST) - 1)
+
+            def get_emoji(emoji_options):
+                try:
+                    emoji_id = random.choice(emoji_options)
+                    emoji_options.remove(emoji_id)
+                except:
+                    emoji_id = random.randint(0, len(EMOJI_LIST) - 1)
+                return emoji_id
+
+            for index in assigned_emoji_teams:
+                if index in emoji_options:
+                    emoji_options.remove(index)
+
+            for index in unassigned_emoji_teams:
+                if index in emoji_options:
+                    emoji_options.remove(index)
+
+
             teams_count = 0
             for line in reader:
                 try:
                     name = line[0]
                     ins = line[1]
                     short_name = name[:34]
+                    emoji_id = get_emoji(emoji_options)
                     try:
                         ins = m.Institution.objects.get(name=ins)
                     except:
@@ -345,7 +372,8 @@ class Command(BaseCommand):
                         institution = ins,
                         reference = name,
                         short_reference = short_name,
-                        tournament=t
+                        tournament=t,
+                        emoji_seq=emoji_id
                     )
                     team.save()
 
@@ -354,7 +382,7 @@ class Command(BaseCommand):
                     m.Speaker(name = "3rd Speaker", team = team).save()
                     m.Speaker(name = "Reply Speaker", team = team).save()
                     teams_count = teams_count + 1
-                    print "Made team:\t\t%s of %s" % (name, ins)
+                    print "Made team:\t\t%s  %s of %s" % (EMOJI_LIST[emoji_id], name, ins)
                 except Exception as inst:
                     self.stdout.write('Couldnt make the team ' + line[0] + ' of ' + line[1])
                     total_errors += 1
@@ -409,8 +437,10 @@ class Command(BaseCommand):
                         tournament=t
                     )
                     if created:
+                        team.emoji_seq = get_emoji(emoji_options)
+                        team.save()
                         teams_count = teams_count + 1
-                        print "Made team:\t\t%s of %s" % (team_name, ins)
+                        print "Made team:\t\t%s  %s of %s" % (EMOJI_LIST[team.emoji_seq], name, ins)
 
                 except Exception as inst:
                     total_errors += 1
@@ -436,7 +466,7 @@ class Command(BaseCommand):
                     total_errors += 1
                     print inst
 
-                print "Made speaker:\t\t%s (%s) of %s" % (name, gender, ins)
+                print "Made speaker:\t\t%s  %s (%s) of %s" % (EMOJI_LIST[speakers_team.emoji_seq], name, gender, ins)
 
             self.stdout.write('**** Created ' + str(speakers_count) +
                               ' speakers and ' + str(teams_count) + ' teams')

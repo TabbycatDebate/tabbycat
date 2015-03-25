@@ -4,31 +4,31 @@
 {% block head-title %}Draw for {{ round.name }} <small>(DRAFT)</small>{% endblock %}
 {% block page-title %}Draw for {{ round.name }} (DRAFT){% endblock %}
 {% block header %}
-    <div class="status btn-group">
-        <button id="confirmDraw" class="btn btn-success">Confirm Draw</button>
-    </div>
+  <div class="status btn-group">
+    <button id="confirmDraw" class="btn btn-success">Confirm Draw</button>
+  </div>
 {% endblock %}
 
 {% block content %}
-    <form id="confirmForm" method="POST" action="{% round_url confirm_draw %}"></form>
-    {% include "draw_with_standings_content.html" %}
+  <form id="confirmForm" method="POST" action="{% round_url confirm_draw %}"></form>
+  {% include "draw_with_standings_content.html" %}
 {% endblock content %}
 
 {% block extra-js %}
-    <script type="text/javascript" charset="utf-8">
+  <script type="text/javascript" charset="utf-8">
 
-        $(document).ready( function() {
-            $("#confirmDraw").click( function() {
-                $("#confirmForm").submit();
-                return false;
-            } );
+    $(document).ready( function() {
+      $("#confirmDraw").click( function() {
+        $("#confirmForm").submit();
+        return false;
+      } );
 
-            var table = $("#dataTable").dataTable( {
-                "aaSorting": [[0, 'desc']]
-            } );
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+      var table = $("#dataTable").dataTable( {
+        "aaSorting": [[0, 'desc']]
+      } );
+      new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
 
-        } );
+    } );
 
-    </script>
+  </script>
 {% endblock extra-js %}

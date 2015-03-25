@@ -3,132 +3,132 @@
 
 <div id="ballot_set">
 
-    {% if form.errors %}
-        <div class="alert alert-danger">
-            <p>There are some problems with this scoresheet. Please review and correct them.</p>
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <p>There are some problems with this scoresheet. Please review and correct them.</p>
 
-            {% if form.non_field_errors %}
-                <p>General errors:</p>
-                <div class="ballot-errors">{{ form.non_field_errors }}</div>
-            {% endif %}
-        </div>
-    {% endif %}
-
-    <div class="row">
-        <p class="col-xs-12 lead h3 page-header">Motion</p>
+      {% if form.non_field_errors %}
+        <p>General errors:</p>
+        <div class="ballot-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
     </div>
+  {% endif %}
 
+  <div class="row">
+    <p class="col-xs-12 lead h3 page-header">Motion</p>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Chosen</label>
+    <div class="col-sm-10">
+      {{ form.motion|addcss:"form-control motion required" }}
+      {{ form.motion.errors }}
+    </div>
+  </div>
+  {% if motion_vetoes_enabled %}
     <div class="form-group">
-        <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Chosen</label>
-        <div class="col-sm-10">
-            {{ form.motion|addcss:"form-control motion required" }}
-            {{ form.motion.errors }}
-        </div>
+      <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Aff Veto</label>
+      <div class="col-sm-10">
+        {{ form.aff_motion_veto|addcss:"form-control motion" }}
+        {{ form.aff_motion_veto.errors }}
+      </div>
     </div>
-    {% if motion_vetoes_enabled %}
+    <div class="form-group">
+      <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Neg Veto</label>
+      <div class="col-sm-10">
+        {{ form.neg_motion_veto|addcss:"form-control motion" }}
+        {{ form.neg_motion_veto.errors }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% for adj in form.adj_iter %}
+    <div class="row">
+      <p class="col-xs-12 lead h3 page-header">Ballot from
+      {% if show_adj_contact and adj.adj.has_contact %}
+        <span data-toggle="tooltip" title="{{ adj.adj.phone }} {{ adj.adj.email }}">
+        {{ adj.adj }}
+        </span>
+      {% else %}
+        {{ adj.adj }}
+      {% endif %}
+      </p>
+    </div>
+
+    <div class="clearfix scoresheet row">
+      <div class="col-md-6">
         <div class="form-group">
-            <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Aff Veto</label>
-            <div class="col-sm-10">
-                {{ form.aff_motion_veto|addcss:"form-control motion" }}
-                {{ form.aff_motion_veto.errors }}
-            </div>
+          <label class="h4 col-xs-offset-1 control-label" >{{ debate.aff_team.short_name }}</label>
         </div>
+        {% for position in adj.position_iter %}
+          <div class="form-group aff speaker s{{ position.pos }}">
+            <label class="col-md-2 col-xs-3 control-label" >{{ position }}A</label>
+            <div class="col-md-4 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
+              {% if forloop.parentloop.first %}
+                {{ position.aff_speaker|addcss:"form-control speaker required" }}
+                {{ position.aff_speaker.errors }}
+              {% else %}
+              <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 col-xs-2 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
+              {{ position.aff_score }}
+              {{ position.aff_score_errors }}
+              {{ position.aff_score.errors }}
+            </div>
+          </div>
+        {% endfor %}
         <div class="form-group">
-            <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Neg Veto</label>
-            <div class="col-sm-10">
-                {{ form.neg_motion_veto|addcss:"form-control motion" }}
-                {{ form.neg_motion_veto.errors }}
+          <label class="col-md-2 col-xs-3 control-label" >Total</label>
+          <div class="form-control-parent col-md-offset-4 col-xs-1 col-xs-offset-6">
+            <div name="aff_total" class="btn btn-default aff_total" type="text" readonly />00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="h4 col-xs-offset-1 control-label" >{{ debate.neg_team.short_name }}</label>
+        </div>
+         {% for position in adj.position_iter %}
+          <div class="form-group neg speaker s{{ position.pos }}">
+            <label class="col-md-2 col-xs-3 control-label" >{{ position }}N</label>
+            <div class="col-md-4 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
+              {% if forloop.parentloop.first %}
+                {{ position.neg_speaker|addcss:"form-control speaker required" }}
+                {{ position.neg_speaker.errors }}
+              {% else %}
+              <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
+              {% endif %}
             </div>
-        </div>
-    {% endif %}
-
-    {% for adj in form.adj_iter %}
-        <div class="row">
-            <p class="col-xs-12 lead h3 page-header">Ballot from
-            {% if show_adj_contact and adj.adj.has_contact %}
-                <span data-toggle="tooltip" title="{{ adj.adj.phone }} {{ adj.adj.email }}">
-                {{ adj.adj }}
-                </span>
-            {% else %}
-                {{ adj.adj }}
-            {% endif %}
-            </p>
-        </div>
-
-        <div class="clearfix scoresheet row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="h4 col-xs-offset-1 control-label" >{{ debate.aff_team.short_name }}</label>
-                </div>
-                {% for position in adj.position_iter %}
-                    <div class="form-group aff speaker s{{ position.pos }}">
-                        <label class="col-md-2 col-xs-3 control-label" >{{ position }}A</label>
-                        <div class="col-md-4 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
-                            {% if forloop.parentloop.first %}
-                                {{ position.aff_speaker|addcss:"form-control speaker required" }}
-                                {{ position.aff_speaker.errors }}
-                            {% else %}
-                            <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-6 col-xs-2 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
-                            {{ position.aff_score }}
-                            {{ position.aff_score_errors }}
-                            {{ position.aff_score.errors }}
-                        </div>
-                    </div>
-                {% endfor %}
-                <div class="form-group">
-                    <label class="col-md-2 col-xs-3 control-label" >Total</label>
-                    <div class="form-control-parent col-md-offset-4 col-xs-1 col-xs-offset-6">
-                        <div name="aff_total" class="btn btn-default aff_total" type="text" readonly />00</div>
-                    </div>
-                </div>
+            <div class="col-md-6 col-xs-2 neg score form-control-parent {{ position.neg_score_errors|yesno:'error,' }}">
+              {{ position.neg_score }}
+              {{ position.neg_score_errors }}
+              {{ position.neg_score.errors }}
             </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="h4 col-xs-offset-1 control-label" >{{ debate.neg_team.short_name }}</label>
-                </div>
-               {% for position in adj.position_iter %}
-                    <div class="form-group neg speaker s{{ position.pos }}">
-                        <label class="col-md-2 col-xs-3 control-label" >{{ position }}N</label>
-                        <div class="col-md-4 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
-                            {% if forloop.parentloop.first %}
-                                {{ position.neg_speaker|addcss:"form-control speaker required" }}
-                                {{ position.neg_speaker.errors }}
-                            {% else %}
-                            <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-6 col-xs-2 neg score form-control-parent {{ position.neg_score_errors|yesno:'error,' }}">
-                            {{ position.neg_score }}
-                            {{ position.neg_score_errors }}
-                            {{ position.neg_score.errors }}
-                        </div>
-                    </div>
-                {% endfor %}
-                <div class="form-group">
-                    <label class="col-md-2 col-xs-3 control-label" >Total</label>
-                    <div class="form-control-parent col-md-offset-4 col-xs-1 col-xs-offset-6">
-                        <div name="neg_total" class="btn btn-default neg_total" type="text" readonly />00</div>
-                    </div>
-                </div>
-
-            </div>
+          </div>
+        {% endfor %}
+        <div class="form-group">
+          <label class="col-md-2 col-xs-3 control-label" >Total</label>
+          <div class="form-control-parent col-md-offset-4 col-xs-1 col-xs-offset-6">
+            <div name="neg_total" class="btn btn-default neg_total" type="text" readonly />00</div>
+          </div>
         </div>
-    {% endfor %}
 
-    {% if enable_forfeits %}
-        <div class="row">
-            <p class="col-xs-12 lead h3 page-header">Forfeits</p>
-        </div>
-        <div class="row">
-            <div class="form-group forfeits-group">
-                {{ form.forfeits|addcss:"form-control" }}
-                {{ form.forfeits.errors }}
-            </div>
-        </div>
-    {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+
+  {% if enable_forfeits %}
+    <div class="row">
+      <p class="col-xs-12 lead h3 page-header">Forfeits</p>
+    </div>
+    <div class="row">
+      <div class="form-group forfeits-group">
+        {{ form.forfeits|addcss:"form-control" }}
+        {{ form.forfeits.errors }}
+      </div>
+    </div>
+  {% endif %}
 
 </div>

@@ -9,65 +9,65 @@
 
 {% block content %}
 
-    <table id="draw" class="h4 table table-bordered">
-        <thead>
-            <tr>
-                <th><span data-toggle="tooltip" title="Round">R</span></th>
-                <th><span data-toggle="tooltip" title="Round">Level</span></th>
-                <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
-                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-                <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
-                <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
-                <th>Aff<span class="hidden-xs">irmative</span></th>
-                <th>Neg<span class="hidden-xs">ative</span></th>
-                <th>Motion</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for debate in debates %}
-                <tr class="{% debate_draw_status_class debate %}">
-                    <td>
-                        <span title="{{ debate.round.name }}" data-toggle="tooltip">{{ debate.round.abbreviation }}</span>
-                    </td>
-                    <td>
-                        {{ debate.aff_team.tournament.short_name }}
-                    </td>
-                    <td>
-                        {{ debate.division.name }}
-                    </td>
-                    <td>
-                        <span title="{{ debate.division.venue_group.name }}" data-toggle="tooltip">{{ debate.division.venue_group.short_name }}</span>
-                    </td>
-                    {% if enable_venue_times %}{% include "tables/debate_status.html" %}{% endif %}
-                    <td class="team-name">
-                        {{ debate.aff_team.short_name }}
-                    </td>
-                    <td class="team-name">
-                        {{ debate.neg_team.short_name }}
-                    </td>
-                    <td>
-                        {% for motion in debate.division_motion %}
-                            <span>{{ motion.reference }}</span>
-                            <small title="{{ motion.text }}" data-toggle="tooltip">(view)</small>
-                        {% endfor %}
-                    </td>
-                </tr>
+  <table id="draw" class="h4 table">
+    <thead>
+      <tr>
+        <th><span data-toggle="tooltip" title="Round">R</span></th>
+        <th><span data-toggle="tooltip" title="Round">Level</span></th>
+        <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+        <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+        <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
+        <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
+        <th>Aff<span class="hidden-xs">irmative</span></th>
+        <th>Neg<span class="hidden-xs">ative</span></th>
+        <th>Motion</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for debate in debates %}
+        <tr class="{% debate_draw_status_class debate %}">
+          <td>
+            <span title="{{ debate.round.name }}" data-toggle="tooltip">{{ debate.round.abbreviation }}</span>
+          </td>
+          <td>
+            {{ debate.aff_team.tournament.short_name }}
+          </td>
+          <td>
+            {{ debate.division.name }}
+          </td>
+          <td>
+            <span title="{{ debate.division.venue_group.name }}" data-toggle="tooltip">{{ debate.division.venue_group.short_name }}</span>
+          </td>
+          {% if enable_venue_times %}{% include "tables/debate_status.html" %}{% endif %}
+          <td class="team-name">
+            {{ debate.aff_team.short_name }}
+          </td>
+          <td class="team-name">
+            {{ debate.neg_team.short_name }}
+          </td>
+          <td>
+            {% for motion in debate.division_motion %}
+              <span>{{ motion.reference }}</span>
+              <small title="{{ motion.text }}" data-toggle="tooltip">(view)</small>
             {% endfor %}
-        </tbody>
-    </table>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
 {% endblock content %}
 
 {% block extra-js %}
-    <script type="text/javascript">
-        $(document).ready( function() {
-            var dTable = $('#draw').DataTable({
-                "aaSorting": [[ 0, "asc" ],[ 1, "asc" ]],
-            });
-            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
-            $('#table-search').keyup(function(){
-                dTable.search($(this).val()).draw();
-            })
-        });
-    </script>
+  <script type="text/javascript">
+    $(document).ready( function() {
+      var dTable = $('#draw').DataTable({
+        "aaSorting": [[ 0, "asc" ],[ 1, "asc" ]],
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
+    });
+  </script>
 {% endblock extra-js %}
