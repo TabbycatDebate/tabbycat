@@ -70,7 +70,6 @@ class Pairing(object):
             pass
         elif self.teams[0].aff_count > self.teams[1].aff_count:
             self.teams.reverse()
-            print "balancing sides"
         else:
             random.shuffle(self.teams)
 

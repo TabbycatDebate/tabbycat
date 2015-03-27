@@ -91,9 +91,7 @@ class Tournament(models.Model):
         if self.config.get('reply_scores_enabled'):
             return 4
         else:
-            # A bit hackish; but ensures when looping through positions it will
-            # never hit the reply position
-            return 99
+            raise ValueError("There is no reply position when reply scores are disabled")
 
     @property
     def POSITIONS(self):
@@ -1868,8 +1866,11 @@ class SpeakerScoreManager(models.Manager):
 
 
 class SpeakerScore(models.Model):
-    """
-    Represents a speaker's score in a debate
+    """Represents a speaker's (overall) score in a debate.
+
+    The 'speaker' field is canonical. The 'score' field, however, is a
+    performance enhancement; raw scores are stored in SpeakerScoreByAdj. The
+    BallotSet class in result.py calculates this when it saves a ballot set.
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_team = models.ForeignKey(DebateTeam)
@@ -1975,8 +1976,6 @@ class ActionLogManager(models.Manager):
 class ActionLog(models.Model):
     # These aren't generated automatically - all generations of these should
     # be done in views (not models).
-
-    # TODO update these to account for new ballot submissions model
 
     ACTION_TYPE_BALLOT_CHECKIN          = 10
     ACTION_TYPE_BALLOT_CREATE           = 11
