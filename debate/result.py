@@ -5,7 +5,7 @@ class Scoresheet(object):
     Representation of an adjudicator's scoresheet
 
     self.data is a nested dictionary, such that
-    self.data[side][pos] = score
+    self.data[team][pos] = score
     """
 
     def __init__(self, ballots, adjudicator):
@@ -20,6 +20,7 @@ class Scoresheet(object):
             adjudicator = self.adjudicator,
             debate = self.debate,
         )
+        self.dts = self.debate.debateteam_set.all()
 
         self.data = {
             'aff': self._no_scores(),

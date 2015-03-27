@@ -188,30 +188,7 @@ class BallotSetForm(forms.Form):
         # Grab the relevant score field configurations
         config = tournament.config
 
-        # tab indices are as follows (example):
-        #
-        # Adjudicator 1
-        #  21 A1name  22 A1score    29 N1name  30 N1score
-        #  23 A2name  24 A2score    31 N2name  32 N2score
-        #  25 A3name  26 A3score    33 N3name  34 N3score
-        #  27 ARname  28 ARscore    35 NRname  36 NRscore
-        #
-        # Adjudicator 2 (odd numbers not used)
-        #   - A1name  38 A1score     - N1name  46 N1score
-        #   - A2name  40 A2score     - N2name  48 N2score
-        #   - A3name  42 A3score     - N3name  50 N3score
-        #   - ARname  44 ARscore     - NRname  52 NRscore
-        #
-        # Adjudicator 3 (odd numbers not used)
-        #   - A1name  54 A1score     - N1name  62 N1score
-        #   - A2name  56 A2score     - N2name  64 N2score
-        #   - A3name  58 A3score     - N3name  66 N3score
-        #   - ARname  60 ARscore     - NRname  68 NRscore
-
-        MAX_POSITION = max(self.POSITIONS)
-
-
-        for side, tab_index_add in (('aff', 0), ('neg', 2 * MAX_POSITION)):
+        for side in ('aff', 'neg'):
 
             team = self.debate.get_team(side)
             for pos in self.POSITIONS:
@@ -220,7 +197,7 @@ class BallotSetForm(forms.Form):
                 # css_class is for jquery validation plugin, surely this can be moved elsewhere
                 score_field = ReplyScoreField if (pos == self.REPLY_POSITION) else ScoreField
 
-                for i, adj in enumerate(self.adjudicators):
+                for adj in self.adjudicators:
                     attrs = {'class': 'required number'}
                     self.fields[self._score_field_name(adj, side, pos)] = score_field(
                         widget=forms.NumberInput(attrs=attrs),
