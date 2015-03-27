@@ -3,9 +3,9 @@
 from django.test import TestCase
 from debate.models import Tournament, Institution, Team, Speaker, Adjudicator, Debate, Round, Venue, DebateTeam
 
-class BaseTest(TestCase):
+class BaseDebateTestCase(TestCase):
     def setUp(self):
-        super(BaseTest, self).setUp()
+        super(BaseDebateTestCase, self).setUp()
         # add test models
         self.t = Tournament(slug="tournament")
         self.t.save()
@@ -49,15 +49,15 @@ class BaseTest(TestCase):
             if venue.name.startswith("Venue"):
                 r.activate_venue(venue, True)
 
-class TestInstitution(BaseTest):
+class TestInstitution(BaseDebateTestCase):
     def test_objects(self):
         self.failUnlessEqual(4, Institution.objects.count())
 
-class TestAdjudicator(BaseTest):
+class TestAdjudicator(BaseDebateTestCase):
     def test_objects(self):
         self.failUnlessEqual(8, Adjudicator.objects.count())
 
-class TestAdjudicatorDisable(BaseTest):
+class TestAdjudicatorDisable(BaseDebateTestCase):
     def setUp(self):
         super(TestAdjudicatorDisable, self).setUp()
         self.round = Round(tournament=self.t, seq=1)
@@ -73,7 +73,7 @@ class TestAdjudicatorDisable(BaseTest):
     def test_active(self):
         self.failUnlessEqual(7, self.round.active_adjudicators.count())
 
-class RandomDrawTests(BaseTest):
+class RandomDrawTests(BaseDebateTestCase):
 
     def setUp(self):
         super(RandomDrawTests, self).setUp()
