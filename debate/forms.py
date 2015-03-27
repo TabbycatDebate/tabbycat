@@ -8,6 +8,9 @@ from debate.models import ActionLog
 from debate.result import BallotSet, ForfeitBallotSet
 
 from collections import Counter
+import itertools
+import logging
+logger = logging.getLogger(__name__)
 
 class FormConstructionError(Exception):
     pass
@@ -114,26 +117,25 @@ class CustomNullBooleanSelect(forms.NullBooleanSelect):
 ### Result/ballot forms
 
 class BallotSetForm(forms.Form):
-    """Form for data entry for a single set of ballots.
-    Responsible for presenting the part that looks like a ballot, i.e.
-    speaker names and scores for each adjudicator. Not responsible for
-    controls that submit the form or anything like that.
+    """Form for data entry for a single set of ballots. Responsible for
+    presenting the part that looks like a ballot, i.e. speaker names and scores
+    for each adjudicator. Not responsible for controls that submit the form or
+    anything like that.
     """
 
-    confirmed = forms.BooleanField(required=False,
-        widget = forms.CheckboxInput(attrs = {'tabindex': 100}))
-    discarded = forms.BooleanField(required=False,
-        widget = forms.CheckboxInput(attrs = {'tabindex': 101}))
+    confirmed = forms.BooleanField(required=False)
+    discarded = forms.BooleanField(required=False)
 
-    debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES,
-        widget = forms.Select(attrs = {'tabindex': 102}))
+    debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
 
     def __init__(self, ballots, *args, **kwargs):
-        """
-        Dynamically generate fields for this ballot
-
-        <side>_speaker_<pos> and
-        <side>_score_<pos>
+        """Dynamically generate fields for this ballot:
+         - password
+         - choose_sides,    if sides need to be chosen by the user
+         - motion,          if there is more than one motion
+         - motion_veto_t#,  if motion vetoes are being noted, one for each team
+         - speaker t#_s#,   one for each speaker
+         - score_a#_t#_s#,  one for each score
         """
 
         self.ballots = ballots
@@ -141,7 +143,7 @@ class BallotSetForm(forms.Form):
         self.adjudicators = self.debate.adjudicators.list
         self.forfeit_declared = False
 
-        password = kwargs.pop('password', False)
+        has_password = kwargs.pop('password', False)
 
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
@@ -151,9 +153,11 @@ class BallotSetForm(forms.Form):
         self.LAST_SUBSTANTIVE_POSITION = tournament.LAST_SUBSTANTIVE_POSITION
         self.REPLY_POSITION = tournament.REPLY_POSITION
 
-        if tournament.config.get('public_use_password') and password:
+        # 1. Tournament password field
+        if tournament.config.get('public_use_password') and has_password:
             self.fields['password'] = TournamentPasswordField(tournament=tournament)
 
+        # 2. Choose sides field
         if tournament.config.get('draw_side_allocations') == 'manual-ballot':
             dts = self.debate.debateteam_set.all()
             if len(dts) != 2:
@@ -169,26 +173,14 @@ class BallotSetForm(forms.Form):
                 choices=side_choices, coerce=coerce
             )
 
-        # Generate the motions field.
-        # We are only allowed to choose from the motions for this round.
-        self.motions = self.debate.round.motion_set
+        # 3. Motions fields
+        self.motions = self.debate.round.motion_set # this round only
         self.show_motion = self.motions.exists() # this is used in the template
         # Tab index for the motion field is first if there's more than one, or last if
         # there's only one.
-        self.fields['motion'] = forms.ModelChoiceField(
-            queryset = self.motions,
-            widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
-            required = True)
-
-        self.fields['aff_motion_veto'] = forms.ModelChoiceField(
-            queryset = self.motions,
-            widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
-            required = False)
-
-        self.fields['neg_motion_veto'] = forms.ModelChoiceField(
-            queryset = self.motions,
-            widget   = forms.Select(attrs = {'tabindex': self.motions.count() > 1 and 1 or 1100}),
-            required = False)
+        self.fields['motion'] = forms.ModelChoiceField(queryset=self.motions, required=True)
+        self.fields['aff_motion_veto'] = forms.ModelChoiceField(queryset=self.motions, required=False)
+        self.fields['neg_motion_veto'] = forms.ModelChoiceField(queryset=self.motions, required=False)
 
         # Set the initial data
         self.initial = self._initial_data()
@@ -218,44 +210,40 @@ class BallotSetForm(forms.Form):
 
         MAX_POSITION = max(self.POSITIONS)
 
+
         for side, tab_index_add in (('aff', 0), ('neg', 2 * MAX_POSITION)):
 
             team = self.debate.get_team(side)
             for pos in self.POSITIONS:
-                self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(
-                    queryset = team.speakers,
-                    widget = forms.Select(attrs = {
-                        'tabindex': 19 + 2 * pos + tab_index_add,
-                    }))
+                self.fields['%s_speaker_%s' % (side, pos)] = forms.ModelChoiceField(queryset=team.speakers)
 
                 # css_class is for jquery validation plugin, surely this can be moved elsewhere
-                score_field = (pos == self.REPLY_POSITION) and ReplyScoreField or ScoreField
+                score_field = ReplyScoreField if (pos == self.REPLY_POSITION) else ScoreField
 
                 for i, adj in enumerate(self.adjudicators):
-                    attrs = {
-                        'class': 'required number',
-                        'tabindex': 20 + 2 * pos + tab_index_add + 4 * MAX_POSITION * i,
-                    }
-                    self.fields[self.score_field_name(adj, side, pos)] = score_field(
-                        widget = forms.NumberInput(attrs=attrs),
+                    attrs = {'class': 'required number'}
+                    self.fields[self._score_field_name(adj, side, pos)] = score_field(
+                        widget=forms.NumberInput(attrs=attrs),
                         tournament_config=tournament.config, **kwargs)
 
                     if config.get('enable_forfeits'):
-                        self.fields[self.score_field_name(adj, side, pos)].required = False
+                        self.fields[self._score_field_name(adj, side, pos)].required = False
 
         if config.get('enable_forfeits'):
             self.fields['motion'].required = False
             CHOICES = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
             self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=False)
 
-    def score_field_name(self, adj, side, pos):
+        self._set_tab_indices()
+
+    def _score_field_name(self, adj, side, pos):
         """
         Return the name of the score field for adj/side/pos
         """
         return '%s_score_a%d_%d' % (side, adj.id, pos)
 
     def score_field(self, adj, side, pos):
-        return self[self.score_field_name(adj, side, pos)]
+        return self[self._score_field_name(adj, side, pos)]
 
     def _initial_data(self):
         """
@@ -291,9 +279,44 @@ class BallotSetForm(forms.Form):
 
                     for adj in self.adjudicators:
                         score = bs.get_score(adj, side, i)
-                        initial[self.score_field_name(adj, side, i)] = score
+                        initial[self._score_field_name(adj, side, i)] = score
 
         return initial
+
+    def _set_tab_indices(self):
+        """Sets all the tab indices in the form."""
+        order = list()
+
+        order.append('choose_sides')
+
+        if self.motions.count() > 1:
+            order.extend(['motion', 'aff_motion_veto', 'neg_motion_veto'])
+
+        for side, pos in itertools.product(('aff', 'neg'), self.POSITIONS):
+            order.append('%s_speaker_%s' % (side, pos))
+            order.append(self._score_field_name(self.adjudicators[0], side, pos))
+
+        for adj, side, pos in itertools.product(self.adjudicators[1:], ('aff', 'neg'), self.POSITIONS):
+            order.append(self._score_field_name(adj, side, pos))
+
+        if 'password' in self.fields:
+            order.append('password')
+
+        if 'forfeits' in self.fields:
+            order.append('forfeits')
+
+        order.extend(['discarded', 'confirmed', 'debate_result_status'])
+
+        if self.motions.count() <= 1:
+            order.extend(['motion', 'aff_motion_veto', 'neg_motion_veto'])
+
+        for i, name in enumerate(order, start=1):
+            try:
+                self.fields[name].widget.attrs['tabindex'] = i
+            except KeyError as e:
+                logger.warning(e.message)
+
+        self.nexttabindex = i + 1
 
     def clean(self):
         cleaned_data = super(BallotSetForm, self).clean()
@@ -320,8 +343,8 @@ class BallotSetForm(forms.Form):
             for adj in self.adjudicators:
                 # Check that it was not a draw
                 try:
-                    aff_total = sum(cleaned_data[self.score_field_name(adj, 'aff', pos)] for pos in self.POSITIONS)
-                    neg_total = sum(cleaned_data[self.score_field_name(adj, 'neg', pos)] for pos in self.POSITIONS)
+                    aff_total = sum(cleaned_data[self._score_field_name(adj, 'aff', pos)] for pos in self.POSITIONS)
+                    neg_total = sum(cleaned_data[self._score_field_name(adj, 'neg', pos)] for pos in self.POSITIONS)
                 except KeyError:
                     continue
                 if aff_total == neg_total:
@@ -386,7 +409,7 @@ class BallotSetForm(forms.Form):
                 speaker = self.cleaned_data['%s_speaker_%d' % (side, i)]
                 bs.set_speaker(side, i, speaker)
                 for adj in self.adjudicators:
-                    score = self.cleaned_data[self.score_field_name(adj, side, i)]
+                    score = self.cleaned_data[self._score_field_name(adj, side, i)]
                     bs.set_score(adj, side, i, score)
 
         if not self.forfeit_declared:
@@ -461,8 +484,7 @@ class DebateManagementForm(forms.Form):
     debate as a whole, not an individual ballot. This form is responsible for those
     fields, and is always part of a DebateResultFormSet."""
 
-    result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES,
-        widget = forms.Select(attrs = {'tabindex': 1000}))
+    result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
 
     def __init__(self, debate, *args, **kwargs):
         self.debate = debate
@@ -474,7 +496,6 @@ class DebateManagementForm(forms.Form):
         # Generate the confirmed ballot field
         self.fields['confirmed_ballot'] = forms.ModelChoiceField(
             queryset = self.debate.ballotsubmission_set,
-            widget   = forms.Select(attrs = {'tabindex': 2}),
             required = False)
         self.initial['confirmed_ballot'] = self.debate.confirmed_ballot
 

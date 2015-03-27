@@ -52,10 +52,10 @@
                         {{ form.debate_result_status|addcss:"form-control" }}
                     </div>
                     <div class="col-sm-2">
-                        <input id="submit" class="save form-control btn btn-success" type="submit" value="Save" tabindex="101" />
+                        <input id="submit" class="save form-control btn btn-success" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" />
                     </div>
                     <div class="col-sm-2">
-                        <a class="form-control btn btn-default btn-danger" href="{% round_url results %}">Cancel</a>
+                        <a class="form-control btn btn-default btn-danger" href="{% round_url results %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel</a>
                     </div>
                 </div>
 
