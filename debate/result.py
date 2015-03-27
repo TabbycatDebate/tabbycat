@@ -206,21 +206,12 @@ class BallotSet(object):
     def _load_team(self, dt):
         """Loads the scores for the given DebateTeam from the database into the
         buffer."""
-        # from debate.models import SpeakerScore, TeamScore, DebateTeamMotionPreference
-
         for ss in self.ballotsub.speakerscore_set.filter(debate_team=dt):
-        # for ss in SpeakerScore.objects.filter(
-        #     debate_team = dt,
-        #     ballot_submission = self.ballotsub,
-        # ):
             self.speakers[dt][ss.position] = ss.speaker
             # ignore the speaker score itself, just look at SpeakerScoreByAdjs
 
         try:
             ts = self.ballotsub.teamscore_set.get(debate_team=dt)
-            # ts = TeamScore.objects.get(
-            #     ballot_submission = self.ballotsub,
-            #     debate_team = dt)
             points = ts.points
             score = ts.score
             win = ts.win
@@ -230,7 +221,6 @@ class BallotSet(object):
             score = None
             win = None
             margin = None
-
         self.points[dt] = points
         self.total_score[dt] = score
         self.wins[dt] = win
@@ -239,15 +229,9 @@ class BallotSet(object):
         try:
             dtmp = self.ballotsub.debateteammotionpreference_set.get(
                     debate_team=dt, preference=3)
-            # dtmp = DebateTeamMotionPreference.objects.get(
-            #     ballot_submission = self.ballotsub,
-            #     debate_team = dt,
-            #     preference = 3
-            # )
-            veto = dtmp.motion
+            self.motion_veto[dt] = dtmp.motion
         except ObjectDoesNotExist:
-            veto = None
-        self.motion_veto[dt] = veto
+            self.motion_veto[dt] = None
 
     @property
     def is_complete(self):
@@ -368,7 +352,7 @@ class BallotSet(object):
         return self._get_avg_score(self._get_dt(team), position)
 
     def set_speaker(self, team, position, speaker):
-        """Sets the identity of the spekaer in this team and position."""
+        """Sets the identity of the speaker in this team and position."""
         return self._set_speaker(self._get_dt(team), position, speaker)
 
     def set_score(self, adj, team, position, score):
@@ -378,7 +362,6 @@ class BallotSet(object):
     def _score(self, dt):
         if not self.loaded_sheets:
             return self.total_score[dt]
-
         return sum(self.adjudicator_sheets[adj]._get_total(dt) for adj in
                    self.majority_adj) / len(self.majority_adj)
 
@@ -465,57 +448,6 @@ class BallotSet(object):
         for (type, adj), split in zip(self.debate.adjudicators, splits):
             yield type, adj, split
 
-    def sheet_iter(self):
-        REPLY_POSITION = self.debate.round.tournament.REPLY_POSITION
-        POSITIONS = self.debate.round.tournament.POSITIONS
-
-        class Position(object):
-
-            def __init__(self2, sheet, side, pos):
-                self2.sheet = sheet
-                self2.pos = pos
-                self2.side = side
-
-            def name(self2):
-                return (self2.pos == REPLY_POSITION) and "Reply" or str(self2.pos)
-
-            def speaker(self2):
-                return self.get_speaker(self2.side, self2.pos)
-
-            def score(self2):
-                return self2.sheet.get_score(self2.side, self2.pos)
-
-        class ScoresheetWrapper(object):
-
-            def __init__(self2, adj):
-                self2.sheet = self.adjudicator_sheets[adj]
-                self2.adjudicator = adj
-
-            def position_iter(self2, side):
-                for pos in POSITIONS:
-                    yield Position(self2.sheet, side, pos)
-
-            def affs(self2):
-                return self2.position_iter('aff')
-
-            def negs(self2):
-                return self2.position_iter('neg')
-
-            def aff_score(self2):
-                return self2.sheet.aff_score
-
-            def neg_score(self2):
-                return self2.sheet.neg_score
-
-            def aff_win(self2):
-                return self2.sheet.aff_win
-
-            def neg_win(self2):
-                return self2.sheet.neg_win
-
-        for adj in self.adjudicators:
-            yield ScoresheetWrapper(adj)
-
     @property
     def confirmed(self):
         return self.ballotsub.confirmed
@@ -556,6 +488,56 @@ class BallotSet(object):
     def neg_motion_veto(self, new):
         self.motion_veto[self.debate.neg_dt] = new
 
+    def sheet_iter(self):
+        REPLY_POSITION = self.debate.round.tournament.REPLY_POSITION
+        POSITIONS = self.debate.round.tournament.POSITIONS
+
+        class Position(object):
+
+            def __init__(self2, sheet, side, pos):
+                self2.sheet = sheet
+                self2.pos = pos
+                self2.side = side
+
+            def name(self2):
+                return "Reply" if (self2.pos == REPLY_POSITION) else str(self2.pos)
+
+            def speaker(self2):
+                return self.get_speaker(self2.side, self2.pos)
+
+            def score(self2):
+                return self2.sheet.get_score(self2.side, self2.pos)
+
+        class ScoresheetWrapper(object):
+
+            def __init__(self2, adj):
+                self2.sheet = self.adjudicator_sheets[adj]
+                self2.adjudicator = adj
+
+            def position_iter(self2, side):
+                for pos in POSITIONS:
+                    yield Position(self2.sheet, side, pos)
+
+            def affs(self2):
+                return self2.position_iter('aff')
+
+            def negs(self2):
+                return self2.position_iter('neg')
+
+            def aff_score(self2):
+                return self2.sheet.aff_score
+
+            def neg_score(self2):
+                return self2.sheet.neg_score
+
+            def aff_win(self2):
+                return self2.sheet.aff_win
+
+            def neg_win(self2):
+                return self2.sheet.neg_win
+
+        for adj in self.adjudicators:
+            yield ScoresheetWrapper(adj)
 
 
 class ForfeitBallotSet(BallotSet):
