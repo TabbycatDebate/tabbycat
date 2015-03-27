@@ -100,10 +100,18 @@ thead {
   text-align: center;
 }
 
-// Tables (to refactor)
+// Edit Adjs and Venues
 
+.edit-adjs, .edit-venues {
+  #table-search-group.btn-group.pull-right {
+    margin-right: 16.66667% // Making way for the unused column
+  }
+  .table > tbody > tr > td {
+    line-height: 33px; // to align with the drag and drop elements
+  }
+}
 
-
+// To refactor
 
 .col-md-12.table-container {
   padding-left: 0;

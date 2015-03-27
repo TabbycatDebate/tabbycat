@@ -282,11 +282,11 @@ span.esl {
 // Editing the Draw
 
 .edit-venues, .edit-adjs {
-  #table-search-group.btn-group.pull-right {
-    margin-right: 16.66667% // Making way for the unused column
-  }
   table {
     border-collapse: separate;
+    td {
+      line-height: 30px; // to align with the drag and drop elements
+    }
   }
   #container {
      min-height: 1000px;
@@ -343,6 +343,9 @@ span.esl {
     }
   }
   .adj {
+    .info {
+      margin-right: 5px;
+    }
     .info:hover {
       cursor: pointer;
       z-index: 11;

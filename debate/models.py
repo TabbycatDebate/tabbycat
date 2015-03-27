@@ -470,7 +470,7 @@ class Team(models.Model):
                             default=TYPE_NONE)
 
     class Meta:
-        unique_together = [('reference', 'institution', 'tournament')]
+        unique_together = [('reference', 'institution', 'tournament'),('emoji_seq', 'tournament')]
         ordering = ['tournament', 'institution', 'short_reference']
         index_together = ['tournament', 'institution', 'short_reference']
 
