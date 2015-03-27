@@ -2,52 +2,45 @@
 
 class Scoresheet(object):
     """
-    Representation of an adjudicator's scoresheet
+    Representation of a single adjudicator's scoresheet in a single ballot
+    submission, providing an interface that abstracts away database operations.
+    In general, the interface to the client uses Teams and Adjudicators (not
+    DebateTeams and DebateAdjudicators). Populates itself with the appropriate
+    data on initialization.
 
-    self.data is a nested dictionary, such that
-    self.data[team][pos] = score
+    This class does *not* deal with any information about the *identity* of the
+    speakers involved. That is all done in the BallotSet class, which comprises
+    (among other things) one or more instances of this class. This class merely
+    stores raw scores awarded by a particular adjudicator (in a particular
+    submission), attaching scores to positions.
+
+    Internally, scores are stored in a nested dictionary self.data, such that
+        self.data[debateteam][pos] = score
     """
 
     def __init__(self, ballots, adjudicator):
         self.ballots = ballots
         self.debate = ballots.debate
         self.adjudicator = adjudicator
-        self.POSITIONS_RANGE = self.debate.round.tournament.POSITIONS
-
-        from debate import models as m
-
-        self.da = m.DebateAdjudicator.objects.get(
-            adjudicator = self.adjudicator,
-            debate = self.debate,
-        )
+        self.da = self.debate.debateadjudicator_set.get(adjudicator=adjudicator)
         self.dts = self.debate.debateteam_set.all()
+        self.data = dict.fromkeys(self.dts, self._no_scores())
 
-        self.data = {
-            'aff': self._no_scores(),
-            'neg': self._no_scores()
-        }
-
-        self._init_side('aff')
-        self._init_side('neg')
+        for dt in self.dts:
+            self._load_team(dt)
+        self.POSITIONS_RANGE = self.debate.round.tournament.POSITIONS
 
     def _no_scores(self):
         return dict((i, None) for i in self.POSITIONS_RANGE)
 
-    def _init_side(self, side):
-        """
-        Load from database
-        """
-
-        from debate import models as m
-
-        dt = self.debate.get_dt(side)
-
+    def _load_team(self, dt):
+        """Loads the scores for the given DebateTeam from the database into the
+        data buffer."""
         scores = m.SpeakerScoreByAdj.objects.filter(
-            ballot_submission = self.ballots,
-            debate_adjudicator = self.da,
-            debate_team = dt,
+            ballot_submission=self.ballots,
+            debate_adjudicator=self.da,
+            debate_team=dt,
         )
-
         for ss in scores:
             self.set_score(side, ss.position, ss.score)
 
@@ -61,17 +54,14 @@ class Scoresheet(object):
             debate_adjudicator = self.da,
         ).delete()
 
-        self._save_side('aff')
-        self._save_side('neg')
+        for dt in self.dts:
+            self._save_team(dt)
 
-    def _save_side(self, side):
-        """
-        Save to database
-        """
+    def _save_team(self, dt):
+        """Saves the scores in the data buffer for the given DebateTeam, to the
+        database."""
 
         from debate import models as m
-
-        dt = self.debate.get_dt(side)
 
         # create new ones
         for pos in self.POSITIONS_RANGE:
@@ -84,11 +74,11 @@ class Scoresheet(object):
             ).save()
 
 
-    def set_score(self, side, position, score):
-        self.data[side][position] = score
+    def set_score(self, team, position, score):
+        self.data[team][position] = score
 
     def get_score(self, side, position):
-        return self.data[side][position]
+        return self.data[team][position]
 
     @property
     def aff_score(self):
