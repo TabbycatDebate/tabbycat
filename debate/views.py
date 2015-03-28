@@ -1778,8 +1778,8 @@ def adj_feedback(request, t):
                 adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
 
             else:
-                adj.avg_score = 0
-                adj.avg_margin = 0
+                adj.avg_score = None
+                adj.avg_margin = None
 
 
     return r2r(request, template, dict(adjudicators=adjudicators))

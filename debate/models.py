@@ -808,7 +808,7 @@ class Adjudicator(Person):
 
     @property
     def feedback_score(self):
-        return self._feedback_score() or 0
+        return self._feedback_score() or None
 
 
     def get_feedback(self):
