@@ -1388,8 +1388,8 @@ class Debate(models.Model):
 
     @property
     def confirmed_ballot(self):
-        """Returns the confirmed ballot for this debate, or None if there is
-        no such ballot."""
+        """Returns the confirmed BallotSubmission for this debate, or None if
+        there is no such ballot submission."""
         try:
             return self.ballotsubmission_set.get(confirmed=True)
         except ObjectDoesNotExist: # BallotSubmission isn't defined yet, so can't use BallotSubmission.DoesNotExist
@@ -1409,7 +1409,7 @@ class Debate(models.Model):
         version numbers of BallotSubmissions that are identical to the key's
         BallotSubmission. Excludes discarded ballots (always)."""
         ballots = self.ballotsubmission_set_by_version_except_discarded
-        result = dict((b, list()) for b in ballots)
+        result = {b: list() for b in ballots}
         for ballot1 in ballots:
             # Save a bit of time by avoiding comparisons already done.
             # This relies on ballots being ordered by version.
