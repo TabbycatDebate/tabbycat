@@ -15,6 +15,7 @@ class BaseTestResult(TestCase):
                    'totals_by_adj': [[263, 261.5], [262, 263], [262.5, 268]],
                    'majority_scores': [[74.5, 75, 75.5, 37.25], [76.5, 76, 75.5, 37.5]],
                    'majority_totals': [262.25, 265.5],
+                   'winner_by_adj': [0, 1, 1],
                    'winner': 1}
 
     def setUp(self):
@@ -88,34 +89,70 @@ class BaseTestResult(TestCase):
 
 class CommonTests(object):
 
-    def test_save_complete_ballotset(self):
-        for testdata_key in self.testdata:
-            self.save_complete_ballotset(self.teams_input, testdata_key)
+    def on_all_datasets(test_fn):
+        """Decorator.
+        Tests should be written to take three arguments: self, ballotset and
+        testdata. 'ballotset' is a BallotSet object. 'testdata' is a value of
+        BaseTestResult.testdata.
+        This decorator then sets up the BallotSet and runs the test once for
+        each test dataset in BaseTestResult.testdata."""
+        def foo(self):
+            for testdata_key in self.testdata:
+                self.save_complete_ballotset(self.teams_input, testdata_key)
+                ballotset = self._get_ballotset()
+                test_fn(self, ballotset, self.testdata[testdata_key])
+        return foo
 
-    def test_totals_by_adj(self):
-        for testdata_key in self.testdata:
-            self.save_complete_ballotset(self.teams_input, testdata_key)
-            ballotset = self._get_ballotset()
-            for adj, totals in zip(self.adjs, self.testdata[testdata_key]['totals_by_adj']):
-                for team, total in zip(self.teams_input, totals):
-                    self.assertEqual(ballotset.adjudicator_sheets[adj].get_total(team), total)
+    @on_all_datasets
+    def test_save_complete_ballotset(self, ballotset, testdata):
+        pass
 
-    def test_majority_scores(self):
-        for testdata_key in self.testdata:
-            self.save_complete_ballotset(self.teams_input, testdata_key)
-            ballotset = self._get_ballotset()
-            for team, totals in zip(self.teams_input, self.testdata[testdata_key]['majority_scores']):
+    @on_all_datasets
+    def test_totals_by_adj(self, ballotset, testdata):
+        for adj, totals in zip(self.adjs, testdata['totals_by_adj']):
+            for team, total in zip(self.teams_input, totals):
+                self.assertEqual(ballotset.adjudicator_sheets[adj].get_total(team), total)
+
+    @on_all_datasets
+    def test_majority_scores(self, ballotset, testdata):
+        for team, totals in zip(self.teams_input, testdata['majority_scores']):
+            for pos, score in enumerate(totals, start=1):
+                self.assertEqual(ballotset.get_avg_score(team, pos), score)
+
+    @on_all_datasets
+    def test_individual_scores(self, ballotset, testdata):
+        for adj, sheet in zip(self.adjs, testdata['scores']):
+            for team, totals in zip(self.teams_input, sheet):
                 for pos, score in enumerate(totals, start=1):
-                    self.assertEqual(ballotset.get_avg_score(team, pos), score)
+                    self.assertEqual(ballotset.get_score(adj, team, pos), score)
 
-    def test_individual_scores(self):
-        for testdata_key in self.testdata:
-            self.save_complete_ballotset(self.teams_input, testdata_key)
-            ballotset = self._get_ballotset()
-            for adj, sheet in zip(self.adjs, self.testdata[testdata_key]['scores']):
-                for team, totals in zip(self.teams_input, sheet):
-                    for pos, score in enumerate(totals, start=1):
-                        self.assertEqual(ballotset.get_score(adj, team, pos), score)
+    @on_all_datasets
+    def test_winner_by_adj(self, ballotset, testdata):
+        for adj, winner in zip(self.adjs, testdata['winner_by_adj']):
+            self.assertEqual(ballotset.adjudicator_sheets[adj].winner,
+                    self.teams[winner])
+
+    @on_all_datasets
+    def test_winner(self, ballotset, testdata):
+        self.assertEqual(ballotset.winner, self.teams[testdata['winner']])
+
+    @on_all_datasets
+    def test_sheet_iter(self, ballotset, testdata):
+        NAMES = ["1", "2", "3", "Reply"]
+        for sheet, adj, scores, total, winner in zip(ballotset.sheet_iter, self.adjs, testdata['scores'], testdata['totals_by_adj'], testdata['winner_by_adj']):
+            self.assertEqual(sheet.adjudicator, adj)
+            for pos, name, speaker, score in zip(sheet.affs, NAMES, self._get_team('aff').speaker_set.all(), scores[0]):
+                self.assertEqual(pos.name, name)
+                self.assertEqual(pos.speaker, speaker)
+                self.assertEqual(pos.score, score)
+            for pos, name, speaker, score in zip(sheet.negs, NAMES, self._get_team('neg').speaker_set.all(), scores[1]):
+                self.assertEqual(pos.name, name)
+                self.assertEqual(pos.speaker, speaker)
+                self.assertEqual(pos.score, score)
+            self.assertEqual(sheet.aff_score, total[0])
+            self.assertEqual(sheet.neg_score, total[1])
+            self.assertEqual(sheet.aff_win, winner == 0)
+            self.assertEqual(sheet.neg_win, winner == 1)
 
 
 class TestResultByTeam(BaseTestResult, CommonTests):
