@@ -1,5 +1,17 @@
 // Basic print styles
 
+.printable-feedback-sheet {
+  .badge {
+    background: #333;
+    color: #FFF;
+  }
+  hr {
+    border-top: 3px solid #CCC;
+    margin-top: 50px;
+  }
+}
+
+
 @media print {
 
   #header-options, .fixedHeader {
