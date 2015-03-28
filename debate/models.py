@@ -84,12 +84,12 @@ class Tournament(models.Model):
 
     @property
     def LAST_SUBSTANTIVE_POSITION(self):
-        return 3
+        return self.config.get('substantive_speakers')
 
     @property
     def REPLY_POSITION(self):
         if self.config.get('reply_scores_enabled'):
-            return 4
+            return self.config.get('substantive_speakers') + 1
         else:
             # A bit hackish; but ensures when looping through positions it will
             # never hit the reply position
@@ -97,10 +97,10 @@ class Tournament(models.Model):
 
     @property
     def POSITIONS(self):
-        if self.config.get('reply_scores_enabled'):
-            return range(1, 5)
-        else:
-            return range(1, 4)
+        speaker_positions = 1 + self.config.get('substantive_speakers')
+        if self.config.get('reply_scores_enabled') is True:
+            speaker_positions = speaker_positions + 1
+        return range(1, speaker_positions)
 
     class Meta:
         ordering = ['seq',]
