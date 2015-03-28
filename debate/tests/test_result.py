@@ -9,23 +9,46 @@ from debate.result import BallotSet
 class BaseTestResult(TestCase):
 
     testdata = dict()
-    testdata[1] = {'scores': [[[75.0, 76.0, 74.0, 38.0],   [76.0, 73.0, 75.0, 37.5]],
-                              [[74.0, 75.0, 76.0, 37.0],   [77.0, 74.0, 74.0, 38.0]],
-                              [[75.0, 75.0, 75.0, 37.5], [76.0, 78.0, 77.0, 37.0]]],
-                   'totals_by_adj': [[263, 261.5], [262, 263], [262.5, 268]],
-                   'majority_scores': [[74.5, 75, 75.5, 37.25], [76.5, 76, 75.5, 37.5]],
-                   'majority_totals': [262.25, 265.5],
-                   'winner_by_adj': [0, 1, 1],
-                   'winner': 1}
+    testdata[1] = {
+        'scores': [[[75.0, 76.0, 74.0, 38.0],   [76.0, 73.0, 75.0, 37.5]],
+                  [[74.0, 75.0, 76.0, 37.0],   [77.0, 74.0, 74.0, 38.0]],
+                  [[75.0, 75.0, 75.0, 37.5], [76.0, 78.0, 77.0, 37.0]]],
+       'totals_by_adj': [[263, 261.5], [262, 263], [262.5, 268]],
+       'majority_scores': [[74.5, 75, 75.5, 37.25], [76.5, 76, 75.5, 37.5]],
+       'majority_totals': [262.25, 265.5],
+       'winner_by_adj': [0, 1, 1],
+       'winner': 1
+   }
+    testdata[2] = {
+        'scores': [[[73.0, 76.0, 79.0, 37.5], [77.0, 77.0, 78.0, 39.0]],
+                   [[79.0, 80.0, 70.0, 36.0], [78.0, 79.0, 73.0, 37.0]],
+                   [[73.0, 70.0, 77.0, 35.0], [76.0, 76.0, 77.0, 37.0]]],
+        'totals_by_adj': [[265.5, 271.0], [265.0, 267.0], [255.0, 266.0]],
+        'majority_scores': [[75.0, 75.33333333333333, 75.33333333333333, 36.166666666666664],
+                            [77.0, 77.33333333333333, 76.0, 37.666666666666664]],
+        'majority_totals': [261.8333333333333, 268.0],
+        'winner_by_adj': [1, 1, 1],
+        'winner': 1
+    }
+    testdata[3] = {
+        'majority_scores': [[75.5, 76.5, 77.5, 38.75], [71.5, 71.5, 75.0, 38.5]],
+        'winner': 0,
+        'winner_by_adj': [1, 0, 0],
+        'totals_by_adj': [[261.0, 271.5], [268.5, 259.0], [268.0, 254.0]],
+        'majority_totals': [268.25, 256.5],
+        'scores': [[[73.0, 70.0, 78.0, 40.0], [80.0, 78.0, 75.0, 38.5]],
+                   [[79.0, 75.0, 75.0, 39.5], [73.0, 73.0, 73.0, 40.0]],
+                   [[72.0, 78.0, 80.0, 38.0], [70.0, 70.0, 77.0, 37.0]]]
+    }
 
     incompletedata = {'scores': [[[75, 76, None, 38],   [76, 73, 75, 37.5]],
-                              [[74, 75, 76, 37],   [77, None, 74, 38]],
-                              [[75, 75, 75, 37.5], [76, 78, 77, None]]],
-                   'totals_by_adj': [[None, 261.5], [262, None], [262.5, None]],
-                   'majority_scores': [[None, 75, 75.5, 37.25], [76.5, None, 75.5, None]],
-                   'majority_totals': [None, None],
-                   'winner_by_adj': [None, None, None],
-                   'winner': None}
+                                 [[74, 75, 76, 37],   [77, None, 74, 38]],
+                                 [[75, 75, 75, 37.5], [76, 78, 77, None]]],
+                      'totals_by_adj': [[None, 261.5], [262, None], [262.5, None]],
+                      'majority_scores': [[None, 75, 75.5, 37.25], [76.5, None, 75.5, None]],
+                      'majority_totals': [None, None],
+                      'winner_by_adj': [None, None, None],
+                      'winner': None}
 
     def setUp(self):
         self.t = m.Tournament(slug="resulttest", name="ResultTest")
@@ -76,6 +99,15 @@ class BaseTestResult(TestCase):
         return BallotSet(ballotsub)
 
     def save_complete_ballotset(self, teams, testdata):
+        # unconfirm existing ballot
+        try:
+            existing = m.BallotSubmission.objects.get(debate=self.debate, confirmed=True)
+        except m.BallotSubmission.DoesNotExist:
+            pass
+        else:
+            existing.confirmed = False
+            existing.save()
+
         ballotsub = m.BallotSubmission(debate=self.debate, submitter_type=m.BallotSubmission.SUBMITTER_TABROOM)
         ballotset = BallotSet(ballotsub)
         scores = testdata['scores']
@@ -115,6 +147,7 @@ class CommonTests(object):
 
     @on_all_datasets
     def test_save_complete_ballotset(self, ballotset, testdata):
+        # Just run self.save_complete_ballotset
         pass
 
     @on_all_datasets
@@ -122,6 +155,12 @@ class CommonTests(object):
         for adj, totals in zip(self.adjs, testdata['totals_by_adj']):
             for team, total in zip(self.teams_input, totals):
                 self.assertEqual(ballotset.adjudicator_sheets[adj].get_total(team), total)
+
+    @on_all_datasets
+    def test_totals_by_adj_by_side(self, ballotset, testdata):
+        for adj, totals in zip(self.adjs, testdata['totals_by_adj']):
+            self.assertEqual(ballotset.adjudicator_sheets[adj].aff_score, totals[0])
+            self.assertEqual(ballotset.adjudicator_sheets[adj].neg_score, totals[1])
 
     @on_all_datasets
     def test_majority_scores(self, ballotset, testdata):
@@ -143,18 +182,31 @@ class CommonTests(object):
                     self.teams[winner])
 
     @on_all_datasets
+    def test_winner_by_adj_by_side(self, ballotset, testdata):
+        for adj, winner in zip(self.adjs, testdata['winner_by_adj']):
+            self.assertEqual(ballotset.adjudicator_sheets[adj].aff_win,
+                    winner == 0)
+            self.assertEqual(ballotset.adjudicator_sheets[adj].neg_win,
+                    winner == 1)
+
+    @on_all_datasets
     def test_winner(self, ballotset, testdata):
         self.assertEqual(ballotset.winner, self.teams[testdata['winner']])
 
     @on_all_datasets
+    def test_winner_by_side(self, ballotset, testdata):
+        self.assertEqual(ballotset.aff_win, testdata['winner'] == 0)
+        self.assertEqual(ballotset.neg_win, testdata['winner'] == 1)
+
+    @on_all_datasets
     def test_majority_totals(self, ballotset, testdata):
         for team, total in zip(self.teams_input, testdata['majority_totals']):
-            self.assertEqual(ballotset.get_avg_total(team), total)
+            self.assertAlmostEqual(ballotset.get_avg_total(team), total)
 
     @on_all_datasets
     def test_majority_totals_by_side(self, ballotset, testdata):
-        self.assertEqual(ballotset.aff_score, testdata['majority_totals'][0])
-        self.assertEqual(ballotset.neg_score, testdata['majority_totals'][1])
+        self.assertAlmostEqual(ballotset.aff_score, testdata['majority_totals'][0])
+        self.assertAlmostEqual(ballotset.neg_score, testdata['majority_totals'][1])
 
     @on_all_datasets
     def test_sheet_iter(self, ballotset, testdata):

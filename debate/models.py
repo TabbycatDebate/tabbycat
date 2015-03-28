@@ -1749,7 +1749,8 @@ class BallotSubmission(Submission):
         unique_together = [('debate', 'version')]
 
     def __unicode__(self):
-        return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp.isoformat())
+        return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + \
+                ('<unknown>' if self.timestamp is None else unicode(self.timestamp.isoformat()))
 
     @property
     def ballot_set(self):

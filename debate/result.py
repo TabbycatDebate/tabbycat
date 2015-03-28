@@ -29,9 +29,23 @@ class Scoresheet(object):
         self.da = self.debate.debateadjudicator_set.get(adjudicator=adjudicator)
         self.dts = self.debate.debateteam_set.all() # note, this is a QuerySet
         self.POSITIONS = self.debate.round.tournament.POSITIONS
-        self.data = {dt: self._no_scores() for dt in self.dts}
+        self.data = {dt: dict.fromkeys(self.POSITIONS, None) for dt in self.dts}
         for dt in self.dts:
             self._load_team(dt)
+
+    def _dt(self, team):
+        """Extracts a DebateTeam from a given team argument. The argument can be
+        either a Team or 'aff'/'neg'."""
+        if team in ['aff', 'neg']:
+            return self.debate.get_dt(team)
+        try:
+            return self.dts.get(team=team)
+        except ObjectDoesNotExist:
+            raise ValueError("The team %s is not in the debate for this scoresheet." % team)
+
+    # --------------------------------------------------------------------------
+    # Load and save methods
+    # --------------------------------------------------------------------------
 
     @property
     def is_complete(self):
@@ -44,9 +58,6 @@ class Scoresheet(object):
         self.ballotsub.speakerscorebyadj_set.filter(debate_adjudicator=self.da).delete()
         for dt in self.dts:
             self._save_team(dt)
-
-    def _no_scores(self):
-        return dict.fromkeys(self.POSITIONS, None)
 
     def _load_team(self, dt):
         """Loads the scores for the given DebateTeam from the database into the
@@ -69,6 +80,30 @@ class Scoresheet(object):
                 score=self._get_score(dt, pos),
             ).save()
 
+    # --------------------------------------------------------------------------
+    # Data setting and retrieval
+    # --------------------------------------------------------------------------
+
+    def set_score(self, team, position, score):
+        """Sets the score for the given team and position in the data buffer,
+        not saved to database."""
+        return self._set_score(self._dt(team), position, score)
+
+    def get_score(self, team, position):
+        """Returns the score for the given team and position, reading from the
+        data buffer."""
+        return self._get_score(self._dt(team), position) or 0 # don't return None
+
+    def get_total(self, team):
+        """Returns the team score for the given team, reading from the data
+        buffer."""
+        return self._get_total(self._dt(team))
+
+    @property
+    def winner(self):
+        """Returns the winner as a Team object."""
+        return self._get_winner().team
+
     def _set_score(self, dt, position, score):
         self.data[dt][position] = score
 
@@ -76,22 +111,12 @@ class Scoresheet(object):
         return self.data[dt][position]
 
     def _get_total(self, dt):
-        """Returns the total for the given DebateTeam, or None if the scores
-        are incomplete."""
+        """Returns the team score for the given DebateTeam, or None if the
+        scores are incomplete."""
         scores = [self.data[dt][p] for p in self.POSITIONS]
         if None in scores:
             return None
         return sum(scores)
-
-    def _get_dt(self, team):
-        """Extracts a DebateTeam from a given team argument. The argument can be
-        either a Team or 'aff'/'neg'."""
-        if team in ['aff', 'neg']:
-            return self.debate.get_dt(team)
-        try:
-            return self.dts.get(team=team)
-        except ObjectDoesNotExist:
-            raise ValueError("The team %s is not in the debate for this scoresheet." % team)
 
     def _get_winner(self):
         """Returns the winner as a DebateTeam, or None if scoresheet is
@@ -108,25 +133,9 @@ class Scoresheet(object):
                 return dt
         raise RuntimeError("Unexpected error") # this should never happen
 
-    def set_score(self, team, position, score):
-        """Sets the score for the given team and position in the data buffer,
-        not saved to database."""
-        return self._set_score(self._get_dt(team), position, score)
-
-    def get_score(self, team, position):
-        """Returns the score for the given team and position, reading from the
-        data buffer."""
-        return self._get_score(self._get_dt(team), position) or 0 # don't return None
-
-    def get_total(self, team):
-        """Returns the team score for the given team, reading from the data
-        buffer."""
-        return self._get_total(self._get_dt(team))
-
-    @property
-    def winner(self):
-        """Returns the winner as a Team object."""
-        return self._get_winner().team
+    # --------------------------------------------------------------------------
+    # Side-specific methods
+    # --------------------------------------------------------------------------
 
     @property
     def aff_score(self):
@@ -143,6 +152,7 @@ class Scoresheet(object):
     @property
     def neg_win(self):
         return self.neg_score > self.aff_score
+
 
 class BallotSet(object):
     """Representation of a set of ballots for a debate in a single ballot
@@ -173,6 +183,7 @@ class BallotSet(object):
         self.adjudicators = self.debate.adjudicators.list
         self.dts = self.debate.debateteam_set.all() # note, this is a QuerySet
         assert self.dts.count() == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
+
         self.POSITIONS = self.debate.round.tournament.POSITIONS
 
         self.loaded_sheets = False
@@ -191,13 +202,41 @@ class BallotSet(object):
         for dt in self.dts:
             self._load_team(dt)
 
-    def _get_dt(self, team):
-        """General-purpose function for extracting a DebateTeam from a given
-        team argument. The argument can be either a Team or 'aff'/'neg'."""
+    def _dt(self, team):
+        """Extracts a DebateTeam from a given team argument. The argument can be
+        either a Team or 'aff'/'neg'."""
         if team in ['aff', 'neg']:
             return self.debate.get_dt(team)
-        else:
+        try:
             return self.dts.get(team=team)
+        except ObjectDoesNotExist:
+            raise ValueError("The team %s is not in the debate for this scoresheet." % team)
+
+    # --------------------------------------------------------------------------
+    # Load and save methods
+    # --------------------------------------------------------------------------
+
+    @property
+    def adjudicator_sheets(self):
+        if not self._adjudicator_sheets:
+            self._adjudicator_sheets = {a: Scoresheet(self.ballotsub, a)
+                    for a in self.adjudicators}
+            self.loaded_sheets = True
+        return self._adjudicator_sheets
+
+    @property
+    def is_complete(self):
+        return all(sheet.is_complete for sheet in self.adjudicator_sheets.itervalues())
+
+    def save(self):
+        assert self.is_complete, "Tried to save ballot set when it is incomplete"
+
+        self.ballotsub.save()
+        for sheet in self.adjudicator_sheets.itervalues():
+            sheet.save()
+        self._calc_decision()
+        for dt in self.dts:
+            self._save_team(dt)
 
     def _load_team(self, dt):
         """Loads the scores for the given DebateTeam from the database into the
@@ -225,27 +264,118 @@ class BallotSet(object):
         except ObjectDoesNotExist:
             self.motion_veto[dt] = None
 
-    @property
-    def is_complete(self):
-        return all(sheet.is_complete for sheet in self.adjudicator_sheets.itervalues())
+    def _save_team(self, dt):
+        from debate.models import TeamScore, SpeakerScore, DebateTeamMotionPreference
 
-    @property
-    def adjudicator_sheets(self):
-        if not self._adjudicator_sheets:
-            self._adjudicator_sheets = {a: Scoresheet(self.ballotsub, a)
-                    for a in self.adjudicators}
-            self.loaded_sheets = True
-        return self._adjudicator_sheets
+        total = self._get_avg_total(dt)
+        points = self._get_points(dt)
+        win = self._get_win(dt)
+        margin = self._get_margin(dt)
 
-    def save(self):
-        assert self.is_complete, "Tried to save ballot set when it is incomplete"
+        TeamScore.objects.filter(ballot_submission=self.ballotsub, debate_team=dt).delete()
+        TeamScore(ballot_submission=self.ballotsub,
+                  debate_team=dt, score=total, points=points, win=win,
+                  margin=margin).save()
+
+        SpeakerScore.objects.filter(ballot_submission=self.ballotsub, debate_team=dt).delete()
+        for pos in self.POSITIONS:
+            speaker = self.speakers[dt][pos]
+            score = self._get_avg_score(dt, pos)
+            SpeakerScore(
+                ballot_submission = self.ballotsub,
+                debate_team = dt,
+                speaker = speaker,
+                score = score,
+                position = pos,
+            ).save()
+
+        DebateTeamMotionPreference.objects.filter(ballot_submission=self.ballotsub, debate_team=dt, preference=3).delete()
+        if self.motion_veto[dt] is not None:
+            DebateTeamMotionPreference(ballot_submission=self.ballotsub, debate_team=dt, preference=3, motion=self.motion_veto[dt]).save()
 
         self.ballotsub.save()
-        for sheet in self.adjudicator_sheets.itervalues():
-            sheet.save()
-        self._calc_decision()
-        for dt in self.dts:
-            self._save_team(dt)
+
+    # --------------------------------------------------------------------------
+    # Data setting and retrieval (speakers and per-adjudicator scores)
+    # --------------------------------------------------------------------------
+
+    def get_speaker(self, team, position):
+        """Returns the speaker object for team/position."""
+        return self._get_speaker(self._dt(team), position)
+
+    def get_score(self, adj, team, position):
+        """Returns the score given by the adjudicator for the speaker in this
+        team and position."""
+        return self._get_score(adj, self._dt(team), position)
+
+    def get_avg_score(self, team, position):
+        """Returns the average score of majority adjudicators for this team and
+        position."""
+        return self._get_avg_score(self._dt(team), position)
+
+    def set_speaker(self, team, position, speaker):
+        """Sets the identity of the speaker in this team and position."""
+        return self._set_speaker(self._dt(team), position, speaker)
+
+    def set_score(self, adj, team, position, score):
+        """Set the score given by adjudicator for this team and position."""
+        return self._set_score(adj, self._dt(team), position, score)
+
+    def _get_speaker(self, dt, position):
+        return self.speakers[dt].get(position)
+
+    def _get_score(self, adj, dt, position):
+        return self.adjudicator_sheets[adj]._get_score(dt, position)
+
+    def _get_avg_score(self, dt, position):
+        if not self.is_complete:
+            return None
+        return sum(self.adjudicator_sheets[adj]._get_score(dt, position)
+                   for adj in self.majority_adj) / len(self.majority_adj)
+
+    def _set_speaker(self, dt, position, speaker):
+        self.speakers[dt][position] = speaker
+
+    def _set_score(self, adj, dt, position, score):
+        self.adjudicator_sheets[adj]._set_score(dt, position, score)
+
+    # --------------------------------------------------------------------------
+    # Data setting and retrieval (properties of BallotSubmission)
+    # --------------------------------------------------------------------------
+
+    @property
+    def confirmed(self):
+        return self.ballotsub.confirmed
+
+    @confirmed.setter
+    def confirmed(self, new):
+        self.ballotsub.confirmed = new
+
+    @property
+    def discarded(self):
+        return self.ballotsub.discarded
+
+    @discarded.setter
+    def discarded(self, new):
+        self.ballotsub.discarded = new
+
+    @property
+    def motion(self):
+        return self.ballotsub.motion
+
+    @motion.setter
+    def motion(self, new):
+        self.ballotsub.motion = new
+
+    def get_motion_veto(self, team):
+        return self.motion_veto[self._dt(team)]
+
+    def set_motion_veto(self, team, motion):
+        self.motion_veto[self._dt(team)] = motion
+
+    # --------------------------------------------------------------------------
+    # Decision and majority methods
+    # --------------------------------------------------------------------------
 
     def _calc_decision(self):
         """Calculates the majority decision and puts the majority adjudicators
@@ -291,54 +421,8 @@ class BallotSet(object):
             self._calc_decision()
             return self._winner.team
 
-    def _save_team(self, dt):
-        from debate.models import TeamScore, SpeakerScore, DebateTeamMotionPreference
-
-        total = self._get_avg_total(dt)
-        points = self._get_points(dt)
-        win = self._get_win(dt)
-        margin = self._get_margin(dt)
-
-        TeamScore.objects.filter(ballot_submission=self.ballotsub, debate_team=dt).delete()
-        TeamScore(ballot_submission=self.ballotsub,
-                  debate_team=dt, score=total, points=points, win=win,
-                  margin=margin).save()
-
-        SpeakerScore.objects.filter(ballot_submission=self.ballotsub, debate_team=dt).delete()
-        for pos in self.POSITIONS:
-            speaker = self.speakers[dt][pos]
-            score = self._get_avg_score(dt, pos)
-            SpeakerScore(
-                ballot_submission = self.ballotsub,
-                debate_team = dt,
-                speaker = speaker,
-                score = score,
-                position = pos,
-            ).save()
-
-        DebateTeamMotionPreference.objects.filter(ballot_submission=self.ballotsub, debate_team=dt, preference=3).delete()
-        if self.motion_veto[dt] is not None:
-            DebateTeamMotionPreference(ballot_submission=self.ballotsub, debate_team=dt, preference=3, motion=self.motion_veto[dt]).save()
-
-        self.ballotsub.save()
-
-    def _get_speaker(self, dt, position):
-        return self.speakers[dt].get(position)
-
-    def _get_score(self, adj, dt, position):
-        return self.adjudicator_sheets[adj]._get_score(dt, position)
-
-    def _get_avg_score(self, dt, position):
-        if not self.is_complete:
-            return None
-        return sum(self.adjudicator_sheets[adj]._get_score(dt, position)
-                   for adj in self.majority_adj) / len(self.majority_adj)
-
-    def _set_speaker(self, dt, position, speaker):
-        self.speakers[dt][position] = speaker
-
-    def _set_score(self, adj, dt, position, score):
-        self.adjudicator_sheets[adj]._set_score(dt, position, score)
+    def get_avg_total(self, team):
+        return self._get_avg_total(self._dt(team))
 
     def _get_avg_total(self, dt):
         if not self.loaded_sheets:
@@ -389,30 +473,9 @@ class BallotSet(object):
 
         return None
 
-    def get_speaker(self, team, position):
-        """Returns the speaker object for team/position."""
-        return self._get_speaker(self._get_dt(team), position)
-
-    def get_score(self, adj, team, position):
-        """Returns the score given by the adjudicator for the speaker in this
-        team and position."""
-        return self._get_score(adj, self._get_dt(team), position)
-
-    def get_avg_score(self, team, position):
-        """Returns the average score of majority adjudicators for this team and
-        position."""
-        return self._get_avg_score(self._get_dt(team), position)
-
-    def set_speaker(self, team, position, speaker):
-        """Sets the identity of the speaker in this team and position."""
-        return self._set_speaker(self._get_dt(team), position, speaker)
-
-    def set_score(self, adj, team, position, score):
-        """Set the score given by adjudicator for this team and position."""
-        return self._set_score(adj, self._get_dt(team), position, score)
-
-    def get_avg_total(self, team):
-        return self._get_avg_total(self._get_dt(team))
+    # --------------------------------------------------------------------------
+    # Side-specific methods
+    # --------------------------------------------------------------------------
 
     @property
     def aff_score(self):
@@ -438,42 +501,6 @@ class BallotSet(object):
     def neg_win(self):
         return self.neg_points
 
-    def is_trainee(self, adj):
-        da = self.debate.debateadjudicator_set.get(adjudicator=adj)
-        return da.type == m.DebateAdjudicator.TYPE_TRAINEE
-
-    @property
-    def adjudicator_results(self):
-        # Must use self.debate.adjudicators to include trainees in the yields.
-        splits = [adj not in self.majority_adj and not self.is_trainee(adj)
-                for _, adj in self.debate.adjudicators]
-        for (type, adj), split in zip(self.debate.adjudicators, splits):
-            yield type, adj, split
-
-    @property
-    def confirmed(self):
-        return self.ballotsub.confirmed
-
-    @confirmed.setter
-    def confirmed(self, new):
-        self.ballotsub.confirmed = new
-
-    @property
-    def discarded(self):
-        return self.ballotsub.discarded
-
-    @discarded.setter
-    def discarded(self, new):
-        self.ballotsub.discarded = new
-
-    @property
-    def motion(self):
-        return self.ballotsub.motion
-
-    @motion.setter
-    def motion(self, new):
-        self.ballotsub.motion = new
-
     @property
     def aff_motion_veto(self):
         return self.motion_veto[self.debate.aff_dt]
@@ -489,6 +516,22 @@ class BallotSet(object):
     @neg_motion_veto.setter
     def neg_motion_veto(self, new):
         self.motion_veto[self.debate.neg_dt] = new
+
+    # --------------------------------------------------------------------------
+    # Methods for UI display
+    # --------------------------------------------------------------------------
+
+    def _is_trainee(self, adj):
+        da = self.debate.debateadjudicator_set.get(adjudicator=adj)
+        return da.type == m.DebateAdjudicator.TYPE_TRAINEE
+
+    @property
+    def adjudicator_results(self):
+        # Must use self.debate.adjudicators to include trainees in the yields.
+        splits = [adj not in self.majority_adj and not self._is_trainee(adj)
+                for _, adj in self.debate.adjudicators]
+        for (type, adj), split in zip(self.debate.adjudicators, splits):
+            yield type, adj, split
 
     @property
     def sheet_iter(self):
