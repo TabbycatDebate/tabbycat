@@ -48,9 +48,12 @@ def team_emoji(team):
         return b"%s" % EMOJI_LIST[team.emoji_seq]
     else:
         if team.id > len(EMOJI_LIST):
-            return b"%s" % EMOJI_LIST[team.id]
+            print len(EMOJI_LIST)
+            print team.id
+            print team.id % len(EMOJI_LIST)
+            return b"%s" % EMOJI_LIST[(team.id % len(EMOJI_LIST))] # Wrapping around if too high
         else:
-            return b"%s" % EMOJI_LIST[(team.id) - len(EMOJI_LIST)]
+            return b"%s" % EMOJI_LIST[team.id]
 register.simple_tag(team_emoji)
 
 def debate_draw_status_class(debate):

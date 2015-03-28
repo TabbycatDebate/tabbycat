@@ -67,6 +67,9 @@
         <li><a href="{% round_url results r %}">Round Status</a></li>
         <li><a href="{% round_url ballot_checkin r %}">Ballot Checkin</a></li>
         <li class="divider"></li>
+        <li><a href="{% round_url draw_print_scoresheets %}">Print Score Ballots</a></li>
+        <li><a href="{% round_url draw_print_feedback %}">Print Feedback Ballots</a></li>
+        <li class="divider"></li>
         <li><a href="{% round_url team_standings r %}">Team Standings</a></li>
         <li><a href="{% round_url speaker_standings r %}">Speaker Standings</a></li>
         {% if reply_scores_enabled %}

@@ -759,6 +759,24 @@ def draw_confirmed(request, round):
                                                     rooms=rooms,
                                                     divs=divisions_assigned))
 
+
+
+@admin_required
+@round_view
+def draw_print_scoresheets(request, round):
+    draw = round.get_draw()
+    return r2r(request, "printable_scoresheets.html", dict(draw=draw))
+
+
+@admin_required
+@round_view
+def draw_print_feedback(request, round):
+    draw = round.get_draw()
+    return r2r(request, "printable_feedback.html", dict(draw=draw))
+
+
+
+
 @admin_required
 @round_view
 def draw_with_standings(request, round):

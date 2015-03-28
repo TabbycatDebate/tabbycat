@@ -78,6 +78,9 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/draw/venues/$', 'draw_venues_edit', name='draw_venues_edit'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw/venues/save/$', 'save_venues', name='save_venues'),
 
+    url(r'^admin/round/(?P<round_seq>\d+)/draw/print/scoresheets/$', 'draw_print_scoresheets', name='draw_print_scoresheets'),
+    url(r'^admin/round/(?P<round_seq>\d+)/draw/print/feedback/$', 'draw_print_feedback', name='draw_print_feedback'),
+
     url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/$', 'draw_adjudicators_edit', name='draw_adjudicators_edit'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/_get/$', 'draw_adjudicators_get', name='draw_adjudicators_get'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/save/$', 'save_adjudicators', name='save_adjudicators'),
