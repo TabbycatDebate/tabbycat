@@ -1,0 +1,105 @@
+{% load debate_tags %}
+
+<section class="printable-feedback-sheet">
+  <div class="clearfix">
+    <span class="h3 pull-left">
+      {% if source.name %}
+        {{ source.name }}'s Feedback
+      {% else %}
+        <span class="team-emoji">{% team_emoji source %} </span>
+        {{ source.short_name }}'s Feedback
+      {% endif %}
+    </span>
+    <span class="badge h3 pull-right">{{ round.abbreviation }}</span>
+    <span class="badge h3 pull-right">{{ debate.venue_splitname }}</span>
+  </div>
+  <br><br>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="panel-title small">
+        {% if target %}
+          <em>Your {{ target_type }} was</em>
+        {% elif debate.adjudicators.is_panel %}
+          <em>Who delivered the adjudication?</em>
+        {% else %}
+          <em>Your adjudicator was</em>
+        {% endif %}
+      </p>
+    </div>
+    <div class="panel-body">
+      <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+        <thead>
+          <tr>
+            {% if target %}
+              <th class="text-center h4">
+                {{ target.name }}
+                {% if target_type == "chair" %}Ⓒ{% elif target_type == "trainee" %}Ⓣ{% endif %}
+              </th>
+            {% else %}
+              {% for type, adj in debate.adjudicators %}
+                {% if type == 'C' and debate.adjudicators.is_panel %}
+                  <th class="text-center h4">{{ adj.name }} Ⓒ</th>
+                {% elif type != 'T' %}
+                  <th class="text-center h4">{{ adj.name }}</th>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="panel-title small"><em>How good was their adjudication?</em></p>
+    </div>
+    <div class="panel-body">
+      <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+        <thead>
+          <tr>
+            <th class="text-center h2">1</th>
+            <th class="text-center h2">2</th>
+            <th class="text-center h2">3</th>
+            <th class="text-center h2">4</th>
+            <th class="text-center h2">5</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center text-muted">
+            <td width="20"><small>The Worst</small></td>
+            <td width="20"><small></small></td>
+            <td width="20"><small>OK</small></td>
+            <td width="20"><small></small></td>
+            <td width="20"><small>The Best</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="italic panel-title small"><em>Why did you rate it that way?</em></p>
+    </div>
+    <div class="panel-body">
+      <hr><hr><hr><hr><hr><hr><hr><hr>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="italic panel-title text-muted small"><em>For the tab room only</em></p>
+    </div>
+    <div class="panel-footer">
+      <table class="table" cellspacing="10" cellpadding="10">
+        <tbody>
+          <tr>
+            <td class="text-muted text-left small" style="border-top: none;">Entered By</td>
+            <td class="text-muted text-left small" style="border-top: none;">Checked By</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

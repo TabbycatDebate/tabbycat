@@ -765,7 +765,8 @@ def draw_confirmed(request, round):
 @round_view
 def draw_print_scoresheets(request, round):
     draw = round.get_draw()
-    return r2r(request, "printable_scoresheets.html", dict(draw=draw))
+    config = round.tournament.config
+    return r2r(request, "printable_scoresheets.html", dict(draw=draw, config=config))
 
 
 @admin_required

@@ -1,0 +1,39 @@
+{% load debate_tags %}
+
+<div class="col-md-6">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="panel-title small">
+        <span class="team-emoji">{% team_emoji team %} </span>
+        {{ team.short_name }}
+        <span class="badge pull-right">{{ position }}</span>
+      </p>
+    </div>
+    <div class="panel-body">
+      <table class="table" cellspacing="10" cellpadding="10">
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Speaker</th>
+            <th>Pronoun</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for config.reply_scores_enabled %}
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          {% endfor %}
+          {% if config.reply_scores_enabled %}
+
+          {% endif %}
+        </tbody>
+      </table>
+      </thead>
+    </div>
+  </div>
+</div>

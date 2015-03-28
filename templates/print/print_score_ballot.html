@@ -1,0 +1,39 @@
+{% load debate_tags %}
+
+<section class="printable-feedback-sheet">
+  <div class="clearfix">
+    <span class="h3 pull-left">
+        {{ source.name }}'s {% if source_type == "chair" %}Ⓒ{% elif source_type == "trainee" %}Ⓣ{% endif %} Ballot
+    </span>
+    <span class="badge h3 pull-right">{{ round.abbreviation }}</span>
+    <span class="badge h3 pull-right">{{ debate.venue_splitname }}</span>
+  </div>
+  <br><br>
+  <div class="row">
+
+    {% with team=debate.aff_team position="Affirmative" %}
+      {% include "print/print_score_team.html" %}
+    {% endwith %}
+    {% with team=debate.neg_team position="Negative" %}
+      {% include "print/print_score_team.html" %}
+    {% endwith %}
+
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="italic panel-title text-muted small"><em>For the tab room only</em></p>
+    </div>
+    <div class="panel-footer">
+      <table class="table" cellspacing="10" cellpadding="10">
+        <tbody>
+          <tr>
+            <td class="text-muted text-left small" style="border-top: none;">Entered By</td>
+            <td class="text-muted text-left small" style="border-top: none;">Checked By</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
