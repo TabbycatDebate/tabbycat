@@ -1326,11 +1326,65 @@ class Debate(models.Model):
             default=STATUS_NONE)
     ballot_in = models.BooleanField(default=False)
 
-    def _get_teams(self):
-        if not hasattr(self, '_team_cache'):
-            self._team_cache = {}
-            for t in DebateTeam.objects.filter(debate=self):
-                self._team_cache[t.position] = t
+    def __contains__(self, team):
+        return team in (self.aff_team, self.neg_team)
+
+    def __unicode__(self):
+        return u"%s - [%s] %s vs %s" % ( # bug
+            self.round.tournament,
+            self.round.abbreviation,
+            self.aff_team.short_name,
+            self.neg_team.short_name
+        )
+
+    @cached_property
+    def teams(self):
+        return Team.objects.select_related('debate_team').filter(debateteam__debate=self)
+
+    @cached_property
+    def aff_team(self):
+        aff_dt = self.aff_dt
+        return aff_dt.team
+
+    @cached_property
+    def neg_team(self):
+        neg_dt = self.neg_dt
+        return neg_dt.team
+
+    def get_team(self, side):
+        return getattr(self, '%s_team' % side)
+
+    def get_dt(self, side):
+        """dt = DebateTeam"""
+        return getattr(self, '%s_dt' % side)
+
+    @cached_property
+    def aff_dt(self):
+        aff_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
+        return aff_dt
+
+    @cached_property
+    def neg_dt(self):
+        neg_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
+        return neg_dt
+
+    def get_side(self, team):
+        if self.aff_team == team:
+            return 'aff'
+        if self.neg_team == team:
+            return 'neg'
+        return None
+
+    @property
+    def draw_conflicts(self):
+        d = []
+        history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
+        if history:
+            d.append("History conflict (%d)" % history)
+        if self.aff_team.institution == self.neg_team.institution:
+            d.append("Institution conflict")
+
+        return d
 
     @property
     def confirmed_ballot(self):
@@ -1351,10 +1405,9 @@ class Debate(models.Model):
 
     @property
     def identical_ballots_dict(self):
-        """Returns a dict, keys are BallotSubmissions,
-        values are lists of version numbers of BallotSubmissions that are
-        identical to the key's BallotSubmission. Excludes discarded
-        ballots (always)."""
+        """Returns a dict. Keys are BallotSubmissions, values are lists of
+        version numbers of BallotSubmissions that are identical to the key's
+        BallotSubmission. Excludes discarded ballots (always)."""
         ballots = self.ballotsubmission_set_by_version_except_discarded
         result = dict((b, list()) for b in ballots)
         for ballot1 in ballots:
@@ -1367,48 +1420,6 @@ class Debate(models.Model):
         for l in result.itervalues():
             l.sort()
         return result
-
-    @cached_property
-    def aff_team(self):
-        aff_dt = self.aff_dt
-        return aff_dt.team
-
-    @cached_property
-    def neg_team(self):
-        neg_dt = self.neg_dt
-        return neg_dt.team
-
-    def get_team(self, side):
-        return getattr(self, '%s_team' % side)
-
-    def get_dt(self, side):
-        """dt = DebateTeam"""
-        return getattr(self, '%s_dt' % side)
-
-    @property
-    def division_motion(self):
-        return Motion.objects.filter(round=self.round, divisions=self.division)
-
-    @cached_property
-    def aff_dt(self):
-        aff_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
-        return aff_dt
-
-    @cached_property
-    def neg_dt(self):
-        neg_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
-        return neg_dt
-
-    @property
-    def draw_conflicts(self):
-        d = []
-        history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
-        if history:
-            d.append("History conflict (%d)" % history)
-        if self.aff_team.institution == self.neg_team.institution:
-            d.append("Institution conflict")
-
-        return d
 
     @property
     def flags_all(self):
@@ -1439,6 +1450,8 @@ class Debate(models.Model):
 
     @property
     def adjudicators(self):
+        """Returns an AdjudicatorAllocation containing the adjudicators for this
+        debate."""
         adjs = DebateAdjudicator.objects.filter(debate=self)
         alloc = AdjudicatorAllocation(self)
         for a in adjs:
@@ -1466,33 +1479,13 @@ class Debate(models.Model):
 
         return alloc
 
-
-    @property
-    def result(self):
-        warn("Debate.result is deprecated. Use Debate.confirmed_ballot.ballot_set instead.", DeprecationWarning, stacklevel=2)
-        raise NotImplementedError("Debate.result is deprecated. Use Debate.confirmed_ballot.ballot_set instead.")
-
-    def get_side(self, team):
-        if self.aff_team == team:
-            return 'aff'
-        if self.neg_team == team:
-            return 'neg'
-        return None
-
-    def __contains__(self, team):
-        return team in (self.aff_team, self.neg_team)
-
-    def __unicode__(self):
-        return u"%s - [%s] %s vs %s" % ( # bug
-            self.round.tournament,
-            self.round.abbreviation,
-            self.aff_team.short_name,
-            self.neg_team.short_name
-        )
-
     @property
     def matchup(self):
         return u'%s vs %s' % (self.aff_team.short_name, self.neg_team.short_name)
+
+    @property
+    def division_motion(self):
+        return Motion.objects.filter(round=self.round, divisions=self.division)
 
 
 class SRManager(models.Manager):
@@ -1676,6 +1669,7 @@ class AdjudicatorFeedback(Submission):
 
 
 class AdjudicatorAllocation(object):
+    """Not a model, just a container object for the adjudicators on a panel."""
     def __init__(self, debate, chair=None, panel=None):
         self.debate = debate
         self.chair = chair
@@ -1684,6 +1678,7 @@ class AdjudicatorAllocation(object):
 
     @property
     def list(self):
+        """Panel only, excludes trainees."""
         a = [self.chair]
         a.extend(self.panel)
         return a
@@ -1692,6 +1687,7 @@ class AdjudicatorAllocation(object):
         return ", ".join(map(lambda x: (x is not None) and x.name or "<None>", self.list))
 
     def __iter__(self):
+        """Iterates through all, including trainees."""
         yield DebateAdjudicator.TYPE_CHAIR, self.chair
         for a in self.panel:
             yield DebateAdjudicator.TYPE_PANEL, a
