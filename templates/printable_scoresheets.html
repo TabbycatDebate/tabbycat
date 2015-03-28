@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block head-title %}
-  Printable Scoresheets Forms <small>(use your browser's print function to save to PDF, turn off header/footer and turn on background graphics</small>
+  Printable Scoresheets Forms <small>(use your browser's print function to save to PDF, set to PORTRAIT, turn off header/footer and turn on background graphics)</small>
 {% endblock %}
 {% block page-title %}Printable Scoresheets Forms for {{ round.name }}{% endblock %}
 {% block body-class %}print-scoresheet{% endblock %}
@@ -11,20 +11,16 @@
 
 {% block content %}
 
-  {{ config.reply_scores_enabled }} /
-  {{ config.score_max }} /
-  {{ config.reply_score_max }} /
-
   {% for debate in draw %}
 
     {% for type, adj in debate.adjudicators %}
       {% if type == 'C' and debate.adjudicators.is_panel %}
-        {% with source=adj source_type="trainee" %}
+        {% with source=adj source_type="chair" %}
           {% include "print/print_score_ballot.html" %}
         {% endwith %}
       {% endif %}
       {% if type == 'P' and debate.adjudicators.is_panel %}
-        {% with source=adj source_type="trainee" %}
+        {% with source=adj source_type="panelist" %}
           {% include "print/print_score_ballot.html" %}
         {% endwith %}
       {% endif %}
@@ -34,7 +30,6 @@
         {% endwith %}
       {% endif %}
     {% endfor %}
-
   {% endfor %}
 
 

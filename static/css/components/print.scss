@@ -3,7 +3,7 @@
 // Printables
 
 
-.printable-feedback-sheet {
+.printable-feedback-sheet, .printable-score-sheet {
   page-break-after: always;
 
   .badge {
@@ -25,17 +25,28 @@
     border-left: 20px solid #FFF;
     border-right: 20px solid #FFF;
   }
+  .table-printed-writeable td {
+    line-height: 40px;
+    padding-bottom: 0px !important;
+    padding-right: 8px !important;
+  }
+  .table-printed-writeable th.text-center {
+    padding-right: 8px !important;
+  }
+  .table .table td.writeable {
+    border-bottom: 3px solid #CCC;
+  }
 }
 
 @media print {
 
-  .print-feedback {
+  .print-feedback, .print-scoresheet {
     .page-header {
       display: none !important;
     }
   }
 
-  .printable-feedback-sheet {
+  .printable-feedback-sheet, .printable-score-sheet {
     font-size: 75%;
   }
 

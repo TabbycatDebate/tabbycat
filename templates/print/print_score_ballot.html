@@ -1,6 +1,6 @@
 {% load debate_tags %}
 
-<section class="printable-feedback-sheet">
+<section class="printable-score-sheet">
   <div class="clearfix">
     <span class="h3 pull-left">
         {{ source.name }}'s {% if source_type == "chair" %}Ⓒ{% elif source_type == "trainee" %}Ⓣ{% endif %} Ballot
@@ -8,26 +8,43 @@
     <span class="badge h3 pull-right">{{ round.abbreviation }}</span>
     <span class="badge h3 pull-right">{{ debate.venue_splitname }}</span>
   </div>
-  <br><br>
+
+  <h5><small> (Panel of {% for type, adj in debate.adjudicators %}{% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}{{ adj.name }}{% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}{% endfor %})</small></h5>
+
   <div class="row">
+    <div class="col-md-12">
+      <table class="table wrap-table" style="border: none;">
+        <tbody>
+          <tr>
+            <td style="padding: 0 10px 0 0 !important;">
+              {% with team=debate.aff_team position="Aff" %}
+                {% include "print/print_score_team.html" %}
+              {% endwith %}
+            </td>
+            <td style="padding: 0 0 0 10px !important;">
+              {% with team=debate.neg_team position="Neg" %}
+                {% include "print/print_score_team.html" %}
+              {% endwith %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    {% with team=debate.aff_team position="Affirmative" %}
-      {% include "print/print_score_team.html" %}
-    {% endwith %}
-    {% with team=debate.neg_team position="Negative" %}
-      {% include "print/print_score_team.html" %}
-    {% endwith %}
 
+  <div class="panel panel-default">
+    <div class="panel-body">
+      The Debate was won by:
+    </div>
   </div>
 
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <p class="italic panel-title text-muted small"><em>For the tab room only</em></p>
-    </div>
     <div class="panel-footer">
       <table class="table" cellspacing="10" cellpadding="10">
         <tbody>
           <tr>
+            <td class="text-muted text-left small" style="border-top: none;"><em>For the tab room only</em></td>
             <td class="text-muted text-left small" style="border-top: none;">Entered By</td>
             <td class="text-muted text-left small" style="border-top: none;">Checked By</td>
           </tr>

@@ -1,39 +1,62 @@
 {% load debate_tags %}
 
-<div class="col-md-6">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <p class="panel-title small">
-        <span class="team-emoji">{% team_emoji team %} </span>
-        {{ team.short_name }}
-        <span class="badge pull-right">{{ position }}</span>
-      </p>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title clearfix">
+      <h5 class="pull-left"><span class="team-emoji">{% team_emoji team %} </span>{{ team.short_name }}</h5>
+      <span class="badge pull-right">{{ position }}</span>
     </div>
-    <div class="panel-body">
-      <table class="table" cellspacing="10" cellpadding="10">
-        <thead>
-          <tr>
-            <th>Position</th>
-            <th>Speaker</th>
-            <th>Pronoun</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for config.reply_scores_enabled %}
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          {% endfor %}
-          {% if config.reply_scores_enabled %}
-
-          {% endif %}
-        </tbody>
-      </table>
+  </div>
+  <div class="panel-body" style="padding-left: 0px; padding-right: 0px;">
+    <table class="table table-printed-writeable" cellspacing="10" cellpadding="10">
+      <thead>
+        <tr>
+          <th class="text-center" width="5%"></th>
+          <th class="text-center" width="65%">Name</th>
+          <th class="text-center" width="12%"></th>
+          <th class="text-center" width="18%">Score</th>
+        </tr>
       </thead>
-    </div>
+      <tbody>
+        {% for i in config.substantive_speakers|times %}
+        <tr  class="text-muted text-center">
+          <td>{{ i|add:1 }}</td>
+          <td class="writeable"></td>
+          <td class="text-muted text-center">
+            {% if config.score_step >= 1 %}
+              ({{config.score_min|floatformat:"0" }}-{{ config.score_max|floatformat:"0" }})
+            {% else %}
+              {{config.score_min }} to {{ config.score_max }}
+            {% endif %}
+          </td>
+          <td class="writeable"></td>
+        </tr>
+        {% endfor %}
+        {% if config.reply_scores_enabled %}
+        <tr  class="text-muted text-center">
+          <td>R</td>
+          <td class="writeable"></td>
+          <td class="text-muted text-center">
+            {% if config.score_step >= 1 %}
+              ({{config.reply_score_min|floatformat:"0" }}-{{ config.reply_score_max|floatformat:"0" }})
+            {% else %}
+              {{config.reply_score_min }} to {{ config.reply_score_max }}
+            {% endif %}
+          </td>
+          <td class="writeable"></td>
+        </tr>
+        {% endif %}
+        <tr>
+          <td style="border-bottom: none;"></td>
+          <td></td>
+          <td class="text-right"><strong>Total:</strong></td>
+          <td class="writeable"></td>
+        </tr>
+      </tbody>
+    </table>
+    </thead>
+  </div>
+  <div class="panel-footer small text-muted">
+    {{ team.short_name }} is {% for speaker in team.speakers %}{% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}{{ speaker.name }}{% endfor %}
   </div>
 </div>

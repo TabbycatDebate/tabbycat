@@ -121,3 +121,7 @@ def prev_value(value, arg):
         return value[int(arg)-1]
     except:
         return None
+
+@register.filter(name='times')
+def times(number):
+    return range(number)

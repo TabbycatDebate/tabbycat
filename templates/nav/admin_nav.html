@@ -16,13 +16,13 @@
       <li><a class="team-standings-nav" href="{% round_url team_standings current_round %}">Teams</a></li>
       <li><a class="speaker-standings-nav" href="{% round_url speaker_standings current_round %}">Speakers</a></li>
       {% if show_novices %}
-        <li><a class="novice-standings-nav" href="{% round_url novice_standings current_round %}">Novices Speakers</a></li>
+        <li><a class="novice-standings-nav" href="{% round_url novice_standings current_round %}">Novices</a></li>
       {% endif %}
       {% if reply_scores_enabled %}
         <li><a class="reply-standings-nav" href="{% round_url reply_standings current_round %}">Replies</a></li>
       {% endif %}
-      <li><a class="feedback-standings-nav" href="{% tournament_url feedback_progress %}">Feedback Stats</a></li>
-      <li><a class="motions-standings-nav" href="{% round_url motions current_round %}">Motion Stats</a></li>
+      <li><a class="feedback-standings-nav" href="{% tournament_url feedback_progress %}">Feedback</a></li>
+      <li><a class="motions-standings-nav" href="{% round_url motions current_round %}">Motions</a></li>
     </ul>
   </li>
   <li class="dropdown">
