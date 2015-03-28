@@ -9,9 +9,9 @@ from debate.result import BallotSet
 class BaseTestResult(TestCase):
 
     testdata = dict()
-    testdata[1] = {'scores': [[[75, 76, 74, 38],   [76, 73, 75, 37.5]],
-                              [[74, 75, 76, 37],   [77, 74, 74, 38]],
-                              [[75, 75, 75, 37.5], [76, 78, 77, 37]]],
+    testdata[1] = {'scores': [[[75.0, 76.0, 74.0, 38.0],   [76.0, 73.0, 75.0, 37.5]],
+                              [[74.0, 75.0, 76.0, 37.0],   [77.0, 74.0, 74.0, 38.0]],
+                              [[75.0, 75.0, 75.0, 37.5], [76.0, 78.0, 77.0, 37.0]]],
                    'totals_by_adj': [[263, 261.5], [262, 263], [262.5, 268]],
                    'majority_scores': [[74.5, 75, 75.5, 37.25], [76.5, 76, 75.5, 37.5]],
                    'majority_totals': [262.25, 265.5],
@@ -145,6 +145,16 @@ class CommonTests(object):
     @on_all_datasets
     def test_winner(self, ballotset, testdata):
         self.assertEqual(ballotset.winner, self.teams[testdata['winner']])
+
+    @on_all_datasets
+    def test_majority_totals(self, ballotset, testdata):
+        for team, total in zip(self.teams_input, testdata['majority_totals']):
+            self.assertEqual(ballotset.get_avg_total(team), total)
+
+    @on_all_datasets
+    def test_majority_totals_by_side(self, ballotset, testdata):
+        self.assertEqual(ballotset.aff_score, testdata['majority_totals'][0])
+        self.assertEqual(ballotset.neg_score, testdata['majority_totals'][1])
 
     @on_all_datasets
     def test_sheet_iter(self, ballotset, testdata):

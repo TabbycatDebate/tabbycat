@@ -130,11 +130,11 @@ class Scoresheet(object):
 
     @property
     def aff_score(self):
-        return self.get_total(self.debate.aff_dt)
+        return self._get_total(self.debate.aff_dt)
 
     @property
     def neg_score(self):
-        return self.get_total(self.debate.neg_dt)
+        return self._get_total(self.debate.neg_dt)
 
     @property
     def aff_win(self):
@@ -410,6 +410,9 @@ class BallotSet(object):
     def set_score(self, adj, team, position, score):
         """Set the score given by adjudicator for this team and position."""
         return self._set_score(adj, self._get_dt(team), position, score)
+
+    def get_avg_total(self, team):
+        return self._get_avg_total(self._get_dt(team))
 
     @property
     def aff_score(self):
