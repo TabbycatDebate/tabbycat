@@ -33,8 +33,8 @@
   .table-printed-writeable th.text-center {
     padding-right: 8px !important;
   }
-  .table .table td.writeable {
-    border-bottom: 3px solid #CCC;
+  td.writeable {
+    border-bottom: 3px solid #CCC !important;
   }
 }
 

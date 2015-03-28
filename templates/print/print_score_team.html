@@ -1,8 +1,8 @@
 {% load debate_tags %}
 
 <div class="panel panel-default">
-  <div class="panel-heading h5">
-    <span class="team-emoji">{% team_emoji team %} </span>{{ team.short_name }} <span class="text-muted">({{ position }})</span>
+  <div class="panel-heading">
+    <h5><span class="team-emoji">{% team_emoji team %} </span>{{ team.short_name }} <span class="text-muted">({{ position }})</span></h5>
   </div>
   <div class="panel-body" style="padding: 0px;">
     <table class="table table-printed-writeable" cellspacing="10" cellpadding="10">
@@ -46,7 +46,7 @@
         <tr>
           <td style="border-bottom: none;"></td>
           <td></td>
-          <td class="text-right"><strong>Total:</strong></td>
+          <td class="text-right"><strong>Total</strong></td>
           <td class="writeable"></td>
         </tr>
       </tbody>
