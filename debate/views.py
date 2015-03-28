@@ -1074,6 +1074,25 @@ def set_adj_test_score(request, t):
 
     return redirect_tournament('adj_feedback', t)
 
+@admin_required
+@expect_post
+@tournament_view
+def set_adj_breaking_status(request, t):
+    adj_id = int(request.POST["adj_id"])
+    adj_breaking_status = str(request.POST["adj_breaking_status"])
+
+    try:
+        adjudicator = Adjudicator.objects.get(id=adj_id)
+    except (Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
+        return HttpResponseBadRequest("Adjudicator probably doesn't exist")
+
+    if adj_breaking_status == "true":
+        adjudicator.breaking = True
+    else:
+        adjudicator.breaking = False
+
+    adjudicator.save()
+    return HttpResponse("ok")
 
 @admin_required
 @expect_post

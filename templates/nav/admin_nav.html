@@ -6,7 +6,7 @@
   {% endif %}
   <li><a class="draw-nav" href="{% round_url draw current_round %}">Draw</a></li>
   <li><a class="status-nav" href="{% round_url results current_round %}">Ballots</a></li>
-  <li><a class="adjudicators-standings-nav" href="{% tournament_url adj_feedback %}">Feedbacks</a></li>
+  <li><a class="adjudicators-standings-nav" href="{% tournament_url adj_feedback %}">Feedback</a></li>
   {% if enable_divisions %}
     <li><a class="division-allocations-nav" href="{% tournament_url division_allocations %}">Divisions</a></li>
   {% endif %}
