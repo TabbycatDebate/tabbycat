@@ -527,11 +527,14 @@ class BallotSet(object):
 
     @property
     def adjudicator_results(self):
-        # Must use self.debate.adjudicators to include trainees in the yields.
-        splits = [adj not in self.majority_adj and not self._is_trainee(adj)
-                for _, adj in self.debate.adjudicators]
-        for (type, adj), split in zip(self.debate.adjudicators, splits):
-            yield type, adj, split
+        """Iterator. Each iteration is a 3-tuple (adjtype, adj, split), where
+        adjtype is a DebateAdjudicator.TYPE_* constant, adj is an Adjudicator
+        object, and split is True if the adjudicator was in the minority and
+        not a trainee, False if the adjudicator was in the majority or is a
+        trainee."""
+        for adjtype, adj in self.debate.adjudicators:
+            yield adjtype, adj, (adj not in self.majority_adj and
+                    adjtype != m.DebateAdjudicator.TYPE_TRAINEE)
 
     @property
     def sheet_iter(self):
