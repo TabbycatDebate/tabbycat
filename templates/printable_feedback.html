@@ -1,80 +1,60 @@
 {% extends "base.html" %}
-{% load debate_tags %}
 {% load static %}
 
 {% block head-title %}
-  Printable Feedback Forms for {{ round.name }}
-  <small>Use your browser's print function</small>
+  Printable Feedback Forms <small>(use your browser's print function to save to PDF, turn off header/footer and turn on background graphics</small>
 {% endblock %}
 {% block page-title %}Printable Feedback Forms for {{ round.name }}{% endblock %}
 {% block body-class %}print-feedback{% endblock %}
 
-
 {% block content %}
 
   {% for debate in draw %}
-    <ul class="list-group printable-feedback-sheet">
 
-      <li class="list-group-item active">
-        <span class="badge h2">{{ round.abbreviation }} {{ debate.venue_splitname }}</span>
-        <h2>Feedback from {{ debate.aff_team.short_name }} <span class="team-emoji">{% team_emoji debate.aff_team %}</span></h2>
-      </li>
-      <li class="list-group-item">
-        <h3 class="text-center">The Adjudicator</h3>
-        <hr>
-      </li>
-      <li class="list-group-item">
-        <h3 class="text-center">Rating</h3>
-        <div class="row h1">
-          <div class="col-md-1"></div>
-          <div class="col-md-2">1</div>
-          <div class="col-md-2">2</div>
-          <div class="col-md-2">3</div>
-          <div class="col-md-2">4</div>
-          <div class="col-md-2">5</div>
-          <div class="col-md-1"></div>
-        </div>
-      </li>
-      </li>
-      <li class="list-group-item">
-        <h3 class="text-center">Comments</h3>
-        <hr><hr><hr><hr><hr><hr><hr><hr>
-      </li>
-      <li class="list-group-item disabled">
-        <p>Entered by:</p><p>Checked by:</p>
-      </li>
-    </ul>
-    <br><br><br><br>
-    <br><br><br><br>
-    <br><br><br><br>
+    {% with source=debate.aff_team %}
+      {% include "print/print_feedback_ballot.html" %}
+    {% endwith %}
 
-      <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
-
-      <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
-
-      <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
-      {{ debate.neg_team.short_name }}
-      </span>
-
-      <span class="hidden">
-      {{ debate.neg_team.speakers|join:', ' }}
-      </span>
-      <td class="adj-names">
-      {% for type, adj in debate.adjudicators %}
-        {% if type == 'C' and debate.adjudicators.is_panel %}
-          <span class="adj-chair">{{ adj.name }} Ⓒ</span>
-        {% elif type == 'T' %}
-          <br><span class="adj-trainee">{{ adj.name }} Ⓣ</span>
-        {% else %}
-          {% if debate.adjudicators.panel %}<br>{% endif %}
-          <span class="adj-normal">{{ adj.name }}</span>
-        {% endif %}
-      {% endfor %}
-      </td>
+    {% with source=debate.neg_team %}
+      {% include "print/print_feedback_ballot.html" %}
+    {% endwith %}
 
 
-    </section>
-  {% endfor %}
+    {% for type, adj in debate.adjudicators %}
+      {% if type == 'C' and debate.adjudicators.is_panel %}
 
+        {% for subtype, subadj in debate.adjudicators %}
+          {% if subtype == 'T' %}
+            {% with source=adj target=subadj target_type="trainee" %}
+              {% include "print/print_feedback_ballot.html" %}
+            {% endwith %}
+          {% elif subtype == 'P' %}
+            {% with source=adj target=subadj target_type="panelist" %}
+              {% include "print/print_feedback_ballot.html" %}
+            {% endwith %}
+          {% endif %}
+        {% endfor %}
+
+
+      {% elif type == 'C' and not debate.adjudicators.is_panel %}
+
+        <!-- no feedback needed -->
+
+      {% elif type == 'P' %}
+
+        {% with source=adj target=debate.chair target_type="chair" %}
+          {% include "print/print_feedback_ballot.html" %}
+        {% endwith %}
+
+      {% elif type == 'T' %}
+
+        {% with source=adj target=debate.chair target_type="chair" %}
+          {% include "print/print_feedback_ballot.html" %}
+        {% endwith %}
+      {% endif %}
+
+    {% endfor %}
+
+ {% endfor %}
 
 {% endblock content %}

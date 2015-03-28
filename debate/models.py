@@ -1452,6 +1452,12 @@ class Debate(models.Model):
         return alloc
 
     @property
+    def chair(self):
+        da_adj = list(DebateAdjudicator.objects.filter(debate=self, type="C"))
+        a_adj = da_adj[0].adjudicator
+        return a_adj
+
+    @property
     def venue_splitname(self):
         # Formatting venue names so they can split over multiple lines
         # TODO: integrate venue group name into here

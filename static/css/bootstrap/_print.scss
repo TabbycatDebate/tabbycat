@@ -7,8 +7,6 @@
 
   * {
     text-shadow: none !important;
-    color: #000 !important; // Black prints faster: h5bp.com/s
-    background: transparent !important;
     box-shadow: none !important;
   }
 
@@ -71,12 +69,6 @@
   // Bootstrap components
   .navbar {
     display: none;
-  }
-  .table {
-    td,
-    th {
-      background-color: #fff !important;
-    }
   }
   .btn,
   .dropup > .btn {

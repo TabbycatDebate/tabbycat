@@ -1,20 +1,48 @@
 // Basic print styles
 
+// Printables
+
+
 .printable-feedback-sheet {
+  page-break-after: always;
+
   .badge {
     background: #333;
     color: #FFF;
+    margin-left: 10px;
+  }
+  .table {
+    margin-bottom: 0px;
+    background: none;
   }
   hr {
-    border-top: 3px solid #CCC;
-    margin-top: 50px;
+    border-top: 2px solid #CCC;
+    margin-top: 40px;
+  }
+  .table-printed-selection th {
+    text-align: center;
+    border: none;
+    border-left: 20px solid #FFF;
+    border-right: 20px solid #FFF;
   }
 }
 
-
 @media print {
 
-  #header-options, .fixedHeader {
+  .print-feedback {
+    .page-header {
+      display: none !important;
+    }
+  }
+
+  .printable-feedback-sheet {
+    font-size: 75%;
+  }
+
+
+  // Old
+
+  .fixedHeader {
     display: none;
   }
   .page-header {
