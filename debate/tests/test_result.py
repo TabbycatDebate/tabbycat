@@ -18,6 +18,15 @@ class BaseTestResult(TestCase):
                    'winner_by_adj': [0, 1, 1],
                    'winner': 1}
 
+    incompletedata = {'scores': [[[75, 76, None, 38],   [76, 73, 75, 37.5]],
+                              [[74, 75, 76, 37],   [77, None, 74, 38]],
+                              [[75, 75, 75, 37.5], [76, 78, 77, None]]],
+                   'totals_by_adj': [[None, 261.5], [262, None], [262.5, None]],
+                   'majority_scores': [[None, 75, 75.5, 37.25], [76.5, None, 75.5, None]],
+                   'majority_totals': [None, None],
+                   'winner_by_adj': [None, None, None],
+                   'winner': None}
+
     def setUp(self):
         self.t = m.Tournament(slug="resulttest", name="ResultTest")
         self.t.save()
@@ -66,10 +75,10 @@ class BaseTestResult(TestCase):
         ballotsub = m.BallotSubmission.objects.get(debate=self.debate, confirmed=True)
         return BallotSet(ballotsub)
 
-    def save_complete_ballotset(self, teams, testdata_key):
+    def save_complete_ballotset(self, teams, testdata):
         ballotsub = m.BallotSubmission(debate=self.debate, submitter_type=m.BallotSubmission.SUBMITTER_TABROOM)
         ballotset = BallotSet(ballotsub)
-        scores = self.testdata[testdata_key]['scores']
+        scores = testdata['scores']
 
         for team in teams:
             speakers = self._get_team(team).speaker_set.all()
@@ -98,9 +107,10 @@ class CommonTests(object):
         each test dataset in BaseTestResult.testdata."""
         def foo(self):
             for testdata_key in self.testdata:
-                self.save_complete_ballotset(self.teams_input, testdata_key)
+                testdata = self.testdata[testdata_key]
+                self.save_complete_ballotset(self.teams_input, testdata)
                 ballotset = self._get_ballotset()
-                test_fn(self, ballotset, self.testdata[testdata_key])
+                test_fn(self, ballotset, testdata)
         return foo
 
     @on_all_datasets
@@ -154,6 +164,8 @@ class CommonTests(object):
             self.assertEqual(sheet.aff_win, winner == 0)
             self.assertEqual(sheet.neg_win, winner == 1)
 
+    def test_incomplete_save(self):
+        self.assertRaises(AssertionError, self.save_complete_ballotset, self.teams_input, self.incompletedata)
 
 class TestResultByTeam(BaseTestResult, CommonTests):
     def setUp(self):

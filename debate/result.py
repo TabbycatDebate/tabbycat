@@ -178,12 +178,13 @@ class BallotSet(object):
         self.loaded_sheets = False
         self._adjudicator_sheets = None
 
-        self.speakers    = {dt: {} for dt in self.dts}
-        self.points      = dict.fromkeys(self.dts, None)
-        self.total_score = dict.fromkeys(self.dts, None)
-        self.wins        = dict.fromkeys(self.dts, None)
-        self.margins     = dict.fromkeys(self.dts, None)
+        self.speakers = {dt: {} for dt in self.dts}
         self.motion_veto = dict.fromkeys(self.dts, None)
+
+        self.points_from_db      = dict.fromkeys(self.dts, None)
+        self.total_score_from_db = dict.fromkeys(self.dts, None)
+        self.wins_from_db        = dict.fromkeys(self.dts, None)
+        self.margins_from_db     = dict.fromkeys(self.dts, None)
 
         self._other = {self.dts[0]: self.dts[1], self.dts[1]: self.dts[0]}
 
@@ -207,15 +208,15 @@ class BallotSet(object):
 
         try:
             ts = self.ballotsub.teamscore_set.get(debate_team=dt)
-            self.points[dt] = ts.points
-            self.total_score[dt] = ts.score
-            self.wins[dt] = ts.win
-            self.margins[dt] = ts.margin
+            self.points_from_db[dt] = ts.points
+            self.total_score_from_db[dt] = ts.score
+            self.wins_from_db[dt] = ts.win
+            self.margins_from_db[dt] = ts.margin
         except ObjectDoesNotExist:
-            self.points[dt] = None
-            self.total_score[dt] = None
-            self.wins[dt] = None
-            self.margins[dt] = None
+            self.points_from_db[dt] = None
+            self.total_score_from_db[dt] = None
+            self.wins_from_db[dt] = None
+            self.margins_from_db[dt] = None
 
         try:
             dtmp = self.ballotsub.debateteammotionpreference_set.get(
@@ -341,7 +342,7 @@ class BallotSet(object):
 
     def _get_avg_total(self, dt):
         if not self.loaded_sheets:
-            return self.total_score[dt]
+            return self.total_score_from_db[dt]
         return sum(self.adjudicator_sheets[adj]._get_total(dt) for adj in
                    self.majority_adj) / len(self.majority_adj)
 
@@ -353,7 +354,7 @@ class BallotSet(object):
     # Abstracted to not be tied to wins
     def _get_points(self, dt):
         if not self.loaded_sheets:
-            return self.points[dt]
+            return self.points_from_db[dt]
 
         if self._get_avg_total(dt):
             if self._get_avg_total(dt) > self._get_avg_total(self._other[dt]):
@@ -365,7 +366,7 @@ class BallotSet(object):
     # Supplants _points; ie its a count of the number of wins
     def _get_win(self, dt):
         if not self.loaded_sheets:
-            return self.win[dt]
+            return self.wins_from_db[dt]
 
         if self._get_avg_total(dt):
             if self._get_avg_total(dt) > self._get_avg_total(self._other[dt]):
@@ -376,7 +377,7 @@ class BallotSet(object):
 
     def _get_margin(self, dt):
         if not self.loaded_sheets:
-            return self.margin[dt]
+            return self.margins_from_db[dt]
 
         if self.debate.round.tournament.config.get('margin_includes_dissenters') is False:
             if self._get_avg_total(dt) and self._get_avg_total(self._other[dt]):
@@ -435,16 +436,12 @@ class BallotSet(object):
         return self.neg_points
 
     def is_trainee(self, adj):
-        from debate import models as m
-        da = m.DebateAdjudicator.objects.get(
-            adjudicator = adj,
-            debate = self.debate)
+        da = self.debate.debateadjudicator_set.get(adjudicator=adj)
         return da.type == m.DebateAdjudicator.TYPE_TRAINEE
 
     @property
     def adjudicator_results(self):
-        # TODO change this to use self.adjudicators not self.debate.adjudicators
-        self._calc_decision()
+        # Must use self.debate.adjudicators to include trainees in the yields.
         splits = [adj not in self.majority_adj and not self.is_trainee(adj)
                 for _, adj in self.debate.adjudicators]
         for (type, adj), split in zip(self.debate.adjudicators, splits):
