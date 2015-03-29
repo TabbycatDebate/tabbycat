@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head-title %}
-  Printable Feedback Forms <small>(use CTRL+P save to PDF, set to PORTRAIT, turn off header/footer and turn on background graphics)</small>
+  {{ round.abbreviation }} Feedback Forms <br><small>(use CTRL+P to save to PDF for printing, but be sure to set orientation to PORTRAIT, to turn off headers/footers and turn on background graphics. Works best in Safari or Firefox.)</small>
 {% endblock %}
 {% block page-title %}Printable Feedback Forms for {{ round.name }}{% endblock %}
 {% block body-class %}print-feedback{% endblock %}

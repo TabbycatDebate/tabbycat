@@ -18,6 +18,36 @@
   src: url('../../css/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../css/bootstrap/glyphicons-halflings-regular.woff') format('woff'), url('../../css/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), url('../../css/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 
+// General utilities
+
+.no-vertical-spacing,
+table.table > thead > tr > th.no-vertical-spacing,
+table.table > tbody > tr > td.no-vertical-spacing {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.no-horizontal-spacing,
+table.table > thead > tr > th.no-horizontal-spacing,
+table.table > tbody > tr > td.no-horizontal-spacing {
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.no-borders,
+.table > thead > tr > th.no-borders,
+.table > tbody > tr > td.no-borders {
+  border-bottom: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+// For the size buttons
 .h4_minus {
   @extend .h4;
   font-size: ceil(($font-size-base * 1.12));

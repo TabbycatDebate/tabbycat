@@ -3,7 +3,8 @@
 // Printables
 
 
-.printable-feedback-sheet, .printable-score-sheet {
+.printable-feedback-sheet,
+.printable-score-sheet {
   page-break-after: always;
 
   .badge {
@@ -15,38 +16,41 @@
     margin-bottom: 0px;
     background: none;
   }
-  hr {
-    border-top: 2px solid #CCC;
-    margin-top: 40px;
-  }
   .table-printed-selection th {
     text-align: center;
     border: none;
     border-left: 20px solid #FFF;
     border-right: 20px solid #FFF;
   }
-  .table-printed-writeable td {
-    line-height: 40px;
-    padding-bottom: 0px !important;
-    padding-right: 8px !important;
+  .writeable {
+    border-bottom: 3px solid #CCC !important;
+    margin-top: 35px;
   }
-  .table-printed-writeable th.text-center {
-    padding-right: 8px !important;
+  hr.writeable {
+    margin-top: 45px;
+    margin-bottom: 0px;
   }
   td.writeable {
-    border-bottom: 3px solid #CCC !important;
+    height: 53px;
+  }
+  .table > tbody > tr > td.small {
+    padding-top: 10px !important; // compensating for small size
   }
 }
 
+
+
 @media print {
 
-  .print-feedback, .print-scoresheet {
+  .print-feedback,
+  .print-scoresheet {
     .page-header {
       display: none !important;
     }
   }
 
-  .printable-feedback-sheet, .printable-score-sheet {
+  .printable-feedback-sheet,
+  .printable-score-sheet {
     font-size: 75%;
   }
 
@@ -56,14 +60,13 @@
   .fixedHeader {
     display: none;
   }
+
   .page-header {
     .col-md-12 {
       padding-left: 0;
     }
-    h1,h2,h3,h4 {
-
-    }
   }
+
   table {
     page-break-inside: avoid; // Don't split a table across multiple pages
     tr {
@@ -74,11 +77,14 @@
       border-bottom: none;
     }
   }
+
   table.h4 {
     font-size: 75%;
     font-weight: normal;
   }
+
   #djDebug {
     display: none !important;
   }
+
 }

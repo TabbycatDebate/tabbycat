@@ -2,7 +2,7 @@
 
 <section class="printable-feedback-sheet">
   <div class="clearfix">
-    <span class="h3 pull-left">
+    <span class="h3 pull-left no-vertical-spacing">
       {% if source.name %}
         {{ source.name }}'s Feedback
       {% else %}
@@ -10,10 +10,18 @@
         {{ source.short_name }}'s Feedback
       {% endif %}
     </span>
-    <span class="badge h3 pull-right">{{ round.abbreviation }}</span>
-    <span class="badge h3 pull-right">{{ debate.venue_splitname }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">{{ round.abbreviation }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">{{ debate.venue_splitname }}</span>
   </div>
-  <br><br>
+  <p class="small text-muted">
+    {% if debate.adjudicators.count > 0 %}
+      Panel was {% for type, adj in debate.adjudicators %}{% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}{{ adj.name }}{% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}{% endfor %}
+    {% else %}
+      {{ debate.adjudicators }} was the sole adjudicator
+    {% endif %}
+  </p>
+  <br>
+
   <div class="panel panel-default">
     <div class="panel-heading">
       <p class="panel-title small">
@@ -26,7 +34,7 @@
         {% endif %}
       </p>
     </div>
-    <div class="panel-body">
+    <div class="panel-body no-vertical-spacing">
       <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
         <thead>
           <tr>
@@ -50,28 +58,45 @@
     </div>
   </div>
 
+
   <div class="panel panel-default">
     <div class="panel-heading">
-      <p class="panel-title small"><em>How good was their adjudication?</em></p>
+      <p class="italic panel-title small"><em>Did you agree with their decision?</em></p>
     </div>
-    <div class="panel-body">
+    <div class="panel-body no-vertical-spacing">
       <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
         <thead>
           <tr>
-            <th class="text-center h2">1</th>
-            <th class="text-center h2">2</th>
-            <th class="text-center h2">3</th>
-            <th class="text-center h2">4</th>
-            <th class="text-center h2">5</th>
+            <th class="text-center h4">Yes</th>
+            <th class="text-center h4">No</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="panel-title small"><em>How convincing was their adjudication?</em></p>
+    </div>
+    <div class="panel-body no-horizontal-spacing">
+      <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+        <thead>
+          <tr>
+            <th class="text-center no-vertical-spacing no-borders h2">😱</th>
+            <th class="text-center no-vertical-spacing no-borders h2">😧</th>
+            <th class="text-center no-vertical-spacing no-borders h2">😐</th>
+            <th class="text-center no-vertical-spacing no-borders h2">😃</th>
+            <th class="text-center no-vertical-spacing no-borders h2">😍</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="text-center text-muted">
-            <td width="20%"><small>The Worst</small></td>
-            <td width="20%"><small></small></td>
-            <td width="20%"><small>OK</small></td>
-            <td width="20%"><small></small></td>
-            <td width="20%"><small>The Best</small></td>
+          <tr class="text-center text-muted em small">
+            <td width="20%" class="no-borders no-vertical-spacing"><em>awful; should trainee</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>bad; should not chair</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>ok; should be panelling</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>good; should be chairing</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>amazing; should break</em></td>
           </tr>
         </tbody>
       </table>
@@ -80,21 +105,30 @@
 
   <div class="panel panel-default">
     <div class="panel-heading">
-      <p class="italic panel-title small"><em>Why did you rate it that way?</em></p>
+      <p class="italic panel-title small"><em>What did you think about the adjudication?</em></p>
     </div>
-    <div class="panel-body">
-      <hr><hr><hr><hr><hr><hr><hr><hr>
+    <div class="panel-body no-vertical-spacing">
+      <hr class="writeable">
+      <hr class="writeable">
+      <hr class="writeable">
+      <hr class="writeable">
+      <hr class="writeable">
+      <hr class="writeable">
+      <hr class="writeable">
+      <hr class="writeable">
+      <hr class="writeable">
+      <hr class="writeable">
     </div>
   </div>
 
   <div class="panel panel-default">
-    <div class="panel-footer">
+    <div class="panel-footer no-borders">
       <table class="table" cellspacing="10" cellpadding="10">
         <tbody>
           <tr>
-            <td class="text-muted text-left small" style="border-top: none;"><em>For the tab room only</em></td>
-            <td class="text-muted text-left small" style="border-top: none;">Entered By</td>
-            <td class="text-muted text-left small" style="border-top: none;">Checked By</td>
+            <td width="20%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only</em></span></td>
+            <td width="40%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small">Entered By</span></td>
+            <td width="40%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small">Checked By</span></td>
           </tr>
         </tbody>
       </table>

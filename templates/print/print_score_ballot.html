@@ -2,16 +2,56 @@
 
 <section class="printable-score-sheet">
   <div class="clearfix">
-    <span class="h3 pull-left">
+    <span class="h3 pull-left no-vertical-spacing">
         {{ source.name }}'s {% if source_type == "chair" %}Ⓒ{% elif source_type == "trainee" %}Ⓣ{% endif %} Ballot
     </span>
-    <span class="badge h3 pull-right">{{ round.abbreviation }}</span>
-    <span class="badge h3 pull-right">{{ debate.venue_splitname }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">{{ round.abbreviation }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">{{ debate.venue_splitname }}</span>
   </div>
+  <p class="small text-muted">
+    {% if debate.adjudicators.count > 0 %}
+      Panel was {% for type, adj in debate.adjudicators %}{% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}{{ adj.name }}{% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}{% endfor %}
+    {% else %}
+      {{ debate.adjudicators }} was the sole adjudicator
+    {% endif %}
+  </p>
+  <br>
 
   <div class="panel panel-default">
-    <div class="panel-body">
-      Panel of {% for type, adj in debate.adjudicators %}{% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}{{ adj.name }}{% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}{% endfor %})
+    <div class="panel-body no-horizontal-spacing no-vertical-spacing">
+      <table class="table">
+        <tbody>
+          <tr>
+            {% if motions.count == 0 %}
+              <td width="20%" class="no-borders no-horizontal-spacing no-vertical-spacing active">
+                <div class="panel-heading small">
+                  <em>What was the motion?</em>
+                </div>
+              </td>
+              <td width="80%" class="no-borders no-horizontal-spacing no-vertical-spacing">
+                <div class="writeable"></div>
+              </td>
+            {% elif motions.count == 1 %}
+              <td width="20%" class="no-borders no-horizontal-spacing no-vertical-spacing active ">
+                <div class="panel-heading small">
+                  <em>The motion is</em> <strong>{{ motions.0.text }}</strong>
+                </div>
+              </td>
+            {% else %}
+              <td class="no-horizontal-spacing no-vertical-spacing active">
+                <div class="panel-heading small">
+                  <em>Which motion?</em>
+                </div>
+              </td>
+              {% for motion in motions %}
+                <td class="text-center small">
+                  <strong>{{ motion.text }}</strong>
+                </td>
+              {% endfor %}
+            {% endif %}
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -20,12 +60,12 @@
       <table class="table wrap-table" style="border: none;">
         <tbody>
           <tr>
-            <td style="padding: 0 10px 0 0 !important; border-top: none;">
+            <td class="no-borders no-horizontal-spacing">
               {% with team=debate.aff_team position="Aff" %}
                 {% include "print/print_score_team.html" %}
               {% endwith %}
             </td>
-            <td style="padding: 0 0 0 10px !important; border-top: none;">
+            <td class="no-borders">
               {% with team=debate.neg_team position="Neg" %}
                 {% include "print/print_score_team.html" %}
               {% endwith %}
@@ -41,28 +81,40 @@
       <table class="table wrap-table" style="border: none;">
         <tbody>
           <tr>
-            <td style="padding: 0 10px 0 0 !important; border-top: none;" width="50%">
+            <td class="no-horizontal-spacing no-vertical-spacing no-borders" width="50%">
               <div class="panel panel-default">
-                <div class="panel-body" style="padding-bottom: 0px;">
+                <div class="panel-body no-horizontal-spacing no-vertical-spacing">
                   <table class="table">
                     <tbody>
                       <tr>
-                        <td width="50%" class="text-right" style="padding-bottom: 15px;"><strong><em>Which team won the debate?</em></strong></td>
-                        <td width="50%" class="writeable" style="border-top: none;"></td>
+                        <td width="40%" class="no-borders no-horizontal-spacing no-vertical-spacing active">
+              <div class="panel-heading small">
+                <em>Which team won the debate?</em>
+              </div>
+                        </td>
+                        <td width="60%" class="no-borders no-horizontal-spacing no-vertical-spacing">
+                          <div class="writeable"></div>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
             </td>
-            <td style="padding: 0 0 0 10px !important; border-top: none;" width="50%">
+            <td class="no-vertical-spacing no-borders" width="50%">
               <div class="panel panel-default">
-                <div class="panel-body" style="padding-bottom: 0px;">
+                <div class="panel-body no-horizontal-spacing no-vertical-spacing">
                   <table class="table">
                     <tbody>
                       <tr>
-                        <td width="50%" class="text-right" style="padding-bottom: 15px;"><strong><em>By how many points did they win? </em></strong></td>
-                        <td width="50%" class="writeable" style="border-top: none;"></td>
+                        <td width="40%" class="no-borders no-horizontal-spacing no-vertical-spacing active">
+              <div class="panel-heading small">
+                <em>By how many points did they win?</em>
+              </div>
+                        </td>
+                        <td width="60%" class="no-borders no-horizontal-spacing no-vertical-spacing">
+                          <div class="writeable"></div>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -76,13 +128,13 @@
   </div>
 
   <div class="panel panel-default">
-    <div class="panel-footer">
+    <div class="panel-footer no-borders">
       <table class="table" cellspacing="10" cellpadding="10">
         <tbody>
           <tr>
-            <td class="text-muted text-left small" style="border-top: none;"><em>For the tab room only</em></td>
-            <td class="text-muted text-left small" style="border-top: none;">Entered By</td>
-            <td class="text-muted text-left small" style="border-top: none;">Checked By</td>
+            <td width="20%" class="text-muted text-left no-vertical-spacing no-borders"><span class="small"><em>For the tab room only</em></span></td>
+            <td width="40%" class="text-muted text-left no-vertical-spacing no-borders"><span class="small">Entered By</span></td>
+            <td width="40%" class="text-muted text-left no-vertical-spacing no-borders"><span class="small">Checked By</span></td>
           </tr>
         </tbody>
       </table>

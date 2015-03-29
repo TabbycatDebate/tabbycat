@@ -1,44 +1,65 @@
 {% load debate_tags %}
 
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <h5><span class="team-emoji">{% team_emoji team %} </span>{{ team.short_name }} <span class="text-muted">({{ position }})</span></h5>
+  <div class="panel-heading clearfix">
+    <h5 class="no-vertical-spacing pull-left">
+      <span class="team-emoji">{% team_emoji team %} </span>
+      {{ team.short_name }}
+      <small>
+        ({% for speaker in team.speakers %}{% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}{{ speaker.name }}{% endfor %})
+      </small>
+    </h5>
+    <span class="text-muted pull-right">{{ position }}</span>
   </div>
-  <div class="panel-body" style="padding: 0px;">
-    <table class="table table-printed-writeable" cellspacing="10" cellpadding="10">
+  <div class="panel-body no-horizontal-spacing no-vertical-spacing">
+    <table class="table" cellspacing="10" cellpadding="10">
       <thead>
         <tr>
-          <th class="text-center" width="5%"></th>
-          <th class="text-center" width="65%">Speaker's Name</th>
-          <th class="text-center" width="12%"></th>
-          <th class="text-center" width="18%">Score</th>
+          <th class="text-center" width="4%"></th>
+          <th class="text-center small" width="72%"><em style="font-weight: normal;">Name</em></th>
+          <th class="text-center" width="10%"></th>
+          <th class="text-center small" width="14%"><em style="font-weight: normal;">Score</em></th>
         </tr>
       </thead>
       <tbody>
         {% for i in config.substantive_speakers|times %}
         <tr class="text-muted text-center">
-          <td>{{ i|add:1 }}</td>
+          <td>
+            <h5>
+              <small>{{ i|add:1 }}</small>
+            </h5>
+          </td>
           <td class="writeable"></td>
           <td class="text-muted text-center">
-            {% if config.score_step >= 1 %}
-              ({{config.score_min|floatformat:"0" }}-{{ config.score_max|floatformat:"0" }})
-            {% else %}
-              {{config.score_min }} to {{ config.score_max }}
-            {% endif %}
+            <h5>
+              <small>
+              {% if config.score_step >= 1 %}
+                {{config.score_min|floatformat:"0" }}-{{ config.score_max|floatformat:"0" }}
+              {% else %}
+                {{config.score_min }}-{{ config.score_max }}
+              {% endif %}
+              </small>
+            </h5>
           </td>
           <td class="writeable"></td>
         </tr>
         {% endfor %}
         {% if config.reply_scores_enabled %}
         <tr class="text-muted text-center">
-          <td>R</td>
+          <td>
+            <h5><small>R</small></h5>
+          </td>
           <td class="writeable"></td>
           <td class="text-muted text-center">
-            {% if config.score_step >= 1 %}
-              ({{config.reply_score_min|floatformat:"0" }}-{{ config.reply_score_max|floatformat:"0" }})
-            {% else %}
-              {{config.reply_score_min }} to {{ config.reply_score_max }}
-            {% endif %}
+            <h5>
+              <small>
+              {% if config.score_step >= 1 %}
+                {{config.reply_score_min|floatformat:"0" }}-{{ config.reply_score_max|floatformat:"0" }}
+              {% else %}
+                {{config.reply_score_min }}-{{ config.reply_score_max }}
+              {% endif %}
+              </small>
+            </h5>
           </td>
           <td class="writeable"></td>
         </tr>
@@ -46,14 +67,11 @@
         <tr>
           <td style="border-bottom: none;"></td>
           <td></td>
-          <td class="text-right"><strong>Total</strong></td>
+          <td class="text-center small"><em style="line-height: 34px;">Total</em></td>
           <td class="writeable"></td>
         </tr>
       </tbody>
     </table>
     </thead>
-  </div>
-  <div class="panel-footer small text-muted">
-    {{ team.short_name }} is {% for speaker in team.speakers %}{% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}{{ speaker.name }}{% endfor %}
   </div>
 </div>
