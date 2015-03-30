@@ -158,6 +158,7 @@ class BallotSetForm(forms.Form):
         self.tournament = self.debate.round.tournament
         self.tconfig = self.tournament.config
         self.using_motions = self.tconfig.get('enable_motions')
+        self.using_forfeits = self.tconfig.get('enable_forfeits')
         self.choosing_sides = self.tconfig.get('draw_side_allocations') == 'manual-ballot'
 
         self.forfeit_declared = False
@@ -215,13 +216,15 @@ class BallotSetForm(forms.Form):
                 raise FormConstructionError('Whoops! There are %d teams in this debate, was expecting 2.' % len(dts))
             teams = self.debate.teams
             side_choices = [
-                ("", ""),
-                ((teams[0].id, teams[1].id), "%s affirmed, %s negated" % (teams[0].short_name, teams[1].short_name)),
-                ((teams[1].id, teams[0].id), "%s affirmed, %s negated" % (teams[1].short_name, teams[0].short_name))
+                (None, "---------"),
+                (str(teams[0].id) + "," + str(teams[1].id), "%s affirmed, %s negated" % (teams[0].short_name, teams[1].short_name)),
+                (str(teams[1].id) + "," + str(teams[0].id), "%s affirmed, %s negated" % (teams[1].short_name, teams[0].short_name))
             ]
             self.fields['choose_sides'] = forms.TypedChoiceField(
-                choices=side_choices, coerce=lambda x: tuple(Team.objects.get(id=v) for v in x)
+                choices=side_choices, coerce=lambda x: tuple(Team.objects.get(id=int(v)) for v in x.split(","))
             )
+            for team in self.debate.teams:
+                self.fields['team_%d' % team.id] = forms.ModelChoiceField(queryset=team.speakers, required=False)
 
         # 3. Motions fields
         if self.using_motions:
@@ -234,10 +237,9 @@ class BallotSetForm(forms.Form):
 
             # 4(a). Speaker identity
             try:
-                team = self.debate.get_team(side)
-                queryset = team.speakers
+                queryset = self.debate.get_team(side).speakers
             except (AttributeError, Team.DoesNotExist):
-                queryset = Speaker.objects.none()
+                queryset = Speaker.objects.none() # if sides not chosen
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(queryset=queryset)
 
             # 4(b). Speaker scores
@@ -248,7 +250,7 @@ class BallotSetForm(forms.Form):
                         tournament_config=self.tconfig)
 
         # 5. If forfeits are enabled, don't require some fields and add the forfeit field
-        if self.tconfig.get('enable_forfeits'):
+        if self.using_forfeits:
             for side, pos in self.SIDES_AND_POSITIONS:
                 self.fields[self._fieldname_score(adj, side, pos)].required = False
             self.fields['motion'].required = False
@@ -258,12 +260,15 @@ class BallotSetForm(forms.Form):
     def _initial_data(self):
         """Generates dictionary of initial form data."""
 
-        initial = {'debate_result_status': self.debate.result_status}
-
         bs = BallotSet(self.ballots)
+        initial = {'debate_result_status': self.debate.result_status,
+                'confirmed': bs.confirmed, 'discarded': bs.discarded}
 
-        initial['confirmed'] = bs.confirmed
-        initial['discarded'] = bs.discarded
+        if self.choosing_sides:
+            try:
+                initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)
+            except DebateTeam.DoesNotExist:
+                pass
 
         # Generally, initialise the motion to what is currently in the database.
         # But if there is only one motion and no motion is currently stored in
@@ -333,7 +338,7 @@ class BallotSetForm(forms.Form):
         errors = list()
 
         if 'forfeits' in cleaned_data:
-            if cleaned_data['forfeits'] == "aff_forfeit" or cleaned_data['forfeits'] == "neg_forfeit":
+            if cleaned_data['forfeits'] in ["aff_forfeit", "neg_forfeit"]:
                 self.forfeit_declared = True
 
         # TODO this should go up to the BallotSubmission.full_clean() method.
@@ -377,7 +382,7 @@ class BallotSetForm(forms.Form):
                 for speaker, count in speakers.iteritems():
                     if count > 1:
                         errors.append(forms.ValidationError(
-                            _('The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side) team.'),
+                            _('The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team.'),
                             params={'speaker': speaker, 'side': self._LONG_NAME[side], 'count': count}, code='speaker'
                         ))
 
@@ -389,7 +394,7 @@ class BallotSetForm(forms.Form):
                     continue
                 if reply_speaker_error:
                     errors.append(forms.ValidationError(
-                        _('The last substantive speaker and reply speaker for the %(side) team are the same.'),
+                        _('The last substantive speaker and reply speaker for the %(side)s team are the same.'),
                         params={'side': self._LONG_NAME[side]}, code='reply_speaker'
                     ))
 
@@ -400,13 +405,14 @@ class BallotSetForm(forms.Form):
 
     def save(self):
 
-        # Unconfirm the other, if necessary
+        # 1. Unconfirm the other, if necessary
         if self.cleaned_data['confirmed']:
             if self.debate.confirmed_ballot != self.ballots and self.debate.confirmed_ballot is not None:
                 self.debate.confirmed_ballot.confirmed = False
                 self.debate.confirmed_ballot.save()
 
-        if self.forfeit_declared:
+        # 2. Check if there was a forfeit
+        if self.using_forfeits and self.forfeit_declared:
             if self.cleaned_data['forfeits'] == "aff_forfeit":
                 forfeiter = self.debate.aff_dt
             if self.cleaned_data['forfeits'] == "neg_forfeit":
@@ -415,18 +421,27 @@ class BallotSetForm(forms.Form):
         else:
             bs = BallotSet(self.ballots)
 
-        if not self.forfeit_declared:
-            bs.set_sides() # TODO fill this in
+        # 3. Save the sides
+        if self.choosing_sides:
+            bs.set_sides(*self.cleaned_data['choose_sides'])
+
+        # 4. Save motions
+        if self.using_motions:
             bs.motion = self.cleaned_data['motion']
-            for side, pos in self.SIDES_AND_POSITIONS:
+            for side in self.SIDES:
                 motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)]
                 bs.set_motion_veto(side, motion_veto)
+
+        # 5. Save speaker fields
+        if not self.forfeit_declared:
+            for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 bs.set_speaker(side, pos, speaker)
                 for adj in self.adjudicators:
                     score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
                     bs.set_score(adj, side, pos, score)
 
+        # 6. Save status fields
         bs.discarded = self.cleaned_data['discarded']
         bs.confirmed = self.cleaned_data['confirmed']
         bs.save()

@@ -1330,23 +1330,30 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __unicode__(self):
-        return u"%s - [%s] %s vs %s" % ( # bug
-            self.round.tournament,
-            self.round.abbreviation,
-            self.aff_team.short_name,
-            self.neg_team.short_name
-        )
+        try:
+            return u"%s - [%s] %s vs %s" % (
+                self.round.tournament,
+                self.round.abbreviation,
+                self.aff_team.short_name,
+                self.neg_team.short_name
+            )
+        except DebateTeam.DoesNotExist:
+            return u"%s - [%s] %s" % (
+                self.round.tournament,
+                self.round.abbreviation,
+                ", ".join(map(lambda x: x.short_name, self.teams))
+            )
 
-    @cached_property
+    @property
     def teams(self):
         return Team.objects.select_related('debate_team').filter(debateteam__debate=self)
 
-    @cached_property
+    @property
     def aff_team(self):
         aff_dt = self.aff_dt
         return aff_dt.team
 
-    @cached_property
+    @property
     def neg_team(self):
         neg_dt = self.neg_dt
         return neg_dt.team
@@ -1358,12 +1365,12 @@ class Debate(models.Model):
         """dt = DebateTeam"""
         return getattr(self, '%s_dt' % side)
 
-    @cached_property
+    @property
     def aff_dt(self):
         aff_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
         return aff_dt
 
-    @cached_property
+    @property
     def neg_dt(self):
         neg_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
         return neg_dt
