@@ -551,59 +551,60 @@ class BallotSet(object):
         """
         REPLY_POSITION = self.debate.round.tournament.REPLY_POSITION
         POSITIONS = self.debate.round.tournament.POSITIONS
+        ballotset = self # provide access in inner classes
 
         class Position(object):
 
-            def __init__(self2, sheet, side, pos):
-                self2.sheet = sheet
-                self2.pos = pos
-                self2.side = side
+            def __init__(self, sheet, side, pos):
+                self.sheet = sheet
+                self.pos = pos
+                self.side = side
 
             @property
-            def name(self2):
-                return "Reply" if (self2.pos == REPLY_POSITION) else str(self2.pos)
+            def name(self):
+                return "Reply" if (self.pos == REPLY_POSITION) else str(self.pos)
 
             @property
-            def speaker(self2):
-                return self.get_speaker(self2.side, self2.pos)
+            def speaker(self):
+                return ballotset.get_speaker(self.side, self.pos)
 
             @property
-            def score(self2):
-                return self2.sheet.get_score(self2.side, self2.pos)
+            def score(self):
+                return self.sheet.get_score(self.side, self.pos)
 
         class ScoresheetWrapper(object):
 
-            def __init__(self2, adj):
-                self2.sheet = self.adjudicator_sheets[adj]
-                self2.adjudicator = adj
+            def __init__(self, adj):
+                self.sheet = ballotset.adjudicator_sheets[adj]
+                self.adjudicator = adj
 
-            def position_iter(self2, side):
+            def position_iter(self, side):
                 for pos in POSITIONS:
-                    yield Position(self2.sheet, side, pos)
+                    yield Position(self.sheet, side, pos)
 
             @property
-            def affs(self2):
-                return self2.position_iter('aff')
+            def affs(self):
+                return self.position_iter('aff')
 
             @property
-            def negs(self2):
-                return self2.position_iter('neg')
+            def negs(self):
+                return self.position_iter('neg')
 
             @property
-            def aff_score(self2):
-                return self2.sheet.aff_score
+            def aff_score(self):
+                return self.sheet.aff_score
 
             @property
-            def neg_score(self2):
-                return self2.sheet.neg_score
+            def neg_score(self):
+                return self.sheet.neg_score
 
             @property
-            def aff_win(self2):
-                return self2.sheet.aff_win
+            def aff_win(self):
+                return self.sheet.aff_win
 
             @property
-            def neg_win(self2):
-                return self2.sheet.neg_win
+            def neg_win(self):
+                return self.sheet.neg_win
 
         for adj in self.adjudicators:
             yield ScoresheetWrapper(adj)
