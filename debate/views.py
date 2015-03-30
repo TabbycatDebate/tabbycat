@@ -1162,11 +1162,8 @@ def edit_ballots(request, t, ballots_id):
 
     if not request.user.is_superuser:
         template = 'monkey/enter_results.html'
-        all_ballot_sets = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
-        if t.config.get('enable_assistant_confirms') is True:
-            disable_confirm = False
-        else:
-            disable_confirm = request.user == ballots.user
+        all_ballot_sets = debate.ballotsubmission_set_by_version_except_discarded
+        disable_confirm = request.user == ballots.user and not t.config.get('enable_assistant_confirms')
     else:
         template = 'enter_results.html'
         all_ballot_sets = debate.ballotsubmission_set.order_by('version')

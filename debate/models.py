@@ -91,9 +91,7 @@ class Tournament(models.Model):
         if self.config.get('reply_scores_enabled'):
             return 4
         else:
-            # A bit hackish; but ensures when looping through positions it will
-            # never hit the reply position
-            return 99
+            raise ValueError("There is no reply position when reply scores are disabled")
 
     @property
     def POSITIONS(self):
@@ -1328,47 +1326,20 @@ class Debate(models.Model):
             default=STATUS_NONE)
     ballot_in = models.BooleanField(default=False)
 
-    def _get_teams(self):
-        if not hasattr(self, '_team_cache'):
-            self._team_cache = {}
-            for t in DebateTeam.objects.filter(debate=self):
-                self._team_cache[t.position] = t
+    def __contains__(self, team):
+        return team in (self.aff_team, self.neg_team)
 
-    @property
-    def confirmed_ballot(self):
-        """Returns the confirmed ballot for this debate, or None if there is
-        no such ballot."""
-        try:
-            return self.ballotsubmission_set.get(confirmed=True)
-        except ObjectDoesNotExist: # BallotSubmission isn't defined yet, so can't use BallotSubmission.DoesNotExist
-            return None
+    def __unicode__(self):
+        return u"%s - [%s] %s vs %s" % ( # bug
+            self.round.tournament,
+            self.round.abbreviation,
+            self.aff_team.short_name,
+            self.neg_team.short_name
+        )
 
-    @property
-    def ballotsubmission_set_by_version(self):
-        return self.ballotsubmission_set.all().order_by('version')
-
-    @property
-    def ballotsubmission_set_by_version_except_discarded(self):
-        return self.ballotsubmission_set.filter(discarded=False).order_by('version')
-
-    @property
-    def identical_ballots_dict(self):
-        """Returns a dict, keys are BallotSubmissions,
-        values are lists of version numbers of BallotSubmissions that are
-        identical to the key's BallotSubmission. Excludes discarded
-        ballots (always)."""
-        ballots = self.ballotsubmission_set_by_version_except_discarded
-        result = dict((b, list()) for b in ballots)
-        for ballot1 in ballots:
-            # Save a bit of time by avoiding comparisons already done.
-            # This relies on ballots being ordered by version.
-            for ballot2 in ballots.filter(version__gt=ballot1.version):
-                if ballot1.is_identical(ballot2):
-                    result[ballot1].append(ballot2.version)
-                    result[ballot2].append(ballot1.version)
-        for l in result.itervalues():
-            l.sort()
-        return result
+    @cached_property
+    def teams(self):
+        return Team.objects.select_related('debate_team').filter(debateteam__debate=self)
 
     @cached_property
     def aff_team(self):
@@ -1387,10 +1358,6 @@ class Debate(models.Model):
         """dt = DebateTeam"""
         return getattr(self, '%s_dt' % side)
 
-    @property
-    def division_motion(self):
-        return Motion.objects.filter(round=self.round, divisions=self.division)
-
     @cached_property
     def aff_dt(self):
         aff_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -1400,6 +1367,13 @@ class Debate(models.Model):
     def neg_dt(self):
         neg_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
         return neg_dt
+
+    def get_side(self, team):
+        if self.aff_team == team:
+            return 'aff'
+        if self.neg_team == team:
+            return 'neg'
+        return None
 
     @property
     def draw_conflicts(self):
@@ -1411,6 +1385,41 @@ class Debate(models.Model):
             d.append("Institution conflict")
 
         return d
+
+    @property
+    def confirmed_ballot(self):
+        """Returns the confirmed BallotSubmission for this debate, or None if
+        there is no such ballot submission."""
+        try:
+            return self.ballotsubmission_set.get(confirmed=True)
+        except ObjectDoesNotExist: # BallotSubmission isn't defined yet, so can't use BallotSubmission.DoesNotExist
+            return None
+
+    @property
+    def ballotsubmission_set_by_version(self):
+        return self.ballotsubmission_set.all().order_by('version')
+
+    @property
+    def ballotsubmission_set_by_version_except_discarded(self):
+        return self.ballotsubmission_set.filter(discarded=False).order_by('version')
+
+    @property
+    def identical_ballots_dict(self):
+        """Returns a dict. Keys are BallotSubmissions, values are lists of
+        version numbers of BallotSubmissions that are identical to the key's
+        BallotSubmission. Excludes discarded ballots (always)."""
+        ballots = self.ballotsubmission_set_by_version_except_discarded
+        result = {b: list() for b in ballots}
+        for ballot1 in ballots:
+            # Save a bit of time by avoiding comparisons already done.
+            # This relies on ballots being ordered by version.
+            for ballot2 in ballots.filter(version__gt=ballot1.version):
+                if ballot1.is_identical(ballot2):
+                    result[ballot1].append(ballot2.version)
+                    result[ballot2].append(ballot1.version)
+        for l in result.itervalues():
+            l.sort()
+        return result
 
     @property
     def flags_all(self):
@@ -1441,6 +1450,8 @@ class Debate(models.Model):
 
     @property
     def adjudicators(self):
+        """Returns an AdjudicatorAllocation containing the adjudicators for this
+        debate."""
         adjs = DebateAdjudicator.objects.filter(debate=self)
         alloc = AdjudicatorAllocation(self)
         for a in adjs:
@@ -1468,33 +1479,13 @@ class Debate(models.Model):
 
         return alloc
 
-
-    @property
-    def result(self):
-        warn("Debate.result is deprecated. Use Debate.confirmed_ballot.ballot_set instead.", DeprecationWarning, stacklevel=2)
-        raise NotImplementedError("Debate.result is deprecated. Use Debate.confirmed_ballot.ballot_set instead.")
-
-    def get_side(self, team):
-        if self.aff_team == team:
-            return 'aff'
-        if self.neg_team == team:
-            return 'neg'
-        return None
-
-    def __contains__(self, team):
-        return team in (self.aff_team, self.neg_team)
-
-    def __unicode__(self):
-        return u"%s - [%s] %s vs %s" % ( # bug
-            self.round.tournament,
-            self.round.abbreviation,
-            self.aff_team.short_name,
-            self.neg_team.short_name
-        )
-
     @property
     def matchup(self):
         return u'%s vs %s' % (self.aff_team.short_name, self.neg_team.short_name)
+
+    @property
+    def division_motion(self):
+        return Motion.objects.filter(round=self.round, divisions=self.division)
 
 
 class SRManager(models.Manager):
@@ -1678,6 +1669,7 @@ class AdjudicatorFeedback(Submission):
 
 
 class AdjudicatorAllocation(object):
+    """Not a model, just a container object for the adjudicators on a panel."""
     def __init__(self, debate, chair=None, panel=None):
         self.debate = debate
         self.chair = chair
@@ -1686,6 +1678,7 @@ class AdjudicatorAllocation(object):
 
     @property
     def list(self):
+        """Panel only, excludes trainees."""
         a = [self.chair]
         a.extend(self.panel)
         return a
@@ -1694,6 +1687,7 @@ class AdjudicatorAllocation(object):
         return ", ".join(map(lambda x: (x is not None) and x.name or "<None>", self.list))
 
     def __iter__(self):
+        """Iterates through all, including trainees."""
         yield DebateAdjudicator.TYPE_CHAIR, self.chair
         for a in self.panel:
             yield DebateAdjudicator.TYPE_PANEL, a
@@ -1751,7 +1745,8 @@ class BallotSubmission(Submission):
         unique_together = [('debate', 'version')]
 
     def __unicode__(self):
-        return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + unicode(self.timestamp.isoformat())
+        return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + \
+                ('<unknown>' if self.timestamp is None else unicode(self.timestamp.isoformat()))
 
     @property
     def ballot_set(self):
@@ -1868,8 +1863,11 @@ class SpeakerScoreManager(models.Manager):
 
 
 class SpeakerScore(models.Model):
-    """
-    Represents a speaker's score in a debate
+    """Represents a speaker's (overall) score in a debate.
+
+    The 'speaker' field is canonical. The 'score' field, however, is a
+    performance enhancement; raw scores are stored in SpeakerScoreByAdj. The
+    BallotSet class in result.py calculates this when it saves a ballot set.
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_team = models.ForeignKey(DebateTeam)
@@ -1975,8 +1973,6 @@ class ActionLogManager(models.Manager):
 class ActionLog(models.Model):
     # These aren't generated automatically - all generations of these should
     # be done in views (not models).
-
-    # TODO update these to account for new ballot submissions model
 
     ACTION_TYPE_BALLOT_CHECKIN          = 10
     ACTION_TYPE_BALLOT_CREATE           = 11
