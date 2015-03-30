@@ -207,7 +207,7 @@ class BallotSetForm(forms.Form):
             if len(dts) != 2:
                 raise FormConstructionError('Whoops! There are %d teams in this debate, was expecting 2.' % len(dts))
             side_choices = [
-                ("", ""),
+                ("", "Select Arrangement"),
                 ((self.teams[0].id, self.teams[1].id), "%s affirmed, %s negated" % (self.teams[0].short_name, self.teams[1].short_name)),
                 ((self.teams[1].id, self.teams[0].id), "%s affirmed, %s negated" % (self.teams[1].short_name, self.teams[0].short_name))
             ]
