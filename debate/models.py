@@ -1330,12 +1330,19 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __unicode__(self):
-        return u"%s - [%s] %s vs %s" % ( # bug
-            self.round.tournament,
-            self.round.abbreviation,
-            self.aff_team.short_name,
-            self.neg_team.short_name
-        )
+        try:
+            return u"%s - [%s] %s vs %s" % (
+                self.round.tournament,
+                self.round.abbreviation,
+                self.aff_team.short_name,
+                self.neg_team.short_name
+            )
+        except DebateTeam.DoesNotExist:
+            return u"%s - [%s] %s" % (
+                self.round.tournament,
+                self.round.abbreviation,
+                ", ".join(map(lambda x: x.short_name, self.teams))
+            )
 
     @cached_property
     def teams(self):

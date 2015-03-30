@@ -174,6 +174,7 @@ class BallotSet(object):
       - Calculates the majority-average speaker scores.
     """
 
+
     def __init__(self, ballotsub):
         """Constructor.
         'ballots' must be a BallotSubmission.
@@ -184,6 +185,8 @@ class BallotSet(object):
         self.dts = self.debate.debateteam_set.all() # note, this is a QuerySet
         assert self.dts.count() == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
 
+        from debate.models import DebateTeam
+        self.SIDES = (DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE)
         self.POSITIONS = self.debate.round.tournament.POSITIONS
 
         self.loaded_sheets = False
@@ -231,12 +234,13 @@ class BallotSet(object):
     def save(self):
         assert self.is_complete, "Tried to save ballot set when it is incomplete"
 
-        self.ballotsub.save()
+        self.ballotsub.save() # need BallotSubmission object to exist first
         for sheet in self.adjudicator_sheets.itervalues():
             sheet.save()
         self._calc_decision()
         for dt in self.dts:
             self._save_team(dt)
+        self.ballotsub.save()
 
     def _load_team(self, dt):
         """Loads the scores for the given DebateTeam from the database into the
@@ -265,6 +269,8 @@ class BallotSet(object):
             self.motion_veto[dt] = None
 
     def _save_team(self, dt):
+        """Saves the TeamScores, SpeakerScores and DebateTeamMotionPreferences
+        for the given DebateTeam."""
         from debate.models import TeamScore, SpeakerScore, DebateTeamMotionPreference
 
         total = self._get_avg_total(dt)
@@ -272,32 +278,39 @@ class BallotSet(object):
         win = self._get_win(dt)
         margin = self._get_margin(dt)
 
-        TeamScore.objects.filter(ballot_submission=self.ballotsub, debate_team=dt).delete()
-        TeamScore(ballot_submission=self.ballotsub,
-                  debate_team=dt, score=total, points=points, win=win,
-                  margin=margin).save()
+        TeamScore.objects.filter(ballot_submission=self.ballotsub,
+                debate_team=dt).delete()
+        TeamScore(ballot_submission=self.ballotsub, debate_team=dt, score=total,
+                points=points, win=win, margin=margin).save()
 
-        SpeakerScore.objects.filter(ballot_submission=self.ballotsub, debate_team=dt).delete()
+        SpeakerScore.objects.filter(ballot_submission=self.ballotsub,
+                debate_team=dt).delete()
         for pos in self.POSITIONS:
             speaker = self.speakers[dt][pos]
             score = self._get_avg_score(dt, pos)
-            SpeakerScore(
-                ballot_submission = self.ballotsub,
-                debate_team = dt,
-                speaker = speaker,
-                score = score,
-                position = pos,
-            ).save()
+            SpeakerScore(ballot_submission=self.ballotsub, debate_team=dt,
+                    speaker=speaker, score=score, position=pos).save()
 
-        DebateTeamMotionPreference.objects.filter(ballot_submission=self.ballotsub, debate_team=dt, preference=3).delete()
+        DebateTeamMotionPreference.objects.filter(ballot_submission=self.ballotsub,
+                debate_team=dt, preference=3).delete()
         if self.motion_veto[dt] is not None:
-            DebateTeamMotionPreference(ballot_submission=self.ballotsub, debate_team=dt, preference=3, motion=self.motion_veto[dt]).save()
-
-        self.ballotsub.save()
+            DebateTeamMotionPreference(ballot_submission=self.ballotsub,
+                    debate_team=dt, preference=3, motion=self.motion_veto[dt]).save()
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval (speakers and per-adjudicator scores)
     # --------------------------------------------------------------------------
+
+    def set_sides(self, *teams):
+        """Sets the sides, saving the sides to the database immediately. The
+        first team is the affirmative team, the second team is the negative
+        team. (Sides are saved immediately to enable the use of 'aff' and 'neg'
+        to refer to teams.)"""
+        dts = map(self._dt, teams)
+        for position, dt in zip(self.SIDES, dts):
+            dt.position = position
+            dt.save()
+        self.dts = self.debate.debateteam_set.all() # refresh self.dts
 
     def get_speaker(self, team, position):
         """Returns the speaker object for team/position."""

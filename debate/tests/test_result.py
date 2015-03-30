@@ -99,6 +99,9 @@ class BaseTestResult(TestCase):
         return BallotSet(ballotsub)
 
     def save_complete_ballotset(self, teams, testdata):
+        self._save_complete_ballotset(teams, testdata)
+
+    def _save_complete_ballotset(self, teams, testdata, post_ballotset_create=None):
         # unconfirm existing ballot
         try:
             existing = m.BallotSubmission.objects.get(debate=self.debate, confirmed=True)
@@ -110,6 +113,8 @@ class BaseTestResult(TestCase):
 
         ballotsub = m.BallotSubmission(debate=self.debate, submitter_type=m.BallotSubmission.SUBMITTER_TABROOM)
         ballotset = BallotSet(ballotsub)
+        if post_ballotset_create:
+            post_ballotset_create(ballotset)
         scores = testdata['scores']
 
         for team in teams:
@@ -231,10 +236,27 @@ class CommonTests(object):
 
 class TestResultByTeam(BaseTestResult, CommonTests):
     def setUp(self):
-        super(TestResultByTeam, self).setUp()
+        BaseTestResult.setUp(self)
         self.teams_input = self.teams
 
 class TestResultBySide(BaseTestResult, CommonTests):
     def setUp(self):
-        super(TestResultBySide, self).setUp()
+        BaseTestResult.setUp(self)
         self.teams_input = ['aff', 'neg']
+
+class TestResultWithInitiallyUnknownSides(BaseTestResult, CommonTests):
+
+    def setUp(self):
+        BaseTestResult.setUp(self)
+        for dt in self.debate.debateteam_set.all():
+            dt.position = m.DebateTeam.POSITION_UNALLOCATED
+            dt.save()
+        self.teams_input = ['aff', 'neg']
+
+    def save_complete_ballotset(self, teams, testdata):
+        self._save_complete_ballotset(teams, testdata,
+                post_ballotset_create=lambda ballotset: ballotset.set_sides(*self.teams))
+
+    def test_unknown_sides(self):
+        self.assertRaises(m.DebateTeam.DoesNotExist, self._save_complete_ballotset,
+                self.teams_input, self.testdata.values()[0])
