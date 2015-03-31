@@ -128,29 +128,49 @@
 
         {% endif %}
 
+
+
         {% if side_allocations_unknown %}
-            $(".scoresheet").hide();
+
+            function swap_sides(selected_option) {
+
+                selected_option = selected_option.replace("(", "").replace(")", "").replace(" ", "");
+                var selected_aff_id = selected_option.split(',')[0];
+                var current_aff_id = $(".position-aff").first().attr('id').replace("team-", "");
+                console.log(selected_aff_id);
+                console.log(current_aff_id);
+                if (selected_aff_id != current_aff_id) {
+                    $(".position .speaker-position-label").each(function() {
+                        var new_label = $(this).text()
+                        $(this).text(new_label.replace("A", "N"));
+                    });
+                    $(".position-neg .speaker-position-label").each(function() {
+                        var new_label = $(this).text()
+                        $(this).text(new_label.replace("N", "A"));
+                    });
+                    $(".position").toggleClass("position-aff").toggleClass("pull-left").toggleClass("position-neg").toggleClass("pull-right");
+                }
+            }
+
+            // On Load
+            if ($("#id_choose_sides").val() == "") {
+                console.log('none');
+                $(".scoresheet").hide();
+            } else {
+                var selected_option = $("#id_choose_sides").val();
+                console.log("swapping");
+                console.log(selected_option);
+                swap_sides(selected_option);
+                $(".adj-ballot .text-warning").hide();
+            }
+
+            // On Change
             $('#id_choose_sides').change(function() {
-                var selected_option = $(this).val()
+                var selected_option = $("#id_choose_sides").val()
                 if (selected_option != "") {
                     $(".scoresheet").show();
                     $(".adj-ballot .text-warning").hide();
-
-                    selected_option = selected_option.replace("(", "").replace(")", "").replace(" ", "");
-                    var selected_aff_id = selected_option.split(',')[0];
-                    var current_aff_id = $(".position-aff").first().attr('id').replace("team-", "");
-
-                    if (selected_aff_id != current_aff_id) {
-                        $(".position .speaker-position-label").each(function() {
-                            var new_label = $(this).text()
-                            $(this).text(new_label.replace("A", "N"));
-                        });
-                        $(".position-neg .speaker-position-label").each(function() {
-                            var new_label = $(this).text()
-                            $(this).text(new_label.replace("N", "A"));
-                        });
-                        $(".position").toggleClass("position-aff").toggleClass("pull-left").toggleClass("position-neg").toggleClass("pull-right");
-                    }
+                    swap_sides(selected_option)
                 } else {
                     $(".scoresheet").hide();
                     $(".adj-ballot .text-warning").show();
@@ -158,7 +178,9 @@
             });
 
             var team_ids = [{{ form.team_ids|join:", " }}];
+
         {% endif %}
+
 
     });
 </script>

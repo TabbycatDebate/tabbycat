@@ -22,9 +22,11 @@
                 {{ form.choose_sides.errors }}
             </div>
         </div>
-        {% for field in form.fake_speaker_selects %}
-            {{ field }}
-        {% endfor %}
+        <div class="hidden">
+            {% for field in form.fake_speaker_selects %}
+                {{ field }}
+            {% endfor %}
+        </div>
     {% endif %}
 
     <div class="row">
@@ -72,7 +74,7 @@
         </div>
 
         <div class="clearfix scoresheet row">
-            <div class="col-md-6 position position-aff pull-left" {% if forloop.first %}id="team-{{ debate.aff_dt.id }}{% endif %}">
+            <div class="col-md-6 position position-aff pull-left" {% if forloop.first %}id="team-{{ debate.aff_team.id }}{% endif %}">
                 <div class="form-group">
                     <label class="h4 col-xs-offset-1 control-label" >{{ debate.aff_team.short_name }}</label>
                 </div>
@@ -102,7 +104,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6 position position-neg pull-right" {% if forloop.first %}id="team-{{ debate.neg_dt.id }}{% endif %}">
+            <div class="col-md-6 position position-neg pull-right" {% if forloop.first %}id="team-{{ debate.neg_team.id }}{% endif %}">
                 <div class="form-group">
                     <label class="h4 col-xs-offset-1 control-label" >{{ debate.neg_team.short_name }}</label>
                 </div>
