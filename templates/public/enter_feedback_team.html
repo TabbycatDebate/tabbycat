@@ -6,45 +6,45 @@
 {% block body-class %}public-enter-feedback{% endblock %}
 
 {% block content %}
-    <div class="alert alert-info">This page is specific to you, {{ source_name }}.
-    The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
+  <div class="alert alert-info">This page is specific to you, {{ source_name }}.
+  The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
 
-    <div class="alert alert-warning">
-    Remember, if you had a panel, you give feedback <strong>only</strong> on the adjudicator who <strong>gave the oral adjudication</strong>.
-    </div>
+  <div class="alert alert-warning">
+  Remember, if you had a panel, you give feedback <strong>only</strong> on the adjudicator who <strong>gave the oral adjudication</strong>.
+  </div>
 
-    {% if form.errors %}
-    <div class="alert alert-danger">
-        <p>There are some problems with this feedback submission. Please review and correct them.</p>
+  {% if form.errors %}
+  <div class="alert alert-danger">
+    <p>There are some problems with this feedback submission. Please review and correct them.</p>
 
-        {% if form.non_field_errors %}
-            <p>General errors:</p>
-            <div class="ballot-errors">{{ form.non_field_errors }}</div>
-        {% endif %}
-    </div>
+    {% if form.non_field_errors %}
+      <p>General errors:</p>
+      <div class="ballot-errors">{{ form.non_field_errors }}</div>
     {% endif %}
+  </div>
+  {% endif %}
 
-    <form id="feedbackForm" action="" method="POST" class="form-horizontal">
+  <form id="feedbackForm" action="" method="POST" class="form-horizontal">
 
-        {% for field in form %}
-        <div class="form-group">
-            <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>
-            <div class="col-sm-9 col-md-6">
-                {{field|addcss:"form-control"}}
-            </div>
-            <div class="col-md-2 col-xs-10 ">
-                {% if field.errors %}
-                    <label for="{{ field.id_for_label }}" class="control-label">{{ field.errors }}</label>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-2">
-                <button type="submit" value="Save" class="form-control btn btn-success">Save</button>
-            </div>
-        </div>
-    </form>
+    {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>
+      <div class="col-sm-9 col-md-6">
+        {{field|addcss:"form-control"}}
+      </div>
+      <div class="col-md-2 col-xs-10 ">
+        {% if field.errors %}
+          <label for="{{ field.id_for_label }}" class="control-label">{{ field.errors }}</label>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-2">
+        <button type="submit" value="Save" class="form-control btn btn-success">Save</button>
+      </div>
+    </div>
+  </form>
 {% endblock %}
 
 {% block extra-js %}{% endblock %}

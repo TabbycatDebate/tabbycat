@@ -3,6 +3,7 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from debate.emoji import EMOJI_LIST
 
 import re
 import os
@@ -41,6 +42,16 @@ def neg_count(team, round):
         return 0
     return team.get_neg_count(round.seq)
 register.simple_tag(neg_count)
+
+def team_emoji(team):
+    if team.emoji_seq:
+        return b"%s" % EMOJI_LIST[team.emoji_seq]
+    else:
+        if team.id > len(EMOJI_LIST):
+            return b"%s" % EMOJI_LIST[team.id]
+        else:
+            return b"%s" % EMOJI_LIST[(team.id) - len(EMOJI_LIST)]
+register.simple_tag(team_emoji)
 
 def debate_draw_status_class(debate):
     if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':

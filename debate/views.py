@@ -1074,6 +1074,25 @@ def set_adj_test_score(request, t):
 
     return redirect_tournament('adj_feedback', t)
 
+@admin_required
+@expect_post
+@tournament_view
+def set_adj_breaking_status(request, t):
+    adj_id = int(request.POST["adj_id"])
+    adj_breaking_status = str(request.POST["adj_breaking_status"])
+
+    try:
+        adjudicator = Adjudicator.objects.get(id=adj_id)
+    except (Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
+        return HttpResponseBadRequest("Adjudicator probably doesn't exist")
+
+    if adj_breaking_status == "true":
+        adjudicator.breaking = True
+    else:
+        adjudicator.breaking = False
+
+    adjudicator.save()
+    return HttpResponse("ok")
 
 @admin_required
 @expect_post
@@ -1520,6 +1539,29 @@ def draw_adjudicators_edit(request, round):
     draw = round.get_draw()
     adj0 = Adjudicator.objects.first()
     duplicate_adjs = round.tournament.config.get('duplicate_adjs')
+
+    def calculate_prior_adj_genders(team):
+        debates = team.get_debates(round.seq)
+        adjs = DebateAdjudicator.objects.filter(debate__in=debates).count()
+        male_adjs = DebateAdjudicator.objects.filter(debate__in=debates,adjudicator__gender="M").count()
+        if male_adjs > 0:
+            male_adj_percent = int((float(male_adjs) / float(adjs)) * 100)
+            return male_adj_percent
+        else:
+            return 0
+
+    for debate in draw:
+        aff_male_adj_percent = calculate_prior_adj_genders(debate.aff_team)
+        debate.aff_team.male_adj_percent = aff_male_adj_percent
+
+        neg_male_adj_percent = calculate_prior_adj_genders(debate.neg_team)
+        debate.neg_team.male_adj_percent = neg_male_adj_percent
+
+        if neg_male_adj_percent > aff_male_adj_percent:
+            debate.gender_class = (neg_male_adj_percent / 5) - 10
+        else:
+            debate.gender_class = (aff_male_adj_percent / 5) - 10
+
     return r2r(request, "draw_adjudicators_edit.html", dict(
         draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs))
 
@@ -1532,6 +1574,7 @@ def _json_adj_allocation(debates, unused_adj):
             'id': a.id,
             'name': a.name + " (" + a.institution.short_code + ")",
             'is_unaccredited': a.is_unaccredited,
+            'gender': a.gender
         }
 
     def _debate(d):

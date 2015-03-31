@@ -1,101 +1,101 @@
 <script type="text/javascript">
-    $(document).ready(function() {
+  $(document).ready(function() {
 
-        // Previously in child template
+    // Previously in child template
 
-        $('.s1 input.number,.s2 input.number,.s3 input.number').attr("type", "number").attr("step", "1");
-        $('.s4 input.number').attr("type", "number").attr("step", "0.5");
-        // When using anonymous speaker names prepopulate the form to save time
-        aff_speakers = $("#id_aff_speaker_1 option").text()
-        neg_speakers = $("#id_neg_speaker_1 option").text()
-        if (aff_speakers.indexOf("1st Speaker") != -1 && neg_speakers.indexOf("1st Speaker") != -1) {
-            $("div.aff.s1").find("select :nth-child(2)").prop('selected', true);
-            $("div.aff.s2").find("select :nth-child(3)").prop('selected', true);
-            $("div.aff.s3").find("select :nth-child(4)").prop('selected', true);
-            $("div.aff.s4").find("select :nth-child(5)").prop('selected', true);
-            $("div.neg.s1").find("select :nth-child(2)").prop('selected', true);
-            $("div.neg.s2").find("select :nth-child(3)").prop('selected', true);
-            $("div.neg.s3").find("select :nth-child(4)").prop('selected', true);
-            $("div.aff.s4").find("select :nth-child(5)").prop('selected', true);
-            $("select.required.error").removeClass("error");
-        }
+    $('.s1 input.number,.s2 input.number,.s3 input.number').attr("type", "number").attr("step", "1");
+    $('.s4 input.number').attr("type", "number").attr("step", "0.5");
+    // When using anonymous speaker names prepopulate the form to save time
+    aff_speakers = $("#id_aff_speaker_1 option").text()
+    neg_speakers = $("#id_neg_speaker_1 option").text()
+    if (aff_speakers.indexOf("1st Speaker") != -1 && neg_speakers.indexOf("1st Speaker") != -1) {
+      $("div.aff.s1").find("select :nth-child(2)").prop('selected', true);
+      $("div.aff.s2").find("select :nth-child(3)").prop('selected', true);
+      $("div.aff.s3").find("select :nth-child(4)").prop('selected', true);
+      $("div.aff.s4").find("select :nth-child(5)").prop('selected', true);
+      $("div.neg.s1").find("select :nth-child(2)").prop('selected', true);
+      $("div.neg.s2").find("select :nth-child(3)").prop('selected', true);
+      $("div.neg.s3").find("select :nth-child(4)").prop('selected', true);
+      $("div.aff.s4").find("select :nth-child(5)").prop('selected', true);
+      $("select.required.error").removeClass("error");
+    }
 
-        function refresh_totals(scoresheet) {
-            $scoresheet = $(scoresheet);
-            $aff_total = $('.aff_total', $scoresheet);
-            $neg_total = $('.neg_total', $scoresheet);
+    function refresh_totals(scoresheet) {
+      $scoresheet = $(scoresheet);
+      $aff_total = $('.aff_total', $scoresheet);
+      $neg_total = $('.neg_total', $scoresheet);
 
-            var aff = sum($('.aff.score input', $scoresheet));
-            var neg = sum($('.neg.score input', $scoresheet));
-            $aff_total.text(aff);
-            $neg_total.text(neg);
+      var aff = sum($('.aff.score input', $scoresheet));
+      var neg = sum($('.neg.score input', $scoresheet));
+      $aff_total.text(aff);
+      $neg_total.text(neg);
 
-            if (aff > neg) {
-                $aff_total.addClass('btn-success').removeClass('btn-danger');
-                $neg_total.addClass('btn-danger').removeClass('btn-success');
-            } else if (neg > aff) {
-                $aff_total.addClass('btn-danger').removeClass('btn-success');
-                $neg_total.addClass('btn-success').removeClass('btn-danger');
-            } else {
-                $aff_total.addClass('btn-danger').removeClass('btn-success');
-                $neg_total.addClass('btn-danger').removeClass('btn-success');
-            }
+      if (aff > neg) {
+        $aff_total.addClass('btn-success').removeClass('btn-danger');
+        $neg_total.addClass('btn-danger').removeClass('btn-success');
+      } else if (neg > aff) {
+        $aff_total.addClass('btn-danger').removeClass('btn-success');
+        $neg_total.addClass('btn-success').removeClass('btn-danger');
+      } else {
+        $aff_total.addClass('btn-danger').removeClass('btn-success');
+        $neg_total.addClass('btn-danger').removeClass('btn-success');
+      }
 
+    };
+
+    function sum(elems) {
+      var r = 0;
+      elems.each(function(){
+        var p = parseFloat($(this).val());
+        if (p > 0) r += p;
+      });
+      return r;
+    }
+
+    function update_speakers() {
+      $('#resultsForm .speaker select').each(update_speaker);
+    }
+
+    function update_speaker() {
+      // e.g. id_aff_speaker_1
+      var parts = $(this).attr('id').split('_');
+      var speaker = $(':selected', this).text();
+
+      // e.g. '.aff.s1 label'
+      var side = parts[1];
+      var pos = parts[3];
+
+      // Keeping the labels the same...
+      $('.' + side + '.s' + pos + ' .speaker-name').html(speaker);
+
+      var others;
+      if (pos == '1') {
+        others = [2, 3];
+      } else if (pos == '2') {
+        others = [1, 3];
+      } else if (pos == '3') {
+        others = [1, 2, 4];
+      } else if (pos == '4') {
+        others = [3];
+      } else {
+        others = [];
+      }
+
+      var dupe = false;
+      $.each(others, function(idx, val) {
+        $sel = $('#id_'+parts[1]+'_speaker_'+val);
+        if ($(':selected', $sel).text() == speaker) {
+          dupe = true;
         };
+      });
+      if (dupe || speaker === '---------') {
+        $(this).addClass('error');
+      } else {
+        $(this).removeClass('error');
+      }
+    }
 
-        function sum(elems) {
-            var r = 0;
-            elems.each(function(){
-                var p = parseFloat($(this).val());
-                if (p > 0) r += p;
-            });
-            return r;
-        }
-
-        function update_speakers() {
-            $('#resultsForm .speaker select').each(update_speaker);
-        }
-
-        function update_speaker() {
-            // e.g. id_aff_speaker_1
-            var parts = $(this).attr('id').split('_');
-            var speaker = $(':selected', this).text();
-
-            // e.g. '.aff.s1 label'
-            var side = parts[1];
-            var pos = parts[3];
-
-            // Keeping the labels the same...
-            $('.' + side + '.s' + pos + ' .speaker-name').html(speaker);
-
-            var others;
-            if (pos == '1') {
-                others = [2, 3];
-            } else if (pos == '2') {
-                others = [1, 3];
-            } else if (pos == '3') {
-                others = [1, 2, 4];
-            } else if (pos == '4') {
-                others = [3];
-            } else {
-                others = [];
-            }
-
-            var dupe = false;
-            $.each(others, function(idx, val) {
-                $sel = $('#id_'+parts[1]+'_speaker_'+val);
-                if ($(':selected', $sel).text() == speaker) {
-                    dupe = true;
-                };
-            });
-            if (dupe || speaker === '---------') {
-                $(this).addClass('error');
-            } else {
-                $(this).removeClass('error');
-            }
-        }
-
-        $("#resultsForm").validate({});
+    $("#resultsForm").validate({});
 
         $('.scoresheet').each(function() {
             refresh_totals($(this));
@@ -104,29 +104,30 @@
             refresh_totals($(this).parents('.scoresheet'));
         });
 
-        $('.speaker select').change(update_speakers).each(update_speaker);
+    $('.speaker select').change(update_speakers).each(update_speaker);
 
 
-        {% if enable_forfeits %}
+    {% if enable_forfeits %}
 
-        function disable_required() {
-            $("#ballot_set").find(".form-control").removeClass("required");
-            $("#ballot_set").find(".form-control-parent .number").removeClass("required");
-        }
+    function disable_required() {
+      $("#ballot_set").find(".form-control").removeClass("required");
+      $("#ballot_set").find(".form-control-parent .number").removeClass("required");
+    }
 
-        $("#id_forfeits_0").click(function() {
-            disable_required();
-        });
-        $("#id_forfeits_1").click(function() {
-            disable_required();
-        });
+    $("#id_forfeits_0").click(function() {
+      disable_required();
+    });
+    $("#id_forfeits_1").click(function() {
+      disable_required();
+    });
 
-        if ($("#id_forfeits_0").is(':checked') || $("#id_forfeits_1").is(':checked')) {
-            // For when reloading initial form data
-            disable_required();
-        }
+    if ($("#id_forfeits_0").is(':checked') || $("#id_forfeits_1").is(':checked')) {
+      // For when reloading initial form data
+      disable_required();
+    }
 
         {% endif %}
+  });
 
 
 

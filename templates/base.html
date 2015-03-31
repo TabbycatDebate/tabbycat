@@ -3,101 +3,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>{% block page-title %}{% endblock %}</title>
-
-    {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/bootstrap.scss' %}">
-    <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/style.scss' %}" />
-    {% endcompress %}
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    {% load debate_tags %}
-
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block page-title %}{% endblock %}</title>
+  {% compress css %}
+  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/bootstrap.scss' %}">
+  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/style.scss' %}" />
+  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/components/tables.scss' %}" />
+  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/components/print.scss' %}" />
+  {% endcompress %}
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  {% load debate_tags %}
 </head>
 
 <body id="{% block body-id %}{% endblock %}" class="{% block body-class %}{% endblock %}">
 
-    <div id="wrap">
+  <div id="wrap">
 
-        {% block body %}
+    {% block body %}
 
-        {% block nav %}{% include "nav.html" %}{% endblock nav %}
+    {% block nav %}{% include "nav.html" %}{% endblock nav %}
 
-        <div id="container" class="container-fluid">
+    <div id="container" class="container-fluid">
 
-            <div class="row page-header">
-                <div class="col-md-12">
-                    <h1 class="h2">{% block head-title %}{% endblock %}</h1>
-                </div>
-           </div>
-
-            <div class="row">
-                <div class="col-md-12 form-inline" id="header-options">
-                {% block header %}{% endblock %}
-                </div>
-            </div>
-
-            {% block content %}{% endblock content %}
-
+      <div class="row page-header">
+        <div class="col-md-12">
+          <h1 class="h2 pull-left">{% block head-title %}{% endblock %}</h1>
+          {% block page-header %}{% endblock %}
         </div>
+       </div>
 
-        {% endblock body %}
+      <div class="row">
+        <div class="col-md-12 form-inline" id="header-options">
+        {% block header %}{% endblock %}
+        </div>
+      </div>
+
+      {% block content %}{% endblock content %}
 
     </div>
 
-    {% include "footer.html" %}
+    {% endblock body %}
 
-    {% compress js %}
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
-    <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
-    <script type="text/javascript">
-        $.extend( true, $.fn.dataTable.defaults, {
-            // Default Data Table options
-            "sDom":
-                "<'row'<'col-md-12 table-container'lr"+ // f = the filter
-                "t"+
-                "f<p>",
-            "bPaginate": false,
-            "oLanguage": {
-                "sSearch": "Search: "
-            }
-        });
-        $(document).ready(function(){
-            $('[data-toggle=tooltip]').tooltip({
-                'html': true,
-                'placement': 'bottom'
-            });
-        });
+  </div>
+
+  {% include "footer.html" %}
+
+  {% compress js %}
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
+  <script type="text/javascript">
+    $.extend( true, $.fn.dataTable.defaults, {
+      // Default Data Table options
+      "sDom":
+        "<'row'<'col-md-12 table-container'lr"+ // f = the filter
+        "t"+
+        "f<p>",
+      "bPaginate": false,
+      "oLanguage": {
+        "sSearch": "Search: "
+      }
+    });
+    $(document).ready(function(){
+      $('[data-toggle=tooltip]').tooltip({
+        'html': true,
+        'placement': 'bottom'
+      });
+    });
+  </script>
+  {% endcompress %}
+  {% block extra-js %}{% endblock extra-js %}
+
+  {% if debug %}
+    <!-- No Analytics -->
+  {% else %}
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-314178-25', 'auto');
+      ga('send', 'pageview');
     </script>
-    {% endcompress %}
-    {% block extra-js %}{% endblock extra-js %}
-
-    {% if debug %}
-        <!-- No Analytics -->
-    {% else %}
-        <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-          ga('create', 'UA-314178-25', 'auto');
-          ga('send', 'pageview');
-        </script>
-    {% endif %}
+  {% endif %}
 
 </body>
 </html>

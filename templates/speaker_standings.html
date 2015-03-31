@@ -4,88 +4,86 @@
 
 {% block head-title %}Speaker Standings <small>after {{ round.name }}</small>{% endblock %}
 {% block page-title %}Speaker Standings after {{ round.name }}{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 {% block body-class %}speaker-standings{% endblock %}
 
-{% block header %}{% include "table_search.html" %}{% endblock %}
-
 {% block content %}
-    <table id="dataTable" class="table table-hover table-bordered table-striped" cellspacing="0" cellpadding="0">
-        <thead>
-            <tr>
-                <th class="hidden"></th>
-                {% if for_print %}
-                    <th>Rank</th>
-                {% else %}
-                    <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
-                {% endif %}
-                <th>Name</th>
-                {% if show_novices > 0 %}
-                    <th><span class="glyphicon glyphicon-leaf" data-toggle="tooltip" title="Speaker's Novice Status"></span></th>
-                {% endif %}
-                {% if show_emoji > 0 and not for_print %}
-                    <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
-                {% endif %}
-                <th>Team</th>
-                {% if show_institutions > 0 %}
-                    <th>Institution</th>
-                {% endif %}
-                {% for round in rounds %}
-                <th>{{ round.abbreviation }}</th>
-                {% endfor %}
-                <th>Total</th>
-                <th>Av<span class="hidden-sm">era</span>g<span class="hidden-sm">e</span></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for speaker in speakers %}
-            {% with speakers|next_value:forloop.counter0 as next_value %}
-            {% with speakers|prev_value:forloop.counter0 as prev_value %}
-            <tr class="{% if not speaker.results_in %}danger{% endif%}">
-                <td class="hidden">{{ speaker.rank }}</td>
-                <td>
-                    <strong>
-                        {{ speaker.rank }}{% if next_value.rank == speaker.rank or prev_value.rank == speaker.rank %}<span class="text-muted">=</span>{% endif %}
-                    </strong>
-                </td>
-                <td>{{ speaker.name }}</td>
-                {% if show_novices > 0 %}
-                    <td>{% if speaker.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
-                {% endif %}
-                {% if show_emoji > 0 and not for_print %}
-                    <td class="team-emoji team-{{ speaker.team.id }}"></td>
-                {% endif %}
-                <td>
-                    <span title="<h5>{{ speaker.team.long_name }}</h5>{% if show_speakers_in_draw %}{{ speaker.team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
-                        {{ speaker.team.short_name }}
-                    </span>
-                </td>
-                {% if show_institutions > 0 %}
-                    <td>{{ speaker.team.institution.code }}</td>
-                {% endif %}
-                {% for score in speaker.scores %}
-                    <td>{{ score|stringformat:".2f" }}</td>
-                {% endfor %}
-                <td>{{ speaker.total|stringformat:".2f" }}</td>
-                <td>{{ speaker.average|stringformat:".2f" }}</td>
-            </tr>
-            {% endwith %}
-            {% endwith %}
+  <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
+    <thead>
+      <tr>
+        <th class="hidden"></th>
+        {% if for_print %}
+          <th>Rank</th>
+        {% else %}
+          <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
+        {% endif %}
+        <th>Name</th>
+        {% if show_novices > 0 %}
+          <th><span class="glyphicon glyphicon-leaf" data-toggle="tooltip" title="Speaker's Novice Status"></span></th>
+        {% endif %}
+        {% if show_emoji > 0 and not for_print %}
+          <th class="team-emoji"></th>
+        {% endif %}
+        <th>Team</th>
+        {% if show_institutions > 0 %}
+          <th>Institution</th>
+        {% endif %}
+        {% for round in rounds %}
+        <th>{{ round.abbreviation }}</th>
         {% endfor %}
-    </table>
+        <th>Total</th>
+        <th>Av<span class="hidden-sm">era</span>g<span class="hidden-sm">e</span></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for speaker in speakers %}
+      {% with speakers|next_value:forloop.counter0 as next_value %}
+      {% with speakers|prev_value:forloop.counter0 as prev_value %}
+      <tr class="{% if not speaker.results_in %}danger{% endif%}">
+        <td class="hidden">{{ speaker.rank }}</td>
+        <td>
+          <strong>
+            {{ speaker.rank }}{% if next_value.rank == speaker.rank or prev_value.rank == speaker.rank %}<span class="text-muted">=</span>{% endif %}
+          </strong>
+        </td>
+        <td>{{ speaker.name }}</td>
+        {% if show_novices > 0 %}
+          <td>{% if speaker.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
+        {% endif %}
+        {% if show_emoji > 0 and not for_print %}
+          <td class="team-emoji">{% team_emoji speaker.team %}</td>
+        {% endif %}
+        <td>
+          <span title="<h5>{{ speaker.team.long_name }}</h5>{% if show_speakers_in_draw %}{{ speaker.team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+            {{ speaker.team.short_name }}
+          </span>
+        </td>
+        {% if show_institutions > 0 %}
+          <td>{{ speaker.team.institution.code }}</td>
+        {% endif %}
+        {% for score in speaker.scores %}
+          <td>{{ score|stringformat:".2f" }}</td>
+        {% endfor %}
+        <td>{{ speaker.total|stringformat:".2f" }}</td>
+        <td>{{ speaker.average|stringformat:".2f" }}</td>
+      </tr>
+      {% endwith %}
+      {% endwith %}
+    {% endfor %}
+  </table>
 {% endblock content %}
 
 {% block extra-js %}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready( function() {
-            var table = $("#dataTable").DataTable({
-                "aaSorting": [[1, "asc"]],
-                "aoColumnDefs": [
-                    {"iDataSort": 0, "aTargets": [1] }, //sort based on a hidden column when another column is clicked
-                    { "bVisible": false, "aTargets": [0] }, //set column visibility
-                ]
-            });
-            new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-        } );
-    </script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+      var table = $("#dataTable").DataTable({
+        "aaSorting": [[1, "asc"]],
+        "aoColumnDefs": [
+          {"iDataSort": 0, "aTargets": [1] }, //sort based on a hidden column when another column is clicked
+          { "bVisible": false, "aTargets": [0] }, //set column visibility
+        ]
+      });
+      new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+    } );
+  </script>
 {% endblock extra-js %}

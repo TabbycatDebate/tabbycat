@@ -12,6 +12,7 @@ def _bool(value):
 
 #name,  coerce, help, default
 SETTINGS = OrderedDict([
+    ('substantive_speakers',        (int,   'How many substantive speakers each team will feature',                3)),
     ('score_min',                   (float, 'Minimum allowed score',                                               68)),
     ('score_max',                   (float, 'Maximum allowed score',                                               82)),
     ('score_step',                  (float, 'Score steps allowed',                                                 1)),
@@ -19,6 +20,7 @@ SETTINGS = OrderedDict([
     ('reply_score_min',             (float, 'Minimum allowed reply score',                                         34)),
     ('reply_score_max',             (float, 'Maximum allowed reply score',                                         41)),
     ('reply_score_step',            (float, 'Reply score steps allowed',                                           0.5)),
+    ('maximum_margin',              (float, 'The largest amount one team can beat another by (0 means no limit)',  0.0)),
     ('break_size',                  (int,   'Number of breaking teams',                                            16)),
     ('esl_break_size',              (int,   'Number of ESL breaking teams',                                        8)),
     ('institution_cap',             (int,   'Maximum number of teams from one institution that can break. Set to 0 if there is no cap',         3)),
@@ -38,7 +40,7 @@ SETTINGS = OrderedDict([
     ('avoid_team_history',          (_bool, 'Avoid team-team history conflicts in draw?',                          True)),
     ('team_institution_penalty',    (int,   'Penalty for team-team institution conflict',                          1)),
     ('team_history_penalty',        (int,   'Penalty for team-team history conflict',                              1000)),
-    ('show_emoji',                  (_bool, 'Shows Emoji in the draw UI',                                          False)),
+    ('show_emoji',                  (_bool, 'Shows Emoji in the draw UI',                                          True)),
     ('show_institutions',           (_bool, 'Shows the institutions column in draw and other UIs',                 True)),
     ('show_novices',                (_bool, 'Show if a speaker is a novice',                                       False)),
     ('show_unaccredited',           (_bool, 'Show if an adjudicator is a novice (unaccredited)',                   False)),

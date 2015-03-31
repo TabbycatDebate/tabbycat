@@ -3,32 +3,31 @@
 {% load static %}
 
 {% block head-title %}
-    Draw for {{ round.name }}
-    {% if round.starts_at %}
-        <small>debates start at {{ round.starts_at }}</small>
-    {% endif %}
+  Draw for {{ round.name }}
+  {% if round.starts_at %}
+    <small>debates start at {{ round.starts_at }}</small>
+  {% endif %}
 {% endblock %}
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 {% block body-class %}draw-public-display{% endblock %}
 
 {% block header %}
-    <div class="btn-group">
-        <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
-        <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-xs">Medium</span></a>
-        <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
-    </div>
-    <div id="statusBar" class="btn-group">
-        <div class="btn btn-default">ESC stops scroll</div>
-    </div>
-    <div class="btn-group">
-        <a class="btn btn-default" href="" id="tiny_text">XS Text</a>
-        <a class="btn btn-default" href="" id="small_text">S Text</a>
-        <a class="btn btn-default active" href="" id="medium_text">M Text</a>
-        <a class="btn btn-default" href="" id="large_text">L Text</a>
-        <a class="btn btn-default" href="" id="huge_text">XL Text</a>
-    </div>
-    {% include "table_search.html" %}
-
+  <div class="btn-group">
+    <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
+    <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-xs">Medium</span></a>
+    <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
+  </div>
+  <div id="statusBar" class="btn-group">
+    <div class="btn btn-default">ESC stops scroll</div>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-default" href="" id="tiny_text">XS Text</a>
+    <a class="btn btn-default" href="" id="small_text">S Text</a>
+    <a class="btn btn-default active" href="" id="medium_text">M Text</a>
+    <a class="btn btn-default" href="" id="large_text">L Text</a>
+    <a class="btn btn-default" href="" id="huge_text">XL Text</a>
+  </div>
 {% endblock %}
 
 {% block content %}
@@ -136,17 +135,16 @@
 {% endblock content %}
 
 {% block extra-js %}
-    <script type="text/javascript">
-        $(document).ready( function() {
-            var dTable = $('#draw').DataTable({
-                "aaSorting": [[ 0, "asc" ]],
-            });
-            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
-            $('#table-search').keyup(function(){
-                dTable.search($(this).val()).draw();
-            })
-        });
-    </script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/scroller.js' %}"></script>
+  <script type="text/javascript">
+    $(document).ready( function() {
+      var dTable = $('#draw').DataTable({
+        "aaSorting": [[ 0, "asc" ]],
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
+    });
+  </script>
+  <script type="text/javascript" language="javascript" src="{% static 'js/scroller.js' %}"></script>
 {% endblock extra-js %}

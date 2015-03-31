@@ -84,21 +84,21 @@ class Tournament(models.Model):
 
     @property
     def LAST_SUBSTANTIVE_POSITION(self):
-        return 3
+        return self.config.get('substantive_speakers')
 
     @property
     def REPLY_POSITION(self):
         if self.config.get('reply_scores_enabled'):
-            return 4
+            return self.config.get('substantive_speakers') + 1
         else:
             raise ValueError("There is no reply position when reply scores are disabled")
 
     @property
     def POSITIONS(self):
-        if self.config.get('reply_scores_enabled'):
-            return range(1, 5)
-        else:
-            return range(1, 4)
+        speaker_positions = 1 + self.config.get('substantive_speakers')
+        if self.config.get('reply_scores_enabled') is True:
+            speaker_positions = speaker_positions + 1
+        return range(1, speaker_positions)
 
     class Meta:
         ordering = ['seq',]
@@ -438,6 +438,7 @@ class Team(models.Model):
     short_reference = models.CharField(max_length=35, verbose_name="Shortened name or suffix")
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament)
+    emoji_seq = models.IntegerField(blank=True, null=True)
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
 
@@ -467,7 +468,7 @@ class Team(models.Model):
                             default=TYPE_NONE)
 
     class Meta:
-        unique_together = [('reference', 'institution', 'tournament')]
+        unique_together = [('reference', 'institution', 'tournament'),('emoji_seq', 'tournament')]
         ordering = ['tournament', 'institution', 'short_reference']
         index_together = ['tournament', 'institution', 'short_reference']
 
@@ -1542,7 +1543,7 @@ class DebateAdjudicator(models.Model):
 
     objects = SRManager()
 
-    debate = models.ForeignKey(Debate)
+    debate = models.ForeignKey(Debate, db_index=True)
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 

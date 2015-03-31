@@ -3,32 +3,31 @@
 {% load static %}
 
 {% block body-class %}draw-public-display{% endblock %}
-
 {% block head-title %}
-    Draw for {{ round.name }}
-    {% if round.starts_at %}
-        <small>debates start at {{ round.starts_at }}</small>
-    {% endif %}
+  Draw for {{ round.name }}
+  {% if round.starts_at %}
+    <small>debates start at {{ round.starts_at }}</small>
+  {% endif %}
 {% endblock %}
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 
 {% block header %}
-    <div class="btn-group">
-        <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
-        <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-md">Medium</span></a>
-        <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
-    </div>
-    <div id="statusBar" class="btn-group">
-        <div class="btn btn-default">Hit ESC to stop scrolling</div>
-    </div>
-    <div class="btn-group">
-        <a class="btn btn-default" href="" id="tiny_text">Tiny Text</a>
-        <a class="btn btn-default" href="" id="small_text">Small Text</a>
-        <a class="btn btn-default active" href="" id="medium_text">Medium Text</a>
-        <a class="btn btn-default" href="" id="large_text">Large Text</a>
-        <a class="btn btn-default" href="" id="huge_text">Huge Text</a>
-    </div>
-    {% include "table_search.html" %}
+  <div class="btn-group">
+    <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
+    <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-md">Medium</span></a>
+    <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
+  </div>
+  <div id="statusBar" class="btn-group">
+    <div class="btn btn-default">Hit ESC to stop scrolling</div>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-default" href="" id="tiny_text">Tiny Text</a>
+    <a class="btn btn-default" href="" id="small_text">Small Text</a>
+    <a class="btn btn-default active" href="" id="medium_text">Medium Text</a>
+    <a class="btn btn-default" href="" id="large_text">Large Text</a>
+    <a class="btn btn-default" href="" id="huge_text">Huge Text</a>
+  </div>
 {% endblock %}
 
 {% block content %}
@@ -180,21 +179,20 @@
 {% endblock content %}
 
 {% block extra-js %}
-    <script type="text/javascript">
-        $(document).ready( function() {
-            var dTable = $('#draw').DataTable({
-                'bPaginate': false,
-                "aaSorting": [[ 0, "asc" ]],
-                "aoColumnDefs": [
-                  { "sType": "string", aTargets: [ '_all' ] }
-                ]
-            });
-            new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
-            $('#table-search').keyup(function(){
-                dTable.search($(this).val()).draw();
-            })
-        });
-    </script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/emoji.js' %}"></script>
-    <script type="text/javascript" language="javascript" src="{% static 'js/scroller.js' %}"></script>
+  <script type="text/javascript">
+    $(document).ready( function() {
+      var dTable = $('#draw').DataTable({
+        'bPaginate': false,
+        "aaSorting": [[ 0, "asc" ]],
+        "aoColumnDefs": [
+          { "sType": "string", aTargets: [ '_all' ] }
+        ]
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
+    });
+  </script>
+  <script type="text/javascript" language="javascript" src="{% static 'js/scroller.js' %}"></script>
 {% endblock extra-js %}
