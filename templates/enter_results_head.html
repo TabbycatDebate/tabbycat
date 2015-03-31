@@ -156,6 +156,8 @@
                     $(".adj-ballot .text-warning").show();
                 }
             });
+
+            var team_ids = [{{ form.team_ids|join:", " }}];
         {% endif %}
 
     });

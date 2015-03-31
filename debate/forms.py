@@ -449,6 +449,18 @@ class BallotSetForm(forms.Form):
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()
 
+    # --------------------------------------------------------------------------
+    # Template access methods
+    # --------------------------------------------------------------------------
+
+    def team_ids(self):
+        for team in self.debate.teams:
+            yield team.id
+
+    def fake_speaker_selects(self):
+        for team in self.debate.teams:
+            yield self['team_%d' % team.id]
+
     def adj_iter(self):
         form = self # provide access in inner classes
 
