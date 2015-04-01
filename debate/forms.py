@@ -475,10 +475,6 @@ class BallotSetForm(forms.Form):
     # Template access methods
     # --------------------------------------------------------------------------
 
-    def team_ids(self):
-        for team in self.debate.teams:
-            yield team.id
-
     def fake_speaker_selects(self):
         for team in self.debate.teams:
             yield self['team_%d' % team.id]
