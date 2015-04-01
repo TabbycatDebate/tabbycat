@@ -389,6 +389,7 @@ class BallotSetForm(forms.Form):
                     except KeyError:
                         logger.error("Field '%s' not found", self._fieldname_speaker(side, pos))
                         raise MalformedFormError
+
                     if speaker not in team.speakers:
                         errors.append(forms.ValidationError(
                             _('The speaker %(speaker)s doesn\'t appear to be on team %(team)s.'),
