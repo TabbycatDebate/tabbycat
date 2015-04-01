@@ -405,14 +405,19 @@ class BallotSetForm(forms.Form):
                 # The third speaker can't give the reply.
                 if self.using_replies:
                     try:
-                        reply_speaker_error = cleaned_data[self._fieldname_speaker(side, self.LAST_SUBSTANTIVE_POSITION)] \
-                                == cleaned_data[self._fieldname_speaker(side, self.REPLY_POSITION)]
+                        reply_speaker = cleaned_data[self._fieldname_speaker(side, self.REPLY_POSITION)]
+                        last_speaker = cleaned_data[self._fieldname_speaker(side, self.LAST_SUBSTANTIVE_POSITION)]
                     except KeyError:
                         raise MalformedFormError
-                    if reply_speaker_error:
+                    if reply_speaker == last_speaker:
                         errors.append(forms.ValidationError(
                             _('The last substantive speaker and reply speaker for the %(side)s team are the same.'),
-                            params={'side': self._LONG_NAME[side]}, code='reply_speaker'
+                            params={'side': self._LONG_NAME[side]}, code='reply_speaker_consecutive'
+                        ))
+                    if speakers[reply_speaker] == 0:
+                        errors.append(forms.ValidationError(
+                            _('The reply speaker for the %(side)s team did not give a substantive speech.'),
+                            params={'side': self._LONG_NAME[side]}, code='reply_speaker_not_repeat'
                         ))
 
         if errors:
