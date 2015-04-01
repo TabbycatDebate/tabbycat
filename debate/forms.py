@@ -375,7 +375,9 @@ class BallotSetForm(forms.Form):
                         params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
                     ))
 
-            for side in self.SIDES:
+            for i, side in enumerate(self.SIDES):
+                # Pull team speakers info again, in case it's changed since the form was loaded.
+                team = self.cleaned_data['choose_sides'][i] if self.choosing_sides else self.debate.get_team(side)
                 # The three substantive speaker fields must be unique.
                 speakers = Counter()
                 for pos in xrange(1, self.LAST_SUBSTANTIVE_POSITION + 1):
@@ -384,12 +386,17 @@ class BallotSetForm(forms.Form):
                     except KeyError:
                         logger.error("Field '%s' not found", self._fieldname_speaker(side, pos))
                         raise MalformedFormError
+                    if speaker not in team.speakers:
+                        errors.append(forms.ValidationError(
+                            _('The speaker %(speaker)s doesn\'t appear to be on team %(team)s.'),
+                            params={'speaker': speaker.name, 'team': team.short_name}, code='speaker_wrongteam'
+                        ))
                     speakers[speaker] += 1
                 for speaker, count in speakers.iteritems():
                     if count > 1:
                         errors.append(forms.ValidationError(
                             _('The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team.'),
-                            params={'speaker': speaker, 'side': self._LONG_NAME[side], 'count': count}, code='speaker'
+                            params={'speaker': speaker.name, 'side': self._LONG_NAME[side], 'count': count}, code='speaker_repeat'
                         ))
 
                 # The third speaker can't give the reply.
