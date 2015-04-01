@@ -295,6 +295,9 @@ span.esl {
     padding-left: 6px;
     padding-right: 6px;
   }
+  #table-search-group {
+    margin-right: 220px; // move right to make way for unused
+  }
   #scratch {
     position: fixed;
     top: 0;
@@ -303,7 +306,7 @@ span.esl {
     padding-left: 0;
     overflow-y: scroll;
     padding-bottom: 50px; // ensure no footer overlaps
-    margin-top: 169px;
+    margin-top: 16px;
     .unused {
       padding-left: 0;
     }

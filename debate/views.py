@@ -471,7 +471,7 @@ def tournament_home(request, t):
             speaks = SpeakerScore.objects.filter(
             ballot_submission__confirmed=True,
             debate_team__debate__round=r,
-            position__lte=3)
+            position__lte=last_substantive_position)
 
             round_min = min(speak.score for speak in speaks)
             round_avg = sum(speak.score for speak in speaks) / len(speaks)
@@ -481,6 +481,7 @@ def tournament_home(request, t):
             # Lazy-catch all for possible errors
             return 0
 
+    last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
     r_stats = [get_round_stats(r) for r in rounds]
 
     # Draw Status
@@ -1376,6 +1377,8 @@ def team_standings(request, round, for_print=False):
 def calculate_speaker_rankings(speakers, rounds, round, results_override=False):
     # TODO is there a way to do this without so many database hits?
     # Maybe using a select subquery?
+    last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
+
     from debate.models import SpeakerScore
     def get_score(speaker, r):
         try:
@@ -1383,7 +1386,7 @@ def calculate_speaker_rankings(speakers, rounds, round, results_override=False):
                 ballot_submission__confirmed=True,
                 speaker=speaker,
                 debate_team__debate__round=r,
-                position__lte=3).score
+                position__lte=last_substantive_position).score
         except SpeakerScore.DoesNotExist:
             return None
 
@@ -1396,7 +1399,7 @@ def calculate_speaker_rankings(speakers, rounds, round, results_override=False):
                 ballot_submission__confirmed=True,
                 speaker=speaker,
                 debate_team__debate__round=r,
-                position__lte=3):
+                position__lte=last_substantive_position):
                 print("   {dt:s}\n        position {pos:d}, ballot submission ID {id:d} (version {v:d}): score {score}".format(
                     dt=score.debate_team, pos=score.position, id=score.ballot_submission.id,
                     v=score.ballot_submission.version, score=score.score))
