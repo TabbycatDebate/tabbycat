@@ -15,6 +15,10 @@ logger = logging.getLogger(__name__)
 class FormConstructionError(Exception):
     pass
 
+class MalformedFormError(forms.ValidationError):
+    def __init__(self):
+        forms.ValidationError.__init__(self, "The form data seems malformed, please try again.")
+
 # ==============================================================================
 # Custom fields
 # ==============================================================================
@@ -159,6 +163,7 @@ class BallotSetForm(forms.Form):
         self.tconfig = self.tournament.config
         self.using_motions = self.tconfig.get('enable_motions')
         self.using_forfeits = self.tconfig.get('enable_forfeits')
+        self.using_replies = self.tconfig.get('reply_scores_enabled')
         self.choosing_sides = self.tconfig.get('draw_side_allocations') == 'manual-ballot'
 
         self.forfeit_declared = False
@@ -189,7 +194,7 @@ class BallotSetForm(forms.Form):
 
     @staticmethod
     def _fieldname_speaker(side, pos):
-        return '%(side)s speaker_s%(pos)d' % {'side': side, 'pos': pos}
+        return '%(side)s_speaker_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
     def _fieldname_score(adj, side, pos):
@@ -362,8 +367,8 @@ class BallotSetForm(forms.Form):
                 try:
                     totals = [sum(cleaned_data[self._fieldname_score(adj, side, pos)] for pos in self.POSITIONS) for side in self.SIDES]
                 except KeyError:
-                    logger.warning("Field '%s' not found", self._fieldname_score(adj, side, pos))
-                    continue
+                    logger.error("Field '%s' not found", self._fieldname_score(adj, side, pos))
+                    raise MalformedFormError
                 if totals[0] == totals[1]:
                     errors.append(forms.ValidationError(
                         _('The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)'),
@@ -377,7 +382,8 @@ class BallotSetForm(forms.Form):
                     try:
                         speaker = cleaned_data[self._fieldname_speaker(side, pos)]
                     except KeyError:
-                        logger.warning("Field '%s' not found", self._fieldname_speaker(side, pos))
+                        logger.error("Field '%s' not found", self._fieldname_speaker(side, pos))
+                        raise MalformedFormError
                     speakers[speaker] += 1
                 for speaker, count in speakers.iteritems():
                     if count > 1:
@@ -387,16 +393,17 @@ class BallotSetForm(forms.Form):
                         ))
 
                 # The third speaker can't give the reply.
-                try:
-                    reply_speaker_error = cleaned_data[self._fieldname_speaker(side, self.LAST_SUBSTANTIVE_POSITION)] \
-                            == cleaned_data[self._fieldname_speaker(side, self.REPLY_POSITION)]
-                except KeyError:
-                    continue
-                if reply_speaker_error:
-                    errors.append(forms.ValidationError(
-                        _('The last substantive speaker and reply speaker for the %(side)s team are the same.'),
-                        params={'side': self._LONG_NAME[side]}, code='reply_speaker'
-                    ))
+                if self.using_replies:
+                    try:
+                        reply_speaker_error = cleaned_data[self._fieldname_speaker(side, self.LAST_SUBSTANTIVE_POSITION)] \
+                                == cleaned_data[self._fieldname_speaker(side, self.REPLY_POSITION)]
+                    except KeyError:
+                        raise MalformedFormError
+                    if reply_speaker_error:
+                        errors.append(forms.ValidationError(
+                            _('The last substantive speaker and reply speaker for the %(side)s team are the same.'),
+                            params={'side': self._LONG_NAME[side]}, code='reply_speaker'
+                        ))
 
         if errors:
             raise forms.ValidationError(errors)

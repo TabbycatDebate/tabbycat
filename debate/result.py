@@ -327,7 +327,8 @@ class BallotSet(object):
         return self._get_avg_score(self._dt(team), position)
 
     def set_speaker(self, team, position, speaker):
-        """Sets the identity of the speaker in this team and position."""
+        """Sets the identity of the speaker in this team and position.
+        Raises an exception if the speaker isn't in the team."""
         return self._set_speaker(self._dt(team), position, speaker)
 
     def set_score(self, adj, team, position, score):
@@ -347,6 +348,8 @@ class BallotSet(object):
                    for adj in self.majority_adj) / len(self.majority_adj)
 
     def _set_speaker(self, dt, position, speaker):
+        if speaker not in dt.team.speakers:
+            raise ValueError("Speaker %s isn't in team %s" % (speaker.name, dt.team.short_name))
         self.speakers[dt][position] = speaker
 
     def _set_score(self, adj, dt, position, score):
