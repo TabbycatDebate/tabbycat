@@ -269,7 +269,10 @@ class BallotSetForm(forms.Form):
         initial = {'debate_result_status': self.debate.result_status,
                 'confirmed': bs.confirmed, 'discarded': bs.discarded}
 
-        if self.choosing_sides:
+        # HACK: Check here to see if self.ballots has been saved -- if it's not,
+        # then it's a new ballots form, and choose_sides should not be populated
+        # with an initial value.
+        if self.choosing_sides and self.ballots.pk is not None:
             try:
                 initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)
             except DebateTeam.DoesNotExist:
