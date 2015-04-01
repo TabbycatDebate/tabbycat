@@ -15,13 +15,6 @@ logger = logging.getLogger(__name__)
 class FormConstructionError(Exception):
     pass
 
-class MalformedFormError(RuntimeError):
-    pass
-
-# class MalformedFormError(forms.ValidationError):
-#     def __init__(self):
-#         forms.ValidationError.__init__(self, "The form data seems malformed, please try again.")
-
 # ==============================================================================
 # Custom fields
 # ==============================================================================
@@ -348,24 +341,21 @@ class BallotSetForm(forms.Form):
         cleaned_data = super(BallotSetForm, self).clean()
         errors = list()
 
-        if 'forfeits' in cleaned_data:
-            if cleaned_data['forfeits'] in ["aff_forfeit", "neg_forfeit"]:
-                self.forfeit_declared = True
+        if cleaned_data.get('forfeits') in ["aff_forfeit", "neg_forfeit"]:
+            self.forfeit_declared = True
 
-        # TODO this should go up to the BallotSubmission.full_clean() method.
-        # Not sure how to structure this.
-        # For now just implement the same checks here.
-        if cleaned_data['discarded'] and cleaned_data['confirmed']:
-            errors.append(forms.ValidationError(
-                _("The ballot set can't be both discarded and confirmed."),
-                code='discard_confirm'
-            ))
-        if cleaned_data['debate_result_status'] == Debate.STATUS_CONFIRMED and not cleaned_data['confirmed'] and self.debate.confirmed_ballot is None:
-            errors.append(forms.ValidationError(
+        if cleaned_data.get('discarded') and cleaned_data.get('confirmed'):
+            for field in ('discarded', 'confirmed'):
+                self.add_error(field, forms.ValidationError(
+                    _("The ballot set can't be both discarded and confirmed."),
+                    code='discard_confirm'
+                ))
+
+        if cleaned_data.get('debate_result_status') == Debate.STATUS_CONFIRMED and not cleaned_data['confirmed'] and self.debate.confirmed_ballot is None:
+            self.add_error('debate_result_status', forms.ValidationError(
                 _("The debate status can't be confirmed unless one of the ballot sets is confirmed."),
                 code='status_confirm'
             ))
-        # end TODO
 
         if not self.forfeit_declared:
             for adj in self.adjudicators:
@@ -373,58 +363,62 @@ class BallotSetForm(forms.Form):
                 try:
                     totals = [sum(cleaned_data[self._fieldname_score(adj, side, pos)] for pos in self.POSITIONS) for side in self.SIDES]
                 except KeyError:
-                    logger.error("Field '%s' not found", self._fieldname_score(adj, side, pos))
-                    raise MalformedFormError
+                    logger.warning("Field '%s' not found", self._fieldname_score(adj, side, pos))
                 if totals[0] == totals[1]:
-                    errors.append(forms.ValidationError(
+                    self.add_error(None, forms.ValidationError(
                         _('The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)'),
                         params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
                     ))
 
-            for i, side in enumerate(self.SIDES):
-                # Pull team speakers info again, in case it's changed since the form was loaded.
-                team = self.cleaned_data['choose_sides'][i] if self.choosing_sides else self.debate.get_team(side)
-                # The three substantive speaker fields must be unique.
-                speakers = Counter()
+
+            # Pull team info again, in case it's changed since the form was loaded.
+            if self.choosing_sides:
+                teams = cleaned_data.get('choose_sides', [None] * len(self.SIDES))
+            else:
+                teams = (self.debate.get_team(side) for side in self.SIDES)
+
+            for side, team in zip(self.SIDES, teams):
+
+                speaker_counts = Counter()
                 for pos in xrange(1, self.LAST_SUBSTANTIVE_POSITION + 1):
-                    try:
-                        speaker = cleaned_data[self._fieldname_speaker(side, pos)]
-                    except KeyError:
-                        logger.error("Field '%s' not found", self._fieldname_speaker(side, pos))
-                        raise MalformedFormError
-                    if speaker not in team.speakers:
-                        errors.append(forms.ValidationError(
+                    speaker = self.cleaned_data.get(self._fieldname_speaker(side, pos))
+                    if speaker is None:
+                        logger.warning("Field '%s' not found", self._fieldname_speaker(side, pos))
+                        continue
+
+                    # The speaker must be on the relevant team.
+                    if team is not None and speaker not in team.speakers:
+                        self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
                             _('The speaker %(speaker)s doesn\'t appear to be on team %(team)s.'),
                             params={'speaker': speaker.name, 'team': team.short_name}, code='speaker_wrongteam'
-                        ))
-                    speakers[speaker] += 1
-                for speaker, count in speakers.iteritems():
+                            ))
+                    speaker_counts[speaker] += 1
+
+                # The substantive speakers must be unique.
+                for speaker, count in speaker_counts.iteritems():
                     if count > 1:
-                        errors.append(forms.ValidationError(
+                        self.add_error(None, forms.ValidationError(
                             _('The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team.'),
                             params={'speaker': speaker.name, 'side': self._LONG_NAME[side], 'count': count}, code='speaker_repeat'
                         ))
 
-                # The third speaker can't give the reply.
                 if self.using_replies:
-                    try:
-                        reply_speaker = cleaned_data[self._fieldname_speaker(side, self.REPLY_POSITION)]
-                        last_speaker = cleaned_data[self._fieldname_speaker(side, self.LAST_SUBSTANTIVE_POSITION)]
-                    except KeyError:
-                        raise MalformedFormError
-                    if reply_speaker == last_speaker:
-                        errors.append(forms.ValidationError(
+                    reply_speaker = cleaned_data.get(self._fieldname_speaker(side, self.REPLY_POSITION))
+                    last_speaker = cleaned_data.get(self._fieldname_speaker(side, self.LAST_SUBSTANTIVE_POSITION))
+
+                    # The third speaker can't give the reply.
+                    if reply_speaker == last_speaker and reply_speaker is not None:
+                        self.add_error(self._fieldname_speaker(side, self.REPLY_POSITION), forms.ValidationError(
                             _('The last substantive speaker and reply speaker for the %(side)s team are the same.'),
                             params={'side': self._LONG_NAME[side]}, code='reply_speaker_consecutive'
-                        ))
-                    if speakers[reply_speaker] == 0:
-                        errors.append(forms.ValidationError(
+                            ))
+
+                    # The reply speaker must have given a substantive speech.
+                    if speaker_counts[reply_speaker] == 0:
+                        self.add_error(self._fieldname_speaker(side, self.REPLY_POSITION), forms.ValidationError(
                             _('The reply speaker for the %(side)s team did not give a substantive speech.'),
                             params={'side': self._LONG_NAME[side]}, code='reply_speaker_not_repeat'
                         ))
-
-        if errors:
-            raise forms.ValidationError(errors)
 
         return cleaned_data
 
