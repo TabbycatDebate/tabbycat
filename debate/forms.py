@@ -2,9 +2,7 @@ from django import forms
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 
-from debate.models import SpeakerScoreByAdj, Debate, Motion, Round, Team, Adjudicator
-from debate.models import DebateTeam, DebateTeamMotionPreference, DebateAdjudicator, AdjudicatorFeedback
-from debate.models import ActionLog
+import debate.models as m
 from debate.result import BallotSet, ForfeitBallotSet
 
 from collections import Counter
@@ -136,7 +134,7 @@ class BallotSetForm(forms.Form):
     confirmed = forms.BooleanField(required=False)
     discarded = forms.BooleanField(required=False)
 
-    debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
+    debate_result_status = forms.ChoiceField(choices=m.Debate.STATUS_CHOICES)
 
     SIDES = ['aff', 'neg']
     _LONG_NAME = {'aff': 'affirmative', 'neg': 'negative'}
@@ -222,7 +220,7 @@ class BallotSetForm(forms.Form):
                 (str(teams[1].id) + "," + str(teams[0].id), "%s affirmed, %s negated" % (teams[1].short_name, teams[0].short_name))
             ]
             self.fields['choose_sides'] = forms.TypedChoiceField(
-                choices=side_choices, coerce=lambda x: tuple(Team.objects.get(id=int(v)) for v in x.split(","))
+                choices=side_choices, coerce=lambda x: tuple(m.Team.objects.get(id=int(v)) for v in x.split(","))
             )
             for team in self.debate.teams:
                 self.fields['team_%d' % team.id] = forms.ModelChoiceField(queryset=team.speakers, required=False)
@@ -236,19 +234,16 @@ class BallotSetForm(forms.Form):
         # 4. Speaker fields
         for side, pos in self.SIDES_AND_POSITIONS:
 
-            # Might come back to later: override the validation method, or write a custom validation method that is more contextual
-            # class ModelChoiceFieldNoValidation(forms.ModelChoiceField):
-            #     def validate(self, value):
-            #         pass
-
             # 4(a). Speaker identity
-            try:
-                # TODO/TEMPORARY ILLUSTRATIVE FIX
-                # Thesis: ModelChoiceField is constrainted by its querset; when it validates it does so against those available options
-                # When initialised it must have its querset set to encompass all possible speakers (even if they're shown on the front end)
-                queryset = self.debate.get_team('aff').speakers | self.debate.get_team('neg').speakers
-            except (AttributeError, Team.DoesNotExist):
-                queryset = Speaker.objects.none() # if sides not chosen
+            queryset = m.Speaker.objects.filter(team__in=self.debate.teams)
+            # try:
+            #     # TODO/TEMPORARY ILLUSTRATIVE FIX
+            #     # Thesis: ModelChoiceField is constrainted by its querset; when it validates it does so against those available options
+            #     # When initialised it must have its querset set to encompass all possible speakers (even if they're shown on the front end)
+            #     queryset = self.debate.get_team('aff').speakers | self.debate.get_team('neg').speakers
+
+            # except (AttributeError, Team.DoesNotExist):
+            #     queryset = Speaker.objects.none() # if sides not chosen
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(queryset=queryset)
 
             # 4(b). Speaker scores
@@ -279,7 +274,7 @@ class BallotSetForm(forms.Form):
         if self.choosing_sides and self.ballots.pk is not None:
             try:
                 initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)
-            except DebateTeam.DoesNotExist:
+            except m.DebateTeam.DoesNotExist:
                 pass
 
         # Generally, initialise the motion to what is currently in the database.
@@ -359,7 +354,7 @@ class BallotSetForm(forms.Form):
                     code='discard_confirm'
                 ))
 
-        if cleaned_data.get('debate_result_status') == Debate.STATUS_CONFIRMED and not cleaned_data['confirmed'] and self.debate.confirmed_ballot is None:
+        if cleaned_data.get('debate_result_status') == m.Debate.STATUS_CONFIRMED and not cleaned_data['confirmed'] and self.debate.confirmed_ballot is None:
             self.add_error('debate_result_status', forms.ValidationError(
                 _("The debate status can't be confirmed unless one of the ballot sets is confirmed."),
                 code='status_confirm'
@@ -541,7 +536,7 @@ class DebateManagementForm(forms.Form):
     debate as a whole, not an individual ballot. This form is responsible for those
     fields, and is always part of a DebateResultFormSet."""
 
-    result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
+    result_status = forms.ChoiceField(choices=m.Debate.STATUS_CHOICES)
 
     def __init__(self, debate, *args, **kwargs):
         self.debate = debate
@@ -613,10 +608,10 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
     released_only is a boolean."""
 
     if released_only:
-        das = DebateAdjudicator.objects.filter(adjudicator = adjudicator,
-            debate__round__draw_status = Round.STATUS_RELEASED)
+        das = m.DebateAdjudicator.objects.filter(adjudicator = adjudicator,
+            debate__round__draw_status = m.Round.STATUS_RELEASED)
     else:
-        das = DebateAdjudicator.objects.filter(adjudicator = adjudicator)
+        das = m.DebateAdjudicator.objects.filter(adjudicator = adjudicator)
 
     debates = [da.debate for da in das]
 
@@ -629,7 +624,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
 
     adj_choices = [(None, '-- Adjudicators --')]
     adj_choices.extend ([
-        adj_choice(da) for da in DebateAdjudicator.objects.filter(
+        adj_choice(da) for da in m.DebateAdjudicator.objects.filter(
             debate__id__in = [d.id for d in debates]
         ).select_related('debate') if da.adjudicator != adjudicator
     ])
@@ -645,7 +640,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
 
     team_choices = [(None, '-- Teams --')]
     team_choices.extend([
-        team_choice(dt) for dt in DebateTeam.objects.filter(
+        team_choice(dt) for dt in m.DebateTeam.objects.filter(
             debate__id__in = [d.id for d in debates]
         ).select_related('debate')
     ])
@@ -657,9 +652,9 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
         id = int(id)
 
         if obj_type.strip() == 'A':
-            return DebateAdjudicator.objects.get(id=id)
+            return m.DebateAdjudicator.objects.get(id=id)
         if obj_type.strip() == 'T':
-            return DebateTeam.objects.get(id=id)
+            return m.DebateTeam.objects.get(id=id)
 
     tournament = adjudicator.tournament
 
@@ -686,23 +681,23 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
             source = self.cleaned_data['source']
             source = coerce(source) # Bug in Django 1.6.5
 
-            if isinstance(source, DebateAdjudicator):
+            if isinstance(source, m.DebateAdjudicator):
                 sa = source
             else:
                 sa = None
-            if isinstance(source, DebateTeam):
+            if isinstance(source, m.DebateTeam):
                 st = source
             else:
                 st = None
 
             # Discard existing feedbacks
-            for fb in AdjudicatorFeedback.objects.filter(adjudicator=adjudicator,
+            for fb in m.AdjudicatorFeedback.objects.filter(adjudicator=adjudicator,
                     source_adjudicator=sa, source_team=st):
                 fb.discarded = True
                 fb.save()
 
             # Save the new one
-            af = AdjudicatorFeedback(
+            af = m.AdjudicatorFeedback(
                 adjudicator       =adjudicator,
                 source_adjudicator=sa,
                 source_team       =st,
@@ -723,7 +718,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
 def make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=True):
 
     kwargs = dict()
-    kwargs['debate__round__draw_status'] = Round.STATUS_RELEASED
+    kwargs['debate__round__draw_status'] = m.Round.STATUS_RELEASED
 
     def adj_choice(da):
         return (
@@ -735,21 +730,21 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
 
     if not include_panellists:
         # Include only debates for which this adj was the chair.
-        kwargs['type'] = DebateAdjudicator.TYPE_CHAIR
+        kwargs['type'] = m.DebateAdjudicator.TYPE_CHAIR
 
-    debates = [da.debate for da in DebateAdjudicator.objects.filter(
+    debates = [da.debate for da in m.DebateAdjudicator.objects.filter(
         adjudicator=source, **kwargs).select_related('debate')]
 
     # For an adjudicator, find every adjudicator on their panel except them.
     choices.extend([
-        adj_choice(da) for da in DebateAdjudicator.objects.filter(
+        adj_choice(da) for da in m.DebateAdjudicator.objects.filter(
             debate__id__in = [d.id for d in debates]
         ).select_related('debate').order_by('-debate__round') if da.adjudicator != source
     ])
 
     def coerce(value):
         value = int(value)
-        return DebateAdjudicator.objects.get(id=value)
+        return m.DebateAdjudicator.objects.get(id=value)
 
     tournament = source.tournament
 
@@ -781,9 +776,9 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
             da = self.cleaned_data['debate_adjudicator']
             da = coerce(da) # Bug in Django 1.6.5
 
-            sa = DebateAdjudicator.objects.get(adjudicator=source, debate=da.debate)
+            sa = m.DebateAdjudicator.objects.get(adjudicator=source, debate=da.debate)
 
-            af = AdjudicatorFeedback(
+            af = m.AdjudicatorFeedback(
                 adjudicator       =da.adjudicator,
                 source_adjudicator=sa,
                 source_team       =None,
@@ -808,16 +803,16 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
     choices = [(None, '-- Adjudicators --')]
 
     # Only include non-silent rounds for teams.
-    debates = [dt.debate for dt in DebateTeam.objects.filter(
+    debates = [dt.debate for dt in m.DebateTeam.objects.filter(
         team=source, debate__round__silent=False,
-        debate__round__draw_status=Round.STATUS_RELEASED).select_related('debate').order_by('-debate__round__seq')]
+        debate__round__draw_status=m.Round.STATUS_RELEASED).select_related('debate').order_by('-debate__round__seq')]
 
     for debate in debates:
         try:
-            chair = DebateAdjudicator.objects.get(debate=debate, type=DebateAdjudicator.TYPE_CHAIR)
-        except DebateAdjudicator.DoesNotExist:
+            chair = m.DebateAdjudicator.objects.get(debate=debate, type=m.DebateAdjudicator.TYPE_CHAIR)
+        except m.DebateAdjudicator.DoesNotExist:
             continue
-        panel = DebateAdjudicator.objects.filter(debate=debate, type=DebateAdjudicator.TYPE_PANEL)
+        panel = m.DebateAdjudicator.objects.filter(debate=debate, type=m.DebateAdjudicator.TYPE_PANEL)
         if panel.exists():
             choices.append((chair.id, '{name} (R{r} - chair gave oral)'.format(
                 name=chair.adjudicator.name, r=debate.round.seq)))
@@ -830,7 +825,7 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
 
     def coerce(value):
         value = int(value)
-        return DebateAdjudicator.objects.get(id=value)
+        return m.DebateAdjudicator.objects.get(id=value)
 
     tournament = source.tournament
 
@@ -857,14 +852,14 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
                 self.fields['password'] = TournamentPasswordField(tournament=tournament)
 
         def save(self):
-            # Saves the form and returns the AdjudicatorFeedback object
+            # Saves the form and returns the m.AdjudicatorFeedback object
 
             da = self.cleaned_data['debate_adjudicator']
             da = coerce(da) # Bug in Django 1.6.5
 
-            st = DebateTeam.objects.get(team=source, debate=da.debate)
+            st = m.DebateTeam.objects.get(team=source, debate=da.debate)
 
-            af = AdjudicatorFeedback(
+            af = m.AdjudicatorFeedback(
                 adjudicator       =da.adjudicator,
                 source_adjudicator=None,
                 source_team       =st,
@@ -883,7 +878,5 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
 
 
 def test():
-    from debate.models import Debate
-
-    return make_results_form_class(Debate.objects.get(pk=1))
+    return make_results_form_class(m.Debate.objects.get(pk=1))
 

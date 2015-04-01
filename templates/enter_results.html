@@ -30,6 +30,7 @@
                     </label>
                     <div class="col-sm-1 col-xs-3">
                         {{ form.discarded|addcss:"form-control" }}
+                        {{ form.discarded.errors }}
                     </div>
                 </div>
                 <div class="form-group">
@@ -38,6 +39,7 @@
                     </label>
                     <div class="col-sm-1 col-xs-3">
                         {{ form.confirmed|addcss:"form-control" }}
+                        {{ form.confirmed.errors }}
                     </div>
                 </div>
             </div>
@@ -50,6 +52,7 @@
                 <div class="form-group">
                     <div class="col-sm-2">
                         {{ form.debate_result_status|addcss:"form-control" }}
+                        {{ form.debate_result_status.errors }}
                     </div>
                     <div class="col-sm-2">
                         <input id="submit" class="save form-control btn btn-success" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" />

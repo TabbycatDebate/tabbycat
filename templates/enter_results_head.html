@@ -142,21 +142,35 @@
         neg_team_id = team_ids[1];
 
         // Copy team names
-        $(".aff-team-name").each(function() {
-          $(this).text(team_names[aff_team_id]);
-        });
-        $(".neg-team-name").each(function() {
-          $(this).text(team_names[neg_team_id]);
-        });
+        $(".aff-team-name").text(team_names[aff_team_id]);
+        $(".neg-team-name").text(team_names[neg_team_id]);
+
+        // Take note of speaker positions
+        current_speakers = {};
+        $(".aff-speaker").each(function(index) {
+          current_speakers["aff" + index] = $(this).val();
+        })
+        $(".neg-speaker").each(function(index) {
+          current_speakers["neg" + index] = $(this).val();
+        })
+        console.log(current_speakers);
 
         // Copy speaker positions dropdowns
         $(".aff-speaker option").remove();
-        $(".aff-speaker").each(function() {
+        $(".aff-speaker").each(function(index) {
           $("#id_team_" + aff_team_id + " option").clone().appendTo(this);
+          // HACK TODO check for values before assigning
+          $(this).val(current_speakers["aff" + index]);
+          if (!$(this).val())
+            $(this).val(current_speakers["neg" + index]);
         })
         $(".neg-speaker option").remove();
-        $(".neg-speaker").each(function() {
+        $(".neg-speaker").each(function(index) {
           $("#id_team_" + neg_team_id + " option").clone().appendTo(this);
+          // HACK TODO check for values before assigning
+          $(this).val(current_speakers["neg" + index]);
+          if (!$(this).val())
+            $(this).val(current_speakers["aff" + index]);
         })
 
     }
