@@ -135,7 +135,6 @@
 
             function swap_sides(selected_option) {
 
-                selected_option = selected_option.replace("(", "").replace(")", "").replace(" ", "");
                 var selected_aff_id = selected_option.split(',')[0];
                 var current_aff_id = $(".position-aff").first().attr('id').replace("team-", "");
                 console.log(selected_aff_id);
