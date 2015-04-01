@@ -41,11 +41,11 @@
                     <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
                 {% endif %}
                 {% if show_emoji > 0 %}
-                    <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+                    <th class="th-emoji"></th>
                 {% endif %}
                 <th>{% if side_allocations_unknown %}Team 1{% else %}Affirmative{% endif %}</th>
                 {% if show_emoji > 0 %}
-                    <th class="th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+                    <th class="th-emoji"></th>
                 {% endif %}
                 <th>{% if side_allocations_unknown %}Team 2{% else %}Negative{% endif %}</th>
                 <th>Adj<span class="hidden-xs">udicator</span>s</th>
@@ -79,7 +79,7 @@
                     </td>
                 {% endif %}
                 {% if show_emoji > 0 %}
-                    <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
+                    <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
                 {% endif %}
                 <td class="team-name" id="">
                     <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
@@ -87,7 +87,7 @@
                     </span>
                 </td>
                 {% if show_emoji > 0 %}
-                    <td class="team-emoji team-{{ debate.neg_team.id }}" id=""></td>
+                    <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
                 {% endif %}
                 <td class="team-name">
                     <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
@@ -135,7 +135,7 @@
                     </td>
                 {% endif %}
                 {% if show_emoji > 0 %}
-                    <td class="team-emoji team-{{ debate.aff_team.id }}" id=""></td>
+                    <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
                 {% endif %}
                 <td class="team-name">
                     <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
@@ -148,7 +148,7 @@
                     {% endif %}
                 </td>
                 {% if show_emoji > 0 %}
-                    <td class="team-emoji team-{{ debate.neg_team.id }}" id=""></td>
+                    <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
                 {% endif %}
                 <td class="team-name">
                     <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">

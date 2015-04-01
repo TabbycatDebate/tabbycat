@@ -43,11 +43,11 @@
                     <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
                 {% endif %}
                 {% if show_emoji > 0 %}
-                    <th class="hidden-xs th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+                    <th class="hidden-xs th-emoji"/></th>
                 {% endif %}
                 <th>{% if side_allocations_unknown %}Team 1{% else %}Affirmative{% endif %}</th>
                 {% if show_emoji > 0 %}
-                    <th class="hidden-xs th-emoji"><img src="{% static 'emoji/img/grey_question.png' %}" /></th>
+                    <th class="hidden-xs th-emoji"/></th>
                 {% endif %}
                 <th>{% if side_allocations_unknown %}Team 2{% else %}Negative{% endif %}</th>
                 {% if enable_division_motions %}
@@ -75,7 +75,7 @@
                     {% include "tables/debate_status.html" %}
                 {% endif %}
                 {% if show_emoji > 0 %}
-                    <td class="team-emoji team-{{ debate.aff_team.id }} hidden-sm"></td>
+                    <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
                 {% endif %}
                 <td class="team-name">
                     {% if debate.aff_team.type != 'B' %}
@@ -90,7 +90,7 @@
                     {% endif %}
                 </td>
                 {% if show_emoji > 0 %}
-                    <td class="team-emoji team-{{ debate.neg_team.id }} hidden-sm "></td>
+                    <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
                 {% endif %}
                 <td class="team-name">
                     {% if debate.neg_team.type != 'B'  %}
