@@ -133,23 +133,34 @@
 
         {% if side_allocations_unknown %}
 
+            var team_names = {};
+            {% for team in form.debate.teams %}team_names['{{team.id}}'] = '{{team.short_name}}';
+            {% endfor %}
+
             function swap_sides(selected_option) {
 
-                var selected_aff_id = selected_option.split(',')[0];
-                var current_aff_id = $(".position-aff").first().attr('id').replace("team-", "");
-                console.log(selected_aff_id);
-                console.log(current_aff_id);
-                if (selected_aff_id != current_aff_id) {
-                    $(".position .speaker-position-label").each(function() {
-                        var new_label = $(this).text()
-                        $(this).text(new_label.replace("A", "N"));
-                    });
-                    $(".position-neg .speaker-position-label").each(function() {
-                        var new_label = $(this).text()
-                        $(this).text(new_label.replace("N", "A"));
-                    });
-                    $(".position").toggleClass("position-aff").toggleClass("pull-left").toggleClass("position-neg").toggleClass("pull-right");
-                }
+                team_ids = selected_option.split(',');
+                aff_team_id = team_ids[0];
+                neg_team_id = team_ids[1];
+
+                // Copy team names
+                $(".aff-team-name").each(function() {
+                  $(this).text(team_names[aff_team_id]);
+                });
+                $(".neg-team-name").each(function() {
+                  $(this).text(team_names[neg_team_id]);
+                });
+
+                // Copy speaker positions dropdowns
+                $(".aff-speaker option").remove();
+                $(".aff-speaker").each(function() {
+                  $("#id_team_" + aff_team_id + " option").clone().appendTo(this);
+                })
+                $(".neg-speaker option").remove();
+                $(".neg-speaker").each(function() {
+                  $("#id_team_" + neg_team_id + " option").clone().appendTo(this);
+                })
+
             }
 
             // On Load
@@ -157,10 +168,6 @@
                 console.log('none');
                 $(".scoresheet").hide();
             } else {
-                var selected_option = $("#id_choose_sides").val();
-                console.log("swapping");
-                console.log(selected_option);
-                swap_sides(selected_option);
                 $(".adj-ballot .text-warning").hide();
             }
 
@@ -176,8 +183,6 @@
                     $(".adj-ballot .text-warning").show();
                 }
             });
-
-            var team_ids = [{{ form.team_ids|join:", " }}];
 
         {% endif %}
 
