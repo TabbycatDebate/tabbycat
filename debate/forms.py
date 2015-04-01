@@ -15,9 +15,12 @@ logger = logging.getLogger(__name__)
 class FormConstructionError(Exception):
     pass
 
-class MalformedFormError(forms.ValidationError):
-    def __init__(self):
-        forms.ValidationError.__init__(self, "The form data seems malformed, please try again.")
+class MalformedFormError(RuntimeError):
+    pass
+
+# class MalformedFormError(forms.ValidationError):
+#     def __init__(self):
+#         forms.ValidationError.__init__(self, "The form data seems malformed, please try again.")
 
 # ==============================================================================
 # Custom fields
