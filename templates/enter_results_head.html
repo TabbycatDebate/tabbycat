@@ -129,62 +129,65 @@
         {% endif %}
   });
 
+  {% if side_allocations_unknown %}
 
+    var team_names = {};
+    {% for team in form.debate.teams %}team_names['{{team.id}}'] = '{{team.short_name}}';
+    {% endfor %}
 
-        {% if side_allocations_unknown %}
+    function swap_sides(selected_option) {
 
-            var team_names = {};
-            {% for team in form.debate.teams %}team_names['{{team.id}}'] = '{{team.short_name}}';
-            {% endfor %}
+        team_ids = selected_option.split(',');
+        aff_team_id = team_ids[0];
+        neg_team_id = team_ids[1];
 
-            function swap_sides(selected_option) {
+        // Copy team names
+        $(".aff-team-name").each(function() {
+          $(this).text(team_names[aff_team_id]);
+        });
+        $(".neg-team-name").each(function() {
+          $(this).text(team_names[neg_team_id]);
+        });
 
-                team_ids = selected_option.split(',');
-                aff_team_id = team_ids[0];
-                neg_team_id = team_ids[1];
+        // Copy speaker positions dropdowns
+        $(".aff-speaker option").remove();
+        $(".aff-speaker").each(function() {
+          $("#id_team_" + aff_team_id + " option").clone().appendTo(this);
+        })
+        $(".neg-speaker option").remove();
+        $(".neg-speaker").each(function() {
+          $("#id_team_" + neg_team_id + " option").clone().appendTo(this);
+        })
 
-                // Copy team names
-                $(".aff-team-name").each(function() {
-                  $(this).text(team_names[aff_team_id]);
-                });
-                $(".neg-team-name").each(function() {
-                  $(this).text(team_names[neg_team_id]);
-                });
+    }
 
-                // Copy speaker positions dropdowns
-                $(".aff-speaker option").remove();
-                $(".aff-speaker").each(function() {
-                  $("#id_team_" + aff_team_id + " option").clone().appendTo(this);
-                })
-                $(".neg-speaker option").remove();
-                $(".neg-speaker").each(function() {
-                  $("#id_team_" + neg_team_id + " option").clone().appendTo(this);
-                })
+    // On Load
+    if ($("#id_choose_sides").val() == "") {
+        // If nothing is selected
+        console.log('none');
+        $(".scoresheet").hide();
+    } else {
+      // If something is selected
+      $(".adj-ballot .text-warning").hide();
+      console.log('on load selected');
+      var selected_option = $("#id_choose_sides").val()
+      swap_sides(selected_option)
+    }
 
-            }
+    // On Change
+    $('#id_choose_sides').change(function() {
+        var selected_option = $("#id_choose_sides").val()
+        if (selected_option != "") {
+            $(".scoresheet").show();
+            $(".adj-ballot .text-warning").hide();
+            swap_sides(selected_option)
+        } else {
+            $(".scoresheet").hide();
+            $(".adj-ballot .text-warning").show();
+        }
+    });
 
-            // On Load
-            if ($("#id_choose_sides").val() == "") {
-                console.log('none');
-                $(".scoresheet").hide();
-            } else {
-                $(".adj-ballot .text-warning").hide();
-            }
-
-            // On Change
-            $('#id_choose_sides').change(function() {
-                var selected_option = $("#id_choose_sides").val()
-                if (selected_option != "") {
-                    $(".scoresheet").show();
-                    $(".adj-ballot .text-warning").hide();
-                    swap_sides(selected_option)
-                } else {
-                    $(".scoresheet").hide();
-                    $(".adj-ballot .text-warning").show();
-                }
-            });
-
-        {% endif %}
+{% endif %}
 
 
 </script>

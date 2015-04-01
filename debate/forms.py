@@ -236,9 +236,17 @@ class BallotSetForm(forms.Form):
         # 4. Speaker fields
         for side, pos in self.SIDES_AND_POSITIONS:
 
+            # Might come back to later: override the validation method, or write a custom validation method that is more contextual
+            # class ModelChoiceFieldNoValidation(forms.ModelChoiceField):
+            #     def validate(self, value):
+            #         pass
+
             # 4(a). Speaker identity
             try:
-                queryset = self.debate.get_team(side).speakers
+                # TODO/TEMPORARY ILLUSTRATIVE FIX
+                # Thesis: ModelChoiceField is constrainted by its querset; when it validates it does so against those available options
+                # When initialised it must have its querset set to encompass all possible speakers (even if they're shown on the front end)
+                queryset = self.debate.get_team('aff').speakers | self.debate.get_team('neg').speakers
             except (AttributeError, Team.DoesNotExist):
                 queryset = Speaker.objects.none() # if sides not chosen
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(queryset=queryset)
