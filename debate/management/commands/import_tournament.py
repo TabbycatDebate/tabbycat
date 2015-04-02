@@ -452,7 +452,7 @@ class Command(BaseCommand):
                             team.emoji_seq = get_emoji(emoji_options)
                             team.save()
                             teams_count = teams_count + 1
-                            print "Made team:\t\t%s  %s of %s" % (EMOJI_LIST[team.emoji_seq], name, ins)
+                            print "Made team:\t\t%s  %s of %s" % (EMOJI_LIST[team.emoji_seq], team_name, ins)
 
                     except Exception as inst:
                         total_errors += 1
@@ -478,7 +478,7 @@ class Command(BaseCommand):
                         total_errors += 1
                         print inst
 
-                    print "Made speaker:\t\t%s  %s (%s) of %s" % (EMOJI_LIST[speakers_team.emoji_seq], name, gender, ins)
+                    print "Made speaker:\t\t\t  %s (%s) of %s" % (name, gender, ins)
 
                 self.stdout.write('**** Created ' + str(speakers_count) +
                                   ' speakers and ' + str(teams_count) + ' teams')
