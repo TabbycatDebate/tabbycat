@@ -67,6 +67,7 @@ SETTINGS = OrderedDict([
     ('tab_released',                (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament',                 False)),
     ('motion_tab_released',         (_bool, 'Displays the motions tab PUBLICLY. For AFTER the tournament',         False)),
     ('ballots_released',            (_bool, 'Displays ballots PUBLICLY. For AFTER the tournament',                 False)),
+    ('enable_motions',              (_bool, 'Keep track of motions',                                               True)),
     ('enable_flagged_motions',      (_bool, 'Allow particular motions to be flagged as contentious',               False)),
     ('enable_adj_notes',            (_bool, 'Enables a general-purpose notes field for adjudicators',              False)),
     ('enable_venue_groups',         (_bool, 'Enables the display of a venues grouping',                            False)),

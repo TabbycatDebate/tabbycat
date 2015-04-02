@@ -273,7 +273,7 @@
 
       function append_adj_scores() {
         $(".adj").each(function() {
-          $(this).children("span").prepend('<a data-toggle="modal" data-target="#adj-feedback"  title="Click to view feedback history" data-toggle="tooltip" class="info">' + formatScore(scores[intId(this)]) + '</a>');
+          $(this).children("span").prepend('<a data-toggle="modal" data-target="#adj-feedback"  title="Click to view feedback history" data-toggle="tooltip" class="info">' + formatScore(scores[intId(this)]) + '</a> ');
           $("a", this).click(function() {
             var adj_row = $(this).parent()
             var adj_name = adj_row.find("span").text()

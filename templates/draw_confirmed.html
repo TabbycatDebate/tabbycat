@@ -87,78 +87,78 @@
     {% endif %}
   {% endif %}
 
-  <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
-    <thead>
-      <tr>
-        {% if enable_divisions %}
-          <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip"title="Division">{{ debate.division.name }}</span></th>
-        {% else %}
-          <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-        {% endif %}
-        {% if enable_venue_groups %}
-          <th>Venue</th>
-        {% endif %}
-        <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Room"></span></th>
-        {% if enable_venue_times %}
-          <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip"title="Date"></span></th>
-        {% endif %}
-        {% if enable_venue_times %}
-          <th><span class="glyphicon glyphicon-time" data-toggle="tooltip"title="Time"></span></th>
-        {% endif %}
-        <th>Aff<span class="hidden-xs">irmative</span></th>
-        <th>Neg<span class="hidden-xs">ative</span></th>
-        <th>Adj<span class="hidden-xs">udicator</span>s</th>
-        <th>Conflict</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for debate in draw %}
-    <tr class="{% if debate.all_conflicts or not debate.adjudicators.valid %}danger{% endif %}">
-      {% if enable_divisions %}
-        <td>{{ debate.division.name }}</td>
-      {% else %}
-        <td>{{ debate.bracket }}</td>
-      {% endif %}
-      {% if enable_venue_groups %}
-        <td>{{ debate.division.venue_group.short_name }}</td>
-      {% endif %}
-      <td>{{ debate.venue.name }}</td>
-      {% if enable_venue_times %}
-      <td>
-        {% if debate.venue.time %}
-          <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
-          {{ debate.venue.time|date:"D jS F" }}
-        {% endif %}
-      </td>
-      <td>
-        {{ debate.division.time_slot|time:'h:i A' }}
-      </td>
-      {% endif %}
-      <td title="{% aff_count debate.aff_team round.prev %} prior aff">
-        <span href="#" title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-          {{ debate.aff_team.short_name }}
-        </span>
-        <span class="hidden">
-          {{ debate.aff_team.speakers|join:', ' }}
-        </span>
-      </td>
-      <td title="{% neg_count debate.neg_team round.prev %} prior neg">
-        <span href="#" title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-          {{ debate.neg_team.short_name }}
-        </span>
-        <span class="hidden">
-          {{ debate.neg_team.speakers|join:', ' }}
-        </span>
-      </td>
-      <td>
-      {% for type, adj in debate.adjudicators %}
-        {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
-      {% endfor %}
-      </td>
-      <td class="text-danger">{{ debate.all_conflicts|join:", " }}</td>
-    </tr>
-    {% endfor %}
-  </table>
+    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                {% if enable_divisions %}
+                    <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip"title="Division">{{ debate.division.name }}</span></th>
+                {% else %}
+                    <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+                {% endif %}
+                {% if enable_venue_groups %}
+                    <th>Venue</th>
+                {% endif %}
+                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Room"></span></th>
+                {% if enable_venue_times %}
+                    <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip"title="Date"></span></th>
+                {% endif %}
+                {% if enable_venue_times %}
+                    <th><span class="glyphicon glyphicon-time" data-toggle="tooltip"title="Time"></span></th>
+                {% endif %}
+                <th>{% if side_allocations_unknown %}Team 1{% else %}Affirmative{% endif %}</th>
+                <th>{% if side_allocations_unknown %}Team 2{% else %}Negative{% endif %}</th>
+                <th>Adj<span class="hidden-xs">udicator</span>s</th>
+                <th>Conflict</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for debate in draw %}
+        <tr class="{% if debate.all_conflicts or not debate.adjudicators.valid %}danger{% endif %}">
+            {% if enable_divisions %}
+                <td>{{ debate.division.name }}</td>
+            {% else %}
+                <td>{{ debate.bracket }}</td>
+            {% endif %}
+            {% if enable_venue_groups %}
+                <td>{{ debate.division.venue_group.short_name }}</td>
+            {% endif %}
+            <td>{{ debate.venue.name }}</td>
+            {% if enable_venue_times %}
+            <td>
+                {% if debate.venue.time %}
+                    <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
+                    {{ debate.venue.time|date:"D jS F" }}
+                {% endif %}
+            </td>
+            <td>
+                {{ debate.division.time_slot|time:'h:i A' }}
+            </td>
+            {% endif %}
+            <td title="{% aff_count debate.aff_team round.prev %} prior aff">
+                <span href="#" title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                    {{ debate.aff_team.short_name }}
+                </span>
+                <span class="hidden">
+                    {{ debate.aff_team.speakers|join:', ' }}
+                </span>
+            </td>
+            <td title="{% neg_count debate.neg_team round.prev %} prior neg">
+                <span href="#" title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
+                    {{ debate.neg_team.short_name }}
+                </span>
+                <span class="hidden">
+                    {{ debate.neg_team.speakers|join:', ' }}
+                </span>
+            </td>
+            <td>
+            {% for type, adj in debate.adjudicators %}
+                {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+            </td>
+            <td class="text-danger">{{ debate.all_conflicts|join:", " }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
   <div class="modal fade" id="start-time-form" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
