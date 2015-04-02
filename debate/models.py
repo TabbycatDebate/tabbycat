@@ -1359,7 +1359,7 @@ class Debate(models.Model):
         # Formatting venue names so they can split over multiple lines
         # TODO: integrate venue group name into here
         match = re.match(r"([a-z]+)([0-9]+)", str(self.venue.name), re.I)
-        if False and match:
+        if match:
             items = match.groups()
             if len(items[1]) > 3:
                 alloc = u'%s %s %s' % (items[0], items[1][:3], items[1][3:])
