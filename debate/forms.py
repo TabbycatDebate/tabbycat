@@ -354,7 +354,7 @@ class BallotSetForm(forms.Form):
                     code='discard_confirm'
                 ))
 
-        if cleaned_data.get('debate_result_status') == m.Debate.STATUS_CONFIRMED and not cleaned_data['confirmed'] and self.debate.confirmed_ballot is None:
+        if cleaned_data.get('debate_result_status') == m.Debate.STATUS_CONFIRMED and not cleaned_data.get('confirmed') and self.debate.confirmed_ballot is None:
             self.add_error('debate_result_status', forms.ValidationError(
                 _("The debate status can't be confirmed unless one of the ballot sets is confirmed."),
                 code='status_confirm'
@@ -379,6 +379,8 @@ class BallotSetForm(forms.Form):
                 teams = cleaned_data.get('choose_sides', [None] * len(self.SIDES))
             else:
                 teams = (self.debate.get_team(side) for side in self.SIDES)
+            if None in teams:
+                logger.warning("Team identities not found")
 
             for side, team in zip(self.SIDES, teams):
 
