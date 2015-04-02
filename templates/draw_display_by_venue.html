@@ -66,10 +66,10 @@
                 {% endif %}
                 {% if enable_venue_groups %}
                     <td>
-                        <span title="{{ debate.division.venue_group.name }}" data-toggle="tooltip">{{ debate.division.venue_group.short_name }}</span>
+                        <span title="{{ debate.division.venue_group.name }}" data-toggle="tooltip">{{ debate.division.venue_group.short_name }}{{ debate.venue.name }}</span>
                     </td>
                 {% else %}
-                    <td class="venue-name">{{ debate.venue_splitname }}</td>
+                    <td class="venue-name">{{ debate.venue.name }}</td>
                 {% endif %}
                 {% if enable_venue_times %}
                     {% include "tables/debate_status.html" %}
@@ -90,7 +90,7 @@
                     {% endif %}
                 </td>
                 {% if show_emoji > 0 %}
-                    <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
+                    <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
                 {% endif %}
                 <td class="team-name">
                     {% if debate.neg_team.type != 'B'  %}
