@@ -142,11 +142,11 @@ class BallotSetForm(forms.Form):
     def __init__(self, ballots, *args, **kwargs):
         """Dynamically generate fields for this ballot:
          - password
-         - choose_sides,    if sides need to be chosen by the user
-         - motion,          if there is more than one motion
-         - motion_veto_t#,  if motion vetoes are being noted, one for each team
-         - speaker t#_s#,   one for each speaker
-         - score_a#_t#_s#,  one for each score
+         - choose_sides,         if sides need to be chosen by the user
+         - motion,               if there is more than one motion
+         - aff/neg_motion_veto,  if motion vetoes are being noted, one for each team
+         - aff/neg_speaker_s#,   one for each speaker
+         - aff/neg_score_a#_s#,  one for each score
         """
 
         self.ballots = ballots
