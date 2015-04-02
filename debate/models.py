@@ -128,7 +128,10 @@ class VenueGroup(models.Model):
         ordering = ['short_name']
 
     def __unicode__(self):
-        return u"%s" % (self.short_name)
+        if self.short_name:
+            return u"%s" % (self.short_name)
+        else:
+            return u"%s" % (self.name)
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)

@@ -181,9 +181,9 @@ class Command(BaseCommand):
                             except:
                                 value = float(int(line[2]))
                         elif value_type == "bool" or value_type == "_bool":
-                            if line[2] == "True" or line[2] == "1":
+                            if line[2] == "True" or line[2] == "1" or line[2] == "TRUE":
                                 value = True
-                            elif line[2] == "False" or line[2] == "0":
+                            elif line[2] == "False" or line[2] == "0" or line[2] == "FALSE":
                                 value = False
                             else:
                                 print "Error %s not properly set" % key

@@ -110,7 +110,7 @@ admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 
 class VenueGroupAdmin(admin.ModelAdmin):
-    list_display = ('name','team_capacity')
+    list_display = ('name','short_name','team_capacity')
     search_fields = ('name',)
 
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
