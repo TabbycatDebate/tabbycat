@@ -578,10 +578,16 @@ class Command(BaseCommand):
                             try:
                                 ins_conflict = m.Institution.objects.get(name=ins_conflict_name)
                             except m.Institution.DoesNotExist:
-                                print ins_conflict_name
-                                ins_conflict = m.Institution.objects.get(code=ins_conflict_name)
+                                try:
+                                    ins_conflict = m.Institution.objects.get(code=ins_conflict_name)
+                                except m.Institution.DoesNotExist:
+                                    try:
+                                        ins_conflict = m.Institution.objects.get(abbreviation=ins_conflict_name)
+                                    except:
+                                        self.stdout.write('Could not find the institution conflict {0} for {1}'.format(ins_conflict, name))
+
                             m.AdjudicatorInstitutionConflict(adjudicator=adj, institution=ins_conflict).save()
-                            print "    conflicts with", ins_conflict.name
+                            print "\t\t\tconflicts with", ins_conflict.name
 
                     if team_conflicts:
                         for team_conflict_name in team_conflicts.split(","):
@@ -590,14 +596,21 @@ class Command(BaseCommand):
                             try:
                                 team_conflict_ins = m.Institution.objects.get(name=team_conflict_ins_name)
                             except m.Institution.DoesNotExist:
-                                team_conflict_ins = m.Institution.objects.get(code=team_conflict_ins_name)
+                                try:
+                                    team_conflict_ins = m.Institution.objects.get(code=team_conflict_ins_name)
+                                except m.Institution.DoesNotExist:
+                                    try:
+                                        team_conflict_ins = m.Institution.objects.get(abbreviation=team_conflict_ins_name)
+                                    except:
+                                        print "couldn't find team conflict institution for %s" % team_conflict_ins_name
+
                             try:
                                 team_conflict = m.Team.objects.get(institution=team_conflict_ins, reference=team_conflict_ref)
                             except m.Team.DoesNotExist:
                                 self.stdout.write('No team exists to conflict with {0}: {1}'.format(name, team_conflict_name))
                                 total_errors += 1
                             m.AdjudicatorConflict(adjudicator=adj, team=team_conflict).save()
-                            print "    conflicts with", team_conflict.short_name
+                            print "\t\t\tconflicts with", team_conflict.short_name
 
                     adjs_count = adjs_count + 1
 
