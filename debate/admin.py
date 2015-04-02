@@ -10,7 +10,7 @@ class TournamentAdmin(admin.ModelAdmin):
 admin.site.register(models.Tournament,TournamentAdmin)
 
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ('name','code')
+    list_display = ('name','code','abbreviation')
     ordering = ('name',)
     search_fields = ('name',)
 

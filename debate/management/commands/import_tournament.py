@@ -309,7 +309,8 @@ class Command(BaseCommand):
                     try:
                         inst, created = m.Institution.objects.get_or_create(
                             code=code,
-                            name=name
+                            name=name,
+                            abbreviation=abbv
                         )
                         if created:
                             print "Made institution: \t%s" % name
@@ -430,11 +431,15 @@ class Command(BaseCommand):
                     except:
                         try:
                             ins = m.Institution.objects.get(name=ins_name)
-                        except Exception as inst:
-                            self.stdout.write("error with " + ins_name)
-                            total_errors += 1
-                            print type(inst)     # the exception instance
-                            print inst           # __str__ allows args to printed directly
+                        except:
+                            try:
+                                ins = m.Institution.objects.get(abbreviation=ins_name)
+                            except  Exception as inst:
+                                self.stdout.write('Could not find the institution of {0} for {1}'.format(ins_name, name))
+                                self.stdout.write("error with " + ins_name)
+                                total_errors += 1
+                                print type(inst)     # the exception instance
+                                print inst           # __str__ allows args to printed directly
 
                     try:
                         team, created = m.Team.objects.get_or_create(
@@ -541,8 +546,11 @@ class Command(BaseCommand):
                     except m.Institution.DoesNotExist:
                         try:
                             ins = m.Institution.objects.get(code=ins_name)
-                        except:
-                            self.stdout.write('Could not find the institution of {0} for {1}'.format(ins_name, name))
+                        except m.Institution.DoesNotExist:
+                            try:
+                                ins = m.Institution.objects.get(abbreviation=ins_name)
+                            except:
+                                self.stdout.write('Could not find the institution of {0} for {1}'.format(ins_name, name))
 
 
                     name = name.strip()
