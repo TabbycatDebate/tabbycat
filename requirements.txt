@@ -8,6 +8,7 @@ wsgiref==0.1.2
 dj-static==0.0.6
 
 # For Mem-Caching
+pylibmc==1.4.1
 django-pylibmc==0.5.0
 
 # For Session Caching
