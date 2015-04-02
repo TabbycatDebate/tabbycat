@@ -93,6 +93,14 @@
       } else {
         $(this).removeClass('error');
       }
+
+      // Kindly fill in the reply speaker if there is only one option
+      {% if form.using_replies and form.LAST_SUBSTANTIVE_POSITION == 2 %}
+      if (posno == 1) {
+        leader = $(this).val();
+        $('#id_'+parts[1]+'_speaker_s{{ form.REPLY_POSITION }}').val(leader);
+      }
+      {% endif %}
     }
 
     $("#resultsForm").validate({});
