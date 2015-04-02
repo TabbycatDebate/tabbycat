@@ -1,6 +1,9 @@
 # cannot import debate.models here - would create circular dep
 from django.core.exceptions import ObjectDoesNotExist
 
+class ResultError(RuntimeError):
+    pass
+
 class Scoresheet(object):
     """Representation of a single adjudicator's scoresheet in a single ballot
     submission, providing an interface that abstracts away database operations.
@@ -395,20 +398,22 @@ class BallotSet(object):
 
     def _calc_decision(self):
         """Calculates the majority decision and puts the majority adjudicators
-        in self._majority_adj and the winning DebateTeam in self._winner. Does
-        nothing if scores are incomplete or if it looks like a draw."""
-        if not self.is_complete:
-            return
+        in self._majority_adj and the winning DebateTeam in self._winner. Raises
+        AssertionError if scores are incomplete. Raises ResultError there is a
+        draw somewhere among the adjudicators, or overall."""
+        assert self.is_complete, "Tried to calculate decision on an incomplete ballot set."
 
         adjs_by_dt = {dt: [] for dt in self.dts} # group adjs by vote
         for adj, sheet in self.adjudicator_sheets.iteritems():
             winner = sheet._get_winner()
+            if winner is None:
+                raise ResultError("The scoresheet for %s does not have a winner." % adj.name)
             adjs_by_dt[winner].append(adj)
 
         counts = {dt: len(adjs) for dt, adjs in adjs_by_dt.iteritems()}
         max_count = max(counts.values()) # check that we have a majority
         if max_count < len(self.adjudicators) / 2 + 1:
-            return
+            raise ResultError("No team had a majority in %s." % self.debate.matchup)
 
         for dt, count in counts.iteritems(): # set self._majority_adj
             if count == max_count:
@@ -547,10 +552,16 @@ class BallotSet(object):
         adjtype is a DebateAdjudicator.TYPE_* constant, adj is an Adjudicator
         object, and split is True if the adjudicator was in the minority and
         not a trainee, False if the adjudicator was in the majority or is a
-        trainee."""
-        for adjtype, adj in self.debate.adjudicators:
-            yield adjtype, adj, (adj not in self.majority_adj and
-                    adjtype != m.DebateAdjudicator.TYPE_TRAINEE)
+        trainee. If there is no available result, split is always False."""
+        try:
+            self._calc_decision()
+        except (ResultError, AssertionError):
+            for adjtype, adj in self.debate.adjudicators:
+                yield adjtype, adj, False
+        else:
+            for adjtype, adj in self.debate.adjudicators:
+                yield adjtype, adj, (adj not in self.majority_adj and
+                        adjtype != m.DebateAdjudicator.TYPE_TRAINEE)
 
     @property
     def sheet_iter(self):
