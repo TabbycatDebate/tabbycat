@@ -167,8 +167,8 @@ class BallotSetForm(forms.Form):
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
         self.POSITIONS = self.tournament.POSITIONS
-        self.LAST_SUBSTANTIVE_POSITION = self.tournament.LAST_SUBSTANTIVE_POSITION
-        self.REPLY_POSITION = self.tournament.REPLY_POSITION
+        self.LAST_SUBSTANTIVE_POSITION = self.tournament.LAST_SUBSTANTIVE_POSITION # also used in template
+        self.REPLY_POSITION = self.tournament.REPLY_POSITION # also used in template
 
         self._create_fields()
         self._set_tab_indices()
@@ -365,11 +365,11 @@ class BallotSetForm(forms.Form):
                 # Check that it was not a draw.
                 try:
                     totals = [sum(cleaned_data[self._fieldname_score(adj, side, pos)] for pos in self.POSITIONS) for side in self.SIDES]
-                except KeyError:
-                    logger.warning("Field '%s' not found", self._fieldname_score(adj, side, pos))
+                except KeyError as e:
+                    logger.warning("Field %s not found", str(e))
                 if totals[0] == totals[1]:
                     self.add_error(None, forms.ValidationError(
-                        _('The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)'),
+                        _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)"),
                         params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
                     ))
 
@@ -394,7 +394,7 @@ class BallotSetForm(forms.Form):
                     # The speaker must be on the relevant team.
                     if team is not None and speaker not in team.speakers:
                         self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
-                            _('The speaker %(speaker)s doesn\'t appear to be on team %(team)s.'),
+                            _("The speaker %(speaker)s doesn't appear to be on team %(team)s."),
                             params={'speaker': speaker.name, 'team': team.short_name}, code='speaker_wrongteam'
                             ))
                     speaker_counts[speaker] += 1
@@ -403,7 +403,7 @@ class BallotSetForm(forms.Form):
                 for speaker, count in speaker_counts.iteritems():
                     if count > 1:
                         self.add_error(None, forms.ValidationError(
-                            _('The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team.'),
+                            _("The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team."),
                             params={'speaker': speaker.name, 'side': self._LONG_NAME[side], 'count': count}, code='speaker_repeat'
                         ))
 
@@ -414,14 +414,14 @@ class BallotSetForm(forms.Form):
                     # The third speaker can't give the reply.
                     if reply_speaker == last_speaker and reply_speaker is not None:
                         self.add_error(self._fieldname_speaker(side, self.REPLY_POSITION), forms.ValidationError(
-                            _('The last substantive speaker and reply speaker for the %(side)s team are the same.'),
+                            _("The last substantive speaker and reply speaker for the %(side)s team can't be the same."),
                             params={'side': self._LONG_NAME[side]}, code='reply_speaker_consecutive'
                             ))
 
                     # The reply speaker must have given a substantive speech.
                     if speaker_counts[reply_speaker] == 0:
                         self.add_error(self._fieldname_speaker(side, self.REPLY_POSITION), forms.ValidationError(
-                            _('The reply speaker for the %(side)s team did not give a substantive speech.'),
+                            _("The reply speaker for the %(side)s team did not give a substantive speech."),
                             params={'side': self._LONG_NAME[side]}, code='reply_speaker_not_repeat'
                         ))
 

@@ -28,6 +28,29 @@ class Tournament(models.Model):
     release_all = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
 
+    @property
+    def LAST_SUBSTANTIVE_POSITION(self):
+        """Returns the number of substantive speakers."""
+        return self.config.get('substantive_speakers')
+
+    @property
+    def REPLY_POSITION(self):
+        """If there is a reply position, returns one more than the number of
+        substantive speakers. If there is no reply position, returns None."""
+        if self.config.get('reply_scores_enabled'):
+            return self.config.get('substantive_speakers') + 1
+        else:
+            return None
+
+    @property
+    def POSITIONS(self):
+        """Guaranteed to be consecutive numbers starting at one. Includes the
+        reply speaker."""
+        speaker_positions = 1 + self.config.get('substantive_speakers')
+        if self.config.get('reply_scores_enabled') is True:
+            speaker_positions = speaker_positions + 1
+        return range(1, speaker_positions)
+
     @models.permalink
     def get_absolute_url(self):
         return ('tournament_home', [self.slug])
@@ -81,24 +104,6 @@ class Tournament(models.Model):
             from debate.config import Config
             self._config = Config(self)
         return self._config
-
-    @property
-    def LAST_SUBSTANTIVE_POSITION(self):
-        return self.config.get('substantive_speakers')
-
-    @property
-    def REPLY_POSITION(self):
-        if self.config.get('reply_scores_enabled'):
-            return self.config.get('substantive_speakers') + 1
-        else:
-            raise ValueError("There is no reply position when reply scores are disabled")
-
-    @property
-    def POSITIONS(self):
-        speaker_positions = 1 + self.config.get('substantive_speakers')
-        if self.config.get('reply_scores_enabled') is True:
-            speaker_positions = speaker_positions + 1
-        return range(1, speaker_positions)
 
     class Meta:
         ordering = ['seq',]

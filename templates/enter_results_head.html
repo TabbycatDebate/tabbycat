@@ -59,28 +59,30 @@
     function update_speaker() {
       // e.g. id_aff_speaker_s1
       var parts = $(this).attr('id').split('_');
+      var side = parts[1]; // e.g. 'aff'
+      var pos = parts[3];  // e.g. 's1'
       var speaker = $(':selected', this).text();
 
-      // e.g. '.aff.s1 label'
-      var side = parts[1]; // 'aff'
-      var pos = parts[3];  // 's1'
-
-      // Keeping the labels the same...
+      // Update speaker names for all judges other than the first
+      // e.g. '.aff.s1 .speaker-name'
       $('.' + side + '.' + pos + ' .speaker-name').html(speaker);
 
-      var others;
-      if (pos == '1') {
-        others = [2, 3];
-      } else if (pos == '2') {
-        others = [1, 3];
-      } else if (pos == '3') {
-        others = [1, 2, 4];
-      } else if (pos == '4') {
-        others = [3];
-      } else {
-        others = [];
-      }
+      var others = [];
+      var posno = parseInt(pos.charAt(1));
+      {% if form.using_replies %}
+      if (posno != {{ form.REPLY_POSITION }})
+        for (var i = 1; i <= {{ form.LAST_SUBSTANTIVE_POSITION }}; i++)
+          if (i != posno) others.push(i);
+      if (posno == {{ form.LAST_SUBSTANTIVE_POSITION }})
+        others.push({{ form.REPLY_POSITION }});
+      if (posno == {{ form.REPLY_POSITION }})
+        others.push({{ form.LAST_SUBSTANTIVE_POSITION }});
+      {% else %}
+      for (var i = 1; i <= {{ form.LAST_SUBSTANTIVE_POSITION }}; i++)
+        if (i != posno) others.push(i);
+      {% endif %}
 
+      // Detect duplicates
       var dupe = false;
       $.each(others, function(idx, val) {
         $sel = $('#id_'+parts[1]+'_speaker_s'+val);
