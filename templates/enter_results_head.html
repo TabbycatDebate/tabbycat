@@ -83,7 +83,7 @@
       // Detect duplicates
       var dupe = false;
       $.each(others, function(idx, val) {
-        $sel = $('#id_'+parts[1]+'_speaker_s'+val);
+        $sel = $('#id_'+side+'_speaker_s'+val);
         if ($(':selected', $sel).text() == speaker) {
           dupe = true;
         };
@@ -93,14 +93,6 @@
       } else {
         $(this).removeClass('error');
       }
-
-      // Kindly fill in the reply speaker if there is only one option
-      {% if form.using_replies and form.LAST_SUBSTANTIVE_POSITION == 2 %}
-      if (posno == 1) {
-        leader = $(this).val();
-        $('#id_'+parts[1]+'_speaker_s{{ form.REPLY_POSITION }}').val(leader);
-      }
-      {% endif %}
     }
 
     $("#resultsForm").validate({});
@@ -113,6 +105,18 @@
     });
 
     $('.speaker select').change(update_speakers).each(update_speaker);
+
+    // Fill in the reply speaker if there is only one option
+    {% if form.using_replies and form.LAST_SUBSTANTIVE_POSITION == 2 %}
+    $('#id_aff_speaker_s1').change(function() {
+      $('#id_aff_speaker_s{{ form.REPLY_POSITION }}').val($(this).val());
+      update_speakers();
+    });
+    $('#id_neg_speaker_s1').change(function() {
+      $('#id_neg_speaker_s{{ form.REPLY_POSITION }}').val($(this).val());
+      update_speakers();
+    });
+    {% endif %}
 
     {% if enable_forfeits %}
 
