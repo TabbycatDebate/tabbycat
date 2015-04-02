@@ -313,9 +313,9 @@ class Command(BaseCommand):
                             abbreviation=abbv
                         )
                         if created:
-                            print "Made institution: \t%s" % name
+                            print "Made institution: \t%s (%s / %s)" % (name, code, abbv)
                         else:
-                            print "Matched institution: \t%s" % name
+                            print "Matched institution: \t%s (%s / %s)" % (name, code, abbv)
 
                         institutions_count = institutions_count + 1
                     except Exception as inst:
