@@ -12,6 +12,9 @@
     <thead>
       <tr>
         <th>Name</th>
+        {% if show_novices > 0 %}
+          <th><span class="glyphicon glyphicon-leaf" data-toggle="tooltip" title="Speaker's Novice Status"></span></th>
+        {% endif %}
         {% if show_emoji > 0 %}
           <th class="team-emoji"></th>
         {% endif %}
@@ -25,6 +28,11 @@
     {% for person in speakers %}
       <tr>
         <td>{{ person.name }}</td>
+        {% if show_novices > 0 %}
+          <td>
+            {% if person.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% else %}<span></span>{% endif %}
+          </td>
+        {% endif %}
         {% if show_emoji > 0 %}
           <td class="team-emoji">{% team_emoji person.team %}</td>
         {% endif %}
@@ -40,6 +48,11 @@
     {% for person in adjs %}
       <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
         <td>{{ person.name }}</td>
+        {% if show_novices > 0 %}
+          <td>
+            {% if person.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% else %}<span></span>{% endif %}
+          </td>
+        {% endif %}
         {% if show_emoji > 0 %}
           <td class=""></td>
         {% endif %}

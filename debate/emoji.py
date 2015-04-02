@@ -49,7 +49,7 @@ EMOJI_LIST = [
     '\xF0\x9F\x8E\xB9',     #  🎹 musical keyboard
     '\xF0\x9F\x8F\x81',     #  🏁 chequered flag
     '\xF0\x9F\x8F\xA9',     #  🏩 love hotel
-    '\xF0\x9F\x90\x8D',     #  🐍 snake
+    '\xF0\x9F\x90\x8D',     #  🐍 snake                              44
     '\xF0\x9F\x90\xA7',     #  🐧 penguin
     '\xF0\x9F\x90\xA8',     #  🐨 koala
     '\xF0\x9F\x90\xAC',     #  🐬 dolphin
@@ -94,9 +94,9 @@ EMOJI_LIST = [
     '\xF0\x9F\x92\x91',     #  💑 couple with heart
     '\xF0\x9F\x92\x94',     #  💔 broken heart
     '\xF0\x9F\x92\x98',     #  💘 heart with arrow
-    '\xF0\x9F\x92\xA3',     #  💣 bomb
+    '\xF0\x9F\x92\xA3',     #  💣 bomb                               91
     '\xF0\x9F\x92\xA6',     #  💦 splashing sweat symbol
-    '\xF0\x9F\x92\xA9',     #  💩 pile of poo
+    '\xF0\x9F\x92\xA9',     #  💩 pile of poo                        93
     '\xF0\x9F\x92\xAA',     #  💪 flexed biceps
     '\xF0\x9F\x92\xAF',     #  💯 hundred points symbol
     '\xF0\x9F\x92\xB0',     #  💰 money bag
@@ -118,7 +118,7 @@ EMOJI_LIST = [
     '\xF0\x9F\x9A\x81',     #  🚁 helicopter
     '\xF0\x9F\x9A\x8A',     #  🚊 tram
     '\xF0\x9F\x9A\x94',     #  🚔 oncoming police car
-    '\xF0\x9F\x9A\x9C',     #  🚜 tractor
+    '\xF0\x9F\x9A\x9C',     #  🚜 tractor                            115
     '\xF0\x9F\x9A\x9D',     #  🚝 monorail
     '\xF0\x9F\x9A\xA6',     #  🚦 vertical traffic light
     '\xF0\x9F\x9A\xB4',     #  🚴 bicyclist
@@ -132,4 +132,10 @@ EMOJI_LIST = [
     '\xF0\x9F\x91\xAD',     #  👭 two women holding hands
     '\xF0\x9F\x94\x89',     #  🔉 speaker with one sound wave
     '\xF0\x9F\x94\xAC',     #  🔬 microscope
+                            #  🐉
+                            #  👹
+                            #  👺
+                            #  🚬
+                            #  ⚠️
+                            #  🇩 german flag
 ]

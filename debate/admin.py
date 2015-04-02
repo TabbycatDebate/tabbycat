@@ -67,8 +67,7 @@ admin.site.register(models.TeamVenuePreference, TeamVenuePreferenceAdmin)
 
 class SpeakerAdmin(admin.ModelAdmin):
     list_display = ('name', 'team', 'novice')
-    search_fields = ('name', 'team__name', 'team__institution__name',
-                     'team__institution__code',)
+    search_fields = ('name',)
     raw_id_fields = ('team',)
 admin.site.register(models.Speaker, SpeakerAdmin)
 
