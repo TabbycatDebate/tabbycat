@@ -287,17 +287,9 @@ class BallotSetForm(forms.Form):
             speaker = bs.get_speaker(side, pos)
             if speaker:
                 initial[self._fieldname_speaker(side, pos)] = speaker.pk
-                try:
-                    print("%s: %d (%s)" % (self._fieldname_speaker(side, pos), speaker.pk, str(speaker)))
-                except:
-                    pass
                 for adj in self.adjudicators:
                     score = bs.get_score(adj, side, pos)
                     initial[self._fieldname_score(adj, side, pos)] = score
-                    try:
-                        print("%s: %.1f" % (self._fieldname_score(adj, side, pos), score))
-                    except:
-                        pass
 
         return initial
 
