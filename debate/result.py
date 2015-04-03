@@ -82,6 +82,14 @@ class Scoresheet(object):
                 position=pos,
                 score=self._get_score(dt, pos),
             ).save()
+            try:
+                print("Saved ballot submission %s, adjudicator %s, team %s, position %s, score %s " %
+                    self.ballotsub, self.da, dt, pos, self._get_score(dt, pos))
+            except Exception as e:
+                try:
+                    print("Trouble reporting saved ballot submission: " + str(e))
+                except:
+                    pass
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval
@@ -238,7 +246,9 @@ class BallotSet(object):
         assert self.is_complete, "Tried to save ballot set when it is incomplete"
 
         self.ballotsub.save() # need BallotSubmission object to exist first
+        print("Saving " + str(self.ballotsub))
         for sheet in self.adjudicator_sheets.itervalues():
+            print("Saving sheet for adjudicator " + str(self.sheet.adjudicator))
             sheet.save()
         self._calc_decision()
         for dt in self.dts:
