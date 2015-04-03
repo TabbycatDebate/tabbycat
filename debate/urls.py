@@ -139,7 +139,4 @@ urlpatterns = patterns('debate.views',
     url(r'^all_tournaments_all_institutions/all_draws/(?P<institution_id>\d+)$', 'all_draws_for_institution', name='all_draws_for_institution'),
     url(r'^all_tournaments_all_teams/$', 'all_tournaments_all_teams', name='all_tournaments_all_teams'),
 
-
-
-
 )
