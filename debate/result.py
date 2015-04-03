@@ -553,6 +553,7 @@ class BallotSet(object):
         object, and split is True if the adjudicator was in the minority and
         not a trainee, False if the adjudicator was in the majority or is a
         trainee. If there is no available result, split is always False."""
+        from debate.models import DebateAdjudicator
         try:
             self._calc_decision()
         except (ResultError, AssertionError):
@@ -561,7 +562,7 @@ class BallotSet(object):
         else:
             for adjtype, adj in self.debate.adjudicators:
                 yield adjtype, adj, (adj not in self.majority_adj and
-                        adjtype != m.DebateAdjudicator.TYPE_TRAINEE)
+                        adjtype != DebateAdjudicator.TYPE_TRAINEE)
 
     @property
     def sheet_iter(self):
