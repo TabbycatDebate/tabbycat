@@ -74,6 +74,14 @@ class Scoresheet(object):
         """Saves the scores in the buffer for the given DebateTeam, to the
         database."""
         from debate.models import SpeakerScoreByAdj
+        try:
+            print("Saving speaker scores for submission %s, adjudicator %s, team %s" %
+                (self.ballotsub, self.da, dt))
+        except Exception as e:
+            try:
+                print("Trouble reporting saved ballot submission: " + str(e))
+            except:
+                pass
         for pos in self.POSITIONS:
             SpeakerScoreByAdj(
                 ballot_submission=self.ballotsub,
@@ -83,8 +91,7 @@ class Scoresheet(object):
                 score=self._get_score(dt, pos),
             ).save()
             try:
-                print("Saved ballot submission %s, adjudicator %s, team %s, position %s, score %s " %
-                    self.ballotsub, self.da, dt, pos, self._get_score(dt, pos))
+                print("position %s, score %s" % (pos, self._get_score(dt, pos)))
             except Exception as e:
                 try:
                     print("Trouble reporting saved ballot submission: " + str(e))
@@ -246,14 +253,22 @@ class BallotSet(object):
         assert self.is_complete, "Tried to save ballot set when it is incomplete"
 
         self.ballotsub.save() # need BallotSubmission object to exist first
-        print("Saving " + str(self.ballotsub))
+        try:
+            print("Saving " + str(self.ballotsub))
+        except:
+            print("Saving a ballot submission")
         for sheet in self.adjudicator_sheets.itervalues():
-            print("Saving sheet for adjudicator " + str(self.sheet.adjudicator))
+            try:
+                print("Saving sheet for adjudicator " + str(sheet.adjudicator))
+            except:
+                print("Saving a sheet for an adjudicator")
             sheet.save()
         self._calc_decision()
+        print("Saving teams")
         for dt in self.dts:
             self._save_team(dt)
         self.ballotsub.save()
+        print("Done.")
 
     def _load_team(self, dt):
         """Loads the scores for the given DebateTeam from the database into the
