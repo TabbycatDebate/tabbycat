@@ -171,10 +171,10 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
             }
         }
     except:
-        return {
-          'default': {
-            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-          }
+        CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+            }
         }
 
 if os.environ.get('REDISTOGO_URL', ''):
