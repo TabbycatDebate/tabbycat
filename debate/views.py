@@ -101,8 +101,8 @@ def index(request):
 
 ## Public UI
 
-PUBLIC_PAGE_CACHE_TIMEOUT = 1
-TAB_PAGES_CACHE_TIMEOUT = 28800
+PUBLIC_PAGE_CACHE_TIMEOUT = 60 * 1 # 1 Minutes
+TAB_PAGES_CACHE_TIMEOUT = 60 * 60 * 2 # 2 Hours
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
