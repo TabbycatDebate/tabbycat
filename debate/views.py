@@ -11,14 +11,14 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 from ipware.ip import get_real_ip
 
-from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator, DebateTeam
+from debate.models import Tournament, Round, Debate, Team, Venue, Adjudicator
 from debate.models import AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator, Speaker
 from debate.models import Person, Checkin, Motion, ActionLog, BallotSubmission
 from debate.models import AdjudicatorFeedback, ActiveVenue, ActiveTeam, ActiveAdjudicator
 from debate import forms
 
 from django.forms.models import modelformset_factory
-from django.forms import Textarea, ChoiceField
+from django.forms import Textarea
 
 import datetime
 from functools import wraps
@@ -167,7 +167,12 @@ def public_team_standings(request, t):
                     debate_team__debate__round=r,
                 )
                 debate = ts.debate_team.debate
-                opposition = ts.debate_team.opposition_team
+
+                opposition = None
+                if debate.neg_team == team:
+                    opposition = ts.debate_team.debate.aff_team
+                else:
+                    opposition = ts.debate_team.debate.neg_team
 
                 return ts.points, opposition
             except TeamScore.DoesNotExist:
@@ -276,7 +281,11 @@ def public_team_tab(request, t):
                 debate_team__debate__round=r,
             )
             debate = ts.debate_team.debate
-            opposition = ts.debate_team.opposition_team
+            opposition = None
+            if debate.neg_team == team:
+                opposition = ts.debate_team.debate.aff_team
+            else:
+                opposition = ts.debate_team.debate.neg_team
 
             return ts.score, ts.points, opposition
         except TeamScore.DoesNotExist:
@@ -1055,7 +1064,11 @@ def team_standings(request, round):
                 debate_team__debate__round=r,
             )
             debate = ts.debate_team.debate
-            opposition = ts.debate_team.opposition_team
+            opposition = None
+            if debate.neg_team == team:
+                opposition = ts.debate_team.debate.aff_team
+            else:
+                opposition = ts.debate_team.debate.neg_team
 
             return ts.score, ts.points, opposition
         except TeamScore.DoesNotExist:
@@ -1345,6 +1358,7 @@ def public_enter_feedback_adjudicator(request, t, adj_id):
     source = get_object_or_404(Adjudicator, id=adj_id)
     include_panellists = request.tournament.config.get('panellist_feedback_enabled') > 0
     ip_address = get_ip_address(request)
+    source_name = source.name
 
     submission_fields = {
         'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
@@ -1361,27 +1375,13 @@ def public_enter_feedback_adjudicator(request, t, adj_id):
     else:
         form = forms.make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=include_panellists)()
 
-    return r2r(request, 'public/enter_feedback_adj.html', dict(source_name=source.name, form=form))
+    return r2r(request, 'public/enter_feedback_adj.html', dict(source_name=source_name, form=form))
 
 # Don't cache
 @public_optional_tournament_view('public_feedback')
 def public_enter_feedback_team(request, t, team_id):
 
     source = get_object_or_404(Team, id=team_id)
-    dts = DebateTeam.objects.filter(
-            team=source, debate__round__silent=False,
-            debate__round__draw_status=Round.STATUS_RELEASED)
-
-    print "public_enter_feedback_team", request.method
-
-    return r2r(request, 'public/enter_feedback_team.html', dict(source=source, dts=dts))
-
-# Don't cache
-@public_optional_tournament_view('public_feedback')
-def public_enter_feedback_team_content(request, t, team_id):
-
-    source = get_object_or_404(Team, id=team_id)
-    dt = get_object_or_404(DebateTeam, pk=int(request.GET['id']))
     ip_address = get_ip_address(request)
     source_name = source.short_name
 
@@ -1390,27 +1390,17 @@ def public_enter_feedback_team_content(request, t, team_id):
         'ip_address'    : ip_address
     }
 
-    print "public_enter_feedback_team_content", request.method
-
     if request.method == "POST":
-        form = forms.make_feedback_form_class_for_public_team(dt, source, submission_fields)(request.POST)
+        form = forms.make_feedback_form_class_for_public_team(source, submission_fields)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
                     ip_address=ip_address, adjudicator_feedback=adj_feedback)
             return r2r(request, 'public/success.html', dict(success_kind="feedback"))
     else:
-        try:
-            form = forms.make_feedback_form_class_for_public_team(dt, source, submission_fields)()
-        except:
-            import traceback
-            traceback.print_exc()
+        form = forms.make_feedback_form_class_for_public_team(source, submission_fields)()
 
-    try:
-        return r2r(request, 'public/enter_feedback_team_content.html', dict(source_name=source_name, form=form))
-    except:
-        import traceback
-        traceback.print_exc()
+    return r2r(request, 'public/enter_feedback_team.html', dict(source_name=source_name, form=form))
 
 @login_required
 @tournament_view

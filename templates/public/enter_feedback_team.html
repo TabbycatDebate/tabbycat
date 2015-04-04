@@ -1,57 +1,9 @@
 {% extends "base.html" %}
-{% load debate_tags %}
 {% load add_field_css %}
 
-{% block head-title %}Add Feedback from {{ source.short_name }}{% endblock %}
-{% block page-title %}Add Feedback from {{ source.short_name }}{% endblock %}
-{% block extra-head %}
-
-<script>
-    $(document).ready(function() {
-
-        $('#id_debate').change(function () {
-
-            var dt_id = this.value;
-            var url = '{% tournament_url public_enter_feedback_team_content source.id %}?id=' + dt_id;
-            $.ajax({
-                type: "GET",
-                url: url,
-                success: function(raw_data, status) {
-                    $('#team-feedback-form').html(raw_data);
-                    if ($('#id_chair_gave_oral').length) {
-                        $('#div_active_adjudicator').hide();
-                        $('#group-id_panellist').hide();
-                        $('#id_chair_gave_oral').change(function() {
-                            if (this.value == 3) {
-                                $('#group-id_panellist').show();
-                            } else {
-                                $('#group-id_panellist').hide();
-                            }
-                            if (this.value == 1) {
-                                $('#div_active_adjudicator').hide();
-                                if ($('#id_panellist').value != "None") {
-                                    $('#div_active_adjudicator').show();
-                                }
-                            }
-                            if (this.value == 2) {
-                                $('#div_active_adjudicator').show();
-                                $('#active_adjudicator_name').text("hello");
-                            }
-                        });
-                    } else {
-
-                    }
-                },
-                error: function(xhr, error, ex) {
-                    $('#team-feedback-form').html("error");
-                },
-            });
-        });
-
-    });
-</script>
-
-{% endblock %}
+{% block head-title %}Add Feedback from {{ source_name }}{% endblock %}
+{% block page-title %}Add Feedback from {{ source_name }}{% endblock %}
+{% block extra-head %}{% endblock %}
 
 {% block body-class %}public-enter-feedback{% endblock %}
 
@@ -62,22 +14,26 @@
 <div class="alert alert-info">This page is specific to you, {{ source_name }}.
 The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
 
-<div class="form-horizontal">
+<form id="feedbackForm" action="" method="POST" class="form-horizontal">
+
+    {% for field in form %}
     <div class="form-group">
-        <label for="id_debate" class="col-sm-2 control-label">Which debate?</label>
+        <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>
         <div class="col-sm-9 col-md-6">
-            <select class="form-control" id="id_debate" name="debate">
-                <option>-------------</option>
-                {% for dt in dts %}
-                <option value="{{ dt.id }}">Round {{ dt.debate.round.seq }} vs {{ dt.opposition_team.short_name }}, chaired by {{ dt.debate.adjudicators.chair }}</option>
-                {% endfor %}
-            </select>
+            {{field|addcss:"form-control"}}
+        </div>
+        <div class="col-md-2 col-xs-10 ">
+            {% if field.errors %}
+                <label for="{{ field.id_for_label }}" class="control-label">{{ field.errors }}</label>
+            {% endif %}
         </div>
     </div>
-</div>
-
-<div id="team-feedback-form">
-
-</div>
+    {% endfor %}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-2">
+            <button type="submit" value="Save" class="form-control btn btn-success">Save</button>
+        </div>
+    </div>
+</form>
 
 {% endblock %}
