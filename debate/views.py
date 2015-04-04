@@ -952,6 +952,15 @@ def update_debate_importance(request, round):
             user=request.user, debate=debate, tournament=round.tournament)
     return HttpResponse(im)
 
+
+@admin_required
+@round_view
+def motion_standings(request, round, for_print=False):
+    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
+    motions = list()
+    motions = Motion.objects.statistics(round=round)
+    return r2r(request, 'motions.html', dict(motions=motions))
+
 @admin_required
 @round_view
 def motions(request, round):

@@ -11,13 +11,13 @@
       </button>
       <ul id="nav_brand" class="nav navbar-nav navbar-left">
         <li class="dropdown">
-          <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament.name }}<b class="caret"></b></a>
+          <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament }}<b class="caret"></b></a>
           <ul class="dropdown-menu">
             {% for tournament in all_tournaments %}
               {% if user.is_authenticated %}
-                <li><a class="" href="{{ tournament.get_absolute_url  }}">{{ tournament.name }}</a></li>
+                <li><a class="" href="{{ tournament.get_absolute_url  }}">{{ tournament }}</a></li>
               {% else %}
-                <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament.name }}</a></li>
+                <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament }}</a></li>
               {% endif %}
             {% endfor %}
             {% if all_tournaments.all.count > 1 and all_tournaments.0.config.public_divisions > 0 %}

@@ -105,6 +105,8 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/standings/team/print/$', 'team_standings', { 'for_print': True }, name='team_standings_print'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/speaker/print/$', 'speaker_standings', { 'for_print': True }, name='speaker_standings_print'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/reply/print/$', 'reply_standings', { 'for_print': True }, name='reply_standings_print'),
+    url(r'^admin/round/(?P<round_seq>\d+)/standings/motions/$', 'motion_standings', name='motion_standings'),
+
     url(r'^admin/ballots/(?P<ballots_id>\d+)/edit/$', 'edit_ballots', name='edit_ballots'),
     url(r'^admin/debate/(?P<debate_id>\d+)/new_ballots/$', 'new_ballots', name='new_ballots'),
     url(r'^admin/round/(?P<round_seq>\d+)/ballot_checkin/$', 'ballot_checkin', name='ballot_checkin'),
