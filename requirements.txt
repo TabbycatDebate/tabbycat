@@ -1,16 +1,21 @@
-Django==1.7.3 # From django-toolbet
-# From django-toolbelt:
+# Importing the base requirements
+-r requirements_common.txt
+
+# Base Heroku Requirements (from the toolbelt)
 dj-database-url==0.3.0
-dj-static==0.0.6
-django-toolbelt==0.0.1
-gunicorn==19.1.1
-psycopg2==2.5.4
 static3==0.5.1
 wsgiref==0.1.2
-# Plugged in modules:
-pylibmc==1.4.1 # For Mem-Caching
-django-pylibmc==0.5.0 # For Mem-Caching
-django-suit>=0.2.12 # Admin Backend
-django-debug-toolbar>=1.2 # Debug Toolbar
-django-emoji>=1.2.0 # Emoji Support
-django-ipware>=0.0.8 # IP Address logging
+dj-static==0.0.6
+
+# For Mem-Caching
+pylibmc==1.4.1
+django-pylibmc==0.5.0
+
+# For Session Caching
+django-redis-sessions==0.4.0
+
+# For web serving
+waitress==0.8.9
+
+# For monitoring
+newrelic

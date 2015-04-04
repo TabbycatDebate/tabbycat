@@ -3,65 +3,57 @@
 {% load add_field_css %}
 {% load humanize %}
 
-{% block extra-head %}
-{{ block.super }}
-{% include "enter_results_head.html" %}
-{% endblock %}
-
-{% block head-title %}
-Enter Results for
-{{ debate.matchup }} <small>Round {{ debate.round }} @ {% if debate.venue.group %}{{ debate.venue.group }} {% endif %}{{ debate.venue.name }}</small>
-{% endblock %}
-{% block page-title %}
-Enter Results for {{ debate.matchup }}
-{% endblock %}
+{% block head-title %}Enter Results for {{ debate.matchup }} <small>Round {{ debate.round }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group}} {% endif %}{{ debate.venue.name }}</small>{% endblock %}
+{% block page-title %}Enter Results for {{ debate.matchup }}{% endblock %}
 {% block body-class %}public-enter-result{% endblock %}
 
 {% block content %}
+  <div class="alert alert-info">This page is specific to you, {{ adjudicator.name }}.
+  The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
 
-<div class="alert alert-info">This page is specific to you, {{ adjudicator.name }}.
-The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
+  {% if form.adjudicators|length > 1 %}
+  <div class="alert alert-warning">
+  {{ adjudicator.name }}, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!
+  </div>
+  {% endif %}
 
-{% if form.adjudicators|length > 1 %}
-<div class="alert alert-warning">
-{{ adjudicator.name }}, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!
-</div>
-{% endif %}
+  {% if existing_ballots %}
+  <div class="alert alert-danger">
+  This form has already been submitted <strong>{{ existing_ballots|apnumber }}</strong> time{{ existing_ballots|pluralize }}. Please contact a tab official after submitting your form.
+  </div>
+  {% endif %}
 
-{% if existing_ballots %}
-<div class="alert alert-danger">
-This form has already been submitted <strong>{{ existing_ballots|apnumber }}</strong> time{{ existing_ballots|pluralize }}. Please contact a tab official after submitting your form.
-</div>
-{% endif %}
-
-<form id="resultsForm" action="." method="POST" class="form-horizontal">
+  <form id="resultsForm" action="." method="POST" class="form-horizontal">
 
     {% include "enter_results_ballot_set.html" %}
 
     <div class="row">
-        <p class="col-xs-12 lead h4 page-header">Confirm</p>
-        {% comment %} Password isn't always used.{% endcomment %}
-        {% if form.password %}
-        <div class="form-group">
-            <label for="{{ form.password.id_for_label }}" class="col-sm-2 control-label">{{ form.password.label }}</label>
-            <div class="col-sm-9 col-md-6">
-                {{form.password|addcss:"form-control"}}
-            </div>
-            <div class="col-md-2 col-xs-10 ">
-                {% if form.password.errors %}
-                    <label for="{{ form.password.id_for_label }}" class="control-label">{{ form.password.errors }}</label>
-                {% endif %}
-            </div>
+      <p class="col-xs-12 lead h4 page-header">Confirm</p>
+      {% comment %} Password isn't always used.{% endcomment %}
+      {% if form.password %}
+      <div class="form-group">
+        <label for="{{ form.password.id_for_label }}" class="col-sm-2 control-label">{{ form.password.label }}</label>
+        <div class="col-sm-9 col-md-6">
+          {{form.password|addcss:"form-control"}}
         </div>
-        {% endif %}
-        <div class="col-sm-2">
-            <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
-            <input id="id_discarded" type="hidden" name="discarded" />
-            <input id="id_confirmed" type="hidden" name="confirmed" />
-            <input class="form-control save btn-success" type="submit" value="Save results" tabindex="100" />
+        <div class="col-md-2 col-xs-10 ">
+          {% if form.password.errors %}
+            <label for="{{ form.password.id_for_label }}" class="control-label">{{ form.password.errors }}</label>
+          {% endif %}
         </div>
+      </div>
+      {% endif %}
+      <div class="col-sm-2">
+        <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
+        <input id="id_discarded" type="hidden" name="discarded" />
+        <input id="id_confirmed" type="hidden" name="confirmed" />
+        <input class="form-control save btn-success" type="submit" value="Save results" tabindex="100" />
+      </div>
     </div>
-</form>
-
+  </form>
 {% endblock content %}
 
+{% block extra-js %}
+  {{ block.super }}
+  {% include "enter_results_head.html" %}
+{% endblock %}

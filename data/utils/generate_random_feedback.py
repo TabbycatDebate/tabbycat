@@ -1,6 +1,7 @@
 """Generates randomly generated feedback for a given round.
 Requires a draw to exist."""
 
+import django # Requried post-1.7 for standalone scripts
 import header
 import debate.models as m
 
@@ -16,6 +17,8 @@ parser.add_argument("-u", "--user", type=str, help="User ID", default="original"
 parser.add_argument("--clean", help="Remove all ballots for the draw first", action="store_true")
 parser.add_argument("-c", "--confirmed", action="store_true", help="Ballot set is confirmed")
 args = parser.parse_args()
+
+django.setup() # Requried post-1.7 for standalone scripts
 
 submitter_type = SUBMITTER_TYPE_MAP[args.type]
 user = User.objects.get(username=args.user)

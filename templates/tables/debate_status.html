@@ -1,0 +1,13 @@
+{% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B'%}
+  <td></td>
+  <td><span class="text-primary">Bye</span></td>
+{% elif debate.result_status = "P" %}
+  <td></td>
+  <td><span class="text-primary">Postponed</span></td>
+{% elif debate.confirmed_ballot.forfeit %}
+  <td></td>
+  <td><span class="text-primary">Forfeit</span></td>
+{% else %}
+  <td>{{ debate.venue.time|date:"D jS F" }}</td>
+  <td>{{ debate.division.time_slot|time:'h:i A' }}</td>
+{% endif %}

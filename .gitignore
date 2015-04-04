@@ -2,16 +2,17 @@ local_settings.py
 staticfiles/
 migrations
 migrations-*/
-.sass-cache/
+.gitmodules
 
-# Tournaments to ignore
-adam*/
-preaustrals*/
-data/Schools*
-data/Schools*
-data/Schools*
-MAD*/
-*.dump
+# Data to ignore
+data/
+
+# Default data to include
+!data/dummy/
+!data/dummy2/
+!data/league_template/
+!data/sandbox/
+!data/utils/
 
 env/
 venv/
@@ -20,6 +21,7 @@ venv/
 *~
 *.db
 .DS_Store
+.debug
 
 # C extensions
 *.so
@@ -31,7 +33,6 @@ dist
 build
 eggs
 parts
-bin
 var
 sdist
 develop-eggs

@@ -425,27 +425,32 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     (20, 19, [], False),
                     (21, 13, [], False)]]
 
-    # indices: (standings, expected)
-    cases = [(1, 1), (1, 2), (1, 3), (1, 4)]
-
     def do_draw(self, standings, options):
         standings = [TestTeam(*args, **kwargs) for args, kwargs in standings]
         self.ppd = DrawGenerator("power_paired", standings, **options)
         return self.ppd.make_draw()
 
-    def test_draw(self):
-        for s, e in self.cases:
-            standings = self.standings[s]
-            kwargs, expected = self.expected[e]
-            draw = self.do_draw(standings, kwargs)
-            for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, expected):
-                actual_teams = (actual.aff_team.id, actual.neg_team.id)
-                expected_teams = (exp_aff, exp_neg)
-                if same_affs:
-                    self.assertItemsEqual(actual_teams, expected_teams)
-                else:
-                    self.assertEqual(actual_teams, expected_teams)
-                self.assertEqual(actual.flags, exp_flags)
+    def draw_test(self, standings_key, expected_key):
+        standings = self.standings[standings_key]
+        kwargs, expected = self.expected[expected_key]
+        draw = self.do_draw(standings, kwargs)
+        for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, expected):
+            actual_teams = (actual.aff_team.id, actual.neg_team.id)
+            expected_teams = (exp_aff, exp_neg)
+            if same_affs:
+                self.assertItemsEqual(actual_teams, expected_teams)
+            else:
+                self.assertEqual(actual_teams, expected_teams)
+            self.assertEqual(actual.flags, exp_flags)
+
+    def test_1_1(self):
+        self.draw_test(1, 1)
+    def test_1_2(self):
+        self.draw_test(1, 2)
+    def test_1_3(self):
+        self.draw_test(1, 3)
+    def test_1_4(self):
+        self.draw_test(1, 4)
 
 
 class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.TestCase):

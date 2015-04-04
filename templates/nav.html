@@ -1,196 +1,42 @@
 {% load debate_tags %}
 
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            {% if user.is_authenticated %}
-                <a class="navbar-brand dash-nav" id="nav-home" href="{{ tournament.get_absolute_url  }}">{{ tournament }}</a>
-            {% else %}
-                <a class="navbar-brand dash-nav" id="nav-home" href="{{ tournament.get_public_url  }}">{{ tournament }}</a>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <ul id="nav_brand" class="nav navbar-nav navbar-left">
+        <li class="dropdown">
+          <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament.name }}<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            {% for tournament in all_tournaments %}
+              {% if user.is_authenticated %}
+                <li><a class="" href="{{ tournament.get_absolute_url  }}">{{ tournament.name }}</a></li>
+              {% else %}
+                <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament.name }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if all_tournaments.all.count > 1 and all_tournaments.0.config.public_divisions > 0 %}
+              <li><a href="{{ all_tournaments.0.get_all_divisions_url }}">All Tournament's Teams</a></li>
             {% endif %}
-        </div>
-
-        <div class="collapse navbar-collapse">
-
-            {% if user.is_authenticated %}
-                <ul id="nav" class="nav navbar-nav navbar-left">
-                    {% if side_allocations_enabled %}
-                        <li><a class="side-allocations-nav" href="{% tournament_url side_allocations %}">Sides</a></li>
-                    {% endif %}
-                    {% if enable_divisions %}
-                        <li><a class="division-allocations-nav" href="{% tournament_url division_allocations %}">Divisions</a></li>
-                    {% endif %}
-                    <li><a class="draw-nav" href="{% round_url draw current_round %}">Draw</a></li>
-                    <li><a class="status-nav" href="{% round_url results current_round %}">Ballots</a></li>
-                    <li><a class="adjudicators-standings-nav" href="{% tournament_url adj_feedback %}">Feedbacks</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standings<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a class="team-standings-nav" href="{% round_url team_standings current_round %}">Teams</a></li>
-                            <li><a class="speaker-standings-nav" href="{% round_url speaker_standings current_round %}">Speakers</a></li>
-                            {% if reply_scores_enabled %}
-                                <li><a class="reply-standings-nav" href="{% round_url reply_standings current_round %}">Replies</a></li>
-                            {% endif %}
-                            <li><a class="feedback-standings-nav" href="{% tournament_url feedback_progress %}">Feedbacks</a></li>
-                            <li><a class="motions-standings-nav" href="{% round_url motions current_round %}">Motions</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle breakk-nav" data-toggle="dropdown">Break<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a class="breaking-teams-open-nav" href="{% tournament_url breaking_teams_open %}">Open</a></li>
-                            {% if esl_break %}
-                                <li><a class="breaking-teams-esl-nav" href="{% tournament_url breaking_teams_esl %}">ESL</a></li>
-                            {% endif %}
-                            <li><a class="breaking-adjs-nav" href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul id="nav" class="nav navbar-nav navbar-right">
-                    {% for r in tournament.rounds.all %}
-                        <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <span class="
-                                    {% if r.seq < current_round.seq %}
-                                        text-success
-                                    {% elif r.draw_status == r.STATUS_RELEASED %}
-                                        text-primary
-                                    {% elif r.draw_status != r.STATUS_NONE %}
-                                        text-warning
-                                    {% endif %}">
-                                    {{ r.abbreviation }}<b class="caret"></b>
-                                </span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{% round_url team_availability r %}">Team Checkins</a></li>
-                                <li><a href="{% round_url venue_availability r %}">Venue Checkins</a></li>
-                                <li><a href="{% round_url adjudicator_availability r %}">Adj Checkins</a></li>
-                                <li><a href="{% round_url people_availability r %}">Participant Checkins</a></li>
-                                <li class="divider"></li>
-                                <li><a href="{% round_url draw r %}">Draw</a></li>
-                                <li><a href="{% round_url motions r %}">Motions</a></li>
-                                <li><a href="{% round_url results r %}">Round Status</a></li>
-                                <li><a href="{% round_url ballot_checkin r %}">Ballot Checkin</a></li>
-                                <li class="divider"></li>
-                                <li><a href="{% round_url team_standings r %}">Team Standings</a></li>
-                                <li><a href="{% round_url speaker_standings r %}">Speaker Standings</a></li>
-                                {% if reply_scores_enabled %}
-                                <li><a href="{% round_url reply_standings r %}">Reply Standings</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-               <ul id="nav" class="nav navbar-nav navbar-left">
-                    {% if tab_released > 0 %}
-                        <li><a class="public-team-tab-nav" href="{% tournament_url public_team_tab %}">
-                            Team Tab
-                        </a></li>
-                        <li><a class="public-speaker-tab-nav" href="{% tournament_url public_speaker_tab %}">
-                            Speaker Tab
-                        </a></li>
-                        {% if reply_scores_enabled %}
-                        <li><a class="public-replies-tab-nav" href="{% tournament_url public_replies_tab %}">
-                            Replies Tab
-                        </a></li>
-                        {% endif %}
-                        {% if motion_tab_released > 0 %}
-                        <li><a class="public-motions-tab-nav" href="{% tournament_url public_motions_tab %}">
-                            Motions Tab
-                        </a></li>
-                        {% endif %}
-                    {% endif %}
-                    {% if public_draw > 0 %}
-                        <li>
-                            <a class="public-draw-nav" href="{% tournament_url public_draw %}">
-                                Draw for {{ current_round.name }}
-                            </a>
-                        </li>
-                        {% if show_all_draws > 0 %}
-                            <li><a class="public-results-nav" href="#" data-toggle="dropdown">All Draws<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    {% for r in tournament.rounds.all %}
-                                        <li><a href="{% round_url public_draw_by_round r %}">{{ r.name }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                        {% endif %}
-                    {% endif %}
-                    {% if public_results > 0 and current_round.prev %}
-                        <li><a class="public-results-nav" href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                {% for r in tournament.rounds.all %}
-                                    {% if r.seq < current_round.seq and not r.silent or tournament.release_all %}
-                                        <li><a href="{% round_url public_results r %}">{{ r.name }}</a></li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </li>
-                    {% endif %}
-                    {% if public_divisions > 0 %}
-                        <li><a class="public-divisions-nav" href="{% tournament_url public_divisions %}">
-                            Divisions
-                        </a></li>
-                    {% endif %}
-                    {% if public_motions > 0 %}
-                        <li><a class="public-motions-nav" href="{% tournament_url public_motions %}">
-                            Motions
-                        </a></li>
-                    {% endif %}
-                    {% if public_side_allocations %}
-                        <li><a class="public-side-allocations-nav" href="{% tournament_url public_side_allocations %}">Sides</a></li>
-                    {% endif %}
-                    {% if public_team_standings > 0 and current_round.prev %}
-                        <li><a class="public-team-standings-nav" href="{% tournament_url public_team_standings %}">
-                            Standings
-                        </a></li>
-                    {% endif %}
-                    {% if public_breaking_teams > 0 or public_breaking_adjs > 0 %}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle public-breakk-nav" data-toggle="dropdown">Break<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                {% if public_breaking_teams > 0 %}
-                                    <li><a class="public-breaking-teams-open-nav" href="{% tournament_url public_breaking_teams_open %}">Open</a></li>
-                                    {% if esl_break %}
-                                        <li><a class="public-breaking-teams-esl-nav" href="{% tournament_url public_breaking_teams_esl %}">ESL</a></li>
-                                    {% endif %}
-                                {% endif %}
-                                {% if public_breaking_adjs > 0 %}
-                                    <li><a class="public-breaking-adjs-nav" href="{% tournament_url public_breaking_adjs %}">Adjudicators</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    {% endif %}
-                    {% if public_participants > 0 %}
-                        <li><a class="public-participants-nav" href="{% tournament_url public_participants %}">
-                            Participants
-                        </a></li>
-                    {% endif %}
-                    {% if feedback_progress > 0 %}
-                        <li><a class="public-feedback-nav" href="{% tournament_url public_feedback_progress %}">
-                            Feedbacks
-                        </a></li>
-                    {% endif %}
-                    {% if public_ballots > 0 %}
-                        <li><a class="public-add-ballot-nav" href="{% tournament_url public_ballot_submit %}">
-                            Enter Ballot
-                        </a></li>
-                    {% endif %}
-                    {% if public_feedback > 0 %}
-                        <li><a class="public-add-feedback-nav" href="{% tournament_url public_feedback_submit %}">
-                            Enter Feedback
-                        </a></li>
-                    {% endif %}
-                </ul>
-            {% endif %}
-        </div>
-
+          </ul>
+        </li>
+      </ul>
     </div>
+    <div class="collapse navbar-collapse">
+      {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+          {% include "nav/admin_nav.html" %}
+        {% else %}
+          {% include "nav/monkey_nav.html" %}
+        {% endif %}
+      {% else %}
+        {% include "nav/public_nav.html" %}
+      {% endif %}
+    </div>
+  </div>
 </nav>

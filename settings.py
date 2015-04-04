@@ -1,10 +1,9 @@
 import sys
 import os
+import urlparse
 
-PROJECT_PATH         = os.path.dirname(os.path.abspath(__file__))
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_PATH, 'static'),
-)
+PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
+STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
 STATIC_ROOT         = 'staticfiles'
 STATIC_URL          = '/static/'
 TEMPLATE_DIRS       = (os.path.join(PROJECT_PATH, 'templates'),)
@@ -15,8 +14,9 @@ SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # = Overwritten in Local =
 # ===================
 
-MANAGERS            = ('Test', 'test@test.com')
-DEBUG               = True
+ADMINS              = ('Test', 'test@test.com')
+MANAGERS            = ADMINS
+DEBUG               = False
 TEMPLATE_DEBUG      = DEBUG
 DEBUG_ASSETS        = DEBUG
 
@@ -27,19 +27,14 @@ DEBUG_ASSETS        = DEBUG
 ADMIN_MEDIA_PREFIX  = '/media/'
 MEDIA_URL           = '/media/'
 STATIC_URL          = '/static/'
-TIME_ZONE           = 'Pacific/Auckland'
+TIME_ZONE           = 'Australia/Melbourne'
 LANGUAGE_CODE       = 'en-us'
 USE_I18N            = True
+TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
 
 # ===========================
 # = Django-specific Modules =
 # ===========================
-
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -60,7 +55,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.csrf",
     "django.core.context_processors.static",
     "debate.context_processors.debate_context",
-    'django.core.context_processors.request',
+    'django.core.context_processors.request', # For SUIT
 )
 
 INSTALLED_APPS = (
@@ -73,38 +68,58 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'debate',
-    'emoji',
     'debug_toolbar',
-    'gunicorn',
+    'compressor',
 )
 
 LOGIN_REDIRECT_URL = '/'
 
 # =========
-# = Cache =
+# = Caching =
 # =========
-def get_cache():
-  import os
-  try:
-    os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
-    os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
-    os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
-    return {
-      'default': {
-        'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-        'TIMEOUT': 500,
-        'BINARY': True,
-        'OPTIONS': { 'tcp_nodelay': True }
-      }
-    }
-  except:
-    return {
-      'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-      }
-    }
 
-CACHES = get_cache()
+# Caching enabled
+TEMPLATE_LOADERS = (
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
+)
+
+# Default non-heroku cache is to use local memory
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake'
+    }
+}
+# This is a dummy cache for development
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+#     }
+# }
+
+# =========
+# = Pipelines =
+# =========
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'), # SASS for stylesheets
+)
+LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
+
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
+COMPRESS_URL = STATIC_URL
+COMPRESS_OFFLINE_MANIFEST = "manifest.json"
+COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
 
 # ==================
 # = Configurations =
@@ -115,20 +130,58 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
 }
 
-# Heroku
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', ''))
-DEBUG = DEBUG
+# ===========================
+# = Heroku
+# ===========================
+
 # Parse database configuration from $DATABASE_URL
-import dj_database_url
-DATABASES = {
-    'default': dj_database_url.config(default='postgres://localhost')
-}
+try:
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(default='postgres://localhost')
+    }
+except:
+    pass
+
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
-# Local
+if os.environ.get('MEMCACHE_SERVERS', ''):
+    os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
+    os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
+    os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+            'TIMEOUT': 500,
+            'BINARY': True,
+            'OPTIONS': {
+                'tcp_nodelay': True
+            }
+        }
+    }
+
+if os.environ.get('REDISTOGO_URL', ''):
+    redis_url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', ''))
+    SESSION_ENGINE = 'redis_sessions.session'
+    SESSION_REDIS_HOST = redis_url.hostname
+    SESSION_REDIS_PORT = redis_url.port
+    SESSION_REDIS_DB = 0
+    SESSION_REDIS_PASSWORD = redis_url.password
+    SESSION_REDIS_PREFIX = 'session'
+
+
+if os.environ.get('DEBUG', ''):
+    DEBUG = os.environ['DEBUG']
+    TEMPLATE_DEBUG = DEBUG
+
+
+# ===========================
+# = Local Overrides
+# ===========================
+
 try:
     from local_settings import *
 except Exception as e:
