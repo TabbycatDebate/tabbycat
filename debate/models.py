@@ -131,7 +131,10 @@ class VenueGroup(models.Model):
         ordering = ['short_name']
 
     def __unicode__(self):
-        return u"%s" % (self.short_name)
+        if self.short_name:
+            return u"%s" % (self.short_name)
+        else:
+            return u"%s" % (self.name)
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
@@ -1068,6 +1071,7 @@ class Round(models.Model):
                     for side in ('aff_team', 'neg_team'):
                         # TODO is there a more efficient way to do this?
                         team = getattr(debate, side)
+                        setattr(debate, side + "_cached", team)
                         annotated_team = filter(lambda x: x == team, standings)
                         if len(annotated_team) == 1:
                             annotated_team = annotated_team[0]

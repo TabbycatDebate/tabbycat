@@ -181,9 +181,9 @@ class Command(BaseCommand):
                             except:
                                 value = float(int(line[2]))
                         elif value_type == "bool" or value_type == "_bool":
-                            if line[2] == "True" or line[2] == "1":
+                            if line[2] == "True" or line[2] == "1" or line[2] == "TRUE":
                                 value = True
-                            elif line[2] == "False" or line[2] == "0":
+                            elif line[2] == "False" or line[2] == "0" or line[2] == "FALSE":
                                 value = False
                             else:
                                 print "Error %s not properly set" % key
@@ -309,12 +309,13 @@ class Command(BaseCommand):
                     try:
                         inst, created = m.Institution.objects.get_or_create(
                             code=code,
-                            name=name
+                            name=name,
+                            abbreviation=abbv
                         )
                         if created:
-                            print "Made institution: \t%s" % name
+                            print "Made institution: \t%s (%s / %s)" % (name, code, abbv)
                         else:
-                            print "Matched institution: \t%s" % name
+                            print "Matched institution: \t%s (%s / %s)" % (name, code, abbv)
 
                         institutions_count = institutions_count + 1
                     except Exception as inst:
@@ -430,11 +431,15 @@ class Command(BaseCommand):
                     except:
                         try:
                             ins = m.Institution.objects.get(name=ins_name)
-                        except Exception as inst:
-                            self.stdout.write("error with " + ins_name)
-                            total_errors += 1
-                            print type(inst)     # the exception instance
-                            print inst           # __str__ allows args to printed directly
+                        except:
+                            try:
+                                ins = m.Institution.objects.get(abbreviation=ins_name)
+                            except  Exception as inst:
+                                self.stdout.write('Could not find the institution of {0} for {1}'.format(ins_name, name))
+                                self.stdout.write("error with " + ins_name)
+                                total_errors += 1
+                                print type(inst)     # the exception instance
+                                print inst           # __str__ allows args to printed directly
 
                     try:
                         team, created = m.Team.objects.get_or_create(
@@ -447,7 +452,7 @@ class Command(BaseCommand):
                             team.emoji_seq = get_emoji(emoji_options)
                             team.save()
                             teams_count = teams_count + 1
-                            print "Made team:\t\t%s  %s of %s" % (EMOJI_LIST[team.emoji_seq], name, ins)
+                            print "Made team:\t\t%s  %s of %s" % (EMOJI_LIST[team.emoji_seq], team_name, ins)
 
                     except Exception as inst:
                         total_errors += 1
@@ -473,7 +478,7 @@ class Command(BaseCommand):
                         total_errors += 1
                         print inst
 
-                    print "Made speaker:\t\t%s  %s (%s) of %s" % (EMOJI_LIST[speakers_team.emoji_seq], name, gender, ins)
+                    print "Made speaker:\t\t\t  %s (%s) of %s" % (name, gender, ins)
 
                 self.stdout.write('**** Created ' + str(speakers_count) +
                                   ' speakers and ' + str(teams_count) + ' teams')
@@ -541,8 +546,11 @@ class Command(BaseCommand):
                     except m.Institution.DoesNotExist:
                         try:
                             ins = m.Institution.objects.get(code=ins_name)
-                        except:
-                            self.stdout.write('Could not find the institution of {0} for {1}'.format(ins_name, name))
+                        except m.Institution.DoesNotExist:
+                            try:
+                                ins = m.Institution.objects.get(abbreviation=ins_name)
+                            except:
+                                self.stdout.write('Could not find the institution of {0} for {1}'.format(ins_name, name))
 
 
                     name = name.strip()
@@ -570,10 +578,16 @@ class Command(BaseCommand):
                             try:
                                 ins_conflict = m.Institution.objects.get(name=ins_conflict_name)
                             except m.Institution.DoesNotExist:
-                                print ins_conflict_name
-                                ins_conflict = m.Institution.objects.get(code=ins_conflict_name)
+                                try:
+                                    ins_conflict = m.Institution.objects.get(code=ins_conflict_name)
+                                except m.Institution.DoesNotExist:
+                                    try:
+                                        ins_conflict = m.Institution.objects.get(abbreviation=ins_conflict_name)
+                                    except:
+                                        self.stdout.write('Could not find the institution conflict {0} for {1}'.format(ins_conflict, name))
+
                             m.AdjudicatorInstitutionConflict(adjudicator=adj, institution=ins_conflict).save()
-                            print "    conflicts with", ins_conflict.name
+                            print "\t\t\tconflicts with", ins_conflict.name
 
                     if team_conflicts:
                         for team_conflict_name in team_conflicts.split(","):
@@ -582,14 +596,21 @@ class Command(BaseCommand):
                             try:
                                 team_conflict_ins = m.Institution.objects.get(name=team_conflict_ins_name)
                             except m.Institution.DoesNotExist:
-                                team_conflict_ins = m.Institution.objects.get(code=team_conflict_ins_name)
+                                try:
+                                    team_conflict_ins = m.Institution.objects.get(code=team_conflict_ins_name)
+                                except m.Institution.DoesNotExist:
+                                    try:
+                                        team_conflict_ins = m.Institution.objects.get(abbreviation=team_conflict_ins_name)
+                                    except:
+                                        print "couldn't find team conflict institution for %s" % team_conflict_ins_name
+
                             try:
                                 team_conflict = m.Team.objects.get(institution=team_conflict_ins, reference=team_conflict_ref)
                             except m.Team.DoesNotExist:
                                 self.stdout.write('No team exists to conflict with {0}: {1}'.format(name, team_conflict_name))
                                 total_errors += 1
                             m.AdjudicatorConflict(adjudicator=adj, team=team_conflict).save()
-                            print "    conflicts with", team_conflict.short_name
+                            print "\t\t\tconflicts with", team_conflict.short_name
 
                     adjs_count = adjs_count + 1
 

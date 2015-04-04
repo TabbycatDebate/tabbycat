@@ -120,6 +120,7 @@ COMPRESS_OFFLINE = True
 COMPRESS_URL = STATIC_URL
 COMPRESS_OFFLINE_MANIFEST = "manifest.json"
 COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
+COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compression
 
 # ==================
 # = Configurations =

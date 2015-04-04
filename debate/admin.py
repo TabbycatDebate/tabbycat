@@ -10,7 +10,7 @@ class TournamentAdmin(admin.ModelAdmin):
 admin.site.register(models.Tournament,TournamentAdmin)
 
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ('name','code')
+    list_display = ('name','code','abbreviation')
     ordering = ('name',)
     search_fields = ('name',)
 
@@ -67,8 +67,7 @@ admin.site.register(models.TeamVenuePreference, TeamVenuePreferenceAdmin)
 
 class SpeakerAdmin(admin.ModelAdmin):
     list_display = ('name', 'team', 'novice')
-    search_fields = ('name', 'team__name', 'team__institution__name',
-                     'team__institution__code',)
+    search_fields = ('name',)
     raw_id_fields = ('team',)
 admin.site.register(models.Speaker, SpeakerAdmin)
 
@@ -110,7 +109,7 @@ admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
 
 class VenueGroupAdmin(admin.ModelAdmin):
-    list_display = ('name','team_capacity')
+    list_display = ('name','short_name','team_capacity')
     search_fields = ('name',)
 
 admin.site.register(models.VenueGroup, VenueGroupAdmin)

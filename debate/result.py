@@ -1,6 +1,9 @@
 # cannot import debate.models here - would create circular dep
 from django.core.exceptions import ObjectDoesNotExist
 
+class ResultError(RuntimeError):
+    pass
+
 class Scoresheet(object):
     """Representation of a single adjudicator's scoresheet in a single ballot
     submission, providing an interface that abstracts away database operations.
@@ -71,6 +74,14 @@ class Scoresheet(object):
         """Saves the scores in the buffer for the given DebateTeam, to the
         database."""
         from debate.models import SpeakerScoreByAdj
+        try:
+            print("Saving speaker scores for submission %s, adjudicator %s, team %s" %
+                (self.ballotsub, self.da, dt))
+        except Exception as e:
+            try:
+                print("Trouble reporting saved ballot submission: " + str(e))
+            except:
+                pass
         for pos in self.POSITIONS:
             SpeakerScoreByAdj(
                 ballot_submission=self.ballotsub,
@@ -79,6 +90,13 @@ class Scoresheet(object):
                 position=pos,
                 score=self._get_score(dt, pos),
             ).save()
+            try:
+                print("position %s, score %s" % (pos, self._get_score(dt, pos)))
+            except Exception as e:
+                try:
+                    print("Trouble reporting saved ballot submission: " + str(e))
+                except:
+                    pass
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval
@@ -235,12 +253,22 @@ class BallotSet(object):
         assert self.is_complete, "Tried to save ballot set when it is incomplete"
 
         self.ballotsub.save() # need BallotSubmission object to exist first
+        try:
+            print("Saving " + str(self.ballotsub))
+        except:
+            print("Saving a ballot submission")
         for sheet in self.adjudicator_sheets.itervalues():
+            try:
+                print("Saving sheet for adjudicator " + str(sheet.adjudicator))
+            except:
+                print("Saving a sheet for an adjudicator")
             sheet.save()
         self._calc_decision()
+        print("Saving teams")
         for dt in self.dts:
             self._save_team(dt)
         self.ballotsub.save()
+        print("Done.")
 
     def _load_team(self, dt):
         """Loads the scores for the given DebateTeam from the database into the
@@ -395,20 +423,22 @@ class BallotSet(object):
 
     def _calc_decision(self):
         """Calculates the majority decision and puts the majority adjudicators
-        in self._majority_adj and the winning DebateTeam in self._winner. Does
-        nothing if scores are incomplete or if it looks like a draw."""
-        if not self.is_complete:
-            return
+        in self._majority_adj and the winning DebateTeam in self._winner. Raises
+        AssertionError if scores are incomplete. Raises ResultError there is a
+        draw somewhere among the adjudicators, or overall."""
+        assert self.is_complete, "Tried to calculate decision on an incomplete ballot set."
 
         adjs_by_dt = {dt: [] for dt in self.dts} # group adjs by vote
         for adj, sheet in self.adjudicator_sheets.iteritems():
             winner = sheet._get_winner()
+            if winner is None:
+                raise ResultError("The scoresheet for %s does not have a winner." % adj.name)
             adjs_by_dt[winner].append(adj)
 
         counts = {dt: len(adjs) for dt, adjs in adjs_by_dt.iteritems()}
         max_count = max(counts.values()) # check that we have a majority
         if max_count < len(self.adjudicators) / 2 + 1:
-            return
+            raise ResultError("No team had a majority in %s." % self.debate.matchup)
 
         for dt, count in counts.iteritems(): # set self._majority_adj
             if count == max_count:
@@ -547,10 +577,17 @@ class BallotSet(object):
         adjtype is a DebateAdjudicator.TYPE_* constant, adj is an Adjudicator
         object, and split is True if the adjudicator was in the minority and
         not a trainee, False if the adjudicator was in the majority or is a
-        trainee."""
-        for adjtype, adj in self.debate.adjudicators:
-            yield adjtype, adj, (adj not in self.majority_adj and
-                    adjtype != m.DebateAdjudicator.TYPE_TRAINEE)
+        trainee. If there is no available result, split is always False."""
+        from debate.models import DebateAdjudicator
+        try:
+            self._calc_decision()
+        except (ResultError, AssertionError):
+            for adjtype, adj in self.debate.adjudicators:
+                yield adjtype, adj, False
+        else:
+            for adjtype, adj in self.debate.adjudicators:
+                yield adjtype, adj, (adj not in self.majority_adj and
+                        adjtype != DebateAdjudicator.TYPE_TRAINEE)
 
     @property
     def sheet_iter(self):
