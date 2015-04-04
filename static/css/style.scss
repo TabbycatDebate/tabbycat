@@ -1,56 +1,112 @@
+// Note tabby cat's modules are imported in the <head> — concatenation happens using the compressor
+
 // Core variables and mixins
-@import "../bootstrap/stylesheets/bootstrap/variables";
-@import "../bootstrap/stylesheets/bootstrap/mixins";
-@import "../bootstrap/stylesheets/bootstrap/type";
-@import "../bootstrap/stylesheets/bootstrap/forms";
-//@import "datatables/dataTables.bootstrap.css";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "bootstrap/type";
+@import "bootstrap/forms";
 
 @include text-emphasis-variant('.text-success', $brand-success);
-
 @include text-emphasis-variant('.text-info', $brand-info);
-
 @include text-emphasis-variant('.text-warning', $brand-warning);
-
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
-// For the collapsedmdouble menu
-.navbar-nav {
-    @media (max-width: $screen-xs-max) {
-        &.navbar-left {
-            float: left;
-            width: 40%;
-        }
-        &.navbar-right {
-            float: right;
-            width: 60%;
-        }
-        .dropdown-menu
-        .dropdown.open ul {
-            clear: both;
-        }
-        .dropdown.open li {
-            display: block;
-        }
-        .dropdown.open li a {
-            padding-left: 15px;
-            padding-right: 0px;
-        }
-        .dropdown.open .divider {
-            display: none;
-        }
-        .dropdown.open .dropdown-menu {
-        }
-    }
+// Fix for post-cache pathings
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('../../css/bootstrap/glyphicons-halflings-regular.eot');
+  src: url('../../css/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../css/bootstrap/glyphicons-halflings-regular.woff') format('woff'), url('../../css/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), url('../../css/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 
-#header-options {
-    min-height: 34px; // Spacer pre-form relocation via JS
-    margin-bottom: 20px;
-    margin-right: 0px;
+// General utilities
 
-    #dataTable_filter, .btn-group {
-        margin-right: 20px;
+.no-vertical-spacing,
+table.table > thead > tr > th.no-vertical-spacing,
+table.table > tbody > tr > td.no-vertical-spacing {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.no-horizontal-spacing,
+table.table > thead > tr > th.no-horizontal-spacing,
+table.table > tbody > tr > td.no-horizontal-spacing {
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.no-borders,
+.table > thead > tr > th.no-borders,
+.table > tbody > tr > td.no-borders {
+  border-bottom: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+// For the size buttons
+.h4_minus {
+  @extend .h4;
+  font-size: ceil(($font-size-base * 1.12));
+}
+.h4_plus {
+  @extend .h4;
+  font-size: ceil(($font-size-base * 1.50));
+}
+
+// For the collapsedmdouble menu
+
+.navbar-nav {
+  @media (max-width: $screen-xs-max) {
+    &.navbar-left {
+      float: left;
+      width: 40%;
     }
+    &.navbar-right {
+      float: right;
+      width: 60%;
+    }
+    .dropdown-menu
+    .dropdown.open ul {
+      clear: both;
+    }
+    .dropdown.open li {
+      display: block;
+    }
+    .dropdown.open li a {
+      padding-left: 15px;
+      padding-right: 0;
+    }
+    .dropdown.open .divider {
+      display: none;
+    }
+    .dropdown.open .dropdown-menu {
+    }
+  }
+}
+
+// Override
+.nav {
+  > li {
+  > a {
+    padding: 15px 10px;
+  }
+  }
+}
+
+.page-header {
+  margin-bottom: 20px;
+}
+#header-options {
+  //min-height: 34px; // Spacer pre-form relocation via JS
+  margin-right: 0;
+
+  .btn {
+    margin-bottom: 20px;
+  }
 }
 
 
@@ -87,7 +143,11 @@
 .speaker-standings a.speaker-standings-nav,
 .adj-feedback a.adjudicators-standings-nav,
 .config a.config-nav {
-    font-weight: bold;
+  font-weight: bold;
+}
+
+.public-draw #header-options .btn {
+  display: none;
 }
 
 // Sticky Footer
@@ -101,354 +161,357 @@ html, body {
   margin: 0 auto -100px;
   padding: 0 0 115px;
   #container {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
   }
 }
 #footer {
   height: 115px;
-    .navbar {
-        height: 115px;
-        margin-bottom: 0;
-    }
-    .navbar-brand {
-        font-size: 14px;
-        margin-bottom: 0;
-    }
+  .navbar {
+    height: 115px;
+    margin-bottom: 0;
+  }
+  .navbar-brand {
+    font-size: 14px;
+    margin-bottom: 0;
+  }
 }
 @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-    #wrap {
-      margin: 0 auto -100px;
-      padding: 0 0 100px;
-    }
-    #footer {
+  #wrap {
+    margin: 0 auto -100px;
+    padding: 0 0 100px;
+  }
+  #footer {
+    height: 100px;
+    .navbar {
       height: 100px;
-        .navbar {
-            height: 100px;
-        }
     }
+  }
 }
 @media (min-width: $screen-md-min) {
-    #wrap {
-      margin: 0 auto -50px;
-      padding: 0 0 50px;
-    }
-    #footer {
+  #wrap {
+    margin: 0 auto -50px;
+    padding: 0 0 50px;
+  }
+  #footer {
+    height: 50px;
+    .navbar {
       height: 50px;
-        .navbar {
-            height: 50px;
-        }
     }
+  }
 }
 
 // Universal Style overrides
 
 .page-header h1 {
-    margin-top: 0; // fixes button alignment easily
+  margin-top: 0; // fixes button alignment easily
 }
 [data-toggle="tooltip"] {
-    cursor: pointer; // for tooltips
-    border-bottom: 2px solid #ccc;
-    img {
-
-    }
+  cursor: pointer; // for tooltips
+  border-bottom: 2px dotted #ccc;
 }
 .alert-link {
-    text-decoration: underline;
-    font-weight: normal;
+  text-decoration: underline;
+  font-weight: normal;
+}
+.check_target {
+  cursor: pointer;
 }
 
 // Forms
 
+#resultsForm {
+  overflow: hidden;
+}
 input.error, select.error, .error input {
-    border-color: $state-danger-text;
-    color: $state-danger-text;
-    background: $state-danger-bg;
+  border-color: $state-danger-text;
+  color: $state-danger-text;
+  background: $state-danger-bg;
 }
 .errorlist {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 .error, .errorlist li {
-    border-color: $state-danger-text;
-    color: $state-danger-text;
+  border-color: $state-danger-text;
+  color: $state-danger-text;
 }
 .form-control-parent input {
-    @extend .form-control;
+  @extend .form-control;
 }
 .ballot-errors .errorlist {
-    list-style-type: disc;
-    margin: 0 2.5em;
-    padding: 0;
+  list-style-type: disc;
+  margin: 0 2.5em;
+  padding: 0;
+}
+.forfeits-group ul {
+  list-style-type: none;
+  label {
+    width: 200px;
+    input[type="radio"].form-control {
+      margin-right: 6px;
+      float:left;
+      margin-top: -8px;
+    }
+  }
+  li {
+    display: inline;
+  }
+}
+input[type="radio"].form-control, input[type="checkbox"].form-control {
+  margin-top: 0;
+  max-width: 20px;
+  display: inline;
 }
 
-// Tables (Universal)
 
-.col-md-12.table-container {
-    padding-left: 0;
-    padding-right: 0;
-}
-
-@media (max-width: $screen-xs-max) {
-    .page-header {
-        margin-top: 0px;
-    }
-    #header-options {
-        min-height: 82px
-    }
-}
-@media (max-width: $screen-sm-max) {
-    .col-md-12.table-container {
-        margin-left: -15px;
-        margin-right: -15px;
-    }
-}
-
-#wrap table.table, .FixedHeader_Cloned .table  {
-    margin-top: 0px !important; // for the fixed header
-
-    tbody > tr > td,
-    thead > tr > th  {
-        // fix for header and icons
-        //min-width: 35px; // minimum widths so icons are jammed
-        padding: 8px;
-        min-width: 35px;
-    }
-    // Phones
-    @media (max-width: $screen-xs-max) {
-        tbody > tr > td,
-        thead > tr > th  {
-            //min-width: auto;
-            padding: 4px;
-        }
-        // .team-emoji, .th-emoji {
-        //     display: none;
-        // }
-    }
-    .team-emoji, .th-emoji {
-        // max-width: 28px;
-        text-align: center;
-        padding: 4px 0 0 0;
-        img {
-            width: 28px;
-            height: 28px;
-        }
-    }
-    .th-emoji {
-        img {
-            height: 10px;
-            width: 28px;
-            visibility: hidden; /* space to get the size right pre JS-resize */
-        }
-    }
-    .opponent-emoji {
-        // min-width: 60px;
-        line-height: 18px;
-        text-align: center;
-        // padding: 4px 0 4px 0;
-        img {
-            width: 20px;
-            height: 20px;
-        }
-    }
-
-    thead {
-        background-color: #FFF; // hovering opacity
-
-        .sorting {
-            background: url('../images/sort_both.png') no-repeat center right;
-        }
-        .sorting_asc {
-            background: url('../images/sort_asc.png') no-repeat center right;
-            color: #000;
-        }
-        .sorting_desc {
-            background: url('../images/sort_desc.png') no-repeat center right;
-            color: #000;
-        }
-        .sorting_asc_disabled {
-            background: url('../images/sort_asc_disabled.png') no-repeat center right;
-        }
-        .sorting_desc_disabled {
-            background: url('../images/sort_desc_disabled.png') no-repeat center right;
-        }
-        .sorting, .sorting_asc, .sorting_desc, .sorting_asc_disabled, .sorting_desc_disabled {
-            cursor: pointer;
-        }
-    }
-
-    th:active {
-        outline: none;
-    }
-
-}
 
 // Modals
 
 .modal-body {
-    overflow: auto;
+  overflow: auto;
 }
 .modal-lg {
-    width: 90%;
+  width: 90%;
 }
 
 // Tables - Specific
 
 .adj-chair {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 .adj-trainee {
-    font-style: italic;
+  font-style: italic;
 }
 
 
 // Draw displays
 
 #draw.dataTable {
-    .adj-names {
-        ul {
-            padding-left: 0px;
-            margin-left: 0;
-            list-style-type: none;
-        }
+  .adj-names {
+    ul {
+      padding-left: 0;
+      margin-left: 0;
+      list-style-type: none;
     }
+  }
 }
 
 .draw-with-standings .em {
-    font-weight: bold;
-    color: chocolate;
-    font-style: normal;
+  font-weight: bold;
+  color: chocolate;
+  font-style: normal;
 }
 
 .draw-with-standings .first-in-bracket {
-    border-top: 3px solid chocolate;
+  border-top: 3px solid chocolate;
 }
 span.esl {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
 
 
 // Editing the Draw
 
 .edit-venues, .edit-adjs {
-    table {
-        border-collapse: separate;
+  table {
+    border-collapse: separate;
+    td {
+      line-height: 30px; // to align with the drag and drop elements
     }
-    #container {
-       min-height: 1000px;
+  }
+  #container {
+     min-height: 1000px;
+  }
+  .btn-default.text-left {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  #table-search-group {
+    margin-right: 220px; // move right to make way for unused
+  }
+  #scratch {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    padding-left: 0;
+    overflow-y: scroll;
+    padding-bottom: 50px; // ensure no footer overlaps
+    margin-top: 16px;
+    .unused {
+      padding-left: 0;
     }
-    .btn-default.text-left {
-        padding-left: 6px;
-        padding-right: 6px;
+  }
+  .venue, .adj {
+    max-width: 300px;
+  }
+  .is_unaccredited {
+    box-shadow: none;
+  }
+  .importance {
+    text-align: left;
+    width: 48px;
+    form {
+      margin: -8px -8px -8px -8px;
     }
-    #scratch {
-        position: fixed;
-        top: 0;
-        right: 0;
-        height: 100%;
-        overflow-y: scroll;
+    select {
+      @extend .form-control;
     }
-    .venue, .adj {
-        max-width: 300px;
+  }
+  .border-success {
+    border: 2px solid $btn-success-border;
+  }
+  .border-primary {
+    border: 2px solid $btn-primary-border;
+  }
+  .venue:hover, .adj:hover, .venue.dragging, .adj.dragging {
+    cursor: move;
+    border: 1px solid $btn-primary-border;
+    @extend .text-primary;
+    @extend .border-primary;
+    &.is_unaccredited {
+      background: $table-bg-active;
     }
-    .btn-holder {
-        padding: 4px;
-        border: 2px solid #ddd;
+    &.btn-danger, &.btn-warning {
+      color: #fff;
     }
-    .importance {
-        width: 60px;
-        text-align: left;
-        form {
-            margin: -5px -6px;
-        }
-        select {
-            @extend .form-control;
-        }
+  }
+  .adj {
+    .info {
+      margin-right: 5px;
     }
-    .border-success {
-        border: 2px solid $btn-success-border;
+    .info:hover {
+      cursor: pointer;
+      z-index: 11;
     }
-    .venue:hover, .adj:hover {
-        cursor: move;
+    &.btn-danger .info, &.btn-warning .info {
+      color: #fff;
     }
-    .adj {
-        .info {
-            display: inline-block;
-            float: right;
-        }
-        .info:hover {
-            cursor: pointer;
-            z-index: 11;
-        }
-        &.btn-danger .info, &.btn-warning .info {
-            color: #fff;
-        }
+    &.gender-display.male span, &.gender-display.female a {
+      color: #fff;
     }
-    #unusedTable {
-        // For compactness
-        td {
-            padding: 5px 0 0 0;
-            border: none;
-            line-height: 32px;
-            text-align: center;
-        }
+    &.gender-display.male {
+      background-color: #0000FF;
     }
+    &.gender-display.female {
+      background-color: #D600FF;
+    }
+  }
+
+  .gender-display.gender-parity-3 {
+    background-color: lighten(#0000FF, 45%);
+  }
+  .gender-display.gender-parity-4 {
+    background-color: lighten(#0000FF, 40%);
+  }
+  .gender-display.gender-parity-5 {
+    background-color: lighten(#0000FF, 30%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-6 {
+    background-color: lighten(#0000FF, 20%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-7 {
+    background-color: lighten(#0000FF, 10%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-8 {
+    background-color: #0000FF;
+    color: #fff;
+  }
+  .gender-display.gender-parity-9 {
+    background-color: darken(#0000FF, 25%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-10 {
+    background-color: darken(#0000FF, 35%);
+    color: #fff;
+  }
+  #unusedTable {
+    // For compactness
+    td {
+      padding: 5px 0 0 0;
+      border: none;
+      line-height: 32px;
+      text-align: center;
+    }
+  }
 
 }
 
 // Ballots
 
 .scoresheet {
-    .score input {
-        width: 70px;
-    }
-    .aff_total, .neg_total {
-        width: 70px;
-        font-weight: bold;
-        cursor: default;
-    }
+  .score input {
+    width: 70px;
+  }
+  .aff_total, .neg_total {
+    width: 70px;
+    font-weight: bold;
+    cursor: default;
+  }
 }
 
 .edit-ballot-link-discarded, .edit-ballot-link-discarded:hover {
-    color: #808080;
-    text-decoration: line-through;
+  color: #808080;
+  text-decoration: line-through;
 }
+
+// Motions
+
+.assign-motions .list-group-item-text {
+  height: 54px;
+  overflow: hidden;
+}
+
 
 // Scoresheets
 
 .scoresheet-view {
-    .control-label {
-        text-align: right;
-        vertical-align: middle;
-    }
-    .score {
-        width: 70px;
-        text-align: right;
-    }
-    .total {
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
-    .total.score {
-        font-weight: bold;
-        border-radius: 3px;
-    }
-    .win {
-        background-color: #47a447;
-        color: white;
-        border-color: #398439;
-    }
-    .loss {
-        background-color: #d2322d;
-        color: white;
-        border-color: #ac2925;
-    }
-    .motion-veto {
-        text-decoration: line-through
-    }
+  .control-label {
+    text-align: right;
+    vertical-align: middle;
+  }
+  .score {
+    width: 70px;
+    text-align: right;
+  }
+  .total {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .total.score {
+    font-weight: bold;
+    border-radius: 3px;
+  }
+  .win {
+    background-color: #47a447;
+    color: white;
+    border-color: #398439;
+  }
+  .loss {
+    background-color: #d2322d;
+    color: white;
+    border-color: #ac2925;
+  }
+  .motion-veto {
+    text-decoration: line-through
+  }
 }
 
 .team-tab a.team-score {
-    // Darker than normal link, but not black
-    color: #285379;
+  // Darker than normal link, but not black
+  color: #285379;
+}
+
+
+@media (max-width: $screen-xs-max) {
+  .page-header {
+    margin-top: 0;
+  }
+  #header-options {
+    min-height: 82px
+  }
 }

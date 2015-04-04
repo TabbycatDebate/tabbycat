@@ -2,19 +2,26 @@ local_settings.py
 staticfiles/
 migrations
 migrations-*/
-.sass-cache/
+.gitmodules
 
-# Tournaments to ignore
-adam2014/
-preaustrals2014/
+# Data to ignore
+data/
+
+# Default data to include
+!data/dummy/
+!data/dummy2/
+!data/league_template/
+!data/sandbox/
+!data/utils/
 
 env/
-venv
+venv/
 *.pyc
 *.swp
 *~
 *.db
 .DS_Store
+.debug
 
 # C extensions
 *.so
@@ -26,7 +33,6 @@ dist
 build
 eggs
 parts
-bin
 var
 sdist
 develop-eggs
@@ -50,3 +56,6 @@ nosetests.xml
 *.log
 *.pot
 *.pyc
+data/Schools Junior 2014
+data/Schools Novice 2014
+data/Schools Senior 2014

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block extra-head %}
+{% block extra-js %}
 {{ block.super }}
 {% include "enter_results_head.html" %}
 {% endblock %}
@@ -9,14 +9,11 @@
 {% block page-title %}No Result to Enter{% endblock %}
 {% block body-class %}public-enter-result{% endblock %}
 
-{% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
 {% block content %}
-
-<div class="alert alert-info">This page is specific to you, {{ adjudicator.name }}.
-The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
-
-<div class="lead">
-{{ message }}
-</div>
-
+  <div class="alert alert-info">This page is specific to you, {{ adjudicator.name }}.
+    The URL doesn't change, so if you bookmark it, you can easily return here after each debate.
+  </div>
+  <div class="lead">
+    {{ message }}
+  </div>
 {% endblock content %}

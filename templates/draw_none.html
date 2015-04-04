@@ -1,59 +1,68 @@
 {% extends "draw_rbase.html" %}
-
 {% load debate_tags %}
 
-{% block extra-head %}
-    <script type="text/javascript" charset="utf-8">
-
-        $(document).ready( function() {
-            $("#createDraw").click( function() {
-                $("#createForm").submit();
-
-                return false;
-            } );
-
-        } );
-
-    </script>
-{% endblock extra-head %}
-
-{% block head-title %}
-No draw currently exists
-{% endblock %}
+{% block head-title %}No draw for {{ round.name }} currently exists{% endblock %}
 
 {% block header %}
-    {% if active_teams.count == 0 %}
-    <div class="alert alert-warning">
-        The draw cannot be generated until some of the teams <a href="{% round_url team_availability current_round %}">have been checked in</a> for this round.
-    </div>
-    {% endif %}
-    {% if active_venues.count < rooms %}
-    <div class="alert alert-warning">
-        The draw cannot be generated until there are more venues than team matchups. <a href="{% round_url venue_availability current_round %}">Check in some more venues</a>.
-    </div>
-    {% endif %}
-    <div class="btn-group">
-        {% if active_venues.count < rooms or active_teams.count == 0%}
-            <a class="btn btn-warning" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
-        {% else %}
-            <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams|length }} teams</a>
-        {% endif %}
-    </div>
+
+  {% if not active_teams.count|divisibleby:2  %}
+  <div class="alert alert-danger">
+    Note: there is an uneven number of teams checked in for this round.
+  </div>
+  {% endif %}
+  {% if 0 < active_teams.count < all_teams_count %}
+  <div class="alert alert-warning">
+    Note: not all teams <a class="alert-link" href="{% round_url team_availability current_round %}">have been checked in</a> for this round.
+  </div>
+  {% elif active_teams.count == 0 %}
+  <div class="alert alert-danger">
+    The draw cannot be generated until some of the teams <a class="alert-link" href="{% round_url team_availability current_round %}">have been checked in</a> for this round.
+  </div>
+  {% endif %}
+  {% if active_venues_count < rooms %}
+  <div class="alert alert-danger">
+    The draw cannot be generated until there are more venues than team matchups. <a class="alert-link" href="{% round_url venue_availability current_round %}">Check in some more venues</a>.
+  </div>
+  {% endif %}
+  {% if active_venues_count < rooms or active_teams.count == 0%}
+    <a class="btn btn-success"  disabled="disabled" id="createDraw">Create draw for {{ active_teams.count }}/{{ all_teams_count }} teams</a>
+  {% else %}
+    <a class="btn btn-success" id="createDraw">Create draw for the following {{ active_teams.count }}/{{ all_teams_count }} teams</a>
+  {% endif %}
+  {% if active_teams.count < all_teams_count %}
+    <a class="btn btn-warning" id="createDrawWithAllTeams">Create draw for ALL teams</a>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-
-<div class="row">
+  <div class="row">
     <div class="col-sm-12">
-        <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
-        <ul>
-            {% for team in active_teams %}
-                <li>{{ team.short_name }} ({{ team.institution.code }})</li>
-            {% endfor %}
-        </ul>
+      {% if active_teams.count < all_teams_count %}
+        <form id="createFormWithAllTeams" action="{% round_url create_draw_with_all_teams %}" method="POST"></form>
+      {% endif %}
+      <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
+      <ul>
+        {% for team in active_teams %}
+          <li>{{ team.short_name }} ({{ team.institution.code }})</li>
+        {% endfor %}
+      </ul>
     </div>
-</div>
-
+  </div>
 {% endblock content %}
 
+{% block extra-js %}
+  <script type="text/javascript" charset="utf-8">
 
+    $(document).ready( function() {
+      $("#createDraw").click( function() {
+        $("#createForm").submit();
+        return false;
+      } );
+      $("#createDrawWithAllTeams").click( function() {
+        $("#createFormWithAllTeams").submit();
+        return false;
+      } );
+    } );
+
+  </script>
+{% endblock extra-js %}

@@ -1,0 +1,121 @@
+{% load debate_tags %}
+
+<ul id="nav" class="nav navbar-nav navbar-left">
+  {% if tab_released > 0 %}
+    <li><a class="public-team-tab-nav" href="{% tournament_url public_team_tab %}">
+      Team Tab
+    </a></li>
+    <li><a class="public-speaker-tab-nav" href="{% tournament_url public_speaker_tab %}">
+      Speaker Tab
+    </a></li>
+    {% if show_novices %}
+    <li><a class="public-novices-tab-nav" href="{% tournament_url public_novices_tab %}">
+      Novice Speaker Tab
+    </a></li>
+    {% endif %}
+    {% if reply_scores_enabled %}
+    <li><a class="public-replies-tab-nav" href="{% tournament_url public_replies_tab %}">
+      Replies Tab
+    </a></li>
+    {% endif %}
+    {% if motion_tab_released > 0 %}
+    <li><a class="public-motions-tab-nav" href="{% tournament_url public_motions_tab %}">
+      Motions Tab
+    </a></li>
+    {% endif %}
+  {% endif %}
+  {% if public_draw > 0 and tab_released == 0  %}
+    {% if show_all_draws == 0 %}
+    <li>
+      <a class="public-draw-nav" href="{% tournament_url public_draw %}">
+        Draw for {{ current_round.name }}
+      </a>
+    </li>
+    {% endif %}
+    {% if show_all_draws > 0 %}
+      <li><a class="public-results-nav" href="#" data-toggle="dropdown">Draws<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          {% for r in tournament.rounds.all %}
+            {% if r.draw_status == r.STATUS_RELEASED %}
+              <li><a href="{% round_url public_draw_by_round r %}">{{ r.name }}</a></li>
+            {% endif %}
+          {% endfor %}
+          <li>
+            <a class="public-draw-nav" href="{% tournament_url public_all_draws %}">
+              View All
+            </a>
+          </li>
+        </ul>
+      </li>
+    {% endif %}
+  {% endif %}
+  {% if public_results > 0 and current_round.prev %}
+    <li><a class="public-results-nav" href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
+      <ul class="dropdown-menu">
+        {% for r in tournament.rounds.all %}
+          {% if r.draw_status == r.STATUS_RELEASED %}
+            {% if r.seq < current_round.seq and not r.silent or tournament.release_all %}
+              <li><a href="{% round_url public_results r %}">{{ r.name }}</a></li>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
+  {% if public_divisions > 0 %}
+    <li><a class="public-divisions-nav" href="{% tournament_url public_divisions %}">
+      Divisions
+    </a></li>
+  {% endif %}
+  {% if public_motions > 0 and motion_tab_released == 0 %}
+    <li><a class="public-motions-nav" href="{% tournament_url public_motions %}">
+      Motions
+    </a></li>
+  {% endif %}
+  {% if public_side_allocations %}
+    <li><a class="public-side-allocations-nav" href="{% tournament_url public_side_allocations %}">
+      Sides
+    </a></li>
+  {% endif %}
+  {% if public_team_standings > 0 and current_round.prev and tab_released == 0 %}
+    <li><a class="public-team-standings-nav" href="{% tournament_url public_team_standings %}">
+      Standings
+    </a></li>
+  {% endif %}
+  {% if public_breaking_teams > 0 or public_breaking_adjs > 0 %}
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle public-breakk-nav" data-toggle="dropdown">Break<b class="caret"></b></a>
+      <ul class="dropdown-menu">
+        {% if public_breaking_teams > 0 %}
+          <li><a class="public-breaking-teams-open-nav" href="{% tournament_url public_breaking_teams_open %}">Open</a></li>
+          {% if esl_break %}
+            <li><a class="public-breaking-teams-esl-nav" href="{% tournament_url public_breaking_teams_esl %}">ESL</a></li>
+          {% endif %}
+        {% endif %}
+        {% if public_breaking_adjs > 0 %}
+          <li><a class="public-breaking-adjs-nav" href="{% tournament_url public_breaking_adjs %}">Adjudicators</a></li>
+        {% endif %}
+      </ul>
+    </li>
+  {% endif %}
+  {% if public_participants > 0 %}
+    <li><a class="public-participants-nav" href="{% tournament_url public_participants %}">
+      Participants
+    </a></li>
+  {% endif %}
+  {% if feedback_progress > 0 %}
+    <li><a class="public-feedback-nav" href="{% tournament_url public_feedback_progress %}">
+      Feedbacks
+    </a></li>
+  {% endif %}
+  {% if public_ballots > 0 %}
+    <li><a class="public-add-ballot-nav" href="{% tournament_url public_ballot_submit %}">
+      Enter Ballot
+    </a></li>
+  {% endif %}
+  {% if public_feedback > 0 %}
+    <li><a class="public-add-feedback-nav" href="{% tournament_url public_feedback_submit %}">
+      Enter Feedback
+    </a></li>
+  {% endif %}
+</ul>

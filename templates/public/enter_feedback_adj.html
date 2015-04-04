@@ -3,17 +3,13 @@
 
 {% block head-title %}Add Feedback from {{ source_name }}{% endblock %}
 {% block page-title %}Add Feedback from {{ source_name }}{% endblock %}
-{% block extra-head %}{% endblock %}
-
 {% block body-class %}public-enter-feedback{% endblock %}
 
-{% block nav %}{% include "public/nav.html" %}{% endblock %}{% block footer %}{% include "public/footer.html" %}{% endblock %}
-
 {% block content %}
+  <div class="alert alert-info">This page is specific to you, {{ source_name }}.
+  The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
 
-<div class="alert alert-info">This page is specific to you, {{ source_name }}.
-The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
-
-{{ block.super }}
-
+  {{ block.super }}
 {% endblock %}
+
+{% block extra-js %}{% endblock %}

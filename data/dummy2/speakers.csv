@@ -1,72 +1,1 @@
-"Georgia Crawford","California Institute of Technology",1
-"Wanda Griffin","California Institute of Technology",1
-"Helen Keller","California Institute of Technology",1
-"Russell Warren","California Institute of Technology",2
-"Angel Rhodes","California Institute of Technology",2
-"Terry Henderson","California Institute of Technology",2
-"Kyle Ruiz","California Institute of Technology",3
-"Randolph Lambert","California Institute of Technology",3
-"Sergio Pittman","California Institute of Technology",3
-"Earnest Becker","Columbia University",1
-"Ellis Rowe","Columbia University",1
-"Robin Roberson","Columbia University",1
-"Gwen Newman","Cornell University",1
-"Robyn Caldwell","Cornell University",1
-"Angie Holt","Cornell University",1
-"Melvin Jordan","Harvard University",1
-"Gladys Burke","Harvard University",1
-"Patty Saunders","Harvard University",1
-"Thomas Pierce","Harvard University",2
-"Stella Lindsey","Harvard University",2
-"Adrian May","Harvard University",2
-"Taylor Brown","Johns Hopkins University",1
-"Bethany Chambers","Johns Hopkins University",1
-"Pamela Bryan","Johns Hopkins University",1
-"Janet Nunez","Massachusetts Institute of Technology",1
-"Owen Chandler","Massachusetts Institute of Technology",1
-"Lillie Rodriquez","Massachusetts Institute of Technology",1
-"Rufus Dennis","Massachusetts Institute of Technology",2
-"Marty Love","Massachusetts Institute of Technology",2
-"Shelia Wright","Massachusetts Institute of Technology",2
-"Clark Mills","Princeton University",1
-"Randy Carroll","Princeton University",1
-"Casey Sparks","Princeton University",1
-"Candace Bowen","Princeton University",2
-"Jaime Long","Princeton University",2
-"Leon Hall","Princeton University",2
-"Morris Nichols","Stanford University",1
-"Benjamin Padilla","Stanford University",1
-"Phil Lyons","Stanford University",1
-"Clay Holland","Stanford University",2
-"Elena Cobb","Stanford University",2
-"Shawn Torres","Stanford University",2
-"Willis Carson","Stanford University",3
-"Wendell Nelson","Stanford University",3
-"Felicia Welch","Stanford University",3
-"Cory Meyer","University of California, Berkeley",1
-"Stacy Frazier","University of California, Berkeley",1
-"Claire Dunn","University of California, Berkeley",1
-"Eloise Munoz","University of Chicago",1
-"Patricia Palmer","University of Chicago",1
-"Stewart Day","University of Chicago",1
-"Timmy Craig","University of Chicago",2
-"Patrick Kelly","University of Chicago",2
-"Kristopher Hayes","University of Chicago",2
-"Andy Lane","University of Chicago",3
-"Scott Mcdonald","University of Chicago",3
-"Charlene Cortez","University of Chicago",3
-"Leigh Holmes","University of Pennsylvania",1
-"Alma Spencer","University of Pennsylvania",1
-"Winston Castro","University of Pennsylvania",1
-"Emilio Simmons","University of Pennsylvania",2
-"Ron Delgado","University of Pennsylvania",2
-"Nadine Barber","University of Pennsylvania",2
-"Gail Adkins","Yale University",1
-"Willard Walton","Yale University",1
-"Jackie Peterson","Yale University",1
-"Terry Thornton","Yale University",2
-"Norman Rodgers","Yale University",2
-"Mattie Lee","Yale University",2
-"Woodrow Harvey","Yale University",3
-"Javier Chavez","Yale University",3
-"Janie Daniels","Yale University",3
+name,institution,team_name,use_team_name_as_prefix,gender,novice_statusGeorgia Crawford,California Institute of Technology,1,1,F,0Wanda Griffin,California Institute of Technology,1,1,F,1Helen Keller,California Institute of Technology,1,1,F,0Russell Warren,California Institute of Technology,2,1,M,0Angel Rhodes,California Institute of Technology,2,1,,1Terry Henderson,California Institute of Technology,2,1,M,0Kyle Ruiz,California Institute of Technology,3,1,M,0Randolph Lambert,California Institute of Technology,3,1,M,1Sergio Pittman,California Institute of Technology,3,1,M,0Earnest Becker,Columbia University,1,1,M,0Ellis Rowe,Columbia University,1,1,M,0Robin Roberson,Columbia University,1,1,M,1Gwen Newman,Cornell University,1,1,F,1Robyn Caldwell,Cornell University,1,1,F,0Angie Holt,Cornell University,1,1,F,1Melvin Jordan,Harvard University,1,1,M,0Gladys Burke,Harvard University,1,1,F,0Patty Saunders,Harvard University,1,1,M,1Thomas Pierce,Harvard University,2,1,M,1Stella Lindsey,Harvard University,2,1,F,1Adrian May,Harvard University,2,1,M,1Taylor Brown,Johns Hopkins University,1,1,M,0Bethany Chambers,Johns Hopkins University,1,1,M,1Pamela Bryan,Johns Hopkins University,1,1,F,1Janet Nunez,Massachusetts Institute of Technology,1,1,F,1Owen Chandler,Massachusetts Institute of Technology,1,1,M,1Lillie Rodriquez,Massachusetts Institute of Technology,1,1,F,1Rufus Dennis,Massachusetts Institute of Technology,2,1,M,0Marty Love,Massachusetts Institute of Technology,2,1,M,1Shelia Wright,Massachusetts Institute of Technology,2,1,F,0Clark Mills,Princeton University,1,1,M,1Randy Carroll,Princeton University,1,1,M,1Casey Sparks,Princeton University,1,1,M,1Candace Bowen,Princeton University,2,1,F,1Jaime Long,Princeton University,2,1,M,1Leon Hall,Princeton University,2,1,M,0Morris Nichols,Stanford University,1,1,M,0Benjamin Padilla,Stanford University,1,1,M,1Phil Lyons,Stanford University,1,1,M,1Clay Holland,Stanford University,2,1,M,1Elena Cobb,Stanford University,2,1,F,0Shawn Torres,Stanford University,2,1,M,0Willis Carson,Stanford University,3,1,M,1Wendell Nelson,Stanford University,3,1,F,1Felicia Welch,Stanford University,3,1,F,1Cory Meyer,"University of California, Berkeley",1,1,M,1Stacy Frazier,"University of California, Berkeley",1,1,F,1Claire Dunn,"University of California, Berkeley",1,1,F,0Eloise Munoz,University of Chicago,1,1,M,1Patricia Palmer,University of Chicago,1,1,M,1Stewart Day,University of Chicago,1,1,M,1Timmy Craig,University of Chicago,2,1,M,1Patrick Kelly,University of Chicago,2,1,M,0Kristopher Hayes,University of Chicago,2,1,M,1Andy Lane,University of Chicago,3,1,M,1Scott Mcdonald,University of Chicago,3,1,M,1Charlene Cortez,University of Chicago,3,1,M,1Leigh Holmes,University of Pennsylvania,1,1,F,0Alma Spencer,University of Pennsylvania,1,1,F,0Winston Castro,University of Pennsylvania,1,1,M,1Emilio Simmons,University of Pennsylvania,2,1,M,0Ron Delgado,University of Pennsylvania,2,1,M,1Nadine Barber,University of Pennsylvania,2,1,M,0Gail Adkins,Yale University,1,1,M,0Willard Walton,Yale University,1,1,M,0Jackie Peterson,Yale University,1,1,M,1Terry Thornton,Yale University,2,1,,1Norman Rodgers,Yale University,2,1,M,0Mattie Lee,Yale University,2,1,,0Woodrow Harvey,Yale University,3,1,M,1Javier Chavez,Yale University,3,1,,0Janie Daniels,Yale University,3,1,F,0

@@ -1,29 +1,31 @@
 {% extends "base_availability.html" %}
-
 {% load debate_tags %}
-{% block update-url %}{% round_url update_people_availability  %}{% endblock %}
-{% block post-success %}location.reload();{% endblock %}
 
+{% block update-url %}{% round_url update_people_availability  %}{% endblock %}
+{% block draw-url %}{% round_url draw round %}{% endblock %}
+{% block post-success %}location.reload();{% endblock %}
 {% block head-title %}Checkins for {{ round.name }}{% endblock %}
 {% block page-title %}Checkins for {{ round.name }}{% endblock %}
-
 {% block copy_btn %}{% endblock %}
-
 {% block table-contents %}
-    <thead><tr><th>Team</th><th>Name</th><th>Checked in</th><th>Barcode</th></tr></thead>
-    <tbody>
-        {% for person in people %}
-        <tr>
-            {% if person.speaker %}
-            <td>{{ person.speaker.team.short_name }}</td>
-            {% else %}
-            <td>{{ person.adjudicator.institution.code }} Judge</td>
-            {% endif %}
-            <td>{{ person.name }}</td>
-            <td><input type="checkbox" {{ person.is_active|yesno:'checked="yes",'  }} name="check_{{ person.id }}"  value="{{ person.id }}" /></td>
-            <td>{{ person.barcode_id }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+
+  <thead><tr><th>Team</th><th>Name</th><th>Checked in</th><th>Barcode</th></tr></thead>
+  <tbody>
+    {% for person in people %}
+    <tr>
+      {% if person.speaker %}
+      <td>{{ person.speaker.team.short_name }}</td>
+      {% else %}
+      <td>{{ person.adjudicator.institution.code }} Judge</td>
+      {% endif %}
+      <td>{{ person.name }}</td>
+      <td class="check_target">
+        <input type="checkbox" {{ person.is_active|yesno:'checked="yes",'  }} name="check_{{ person.id }}" value="{{ person.id }}" />
+      </td>
+      <td>{{ person.barcode_id }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
 {% endblock table-contents %}
 
