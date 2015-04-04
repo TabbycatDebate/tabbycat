@@ -193,7 +193,7 @@ class DebateAdjudicatorInline(admin.TabularInline):
     extra = 1
 
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id','round','bracket','aff_team', 'neg_team',)
+    list_display = ('id','round','bracket','aff_team', 'neg_team','result_status')
     list_filter = ('round__tournament','round', 'division')
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
     raw_id_fields = ('venue','division')
@@ -206,13 +206,12 @@ class DebateAdmin(admin.ModelAdmin):
 for value, verbose_name in models.Debate.STATUS_CHOICES:
     def _make_set_result_status(value, verbose_name):
         def _set_result_status(modeladmin, request, queryset):
-            queryset.update(result_status=value)
+            count = queryset.update(result_status=value)
         _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower() # so that they look different to DebateAdmin
         _set_result_status.short_description = "Set result status to %s" % verbose_name.lower()
         return _set_result_status
     DebateAdmin.actions.append(_make_set_result_status(value, verbose_name))
-    print DebateAdmin.actions
-del value, verbose_name
+del value, verbose_name # for fail-fast
 
 admin.site.register(models.Debate, DebateAdmin)
 
