@@ -3,11 +3,19 @@ from django import forms
 
 import debate.models as models
 
+# ==============================================================================
+# Tournament
+# ==============================================================================
+
 class TournamentAdmin(admin.ModelAdmin):
     list_display = ('name','short_name','current_round')
     ordering = ('name',)
 
 admin.site.register(models.Tournament,TournamentAdmin)
+
+# ==============================================================================
+# Institution
+# ==============================================================================
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ('name','code','abbreviation')
@@ -16,10 +24,15 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Institution, InstitutionAdmin)
 
+# ==============================================================================
+# DebateTeam
+# ==============================================================================
+
 _dt_round = lambda o: o.debate.round.abbreviation
 _dt_round.short_description = 'Round'
 _dt_tournament = lambda o: o.debate.round.tournament
 _dt_tournament.short_description = 'Tournament'
+
 class DebateTeamAdmin(admin.ModelAdmin):
     list_display = ('team', _dt_tournament, _dt_round, 'position')
     search_fields = ('team',)
@@ -30,6 +43,10 @@ class DebateTeamAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.DebateTeam, DebateTeamAdmin)
+
+# ==============================================================================
+# Team
+# ==============================================================================
 
 class SpeakerInline(admin.TabularInline):
     model = models.Speaker
@@ -55,6 +72,9 @@ class TeamAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Team, TeamAdmin)
 
+# ==============================================================================
+# TeamVenuePreference
+# ==============================================================================
 
 class TeamVenuePreferenceAdmin(admin.ModelAdmin):
     list_display = ('team', 'venue_group', 'priority')
@@ -64,13 +84,20 @@ class TeamVenuePreferenceAdmin(admin.ModelAdmin):
 
 admin.site.register(models.TeamVenuePreference, TeamVenuePreferenceAdmin)
 
+# ==============================================================================
+# Speaker
+# ==============================================================================
 
 class SpeakerAdmin(admin.ModelAdmin):
     list_display = ('name', 'team', 'novice')
     search_fields = ('name',)
     raw_id_fields = ('team',)
+
 admin.site.register(models.Speaker, SpeakerAdmin)
 
+# ==============================================================================
+# Division
+# ==============================================================================
 
 class DivisionAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'venue_group','time_slot')
@@ -79,6 +106,10 @@ class DivisionAdmin(admin.ModelAdmin):
     ordering = ('tournament', 'name',)
 
 admin.site.register(models.Division, DivisionAdmin)
+
+# ==============================================================================
+# Adjudicator
+# ==============================================================================
 
 class AdjudicatorConflictInline(admin.TabularInline):
     model = models.AdjudicatorConflict
@@ -98,7 +129,12 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code',)
     list_filter = ('tournament', 'name')
     inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorTestScoreHistoryInline)
+
 admin.site.register(models.Adjudicator, AdjudicatorAdmin)
+
+# ==============================================================================
+# AdjudicatorFeedback
+# ==============================================================================
 
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'source_adjudicator', 'source_team', 'confirmed', 'score', 'comments')
@@ -107,12 +143,19 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
+# ==============================================================================
+# VenueGroup
+# ==============================================================================
 
 class VenueGroupAdmin(admin.ModelAdmin):
     list_display = ('name','short_name','team_capacity')
     search_fields = ('name',)
 
 admin.site.register(models.VenueGroup, VenueGroupAdmin)
+
+# ==============================================================================
+# Venue
+# ==============================================================================
 
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time',)
@@ -123,6 +166,22 @@ class VenueAdmin(admin.ModelAdmin):
         return super(VenueAdmin, self).queryset(request).select_related('group')
 
 admin.site.register(models.Venue, VenueAdmin)
+
+# ==============================================================================
+# Debate
+# ==============================================================================
+
+def make_result_status_none(modeladmin, request, queryset):
+    queryset.update(result_status=models.Debate.STATUS_NONE)
+
+def make_result_status_postponed(modeladmin, request, queryset):
+    queryset.update(result_status=models.Debate.STATUS_POSTPONED)
+
+def make_result_status_draft(modeladmin, request, queryset):
+    queryset.update(result_status=models.Debate.STATUS_DRAFT)
+
+def make_result_status_confirmed(modeladmin, request, queryset):
+    queryset.update(result_status=models.Debate.STATUS_CONFIRMED)
 
 class DebateTeamInline(admin.TabularInline):
     model = models.DebateTeam
@@ -144,8 +203,22 @@ class DebateAdmin(admin.ModelAdmin):
             'round__tournament','division__tournament','venue__venue_group'
         )
 
+for value, verbose_name in models.Debate.STATUS_CHOICES:
+    def _make_set_result_status(value, verbose_name):
+        def _set_result_status(modeladmin, request, queryset):
+            queryset.update(result_status=value)
+        _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower() # so that they look different to DebateAdmin
+        _set_result_status.short_description = "Set result status to %s" % verbose_name.lower()
+        return _set_result_status
+    DebateAdmin.actions.append(_make_set_result_status(value, verbose_name))
+    print DebateAdmin.actions
+del value, verbose_name
 
 admin.site.register(models.Debate, DebateAdmin)
+
+# ==============================================================================
+# TeamScore
+# ==============================================================================
 
 _ts_round = lambda o: o.debate_team.debate.round.seq
 _ts_round.short_description = 'Round'
@@ -159,8 +232,13 @@ class TeamScoreAdmin(admin.ModelAdmin):
 
 admin.site.register(models.TeamScore, TeamScoreAdmin)
 
+# ==============================================================================
+# SpeakerScore
+# ==============================================================================
+
 _ss_speaker = lambda o: o.speaker.name
 _ss_speaker.short_description = 'Speaker'
+
 class SpeakerScoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ts_team, 'position', _ss_speaker, 'score')
     search_fields = ('debate_team__debate__round__seq',
@@ -177,10 +255,15 @@ class SpeakerScoreAdmin(admin.ModelAdmin):
 
 admin.site.register(models.SpeakerScore, SpeakerScoreAdmin)
 
+# ==============================================================================
+# SpeakerScoreByAdj
+# ==============================================================================
+
 _ssba_speaker = lambda o: models.SpeakerScore.objects.filter(debate_team=o.debate_team, position=o.position)[0].speaker.name
 _ssba_speaker.short_description = 'Speaker'
 _ssba_adj = lambda o: o.debate_adjudicator.adjudicator.name
 _ssba_adj.short_description = 'Adjudicator'
+
 class SpeakerScoreByAdjAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ssba_adj, _ts_team, 'position', _ssba_speaker, 'score')
     search_fields = ('debate_team__debate__round__seq',
@@ -188,6 +271,10 @@ class SpeakerScoreByAdjAdmin(admin.ModelAdmin):
                      'debate_adjudicator__adjudicator__name')
     raw_id_fields = ('debate_team','ballot_submission')
 admin.site.register(models.SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)
+
+# ==============================================================================
+# DebateTeamMotionPreference
+# ==============================================================================
 
 _dtmp_team_name =  lambda o: o.debate_team.team.short_name
 _dtmp_team_name.short_description = 'Team'
@@ -197,18 +284,25 @@ _dtmp_motion = lambda o: o.motion.reference
 _dtmp_motion.short_description = 'Motion'
 _dtmp_confirmed = lambda o: o.ballot_submission.confirmed
 _dtmp_confirmed.short_description = 'Confirmed'
+
 class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin):
     list_display = ('ballot_submission', _dtmp_confirmed, _dtmp_team_name, _dtmp_position, 'preference', _dtmp_motion)
 admin.site.register(models.DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
+
+# ==============================================================================
+# Round
+# ==============================================================================
 
 class RoundAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
     list_filter = ('tournament',)
     search_fields = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status')
 
-
 admin.site.register(models.Round, RoundAdmin)
 
+# ==============================================================================
+# DebateAdjudicator
+# ==============================================================================
 
 class DebateAdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('debate', 'adjudicator', 'type')
@@ -217,6 +311,9 @@ class DebateAdjudicatorAdmin(admin.ModelAdmin):
 
 admin.site.register(models.DebateAdjudicator, DebateAdjudicatorAdmin)
 
+# ==============================================================================
+# Motion
+# ==============================================================================
 
 _m_tournament = lambda o: o.round.tournament
 class MotionAdmin(admin.ModelAdmin):
@@ -224,6 +321,10 @@ class MotionAdmin(admin.ModelAdmin):
     list_filter = ('round', 'divisions')
 
 admin.site.register(models.Motion, MotionAdmin)
+
+# ==============================================================================
+# BallotSubmission
+# ==============================================================================
 
 class BallotSubmissionAdmin(admin.ModelAdmin):
     list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'user')
@@ -233,6 +334,10 @@ class BallotSubmissionAdmin(admin.ModelAdmin):
     #inlines = (SpeakerScoreByAdjInline, SpeakerScoreInline, TeamScoreInline)
 
 admin.site.register(models.BallotSubmission, BallotSubmissionAdmin)
+
+# ==============================================================================
+# ActionLog
+# ==============================================================================
 
 class ActionLogAdmin(admin.ModelAdmin):
     list_display = ('type', 'user', 'timestamp', 'get_parameters_display', 'tournament')
