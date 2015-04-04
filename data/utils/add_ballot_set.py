@@ -25,7 +25,7 @@ def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=Fals
     def gen_results():
         r = {'aff': (0,), 'neg': (0,)}
         def do():
-            s = [random.randint(min_score, max_score) for i in range(3)]
+            s = [random.randint(min_score, max_score) for i in range(debate.round.tournament.LAST_SUBSTANTIVE_POSITION)]
             s.append(random.randint(min_score, max_score)/2.0)
             return s
         while sum(r['aff']) == sum(r['neg']):
@@ -42,20 +42,20 @@ def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=Fals
 
     for side in ('aff', 'neg'):
         speakers = getattr(debate, '%s_team' % side).speakers
-        for i in range(1, 4):
+        for i in range(1, debate.round.tournament.LAST_SUBSTANTIVE_POSITION+1):
             bset.set_speaker(
-                side = side,
-                pos = i,
+                team = side,
+                position = i,
                 speaker = speakers[i - 1],
             )
         bset.set_speaker(
-            side = side,
-            pos = 4,
+            team = side,
+            position = debate.round.tournament.REPLY_POSITION,
             speaker = speakers[0]
         )
 
         for adj in debate.adjudicators.list:
-            for pos in range(1, 5):
+            for pos in debate.round.tournament.POSITIONS:
                 bset.set_score(adj, side, pos, rr[adj][side][pos-1])
 
     # Pick a motion

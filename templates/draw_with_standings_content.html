@@ -40,22 +40,22 @@
       </span>
     </td>
     <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
-      {{ debate.aff_team.points }}
+      {{ debate.aff_team_cached.points }}
     </td>
     <td{% if debate.neg_team.pullup %} class="em"{% endif %}>
-      {{ debate.neg_team.points }}
+      {{ debate.neg_team_cached.points }}
     </td>
     <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
-      {{ debate.aff_team.subrank }}
+      {{ debate.aff_team_cached.subrank }}
     </td>
     <td{% if debate.neg_team.pullup %} class="em"{% endif %}>
-      {{ debate.neg_team.subrank }}
+      {{ debate.neg_team_cached.subrank }}
     </td>
-    <td>{{ debate.aff_team.speaker_score|stringformat:".2f" }}</td>
-    <td>{{ debate.neg_team.speaker_score|stringformat:".2f" }}</td>
+    <td>{{ debate.aff_team_cached.speaker_score|stringformat:".2f" }}</td>
+    <td>{{ debate.neg_team_cached.speaker_score|stringformat:".2f" }}</td>
     {% if show_draw_strength %}
-    <td>{{ debate.aff_team.draw_strength }}</td>
-    <td>{{ debate.neg_team.draw_strength }}</td>
+    <td>{{ debate.aff_team_cached.draw_strength }}</td>
+    <td>{{ debate.neg_team_cached.draw_strength }}</td>
     {% endif %}
     <td>{% aff_count debate.aff_team debate.round.prev %}</td>
     <td>{% aff_count debate.neg_team debate.round.prev %}</td>
