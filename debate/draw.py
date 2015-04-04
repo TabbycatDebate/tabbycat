@@ -14,7 +14,7 @@ DRAW_FLAG_DESCRIPTIONS = {
     "bub_up_hist":  "Bubble up (history)",
     "bub_dn_hist":  "Bubble down (history)",
     "bub_up_inst":  "Bubble up (institution)",
-    "bub_dn_hist":  "Bubble down (institution)",
+    "bub_dn_inst":  "Bubble down (institution)",
     "bub_up_accom": "Bubble up (to accommodate)",
     "bub_dn_accom": "Bubble down (to accommodate)",
     "no_bub_updn":  "Can't bubble up/down",
