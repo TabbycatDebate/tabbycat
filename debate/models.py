@@ -611,12 +611,12 @@ class SpeakerManager(models.Manager):
             aggregator = "SUM",
             round = round.seq,
             position = round.tournament.LAST_SUBSTANTIVE_POSITION,
-            stage = round.STAGE_PRELIMINARY,
+            stage = Round.STAGE_PRELIMINARY,
         ), "average": EXTRA_QUERY.format(
             aggregator = "AVG",
             round = round.seq,
             position = round.tournament.LAST_SUBSTANTIVE_POSITION,
-            stage = round.STAGE_PRELIMINARY,
+            stage = Round.STAGE_PRELIMINARY,
         )}).distinct().order_by('-total')
 
         prev_total = None
