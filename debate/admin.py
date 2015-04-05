@@ -240,10 +240,10 @@ _ss_speaker.short_description = 'Speaker'
 
 class SpeakerScoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ts_team, 'position', _ss_speaker, 'score')
-    search_fields = ('debate_team__debate__round__seq',
+    search_fields = ('debate_team__debate__round__abbreviation',
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'speaker__name')
-    list_filter = ('score',)
+    list_filter = ('score','debate_team__debate__round__abbreviation')
     raw_id_fields = ('debate_team','ballot_submission')
 
     def get_queryset(self, request):
@@ -268,6 +268,7 @@ class SpeakerScoreByAdjAdmin(admin.ModelAdmin):
     search_fields = ('debate_team__debate__round__seq',
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'debate_adjudicator__adjudicator__name')
+    list_filter = ('debate_team__debate__round__seq', 'debate_team__team__institution__code')
     raw_id_fields = ('debate_team','ballot_submission')
 admin.site.register(models.SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)
 
