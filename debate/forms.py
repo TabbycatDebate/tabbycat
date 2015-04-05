@@ -373,7 +373,7 @@ class BallotSetForm(forms.Form):
             if self.choosing_sides:
                 teams = cleaned_data.get('choose_sides', [None] * len(self.SIDES))
             else:
-                teams = (self.debate.get_team(side) for side in self.SIDES)
+                teams = [self.debate.get_team(side) for side in self.SIDES]
             if None in teams:
                 logger.warning("Team identities not found")
 
