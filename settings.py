@@ -158,15 +158,10 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
         CACHES = {
             'default': {
                 'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+                'TIMEOUT': 300,
                 'BINARY': True,
-                'OPTIONS': {
-                    'no_block': True,
+                'OPTIONS': {  # Maps to pylibmc "behaviors"
                     'tcp_nodelay': True,
-                    'tcp_keepalive': True,
-                    'remove_failed': 4,
-                    'retry_timeout': 2,
-                    'dead_timeout': 10,
-                    '_poll_timeout': 2000
                 }
             }
         }
