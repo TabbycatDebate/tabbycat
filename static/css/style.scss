@@ -11,13 +11,6 @@
 @include text-emphasis-variant('.text-warning', $brand-warning);
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
-// Fix for post-cache pathings
-@font-face {
-  font-family: 'Glyphicons Halflings';
-  src: url('../../css/bootstrap/glyphicons-halflings-regular.eot');
-  src: url('../../css/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../css/bootstrap/glyphicons-halflings-regular.woff') format('woff'), url('../../css/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), url('../../css/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
-}
-
 // General utilities
 
 .no-vertical-spacing,
