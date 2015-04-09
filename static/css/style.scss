@@ -40,15 +40,7 @@ table.table > tbody > tr > td.no-horizontal-spacing {
   border-right: none;
 }
 
-// For the size buttons
-.h4_minus {
-  @extend .h4;
-  font-size: ceil(($font-size-base * 1.12));
-}
-.h4_plus {
-  @extend .h4;
-  font-size: ceil(($font-size-base * 1.50));
-}
+
 
 // For the collapsedmdouble menu
 
