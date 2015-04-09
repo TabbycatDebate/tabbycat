@@ -160,7 +160,7 @@ admin.site.register(models.VenueGroup, VenueGroupAdmin)
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time',)
     list_filter = ('group', 'priority', 'time')
-    search_fields = ('name', 'group', 'time')
+    search_fields = ('name', 'time')
 
     def get_queryset(self, request):
         return super(VenueAdmin, self).queryset(request).select_related('group')
