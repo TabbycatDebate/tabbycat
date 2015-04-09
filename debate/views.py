@@ -466,24 +466,6 @@ def tournament_home(request, t):
 
     rounds = t.prelim_rounds(until=round).order_by('seq')
 
-    def get_round_stats(r):
-        try:
-            speaks = SpeakerScore.objects.filter(
-            ballot_submission__confirmed=True,
-            debate_team__debate__round=r,
-            position__lte=last_substantive_position)
-
-            round_min = min(speak.score for speak in speaks)
-            round_avg = sum(speak.score for speak in speaks) / len(speaks)
-            round_max = max(speak.score for speak in speaks)
-            return round_min, round_avg, round_max
-        except:
-            # Lazy-catch all for possible errors
-            return 0
-
-    last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
-    r_stats = [get_round_stats(r) for r in rounds]
-
     # Draw Status
     draw = round.get_draw()
     stats = {
@@ -498,7 +480,7 @@ def tournament_home(request, t):
     else:
         stats['pc'] = 0
 
-    return r2r(request, 'tournament_home.html', dict(stats=stats, round=round, actions=a, r_stats=r_stats))
+    return r2r(request, 'tournament_home.html', dict(stats=stats, round=round, actions=a))
 
 @admin_required
 @tournament_view
