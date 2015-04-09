@@ -237,28 +237,6 @@ input[type="radio"].form-control, input[type="checkbox"].form-control {
 
 // Draw displays
 
-#draw.dataTable {
-  .adj-names {
-    ul {
-      padding-left: 0;
-      margin-left: 0;
-      list-style-type: none;
-    }
-  }
-}
-
-.draw-with-standings .em {
-  font-weight: bold;
-  color: chocolate;
-  font-style: normal;
-}
-
-.draw-with-standings .first-in-bracket {
-  border-top: 3px solid chocolate;
-}
-span.esl {
-  text-transform: uppercase;
-}
 
 
 // Editing the Draw
@@ -276,25 +254,6 @@ span.esl {
   .btn-default.text-left {
     padding-left: 6px;
     padding-right: 6px;
-  }
-  #table-search-group {
-    margin-right: 220px; // move right to make way for unused
-  }
-  #scratch {
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: 100%;
-    padding-left: 0;
-    overflow-y: scroll;
-    padding-bottom: 50px; // ensure no footer overlaps
-    margin-top: 16px;
-    .unused {
-      padding-left: 0;
-    }
-  }
-  .venue, .adj {
-    max-width: 300px;
   }
   .is_unaccredited {
     box-shadow: none;
@@ -327,27 +286,7 @@ span.esl {
       color: #fff;
     }
   }
-  .adj {
-    .info {
-      margin-right: 5px;
-    }
-    .info:hover {
-      cursor: pointer;
-      z-index: 11;
-    }
-    &.btn-danger .info, &.btn-warning .info {
-      color: #fff;
-    }
-    &.gender-display.male span, &.gender-display.female a {
-      color: #fff;
-    }
-    &.gender-display.male {
-      background-color: #0000FF;
-    }
-    &.gender-display.female {
-      background-color: #D600FF;
-    }
-  }
+
 
   .gender-display.gender-parity-3 {
     background-color: lighten(#0000FF, 45%);
@@ -388,7 +327,6 @@ span.esl {
       text-align: center;
     }
   }
-
 }
 
 // Ballots

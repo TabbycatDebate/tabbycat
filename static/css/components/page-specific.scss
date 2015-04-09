@@ -46,20 +46,133 @@
   display: block;
 }
 
-// Draw Page
+// Edit Adjs and Edit Venues Page Generally
 
-// For the draw
-#draw {
-  margin-top: 0px;
+.edit-venues, .edit-adjs {
+
+  .page-header {
+    margin: 10px 0 0 -15px;
+    .h2 {
+      margin-bottom: 0px;
+    }
+  }
+
+  #table-search-group {
+    margin-right: 220px; // move the search box right to make way for unused
+  }
+
+  #main {
+    z-index: 10;
+    position: relative;
+  }
+
+  #scratch {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    padding-left: 0;
+    overflow-y: scroll;
+    padding-bottom: 50px; // ensure no footer overlaps
+    padding-top: 18px;
+    z-index: 100;
+
+    .unused {
+      padding-left: 0;
+    }
+    thead {
+      background: none;
+    }
+  }
+
 }
 
-// For the size buttons
+//  Edit Adjs and Edit Venues Droppables
+
+.venue, .adj, .team {
+  background-color: #fff;
+
+  &.history-conflict {
+    background-color: $btn-warning-bg;
+  }
+  &.personal-conflict {
+    background-color: $btn-danger-bg;
+  }
+  &.institutional-conflict {
+    background-color: $btn-danger-bg;
+  }
+}
+.adj {
+  max-width: 300px; // Needed
+}
+.venue {
+  max-width: 200px; // Needed
+}
+.venue, .adj {
+  border: 1px solid #ccc;
+  padding: 0px 0px 0px 0px;
+  text-align: left;
+  span {
+    padding: 6px 6px 6px 6px;
+    display: block;
+  }
+  &.gender-display span {
+    margin-right: 35px;
+    padding-right: 0px;
+  }
+  &.gender-display.male span a,
+  &.gender-display.female span a {
+    color: #fff;
+  }
+  &.gender-display.male span {
+    background-color: #0000FF;
+    color: #fff;
+  }
+  &.gender-display.female span {
+    background-color: #D600FF;
+    color: #fff;
+  }
+}
+
+// Draw Page
+
+#draw {
+  margin-top: 0px; // counteracts margin addded from the text size h2/h3/etcs
+}
+
+// For the text size buttons
 .h3_minus, .h3_minus {
   @extend .h3;
 }
+
 .h3_minus {
   font-size: ceil(($font-size-base * 1.42));
 }
+
 .h3_plus {
   font-size: ceil(($font-size-base * 1.92));
+}
+
+#draw.dataTable {
+  .adj-names {
+    ul {
+      padding-left: 0;
+      margin-left: 0;
+      list-style-type: none;
+    }
+  }
+}
+
+.draw-with-standings .em {
+  font-weight: bold;
+  color: chocolate;
+  font-style: normal;
+}
+
+.draw-with-standings .first-in-bracket {
+  border-top: 3px solid chocolate;
+}
+
+span.esl {
+  text-transform: uppercase;
 }
