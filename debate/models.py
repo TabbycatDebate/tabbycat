@@ -1666,7 +1666,7 @@ class AdjudicatorFeedback(Submission):
         if self.source_adjudicator:
             return self.source_adjudicator.adjudicator
         if self.source_team:
-            return self.source_team.team
+            return self.source_team.team.short_name
 
     @property
     def debate(self):

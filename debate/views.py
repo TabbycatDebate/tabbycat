@@ -1774,7 +1774,6 @@ def adj_feedback(request, t):
                 adj.avg_score = None
                 adj.avg_margin = None
 
-
     return r2r(request, template, dict(adjudicators=adjudicators))
 
 
@@ -1785,9 +1784,9 @@ def get_adj_feedback(request, t):
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback()
     data = [ [unicode(str(f.version) + (f.confirmed and "*" or "")),
-              unicode(f.round),
+              unicode(f.round.abbreviation),
               f.debate.bracket,
-              unicode(f.debate),
+              f.debate.matchup,
               unicode(f.source),
               f.score,
               {None: "Unsure", True: "Yes", False: "No"}[f.agree_with_decision],
