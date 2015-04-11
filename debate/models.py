@@ -1,6 +1,7 @@
 import random
 import re
 from django.db import models
+from django.db.models import signals
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.cache import cache
@@ -76,6 +77,18 @@ class Tournament(models.Model):
     def teams(self):
         return Team.objects.filter(tournament=self)
 
+    @cached_property
+    def get_current_round_cached(self):
+        cached_key = "%s_current_round_object" % self.slug
+        cached_value = cache.get(cached_key)
+        if cached_value:
+            print 'found current round cache'
+            return cache.get(cached_key)
+        else:
+            print 'set current round cache'
+            cache.set(cached_key, self.current_round, None)
+            return self.current_round
+
     def prelim_rounds(self, before=None, until=None):
         qs = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=self)
         if until:
@@ -115,6 +128,16 @@ class Tournament(models.Model):
             return unicode(self.short_name)
         else:
             return unicode(self.name)
+
+def update_tournament_cache(sender, instance, created, **kwargs):
+    cached_key = "%s_%s" % (instance.slug, 'object')
+    cache.delete(cached_key)
+    cached_key = "%s_%s" % (instance.slug, 'current_round_object')
+    cache.delete(cached_key)
+    print "Updated cache %s for %s" % (cached_key, instance)
+
+# Update the cached tournament object when model is changed)
+signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
 class VenueGroup(models.Model):
     name = models.CharField(unique=True, max_length=200)
@@ -1276,6 +1299,13 @@ class Round(models.Model):
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
 
+def update_round_cache(sender, instance, created, **kwargs):
+    cached_key = "%s_%s_%s" % (instance.tournament.slug, instance.seq, 'object')
+    cache.delete(cached_key)
+    print "Updated cache %s for %s" % (cached_key, instance)
+
+# Update the cached round object when model is changed)
+signals.post_save.connect(update_round_cache, sender=Round)
 
 class ActiveVenue(models.Model):
     venue = models.ForeignKey(Venue)
@@ -1773,7 +1803,8 @@ class BallotSubmission(Submission):
         return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + \
                 ('<unknown>' if self.timestamp is None else unicode(self.timestamp.isoformat()))
 
-    @property
+
+    @cached_property
     def ballot_set(self):
         if not hasattr(self, "_ballot_set"):
             self._ballot_set = BallotSet(self)
@@ -1913,30 +1944,45 @@ class MotionManager(models.Manager):
         else:
             motions = self.select_related('round').filter(round__seq__lte=round.seq)
 
-        # ballots = list(BallotSubmission.objects.select_related('motion').filter(confirmed=True))
+        ballots = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
+        teamscores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
 
-        # for motion in motions:
-        #     motion_ballots = [b for b in ballots if b.motion == motion]
-        #     motion.chosen_in = len(motion_ballots)
-        #     if motion.chosen_in == 0:
-        #         motion.aff_wins, motion.aff_wins_percent = 0, 0
-        #         motion.neg_wins, motion.neg_wins_percent = 0, 0
-        #     else:
-        #         motion.aff_wins = sum(ballot.ballot_set.aff_win for ballot in motion_ballots)
-        #         motion.aff_wins_percent = int((float(motion.aff_wins) / float(motion.chosen_in)) * 100)
-        #         motion.neg_wins = sum(ballot.ballot_set.neg_win for ballot in motion_ballots)
-        #         motion.neg_wins_percent = int((float(motion.neg_wins) / float(motion.chosen_in)) * 100)
+        for motion in motions:
+            motion_ballots = [b for b in ballots if b.motion == motion]
 
-        #     if round.tournament.config.get('motion_vetoes_enabled') is True:
-        #         all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
-        #         motion.aff_vetoes = 0
-        #         motion.neg_vetoes = 0
-        #         if all_vetoes:
-        #             for veto in all_vetoes:
-        #                 if veto.debate_team.position == "A":
-        #                     motion.aff_vetoes += 1
-        #                 elif veto.debate_team.position == "N":
-        #                     motion.neg_vetoes += 1
+            motion.aff_wins, motion.aff_wins_percent = 0, 0
+            motion.neg_wins, motion.neg_wins_percent = 0, 0
+            motion.chosen_in = len(motion_ballots)
+
+            if motion.chosen_in > 0:
+                for ballot in motion_ballots:
+                    # Find the team score the matches, return none otherwise
+                    teamscore = next((x for x in teamscores if x.ballot_submission == ballot), None)
+                    debate_team = teamscore.debate_team
+                    if debate_team.position == DebateTeam.POSITION_AFFIRMATIVE:
+                        if teamscore.win:
+                            motion.aff_wins += 1
+                        else:
+                            motion.neg_wins += 1
+                    elif debate_team.position == DebateTeam.POSITION_NEGATIVE:
+                        if teamscore.win:
+                            motion.neg_wins += 1
+                        else:
+                            motion.aff_wins += 1
+
+                motion.aff_wins_percent = int((float(motion.aff_wins) / float(motion.chosen_in)) * 100)
+                motion.neg_wins_percent = int((float(motion.neg_wins) / float(motion.chosen_in)) * 100)
+
+            if round.tournament.config.get('motion_vetoes_enabled') is True:
+                all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
+                motion.aff_vetoes = 0
+                motion.neg_vetoes = 0
+                if all_vetoes:
+                    for veto in all_vetoes:
+                        if veto.debate_team.position == DebateTeam.POSITION_AFFIRMATIVE:
+                            motion.aff_vetoes += 1
+                        elif veto.debate_team.position == DebateTeam.POSITION_NEGATIVE:
+                            motion.neg_vetoes += 1
 
         return motions
 
@@ -2126,25 +2172,22 @@ class ConfigManager(models.Manager):
     def set(self, tournament, key, value):
         obj, created = self.get_or_create(tournament=tournament, key=key)
         obj.value = value
-        cached_key = "%s_%s" % (tournament.slug, key)
-        cache.set(cached_key, value)
-        print "created new object for %s / %s as %s" % (key, cached_key, value)
         obj.save()
+        print "set config cache via set() call"
+        cached_key = "%s_%s" % (tournament.slug, key)
+        cache.set(cached_key, value, None)
 
     def get_(self, tournament, key, default=None):
         cached_key = "%s_%s" % (tournament.slug, key)
         if cache.get(cached_key):
-            #print "%s is set" % cached_key
             return cache.get(cached_key)
         else:
-            #print "%s not set" % cached_key
             try:
                 noncached_value = self.get(tournament=tournament, key=key).value
             except ObjectDoesNotExist:
                 noncached_value = default
-
-            #print "\t setting to %s" % noncached_value
-            cache.set(cached_key, noncached_value)
+            cache.set(cached_key, noncached_value, None)
+            print "set config cache via get() call"
             return noncached_value
 
 

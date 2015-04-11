@@ -6,7 +6,7 @@ def debate_context(request):
     if hasattr(request, 'tournament'):
         d = {
             'tournament'              : request.tournament,
-            'current_round'           : request.tournament.current_round,
+            'current_round'           : request.tournament.get_current_round_cached,
             'reply_scores_enabled'    : request.tournament.config.get('reply_scores_enabled'),
             'show_emoji'              : request.tournament.config.get('show_emoji'),
             'show_institutions'       : request.tournament.config.get('show_institutions'),
@@ -14,7 +14,7 @@ def debate_context(request):
             'show_unaccredited'       : request.tournament.config.get('show_unaccredited'),
             'motion_vetoes_enabled'   : request.tournament.config.get('motion_vetoes_enabled'),
             'public_team_standings'   : request.tournament.config.get('public_team_standings') \
-                                           and request.tournament.current_round.prev is not None,
+                                           and request.tournament.get_current_round_cached.prev is not None,
             'public_breaking_teams'   : request.tournament.config.get('public_breaking_teams'),
             'public_breaking_adjs'    : request.tournament.config.get('public_breaking_adjs'),
             'esl_break'               : request.tournament.config.get('esl_break_size') > 0,
