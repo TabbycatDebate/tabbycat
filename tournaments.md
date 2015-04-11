@@ -6,8 +6,10 @@
 - [Auckland Schools Regionals](http://aucklandregionals2015.herokuapp.com)
 - [Malaysia Debate Open](http://tabs.altairtechlab.com/malaysiadebateopen2015/)
 - [Mad Mini](http://tabs.monashdebaters.com/t/mad-mini-2015/)
+- President's Cup
 - [New Zealand Easters](https://nzeasters2015.herokuapp.com)
 - [The Western Australian Debating League](http://draw.wadl.org)
+- The National Law School Debate
 
 #### 2014
 
@@ -19,7 +21,7 @@
 
 #### 2012
 
-- [Victoria Australs](http://australs2012tab.herokuapp.com)
+- [Wellington Australs](http://australs2012tab.herokuapp.com)
 
 #### 2010
 

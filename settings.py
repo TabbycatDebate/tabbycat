@@ -79,14 +79,6 @@ LOGIN_REDIRECT_URL = '/'
 # = Caching =
 # =========
 
-# Caching enabled
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
-
 # Default non-heroku cache is to use local memory
 CACHES = {
     'default': {
@@ -94,12 +86,24 @@ CACHES = {
         'LOCATION': 'unique-snowflake'
     }
 }
+
 # This is a dummy cache for development
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
 #     }
 # }
+
+# Caching enabled for templtaes
+TEMPLATE_LOADERS = (
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
+)
+
+# Use the cache for sessions rather than the db
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
 # =========
 # = Pipelines =
@@ -171,16 +175,6 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
             }
         }
-
-if os.environ.get('REDISTOGO_URL', ''):
-    redis_url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', ''))
-    SESSION_ENGINE = 'redis_sessions.session'
-    SESSION_REDIS_HOST = redis_url.hostname
-    SESSION_REDIS_PORT = redis_url.port
-    SESSION_REDIS_DB = 0
-    SESSION_REDIS_PASSWORD = redis_url.password
-    SESSION_REDIS_PREFIX = 'session'
-
 
 if os.environ.get('DEBUG', ''):
     DEBUG = os.environ['DEBUG']

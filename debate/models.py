@@ -3,6 +3,7 @@ import re
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.cache import cache
 
 from django.utils.functional import cached_property
 from debate.utils import pair_list, memoize
@@ -21,7 +22,7 @@ class Tournament(models.Model):
     name = models.CharField(max_length=100)
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
     seq = models.IntegerField(db_index=True, blank=True, null=True)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, db_index=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_',)
     welcome_msg = models.TextField(blank=True, null=True, default="")
@@ -98,12 +99,13 @@ class Tournament(models.Model):
             self.current_round = next_round
             self.save()
 
-    @property
+    @cached_property
     def config(self):
         if not hasattr(self, '_config'):
             from debate.config import Config
             self._config = Config(self)
         return self._config
+
 
     class Meta:
         ordering = ['seq',]
@@ -1608,7 +1610,7 @@ class Submission(models.Model):
 
     version_semaphore = BoundedSemaphore(100)
 
-    confirmed = models.BooleanField(default=False)
+    confirmed = models.BooleanField(default=False, db_index=True)
 
     class Meta:
         abstract = True
@@ -1907,55 +1909,34 @@ class SpeakerScore(models.Model):
 class MotionManager(models.Manager):
     def statistics(self, round=None):
         if round is None:
-            motions = self.all()
+            motions = self.select_related('round').filter(round__tournament=round.tournament)
         else:
-            motions = self.filter(round__seq__lte=round.seq)
+            motions = self.select_related('round').filter(round__seq__lte=round.seq)
 
-        #motions = motions.filter(
-            #ballotsubmission__confirmed = True
-        #).annotate(
-            #chosen_in = models.Count('ballotsubmission')
-        #)
-        # Need to do it using extra() in order to include the motions that haven't been done,
-        # otherwise filter() leaves them out.
-        motions = motions.extra({"chosen_in": """
-                SELECT COUNT (*)
-                FROM "debate_ballotsubmission"
-                WHERE "debate_ballotsubmission"."confirmed" = True
-                AND "debate_ballotsubmission"."motion_id" = "debate_motion"."id"
-            """,
-        })
+        # ballots = list(BallotSubmission.objects.select_related('motion').filter(confirmed=True))
 
-        # TODO is there a more efficient way to do this?
-        for motion in motions:
-            ballots = BallotSubmission.objects.filter(confirmed=True, motion=motion)
+        # for motion in motions:
+        #     motion_ballots = [b for b in ballots if b.motion == motion]
+        #     motion.chosen_in = len(motion_ballots)
+        #     if motion.chosen_in == 0:
+        #         motion.aff_wins, motion.aff_wins_percent = 0, 0
+        #         motion.neg_wins, motion.neg_wins_percent = 0, 0
+        #     else:
+        #         motion.aff_wins = sum(ballot.ballot_set.aff_win for ballot in motion_ballots)
+        #         motion.aff_wins_percent = int((float(motion.aff_wins) / float(motion.chosen_in)) * 100)
+        #         motion.neg_wins = sum(ballot.ballot_set.neg_win for ballot in motion_ballots)
+        #         motion.neg_wins_percent = int((float(motion.neg_wins) / float(motion.chosen_in)) * 100)
 
-            all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
-            motion.aff_vetoes = 0
-            motion.neg_vetoes = 0
-            if all_vetoes:
-                for veto in all_vetoes:
-                    if veto.debate_team.position == "A":
-                        motion.aff_vetoes += 1
-                    elif veto.debate_team.position == "N":
-                        motion.neg_vetoes += 1
-
-            # preferences = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
-            # if preferences:
-            #     logger.error("logging for %s rules" % prefs)
-            #     for p in preferences:
-            #         if p.ballot_submission.debate_team ==
-
-            if motion.chosen_in == 0:
-                motion.aff_wins = 0
-                motion.aff_wins_percent = 0
-                motion.neg_wins = 0
-                motion.neg_wins_percent = 0
-            else:
-                motion.aff_wins = sum(ballot.ballot_set.aff_win for ballot in ballots)
-                motion.aff_wins_percent = int((float(motion.aff_wins) / float(motion.chosen_in)) * 100)
-                motion.neg_wins = sum(ballot.ballot_set.neg_win for ballot in ballots)
-                motion.neg_wins_percent = int((float(motion.neg_wins) / float(motion.chosen_in)) * 100)
+        #     if round.tournament.config.get('motion_vetoes_enabled') is True:
+        #         all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
+        #         motion.aff_vetoes = 0
+        #         motion.neg_vetoes = 0
+        #         if all_vetoes:
+        #             for veto in all_vetoes:
+        #                 if veto.debate_team.position == "A":
+        #                     motion.aff_vetoes += 1
+        #                 elif veto.debate_team.position == "N":
+        #                     motion.neg_vetoes += 1
 
         return motions
 
@@ -1979,7 +1960,7 @@ class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""
     debate_team = models.ForeignKey(DebateTeam, db_index=True)
     motion = models.ForeignKey(Motion, db_index=True)
-    preference = models.IntegerField()
+    preference = models.IntegerField(db_index=True)
     ballot_submission = models.ForeignKey(BallotSubmission)
 
     class Meta:
@@ -2141,16 +2122,30 @@ class ActionLog(models.Model):
 
 
 class ConfigManager(models.Manager):
+
     def set(self, tournament, key, value):
         obj, created = self.get_or_create(tournament=tournament, key=key)
         obj.value = value
+        cached_key = "%s_%s" % (tournament.slug, key)
+        cache.set(cached_key, value)
+        print "created new object for %s / %s as %s" % (key, cached_key, value)
         obj.save()
 
     def get_(self, tournament, key, default=None):
-        try:
-            return self.get(tournament=tournament, key=key).value
-        except ObjectDoesNotExist:
-            return default
+        cached_key = "%s_%s" % (tournament.slug, key)
+        if cache.get(cached_key):
+            #print "%s is set" % cached_key
+            return cache.get(cached_key)
+        else:
+            #print "%s not set" % cached_key
+            try:
+                noncached_value = self.get(tournament=tournament, key=key).value
+            except ObjectDoesNotExist:
+                noncached_value = default
+
+            #print "\t setting to %s" % noncached_value
+            cache.set(cached_key, noncached_value)
+            return noncached_value
 
 
 class Config(models.Model):

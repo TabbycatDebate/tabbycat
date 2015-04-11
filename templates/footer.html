@@ -1,20 +1,24 @@
 {% load debate_tags %}
+{% load cache %}
 
 <div id="footer" class="clearfix">
   <nav class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
-      <p class="navbar-brand text-muted"><small>
-      {% if tournament and enable_divisions == 0 %}
-        {% if tournament %}{{ tournament }} runs on {% endif %}
-        <a href="https://github.com/czlee/tabbycat/" target="_new">Tabby Cat, </a>
-        {% if tournament %}as {% else %}is {% endif %}
-         developed by Qi-Shan,
-        <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>,
-        and <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
-        Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> (Android) and
-         <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
-      {% endif %}
-      </small></p>
+      {% cache 600 footerleft request.tournament %}
+        <p class="navbar-brand text-muted"><small>
+        {% if tournament and enable_divisions == 0 %}
+          {% if tournament %}{{ tournament }} runs on {% endif %}
+          <a href="https://github.com/czlee/tabbycat/" target="_new">Tabby Cat, </a>
+          {% if tournament %}as {% else %}is {% endif %}
+           developed by Qi-Shan,
+          <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>,
+          and <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
+          Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> (Android) and
+           <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
+        {% endif %}
+        </small></p>
+      {% endcache %}
+      {% cache 600 footerright request.user request.tournament %}
       <p class="navbar-brand text-muted pull-right">
         <a href="/">Home</a> |
         {% if user.is_authenticated %}
@@ -29,6 +33,7 @@
           <a href="/accounts/login/" title="Log in">Log in</a>
         {% endif %}
       </p>
+      {% endcache %}
     </div>
   </nav>
 </div>
