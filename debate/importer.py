@@ -17,10 +17,10 @@ class TournamentDataImporter(object):
 
     ROUND_DRAW_TYPES = {
         ("random", "r"): "R",
-        ("round-robin", "round robin", "d"): "D",
-        ("power-paired", "power paired", "p"): "P",
-        ("first elimination", "first-elimination", "1st elimination", "1e", "f"): "F",
-        ("subsequent elimination", "subsequent-elimination", "2nd elimination", "2e", "b"): "B",
+        ("round robin", "d"): "D",
+        ("power paired", "p"): "P",
+        ("first elimination", "1st elimination", "1e", "f"): "F",
+        ("subsequent elimination", "2nd elimination", "2e", "b"): "B",
     }
 
     def __init__(self, tournament, **kwargs):
@@ -31,7 +31,7 @@ class TournamentDataImporter(object):
 
     def _lookup(self, d, code, name):
         for k, v in d.iteritems():
-            if code.lower() in k:
+            if code.lower().replace("-"," ") in k:
                 return v
         self.logger.warning("Unrecognized code for %s: %s", name, code)
         return None
@@ -123,10 +123,10 @@ class TournamentDataImporter(object):
             kwargs = dict()
             kwargs['tournament'] = self.tournament
             kwargs['seq'] = int(line[0]) or i
-            kwargs['name'] = str(line[1])
-            kwargs['abbreviation'] = str(line[2])
-            kwargs['stage'] = self._lookup(self.ROUND_STAGES, str(line[3]) or "p", "draw stage")
-            kwargs['draw_type'] = self._lookup(self.ROUND_DRAW_TYPES, str(line[4]) or "r", "draw type")
+            kwargs['name'] = line[1]
+            kwargs['abbreviation'] = line[2]
+            kwargs['stage'] = self._lookup(self.ROUND_STAGES, line[3] or "p", "draw stage")
+            kwargs['draw_type'] = self._lookup(self.ROUND_DRAW_TYPES, line[4] or "r", "draw type")
             kwargs['silent'] = bool(int(line[5]))
             kwargs['feedback_weight'] = float(line[6]) or 0.7
             return kwargs
