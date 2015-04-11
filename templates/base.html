@@ -59,6 +59,7 @@
   {% include "footer.html" %}
 
   {% compress js %}
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/modernizr.js' %}"></script>
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
@@ -67,6 +68,7 @@
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
   <script type="text/javascript">
     $.extend( true, $.fn.dataTable.defaults, {
+
       // Default Data Table options
       "sDom":
         "<'row'<'col-md-12 table-container'lr"+ // f = the filter
@@ -77,12 +79,24 @@
         "sSearch": "Search: "
       }
     });
+
+    // Enable all bootstrap tooltips
     $(document).ready(function(){
       $('[data-toggle=tooltip]').tooltip({
         'html': true,
         'placement': 'bottom'
       });
     });
+
+    // Test for emoji support, if not present then add a shiv
+    Modernizr.load({
+      test: Modernizr.emoji,
+      nope: '{% static '//twemoji.maxcdn.com/twemoji.min.js' %}',
+      complete : function () {
+        twemoji.parse(document.body);
+      }
+    });
+
   </script>
   {% endcompress %}
   {% block extra-js %}{% endblock extra-js %}
