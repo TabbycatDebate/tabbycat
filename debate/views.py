@@ -195,25 +195,25 @@ def public_break_index(request, t):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_teams')
 def public_breaking_teams(request, t, name, category):
-    teams = Team.objects.breaking_teams(t, category)
+    teams = Team.objects.breaking_teams(t, category).select_related('institution')
     return r2r(request, 'public/breaking_teams.html', dict(teams=teams, category=category, name=name))
 
 @admin_required
 @tournament_view
 def breaking_teams(request, t, name, category):
-    teams = Team.objects.breaking_teams(t, category)
+    teams = Team.objects.breaking_teams(t, category).select_related('institution')
     return r2r(request, 'breaking_teams.html', dict(teams=teams, category=category, name=name))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')
 def public_breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
+    adjs = Adjudicator.objects.filter(breaking=True, tournament=t).select_related('institution')
     return r2r(request, 'public/breaking_adjudicators.html', dict(adjs=adjs))
 
 @admin_required
 @tournament_view
 def breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
+    adjs = Adjudicator.objects.filter(breaking=True, tournament=t).select_related('institution')
     return r2r(request, 'breaking_adjudicators.html', dict(adjs=adjs))
 
 
@@ -251,7 +251,7 @@ def public_feedback_progress(request, t):
 
     feedback = AdjudicatorFeedback.objects.all()
     adjudicators = Adjudicator.objects.all()
-    teams = Team.objects.all()
+    teams = Team.objects.all().select_related('institution')
     current_round = request.tournament.current_round.seq
 
     for adj in adjudicators:
@@ -337,7 +337,7 @@ def all_draws_for_institution(request, t, institution_id):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_teams(request, t):
-    teams = Team.objects.filter(tournament__active=True)
+    teams = Team.objects.filter(tournament__active=True).select_related('institution')
     return r2r(request, 'public/public_all_tournament_teams.html', dict(
         teams=teams))
 
@@ -355,7 +355,7 @@ def public_all_draws(request, t):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
 def public_side_allocations(request, t):
-    teams = Team.objects.filter(tournament=t)
+    teams = Team.objects.filter(tournament=t).select_related('institution')
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
     TPA_MAP = {
@@ -1352,15 +1352,12 @@ def team_standings(request, round, for_print=False):
     teams = Team.objects.ranked_standings(round)
 
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
+    team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
 
     def get_round_result(team, r):
         try:
-            ts = TeamScore.objects.get(
-                ballot_submission__confirmed=True,
-                debate_team__team=team,
-                debate_team__debate__round=r,
-            )
-            ts.opposition = ts.debate_team.opposition.team
+            ts = next((x for x in team_scores if x.debate_team.team == team and x.debate_team.debate.round == r), None)
+            ts.opposition = ts.debate_team.opposition.team # TODO: this slows down the page generation considerably
             return ts
         except TeamScore.DoesNotExist:
             return None
@@ -1385,7 +1382,7 @@ def team_standings(request, round, for_print=False):
     show_draw_strength = decide_show_draw_strength(round.tournament)
 
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds, for_print=for_print,
-        show_ballots=False, show_draw_strength=show_draw_strength))
+       show_ballots=False, show_draw_strength=show_draw_strength))
 
 def calculate_speaker_rankings(speakers, rounds, round, results_override=False):
     # TODO is there a way to do this without so many database hits?
@@ -1393,33 +1390,21 @@ def calculate_speaker_rankings(speakers, rounds, round, results_override=False):
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
 
     from debate.models import SpeakerScore
-    def get_score(speaker, r):
-        try:
-            return SpeakerScore.objects.get(
-                ballot_submission__confirmed=True,
-                speaker=speaker,
-                debate_team__debate__round=r,
-                position__lte=last_substantive_position).score
-        except SpeakerScore.DoesNotExist:
-            return None
+    speaker_scores = list(SpeakerScore.objects.select_related('speaker','ballot_submission', 'debate_team__debate__round').filter(ballot_submission__confirmed=True, position__lte=last_substantive_position))
 
-        # This was an issue once, not sure how, but if it ever happens,
-        # fail gracefully.
-        except SpeakerScore.MultipleObjectsReturned:
-            print("Multiple speaker scores seen for speaker {0:s} in round {1:d}:".format(
-                speaker.name, r.seq))
-            for score in SpeakerScore.objects.filter(
-                ballot_submission__confirmed=True,
-                speaker=speaker,
-                debate_team__debate__round=r,
-                position__lte=last_substantive_position):
-                print("   {dt:s}\n        position {pos:d}, ballot submission ID {id:d} (version {v:d}): score {score}".format(
-                    dt=score.debate_team, pos=score.position, id=score.ballot_submission.id,
-                    v=score.ballot_submission.version, score=score.score))
-            return None
+    def get_scores(speaker, this_speakers_scores, rounds):
+        speaker_scores = [None] * len(rounds)
+        for r in rounds:
+            finding_score = next((x for x in this_speakers_scores if x.debate_team.debate.round == r), None)
+            if finding_score:
+                speaker_scores[r.seq - 1] = finding_score.score
+
+        return speaker_scores
 
     for speaker in speakers:
-        speaker.scores = [get_score(speaker, r) for r in rounds]
+        this_speakers_scores = [s for s in speaker_scores if s.speaker == speaker]
+        speaker.scores = get_scores(speaker, this_speakers_scores, rounds)
+
         if results_override is True:
             speaker.results_in = True
         else:
@@ -1431,7 +1416,7 @@ def calculate_speaker_rankings(speakers, rounds, round, results_override=False):
 @round_view
 def speaker_standings(request, round, for_print=False):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = Speaker.objects.standings(round)
+    speakers = Speaker.objects.standings(round).select_related('team', 'team__institution')
     speakers = calculate_speaker_rankings(speakers, rounds, round)
     return r2r(request, "speaker_standings.html", dict(speakers=speakers,
                                         rounds=rounds, for_print=for_print))
@@ -1441,7 +1426,7 @@ def speaker_standings(request, round, for_print=False):
 def public_speaker_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
-    speakers = Speaker.objects.standings(round)
+    speakers = Speaker.objects.standings(round).select_related('team', 'team__institution')
     speakers = calculate_speaker_rankings(speakers, rounds, round, results_override=True)
 
     return r2r(request, 'public/speaker_tab.html', dict(speakers=speakers,
@@ -1451,7 +1436,7 @@ def public_speaker_tab(request, t):
 @round_view
 def novice_standings(request, round, for_print=False):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = Speaker.objects.standings(round, only_novices=True)
+    speakers = Speaker.objects.standings(round, only_novices=True).select_related('team', 'team__institution')
     speakers = calculate_speaker_rankings(speakers, rounds, round)
     return r2r(request, "novice_standings.html", dict(speakers=speakers,
                                         rounds=rounds, for_print=for_print))
@@ -1462,7 +1447,7 @@ def novice_standings(request, round, for_print=False):
 def public_novices_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
-    speakers = Speaker.objects.standings(round, only_novices=True)
+    speakers = Speaker.objects.standings(round, only_novices=True).select_related('team', 'team__institution')
     speakers = calculate_speaker_rankings(speakers, rounds, round, results_override=True)
 
     return r2r(request, 'public/novices_tab.html', dict(speakers=speakers,
@@ -1495,7 +1480,7 @@ def calculate_reply_rankings(speakers, rounds, round):
 @round_view
 def reply_standings(request, round, for_print=False):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = Speaker.objects.reply_standings(round)
+    speakers = Speaker.objects.reply_standings(round).select_related('team', 'team__institution')
     speakers = calculate_speaker_rankings(speakers, rounds, round)
 
     return r2r(request, 'reply_standings.html', dict(speakers=speakers,
@@ -1506,7 +1491,7 @@ def reply_standings(request, round, for_print=False):
 def public_replies_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
-    speakers = Speaker.objects.reply_standings(round)
+    speakers = Speaker.objects.reply_standings(round).select_related('team', 'team__institution')
     speakers = calculate_speaker_rankings(speakers, rounds, round)
 
     return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,

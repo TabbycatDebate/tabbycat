@@ -336,7 +336,7 @@ class TeamManager(models.Manager):
         teams = self.filter(
             tournament = round.tournament,
             debateteam__debate__round__seq__lte = round.seq,
-        )
+        ).select_related('institution')
         return annotate_team_standings(teams, round)
 
     def ranked_standings(self, round):
@@ -470,7 +470,7 @@ class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Name or suffix")
     short_reference = models.CharField(max_length=35, verbose_name="Shortened name or suffix")
     institution = models.ForeignKey(Institution)
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, db_index=True)
     emoji_seq = models.IntegerField(blank=True, null=True)
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
@@ -1568,7 +1568,7 @@ class DebateTeam(models.Model):
     def __unicode__(self):
         return u'%s (%s)' % (self.team, self.debate)
 
-    @property
+    @cached_property # TODO: this slows down the standings pages reasonably heavily
     def opposition(self):
         try:
             return DebateTeam.objects.exclude(position=self.position).get(debate=self.debate)
@@ -1948,7 +1948,7 @@ class MotionManager(models.Manager):
             motions = self.select_related('round').filter(round__seq__lte=round.seq)
 
         ballots = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
-        teamscores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
+        team_scores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
 
         for motion in motions:
             motion_ballots = [b for b in ballots if b.motion == motion]
@@ -1960,7 +1960,7 @@ class MotionManager(models.Manager):
             if motion.chosen_in > 0:
                 for ballot in motion_ballots:
                     # Find the team score the matches, return none otherwise
-                    teamscore = next((x for x in teamscores if x.ballot_submission == ballot), None)
+                    teamscore = next((x for x in team_scores if x.ballot_submission == ballot), None)
                     debate_team = teamscore.debate_team
                     if debate_team.position == DebateTeam.POSITION_AFFIRMATIVE:
                         if teamscore.win:
@@ -2183,19 +2183,23 @@ class ConfigManager(models.Manager):
         obj.save()
         print "set config cache via set() call"
         cached_key = "%s_%s" % (tournament.slug, key)
-        cache.set(cached_key, value, None)
+        cache.set(cached_key, value, 600)
 
     def get_(self, tournament, key, default=None):
         cached_key = "%s_%s" % (tournament.slug, key)
         if cache.get(cached_key):
             return cache.get(cached_key)
         else:
+            print "couldnt get cache key %s" % cached_key
+            print "\t value is %s" % cache.get(cached_key)
+            cache.get(cached_key)
             try:
                 noncached_value = self.get(tournament=tournament, key=key).value
             except ObjectDoesNotExist:
                 noncached_value = default
-            cache.set(cached_key, noncached_value, None)
-            print "set config cache via get() call"
+
+            cache.set(cached_key, noncached_value, 600)
+            print "\tset config cache %s to %s via get() call" % (cached_key, noncached_value)
             return noncached_value
 
 

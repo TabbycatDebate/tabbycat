@@ -88,12 +88,14 @@
       });
     });
 
-    // Test for emoji support, if not present then add a shiv
+    // Test for emoji support, if not present then load and execute a polyfill
     Modernizr.load({
       test: Modernizr.emoji,
       nope: '{% static '//twemoji.maxcdn.com/twemoji.min.js' %}',
       complete : function () {
-        twemoji.parse(document.body);
+        if (!Modernizr.emoji) {
+          twemoji.parse(document.body);
+        }
       }
     });
 

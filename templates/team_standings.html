@@ -34,7 +34,6 @@
           <th>Inst<span class="hidden-xs">itution</span></th>
         {% endif %}
         <th>Wins</th>
-        <th>Affs</th>
         {% for round in rounds %}
           <th>{{ round.abbreviation }}</th>
           <th>{{ round.abbreviation }}</th>
@@ -91,7 +90,6 @@
           </td>
         {% endif %}
         <td>{{ team.wins }}</td>
-        <td>{% aff_count team round %}</td>
         {% for round_results in team.round_results %}
           {% if round_results.win >= 0 %}
             {% if for_print %}
