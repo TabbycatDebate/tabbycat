@@ -14,7 +14,16 @@ $(document).ready( function() {
             scrollTop: $(document).height() - $(window).height()}, 120000, "linear");
         return false;
     });
-
+    $("#scroll_draw4").click(function(event){
+        $('html, body').animate({
+            scrollTop: $(document).height() - $(window).height()}, 160000, "linear");
+        return false;
+    });
+    $("#scroll_draw5").click(function(event){
+        $('html, body').animate({
+            scrollTop: $(document).height() - $(window).height()}, 200000, "linear");
+        return false;
+    });
 
     $("#tiny_text").click(function(event){
         $(this).siblings().removeClass("active");

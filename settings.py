@@ -150,19 +150,31 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 
 if os.environ.get('MEMCACHE_SERVERS', ''):
-    os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
-    os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
-    os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
-    CACHES = {
-        'default': {
-            'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-            'TIMEOUT': 500,
-            'BINARY': True,
-            'OPTIONS': {
-                'tcp_nodelay': True
+    try:
+        os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
+        os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
+        os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
+        CACHES = {
+            'default': {
+                'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+                'BINARY': True,
+                'OPTIONS': {
+                    'no_block': True,
+                    'tcp_nodelay': True,
+                    'tcp_keepalive': True,
+                    'remove_failed': 4,
+                    'retry_timeout': 2,
+                    'dead_timeout': 10,
+                    '_poll_timeout': 2000
+                }
             }
         }
-    }
+    except:
+        CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+            }
+        }
 
 if os.environ.get('REDISTOGO_URL', ''):
     redis_url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', ''))

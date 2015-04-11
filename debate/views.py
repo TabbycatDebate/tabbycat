@@ -101,8 +101,8 @@ def index(request):
 
 ## Public UI
 
-PUBLIC_PAGE_CACHE_TIMEOUT = 1
-TAB_PAGES_CACHE_TIMEOUT = 28800
+PUBLIC_PAGE_CACHE_TIMEOUT = 60 * 1 # 1 Minutes
+TAB_PAGES_CACHE_TIMEOUT = 60 * 60 * 2 # 2 Hours
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
@@ -951,6 +951,15 @@ def update_debate_importance(request, round):
     ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
             user=request.user, debate=debate, tournament=round.tournament)
     return HttpResponse(im)
+
+
+@admin_required
+@round_view
+def motion_standings(request, round, for_print=False):
+    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
+    motions = list()
+    motions = Motion.objects.statistics(round=round)
+    return r2r(request, 'motions.html', dict(motions=motions))
 
 @admin_required
 @round_view

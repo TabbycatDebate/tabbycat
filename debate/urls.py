@@ -105,6 +105,8 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/standings/team/print/$', 'team_standings', { 'for_print': True }, name='team_standings_print'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/speaker/print/$', 'speaker_standings', { 'for_print': True }, name='speaker_standings_print'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/reply/print/$', 'reply_standings', { 'for_print': True }, name='reply_standings_print'),
+    url(r'^admin/round/(?P<round_seq>\d+)/standings/motions/$', 'motion_standings', name='motion_standings'),
+
     url(r'^admin/ballots/(?P<ballots_id>\d+)/edit/$', 'edit_ballots', name='edit_ballots'),
     url(r'^admin/debate/(?P<debate_id>\d+)/new_ballots/$', 'new_ballots', name='new_ballots'),
     url(r'^admin/round/(?P<round_seq>\d+)/ballot_checkin/$', 'ballot_checkin', name='ballot_checkin'),
@@ -138,8 +140,5 @@ urlpatterns = patterns('debate.views',
     url(r'^all_tournaments_all_institutions/$', 'all_tournaments_all_institutions', name='all_tournaments_all_institutions'),
     url(r'^all_tournaments_all_institutions/all_draws/(?P<institution_id>\d+)$', 'all_draws_for_institution', name='all_draws_for_institution'),
     url(r'^all_tournaments_all_teams/$', 'all_tournaments_all_teams', name='all_tournaments_all_teams'),
-
-
-
 
 )

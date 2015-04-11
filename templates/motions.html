@@ -26,17 +26,18 @@
     <button class="btn btn-success form-control" id="release_motions">Release {{ round.name }} Motions to Public</button>
   {% endif %}
   </div>
+  <form id="releaseForm" method="POST" action="{% round_url release_motions %}"></form>
+  <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}"></form>
 {% endblock %}
 
 {% block content %}
-  <form id="releaseForm" method="POST" action="{% round_url release_motions %}"></form>
-  <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}"></form>
 
   <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
     <thead>
     <tr>
+      <th>RSeq</th>
       <th>Round</th>
-      <th>Seq</th>
+      <th>Order</th>
       <th>Reference</th>
       <th>M<span class="hidden-xs">otion</span></th>
       {% if enable_flagged_motions %}
@@ -59,7 +60,8 @@
     <tbody>
     {% for motion in motions %}
     <tr>
-      <td><span class="hidden">{{ motion.round.seq }}</span>{{ motion.round.name }}</td>
+      <td>{{ motion.round.seq }}</td>
+      <td>{{ motion.round.abbreviation }}</td>
       <td>{{ motion.seq }}</td>
       <td>{{ motion.reference }}</td>
       <td>{{ motion.text }}</td>
@@ -98,7 +100,11 @@
 
     $(document).ready( function() {
       var table = $("#dataTable").dataTable( {
-        "aaSorting": [[0, 'asc'],[1, 'asc']],
+        "aaSorting": [[1, 'asc'], [2, 'asc']],
+        "aoColumnDefs": [
+          {"iDataSort": 0, "aTargets": [1] }, //sort based on a hidden column when another column is clicked
+          { "bVisible": false, "aTargets": [0] }, //set column visibility
+        ],
       });
       new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
 

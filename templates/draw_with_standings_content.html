@@ -59,7 +59,6 @@
     {% endif %}
     <td>{% aff_count debate.aff_team debate.round.prev %}</td>
     <td>{% aff_count debate.neg_team debate.round.prev %}</td>
-    <td>{{ debate.draw_conflicts|add:debate.flags_all|join:", " }}</td>
   </tr>
   {% endfor %}
 </table>
