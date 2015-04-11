@@ -10,5 +10,7 @@ django-libsass  # SASS Compilation
 django-suit==0.2.12 # Admin Backend
 psycopg2==2.5.4 # For Django to talk to postgres
 libsass==0.7.0 # SASS Compilation Dependency
+scipy==0.15.1 # Use scipy for some stats stuff
+numpy==1.9.2 # Required for scipy
 six==1.9.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.1.14
