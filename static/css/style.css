@@ -1,5 +1,5 @@
 h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
+.h1, .h2, .h3, .h4, .h4_minus, .h4_plus, .h5, .h6 {
   font-family: inherit;
   font-weight: 500;
   line-height: 1.1;
@@ -14,8 +14,10 @@ h1, h2, h3, h4, h5, h6,
   .h1 small,
   .h1 .small, .h2 small,
   .h2 .small, .h3 small,
-  .h3 .small, .h4 small,
-  .h4 .small, .h5 small,
+  .h3 .small, .h4 small, .h4_minus small, .h4_plus small,
+  .h4 .small,
+  .h4_minus .small,
+  .h4_plus .small, .h5 small,
   .h5 .small, .h6 small,
   .h6 .small {
     font-weight: normal;
@@ -38,14 +40,16 @@ h3, .h3 {
   .h3 .small {
     font-size: 65%; }
 
-h4, .h4,
+h4, .h4, .h4_minus, .h4_plus,
 h5, .h5,
 h6, .h6 {
   margin-top: 10px;
   margin-bottom: 10px; }
   h4 small,
-  h4 .small, .h4 small,
+  h4 .small, .h4 small, .h4_minus small, .h4_plus small,
   .h4 .small,
+  .h4_minus .small,
+  .h4_plus .small,
   h5 small,
   h5 .small, .h5 small,
   .h5 .small,
@@ -63,7 +67,7 @@ h2, .h2 {
 h3, .h3 {
   font-size: 24px; }
 
-h4, .h4 {
+h4, .h4, .h4_minus, .h4_plus {
   font-size: 18px; }
 
 h5, .h5 {
@@ -103,7 +107,7 @@ cite {
 .text-justify {
   text-align: justify; }
 
-.text-muted {
+.text-muted, .debate-status-B {
   color: #999999; }
 
 .text-primary {
@@ -640,6 +644,12 @@ a.text-warning:hover {
 a.text-danger:hover {
   color: #c9302c; }
 
+.h4_minus {
+  font-size: 16px; }
+
+.h4_plus {
+  font-size: 21px; }
+
 @media (max-width: 767px) {
   .navbar-nav.navbar-left {
     float: left;
@@ -782,6 +792,12 @@ input.error, select.error, .error input {
 table a:hover {
   cursor: pointer; }
 
+.table-division-bottom {
+  border-bottom: 5px solid #dddddd; }
+
+.table-division-top {
+  border-top: 5px solid #dddddd; }
+
 @media (max-width: 767px) {
   .page-header {
     margin-top: 0px; }
@@ -839,6 +855,86 @@ table a:hover {
       cursor: pointer; }
   #wrap table.table th:active, .FixedHeader_Cloned .table th:active {
     outline: none; }
+
+.table > thead > tr > td.debate-status-N,
+.table > thead > tr > th.debate-status-N, .table > thead > tr.debate-status-N > td, .table > thead > tr.debate-status-N > th,
+.table > tbody > tr > td.debate-status-N,
+.table > tbody > tr > th.debate-status-N,
+.table > tbody > tr.debate-status-N > td,
+.table > tbody > tr.debate-status-N > th,
+.table > tfoot > tr > td.debate-status-N,
+.table > tfoot > tr > th.debate-status-N,
+.table > tfoot > tr.debate-status-N > td,
+.table > tfoot > tr.debate-status-N > th {
+  background-color: #fcede3; }
+
+.table-hover > tbody > tr > td.debate-status-N:hover,
+.table-hover > tbody > tr > th.debate-status-N:hover, .table-hover > tbody > tr.debate-status-N:hover > td, .table-hover > tbody > tr.debate-status-N:hover > th {
+  background-color: #fadecc; }
+
+.table > thead > tr > td.debate-status-D,
+.table > thead > tr > th.debate-status-D, .table > thead > tr.debate-status-D > td, .table > thead > tr.debate-status-D > th,
+.table > tbody > tr > td.debate-status-D,
+.table > tbody > tr > th.debate-status-D,
+.table > tbody > tr.debate-status-D > td,
+.table > tbody > tr.debate-status-D > th,
+.table > tfoot > tr > td.debate-status-D,
+.table > tfoot > tr > th.debate-status-D,
+.table > tfoot > tr.debate-status-D > td,
+.table > tfoot > tr.debate-status-D > th {
+  background-color: #d9edf7; }
+
+.table-hover > tbody > tr > td.debate-status-D:hover,
+.table-hover > tbody > tr > th.debate-status-D:hover, .table-hover > tbody > tr.debate-status-D:hover > td, .table-hover > tbody > tr.debate-status-D:hover > th {
+  background-color: #c4e3f3; }
+
+.table > thead > tr > td.debate-status-C,
+.table > thead > tr > th.debate-status-C, .table > thead > tr.debate-status-C > td, .table > thead > tr.debate-status-C > th,
+.table > tbody > tr > td.debate-status-C,
+.table > tbody > tr > th.debate-status-C,
+.table > tbody > tr.debate-status-C > td,
+.table > tbody > tr.debate-status-C > th,
+.table > tfoot > tr > td.debate-status-C,
+.table > tfoot > tr > th.debate-status-C,
+.table > tfoot > tr.debate-status-C > td,
+.table > tfoot > tr.debate-status-C > th {
+  background-color: #dff0d8; }
+
+.table-hover > tbody > tr > td.debate-status-C:hover,
+.table-hover > tbody > tr > th.debate-status-C:hover, .table-hover > tbody > tr.debate-status-C:hover > td, .table-hover > tbody > tr.debate-status-C:hover > th {
+  background-color: #d0e9c6; }
+
+.table > thead > tr > td.debate-status-P,
+.table > thead > tr > th.debate-status-P, .table > thead > tr.debate-status-P > td, .table > thead > tr.debate-status-P > th,
+.table > tbody > tr > td.debate-status-P,
+.table > tbody > tr > th.debate-status-P,
+.table > tbody > tr.debate-status-P > td,
+.table > tbody > tr.debate-status-P > th,
+.table > tfoot > tr > td.debate-status-P,
+.table > tfoot > tr > th.debate-status-P,
+.table > tfoot > tr.debate-status-P > td,
+.table > tfoot > tr.debate-status-P > th {
+  background-color: whitesmoke; }
+
+.table-hover > tbody > tr > td.debate-status-P:hover,
+.table-hover > tbody > tr > th.debate-status-P:hover, .table-hover > tbody > tr.debate-status-P:hover > td, .table-hover > tbody > tr.debate-status-P:hover > th {
+  background-color: #e8e8e8; }
+
+.table > thead > tr > td.debate-status-B,
+.table > thead > tr > th.debate-status-B, .table > thead > tr.debate-status-B > td, .table > thead > tr.debate-status-B > th,
+.table > tbody > tr > td.debate-status-B,
+.table > tbody > tr > th.debate-status-B,
+.table > tbody > tr.debate-status-B > td,
+.table > tbody > tr.debate-status-B > th,
+.table > tfoot > tr > td.debate-status-B,
+.table > tfoot > tr > th.debate-status-B,
+.table > tfoot > tr.debate-status-B > td,
+.table > tfoot > tr.debate-status-B > th {
+  background-color: whitesmoke; }
+
+.table-hover > tbody > tr > td.debate-status-B:hover,
+.table-hover > tbody > tr > th.debate-status-B:hover, .table-hover > tbody > tr.debate-status-B:hover > td, .table-hover > tbody > tr.debate-status-B:hover > th {
+  background-color: #e8e8e8; }
 
 .modal-body {
   overflow: auto; }
@@ -917,6 +1013,10 @@ span.esl {
   color: #808080;
   text-decoration: line-through; }
 
+.assign-motions .list-group-item-text {
+  height: 54px;
+  overflow: hidden; }
+
 .scoresheet-view .control-label {
   text-align: right;
   vertical-align: middle; }
@@ -942,3 +1042,27 @@ span.esl {
 
 .team-tab a.team-score {
   color: #285379; }
+
+@media print {
+  #header-options, .fixedHeader {
+    display: none; }
+
+  .page-header {
+    margin-bottom: 0px; }
+    .page-header .col-md-12 {
+      padding-left: 0px; }
+
+  table {
+    page-break-inside: avoid; }
+    table tr {
+      page-break-inside: avoid;
+      page-break-after: auto; }
+    table [data-toggle="tooltip"] {
+      border-bottom: none; }
+
+  table.h4, table.h4_minus, table.h4_plus {
+    font-size: 75%;
+    font-weight: normal; }
+
+  #djDebug {
+    display: none !important; } }

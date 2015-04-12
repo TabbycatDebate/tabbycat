@@ -8,28 +8,36 @@
 
 {% block content %}
 
-
 <ul class="list-group">
-
-    {% if user.is_authenticated %}
-        {% for tournament in tournaments %}
-        <li class="list-group-item list-group-item-info">
-            <a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
-            <span class="badge">ADMIN</span>
-        </li>
-        <li class="list-group-item list-group-item-success">
-            <a href="{{ tournament.get_public_url }}">{{ tournament.name }}</a>
-            <span class="badge">PUBLIC</span>
-        </li>
-        {% endfor %}
-    {% else %}
-        {% for tournament in tournaments %}
-        <li class="list-group-item">
-            <a href="{{ tournament.get_public_url }}">{{ tournament.name }}</a>
-        </li>
-        {% endfor %}
-    {% endif %}
-
+  {% if user.is_authenticated %}
+    {% for tournament in tournaments %}
+    <li class="list-group-item">
+      <a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
+      <span class="badge">ADMIN</span>
+    </li>
+    <li class="list-group-item">
+      <a href="{{ tournament.get_public_url }}">{{ tournament.name }}</a>
+      <span class="badge">PUBLIC</span>
+    </li>
+    {% endfor %}
+  {% else %}
+    {% for tournament in tournaments %}
+    <li class="list-group-item">
+      <a href="{{ tournament.get_public_url }}">{{ tournament.name }}</a>
+    </li>
+    {% endfor %}
+  {% endif %}
+  {% if tournaments.all.count > 1 and tournaments.0.config.public_divisions > 0 %}
+  <li class="list-group-item">
+    <a href="{{ tournaments.0.get_all_tournaments_all_venues }}">All Draws by Venue</a>
+  </li>
+  <li class="list-group-item">
+    <a href="{{ tournaments.0.get_all_tournaments_all_institutions }}">All Draws by School</a>
+  </li>
+  <li class="list-group-item">
+    <a href="{{ tournaments.0.get_all_tournaments_all_teams }}">All Teams and Divisions</a>
+  </li>
+  {% endif %}
 </ul>
 
 {% endblock content %}

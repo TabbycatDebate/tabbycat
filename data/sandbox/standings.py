@@ -77,7 +77,7 @@ if args.teams:
     """
     teams = teams.extra({
         "points": EXTRA_QUERY.format(field="points", round=round.seq),
-        "speaker_score": EXTRA_QUERY.format(field="score", round=round.seq)}
+        "speaker_score": EXTRA_QUERY.format(field="score", round=round.seq, affects_averages=True)}
     ).distinct().order_by("-points", "-speaker_score")
 
     print teams.query

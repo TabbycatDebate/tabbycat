@@ -1,7 +1,6 @@
 import os.path, sys
-if os.path.abspath("..") not in sys.path: sys.path.append(os.path.abspath(".."))
 import unittest
-from one_up_one_down import OneUpOneDownSwapper
+from debate.one_up_one_down import OneUpOneDownSwapper
 
 class TestTeam(object):
     """Basic implementation of team interface"""

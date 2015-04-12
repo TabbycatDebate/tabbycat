@@ -3,6 +3,7 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from debate.emoji import EMOJI_LIST
 
 import re
 import os
@@ -41,6 +42,29 @@ def neg_count(team, round):
         return 0
     return team.get_neg_count(round.seq)
 register.simple_tag(neg_count)
+
+def team_emoji(team):
+    if team.emoji_seq:
+        return b"%s" % EMOJI_LIST[team.emoji_seq]
+    else:
+        if team.id > len(EMOJI_LIST):
+            return b"%s" % EMOJI_LIST[(team.id % len(EMOJI_LIST))] # Wrapping around if too high
+        else:
+            return b"%s" % EMOJI_LIST[team.id]
+register.simple_tag(team_emoji)
+
+def debate_draw_status_class(debate):
+    if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
+        return "active text-muted"
+    elif debate.result_status == "P":
+        return "active text-muted"
+    elif debate.confirmed_ballot:
+        if debate.confirmed_ballot.forfeit:
+            return "active text-muted"
+
+register.simple_tag(debate_draw_status_class)
+
+
 
 class RoundURLNode(template.Node):
     def __init__(self, view_name, round=None):
@@ -84,3 +108,20 @@ def tournament_url(parser, token):
     args = tuple([parser.compile_filter(b) for b in bits[2:]])
     return TournamentURLNode(bits[1], args)
 
+@register.filter
+def next_value(value, arg):
+    try:
+        return value[int(arg)+1]
+    except:
+        return None
+
+@register.filter
+def prev_value(value, arg):
+    try:
+        return value[int(arg)-1]
+    except:
+        return None
+
+@register.filter(name='times')
+def times(number):
+    return range(number)

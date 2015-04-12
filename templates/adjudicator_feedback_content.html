@@ -1,33 +1,33 @@
 {% load debate_tags %}
 
-<table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Name</th>
-            {% if show_institutions > 0 %}
-            <th>Institution</th>
-            {% endif %}
-            <th>Test Score</th>
-            <th>Score</th>
-            <th>View</th>
-            <th>Add</th>
-        </tr>
-    </thead>
+<table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Name</th>
+      {% if show_institutions > 0 %}
+      <th>Institution</th>
+      {% endif %}
+      <th>Test Score</th>
+      <th>Score</th>
+      <th>View</th>
+      <th>Add</th>
+    </tr>
+  </thead>
 
-    <tbody>
-        {% for adj in adjudicators %}
-        <tr id="adj_{{ adj.id }}">
-            <td>{{ adj.name }}</td>
-            {% if show_institutions > 0 %}
-            <td>{{ adj.institution.code }}</td>
-            {% endif %}
-            <td>{{ adj.test_score }}</td>
-            <td>{{ adj.score }}</td>
-            <td><a class="view" href="">View Feedback</a></td>
-            <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
+  <tbody>
+    {% for adj in adjudicators %}
+    <tr id="adj_{{ adj.id }}">
+      <td>{{ adj.name }}</td>
+      {% if show_institutions > 0 %}
+      <td>{{ adj.institution.code }}</td>
+      {% endif %}
+      <td>{{ adj.test_score }}</td>
+      <td>{{ adj.score }}</td>
+      <td><a class="view" href="">View Feedback</a></td>
+      <td><a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 </div>
 

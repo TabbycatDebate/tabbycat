@@ -1,8 +1,7 @@
 import os.path, sys
-if os.path.abspath("..") not in sys.path: sys.path.append(os.path.abspath(".."))
 import unittest
 from collections import OrderedDict
-from draw import DrawGenerator, Pairing, DrawError
+from debate.draw import DrawGenerator, Pairing, DrawError
 import copy
 from test_one_up_one_down import TestTeam
 
@@ -24,7 +23,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
     def test_draw(self):
         for i in xrange(100):
             teams = [TestTeam(*args, aff_count=0) for args in self.teams]
-            self.rd = DrawGenerator("random", teams)
+            self.rd = DrawGenerator("random", teams, avoid_conflicts="on")
             _draw = self.rd.make_draw()
             for pairing in _draw:
                 if pairing.aff_team.seen(pairing.neg_team) or \
@@ -426,27 +425,32 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     (20, 19, [], False),
                     (21, 13, [], False)]]
 
-    # indices: (standings, expected)
-    cases = [(1, 1), (1, 2), (1, 3), (1, 4)]
-
     def do_draw(self, standings, options):
         standings = [TestTeam(*args, **kwargs) for args, kwargs in standings]
         self.ppd = DrawGenerator("power_paired", standings, **options)
         return self.ppd.make_draw()
 
-    def test_draw(self):
-        for s, e in self.cases:
-            standings = self.standings[s]
-            kwargs, expected = self.expected[e]
-            draw = self.do_draw(standings, kwargs)
-            for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, expected):
-                actual_teams = (actual.aff_team.id, actual.neg_team.id)
-                expected_teams = (exp_aff, exp_neg)
-                if same_affs:
-                    self.assertItemsEqual(actual_teams, expected_teams)
-                else:
-                    self.assertEqual(actual_teams, expected_teams)
-                self.assertEqual(actual.flags, exp_flags)
+    def draw_test(self, standings_key, expected_key):
+        standings = self.standings[standings_key]
+        kwargs, expected = self.expected[expected_key]
+        draw = self.do_draw(standings, kwargs)
+        for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, expected):
+            actual_teams = (actual.aff_team.id, actual.neg_team.id)
+            expected_teams = (exp_aff, exp_neg)
+            if same_affs:
+                self.assertItemsEqual(actual_teams, expected_teams)
+            else:
+                self.assertEqual(actual_teams, expected_teams)
+            self.assertEqual(actual.flags, exp_flags)
+
+    def test_1_1(self):
+        self.draw_test(1, 1)
+    def test_1_2(self):
+        self.draw_test(1, 2)
+    def test_1_3(self):
+        self.draw_test(1, 3)
+    def test_1_4(self):
+        self.draw_test(1, 4)
 
 
 class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.TestCase):
@@ -753,7 +757,7 @@ class TestEliminationDrawGenerator(unittest.TestCase):
     def _results(self, *args):
         _t = lambda id: self.teams[id-1]
         _p = lambda ids: map(_t, ids)
-        from draw import Pairing
+        from debate.draw import Pairing
         pairings = list()
         for i, (teams, winner) in enumerate(args):
             pairing = Pairing(_p(teams), 0, i, winner=_t(winner))

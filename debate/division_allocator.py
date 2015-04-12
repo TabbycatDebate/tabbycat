@@ -41,10 +41,9 @@ class DivisionAllocator():
     def determine_division_size(self,division_dict, allocated_teams,all_teams):
         di = 1 # index of current division
 
-
         for group,group_teams in division_dict.iteritems():
             if len(group_teams) > 0:
-                print "------\n%s has %s/%s teams" % (group, len(group_teams), len(group.venues) * 2)
+                print "------\n%s has %s/%s teams" % (group, len(group_teams), group.team_capacity)
 
                 # Using the ideal division size, how many divisions can we support?
                 possible_ideal_divisions = len(group_teams) / self.ideal_division_size
@@ -122,19 +121,19 @@ class DivisionAllocator():
             # For each possible preference priority (0 through 12)
             #print "%sst round" % i
             for group, group_teams in division_dict.iteritems():
-                # We go through each group
-                if len(group_teams) <= (len(group.venues) * 2):
-                    for team in teams_to_allocate:
+                for team in teams_to_allocate:
+                    # We go through each group
+                    if len(group_teams) <= group.team_capacity - 1:
                         # And find a team which has them as a preference
                         if i in team.preferences_dict and team.preferences_dict[i] == group:
                             # And there is space
-                            #print "\t%s given %s" % (group, team)
                             group_teams.append(team)
                             allocated_teams.append(team)
                             teams_to_allocate.remove(team)
-                else:
-                    #print "\t%s is full" % group
-                    pass
+                            #print "\t\t %s given %s (%s/%s)" % (team, group, len(group_teams), group.team_capacity)
+                    else:
+                        #print "\t\t%s is full (%s/%s)" % (group, len(group_teams), group.team_capacity)
+                        pass
 
         for group, group_teams in division_dict.iteritems():
             # Trying to mix up the distributions within divisions
