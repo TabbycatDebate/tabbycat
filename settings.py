@@ -87,8 +87,6 @@ CACHES = {
     }
 }
 
-
-
 # Caching enabled for templtaes
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', (

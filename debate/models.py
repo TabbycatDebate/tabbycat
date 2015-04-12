@@ -617,136 +617,7 @@ class TeamVenuePreference(models.Model):
 
 
 class SpeakerManager(models.Manager):
-    def standings(self, round=None, only_novices=False):
-        # only include scoresheets for up to this round, exclude replies
-        if round:
-            speakers = self.filter(
-                team__tournament=round.tournament,
-                speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
-                speakerscore__debate_team__debate__round__seq__lte = round.seq,
-            )
-        else:
-            speakers = self.filter(
-                team__tournament=round.tournament,
-                speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
-            )
-
-        if only_novices is True:
-            speakers = speakers.filter(novice=True)
-
-        # TODO is there a way to add round scores without so many database hits?
-        # Maybe using a select subquery?
-
-        # This is what might be more concisely expressed, if it were permissible
-        # in Django, as:
-        # speakers = speakers.annotate_if(
-        #     dict(total = models.Sum('speakerscore__score')),
-        #     dict(ballot_submission__confirmed = True)
-        # )
-        # That is, it adds up all the points of each speaker on CONFIRMED
-        # ballots and adds them as columns to the table it returns.
-        EXTRA_QUERY = """
-            SELECT DISTINCT {aggregator:s}("score")
-            FROM "debate_speakerscore"
-            JOIN "debate_debateteam" ON "debate_speakerscore"."debate_team_id" = "debate_debateteam"."id"
-            JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-            JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-            JOIN "debate_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-            WHERE "debate_ballotsubmission"."confirmed" = True
-            AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
-            AND "debate_speakerscore"."position" <= {position:d}
-            AND "debate_round"."seq" <= {round:d}
-            AND "debate_round"."stage" = '{stage}'
-        """
-        speakers = speakers.extra({"total": EXTRA_QUERY.format(
-            aggregator = "SUM",
-            round = round.seq,
-            position = round.tournament.LAST_SUBSTANTIVE_POSITION,
-            stage = Round.STAGE_PRELIMINARY,
-        ), "average": EXTRA_QUERY.format(
-            aggregator = "AVG",
-            round = round.seq,
-            position = round.tournament.LAST_SUBSTANTIVE_POSITION,
-            stage = Round.STAGE_PRELIMINARY,
-        )}).distinct().order_by('-total')
-
-        prev_total = None
-        current_rank = 0
-        for i, speaker in enumerate(speakers, start=1):
-            if speaker.total != prev_total:
-                current_rank = i
-                prev_total = speaker.total
-            speaker.rank = current_rank
-
-        return speakers
-
-    def reply_standings(self, round=None):
-        # If replies aren't enabled, return an empty queryset.
-        if not round.tournament.config.get('reply_scores_enabled'):
-            return self.objects.none()
-
-        if round:
-            speakers = self.filter(
-                team__tournament=round.tournament,
-                speakerscore__position=round.tournament.REPLY_POSITION,
-                speakerscore__debate_team__debate__round__seq__lte =
-                round.seq,
-            )
-        else:
-            speakers = self.filter(
-                team__tournament=round.tournament,
-                speakerscore__position=round.tournament.REPLY_POSITION,
-            )
-
-        # This is what might be more concisely expressed, if it were permissible
-        # in Django, as:
-        # speakers = speakers.annotate_if(
-        #     dict(average = models.Avg('speakerscore__score'),
-        #          count   = models.Count('speakerscore__score')),
-        #     dict(ballot_submission__confirmed = True)
-        # )
-        # That is, it adds up all the reply scores of each speaker on CONFIRMED
-        # ballots and adds them as columns to the table it returns.
-        EXTRA_QUERY = """
-            SELECT DISTINCT {aggregator:s}("score")
-            FROM "debate_speakerscore"
-            JOIN "debate_debateteam" ON "debate_speakerscore"."debate_team_id" = "debate_debateteam"."id"
-            JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-            JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-            JOIN "debate_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-            WHERE "debate_ballotsubmission"."confirmed" = True
-            AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
-            AND "debate_speakerscore"."position" = {position:d}
-            AND "debate_round"."seq" <= {round:d}
-            AND "debate_round"."stage" = '{stage}'
-        """
-        speakers = speakers.extra({"average": EXTRA_QUERY.format(
-            aggregator = "AVG",
-            round = round.seq,
-            position = round.tournament.REPLY_POSITION,
-            stage = round.STAGE_PRELIMINARY
-        ), "replies": EXTRA_QUERY.format(
-            aggregator = "COUNT",
-            round = round.seq,
-            position = round.tournament.REPLY_POSITION,
-            stage = round.STAGE_PRELIMINARY
-        )}).distinct().order_by('-average', '-replies', 'name')
-
-        # Use this to filter out speakers with an unconfirmed ballot submission,
-        # since they get caught up in the query above.
-        speakers_filtered = filter(lambda x: x.replies > 0, speakers)
-
-        prev_rank_value = (None, None)
-        current_rank = 0
-        for i, speaker in enumerate(speakers_filtered, start=1):
-            rank_value = (speaker.average, speaker.replies)
-            if rank_value != prev_rank_value:
-                current_rank = i
-                prev_rank_value = rank_value
-            speaker.rank = current_rank
-
-        return speakers_filtered
-
+    pass
 
 class Person(models.Model):
     name = models.CharField(max_length=40, db_index=True)
@@ -828,7 +699,7 @@ class Adjudicator(Person):
     def is_unaccredited(self):
         return self.novice
 
-    @property
+    @cached_property
     def score(self):
         if self.tournament:
             weight = self.tournament.current_round.feedback_weight
@@ -844,7 +715,7 @@ class Adjudicator(Person):
         return self.test_score * (1 - weight) + (weight * feedback_score)
 
 
-    @property
+    @cached_property
     def rscores(self):
         r = []
         for round in self.tournament.rounds.all():
