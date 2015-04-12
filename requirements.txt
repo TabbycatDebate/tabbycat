@@ -12,9 +12,6 @@ dj-static==0.0.6
 pylibmc==1.4.1
 django-pylibmc==0.5.0
 
-# For Session Caching
-django-redis-sessions==0.4.0
-
 # For web serving
 waitress==0.8.9
 
