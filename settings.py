@@ -87,12 +87,7 @@ CACHES = {
     }
 }
 
-# This is a dummy cache for development
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-#     }
-# }
+
 
 # Caching enabled for templtaes
 TEMPLATE_LOADERS = (

@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist, Multiple
 from django.core.cache import cache
 
 from django.utils.functional import cached_property
-from debate.utils import pair_list, memoize
+from debate.utils import pair_list
 from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
 from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
@@ -134,7 +134,6 @@ def update_tournament_cache(sender, instance, created, **kwargs):
     cache.delete(cached_key)
     cached_key = "%s_%s" % (instance.slug, 'current_round_object')
     cache.delete(cached_key)
-    print "Updated cache %s for %s" % (cached_key, instance)
 
 # Update the cached tournament object when model is changed)
 signals.post_save.connect(update_tournament_cache, sender=Tournament)
@@ -454,9 +453,9 @@ class Division(models.Model):
     def teams_count(self):
         return self.team_set.count()
 
-    @property
+    @cached_property
     def teams(self):
-        return self.team_set.all().order_by('institution','reference')
+        return self.team_set.all().order_by('institution','reference').select_related('institution')
 
     def __unicode__(self):
         return u"%s - %s" % (self.tournament, self.name)
@@ -512,19 +511,21 @@ class Team(models.Model):
 
     @property
     def short_name(self):
+        institution = self.get_cached_institution()
         if self.short_reference:
             name = self.short_reference
         else:
             name = self.reference
         if self.use_institution_prefix is True:
-            return unicode(self.institution.code + " " + name)
+            return unicode(institution.code + " " + name)
         else:
             return unicode(name)
 
     @property
     def long_name(self):
+        institution = self.get_cached_institution()
         if self.use_institution_prefix is True:
-            return unicode(self.institution.name + " " + self.reference)
+            return unicode(institution.name + " " + self.reference)
         else:
             return unicode(self.reference)
 
@@ -547,7 +548,6 @@ class Team(models.Model):
         return [dt.debate for dt in dts]
 
     @property
-    @memoize
     def get_preferences(self):
         prefs = TeamVenuePreference.objects.filter(team=self)
         return prefs
@@ -555,6 +555,17 @@ class Team(models.Model):
     @property
     def debates(self):
         return self.get_debates(None)
+
+    @property
+    def speakers(self):
+        cached_key = "%s_%s_%s" % ('teamid', self.id, '_speaker__objects')
+        cached_value = cache.get(cached_key)
+        if cached_value:
+            return cache.get(cached_key)
+        else:
+            cached_value = self.speaker_set.all()
+            cache.set(cached_key, cached_value, None)
+            return cached_value
 
     def seen(self, other, before_round=None):
         debates = self.get_debates(before_round)
@@ -572,10 +583,25 @@ class Team(models.Model):
         except IndexError:
             return None
 
-    @property
-    def speakers(self):
-        return self.speaker_set.all()
+    def get_cached_institution(self):
+        cached_key = "%s_%s_%s" % ('teamid', self.id, '_institution__object')
+        cached_value = cache.get(cached_key)
+        if cached_value:
+            return cache.get(cached_key)
+        else:
+            cached_value = self.institution
+            cache.set(cached_key, cached_value, None)
+            return cached_value
 
+
+def update_team_cache(sender, instance, created, **kwargs):
+    cached_key = "%s_%s_%s" % ('teamid', instance.id, '_institution__object')
+    cache.delete(cached_key)
+    cached_key = "%s_%s_%s" % ('teamid', instance.id, '_speaker__objects')
+    cache.delete(cached_key)
+
+# Update the cached tournament object when model is changed)
+signals.post_save.connect(update_team_cache, sender=Team)
 
 class TeamVenuePreference(models.Model):
     team = models.ForeignKey(Team, db_index=True)
@@ -1073,10 +1099,14 @@ class Round(models.Model):
             return False
 
     def get_draw(self):
-        return self.debate_set.order_by('room_rank')
+        return self.debate_set.order_by('room_rank').select_related(
+            'venue', 'division', 'division__venue_group'
+        )
 
     def get_draw_by_room(self):
-        return self.debate_set.order_by('venue__name')
+        return self.debate_set.order_by('venue__name').select_related(
+            'venue', 'division', 'division__venue_group'
+        )
 
     def get_draw_by_team(self):
         # TODO is there a more efficient way to do this?
@@ -1288,7 +1318,6 @@ class Round(models.Model):
         self.set_available_teams([t.id for t in Team.objects.all()])
 
     @property
-    @memoize
     def prev(self):
         try:
             return Round.objects.get(seq=self.seq-1, tournament=self.tournament)
@@ -1390,12 +1419,12 @@ class Debate(models.Model):
     def teams(self):
         return Team.objects.select_related('debate_team').filter(debateteam__debate=self)
 
-    @property
+    @cached_property
     def aff_team(self):
         aff_dt = self.aff_dt
         return aff_dt.team
 
-    @property
+    @cached_property
     def neg_team(self):
         neg_dt = self.neg_dt
         return neg_dt.team
@@ -1407,12 +1436,12 @@ class Debate(models.Model):
         """dt = DebateTeam"""
         return getattr(self, '%s_dt' % side)
 
-    @property
+    @cached_property
     def aff_dt(self):
         aff_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
         return aff_dt
 
-    @property
+    @cached_property
     def neg_dt(self):
         neg_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
         return neg_dt
@@ -2181,25 +2210,25 @@ class ConfigManager(models.Manager):
         obj, created = self.get_or_create(tournament=tournament, key=key)
         obj.value = value
         obj.save()
-        print "set config cache via set() call"
+        #print "set config cache via set() call"
         cached_key = "%s_%s" % (tournament.slug, key)
-        cache.set(cached_key, value, 600)
+        cache.set(cached_key, value, None)
 
     def get_(self, tournament, key, default=None):
         cached_key = "%s_%s" % (tournament.slug, key)
-        if cache.get(cached_key):
-            return cache.get(cached_key)
+        cached_value = cache.get(cached_key)
+        if cached_value:
+            return cached_value
         else:
-            print "couldnt get cache key %s" % cached_key
-            print "\t value is %s" % cache.get(cached_key)
-            cache.get(cached_key)
+            #print "couldnt get cache key %s" % cached_key
+            #print "\t value is %s" % cache.get(cached_key)
             try:
                 noncached_value = self.get(tournament=tournament, key=key).value
             except ObjectDoesNotExist:
                 noncached_value = default
 
-            cache.set(cached_key, noncached_value, 600)
-            print "\tset config cache %s to %s via get() call" % (cached_key, noncached_value)
+            cache.set(cached_key, noncached_value, None)
+            #print "\tset config cache %s to %s via get() call" % (cached_key, noncached_value)
             return noncached_value
 
 
