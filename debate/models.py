@@ -1840,7 +1840,7 @@ class SpeakerScore(models.Model):
 class MotionManager(models.Manager):
 
     def statistics(self, round=None):
-        from scipy.stats import chisquare
+        #from scipy.stats import chisquare
 
         if round is None:
             motions = self.select_related('round').filter(round__tournament=round.tournament)
@@ -1873,12 +1873,14 @@ class MotionManager(models.Manager):
                         else:
                             motion.aff_wins += 1
 
-                motion.c1, motion.p_value = chisquare([motion.aff_wins, motion.neg_wins], f_exp=[motion.chosen_in / 2, motion.chosen_in / 2])
-                # Culling out the NaN errors
-                try:
-                    test = int(motion.c1)
-                except ValueError:
-                    motion.c1, motion.p_value = None, None
+                # motion.c1, motion.p_value = chisquare([motion.aff_wins, motion.neg_wins], f_exp=[motion.chosen_in / 2, motion.chosen_in / 2])
+                # # Culling out the NaN errors
+                # try:
+                #     test = int(motion.c1)
+                # except ValueError:
+                #     motion.c1, motion.p_value = None, None
+                # TODO: temporarily disabled
+                motion.c1, motion.p_value = None, None
 
 
             if round.tournament.config.get('motion_vetoes_enabled') is True:
