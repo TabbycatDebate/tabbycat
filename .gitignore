@@ -13,6 +13,7 @@ data/
 !data/league_template/
 !data/sandbox/
 !data/utils/
+!data/tabbycat_datasets/
 
 env/
 venv/
