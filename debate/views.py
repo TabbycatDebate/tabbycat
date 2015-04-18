@@ -1639,9 +1639,9 @@ def save_adjudicators(request, round):
 def adj_conflicts(request, round):
 
     data = {
-        'conflict': {},
+        'personal': {},
         'history': {},
-        'institution': {},
+        'institutional': {},
     }
 
     def add(type, adj_id, target_id):
@@ -1650,11 +1650,11 @@ def adj_conflicts(request, round):
         data[type][adj_id].append(target_id)
 
     for ac in AdjudicatorConflict.objects.all():
-        add('conflict', ac.adjudicator_id, ac.team_id)
+        add('personal', ac.adjudicator_id, ac.team_id)
 
     for ic in AdjudicatorInstitutionConflict.objects.all():
         for team in Team.objects.filter(institution=ic.institution):
-            add('institution', ic.adjudicator_id, team.id)
+            add('institutional', ic.adjudicator_id, team.id)
 
     history = DebateAdjudicator.objects.filter(
         debate__round__seq__lt = round.seq,

@@ -124,12 +124,12 @@
 .venue, .adj, .team {
 
   &.history-conflict {
+    background-color: $btn-primary-bg;
+  }
+  &.institutional-conflict {
     background-color: $btn-warning-bg;
   }
   &.personal-conflict {
-    background-color: $btn-danger-bg;
-  }
-  &.institutional-conflict {
     background-color: $btn-danger-bg;
   }
   &.history-conflict, &.personal-conflict, &.institutional-conflict {

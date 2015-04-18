@@ -155,7 +155,7 @@
       var conflicts;
       var scores;
       var conflictTypeClass = {
-        'conflict': 'personal-conflict',
+        'personal': 'personal-conflict',
         'institutional': 'institutional-conflict',
         'history': 'history-conflict',
       }
@@ -256,21 +256,20 @@
         // load adjudicator conflict data
         $.getJSON("{% round_url adj_conflicts %}", function(data) {
           conflicts = data;
-
-           // insert blank entries for adjudicators who aren't there
-           // (no conflicts)
-           $(".adj").each( function() {
-             var id = intId(this);
-             if (conflicts['conflict'][id] == undefined) {
-               conflicts['conflict'][id] = [];
-             }
-             if (conflicts['history'][id] == undefined) {
-               conflicts['history'][id] = [];
-             }
-           });
-
-           update_all_conflicts();
-
+          // insert blank entries for adjs who aren't there (no conflicts)
+          $(".adj").each( function() {
+            var id = intId(this);
+            if (conflicts['personal'][id] == undefined) {
+              conflicts['personal'][id] = [];
+            }
+            if (conflicts['history'][id] == undefined) {
+              conflicts['history'][id] = [];
+            }
+            if (conflicts['institutional'][id] == undefined) {
+              conflicts['institutional'][id] = [];
+            }
+          });
+          update_all_conflicts();
         });
       } //load_conflict_data()
 
@@ -326,11 +325,19 @@
 
       }
       function eachConflictingTeam(adj_id, fn) {
-        $.each(conflicts['conflict'][adj_id], function (i, n) {
-          $("#team_" + n).each( function() { fn('conflict', this); });
+        console.log(adj_id);
+        console.log(conflicts['personal'][adj_id]);
+        console.log(conflicts['history'][adj_id]);
+        console.log(conflicts['institutional'][adj_id]);
+
+        $.each(conflicts['personal'][adj_id], function (i, n) {
+          $("#team_" + n).each( function() { fn('personal', this); });
         });
         $.each(conflicts['history'][adj_id], function (i, n) {
           $("#team_" + n).each( function() { fn('history', this); });
+        });
+        $.each(conflicts['institutional'][adj_id], function (i, n) {
+          $("#team_" + n).each( function() { fn('institutional', this); });
         });
       }
 
@@ -347,7 +354,7 @@
             //console.log(conflicts);
             if ($.inArray(
                 intId(this),
-                conflicts['conflict'][adj_id]) != -1) {
+                conflicts['personal'][adj_id]) != -1) {
               $(debate_tr).addClass("debate-inactive");
               $(adj).addClass("personal-conflict");
               ca++;
@@ -365,15 +372,15 @@
           if (h == 0) {
             $(adj).removeClass("history-conflict");
           }
+          if (i == 0) {
+            $(adj).removeClass("institutional-conflict");
+          }
 
         });
 
         if (ca == 0) {
           $(debate_tr).removeClass("debate-inactive");
         }
-  //       if (ch == 0) {
-  //         $(debate_tr).removeClass("personal-conflict");
-  //       }
 
         // check for incomplete panels
         if ($(".panel-holder .adj", debate_tr).length % 2 != 0) {
