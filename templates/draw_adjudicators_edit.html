@@ -8,24 +8,25 @@
 {% block head-title %}{% endblock %}
 {% block page-title %}Edit Adjudicators for {{ round.abbreviation }}{% endblock %}
 {% block page-header %}
-  {% include "table_search.html" %}
-    <div id="statusBar" class="btn-group">
-      <div class="btn btn-default" href="#auto" id="auto_allocate">Auto Allocate</div>
-      <div class="btn btn-default" data-loading-text="Saving..." href="" id="save">Save</div>
-      <div class="btn btn-default personal-conflict" data-loading-text="Allocating..." href="{% round_url draw %}">Quit</div>
-    </div>
-    <div id="statusBar" class="btn-group">
-      <div class="btn btn-default form-control" href="" id="display_gender">Show Gender</div>
-      <div class="btn btn-default form-control" href="" id="hide_gender">Hide Gender</div>
-    </div>
-    <div id="statusBar" class="btn-group">
-      <div class="btn btn-default">Legend:</div>
-      <div class="btn btn-default btn-warning">Has Seen</div>
-      <div class="btn btn-default btn-danger">Has Conflict</div>
-      {% if show_unaccredited %}
-      <div class="btn btn-default active is_unaccredited">Unaccredited</div>
-      {% endif %}
-    </div>
+  <div id="statusBar" class="btn-group">
+    <div class="btn btn-default" href="#auto" id="auto_allocate">Auto Allocate</div>
+    <div class="btn btn-default" data-loading-text="Saving..." href="" id="save">Save</div>
+    <div class="btn btn-default personal-conflict" data-loading-text="Allocating..." href="{% round_url draw %}">Quit</div>
+  </div>
+  <div id="statusBar" class="btn-group">
+    <div class="btn btn-default" href="" id="toggle_venues">Show Venues</div>
+    <div class="btn btn-default" href="" id="toggle_wins">Show Wins</div>
+    <div class="btn btn-default" href="" id="toggle_gender">Show Gender</div>
+  </div>
+  <div id="statusBar" class="btn-group">
+    <div class="btn btn-default">Conflicts:</div>
+    <div class="btn btn-default btn-primary">Seen</div>
+    <div class="btn btn-default btn-warning">Institution</div>
+    <div class="btn btn-default btn-danger">Person</div>
+    {% if show_unaccredited %}
+    <div class="btn btn-default active is_unaccredited">Unaccredited</div>
+    {% endif %}
+  </div>
 {% endblock %}
 
 {% block header %}{% endblock %}
@@ -34,11 +35,11 @@
 
   <div class="row">
 
-    <div id="scratch" class="col-xs-2">
+    <div id="scratch" class="col-xs-2 fixed-right">
       <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
         <thead>
           <tr>
-            <th>Unused Adjudicators</th>
+            <th>Unused Adjudicators <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>
             <th><span class="glyphicon glyphicon-sort"></span></th>
           </tr>
         </thead>
@@ -52,15 +53,19 @@
       <table id="dataTable" class=" table" cellpadding="0" cellspacing="0">
         <thead>
           <tr>
-          <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-          <th><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Importance"></span></th>
-          <th>Aff<span class="hidden-xs">irmative</span></th>
-          <th><span class="glyphicon glyphicon-off" data-toggle="tooltip" title="Aff's % of Previous Male Adjudicators"></span></th>
-          <th>Neg<span class="hidden-xs">ative</span></th>
-          <th><span class="glyphicon glyphicon-off" data-toggle="tooltip" title="Neg's % of Previous Male Adjudicators"></span></th>
-          <th>Chair</th>
-          <th>Panel</th>
-          <th>Trainee</th></tr>
+            <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+            <th><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Importance"></span></th>
+            <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+            <th><span data-toggle="tooltip" title="Aff wins">AW</span></th>
+            <th><span class="glyphicon glyphicon-off " data-toggle="tooltip" title="Aff's % of Previous Male Adjudicators"></span></th>
+            <th>Aff<span class="hidden-xs">irmative</span></th>
+            <th><span data-toggle="tooltip" title="Neg wins">NW</span></th>
+            <th><span class="glyphicon glyphicon-off " data-toggle="tooltip" title="Neg's % of Previous Male Adjudicators"></span></th>
+            <th>Neg<span class="hidden-xs">ative</span></th>
+            <th>Chair</th>
+            <th>Panel</th>
+            <th>Trainee</th>
+          </tr>
         </thead>
         <tbody>
         {% for debate in draw %}
@@ -75,27 +80,30 @@
               {{ debate.importance }}
             {% endif %}
           </td>
-          <td id="team_{{ debate.aff_team.id }}" class="team">
-            <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-              {{ debate.aff_team.short_name }} {% if debate.aff_team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
-            </span>
-            <span class="hidden">
-               {{ debate.aff_team.speakers|join:', ' }}
-            </span>
+          <td>
+            {{ debate.venue }}
+          </td>
+          <td>
+            {{ debate.aff_team.wins_count }}
           </td>
           <td class="{% if debate.aff_team.male_adj_percent >= debate.neg_team.male_adj_percent %}gender-parity-{{ debate.gender_class }} gender-highlight{% endif %}">
             {{ debate.aff_team.male_adj_percent }}
           </td>
-          <td id="team_{{ debate.neg_team.id }}" class="team">
-            <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-              {{ debate.neg_team.short_name }} {% if debate.neg_team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
+          <td id="team_{{ debate.aff_team.id }}" class="team">
+            <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
+              {{ debate.aff_team.short_name }}
             </span>
-            <span class="hidden">
-               {{ debate.neg_team.speakers|join:', ' }}
-            </span>
+          </td>
+          <td>
+            {{ debate.neg_team.wins_count }}
           </td>
           <td class="{% if debate.neg_team.male_adj_percent >= debate.aff_team.male_adj_percent %}gender-parity-{{ debate.gender_class }} gender-highlight{% endif %}">
             {{ debate.neg_team.male_adj_percent }}
+          </td>
+          <td id="team_{{ debate.neg_team.id }}" class="team">
+            <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
+              {{ debate.neg_team.short_name }}
+            </span>
           </td>
           <td id="chair_{{ debate.id }}" class="btn-holder adj-holder chair-holder">
           </td>
@@ -147,8 +155,9 @@
       var conflicts;
       var scores;
       var conflictTypeClass = {
-        'conflict': 'history-conflict',
-        'history': 'personal-conflict',
+        'conflict': 'personal-conflict',
+        'institutional': 'institutional-conflict',
+        'history': 'history-conflict',
       }
 
       function intId(e) {
@@ -532,7 +541,7 @@
           var oldHolder = adj[0].oldHolder;
           moveToUnused(adj);
           adj.animate({'top': '0', 'left': '0'}, 300);
-          adj.removeClass("personal-conflict").removeClass("history-conflict"); // Remove conflict classes when dropped
+          adj.removeClass("personal-conflict").removeClass("history-conflict").removeClass("institutional-conflict"); // Remove conflict classes when dropped
           updateConflicts($(oldHolder).parent("tr"));
         }
       });
@@ -629,37 +638,26 @@
 
       });
 
-      function toggle_gender() {
-        $("#display_gender").toggle()
-        $("#hide_gender").toggle()
-        $(".adj").toggleClass("gender-display");
-        $(".gender-highlight").toggleClass("gender-display");
-      }
-
-      $('#hide_gender').hide()
-      $('#display_gender').click(function() {
-        toggle_gender();
-        return false
-      });
-      $('#hide_gender').click(function() {
-        toggle_gender();
-        return false
-      });
-
-      dataTable = $("#dataTable").dataTable( {
+      dataTable = $("#dataTable").DataTable( {
         "bAutoWidth": false,
         "aoColumns": [
           { "sWidth": "3%" },
           { "sWidth": "3%" },
-          { "sWidth": "13%" },
           { "sWidth": "3%" },
-          { "sWidth": "13%" },
           { "sWidth": "3%" },
-          { "sWidth": "21%" },
-          { "sWidth": "21%" },
-          { "sWidth": "21%" }
+          { "sWidth": "3%" },
+          { "sWidth": "17%" },
+          { "sWidth": "3%" },
+          { "sWidth": "3%" },
+          { "sWidth": "17%" },
+          { "sWidth": "18%" },
+          { "sWidth": "18%" },
+          { "sWidth": "18%" }
         ],
-        "aaSorting": [[1, 'desc']]
+        "aaSorting": [[1, 'desc']],
+        "aoColumnDefs": [
+          { "bVisible": false, "aTargets": [2,3,4,6,7] }, //set column visibility
+        ]
       });
 
       unusedTable = $("#unusedTable").dataTable({
@@ -672,8 +670,57 @@
           {"iDataSort": 1, "aTargets": [0] }, //sort based on a hidden column when another column is clicked
           { "bVisible": false, "aTargets": [1] }, //set column visibility
         ],
-        bFilter: false
+        "autoWidth": false,
+        bFilter: false,
       })
+
+      // Setup for gender toggles
+      $('#toggle_gender').click(function() {
+        var columnA = dataTable.column(4);
+        columnA.visible( ! columnA.visible() );
+        var columnB = dataTable.column(7);
+        columnB.visible( ! columnB.visible() );
+        $(".adj").toggleClass("gender-display");
+        $(".gender-highlight").toggleClass("gender-display");
+        $(this).text(function(i, text){
+          return text === "Show Gender" ? "Hide Gender" : "Show Gender";
+        })
+        return false
+      });
+      $('#toggle_venues').click(function() {
+        var columnA = dataTable.column(2);
+        columnA.visible( ! columnA.visible() );
+        $(this).text(function(i, text){
+          return text === "Show Venues" ? "Hide Venues" : "Show Venues";
+        })
+        return false
+      });
+      $('#toggle_wins').click(function() {
+        var columnA = dataTable.column(3);
+        columnA.visible( ! columnA.visible() );
+        var columnB = dataTable.column(6);
+        columnB.visible( ! columnB.visible() );
+        $(this).text(function(i, text){
+          return text === "Show Wins" ? "Hide Wins" : "Show Wins";
+        })
+        return false
+      });
+
+      $('#toggle_unused_layout').click(function() {
+        if ($('#scratch').hasClass("fixed-right")) {
+          $('#scratch').removeClass("fixed-right");
+          $('#scratch').addClass("fixed-bottom");
+          $('#main').removeClass("col-xs-10");
+          $('#main').addClass("col-xs-12");
+        } else {
+          $('#scratch').removeClass("fixed-bottom");
+          $('#scratch').addClass("fixed-right");
+          $('#scratch').addClass("fixed-bottom");
+          $('#main').addClass("col-xs-10");
+          $('#main').removeClass("col-xs-12");
+        }
+        return false
+      });
 
       $('#dataTable .importance').editable('{% round_url update_debate_importance %}', {
         "callback": function(sValue, y) {

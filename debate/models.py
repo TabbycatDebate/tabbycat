@@ -535,6 +535,7 @@ class Team(models.Model):
     def get_neg_count(self, seq=None):
         return self._get_count(DebateTeam.POSITION_NEGATIVE, seq)
 
+
     def _get_count(self, position, seq):
         dts = DebateTeam.objects.filter(team=self, position=position, debate__round__stage=Round.STAGE_PRELIMINARY)
         if seq is not None:
@@ -556,7 +557,12 @@ class Team(models.Model):
     def debates(self):
         return self.get_debates(None)
 
-    @property
+    @cached_property
+    def wins_count(self):
+        wins = TeamScore.objects.filter(ballot_submission__confirmed=True,debate_team__team=self,win=True).count()
+        return wins
+
+    @cached_property
     def speakers(self):
         cached_key = "%s_%s_%s" % ('teamid', self.id, '_speaker__objects')
         cached_value = cache.get(cached_key)

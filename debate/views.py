@@ -1641,6 +1641,7 @@ def adj_conflicts(request, round):
     data = {
         'conflict': {},
         'history': {},
+        'institution': {},
     }
 
     def add(type, adj_id, target_id):
@@ -1653,7 +1654,7 @@ def adj_conflicts(request, round):
 
     for ic in AdjudicatorInstitutionConflict.objects.all():
         for team in Team.objects.filter(institution=ic.institution):
-            add('conflict', ic.adjudicator_id, team.id)
+            add('institution', ic.adjudicator_id, team.id)
 
     history = DebateAdjudicator.objects.filter(
         debate__round__seq__lt = round.seq,
