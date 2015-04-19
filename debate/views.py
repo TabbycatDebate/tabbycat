@@ -104,7 +104,7 @@ def index(request):
 PUBLIC_PAGE_CACHE_TIMEOUT   = 60 * 10    # 10 Minutes
 TAB_PAGES_CACHE_TIMEOUT     = 60 * 120   # 120 Minutes
 
-@cache_page(30) # Set Slower to show new indexes
+@cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view
 def public_index(request, t):
     return r2r(request, 'public/tournament_index.html')
