@@ -288,8 +288,8 @@
             var adj_name = adj_row.find("span").text()
             var adj_id = parseInt(adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
             $("#modal-adj-name").text(adj_name); // Updating header of the modal
-            console.log(adj_id)
-            console.log(adj_name)
+            //console.log(adj_id)
+            //console.log(adj_name)
             var newUrl = '{% tournament_url get_adj_feedback %}?id=' + adj_id
             adjTable.api().ajax.url(newUrl).load();
           }).tooltip();
@@ -325,11 +325,6 @@
 
       }
       function eachConflictingTeam(adj_id, fn) {
-        console.log(adj_id);
-        console.log(conflicts['personal'][adj_id]);
-        console.log(conflicts['history'][adj_id]);
-        console.log(conflicts['institutional'][adj_id]);
-
         $.each(conflicts['personal'][adj_id], function (i, n) {
           $("#team_" + n).each( function() { fn('personal', this); });
         });
@@ -344,21 +339,26 @@
       function updateConflicts(debate_tr) {
         var ca = 0;
         var ch = 0;
+        var ci = 0;
         $(".adj", debate_tr).each( function() {
           var adj = this;
           var adj_id = intId(this);
           var a = 0;
           var h = 0;
+          var i = 0;
           // select aff & neg team
           $("td.team", debate_tr).each( function() {
             //console.log(conflicts);
-            if ($.inArray(
-                intId(this),
-                conflicts['personal'][adj_id]) != -1) {
+            if ($.inArray(intId(this),conflicts['personal'][adj_id]) != -1) {
               $(debate_tr).addClass("debate-inactive");
               $(adj).addClass("personal-conflict");
               ca++;
               a++;
+            } else if ($.inArray(intId(this),conflicts['institutional'][adj_id]) != -1) {
+              $(debate_tr).addClass("debate-inactive");
+              $(adj).addClass("institutional-conflict");
+              ci++;
+              i++;
             } else if ($.inArray(intId(this), conflicts['history'][adj_id]) != -1) {
   //             $(debate_tr).addClass("personal-conflict");
               $(adj).addClass("history-conflict");

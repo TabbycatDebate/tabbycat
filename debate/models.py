@@ -569,7 +569,7 @@ class Team(models.Model):
         if cached_value:
             return cache.get(cached_key)
         else:
-            cached_value = self.speaker_set.all()
+            cached_value = self.speaker_set.all().select_related('person')
             cache.set(cached_key, cached_value, None)
             return cached_value
 
@@ -1315,12 +1315,12 @@ class Debate(models.Model):
 
     @cached_property
     def aff_dt(self):
-        aff_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
+        aff_dt = DebateTeam.objects.select_related('team','team__institution').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
         return aff_dt
 
     @cached_property
     def neg_dt(self):
-        neg_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
+        neg_dt = DebateTeam.objects.select_related('team','team__institution').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
         return neg_dt
 
     def get_side(self, team):
@@ -1341,7 +1341,7 @@ class Debate(models.Model):
 
         return d
 
-    @property
+    @cached_property
     def confirmed_ballot(self):
         """Returns the confirmed BallotSubmission for this debate, or None if
         there is no such ballot submission."""
@@ -1403,11 +1403,11 @@ class Debate(models.Model):
                     a.append(Conflict(adj, team))
         return a
 
-    @property
+    @cached_property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
-        adjs = DebateAdjudicator.objects.filter(debate=self)
+        adjs = DebateAdjudicator.objects.filter(debate=self).select_related('adjudicator')
         alloc = AdjudicatorAllocation(self)
         for a in adjs:
             if a.type == a.TYPE_CHAIR:
