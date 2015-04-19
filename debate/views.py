@@ -745,6 +745,7 @@ def draw_confirmed(request, round):
 
 
 
+
 @admin_required
 @round_view
 def draw_print_scoresheets(request, round):
@@ -1491,6 +1492,43 @@ def public_replies_tab(request, t):
     return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
+
+@admin_required
+@round_view
+def draw_matchups_edit(request, round):
+    draw = round.get_draw_with_standings(round)
+    return r2r(request, "draw_matchups_edit.html", dict(draw=draw))
+
+@admin_required
+@expect_post
+@round_view
+def save_matchups(request, round):
+
+    print "keys"
+    print request.POST.keys()
+
+    debate_ids = [a.split('_')[0] for a in request.POST.keys()]
+
+    print "debate_ids"
+    print debate_ids
+
+    debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
+
+    for debate in debates:
+        print debate
+
+    # aff_teams = Venue.objects.in_bulk([v_id for _, v_id in data])
+    # neg_teams = Venue.objects.in_bulk([v_id for _, v_id in data])
+    # for debate_id, venue_id in data:
+    #     if venue_id == None:
+    #         debates[debate_id].venue = None
+    #     else:
+    #         debates[debate_id].venue = venues[venue_id]
+
+    #     debates[debate_id].save()
+
+    return HttpResponse("ok")
+
 @admin_required
 @round_view
 def draw_venues_edit(request, round):
@@ -1639,9 +1677,9 @@ def save_adjudicators(request, round):
 def adj_conflicts(request, round):
 
     data = {
-        'conflict': {},
+        'personal': {},
         'history': {},
-        'institution': {},
+        'institutional': {},
     }
 
     def add(type, adj_id, target_id):
@@ -1650,11 +1688,11 @@ def adj_conflicts(request, round):
         data[type][adj_id].append(target_id)
 
     for ac in AdjudicatorConflict.objects.all():
-        add('conflict', ac.adjudicator_id, ac.team_id)
+        add('personal', ac.adjudicator_id, ac.team_id)
 
     for ic in AdjudicatorInstitutionConflict.objects.all():
         for team in Team.objects.filter(institution=ic.institution):
-            add('institution', ic.adjudicator_id, team.id)
+            add('institutional', ic.adjudicator_id, team.id)
 
     history = DebateAdjudicator.objects.filter(
         debate__round__seq__lt = round.seq,

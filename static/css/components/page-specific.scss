@@ -48,11 +48,24 @@
 
 // Edit Adjs and Edit Venues Page Generally
 
-.edit-venues, .edit-adjs {
+.edit-venues, .edit-adjs, .edit-matchups {
 
   #main {
+    z-index: 10;
+    position: relative;
     padding-right: 5px;
     padding-left: 5px;
+  }
+
+  .importance {
+    text-align: left;
+    width: 48px;
+    form {
+      margin: -8px -8px -8px -8px;
+    }
+    select {
+      @extend .form-control;
+    }
   }
 
   .page-header {
@@ -64,11 +77,6 @@
 
   #table-search-group {
     margin-right: 220px; // move the search box right to make way for unused
-  }
-
-  #main {
-    z-index: 10;
-    position: relative;
   }
 
   #scratch {
@@ -107,8 +115,6 @@
         }
       }
     }
-
-
     .unused {
       padding-left: 0;
     }
@@ -124,12 +130,12 @@
 .venue, .adj, .team {
 
   &.history-conflict {
+    background-color: $btn-primary-bg;
+  }
+  &.institutional-conflict {
     background-color: $btn-warning-bg;
   }
   &.personal-conflict {
-    background-color: $btn-danger-bg;
-  }
-  &.institutional-conflict {
     background-color: $btn-danger-bg;
   }
   &.history-conflict, &.personal-conflict, &.institutional-conflict {
@@ -138,18 +144,14 @@
       border-bottom: none;
     }
   }
+}
 
-}
-.adj {
-  max-width: 300px; // Needed
-}
-.venue {
-  max-width: 200px; // Needed
-}
-.venue, .adj {
+.venue, .adj, .team_draggable {
   border: 1px solid #ccc;
   padding: 0px 0px 0px 0px;
   text-align: left;
+  max-width: 300px; // Needed
+
   span {
     padding: 6px 6px 6px 6px;
     display: block;
@@ -168,6 +170,54 @@
   }
   &.gender-display.female span {
     background-color: #D600FF;
+    color: #fff;
+  }
+}
+.venue:hover, .adj:hover, .team_draggable:hover, .venue.dragging, .adj.dragging, .team_draggable.dragging {
+  cursor: move;
+  border: 1px solid $btn-primary-border;
+  @extend .text-primary;
+  @extend .border-primary;
+  &.is_unaccredited {
+    background: $table-bg-active;
+  }
+  &.btn-danger, &.btn-warning {
+    color: #fff;
+  }
+}
+
+// Gender Colors
+
+
+.edit-venues, .edit-adjs {
+  .gender-display.gender-parity-3 {
+    background-color: lighten(#0000FF, 45%);
+  }
+  .gender-display.gender-parity-4 {
+    background-color: lighten(#0000FF, 40%);
+  }
+  .gender-display.gender-parity-5 {
+    background-color: lighten(#0000FF, 30%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-6 {
+    background-color: lighten(#0000FF, 20%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-7 {
+    background-color: lighten(#0000FF, 10%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-8 {
+    background-color: #0000FF;
+    color: #fff;
+  }
+  .gender-display.gender-parity-9 {
+    background-color: darken(#0000FF, 25%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-10 {
+    background-color: darken(#0000FF, 35%);
     color: #fff;
   }
 }

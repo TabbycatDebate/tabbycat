@@ -39,9 +39,9 @@ TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'debate.middleware.DebateMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
@@ -69,8 +69,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'debate',
-    'debug_toolbar',
     'compressor',
+    'debug_toolbar',
 )
 
 LOGIN_REDIRECT_URL = '/'
@@ -120,15 +120,6 @@ COMPRESS_OFFLINE_MANIFEST = "manifest.json"
 COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
 COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compression
 
-# ==================
-# = Configurations =
-# ==================
-
-DEBUG_TOOLBAR_PATCH_SETTINGS = False
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-}
-
 # ===========================
 # = Heroku
 # ===========================
@@ -172,7 +163,6 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
 if os.environ.get('DEBUG', ''):
     DEBUG = os.environ['DEBUG']
     TEMPLATE_DEBUG = DEBUG
-
 
 # ===========================
 # = Local Overrides
