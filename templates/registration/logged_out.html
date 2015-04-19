@@ -1,7 +1,12 @@
-{% extends "registration/base.html" %}
+{% extends "base.html" %}
 
-{% block body %}
+{% block head-title %}
+  You have been logged out
+{% endblock %}
+{% block page-title %}You have been logged out{% endblock %}
+
+{% block content %}
   <div id="logged_out">
     You have been logged out. <a href="/accounts/login">Log in</a>.
   </div>
-{% endblock body %}
+{% endblock %}
