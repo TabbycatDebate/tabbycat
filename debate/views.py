@@ -1716,7 +1716,7 @@ def adj_feedback(request, t):
     if not t.config.get('share_adjs'):
         adjudicators = Adjudicator.objects.select_related('institution').filter(tournament=t)
     else:
-        adjudicators = Adjudicator.objects.select_related('institution').all(tournament=t)
+        adjudicators = Adjudicator.objects.select_related('institution').all()
 
     if not request.user.is_superuser:
         template = 'monkey/adjudicator_feedback.html'
