@@ -361,6 +361,7 @@ class TeamManager(models.Manager):
         prev_rank_value = None
         prev_points = None
         current_rank = 0
+        counter = 0
         for team in teams:
             if team.points != prev_points:
                 counter = 1
@@ -1010,8 +1011,9 @@ class Round(models.Model):
                             team.points = annotated_team.points
                             team.speaker_score = annotated_team.speaker_score
                             team.subrank = annotated_team.subrank
-                            team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
                             team.draw_strength = getattr(annotated_team, 'draw_strength', None) # only exists in NZ standings rules
+                            if annotated_team.points:
+                                team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
             else:
                 standings = list(Team.objects.standings(round.prev))
 
