@@ -1497,35 +1497,52 @@ def public_replies_tab(request, t):
 @round_view
 def draw_matchups_edit(request, round):
     draw = round.get_draw_with_standings(round)
-    return r2r(request, "draw_matchups_edit.html", dict(draw=draw))
+    debates = len(draw)
+    unused_teams = round.unused_teams()
+    possible_debates = int((len(round.active_teams.all()) / 2) - debates)
+    possible_debates = [None] * possible_debates
+    return r2r(request, "draw_matchups_edit.html", dict(draw=draw,
+        possible_debates=possible_debates,unused_teams=unused_teams))
 
 @admin_required
 @expect_post
 @round_view
 def save_matchups(request, round):
+    #print request.POST.keys()
 
-    print "keys"
-    print request.POST.keys()
+    existing_debate_ids = [int(a.replace('debate_', '')) for a in request.POST.keys() if a.startswith('debate_')]
+    for debate_id in existing_debate_ids:
+        debate = Debate.objects.get(id=debate_id)
+        DebateTeam.objects.filter(debate=debate).delete()
+        debate.save()
 
-    debate_ids = [a.split('_')[0] for a in request.POST.keys()]
+        new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_', '')
+        new_aff_team = Team.objects.get(id=int(new_aff_id))
+        new_aff_dt = DebateTeam(debate=debate, team=new_aff_team, position=DebateTeam.POSITION_AFFIRMATIVE)
+        new_aff_dt.save()
 
-    print "debate_ids"
-    print debate_ids
+        new_neg_id = request.POST.get('neg_%s' % debate_id).replace('team_', '')
+        new_aff_team = Team.objects.get(id=int(new_neg_id))
+        new_neg_dt = DebateTeam(debate=debate, team=new_aff_team, position=DebateTeam.POSITION_NEGATIVE)
+        new_neg_dt.save()
 
-    debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
 
-    for debate in debates:
-        print debate
+    new_debate_ids = [int(a.replace('new_debate_', '')) for a in request.POST.keys() if a.startswith('new_debate_')]
+    for debate_id in new_debate_ids:
+        new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_', '')
+        new_neg_id = request.POST.get('neg_%s' % debate_id).replace('team_', '')
 
-    # aff_teams = Venue.objects.in_bulk([v_id for _, v_id in data])
-    # neg_teams = Venue.objects.in_bulk([v_id for _, v_id in data])
-    # for debate_id, venue_id in data:
-    #     if venue_id == None:
-    #         debates[debate_id].venue = None
-    #     else:
-    #         debates[debate_id].venue = venues[venue_id]
+        if new_aff_id and new_neg_id:
 
-    #     debates[debate_id].save()
+            debate = Debate(round=round, venue=None)
+            debate.save()
+            aff_team = Team.objects.get(id=int(new_aff_id))
+            neg_team = Team.objects.get(id=int(new_neg_id))
+            new_aff_dt = DebateTeam(debate=debate, team=aff_team, position=DebateTeam.POSITION_AFFIRMATIVE)
+            new_neg_dt = DebateTeam(debate=debate, team=neg_team, position=DebateTeam.POSITION_NEGATIVE)
+
+            new_aff_dt.save()
+            new_neg_dt.save()
 
     return HttpResponse("ok")
 

@@ -311,10 +311,6 @@ def annotate_team_standings(teams, round=None, shuffle=False):
         return sorted_teams
 
     elif rule == "wadl":
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error("logging for %s rules" % rule)
-
         # Sort by points
         if shuffle:
             sorted_teams = list(teams)
@@ -805,12 +801,14 @@ class RoundManager(models.Manager):
 
 class Round(models.Model):
     DRAW_RANDOM      = 'R'
-    DRAW_ROUNDROBIN       = 'D'
+    DRAW_MANUAL      = 'M'
+    DRAW_ROUNDROBIN  = 'D'
     DRAW_POWERPAIRED = 'P'
     DRAW_FIRSTBREAK  = 'F'
     DRAW_BREAK       = 'B'
     DRAW_CHOICES = (
         (DRAW_RANDOM,      'Random'),
+        (DRAW_MANUAL,      'Manual'),
         (DRAW_ROUNDROBIN,  'Round-robin'),
         (DRAW_POWERPAIRED, 'Power-paired'),
         (DRAW_FIRSTBREAK,  'First elimination'),
@@ -899,6 +897,9 @@ class Round(models.Model):
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts" : "draw_avoid_conflicts",
             })
+        elif self.draw_type == self.DRAW_MANUAL:
+            teams = draw_teams
+            draw_type = "manual"
         elif self.draw_type == self.DRAW_POWERPAIRED:
             teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
@@ -1129,6 +1130,17 @@ class Round(models.Model):
                                       'debate_team')
         relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
         return relevant_teams
+
+    def unused_teams(self):
+        # Had to replicate venue_availability via base_availability so extra()
+        # could still function on the query set
+        all_teams = self.active_teams.all()
+        all_teams = [t for t in all_teams if t.tournament == self.tournament]
+
+        all_dts = DebateTeam.objects.filter(debate__round=self).values('team').select_related('team', 'debate')
+
+        unused_teams = [t for t in all_teams if t not in all_dts]
+        return unused_teams
 
     def set_available_base(self, ids, model, active_model, get_active,
                              id_column, active_id_column, remove=True):
