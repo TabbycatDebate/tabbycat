@@ -10,18 +10,18 @@
     Note: there is an uneven number of teams checked in for this round.
   </div>
   {% endif %}
-  {% if 0 < active_teams.count < all_teams_count %}
+  {% if active_teams.count == 0 or active_teams.count < all_teams_count %}
   <div class="alert alert-warning">
-    Note: not all teams <a class="alert-link" href="{% round_url team_availability current_round %}">have been checked in</a> for this round.
+    Note: not all teams ({{ active_teams.count }} / {{ all_teams_count }}) <a class="alert-link" href="{% round_url team_availability round %}">have been checked in</a> for this round.
   </div>
   {% elif active_teams.count == 0 %}
   <div class="alert alert-danger">
-    The draw cannot be generated until some of the teams <a class="alert-link" href="{% round_url team_availability current_round %}">have been checked in</a> for this round.
+    The draw cannot be generated until some of the teams <a class="alert-link" href="{% round_url team_availability round %}">have been checked in</a> for this round.
   </div>
   {% endif %}
-  {% if active_venues_count < rooms %}
+  {% if active_venues_count < rooms or rooms == 0 %}
   <div class="alert alert-danger">
-    The draw cannot be generated until there are more venues than team matchups. <a class="alert-link" href="{% round_url venue_availability current_round %}">Check in some more venues</a>.
+    The draw cannot be generated until there are more venues than team matchups. <a class="alert-link" href="{% round_url venue_availability round %}">Check in some more venues</a>.
   </div>
   {% endif %}
   {% if active_venues_count < rooms or active_teams.count == 0%}

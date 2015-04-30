@@ -38,9 +38,9 @@ TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'debate.middleware.DebateMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
@@ -68,8 +68,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'debate',
-    'debug_toolbar',
     'compressor',
+    'debug_toolbar',
 )
 
 LOGIN_REDIRECT_URL = '/'
@@ -78,14 +78,6 @@ LOGIN_REDIRECT_URL = '/'
 # = Caching =
 # =========
 
-# Caching enabled
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
-
 # Default non-heroku cache is to use local memory
 CACHES = {
     'default': {
@@ -93,12 +85,17 @@ CACHES = {
         'LOCATION': 'unique-snowflake'
     }
 }
-# This is a dummy cache for development
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-#     }
-# }
+
+# Caching enabled for templtaes
+TEMPLATE_LOADERS = (
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
+)
+
+# Use the cache for sessions rather than the db
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
 # =========
 # = Pipelines =
@@ -121,15 +118,6 @@ COMPRESS_URL = STATIC_URL
 COMPRESS_OFFLINE_MANIFEST = "manifest.json"
 COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
 COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compression
-
-# ==================
-# = Configurations =
-# ==================
-
-DEBUG_TOOLBAR_PATCH_SETTINGS = False
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-}
 
 # ===========================
 # = Heroku
@@ -157,15 +145,10 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
         CACHES = {
             'default': {
                 'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+                'TIMEOUT': 300,
                 'BINARY': True,
-                'OPTIONS': {
-                    'no_block': True,
+                'OPTIONS': {  # Maps to pylibmc "behaviors"
                     'tcp_nodelay': True,
-                    'tcp_keepalive': True,
-                    'remove_failed': 4,
-                    'retry_timeout': 2,
-                    'dead_timeout': 10,
-                    '_poll_timeout': 2000
                 }
             }
         }
@@ -176,20 +159,9 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
             }
         }
 
-if os.environ.get('REDISTOGO_URL', ''):
-    redis_url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', ''))
-    SESSION_ENGINE = 'redis_sessions.session'
-    SESSION_REDIS_HOST = redis_url.hostname
-    SESSION_REDIS_PORT = redis_url.port
-    SESSION_REDIS_DB = 0
-    SESSION_REDIS_PASSWORD = redis_url.password
-    SESSION_REDIS_PREFIX = 'session'
-
-
 if os.environ.get('DEBUG', ''):
     DEBUG = os.environ['DEBUG']
     TEMPLATE_DEBUG = DEBUG
-
 
 # ===========================
 # = Local Overrides

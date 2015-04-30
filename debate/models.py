@@ -1,11 +1,13 @@
 import random
 import re
 from django.db import models
+from django.db.models import signals
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.cache import cache
 
 from django.utils.functional import cached_property
-from debate.utils import pair_list, memoize
+from debate.utils import pair_list
 from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
 from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
@@ -21,7 +23,7 @@ class Tournament(models.Model):
     name = models.CharField(max_length=100)
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
     seq = models.IntegerField(db_index=True, blank=True, null=True)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, db_index=True)
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_',)
     welcome_msg = models.TextField(blank=True, null=True, default="")
@@ -75,6 +77,18 @@ class Tournament(models.Model):
     def teams(self):
         return Team.objects.filter(tournament=self)
 
+    @cached_property
+    def get_current_round_cached(self):
+        cached_key = "%s_current_round_object" % self.slug
+        cached_value = cache.get(cached_key)
+        if cached_value:
+            print 'found current round cache'
+            return cache.get(cached_key)
+        else:
+            print 'set current round cache'
+            cache.set(cached_key, self.current_round, None)
+            return self.current_round
+
     def prelim_rounds(self, before=None, until=None):
         qs = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=self)
         if until:
@@ -98,12 +112,13 @@ class Tournament(models.Model):
             self.current_round = next_round
             self.save()
 
-    @property
+    @cached_property
     def config(self):
         if not hasattr(self, '_config'):
             from debate.config import Config
             self._config = Config(self)
         return self._config
+
 
     class Meta:
         ordering = ['seq',]
@@ -113,6 +128,15 @@ class Tournament(models.Model):
             return unicode(self.short_name)
         else:
             return unicode(self.name)
+
+def update_tournament_cache(sender, instance, created, **kwargs):
+    cached_key = "%s_%s" % (instance.slug, 'object')
+    cache.delete(cached_key)
+    cached_key = "%s_%s" % (instance.slug, 'current_round_object')
+    cache.delete(cached_key)
+
+# Update the cached tournament object when model is changed)
+signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
 class VenueGroup(models.Model):
     name = models.CharField(unique=True, max_length=200)
@@ -311,7 +335,7 @@ class TeamManager(models.Manager):
         teams = self.filter(
             tournament = round.tournament,
             debateteam__debate__round__seq__lte = round.seq,
-        )
+        ).select_related('institution')
         return annotate_team_standings(teams, round)
 
     def ranked_standings(self, round):
@@ -337,6 +361,7 @@ class TeamManager(models.Manager):
         prev_rank_value = None
         prev_points = None
         current_rank = 0
+        counter = 0
         for team in teams:
             if team.points != prev_points:
                 counter = 1
@@ -429,9 +454,9 @@ class Division(models.Model):
     def teams_count(self):
         return self.team_set.count()
 
-    @property
+    @cached_property
     def teams(self):
-        return self.team_set.all().order_by('institution','reference')
+        return self.team_set.all().order_by('institution','reference').select_related('institution')
 
     def __unicode__(self):
         return u"%s - %s" % (self.tournament, self.name)
@@ -445,7 +470,7 @@ class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Name or suffix")
     short_reference = models.CharField(max_length=35, verbose_name="Shortened name or suffix")
     institution = models.ForeignKey(Institution)
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, db_index=True)
     emoji_seq = models.IntegerField(blank=True, null=True)
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
@@ -487,19 +512,21 @@ class Team(models.Model):
 
     @property
     def short_name(self):
+        institution = self.get_cached_institution()
         if self.short_reference:
             name = self.short_reference
         else:
             name = self.reference
         if self.use_institution_prefix is True:
-            return unicode(self.institution.code + " " + name)
+            return unicode(institution.code + " " + name)
         else:
             return unicode(name)
 
     @property
     def long_name(self):
+        institution = self.get_cached_institution()
         if self.use_institution_prefix is True:
-            return unicode(self.institution.name + " " + self.reference)
+            return unicode(institution.name + " " + self.reference)
         else:
             return unicode(self.reference)
 
@@ -508,6 +535,7 @@ class Team(models.Model):
 
     def get_neg_count(self, seq=None):
         return self._get_count(DebateTeam.POSITION_NEGATIVE, seq)
+
 
     def _get_count(self, position, seq):
         dts = DebateTeam.objects.filter(team=self, position=position, debate__round__stage=Round.STAGE_PRELIMINARY)
@@ -522,7 +550,6 @@ class Team(models.Model):
         return [dt.debate for dt in dts]
 
     @property
-    @memoize
     def get_preferences(self):
         prefs = TeamVenuePreference.objects.filter(team=self)
         return prefs
@@ -530,6 +557,22 @@ class Team(models.Model):
     @property
     def debates(self):
         return self.get_debates(None)
+
+    @cached_property
+    def wins_count(self):
+        wins = TeamScore.objects.filter(ballot_submission__confirmed=True,debate_team__team=self,win=True).count()
+        return wins
+
+    @cached_property
+    def speakers(self):
+        cached_key = "%s_%s_%s" % ('teamid', self.id, '_speaker__objects')
+        cached_value = cache.get(cached_key)
+        if cached_value:
+            return cache.get(cached_key)
+        else:
+            cached_value = self.speaker_set.all().select_related('person')
+            cache.set(cached_key, cached_value, None)
+            return cached_value
 
     def seen(self, other, before_round=None):
         debates = self.get_debates(before_round)
@@ -547,10 +590,25 @@ class Team(models.Model):
         except IndexError:
             return None
 
-    @property
-    def speakers(self):
-        return self.speaker_set.all()
+    def get_cached_institution(self):
+        cached_key = "%s_%s_%s" % ('teamid', self.id, '_institution__object')
+        cached_value = cache.get(cached_key)
+        if cached_value:
+            return cache.get(cached_key)
+        else:
+            cached_value = self.institution
+            cache.set(cached_key, cached_value, None)
+            return cached_value
 
+
+def update_team_cache(sender, instance, created, **kwargs):
+    cached_key = "%s_%s_%s" % ('teamid', instance.id, '_institution__object')
+    cache.delete(cached_key)
+    cached_key = "%s_%s_%s" % ('teamid', instance.id, '_speaker__objects')
+    cache.delete(cached_key)
+
+# Update the cached tournament object when model is changed)
+signals.post_save.connect(update_team_cache, sender=Team)
 
 class TeamVenuePreference(models.Model):
     team = models.ForeignKey(Team, db_index=True)
@@ -566,136 +624,7 @@ class TeamVenuePreference(models.Model):
 
 
 class SpeakerManager(models.Manager):
-    def standings(self, round=None, only_novices=False):
-        # only include scoresheets for up to this round, exclude replies
-        if round:
-            speakers = self.filter(
-                team__tournament=round.tournament,
-                speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
-                speakerscore__debate_team__debate__round__seq__lte = round.seq,
-            )
-        else:
-            speakers = self.filter(
-                team__tournament=round.tournament,
-                speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
-            )
-
-        if only_novices is True:
-            speakers = speakers.filter(novice=True)
-
-        # TODO is there a way to add round scores without so many database hits?
-        # Maybe using a select subquery?
-
-        # This is what might be more concisely expressed, if it were permissible
-        # in Django, as:
-        # speakers = speakers.annotate_if(
-        #     dict(total = models.Sum('speakerscore__score')),
-        #     dict(ballot_submission__confirmed = True)
-        # )
-        # That is, it adds up all the points of each speaker on CONFIRMED
-        # ballots and adds them as columns to the table it returns.
-        EXTRA_QUERY = """
-            SELECT DISTINCT {aggregator:s}("score")
-            FROM "debate_speakerscore"
-            JOIN "debate_debateteam" ON "debate_speakerscore"."debate_team_id" = "debate_debateteam"."id"
-            JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-            JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-            JOIN "debate_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-            WHERE "debate_ballotsubmission"."confirmed" = True
-            AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
-            AND "debate_speakerscore"."position" <= {position:d}
-            AND "debate_round"."seq" <= {round:d}
-            AND "debate_round"."stage" = '{stage}'
-        """
-        speakers = speakers.extra({"total": EXTRA_QUERY.format(
-            aggregator = "SUM",
-            round = round.seq,
-            position = round.tournament.LAST_SUBSTANTIVE_POSITION,
-            stage = Round.STAGE_PRELIMINARY,
-        ), "average": EXTRA_QUERY.format(
-            aggregator = "AVG",
-            round = round.seq,
-            position = round.tournament.LAST_SUBSTANTIVE_POSITION,
-            stage = Round.STAGE_PRELIMINARY,
-        )}).distinct().order_by('-total')
-
-        prev_total = None
-        current_rank = 0
-        for i, speaker in enumerate(speakers, start=1):
-            if speaker.total != prev_total:
-                current_rank = i
-                prev_total = speaker.total
-            speaker.rank = current_rank
-
-        return speakers
-
-    def reply_standings(self, round=None):
-        # If replies aren't enabled, return an empty queryset.
-        if not round.tournament.config.get('reply_scores_enabled'):
-            return self.objects.none()
-
-        if round:
-            speakers = self.filter(
-                team__tournament=round.tournament,
-                speakerscore__position=round.tournament.REPLY_POSITION,
-                speakerscore__debate_team__debate__round__seq__lte =
-                round.seq,
-            )
-        else:
-            speakers = self.filter(
-                team__tournament=round.tournament,
-                speakerscore__position=round.tournament.REPLY_POSITION,
-            )
-
-        # This is what might be more concisely expressed, if it were permissible
-        # in Django, as:
-        # speakers = speakers.annotate_if(
-        #     dict(average = models.Avg('speakerscore__score'),
-        #          count   = models.Count('speakerscore__score')),
-        #     dict(ballot_submission__confirmed = True)
-        # )
-        # That is, it adds up all the reply scores of each speaker on CONFIRMED
-        # ballots and adds them as columns to the table it returns.
-        EXTRA_QUERY = """
-            SELECT DISTINCT {aggregator:s}("score")
-            FROM "debate_speakerscore"
-            JOIN "debate_debateteam" ON "debate_speakerscore"."debate_team_id" = "debate_debateteam"."id"
-            JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-            JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-            JOIN "debate_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-            WHERE "debate_ballotsubmission"."confirmed" = True
-            AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
-            AND "debate_speakerscore"."position" = {position:d}
-            AND "debate_round"."seq" <= {round:d}
-            AND "debate_round"."stage" = '{stage}'
-        """
-        speakers = speakers.extra({"average": EXTRA_QUERY.format(
-            aggregator = "AVG",
-            round = round.seq,
-            position = round.tournament.REPLY_POSITION,
-            stage = round.STAGE_PRELIMINARY
-        ), "replies": EXTRA_QUERY.format(
-            aggregator = "COUNT",
-            round = round.seq,
-            position = round.tournament.REPLY_POSITION,
-            stage = round.STAGE_PRELIMINARY
-        )}).distinct().order_by('-average', '-replies', 'name')
-
-        # Use this to filter out speakers with an unconfirmed ballot submission,
-        # since they get caught up in the query above.
-        speakers_filtered = filter(lambda x: x.replies > 0, speakers)
-
-        prev_rank_value = (None, None)
-        current_rank = 0
-        for i, speaker in enumerate(speakers_filtered, start=1):
-            rank_value = (speaker.average, speaker.replies)
-            if rank_value != prev_rank_value:
-                current_rank = i
-                prev_rank_value = rank_value
-            speaker.rank = current_rank
-
-        return speakers_filtered
-
+    pass
 
 class Person(models.Model):
     name = models.CharField(max_length=40, db_index=True)
@@ -777,7 +706,7 @@ class Adjudicator(Person):
     def is_unaccredited(self):
         return self.novice
 
-    @property
+    @cached_property
     def score(self):
         if self.tournament:
             weight = self.tournament.current_round.feedback_weight
@@ -793,7 +722,7 @@ class Adjudicator(Person):
         return self.test_score * (1 - weight) + (weight * feedback_score)
 
 
-    @property
+    @cached_property
     def rscores(self):
         r = []
         for round in self.tournament.rounds.all():
@@ -1048,10 +977,14 @@ class Round(models.Model):
             return False
 
     def get_draw(self):
-        return self.debate_set.order_by('room_rank')
+        return self.debate_set.order_by('room_rank').select_related(
+            'venue', 'division', 'division__venue_group'
+        )
 
     def get_draw_by_room(self):
-        return self.debate_set.order_by('venue__name')
+        return self.debate_set.order_by('venue__name').select_related(
+            'venue', 'division', 'division__venue_group'
+        )
 
     def get_draw_by_team(self):
         # TODO is there a more efficient way to do this?
@@ -1078,8 +1011,9 @@ class Round(models.Model):
                             team.points = annotated_team.points
                             team.speaker_score = annotated_team.speaker_score
                             team.subrank = annotated_team.subrank
-                            team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
                             team.draw_strength = getattr(annotated_team, 'draw_strength', None) # only exists in NZ standings rules
+                            if annotated_team.points:
+                                team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
             else:
                 standings = list(Team.objects.standings(round.prev))
 
@@ -1263,7 +1197,6 @@ class Round(models.Model):
         self.set_available_teams([t.id for t in Team.objects.all()])
 
     @property
-    @memoize
     def prev(self):
         try:
             return Round.objects.get(seq=self.seq-1, tournament=self.tournament)
@@ -1274,6 +1207,13 @@ class Round(models.Model):
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
 
+def update_round_cache(sender, instance, created, **kwargs):
+    cached_key = "%s_%s_%s" % (instance.tournament.slug, instance.seq, 'object')
+    cache.delete(cached_key)
+    print "Updated cache %s for %s" % (cached_key, instance)
+
+# Update the cached round object when model is changed)
+signals.post_save.connect(update_round_cache, sender=Round)
 
 class ActiveVenue(models.Model):
     venue = models.ForeignKey(Venue)
@@ -1358,12 +1298,12 @@ class Debate(models.Model):
     def teams(self):
         return Team.objects.select_related('debate_team').filter(debateteam__debate=self)
 
-    @property
+    @cached_property
     def aff_team(self):
         aff_dt = self.aff_dt
         return aff_dt.team
 
-    @property
+    @cached_property
     def neg_team(self):
         neg_dt = self.neg_dt
         return neg_dt.team
@@ -1375,14 +1315,14 @@ class Debate(models.Model):
         """dt = DebateTeam"""
         return getattr(self, '%s_dt' % side)
 
-    @property
+    @cached_property
     def aff_dt(self):
-        aff_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
+        aff_dt = DebateTeam.objects.select_related('team','team__institution').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
         return aff_dt
 
-    @property
+    @cached_property
     def neg_dt(self):
-        neg_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
+        neg_dt = DebateTeam.objects.select_related('team','team__institution').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
         return neg_dt
 
     def get_side(self, team):
@@ -1403,7 +1343,7 @@ class Debate(models.Model):
 
         return d
 
-    @property
+    @cached_property
     def confirmed_ballot(self):
         """Returns the confirmed BallotSubmission for this debate, or None if
         there is no such ballot submission."""
@@ -1465,11 +1405,11 @@ class Debate(models.Model):
                     a.append(Conflict(adj, team))
         return a
 
-    @property
+    @cached_property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
-        adjs = DebateAdjudicator.objects.filter(debate=self)
+        adjs = DebateAdjudicator.objects.filter(debate=self).select_related('adjudicator')
         alloc = AdjudicatorAllocation(self)
         for a in adjs:
             if a.type == a.TYPE_CHAIR:
@@ -1536,7 +1476,7 @@ class DebateTeam(models.Model):
     def __unicode__(self):
         return u'%s (%s)' % (self.team, self.debate)
 
-    @property
+    @cached_property # TODO: this slows down the standings pages reasonably heavily
     def opposition(self):
         try:
             return DebateTeam.objects.exclude(position=self.position).get(debate=self.debate)
@@ -1608,7 +1548,7 @@ class Submission(models.Model):
 
     version_semaphore = BoundedSemaphore(100)
 
-    confirmed = models.BooleanField(default=False)
+    confirmed = models.BooleanField(default=False, db_index=True)
 
     class Meta:
         abstract = True
@@ -1666,7 +1606,7 @@ class AdjudicatorFeedback(Submission):
         if self.source_adjudicator:
             return self.source_adjudicator.adjudicator
         if self.source_team:
-            return self.source_team.team
+            return self.source_team.team.short_name
 
     @property
     def debate(self):
@@ -1771,7 +1711,8 @@ class BallotSubmission(Submission):
         return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + \
                 ('<unknown>' if self.timestamp is None else unicode(self.timestamp.isoformat()))
 
-    @property
+
+    @cached_property
     def ballot_set(self):
         if not hasattr(self, "_ballot_set"):
             self._ballot_set = BallotSet(self)
@@ -1905,57 +1846,61 @@ class SpeakerScore(models.Model):
 
 
 class MotionManager(models.Manager):
+
     def statistics(self, round=None):
+        #from scipy.stats import chisquare
+
         if round is None:
-            motions = self.all()
+            motions = self.select_related('round').filter(round__tournament=round.tournament)
         else:
-            motions = self.filter(round__seq__lte=round.seq)
+            motions = self.select_related('round').filter(round__seq__lte=round.seq)
 
-        #motions = motions.filter(
-            #ballotsubmission__confirmed = True
-        #).annotate(
-            #chosen_in = models.Count('ballotsubmission')
-        #)
-        # Need to do it using extra() in order to include the motions that haven't been done,
-        # otherwise filter() leaves them out.
-        motions = motions.extra({"chosen_in": """
-                SELECT COUNT (*)
-                FROM "debate_ballotsubmission"
-                WHERE "debate_ballotsubmission"."confirmed" = True
-                AND "debate_ballotsubmission"."motion_id" = "debate_motion"."id"
-            """,
-        })
+        ballots = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
+        team_scores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
 
-        # TODO is there a more efficient way to do this?
         for motion in motions:
-            ballots = BallotSubmission.objects.filter(confirmed=True, motion=motion)
+            motion_ballots = [b for b in ballots if b.motion == motion]
 
-            all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
-            motion.aff_vetoes = 0
-            motion.neg_vetoes = 0
-            if all_vetoes:
-                for veto in all_vetoes:
-                    if veto.debate_team.position == "A":
-                        motion.aff_vetoes += 1
-                    elif veto.debate_team.position == "N":
-                        motion.neg_vetoes += 1
+            motion.aff_wins, motion.aff_wins_percent = 0, 0
+            motion.neg_wins, motion.neg_wins_percent = 0, 0
+            motion.chosen_in = len(motion_ballots)
 
-            # preferences = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
-            # if preferences:
-            #     logger.error("logging for %s rules" % prefs)
-            #     for p in preferences:
-            #         if p.ballot_submission.debate_team ==
+            if motion.chosen_in > 0:
+                for ballot in motion_ballots:
+                    # Find the team score the matches, return none otherwise
+                    teamscore = next((x for x in team_scores if x.ballot_submission == ballot), None)
+                    debate_team = teamscore.debate_team
+                    if debate_team.position == DebateTeam.POSITION_AFFIRMATIVE:
+                        if teamscore.win:
+                            motion.aff_wins += 1
+                        else:
+                            motion.neg_wins += 1
+                    elif debate_team.position == DebateTeam.POSITION_NEGATIVE:
+                        if teamscore.win:
+                            motion.neg_wins += 1
+                        else:
+                            motion.aff_wins += 1
 
-            if motion.chosen_in == 0:
-                motion.aff_wins = 0
-                motion.aff_wins_percent = 0
-                motion.neg_wins = 0
-                motion.neg_wins_percent = 0
-            else:
-                motion.aff_wins = sum(ballot.ballot_set.aff_win for ballot in ballots)
-                motion.aff_wins_percent = int((float(motion.aff_wins) / float(motion.chosen_in)) * 100)
-                motion.neg_wins = sum(ballot.ballot_set.neg_win for ballot in ballots)
-                motion.neg_wins_percent = int((float(motion.neg_wins) / float(motion.chosen_in)) * 100)
+                # motion.c1, motion.p_value = chisquare([motion.aff_wins, motion.neg_wins], f_exp=[motion.chosen_in / 2, motion.chosen_in / 2])
+                # # Culling out the NaN errors
+                # try:
+                #     test = int(motion.c1)
+                # except ValueError:
+                #     motion.c1, motion.p_value = None, None
+                # TODO: temporarily disabled
+                motion.c1, motion.p_value = None, None
+
+
+            if round.tournament.config.get('motion_vetoes_enabled') is True:
+                all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
+                motion.aff_vetoes = 0
+                motion.neg_vetoes = 0
+                if all_vetoes:
+                    for veto in all_vetoes:
+                        if veto.debate_team.position == DebateTeam.POSITION_AFFIRMATIVE:
+                            motion.aff_vetoes += 1
+                        elif veto.debate_team.position == DebateTeam.POSITION_NEGATIVE:
+                            motion.neg_vetoes += 1
 
         return motions
 
@@ -1979,7 +1924,7 @@ class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""
     debate_team = models.ForeignKey(DebateTeam, db_index=True)
     motion = models.ForeignKey(Motion, db_index=True)
-    preference = models.IntegerField()
+    preference = models.IntegerField(db_index=True)
     ballot_submission = models.ForeignKey(BallotSubmission)
 
     class Meta:
@@ -2141,16 +2086,31 @@ class ActionLog(models.Model):
 
 
 class ConfigManager(models.Manager):
+
     def set(self, tournament, key, value):
         obj, created = self.get_or_create(tournament=tournament, key=key)
         obj.value = value
         obj.save()
+        #print "set config cache via set() call"
+        cached_key = "%s_%s" % (tournament.slug, key)
+        cache.set(cached_key, value, None)
 
     def get_(self, tournament, key, default=None):
-        try:
-            return self.get(tournament=tournament, key=key).value
-        except ObjectDoesNotExist:
-            return default
+        cached_key = "%s_%s" % (tournament.slug, key)
+        cached_value = cache.get(cached_key)
+        if cached_value:
+            return cached_value
+        else:
+            #print "couldnt get cache key %s" % cached_key
+            #print "\t value is %s" % cache.get(cached_key)
+            try:
+                noncached_value = self.get(tournament=tournament, key=key).value
+            except ObjectDoesNotExist:
+                noncached_value = default
+
+            cache.set(cached_key, noncached_value, None)
+            #print "\tset config cache %s to %s via get() call" % (cached_key, noncached_value)
+            return noncached_value
 
 
 class Config(models.Model):

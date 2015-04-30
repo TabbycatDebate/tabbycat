@@ -1,18 +1,5 @@
 from functools import wraps
 
-def memoize(fn):
-    cache = {}
-    @wraps(fn)
-    def foo(*args):
-        if args not in cache:
-            cache[args] = fn(*args)
-
-        return cache[(args)]
-
-    foo.func_name = fn.func_name
-    return foo
-
-
 def pair_list(ls):
     half = len(ls)/2
     return zip(ls[:half], ls[half:])

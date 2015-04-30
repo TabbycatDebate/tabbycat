@@ -5,9 +5,9 @@
 {% block nav %}{% endblock %}
 {% block footer %}{% endblock %}
 
-{% block body-class %}edit-venues{% endblock %}
-{% block head-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
-{% block page-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
+{% block body-class %}edit-matchups{% endblock %}
+{% block head-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
+{% block page-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
 {% block page-header %}
   {% include "table_search.html" %}
   <div id="" class="btn-group pull-left col-sm-1">
@@ -28,17 +28,12 @@
     <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
-          <th>Unused Venues <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>
+          <th>Unused Teams <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>
         </tr>
       </thead>
       <tbody>
       </tbody>
     </table>
-    {% for venue in round.unused_venues %}
-    <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
-      <span>{{ venue.name }} {% if venue.time %}<em>{{ venue.time|date:"d/m" }}</em>{% endif %}</span>
-    </div>
-    {% endfor %}
   </div>
 
   <div id="main" class="col-xs-10">
@@ -51,31 +46,29 @@
           <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
           <th>Aff</th>
           <th>Neg</th>
-          <th>Adjs</th>
-          <th>Venue</th>
+          <th>Adjudicators</th>
         </tr>
       </thead>
       <tbody>
       {% for debate in draw %}
-      <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
-        <td>{{ debate.bracket }}</td>
+      <tr id="debate_{{ debate.id }}" class="matchup">
         <td>
-          <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">{{ debate.aff_team.short_name }}</span>
+          {{ debate.bracket }}
         </td>
-        <td>
-          <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">{{ debate.neg_team.short_name }}</span>
-        </td>
-        <td>
-        {% for type, adj in debate.adjudicators %}
-          {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
-        {% endfor %}
-        </td>
-        <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
-          {% if debate.venue %}
-          <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
-            <span class="">{{ debate.venue.name }} {% if debate.venue.time %}<em>{{ debate.venue.time|date:"d/m" }}</em>{% endif %}</span>
+        <td class="team-holder btn-holder">
+          <div id="team_{{ debate.aff_team.id }}" class="btn btn-block btn-default aff-team team_draggable">
+            <span title="{{ debate.aff_team.speakers|join:'<br>' }}">{{ debate.aff_team.short_name }}</span>
           </div>
-          {% endif %}
+        </td>
+        <td class="team-holder btn-holder">
+          <div id="team_{{ debate.neg_team.id }}" class="btn btn-block btn-default neg-team team_draggable">
+            <span title="{{ debate.neg_team.speakers|join:'<br>' }}">{{ debate.neg_team.short_name }}</span>
+          </div>
+        </td>
+        <td >
+          {% for type, adj in debate.adjudicators %}
+            {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+          {% endfor %}
         </td>
       </tr>
       {% endfor %}
@@ -90,14 +83,8 @@
 <script type="text/javascript" charset="utf-8">
   $(document).ready( function() {
 
-    var debates = {};
-    // add ID of the debate to parent TD of venue holder
-    $("#dataTable .venue-holder").each( function() {
-      debates[$(this).attr("id")] = $("div.venue", this).attr("id");
-    } );
-
     // Triggers when a draggable element is placed
-    function venueMoved(venue, oldDebate, newDebate) {
+    function teamMoved(venue, oldDebate, newDebate) {
       var oldId = oldDebate.attr("id");
       if (oldId != undefined && oldId != "scratch") {
         debates[oldId] = 'none';
@@ -108,7 +95,7 @@
       }
     }
 
-    $(".venue").draggable( {
+    $(".team_draggable").draggable( {
       revert: 'invalid', // revert to initial position if not dropped on a droppable element
       zIndex: 1000,
       appendTo: "body",
@@ -116,20 +103,20 @@
     });
 
     $("#scratch").droppable( {
-      accept: '.venue',
+      accept: '.team_draggable',
       hoverClass: 'bg-success',
       drop: function(event, ui) {
         var venue = ui.draggable; // the object being dragged
         var oldHolder = venue.parent("td");
         venue.appendTo($(this))
         venue.css({left:'0px', top:'0px'}) // reset position so it sits nicely
-        venueMoved(venue, oldHolder, $(this));
+        teamMoved(venue, oldHolder, $(this));
       }
     });
 
     // Droppable elements are targets for draggable elements
-    $(".venue-holder").droppable( {
-      accept: '.venue',
+    $(".team-holder").droppable( {
+      accept: '.team_draggable',
       hoverClass: 'bg-success',
       drop: function(event, ui) {
         var venue = ui.draggable;
@@ -139,8 +126,8 @@
         var newHomeOff;
         var curOff = venue.offset();
         if (replacing.length == 0) {
-        //   // dropping onto a blank venue holder, construct a hidden node
-        //   // to do position calculation
+          // dropping onto a blank venue holder, construct a hidden node
+          // to do position calculation
           replacing = $(document.createElement("div"));
           replacing.addClass("venue");
           replacing[0].style.visibility = "hidden";
@@ -148,13 +135,12 @@
           newHomeOff = replacing.offset();
           replacing.remove();
         } else {
-          newHomeOff = replacing.offset();
-          venueMoved(replacing, $(this), $("#scratch"));
+          teamMoved(replacing, $(this), $("#scratch"));
           $("#scratch").append(replacing);
         }
 
         $(this).append(venue);
-        venueMoved(venue, oldHolder, $(this));
+        teamMoved(venue, oldHolder, $(this));
 
         venue.css('top', curOff.top - newHomeOff.top);
         venue.css('left', curOff.left - newHomeOff.left);
@@ -165,9 +151,19 @@
     });
 
     $('#save').click( function() {
+
+      var debates = {};
+      // add ID of the debate to parent TD of venue holder
+      $("#dataTable .matchup").each( function() {
+        debates[$(this).attr("id") + "_aff"] = $(".aff-team", this).attr("id");
+        debates[$(this).attr("id") + "_neg"] = $(".neg-team", this).attr("id");
+      });
+
+      console.log(debates);
+
       $.ajax( {
         type: "POST",
-        url: "{% round_url save_venues %}",
+        url: "{% round_url save_matchups %}",
         data: debates,
         success: function(data, status) {
           $("#alerts-holder").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Saved successfully!</div>');
@@ -179,26 +175,10 @@
       return false;
     });
 
-    var dTable = $("#dataTable").DataTable({
-      "aaSorting": [[0, 'desc']],
-      "aoColumns": [
-        { "sWidth": "5%" },
-        { "sWidth": "10%" },
-        { "sWidth": "10%" },
-        { "sWidth": "55%" },
-        { "sWidth": "20%" }
-      ],
-    });
+    var dTable = $("#dataTable").DataTable();
     $('#table-search').keyup(function(){
       dTable.search($(this).val()).draw();
     })
-
-    // remove the table cells without venues
-    $("#dataTable div.empty").each( function() {
-      var holder = $(this).parent("venue-holder");
-      $(this).remove();
-      //addPlaceholder(holder); NOTE: there's no function for this...?
-    } );
 
   });
 

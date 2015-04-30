@@ -10,6 +10,11 @@
   border-bottom-width: 1px;
 }
 
+.team-emoji img { // Emoji fallbacks need a fixed-size
+  width: 20px;
+  height: 20px;
+}
+
 // Table Heads
 
 thead {
@@ -94,9 +99,8 @@ thead {
 
 .table > thead > tr > th.team-emoji,
 .table > tbody > tr > td.team-emoji {
-  padding: 2px 0 0 0;
+  padding: 8px 0 0 0;
   min-width: 20px;
-  font-size: 22px;
   text-align: center;
 }
 
@@ -105,9 +109,6 @@ thead {
 .edit-adjs, .edit-venues {
   #table-search-group.btn-group.pull-right {
     margin-right: 16.66667% // Making way for the unused column
-  }
-  .table > tbody > tr > td {
-    line-height: 33px; // to align with the drag and drop elements
   }
 }
 

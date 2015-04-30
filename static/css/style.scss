@@ -11,13 +11,6 @@
 @include text-emphasis-variant('.text-warning', $brand-warning);
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
-// Fix for post-cache pathings
-@font-face {
-  font-family: 'Glyphicons Halflings';
-  src: url('../../css/bootstrap/glyphicons-halflings-regular.eot');
-  src: url('../../css/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../css/bootstrap/glyphicons-halflings-regular.woff') format('woff'), url('../../css/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), url('../../css/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
-}
-
 // General utilities
 
 .no-vertical-spacing,
@@ -47,15 +40,7 @@ table.table > tbody > tr > td.no-horizontal-spacing {
   border-right: none;
 }
 
-// For the size buttons
-.h4_minus {
-  @extend .h4;
-  font-size: ceil(($font-size-base * 1.12));
-}
-.h4_plus {
-  @extend .h4;
-  font-size: ceil(($font-size-base * 1.50));
-}
+
 
 // For the collapsedmdouble menu
 
@@ -110,41 +95,6 @@ table.table > tbody > tr > td.no-horizontal-spacing {
 }
 
 
-// Navigation Highlights
-
-.public-draw a.public-draw-nav,
-.public-motions a.public-motions-nav,
-.public-results a.public-results-nav,
-.public-feedback a.public-feedback-nav,
-.public-add-ballot a.public-add-ballot-nav,
-.public-add-feedback a.public-add-feedback-nav,
-.public-feedback-tab a.public-feedback-nav,
-.public-participants a.public-participants-nav,
-.public-team-tab a.public-team-tab-nav,
-.public-speaker-tab a.public-speaker-tab-nav,
-.public-replies-tab a.public-replies-tab-nav,
-.public-motions-tab a.public-motions-tab-nav,
-.public-breakk a.public-breakk-nav,
-.public-breaking-teams-open a.public-breaking-teams-open-nav,
-.public-breaking-teams-esl a.public-breaking-teams-esl-nav,
-.public-adjs a.public-breaking-adjs-nav,
-.monkey-enter-result a.monkey-enter-result-nav,
-.monkey-enter-feedback a.monkey-enter-feedback-nav,
-.dash a.dash-nav,
-.draw a.draw-nav,
-.display-motions a.motions-nav,
-.status a.status-nav,
-.results a.results-nav,
-.team-standings a.team-standings-nav,
-.breakk a.breakk-nav,
-.breaking-teams-open a.breaking-teams-open-nav,
-.breaking-teams-esl a.breaking-teams-esl-nav,
-.breaking-adjs a.breaking-adjs-nav,
-.speaker-standings a.speaker-standings-nav,
-.adj-feedback a.adjudicators-standings-nav,
-.config a.config-nav {
-  font-weight: bold;
-}
 
 .public-draw #header-options .btn {
   display: none;
@@ -282,163 +232,6 @@ input[type="radio"].form-control, input[type="checkbox"].form-control {
 }
 .adj-trainee {
   font-style: italic;
-}
-
-
-// Draw displays
-
-#draw.dataTable {
-  .adj-names {
-    ul {
-      padding-left: 0;
-      margin-left: 0;
-      list-style-type: none;
-    }
-  }
-}
-
-.draw-with-standings .em {
-  font-weight: bold;
-  color: chocolate;
-  font-style: normal;
-}
-
-.draw-with-standings .first-in-bracket {
-  border-top: 3px solid chocolate;
-}
-span.esl {
-  text-transform: uppercase;
-}
-
-
-// Editing the Draw
-
-.edit-venues, .edit-adjs {
-  table {
-    border-collapse: separate;
-    td {
-      line-height: 30px; // to align with the drag and drop elements
-    }
-  }
-  #container {
-     min-height: 1000px;
-  }
-  .btn-default.text-left {
-    padding-left: 6px;
-    padding-right: 6px;
-  }
-  #table-search-group {
-    margin-right: 220px; // move right to make way for unused
-  }
-  #scratch {
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: 100%;
-    padding-left: 0;
-    overflow-y: scroll;
-    padding-bottom: 50px; // ensure no footer overlaps
-    margin-top: 16px;
-    .unused {
-      padding-left: 0;
-    }
-  }
-  .venue, .adj {
-    max-width: 300px;
-  }
-  .is_unaccredited {
-    box-shadow: none;
-  }
-  .importance {
-    text-align: left;
-    width: 48px;
-    form {
-      margin: -8px -8px -8px -8px;
-    }
-    select {
-      @extend .form-control;
-    }
-  }
-  .border-success {
-    border: 2px solid $btn-success-border;
-  }
-  .border-primary {
-    border: 2px solid $btn-primary-border;
-  }
-  .venue:hover, .adj:hover, .venue.dragging, .adj.dragging {
-    cursor: move;
-    border: 1px solid $btn-primary-border;
-    @extend .text-primary;
-    @extend .border-primary;
-    &.is_unaccredited {
-      background: $table-bg-active;
-    }
-    &.btn-danger, &.btn-warning {
-      color: #fff;
-    }
-  }
-  .adj {
-    .info {
-      margin-right: 5px;
-    }
-    .info:hover {
-      cursor: pointer;
-      z-index: 11;
-    }
-    &.btn-danger .info, &.btn-warning .info {
-      color: #fff;
-    }
-    &.gender-display.male span, &.gender-display.female a {
-      color: #fff;
-    }
-    &.gender-display.male {
-      background-color: #0000FF;
-    }
-    &.gender-display.female {
-      background-color: #D600FF;
-    }
-  }
-
-  .gender-display.gender-parity-3 {
-    background-color: lighten(#0000FF, 45%);
-  }
-  .gender-display.gender-parity-4 {
-    background-color: lighten(#0000FF, 40%);
-  }
-  .gender-display.gender-parity-5 {
-    background-color: lighten(#0000FF, 30%);
-    color: #fff;
-  }
-  .gender-display.gender-parity-6 {
-    background-color: lighten(#0000FF, 20%);
-    color: #fff;
-  }
-  .gender-display.gender-parity-7 {
-    background-color: lighten(#0000FF, 10%);
-    color: #fff;
-  }
-  .gender-display.gender-parity-8 {
-    background-color: #0000FF;
-    color: #fff;
-  }
-  .gender-display.gender-parity-9 {
-    background-color: darken(#0000FF, 25%);
-    color: #fff;
-  }
-  .gender-display.gender-parity-10 {
-    background-color: darken(#0000FF, 35%);
-    color: #fff;
-  }
-  #unusedTable {
-    // For compactness
-    td {
-      padding: 5px 0 0 0;
-      border: none;
-      line-height: 32px;
-      text-align: center;
-    }
-  }
-
 }
 
 // Ballots

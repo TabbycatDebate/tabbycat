@@ -1,4 +1,5 @@
 {% load debate_tags %}
+{% load cache %}
 
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
   <div class="container-fluid">
@@ -9,23 +10,33 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <ul id="nav_brand" class="nav navbar-nav navbar-left">
-        <li class="dropdown">
-          <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament }}<b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            {% for tournament in all_tournaments %}
-              {% if user.is_authenticated %}
-                <li><a class="" href="{{ tournament.get_absolute_url  }}">{{ tournament }}</a></li>
-              {% else %}
-                <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament }}</a></li>
-              {% endif %}
-            {% endfor %}
-            {% if all_tournaments.all.count > 1 and all_tournaments.0.config.public_divisions > 0 %}
-              <li><a href="{{ all_tournaments.0.get_all_divisions_url }}">All Tournament's Teams</a></li>
-            {% endif %}
+      {% cache 600 headerleft request.user %}
+        {% if all_tournaments.count > 1 %}
+          <ul id="nav_brand" class="nav navbar-nav navbar-left">
+            <li class="dropdown">
+              <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament }}<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                {% for tournament in all_tournaments %}
+                  {% if user.is_authenticated %}
+                    <li><a class="" href="{{ tournament.get_absolute_url  }}">{{ tournament }}</a></li>
+                  {% else %}
+                    <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                {% if all_tournaments.0.config.public_divisions > 0 %}
+                  <li><a href="{{ all_tournaments.0.get_all_divisions_url }}">All Tournament's Teams</a></li>
+                {% endif %}
+              </ul>
+            </li>
           </ul>
-        </li>
-      </ul>
+        {% else %}
+          {% if user.is_authenticated %}
+            <a class="navbar-brand" href="{{ tournament.get_absolute_url  }}">{{ tournament }}</a>
+          {% else %}
+            <a class="navbar-brand" href="{{ tournament.get_public_url  }}">{{ tournament }}</a>
+          {% endif %}
+        {% endif %}
+      {% endcache %}
     </div>
     <div class="collapse navbar-collapse">
       {% if user.is_authenticated %}

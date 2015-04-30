@@ -53,8 +53,8 @@
       {% endif %}
       <th><span title="Aff wins" data-toggle="tooltip">AW</span></th>
       <th><span title="Neg wins" data-toggle="tooltip">NW</span></th>
-      <th><span title="Aff win %" data-toggle="tooltip">AW%</span></th>
-      <th><span title="Neg win %" data-toggle="tooltip">NW%</span></th>
+      <th><span title="Observed imbalance (deviation from 50/50 odds) as determined through a chi square test. Higher is more imbalanced." data-toggle="tooltip">Chi2</span></th>
+      <th><span title="Probability of this bias not being due to random variations. Lower is more likely (statistically insignifcant examples muted)." data-toggle="tooltip">P-val.</span></th>
     </tr>
     </thead>
     <tbody>
@@ -88,8 +88,12 @@
       {% endif %}
       <td>{{ motion.aff_wins }}</td>
       <td>{{ motion.neg_wins }}</td>
-      <td>{{ motion.aff_wins_percent }}%</td>
-      <td>{{ motion.neg_wins_percent }}%</td>
+      <td class="{% if motion.p_value <= 0.05 %}strong{% elif motion.p_value >= 0.10 %}text-muted{% endif %}">
+        {{ motion.c1|floatformat:1 }}
+      </td>
+      <td class="{% if motion.p_value <= 0.05 %}strong{% elif motion.p_value >= 0.10 %}text-muted{% endif %}">
+        {{ motion.p_value|floatformat:2 }}
+      </td>
     </tr>
     {% endfor %}
   </table>

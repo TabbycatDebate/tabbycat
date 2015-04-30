@@ -34,7 +34,6 @@
           <th>Inst<span class="hidden-xs">itution</span></th>
         {% endif %}
         <th>Wins</th>
-        <th>Affs</th>
         {% for round in rounds %}
           <th>{{ round.abbreviation }}</th>
           <th>{{ round.abbreviation }}</th>
@@ -91,7 +90,6 @@
           </td>
         {% endif %}
         <td>{{ team.wins }}</td>
-        <td>{% aff_count team round %}</td>
         {% for round_results in team.round_results %}
           {% if round_results.win >= 0 %}
             {% if for_print %}
@@ -100,12 +98,12 @@
               <td>
                 {% if round_results.score == 0 %}
                   {% with status=round_results.win|yesno:"Won (via forfeit),Forfeitted" icon=round_results.win|yesno:"glyphicon-share-alt text-success,glyphicon-eye-close text-danger" %}
-                  <span title="{{ status }} against {{ round_results.opposition.short_name }} ({% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %})" data-toggle="tooltip">
+                  <span title="{{ status }} against {{ round_results.opposition.short_name }} ({% if show_speakers_in_draw %}{{ round_results.opposition.speakers|join:"<br>" }}{% endif %})" data-toggle="tooltip">
                     <span class="glyphicon {{ icon }}"></span>
                   {% endwith %}
                 {% else %}
                   {% with status=round_results.win|yesno:"Won,Lost" icon=round_results.win|yesno:"glyphicon-arrow-up text-success,glyphicon-arrow-down text-danger" %}
-                  <span title="{{ status }} against {{ round_results.opposition.short_name }} ({% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %})" data-toggle="tooltip">
+                  <span title="{{ status }} against {{ round_results.opposition.short_name }} ({% if show_speakers_in_draw %}{{ round_results.opposition.speakers|join:"<br>" }}{% endif %})" data-toggle="tooltip">
                     <span class="glyphicon {{ icon }}"></span>
                   {% endwith %}
                 {% endif %}

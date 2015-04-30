@@ -29,6 +29,7 @@
     <a class="btn {% if round.venue_allocation_validity %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_venues_edit %}">Edit Venues</a>
     <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
     <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url motions_edit current_round %}">Edit Motions</a>
+    <a class="btn btn-default" href="{% round_url draw_matchups_edit current_round %}">Edit Matchups</a>
     {% if not enable_venue_times %}
       <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
     {% endif %}
@@ -51,12 +52,6 @@
   <form id="releaseForm" method="POST" action="{% round_url release_draw %}"></form>
   <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}"></form>
   <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}"></form>
-
-  {% if enable_divisions and divs < round.active_teams.count %}
-    <div class="alert alert-danger">
-      Not all teams have been assigned a division. <a href="{% tournament_url division_allocations %}" class="alert-link">Edit the divisions.</a>
-    </div>
-  {% endif %}
 
   {% if round.motion_set.all.count == 0 %}
   <div class="alert alert-danger">
@@ -135,20 +130,10 @@
             </td>
             {% endif %}
             <td title="{% aff_count debate.aff_team round.prev %} prior aff">
-                <span href="#" title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-                    {{ debate.aff_team.short_name }}
-                </span>
-                <span class="hidden">
-                    {{ debate.aff_team.speakers|join:', ' }}
-                </span>
+              {{ debate.aff_team.short_name }}
             </td>
             <td title="{% neg_count debate.neg_team round.prev %} prior neg">
-                <span href="#" title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
-                    {{ debate.neg_team.short_name }}
-                </span>
-                <span class="hidden">
-                    {{ debate.neg_team.speakers|join:', ' }}
-                </span>
+              {{ debate.neg_team.short_name }}
             </td>
             <td>
             {% for type, adj in debate.adjudicators %}
