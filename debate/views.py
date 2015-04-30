@@ -1499,7 +1499,7 @@ def draw_matchups_edit(request, round):
     draw = round.get_draw_with_standings(round)
     debates = len(draw)
     unused_teams = round.unused_teams()
-    possible_debates = int((len(round.active_teams.all()) / 2) - debates)
+    possible_debates = int(len(unused_teams) / 2) + 1 # The blank rows to add
     possible_debates = [None] * possible_debates
     return r2r(request, "draw_matchups_edit.html", dict(draw=draw,
         possible_debates=possible_debates,unused_teams=unused_teams))
@@ -1513,19 +1513,23 @@ def save_matchups(request, round):
     existing_debate_ids = [int(a.replace('debate_', '')) for a in request.POST.keys() if a.startswith('debate_')]
     for debate_id in existing_debate_ids:
         debate = Debate.objects.get(id=debate_id)
-        DebateTeam.objects.filter(debate=debate).delete()
-        debate.save()
-
         new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_', '')
-        new_aff_team = Team.objects.get(id=int(new_aff_id))
-        new_aff_dt = DebateTeam(debate=debate, team=new_aff_team, position=DebateTeam.POSITION_AFFIRMATIVE)
-        new_aff_dt.save()
-
         new_neg_id = request.POST.get('neg_%s' % debate_id).replace('team_', '')
-        new_aff_team = Team.objects.get(id=int(new_neg_id))
-        new_neg_dt = DebateTeam(debate=debate, team=new_aff_team, position=DebateTeam.POSITION_NEGATIVE)
-        new_neg_dt.save()
 
+        if new_aff_id and new_neg_id:
+            DebateTeam.objects.filter(debate=debate).delete()
+            debate.save()
+
+            new_aff_team = Team.objects.get(id=int(new_aff_id))
+            new_aff_dt = DebateTeam(debate=debate, team=new_aff_team, position=DebateTeam.POSITION_AFFIRMATIVE)
+            new_aff_dt.save()
+
+            new_aff_team = Team.objects.get(id=int(new_neg_id))
+            new_neg_dt = DebateTeam(debate=debate, team=new_aff_team, position=DebateTeam.POSITION_NEGATIVE)
+            new_neg_dt.save()
+        else:
+            # If there's blank debates we need to delete those
+            debate.delete()
 
     new_debate_ids = [int(a.replace('new_debate_', '')) for a in request.POST.keys() if a.startswith('new_debate_')]
     for debate_id in new_debate_ids:
@@ -1533,14 +1537,13 @@ def save_matchups(request, round):
         new_neg_id = request.POST.get('neg_%s' % debate_id).replace('team_', '')
 
         if new_aff_id and new_neg_id:
-
             debate = Debate(round=round, venue=None)
             debate.save()
+
             aff_team = Team.objects.get(id=int(new_aff_id))
             neg_team = Team.objects.get(id=int(new_neg_id))
             new_aff_dt = DebateTeam(debate=debate, team=aff_team, position=DebateTeam.POSITION_AFFIRMATIVE)
             new_neg_dt = DebateTeam(debate=debate, team=neg_team, position=DebateTeam.POSITION_NEGATIVE)
-
             new_aff_dt.save()
             new_neg_dt.save()
 
