@@ -7,6 +7,14 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, 
 
 import debate.models as m
 
+class TournamentDataImporterError(Exception):
+    """Inspired by ValidationError, but adapted for the importer's needs."""
+
+    def __init__(self):
+
+
+
+
 class TournamentDataImporter(object):
     """Imports data for a tournament from CSV files passed as arguments."""
 
@@ -61,23 +69,22 @@ class TournamentDataImporter(object):
         parse each line, and passing the arguments to the given model's
         constructor.
 
-        'line_parser' must take two arguments: a tuple (the CSV line) and the
-        line number, and return a dict of arguments that can be passed to the
-        model constructor.
+        'line_parser' must take a single argument, a tuple (the CSV line), and
+        return a dict of arguments that can be passed to the model constructor.
         """
         reader = csv.reader(f)
         if self.header_row:
             reader.next()
         insts = list()
-        errors = list()
+        errors = TournamentDataImporterError() # initially blank
 
         for i, line in enumerate(reader, start=1):
             try:
-                kwargs = line_parser(line, i)
+                kwargs = line_parser(line)
             except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
-                message = "Couldn't parse file to create %s, in line %d: " % (model._meta.verbose_name, i) + e.message
-                errors.append(message)
+                message = "Couldn't parse line to create %s: " % (model._meta.verbose_name, i) + e.message
+                errors.add(i, message)
                 self._log(message)
                 continue
 
@@ -88,7 +95,7 @@ class TournamentDataImporter(object):
                 inst = model.objects.get(**kwargs)
             except MultipleObjectsReturned as e:
                 if expect_unique:
-                    errors.append(e.message)
+                    errors.add(i, e.message)
                     self._log(e.message)
                 continue
             except ObjectDoesNotExist as e:
@@ -100,6 +107,8 @@ class TournamentDataImporter(object):
             try:
                 inst.full_clean()
             except ValidationError as e:
+                if hasattr(e, 'error_dict'):
+                    pass # CONTINUE HERE
                 e.message = "Model validation for %s failed, in line %d: " % (model._meta.verbose_name, i) + e.message
                 errors.append(e)
                 self._log(e)
@@ -108,7 +117,7 @@ class TournamentDataImporter(object):
             insts.append(inst)
 
         if self.strict and errors:
-            raise ValidationError(errors)
+            raise errors
 
         for inst in insts:
             self.logger.debug("Made %s: %s", model._meta.verbose_name, inst)
@@ -119,10 +128,14 @@ class TournamentDataImporter(object):
         return len(insts), len(errors)
 
     def import_rounds(self, f):
-        def _round_line_parser(line, i):
+        """Imports rounds from a file.
+        Each line has:
+            seq, name, abbreviation, stage, draw_type, silent, feedback_weight
+        """
+        def _round_line_parser(line):
             kwargs = dict()
             kwargs['tournament'] = self.tournament
-            kwargs['seq'] = int(line[0]) or i
+            kwargs['seq'] = int(line[0])
             kwargs['name'] = line[1]
             kwargs['abbreviation'] = line[2]
             kwargs['stage'] = self._lookup(self.ROUND_STAGES, line[3] or "p", "draw stage")
@@ -141,37 +154,48 @@ class TournamentDataImporter(object):
         return result
 
     def import_institutions(self, f):
-        def _institution_line_parser(line, i):
+        """Imports institutions from a file.
+        Each line has:
+            name, code, abbreviation
+        """
+        def _institution_line_parser(line):
             kwargs = dict()
             kwargs['name'] = line[0] or None
             kwargs['code'] = line[1] or None
-            if len(line) > 2:
-                kwargs['abbreviation'] = line[2]
+            kwargs['abbreviation'] = line[2]
             return kwargs
         return self._import(f, _institution_line_parser, m.Institution)
 
     def import_venue_groups(self, f):
-        def _venue_group_line_parser(line, i):
+        """Imports venue groups from a file.
+        Each line has:
+            name, short_name[, team_capacity]
+        """
+        def _venue_group_line_parser(line):
             kwargs = dict()
             kwargs['tournanent'] = self.tournament
-            kwargs['name'] = line[0] or None
-            kwargs['short_name'] = line[1] or None
+            kwargs['name'] = line[0]
+            kwargs['short_name'] = line[1]
             if len(line) > 2:
                 kwargs['team_capacity'] = line[2]
             return kwargs
         return self._import(f, _venue_group_line_parser, m.VenueGroup)
 
     def import_venues(self, f):
-        def _venue_group_line_parser(line, i):
+        """Imports venues from a file, also creating venue groups as needed.
+        Each line has:
+            name, priority, venue_group.name, time
+        """
+        def _venue_group_line_parser(line):
             if not line[2]:
                 return None
             kwargs = dict()
-            kwargs['tournament'] = self.tournament
+            # kwargs['tournament'] = self.tournament # check whether VenueGroup should have tournament field?
             kwargs['name'] = line[2] or None
             return kwargs
         self._import(f, _venue_group_line_parser, m.VenueGroup, expect_unique=False)
 
-        def _venue_line_parser(line, i):
+        def _venue_line_parser(line):
             kwargs = dict()
             kwargs['tournament'] = self.tournament
             kwargs['name'] = line[0]
@@ -184,7 +208,7 @@ class TournamentDataImporter(object):
 
     def import_config(self, f):
         VALUE_TYPES = {"string": str, "int": int, "float": float, "bool": bool}
-        def _config_line_parser(line, i):
+        def _config_line_parser(line):
             kwargs = dict()
             key = line[0]
             try:
