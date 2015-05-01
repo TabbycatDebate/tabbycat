@@ -7,12 +7,51 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, 
 
 import debate.models as m
 
+NON_FIELD_ERRORS = '__all__'
+
 class TournamentDataImporterError(Exception):
-    """Inspired by ValidationError, but adapted for the importer's needs."""
+    """Inspired by Django's ValidationError, but adapted for the importer's
+    needs. This keeps track of multiple errors and is initialized blank."""
+
+    class Entry(object):
+        def __init__(self, lineno, model, message, field=NON_FIELD_ERRORS):
+            self.lineno = lineno
+            self.model = model._meta.verbose_name
+            self.field = field
+            self.message = message
+
+        def __str__(self):
+            if self.field == NON_FIELD_ERRORS:
+                return "%d:%s:%s" % (self.lineno, self.model, self.message)
+            else:
+                return "%d:%s.%s:%s" % (self.lineno, self.model, self.field, self.message)
 
     def __init__(self):
+        self.entries = []
 
+    def __nonzero__(self):
+        return len(self.entries) > 0
 
+    def __len__(self):
+        return len(self.entries)
+
+    def __str__(self):
+        return "\n".join(map(str, self.entries))
+
+    def add(self, *args, **kwargs):
+        self.entries.append(self.Entry(*args, **kwargs))
+
+    def update_with_validation_error(self, lineno, model, ve):
+        if hasattr(ve, 'error_dict'):
+            for field, error_list in ve.error_dict.items():
+                for error in error_list:
+                    self.add(lineno, model, error.message, field)
+        elif hasattr(ve, 'error_list'):
+            for error in ve.error_list:
+                self.add(lineno, model, error.message, NON_FIELD_ERRORS)
+        else:
+            message = "Model validation failed: "+ str(ve)
+            self.add(lineno, model, message, NON_FIELD_ERRORS)
 
 
 class TournamentDataImporter(object):
@@ -78,13 +117,13 @@ class TournamentDataImporter(object):
         insts = list()
         errors = TournamentDataImporterError() # initially blank
 
-        for i, line in enumerate(reader, start=1):
+        for lineno, line in enumerate(reader, start=1):
             try:
                 kwargs = line_parser(line)
             except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
-                message = "Couldn't parse line to create %s: " % (model._meta.verbose_name, i) + e.message
-                errors.add(i, message)
+                message = "Couldn't parse line: " + str(e)
+                errors.add(lineno, model, message)
                 self._log(message)
                 continue
 
@@ -95,7 +134,7 @@ class TournamentDataImporter(object):
                 inst = model.objects.get(**kwargs)
             except MultipleObjectsReturned as e:
                 if expect_unique:
-                    errors.add(i, e.message)
+                    errors.add(lineno, model, e.message)
                     self._log(e.message)
                 continue
             except ObjectDoesNotExist as e:
@@ -107,10 +146,7 @@ class TournamentDataImporter(object):
             try:
                 inst.full_clean()
             except ValidationError as e:
-                if hasattr(e, 'error_dict'):
-                    pass # CONTINUE HERE
-                e.message = "Model validation for %s failed, in line %d: " % (model._meta.verbose_name, i) + e.message
-                errors.append(e)
+                errors.update_with_validation_error(lineno, model, e)
                 self._log(e)
                 continue
 
