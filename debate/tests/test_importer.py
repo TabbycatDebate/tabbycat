@@ -3,9 +3,10 @@
 from django.test import TestCase
 from unittest import skip
 import debate.models as m
-import debate.importer
 import os.path
 import logging
+
+from debate.importer import TournamentDataImporter, TournamentDataImporterError
 
 class TestImporter(TestCase):
 
@@ -20,7 +21,7 @@ class TestImporter(TestCase):
         self.t.save()
         logger = logging.getLogger(__name__)
         logger.setLevel(logging.ERROR)
-        self.importer = debate.importer.TournamentDataImporter(self.t, logger=logger)
+        self.importer = TournamentDataImporter(self.t, logger=logger)
 
     def _open_csv_file(self, dir, filename):
         path = os.path.join(dir, filename + ".csv")
@@ -29,19 +30,33 @@ class TestImporter(TestCase):
     def test_rounds(self):
         f = self._open_csv_file(self.TESTDIR, "rounds")
         rounds, errors = self.importer.import_rounds(f)
+        self.assertEqual(rounds, 6)
+        self.assertEqual(errors, 0)
 
     def test_venues(self):
         f = self._open_csv_file(self.TESTDIR, "venues")
-        institutions, errors = self.importer.import_venues(f)
+        venues, errors = self.importer.import_venues(f)
+        self.assertEqual(venues, 23)
+        self.assertEqual(errors, 0)
 
     def test_institutions(self):
         f = self._open_csv_file(self.TESTDIR, "institutions")
         institutions, errors = self.importer.import_institutions(f)
+        self.assertEqual(institutions, 14)
+        self.assertEqual(errors, 0)
 
     # @skip
     # def test_invalid_line(self):
     #     pass
 
-    def test_blank_entry(self):
+    def test_blank_entry_strict(self):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "venues")
-        institutions, errors = self.importer.import_venues(f)
+        self.assertRaises(TournamentDataImporterError, self.importer.import_venues, f)
+
+    def test_blank_entry_not_strict(self):
+        f = self._open_csv_file(self.TESTDIR_ERRORS, "venues")
+        self.importer.strict = False
+        venues, errors = self.importer.import_venues(f)
+        self.assertEqual(venues, 20)
+        self.assertEqual(errors, 3)
+        self.importer.strict = True

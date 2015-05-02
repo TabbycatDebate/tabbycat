@@ -11,7 +11,13 @@ NON_FIELD_ERRORS = '__all__'
 
 class TournamentDataImporterError(Exception):
     """Inspired by Django's ValidationError, but adapted for the importer's
-    needs. This keeps track of multiple errors and is initialized blank."""
+    needs. This keeps track of multiple errors and is initialized blank.
+    Before raising, check whether there is anything in it:
+        errors = TournamentDataImporterError()
+        ...
+        if errors:
+            raise errors
+    """
 
     class Entry(object):
         def __init__(self, lineno, model, message, field=NON_FIELD_ERRORS):
@@ -103,17 +109,27 @@ class TournamentDataImporter(object):
     def _log(self, message):
         self.logger.log(logging.ERROR if self.strict else logging.WARNING, message)
 
-    def _import(self, f, line_parser, model, expect_unique=True):
-        """Parses the file object given in f, using the callable line_parser to
-        parse each line, and passing the arguments to the given model's
-        constructor.
+    def _import(self, csvfile, line_parser, model, expect_unique=True):
+        """Parses the object given in f, using the callable line_parser to parse
+        each line, and passing the arguments to the given model's constructor.
+        'csvfile' can be any object that is supported by csv.reader(), which
+        includes file objects and lists of strings.
+
+        If csvfile supports the seek() method (e.g., file objects),
+        csvfile.seek(0) will be called, to allow this function to be called
+        multiple times on the same file. This means that csvfile, if a file
+        object, must be seekable.
 
         'line_parser' must take a single argument, a tuple (the CSV line), and
         return a dict of arguments that can be passed to the model constructor.
+        If 'line_parser' returns None, the line is skipped.
         """
-        reader = csv.reader(f)
+        if hasattr(csvfile, 'seek') and callable(csvfile.seek):
+            csvfile.seek(0)
+        reader = csv.reader(csvfile)
         if self.header_row:
             reader.next()
+        kwargs_seen = list()
         insts = list()
         errors = TournamentDataImporterError() # initially blank
 
@@ -130,17 +146,36 @@ class TournamentDataImporter(object):
             if kwargs is None:
                 continue
 
+            description = model._meta.verbose_name + "(" + ", ".join(["%s=%s" % args for args in kwargs.items()]) + ")"
+
+            # Check if it's a duplicate
+            if kwargs in kwargs_seen:
+                if expect_unique:
+                    message = "Duplicate " + description
+                    errors.add(lineno, model, message)
+                    self._log(message)
+                else:
+                    self.logger.info("Skipping duplicate " + description)
+                continue
+            kwargs_seen.append(kwargs)
+
+            # Retrieve the instance or create it if it doesn't exist
             try:
                 inst = model.objects.get(**kwargs)
+            except ObjectDoesNotExist as e:
+                inst = model(**kwargs)
             except MultipleObjectsReturned as e:
                 if expect_unique:
                     errors.add(lineno, model, e.message)
                     self._log(e.message)
                 continue
-            except ObjectDoesNotExist as e:
-                inst = model(**kwargs)
             else:
-                self.logger.info("Skipping %s: %s, already exists", model._meta.verbose_name, inst)
+                if expect_unique:
+                    message = description + "already exists"
+                    errors.add(lineno, model, message)
+                    self._log(message)
+                else:
+                    self.logger.info("Skipping %s: %s, already exists", model._meta.verbose_name, inst)
                 continue
 
             try:
@@ -196,8 +231,8 @@ class TournamentDataImporter(object):
         """
         def _institution_line_parser(line):
             kwargs = dict()
-            kwargs['name'] = line[0] or None
-            kwargs['code'] = line[1] or None
+            kwargs['name'] = line[0]
+            kwargs['code'] = line[1]
             kwargs['abbreviation'] = line[2]
             return kwargs
         return self._import(f, _institution_line_parser, m.Institution)
@@ -209,7 +244,7 @@ class TournamentDataImporter(object):
         """
         def _venue_group_line_parser(line):
             kwargs = dict()
-            kwargs['tournanent'] = self.tournament
+            # kwargs['tournanent'] = self.tournament # check whether VenueGroup should have tournament field?
             kwargs['name'] = line[0]
             kwargs['short_name'] = line[1]
             if len(line) > 2:
@@ -227,19 +262,23 @@ class TournamentDataImporter(object):
                 return None
             kwargs = dict()
             # kwargs['tournament'] = self.tournament # check whether VenueGroup should have tournament field?
-            kwargs['name'] = line[2] or None
+            kwargs['name'] = line[2]
+            kwargs['short_name'] = line[2][:25]
             return kwargs
-        self._import(f, _venue_group_line_parser, m.VenueGroup, expect_unique=False)
+        _, errors = self._import(f, _venue_group_line_parser, m.VenueGroup, expect_unique=False)
 
         def _venue_line_parser(line):
             kwargs = dict()
             kwargs['tournament'] = self.tournament
             kwargs['name'] = line[0]
-            kwargs['priority'] = line[1] if len(line) > 1 else 10
-            kwargs['group'] = m.VenueGroup.objects.get(tournament=self.tournament, name=line[2]) if len(line) > 2 else None
+            kwargs['priority'] = int(line[1]) if len(line) > 1 else 10
+            kwargs['group'] = m.VenueGroup.objects.get(name=line[2]) if len(line) > 2 else None
             kwargs['time'] = line[3] if len(line) > 3 else None
             return kwargs
-        self._import(f, _venue_line_parser, m.Venue)
+        venues, new_errors = self._import(f, _venue_line_parser, m.Venue)
+        errors += new_errors
+
+        return venues, errors
 
 
     def import_config(self, f):
