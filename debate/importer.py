@@ -59,6 +59,10 @@ class TournamentDataImporterError(Exception):
             message = "Model validation failed: "+ str(ve)
             self.add(lineno, model, message, NON_FIELD_ERRORS)
 
+    def itermessages(self):
+        for entry in self.entries:
+            yield str(entry)
+
 
 class TournamentDataImporter(object):
     """Imports data for a tournament from CSV files passed as arguments."""
@@ -106,9 +110,6 @@ class TournamentDataImporter(object):
             ).save()
         self.logger.info("Auto-made %d rounds", num_rounds)
 
-    def _log(self, message):
-        self.logger.log(logging.ERROR if self.strict else logging.WARNING, message)
-
     def _import(self, csvfile, line_parser, model, expect_unique=True):
         """Parses the object given in f, using the callable line_parser to parse
         each line, and passing the arguments to the given model's constructor.
@@ -140,7 +141,6 @@ class TournamentDataImporter(object):
                     TypeError, IndexError) as e:
                 message = "Couldn't parse line: " + str(e)
                 errors.add(lineno, model, message)
-                self._log(message)
                 continue
 
             if kwargs is None:
@@ -153,7 +153,6 @@ class TournamentDataImporter(object):
                 if expect_unique:
                     message = "Duplicate " + description
                     errors.add(lineno, model, message)
-                    self._log(message)
                 else:
                     self.logger.info("Skipping duplicate " + description)
                 continue
@@ -167,28 +166,31 @@ class TournamentDataImporter(object):
             except MultipleObjectsReturned as e:
                 if expect_unique:
                     errors.add(lineno, model, e.message)
-                    self._log(e.message)
                 continue
             else:
                 if expect_unique:
                     message = description + "already exists"
                     errors.add(lineno, model, message)
-                    self._log(message)
                 else:
-                    self.logger.info("Skipping %s: %s, already exists", model._meta.verbose_name, inst)
+                    self.logger.info("Skipping %s, already exists", description)
                 continue
 
             try:
                 inst.full_clean()
             except ValidationError as e:
                 errors.update_with_validation_error(lineno, model, e)
-                self._log(e)
                 continue
 
             insts.append(inst)
 
-        if self.strict and errors:
-            raise errors
+        if errors:
+            if self.strict:
+                for message in errors.itermessages():
+                    self.logger.error(message)
+                raise errors
+            else:
+                for message in errors.itermessages():
+                    self.logger.warning(message)
 
         for inst in insts:
             self.logger.debug("Made %s: %s", model._meta.verbose_name, inst)
