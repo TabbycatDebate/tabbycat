@@ -20,7 +20,7 @@ class TestImporter(TestCase):
         self.t = m.Tournament(slug="import-test")
         self.t.save()
         logger = logging.getLogger(__name__)
-        logger.setLevel(logging.ERROR)
+        logger.setLevel(logging.INFO)
         self.importer = TournamentDataImporter(self.t, logger=logger)
 
     def _open_csv_file(self, dir, filename):

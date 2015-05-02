@@ -28,9 +28,9 @@ class TournamentDataImporterError(Exception):
 
         def __str__(self):
             if self.field == NON_FIELD_ERRORS:
-                return "%d:%s:%s" % (self.lineno, self.model, self.message)
+                return "line %d, creating %s: %s" % (self.lineno, self.model, self.message)
             else:
-                return "%d:%s.%s:%s" % (self.lineno, self.model, self.field, self.message)
+                return "line %d, creating %s, in field '%s': %s" % (self.lineno, self.model, self.field, self.message)
 
     def __init__(self):
         self.entries = []

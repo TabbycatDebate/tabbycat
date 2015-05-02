@@ -1,3 +1,4 @@
+import logging
 import random
 import re
 from django.db import models
@@ -15,6 +16,8 @@ from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
 from warnings import warn
 from threading import BoundedSemaphore
 from collections import OrderedDict
+
+logger = logging.getLogger(__name__)
 
 class ScoreField(models.FloatField):
     pass
@@ -1210,7 +1213,7 @@ class Round(models.Model):
 def update_round_cache(sender, instance, created, **kwargs):
     cached_key = "%s_%s_%s" % (instance.tournament.slug, instance.seq, 'object')
     cache.delete(cached_key)
-    print "Updated cache %s for %s" % (cached_key, instance)
+    logger.info("Updated cache %s for %s" % (cached_key, instance))
 
 # Update the cached round object when model is changed)
 signals.post_save.connect(update_round_cache, sender=Round)
