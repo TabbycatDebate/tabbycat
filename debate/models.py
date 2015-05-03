@@ -1983,12 +1983,12 @@ class ActionLog(models.Model):
     ACTION_TYPE_CHOICES = (
         (ACTION_TYPE_BALLOT_DISCARD         , 'Discarded ballot set'),
         (ACTION_TYPE_BALLOT_CHECKIN         , 'Checked in ballot set'),
-        (ACTION_TYPE_BALLOT_CREATE          , 'Created ballot set'), # For tab monkeys, not debaters
+        (ACTION_TYPE_BALLOT_CREATE          , 'Created ballot set'), # For tab assistants, not debaters
         (ACTION_TYPE_BALLOT_EDIT            , 'Edited ballot set'),
         (ACTION_TYPE_BALLOT_CONFIRM         , 'Confirmed ballot set'),
-        (ACTION_TYPE_BALLOT_SUBMIT          , 'Submitted ballot set from the public form'), # For debaters, not tab monkeys
-        (ACTION_TYPE_FEEDBACK_SUBMIT        , 'Submitted feedback from the public form'), # For debaters, not tab monkeys
-        (ACTION_TYPE_FEEDBACK_SAVE          , 'Saved feedback'), # For tab monkeys, not debaters
+        (ACTION_TYPE_BALLOT_SUBMIT          , 'Submitted ballot set from the public form'), # For debaters, not tab assistants
+        (ACTION_TYPE_FEEDBACK_SUBMIT        , 'Submitted feedback from the public form'), # For debaters, not tab assistants
+        (ACTION_TYPE_FEEDBACK_SAVE          , 'Saved feedback'), # For tab assistants, not debaters
         (ACTION_TYPE_TEST_SCORE_EDIT        , 'Edited adjudicator test score'),
         (ACTION_TYPE_ADJUDICATORS_SAVE      , 'Saved adjudicator allocation'),
         (ACTION_TYPE_VENUES_SAVE            , 'Saved venues'),

@@ -107,7 +107,7 @@ TAB_PAGES_CACHE_TIMEOUT     = 60 * 120   # 120 Minutes
 @cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view
 def public_index(request, t):
-    return r2r(request, 'public/tournament_index.html')
+    return r2r(request, 'public/public_tournament_index.html')
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -115,7 +115,7 @@ def public_index(request, t):
 def public_participants(request, t):
     adjs = Adjudicator.objects.all().select_related('institution')
     speakers = Speaker.objects.all().select_related('team','team__institution')
-    return r2r(request, "public/participants.html", dict(adjs=adjs, speakers=speakers))
+    return r2r(request, "public/public_participants.html", dict(adjs=adjs, speakers=speakers))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_draw')
@@ -123,18 +123,18 @@ def public_draw(request, t):
     r = t.current_round
     if r.draw_status == r.STATUS_RELEASED:
         draw = r.get_draw()
-        return r2r(request, "public/draw_released.html", dict(draw=draw, round=r))
+        return r2r(request, "public/public_draw_released.html", dict(draw=draw, round=r))
     else:
-        return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=r))
+        return r2r(request, 'public/public_draw_unreleased.html', dict(draw=None, round=r))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_round_view('show_all_draws')
 def public_draw_by_round(request, round):
     if round.draw_status == round.STATUS_RELEASED:
         draw = round.get_draw()
-        return r2r(request, "public/draw_released.html", dict(draw=draw, round=round))
+        return r2r(request, "public/public_draw_released.html", dict(draw=draw, round=round))
     else:
-        return r2r(request, 'public/draw_unreleased.html', dict(draw=None, round=round))
+        return r2r(request, 'public/public_draw_unreleased.html', dict(draw=None, round=round))
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -190,13 +190,13 @@ def public_team_standings(request, t):
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
 def public_break_index(request, t):
-    return r2r(request, "public/break_index.html")
+    return r2r(request, "public/public_break_index.html")
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_teams')
 def public_breaking_teams(request, t, name, category):
     teams = Team.objects.breaking_teams(t, category)
-    return r2r(request, 'public/breaking_teams.html', dict(teams=teams, category=category, name=name))
+    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=category, name=name))
 
 @admin_required
 @tournament_view
@@ -208,7 +208,7 @@ def breaking_teams(request, t, name, category):
 @public_optional_tournament_view('public_breaking_adjs')
 def public_breaking_adjs(request, t):
     adjs = Adjudicator.objects.filter(breaking=True, tournament=t).select_related('institution')
-    return r2r(request, 'public/breaking_adjudicators.html', dict(adjs=adjs))
+    return r2r(request, 'public/public_breaking_adjudicators.html', dict(adjs=adjs))
 
 @admin_required
 @tournament_view
@@ -226,16 +226,16 @@ def public_ballot_submit(request, t):
 
     if r.draw_status == r.STATUS_RELEASED and r.motions_good_for_public:
         draw = r.get_draw()
-        return r2r(request, 'public/add_ballot.html', dict(das=das))
+        return r2r(request, 'public/public_add_ballot.html', dict(das=das))
     else:
-        return r2r(request, 'public/add_ballot_unreleased.html', dict(das=None, round=r))
+        return r2r(request, 'public/public_add_ballot_unreleased.html', dict(das=None, round=r))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_feedback')
 def public_feedback_submit(request, t):
     adjudicators = Adjudicator.objects.all()
     teams = Team.objects.all()
-    return r2r(request, 'public/add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
+    return r2r(request, 'public/public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
 
 
 @cache_page(3) # short cache - needs to update often
@@ -282,14 +282,14 @@ def public_feedback_progress(request, t):
         team.owed_ballots = max((current_round - team.submitted_ballots), 0)
         team.coverage = min(calculate_coverage(team.submitted_ballots, current_round), 100)
 
-    return r2r(request, 'public/feedback_tab.html', dict(teams=teams, adjudicators=adjudicators))
+    return r2r(request, 'public/public_feedback_tab.html', dict(teams=teams, adjudicators=adjudicators))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_motions')
 def public_motions(request, t):
     order_by = t.config.get('public_motions_descending') and '-seq' or 'seq'
     rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
-    return r2r(request, 'public/motions.html', dict(rounds=rounds))
+    return r2r(request, 'public/public_motions.html', dict(rounds=rounds))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')
@@ -314,7 +314,7 @@ def all_draws_for_venue(request, t, venue_id):
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
         'round','round__tournament','division', 'aff_team', 'aff_team__institution', 'neg_team', 'neg_team__institution')
-    return r2r(request, 'public/all_draws_for_venue.html', dict(
+    return r2r(request, 'public/public_all_draws_for_venue.html', dict(
         venue_group=venue_group, debates=debates))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -331,7 +331,7 @@ def all_draws_for_institution(request, t, institution_id):
         'debate', 'division', 'division__venue_group', 'round')
     debates = [dt.debate for dt in debate_teams]
 
-    return r2r(request, 'public/all_draws_for_institution.html', dict(
+    return r2r(request, 'public/public_all_draws_for_institution.html', dict(
         institution=institution, debates=debates))
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -366,7 +366,7 @@ def public_side_allocations(request, t):
         tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
     for team in teams:
         team.side_allocations = [tpas.get((team.id, round.id), "-") for round in rounds]
-    return r2r(request, "public/side_allocations.html", dict(teams=teams, rounds=rounds))
+    return r2r(request, "public/public_side_allocations.html", dict(teams=teams, rounds=rounds))
 
 ## Tab
 
@@ -413,7 +413,7 @@ def public_team_tab(request, t):
 
     show_ballots = round.tournament.config.get('ballots_released')
 
-    return r2r(request, 'public/team_tab.html', dict(teams=teams,
+    return r2r(request, 'public/public_team_tab.html', dict(teams=teams,
             rounds=rounds, round=round, show_ballots=show_ballots))
 
 
@@ -425,7 +425,7 @@ def public_motions_tab(request, t):
     rounds = t.prelim_rounds(until=round).order_by('seq')
     motions = list()
     motions = Motion.objects.statistics(round=round)
-    return r2r(request, 'public/motions_tab.html', dict(motions=motions))
+    return r2r(request, 'public/public_motions_tab.html', dict(motions=motions))
 
 
 @cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -445,7 +445,7 @@ def public_ballots_view(request, t, debate_id):
         raise Http404()
 
     ballot_set = BallotSet(ballot_submission)
-    return r2r(request, 'public/ballot_set.html', dict(debate=debate, ballot_set=ballot_set))
+    return r2r(request, 'public/public_ballot_set.html', dict(debate=debate, ballot_set=ballot_set))
 
 @login_required
 @tournament_view
@@ -1153,7 +1153,7 @@ def results(request, round):
     if not request.user.is_superuser:
         if round != request.tournament.current_round:
             raise Http404()
-        template = "monkey/results.html"
+        template = "assistant/assistant_results.html"
         draw = draw.filter(result_status__in=(
             Debate.STATUS_NONE, Debate.STATUS_DRAFT, Debate.STATUS_POSTPONED))
     else:
@@ -1177,7 +1177,7 @@ def public_results(request, round):
     show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.config.get('show_motions_in_results')
     show_splits = round.tournament.config.get('show_splitting_adjudicators')
     show_ballots = round.tournament.config.get('ballots_released')
-    return r2r(request, "public/results_for_round.html", dict(
+    return r2r(request, "public/public_results_for_round.html", dict(
             draw=draw, show_motions_column=show_motions_column, show_splits=show_splits,
             show_ballots=show_ballots))
 
@@ -1186,7 +1186,7 @@ def public_results(request, round):
 def public_results_index(request, tournament):
     rounds = Round.objects.filter(tournament=tournament,
         seq__lt=tournament.current_round.seq).order_by('seq')
-    return r2r(request, "public/results_index.html", dict(rounds=rounds))
+    return r2r(request, "public/public_results_index.html", dict(rounds=rounds))
 
 @login_required
 @tournament_view
@@ -1195,7 +1195,7 @@ def edit_ballots(request, t, ballots_id):
     debate = ballots.debate
 
     if not request.user.is_superuser:
-        template = 'monkey/enter_results.html'
+        template = 'assistant/assistant_enter_results.html'
         all_ballot_sets = debate.ballotsubmission_set_by_version_except_discarded
         disable_confirm = request.user == ballots.user and not t.config.get('enable_assistant_confirms')
     else:
@@ -1246,11 +1246,11 @@ def public_new_ballots(request, t, adj_id):
 
     round = t.current_round
     if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
-        return r2r(request, 'public/enter_results_error.html', dict(adjudicator=adjudicator, message='The draw and/or motions for the round haven\'t been released yet.'))
+        return r2r(request, 'public/public_enter_results_error.html', dict(adjudicator=adjudicator, message='The draw and/or motions for the round haven\'t been released yet.'))
     try:
         da = DebateAdjudicator.objects.get(adjudicator=adjudicator, debate__round=round)
     except DebateAdjudicator.DoesNotExist:
-        return r2r(request, 'public/enter_results_error.html', dict(adjudicator=adjudicator, message='It looks like you don\'t have a debate this round.'))
+        return r2r(request, 'public/public_enter_results_error.html', dict(adjudicator=adjudicator, message='It looks like you don\'t have a debate this round.'))
 
     debate = da.debate
 
@@ -1271,12 +1271,12 @@ def public_new_ballots(request, t, adj_id):
 
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_SUBMIT,
                     ballot_submission=ballots, ip_address=ip_address, tournament=t)
-            return r2r(request, 'public/success.html', dict(success_kind="ballot"))
+            return r2r(request, 'public/public_success.html', dict(success_kind="ballot"))
 
     else:
         form = forms.BallotSetForm(ballots, password=True)
 
-    return r2r(request, 'public/enter_results.html', dict(
+    return r2r(request, 'public/public_enter_results.html', dict(
         debate          =debate,
         form            =form,
         round           =round,
@@ -1301,7 +1301,7 @@ def new_ballots(request, t, debate_id):
         return HttpResponseBadRequest("Whoops! This debate doesn't have a chair, so you can't enter results for it.")
 
     if not request.user.is_superuser:
-        template = 'monkey/enter_results.html'
+        template = 'assistant/assistant_enter_results.html'
         all_ballot_sets = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
     else:
         template = 'enter_results.html'
@@ -1466,7 +1466,7 @@ def public_speaker_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
-    return r2r(request, 'public/speaker_tab.html', dict(speakers=speakers,
+    return r2r(request, 'public/public_speaker_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
 @admin_required
@@ -1484,7 +1484,7 @@ def public_novices_tab(request, t):
     round = t.current_round
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, only_novices=True)
-    return r2r(request, 'public/novices_tab.html', dict(speakers=speakers,
+    return r2r(request, 'public/public_novices_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
 @admin_required
@@ -1501,7 +1501,7 @@ def public_replies_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, for_replies=True)
-    return r2r(request, 'public/reply_tab.html', dict(speakers=speakers,
+    return r2r(request, 'public/public_reply_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
 
@@ -1789,7 +1789,7 @@ def adj_feedback(request, t):
         adjudicators = Adjudicator.objects.select_related('institution').all()
 
     if not request.user.is_superuser:
-        template = 'monkey/adjudicator_feedback.html'
+        template = 'assistant/assistant_adjudicator_feedback.html'
     else:
         template = 'adjudicator_feedback.html'
 
@@ -1869,11 +1869,11 @@ def public_enter_feedback_adjudicator(request, t, adj_id):
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
                     ip_address=ip_address, adjudicator_feedback=adj_feedback, tournament=t)
-            return r2r(request, 'public/success.html', dict(success_kind="feedback"))
+            return r2r(request, 'public/public_success.html', dict(success_kind="feedback"))
     else:
         form = forms.make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=include_panellists)()
 
-    return r2r(request, 'public/enter_feedback_adj.html', dict(source_name=source_name, form=form))
+    return r2r(request, 'public/public_enter_feedback_adj.html', dict(source_name=source_name, form=form))
 
 # Don't cache
 @public_optional_tournament_view('public_feedback')
@@ -1894,11 +1894,11 @@ def public_enter_feedback_team(request, t, team_id):
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
                     ip_address=ip_address, adjudicator_feedback=adj_feedback, tournament=t)
-            return r2r(request, 'public/success.html', dict(success_kind="feedback"))
+            return r2r(request, 'public/public_success.html', dict(success_kind="feedback"))
     else:
         form = forms.make_feedback_form_class_for_public_team(source, submission_fields)()
 
-    return r2r(request, 'public/enter_feedback_team.html', dict(source_name=source_name, form=form))
+    return r2r(request, 'public/public_enter_feedback_team.html', dict(source_name=source_name, form=form))
 
 @login_required
 @tournament_view
