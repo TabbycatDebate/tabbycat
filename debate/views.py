@@ -423,6 +423,7 @@ def public_team_tab(request, t):
 def public_motions_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
+    print rounds
     motions = list()
     motions = Motion.objects.statistics(round=round)
     return r2r(request, 'public/public_motions_tab.html', dict(motions=motions))

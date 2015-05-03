@@ -1863,7 +1863,7 @@ class MotionManager(models.Manager):
         if round is None:
             motions = self.select_related('round').filter(round__tournament=round.tournament)
         else:
-            motions = self.select_related('round').filter(round__seq__lte=round.seq)
+            motions = self.select_related('round').filter(round__seq__lte=round.seq, round__tournament=round.tournament)
 
         ballots = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
         team_scores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
