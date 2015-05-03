@@ -1349,6 +1349,7 @@ def toggle_postponed(request, t):
 
 def get_speaker_standings(rounds, round, results_override=False, only_novices=False, for_replies=False):
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
+    minimum_debates_needed = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=round.tournament).count() - round.tournament.config.get('standings_missed_debates')
 
     if for_replies:
         speaker_scores = SpeakerScore.objects.select_related(
@@ -1378,7 +1379,7 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
     for speaker in speakers:
         this_speakers_scores = [score for score in speaker_scores if score.speaker == speaker]
         speaker.scores = get_scores(speaker, this_speakers_scores)
-        if len(filter(None, speaker.scores)) > 0:
+        if len(filter(None, speaker.scores)) > minimum_debates_needed:
             speaker.total = sum(filter(None, speaker.scores))
             speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
         else:
@@ -1387,12 +1388,23 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
 
     prev_total = None
     current_rank = 0
-    speakers.sort(key=lambda x: x.total, reverse=True)
+
+    if round.tournament.config.get('standings_method') is False:
+        method = False
+        speakers.sort(key=lambda x: x.average, reverse=True)
+    else:
+        method = True
+        speakers.sort(key=lambda x: x.total, reverse=True)
 
     for i, speaker in enumerate(speakers, start=1):
-        if speaker.total != prev_total:
+        if method:
+            comparison = speaker.total
+        else:
+            comparison = speaker.average
+
+        if comparison != prev_total:
             current_rank = i
-            prev_total = speaker.total
+            prev_total = comparison
         speaker.rank = current_rank
 
     return speakers
