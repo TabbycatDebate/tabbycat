@@ -1132,14 +1132,12 @@ class Round(models.Model):
         return relevant_teams
 
     def unused_teams(self):
-        # Had to replicate venue_availability via base_availability so extra()
-        # could still function on the query set
         all_teams = self.active_teams.all()
         all_teams = [t for t in all_teams if t.tournament == self.tournament]
 
-        all_dts = DebateTeam.objects.filter(debate__round=self).values('team').select_related('team', 'debate')
+        debating_teams = [t.team for t in DebateTeam.objects.filter(debate__round=self).select_related('team', 'debate')]
+        unused_teams = [t for t in all_teams if t not in debating_teams]
 
-        unused_teams = [t for t in all_teams if t not in all_dts]
         return unused_teams
 
     def set_available_base(self, ids, model, active_model, get_active,
