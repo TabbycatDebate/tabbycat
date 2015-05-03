@@ -6,13 +6,17 @@
 {% block page-title %} Ballot check-in for {{ round.name }}{% endblock %}
 
 {% block header %}
-  <div class="btn-group">
-    <button class="btn btn-default btn-danger"><span class="label none"><span id="ballots_left" class="detail">{{ ballots_left }}</span>  Ballots Left <span class="glyphicon glyphicon-remove"></span></span></button>
-  </div>
+<div class="btn-group">
+  <button class="btn btn-default btn-danger">
+    <span class="label none">
+      <span id="ballots_left" class="detail">{{ ballots_left }}</span>
+        Ballots Left <span class="glyphicon glyphicon-remove"></span>
+    </span>
+  </button>
+</div>
 {% endblock %}
 
 {% block content %}
-  <!-- Surround with a form so that we can press 'Enter' on the venue field to submit. -->
   <div class="ballot-checkin-form form-horizontal">
     <div class="form-group">
       <label for="venue" class="col-sm-1 control-label">Venue</label>

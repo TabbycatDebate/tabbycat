@@ -46,7 +46,7 @@ SETTINGS = OrderedDict([
     ('show_unaccredited',           (_bool, 'Show if an adjudicator is a novice (unaccredited)',                   False)),
     ('show_speakers_in_draw',       (_bool, 'Disable/Enable a hover element showing each teams speakers in the UI',True)),
     ('standings_method',            (_bool, 'Speaker rankings are by total (Yes) or average score (No)',           True)),
-    ('standings_missed_debates',    (int, 'The number of debates you can miss and still be on the speaker tab',    1)),
+    ('standings_missed_debates',    (int,   'The number of debates you can miss and still be on the speaker tab',  1)),
     ('public_participants',         (_bool, 'Public interface to see all participants',                            False)),
     ('public_side_allocations',     (_bool, 'Public interface to see side pre-allocations',                        False)),
     ('public_draw',                 (_bool, 'Public interface to see RELEASED draws',                              False)),
