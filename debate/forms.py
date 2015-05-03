@@ -156,6 +156,7 @@ class BallotSetForm(forms.Form):
         self.tournament = self.debate.round.tournament
         self.tconfig = self.tournament.config
         self.using_motions = self.tconfig.get('enable_motions')
+        self.using_vetoes = self.tconfig.get('motion_vetoes_enabled')
         self.using_forfeits = self.tconfig.get('enable_forfeits')
         self.using_replies = self.tconfig.get('reply_scores_enabled')
         self.choosing_sides = self.tconfig.get('draw_side_allocations') == 'manual-ballot'
@@ -252,6 +253,7 @@ class BallotSetForm(forms.Form):
         if self.using_forfeits:
             for side, pos in self.SIDES_AND_POSITIONS:
                 self.fields[self._fieldname_score(adj, side, pos)].required = False
+                self.fields[self._fieldname_speaker(side, pos)].required = False
             self.fields['motion'].required = False
             CHOICES = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
             self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=False)
@@ -447,12 +449,15 @@ class BallotSetForm(forms.Form):
         # 4. Save motions
         if self.using_motions:
             bs.motion = self.cleaned_data['motion']
+
+        if self.using_vetoes:
             for side in self.SIDES:
                 motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)]
                 bs.set_motion_veto(side, motion_veto)
 
         # 5. Save speaker fields
         if not self.forfeit_declared:
+            print "saving speaker fields"
             for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 bs.set_speaker(side, pos, speaker)

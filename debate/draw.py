@@ -132,6 +132,8 @@ def DrawGenerator(draw_type, teams, results=None, **kwargs):
             klass = RandomWithAllocatedSidesDrawGenerator
         else:
             klass = RandomDrawGenerator
+    elif draw_type == "manual":
+        klass = ManualDrawGenerator
     elif draw_type == "round_robin":
         klass = RoundRobinDrawGenerator
     elif draw_type == "power_paired":
@@ -1193,4 +1195,16 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
 
         return pairings
+
+
+class ManualDrawGenerator(BaseDrawGenerator):
+    """ Class for round-robin stype matchups using divisions """
+
+    can_be_first_round = True
+    requires_even_teams = False
+    requires_prev_results = False
+
+    def make_draw(self):
+        self._draw = list()
+        return self._draw
 

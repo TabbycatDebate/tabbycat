@@ -1,0 +1,9 @@
+{% load debate_tags %}
+
+<ul id="nav" class="nav navbar-nav navbar-left">
+  <li><a class="assistant-enter-result-nav" href="{% round_url results current_round %}">Enter Results</a></li>
+  <li><a class="assistant-enter-feedback-nav" href="{% tournament_url adj_feedback %}">Enter Feedback</a></li>
+  {% if enable_divisions %}
+    <li><a class="assistant-print-mastersheets" href="{% round_url master_sheets_list current_round %}">Mastersheets</a></li>
+  {% endif %}
+</ul>

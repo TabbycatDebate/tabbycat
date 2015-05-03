@@ -674,8 +674,10 @@ class ForfeitBallotSet(BallotSet):
         self.debate = ballots.debate
         self.adjudicators = self.debate.adjudicators.list
         self.forfeiter = forfeiter
+        self.motion_veto = None
+        self.dts = self.debate.debateteam_set.all() # note, this is a QuerySet
 
-    def save_side(self, dt):
+    def _save_team(self, dt):
 
         if self.forfeiter == dt:
             points = 0
@@ -683,7 +685,6 @@ class ForfeitBallotSet(BallotSet):
         else:
             points = 2
             win = True
-
 
         from debate.models import TeamScore
         # Note: forfeited debates have fake scores/margins, thus the affects_average toggle
@@ -702,6 +703,6 @@ class ForfeitBallotSet(BallotSet):
         self.ballotsub.forfeit = self.forfeiter
         self.ballotsub.save()
         for dt in self.dts:
-            self.save_side(dt)
+            self._save_team(dt)
 
 

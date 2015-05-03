@@ -311,10 +311,6 @@ def annotate_team_standings(teams, round=None, shuffle=False):
         return sorted_teams
 
     elif rule == "wadl":
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error("logging for %s rules" % rule)
-
         # Sort by points
         if shuffle:
             sorted_teams = list(teams)
@@ -361,6 +357,7 @@ class TeamManager(models.Manager):
         prev_rank_value = None
         prev_points = None
         current_rank = 0
+        counter = 0
         for team in teams:
             if team.points != prev_points:
                 counter = 1
@@ -535,6 +532,7 @@ class Team(models.Model):
     def get_neg_count(self, seq=None):
         return self._get_count(DebateTeam.POSITION_NEGATIVE, seq)
 
+
     def _get_count(self, position, seq):
         dts = DebateTeam.objects.filter(team=self, position=position, debate__round__stage=Round.STAGE_PRELIMINARY)
         if seq is not None:
@@ -556,14 +554,19 @@ class Team(models.Model):
     def debates(self):
         return self.get_debates(None)
 
-    @property
+    @cached_property
+    def wins_count(self):
+        wins = TeamScore.objects.filter(ballot_submission__confirmed=True,debate_team__team=self,win=True).count()
+        return wins
+
+    @cached_property
     def speakers(self):
         cached_key = "%s_%s_%s" % ('teamid', self.id, '_speaker__objects')
         cached_value = cache.get(cached_key)
         if cached_value:
             return cache.get(cached_key)
         else:
-            cached_value = self.speaker_set.all()
+            cached_value = self.speaker_set.all().select_related('person')
             cache.set(cached_key, cached_value, None)
             return cached_value
 
@@ -798,12 +801,14 @@ class RoundManager(models.Manager):
 
 class Round(models.Model):
     DRAW_RANDOM      = 'R'
-    DRAW_ROUNDROBIN       = 'D'
+    DRAW_MANUAL      = 'M'
+    DRAW_ROUNDROBIN  = 'D'
     DRAW_POWERPAIRED = 'P'
     DRAW_FIRSTBREAK  = 'F'
     DRAW_BREAK       = 'B'
     DRAW_CHOICES = (
         (DRAW_RANDOM,      'Random'),
+        (DRAW_MANUAL,      'Manual'),
         (DRAW_ROUNDROBIN,  'Round-robin'),
         (DRAW_POWERPAIRED, 'Power-paired'),
         (DRAW_FIRSTBREAK,  'First elimination'),
@@ -892,6 +897,9 @@ class Round(models.Model):
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts" : "draw_avoid_conflicts",
             })
+        elif self.draw_type == self.DRAW_MANUAL:
+            teams = draw_teams
+            draw_type = "manual"
         elif self.draw_type == self.DRAW_POWERPAIRED:
             teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
@@ -1004,8 +1012,9 @@ class Round(models.Model):
                             team.points = annotated_team.points
                             team.speaker_score = annotated_team.speaker_score
                             team.subrank = annotated_team.subrank
-                            team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
                             team.draw_strength = getattr(annotated_team, 'draw_strength', None) # only exists in NZ standings rules
+                            if annotated_team.points:
+                                team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
             else:
                 standings = list(Team.objects.standings(round.prev))
 
@@ -1121,6 +1130,15 @@ class Round(models.Model):
                                       'debate_team')
         relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
         return relevant_teams
+
+    def unused_teams(self):
+        all_teams = self.active_teams.all()
+        all_teams = [t for t in all_teams if t.tournament == self.tournament]
+
+        debating_teams = [t.team for t in DebateTeam.objects.filter(debate__round=self).select_related('team', 'debate')]
+        unused_teams = [t for t in all_teams if t not in debating_teams]
+
+        return unused_teams
 
     def set_available_base(self, ids, model, active_model, get_active,
                              id_column, active_id_column, remove=True):
@@ -1309,12 +1327,12 @@ class Debate(models.Model):
 
     @cached_property
     def aff_dt(self):
-        aff_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
+        aff_dt = DebateTeam.objects.select_related('team','team__institution').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
         return aff_dt
 
     @cached_property
     def neg_dt(self):
-        neg_dt = DebateTeam.objects.select_related('team').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
+        neg_dt = DebateTeam.objects.select_related('team','team__institution').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
         return neg_dt
 
     def get_side(self, team):
@@ -1335,7 +1353,7 @@ class Debate(models.Model):
 
         return d
 
-    @property
+    @cached_property
     def confirmed_ballot(self):
         """Returns the confirmed BallotSubmission for this debate, or None if
         there is no such ballot submission."""
@@ -1397,11 +1415,11 @@ class Debate(models.Model):
                     a.append(Conflict(adj, team))
         return a
 
-    @property
+    @cached_property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
-        adjs = DebateAdjudicator.objects.filter(debate=self)
+        adjs = DebateAdjudicator.objects.filter(debate=self).select_related('adjudicator')
         alloc = AdjudicatorAllocation(self)
         for a in adjs:
             if a.type == a.TYPE_CHAIR:
@@ -1845,7 +1863,7 @@ class MotionManager(models.Manager):
         if round is None:
             motions = self.select_related('round').filter(round__tournament=round.tournament)
         else:
-            motions = self.select_related('round').filter(round__seq__lte=round.seq)
+            motions = self.select_related('round').filter(round__seq__lte=round.seq, round__tournament=round.tournament)
 
         ballots = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
         team_scores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
@@ -1963,12 +1981,12 @@ class ActionLog(models.Model):
     ACTION_TYPE_CHOICES = (
         (ACTION_TYPE_BALLOT_DISCARD         , 'Discarded ballot set'),
         (ACTION_TYPE_BALLOT_CHECKIN         , 'Checked in ballot set'),
-        (ACTION_TYPE_BALLOT_CREATE          , 'Created ballot set'), # For tab monkeys, not debaters
+        (ACTION_TYPE_BALLOT_CREATE          , 'Created ballot set'), # For tab assistants, not debaters
         (ACTION_TYPE_BALLOT_EDIT            , 'Edited ballot set'),
         (ACTION_TYPE_BALLOT_CONFIRM         , 'Confirmed ballot set'),
-        (ACTION_TYPE_BALLOT_SUBMIT          , 'Submitted ballot set from the public form'), # For debaters, not tab monkeys
-        (ACTION_TYPE_FEEDBACK_SUBMIT        , 'Submitted feedback from the public form'), # For debaters, not tab monkeys
-        (ACTION_TYPE_FEEDBACK_SAVE          , 'Saved feedback'), # For tab monkeys, not debaters
+        (ACTION_TYPE_BALLOT_SUBMIT          , 'Submitted ballot set from the public form'), # For debaters, not tab assistants
+        (ACTION_TYPE_FEEDBACK_SUBMIT        , 'Submitted feedback from the public form'), # For debaters, not tab assistants
+        (ACTION_TYPE_FEEDBACK_SAVE          , 'Saved feedback'), # For tab assistants, not debaters
         (ACTION_TYPE_TEST_SCORE_EDIT        , 'Edited adjudicator test score'),
         (ACTION_TYPE_ADJUDICATORS_SAVE      , 'Saved adjudicator allocation'),
         (ACTION_TYPE_VENUES_SAVE            , 'Saved venues'),

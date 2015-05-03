@@ -19,8 +19,8 @@
 .public-breaking-teams-open a.public-breaking-teams-open-nav,
 .public-breaking-teams-esl a.public-breaking-teams-esl-nav,
 .public-adjs a.public-breaking-adjs-nav,
-.monkey-enter-result a.monkey-enter-result-nav,
-.monkey-enter-feedback a.monkey-enter-feedback-nav,
+.assistant-enter-result a.assistant-enter-result-nav,
+.assistant-enter-feedback a.assistant-enter-feedback-nav,
 .dash a.dash-nav,
 .draw a.draw-nav,
 .display-motions a.motions-nav,
@@ -46,9 +46,29 @@
   display: block;
 }
 
-// Edit Adjs and Edit Venues Page Generally
+// Edit Adjs and Edit Venues Page
 
-.edit-venues, .edit-adjs {
+.edit-venues, .edit-adjs, .edit-matchups {
+
+  // General
+
+  #main {
+    z-index: 10;
+    position: relative;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .importance {
+    text-align: left;
+    width: 48px;
+    form {
+      margin: -8px -8px -8px -8px;
+    }
+    select {
+      @extend .form-control;
+    }
+  }
 
   .page-header {
     margin: 10px 0 0 -15px;
@@ -61,22 +81,42 @@
     margin-right: 220px; // move the search box right to make way for unused
   }
 
-  #main {
-    z-index: 10;
-    position: relative;
-  }
-
   #scratch {
+    background-color: #fff;
+    background-color: rgba(240,240,240,0.90);
     position: fixed;
-    top: 0;
-    right: 0;
-    height: 100%;
-    padding-left: 0;
     overflow-y: scroll;
-    padding-bottom: 50px; // ensure no footer overlaps
-    padding-top: 18px;
     z-index: 100;
+    padding-left: 5px;
+    padding-right: 5px;
 
+    &.bg-success {
+      background: $state-success-bg;
+    }
+    &.fixed-right {
+      top: 0;
+      right: 0;
+      height: 100%;
+      padding-bottom: 50px; // ensure no footer overlaps
+      padding-top: 18px;
+    }
+    &.fixed-bottom {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      thead {
+        text-align: center;
+      }
+      tbody tr {
+        float: left;
+        width: 210px;
+        padding-right: 5px;
+        td {
+          display: block;
+        }
+      }
+    }
     .unused {
       padding-left: 0;
     }
@@ -85,50 +125,105 @@
     }
   }
 
+  // Draggables
+
+  .ui-droppable {
+    height: 50px;
+  }
+
+  .venue, .adj, .team {
+
+    &.history-conflict {
+      background-color: $btn-primary-bg;
+    }
+    &.institutional-conflict {
+      background-color: $btn-warning-bg;
+    }
+    &.personal-conflict {
+      background-color: $btn-danger-bg;
+    }
+    &.history-conflict, &.personal-conflict, &.institutional-conflict {
+      span, a, span a {
+        color: #fff;
+        border-bottom: none;
+      }
+    }
+  }
+
+  .venue, .adj, .team {
+    border: 1px solid #ccc;
+    padding: 0px 0px 0px 0px;
+    text-align: left;
+    max-width: 300px; // Needed
+
+    span {
+      padding: 6px 6px 6px 6px;
+      display: block;
+    }
+    &.gender-display span {
+      margin-right: 35px;
+      padding-right: 0px;
+    }
+    &.gender-display.male span a,
+    &.gender-display.female span a {
+      color: #fff;
+    }
+    &.gender-display.male span {
+      background-color: #0000FF;
+      color: #fff;
+    }
+    &.gender-display.female span {
+      background-color: #D600FF;
+      color: #fff;
+    }
+  }
+  .venue:hover, .adj:hover, .team:hover,
+  .venue.dragging, .adj.dragging, .team.dragging {
+    cursor: move;
+    border: 1px solid $btn-primary-border;
+    @extend .text-primary;
+    @extend .border-primary;
+    &.is_unaccredited {
+      background: $table-bg-active;
+    }
+    &.btn-danger, &.btn-warning {
+      color: #fff;
+    }
+  }
 }
 
-//  Edit Adjs and Edit Venues Droppables
+// Gender Colors
 
-.venue, .adj, .team {
 
-  &.history-conflict {
-    background-color: $btn-warning-bg;
+.edit-venues, .edit-adjs {
+  .gender-display.gender-parity-3 {
+    background-color: lighten(#0000FF, 45%);
   }
-  &.personal-conflict {
-    background-color: $btn-danger-bg;
+  .gender-display.gender-parity-4 {
+    background-color: lighten(#0000FF, 40%);
   }
-  &.institutional-conflict {
-    background-color: $btn-danger-bg;
-  }
-}
-.adj {
-  max-width: 300px; // Needed
-}
-.venue {
-  max-width: 200px; // Needed
-}
-.venue, .adj {
-  border: 1px solid #ccc;
-  padding: 0px 0px 0px 0px;
-  text-align: left;
-  span {
-    padding: 6px 6px 6px 6px;
-    display: block;
-  }
-  &.gender-display span {
-    margin-right: 35px;
-    padding-right: 0px;
-  }
-  &.gender-display.male span a,
-  &.gender-display.female span a {
+  .gender-display.gender-parity-5 {
+    background-color: lighten(#0000FF, 30%);
     color: #fff;
   }
-  &.gender-display.male span {
+  .gender-display.gender-parity-6 {
+    background-color: lighten(#0000FF, 20%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-7 {
+    background-color: lighten(#0000FF, 10%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-8 {
     background-color: #0000FF;
     color: #fff;
   }
-  &.gender-display.female span {
-    background-color: #D600FF;
+  .gender-display.gender-parity-9 {
+    background-color: darken(#0000FF, 25%);
+    color: #fff;
+  }
+  .gender-display.gender-parity-10 {
+    background-color: darken(#0000FF, 35%);
     color: #fff;
   }
 }

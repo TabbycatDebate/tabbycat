@@ -24,11 +24,11 @@
 {% block content %}
 <div class="row">
 
-  <div id="scratch" class="col-xs-2">
+  <div id="scratch" class="col-xs-3  fixed-right">
     <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
-          <th>Unused Venues</th>
+          <th>Unused Venues <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>
         </tr>
       </thead>
       <tbody>
@@ -36,12 +36,12 @@
     </table>
     {% for venue in round.unused_venues %}
     <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
-      <span>{{ venue.name }} {% if venue.time %}<em>{{ venue.time|date:"d/m" }}</em>{% endif %}</span>
+      <span>{{ venue }} {% if venue.time %}<em>{{ venue.time|date:"d/m" }}</em>{% endif %}</span>
     </div>
     {% endfor %}
   </div>
 
-  <div id="main" class="col-xs-10">
+  <div id="main" class="col-xs-9">
 
     <div id="alerts-holder" class=""></div>
 
@@ -73,7 +73,7 @@
         <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
           {% if debate.venue %}
           <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
-            <span class="">{{ debate.venue.name }} {% if debate.venue.time %}<em>{{ debate.venue.time|date:"d/m" }}</em>{% endif %}</span>
+            <span class="">{{ debate.venue }} {% if debate.venue.time %}<em>{{ debate.venue.time|date:"d/m" }}</em>{% endif %}</span>
           </div>
           {% endif %}
         </td>
@@ -183,10 +183,10 @@
       "aaSorting": [[0, 'desc']],
       "aoColumns": [
         { "sWidth": "5%" },
-        { "sWidth": "10%" },
-        { "sWidth": "10%" },
-        { "sWidth": "55%" },
-        { "sWidth": "20%" }
+        { "sWidth": "12.5%" },
+        { "sWidth": "12.5%" },
+        { "sWidth": "35%" },
+        { "sWidth": "35%" }
       ],
     });
     $('#table-search').keyup(function(){

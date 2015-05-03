@@ -75,6 +75,9 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/draw/release/$', 'release_draw', name='release_draw'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw/unrelease/$', 'unrelease_draw', name='unrelease_draw'),
 
+    url(r'^admin/round/(?P<round_seq>\d+)/draw/matchups/edit/$', 'draw_matchups_edit', name='draw_matchups_edit'),
+    url(r'^admin/round/(?P<round_seq>\d+)/draw/matchups/save/$', 'save_matchups', name='save_matchups'),
+
     url(r'^admin/round/(?P<round_seq>\d+)/draw/venues/$', 'draw_venues_edit', name='draw_venues_edit'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw/venues/save/$', 'save_venues', name='save_venues'),
 
@@ -85,6 +88,7 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/_get/$', 'draw_adjudicators_get', name='draw_adjudicators_get'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/save/$', 'save_adjudicators', name='save_adjudicators'),
     url(r'^admin/round/(?P<round_seq>\d+)/_update_importance/$', 'update_debate_importance', name='update_debate_importance'),
+
 
     url(r'^admin/round/(?P<round_seq>\d+)/round_increment_check/$', 'round_increment_check', name='round_increment_check'),
     url(r'^admin/round/(?P<round_seq>\d+)/round_increment/$', 'round_increment', name='round_increment'),
