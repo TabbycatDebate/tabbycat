@@ -43,7 +43,11 @@
         <td class="hidden">{{ speaker.rank }}</td>
         <td>
           <strong>
-            {{ speaker.rank }}{% if next_value.rank == speaker.rank or prev_value.rank == speaker.rank %}<span class="text-muted">=</span>{% endif %}
+            {% if speaker.total %}
+              {{ speaker.rank }}{% if next_value.rank == speaker.rank or prev_value.rank == speaker.rank %}<span class="text-muted">=</span>{% endif %}
+            {% else %}
+              N/A
+            {% endif %}
           </strong>
         </td>
         <td>{{ speaker.name }}</td>

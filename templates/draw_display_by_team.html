@@ -68,7 +68,11 @@
         <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
       {% endif %}
       <td class="venue-name">
-        {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }}{% else %}{{ debate.venue.name }}{% endif %}
+      {% if debate.division %}
+        {{ debate.division.venue_group.short_name }}
+      {% else %}
+        {{ debate.venue.group.short_name }}
+      {% endif %}
       </td>
       {% if enable_venue_times %}
         <td>
@@ -77,9 +81,9 @@
             {{ debate.venue.time|date:"D jS F" }}
           {% endif %}
         </td>
-        <td>
-          {{ debate.division.time_slot|time:'h:i A' }}
-        </td>
+        {% if enable_venue_times %}
+          {% include "tables/debate_status.html" %}
+        {% endif %}
       {% endif %}
       <td class="team-name" id="">
         <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">

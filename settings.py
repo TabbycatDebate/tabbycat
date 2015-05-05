@@ -111,6 +111,7 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'), # SASS for stylesheets
 )
 LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
+LIBSASS_SOURCE_COMMENTS = False
 
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True

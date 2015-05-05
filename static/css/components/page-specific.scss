@@ -19,8 +19,8 @@
 .public-breaking-teams-open a.public-breaking-teams-open-nav,
 .public-breaking-teams-esl a.public-breaking-teams-esl-nav,
 .public-adjs a.public-breaking-adjs-nav,
-.monkey-enter-result a.monkey-enter-result-nav,
-.monkey-enter-feedback a.monkey-enter-feedback-nav,
+.assistant-enter-result a.assistant-enter-result-nav,
+.assistant-enter-feedback a.assistant-enter-feedback-nav,
 .dash a.dash-nav,
 .draw a.draw-nav,
 .display-motions a.motions-nav,
@@ -46,9 +46,11 @@
   display: block;
 }
 
-// Edit Adjs and Edit Venues Page Generally
+// Edit Adjs and Edit Venues Page
 
 .edit-venues, .edit-adjs, .edit-matchups {
+
+  // General
 
   #main {
     z-index: 10;
@@ -123,66 +125,70 @@
     }
   }
 
-}
+  // Draggables
 
-//  Edit Adjs and Edit Venues Droppables
+  .ui-droppable {
+    height: 50px;
+  }
 
-.venue, .adj, .team {
+  .venue, .adj, .team {
 
-  &.history-conflict {
-    background-color: $btn-primary-bg;
-  }
-  &.institutional-conflict {
-    background-color: $btn-warning-bg;
-  }
-  &.personal-conflict {
-    background-color: $btn-danger-bg;
-  }
-  &.history-conflict, &.personal-conflict, &.institutional-conflict {
-    span, a, span a {
-      color: #fff;
-      border-bottom: none;
+    &.history-conflict {
+      background-color: $btn-primary-bg;
+    }
+    &.institutional-conflict {
+      background-color: $btn-warning-bg;
+    }
+    &.personal-conflict {
+      background-color: $btn-danger-bg;
+    }
+    &.history-conflict, &.personal-conflict, &.institutional-conflict {
+      span, a, span a {
+        color: #fff;
+        border-bottom: none;
+      }
     }
   }
-}
 
-.venue, .adj, .team_draggable {
-  border: 1px solid #ccc;
-  padding: 0px 0px 0px 0px;
-  text-align: left;
-  max-width: 300px; // Needed
+  .venue, .adj, .team {
+    border: 1px solid #ccc;
+    padding: 0px 0px 0px 0px;
+    text-align: left;
+    max-width: 300px; // Needed
 
-  span {
-    padding: 6px 6px 6px 6px;
-    display: block;
+    span {
+      padding: 6px 6px 6px 6px;
+      display: block;
+    }
+    &.gender-display span {
+      margin-right: 35px;
+      padding-right: 0px;
+    }
+    &.gender-display.male span a,
+    &.gender-display.female span a {
+      color: #fff;
+    }
+    &.gender-display.male span {
+      background-color: #0000FF;
+      color: #fff;
+    }
+    &.gender-display.female span {
+      background-color: #D600FF;
+      color: #fff;
+    }
   }
-  &.gender-display span {
-    margin-right: 35px;
-    padding-right: 0px;
-  }
-  &.gender-display.male span a,
-  &.gender-display.female span a {
-    color: #fff;
-  }
-  &.gender-display.male span {
-    background-color: #0000FF;
-    color: #fff;
-  }
-  &.gender-display.female span {
-    background-color: #D600FF;
-    color: #fff;
-  }
-}
-.venue:hover, .adj:hover, .team_draggable:hover, .venue.dragging, .adj.dragging, .team_draggable.dragging {
-  cursor: move;
-  border: 1px solid $btn-primary-border;
-  @extend .text-primary;
-  @extend .border-primary;
-  &.is_unaccredited {
-    background: $table-bg-active;
-  }
-  &.btn-danger, &.btn-warning {
-    color: #fff;
+  .venue:hover, .adj:hover, .team:hover,
+  .venue.dragging, .adj.dragging, .team.dragging {
+    cursor: move;
+    border: 1px solid $btn-primary-border;
+    @extend .text-primary;
+    @extend .border-primary;
+    &.is_unaccredited {
+      background: $table-bg-active;
+    }
+    &.btn-danger, &.btn-warning {
+      color: #fff;
+    }
   }
 }
 

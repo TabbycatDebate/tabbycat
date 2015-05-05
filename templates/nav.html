@@ -1,7 +1,7 @@
 {% load debate_tags %}
 {% load cache %}
 
-<nav class="navbar navbar-default navbar-static-top" role="navigation">
+<nav class="navbar navbar-default navbar-static-top {% if '/admin/' in request.path %}navbar-inverse{% endif %}" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -43,7 +43,7 @@
         {% if user.is_superuser %}
           {% include "nav/admin_nav.html" %}
         {% else %}
-          {% include "nav/monkey_nav.html" %}
+          {% include "nav/assistant_nav.html" %}
         {% endif %}
       {% else %}
         {% include "nav/public_nav.html" %}

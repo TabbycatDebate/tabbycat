@@ -108,105 +108,110 @@
 
     // Fill in the reply speaker if there is only one option
     {% if form.using_replies and form.LAST_SUBSTANTIVE_POSITION == 2 %}
-    $('#id_aff_speaker_s1').change(function() {
-      $('#id_aff_speaker_s{{ form.REPLY_POSITION }}').val($(this).val());
-      update_speakers();
-    });
-    $('#id_neg_speaker_s1').change(function() {
-      $('#id_neg_speaker_s{{ form.REPLY_POSITION }}').val($(this).val());
-      update_speakers();
-    });
+
+      $('#id_aff_speaker_s1').change(function() {
+        $('#id_aff_speaker_s{{ form.REPLY_POSITION }}').val($(this).val());
+        update_speakers();
+      });
+      $('#id_neg_speaker_s1').change(function() {
+        $('#id_neg_speaker_s{{ form.REPLY_POSITION }}').val($(this).val());
+        update_speakers();
+      });
+
     {% endif %}
 
     {% if enable_forfeits %}
 
-    function disable_required() {
-      $("#ballot_set").find(".form-control").removeClass("required");
-      $("#ballot_set").find(".form-control-parent .number").removeClass("required");
-    }
+      function disable_required() {
+        $("#ballot_set").find(".form-control").removeClass("required").removeClass("error");
+        $("#ballot_set").find(".form-control-parent .number").removeClass("required").removeClass("error");
+        $("#ballot_set").find(".form-control").removeClass("required").removeClass("error");
+        $("#ballot_set").find(".scoresheet select").attr("disabled", true);
+        $("#ballot_set").find(".scoresheet input").attr("disabled", true);
+      }
 
-    $("#id_forfeits_0").click(function() {
-      disable_required();
-    });
-    $("#id_forfeits_1").click(function() {
-      disable_required();
-    });
+      $("#id_forfeits_0").click(function() {
+        disable_required();
+      });
+      $("#id_forfeits_1").click(function() {
+        disable_required();
+      });
 
-    if ($("#id_forfeits_0").is(':checked') || $("#id_forfeits_1").is(':checked')) {
-      // For when reloading initial form data
-      disable_required();
-    }
+      if ($("#id_forfeits_0").is(':checked') || $("#id_forfeits_1").is(':checked')) {
+        // For when reloading initial form data
+        disable_required();
+      }
 
     {% endif %}
 
     {% if side_allocations_unknown %}
 
-    var team_names = {};
-    {% for team in form.debate.teams %}team_names['{{team.id}}'] = '{{team.short_name}}';
-    {% endfor %}
+      var team_names = {};
+      {% for team in form.debate.teams %}team_names['{{team.id}}'] = '{{team.short_name}}';
+      {% endfor %}
 
-    function swap_sides(selected_option) {
+      function swap_sides(selected_option) {
 
-        team_ids = selected_option.split(',');
-        aff_team_id = team_ids[0];
-        neg_team_id = team_ids[1];
+          team_ids = selected_option.split(',');
+          aff_team_id = team_ids[0];
+          neg_team_id = team_ids[1];
 
-        // Copy team names
-        $(".aff-team-name").text(team_names[aff_team_id]);
-        $(".neg-team-name").text(team_names[neg_team_id]);
+          // Copy team names
+          $(".aff-team-name").text(team_names[aff_team_id]);
+          $(".neg-team-name").text(team_names[neg_team_id]);
 
-        // Take note of speaker positions
-        current_speakers = {};
-        $(".aff-speaker").each(function(index) {
-          current_speakers["aff" + index] = $(this).val();
-        })
-        $(".neg-speaker").each(function(index) {
-          current_speakers["neg" + index] = $(this).val();
-        })
+          // Take note of speaker positions
+          current_speakers = {};
+          $(".aff-speaker").each(function(index) {
+            current_speakers["aff" + index] = $(this).val();
+          })
+          $(".neg-speaker").each(function(index) {
+            current_speakers["neg" + index] = $(this).val();
+          })
 
-        // Copy speaker positions dropdowns
-        $(".aff-speaker option").remove();
-        $(".aff-speaker").each(function(index) {
-          $("#id_team_" + aff_team_id + " option").clone().appendTo(this);
-          // HACK TODO check for values before assigning
-          $(this).val(current_speakers["aff" + index]);
-          if (!$(this).val())
-            $(this).val(current_speakers["neg" + index]);
-        })
-        $(".neg-speaker option").remove();
-        $(".neg-speaker").each(function(index) {
-          $("#id_team_" + neg_team_id + " option").clone().appendTo(this);
-          // HACK TODO check for values before assigning
-          $(this).val(current_speakers["neg" + index]);
-          if (!$(this).val())
+          // Copy speaker positions dropdowns
+          $(".aff-speaker option").remove();
+          $(".aff-speaker").each(function(index) {
+            $("#id_team_" + aff_team_id + " option").clone().appendTo(this);
+            // HACK TODO check for values before assigning
             $(this).val(current_speakers["aff" + index]);
-        })
+            if (!$(this).val())
+              $(this).val(current_speakers["neg" + index]);
+          })
+          $(".neg-speaker option").remove();
+          $(".neg-speaker").each(function(index) {
+            $("#id_team_" + neg_team_id + " option").clone().appendTo(this);
+            // HACK TODO check for values before assigning
+            $(this).val(current_speakers["neg" + index]);
+            if (!$(this).val())
+              $(this).val(current_speakers["aff" + index]);
+          })
 
-    }
-
-    // On Load
-    if ($("#id_choose_sides").val() == "") {
-      $(".scoresheet").hide();
-    } else {
-      $(".adj-ballot .text-warning").hide();
-      console.log('on load selected');
-      var selected_option = $("#id_choose_sides").val()
-      swap_sides(selected_option)
-    }
-
-    // On Change
-    $('#id_choose_sides').change(function() {
-      var selected_option = $("#id_choose_sides").val()
-      if (selected_option != "") {
-        $(".scoresheet").show();
-        $(".adj-ballot .text-warning").hide();
-        swap_sides(selected_option)
-      } else {
-        $(".scoresheet").hide();
-        $(".adj-ballot .text-warning").show();
       }
-      update_speakers();
-    });
+
+      // On Load
+      if ($("#id_choose_sides").val() == "") {
+        $(".scoresheet").hide();
+      } else {
+        $(".adj-ballot .text-warning").hide();
+        console.log('on load selected');
+        var selected_option = $("#id_choose_sides").val()
+        swap_sides(selected_option)
+      }
+
+      // On Change
+      $('#id_choose_sides').change(function() {
+        var selected_option = $("#id_choose_sides").val()
+        if (selected_option != "") {
+          $(".scoresheet").show();
+          $(".adj-ballot .text-warning").hide();
+          swap_sides(selected_option)
+        } else {
+          $(".scoresheet").hide();
+          $(".adj-ballot .text-warning").show();
+        }
+        update_speakers();
+      });
 
     {% endif %}
 

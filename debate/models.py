@@ -314,10 +314,6 @@ def annotate_team_standings(teams, round=None, shuffle=False):
         return sorted_teams
 
     elif rule == "wadl":
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error("logging for %s rules" % rule)
-
         # Sort by points
         if shuffle:
             sorted_teams = list(teams)
@@ -808,12 +804,14 @@ class RoundManager(models.Manager):
 
 class Round(models.Model):
     DRAW_RANDOM      = 'R'
-    DRAW_ROUNDROBIN       = 'D'
+    DRAW_MANUAL      = 'M'
+    DRAW_ROUNDROBIN  = 'D'
     DRAW_POWERPAIRED = 'P'
     DRAW_FIRSTBREAK  = 'F'
     DRAW_BREAK       = 'B'
     DRAW_CHOICES = (
         (DRAW_RANDOM,      'Random'),
+        (DRAW_MANUAL,      'Manual'),
         (DRAW_ROUNDROBIN,  'Round-robin'),
         (DRAW_POWERPAIRED, 'Power-paired'),
         (DRAW_FIRSTBREAK,  'First elimination'),
@@ -902,6 +900,9 @@ class Round(models.Model):
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts" : "draw_avoid_conflicts",
             })
+        elif self.draw_type == self.DRAW_MANUAL:
+            teams = draw_teams
+            draw_type = "manual"
         elif self.draw_type == self.DRAW_POWERPAIRED:
             teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
@@ -1132,6 +1133,15 @@ class Round(models.Model):
                                       'debate_team')
         relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
         return relevant_teams
+
+    def unused_teams(self):
+        all_teams = self.active_teams.all()
+        all_teams = [t for t in all_teams if t.tournament == self.tournament]
+
+        debating_teams = [t.team for t in DebateTeam.objects.filter(debate__round=self).select_related('team', 'debate')]
+        unused_teams = [t for t in all_teams if t not in debating_teams]
+
+        return unused_teams
 
     def set_available_base(self, ids, model, active_model, get_active,
                              id_column, active_id_column, remove=True):
@@ -1856,7 +1866,7 @@ class MotionManager(models.Manager):
         if round is None:
             motions = self.select_related('round').filter(round__tournament=round.tournament)
         else:
-            motions = self.select_related('round').filter(round__seq__lte=round.seq)
+            motions = self.select_related('round').filter(round__seq__lte=round.seq, round__tournament=round.tournament)
 
         ballots = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
         team_scores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
@@ -1974,12 +1984,12 @@ class ActionLog(models.Model):
     ACTION_TYPE_CHOICES = (
         (ACTION_TYPE_BALLOT_DISCARD         , 'Discarded ballot set'),
         (ACTION_TYPE_BALLOT_CHECKIN         , 'Checked in ballot set'),
-        (ACTION_TYPE_BALLOT_CREATE          , 'Created ballot set'), # For tab monkeys, not debaters
+        (ACTION_TYPE_BALLOT_CREATE          , 'Created ballot set'), # For tab assistants, not debaters
         (ACTION_TYPE_BALLOT_EDIT            , 'Edited ballot set'),
         (ACTION_TYPE_BALLOT_CONFIRM         , 'Confirmed ballot set'),
-        (ACTION_TYPE_BALLOT_SUBMIT          , 'Submitted ballot set from the public form'), # For debaters, not tab monkeys
-        (ACTION_TYPE_FEEDBACK_SUBMIT        , 'Submitted feedback from the public form'), # For debaters, not tab monkeys
-        (ACTION_TYPE_FEEDBACK_SAVE          , 'Saved feedback'), # For tab monkeys, not debaters
+        (ACTION_TYPE_BALLOT_SUBMIT          , 'Submitted ballot set from the public form'), # For debaters, not tab assistants
+        (ACTION_TYPE_FEEDBACK_SUBMIT        , 'Submitted feedback from the public form'), # For debaters, not tab assistants
+        (ACTION_TYPE_FEEDBACK_SAVE          , 'Saved feedback'), # For tab assistants, not debaters
         (ACTION_TYPE_TEST_SCORE_EDIT        , 'Edited adjudicator test score'),
         (ACTION_TYPE_ADJUDICATORS_SAVE      , 'Saved adjudicator allocation'),
         (ACTION_TYPE_VENUES_SAVE            , 'Saved venues'),
