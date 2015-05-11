@@ -45,6 +45,13 @@ class TestImporter(TestCase):
         self.assertEqual(institutions, 14)
         self.assertEqual(errors, 0)
 
+    @skip
+    def test_teams(self):
+        f = self._open_csv_file(self, TESTDIR, "teams")
+        teams, errors = self.importer.import_teams(self)
+        self.assertEqual(teams, 12)
+        self.assertEqual(errors, 0)
+
     # @skip
     # def test_invalid_line(self):
     #     pass

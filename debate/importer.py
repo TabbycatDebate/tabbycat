@@ -86,29 +86,16 @@ class TournamentDataImporter(object):
         self.header_row = kwargs.get('header_row', True)
         self.logger = kwargs.get('logger', None) or logging.getLogger(__name__) # don't evaluate default unless necessary
 
+    # --------------------------------------------------------------------------
+    # Helper methods
+    # --------------------------------------------------------------------------
+
     def _lookup(self, d, code, name):
         for k, v in d.iteritems():
             if code.lower().replace("-"," ") in k:
                 return v
         self.logger.warning("Unrecognized code for %s: %s", name, code)
         return None
-
-    def auto_make_rounds(self, num_rounds):
-        """Makes the number of rounds specified. The first one is random and the
-        rest are all power-paired. The last one is silent. This is intended as a
-        convenience function. For anything more complicated, the user should use
-        import_rounds() instead."""
-        for i in range(1, num_rounds+1):
-            m.Round(
-                tournament=self.tournament,
-                seq=i,
-                name='Round %d' % i,
-                abbreviation='R%d' % i,
-                draw_type=m.Round.DRAW_RANDOM if (i == 1) else m.Round.DRAW_POWERPAIRED,
-                feedback_weight=min((i-1)*0.1, 0.5),
-                silent=(i == num_rounds),
-            ).save()
-        self.logger.info("Auto-made %d rounds", num_rounds)
 
     def _import(self, csvfile, line_parser, model, expect_unique=True):
         """Parses the object given in f, using the callable line_parser to parse
@@ -200,6 +187,10 @@ class TournamentDataImporter(object):
 
         return len(insts), len(errors)
 
+    # --------------------------------------------------------------------------
+    # Import methods
+    # --------------------------------------------------------------------------
+
     def import_rounds(self, f):
         """Imports rounds from a file.
         Each line has:
@@ -254,20 +245,27 @@ class TournamentDataImporter(object):
             return kwargs
         return self._import(f, _venue_group_line_parser, m.VenueGroup)
 
-    def import_venues(self, f):
-        """Imports venues from a file, also creating venue groups as needed.
+    def import_venues(self, f, auto_create_groups=True):
+        """Imports venues from a file, also creating venue groups as needed
+        (unless 'auto_create_groups' is False).
+
         Each line has:
             name, priority, venue_group.name, time
         """
-        def _venue_group_line_parser(line):
-            if not line[2]:
-                return None
-            kwargs = dict()
-            # kwargs['tournament'] = self.tournament # check whether VenueGroup should have tournament field?
-            kwargs['name'] = line[2]
-            kwargs['short_name'] = line[2][:25]
-            return kwargs
-        _, errors = self._import(f, _venue_group_line_parser, m.VenueGroup, expect_unique=False)
+
+        errors = 0
+
+        if auto_create_groups:
+            def _venue_group_line_parser(line):
+                if not line[2]:
+                    return None
+                kwargs = dict()
+                # kwargs['tournament'] = self.tournament # check whether VenueGroup should have tournament field?
+                kwargs['name'] = line[2]
+                kwargs['short_name'] = line[2][:25]
+                return kwargs
+            _, new_errors = self._import(f, _venue_group_line_parser, m.VenueGroup, expect_unique=False)
+            errors += new_errors
 
         def _venue_line_parser(line):
             kwargs = dict()
@@ -282,6 +280,20 @@ class TournamentDataImporter(object):
 
         return venues, errors
 
+    def import_teams(self, f):
+        # TODO
+        pass
+
+    def import_speakers(self, f, auto_create_teams=True):
+        """Imports speakers from a file, also creating teams as needed (unless
+        'auto_create_teams' is False).
+
+        Each line has:
+            name, institution_name, team_name, use_team_name_as_prefix, gender, novice_status.
+        """
+
+
+
 
     def import_config(self, f):
         VALUE_TYPES = {"string": str, "int": int, "float": float, "bool": bool}
@@ -293,3 +305,25 @@ class TournamentDataImporter(object):
             except KeyError:
                 raise ValueError("Unrecognized value type in config: {0:r}".format(line[1]))
             value = coerce(line[2])
+
+    # --------------------------------------------------------------------------
+    # Other methods
+    # --------------------------------------------------------------------------
+
+    def auto_make_rounds(self, num_rounds):
+        """Makes the number of rounds specified. The first one is random and the
+        rest are all power-paired. The last one is silent. This is intended as a
+        convenience function. For anything more complicated, the user should use
+        import_rounds() instead."""
+        for i in range(1, num_rounds+1):
+            m.Round(
+                tournament=self.tournament,
+                seq=i,
+                name='Round %d' % i,
+                abbreviation='R%d' % i,
+                draw_type=m.Round.DRAW_RANDOM if (i == 1) else m.Round.DRAW_POWERPAIRED,
+                feedback_weight=min((i-1)*0.1, 0.5),
+                silent=(i == num_rounds),
+            ).save()
+        self.logger.info("Auto-made %d rounds", num_rounds)
+
