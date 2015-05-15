@@ -29,42 +29,42 @@ class TestImporter(TestCase):
 
     def test_rounds(self):
         f = self._open_csv_file(self.TESTDIR, "rounds")
-        rounds, errors = self.importer.import_rounds(f)
-        self.assertEqual(rounds, 6)
-        self.assertEqual(errors, 0)
+        counts, errors = self.importer.import_rounds(f)
+        self.assertEqual(counts, {m.Round: 6})
+        self.assertFalse(errors)
 
     def test_venues(self):
         f = self._open_csv_file(self.TESTDIR, "venues")
-        venues, errors = self.importer.import_venues(f)
-        self.assertEqual(venues, 23)
-        self.assertEqual(errors, 0)
+        counts, errors = self.importer.import_venues(f)
+        self.assertEqual(counts, {m.VenueGroup: 7, m.Venue: 23})
+        self.assertFalse(errors)
 
     def test_institutions(self):
         f = self._open_csv_file(self.TESTDIR, "institutions")
-        institutions, errors = self.importer.import_institutions(f)
-        self.assertEqual(institutions, 14)
-        self.assertEqual(errors, 0)
+        counts, errors = self.importer.import_institutions(f)
+        self.assertEqual(counts, {m.Institution: 14})
+        self.assertFalse(errors)
 
     @skip("test file does not yet exist")
     def test_teams(self):
         f = self._open_csv_file(self.TESTDIR, "teams")
-        teams, errors = self.importer.import_teams(self)
-        self.assertEqual(teams, 12)
-        self.assertEqual(errors, 0)
+        counts, errors = self.importer.import_teams(self)
+        self.assertEqual(counts, {m.Team: 12})
+        self.assertFalse(errors)
 
     def test_speakers(self):
         self.test_institutions()
         f = self._open_csv_file(self.TESTDIR, "speakers")
-        speakers, errors = self.importer.import_speakers(f)
-        self.assertEqual(speakers, 72)
-        self.assertEqual(errors, 0)
+        counts, errors = self.importer.import_speakers(f)
+        self.assertEqual(counts, {m.Team: 24, m.Speaker: 72})
+        self.assertFalse(errors)
 
     def test_adjudicators(self):
         self.test_institutions()
         f = self._open_csv_file(self.TESTDIR, "judges")
-        adjudicators, errors = self.importer.import_adjudicators(f)
-        self.assertEqual(adjudicators, 27)
-        self.assertEqual(errors, 0)
+        counts, errors = self.importer.import_adjudicators(f)
+        self.assertEqual(counts, {m.Adjudicator: 27})
+        self.assertFalse(errors)
 
     @skip("test file does not yet exist")
     def test_invalid_line(self):
@@ -81,7 +81,7 @@ class TestImporter(TestCase):
     def test_blank_entry_not_strict(self):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "venues")
         self.importer.strict = False
-        venues, errors = self.importer.import_venues(f)
-        self.assertEqual(venues, 20)
-        self.assertEqual(errors, 3)
+        counts, errors = self.importer.import_venues(f)
+        self.assertEqual(counts, {m.Venue: 20, m.VenueGroup: 7})
+        self.assertEqual(len(errors), 3)
         self.importer.strict = True

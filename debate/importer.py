@@ -4,6 +4,7 @@ All 'file' arguments must be """
 import csv
 import logging
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
+from collections import Counter
 
 import debate.models as m
 
@@ -42,12 +43,15 @@ class TournamentDataImporterError(Exception):
         return len(self.entries)
 
     def __str__(self):
+        """Returns a newline-delimited string of error messages."""
         return "\n".join(map(str, self.entries))
 
     def add(self, *args, **kwargs):
+        """Adds a new error. Takes the arguments of the Entry constructor."""
         self.entries.append(self.Entry(*args, **kwargs))
 
     def update_with_validation_error(self, lineno, model, ve):
+        """Adds the information in a Django ValidationError to this error."""
         if hasattr(ve, 'error_dict'):
             for field, error_list in ve.error_dict.items():
                 for error in error_list:
@@ -59,7 +63,12 @@ class TournamentDataImporterError(Exception):
             message = "Model validation failed: "+ str(ve)
             self.add(lineno, model, message, NON_FIELD_ERRORS)
 
+    def update(self, tdie):
+        """Adds the entries in another TournamentDataImporterError to this one."""
+        self.entries.extend(tdie.entries)
+
     def itermessages(self):
+        """Iterates through the error messages."""
         for entry in self.entries:
             yield str(entry)
 
@@ -97,7 +106,8 @@ class TournamentDataImporter(object):
         self.logger.warning("Unrecognized code for %s: %s", name, code)
         return None
 
-    def _import(self, csvfile, line_parser, model, expect_unique=True):
+    def _import(self, csvfile, line_parser, model, counts=None, errors=None,
+                expect_unique=True):
         """Parses the object given in f, using the callable line_parser to parse
         each line, and passing the arguments to the given model's constructor.
         'csvfile' can be any object that is supported by csv.reader(), which
@@ -111,6 +121,21 @@ class TournamentDataImporter(object):
         'line_parser' must take a single argument, a tuple (the CSV line), and
         return a dict of arguments that can be passed to the model constructor.
         If 'line_parser' returns None, the line is skipped.
+
+        Returns a tuple of two objects. The first is a Counter object (from
+        Python's collections module) in which the keys are models (e.g. Round,
+        Team) and the values are the number that were created. The second is a
+        (possibly empty) TournamentDataImporterError object. If self.strict is
+        True, then the returned TournamentDataImporterError will always be empty
+        (since otherwise it would have raised it as an exception); otherwise, it
+        will contain the errors raised during the import attempt.
+
+        If 'counts_in' and/or 'errors_in' are provided, this function adds the
+        counts and errors from this _import call and returns them instead. This
+        modifies the original counts_in and errors_in. This allows easy daisy-
+        chaining of successive _import calls. If provided, 'counts_in' should
+        behave like a Counter object and 'errors_in' should behave like a
+        TournamentDataImporterError object.
         """
         if hasattr(csvfile, 'seek') and callable(csvfile.seek):
             csvfile.seek(0)
@@ -119,7 +144,10 @@ class TournamentDataImporter(object):
             reader.next()
         kwargs_seen = list()
         insts = list()
-        errors = TournamentDataImporterError() # initially blank
+        if counts is None:
+            counts = Counter()
+        if errors is None:
+            errors = TournamentDataImporterError()
 
         for lineno, line in enumerate(reader, start=1):
             try:
@@ -185,7 +213,8 @@ class TournamentDataImporter(object):
 
         self.logger.info("Imported %d %ss", len(insts), model._meta.verbose_name)
 
-        return len(insts), len(errors)
+        counts.update({model: len(insts)})
+        return counts, errors
 
     # --------------------------------------------------------------------------
     # Import methods
@@ -207,7 +236,7 @@ class TournamentDataImporter(object):
                 'silent'          : bool(int(line[5])),
                 'feedback_weight' : float(line[6]) or 0.7,
             }
-        result = self._import(f, _round_line_parser, m.Round)
+        counts, errors = self._import(f, _round_line_parser, m.Round)
 
         # Set the round with the lowest known seqno to be the current round.
         # TODO (as above)
@@ -215,7 +244,7 @@ class TournamentDataImporter(object):
                 tournament=self.tournament, seq=1)
         self.tournament.save()
 
-        return result
+        return counts, errors
 
     def import_institutions(self, f):
         """Imports institutions from a file.
@@ -253,8 +282,6 @@ class TournamentDataImporter(object):
             name, priority, venue_group.name, time
         """
 
-        errors = 0
-
         if auto_create_groups:
             def _venue_group_line_parser(line):
                 if not line[2]:
@@ -263,8 +290,8 @@ class TournamentDataImporter(object):
                     'name'       : line[2],
                     'short_name' : line[2][:25],
                 }
-            _, new_errors = self._import(f, _venue_group_line_parser, m.VenueGroup, expect_unique=False)
-            errors += new_errors
+            counts, errors = self._import(f, _venue_group_line_parser,
+                    m.VenueGroup, expect_unique=False)
 
         def _venue_line_parser(line):
             return {
@@ -274,10 +301,9 @@ class TournamentDataImporter(object):
                 'group'      : m.VenueGroup.objects.get(name=line[2]) if len(line) > 2 else None,
                 'time'       : line[3] if len(line) > 3 else None,
             }
-        venues, new_errors = self._import(f, _venue_line_parser, m.Venue)
-        errors += new_errors
+        counts, errors = self._import(f, _venue_line_parser, m.Venue, counts=counts, errors=errors)
 
-        return venues, errors
+        return counts, errors
 
     def import_teams(self, f):
         # TODO
@@ -292,7 +318,6 @@ class TournamentDataImporter(object):
             name, institution_name, team_name, use_team_name_as_prefix, gender,
                     novice_status.
         """
-        errors = 0
 
         if auto_create_teams:
             def _team_line_parser(line):
@@ -303,8 +328,10 @@ class TournamentDataImporter(object):
                     'short_reference'        : line[2][:35],
                     'use_institution_prefix' : int(line[3]) if len(line) > 3 else 0,
                 }
-            _, new_errors = self._import(f, _team_line_parser, m.Team, expect_unique=False)
-            errors += new_errors
+            counts, errors = self._import(f, _team_line_parser, m.Team, expect_unique=False)
+        else:
+            counts = Counter()
+            errors = TournamentDataImporterError()
 
         def _speaker_line_parser(line):
             institution = m.Institution.objects.lookup(line[1])
@@ -315,10 +342,9 @@ class TournamentDataImporter(object):
                 'gender' : line[4] if len(line) > 4 else None,
                 'novice' : int(line[5]) if len(line) > 5 and line[5] else None,
             }
-        speakers, new_errors = self._import(f, _speaker_line_parser, m.Speaker)
-        errors += new_errors
+        counts, errors = self._import(f, _speaker_line_parser, m.Speaker, counts=counts, errors=errors)
 
-        return speakers, errors
+        return counts, errors
 
     def import_adjudicators(self, f):
         """Imports adjudicators from a file. Institutions are not created as
@@ -340,14 +366,16 @@ class TournamentDataImporter(object):
                 'email': line[6] if len(line) > 6 else None,
                 'notes': line[7] if len(line) > 7 else None,
             }
-        adjudicators, errors = self._import(f, _adjudicator_line_parser, m.Adjudicator)
+        counts, errors = self._import(f, _adjudicator_line_parser, m.Adjudicator)
+
+
 
         # TODO CONTINUE HERE
         # adjudicator conflicts
         # adjudicator-institution conflicts
         # test score history
 
-        return adjudicators, errors
+        return counts, errors
 
 
     def import_config(self, f):
