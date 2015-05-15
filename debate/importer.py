@@ -296,6 +296,9 @@ class TournamentDataImporter(object):
                 }
             counts, errors = self._import(f, _venue_group_line_parser,
                     m.VenueGroup, expect_unique=False)
+        else:
+            counts = None
+            errors = None
 
         def _venue_line_parser(line):
             return {
@@ -334,8 +337,8 @@ class TournamentDataImporter(object):
                 }
             counts, errors = self._import(f, _team_line_parser, m.Team, expect_unique=False)
         else:
-            counts = Counter()
-            errors = TournamentDataImporterError()
+            counts = None
+            errors = None
 
         def _speaker_line_parser(line):
             institution = m.Institution.objects.lookup(line[1])
