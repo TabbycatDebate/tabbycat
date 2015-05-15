@@ -285,13 +285,13 @@ class TournamentDataImporter(object):
 
     def import_speakers(self, f, auto_create_teams=True):
         """Imports speakers from a file, also creating teams as needed (unless
-        'auto_create_teams' is False).
+        'auto_create_teams' is False). Institutions are not created as needed;
+        if an institution doesn't exist, an error is raised.
 
         Each line has:
             name, institution_name, team_name, use_team_name_as_prefix, gender,
                     novice_status.
         """
-
         errors = 0
 
         if auto_create_teams:
@@ -313,12 +313,41 @@ class TournamentDataImporter(object):
                 'team'   : m.Team.objects.get(institution=institution,
                                       reference=line[2], tournament=self.tournament),
                 'gender' : line[4] if len(line) > 4 else None,
-                'novice' : int(line[5]) if len(line) > 5 else None,
+                'novice' : int(line[5]) if len(line) > 5 and line[5] else None,
             }
         speakers, new_errors = self._import(f, _speaker_line_parser, m.Speaker)
         errors += new_errors
 
         return speakers, errors
+
+    def import_adjudicators(self, f):
+        """Imports adjudicators from a file. Institutions are not created as
+        needed; if an institution doesn't exist, an error is raised. Conflicts
+        are created from the same file, if present.
+
+        Each line has:
+            name, institution, rating, gender, novice, cellphone, email,
+                    notes, institution_conflicts, team_conflicts
+        """
+        def _adjudicator_line_parser(line):
+            return {
+                'name': line[0],
+                'institution': m.Institution.objects.lookup(line[1]),
+                'test_score': float(line[2]),
+                'gender': line[3] if len(line) > 3 else None,
+                'novice': int(line[4]) if len(line) > 4 and line[4] else False,
+                'phone': line[5] if len(line) > 5 else None,
+                'email': line[6] if len(line) > 6 else None,
+                'notes': line[7] if len(line) > 7 else None,
+            }
+        adjudicators, errors = self._import(f, _adjudicator_line_parser, m.Adjudicator)
+
+        # TODO CONTINUE HERE
+        # adjudicator conflicts
+        # adjudicator-institution conflicts
+        # test score history
+
+        return adjudicators, errors
 
 
     def import_config(self, f):

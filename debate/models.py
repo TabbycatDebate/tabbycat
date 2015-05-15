@@ -188,6 +188,8 @@ class Region(models.Model):
 class InstitutionManager(models.Manager):
 
     def lookup(self, name, **kwargs):
+        """Queries for an institution with matching name in any of the three
+        name fields."""
         for field in ('code', 'name', 'abbreviation'):
             try:
                 kwargs[field] = name

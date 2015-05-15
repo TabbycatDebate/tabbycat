@@ -59,9 +59,20 @@ class TestImporter(TestCase):
         self.assertEqual(speakers, 72)
         self.assertEqual(errors, 0)
 
-    # @skip
-    # def test_invalid_line(self):
-    #     pass
+    def test_adjudicators(self):
+        self.test_institutions()
+        f = self._open_csv_file(self.TESTDIR, "judges")
+        adjudicators, errors = self.importer.import_adjudicators(f)
+        self.assertEqual(adjudicators, 27)
+        self.assertEqual(errors, 0)
+
+    @skip("test file does not yet exist")
+    def test_invalid_line(self):
+        pass
+
+    @skip("test file does not yet exist")
+    def test_invalid_gender(self):
+        pass
 
     def test_blank_entry_strict(self):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "venues")
