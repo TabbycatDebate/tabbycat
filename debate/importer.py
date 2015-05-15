@@ -120,7 +120,8 @@ class TournamentDataImporter(object):
 
         'line_parser' must take a single argument, a tuple (the CSV line), and
         return a dict of arguments that can be passed to the model constructor.
-        If 'line_parser' returns None, the line is skipped.
+        If 'line_parser' returns None, the line is skipped. 'line_parser' can
+        return a list of dicts; if so, one instance is created for each dict.
 
         Returns a tuple of two objects. The first is a Counter object (from
         Python's collections module) in which the keys are models (e.g. Round,
@@ -151,52 +152,55 @@ class TournamentDataImporter(object):
 
         for lineno, line in enumerate(reader, start=1):
             try:
-                kwargs = line_parser(line)
+                kwargs_list = line_parser(line)
             except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
                 message = "Couldn't parse line: " + str(e)
                 errors.add(lineno, model, message)
                 continue
 
-            if kwargs is None:
+            if kwargs_list is None:
                 continue
+            if isinstance(kwargs_list, dict):
+                kwargs_list = [kwargs_list]
 
-            description = model._meta.verbose_name + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
+            for kwargs in kwargs_list:
+                description = model._meta.verbose_name + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
 
-            # Check if it's a duplicate
-            if kwargs in kwargs_seen:
-                if expect_unique:
-                    message = "Duplicate " + description
-                    errors.add(lineno, model, message)
+                # Check if it's a duplicate
+                if kwargs in kwargs_seen:
+                    if expect_unique:
+                        message = "Duplicate " + description
+                        errors.add(lineno, model, message)
+                    else:
+                        self.logger.info("Skipping duplicate " + description)
+                    continue
+                kwargs_seen.append(kwargs)
+
+                # Retrieve the instance or create it if it doesn't exist
+                try:
+                    inst = model.objects.get(**kwargs)
+                except ObjectDoesNotExist as e:
+                    inst = model(**kwargs)
+                except MultipleObjectsReturned as e:
+                    if expect_unique:
+                        errors.add(lineno, model, e.message)
+                    continue
                 else:
-                    self.logger.info("Skipping duplicate " + description)
-                continue
-            kwargs_seen.append(kwargs)
+                    if expect_unique:
+                        message = description + "already exists"
+                        errors.add(lineno, model, message)
+                    else:
+                        self.logger.info("Skipping %s, already exists", description)
+                    continue
 
-            # Retrieve the instance or create it if it doesn't exist
-            try:
-                inst = model.objects.get(**kwargs)
-            except ObjectDoesNotExist as e:
-                inst = model(**kwargs)
-            except MultipleObjectsReturned as e:
-                if expect_unique:
-                    errors.add(lineno, model, e.message)
-                continue
-            else:
-                if expect_unique:
-                    message = description + "already exists"
-                    errors.add(lineno, model, message)
-                else:
-                    self.logger.info("Skipping %s, already exists", description)
-                continue
+                try:
+                    inst.full_clean()
+                except ValidationError as e:
+                    errors.update_with_validation_error(lineno, model, e)
+                    continue
 
-            try:
-                inst.full_clean()
-            except ValidationError as e:
-                errors.update_with_validation_error(lineno, model, e)
-                continue
-
-            insts.append(inst)
+                insts.append(inst)
 
         if errors:
             if self.strict:
@@ -357,23 +361,32 @@ class TournamentDataImporter(object):
         """
         def _adjudicator_line_parser(line):
             return {
-                'name': line[0],
-                'institution': m.Institution.objects.lookup(line[1]),
-                'test_score': float(line[2]),
-                'gender': line[3] if len(line) > 3 else None,
-                'novice': int(line[4]) if len(line) > 4 and line[4] else False,
-                'phone': line[5] if len(line) > 5 else None,
-                'email': line[6] if len(line) > 6 else None,
-                'notes': line[7] if len(line) > 7 else None,
+                'name'        : line[0],
+                'institution' : m.Institution.objects.lookup(line[1]),
+                'test_score'  : float(line[2]),
+                'gender'      : line[3] if len(line) > 3 else None,
+                'novice'      : int(line[4]) if len(line) > 4 and line[4] else False,
+                'phone'       : line[5] if len(line) > 5 else None,
+                'email'       : line[6] if len(line) > 6 else None,
+                'notes'       : line[7] if len(line) > 7 else None,
             }
         counts, errors = self._import(f, _adjudicator_line_parser, m.Adjudicator)
 
+        def _test_score_line_parser(line):
+            return {
+                'adjudicator' : m.Adjudicator.objects.get(name=line[0]),
+                'score'       : float(line[2]),
+                'round'       : None,
+            }
+        counts, errors = self._import(f, _test_score_line_parser, m.AdjudicatorTestScoreHistory,
+                    counts=counts, errors=errors)
 
+        def _institution_conflict_parser(line):
+            pass
 
         # TODO CONTINUE HERE
         # adjudicator conflicts
         # adjudicator-institution conflicts
-        # test score history
 
         return counts, errors
 
