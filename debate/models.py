@@ -185,11 +185,25 @@ class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
 
 
+class InstitutionManager(models.Manager):
+
+    def lookup(self, name, **kwargs):
+        for field in ('code', 'name', 'abbreviation'):
+            try:
+                kwargs[field] = name
+                return self.get(**kwargs)
+            except ObjectDoesNotExist:
+                kwargs.pop(field)
+        raise self.model.DoesNotExist("No institution matching '%s'" % name)
+
+
 class Institution(models.Model):
     code = models.CharField(max_length=20)
     name = models.CharField(db_index=True, max_length=100)
     abbreviation = models.CharField(max_length=8, default="")
     region = models.ForeignKey(Region, blank=True, null=True)
+
+    objects = InstitutionManager()
 
     class Meta:
         unique_together = [('name', 'code')]

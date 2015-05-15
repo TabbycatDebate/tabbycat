@@ -133,7 +133,7 @@ class TournamentDataImporter(object):
             if kwargs is None:
                 continue
 
-            description = model._meta.verbose_name + "(" + ", ".join(["%s=%s" % args for args in kwargs.items()]) + ")"
+            description = model._meta.verbose_name + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
 
             # Check if it's a duplicate
             if kwargs in kwargs_seen:
@@ -197,16 +197,16 @@ class TournamentDataImporter(object):
             seq, name, abbreviation, stage, draw_type, silent, feedback_weight
         """
         def _round_line_parser(line):
-            kwargs = dict()
-            kwargs['tournament'] = self.tournament
-            kwargs['seq'] = int(line[0])
-            kwargs['name'] = line[1]
-            kwargs['abbreviation'] = line[2]
-            kwargs['stage'] = self._lookup(self.ROUND_STAGES, line[3] or "p", "draw stage")
-            kwargs['draw_type'] = self._lookup(self.ROUND_DRAW_TYPES, line[4] or "r", "draw type")
-            kwargs['silent'] = bool(int(line[5]))
-            kwargs['feedback_weight'] = float(line[6]) or 0.7
-            return kwargs
+            return {
+                'tournament'      : self.tournament,
+                'seq'             : int(line[0]),
+                'name'            : line[1],
+                'abbreviation'    : line[2],
+                'stage'           : self._lookup(self.ROUND_STAGES, line[3] or "p", "draw stage"),
+                'draw_type'       : self._lookup(self.ROUND_DRAW_TYPES, line[4] or "r", "draw type"),
+                'silent'          : bool(int(line[5])),
+                'feedback_weight' : float(line[6]) or 0.7,
+            }
         result = self._import(f, _round_line_parser, m.Round)
 
         # Set the round with the lowest known seqno to be the current round.
@@ -223,11 +223,11 @@ class TournamentDataImporter(object):
             name, code, abbreviation
         """
         def _institution_line_parser(line):
-            kwargs = dict()
-            kwargs['name'] = line[0]
-            kwargs['code'] = line[1]
-            kwargs['abbreviation'] = line[2]
-            return kwargs
+            return {
+                'name'         : line[0],
+                'code'         : line[1],
+                'abbreviation' : line[2],
+            }
         return self._import(f, _institution_line_parser, m.Institution)
 
     def import_venue_groups(self, f):
@@ -236,10 +236,10 @@ class TournamentDataImporter(object):
             name, short_name[, team_capacity]
         """
         def _venue_group_line_parser(line):
-            kwargs = dict()
-            # kwargs['tournanent'] = self.tournament # check whether VenueGroup should have tournament field?
-            kwargs['name'] = line[0]
-            kwargs['short_name'] = line[1]
+            kwargs = {
+                'name'       : line[0],
+                'short_name' : line[1],
+            }
             if len(line) > 2:
                 kwargs['team_capacity'] = line[2]
             return kwargs
@@ -259,22 +259,21 @@ class TournamentDataImporter(object):
             def _venue_group_line_parser(line):
                 if not line[2]:
                     return None
-                kwargs = dict()
-                # kwargs['tournament'] = self.tournament # check whether VenueGroup should have tournament field?
-                kwargs['name'] = line[2]
-                kwargs['short_name'] = line[2][:25]
-                return kwargs
+                return {
+                    'name'       : line[2],
+                    'short_name' : line[2][:25],
+                }
             _, new_errors = self._import(f, _venue_group_line_parser, m.VenueGroup, expect_unique=False)
             errors += new_errors
 
         def _venue_line_parser(line):
-            kwargs = dict()
-            kwargs['tournament'] = self.tournament
-            kwargs['name'] = line[0]
-            kwargs['priority'] = int(line[1]) if len(line) > 1 else 10
-            kwargs['group'] = m.VenueGroup.objects.get(name=line[2]) if len(line) > 2 else None
-            kwargs['time'] = line[3] if len(line) > 3 else None
-            return kwargs
+            return {
+                'tournament' : self.tournament,
+                'name'       : line[0],
+                'priority'   : int(line[1]) if len(line) > 1 else 10,
+                'group'      : m.VenueGroup.objects.get(name=line[2]) if len(line) > 2 else None,
+                'time'       : line[3] if len(line) > 3 else None,
+            }
         venues, new_errors = self._import(f, _venue_line_parser, m.Venue)
         errors += new_errors
 
@@ -289,10 +288,37 @@ class TournamentDataImporter(object):
         'auto_create_teams' is False).
 
         Each line has:
-            name, institution_name, team_name, use_team_name_as_prefix, gender, novice_status.
+            name, institution_name, team_name, use_team_name_as_prefix, gender,
+                    novice_status.
         """
 
+        errors = 0
 
+        if auto_create_teams:
+            def _team_line_parser(line):
+                return {
+                    'tournament'             : self.tournament,
+                    'institution'            : m.Institution.objects.lookup(line[1]),
+                    'reference'              : line[2],
+                    'short_reference'        : line[2][:35],
+                    'use_institution_prefix' : int(line[3]) if len(line) > 3 else 0,
+                }
+            _, new_errors = self._import(f, _team_line_parser, m.Team, expect_unique=False)
+            errors += new_errors
+
+        def _speaker_line_parser(line):
+            institution = m.Institution.objects.lookup(line[1])
+            return {
+                'name'   : line[0],
+                'team'   : m.Team.objects.get(institution=institution,
+                                      reference=line[2], tournament=self.tournament),
+                'gender' : line[4] if len(line) > 4 else None,
+                'novice' : int(line[5]) if len(line) > 5 else None,
+            }
+        speakers, new_errors = self._import(f, _speaker_line_parser, m.Speaker)
+        errors += new_errors
+
+        return speakers, errors
 
 
     def import_config(self, f):
