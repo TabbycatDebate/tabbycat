@@ -60,13 +60,22 @@ class TestImporter(TestCase):
         self.assertFalse(errors)
 
     def test_adjudicators(self):
-        self.test_institutions()
+        self.test_speakers()
         f = self._open_csv_file(self.TESTDIR, "judges")
         counts, errors = self.importer.import_adjudicators(f)
         self.assertEqual(counts, {
             m.Adjudicator: 27,
             m.AdjudicatorTestScoreHistory: 27,
-            })
+            m.AdjudicatorInstitutionConflict: 36,
+            m.AdjudicatorConflict: 7,
+        })
+        self.assertFalse(errors)
+
+    def test_motions(self):
+        self.test_rounds()
+        f = self._open_csv_file(self.TESTDIR, "motions")
+        counts, errors = self.importer.import_motions(f)
+        self.assertEqual(counts, {m.Motion: 18})
         self.assertFalse(errors)
 
     @skip("test file does not yet exist")

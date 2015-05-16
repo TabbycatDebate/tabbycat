@@ -5,6 +5,7 @@ import csv
 import logging
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
 from collections import Counter
+from types import GeneratorType
 
 import debate.models as m
 
@@ -77,16 +78,28 @@ class TournamentDataImporter(object):
     """Imports data for a tournament from CSV files passed as arguments."""
 
     ROUND_STAGES = {
-        ("preliminary", "p"): "P",
-        ("elimination", "break", "e", "b"): "E",
+        ("preliminary", "p"): m.Round.STAGE_PRELIMINARY,
+        ("elimination", "break", "e", "b"): m.Round.STAGE_ELIMINATION,
     }
 
     ROUND_DRAW_TYPES = {
-        ("random", "r"): "R",
-        ("round robin", "d"): "D",
-        ("power paired", "p"): "P",
-        ("first elimination", "1st elimination", "1e", "f"): "F",
-        ("subsequent elimination", "2nd elimination", "2e", "b"): "B",
+        ("random", "r"): m.Round.DRAW_RANDOM,
+        ("manual", "m"): m.Round.DRAW_MANUAL,
+        ("round robin", "d"): m.Round.DRAW_ROUNDROBIN,
+        ("power paired", "p"): m.Round.DRAW_POWERPAIRED,
+        ("first elimination", "1st elimination", "1e", "f"): m.Round.DRAW_FIRSTBREAK,
+        ("subsequent elimination", "2nd elimination", "2e", "b"): m.Round.DRAW_BREAK,
+    }
+
+    GENDERS = {
+        ("male", "m"): m.Person.GENDER_MALE,
+        ("female", "f"): m.Person.GENDER_FEMALE,
+        ("other", "o"): m.Person.GENDER_OTHER,
+    }
+
+    TEAM_POSITIONS = {
+        ("affirmative", "aff", "a"): m.TeamPositionAllocation.POSITION_AFFIRMATIVE,
+        ("negative", "aff", "n"): m.TeamPositionAllocation.POSITION_NEGATIVE,
     }
 
     def __init__(self, tournament, **kwargs):
@@ -121,7 +134,7 @@ class TournamentDataImporter(object):
         'line_parser' must take a single argument, a tuple (the CSV line), and
         return a dict of arguments that can be passed to the model constructor.
         If 'line_parser' returns None, the line is skipped. 'line_parser' can
-        return a list of dicts; if so, one instance is created for each dict.
+        be a generator; if so, one instance is created for each dict yielded.
 
         Returns a tuple of two objects. The first is a Counter object (from
         Python's collections module) in which the keys are models (e.g. Round,
@@ -150,9 +163,11 @@ class TournamentDataImporter(object):
         if errors is None:
             errors = TournamentDataImporterError()
 
-        for lineno, line in enumerate(reader, start=1):
+        for lineno, line in enumerate(reader, start=2 if self.header_row else 1):
             try:
                 kwargs_list = line_parser(line)
+                if isinstance(kwargs_list, GeneratorType):
+                    kwargs_list = list(kwargs_list) # force evaluation
             except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
                 message = "Couldn't parse line: " + str(e)
@@ -188,7 +203,7 @@ class TournamentDataImporter(object):
                     continue
                 else:
                     if expect_unique:
-                        message = description + "already exists"
+                        message = description + " already exists"
                         errors.add(lineno, model, message)
                     else:
                         self.logger.info("Skipping %s, already exists", description)
@@ -346,17 +361,18 @@ class TournamentDataImporter(object):
                 'name'   : line[0],
                 'team'   : m.Team.objects.get(institution=institution,
                                       reference=line[2], tournament=self.tournament),
-                'gender' : line[4] if len(line) > 4 else None,
+                'gender' : self._lookup(self.GENDERS, line[4], "gender") if len(line) > 4 and line[4] else None,
                 'novice' : int(line[5]) if len(line) > 5 and line[5] else None,
             }
         counts, errors = self._import(f, _speaker_line_parser, m.Speaker, counts=counts, errors=errors)
 
         return counts, errors
 
-    def import_adjudicators(self, f):
+    def import_adjudicators(self, f, auto_conflict=True):
         """Imports adjudicators from a file. Institutions are not created as
         needed; if an institution doesn't exist, an error is raised. Conflicts
-        are created from the same file, if present.
+        are created from the same file, if present. If 'auto_conflict' is True
+        (default), conflicts are created with adjudicators' own institutions.
 
         Each line has:
             name, institution, rating, gender, novice, cellphone, email,
@@ -376,23 +392,82 @@ class TournamentDataImporter(object):
         counts, errors = self._import(f, _adjudicator_line_parser, m.Adjudicator)
 
         def _test_score_line_parser(line):
+            institution = m.Institution.objects.lookup(line[1])
             return {
-                'adjudicator' : m.Adjudicator.objects.get(name=line[0]),
+                'adjudicator' : m.Adjudicator.objects.get(name=line[0], institution=institution),
                 'score'       : float(line[2]),
                 'round'       : None,
             }
         counts, errors = self._import(f, _test_score_line_parser, m.AdjudicatorTestScoreHistory,
-                    counts=counts, errors=errors)
+                counts=counts, errors=errors)
+
+        def _own_institution_conflict_parser(line):
+            institution = m.Institution.objects.lookup(line[1])
+            return {
+                'adjudicator' : m.Adjudicator.objects.get(name=line[0], institution=institution),
+                'institution' : institution,
+            }
+        counts, errors = self._import(f, _own_institution_conflict_parser, m.AdjudicatorInstitutionConflict,
+                counts=counts, errors=errors)
 
         def _institution_conflict_parser(line):
-            pass
+            if len(line) <= 8 or not line[8]:
+                return
+            adj_inst = m.Institution.objects.lookup(line[1])
+            adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst)
+            for institution_name in line[8].split(","):
+                institution_name = institution_name.strip()
+                institution = m.Institution.objects.lookup(institution_name)
+                yield {
+                    'adjudicator' : adjudicator,
+                    'institution' : institution,
+                }
+        counts, errors = self._import(f, _institution_conflict_parser, m.AdjudicatorInstitutionConflict,
+                counts=counts, errors=errors)
 
-        # TODO CONTINUE HERE
-        # adjudicator conflicts
-        # adjudicator-institution conflicts
+        def _team_conflict_parser(line):
+            if len(line) <= 9 or not line[9]:
+                return
+            adj_inst = m.Institution.objects.lookup(line[1])
+            adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst)
+            for team_name in line[9].split(","):
+                team = m.Team.objects.lookup(team_name)
+                yield {
+                    'adjudicator' : adjudicator,
+                    'team'        : team,
+                }
+        counts, errors = self._import(f, _team_conflict_parser, m.AdjudicatorConflict,
+                counts=counts, errors=errors)
 
         return counts, errors
 
+    def import_motions(self, f):
+        """Imports motions from a file.
+        Each line has:
+            round, motion_seq, reference, text
+        """
+        def _motion_line_parser(line):
+            return {
+                'round': m.Round.objects.lookup(line[0], tournament=self.tournament),
+                'seq': int(line[1]),
+                'reference': line[2],
+                'text': line[3],
+            }
+        return self._import(f, _motion_line_parser, m.Motion)
+
+    def import_sides(self, f):
+        """Imports sides from a file.
+        Each line has:
+            team_name, side_for_round1, side_for_round2, ...
+        """
+        def _side_line_parser(line):
+            team = m.Team.objects.lookup(line[0])
+            for seq, side in enumerate(line[1:], start=1):
+                yield {
+                    'round': m.Round.objects.get(seq=seq),
+                    'team' : team,
+                    'position': self._lookup(self.TEAM_POSITIONS, side),
+                }
 
     def import_config(self, f):
         VALUE_TYPES = {"string": str, "int": int, "float": float, "bool": bool}

@@ -345,6 +345,19 @@ def annotate_team_standings(teams, round=None, shuffle=False):
 
 
 class TeamManager(models.Manager):
+
+    def lookup(self, name, **kwargs):
+        """Queries for a team with a matching name."""
+        # TODO could be improved to take in a better range of fields
+        try:
+            institution_name, reference = name.rsplit(None, 1)
+        except:
+            print "Error in", repr(name)
+            raise
+        institution_name = institution_name.strip()
+        institution = Institution.objects.lookup(institution_name)
+        return self.get(institution=institution, reference=reference, **kwargs)
+
     def standings(self, round):
         """Returns a list."""
         teams = self.filter(
@@ -812,6 +825,17 @@ class AdjudicatorInstitutionConflict(models.Model):
 
 class RoundManager(models.Manager):
     use_for_related_Fields = True
+
+    def lookup(self, name, **kwargs):
+        """Queries for a round with matching name in any of the two name
+        fields."""
+        for field in ('name', 'abbreviation'):
+            try:
+                kwargs[field] = name
+                return self.get(**kwargs)
+            except ObjectDoesNotExist:
+                kwargs.pop(field)
+        raise self.model.DoesNotExist("No round matching '%s'" % name)
 
     def get_queryset(self):
         return super(RoundManager,
