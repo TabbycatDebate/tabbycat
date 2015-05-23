@@ -6,22 +6,22 @@ import debate.models as m
 import os.path
 import logging
 
-from debate.importer import TournamentDataImporter, TournamentDataImporterError
+from debate.importer.anorak import AnorakTournamentDataImporter, TournamentDataImporterError
 
-class TestImporter(TestCase):
+class TestImporterAnorak(TestCase):
 
     TESTDIR = "data/test/standard"
     TESTDIR_ERRORS = "data/test/errors"
 
     def setUp(self):
-        super(TestImporter, self).setUp()
+        super(TestImporterAnorak, self).setUp()
 
         # create tournament
         self.t = m.Tournament(slug="import-test")
         self.t.save()
         logger = logging.getLogger(__name__)
         logger.setLevel(logging.INFO)
-        self.importer = TournamentDataImporter(self.t, logger=logger)
+        self.importer = AnorakTournamentDataImporter(self.t, logger=logger)
 
     def _open_csv_file(self, dir, filename):
         path = os.path.join(dir, filename + ".csv")
