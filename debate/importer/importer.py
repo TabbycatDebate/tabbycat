@@ -3,6 +3,8 @@ All 'file' arguments must be """
 
 import csv
 import logging
+import itertools
+import random
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
 from collections import Counter
 from types import GeneratorType
@@ -10,6 +12,7 @@ from types import GeneratorType
 import debate.models as m
 
 NON_FIELD_ERRORS = '__all__'
+DUPLICATE_INFO = 15 # logging level
 
 class TournamentDataImporterError(Exception):
     """Inspired by Django's ValidationError, but adapted for the importer's
@@ -200,7 +203,7 @@ class BaseTournamentDataImporter(object):
                         message = "Duplicate " + description
                         errors.add(lineno, model, message)
                     else:
-                        self.logger.info("Skipping duplicate " + description)
+                        self.logger.log(DUPLICATE_INFO, "Skipping duplicate " + description)
                     continue
                 kwargs_seen.append(kwargs)
 
@@ -218,7 +221,7 @@ class BaseTournamentDataImporter(object):
                         message = description + " already exists"
                         errors.add(lineno, model, message)
                     else:
-                        self.logger.info("Skipping %s, already exists", description)
+                        self.logger.log(DUPLICATE_INFO, "Skipping %s, already exists", description)
                     continue
 
                 try:
@@ -246,3 +249,30 @@ class BaseTournamentDataImporter(object):
 
         counts.update({model: len(insts)})
         return counts, errors
+
+    def initialise_emoji_options(self):
+        """Initialises a list of permissible emoji. Should be called before
+        self.get_emoji()."""
+
+        # Get list of all emoji already in use. Teams without emoji are assigned by team ID.
+        assigned_emoji_teams = m.Team.objects.filter(emoji_seq__isnull=False).values_list('emoji_seq', flat=True)
+        unassigned_emoji_teams = m.Team.objects.filter(emoji_seq__isnull=True).values_list('id', flat=True)
+
+        # Start with a list of all emoji...
+        self.emoji_options = range(0, len(EMOJI_LIST) - 1)
+
+        # Then remove the ones that are already in use
+        for index in itertools.chain(assigned_emoji_teams, unassigned_emoji_teams):
+            if index in emoji_options:
+                emoji_options.remove(index)
+
+    def get_emoji(self):
+        """Retrieves an emoji. If there are any not currently in returns one of
+        those. Otherwise, returns any one at random."""
+        try:
+            emoji_id = random.choice(self.emoji_options)
+        except IndexError:
+            logger.debug("No more choices left for emoji, choosing at random")
+            return random.randint(0, len(EMOJI_LIST) - 1)
+        self.emoji_options.remove(emoji_id)
+        return emoji_id

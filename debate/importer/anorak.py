@@ -92,9 +92,26 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return counts, errors
 
-    def import_teams(self, f):
-        # TODO
-        pass
+    def import_teams(self, f, create_dummy_speakers=False):
+        """Imports teams from a file, assigning emoji as needed.
+        If 'create_dummy_speakers' is True, also creates dummy speakers."""
+
+        self.initialise_emoji_options()
+        def _team_line_parser(line):
+            return {
+                'name'        : line[0],
+                'short_name'  : line[0][:34],
+                'institution' : m.Institutions.objects.lookup(line[1]),
+                'emoji_seq'   : self.get_emoji()
+            }
+        counts, errors = self._import(f, _team_line_parser, m.Team)
+
+        if create_dummy_speakers:
+            def _speakers_line_parser(line):
+                team = m.Teams.objects.get(name=line[0])
+                for name in ["1st Speaker", "2nd Speaker", "3rd Speaker", "Reply Speaker"]:
+                    yield dict(name=name, team=team)
+            counts, errors = self._import(f, _speakers_line_parser, m.Speaker, counts=counts, errors=errors)
 
     def import_speakers(self, f, auto_create_teams=True):
         """Imports speakers from a file, also creating teams as needed (unless
