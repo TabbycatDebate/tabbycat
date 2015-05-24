@@ -190,6 +190,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             return {
                 'name'        : line[0],
                 'institution' : m.Institution.objects.lookup(line[1]),
+                'tournament'  : self.tournament,
                 'test_score'  : float(line[2]),
                 'gender'      : self._lookup(self.GENDERS, line[3], "gender") if len(line) > 3 and line[3] else None,
                 'novice'      : int(line[4]) if len(line) > 4 and line[4] else False,
@@ -202,7 +203,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         def _test_score_line_parser(line):
             institution = m.Institution.objects.lookup(line[1])
             return {
-                'adjudicator' : m.Adjudicator.objects.get(name=line[0], institution=institution),
+                'adjudicator' : m.Adjudicator.objects.get(name=line[0], institution=institution, tournament=self.tournament),
                 'score'       : float(line[2]),
                 'round'       : None,
             }
@@ -212,7 +213,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         def _own_institution_conflict_parser(line):
             institution = m.Institution.objects.lookup(line[1])
             return {
-                'adjudicator' : m.Adjudicator.objects.get(name=line[0], institution=institution),
+                'adjudicator' : m.Adjudicator.objects.get(name=line[0], institution=institution, tournament=self.tournament),
                 'institution' : institution,
             }
         counts, errors = self._import(f, _own_institution_conflict_parser, m.AdjudicatorInstitutionConflict,
@@ -222,7 +223,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             if len(line) <= 8 or not line[8]:
                 return
             adj_inst = m.Institution.objects.lookup(line[1])
-            adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst)
+            adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
             for institution_name in line[8].split(","):
                 institution_name = institution_name.strip()
                 institution = m.Institution.objects.lookup(institution_name)
@@ -237,7 +238,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             if len(line) <= 9 or not line[9]:
                 return
             adj_inst = m.Institution.objects.lookup(line[1])
-            adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst)
+            adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
             for team_name in line[9].split(","):
                 team = m.Team.objects.lookup(team_name)
                 yield {

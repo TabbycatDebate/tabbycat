@@ -1,5 +1,4 @@
-"""Functions for importing from CSV files into the database.
-All 'file' arguments must be """
+"""Base classes for tournament data importers."""
 
 import csv
 import logging
