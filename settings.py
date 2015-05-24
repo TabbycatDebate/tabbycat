@@ -31,7 +31,6 @@ TIME_ZONE           = 'Australia/Melbourne'
 LANGUAGE_CODE       = 'en-us'
 USE_I18N            = True
 TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
-SITE_ID             = 1
 
 # ===========================
 # = Django-specific Modules =
@@ -65,7 +64,6 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'debate',
