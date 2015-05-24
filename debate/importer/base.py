@@ -103,6 +103,7 @@ class BaseTournamentDataImporter(object):
         self.logger = kwargs.get('logger', None) or logging.getLogger(__name__) # don't evaluate default unless necessary
         if 'loglevel' in kwargs:
             self.logger.setLevel(kwargs['loglevel'])
+        self.expect_unique = kwargs.get('expect_unique', True)
 
     def _lookup(self, d, code, name):
         if not code:
@@ -113,7 +114,7 @@ class BaseTournamentDataImporter(object):
         raise ValueError("Unrecognized code for %s: %s" % (name, code))
 
     def _import(self, csvfile, line_parser, model, counts=None, errors=None,
-                expect_unique=True):
+                expect_unique=None):
         """Parses the object given in f, using the callable line_parser to parse
         each line, and passing the arguments to the given model's constructor.
         'csvfile' can be any object that is supported by csv.reader(), which
@@ -155,6 +156,9 @@ class BaseTournamentDataImporter(object):
             counts = Counter()
         if errors is None:
             errors = TournamentDataImporterError()
+        if expect_unique is None:
+            expect_unique = self.expect_unique
+        skipped_because_existing = 0
 
         for lineno, line in enumerate(reader, start=2 if self.header_row else 1):
             try:
@@ -195,6 +199,7 @@ class BaseTournamentDataImporter(object):
                         errors.add(lineno, model, e.message)
                     continue
                 else:
+                    skipped_because_existing += 1
                     if expect_unique:
                         message = description + " already exists"
                         errors.add(lineno, model, message)
@@ -224,6 +229,8 @@ class BaseTournamentDataImporter(object):
             inst.save()
 
         self.logger.info("Imported %d %s", len(insts), model._meta.verbose_name_plural.lower())
+        if skipped_because_existing:
+            self.logger.info("(skipped %d %s)", skipped_because_existing, model._meta.verbose_name_plural.lower())
 
         counts.update({model: len(insts)})
         return counts, errors
