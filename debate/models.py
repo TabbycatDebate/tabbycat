@@ -1924,7 +1924,7 @@ class Motion(models.Model):
     flagged = models.BooleanField(default=False, help_text="WADL: Allows for particular motions to be flagged as contentious")
     round = models.ForeignKey(Round, db_index=True)
     objects = MotionManager()
-    divisions = models.ManyToManyField('Division', blank=True, null=True)
+    divisions = models.ManyToManyField('Division', blank=True)
 
     def __unicode__(self):
         return self.text
