@@ -454,7 +454,7 @@ def tournament_home(request, t):
     # Actions
     from debate.models import ActionLog
     a = ActionLog.objects.filter(tournament=t).order_by('-id')[:20].select_related(
-        'user', 'debate', 'debate__tournament', 'ballot_submission'
+        'user', 'debate', 'ballot_submission'
     )
 
     # Speaker Scores
