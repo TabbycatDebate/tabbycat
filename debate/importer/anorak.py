@@ -278,6 +278,10 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 }
 
     def import_config(self, f):
+        """Imports configuration settings from a file.
+        Each line has:
+            key, value_type, value
+        """
         def _bool(val):
             if val.lower() in ["true", "1"]:
                 return True

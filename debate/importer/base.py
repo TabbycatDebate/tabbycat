@@ -12,7 +12,8 @@ from types import GeneratorType
 import debate.models as m
 
 NON_FIELD_ERRORS = '__all__'
-DUPLICATE_INFO = 15 # logging level
+DUPLICATE_INFO = 19 # logging level just below INFO
+logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
 
 class TournamentDataImporterError(Exception):
     """Inspired by Django's ValidationError, but adapted for the importer's

@@ -24,6 +24,8 @@ class Command(BaseCommand):
             help='Delete tournaments if they already exist.')
         parser.add_argument('--delete-institutions', action='store_true', default=False,
             help='Delete all institutions from the database, whether with the tournament or not.')
+        parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
+            help='Don\'t crash if there is an error, just skip and keep going.')
 
         # Tournament options
         parser.add_argument('-s', '--slug', type=str, action='store', default=None,
@@ -32,6 +34,28 @@ class Command(BaseCommand):
             help='Override tournament name. (Default: use name of directory.)'),
         parser.add_argument('--short-name', type=str, action='store', default=None,
             help='Override tournament short name. (Default: use name of directory.)'),
+
+    def handle(self, *args, **options):
+        self.options = options
+        self.verbosity = options['verbosity']
+        self.dirpath = self.get_data_path(options['path'])
+
+        if options['delete_institutions']:
+            self.delete_institutions()
+        self.make_tournament()
+        loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
+        self.importer = AnorakTournamentDataImporter(self.t, loglevel=loglevel, strict=options['strict'])
+        self.make_rounds()
+
+        self._make('config')
+        self._make('venue_groups')
+        self._make('venues')
+        self._make('institutions')
+        self._make('teams')
+        self._make('speakers')
+        self._make('judges', self.importer.import_adjudicators)
+        self._make('motions')
+        self._make('sides')
 
     def _print_stage(self, message):
         if self.verbosity > 0:
@@ -66,6 +90,8 @@ class Command(BaseCommand):
             return None
 
     def _make(self, filename, import_method=None):
+        """Imports objects from the given file using the given import method.
+        If the import method isn't given, it is inferred from the file name."""
         f = self._open_csv_file(filename)
         if import_method is None:
             import_method = getattr(self.importer, 'import_' + filename)
@@ -73,28 +99,6 @@ class Command(BaseCommand):
             self._print_stage("Importing %s.csv" % filename)
             counts, errors = import_method(f)
             self._print_result(counts, errors)
-
-    def handle(self, *args, **options):
-        self.options = options
-        self.verbosity = options['verbosity']
-        self.dirpath = self.get_data_path(options['path'])
-
-        if options['delete_institutions']:
-            self.delete_institutions()
-        self.make_tournament()
-        loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
-        self.importer = AnorakTournamentDataImporter(self.t, loglevel=loglevel)
-        self.make_rounds()
-
-        self._make('config')
-        self._make('venue_groups')
-        self._make('venues')
-        self._make('institutions')
-        self._make('teams')
-        self._make('speakers')
-        self._make('judges', self.importer.import_adjudicators)
-        self._make('motions')
-        self._make('sides')
 
     def get_data_path(self, arg):
         """Returns the directory for the given command-line argument. If the
@@ -129,6 +133,8 @@ class Command(BaseCommand):
         self.t = self.create_tournament(slug, name, short_name)
 
     def make_rounds(self):
+        """Makes rounds using an automatic rounds maker if --auto-rounds is
+        enabled, or using the CSV file if not."""
         if self.options['auto_rounds'] is None:
             self._make('rounds')
         else:
