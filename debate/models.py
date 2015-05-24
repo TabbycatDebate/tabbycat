@@ -566,7 +566,7 @@ class Team(models.Model):
         if cached_value:
             return cache.get(cached_key)
         else:
-            cached_value = self.speaker_set.all().select_related('person')
+            cached_value = self.speaker_set.all().select_related('person_ptr')
             cache.set(cached_key, cached_value, None)
             return cached_value
 
@@ -1464,7 +1464,7 @@ class Debate(models.Model):
 class SRManager(models.Manager):
     use_for_related_fields = True
     def get_queryset(self):
-        return super(SRManager, self).get_queryset().select_related('debate', 'team', 'position')
+        return super(SRManager, self).get_queryset().select_related('debate')
 
 
 class DebateTeam(models.Model):
