@@ -173,7 +173,7 @@ class BaseTournamentDataImporter(object):
                 kwargs_list = [kwargs_list]
 
             for kwargs in kwargs_list:
-                description = model._meta.verbose_name + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
+                description = model.__name__ + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
 
                 # Check if it's a duplicate
                 if kwargs in kwargs_seen:

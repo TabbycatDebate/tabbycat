@@ -8,7 +8,7 @@ from django.conf import settings
 from django.template.defaultfilters import slugify
 
 import debate.models as m
-from debate.importer import AnorakTournamentDataImporter
+from debate.importer import AnorakTournamentDataImporter, DUPLICATE_INFO
 
 class Command(BaseCommand):
     help = 'Delete all data for a tournament and import from specified directory.'
@@ -20,8 +20,10 @@ class Command(BaseCommand):
             help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.')
         parser.add_argument('-S', '--share-data', action='store_true', default=False,
             help='If specified, all institutions and adjudicators will not be tournament-specific.')
-        parser.add_argument("--force", action='store_true', default=False,
+        parser.add_argument('--force', action='store_true', default=False,
             help='Delete tournaments if they already exist.')
+        parser.add_argument('--delete-institutions', action='store_true', default=False,
+            help='Delete all institutions from the database, whether with the tournament or not.')
 
         # Tournament options
         parser.add_argument('-s', '--slug', type=str, action='store', default=None,
@@ -32,11 +34,11 @@ class Command(BaseCommand):
             help='Override tournament short name. (Default: use name of directory.)'),
 
     def _print_stage(self, message):
-        if self.verbosity > 1:
+        if self.verbosity > 0:
             self.stdout.write("\033[1;36m" + message + "\033[0m\n")
 
     def _print_result(self, counts, errors):
-        if self.verbosity > 1:
+        if self.verbosity > 0:
             if errors:
                 for message in errors.itermessages():
                     self.stdout.write("\033[1;32m" + message + "\032[0m\n")
@@ -46,7 +48,7 @@ class Command(BaseCommand):
 
     def _warning(self, message):
         if self.verbosity > 0:
-            self.stdout.write("\033[1;33mWarning: " + message + "\033[0m\n")
+            self.stdout.write("\033[0;33mWarning: " + message + "\033[0m\n")
 
     def _csv_file_path(self, filename):
         """Requires self.dirpath to be defined."""
@@ -63,28 +65,60 @@ class Command(BaseCommand):
             self._warning("Problem opening '{0:s}': {1:s}".format(filename, e))
             return None
 
+    def _make(self, filename, import_method=None):
+        f = self._open_csv_file(filename)
+        if import_method is None:
+            import_method = getattr(self.importer, 'import_' + filename)
+        if f is not None:
+            self._print_stage("Importing %s.csv" % filename)
+            counts, errors = import_method(f)
+            self._print_result(counts, errors)
+
     def handle(self, *args, **options):
         self.options = options
         self.verbosity = options['verbosity']
         self.dirpath = self.get_data_path(options['path'])
 
+        if options['delete_institutions']:
+            self.delete_institutions()
         self.make_tournament()
-        loglevel = [logging.ERROR, logging.WARNING, logging.INFO, logging.DEBUG][self.verbosity]
+        loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
         self.importer = AnorakTournamentDataImporter(self.t, loglevel=loglevel)
         self.make_rounds()
+
+        self._make('config')
+        self._make('venue_groups')
+        self._make('venues')
+        self._make('institutions')
+        self._make('teams')
+        self._make('speakers')
+        self._make('judges', self.importer.import_adjudicators)
+        self._make('motions')
+        self._make('sides')
 
     def get_data_path(self, arg):
         """Returns the directory for the given command-line argument. If the
         argument is an absolute path and is a directory, then looks there.
         Failing that, looks in the debate/data directory. Raises an exception
         if the directory doesn't appear to exist, or is not a directory."""
-        if os.path.isabs(arg) and os.path.isdir(arg): # absolute path
-            return arg
+        def _check_return(path):
+            if not os.path.isdir(path):
+                raise CommandError("The path '%s' is not a directory" % path)
+            self.stdout.write('Importing from directory: ' + path)
+            return path
+
+        if os.path.isabs(arg): # absolute path
+            return _check_return(arg)
 
         # relative path, look in debate/data
         base_path = os.path.join(settings.PROJECT_PATH, 'data')
         data_path = os.path.join(base_path, arg)
-        return data_path
+        return _check_return(data_path)
+
+    def delete_institutions(self):
+        """Deletes all institutions from the database."""
+        self._warning("Deleting all institutions from the database")
+        m.Institution.objects.all().delete()
 
     def make_tournament(self):
         """Given the path, does everything necessary to create the tournament,
@@ -96,10 +130,7 @@ class Command(BaseCommand):
 
     def make_rounds(self):
         if self.options['auto_rounds'] is None:
-            f = self._open_csv_file('rounds')
-            if f is not None:
-                counts, errors = self.importer.import_rounds(f)
-                self._print_result(counts, errors)
+            self._make('rounds')
         else:
             if os.path.exists(self._csv_file_path('rounds')):
                 self._warning("Ignoring file 'rounds.csv' because --auto-rounds used")
