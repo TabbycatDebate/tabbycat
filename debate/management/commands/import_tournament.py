@@ -18,12 +18,10 @@ class Command(BaseCommand):
 
         parser.add_argument('-r', '--auto-rounds', type=int, metavar='N', default=None,
             help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.')
-        parser.add_argument('-S', '--share-data', action='store_true', default=False,
-            help='If specified, all institutions and adjudicators will not be tournament-specific.')
         parser.add_argument('--force', action='store_true', default=False,
-            help='Delete tournaments if they already exist.')
+            help='Do not prompt before deleting tournament that already exists.')
         parser.add_argument('--delete-institutions', action='store_true', default=False,
-            help='Delete all institutions from the database, whether with the tournament or not.')
+            help='Delete all institutions from the database.')
         parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
             help='Don\'t crash if there is an error, just skip and keep going.')
 
@@ -154,14 +152,13 @@ class Command(BaseCommand):
 
     def clean_existing_tournament(self, slug):
         """Checks if a tournament exists and deletes it if it does."""
-        if self.options['force']:
-            return
         if m.Tournament.objects.filter(slug=slug).exists():
-            self.stdout.write("WARNING! A tournament with slug '" + slug + "' already exists.")
-            self.stdout.write("You are about to delete EVERYTHING for this tournament.")
-            response = raw_input("Are you sure? ")
-            if response != "yes":
-                raise CommandError("Cancelled by user.")
+            if not self.options['force']:
+                self.stdout.write("WARNING! A tournament with slug '" + slug + "' already exists.")
+                self.stdout.write("You are about to delete EVERYTHING for this tournament.")
+                response = raw_input("Are you sure? ")
+                if response != "yes":
+                    raise CommandError("Cancelled by user.")
             m.Tournament.objects.filter(slug=slug).delete()
 
     def create_tournament(self, slug, name, short_name):
