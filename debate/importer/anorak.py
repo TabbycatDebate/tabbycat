@@ -1,8 +1,34 @@
-from importer import BaseTournamentDataImporter, TournamentDataImporterError
+from base import BaseTournamentDataImporter, TournamentDataImporterError
 import debate.models as m
+import csv
 
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     """Anorak: The original tournament data format."""
+
+    ROUND_STAGES = {
+        ("preliminary", "p"): m.Round.STAGE_PRELIMINARY,
+        ("elimination", "break", "e", "b"): m.Round.STAGE_ELIMINATION,
+    }
+
+    ROUND_DRAW_TYPES = {
+        ("random", "r"): m.Round.DRAW_RANDOM,
+        ("manual", "m"): m.Round.DRAW_MANUAL,
+        ("round robin", "d"): m.Round.DRAW_ROUNDROBIN,
+        ("power paired", "p"): m.Round.DRAW_POWERPAIRED,
+        ("first elimination", "1st elimination", "1e", "f"): m.Round.DRAW_FIRSTBREAK,
+        ("subsequent elimination", "2nd elimination", "2e", "b"): m.Round.DRAW_BREAK,
+    }
+
+    GENDERS = {
+        ("male", "m"): m.Person.GENDER_MALE,
+        ("female", "f"): m.Person.GENDER_FEMALE,
+        ("other", "o"): m.Person.GENDER_OTHER,
+    }
+
+    TEAM_POSITIONS = {
+        ("affirmative", "aff", "a"): m.TeamPositionAllocation.POSITION_AFFIRMATIVE,
+        ("negative", "aff", "n"): m.TeamPositionAllocation.POSITION_NEGATIVE,
+    }
 
     def import_rounds(self, f):
         """Imports rounds from a file.
@@ -252,15 +278,53 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 }
 
     def import_config(self, f):
-        VALUE_TYPES = {"string": str, "int": int, "float": float, "bool": bool}
-        def _config_line_parser(line):
-            kwargs = dict()
-            key = line[0]
+        def _bool(val):
+            if val.lower() in ["true", "1"]:
+                return True
+            elif val.lower() in ["false", "0"]:
+                return False
+            else:
+                raise ValueError("Unrecognized boolean value: %r" % val)
+        coercefuncs = {"string": str, "int": int, "float": float, "bool": _bool,
+            "str": str}
+
+        reader = csv.reader(f)
+        count = 0
+        errors = TournamentDataImporterError()
+        if self.header_row:
+            reader.next()
+
+        for lineno, line in enumerate(reader, start=2 if self.header_row else 1):
             try:
-                coerce = VALUE_TYPES[line[1]]
-            except KeyError:
-                raise ValueError("Unrecognized value type in config: {0:r}".format(line[1]))
-            value = coerce(line[2])
+                key, value_type, value = line
+            except ValueError as e:
+                errors.add(lineno, m.Config, "Couldn't parse line: " + str(e))
+                continue
+            if value:
+                try:
+                    coercefunc = coercefuncs[value_type]
+                except KeyError:
+                    errors.add(lineno, m.Config, "Unrecognized value type: %r" % value_type)
+                    continue
+                try:
+                    value = coercefunc(value)
+                except ValueError as e:
+                    errors.add(lineno, m.Config, "Invalid value for type %r: %r" % (value_type, value))
+                    continue
+                self.tournament.config.set(key, value)
+                count += 1
+                self.logger.debug("Made config %r = %r" % (key, value))
+
+        if errors:
+            if self.strict:
+                for message in errors.itermessages():
+                    self.logger.error(message)
+                raise errors
+            else:
+                for message in errors.itermessages():
+                    self.logger.warning(message)
+
+        return {m.Config: count}, errors
 
     def auto_make_rounds(self, num_rounds):
         """Makes the number of rounds specified. The first one is random and the

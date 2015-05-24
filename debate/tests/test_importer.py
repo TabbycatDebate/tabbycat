@@ -79,6 +79,12 @@ class TestImporterAnorak(TestCase):
         self.assertEqual(counts, {m.Motion: 18})
         self.assertFalse(errors)
 
+    def test_config(self):
+        f = self._open_csv_file(self.TESTDIR_CHOICES, "config")
+        counts, errors = self.importer.import_config(f)
+        self.assertEqual(counts, {m.Config: 28})
+        self.assertFalse(errors)
+
     def test_invalid_line(self):
         self.test_speakers()
         f = self._open_csv_file(self.TESTDIR_ERRORS, "judges_invalid_line")

@@ -1,0 +1,1 @@
+from anorak import AnorakTournamentDataImporter

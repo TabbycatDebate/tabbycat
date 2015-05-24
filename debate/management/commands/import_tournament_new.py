@@ -1,5 +1,6 @@
 import os
 import csv
+import logging
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
@@ -7,35 +8,40 @@ from django.conf import settings
 from django.template.defaultfilters import slugify
 
 import debate.models as m
-import debate.importer
+from debate.importer import AnorakTournamentDataImporter
 
 class Command(BaseCommand):
-    args = 'path [--auto-rounds n] [--share-data] [--slug SLUG] [--name NAME] [--short-name NAME]'
     help = 'Delete all data for a tournament and import from specified directory.'
 
-    option_list = BaseCommand.option_list + (
-        make_option('-r', '--auto-rounds', type=int, metavar='N', default=None,
-            help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.'),
-        make_option('-S', '--share-data', action='store_true', default=False,
-            help='If specified, all institutions and adjudicators will not be tournament-specific.'),
-        make_option("--force", action='store_true', default=False,
-            help='Delete tournaments if they already exist.'),
+    def add_arguments(self, parser):
+        parser.add_argument('path', help="Directory to import tournament data from")
+
+        parser.add_argument('-r', '--auto-rounds', type=int, metavar='N', default=None,
+            help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.')
+        parser.add_argument('-S', '--share-data', action='store_true', default=False,
+            help='If specified, all institutions and adjudicators will not be tournament-specific.')
+        parser.add_argument("--force", action='store_true', default=False,
+            help='Delete tournaments if they already exist.')
 
         # Tournament options
-        make_option('-s', '--slug', type=str, action='store', default=None,
+        parser.add_argument('-s', '--slug', type=str, action='store', default=None,
             help='Override tournament slug. (Default: use name of directory.)'),
-        make_option('--name', type=str, action='store', default=None,
+        parser.add_argument('--name', type=str, action='store', default=None,
             help='Override tournament name. (Default: use name of directory.)'),
-        make_option('--short-name', type=str, action='store', default=None,
+        parser.add_argument('--short-name', type=str, action='store', default=None,
             help='Override tournament short name. (Default: use name of directory.)'),
-    )
 
     def _print_stage(self, message):
         if self.verbosity > 1:
             self.stdout.write("\033[1;36m" + message + "\033[0m\n")
 
-    def _print_result(self, message):
+    def _print_result(self, counts, errors):
         if self.verbosity > 1:
+            if errors:
+                for message in errors.itermessages():
+                    self.stdout.write("\033[1;32m" + message + "\032[0m\n")
+            count_strs = ("{1:d} {0:s}".format(model._meta.verbose_name_plural.lower(), count) for model, count in counts.iteritems())
+            message = "Imported " + ", ".join(count_strs) + ", hit {1:d} errors".format(counts, len(errors))
             self.stdout.write("\033[0;36m" + message + "\033[0m\n")
 
     def _warning(self, message):
@@ -60,15 +66,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.options = options
         self.verbosity = options['verbosity']
-
-        if len(args) != 1:
-            raise CommandError('There must be exactly one positional argument, the directory where the data is stored.')
-        arg = args[0]
-
-        self.dirpath = self.get_data_path(arg)
+        self.dirpath = self.get_data_path(options['path'])
 
         self.make_tournament()
-        self.importer = debate.importer.TournamentDataImporter(self.t)
+        loglevel = [logging.ERROR, logging.WARNING, logging.INFO, logging.DEBUG][self.verbosity]
+        self.importer = AnorakTournamentDataImporter(self.t, loglevel=loglevel)
         self.make_rounds()
 
     def get_data_path(self, arg):
@@ -96,8 +98,8 @@ class Command(BaseCommand):
         if self.options['auto_rounds'] is None:
             f = self._open_csv_file('rounds')
             if f is not None:
-                rounds, errors = self.importer.import_rounds(f)
-                self._print_result("Imported {0:d} rounds, hit {1:d} errors".format(rounds, errors))
+                counts, errors = self.importer.import_rounds(f)
+                self._print_result(counts, errors)
         else:
             if os.path.exists(self._csv_file_path('rounds')):
                 self._warning("Ignoring file 'rounds.csv' because --auto-rounds used")

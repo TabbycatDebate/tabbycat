@@ -96,36 +96,13 @@ class BaseTournamentDataImporter(object):
     See the documentation for _import for more details.
     """
 
-    ROUND_STAGES = {
-        ("preliminary", "p"): m.Round.STAGE_PRELIMINARY,
-        ("elimination", "break", "e", "b"): m.Round.STAGE_ELIMINATION,
-    }
-
-    ROUND_DRAW_TYPES = {
-        ("random", "r"): m.Round.DRAW_RANDOM,
-        ("manual", "m"): m.Round.DRAW_MANUAL,
-        ("round robin", "d"): m.Round.DRAW_ROUNDROBIN,
-        ("power paired", "p"): m.Round.DRAW_POWERPAIRED,
-        ("first elimination", "1st elimination", "1e", "f"): m.Round.DRAW_FIRSTBREAK,
-        ("subsequent elimination", "2nd elimination", "2e", "b"): m.Round.DRAW_BREAK,
-    }
-
-    GENDERS = {
-        ("male", "m"): m.Person.GENDER_MALE,
-        ("female", "f"): m.Person.GENDER_FEMALE,
-        ("other", "o"): m.Person.GENDER_OTHER,
-    }
-
-    TEAM_POSITIONS = {
-        ("affirmative", "aff", "a"): m.TeamPositionAllocation.POSITION_AFFIRMATIVE,
-        ("negative", "aff", "n"): m.TeamPositionAllocation.POSITION_NEGATIVE,
-    }
-
     def __init__(self, tournament, **kwargs):
         self.tournament = tournament
         self.strict = kwargs.get('strict', True)
         self.header_row = kwargs.get('header_row', True)
         self.logger = kwargs.get('logger', None) or logging.getLogger(__name__) # don't evaluate default unless necessary
+        if 'loglevel' in kwargs:
+            self.logger.setLevel(kwargs['loglevel'])
 
     def _lookup(self, d, code, name):
         if not code:
