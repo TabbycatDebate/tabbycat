@@ -59,10 +59,10 @@ class TournamentDataImporterError(Exception):
         if hasattr(ve, 'error_dict'):
             for field, error_list in ve.error_dict.items():
                 for error in error_list:
-                    self.add(lineno, model, error.message, field)
+                    self.add(lineno, model, "; ".join(error), field)
         elif hasattr(ve, 'error_list'):
             for error in ve.error_list:
-                self.add(lineno, model, error.message, NON_FIELD_ERRORS)
+                self.add(lineno, model, "; ".join(error), NON_FIELD_ERRORS)
         else:
             message = "Model validation failed: "+ str(ve)
             self.add(lineno, model, message, NON_FIELD_ERRORS)
@@ -128,11 +128,12 @@ class BaseTournamentDataImporter(object):
         self.logger = kwargs.get('logger', None) or logging.getLogger(__name__) # don't evaluate default unless necessary
 
     def _lookup(self, d, code, name):
+        if not code:
+            return None
         for k, v in d.iteritems():
             if code.lower().replace("-"," ") in k:
                 return v
-        self.logger.warning("Unrecognized code for %s: %s", name, code)
-        return None
+        raise ValueError("Unrecognized code for %s: %s" % (name, code))
 
     def _import(self, csvfile, line_parser, model, counts=None, errors=None,
                 expect_unique=True):

@@ -165,7 +165,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'name'        : line[0],
                 'institution' : m.Institution.objects.lookup(line[1]),
                 'test_score'  : float(line[2]),
-                'gender'      : line[3] if len(line) > 3 else None,
+                'gender'      : self._lookup(self.GENDERS, line[3], "gender") if len(line) > 3 and line[3] else None,
                 'novice'      : int(line[4]) if len(line) > 4 and line[4] else False,
                 'phone'       : line[5] if len(line) > 5 else None,
                 'email'       : line[6] if len(line) > 6 else None,

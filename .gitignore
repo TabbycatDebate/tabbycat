@@ -5,7 +5,7 @@ migrations-*/
 .gitmodules
 
 # Data to ignore
-data/
+data/*
 
 # Default data to include
 !data/dummy/
@@ -14,6 +14,7 @@ data/
 !data/sandbox/
 !data/utils/
 !data/tabbycat_datasets/
+!data/test/
 
 env/
 venv/
