@@ -1704,7 +1704,8 @@ class AdjudicatorAllocation(object):
 
     def __iter__(self):
         """Iterates through all, including trainees."""
-        yield DebateAdjudicator.TYPE_CHAIR, self.chair
+        if self.chair is not None:
+            yield DebateAdjudicator.TYPE_CHAIR, self.chair
         for a in self.panel:
             yield DebateAdjudicator.TYPE_PANEL, a
         for a in self.trainees:
