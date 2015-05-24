@@ -27,7 +27,7 @@ class TournamentDataImporterError(Exception):
     class Entry(object):
         def __init__(self, lineno, model, message, field=NON_FIELD_ERRORS):
             self.lineno = lineno
-            self.model = model._meta.verbose_name
+            self.model = model._meta.verbose_name.lower()
             self.field = field
             self.message = message
 
