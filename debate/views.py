@@ -1173,6 +1173,7 @@ def results(request, round):
 def public_results(request, round):
     # Can't see results for current round or later
     if (round.seq >= round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
+        print "Result page denied: round %d, current round %d, release all %s, silent %s" % (round.seq, round.tournament.current_round.seq, round.tournament.release_all, round.silent)
         raise Http404()
     draw = round.get_draw()
     show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.config.get('show_motions_in_results')
