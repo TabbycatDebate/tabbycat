@@ -39,7 +39,7 @@ class DebateTeamAdmin(admin.ModelAdmin):
     raw_id_fields = ('debate','team',)
 
     def get_queryset(self, request):
-        return super(DebateTeamAdmin, self).queryset(request).select_related('tournament','institution')
+        return super(DebateTeamAdmin, self).get_queryset(request).select_related('debate__round', 'debate__round__tournament')
 
 
 admin.site.register(models.DebateTeam, DebateTeamAdmin)
@@ -68,7 +68,7 @@ class TeamAdmin(admin.ModelAdmin):
     raw_id_fields = ('division',)
 
     def get_queryset(self, request):
-        return super(TeamAdmin, self).queryset(request).prefetch_related('institution','division')
+        return super(TeamAdmin, self).get_queryset(request).prefetch_related('institution','division')
 
 admin.site.register(models.Team, TeamAdmin)
 
@@ -163,7 +163,7 @@ class VenueAdmin(admin.ModelAdmin):
     search_fields = ('name', 'time')
 
     def get_queryset(self, request):
-        return super(VenueAdmin, self).queryset(request).select_related('group')
+        return super(VenueAdmin, self).get_queryset(request).select_related('group')
 
 admin.site.register(models.Venue, VenueAdmin)
 
@@ -199,8 +199,8 @@ class DebateAdmin(admin.ModelAdmin):
     raw_id_fields = ('venue','division')
 
     def get_queryset(self, request):
-        return super(DebateAdmin, self).queryset(request).select_related(
-            'round__tournament','division__tournament','venue__venue_group'
+        return super(DebateAdmin, self).get_queryset(request).select_related(
+            'round__tournament','division__tournament','venue__group'
         )
 
 for value, verbose_name in models.Debate.STATUS_CHOICES:
@@ -247,7 +247,7 @@ class SpeakerScoreAdmin(admin.ModelAdmin):
     raw_id_fields = ('debate_team','ballot_submission')
 
     def get_queryset(self, request):
-        return super(SpeakerScoreAdmin, self).queryset(request).select_related(
+        return super(SpeakerScoreAdmin, self).get_queryset(request).select_related(
             'debate_team__debate__round',
             'debate_team__team__institution','debate_team__team__tournament',
             'ballot_submission')
@@ -345,7 +345,7 @@ class ActionLogAdmin(admin.ModelAdmin):
     search_fields = ('type', 'tournament__name', 'user__username')
 
     def get_queryset(self, request):
-        return super(ActionLogAdmin, self).queryset(request).select_related(
+        return super(ActionLogAdmin, self).get_queryset(request).select_related(
             'tournament','user'
         )
 
