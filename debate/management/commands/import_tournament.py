@@ -21,9 +21,9 @@ class Command(BaseCommand):
         parser.add_argument('--force', action='store_true', default=False,
             help='Do not prompt before deleting tournament that already exists.')
         parser.add_argument('--keep-existing', action='store_true', default=False,
-            help='Keep existing tournament and ')
+            help='Keep existing tournament and data, skipping lines if they are duplicates.')
         parser.add_argument('--delete-institutions', action='store_true', default=False,
-            help='Delete all institutions from the database.')
+            help='Delete all institutions from the database. Overrides --keep-existing.')
         parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
             help='Don\'t crash if there is an error, just skip and keep going.')
 
