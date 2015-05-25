@@ -10,3 +10,5 @@ if venv is None:
     exit()
 root_path = os.path.abspath(os.path.join(venv, ".."))
 if root_path not in sys.path: sys.path.append(root_path)
+import django
+django.setup()
