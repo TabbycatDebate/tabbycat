@@ -1599,7 +1599,7 @@ class Submission(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
-    version_semaphore = BoundedSemaphore(100)
+    version_semaphore = BoundedSemaphore()
 
     confirmed = models.BooleanField(default=False, db_index=True)
 
