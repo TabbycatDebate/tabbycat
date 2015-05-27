@@ -38,6 +38,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.options = options
         self.verbosity = options['verbosity']
+        self.color = not options['no_color']
         self.dirpath = self.get_data_path(options['path'])
 
         if options['delete_institutions']:
@@ -60,20 +61,27 @@ class Command(BaseCommand):
 
     def _print_stage(self, message):
         if self.verbosity > 0:
-            self.stdout.write("\033[1;36m" + message + "\033[0m\n")
+            if self.color:
+                message = "\033[1;36m" + message + "\033[0m\n"
+            self.stdout.write(message)
 
     def _print_result(self, counts, errors):
         if self.verbosity > 0:
             if errors:
                 for message in errors.itermessages():
-                    self.stdout.write("\033[1;32m" + message + "\032[0m\n")
+                    if self.color:
+                        message = "\033[1;32m" + message + "\032[0m\n"
+                    self.stdout.write(message)
             count_strs = ("{1:d} {0:s}".format(model._meta.verbose_name_plural.lower(), count) for model, count in counts.iteritems())
             message = "Imported " + ", ".join(count_strs) + ", hit {1:d} errors".format(counts, len(errors))
-            self.stdout.write("\033[0;36m" + message + "\033[0m\n")
+            if self.color: "\033[0;36m" + message + "\033[0m\n"
+            self.stdout.write(message)
 
     def _warning(self, message):
         if self.verbosity > 0:
-            self.stdout.write("\033[0;33mWarning: " + message + "\033[0m\n")
+            if self.color:
+                message = "\033[0;33mWarning: " + message + "\033[0m\n"
+            self.stdout.write(message)
 
     def _csv_file_path(self, filename):
         """Requires self.dirpath to be defined."""
