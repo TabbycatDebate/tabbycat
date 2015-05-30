@@ -68,7 +68,6 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'debate',
     'compressor',
-    'debug_toolbar',
 )
 
 LOGIN_REDIRECT_URL = '/'
@@ -168,6 +167,9 @@ if os.environ.get('DEBUG', ''):
 # ===========================
 
 try:
-    from local_settings import *
-except Exception as e:
-    pass
+    LOCAL_SETTINGS
+except NameError:
+    try:
+        from local_settings import *
+    except ImportError:
+        pass
