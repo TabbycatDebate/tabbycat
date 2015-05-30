@@ -972,8 +972,8 @@ def motions_edit(request, round):
                     user=request.user, motion=motion, tournament=round.tournament)
             if 'submit' in request.POST:
                 return redirect_round('motions', round)
-
-    formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
+    else:
+        formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
     return r2r(request, "motions_edit.html", dict(formset=formset))
 
