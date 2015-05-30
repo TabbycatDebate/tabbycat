@@ -64,10 +64,9 @@
       One or more debates does not have a venue <a href="{% round_url draw_venues_edit current_round %}" class="alert-link">Edit the venues</a>.
     </div>
   {% endif %}
-
-  {% if active_adjs.count < rooms %}
+  {% if active_adjs.count < draw.count %}
     <div class="alert alert-danger alert-dismissable" id="">
-      There are currently fewer active adjudicators than there are rooms. <a href="{% round_url adjudicator_availability current_round %}" class="alert-link">Check in some more adjudicators</a>.
+      There are currently fewer checked-in adjudicators than there are rooms. <a href="{% round_url adjudicator_availability current_round %}" class="alert-link">Check in some more adjudicators</a>.
     </div>
   {% else %}
     {% if round.adjudicators_allocation_validity == 1 or round.adjudicators_allocation_validity == 2 %}
