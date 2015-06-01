@@ -55,3 +55,5 @@ Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. The current act
 Please don't hesitate to contact us with any questions, suggestions, expressions of interest or generally anything relating to Tabbycat.
 
 If you're interested in helping out as a developer, we'd love to have you! [Join our Facebook group](https://www.facebook.com/groups/tabbycat.debate/) and contact us as above.
+
+**Bug reports.** If you have a GitHub account, we'd prefer that bugs be reported to our [issues page](https://github.com/czlee/tabbycat/issues). Otherwise, please contact us as above.
