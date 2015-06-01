@@ -97,7 +97,10 @@ class Config(object):
         self._t = tournament
 
     def __getattr__(self, key):
-        return self.get(key)
+        try:
+            return self.get(key)
+        except KeyError:
+            raise AttributeError(key)
 
     def get(self, key, default=None):
         from debate.models import Config
