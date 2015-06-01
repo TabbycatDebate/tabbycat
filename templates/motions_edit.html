@@ -23,33 +23,34 @@
         {% for form in formset %}
         <li class="list-group-item">
 
-          {% if form.errors %}
-          <div class="error">
-            {{ form.errors }}
-          </div>
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              <p>{{ form.non_field_errors }}
+            </div>
           {% endif %}
+
           <div class="form-group">
             <label for="{{ form.text.id_for_label }}" class="col-sm-1 control-label" {% if form.text.help_text %}data-toggle="tooltip" title="{{ form.text.help_text }}"{% endif %}>
-              {{ form.text.label }}
+              {{ form.text.label }} {{ form.text.errors }}
             </label>
             <div class="col-sm-6">
-              {{form.text|addcss:"form-control help-anchor"}}
+              {{form.text|addcss:"form-control help-anchor required"}}
             </div>
           </div>
           <div class="form-group">
             <label for="{{ form.reference.id_for_label }}" class="col-sm-1 control-label" {% if form.reference.help_text %}data-toggle="tooltip" title="{{ form.reference.help_text }}"{% endif %}>
-              {{ form.reference.label }}
+              {{ form.reference.label }}  {{ form.reference.errors }}
             </label>
             <div class="col-sm-6">
-              {{form.reference|addcss:"form-control"}}
+              {{form.reference|addcss:"form-control required"}}
             </div>
           </div>
           <div class="form-group">
             <label for="{{ form.seq.id_for_label }}" class="col-sm-1 control-label" {% if form.seq.help_text %}data-toggle="tooltip" title="{{ form.seq.help_text }}"{% endif %}>
-              {{ form.seq.label }}
+              Sequence {{ form.seq.errors }}
             </label>
             <div class="col-sm-3">
-              {{form.seq|addcss:"form-control"}}{{ form.id }}
+              {{form.seq|addcss:"form-control required"}}{{ form.id }}
             </div>
             <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
               {{ form.DELETE.label }}
@@ -62,7 +63,7 @@
           {% if enable_flagged_motions %}
           <div class="form-group">
             <label for="{{ form.flagged.id_for_label }}" class="col-sm-1 control-label" {% if form.flagged.help_text %}data-toggle="tooltip" title="{{ form.flagged.help_text }}"{% endif %}>
-              {{ form.flagged.label }}
+              {{ form.flagged.label }} {{ form.flagged.errors }}
             </label>
             <div class="col-sm-6">
               {{form.flagged|addcss:"form-control help-anchor"}}

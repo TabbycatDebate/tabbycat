@@ -972,8 +972,8 @@ def motions_edit(request, round):
                     user=request.user, motion=motion, tournament=round.tournament)
             if 'submit' in request.POST:
                 return redirect_round('motions', round)
-
-    formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
+    else:
+        formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
     return r2r(request, "motions_edit.html", dict(formset=formset))
 
@@ -1351,12 +1351,13 @@ def toggle_postponed(request, t):
 
 def get_speaker_standings(rounds, round, results_override=False, only_novices=False, for_replies=False):
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
+    reply_position = round.tournament.REPLY_POSITION
     minimum_debates_needed = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=round.tournament).count() - round.tournament.config.get('standings_missed_debates')
 
     if for_replies:
         speaker_scores = SpeakerScore.objects.select_related(
             'speaker','ballot_submission', 'debate_team__debate__round'
-            ).filter(ballot_submission__confirmed=True, position=last_substantive_position)
+            ).filter(ballot_submission__confirmed=True, position=reply_position)
     else:
         speaker_scores = SpeakerScore.objects.select_related(
             'speaker','ballot_submission', 'debate_team__debate__round'
@@ -1387,6 +1388,11 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
         else:
             speaker.total = None
             speaker.average = None
+        if for_replies:
+            speaker.replies_given = len(filter(None, speaker.scores))
+
+    if for_replies:
+        speakers = [s for s in speakers if s.replies_given > 0]
 
     prev_total = None
     current_rank = 0

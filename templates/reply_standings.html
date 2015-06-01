@@ -31,7 +31,7 @@
           <th>{{ round.abbreviation }}</th>
         {% endfor %}
         <th>Av<span class="hidden-xs">erage</span></th>
-        <th>Replies</th>
+        <th>Replies Given</th>
       </tr>
     </thead>
     <tbody>
@@ -71,7 +71,7 @@
           {{ speaker.average|stringformat:".2f" }}
         </td>
         <td>
-          {{ speaker.replies }}
+          {{ speaker.replies_given }}
         </td>
       </tr>
       {% endwith %}
