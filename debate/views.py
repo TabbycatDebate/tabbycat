@@ -313,7 +313,7 @@ def all_tournaments_all_venues(request, t):
 def all_draws_for_venue(request, t, venue_id):
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
-        'round','round__tournament','division', 'aff_team', 'aff_team__institution', 'neg_team', 'neg_team__institution')
+        'round','round__tournament','division')
     return r2r(request, 'public/public_all_draws_for_venue.html', dict(
         venue_group=venue_group, debates=debates))
 
@@ -328,7 +328,7 @@ def all_tournaments_all_institutions(request, t):
 def all_draws_for_institution(request, t, institution_id):
     institution = Institution.objects.get(pk=institution_id)
     debate_teams = DebateTeam.objects.filter(team__institution=institution).select_related(
-        'debate', 'division', 'division__venue_group', 'round')
+        'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')
     debates = [dt.debate for dt in debate_teams]
 
     return r2r(request, 'public/public_all_draws_for_institution.html', dict(

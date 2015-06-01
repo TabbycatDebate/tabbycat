@@ -36,7 +36,7 @@
         {% if enable_divisions %}
           <td>{{ debate.division.name }}</td>
         {% endif %}
-        <td>{{ debate.venue_splitname }}</td>
+        <td>{% if debate.venue %}{{ debate.venue.name }}{% endif %}</td>
         {% if show_ballots %}
           <td>
             {% if debate.confirmed_ballot %}
