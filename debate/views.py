@@ -568,6 +568,8 @@ def round_index(request, round):
 @admin_required
 @round_view
 def round_increment_check(request, round):
+    if round != request.tournament.current_round: # doesn't make sense if not current round
+        raise Http404()
     draw = round.get_draw()
     stats = {
         'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
@@ -575,12 +577,16 @@ def round_increment_check(request, round):
         'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
         'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
     }
-    return r2r(request, "round_increment_check.html", dict(stats=stats))
+    num_unconfirmed = draw.filter(result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
+    increment_ok = num_unconfirmed == 0
+    return r2r(request, "round_increment_check.html", dict(num_unconfirmed=num_unconfirmed, increment_ok=increment_ok))
 
 @admin_required
 @expect_post
 @round_view
 def round_increment(request, round):
+    if round != request.tournament.current_round: # doesn't make sense if not current round
+        raise Http404()
     request.tournament.advance_round()
     return redirect_round('draw', request.tournament.current_round )
 
