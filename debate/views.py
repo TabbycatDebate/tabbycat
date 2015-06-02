@@ -1382,12 +1382,14 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
     for speaker in speakers:
         this_speakers_scores = [score for score in speaker_scores if score.speaker == speaker]
         speaker.scores = get_scores(speaker, this_speakers_scores)
+        speaker.results_in = speaker.scores[-1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
         if len(filter(None, speaker.scores)) > minimum_debates_needed:
             speaker.total = sum(filter(None, speaker.scores))
             speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
         else:
             speaker.total = None
             speaker.average = None
+
         if for_replies:
             speaker.replies_given = len(filter(None, speaker.scores))
 
