@@ -8,20 +8,26 @@
 
 {% block content %}
 
-  {% if stats.none|add:stats.ballot_in|add:stats.draft > 0 %}
-    <div class="alert alert-danger">
-      There are still {{ stats.none|add:stats.ballot_in|add:stats.draft }}
-      ballots that are not confirmed. You should <strong>not</strong>
-      proceed to the next round until all ballots are confirmed.
-    </div>
-  {% else %}
+  {% if increment_ok %}
     <div class="alert alert-success">
       It looks like all the ballots from {{ round.name }} are confirmed, you should be good to go.
+    </div>
+  {% else %}
+    <div class="alert alert-danger">
+      There are still {{ num_unconfirmed }}
+      ballots that are not confirmed. You should <strong>not</strong>
+      proceed to the next round until all ballots are confirmed.
     </div>
   {% endif %}
 
   <form action="{% round_url round_increment %}" method="POST">
-    <button class="btn btn-success" id="createDraw" type="submit">Advance to Next Round</button>
+    <button class="btn {{increment_ok|yesno:"btn-success,btn-warning"}}" id="createDraw" type="submit">
+      {% if increment_ok %}
+        Advance to Next Round
+      {% else %}
+        That's fine, I want to advance to the next round anyway
+      {% endif %}
+    </button>
 </form>
 
 {% endblock %}

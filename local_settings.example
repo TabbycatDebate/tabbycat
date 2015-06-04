@@ -1,5 +1,8 @@
 import os
 
+LOCAL_SETTINGS = True
+from settings import *
+
 # ===================
 # = Server Settings =
 # ===================

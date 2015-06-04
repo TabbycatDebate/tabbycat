@@ -313,7 +313,7 @@ def all_tournaments_all_venues(request, t):
 def all_draws_for_venue(request, t, venue_id):
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
-        'round','round__tournament','division', 'aff_team', 'aff_team__institution', 'neg_team', 'neg_team__institution')
+        'round','round__tournament','division')
     return r2r(request, 'public/public_all_draws_for_venue.html', dict(
         venue_group=venue_group, debates=debates))
 
@@ -328,7 +328,7 @@ def all_tournaments_all_institutions(request, t):
 def all_draws_for_institution(request, t, institution_id):
     institution = Institution.objects.get(pk=institution_id)
     debate_teams = DebateTeam.objects.filter(team__institution=institution).select_related(
-        'debate', 'division', 'division__venue_group', 'round')
+        'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')
     debates = [dt.debate for dt in debate_teams]
 
     return r2r(request, 'public/public_all_draws_for_institution.html', dict(
@@ -568,19 +568,18 @@ def round_index(request, round):
 @admin_required
 @round_view
 def round_increment_check(request, round):
-    draw = round.get_draw()
-    stats = {
-        'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
-        'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
-        'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
-        'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
-    }
-    return r2r(request, "round_increment_check.html", dict(stats=stats))
+    if round != request.tournament.current_round: # doesn't make sense if not current round
+        raise Http404()
+    num_unconfirmed = round.get_draw().filter(result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
+    increment_ok = num_unconfirmed == 0
+    return r2r(request, "round_increment_check.html", dict(num_unconfirmed=num_unconfirmed, increment_ok=increment_ok))
 
 @admin_required
 @expect_post
 @round_view
 def round_increment(request, round):
+    if round != request.tournament.current_round: # doesn't make sense if not current round
+        raise Http404()
     request.tournament.advance_round()
     return redirect_round('draw', request.tournament.current_round )
 
@@ -1382,12 +1381,14 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
     for speaker in speakers:
         this_speakers_scores = [score for score in speaker_scores if score.speaker == speaker]
         speaker.scores = get_scores(speaker, this_speakers_scores)
+        speaker.results_in = speaker.scores[-1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
         if len(filter(None, speaker.scores)) > minimum_debates_needed:
             speaker.total = sum(filter(None, speaker.scores))
             speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
         else:
             speaker.total = None
             speaker.average = None
+
         if for_replies:
             speaker.replies_given = len(filter(None, speaker.scores))
 
