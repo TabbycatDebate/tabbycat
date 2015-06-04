@@ -113,8 +113,8 @@
       <div class="modal-body">
         <table id="modal-adj-table" class="table">
           <thead>
-            <th><span class="glyphicon glyphicon-tag" data-toggle="tooltip" title="Version"></span></th>
             <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
+            <th><span class="glyphicon glyphicon-tag" data-toggle="tooltip" title="Version"></span></th>
             <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
             <th>Debate</th>
             <th>Source</th>
@@ -226,6 +226,8 @@
 
       $(".view-feedback").each( function() {
         $(this).click( function() {
+          // Remove previous data to prevent confusion during slow loads
+          adjTable.api().clear().draw()
           var adj_info = get_adj_information(this);
           $("#modal-adj-name").text(adj_info.adj_name); // Updating header of the modal
           var newUrl = '{% tournament_url get_adj_feedback %}?id=' + adj_info.adj_id
