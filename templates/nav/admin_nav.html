@@ -42,11 +42,11 @@
     <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
         <span class="
-          {% if r.seq < current_round.seq %}
+          {% if r.draw_status == r.STATUS_RELEASED %}
             text-success
-          {% elif r.draw_status == r.STATUS_RELEASED %}
+          {% elif r.draw_status == r.STATUS_CONFIRMED %}
             text-primary
-          {% elif r.draw_status != r.STATUS_NONE %}
+          {% elif r.draw_status == r.STATUS_DRAFT %}
             text-warning
           {% endif %}
         ">
@@ -57,6 +57,18 @@
         </span>
       </a>
       <ul class="dropdown-menu">
+        <li class="dropdown-header">Draw Status:
+          {% if r.draw_status == r.STATUS_RELEASED %}
+            <span class="text-success">Released</span>
+          {% elif r.draw_status == r.STATUS_CONFIRMED %}
+            <span class="text-primary">Confirmed</span>
+          {% elif r.draw_status == r.STATUS_DRAFT %}
+            <span class="text-warning">Draft</span>
+          {% elif r.draw_status == 0 %}
+            <span class="">None</span>
+          {% endif %}
+        </li>
+        <li class="divider"></li>
         <li><a href="{% round_url team_availability r %}">Team Checkins</a></li>
         <li><a href="{% round_url venue_availability r %}">Venue Checkins</a></li>
         <li><a href="{% round_url adjudicator_availability r %}">Adj Checkins</a></li>
