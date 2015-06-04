@@ -184,6 +184,9 @@ class Venue(models.Model):
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
 
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
 
 class InstitutionManager(models.Manager):
 
@@ -408,7 +411,7 @@ class TeamManager(models.Manager):
 
         FILTER_ARGS = {
             'open': dict(),
-            'esl':  dict(type=Team.TYPE_ESL),
+            'esl':  dict(esl=True),
         }
         filterargs = FILTER_ARGS[category]
 
@@ -507,6 +510,9 @@ class Team(models.Model):
     # swing/composite)
     cannot_break = models.BooleanField(default=False)
 
+    esl = models.BooleanField(default=False)
+    efl = models.BooleanField(default=False)
+
     venue_preferences = models.ManyToManyField(VenueGroup,
         through = 'TeamVenuePreference',
         related_name = 'VenueGroup',
@@ -514,13 +520,11 @@ class Team(models.Model):
     )
 
     TYPE_NONE = 'N'
-    TYPE_ESL = 'E'
     TYPE_SWING = 'S'
     TYPE_COMPOSITE = 'C'
     TYPE_BYE = 'B'
     TYPE_CHOICES = (
         (TYPE_NONE, 'None'),
-        (TYPE_ESL, 'ESL'),
         (TYPE_SWING, 'Swing'),
         (TYPE_COMPOSITE, 'Composite'),
         (TYPE_BYE, 'Bye'),
@@ -557,6 +561,10 @@ class Team(models.Model):
             return unicode(institution.name + " " + self.reference)
         else:
             return unicode(self.reference)
+
+    @property
+    def region(self):
+        return self.get_cached_institution().region
 
     def get_aff_count(self, seq=None):
         return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)

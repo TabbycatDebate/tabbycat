@@ -18,11 +18,20 @@ admin.site.register(models.Tournament,TournamentAdmin)
 # ==============================================================================
 
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ('name','code','abbreviation')
+    list_display = ('name','code','abbreviation','region')
     ordering = ('name',)
     search_fields = ('name',)
 
 admin.site.register(models.Institution, InstitutionAdmin)
+
+# ==============================================================================
+# Region
+# ==============================================================================
+
+class RegionAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(models.Region, RegionAdmin)
 
 # ==============================================================================
 # DebateTeam
