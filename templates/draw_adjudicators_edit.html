@@ -645,7 +645,8 @@
 
     });
 
-    dataTable = $("#dataTable").DataTable( {
+    var dataTable = $("#dataTable").DataTable( {
+      // TODO: update this to the new API method
       "bAutoWidth": false,
       "aoColumns": [
         { "sWidth": "3%" },
@@ -667,7 +668,7 @@
       ]
     });
 
-    unusedTable = $("#unusedTable").dataTable({
+    var unusedTable = $("#unusedTable").dataTable({
       aoColumns: [
         { "sWdith": "90%", "sType": "string" },
         { "sWidth": "10%", "sType": "string" }
