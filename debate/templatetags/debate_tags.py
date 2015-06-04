@@ -53,6 +53,20 @@ def team_emoji(team):
             return b"%s" % EMOJI_LIST[team.id]
 register.simple_tag(team_emoji)
 
+
+def team_status_classes(team):
+    classes = ""
+    if team.region is not None:
+        region_stripped = team.region.name.replace(' ', '_')
+        classes += "region-%s" % region_stripped
+    if team.esl:
+        classes += " language-esl"
+    if team.efl:
+        classes += " language-efl"
+    return classes
+register.simple_tag(team_status_classes)
+
+
 def debate_draw_status_class(debate):
     if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
         return "active text-muted"

@@ -56,7 +56,7 @@
 
   </div>
 
-  {% include "footer.html" %}
+  {% block footer %}{% include "footer.html" %}{% endblock footer %}
 
   {% compress js %}
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/modernizr.js' %}"></script>

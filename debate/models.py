@@ -742,6 +742,10 @@ class Adjudicator(Person):
     def is_unaccredited(self):
         return self.novice
 
+    @property
+    def region(self):
+        return self.institution.region
+
     @cached_property
     def score(self):
         if self.tournament:

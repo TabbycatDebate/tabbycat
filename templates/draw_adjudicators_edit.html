@@ -14,12 +14,23 @@
     <a class="btn btn-default personal-conflict" href="{% round_url draw %}">Quit</a>
   </div>
   <div id="statusBar" class="btn-group">
-    <div class="btn btn-default" href="" id="toggle_venues">Show Venues</div>
-    <div class="btn btn-default" href="" id="toggle_wins">Show Wins</div>
-    <div class="btn btn-default" href="" id="toggle_gender">Show Gender</div>
+    <div class="btn btn-default" href="" id="toggle_venues">
+      <span class="glyphicon glyphicon-eye-open"></span> Venues
+    </div>
+    <div class="btn btn-default" href="" id="toggle_wins">
+      <span class="glyphicon glyphicon-eye-open"></span> Wins
+    </div>
+    <div class="btn btn-default" href="" id="toggle_gender">
+      <span class="glyphicon glyphicon-eye-open"></span> Gender
+    </div>
+    <div class="btn btn-default" href="" id="toggle_region">
+      <span class="glyphicon glyphicon-eye-open"></span> Region
+    </div>
+    <div class="btn btn-default" href="" id="toggle_language">
+      <span class="glyphicon glyphicon-eye-open"></span> Language
+    </div>
   </div>
   <div id="statusBar" class="btn-group">
-    <div class="btn btn-default">Conflicts:</div>
     <div class="btn btn-default btn-primary">Seen</div>
     <div class="btn btn-default btn-warning">Institution</div>
     <div class="btn btn-default btn-danger">Person</div>
@@ -89,7 +100,7 @@
         <td class="{% if debate.aff_team.male_adj_percent >= debate.neg_team.male_adj_percent %}gender-parity-{{ debate.gender_class }} gender-highlight{% endif %}">
           {{ debate.aff_team.male_adj_percent }}
         </td>
-        <td id="team_{{ debate.aff_team.id }}" class="teaminfo">
+        <td id="team_{{ debate.aff_team.id }}" class="teaminfo {% team_status_classes debate.aff_team %}">
           <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
             {{ debate.aff_team.short_name }}
           </span>
@@ -100,7 +111,7 @@
         <td class="{% if debate.neg_team.male_adj_percent >= debate.aff_team.male_adj_percent %}gender-parity-{{ debate.gender_class }} gender-highlight{% endif %}">
           {{ debate.neg_team.male_adj_percent }}
         </td>
-        <td id="team_{{ debate.neg_team.id }}" class="teaminfo">
+        <td id="team_{{ debate.neg_team.id }}" class="teaminfo {% team_status_classes debate.neg_team %}">
           <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
             {{ debate.neg_team.short_name }}
           </span>
@@ -145,6 +156,8 @@
   </div>
 </div>
 {% endblock content %}
+
+{% block footer %}{% endblock footer %}
 
 {% block extra-js %}
 <script type="text/javascript" language="javascript" src="{% static 'js/jquery-ui-1.10.4.custom.min.js' %}"></script>
@@ -690,17 +703,21 @@
       columnB.visible( ! columnB.visible() );
       $(".adj").toggleClass("gender-display");
       $(".gender-highlight").toggleClass("gender-display");
-      $(this).text(function(i, text){
-        return text === "Show Gender" ? "Hide Gender" : "Show Gender";
-      })
+      $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
+      return false
+    });
+    $('#toggle_region').click(function() {
+      $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
+      return false
+    });
+    $('#toggle_language').click(function() {
+      $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
       return false
     });
     $('#toggle_venues').click(function() {
       var columnA = dataTable.column(2);
       columnA.visible( ! columnA.visible() );
-      $(this).text(function(i, text){
-        return text === "Show Venues" ? "Hide Venues" : "Show Venues";
-      })
+      $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
       return false
     });
     $('#toggle_wins').click(function() {
@@ -708,9 +725,7 @@
       columnA.visible( ! columnA.visible() );
       var columnB = dataTable.column(6);
       columnB.visible( ! columnB.visible() );
-      $(this).text(function(i, text){
-        return text === "Show Wins" ? "Hide Wins" : "Show Wins";
-      })
+      $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
       return false
     });
 
