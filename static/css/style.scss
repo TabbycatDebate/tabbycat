@@ -76,9 +76,17 @@ table.table > tbody > tr > td.no-horizontal-spacing {
 // Override
 .nav {
   > li {
-  > a {
-    padding: 15px 10px;
+    > a {
+      padding: 15px 10px;
+    }
   }
+  > li.round-nav {
+    > a {
+      padding: 15px 8px 15px 0;
+      .caret {
+        margin-left: -2px;
+      }
+    }
   }
 }
 
