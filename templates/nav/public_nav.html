@@ -2,19 +2,19 @@
 
 <ul id="nav" class="nav navbar-nav navbar-left">
   {% if tab_released > 0 %}
-    <li><a class="public-team-tab-nav" href="{% tournament_url public_team_tab %}">
+    <li><a href="{% tournament_url public_team_tab %}">
       Team Tab
     </a></li>
-    <li><a class="public-speaker-tab-nav" href="{% tournament_url public_speaker_tab %}">
+    <li><a href="{% tournament_url public_speaker_tab %}">
       Speaker Tab
     </a></li>
     {% if show_novices %}
-    <li><a class="public-novices-tab-nav" href="{% tournament_url public_novices_tab %}">
+    <li><a href="{% tournament_url public_novices_tab %}">
       Novice Speaker Tab
     </a></li>
     {% endif %}
     {% if reply_scores_enabled %}
-    <li><a class="public-replies-tab-nav" href="{% tournament_url public_replies_tab %}">
+    <li><a href="{% tournament_url public_replies_tab %}">
       Replies Tab
     </a></li>
     {% endif %}
@@ -27,13 +27,13 @@
   {% if public_draw > 0 and tab_released == 0  %}
     {% if show_all_draws == 0 %}
     <li>
-      <a class="public-draw-nav" href="{% tournament_url public_draw %}">
+      <a href="{% tournament_url public_draw %}">
         Draw for {{ current_round.name }}
       </a>
     </li>
     {% endif %}
     {% if show_all_draws > 0 %}
-      <li><a class="public-results-nav" href="#" data-toggle="dropdown">Draws<b class="caret"></b></a>
+      <li><a href="#" data-toggle="dropdown">Draws<b class="caret"></b></a>
         <ul class="dropdown-menu">
           {% for r in tournament.rounds.all %}
             {% if r.draw_status == r.STATUS_RELEASED %}
@@ -50,7 +50,7 @@
     {% endif %}
   {% endif %}
   {% if public_results > 0 and current_round.prev %}
-    <li><a class="public-results-nav" href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
+    <li><a chref="#" data-toggle="dropdown">Results<b class="caret"></b></a>
       <ul class="dropdown-menu">
         {% for r in tournament.rounds.all %}
           {% if r.draw_status == r.STATUS_RELEASED %}
@@ -63,22 +63,22 @@
     </li>
   {% endif %}
   {% if public_divisions > 0 %}
-    <li><a class="public-divisions-nav" href="{% tournament_url public_divisions %}">
+    <li><a chref="{% tournament_url public_divisions %}">
       Divisions
     </a></li>
   {% endif %}
   {% if public_motions > 0 and motion_tab_released == 0 %}
-    <li><a class="public-motions-nav" href="{% tournament_url public_motions %}">
+    <li><a chref="{% tournament_url public_motions %}">
       Motions
     </a></li>
   {% endif %}
   {% if public_side_allocations %}
-    <li><a class="public-side-allocations-nav" href="{% tournament_url public_side_allocations %}">
+    <li><a cav" href="{% tournament_url public_side_allocations %}">
       Sides
     </a></li>
   {% endif %}
   {% if public_team_standings > 0 and current_round.prev and tab_released == 0 %}
-    <li><a class="public-team-standings-nav" href="{% tournament_url public_team_standings %}">
+    <li><a cav" href="{% tournament_url public_team_standings %}">
       Standings
     </a></li>
   {% endif %}
