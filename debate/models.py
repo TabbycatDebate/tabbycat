@@ -719,6 +719,8 @@ class Adjudicator(Person):
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
 
     breaking = models.BooleanField(default=False)
+    independent = models.BooleanField(default=False, blank=True)
+    adj_core = models.BooleanField(default=False, blank=True)
 
     objects = AdjudicatorManager()
 

@@ -8,7 +8,8 @@
 {% block body-class %}public-participants{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover table-striped">
+  <h3>Speakers</h3>
+  <table id="speakersList" class="table table-hover table-striped">
     <thead>
       <tr>
         <th>Name</th>
@@ -18,7 +19,7 @@
         {% if show_emoji > 0 %}
           <th class="team-emoji"></th>
         {% endif %}
-        <th>Team or Adj</th>
+        <th>Team</th>
         {% if show_institutions > 0 %}
           <th>Institution</th>
         {% endif %}
@@ -45,31 +46,39 @@
           <td>{{ person.team.institution.name }}</td>
         {% endif %}
     {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Adjudicators</h3>
+  <table id="adjudicatorsList" class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        {% if show_institutions > 0 %}
+        <th>Institution</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
     {% for person in adjs %}
       <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
         <td>{{ person.name }}</td>
-        {% if show_novices > 0 %}
-          <td>
-            {% if person.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% else %}<span></span>{% endif %}
-          </td>
-        {% endif %}
-        {% if show_emoji > 0 %}
-          <td class=""></td>
-        {% endif %}
-        <td>Adjudicator</td>
         {% if show_institutions > 0 %}
           <td>{{ person.institution.name }}</td>
         {% endif %}
     {% endfor %}
-
     </tbody>
   </table>
+
 {% endblock content %}
 
 {% block extra-js %}
    <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
-      var dTable = $("#dataTable").DataTable({
+      var dTable = $("#speakersList").DataTable({
+        "aaSorting": [[ 0, "asc" ]],
+      });
+      var dTable = $("#adjudicatorsList").DataTable({
         "aaSorting": [[ 0, "asc" ]],
       });
       new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
