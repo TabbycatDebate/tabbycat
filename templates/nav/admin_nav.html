@@ -50,7 +50,7 @@
 <ul id="nav_right" class="nav navbar-nav navbar-right">
   {% for r in tournament.rounds.all %}
     <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown round-nav">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      <a href="#" class="dropdown-toggle {% if r.seq == current_round.seq %}current-round{% endif %}" data-toggle="dropdown">
         <span class="
           {% if r.draw_status == r.STATUS_RELEASED %}
             text-success
@@ -60,9 +60,7 @@
             text-warning
           {% endif %}
         ">
-          {% if r.seq == current_round.seq %}<strong>{% endif %}
           {{ r.abbreviation }}
-          {% if r.seq == current_round.seq %}</strong>{% endif %}
           <b class="caret"></b>
         </span>
       </a>
