@@ -68,7 +68,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             return kwargs
         return self._import(f, _region_line_parser, m.Region)
 
-    def import_institutions(self, f, auto_create_regions=True):
+    def import_institutions(self, f, auto_create_regions=False):
         """Imports institutions from a file, also creating regions as needed
         (unless 'auto_create_regions' is False)
         Each line has:
@@ -250,11 +250,11 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 counts=counts, errors=errors)
 
         def _institution_conflict_parser(line):
-            if len(line) <= 8 or not line[8]:
+            if len(line) <= 9 or not line[9]:
                 return
             adj_inst = m.Institution.objects.lookup(line[1])
             adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
-            for institution_name in line[8].split(","):
+            for institution_name in line[9].split(","):
                 institution_name = institution_name.strip()
                 institution = m.Institution.objects.lookup(institution_name)
                 yield {
@@ -265,11 +265,11 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 counts=counts, errors=errors)
 
         def _team_conflict_parser(line):
-            if len(line) <= 9 or not line[9]:
+            if len(line) <= 10 or not line[10]:
                 return
             adj_inst = m.Institution.objects.lookup(line[1])
             adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
-            for team_name in line[9].split(","):
+            for team_name in line[10].split(","):
                 team = m.Team.objects.lookup(team_name)
                 yield {
                     'adjudicator' : adjudicator,
