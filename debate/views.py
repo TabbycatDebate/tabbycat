@@ -97,6 +97,7 @@ def r2r(request, template, extra_context=None):
 
 def index(request):
     tournaments = Tournament.objects.all()
+    print tournaments
     return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
 
 ## Public UI
