@@ -92,7 +92,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'name'         : line[0],
                 'code'         : line[1],
                 'abbreviation' : line[2],
-                'region'       : m.Region.objects.get(name=line[3]) if len(line) > 3 else None,
+                'region'       : m.Region.objects.get(name=line[3]) if len(line) > 3  and line[3] else None,
             }
         counts, errors = self._import(f, _institution_line_parser, m.Institution, counts=counts, errors=errors)
 
@@ -140,7 +140,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'tournament' : self.tournament,
                 'name'       : line[0],
                 'priority'   : int(line[1]) if len(line) > 1 else 10,
-                'group'      : m.VenueGroup.objects.get(name=line[2]) if len(line) > 2 else None,
+                'group'      : m.VenueGroup.objects.get(name=line[2]) if len(line) > 2 and line[2] else None,
                 'time'       : line[3] if len(line) > 3 else None,
             }
         counts, errors = self._import(f, _venue_line_parser, m.Venue, counts=counts, errors=errors)

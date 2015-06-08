@@ -1,7 +1,7 @@
 name,institution,rating,gender,independent,trainee,cellphone,email,notes,institution_conflicts,team_conflicts
-Levi Flores,Adjudication Core,5,M,0,0,(400) 258-4262,leviflores@gmail.com,,,
-Boyd Pierce,Adjudication Core,5,M,1,0,(645) 106-7743,boydpierce@yahoo.com,,,
-Eunice Mcbride,Adjudication Core,5,F,0,0,(549) 309-9187,eunicemcbride@outlook.com,,,
+Levi Flores,Yale University,5,M,0,0,(400) 258-4262,leviflores@gmail.com,,,
+Boyd Pierce,Stanford University,5,M,1,0,(645) 106-7743,boydpierce@yahoo.com,,,
+Eunice Mcbride,University of Toronto,5,F,0,0,(549) 309-9187,eunicemcbride@outlook.com,,,
 Ramona Cobb,California Institute of Technology,1,F,1,0,(440) 487-5776,ramonacobb@yahoo.com,,Princeton,
 Justin Ford,California Institute of Technology,5,M,0,0,(618) 921-9188,justinford@outlook.com,,,Caltech 1
 Luis Bennett,Columbia University,2,M,0,0,(730) 097-8797,luisbennett@gmail.com,,,
