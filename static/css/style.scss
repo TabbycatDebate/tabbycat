@@ -76,9 +76,17 @@ table.table > tbody > tr > td.no-horizontal-spacing {
 // Override
 .nav {
   > li {
-  > a {
-    padding: 15px 10px;
+    > a {
+      padding: 15px 10px;
+    }
   }
+  > li.round-nav {
+    > a {
+      padding: 15px 10px 15px 0;
+      .caret {
+        margin-left: -2px;
+      }
+    }
   }
 }
 
@@ -120,6 +128,9 @@ html, body {
     height: 115px;
     margin-bottom: 0;
   }
+  .navbar {
+    border-radius: 0px;
+  }
   .navbar-brand {
     font-size: 14px;
     margin-bottom: 0;
@@ -144,9 +155,7 @@ html, body {
   }
   #footer {
     height: 50px;
-    .navbar {
-      height: 50px;
-    }
+    overflow: hidden;
   }
 }
 

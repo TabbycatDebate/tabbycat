@@ -2,44 +2,54 @@
 
 <ul id="nav_left" class="nav navbar-nav navbar-left">
   {% if side_allocations_enabled %}
-    <li><a class="side-allocations-nav" href="{% tournament_url side_allocations %}">Sides</a></li>
+    <li {% if sides_nav %}class="active"{% endif %}>
+      <a href="{% tournament_url side_allocations %}">Sides</a>
+    </li>
   {% endif %}
-  <li><a class="draw-nav" href="{% round_url draw current_round %}">Draw</a></li>
-  <li><a class="status-nav" href="{% round_url results current_round %}">Ballots</a></li>
-  <li><a class="adjudicators-standings-nav" href="{% tournament_url adj_feedback %}">Feedback</a></li>
+  <li {% if draw_nav %}class="active"{% endif %}>
+    <a href="{% round_url draw current_round %}">Draw</a>
+  </li>
+  <li {% if ballots_nav %}class="active"{% endif %}>
+    <a href="{% round_url results current_round %}">Ballots</a>
+  </li>
+  <li {% if feedback_nav %}class="active"{% endif %}>
+    <a href="{% tournament_url adj_feedback %}">Feedback</a>
+  </li>
   {% if enable_divisions %}
-    <li><a class="division-allocations-nav" href="{% tournament_url division_allocations %}">Divisions</a></li>
+    <li {% if divisions_nav %}class="active"{% endif %}>
+      <a href="{% tournament_url division_allocations %}">Divisions</a>
+    </li>
   {% endif %}
-  <li class="dropdown">
+  <li class="dropdown {% if standings_nav %}active{% endif %}">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standings<b class="caret"></b></a>
     <ul class="dropdown-menu">
-      <li><a class="team-standings-nav" href="{% round_url team_standings current_round %}">Teams</a></li>
-      <li><a class="speaker-standings-nav" href="{% round_url speaker_standings current_round %}">Speakers</a></li>
+      <li><a href="{% round_url team_standings current_round %}">Teams</a></li>
+      <li><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
       {% if show_novices %}
-        <li><a class="novice-standings-nav" href="{% round_url novice_standings current_round %}">Novices</a></li>
+        <li><a href="{% round_url novice_standings current_round %}">Novices</a></li>
       {% endif %}
       {% if reply_scores_enabled %}
-        <li><a class="reply-standings-nav" href="{% round_url reply_standings current_round %}">Replies</a></li>
+        <li><a href="{% round_url reply_standings current_round %}">Replies</a></li>
       {% endif %}
-      <li><a class="feedback-standings-nav" href="{% tournament_url feedback_progress %}">Feedback</a></li>
-      <li><a class="motions-standings-nav" href="{% round_url motion_standings current_round %}">Motions</a></li>
+      <li><a href="{% tournament_url feedback_progress %}">Feedback</a></li>
+      <li><a href="{% round_url motion_standings current_round %}">Motions</a></li>
     </ul>
   </li>
   <li class="dropdown">
-    <a href="#" class="dropdown-toggle breakk-nav" data-toggle="dropdown">Break<b class="caret"></b></a>
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Break<b class="caret"></b></a>
     <ul class="dropdown-menu">
-      <li><a class="breaking-teams-open-nav" href="{% tournament_url breaking_teams_open %}">Open</a></li>
+      <li><a href="{% tournament_url breaking_teams_open %}">Open</a></li>
       {% if esl_break %}
-        <li><a class="breaking-teams-esl-nav" href="{% tournament_url breaking_teams_esl %}">ESL</a></li>
+        <li><a href="{% tournament_url breaking_teams_esl %}">ESL</a></li>
       {% endif %}
-      <li><a class="breaking-adjs-nav" href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
+      <li><a href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
     </ul>
   </li>
 </ul>
 
 <ul id="nav_right" class="nav navbar-nav navbar-right">
   {% for r in tournament.rounds.all %}
-    <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown">
+    <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown round-nav">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
         <span class="
           {% if r.draw_status == r.STATUS_RELEASED %}

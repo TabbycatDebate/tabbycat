@@ -51,3 +51,19 @@ def debate_context(request):
         return d
 
     return {}
+
+def get_menu_highlight(request):
+    if "side_allocations" in request.path:
+        return {'sides_nav': True}
+    elif "ballots" in request.path:
+        return {'ballots_nav': True}
+    elif "draw" in request.path:
+        return {'draw_nav': True}
+    elif "feedback" in request.path:
+        return {'feedback_nav': True}
+    elif "division_allocations" in request.path:
+        return {'divisions_nav': True}
+    elif "standings" in request.path:
+        return {'standings_nav': True}
+    elif "break" in request.path:
+        return {'break_nav': True}
