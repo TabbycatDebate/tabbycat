@@ -52,6 +52,7 @@ class Command(BaseCommand):
         self._make('config')
         self._make('venue_groups')
         self._make('venues')
+        self._make('regions')
         self._make('institutions')
         self._make('teams')
         self._make('speakers')

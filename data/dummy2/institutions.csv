@@ -1,15 +1,14 @@
-name,code,abbreviation
-"Adjudication Core","Adj Core","AdjC"
-"California Institute of Technology","Caltech","Calt"
-"Columbia University","Columbia","Colum"
-"Cornell University","Cornell","Corn"
-"Harvard University","Harvard","Harv"
-"Johns Hopkins University","Johns Hopkins","JHU"
-"Massachusetts Institute of Technology","MIT","MIT"
-"Princeton University","Princeton","Prin"
-"Stanford University","Stanford","Stan"
-"University of California, Berkeley","Berkeley","Cal"
-"University of Chicago","Chicago","Chic"
-"University of Pennsylvania","Pennsylvania","Penn"
-"University of Toronto","Toronto","Toron"
-"Yale University","Yale","Yale"
+name,code,abbreviation,region
+California Institute of Technology,Caltech,Calt,California
+Columbia University,Columbia,Colum,New York
+Cornell University,Cornell,Corn,New York
+Harvard University,Harvard,Harv,Massachusetts
+Johns Hopkins University,Johns Hopkins,JHU,Maryland
+Massachusetts Institute of Technology,MIT,MIT,Massachusetts
+Princeton University,Princeton,Prin,
+Stanford University,Stanford,Stan,California
+"University of California, Berkeley",Berkeley,Cal,California
+University of Chicago,Chicago,Chic,
+University of Pennsylvania,Pennsylvania,Penn,Pennsylvania
+University of Toronto,Toronto,Toron,
+Yale University,Yale,Yale,Connecticut

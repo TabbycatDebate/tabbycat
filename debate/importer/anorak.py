@@ -56,18 +56,47 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return counts, errors
 
-    def import_institutions(self, f):
-        """Imports institutions from a file.
+    def import_regions(self, f):
+        """Imports regions from a file.
         Each line has:
-            name, code, abbreviation
+            name
         """
+        def _region_line_parser(line):
+            kwargs = {
+                'name'       : line[0],
+            }
+            return kwargs
+        return self._import(f, _region_line_parser, m.Region)
+
+    def import_institutions(self, f, auto_create_regions=True):
+        """Imports institutions from a file, also creating regions as needed
+        (unless 'auto_create_regions' is False)
+        Each line has:
+            name, code, abbreviation, region
+        """
+        if auto_create_regions:
+            def _region_line_parser(line):
+                if not line[3]:
+                    return None
+                return {
+                    'name': line[3],
+                }
+            counts, errors = self._import(f, _region_line_parser,
+                    m.Region, expect_unique=False)
+        else:
+            counts = None
+            errors = None
+
         def _institution_line_parser(line):
             return {
                 'name'         : line[0],
                 'code'         : line[1],
                 'abbreviation' : line[2],
+                'region'       : m.Region.objects.get(name=line[3]) if len(line) > 3 else None,
             }
-        return self._import(f, _institution_line_parser, m.Institution)
+        counts, errors = self._import(f, _institution_line_parser, m.Institution, counts=counts, errors=errors)
+
+        return counts, errors
 
     def import_venue_groups(self, f):
         """Imports venue groups from a file.
