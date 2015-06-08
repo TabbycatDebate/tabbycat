@@ -77,15 +77,8 @@ LOGIN_REDIRECT_URL = '/'
 # = Caching =
 # =========
 
-if os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', ''):
-    PUBLIC_PAGE_CACHE_TIMEOUT = os.environ['PUBLIC_PAGE_CACHE_TIMEOUT']
-else:
-    PUBLIC_PAGE_CACHE_TIMEOUT = 60 * 10 # 10 Minutes
-
-if os.environ.get('TAB_PAGES_CACHE_TIMEOUT', ''):
-    TAB_PAGES_CACHE_TIMEOUT = os.environ['TAB_PAGES_CACHE_TIMEOUT']
-else:
-    TAB_PAGES_CACHE_TIMEOUT = 60 * 120 # 120 Minutes
+PUBLIC_PAGE_CACHE_TIMEOUT = os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', None) or (60 * 10)
+PUBLIC_PAGE_CACHE_TIMEOUT = os.environ.get('TAB_PAGES_CACHE_TIMEOUT', None) or (60 * 120)
 
 # Default non-heroku cache is to use local memory
 CACHES = {

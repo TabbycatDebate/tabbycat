@@ -134,7 +134,7 @@ class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
     extra = 1
 
 class AdjudicatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution', 'tournament','novice')
+    list_display = ('name', 'institution', 'tournament','novice','independent')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code',)
     list_filter = ('tournament', 'name')
     inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorTestScoreHistoryInline)
