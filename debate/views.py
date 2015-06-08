@@ -1788,6 +1788,7 @@ def adj_scores(request, t):
 @login_required
 @tournament_view
 def adj_feedback(request, t):
+    breaking_count = 0
 
     if not t.config.get('share_adjs'):
         adjudicators = Adjudicator.objects.select_related('institution').filter(tournament=t)
@@ -1805,6 +1806,9 @@ def adj_feedback(request, t):
         for adj in adjudicators:
             adjs_rooms  = all_adjs_rooms.filter(adjudicator = adj)
             adj.debates = len(adjs_rooms)
+
+            if adj.breaking:
+                breaking_count += 1
 
             adjs_scores = all_adjs_scores.filter(debate_adjudicator = adjs_rooms)
             if len(adjs_scores) > 0:
@@ -1832,7 +1836,7 @@ def adj_feedback(request, t):
                 adj.avg_score = None
                 adj.avg_margin = None
 
-    return r2r(request, template, dict(adjudicators=adjudicators))
+    return r2r(request, template, dict(adjudicators=adjudicators, breaking_count=breaking_count))
 
 
 @login_required

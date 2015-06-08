@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Adjudicator Feedback{% endblock %}
+{% block head-title %}Adjudicator Feedback <small>(<span id="breaking_count">{{ breaking_count }}</span> breaking)</small>{% endblock %}
 {% block page-title %}Adjudicator Feedback{% endblock %}
 {% block page-header %}{% include "table_search.html" %}{% endblock %}
 
@@ -257,8 +257,10 @@
           var adj_info = get_adj_information(this);
           if (this.checked) {
             var breaking_status = true
+            $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)+1)
           } else {
             var breaking_status = false
+            $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)-1)
           }
           $.ajax({
             type: "POST",

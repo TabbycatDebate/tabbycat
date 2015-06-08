@@ -9,7 +9,7 @@
 
 {% block header %}
   {% if adjs.all.count == 0 %}
-    <p class="lead">The breaking adjudicators have not been released yet.</p>
+    <p class="lead">Breaking adjudicators can be set in the <a href="{% tournament_url adj_feedback %}"> Feedback section.</a></p>
   {% endif %}
 {% endblock %}
 
@@ -29,7 +29,15 @@
       <tr>
         <td>{{ adj.name }}</td>
         {% if show_institutions > 0 %}
-          <td>{{ adj.institution }}</td>
+          <td>
+            {{ adj.institution }}
+            {% if person.independent %}
+              (Independent)
+            {% endif %}
+            {% if person.adj_core %}
+              (Adj Core)
+            {% endif %}
+          </td>
         {% endif %}
       </tr>
       {% endfor %}
