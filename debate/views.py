@@ -101,23 +101,20 @@ def index(request):
 
 ## Public UI
 
-PUBLIC_PAGE_CACHE_TIMEOUT   = 60 * 10    # 10 Minutes
-TAB_PAGES_CACHE_TIMEOUT     = 60 * 120   # 120 Minutes
-
 @cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view
 def public_index(request, t):
     return r2r(request, 'public/public_tournament_index.html')
 
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_participants')
 def public_participants(request, t):
     adjs = Adjudicator.objects.all().select_related('institution')
     speakers = Speaker.objects.all().select_related('team','team__institution')
     return r2r(request, "public/public_participants.html", dict(adjs=adjs, speakers=speakers))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_draw')
 def public_draw(request, t):
     r = t.current_round
@@ -127,7 +124,7 @@ def public_draw(request, t):
     else:
         return r2r(request, 'public/public_draw_unreleased.html', dict(draw=None, round=r))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_round_view('show_all_draws')
 def public_draw_by_round(request, round):
     if round.draw_status == round.STATUS_RELEASED:
@@ -137,7 +134,7 @@ def public_draw_by_round(request, round):
         return r2r(request, 'public/public_draw_unreleased.html', dict(draw=None, round=round))
 
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_team_standings')
 def public_team_standings(request, t):
     if t.release_all:
@@ -187,12 +184,12 @@ def public_team_standings(request, t):
     else:
         return r2r(request, 'public/index.html')
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
 def public_break_index(request, t):
     return r2r(request, "public/public_break_index.html")
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_teams')
 def public_breaking_teams(request, t, name, category):
     teams = Team.objects.breaking_teams(t, category)
@@ -204,7 +201,7 @@ def breaking_teams(request, t, name, category):
     teams = Team.objects.breaking_teams(t, category)
     return r2r(request, 'breaking_teams.html', dict(teams=teams, category=category, name=name))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')
 def public_breaking_adjs(request, t):
     adjs = Adjudicator.objects.filter(breaking=True, tournament=t).select_related('institution')
@@ -217,7 +214,7 @@ def breaking_adjs(request, t):
     return r2r(request, 'breaking_adjudicators.html', dict(adjs=adjs))
 
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_ballots')
 def public_ballot_submit(request, t):
     r = t.current_round
@@ -230,7 +227,7 @@ def public_ballot_submit(request, t):
     else:
         return r2r(request, 'public/public_add_ballot_unreleased.html', dict(das=None, round=r))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_feedback')
 def public_feedback_submit(request, t):
     adjudicators = Adjudicator.objects.all()
@@ -284,14 +281,14 @@ def public_feedback_progress(request, t):
 
     return r2r(request, 'public/public_feedback_tab.html', dict(teams=teams, adjudicators=adjudicators))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_motions')
 def public_motions(request, t):
     order_by = t.config.get('public_motions_descending') and '-seq' or 'seq'
     rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
     return r2r(request, 'public/public_motions.html', dict(rounds=rounds))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')
 def public_divisions(request, t):
     divisions = Division.objects.filter(tournament=t).all().select_related('venue_group')
@@ -302,13 +299,13 @@ def public_divisions(request, t):
 
     return r2r(request, 'public/public_divisions.html', dict(venue_groups=venue_groups))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_venues(request, t):
     venues = VenueGroup.objects.all()
     return r2r(request, 'public/public_all_tournament_venues.html', dict(venues=venues))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_draws_for_venue(request, t, venue_id):
     venue_group = VenueGroup.objects.get(pk=venue_id)
@@ -317,7 +314,7 @@ def all_draws_for_venue(request, t, venue_id):
     return r2r(request, 'public/public_all_draws_for_venue.html', dict(
         venue_group=venue_group, debates=debates))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_institutions(request, t):
     institutions = Institution.objects.all()
@@ -334,7 +331,7 @@ def all_draws_for_institution(request, t, institution_id):
     return r2r(request, 'public/public_all_draws_for_institution.html', dict(
         institution=institution, debates=debates))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_teams(request, t):
     teams = Team.objects.filter(tournament__active=True).select_related('institution','tournament').prefetch_related('division')
@@ -342,7 +339,7 @@ def all_tournaments_all_teams(request, t):
         teams=teams))
 
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def public_all_draws(request, t):
     all_rounds = list(Round.objects.filter(tournament=t))
@@ -352,7 +349,7 @@ def public_all_draws(request, t):
     return r2r(request, 'public/public_draw_display_all.html', dict(
         all_rounds=all_rounds))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
 def public_side_allocations(request, t):
     teams = Team.objects.filter(tournament=t).select_related('institution')
@@ -370,7 +367,7 @@ def public_side_allocations(request, t):
 
 ## Tab
 
-@cache_page(TAB_PAGES_CACHE_TIMEOUT)
+@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_team_tab(request, t):
     round = t.current_round
@@ -418,7 +415,7 @@ def public_team_tab(request, t):
 
 
 
-@cache_page(TAB_PAGES_CACHE_TIMEOUT)
+@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('motion_tab_released')
 def public_motions_tab(request, t):
     round = t.current_round
@@ -429,7 +426,7 @@ def public_motions_tab(request, t):
     return r2r(request, 'public/public_motions_tab.html', dict(motions=motions))
 
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('ballots_released')
 def public_ballots_view(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
@@ -1167,7 +1164,7 @@ def results(request, round):
         show_motions_column=show_motions_column, has_motions=has_motions)
     )
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_round_view('public_results')
 def public_results(request, round):
     # Can't see results for current round or later
@@ -1182,7 +1179,7 @@ def public_results(request, round):
             draw=draw, show_motions_column=show_motions_column, show_splits=show_splits,
             show_ballots=show_ballots))
 
-@cache_page(PUBLIC_PAGE_CACHE_TIMEOUT)
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
 def public_results_index(request, tournament):
     rounds = Round.objects.filter(tournament=tournament,
@@ -1469,7 +1466,7 @@ def speaker_standings(request, round, for_print=False):
     return r2r(request, "speaker_standings.html", dict(speakers=speakers,
                                         rounds=rounds, for_print=for_print))
 
-@cache_page(TAB_PAGES_CACHE_TIMEOUT)
+@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_speaker_tab(request, t):
     round = t.current_round
@@ -1487,7 +1484,7 @@ def novice_standings(request, round, for_print=False):
                                         rounds=rounds))
 
 
-@cache_page(TAB_PAGES_CACHE_TIMEOUT)
+@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_novices_tab(request, t):
     round = t.current_round
@@ -1504,7 +1501,7 @@ def reply_standings(request, round, for_print=False):
     return r2r(request, 'reply_standings.html', dict(speakers=speakers,
                                         rounds=rounds, for_print=for_print))
 
-@cache_page(TAB_PAGES_CACHE_TIMEOUT)
+@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_replies_tab(request, t):
     round = t.current_round

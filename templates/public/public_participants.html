@@ -8,7 +8,6 @@
 {% block body-class %}public-participants{% endblock %}
 
 {% block content %}
-  <h3>Speakers</h3>
   <table id="speakersList" class="table table-hover table-striped">
     <thead>
       <tr>
@@ -48,6 +47,18 @@
     {% endfor %}
     </tbody>
   </table>
+
+  <div class="row page-header">
+    <div class="col-md-12">
+    <h1 class="h2 pull-left">Adjudicators</h1>
+    <div id="table-search-group" class="btn-group pull-right col-sm-3">
+    <div class="input-group">
+    <span class="input-group-btn">
+    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+    </span>
+      <input id="table-search" type="search" class="form-control" aria-controls="dataTable" placeholder="Quick Search">
+    </div>
+  </div>
 
   <h3>Adjudicators</h3>
   <table id="adjudicatorsList" class="table table-hover table-striped">
