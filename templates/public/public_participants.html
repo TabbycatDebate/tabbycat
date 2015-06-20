@@ -21,6 +21,10 @@
           <th class="team-emoji"></th>
         {% endif %}
         <th>Team</th>
+        {% if show_public_eslefl > 0 %}
+          <th>ESL</th>
+          <th>EFL</th>
+        {% endif %}
         {% if show_institutions > 0 %}
           <th>Institution</th>
         {% endif %}
@@ -43,6 +47,10 @@
             {{ person.team.long_name }}
           </span>
         </td>
+        {% if show_public_eslefl > 0 %}
+          <td>{% if person.team.efl > 0 %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+          <td>{% if person.team.efl > 0 %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        {% endif %}
         {% if show_institutions > 0 %}
           <td>{{ person.team.institution.name }}</td>
         {% endif %}

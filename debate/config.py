@@ -48,6 +48,7 @@ SETTINGS = OrderedDict([
     ('standings_method',            (_bool, 'Speaker rankings are by total (Yes) or average score (No)',           True)),
     ('standings_missed_debates',    (int,   'The number of debates you can miss and still be on the speaker tab',  1)),
     ('public_participants',         (_bool, 'Public interface to see all participants',                            False)),
+    ('public_participants_eslefl',  (_bool, 'Show ESL/EFL language status on the participants page',               False)),
     ('public_side_allocations',     (_bool, 'Public interface to see side pre-allocations',                        False)),
     ('public_draw',                 (_bool, 'Public interface to see RELEASED draws',                              False)),
     ('show_all_draws',              (_bool, 'If showing public draws, show all (past & future) RELEASED draws',    False)),

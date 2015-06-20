@@ -278,6 +278,21 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         counts, errors = self._import(f, _team_conflict_parser, m.AdjudicatorConflict,
                 counts=counts, errors=errors)
 
+        def _adj_conflict_parser(line):
+            if len(line) <= 11 or not line[11]:
+                return
+            adj_inst = m.Institution.objects.lookup(line[1])
+            adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
+            for adj_name in line[11].split(","):
+                conflicting_adj = m.Adjudicator.objects.get(name=adj_name)
+                print conflicting_adj
+                yield {
+                    'adjudicator'           : adjudicator,
+                    'conflict_adjudicator'  : conflicting_adj,
+                }
+        counts, errors = self._import(f, _adj_conflict_parser, m.AdjudicatorAdjudicatorConflict,
+                counts=counts, errors=errors)
+
         return counts, errors
 
     def import_motions(self, f):
