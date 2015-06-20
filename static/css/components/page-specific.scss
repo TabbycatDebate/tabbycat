@@ -10,6 +10,12 @@
   display: block;
 }
 
+// Ballot Entry
+
+.speaker-name {
+  text-align: left;
+}
+
 // Edit Adjs and Edit Venues Page
 
 .edit-venues, .edit-adjs, .edit-matchups {
@@ -157,7 +163,6 @@
 }
 
 // Gender Colors
-
 
 .edit-venues, .edit-adjs {
   .gender-display.gender-parity-3 {

@@ -309,9 +309,8 @@ class BallotSetForm(forms.Form):
 
         for side, pos in self.SIDES_AND_POSITIONS:
             order.append(self._fieldname_speaker(side, pos))
-            order.append(self._fieldname_score(self.adjudicators[0], side, pos))
 
-        for adj, side, pos in itertools.product(self.adjudicators[1:], self.SIDES, self.POSITIONS):
+        for adj, side, pos in itertools.product(self.adjudicators, self.SIDES, self.POSITIONS):
             order.append(self._fieldname_score(adj, side, pos))
 
         if 'password' in self.fields:
@@ -480,6 +479,32 @@ class BallotSetForm(forms.Form):
     def fake_speaker_selects(self):
         for team in self.debate.teams:
             yield self['team_%d' % team.id]
+
+
+    def position_iter(self):
+        # Not very DRY
+        form = self
+
+        class PositionSetter(object):
+            def __init__(self, pos):
+                self.pos = pos
+
+            @property
+            def name(self):
+                return (self.pos == form.REPLY_POSITION) and "Reply" or str(self.pos)
+
+            def __unicode__(self):
+                return unicode(self.name)
+
+            def aff_speaker(self):
+                return form[form._fieldname_speaker('aff', self.pos)]
+
+            def neg_speaker(self):
+                return form[form._fieldname_speaker('neg', self.pos)]
+
+        for i in form.POSITIONS:
+            yield PositionSetter(i)
+
 
     def adj_iter(self):
         form = self # provide access in inner classes
