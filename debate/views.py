@@ -694,23 +694,34 @@ def draw_display_by_team(request, round):
     draw = round.get_draw()
     return r2r(request, "draw_display_by_team.html", dict(draw=draw))
 
-@admin_required
+@login_required
 @round_view
 def draw(request, round):
 
-    if round.draw_status == round.STATUS_NONE:
-        return draw_none(request, round)
+    if request.user.is_superuser:
+        if round.draw_status == round.STATUS_NONE:
+            return draw_none(request, round)
 
-    if round.draw_status == round.STATUS_DRAFT:
-        return draw_draft(request, round)
+        if round.draw_status == round.STATUS_DRAFT:
+            return draw_draft(request, round)
 
-    if round.draw_status == round.STATUS_CONFIRMED:
-        return draw_confirmed(request, round)
+        if round.draw_status == round.STATUS_CONFIRMED:
+            return draw_confirmed(request, round)
 
-    if round.draw_status == round.STATUS_RELEASED:
-        return draw_confirmed(request, round)
+        if round.draw_status == round.STATUS_RELEASED:
+            return draw_confirmed(request, round)
+    else:
+        if round.draw_status == round.STATUS_RELEASED:
+            draw = round.get_draw()
+            return r2r(request, "public/public_draw_released.html", dict(draw=draw, round=round))
+        else:
+            return r2r(request, 'public/public_draw_unreleased.html', dict(draw=None, round=round))
 
     raise
+
+def assistant_draw(request, round):
+    if round.draw_status == round.STATUS_RELEASED:
+        return draw_confirmed(request, round)
 
 
 def draw_none(request, round):
