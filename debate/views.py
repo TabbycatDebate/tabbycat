@@ -972,11 +972,14 @@ def motions_edit(request, round):
     if request.method == 'POST':
         formset = MotionFormSet(request.POST, request.FILES)
         if formset.is_valid():
-            for motion in formset.save(commit=False):
+            motions = formset.save(commit=False)
+            for motion in motions:
                 motion.round = round
                 motion.save()
                 ActionLog.objects.log(type=ActionLog.ACTION_TYPE_MOTION_EDIT,
                     user=request.user, motion=motion, tournament=round.tournament)
+            for motions in formset.deleted_objects:
+                motions.delete()
             if 'submit' in request.POST:
                 return redirect_round('motions', round)
     else:
