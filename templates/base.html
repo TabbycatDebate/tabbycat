@@ -66,6 +66,7 @@
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
+  {% endcompress %}
   <script type="text/javascript">
     $.extend( true, $.fn.dataTable.defaults, {
 
@@ -132,7 +133,6 @@
     });
 
   </script>
-  {% endcompress %}
   {% block extra-js %}{% endblock extra-js %}
 
   {% if debug %}
