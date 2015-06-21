@@ -58,11 +58,6 @@
         <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
-        {% if show_speakers_in_draw %}
-        <span class="hidden">
-           {{ debate.aff_team.speakers|join:', ' }}
-        </span>
-        {% endif %}
       </td>
       {% if show_emoji > 0 %}
         <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
@@ -115,11 +110,6 @@
         <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
           {{ debate.neg_team.short_name }}
         </span>
-        {% if show_speakers_in_draw %}
-          <span class="hidden">
-             {{ debate.neg_team.speakers|join:', ' }}
-          </span>
-        {% endif %}
       </td>
       {% if show_emoji > 0 %}
         <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
@@ -142,21 +132,11 @@
         <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
-        {% if show_speakers_in_draw %}
-          <span class="hidden">
-             {{ debate.aff_team.speakers|join:', ' }}
-          </span>
-        {% endif %}
       </td>
       <td class="team-name">
         <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
           {{ debate.neg_team.short_name }}
         </span>
-        {% if show_speakers_in_draw %}
-        <span class="hidden">
-           {{ debate.neg_team.speakers|join:', ' }}
-        </span>
-        {% endif %}
       </td>
       <td class="adj-names">
         {% for type, adj in debate.adjudicators %}

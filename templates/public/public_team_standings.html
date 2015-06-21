@@ -43,7 +43,7 @@
         <td>{{ team.division.name }}</td>
       {% endif %}
       <td>
-        <span title="<h5>{{ team.long_name }}</h5>{% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
           {{ team.short_name }}
         </span>
       </td>
@@ -68,12 +68,12 @@
             <td>
               {% if round_results.score == 0 %}
                 {% with status=round_results.win|yesno:"Won (via forfeit),Forfeitted" icon=round_results.win|yesno:"glyphicon-share-alt text-success,glyphicon-eye-close text-danger" %}
-                <span title="{{ status }} against {{ round_results.opposition.short_name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
+                <span title="{{ status }} against {{ round_results.opposition.short_name }}" data-toggle="tooltip">
                   <span class="glyphicon {{ icon }}"></span>
                 {% endwith %}
               {% else %}
                 {% with status=round_results.win|yesno:"Won,Lost" icon=round_results.win|yesno:"glyphicon-arrow-up text-success,glyphicon-arrow-down text-danger" %}
-                <span title="{{ status }} against {{ round_results.opposition.short_name }} ({{ round_results.opposition.speakers|join:", " }})" data-toggle="tooltip">
+                <span title="{{ status }} against {{ round_results.opposition.short_name }}" data-toggle="tooltip">
                   <span class="glyphicon {{ icon }}"></span>
                 {% endwith %}
               {% endif %}

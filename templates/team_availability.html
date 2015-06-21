@@ -28,11 +28,6 @@
         <span class="team-speakers-hover" id="team_speakers_{{ team.id }}">
            {{ team.long_name }}
          </span>
-         {% if show_speakers_in_draw %}
-         <span class="hidden">
-           {{ team.speakers|join:', ' }}
-         </span>
-         {% endif %}
       </td>
       {% if show_emoji > 0 and not for_print %}
         <td class="team-emoji">{% team_emoji team %}</td>

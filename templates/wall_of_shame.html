@@ -69,14 +69,9 @@
         {{ team.submitted_ballots }}
       </td>
       <td>
-        <span title="{% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %}" data-toggle="tooltip" class="entity" href="#">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
           {{ team.short_name }}
         </span>
-        {% if show_speakers_in_draw %}
-         <span class="hidden">
-           {{ team.speakers|join:', ' }}
-         </span>
-        {% endif %}
       </td>
       {% if show_institutions > 0 %}
         <td class="">

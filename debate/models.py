@@ -601,14 +601,7 @@ class Team(models.Model):
 
     @cached_property
     def speakers(self):
-        cached_key = "%s_%s_%s" % ('teamid', self.id, '_speaker__objects')
-        cached_value = cache.get(cached_key)
-        if cached_value:
-            return cache.get(cached_key)
-        else:
-            cached_value = self.speaker_set.all().select_related('person_ptr')
-            cache.set(cached_key, cached_value, None)
-            return cached_value
+        return self.speaker_set.all().select_related('person_ptr')
 
     def seen(self, other, before_round=None):
         debates = self.get_debates(before_round)
