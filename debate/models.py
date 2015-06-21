@@ -826,7 +826,7 @@ class AdjudicatorConflict(models.Model):
 
 class AdjudicatorAdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey(Adjudicator, related_name="source_adjudicator")
-    conflict_adjudicator = models.ForeignKey(Adjudicator, related_name="target_adjudicator")
+    conflict_adjudicator = models.ForeignKey(Adjudicator, related_name="target_adjudicator", verbose_name="Adjudicator")
 
 class AdjudicatorInstitutionConflict(models.Model):
     adjudicator = models.ForeignKey(Adjudicator)
