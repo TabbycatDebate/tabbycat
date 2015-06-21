@@ -43,7 +43,7 @@
           <td class="team-emoji">{% team_emoji person.team %}</td>
         {% endif %}
         <td class="team-name">
-          <span title="{% if show_speakers_in_draw %}{{ person.team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+          <span class="team-speakers-hover" id="team_speakers_{{ person.team.id }}">
             {{ person.team.long_name }}
           </span>
         </td>

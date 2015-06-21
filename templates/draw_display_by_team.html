@@ -55,7 +55,7 @@
   {% for debate in draw %}
     <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
       <td>
-        <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
         {% if show_speakers_in_draw %}
@@ -86,12 +86,12 @@
         {% endif %}
       {% endif %}
       <td class="team-name" id="">
-        <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
       </td>
       <td class="team-name">
-        <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
           {{ debate.neg_team.short_name }}
         </span>
       </td>
@@ -112,7 +112,7 @@
   {% for debate in draw %}
     <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
       <td>
-        <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
           {{ debate.neg_team.short_name }}
         </span>
         {% if show_speakers_in_draw %}
@@ -139,7 +139,7 @@
         </td>
       {% endif %}
       <td class="team-name">
-        <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
         {% if show_speakers_in_draw %}
@@ -149,7 +149,7 @@
         {% endif %}
       </td>
       <td class="team-name">
-        <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
           {{ debate.neg_team.short_name }}
         </span>
         {% if show_speakers_in_draw %}

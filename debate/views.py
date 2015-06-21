@@ -101,6 +101,18 @@ def index(request):
 
 ## Public UI
 
+@tournament_view
+def team_speakers(request, t, team_id):
+    from django.http import JsonResponse
+    team = Team.objects.get(pk=team_id)
+    speakers = team.speakers
+    data = {}
+    for i, speaker in enumerate(speakers):
+        data[i] = speaker.name
+
+    return JsonResponse(data, safe=False)
+
+
 @cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view
 def public_index(request, t):

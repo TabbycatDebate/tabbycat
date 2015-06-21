@@ -17,6 +17,8 @@ urlpatterns = patterns('debate.views',
     url(r'^results/$', 'public_results_index', name='public_results_index'),
     url(r'^results/round/(?P<round_seq>\d+)/$', 'public_results', name='public_results'),
 
+    url(r'^team_speakers/(?P<team_id>\d+)/$', 'team_speakers', name='team_speakers'),
+
     url(r'^break/$', 'public_break_index', name='public_break_index'),
     url(r'^break/teams/open/$', 'public_breaking_teams', {'name': 'Open Break', 'category': 'open'}, name='public_breaking_teams_open'),
     url(r'^break/teams/esl/$', 'public_breaking_teams', {'name': 'ESL Break', 'category': 'esl'}, name='public_breaking_teams_esl'),

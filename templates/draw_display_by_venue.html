@@ -84,7 +84,7 @@
       {% endif %}
       <td class="team-name">
         {% if debate.aff_team.type != 'B' %}
-          <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+          <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
             {{ debate.aff_team.short_name }}
           </span>
           {% if show_speakers_in_draw %}
@@ -99,7 +99,7 @@
       {% endif %}
       <td class="team-name">
         {% if debate.neg_team.type != 'B'  %}
-          <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+          <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
             {{ debate.neg_team.short_name }}
           </span>
           {% if show_speakers_in_draw %}

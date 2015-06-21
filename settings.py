@@ -38,7 +38,6 @@ TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'debate.middleware.DebateMiddleware',

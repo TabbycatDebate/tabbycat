@@ -55,7 +55,7 @@
           <td class="team-emoji">{% team_emoji speaker.team %}</td>
         {% endif %}
         <td>
-          <span title="<h5>{{ speaker.team.long_name }}</h5>{% if show_speakers_in_draw %}{{ speaker.team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+          <span class="team-speakers-hover" id="team_speakers_{{ speaker.team.id }}">
             {{ speaker.team.short_name }}
           </span>
         </td>

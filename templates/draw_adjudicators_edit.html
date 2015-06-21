@@ -101,7 +101,7 @@
           {{ debate.aff_team.male_adj_percent }}
         </td>
         <td id="team_{{ debate.aff_team.id }}" class="teaminfo {% team_status_classes debate.aff_team %}">
-          <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">
+          <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
             {{ debate.aff_team.short_name }}
           </span>
         </td>
@@ -112,7 +112,7 @@
           {{ debate.neg_team.male_adj_percent }}
         </td>
         <td id="team_{{ debate.neg_team.id }}" class="teaminfo {% team_status_classes debate.neg_team %}">
-          <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">
+          <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
             {{ debate.neg_team.short_name }}
           </span>
         </td>

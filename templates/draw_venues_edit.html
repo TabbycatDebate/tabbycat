@@ -60,10 +60,14 @@
       <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
         <td>{{ debate.bracket }}</td>
         <td>
-          <span title="{{ debate.aff_team.speakers|join:'<br>' }}" data-toggle="tooltip">{{ debate.aff_team.short_name }}</span>
+          <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
+            {{ debate.aff_team.short_name }}
+          </span>
         </td>
         <td>
-          <span title="{{ debate.neg_team.speakers|join:'<br>' }}" data-toggle="tooltip">{{ debate.neg_team.short_name }}</span>
+          <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
+            {{ debate.neg_team.short_name }}
+          </span>
         </td>
         <td>
         {% for type, adj in debate.adjudicators %}

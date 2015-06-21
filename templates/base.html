@@ -86,6 +86,38 @@
         'html': true,
         'placement': 'bottom'
       });
+
+      // Do the team speakers as an AJAX to boost page rendering
+      $('.team-speakers-hover').tooltip({
+        title: getTeamSpeakers,
+        'html': true,
+        'placement': 'bottom'
+      });
+
+      var cachedData = Array();
+
+      function getTeamSpeakers(){
+          var element = $(this);
+          var id = element.attr('id').replace("team_speakers_", "");
+
+          if(id in cachedData){
+              return cachedData[id];
+          }
+
+          var localData = "error";
+
+          $.ajax('{{ tournament.get_public_url  }}team_speakers/' + id + '/', {
+              async: false,
+              success: function(data){
+                  localData = data[0] + ", " + data[1] + ", " + data[2];
+              }
+          });
+
+          cachedData[id] = localData;
+
+          return localData;
+      }
+
     });
 
     // Test for emoji support, if not present then load and execute a polyfill

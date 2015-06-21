@@ -236,6 +236,11 @@
   border-top: 3px solid chocolate;
 }
 
+.team-speakers-hover {
+  cursor: pointer;
+  border-bottom: 2px dotted #ccc;
+}
+
 span.esl {
   text-transform: uppercase;
 }
