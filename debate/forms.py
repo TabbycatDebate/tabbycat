@@ -321,7 +321,8 @@ class BallotSetForm(forms.Form):
         order.extend(['discarded', 'confirmed', 'debate_result_status'])
 
         if self.motions.count() <= 1:
-            order.extend(['motion', 'aff_motion_veto', 'neg_motion_veto'])
+            order.append('motion')
+            order.extend(self._fieldname_motion_veto(side) for side in self.SIDES)
 
         # now, set
         for i, name in enumerate(order, start=1):
