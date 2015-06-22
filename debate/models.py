@@ -23,14 +23,14 @@ class ScoreField(models.FloatField):
     pass
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=100)
-    short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
-    seq = models.IntegerField(db_index=True, blank=True, null=True)
-    slug = models.SlugField(unique=True, db_index=True)
+    name = models.CharField(max_length=100, help_text="The full name used on the homepage")
+    short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu")
+    seq = models.IntegerField(db_index=True, blank=True, null=True, help_text="For (re)ording multiple tournaments")
+    slug = models.SlugField(unique=True, db_index=True, help_text="The sub-URL of the tournament; cannot have spaces")
     current_round = models.ForeignKey('Round', null=True, blank=True,
-                                     related_name='tournament_',)
-    welcome_msg = models.TextField(blank=True, null=True, default="")
-    release_all = models.BooleanField(default=False)
+                                     related_name='tournament_', help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
+    welcome_msg = models.TextField(blank=True, null=True, default="", help_text="Text/html entered here shows on the homepage")
+    release_all = models.BooleanField(default=False, help_text="This releases all results; do so only after the tournament is finished")
     active = models.BooleanField(default=True)
 
     @property
@@ -166,9 +166,9 @@ class VenueGroup(models.Model):
 class Venue(models.Model):
     name = models.CharField(max_length=40)
     group = models.ForeignKey(VenueGroup, blank=True, null=True)
-    priority = models.IntegerField()
+    priority = models.IntegerField(help_text="Venues with a higher priority number will be preferred in the draw")
     tournament = models.ForeignKey(Tournament, blank=True, null=True)
-    time = models.DateTimeField(blank=True, null=True)
+    time = models.DateTimeField(blank=True, null=True, help_text="")
 
     class Meta:
         ordering = ['group', 'name']
@@ -498,13 +498,13 @@ class Division(models.Model):
         index_together = ['tournament', 'seq']
 
 class Team(models.Model):
-    reference = models.CharField(max_length=150, verbose_name="Name or suffix")
-    short_reference = models.CharField(max_length=35, verbose_name="Shortened name or suffix")
+    reference = models.CharField(max_length=150, verbose_name="Full Name or suffix")
+    short_reference = models.CharField(max_length=35, verbose_name="Shortened name or suffix", help_text="The name shown in the draw")
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament, db_index=True)
     emoji_seq = models.IntegerField(blank=True, null=True)
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
-    use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
+    use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
 
     # set to True if a team is ineligible to break (other than being
     # swing/composite)
@@ -889,11 +889,11 @@ class Round(models.Model):
     objects = RoundManager()
 
     tournament   = models.ForeignKey(Tournament, related_name='rounds',db_index=True)
-    seq          = models.IntegerField()
-    name         = models.CharField(max_length=40)
-    abbreviation = models.CharField(max_length=10)
-    draw_type    = models.CharField(max_length=1, choices=DRAW_CHOICES)
-    stage        = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY)
+    seq          = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
+    name         = models.CharField(max_length=40, help_text="ie \"Round 1\"")
+    abbreviation = models.CharField(max_length=10, help_text="ie \"R1\"")
+    draw_type    = models.CharField(max_length=1, choices=DRAW_CHOICES, help_text="Which draw technique to use")
+    stage        = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY, help_text="Whether it is a break round or not")
 
     draw_status        = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
     venue_status       = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
