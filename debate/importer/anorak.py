@@ -68,7 +68,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             return kwargs
         return self._import(f, _region_line_parser, m.Region)
 
-    def import_institutions(self, f, auto_create_regions=False):
+    def import_institutions(self, f, auto_create_regions=True):
         """Imports institutions from a file, also creating regions as needed
         (unless 'auto_create_regions' is False)
         Each line has:
@@ -212,8 +212,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         (default), conflicts are created with adjudicators' own institutions.
 
         Each line has:
-            name, institution, rating, gender, novice, cellphone, email,
-                    notes, institution_conflicts, team_conflicts
+            name, institution, rating, gender, independent, novice, cellphone,
+                    email, notes, institution_conflicts, team_conflicts
         """
         def _adjudicator_line_parser(line):
             return {
@@ -222,7 +222,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'tournament'  : self.tournament,
                 'test_score'  : float(line[2]),
                 'gender'      : self._lookup(self.GENDERS, line[3], "gender") if len(line) > 3 and line[3] else None,
-                'independent' : bool(line[4]) if len(line) > 4 and line[4] else False,
+                'independent' : bool(int(line[4])) if len(line) > 4 and line[4] else False,
                 'novice'      : int(line[5]) if len(line) > 5 and line[5] else False,
                 'phone'       : line[6] if len(line) > 6 else None,
                 'email'       : line[7] if len(line) > 7 else None,

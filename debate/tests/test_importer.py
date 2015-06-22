@@ -43,7 +43,7 @@ class TestImporterAnorak(TestCase):
     def test_institutions(self):
         f = self._open_csv_file(self.TESTDIR, "institutions")
         counts, errors = self.importer.import_institutions(f)
-        self.assertEqual(counts, {m.Institution: 14})
+        self.assertEqual(counts, {m.Institution: 13, m.Region: 6})
         self.assertFalse(errors)
 
     @skip("test file does not yet exist")
@@ -90,8 +90,8 @@ class TestImporterAnorak(TestCase):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "judges_invalid_line")
         with self.assertRaises(TournamentDataImporterError) as cm:
             counts, errors = self.importer.import_adjudicators(f)
-        self.assertEqual(len(cm.exception), 8)
-        self.assertItemsEqual([e.lineno for e in cm.exception.entries], (2, 5, 8, 14, 15, 23, 26, 28))
+        self.assertEqual(len(cm.exception), 10)
+        self.assertItemsEqual([e.lineno for e in cm.exception.entries], (2, 5, 9, 10, 15, 16, 23, 24, 26, 28))
 
     def test_weird_choices_judges(self):
         self.test_speakers()
