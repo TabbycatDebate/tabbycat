@@ -59,7 +59,7 @@ admin.site.register(models.DebateTeam, DebateTeamAdmin)
 
 class SpeakerInline(admin.TabularInline):
     model = models.Speaker
-    fields = ('name', 'barcode_id', 'email', 'phone')
+    fields = ('name', 'novice', 'gender')
 
 class TeamPositionAllocationInline(admin.TabularInline):
     model = models.TeamPositionAllocation
