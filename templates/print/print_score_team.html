@@ -16,9 +16,10 @@
       <thead>
         <tr>
           <th class="text-center" width="4%"></th>
-          <th class="text-center small" width="72%"><em style="font-weight: normal;">Name</em></th>
+          <th class="text-left small" width="62%"><em style="font-weight: normal;">Name</em></th>
+          <th class="text-left small" width="10%"><em style="font-weight: normal;">Pronoun</em></th>
           <th class="text-center" width="10%"></th>
-          <th class="text-center small" width="14%"><em style="font-weight: normal;">Score</em></th>
+          <th class="text-left small" width="14%"><em style="font-weight: normal;">Score</em></th>
         </tr>
       </thead>
       <tbody>
@@ -29,6 +30,7 @@
               <small>{{ i|add:1 }}</small>
             </h5>
           </td>
+          <td class="writeable"></td>
           <td class="writeable"></td>
           <td class="text-muted text-center">
             <h5>
@@ -50,6 +52,7 @@
             <h5><small>R</small></h5>
           </td>
           <td class="writeable"></td>
+          <td class="writeable"></td>
           <td class="text-muted text-center">
             <h5>
               <small>
@@ -66,6 +69,7 @@
         {% endif %}
         <tr>
           <td style="border-bottom: none;"></td>
+          <td></td>
           <td></td>
           <td class="text-center small"><em style="line-height: 34px;">Total</em></td>
           <td class="writeable"></td>

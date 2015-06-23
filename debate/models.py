@@ -183,6 +183,7 @@ class Venue(models.Model):
 
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
+    tournament = models.ForeignKey(Tournament)
 
     def __unicode__(self):
         return u'%s' % (self.name)
@@ -499,7 +500,7 @@ class Division(models.Model):
 
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Full Name or suffix")
-    short_reference = models.CharField(max_length=35, verbose_name="Shortened name or suffix", help_text="The name shown in the draw")
+    short_reference = models.CharField(max_length=35, verbose_name="Short name/suffix", help_text="The name shown in the draw")
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament, db_index=True)
     emoji_seq = models.IntegerField(blank=True, null=True)

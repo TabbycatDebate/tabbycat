@@ -5,8 +5,8 @@
     <span class="h3 pull-left no-vertical-spacing">
         {{ source.name }}'s {% if source_type == "chair" %}Ⓒ{% elif source_type == "trainee" %}Ⓣ{% endif %} Ballot
     </span>
-    <span class="badge h3 no-vertical-spacing pull-right">{{ round.abbreviation }}</span>
-    <span class="badge h3 no-vertical-spacing pull-right">{{ debate.venue_splitname }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">{{ round.name }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">Room {{ debate.venue_splitname }}</span>
   </div>
   <p class="small text-muted">
     {% if debate.adjudicators.count > 0 %}
@@ -23,28 +23,28 @@
         <tbody>
           <tr>
             {% if motions.count == 0 %}
-              <td width="20%" class="no-borders no-horizontal-spacing no-vertical-spacing active">
-                <div class="panel-heading small">
+              <td width="20%" class="no-horizontal-spacing no-vertical-spacing active no-borders">
+                <div class="panel-heading small no-borders">
                   <em>What was the motion?</em>
                 </div>
               </td>
-              <td width="80%" class="no-borders no-horizontal-spacing no-vertical-spacing">
+              <td width="80%" class="no-borders no-horizontal-spacing no-vertical-spacing no-borders">
                 <div class="writeable"></div>
               </td>
             {% elif motions.count == 1 %}
               <td width="20%" class="no-borders no-horizontal-spacing no-vertical-spacing active ">
-                <div class="panel-heading small">
+                <div class="panel-heading small no-borders">
                   <em>The motion is</em> <strong>{{ motions.0.text }}</strong>
                 </div>
               </td>
             {% else %}
-              <td class="no-horizontal-spacing no-vertical-spacing active">
+              <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
                 <div class="panel-heading small">
                   <em>Which motion?</em>
                 </div>
               </td>
               {% for motion in motions %}
-                <td class="text-center small">
+                <td class="text-center small no-borders">
                   <strong>{{ motion.text }}</strong>
                 </td>
               {% endfor %}
@@ -88,9 +88,9 @@
                     <tbody>
                       <tr>
                         <td width="40%" class="no-borders no-horizontal-spacing no-vertical-spacing active">
-              <div class="panel-heading small">
-                <em>Which team won the debate?</em>
-              </div>
+                          <div class="panel-heading small" style="padding-top: 13px;">
+                            <em>Which team won the debate?</em>
+                          </div>
                         </td>
                         <td width="60%" class="no-borders no-horizontal-spacing no-vertical-spacing">
                           <div class="writeable"></div>
@@ -108,9 +108,9 @@
                     <tbody>
                       <tr>
                         <td width="40%" class="no-borders no-horizontal-spacing no-vertical-spacing active">
-              <div class="panel-heading small">
-                <em>By how many points did they win?</em>
-              </div>
+                          <div class="panel-heading small" style="padding-top: 13px;">
+                            <em>By how many points did they win?</em>
+                          </div>
                         </td>
                         <td width="60%" class="no-borders no-horizontal-spacing no-vertical-spacing">
                           <div class="writeable"></div>
@@ -132,9 +132,12 @@
       <table class="table" cellspacing="10" cellpadding="10">
         <tbody>
           <tr>
-            <td width="20%" class="text-muted text-left no-vertical-spacing no-borders"><span class="small"><em>For the tab room only</em></span></td>
-            <td width="40%" class="text-muted text-left no-vertical-spacing no-borders"><span class="small">Entered By</span></td>
-            <td width="40%" class="text-muted text-left no-vertical-spacing no-borders"><span class="small">Checked By</span></td>
+            {% if config.score_return_location|length > 2 %}
+            <td width="30%" class="no-vertical-spacing text-left no-borders"><span class="small"><em>Please return ballots to {{ config.score_return_location }}</em></span></td>
+            {% endif %}
+            <td width="10%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only:</em></span></td>
+            <td width="30%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Entered By</em></span></td>
+            <td width="50%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Checked By</em></span></td>
           </tr>
         </tbody>
       </table>
