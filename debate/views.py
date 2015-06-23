@@ -1220,57 +1220,57 @@ def public_results_index(request, tournament):
 
 @login_required
 @tournament_view
-def edit_ballots(request, t, ballots_id):
-    ballots = get_object_or_404(BallotSubmission, id=ballots_id)
-    debate = ballots.debate
+def edit_ballotset(request, t, ballotsub_id):
+    ballotsub = get_object_or_404(BallotSubmission, id=ballotsub_id)
+    debate = ballotsub.debate
 
     if not request.user.is_superuser:
         template = 'assistant/assistant_enter_results.html'
-        all_ballot_sets = debate.ballotsubmission_set_by_version_except_discarded
-        disable_confirm = request.user == ballots.user and not t.config.get('enable_assistant_confirms')
+        all_ballotsubs = debate.ballotsubmission_set_by_version_except_discarded
+        disable_confirm = request.user == ballotsub.user and not t.config.get('enable_assistant_confirms')
     else:
         template = 'enter_results.html'
-        all_ballot_sets = debate.ballotsubmission_set.order_by('version')
+        all_ballotsubs = debate.ballotsubmission_set.order_by('version')
         disable_confirm = False
 
-    identical_ballots_dict = debate.identical_ballots_dict
-    for b in all_ballot_sets:
-        if b in identical_ballots_dict:
-            b.identical_ballot_versions = identical_ballots_dict[b]
+    identical_ballotsubs_dict = debate.identical_ballotsubs_dict
+    for b in all_ballotsubs:
+        if b in identical_ballotsubs_dict:
+            b.identical_ballotsub_versions = identical_ballotsubs_dict[b]
 
     if request.method == 'POST':
-        form = forms.BallotSetForm(ballots, request.POST)
+        form = forms.BallotSetForm(ballotsub, request.POST)
 
         if form.is_valid():
             form.save()
 
-            if ballots.discarded:
+            if ballotsub.discarded:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_DISCARD
-            elif ballots.confirmed:
+            elif ballotsub.confirmed:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_CONFIRM
             else:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_EDIT
             ActionLog.objects.log(type=action_type, user=request.user,
-                ballot_submission=ballots, ip_address=get_ip_address(request), tournament=t)
+                ballot_submission=ballotsub, ip_address=get_ip_address(request), tournament=t)
 
             return redirect_round('results', debate.round)
     else:
-        form = forms.BallotSetForm(ballots)
+        form = forms.BallotSetForm(ballotsub)
 
     return r2r(request, template, dict(
         debate              =debate,
         form                =form,
         round               =debate.round,
-        ballots             =ballots,
-        all_ballot_sets     =all_ballot_sets,
+        ballotsub           =ballotsub,
+        all_ballotsubs      =all_ballotsubs,
         disable_confirm     =disable_confirm,
         new                 =False,
-        ballot_not_singleton=all_ballot_sets.exclude(id=ballots_id).exists(),
+        ballot_not_singleton=all_ballotsubs.exclude(id=ballotsub_id).exists(),
         show_adj_contact    =True))
 
 # Don't cache
 @public_optional_tournament_view('public_ballots')
-def public_new_ballots(request, t, adj_id):
+def public_new_ballotset(request, t, adj_id):
 
     adjudicator = get_object_or_404(Adjudicator, id=adj_id)
 
@@ -1286,42 +1286,42 @@ def public_new_ballots(request, t, adj_id):
 
     ip_address = get_ip_address(request)
 
-    ballots = BallotSubmission(
+    ballotsub = BallotSubmission(
         debate         = debate,
         submitter_type = BallotSubmission.SUBMITTER_PUBLIC,
         ip_address     = ip_address)
 
-    existing_ballots = debate.ballotsubmission_set.exclude(discarded=True).count()
+    existing_ballotsubs = debate.ballotsubmission_set.exclude(discarded=True).count()
 
     if request.method == 'POST':
-        form = forms.BallotSetForm(ballots, request.POST, password=True)
+        form = forms.BallotSetForm(ballotsub, request.POST, password=True)
 
         if form.is_valid():
             form.save()
 
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_SUBMIT,
-                    ballot_submission=ballots, ip_address=ip_address, tournament=t)
+                    ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
             return r2r(request, 'public/public_success.html', dict(success_kind="ballot"))
 
     else:
-        form = forms.BallotSetForm(ballots, password=True)
+        form = forms.BallotSetForm(ballotsub, password=True)
 
     return r2r(request, 'public/public_enter_results.html', dict(
-        debate          =debate,
-        form            =form,
-        round           =round,
-        ballots         =ballots,
-        adjudicator     =adjudicator,
-        existing_ballots=existing_ballots,
-        show_adj_contact=False))
+        debate             =debate,
+        form               =form,
+        round              =round,
+        ballotsub          =ballotsub,
+        adjudicator        =adjudicator,
+        existing_ballotsubs=existing_ballotsubs,
+        show_adj_contact   =False))
 
 @login_required
 @tournament_view
-def new_ballots(request, t, debate_id):
+def new_ballotset(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
     ip_address = get_ip_address(request)
 
-    ballots = BallotSubmission(
+    ballotsub = BallotSubmission(
         debate        =debate,
         submitter_type=BallotSubmission.SUBMITTER_TABROOM,
         user          =request.user,
@@ -1332,33 +1332,33 @@ def new_ballots(request, t, debate_id):
 
     if not request.user.is_superuser:
         template = 'assistant/assistant_enter_results.html'
-        all_ballot_sets = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
+        all_ballotsets = debate.ballotsubmission_set.exclude(discarded=True).order_by('version')
     else:
         template = 'enter_results.html'
-        all_ballot_sets = debate.ballotsubmission_set.order_by('version')
+        all_ballotsets = debate.ballotsubmission_set.order_by('version')
 
     if request.method == 'POST':
-        form = forms.BallotSetForm(ballots, request.POST)
+        form = forms.BallotSetForm(ballotsub, request.POST)
 
         if form.is_valid():
             form.save()
 
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_CREATE, user=request.user,
-                    ballot_submission=ballots, ip_address=ip_address, tournament=t)
+                    ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
 
             return redirect_round('results', debate.round)
 
     else:
-        form = forms.BallotSetForm(ballots)
+        form = forms.BallotSetForm(ballotsub)
 
     return r2r(request, template, dict(
         debate              =debate,
         form                =form,
         round               =debate.round,
-        ballots             =ballots,
-        all_ballot_sets     =all_ballot_sets,
+        ballotsub           =ballotsub,
+        all_ballotsets      =all_ballotsets,
         new                 =True,
-        ballot_not_singleton=all_ballot_sets.exists(),
+        ballot_not_singleton=all_ballotsets.exists(),
         show_adj_contact    =True))
 
 @login_required
