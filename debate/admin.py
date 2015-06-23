@@ -70,7 +70,7 @@ class TeamVenuePreferenceInline(admin.TabularInline):
 
 
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('long_name','short_reference','institution', 'division', 'tournament')
+    list_display = ('long_name','short_reference','institution', 'division', 'esl', 'efl', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
     list_filter = ('tournament', 'division', 'institution')
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
