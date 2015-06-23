@@ -10,8 +10,8 @@
         {{ source.short_name }}'s Feedback
       {% endif %}
     </span>
-    <span class="badge h3 no-vertical-spacing pull-right">{{ round.abbreviation }}</span>
-    <span class="badge h3 no-vertical-spacing pull-right">{{ debate.venue_splitname }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">{{ round.name }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">Room {{ debate.venue_splitname }}</span>
   </div>
   <p class="small text-muted">
     {% if debate.adjudicators.count > 0 %}
@@ -58,7 +58,6 @@
     </div>
   </div>
 
-
   <div class="panel panel-default">
     <div class="panel-heading">
       <p class="italic panel-title small"><em>Did you agree with their decision?</em></p>
@@ -69,6 +68,23 @@
           <tr>
             <th class="text-center h4">Yes</th>
             <th class="text-center h4">No</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="italic panel-title small"><em>Do you think they should be demoted or promoted?</em></p>
+    </div>
+    <div class="panel-body no-vertical-spacing">
+      <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+        <thead>
+          <tr>
+            <th class="text-center h4">Demote</th>
+            <th class="text-center h4">Keep the same</th>
+            <th class="text-center h4">Promote</th>
           </tr>
         </thead>
       </table>
@@ -126,9 +142,12 @@
       <table class="table" cellspacing="10" cellpadding="10">
         <tbody>
           <tr>
-            <td width="20%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only</em></span></td>
-            <td width="40%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small">Entered By</span></td>
-            <td width="40%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small">Checked By</span></td>
+            {% if config.feedback_return_location|length > 2 %}
+            <td width="30%" class="no-vertical-spacing text-left no-borders"><span class="small"><em>Please return feedback forms to {{ config.feedback_return_location }}</em></span></td>
+            {% endif %}
+            <td width="10%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only.</em></span></td>
+            <td width="30%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Entered By</em></span></td>
+            <td width="50%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Checked By</em></span></td>
           </tr>
         </tbody>
       </table>

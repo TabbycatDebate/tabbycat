@@ -89,6 +89,8 @@ SETTINGS = OrderedDict([
     ('minimum_division_size',       (int,   'Smallest allowed size for a division',                                5)),
     ('ideal_division_size',         (int,   'Ideal size for a division',                                           6)),
     ('maximum_division_size',       (int,   'Largest allowed size for a division',                                 8)),
+    ('score_return_location',       (str,   'The location to return scoresheets to (put on preprinted ballots)',   ' ')),
+    ('feedback_return_location',    (str,   'The location to return feedback to (put on preprinted feedbacks)',    ' ')),
 ])
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))

@@ -786,7 +786,9 @@ def draw_print_scoresheets(request, round):
 @round_view
 def draw_print_feedback(request, round):
     draw = round.get_draw()
-    return r2r(request, "printable_feedback.html", dict(draw=draw))
+    config = round.tournament.config
+    return r2r(request, "printable_feedback.html", dict(
+        draw=draw, config=config))
 
 
 
