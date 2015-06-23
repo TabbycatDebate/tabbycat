@@ -64,6 +64,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         def _region_line_parser(line):
             kwargs = {
                 'name'       : line[0],
+                'tournament' : self.tournament,
             }
             return kwargs
         return self._import(f, _region_line_parser, m.Region)

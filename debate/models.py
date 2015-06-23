@@ -183,6 +183,7 @@ class Venue(models.Model):
 
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
+    tournament = models.ForeignKey(Tournament)
 
     def __unicode__(self):
         return u'%s' % (self.name)
