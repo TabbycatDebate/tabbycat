@@ -104,7 +104,7 @@ class TournamentPasswordField(forms.CharField):
 
 class RequiredTypedChoiceField(forms.TypedChoiceField):
     def clean(self, value):
-        value = super(forms.TypedChoiceField, self).clean(value)
+        value = super(RequiredTypedChoiceField, self).clean(value)
         if value == "None":
             raise forms.ValidationError(_("This field is required."))
         return value
@@ -649,7 +649,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
 
     choices = adj_choices + team_choices
 
-    def coerce(value):
+    def coerce_source(value):
         obj_type, id = value.split(':')
         id = int(id)
 
@@ -663,9 +663,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
     class FeedbackForm(forms.Form):
         source = RequiredTypedChoiceField(
             choices = choices,
-            # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
-            # Fix when Django 1.7 is released.
-            #coerce = coerce,
+            coerce = coerce_source,
         )
 
         score = forms.FloatField(
@@ -681,7 +679,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
             # Saves the form and returns the AdjudicatorFeedback object
 
             source = self.cleaned_data['source']
-            source = coerce(source) # Bug in Django 1.6.5
+            # source = coerce(source) # Bug in Django 1.6.5
 
             if isinstance(source, m.DebateAdjudicator):
                 sa = source
@@ -744,7 +742,7 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
         ).select_related('debate').order_by('-debate__round') if da.adjudicator != source
     ])
 
-    def coerce(value):
+    def coerce_source(value):
         value = int(value)
         return m.DebateAdjudicator.objects.get(id=value)
 
@@ -753,9 +751,7 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
     class FeedbackForm(forms.Form):
         debate_adjudicator = RequiredTypedChoiceField(
             choices = choices,
-            # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
-            # Fix when Django 1.7 is released.
-            #coerce = coerce,
+            coerce = coerce_source,
         )
 
         score = forms.FloatField(
@@ -776,7 +772,6 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
             # Saves the form and returns the AdjudicatorFeedback object
 
             da = self.cleaned_data['debate_adjudicator']
-            da = coerce(da) # Bug in Django 1.6.5
 
             sa = m.DebateAdjudicator.objects.get(adjudicator=source, debate=da.debate)
 
@@ -825,7 +820,7 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
             choices.append((chair.id, '{name} (R{r})'.format(
                 name=chair.adjudicator.name, r=debate.round.seq)))
 
-    def coerce(value):
+    def coerce_source(value):
         value = int(value)
         return m.DebateAdjudicator.objects.get(id=value)
 
@@ -834,9 +829,7 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
     class FeedbackForm(forms.Form):
         debate_adjudicator = RequiredTypedChoiceField(
             choices = choices,
-            # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
-            # Fix when Django 1.7 is released.
-            #coerce = coerce,
+            coerce = coerce_source,
         )
 
         score = forms.FloatField(
@@ -857,7 +850,6 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
             # Saves the form and returns the m.AdjudicatorFeedback object
 
             da = self.cleaned_data['debate_adjudicator']
-            da = coerce(da) # Bug in Django 1.6.5
 
             st = m.DebateTeam.objects.get(team=source, debate=da.debate)
 
