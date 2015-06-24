@@ -1,26 +1,26 @@
 name,institution,rating,gender,pronoun,independent,trainee,cellphone,email,notes,institution_conflicts,team_conflicts
-Levi Flores,Yale University,5,M,they,0,0,(400) 258-4262,leviflores@gmail.com,,,
-Boyd Pierce,Stanford University,5,M,they,1,0,(645) 106-7743,boydpierce@yahoo.com,,,
+Levi Flores,Yale University,5,M,he,0,0,(400) 258-4262,leviflores@gmail.com,,,
+Boyd Pierce,Stanford University,5,M,he,1,0,(645) 106-7743,boydpierce@yahoo.com,,,
 Eunice Mcbride,University of Toronto,5,F,she,0,0,(549) 309-9187,eunicemcbride@outlook.com,,,
 Ramona Cobb,California Institute of Technology,1,F,she,1,0,(440) 487-5776,ramonacobb@yahoo.com,,Princeton,
-Justin Ford,California Institute of Technology,5,M,they,0,0,(618) 921-9188,justinford@outlook.com,,,Caltech 1
-Luis Bennett,Columbia University,2,M,they,0,0,(730) 097-8797,luisbennett@gmail.com,,,
+Justin Ford,California Institute of Technology,5,M,he,0,0,(618) 921-9188,justinford@outlook.com,,,Caltech 1
+Luis Bennett,Columbia University,2,M,he,0,0,(730) 097-8797,luisbennett@gmail.com,,,
 Mandy Estrada,Cornell University,5,F,she,1,0,(559) 299-0471,mandyestrada@gmail.com,,,
 Leigh Mcgee,Harvard University,4,F,she,0,0,(844) 760-9302,leighmcgee@gmail.com,,,
 Jacqueline Freeman,Harvard University,5,F,she,1,0,(297) 916-1716,jacquelinefreeman@yahoo.com,,Toronto,Caltech 2
-Holly Howard,University of Toronto,5,F,she,1,0,(958) 783-2610,hollyhoward@gmail.com,,Harvard University,
+Holly Howard,University of Toronto,5,F,she,1,0,(958) 783-2610,hollyhoward@gmail.com,,Harvard,
 Pedro Burgess,University of Toronto,4,,,0,,(854) 441-0104,pedroburgess@yahoo.com,,,
-Kristy Carr,Stanford University,4,M,they,0,1,(644) 607-3297,kristycarr@yahoo.com,,,MIT 2
+Kristy Carr,Stanford University,4,M,he,0,1,(644) 607-3297,kristycarr@yahoo.com,,,MIT 2
 Wilma Vaughn,Johns Hopkins University,4,F,she,1,1,(398) 759-9537,wilmavaughn@outlook.com,,,
 Virginia Mccarthy,Johns Hopkins University,2,F,she,0,1,(455) 177-0459,virginiamccarthy@gmail.com,,,
-Tasha Jenkins,Massachusetts Institute of Technology,2,,,1,,(875) 519-9891,tashajenkins@outlook.com,,"Cornell,Penn,Yale",
-Toby Wong,Massachusetts Institute of Technology,5,M,they,0,0,(404) 641-5999,tobywong@gmail.com,,Berkeley,
-Jo Allen,Princeton University,2,M,they,0,0,(761) 993-2983,joallen@yahoo.com,,,MIT 2
-Billy Griffin,Princeton University,2,M,they,0,0,(430) 532-2939,billygriffin@outlook.com,,,
+Tasha Jenkins,Massachusetts Institute of Technology,2,,,1,,(875) 519-9891,tashajenkins@outlook.com,,"Cornell,Penn,Yale",Stan 1
+Toby Wong,Massachusetts Institute of Technology,5,M,he,0,0,(404) 641-5999,tobywong@gmail.com,,Berkeley,
+Jo Allen,Princeton University,2,M,he,0,0,(761) 993-2983,joallen@yahoo.com,,,MIT 2
+Billy Griffin,Princeton University,2,M,he,0,0,(430) 532-2939,billygriffin@outlook.com,,,
 Angela Reed,Stanford University,1,F,she,0,0,(936) 500-1228,angelareed@yahoo.com,,,Chicago 1
 Hugo Lewis,Stanford University,2,M,they,0,0,(422) 585-9609,hugolewis@outlook.com,,,
 Cassandra Wilson,"University of California, Berkeley",4,F,she,,0,(604) 306-2084,cassandrawilson@gmail.com,,,Yale 2
-George Willis,University of Chicago,2,M,they,0,0,(222) 204-5944,georgewillis@yahoo.com,,Johns Hopkins University,
+George Willis,University of Chicago,2,M,he,0,0,(222) 204-5944,georgewillis@yahoo.com,,Johns Hopkins University,
 Jamie Hodges,University of Chicago,3,F,she,0,,(737) 122-6102,jamiehodges@outlook.com,,,
 Bennie Rodriguez,University of Pennsylvania,2,F,she,0,,(537) 641-2175,bennierodriguez@gmail.com,,Stan,
 Allison Martin,Yale University,4,F,she,,0,(525) 384-2715,allisonmartin@outlook.com,,,
