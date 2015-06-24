@@ -1891,8 +1891,6 @@ def get_adj_feedback(request, t):
             f.debate.matchup,
             unicode(f.source),
             f.score,
-            BOOLEAN_VALUES[f.agree_with_decision],
-            f.comments
         ]
         for question in questions:
             try:

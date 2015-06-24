@@ -782,13 +782,8 @@ class Adjudicator(Person):
     def feedback_score(self):
         return self._feedback_score() or None
 
-
     def get_feedback(self):
         return self.adjudicatorfeedback_set.all()
-
-        # .select_related(
-        #     'adjudicatorfeedbackfloatanswer', 'adjudicatorfeedbackstringanswer',
-        #     'adjudicatorfeedbackintegeranswer', 'adjudicatorfeedbackbooleananswer')
 
     def seen_team(self, team, before_round=None):
         if not hasattr(self, '_seen_cache'):
@@ -1731,8 +1726,6 @@ class AdjudicatorFeedbackQuestion(models.Model):
 class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     score = models.FloatField()
-    agree_with_decision = models.NullBooleanField()
-    comments = models.TextField(blank=True)
 
     source_adjudicator = models.ForeignKey(DebateAdjudicator, blank=True,
                                            null=True)

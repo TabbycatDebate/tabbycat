@@ -608,18 +608,13 @@ class BaseFeedbackForm(forms.Form):
     """Base class for all dynamically-created feedback forms. Contains all
     question fields."""
     score = forms.FloatField(min_value=1, max_value=5)
-    agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
-    comment = forms.CharField(widget=forms.Textarea, required=False)
 
     tournament = NotImplemented      # set at "compile time" by subclasses
     _use_tournament_password = False # set at "compile time" by subclasses
 
     def __init__(self, *args, **kwargs):
-        # Hack to force question fields to come after source/adjudicator field,
-        # basically pop and then reinsert each of the question fields.
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
-        for key in ['score', 'agree_with_decision', 'comment']:
-            self.fields[key] = self.fields.pop(key)
+        self.fields['score'] = self.fields.pop('score') # for score field to come after source/adjudicator field
         self._create_fields()
 
     @staticmethod
@@ -654,8 +649,6 @@ class BaseFeedbackForm(forms.Form):
         """Saves the question fields and returns the AdjudicatorFeedback.
         To be called by save() of child classes."""
         af.score = self.cleaned_data['score']
-        af.agree_with_decision = self.cleaned_data['agree_with_decision']
-        af.comments = self.cleaned_data['comment']
         af.save()
 
         for question in self.tournament.adj_feedback_questions:

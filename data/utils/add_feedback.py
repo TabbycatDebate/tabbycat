@@ -57,17 +57,27 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
 
         score = float(random.randrange(1, 6))
         fb.score = score
-        agree = random.choice([None, True, False])
-        fb.agree_with_decision = agree
-        comments = random.choice(COMMENTS[score])
-        fb.comments = comments
 
         fb.discarded = discarded
         fb.confirmed = confirmed
+        fb.save()
+
+        for question in debate.round.tournament.adj_feedback_questions:
+            if question.answer_type == question.ANSWER_TYPE_BOOLEAN:
+                answer = random.choice([None, True, False])
+            elif question.answer_type == question.ANSWER_TYPE_INTEGER:
+                min_value = int(question.min_value) or 0
+                max_value = int(question.max_value) or 10
+                answer = random.randrange(min_value, max_value+1)
+            elif question.answer_type == question.ANSWER_TYPE_FLOAT:
+                min_value = question.min_value or 0
+                max_value = question.max_value or 10
+                answer = random.uniform(min_value, max_value)
+            elif question.answer_type in [question.ANSWER_TYPE_TEXT, question.ANSWER_TYPE_TEXTBOX]:
+                answer = random.choice(COMMENTS[score])
+            question.answer_type_class(question=question, feedback=fb, answer=answer).save()
 
         print source, "on", adj, ":", score
-
-        fb.save()
 
         fbs.append(fb)
 
@@ -79,7 +89,7 @@ if __name__ == "__main__":
     parser.add_argument("debate", type=int, nargs='+', help="Debate ID(s) to add to")
     parser.add_argument("-p", "--probability", type=float, help="Probability with which to add feedback", default=1.0)
     parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=SUBMITTER_TYPE_MAP.keys(), default="tabroom")
-    parser.add_argument("-u", "--user", type=str, help="User ID", default="original")
+    parser.add_argument("-u", "--user", type=str, help="User ID", default="random")
     status = parser.add_mutually_exclusive_group(required=True)
     status.add_argument("-d", "--discarded", action="store_true", help="Ballot set is discarded")
     status.add_argument("-c", "--confirmed", action="store_true", help="Ballot set is confirmed")

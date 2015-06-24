@@ -14,7 +14,7 @@ import argparse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("rounds", type=int, nargs="+", help="Round to generate for.")
 parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=SUBMITTER_TYPE_MAP.keys(), default="tabroom")
-parser.add_argument("-u", "--user", type=str, help="User username", default="original")
+parser.add_argument("-u", "--user", type=str, help="User username", default="random")
 parser.add_argument("--clean", help="Remove all ballots for the draw first", action="store_true")
 status = parser.add_mutually_exclusive_group(required=True)
 status.add_argument("-d", "--draft", help="Generate a draft draw", action="store_const", dest="status", const=m.Debate.STATUS_DRAFT)
