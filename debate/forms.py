@@ -618,6 +618,10 @@ class BaseFeedbackForm(forms.Form):
         for key in ['score', 'agree_with_decision', 'comment']:
             self.fields[key] = self.fields.pop(key)
 
+        # TODO CONTINUE HERE
+        # Dynamically create fields for the custom questions, just like in
+        # BallotSetForm.
+
     def save_adjudicatorfeedback_questions(self, af):
         """Saves the question fields and returns the AdjudicatorFeedback.
         To be called by save() of child classes."""
@@ -629,9 +633,10 @@ class BaseFeedbackForm(forms.Form):
 
 
 def make_feedback_form_class_for_tabroom(adjudicator, submission_fields):
-    """adjudicator is an Adjudicator.
-    submission_fields is a dict of fields for Submission.
-    released_only is a boolean."""
+    """Constructs a FeedbackForm class specific to the given adjudicator.
+    'adjudicator' is the Adjudicator who is receiving feedback.
+    'submission_fields' is a dict of fields that is passed directly as keyword
+        arguments to Submission."""
 
     def adj_choice(da):
         return (
@@ -651,23 +656,18 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields):
         if obj_type.strip() == 'T':
             return m.DebateTeam.objects.get(id=id)
 
-    das = m.DebateAdjudicator.objects.filter(adjudicator = adjudicator)
-    debates = [da.debate for da in das]
+    debates = m.Debate.objects.filter(debateadjudicator__adjudicator=adjudicator)
 
     adj_choices = [(None, '-- Adjudicators --')]
     adj_choices.extend(adj_choice(da) for da in
             m.DebateAdjudicator.objects.filter(debate__in=debates).exclude(adjudicator=adjudicator).select_related('debate').order_by('-debate__round__seq'))
-
-    # Get rid of the heading if there aren't any adjudicators
-    if len(adj_choices) == 1: adj_choices = []
+    if len(adj_choices) == 1: adj_choices = [] # get rid of heading if there aren't any adjs
 
     team_choices = [(None, '-- Teams --')]
     team_choices.extend(team_choice(dt) for dt in
             m.DebateTeam.objects.filter(debate__in = debates).select_related('debate').order_by('-debate__round__seq'))
 
     choices = adj_choices + team_choices
-
-    tournament = adjudicator.tournament
 
     class FeedbackForm(BaseFeedbackForm):
         source = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
@@ -692,10 +692,12 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields):
     return FeedbackForm
 
 def make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=True):
-
-    kwargs = dict(debate__round__draw_status=m.Round.STATUS_RELEASED)
-    if not include_panellists: # include only debates for which this adj was the chair
-        kwargs['type'] = m.DebateAdjudicator.TYPE_CHAIR
+    """Constructs a FeedbackForm class specific to the given source adjudicator.
+    'source' is the Adjudicator who is giving feedback.
+    'submission_fields' is a dict of fields that is passed directly as keyword
+        arguments to Submission.
+    'include_panellists' is a bool, and indicates whether panellists can give
+        feedback on chairs."""
 
     def adj_choice(da):
         return (da.id, '%s (R%d, %s)' % (da.adjudicator.name,
@@ -703,12 +705,15 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
     def coerce_source(value):
         return m.DebateAdjudicator.objects.get(id=int(value))
 
+    debate_filter = dict(debateadjudicator__adjudicator=source,
+            round__draw_status=m.Round.STATUS_RELEASED)
+    if not include_panellists: # then include only debates for which this adj was the chair
+        debate_filter['debateadjudicator__type'] = m.DebateAdjudicator.TYPE_CHAIR
+    debates = m.Debate.objects.filter(**debate_filter)
+
     choices = [(None, '-- Adjudicators --')]
-    debates = [da.debate for da in m.DebateAdjudicator.objects.filter(
-            adjudicator=source, **kwargs).select_related('debate')]
     choices.extend(adj_choice(da) for da in     # for an adjudicator, find every adjudicator on their panel except them.
             m.DebateAdjudicator.objects.filter(debate__in=debates).exclude(adjudicator=source).select_related('debate').order_by('-debate__round__seq'))
-
 
     class FeedbackForm(BaseFeedbackForm):
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
@@ -729,18 +734,17 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
 
     return FeedbackForm
 
-def make_feedback_form_class_for_public_team(source, submission_fields, include_panellists=True):
-    """source is an Adjudicator or Team.
-    submission_fields is a dict of fields for Submission.
-    released_only is a boolean."""
-
-    choices = [(None, '-- Adjudicators --')]
+def make_feedback_form_class_for_public_team(source, submission_fields):
+    """Constructs a FeedbackForm class specific to the given source team.
+    'source' is the Team who is giving feedback.
+    'submission_fields' is a dict of fields that is passed directly as keyword
+        arguments to Submission."""
 
     # Only include non-silent rounds for teams.
-    debates = [dt.debate for dt in m.DebateTeam.objects.filter(
-            team=source, debate__round__silent=False,
-            debate__round__draw_status=m.Round.STATUS_RELEASED).select_related('debate').order_by('-debate__round__seq')]
+    debates = m.Debate.objects.filter(debateteam__team=source, round__silent=False,
+        round__draw_status=m.Round.STATUS_RELEASED).order_by('-round__seq')
 
+    choices = [(None, '-- Adjudicators --')]
     for debate in debates:
         try:
             chair = m.DebateAdjudicator.objects.get(debate=debate, type=m.DebateAdjudicator.TYPE_CHAIR)
@@ -760,7 +764,6 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
     def coerce_source(value):
         value = int(value)
         return m.DebateAdjudicator.objects.get(id=value)
-
 
     class FeedbackForm(BaseFeedbackForm):
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
