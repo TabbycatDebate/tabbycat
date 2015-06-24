@@ -650,6 +650,12 @@ class BaseFeedbackForm(forms.Form):
     def save_adjudicatorfeedback_questions(self, af):
         """Saves the question fields and returns the AdjudicatorFeedback.
         To be called by save() of child classes."""
+        for question in questions:
+            answer_class = af.ANSWER_TYPE_CLASSES[question.answer_type]
+            answer = answer_class(feedback=af, question=question,
+                    answer=self.cleaned_data[question.reference])
+            answer.save()
+
         af.score = self.cleaned_data['score']
         af.agree_with_decision = self.cleaned_data['agree_with_decision']
         af.comments = self.cleaned_data['comment']
