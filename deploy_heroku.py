@@ -19,11 +19,16 @@ args = parser.parse_args()
 
 if platform.system() == "Windows":
     subprocess_kwargs = dict(shell=True)
+    use_color = False
 else:
     subprocess_kwargs = dict()
+    use_color = True
 
 def print_command(command):
-    print "\033[1;36m $ " + " ".join(command) + "\033[0m"
+    message = " $ " + " ".join(command)
+    if use_color:
+        message = "\033[1;36m" + message + "\033[0m"
+    print message
 
 def run_command(command):
     print_command(command)
@@ -42,7 +47,9 @@ def get_output_from_command(command):
     return output
 
 def print_yellow(message):
-    print "\033[1;33m" + message + "\033[0m"
+    if use_color:
+        message = "\033[1;33m" + message + "\033[0m"
+    print message
 
 # Create the app
 command = ["heroku", "apps:create"]
