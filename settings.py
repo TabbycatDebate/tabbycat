@@ -162,7 +162,7 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
         }
 
 if os.environ.get('DEBUG', ''):
-    DEBUG = os.environ['DEBUG']
+    DEBUG = bool(int(os.environ['DEBUG']))
     TEMPLATE_DEBUG = DEBUG
 
 # ===========================
