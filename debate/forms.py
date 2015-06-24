@@ -611,16 +611,20 @@ class BaseFeedbackForm(forms.Form):
     agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
     comment = forms.CharField(widget=forms.Textarea, required=False)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, tournament, *args, **kwargs):
         # Hack to force question fields to come after source/adjudicator field,
         # basically pop and then reinsert each of the question fields.
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
         for key in ['score', 'agree_with_decision', 'comment']:
             self.fields[key] = self.fields.pop(key)
+        self._create_fields()
 
-        # TODO CONTINUE HERE
-        # Dynamically create fields for the custom questions, just like in
-        # BallotSetForm.
+    def _create_fields(self):
+        """Creates dynamic fields in the form."""
+
+        # Tournament password field, if applicable
+        if self._use_tournament_password and self.tournament.config.get('public_use_password'):
+            self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
 
     def save_adjudicatorfeedback_questions(self, af):
         """Saves the question fields and returns the AdjudicatorFeedback.
@@ -719,10 +723,10 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
 
         def __init__(self, *args, **kwargs):
-            super(FeedbackForm, self).__init__(*args, **kwargs)
+            super(FeedbackForm, self).__init__(source.tournament, *args, **kwargs)
             tournament = source.tournament
             if tournament.config.get('public_use_password'):
-                self.fields['password'] = TournamentPasswordField(tournament=tournament)
+                    self.fields['password'] = TournamentPasswordField(tournament=tournament)
 
         def save(self):
             """Saves the form and returns the AdjudicatorFeedback object."""
