@@ -88,7 +88,9 @@ table.table > tbody > tr > td.no-horizontal-spacing {
       }
     }
     a.current-round {
-      text-decoration: underline;
+      font-weight: bold;
+      border-top: 2px solid #999999;
+      padding-top: 13px;
     }
   }
 }
