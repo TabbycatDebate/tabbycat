@@ -200,7 +200,7 @@ class AdjudicatorFeedbackStringAnswerInline(admin.TabularInline):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "question":
-            kwargs["queryset"] = models.AdjudicatorFeedbackQuestion.objects.filter(answer_type=models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_STRING)
+            kwargs["queryset"] = models.AdjudicatorFeedbackQuestion.objects.filter(answer_type__in=[models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT, models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXTBOX])
         return super(AdjudicatorFeedbackStringAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):

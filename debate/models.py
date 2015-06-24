@@ -1677,8 +1677,9 @@ class AdjudicatorFeedbackStringAnswer(AdjudicatorFeedbackAnswer):
 class AdjudicatorFeedbackQuestion(models.Model):
     tournament = models.ForeignKey(Tournament)
     seq = models.IntegerField(help_text="The order in which questions are displayed")
-    reference = models.CharField(max_length=15, help_text="A short reference for the question, e.g., \"Agree with decision\"")
     text = models.CharField(max_length=255, help_text="The question displayed to participants, e.g., \"Did you agree with the decision?\"")
+    name = models.CharField(max_length=30, help_text="A short name for the question, e.g., \"Agree with decision\"")
+    reference = models.SlugField(help_text="Code-compatible reference, e.g., \"agree_with_decision\"")
 
     chair_on_panellist = models.BooleanField()
     panellist_on_chair = models.BooleanField()
@@ -1688,18 +1689,21 @@ class AdjudicatorFeedbackQuestion(models.Model):
     ANSWER_TYPE_BOOLEAN = 'b'
     ANSWER_TYPE_INTEGER = 'i'
     ANSWER_TYPE_FLOAT = 'f'
-    ANSWER_TYPE_STRING = 's'
+    ANSWER_TYPE_TEXT = 't'
+    ANSWER_TYPE_TEXTBOX = 'T'
     ANSWER_TYPE_CHOICES = (
         (ANSWER_TYPE_BOOLEAN, 'boolean'),
         (ANSWER_TYPE_INTEGER, 'integer'),
         (ANSWER_TYPE_FLOAT, 'float'),
-        (ANSWER_TYPE_STRING, 'string'),
+        (ANSWER_TYPE_TEXT, 'text'),
+        (ANSWER_TYPE_TEXTBOX, 'textbox'),
     )
     ANSWER_TYPE_CLASSES = {
         ANSWER_TYPE_BOOLEAN: AdjudicatorFeedbackBooleanAnswer,
         ANSWER_TYPE_INTEGER: AdjudicatorFeedbackIntegerAnswer,
         ANSWER_TYPE_FLOAT:   AdjudicatorFeedbackFloatAnswer,
-        ANSWER_TYPE_STRING:  AdjudicatorFeedbackStringAnswer,
+        ANSWER_TYPE_TEXT:    AdjudicatorFeedbackStringAnswer,
+        ANSWER_TYPE_TEXTBOX: AdjudicatorFeedbackStringAnswer,
     }
     answer_type = models.CharField(max_length=1, choices=ANSWER_TYPE_CHOICES)
 

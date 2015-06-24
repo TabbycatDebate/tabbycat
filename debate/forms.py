@@ -611,7 +611,10 @@ class BaseFeedbackForm(forms.Form):
     agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
     comment = forms.CharField(widget=forms.Textarea, required=False)
 
-    def __init__(self, tournament, *args, **kwargs):
+    tournament = NotImplemented      # set at "compile time" by subclasses
+    _use_tournament_password = False # set at "compile time" by subclasses
+
+    def __init__(self, *args, **kwargs):
         # Hack to force question fields to come after source/adjudicator field,
         # basically pop and then reinsert each of the question fields.
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
@@ -619,8 +622,26 @@ class BaseFeedbackForm(forms.Form):
             self.fields[key] = self.fields.pop(key)
         self._create_fields()
 
+    def _make_question_field(self, question):
+        if question.answer_type == question.ANSWER_TYPE_BOOLEAN:
+            field = forms.NullBooleanField(widget=CustomNullBooleanSelect, required=False)
+        elif question.answer_type == question.ANSWER_TYPE_INTEGER:
+            field = forms.IntegerField()
+        elif question.answer_type == question.ANSWER_TYPE_FLOAT:
+            field = forms.FloatField()
+        elif question.answer_type == question.ANSWER_TYPE_TEXT:
+            field = forms.CharField(required=False)
+        elif question.answer_type == question.ANSWER_TYPE_TEXTBOX:
+            field = forms.CharField(widget=forms.Textarea, required=False)
+        field.label = question.text
+        return field
+
     def _create_fields(self):
         """Creates dynamic fields in the form."""
+        # Feedback questions defined for the tournament
+        questions = self.tournament.adjudicatorfeedbackquestion_set.order_by("seq")
+        for question in questions:
+            self.fields[question.reference] = self._make_question_field(question)
 
         # Tournament password field, if applicable
         if self._use_tournament_password and self.tournament.config.get('public_use_password'):
@@ -674,6 +695,7 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields):
     choices = adj_choices + team_choices
 
     class FeedbackForm(BaseFeedbackForm):
+        tournament = adjudicator.tournament # BaseFeedbackForm setting
         source = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
 
         def save(self):
@@ -720,13 +742,9 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
             m.DebateAdjudicator.objects.filter(debate__in=debates).exclude(adjudicator=source).select_related('debate').order_by('-debate__round__seq'))
 
     class FeedbackForm(BaseFeedbackForm):
+        tournament = source.tournament  # BaseFeedbackForm setting
+        _use_tournament_password = True # BaseFeedbackForm setting
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
-
-        def __init__(self, *args, **kwargs):
-            super(FeedbackForm, self).__init__(source.tournament, *args, **kwargs)
-            tournament = source.tournament
-            if tournament.config.get('public_use_password'):
-                    self.fields['password'] = TournamentPasswordField(tournament=tournament)
 
         def save(self):
             """Saves the form and returns the AdjudicatorFeedback object."""
@@ -770,13 +788,9 @@ def make_feedback_form_class_for_public_team(source, submission_fields):
         return m.DebateAdjudicator.objects.get(id=value)
 
     class FeedbackForm(BaseFeedbackForm):
+        tournament = source.tournament  # BaseFeedbackForm setting
+        _use_tournament_password = True # BaseFeedbackForm setting
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
-
-        def __init__(self, *args, **kwargs):
-            super(FeedbackForm, self).__init__(*args, **kwargs)
-            tournament = source.tournament
-            if tournament.config.get('public_use_password'):
-                self.fields['password'] = TournamentPasswordField(tournament=tournament)
 
         def save(self):
             # Saves the form and returns the m.AdjudicatorFeedback object
