@@ -620,6 +620,7 @@ class BaseFeedbackForm(forms.Form):
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
         for key in ['score', 'agree_with_decision', 'comment']:
             self.fields[key] = self.fields.pop(key)
+        self.questions = self.tournament.adjudicatorfeedbackquestion_set.order_by("seq")
         self._create_fields()
 
     def _make_question_field(self, question):
@@ -639,8 +640,7 @@ class BaseFeedbackForm(forms.Form):
     def _create_fields(self):
         """Creates dynamic fields in the form."""
         # Feedback questions defined for the tournament
-        questions = self.tournament.adjudicatorfeedbackquestion_set.order_by("seq")
-        for question in questions:
+        for question in self.questions:
             self.fields[question.reference] = self._make_question_field(question)
 
         # Tournament password field, if applicable
@@ -650,16 +650,16 @@ class BaseFeedbackForm(forms.Form):
     def save_adjudicatorfeedback_questions(self, af):
         """Saves the question fields and returns the AdjudicatorFeedback.
         To be called by save() of child classes."""
-        for question in questions:
-            answer_class = af.ANSWER_TYPE_CLASSES[question.answer_type]
-            answer = answer_class(feedback=af, question=question,
-                    answer=self.cleaned_data[question.reference])
-            answer.save()
-
         af.score = self.cleaned_data['score']
         af.agree_with_decision = self.cleaned_data['agree_with_decision']
         af.comments = self.cleaned_data['comment']
         af.save()
+
+        for question in self.questions:
+            answer_class = question.ANSWER_TYPE_CLASSES[question.answer_type]
+            answer = answer_class(feedback=af, question=question,
+                    answer=self.cleaned_data[question.reference])
+            answer.save()
         return af
 
 
