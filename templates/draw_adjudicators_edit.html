@@ -11,7 +11,7 @@
   <div id="statusBar" class="btn-group">
     <div class="btn btn-default" href="#auto" id="auto_allocate">Auto Allocate</div>
     <div class="btn btn-default" data-loading-text="Saving..." href="" id="save">Save</div>
-    <a class="btn btn-default personal-conflict" href="{% round_url draw %}">Quit</a>
+    <a class="btn btn-default" href="{% round_url draw %}">Quit</a>
   </div>
   <div id="statusBar" class="btn-group">
     <div class="btn btn-default" href="" id="toggle_venues">
@@ -30,13 +30,27 @@
       <span class="glyphicon glyphicon-eye-open"></span> Language
     </div>
   </div>
-  <div id="statusBar" class="btn-group">
+  <div id="conflict_key" class="btn-group">
     <div class="btn btn-default btn-primary">Seen</div>
     <div class="btn btn-default btn-warning">Institution</div>
     <div class="btn btn-default btn-danger">Person</div>
     {% if show_unaccredited %}
     <div class="btn btn-default active is_unaccredited">Unaccredited</div>
     {% endif %}
+  </div>
+  <div id="gender_key" class="btn-group hidden">
+    <div class="btn btn-default">Male</div>
+    <div class="btn btn-default">Female</div>
+  </div>
+  <div id="region_key" class="btn-group hidden">
+    {% for region in regions %}
+    <div class="btn btn-default">{{ region }}</div>
+    <div class="btn btn-default">{{ region }}</div>
+    {% endfor %}
+  </div>
+  <div id="language_key" class="btn-group hidden">
+    <div class="btn btn-default">ESL</div>
+    <div class="btn btn-default">EFL</div>
   </div>
 {% endblock %}
 
@@ -47,7 +61,7 @@
 <div class="row">
 
   <div id="scratch" class="col-xs-2 fixed-right">
-    <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
+    <table id="unusedAdjTable" class="table" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
           <th>Unused Adjudicators <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>
@@ -61,7 +75,7 @@
   <div id="main" class="col-xs-10">
 
     <div id="alerts-holder"></div>
-    <table id="dataTable" class=" table" cellpadding="0" cellspacing="0">
+    <table id="allocationsTable" class=" table" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
           <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
@@ -127,7 +141,6 @@
       </tbody>
     </table>
   </div>
-
 </div>
 
 

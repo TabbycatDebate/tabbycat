@@ -101,22 +101,22 @@
     height: 50px;
   }
 
-  .venue, .adj, .team {
-
-    &.history-conflict {
-      background-color: $btn-primary-bg;
-    }
-    &.institutional-conflict {
-      background-color: $btn-warning-bg;
-    }
-    &.personal-conflict {
-      background-color: $btn-danger-bg;
-    }
-    &.history-conflict, &.personal-conflict, &.institutional-conflict {
-      span, a, span a {
-        color: #fff;
-        border-bottom: none;
-      }
+  .history-conflict {
+    background-color: $btn-primary-bg;
+  }
+  .institutional-conflict {
+    background-color: $btn-warning-bg;
+  }
+  .personal-conflict {
+    background-color: $btn-danger-bg;
+  }
+  .adjudicator-conflict {
+    background-color: $btn-danger-bg;
+  }
+  .history-conflict, .personal-conflict, .institutional-conflict, .adjudicator-conflict {
+    span, a, span a {
+      color: #fff;
+      border-bottom: none;
     }
   }
 

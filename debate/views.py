@@ -1644,6 +1644,7 @@ def draw_adjudicators_edit(request, round):
     draw = round.get_draw()
     adj0 = Adjudicator.objects.first()
     duplicate_adjs = round.tournament.config.get('duplicate_adjs')
+    regions = Region.objects.filter(tournament=round.tournament)
 
     def calculate_prior_adj_genders(team):
         debates = team.get_debates(round.seq)
@@ -1752,6 +1753,7 @@ def adj_conflicts(request, round):
         'personal': {},
         'history': {},
         'institutional': {},
+        'adjudicator': {},
     }
 
     def add(type, adj_id, target_id):
@@ -1765,6 +1767,9 @@ def adj_conflicts(request, round):
     for ic in AdjudicatorInstitutionConflict.objects.all():
         for team in Team.objects.filter(institution=ic.institution):
             add('institutional', ic.adjudicator_id, team.id)
+
+    for ac in AdjudicatorAdjudicatorConflict.objects.all():
+        add('adjudicator', ac.adjudicator_id, ac.conflict_adjudicator.id)
 
     history = DebateAdjudicator.objects.filter(
         debate__round__seq__lt = round.seq,
