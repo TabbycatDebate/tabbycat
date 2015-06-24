@@ -604,91 +604,58 @@ class DebateResultFormSet(object):
 # Feedback forms
 # ==============================================================================
 
-def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, released_only=False):
+def make_feedback_form_class_for_tabroom(adjudicator, submission_fields):
     """adjudicator is an Adjudicator.
     submission_fields is a dict of fields for Submission.
     released_only is a boolean."""
 
-    if released_only:
-        das = m.DebateAdjudicator.objects.filter(adjudicator = adjudicator,
-            debate__round__draw_status = m.Round.STATUS_RELEASED)
-    else:
-        das = m.DebateAdjudicator.objects.filter(adjudicator = adjudicator)
-
-    debates = [da.debate for da in das]
-
     def adj_choice(da):
         return (
             'A:%d' % da.id,
-            '%s (R%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
-                           da.get_type_display())
+            '%s (R%d, %s)' % (da.adjudicator.name, da.debate.round.seq, da.get_type_display())
         )
-
-    adj_choices = [(None, '-- Adjudicators --')]
-    adj_choices.extend ([
-        adj_choice(da) for da in m.DebateAdjudicator.objects.filter(
-            debate__id__in = [d.id for d in debates]
-        ).select_related('debate') if da.adjudicator != adjudicator
-    ])
-
-    # Get rid of the heading if there aren't any adjudicators
-    if len(adj_choices) == 1: adj_choices = []
-
     def team_choice(dt):
         return (
             'T:%d' % dt.id,
             '%s (%d)' % (dt.team.short_name, dt.debate.round.seq)
         )
-
-    team_choices = [(None, '-- Teams --')]
-    team_choices.extend([
-        team_choice(dt) for dt in m.DebateTeam.objects.filter(
-            debate__id__in = [d.id for d in debates]
-        ).select_related('debate')
-    ])
-
-    choices = adj_choices + team_choices
-
     def coerce_source(value):
         obj_type, id = value.split(':')
         id = int(id)
-
         if obj_type.strip() == 'A':
             return m.DebateAdjudicator.objects.get(id=id)
         if obj_type.strip() == 'T':
             return m.DebateTeam.objects.get(id=id)
 
+    das = m.DebateAdjudicator.objects.filter(adjudicator = adjudicator)
+    debates = [da.debate for da in das]
+
+    adj_choices = [(None, '-- Adjudicators --')]
+    adj_choices.extend(adj_choice(da) for da in
+            m.DebateAdjudicator.objects.filter(debate__in=debates).exclude(adjudicator=adjudicator).select_related('debate'))
+
+    # Get rid of the heading if there aren't any adjudicators
+    if len(adj_choices) == 1: adj_choices = []
+
+    team_choices = [(None, '-- Teams --')]
+    team_choices.extend(team_choice(dt) for dt in
+            m.DebateTeam.objects.filter(debate__in = debates).select_related('debate'))
+
+    choices = adj_choices + team_choices
+
     tournament = adjudicator.tournament
 
     class FeedbackForm(forms.Form):
-        source = RequiredTypedChoiceField(
-            choices = choices,
-            coerce = coerce_source,
-        )
-
-        score = forms.FloatField(
-            min_value = 1,
-            max_value = 5,
-        )
-
+        source = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
+        score = forms.FloatField(min_value=1, max_value=5)
         agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
-
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def save(self):
-            # Saves the form and returns the AdjudicatorFeedback object
-
+            """Saves the form and returns the AdjudicatorFeedback object"""
             source = self.cleaned_data['source']
-            # source = coerce(source) # Bug in Django 1.6.5
-
-            if isinstance(source, m.DebateAdjudicator):
-                sa = source
-            else:
-                sa = None
-            if isinstance(source, m.DebateTeam):
-                st = source
-            else:
-                st = None
+            sa = source if isinstance(source, m.DebateAdjudicator) else None
+            st = source if isinstance(source, m.DebateTeam) else None
 
             # Discard existing feedbacks
             for fb in m.AdjudicatorFeedback.objects.filter(adjudicator=adjudicator,
@@ -704,63 +671,38 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
                 confirmed         =True, # assume confirmed on every submission
                 **submission_fields
             )
-
             af.score = self.cleaned_data['score']
             af.agree_with_decision = self.cleaned_data['agree_with_decision']
             af.comments = self.cleaned_data['comment']
-
             af.save()
-
             return af
 
     return FeedbackForm
 
 def make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=True):
 
-    kwargs = dict()
-    kwargs['debate__round__draw_status'] = m.Round.STATUS_RELEASED
-
-    def adj_choice(da):
-        return (
-            da.id,
-            '%s (R%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
-                           da.get_type_display())
-        )
-    choices = [(None, '-- Adjudicators --')]
-
-    if not include_panellists:
-        # Include only debates for which this adj was the chair.
+    kwargs = dict(debate__round__draw_status=m.Round.STATUS_RELEASED)
+    if not include_panellists: # include only debates for which this adj was the chair
         kwargs['type'] = m.DebateAdjudicator.TYPE_CHAIR
 
-    debates = [da.debate for da in m.DebateAdjudicator.objects.filter(
-        adjudicator=source, **kwargs).select_related('debate')]
-
-    # For an adjudicator, find every adjudicator on their panel except them.
-    choices.extend([
-        adj_choice(da) for da in m.DebateAdjudicator.objects.filter(
-            debate__id__in = [d.id for d in debates]
-        ).select_related('debate').order_by('-debate__round') if da.adjudicator != source
-    ])
-
+    def adj_choice(da):
+        return (da.id, '%s (R%d, %s)' % (da.adjudicator.name,
+                da.debate.round.seq, da.get_type_display()))
     def coerce_source(value):
-        value = int(value)
-        return m.DebateAdjudicator.objects.get(id=value)
+        return m.DebateAdjudicator.objects.get(id=int(value))
+
+    choices = [(None, '-- Adjudicators --')]
+    debates = [da.debate for da in m.DebateAdjudicator.objects.filter(
+            adjudicator=source, **kwargs).select_related('debate')]
+    choices.extend(adj_choice(da) for da in     # for an adjudicator, find every adjudicator on their panel except them.
+            m.DebateAdjudicator.objects.filter(debate__in=debates).exclude(adjudicator=source).select_related('debate').order_by('-debate__round'))
 
     tournament = source.tournament
 
     class FeedbackForm(forms.Form):
-        debate_adjudicator = RequiredTypedChoiceField(
-            choices = choices,
-            coerce = coerce_source,
-        )
-
-        score = forms.FloatField(
-            min_value = 1,
-            max_value = 5,
-        )
-
+        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
+        score = forms.FloatField(min_value=1, max_value=5)
         agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
-
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def __init__(self, *args, **kwargs):
@@ -769,25 +711,19 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
                 self.fields['password'] = TournamentPasswordField(tournament=tournament)
 
         def save(self):
-            # Saves the form and returns the AdjudicatorFeedback object
-
+            """ Saves the form and returns the AdjudicatorFeedback object"""
             da = self.cleaned_data['debate_adjudicator']
-
             sa = m.DebateAdjudicator.objects.get(adjudicator=source, debate=da.debate)
-
             af = m.AdjudicatorFeedback(
                 adjudicator       =da.adjudicator,
                 source_adjudicator=sa,
                 source_team       =None,
                 **submission_fields
             )
-
             af.score = self.cleaned_data['score']
             af.agree_with_decision = self.cleaned_data['agree_with_decision']
             af.comments = self.cleaned_data['comment']
-
             af.save()
-
             return af
 
     return FeedbackForm
@@ -801,8 +737,8 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
 
     # Only include non-silent rounds for teams.
     debates = [dt.debate for dt in m.DebateTeam.objects.filter(
-        team=source, debate__round__silent=False,
-        debate__round__draw_status=m.Round.STATUS_RELEASED).select_related('debate').order_by('-debate__round__seq')]
+            team=source, debate__round__silent=False,
+            debate__round__draw_status=m.Round.STATUS_RELEASED).select_related('debate').order_by('-debate__round__seq')]
 
     for debate in debates:
         try:
@@ -827,18 +763,9 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
     tournament = source.tournament
 
     class FeedbackForm(forms.Form):
-        debate_adjudicator = RequiredTypedChoiceField(
-            choices = choices,
-            coerce = coerce_source,
-        )
-
-        score = forms.FloatField(
-            min_value = 1,
-            max_value = 5,
-        )
-
+        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
+        score = forms.FloatField(min_value=1, max_value=5)
         agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
-
         comment = forms.CharField(widget=forms.Textarea, required=False)
 
         def __init__(self, *args, **kwargs):
@@ -848,24 +775,18 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
 
         def save(self):
             # Saves the form and returns the m.AdjudicatorFeedback object
-
             da = self.cleaned_data['debate_adjudicator']
-
             st = m.DebateTeam.objects.get(team=source, debate=da.debate)
-
             af = m.AdjudicatorFeedback(
                 adjudicator       =da.adjudicator,
                 source_adjudicator=None,
                 source_team       =st,
                 **submission_fields
             )
-
             af.score = self.cleaned_data['score']
             af.agree_with_decision = self.cleaned_data['agree_with_decision']
             af.comments = self.cleaned_data['comment']
-
             af.save()
-
             return af
 
     return FeedbackForm
