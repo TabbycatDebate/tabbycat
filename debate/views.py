@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib import messages
 from django.db.models import Sum, Count
@@ -1870,7 +1870,9 @@ def adj_feedback(request, t):
                 adj.avg_score = None
                 adj.avg_margin = None
 
-    return r2r(request, template, dict(adjudicators=adjudicators, breaking_count=breaking_count))
+    feedback_headings = [q.name for q in t.adj_feedback_questions]
+
+    return r2r(request, template, dict(adjudicators=adjudicators, breaking_count=breaking_count, feedback_headings=feedback_headings))
 
 
 @login_required
@@ -1879,18 +1881,27 @@ def get_adj_feedback(request, t):
 
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback()
-    data = [ [
-              unicode(f.round.abbreviation),
-              unicode(str(f.version) + (f.confirmed and "*" or "")),
-              f.debate.bracket,
-              f.debate.matchup,
-              unicode(f.source),
-              f.score,
-              {None: "Unsure", True: "Yes", False: "No"}[f.agree_with_decision],
-              f.comments,
-              f.confirmed,
-             ] for f in feedback ]
-
+    questions = t.adj_feedback_questions
+    BOOLEAN_VALUES = {None: "Unsure", True: "Yes", False: "No"}
+    def _parse_feedback(f):
+        data = [
+            unicode(f.round.abbreviation),
+            unicode(str(f.version) + (f.confirmed and "*" or "")),
+            f.debate.bracket,
+            f.debate.matchup,
+            unicode(f.source),
+            f.score,
+            BOOLEAN_VALUES[f.agree_with_decision],
+            f.comments
+        ]
+        for question in questions:
+            try:
+                data.append(question.answer_set.get(feedback=f).answer)
+            except ObjectDoesNotExist:
+                data.append("-")
+        data.append(f.confirmed)
+        return data
+    data = [_parse_feedback(f) for f in feedback]
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
 

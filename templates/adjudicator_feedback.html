@@ -120,6 +120,9 @@
             <th>Score</th>
             <th>Agree</th>
             <th>Comments</th>
+            {% for heading in feedback_headings %}
+               <th>{{ heading }}</th>
+            {% endfor %}
             <th><span class="glyphicon glyphicon-saved" data-toggle="tooltip" title="Confirmed"></span></th>
           </thead>
           <tbody>

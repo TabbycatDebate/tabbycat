@@ -122,6 +122,9 @@ class Tournament(models.Model):
             self._config = Config(self)
         return self._config
 
+    @cached_property
+    def adj_feedback_questions(self):
+        return self.adjudicatorfeedbackquestion_set.order_by("seq")
 
     class Meta:
         ordering = ['seq',]
@@ -773,10 +776,7 @@ class Adjudicator(Person):
         return r
 
     def _feedback_score(self):
-        return AdjudicatorFeedback.objects.filter(
-            adjudicator = self,
-            confirmed = True
-        ).aggregate(avg=models.Avg('score'))['avg']
+        return self.adjudicatorfeedback_set.filter(confirmed=True).aggregate(avg=models.Avg('score'))['avg']
 
     @property
     def feedback_score(self):
@@ -784,7 +784,11 @@ class Adjudicator(Person):
 
 
     def get_feedback(self):
-        return AdjudicatorFeedback.objects.filter(adjudicator=self)
+        return self.adjudicatorfeedback_set.all()
+
+        # .select_related(
+        #     'adjudicatorfeedbackfloatanswer', 'adjudicatorfeedbackstringanswer',
+        #     'adjudicatorfeedbackintegeranswer', 'adjudicatorfeedbackbooleananswer')
 
     def seen_team(self, team, before_round=None):
         if not hasattr(self, '_seen_cache'):
@@ -1718,8 +1722,11 @@ class AdjudicatorFeedbackQuestion(models.Model):
 
     @property
     def answer_set(self):
-        return self.ANSWER_TYPE_CLASSES[self.answer_type].objects.filter(question=self)
+        return self.answer_type_class.objects.filter(question=self)
 
+    @property
+    def answer_type_class(self):
+        return self.ANSWER_TYPE_CLASSES[self.answer_type]
 
 class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)

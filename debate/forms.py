@@ -620,10 +620,10 @@ class BaseFeedbackForm(forms.Form):
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
         for key in ['score', 'agree_with_decision', 'comment']:
             self.fields[key] = self.fields.pop(key)
-        self.questions = self.tournament.adjudicatorfeedbackquestion_set.order_by("seq")
         self._create_fields()
 
-    def _make_question_field(self, question):
+    @staticmethod
+    def _make_question_field(question):
         if question.answer_type == question.ANSWER_TYPE_BOOLEAN:
             field = forms.NullBooleanField(widget=CustomNullBooleanSelect, required=False)
         elif question.answer_type == question.ANSWER_TYPE_INTEGER:
@@ -643,7 +643,7 @@ class BaseFeedbackForm(forms.Form):
     def _create_fields(self):
         """Creates dynamic fields in the form."""
         # Feedback questions defined for the tournament
-        for question in self.questions:
+        for question in self.tournament.adj_feedback_questions:
             self.fields[question.reference] = self._make_question_field(question)
 
         # Tournament password field, if applicable
@@ -658,9 +658,8 @@ class BaseFeedbackForm(forms.Form):
         af.comments = self.cleaned_data['comment']
         af.save()
 
-        for question in self.questions:
-            answer_class = question.ANSWER_TYPE_CLASSES[question.answer_type]
-            answer = answer_class(feedback=af, question=question,
+        for question in self.tournament.adj_feedback_questions:
+            answer = question.answer_type_class(feedback=af, question=question,
                     answer=self.cleaned_data[question.reference])
             answer.save()
         return af
