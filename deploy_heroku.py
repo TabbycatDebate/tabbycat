@@ -16,7 +16,10 @@ parser.add_argument("--no-init-db", action="store_false", default=True, dest="in
     help="Don't run initial migrations on the database")
 parser.add_argument("--import-tournament", type=str, metavar="IMPORT_DIR",
     help="Also run the import_tournament command, importing from IMPORT_DIR")
-parser.add_argument("--git-remote", type=str, help="Name of Git remote to use", default=None)
+parser.add_argument("--git-remote", type=str, default=None,
+    help="Name of Git remote to use")
+parser.add_argument("--git-branch", type=str, default=None,
+    help="Git branch to push (default master)")
 
 config_group = parser.add_argument_group("heroku configuration settings")
 config_group.add_argument("--public-cache-timeout", type=int, default=None, metavar="TIMEOUT",
@@ -103,7 +106,8 @@ else:
     remote_name = heroku_url
 
 # Push source code to Heroku
-run_command(["git", "push", remote_name, "master"])
+git_branch = args.git_branch + ":master" if args.git_branch else "master"
+run_command(["git", "push", remote_name, git_branch])
 
 if args.init_db:
     # Perform initial migrations
