@@ -1706,6 +1706,9 @@ class AdjudicatorFeedbackQuestion(models.Model):
         ANSWER_TYPE_TEXTBOX: AdjudicatorFeedbackStringAnswer,
     }
     answer_type = models.CharField(max_length=1, choices=ANSWER_TYPE_CHOICES)
+    required = models.BooleanField(default=True, help_text="Whether participants are required to fill out this field")
+    min_value = models.FloatField(blank=True, null=True, help_text="Minimum allowed value for numeric fields (ignored for text or boolean fields)")
+    max_value = models.FloatField(blank=True, null=True, help_text="Maximum allowed value for numeric fields (ignored for text or boolean fields)")
 
     class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]

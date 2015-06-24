@@ -627,14 +627,17 @@ class BaseFeedbackForm(forms.Form):
         if question.answer_type == question.ANSWER_TYPE_BOOLEAN:
             field = forms.NullBooleanField(widget=CustomNullBooleanSelect, required=False)
         elif question.answer_type == question.ANSWER_TYPE_INTEGER:
-            field = forms.IntegerField()
+            field = forms.IntegerField(min_value=int(question.min_value),
+                    max_value=int(question.max_value))
         elif question.answer_type == question.ANSWER_TYPE_FLOAT:
-            field = forms.FloatField()
+            field = forms.FloatField(min_value=question.min_value,
+                    max_value=question.max_value)
         elif question.answer_type == question.ANSWER_TYPE_TEXT:
-            field = forms.CharField(required=False)
+            field = forms.CharField()
         elif question.answer_type == question.ANSWER_TYPE_TEXTBOX:
-            field = forms.CharField(widget=forms.Textarea, required=False)
+            field = forms.CharField(widget=forms.Textarea)
         field.label = question.text
+        field.required = question.required
         return field
 
     def _create_fields(self):
