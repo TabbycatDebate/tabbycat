@@ -675,6 +675,7 @@ class Person(models.Model):
         (GENDER_OTHER,    'Other'),
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES,blank=True, null=True)
+    pronoun = models.CharField(max_length=10, blank=True, null=True)
 
     @property
     def has_contact(self):

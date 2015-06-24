@@ -14,11 +14,14 @@
     <span class="badge h3 no-vertical-spacing pull-right">Room {{ debate.venue_splitname }}</span>
   </div>
   <p class="small text-muted">
-    {% if debate.adjudicators.count > 0 %}
-      Panel was {% for type, adj in debate.adjudicators %}{% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}{{ adj.name }}{% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}{% endfor %}
-    {% else %}
-      {{ debate.adjudicators }} was the sole adjudicator
-    {% endif %}
+    {% if debate.adjudicators.list|length > 1 %}The panel was {% endif %}
+    {% for type, adj in debate.adjudicators %}
+      {% if debate.adjudicators.list|length > 1 and forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}
+      {{ adj.name }}
+      {% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}
+      {% if adj.pronoun %} ({{ adj.pronoun }}){% endif %}
+    {% endfor %}
+    {% if debate.adjudicators.list|length == 1 %} was the sole adjudicator{% endif %}
   </p>
   <br>
 
