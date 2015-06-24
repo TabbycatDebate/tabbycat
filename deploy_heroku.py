@@ -6,15 +6,36 @@ import re
 import sys
 import platform
 
+# Arguments
 parser = argparse.ArgumentParser(description="Deploy Tabbycat to a new Heroku app.")
-parser.add_argument("urlname", type=str, help="Name of the Heroku app. The app will be at urlname.herokuapp.com. Use '-' to use a Heroku-generated default.")
-parser.add_argument("--public-cache-timeout", type=int, default=None, help="Set the public page cache timeout to TIMEOUT", metavar="TIMEOUT")
-parser.add_argument("--tab-cache-timeout", type=int, default=None, help="Set the tab page cache timeout to TIMEOUT", metavar="TIMEOUT")
-parser.add_argument("--enable-debug", action="store_true", default=False, help="Enable Django debug pages")
-parser.add_argument("--no-open", action="store_false", default=True, dest="open", help="Don't open the Heroku website in your browser at the end")
-parser.add_argument("--no-init-db", action="store_false", default=True, dest="init_db", help="Don't run initial migrations on the database")
-parser.add_argument("--import-tournament", type=str, help="Also run the import_tournament command, importing from IMPORT_DIR", metavar="IMPORT_DIR")
+parser.add_argument("urlname", type=str,
+    help="Name of the Heroku app. The app will be at urlname.herokuapp.com. Use '-' to use a Heroku-generated default.")
+parser.add_argument("--no-open", action="store_false", default=True, dest="open",
+    help="Don't open the Heroku website in your browser at the end")
+parser.add_argument("--no-init-db", action="store_false", default=True, dest="init_db",
+    help="Don't run initial migrations on the database")
+parser.add_argument("--import-tournament", type=str, metavar="IMPORT_DIR",
+    help="Also run the import_tournament command, importing from IMPORT_DIR")
 parser.add_argument("--git-remote", type=str, help="Name of Git remote to use", default=None)
+
+config_group = parser.add_argument_group("heroku configuration settings")
+config_group.add_argument("--public-cache-timeout", type=int, default=None, metavar="TIMEOUT",
+    help="Set the public page cache timeout to TIMEOUT")
+config_group.add_argument("--tab-cache-timeout", type=int, default=None, metavar="TIMEOUT",
+    help="Set the tab page cache timeout to TIMEOUT")
+config_group.add_argument("--enable-debug", action="store_true", default=False,
+    help="Enable Django debug pages")
+
+# Import tournament arguments are copied from import_tournament.py, and should be
+# updated when these options in import_tournament.py change.
+import_tournament_group = parser.add_argument_group("import tournament options")
+import_tournament_group.add_argument('-s', '--slug', type=str, action='store', default=None, dest="tournament_slug",
+    help='Override tournament slug. (Default: use name of directory.)'),
+import_tournament_group.add_argument('--name', type=str, action='store', default=None, dest="tournament_name",
+    help='Override tournament name. (Default: use name of directory.)'),
+import_tournament_group.add_argument('--short-name', type=str, action='store', default=None, dest="tournament_short_name",
+    help='Override tournament short name. (Default: use name of directory.)'),
+
 args = parser.parse_args()
 
 if platform.system() == "Windows":
@@ -23,6 +44,8 @@ if platform.system() == "Windows":
 else:
     subprocess_kwargs = dict()
     use_color = True
+
+# Helper functions
 
 def print_command(command):
     message = " $ " + " ".join(command)
@@ -83,6 +106,7 @@ else:
 run_command(["git", "push", remote_name, "master"])
 
 if args.init_db:
+    # Perform initial migrations
     run_heroku_command(["run", "python", "manage.py", "migrate", "auth"])
     run_heroku_command(["run", "python", "manage.py", "migrate"])
     run_heroku_command(["run", "python", "manage.py", "makemigrations", "debate"])
@@ -92,11 +116,20 @@ if args.init_db:
     print_yellow("You'll need to respond to the prompts:")
     run_heroku_command(["run", "python", "manage.py", "createsuperuser"])
 
-if args.import_tournament:
-    if args.init_db:
-        run_heroku_command(["run", "python", "manage.py", "import_tournament", args.import_tournament])
-    else:
-        print_yellow("Warning: You can't use --import-tournament when --no-init-db is used.")
+    # Import tournament, if provided
+    if args.import_tournament:
+        command = ["run", "python", "manage.py", "import_tournament", args.import_tournament]
+        if args.tournament_slug:
+            command += ["--slug", args.tournament_slug]
+        if args.tournament_name:
+            command += ["--name", "\"" + args.tournament_name + "\""]
+        if args.tournament_short_name:
+            command += ["--short-name", "\"" + args.tournament_short_name + "\""]
+        run_heroku_command(command)
 
-if args.open:
-    run_heroku_command(["open"])
+    # Open in browser
+    if args.open:
+        run_heroku_command(["open"])
+
+elif args.import_tournament:
+    print_yellow("Warning: You can't use --import-tournament when --no-init-db is used.")
