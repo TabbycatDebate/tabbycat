@@ -1838,7 +1838,6 @@ def adj_scores(request, t):
 
     return HttpResponse(json.dumps(data), content_type="text/json")
 
-
 @login_required
 @tournament_view
 def adj_feedback(request, t):
@@ -1894,6 +1893,29 @@ def adj_feedback(request, t):
 
     return r2r(request, template, dict(adjudicators=adjudicators, breaking_count=breaking_count, feedback_headings=feedback_headings))
 
+@login_required
+@tournament_view
+def adj_latest_feedback(request, t):
+    questions = t.adj_feedback_questions
+    feedbacks = AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
+        'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+
+    score_step = t.config.get('adj_max_score')  / 10
+    low_score = t.config.get('adj_min_score') + score_step
+    medium_score = low_score + score_step
+    high_score = t.config.get('adj_max_score') - score_step
+
+    for feedback in list(feedbacks):
+        feedback.items = []
+        for question in questions:
+            try:
+                qa_set = { "question" : question,
+                           "answer"   : question.answer_set.get(feedback=feedback).answer}
+                feedback.items.append(qa_set)
+            except ObjectDoesNotExist:
+                pass
+
+    return r2r(request, "adjudicator_latest_feedback.html", dict(feedbacks=feedbacks, low_score=low_score, medium_score=medium_score, high_score=high_score))
 
 @login_required
 @tournament_view

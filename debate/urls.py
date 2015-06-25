@@ -128,6 +128,7 @@ urlpatterns = patterns('debate.views',
 
     url(r'^admin/adjudicators/scores/$', 'adj_scores', name='adj_scores'),
     url(r'^admin/adjudicators/feedback/$', 'adj_feedback', name='adj_feedback'),
+    url(r'^admin/adjudicators/feedback_latest/$', 'adj_latest_feedback', name='adj_latest_feedback'),
     url(r'^admin/adjudicators/feedback/get/$', 'get_adj_feedback', name='get_adj_feedback'),
     url(r'^admin/adjudicators/feedback/(?P<adj_id>\d+)/$', 'enter_feedback', name='enter_feedback'),
     url(r'^admin/adjudicators/scores/test/set/$', 'set_adj_test_score', name='set_adj_test_score'),

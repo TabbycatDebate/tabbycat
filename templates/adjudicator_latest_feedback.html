@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Latest Feedback{% endblock %}
+{% block page-title %}Latest Feedback{% endblock %}
+{% block page-header %}{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+  {% for feedback in feedbacks %}
+
+    <div class="col-md-4">
+    <ul class="list-group">
+      <li class="list-group-item
+        {% if feedback.score <= low_score %}list-group-item-danger
+        {% elif feedback.score <= medium_score %}list-group-item-warning
+        {% elif feedback.score > high_score %}list-group-item-success
+        {% endif %}">
+          <span class="badge">{{ feedback.score }}</span>
+          <span class="h5">{{ feedback.adjudicator }}</span>
+      </li>
+      {% for item in feedback.items %}
+        <li class="list-group-item">
+          <small><strong>{{ item.question.text }}</strong></small>
+          <span class="text-right">{{ item.answer }}</span>
+        </li>
+      {% endfor %}
+      <li class="list-group-item panel-footer">
+        <em><small>{% if feedback.source_adjudicator %}
+          submitted by {{ feedback.source_adjudicator.adjudicator }},
+        {% else %}
+          submitted by <strong>{{ feedback.source_team.team.long_name }}</strong>,
+        {% endif %}
+        {{ feedback.timestamp|timesince }} ago</small></em>
+      </li>
+    </ul>
+    </div>
+
+    {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+
+  {% endfor %}
+  </div>
+
+{% endblock content %}
+
+{% block extra-js %}
+
+{% endblock extra-js %}
