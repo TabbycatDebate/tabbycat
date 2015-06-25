@@ -1,12 +1,10 @@
 from functools import wraps
-
-def pair_list(ls):
-    half = len(ls)/2
-    return zip(ls[:half], ls[half:])
+import string, random
+from django.db import IntegrityError
+import logging
+logger = logging.getLogger(__name__)
 
 def gen_results():
-    import random
-
     r = {'aff': (0,), 'neg': (0,)}
 
     def do():
@@ -20,46 +18,6 @@ def gen_results():
 
     return r
 
-def generate_random_results(round):
-    # WARNING: This function has probably been broken by the transition to
-    # using BallotSubmissions.  See data/utils/add_ballot_set.py for a new
-    # example.
-    from debate.models import Debate, DebateResult
-
-    debates = Debate.objects.filter(round=round)
-
-    for debate in debates:
-        dr = DebateResult(debate)
-
-        rr = gen_results()
-        for side in ('aff', 'neg'):
-            speakers = getattr(debate, '%s_team' % side).speakers
-            scores = rr[side]
-            for i in range(1, 4):
-                dr.set_speaker(
-                    side = side,
-                    pos = i,
-                    speaker = speakers[i - 1],
-                )
-            dr.set_speaker(
-                side = side,
-                pos = 4,
-                speaker = speakers[0]
-            )
-
-            for adj in debate.adjudicators.list:
-                for pos in range(1, 5):
-                    dr.set_score(adj, side, pos, scores[pos-1])
-
-        dr.save()
-        debate.result_status = debate.STATUS_CONFIRMED
-        debate.save()
-
-
-def test_gen():
-    from debate.models import Round
-    generate_random_results(Round.objects.get(pk=1))
-
 def make_dummy_speakers():
     from debate import models as m
     t = m.Tournament.objects.get(pk=1)
@@ -69,4 +27,24 @@ def make_dummy_speakers():
         for i in range(1, 4):
             m.Speaker(name='%s %d' % (team, i), team=team).save()
 
+def generate_url_hash(length=8):
+    """Generates a URL hash."""
+    chars = string.ascii_lowercase + string.ascii_uppercase + string.digits
+    return ''.join(random.SystemRandom().choice(chars) for _ in range(length))
 
+def populate_url_hashes(queryset, length=8):
+    """Populates the URL hash field for every instance in the given QuerySet."""
+    NUM_ATTEMPTS = 10
+    for instance in queryset:
+        for i in range(NUM_ATTEMPTS):
+            instance.url_hash = generate_url_hash(length)
+            try:
+                instance.save()
+            except IntegrityError:
+                logger.warning("URL hash was not unique, trying again (%d of %d", i, NUM_ATTEMPTS)
+                continue
+            else:
+                break
+        else:
+            logger.error("Could not generate unique URL for %r after %d tries", instance, NUM_ATTEMPTS)
+            return

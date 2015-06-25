@@ -3,7 +3,7 @@
 {% load add_field_css %}
 {% load humanize %}
 
-{% block head-title %}Enter Results for {{ debate.matchup }} <small>Round {{ debate.round }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group}} {% endif %}{{ debate.venue.name }}</small>{% endblock %}
+{% block head-title %}Enter Results for {{ debate.matchup }} <small>{{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group}} {% endif %}{{ debate.venue.name }}</small>{% endblock %}
 {% block page-title %}Enter Results for {{ debate.matchup }}{% endblock %}
 {% block body-class %}public-enter-result{% endblock %}
 

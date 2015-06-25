@@ -8,7 +8,6 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist, Multiple
 from django.core.cache import cache
 
 from django.utils.functional import cached_property
-from debate.utils import pair_list
 from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
 from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
@@ -501,6 +500,7 @@ class Division(models.Model):
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
 
+
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Full name or suffix", help_text="Do not include institution name (see \"uses institutional prefix\" below)")
     short_reference = models.CharField(max_length=35, verbose_name="Short name/suffix", help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
@@ -509,6 +509,7 @@ class Team(models.Model):
     emoji_seq = models.IntegerField(blank=True, null=True, help_text="Emoji number to use for this team")
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
+    url_hash = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
     # set to True if a team is ineligible to break (other than being
     # swing/composite)
@@ -520,7 +521,7 @@ class Team(models.Model):
     venue_preferences = models.ManyToManyField(VenueGroup,
         through = 'TeamVenuePreference',
         related_name = 'VenueGroup',
-        verbose_name = 'Venue Group Preference'
+        verbose_name = 'Venue group preference'
     )
 
     TYPE_NONE = 'N'
@@ -633,7 +634,6 @@ class Team(models.Model):
             cache.set(cached_key, cached_value, None)
             return cached_value
 
-
 def update_team_cache(sender, instance, created, **kwargs):
     cached_key = "%s_%s_%s" % ('teamid', instance.id, '_institution__object')
     cache.delete(cached_key)
@@ -712,6 +712,7 @@ class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament, blank=True, null=True)
     test_score = models.FloatField(default=0)
+    url_hash = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
     institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adjudicator_institution_conflicts')
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
@@ -1793,11 +1794,8 @@ class AdjudicatorAllocation(object):
             yield DebateAdjudicator.TYPE_TRAINEE, a
 
     def delete(self):
-        """
-        Delete existing, current allocation
-        """
-
-        DebateAdjudicator.objects.filter(debate=self.debate).delete()
+        """Delete existing, current allocation"""
+        self.debate.debateadjudicator_set.all().delete()
         self.chair = None
         self.panel = []
         self.trainees = []
@@ -1815,16 +1813,12 @@ class AdjudicatorAllocation(object):
         return self.has_chair and len(self.panel) % 2 == 0
 
     def save(self):
-        DebateAdjudicator.objects.filter(debate=self.debate).delete()
+        self.debate.debateadjudicator_set.all().delete()
         for t, adj in self:
             if isinstance(adj, Adjudicator):
                 adj = adj.id
             if adj:
-                DebateAdjudicator(
-                    debate = self.debate,
-                    adjudicator_id = adj,
-                    type = t,
-                ).save()
+                DebateAdjudicator(debate=self.debate, adjudicator_id=adj, type=t).save()
 
 
 class BallotSubmission(Submission):
