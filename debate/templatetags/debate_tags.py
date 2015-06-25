@@ -57,12 +57,12 @@ register.simple_tag(team_emoji)
 def team_status_classes(team):
     classes = ""
     if team.region is not None:
-        region_stripped = team.region.name.replace(' ', '_')
+        region_stripped = team.region.name.replace(' ', '_').lower()
         classes += "region-%s" % region_stripped
     if team.esl:
-        classes += " language-esl"
+        classes += " esl"
     if team.efl:
-        classes += " language-efl"
+        classes += " efl"
     return classes
 register.simple_tag(team_status_classes)
 

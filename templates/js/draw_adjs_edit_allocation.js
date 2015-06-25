@@ -125,7 +125,6 @@ function eachConflictingTeam(adj_id, fn) {
 }
 
 function display_conflicts(target) {
-  console.log('display');
   if (draggingCurrently === false) {
     eachConflictingTeam(DOMIdtoInt(target),
       function (type, elem) {
@@ -360,7 +359,18 @@ $("#allocationsTable .adj-holder").droppable( {
 // ALLOCATION MANIPULATION FUNCTIONS
 
 function _make_adj(data) {
-  var adj = $('<div></div>').addClass('adj btn btn-block').attr('id', 'adj_' + data.id).append($('<span></span> ').html(data.name))
+  var gender_class = ""
+  if (data["gender"] == "M") {
+    gender_class = "male";
+  } else if (data["gender"] == "F") {
+    gender_class = "female";
+  }
+  var adj = $('<div></div>')
+    .addClass('adj btn btn-block')
+    .addClass(gender_class)
+    .addClass(data["region"])
+    .attr('id', 'adj_' + data.id)
+    .append($('<span></span> ').html(data.name));
   init_adj(adj);
   return adj;
 }

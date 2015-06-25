@@ -38,19 +38,18 @@
     <div class="btn btn-default active is_unaccredited">Unaccredited</div>
     {% endif %}
   </div>
-  <div id="gender_key" class="btn-group hidden">
-    <div class="btn btn-default">Male</div>
-    <div class="btn btn-default">Female</div>
+  <div id="gender_key" class="btn-group" style="display: none;">
+    <div class="btn btn-default gender-display male">Male</div>
+    <div class="btn btn-default gender-display female">Female</div>
   </div>
-  <div id="region_key" class="btn-group hidden">
+  <div id="region_key" class="btn-group" style="display: none;">
     {% for region in regions %}
-    <div class="btn btn-default">{{ region }}</div>
-    <div class="btn btn-default">{{ region }}</div>
+      <div class="btn btn-default region-display region-{{ region.name|slugify }}">{{ region.name }}</div>
     {% endfor %}
   </div>
-  <div id="language_key" class="btn-group hidden">
-    <div class="btn btn-default">ESL</div>
-    <div class="btn btn-default">EFL</div>
+  <div id="language_key" class="btn-group" style="display: none;">
+    <div class="btn btn-default language-display esl">ESL</div>
+    <div class="btn btn-default language-display efl">EFL</div>
   </div>
 {% endblock %}
 
@@ -171,6 +170,64 @@
   </div>
   </div>
 </div>
+
+<style style="text/css">
+  {% if regions.0 %}
+    .region-display.region-{{ regions.0.name|slugify }} {
+      background: #B1E001;
+      color: #fff;
+    }
+  {% endif %}
+  {% if regions.1 %}
+    .region-display.region-{{ regions.1.name|slugify }} {
+      background: #476C5E;
+      color: #fff;
+    }
+  {% endif %}
+  {% if regions.2 %}
+    .region-display.region-{{ regions.2.name|slugify }} {
+      background: #777;
+      color: #fff;
+    }
+  {% endif %}
+  {% if regions.3 %}
+    .region-display.region-{{ regions.3.name|slugify }} {
+      background: #FF2983;
+      color: #fff;
+    }
+  {% endif %}
+  {% if regions.4 %}
+    .region-display.region-{{ regions.4.name|slugify }} {
+      background: #6A268C;
+      color: #fff;
+    }
+  {% endif %}
+  {% if regions.5 %}
+    .region-display.region-{{ regions.5.name|slugify }} {
+      background: #00C0CF;
+      color: #fff;
+    }
+  {% endif %}
+  {% if regions.6 %}
+    .region-display.region-{{ regions.6.name|slugify }} {
+      background: #0051CF;
+      color: #fff;
+    }
+  {% endif %}
+  {% if regions.7 %}
+    .region-display.region-{{ regions.7.name|slugify }} {
+      background: black;
+      color: #fff;
+    }
+  {% endif %}
+  {% if regions.8 %}
+    .region-display.region-{{ regions.8.name|slugify }} {
+      background: black;
+      color: #fff;
+    }
+  {% endif %}
+</style>
+
 {% endblock content %}
 
 {% block footer %}{% endblock footer %}

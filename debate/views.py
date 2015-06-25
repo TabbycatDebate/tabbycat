@@ -1644,7 +1644,7 @@ def draw_adjudicators_edit(request, round):
     draw = round.get_draw()
     adj0 = Adjudicator.objects.first()
     duplicate_adjs = round.tournament.config.get('duplicate_adjs')
-    regions = Region.objects.filter(tournament=round.tournament)
+    regions = Region.objects.filter(tournament=round.tournament).order_by('name')
 
     def calculate_prior_adj_genders(team):
         debates = team.get_debates(round.seq)
@@ -1669,18 +1669,26 @@ def draw_adjudicators_edit(request, round):
             debate.gender_class = (aff_male_adj_percent / 5) - 10
 
     return r2r(request, "draw_adjudicators_edit.html", dict(
-        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs))
+        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs, regions=regions))
 
 def _json_adj_allocation(debates, unused_adj):
 
     obj = {}
 
     def _adj(a):
+
+        if a.institution.region:
+            region_name = "region-%s" % a.institution.region.name
+            region_name = region_name.replace(' ', '_').lower()
+        else:
+            region_name = ""
+
         return {
             'id': a.id,
             'name': a.name + " (" + a.institution.short_code + ")",
             'is_unaccredited': a.is_unaccredited,
-            'gender': a.gender
+            'gender': a.gender,
+            'region': region_name
         }
 
     def _debate(d):

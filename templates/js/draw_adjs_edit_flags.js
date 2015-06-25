@@ -23,16 +23,28 @@ $('#toggle_gender').click(function() {
   $(".adj").toggleClass("gender-display");
   $(".gender-highlight").toggleClass("gender-display");
   $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
+
+  $("#conflict_key").toggle();
+  $("#gender_key").toggle();
   return false
 });
 
 $('#toggle_region').click(function() {
   $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
+
+  $(".teaminfo").toggleClass("region-display");
+  $(".adj").toggleClass("region-display");
+  $("#conflict_key").toggle();
+  $("#region_key").toggle();
   return false
 });
 
 $('#toggle_language').click(function() {
   $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
+
+  $(".teaminfo").toggleClass("language-display");
+  $("#conflict_key").toggle();
+  $("#language_key").toggle();
   return false
 });
 

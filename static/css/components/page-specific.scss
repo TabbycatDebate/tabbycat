@@ -125,15 +125,25 @@
     &.gender-display.female span a {
       color: #fff;
     }
-    &.gender-display.male span {
-      background-color: #0000FF;
-      color: #fff;
-    }
-    &.gender-display.female span {
-      background-color: #D600FF;
-      color: #fff;
-    }
   }
+
+  .gender-display.male {
+    background-color: #0000FF;
+    color: #fff;
+  }
+  .gender-display.female {
+    background-color: #D600FF;
+    color: #fff;
+  }
+  .language-display.esl {
+    background-color: #c70062;
+    color: #fff;
+  }
+  .language-display.efl {
+    background-color: #00c79b;
+    color: #fff;
+  }
+
   .venue:hover, .adj:hover, .team:hover,
   .venue.dragging, .adj.dragging, .team.dragging {
     cursor: move;
