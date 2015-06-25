@@ -176,6 +176,9 @@
 <script type="text/javascript" language="javascript" src="{% static 'js/jquery-ui-1.10.4.custom.min.js' %}"></script>
 <script type="text/javascript" language="javascript" src="{% static 'js/jquery.jeditable.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
-{% include 'js/draw_filters_highlights.js' %}
+$(document).ready( function() {
+  {% include 'js/draw_adjs_edit_allocation.js' %}
+  {% include 'js/draw_adjs_edit_flags.js' %}
+});
 </script>
 {% endblock extra-js %}
