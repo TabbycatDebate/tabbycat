@@ -1907,12 +1907,19 @@ def get_adj_feedback(request, t):
     data = [_parse_feedback(f) for f in feedback]
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
+# Don't cache
+@public_optional_tournament_view('public_feedback_hash')
+def public_enter_feedback_adjudicator_by_hash(request, t, url_hash):
+    source = get_object_or_404(Adjudicator, tournament=t, url_hash=url_hash)
+    return public_enter_feedback_adjudicator(request, t, source)
 
 # Don't cache
 @public_optional_tournament_view('public_feedback')
-def public_enter_feedback_adjudicator(request, t, adj_id):
+def public_enter_feedback_adjudicator_by_id(request, t, adj_id):
+    source = get_object_or_404(Adjudicator, tournament=t, id=adj_id)
+    return public_enter_feedback_adjudicator(request, t, source)
 
-    source = get_object_or_404(Adjudicator, id=adj_id)
+def public_enter_feedback_adjudicator(request, t, source):
     include_panellists = request.tournament.config.get('panellist_feedback_enabled') > 0
     ip_address = get_ip_address(request)
     source_name = source.name
@@ -1935,10 +1942,18 @@ def public_enter_feedback_adjudicator(request, t, adj_id):
     return r2r(request, 'public/public_enter_feedback_adj.html', dict(source_name=source_name, form=form))
 
 # Don't cache
-@public_optional_tournament_view('public_feedback')
-def public_enter_feedback_team(request, t, team_id):
+@public_optional_tournament_view('public_feedback_hash')
+def public_enter_feedback_team_by_hash(request, t, url_hash):
+    source = get_object_or_404(Team, tournament=t, url_hash=url_hash)
+    return public_enter_feedback_team(request, t, source)
 
-    source = get_object_or_404(Team, id=team_id)
+# Don't cache
+@public_optional_tournament_view('public_feedback')
+def public_enter_feedback_team_by_id(request, t, team_id):
+    source = get_object_or_404(Team, tournament=t, id=team_id)
+    return public_enter_feedback_team(request, t, source)
+
+def public_enter_feedback_team(request, t, source):
     ip_address = get_ip_address(request)
     source_name = source.short_name
 

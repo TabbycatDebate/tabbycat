@@ -26,8 +26,10 @@ urlpatterns = patterns('debate.views',
 
     url(r'^add_ballot/$', 'public_ballot_submit', name='public_ballot_submit'),
     url(r'^add_ballot/adjudicator/(?P<adj_id>\d+)/$', 'public_new_ballots', name='public_new_ballots'),
-    url(r'^add_feedback/team/(?P<team_id>\d+)/$', 'public_enter_feedback_team', name='public_enter_feedback_team'),
-    url(r'^add_feedback/adjudicator/(?P<adj_id>\d+)/$', 'public_enter_feedback_adjudicator', name='public_enter_feedback_adjudicator'),
+    url(r'^add_feedback/team/(?P<team_id>\d+)/$', 'public_enter_feedback_team_by_id', name='public_enter_feedback_team_by_id'),
+    url(r'^add_feedback/adjudicator/(?P<adj_id>\d+)/$', 'public_enter_feedback_adjudicator_by_id', name='public_enter_feedback_adjudicator_by_id'),
+    url(r'^add_feedback/team/h/(?P<url_hash>\w+)/$', 'public_enter_feedback_team_by_hash', name='public_enter_feedback_team_by_hash'),
+    url(r'^add_feedback/adjudicator/h/(?P<url_hash>\w+)/$', 'public_enter_feedback_adjudicator_by_hash', name='public_enter_feedback_adjudicator_by_hash'),
     url(r'^add_feedback/$', 'public_feedback_submit', name='public_feedback_submit'),
     url(r'^toggle_postponed/$', 'toggle_postponed', name='toggle_postponed'),
 

@@ -1794,7 +1794,7 @@ class AdjudicatorAllocation(object):
 
     def delete(self):
         """Delete existing, current allocation"""
-        self.debate.debateadjudicator_set.delete()
+        self.debate.debateadjudicator_set.all().delete()
         self.chair = None
         self.panel = []
         self.trainees = []
@@ -1812,9 +1812,12 @@ class AdjudicatorAllocation(object):
         return self.has_chair and len(self.panel) % 2 == 0
 
     def save(self):
-        self.debate.debateadjudicator_set.delete()
+        self.debate.debateadjudicator_set.all().delete()
         for t, adj in self:
-            DebateAdjudicator(debate=self.debate, adjudicator=adj, type=t).save()
+            if isinstance(adj, Adjudicator):
+                adj = adj.id
+            if adj:
+                DebateAdjudicator(debate=self.debate, adjudicator_id=adj, type=t).save()
 
 
 class BallotSubmission(Submission):
