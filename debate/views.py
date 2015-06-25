@@ -2088,3 +2088,10 @@ def post_ballot_checkin(request, round):
     obj['ballots_left'] = ballot_checkin_number_left(round)
 
     return HttpResponse(json.dumps(obj))
+
+@admin_required
+@tournament_view
+def hash_urls(request, t):
+    teams = t.team_set.filter(url_hash__isnull=False)
+    adjs = t.adjudicator_set.filter(url_hash__isnull=False)
+    return r2r(request, 'hash_urls.html', dict(teams=teams, adjs=adjs))
