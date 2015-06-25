@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Hashed URLs{% endblock %}
+{% block page-title %}Hashed URLs{% endblock %}
+{% block body-class %}hash-urls{% endblock %}
+
+{% block content %}
+<p>
+  The hashed URLs for public data entry are given below. Anyone with the URLs
+  can access the relevant data entry page. The idea is that it's hard to guess
+  another hash (the random-looking string), so you should make each URL
+  accessible only to the team or adjudicator in question, <i>e.g.</i> by
+  e-mailing it to them.
+</p>
+
+<p>
+  If you're not fussed at all about security or data entry fraud, it's easier
+  for everyone if you just enable the normal public ballots and feedback pages
+  instead, on the <a href="{% tournament_url tournament_config %}">tournament
+  configuration page</a>.
+</p>
+
+<p>
+  Add the root of your website before each entry.
+  For example, if your URL is http://tab.mytournament.com/, then the URL for
+  <b>{{ teams.0.short_name }}</b> should look like
+  <b>http://tab.mytournament.com{% tournament_url public_enter_feedback_team_hash teams.0.url_hash %}</b>.
+</p>
+
+<table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Team or Adjudicator</th>
+      <th>Feedback URL</th>
+      <th>Ballot URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for team in teams %}
+    <tr>
+      <td>{{ team.short_name }}</td>
+      <td>{% tournament_url public_enter_feedback_team_hash team.url_hash %}</td>
+      <td>N/A</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3">No teams have hashed URLs.</td>
+    </tr>
+    {% endfor %}
+    {% for adj in adjs %}
+    <tr>
+      <td>{{ adj.name }}</td>
+      <td>{% tournament_url public_enter_feedback_adjudicator_hash adj.url_hash %}</td>
+      <td>{% tournament_url public_new_ballots_hash adj.url_hash %}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3">No adjudicators have hashed URLs.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}

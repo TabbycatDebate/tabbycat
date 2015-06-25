@@ -163,7 +163,7 @@ class BallotSetForm(forms.Form):
 
         self.forfeit_declared = False
 
-        self.has_tournament_password = kwargs.pop('password', False) and tournament.config.get('public_use_password')
+        self.has_tournament_password = kwargs.pop('password', False) and self.tournament.config.get('public_use_password')
 
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
