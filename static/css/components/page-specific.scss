@@ -51,14 +51,19 @@
     margin-right: 220px; // move the search box right to make way for unused
   }
 
+  #helper_holder {
+    z-index: 50; // Higher than main and scratch
+    position: relative;
+  }
+
   #scratch {
     background-color: #fff;
     background-color: rgba(240,240,240,0.90);
     position: fixed;
     overflow-y: scroll;
-    z-index: 100;
     padding-left: 5px;
     padding-right: 5px;
+    z-index: 10;
 
     &.bg-success {
       background: $state-success-bg;
@@ -101,30 +106,12 @@
     height: 50px;
   }
 
-  .history-conflict {
-    background-color: $btn-primary-bg;
-  }
-  .institutional-conflict {
-    background-color: $btn-warning-bg;
-  }
-  .personal-conflict {
-    background-color: $btn-danger-bg;
-  }
-  .adjudicator-conflict {
-    background-color: $btn-danger-bg;
-  }
-  .history-conflict, .personal-conflict, .institutional-conflict, .adjudicator-conflict {
-    span, a, span a {
-      color: #fff;
-      border-bottom: none;
-    }
-  }
-
   .venue, .adj, .team {
     border: 1px solid #ccc;
     padding: 0px 0px 0px 0px;
     text-align: left;
     max-width: 300px; // Needed
+    background: #fff;
 
     span {
       padding: 6px 6px 6px 6px;
@@ -160,6 +147,26 @@
       color: #fff;
     }
   }
+
+  .history-conflict {
+    background-color: $btn-primary-bg;
+  }
+  .institutional-conflict {
+    background-color: $btn-warning-bg;
+  }
+  .personal-conflict {
+    background-color: $btn-danger-bg;
+  }
+  .adjudicator-conflict {
+    background-color: $btn-danger-bg;
+  }
+  .history-conflict, .personal-conflict, .institutional-conflict, .adjudicator-conflict {
+    span, a, span a {
+      color: #fff;
+      border-bottom: none;
+    }
+  }
+
 }
 
 // Gender Colors

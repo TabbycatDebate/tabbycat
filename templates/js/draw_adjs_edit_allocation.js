@@ -136,13 +136,15 @@ function display_conflicts(target) {
 }
 
 function remove_conflicts(target) {
-  eachConflictingTeam(DOMIdtoInt(target),
-    function (type, elem) {
-      $(elem).removeClass(conflictTypeClass[type]);
-    }
-  );
-  removeConflictClasses(target);
-  update_all_conflicts(); // Need to check we haven't removed in-situ conflicts
+  if (draggingCurrently === false) {
+    eachConflictingTeam(DOMIdtoInt(target),
+      function (type, elem) {
+        $(elem).removeClass(conflictTypeClass[type]);
+      }
+    );
+    removeConflictClasses(target);
+    update_all_conflicts(); // Need to check we haven't removed in-situ conflicts
+  }
 }
 
 // Checks/highlights any existing conflicts on in-place data
@@ -158,33 +160,21 @@ function update_all_conflicts() {
 
 // Checks an individual debate for circumstances of conflict on each row
 function updateConflicts(debate_tr) {
-  // var ca = 0;
-  // var ch = 0;
-  // var ci = 0;
   $(".adj", debate_tr).each( function() {
     var adj = this;
     var adj_id = DOMIdtoInt(this);
-    // var a = 0;
-    // var h = 0;
-    // var i = 0;
 
     // Check each team within each debate
     $("td.teaminfo", debate_tr).each( function() {
       if ($.inArray(DOMIdtoInt(this),all_adj_conflicts['personal'][adj_id]) != -1) {
         $(this).addClass("personal-conflict");
         $(adj).addClass("personal-conflict");
-        //ca++;
-        //a++;
       } else if ($.inArray(DOMIdtoInt(this),all_adj_conflicts['institutional'][adj_id]) != -1) {
         $(this).addClass("institutional-conflict");
         $(adj).addClass("institutional-conflict");
-        //ci++;
-        //i++;
       } else if ($.inArray(DOMIdtoInt(this), all_adj_conflicts['history'][adj_id]) != -1) {
         $(this).addClass("history-conflict");
         $(adj).addClass("history-conflict");
-        //ch++;
-        //h++;
       }
     });
 
@@ -201,21 +191,6 @@ function updateConflicts(debate_tr) {
       }
     });
   });
-
-
-    // if (a == 0) {
-    //   $(adj).removeClass("personal-conflict");
-    // }
-    // if (h == 0) {
-    //   $(adj).removeClass("history-conflict");
-    // }
-    // if (i == 0) {
-    //   $(adj).removeClass("institutional-conflict");
-    // }
-
-  // if (ca == 0) {
-  //   $(debate_tr).removeClass("debate-inactive");
-  // }
 
   // Check for incomplete panels
   if ($(".panel-holder .adj", debate_tr).length % 2 != 0) {
@@ -326,49 +301,24 @@ function init_adj(el) {
 
   el.draggable({
     containment: "body", // bounds that limit dragging area
+    revert: 'invalid',
+    appendTo: "#helper_holder", // append helper to element with highest z-index
     helper: function() {
       this.oldHolder = $(this).parent("td");
       var adj = $(this).clone();
-      // $(this).css('position', 'relative');
-      // var offset = $(this).offset();
-      // $(adj).appendTo('body').css('top', 0).css('left', 0);
-      // var curOff = $(adj).offset();
-      // $(adj).css('top', offset.top - curOff.top).css('left', offset.left - curOff.left);
       return adj;
     },
-    revert: 'invalid',
     start: function(event, ui) {
-      // $("#" + ui.helper.attr("id")).addClass("dragging");
-      // $(ui.helper).addClass("dragging");
-      // We want to keep showing conflicts during drag, so
-      // we unbind the event
+      // We want to keep showing conflicts during drag, so we unbind the event
       display_conflicts(event.currentTarget);
       $(event.currentTarget).unbind('mouseover mouseout');
       draggingCurrently = true;
     },
     stop: function(event, ui) {
       target_id = $("#" + ui.helper.attr("id"));
-      // If the mouse isn't over the original position, stop highlighting.
-      // Set a timeout to run shortly after to give the element time to get
-      // back where it belongs. (If there's a way to do this without setTimeout,
-      // that is probably preferable.)
-      // setTimeout( function() {
-      //   if ($("#" + ui.helper.attr("id") + ":hover").length == 0) {
-      //     eachConflictingTeam(
-      //       DOMIdtoInt(target_id),
-      //       function (type, elem) {
-      //         $(elem).removeClass(conflictTypeClass[type]);
-      //       }
-      //     );
-      //   }
-      // }, 50)
-
       $(ui.helper).remove();
       draggingCurrently = false;
       update_all_conflicts(); // Update to account for new/resolved conflicts
-
-      console.log(target_id);
-
     }
   });
 }
@@ -378,14 +328,8 @@ $("#scratch").droppable( {
   hoverClass: 'bg-success',
   drop: function(event, ui) {
     var adj = ui.draggable;
-    remove_conflicts(adj);
     moveToUnused(adj);
-    rebindHoverEvents($(adj));
-
-    //var oldHolder = adj[0].oldHolder;
-    // adj.animate({'top': '0', 'left': '0'}, 300);
-    //adj.removeClass("personal-conflict").removeClass("history-conflict").removeClass("institutional-conflict"); // Remove conflict classes when dropped
-    //updateConflicts($(oldHolder).parent("tr"));
+    remove_conflicts(adj);
   }
 });
 
@@ -396,20 +340,10 @@ $("#allocationsTable .adj-holder").droppable( {
     var oldHolder = adj[0].oldHolder; // Where the element came from
     var destinationAdjs = $(".adj", this); // Any adjs present in the drop destination
 
-    // var newHomeOff;
-    // var curOff = adj.offset();
-
     if (destinationAdjs.length == 0 || $(this).hasClass("panel-holder") || $(this).hasClass("trainee-holder")) {
-      // If replacing an empty chair, or adding to a panel/trainee list
-      // replacing = $(document.createElement("div"));
-      // replacing.addClass("adj");
-      // replacing[0].style.visibility = "hidden";
-      // $(this).append(replacing);
-      // newHomeOff = replacing.offset();
-      // replacing.remove();
+      // do nothing
     } else {
       // If replacing an existing chair
-      //newHomeOff = replacing.offset();
       if (oldHolder.hasClass("adj-holder")) {
         oldHolder.append(destinationAdjs); // Swap the two around
       } else {
@@ -419,34 +353,7 @@ $("#allocationsTable .adj-holder").droppable( {
 
     $(this).append(adj);
     rebindHoverEvents($(adj));
-
-    // If coming from the unused table, delete that row
-    // if ($(oldHolder).hasClass("unused")) {
-    //   {% if not duplicate_adjs %}
-    //     var idx = unusedTable.fnGetPosition(oldHolder[0]);
-    //     unusedTable.fnDeleteRow(idx[0]);
-    //   {% endif %}
-    // }
-
-    // {% if duplicate_adjs %}
-    // if ($(oldHolder).hasClass("unused")) {
-    //   // If duplicate we clone a (deep) copy to leave behind
-    //   var clone = $(adj).clone().appendTo(oldHolder);
-    //   clone.removeAttr('style');
-    //   init_adj(clone);
-    // }
-    // {% endif %}
-
-
-    // adj.css('top', curOff.top - newHomeOff.top).css('left', curOff.left - newHomeOff.left);
-    // adj.animate({'top': '0', 'left': '0'}, 300);
-    //updateConflicts(oldHolder.parent("tr"));
-    //updateConflicts($(this).parent("tr"));
-
-
-
   }
-
 });
 
 
@@ -494,24 +401,10 @@ function moveToUnused(adj) {
     // If the adj isn't already in the table
     var new_row = unusedAdjTable.row.add( ["",formatScore(all_adj_scores[moving_adj_id])] ).draw(); // Adds a new row
     var first_cell = $("td:first", new_row.node()).append(adj); // Append the adj element
-
-    //unusedAdjTable.cell(0, 0).append(adj);
-    //unusedAdjTable.draw(); // Update the table
-
-    // var idxs = unusedTable.a();
-    // var trNode = unusedTable.fnGetNodes(idxs[0]);
-    // var td = $("td:first", trNode);
-    // td.addClass("unused");
-    // // append node (to preserve events)
-    // td.children().remove();
-    // td;
   } else {
-    // Adj is already in the table (might just be dragging back)
-    var oldHolder = adj[0].oldHolder;
-    if ($(oldHolder).hasClass("unused") === false) {
-      $(adj).remove();
-    }
+    // Adj is already in the table (probably just be dragging back)
   }
+
 }
 
 // INITIALISATION VARIABLES
@@ -592,68 +485,3 @@ load_adjudicator_scores(function() {
     load_conflict_data();
   });
 });
-
-
-//   var conflicts;
-//   var scores;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//   /* sorting function for adjs */
-//   $.fn.dataTableExt.afnSortData['adj'] = function ( oSettings, iColumn) {
-//     var aData = [];
-//     $('.adj-holder', oSettings.oApi._fnGetTrNodes(oSettings)).each( function () {
-//       var name = $('span', this).html();
-//       if (name == null) name = '';
-//       aData.push(name);
-//     });
-//     return aData;
-//   };
-
-//   /* filter function for adjs */
-//   $.fn.dataTableExt.ofnSearch['adj'] = function ( sData ) {
-//     var jo = $(sData);
-//     var f = $('span', jo).html();
-//     return f;
-//   };
-
-//   /////////////////////
-//   // HANDLERS
-//   ////////////////////
-
-
-
-
-
-
-
-
-
-
-//   // the standard header to be re-added to the modal
-//   var tableHead = '<table id="modal-adj-table" class="table"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
-
-//   //////////
-//   // INIT
-//   ////////
-
