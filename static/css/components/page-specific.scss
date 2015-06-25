@@ -103,7 +103,10 @@
   // Draggables
 
   .ui-droppable {
-    height: 50px;
+    height: 44px;
+  }
+  .panel-holder, .chair-holder {
+    padding: 5px;
   }
 
   .venue, .adj, .team {
@@ -169,6 +172,10 @@
   }
   .adjudicator-conflict {
     background-color: $btn-danger-bg;
+  }
+  .panel-incomplete, .chair-incomplete {
+    background-color: #FFFF00;
+    color: #000;
   }
   .history-conflict, .personal-conflict, .institutional-conflict, .adjudicator-conflict {
     span, a, span a {

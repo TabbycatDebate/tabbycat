@@ -193,16 +193,18 @@ function updateConflicts(debate_tr) {
 
   // Check for incomplete panels
   if ($(".panel-holder .adj", debate_tr).length % 2 != 0) {
-    $(".panel-holder", debate_tr).addClass("incomplete");
+    console.log('incomplete');
+    $(".panel-holder", debate_tr).addClass("panel-incomplete");
   } else {
-    $(".panel-holder", debate_tr).removeClass("incomplete");
+    $(".panel-holder", debate_tr).removeClass("panel-incomplete");
   }
 
   // Check for missing chairs
   if ($(".chair-holder .adj", debate_tr).length != 1) {
-    $(".chair-holder", debate_tr).addClass("incomplete");
+    console.log('no chair');
+    $(".chair-holder", debate_tr).addClass("chair-incomplete");
   } else {
-    $(".chair-holder", debate_tr).removeClass("incomplete");
+    $(".chair-holder", debate_tr).removeClass("chair-incomplete");
   }
 
 }
