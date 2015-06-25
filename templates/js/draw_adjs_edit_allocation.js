@@ -341,15 +341,12 @@ $("#allocationsTable .adj-holder").droppable( {
     var oldHolder = adj[0].oldHolder; // Where the element came from
     var destinationAdjs = $(".adj", this); // Any adjs present in the drop destination
 
-    if (destinationAdjs.length == 0 || $(this).hasClass("panel-holder") || $(this).hasClass("trainee-holder")) {
-      // do nothing
-    } else {
-      // If replacing an existing chair
-      if (oldHolder.hasClass("adj-holder")) {
-        oldHolder.append(destinationAdjs); // Swap the two around
-      } else {
-        moveToUnused(destinationAdjs);
-      }
+    if ($(this).hasClass("chair-holder")) {
+      oldHolder.append(destinationAdjs); // Swap the two around if dropping into a single position
+    } else if (!oldHolder.hasClass("adj-holder")) {
+      console.log("coming from scratch")
+      var old_row = oldHolder.parent(); // Get the <tr>
+      unusedAdjTable.row(old_row).remove().draw(false);
     }
 
     $(this).append(adj);

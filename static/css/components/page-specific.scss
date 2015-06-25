@@ -98,6 +98,11 @@
     thead {
       background: none;
     }
+
+    .table > tbody > tr > td {
+      padding: 2px 0 0 0; // Reduce padding in unused area
+    }
+
   }
 
   // Draggables
@@ -120,13 +125,13 @@
       padding: 6px 6px 6px 6px;
       display: block;
     }
-    &.gender-display span {
-      margin-right: 35px;
-      padding-right: 0px;
-    }
     &.gender-display.male span a,
     &.gender-display.female span a {
       color: #fff;
+    }
+    &:active {
+      box-shadow: none;
+      opacity: 0.5; // Dull the 'shadow' left behind while dragging
     }
   }
 
@@ -148,7 +153,8 @@
   }
 
   .venue:hover, .adj:hover, .team:hover,
-  .venue.dragging, .adj.dragging, .team.dragging {
+  .venue.dragging, .adj.dragging, .team.dragging,
+  .ui-draggable-dragging {
     cursor: move;
     border: 1px solid $btn-primary-border;
     @extend .text-primary;
@@ -163,24 +169,55 @@
 
   .history-conflict {
     background-color: $btn-primary-bg;
+    span::after {
+      background-color: $btn-primary-bg;
+    }
   }
   .institutional-conflict {
     background-color: $btn-warning-bg;
+    span::after {
+      background-color: $btn-warning-bg;
+    }
   }
   .personal-conflict {
     background-color: $btn-danger-bg;
+    span::after {
+      background-color: $btn-danger-bg;
+    }
   }
   .adjudicator-conflict {
     background-color: $btn-danger-bg;
+    span::after {
+      background-color: $btn-danger-bg;
+    }
   }
   .panel-incomplete, .chair-incomplete {
-    background-color: #FFFF00;
-    color: #000;
+    background-color: #a700a5;
+  }
+  .btn-default.panel-incomplete {
+    color: #fff; // Just for the button
+    border: 1px solid #a700a5;
   }
   .history-conflict, .personal-conflict, .institutional-conflict, .adjudicator-conflict {
     span, a, span a {
       color: #fff;
       border-bottom: none;
+    }
+  }
+  .gender-display.male, .gender-display.female, .language-display.esl, .language-display.efl {
+    span a {
+      color: #fff;
+    }
+  }
+  .gender-display.history-conflict, .gender-display.personal-conflict, .gender-display.institutional-conflict, .gender-display.adjudicator-conflict,
+  .region-display.history-conflict, .region-display.personal-conflict, .region-display.institutional-conflict, .region-display.adjudicator-conflict,
+  .language-display.history-conflict, .language-display.personal-conflict, .language-display.institutional-conflict, .language-display.adjudicator-conflict {
+    span::after {
+      content:"";
+      padding: 9px;
+      float: right;
+      border: 1px solid #fff;
+      border-radius: 3px;
     }
   }
 
