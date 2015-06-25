@@ -1467,6 +1467,7 @@ class Debate(models.Model):
             for team in (self.aff_team, self.neg_team):
                 if adj.conflict_with(team):
                     a.append(Conflict(adj, team))
+
         return a
 
     @cached_property
