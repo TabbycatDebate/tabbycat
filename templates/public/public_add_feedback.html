@@ -34,7 +34,7 @@
       {% for adj in adjudicators %}
       <tr id="adj_{{ adj.id }}" class="adj-row">
         <td>
-          <a href="{% tournament_url public_enter_feedback_adjudicator_by_id adj.id %}">
+          <a href="{% tournament_url public_enter_feedback_adjudicator adj.id %}">
           Add feedback from {{ adj.name }}</a></td>
         {% if show_institutions > 0 %}
         <td>
@@ -46,7 +46,7 @@
       {% for team in teams %}
       <tr id="team_{{ team.id }}" class="team-row">
         <td>
-          <a href="{% tournament_url public_enter_feedback_team_by_hash team.id %}">
+          <a href="{% tournament_url public_enter_feedback_team team.id %}">
           Add feedback from {{ team.long_name }}</a>
         </td>
         {% if show_institutions > 0 %}

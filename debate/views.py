@@ -1271,11 +1271,18 @@ def edit_ballots(request, t, ballots_id):
         show_adj_contact    =True))
 
 # Don't cache
+@public_optional_tournament_view('public_ballots_hash')
+def public_new_ballots_by_hash(request, t, url_hash):
+    adjudicator = get_object_or_404(Adjudicator, tournament=t, url_hash=url_hash)
+    return public_new_ballots(request, t, adjudicator)
+
+# Don't cache
 @public_optional_tournament_view('public_ballots')
-def public_new_ballots(request, t, adj_id):
+def public_new_ballots_by_id(request, t, adj_id):
+    adjudicator = get_object_or_404(Adjudicator, tournament=t, id=adj_id)
+    return public_new_ballots(request, t, adjudicator)
 
-    adjudicator = get_object_or_404(Adjudicator, id=adj_id)
-
+def public_new_ballots(request, t, adjudicator):
     round = t.current_round
     if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
         return r2r(request, 'public/public_enter_results_error.html', dict(adjudicator=adjudicator, message='The draw and/or motions for the round haven\'t been released yet.'))
