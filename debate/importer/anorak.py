@@ -156,10 +156,12 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         self.initialise_emoji_options()
         def _team_line_parser(line):
             return {
-                'name'        : line[0],
-                'short_name'  : line[0][:34],
-                'institution' : m.Institutions.objects.lookup(line[1]),
-                'emoji_seq'   : self.get_emoji()
+                'tournament'             : self.tournament,
+                'institution'            : m.Institution.objects.lookup(line[1]),
+                'reference'              : line[0],
+                'short_reference'        : line[0][:34],
+                'use_institution_prefix' : int(line[2]) if len(line) > 2 else 0,
+                'emoji_seq'              : self.get_emoji(),
             }
         counts, errors = self._import(f, _team_line_parser, m.Team)
 
