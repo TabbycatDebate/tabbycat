@@ -59,6 +59,7 @@ class Command(BaseCommand):
         self._make('judges', self.importer.import_adjudicators)
         self._make('motions')
         self._make('sides')
+        self._make('questions', self.importer.import_adj_feedback_questions)
 
     def _print_stage(self, message):
         if self.verbosity > 0:
