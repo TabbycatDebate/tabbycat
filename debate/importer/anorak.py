@@ -27,7 +27,15 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
     TEAM_POSITIONS = {
         ("affirmative", "aff", "a"): m.TeamPositionAllocation.POSITION_AFFIRMATIVE,
-        ("negative", "aff", "n"): m.TeamPositionAllocation.POSITION_NEGATIVE,
+        ("negative", "neg", "n"): m.TeamPositionAllocation.POSITION_NEGATIVE,
+    }
+
+    FEEDBACK_ANSWER_TYPES = {
+        ("boolean", "bool"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN,
+        ("integer", "int"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER,
+        ("float"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT,
+        ("text"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT,
+        ("textbox"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXTBOX,
     }
 
     def import_rounds(self, f):
@@ -293,10 +301,10 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
         def _motion_line_parser(line):
             return {
-                'round': m.Round.objects.lookup(line[0], tournament=self.tournament),
-                'seq': int(line[1]),
-                'reference': line[2],
-                'text': line[3],
+                'round'     : m.Round.objects.lookup(line[0], tournament=self.tournament),
+                'seq'       : int(line[1]),
+                'reference' : line[2],
+                'text'      : line[3],
             }
         return self._import(f, _motion_line_parser, m.Motion)
 
@@ -309,10 +317,31 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             team = m.Team.objects.lookup(line[0])
             for seq, side in enumerate(line[1:], start=1):
                 yield {
-                    'round': m.Round.objects.get(seq=seq),
-                    'team' : team,
-                    'position': self._lookup(self.TEAM_POSITIONS, side),
+                    'round'    : m.Round.objects.get(seq=seq),
+                    'team'     : team,
+                    'position' : self._lookup(self.TEAM_POSITIONS, side, "side"),
                 }
+        return self._import(f, _side_line_parser, m.TeamPositionAllocation)
+
+    def import_adj_feedback_questions(self, f):
+        """Imports adjudicator feedback questions from a file.
+        Each line has:
+            seq, reference, name, text, answer_type, team_on_orallist, chair_on_panel, panel_on_chair, panel_on_panel
+        """
+        def _question_line_parser(line):
+            return {
+                'tournament'             : self.tournament,
+                'seq'                    : int(line[0]),
+                'reference'              : line[1],
+                'name'                   : line[2],
+                'text'                   : line[3],
+                'answer_type'            : self._lookup(self.FEEDBACK_ANSWER_TYPES, line[4], "answer type"),
+                'team_on_orallist'       : bool(int(line[5])),
+                'chair_on_panellist'     : bool(int(line[6])),
+                'panellist_on_chair'     : bool(int(line[7])),
+                'panellist_on_panellist' : bool(int(line[8])),
+            }
+        return self._import(f, _question_line_parser, m.AdjudicatorFeedbackQuestion)
 
     def import_config(self, f):
         """Imports configuration settings from a file.
