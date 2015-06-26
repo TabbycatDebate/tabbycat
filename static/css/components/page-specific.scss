@@ -194,6 +194,9 @@
   .panel-incomplete, .chair-incomplete {
     background-color: #a700a5;
   }
+  .bg-info.panel-incomplete, .bg-info.chair-incomplete {
+    background: $state-info-bg; // don't overwrite the drop hover
+  }
   .btn-default.panel-incomplete {
     color: #fff; // Just for the button
     border: 1px solid #a700a5;
