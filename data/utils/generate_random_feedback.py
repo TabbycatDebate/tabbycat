@@ -26,8 +26,8 @@ user = User.objects.get(username=args.user)
 for round in args.rounds:
     if args.clean:
         print("Deleting all feedback for round %d..." % round)
-        m.AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator__debate__round__seq=round).delete()
-        m.AdjudicatorFeedback.objects.filter(source_team__adjudicator__debate__round__seq=round).delete()
+        m.AdjudicatorFeedback.objects.filter(source_adjudicator__debate__round__seq=round).delete()
+        m.AdjudicatorFeedback.objects.filter(source_team__debate__round__seq=round).delete()
 
     for debate in m.Round.objects.get(seq=round).get_draw():
         fbs = add_feedback(debate, submitter_type, user, args.probability, False, args.confirmed)
