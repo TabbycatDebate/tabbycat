@@ -1,9 +1,25 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Adjudicator Feedback <small>(<span id="breaking_count">{{ breaking_count }}</span> set as breaking)</small>{% endblock %}
+{% block head-title %}Adjudicator Feedback{% endblock %}
 {% block page-title %}Adjudicator Feedback{% endblock %}
 {% block page-header %}{% include "table_search.html" %}{% endblock %}
+
+{% block header %}
+  <div class="btn-group">
+    <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">View Latest Feedback</a>
+    <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">View Feedback By Source</a>
+  </div>
+  <div class="btn-group">
+    <div class="btn btn-default">
+      <span class="glyphicon glyphicon-star"></span>
+      <span id="breaking_count">{{ breaking_count }}</span> set as breaking
+    </div>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-default" href="{% tournament_url hash_urls %}">View Feedback URLs</a>
+  </div>
+{% endblock %}
 
 {% block content %}
 

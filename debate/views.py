@@ -98,7 +98,7 @@ def r2r(request, template, extra_context=None):
 
 def index(request):
     tournaments = Tournament.objects.all()
-    if request.user.is_authenticated:
+    if request.user.is_superuser and request.user.is_staff:
         return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
     elif len(tournaments) == 1:
         sole_tournament = list(tournaments)[0]
@@ -1653,6 +1653,7 @@ def draw_adjudicators_edit(request, round):
     adj0 = Adjudicator.objects.first()
     duplicate_adjs = round.tournament.config.get('duplicate_adjs')
     regions = Region.objects.filter(tournament=round.tournament).order_by('name')
+    feedback_headings = [q.name for q in round.tournament.adj_feedback_questions]
 
     def calculate_prior_adj_genders(team):
         debates = team.get_debates(round.seq)
@@ -1677,7 +1678,8 @@ def draw_adjudicators_edit(request, round):
             debate.gender_class = (aff_male_adj_percent / 5) - 10
 
     return r2r(request, "draw_adjudicators_edit.html", dict(
-        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs, regions=regions))
+        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs, regions=regions,
+        feedback_headings=feedback_headings))
 
 def _json_adj_allocation(debates, unused_adj):
 
@@ -1894,19 +1896,32 @@ def adj_feedback(request, t):
 
     return r2r(request, template, dict(adjudicators=adjudicators, breaking_count=breaking_count, feedback_headings=feedback_headings))
 
+
 @login_required
 @tournament_view
-def adj_latest_feedback(request, t):
+def adj_source_feedback(request, t):
     questions = t.adj_feedback_questions
-    feedbacks = AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
-        'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+    teams = Team.objects.filter(tournament=t).select_related('institution')
+    for team in teams:
+        team.feedback_tally = AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
+            'source_team__team').count()
 
+    adjs = Adjudicator.objects.filter(tournament=t).select_related('institution')
+    for adj in adjs:
+        adj.feedback_tally = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
+            'source_adjudicator__adjudicator').count()
+
+    return r2r(request, "adjudicator_source_list.html", dict(teams=teams, adjs=adjs))
+
+def process_feedback(feedbacks, t):
+    questions = t.adj_feedback_questions
     score_step = t.config.get('adj_max_score')  / 10
-    low_score = t.config.get('adj_min_score') + score_step
-    medium_score = low_score + score_step
-    high_score = t.config.get('adj_max_score') - score_step
-
-    for feedback in list(feedbacks):
+    score_thresholds = {
+        'low_score'     : t.config.get('adj_min_score') + score_step,
+        'medium_score'  : t.config.get('adj_min_score') + score_step + score_step,
+        'high_score'    : t.config.get('adj_max_score') - score_step,
+    }
+    for feedback in feedbacks:
         feedback.items = []
         for question in questions:
             try:
@@ -1915,8 +1930,33 @@ def adj_latest_feedback(request, t):
                 feedback.items.append(qa_set)
             except ObjectDoesNotExist:
                 pass
+    return feedbacks, score_thresholds
 
-    return r2r(request, "adjudicator_latest_feedback.html", dict(feedbacks=feedbacks, low_score=low_score, medium_score=medium_score, high_score=high_score))
+@login_required
+@tournament_view
+def adj_latest_feedback(request, t):
+    feedbacks = AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
+        'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+    feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    return r2r(request, "adjudicator_latest_feedback.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
+
+@login_required
+@tournament_view
+def team_feedback_list(request, t, team_id):
+    team = Team.objects.get(pk=team_id)
+    source = team.short_name
+    feedbacks = AdjudicatorFeedback.objects.filter(source_team__team=team).order_by('-timestamp')
+    feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    return r2r(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
+
+@login_required
+@tournament_view
+def adj_feedback_list(request, t, adj_id):
+    adj = Adjudicator.objects.get(pk=team_id)
+    source = adj.name
+    feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).order_by('-timestamp')
+    feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    return r2r(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
 
 @login_required
 @tournament_view

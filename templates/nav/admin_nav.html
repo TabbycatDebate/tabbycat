@@ -13,12 +13,7 @@
     <a href="{% round_url results current_round %}">Ballots</a>
   </li>
   <li {% if feedback_nav %}class="dropdown active"{% endif %}>
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Feedback<b class="caret"></b></a>
-    <ul class="dropdown-menu">
-      <li><a href="{% tournament_url adj_feedback %}">Overall</a></li>
-      <li><a href="{% tournament_url adj_latest_feedback %}">Latest</a></li>
-      <li><a href="">By Source</a></li>
-    </ul>
+    <a href="{% tournament_url adj_feedback %}" >Feedback</a>
   </li>
   {% if enable_divisions %}
     <li {% if divisions_nav %}class="active"{% endif %}>
