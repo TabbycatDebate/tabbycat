@@ -68,8 +68,16 @@ class TeamVenuePreferenceInline(admin.TabularInline):
     model = models.TeamVenuePreference
     extra = 6
 
+class TeamForm(forms.ModelForm):
+    class Meta:
+        model = models.Team
+        fields = '__all__'
+
+    def clean_url_hash(self):
+        return self.cleaned_data['url_hash'] or None # So that the url hash can be unique and also set to blank
 
 class TeamAdmin(admin.ModelAdmin):
+    form = TeamForm
     list_display = ('long_name','short_reference','institution', 'division', 'esl', 'efl', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
     list_filter = ('tournament', 'division', 'institution')
