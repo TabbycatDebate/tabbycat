@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}View Feedback by Source{% endblock %}
+{% block page-title %}View Feedback by Source{% endblock %}
+{% block page-header %}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+  <div class="col-md-6">
+
+    <table id="teamTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Institution</th>
+          <th>Feedbacks</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for team in teams %}
+        <tr>
+          <td>{{ team.short_name }}</td>
+          <td>{{ team.institution }}</td>
+          <td>
+            <a href="{% tournament_url team_feedback_list team.id %}">
+              {{ team.feedback_tally }} Feedback{{ adj.feedback_tally|pluralize }}
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="col-md-6">
+
+    <table id="adjTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Institution</th>
+          <th>Feedbacks</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for adj in adjs %}
+        <tr>
+          <td>{{ adj.name }}</td>
+          <td>{{ adj.institution }}</td>
+          <td>
+            <a href="{% tournament_url adj_feedback_list adj.id %}">
+              {{ adj.feedback_tally }} Feedback{{ adj.feedback_tally|pluralize }}
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+{% endblock content %}
+
+{% block extra-js %}
+
+  {{ block.super }}
+   <script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+      var tTable = $("#teamTable").DataTable({
+          "aaSorting": [[ 1, "asc" ], [ 0, "asc" ]],
+      });
+      new $.fn.dataTable.FixedHeader( tTable, {alwaysCloneTop: true});
+
+      var aTable = $("#adjTable").DataTable({
+          "aaSorting": [[ 0, "asc" ]],
+      });
+      new $.fn.dataTable.FixedHeader( aTable, {alwaysCloneTop: true});
+
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
+    } );
+  </script>
+{% endblock extra-js %}

@@ -17,7 +17,7 @@
     <ul class="dropdown-menu">
       <li><a href="{% tournament_url adj_feedback %}">Overall</a></li>
       <li><a href="{% tournament_url adj_latest_feedback %}">Latest</a></li>
-      <li><a href="">By Source</a></li>
+      <li><a href="{% tournament_url adj_source_feedback %}">By Source</a></li>
     </ul>
   </li>
   {% if enable_divisions %}

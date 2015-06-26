@@ -1,0 +1,25 @@
+
+<ul class="list-group">
+  <li class="list-group-item
+    {% if feedback.score <= low_score %}list-group-item-danger
+    {% elif feedback.score <= medium_score %}list-group-item-warning
+    {% elif feedback.score > high_score %}list-group-item-success
+    {% endif %}">
+      <span class="badge">{{ feedback.score }}</span>
+      <span class="h5">{{ feedback.adjudicator }}</span>
+  </li>
+  {% for item in feedback.items %}
+    <li class="list-group-item">
+      <small><strong>{{ item.question.text }}</strong></small>
+      <span class="text-right">{{ item.answer }}</span>
+    </li>
+  {% endfor %}
+  <li class="list-group-item panel-footer">
+    <em><small>{% if feedback.source_adjudicator %}
+      submitted by {{ feedback.source_adjudicator.adjudicator }},
+    {% else %}
+      submitted by <strong>{{ feedback.source_team.team.long_name }}</strong>,
+    {% endif %}
+    {{ feedback.timestamp|timesince }} ago</small></em>
+  </li>
+</ul>
