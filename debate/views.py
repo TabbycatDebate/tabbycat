@@ -14,6 +14,7 @@ from ipware.ip import get_real_ip
 from debate.result import BallotSet
 from debate import forms
 from debate.models import *
+from debate.utils import populate_url_hashes
 
 from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
@@ -2122,6 +2123,23 @@ def post_ballot_checkin(request, round):
 @admin_required
 @tournament_view
 def hash_urls(request, t):
-    teams = t.team_set.filter(url_hash__isnull=False)
-    adjs = t.adjudicator_set.filter(url_hash__isnull=False)
-    return r2r(request, 'hash_urls.html', dict(teams=teams, adjs=adjs))
+    teams = t.team_set.all()
+    adjs = t.adjudicator_set.all()
+    exists = t.adjudicator_set.filter(url_hash__isnull=False).exists() or \
+            t.team_set.filter(url_hash__isnull=False).exists()
+    tournament_slug = t.slug
+    return r2r(request, 'hash_urls.html', dict(teams=teams, adjs=adjs,
+            exists=exists, tournament_slug=tournament_slug))
+
+@admin_required
+@tournament_view
+@expect_post
+def generate_hash_urls(request, t):
+    # Only works if there are no URL hashes now
+    if t.adjudicator_set.filter(url_hash__isnull=False).exists() or \
+            t.team_set.filter(url_hash__isnull=False).exists():
+        return HttpResponseBadRequest("There are already URL hashes. You must use the Django management commands to populate or delete URL hashes.")
+
+    populate_url_hashes(t.adjudicator_set.all())
+    populate_url_hashes(t.team_set.all())
+    return redirect_tournament('hash_urls', t)

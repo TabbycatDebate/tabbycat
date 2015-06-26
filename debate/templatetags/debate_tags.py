@@ -106,6 +106,12 @@ class TournamentURLNode(template.Node):
         return reverse(self.view_name, args=args,
                        current_app=context.current_app)
 
+class TournamentAbsoluteURLNode(TournamentURLNode):
+    def render(self, context):
+        path = super(TournamentAbsoluteURLNode, self).render(context)
+        return context['request'].build_absolute_uri(path)
+
+
 @register.tag
 def round_url(parser, token):
     bits = token.split_contents()
@@ -118,9 +124,14 @@ def round_url(parser, token):
 @register.tag
 def tournament_url(parser, token):
     bits = token.split_contents()
-
     args = tuple([parser.compile_filter(b) for b in bits[2:]])
     return TournamentURLNode(bits[1], args)
+
+@register.tag
+def tournament_absurl(parser, token):
+    bits = token.split_contents()
+    args = tuple([parser.compile_filter(b) for b in bits[2:]])
+    return TournamentAbsoluteURLNode(bits[1], args)
 
 @register.filter
 def next_value(value, arg):

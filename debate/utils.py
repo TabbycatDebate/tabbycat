@@ -48,3 +48,9 @@ def populate_url_hashes(queryset, length=8):
         else:
             logger.error("Could not generate unique URL for %r after %d tries", instance, NUM_ATTEMPTS)
             return
+
+def delete_url_hashes(queryset):
+    """Deletes URL hashes from every instance in the given QuerySet."""
+    for instance in queryset:
+        instance.url_hash = None
+        instance.save()
