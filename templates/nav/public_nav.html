@@ -53,8 +53,8 @@
     <li><a chref="#" data-toggle="dropdown">Results<b class="caret"></b></a>
       <ul class="dropdown-menu">
         {% for r in tournament.rounds.all %}
-          {% if r.draw_status == r.STATUS_RELEASED %}
-            {% if r.seq < current_round.seq and not r.silent or tournament.release_all %}
+          {% if not r.silent %}
+            {% if r.seq < current_round.seq or tournament.release_all %}
               <li><a href="{% round_url public_results r %}">{{ r.name }}</a></li>
             {% endif %}
           {% endif %}
