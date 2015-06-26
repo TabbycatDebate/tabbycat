@@ -7,11 +7,22 @@
 
 {% block content %}
 <p>
-  The hashed URLs for public data entry are given below. Anyone with the URLs
-  can access the relevant data entry page. The idea is that it's hard to guess
-  another hash (the random-looking string), so you should make each URL
-  accessible only to the team or adjudicator in question, <i>e.g.</i> by
-  e-mailing it to them.
+  {% if exists %}
+    The hashed URLs for public ballot and/or feedback submission are given below.
+  {% else %}
+    Hashed URLs are used for public ballot and/or feedback submission. You
+    should use them if you have a means of distributing crazy-looking URLs to
+    participants, and are too worried about fraud to use a publicly accessible
+    page where <em>anyone</em> can enter <em>any</em> submission. The URLs
+    will look something like this: <b>{% tournament_absurl public_enter_feedback_team_hash "9dnFlP3Z" %}</b>.
+  {% endif %}
+</p>
+<p>
+  Anyone with the URLs can access the relevant data entry page. The idea is that
+  it's hard to guess another hash (the random-looking string), so you should
+  make each URL accessible only to the team or adjudicator in question,
+  <i>e.g.</i> by e-mailing it to them. It's not a perfect security solution.
+  It's meant to discourage fraud, not prevent it.
 </p>
 
 <p>
@@ -21,45 +32,77 @@
   configuration page</a>.
 </p>
 
-
+{% if exists %}
 <p>
-  Add the root of your website before each entry.
-  For example, if your URL is http://tab.mytournament.com/, then if it says
-  <b>/t/demo/add_feedback/adjudicator/h/mr0JZPrA950m/</b>, the URL is actually
-  <b>http://tab.mytournament.com/t/demo/add_feedback/adjudicator/h/mr0JZPrA950m/</b>.
+  If you want to delete these, run this command in a shell on your server:
+  <code>python manage.py url_hashes delete {{ tournament_slug }}</code>.
 </p>
 
-<table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
-  <thead>
-    <tr>
-      <th>Team or Adjudicator</th>
-      <th>Feedback URL</th>
-      <th>Ballot URL</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for team in teams %}
-    <tr>
-      <td>{{ team.short_name }}</td>
-      <td>{% tournament_url public_enter_feedback_team_hash team.url_hash %}</td>
-      <td>N/A</td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="3">No teams have hashed URLs.</td>
-    </tr>
-    {% endfor %}
-    {% for adj in adjs %}
-    <tr>
-      <td>{{ adj.name }}</td>
-      <td>{% tournament_url public_enter_feedback_adjudicator_hash adj.url_hash %}</td>
-      <td>{% tournament_url public_new_ballots_hash adj.url_hash %}</td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="3">No adjudicators have hashed URLs.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+  <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Team or Adjudicator</th>
+        <th>Feedback URL</th>
+        <th>Ballot URL</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for team in teams %}
+      <tr>
+        <td>{{ team.short_name }}</td>
+        <td>
+          {% if team.url_hash %}
+            {% tournament_absurl public_enter_feedback_team_hash team.url_hash %}
+          {% else %}
+            no URL
+          {% endif %}
+        </td>
+        <td>N/A</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3">No teams have hashed URLs.</td>
+      </tr>
+      {% endfor %}
+      {% for adj in adjs %}
+      <tr>
+        <td>{{ adj.name }}</td>
+          {% if adj.url_hash %}
+          <td>
+            {% tournament_absurl public_enter_feedback_adjudicator_hash adj.url_hash %}
+          </td>
+          <td>
+            {% tournament_absurl public_new_ballots_hash adj.url_hash %}
+          </td>
+          {% else %}
+          <td>no URL</td><td>no URL</td>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3">No adjudicators have hashed URLs.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>
+    <strong>There aren't any URL hashes in the database.</strong>
+    Would you like to generate them?
+  </p>
+  <p>
+    <form action="{% tournament_url generate_hash_urls %}" method="POST">
+      <button class="btn btn-default" id="generateHashUrls" type="submit">
+        Generate hash URLs for ballot and feedback submission
+      </button>
+    </form>
+  </p>
+  <p>
+    Note: You also need to enable <b>public feedback hash</b> and/or
+    <b>public ballots hash</b> on the <a href="{% tournament_url tournament_config %}">
+    tournament configuration page</a> for this to work. (You don't need to
+    enable both, just whichever ones you want to work.)
+  </p>
+{% endif %}
 {% endblock content %}

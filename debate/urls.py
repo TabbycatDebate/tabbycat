@@ -145,6 +145,7 @@ urlpatterns = patterns('debate.views',
 
     url(r'^admin/side_allocations/$', 'side_allocations', name='side_allocations'),
     url(r'^admin/hash_urls/$', 'hash_urls', name='hash_urls'),
+    url(r'^admin/hash_urls/generate/$', 'generate_hash_urls', name='generate_hash_urls'),
 
     url(r'^admin/division_allocations/$', 'division_allocations', name='division_allocations'),
     url(r'^admin/division_allocations/save/$', 'save_divisions', name='save_divisions'),
