@@ -326,7 +326,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     def import_adj_feedback_questions(self, f):
         """Imports adjudicator feedback questions from a file.
         Each line has:
-            seq, reference, name, text, answer_type, team_on_orallist, chair_on_panel, panel_on_chair, panel_on_panel
+            seq, reference, name, text, answer_type, required, team_on_orallist, chair_on_panel, panel_on_chair, panel_on_panel
         """
         def _question_line_parser(line):
             return {
@@ -336,10 +336,11 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'name'                   : line[2],
                 'text'                   : line[3],
                 'answer_type'            : self._lookup(self.FEEDBACK_ANSWER_TYPES, line[4], "answer type"),
-                'team_on_orallist'       : bool(int(line[5])),
-                'chair_on_panellist'     : bool(int(line[6])),
-                'panellist_on_chair'     : bool(int(line[7])),
-                'panellist_on_panellist' : bool(int(line[8])),
+                'required'               : bool(int(line[5])),
+                'team_on_orallist'       : bool(int(line[6])),
+                'chair_on_panellist'     : bool(int(line[7])),
+                'panellist_on_chair'     : bool(int(line[8])),
+                'panellist_on_panellist' : bool(int(line[9])),
             }
         return self._import(f, _question_line_parser, m.AdjudicatorFeedbackQuestion)
 
