@@ -6,7 +6,10 @@
       <span class="team-emoji">{% team_emoji team %} </span>
       {{ team.short_name }}
       <small>
-        ({% for speaker in team.speakers %}{% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}{{ speaker.name }}{% endfor %})
+        {% for speaker in team.speakers %}
+          {% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}
+          {{ speaker.name }}{% if speaker.pronoun %} ({{ speaker.pronoun }}){% endif %}
+        {% endfor %}
       </small>
     </h5>
     <span class="text-muted pull-right">{{ position }}</span>
@@ -16,9 +19,9 @@
       <thead>
         <tr>
           <th class="text-center" width="4%"></th>
-          <th class="text-center small" width="72%"><em style="font-weight: normal;">Name</em></th>
+          <th class="text-left small" width="62%"><em style="font-weight: normal;">Name & Pronoun</em></th>
           <th class="text-center" width="10%"></th>
-          <th class="text-center small" width="14%"><em style="font-weight: normal;">Score</em></th>
+          <th class="text-left small" width="14%"><em style="font-weight: normal;">Score</em></th>
         </tr>
       </thead>
       <tbody>

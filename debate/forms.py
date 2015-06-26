@@ -104,7 +104,7 @@ class TournamentPasswordField(forms.CharField):
 
 class RequiredTypedChoiceField(forms.TypedChoiceField):
     def clean(self, value):
-        value = super(forms.TypedChoiceField, self).clean(value)
+        value = super(RequiredTypedChoiceField, self).clean(value)
         if value == "None":
             raise forms.ValidationError(_("This field is required."))
         return value
@@ -163,7 +163,7 @@ class BallotSetForm(forms.Form):
 
         self.forfeit_declared = False
 
-        self.has_tournament_password = kwargs.pop('password', False) and tournament.config.get('public_use_password')
+        self.has_tournament_password = kwargs.pop('password', False) and self.tournament.config.get('public_use_password')
 
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
@@ -604,93 +604,106 @@ class DebateResultFormSet(object):
 # Feedback forms
 # ==============================================================================
 
-def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, released_only=False):
-    """adjudicator is an Adjudicator.
-    submission_fields is a dict of fields for Submission.
-    released_only is a boolean."""
+class BaseFeedbackForm(forms.Form):
+    """Base class for all dynamically-created feedback forms. Contains all
+    question fields."""
+    score = forms.FloatField(min_value=1, max_value=5)
 
-    if released_only:
-        das = m.DebateAdjudicator.objects.filter(adjudicator = adjudicator,
-            debate__round__draw_status = m.Round.STATUS_RELEASED)
-    else:
-        das = m.DebateAdjudicator.objects.filter(adjudicator = adjudicator)
+    tournament = NotImplemented      # set at "compile time" by subclasses
+    _use_tournament_password = False # set at "compile time" by subclasses
 
-    debates = [da.debate for da in das]
+    def __init__(self, *args, **kwargs):
+        super(BaseFeedbackForm, self).__init__(*args, **kwargs)
+        self.fields['score'] = self.fields.pop('score') # for score field to come after source/adjudicator field
+        self._create_fields()
+
+    @staticmethod
+    def _make_question_field(question):
+        if question.answer_type == question.ANSWER_TYPE_BOOLEAN:
+            field = forms.NullBooleanField(widget=CustomNullBooleanSelect, required=False)
+        elif question.answer_type == question.ANSWER_TYPE_INTEGER:
+            field = forms.IntegerField(min_value=int(question.min_value),
+                    max_value=int(question.max_value))
+        elif question.answer_type == question.ANSWER_TYPE_FLOAT:
+            field = forms.FloatField(min_value=question.min_value,
+                    max_value=question.max_value)
+        elif question.answer_type == question.ANSWER_TYPE_TEXT:
+            field = forms.CharField()
+        elif question.answer_type == question.ANSWER_TYPE_TEXTBOX:
+            field = forms.CharField(widget=forms.Textarea)
+        field.label = question.text
+        field.required = question.required
+        return field
+
+    def _create_fields(self):
+        """Creates dynamic fields in the form."""
+        # Feedback questions defined for the tournament
+        for question in self.tournament.adj_feedback_questions:
+            self.fields[question.reference] = self._make_question_field(question)
+
+        # Tournament password field, if applicable
+        if self._use_tournament_password and self.tournament.config.get('public_use_password'):
+            self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
+
+    def save_adjudicatorfeedback_questions(self, af):
+        """Saves the question fields and returns the AdjudicatorFeedback.
+        To be called by save() of child classes."""
+        af.score = self.cleaned_data['score']
+        af.save()
+
+        for question in self.tournament.adj_feedback_questions:
+            answer = question.answer_type_class(feedback=af, question=question,
+                    answer=self.cleaned_data[question.reference])
+            answer.save()
+        return af
+
+
+def make_feedback_form_class_for_tabroom(adjudicator, submission_fields):
+    """Constructs a FeedbackForm class specific to the given adjudicator.
+    'adjudicator' is the Adjudicator who is receiving feedback.
+    'submission_fields' is a dict of fields that is passed directly as keyword
+        arguments to Submission."""
 
     def adj_choice(da):
         return (
             'A:%d' % da.id,
-            '%s (R%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
-                           da.get_type_display())
+            '%s (R%d, %s)' % (da.adjudicator.name, da.debate.round.seq, da.get_type_display())
         )
-
-    adj_choices = [(None, '-- Adjudicators --')]
-    adj_choices.extend ([
-        adj_choice(da) for da in m.DebateAdjudicator.objects.filter(
-            debate__id__in = [d.id for d in debates]
-        ).select_related('debate') if da.adjudicator != adjudicator
-    ])
-
-    # Get rid of the heading if there aren't any adjudicators
-    if len(adj_choices) == 1: adj_choices = []
-
     def team_choice(dt):
         return (
             'T:%d' % dt.id,
             '%s (%d)' % (dt.team.short_name, dt.debate.round.seq)
         )
-
-    team_choices = [(None, '-- Teams --')]
-    team_choices.extend([
-        team_choice(dt) for dt in m.DebateTeam.objects.filter(
-            debate__id__in = [d.id for d in debates]
-        ).select_related('debate')
-    ])
-
-    choices = adj_choices + team_choices
-
-    def coerce(value):
+    def coerce_source(value):
         obj_type, id = value.split(':')
         id = int(id)
-
         if obj_type.strip() == 'A':
             return m.DebateAdjudicator.objects.get(id=id)
         if obj_type.strip() == 'T':
             return m.DebateTeam.objects.get(id=id)
 
-    tournament = adjudicator.tournament
+    debates = m.Debate.objects.filter(debateadjudicator__adjudicator=adjudicator)
 
-    class FeedbackForm(forms.Form):
-        source = RequiredTypedChoiceField(
-            choices = choices,
-            # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
-            # Fix when Django 1.7 is released.
-            #coerce = coerce,
-        )
+    adj_choices = [(None, '-- Adjudicators --')]
+    adj_choices.extend(adj_choice(da) for da in
+            m.DebateAdjudicator.objects.filter(debate__in=debates).exclude(adjudicator=adjudicator).select_related('debate').order_by('-debate__round__seq'))
+    if len(adj_choices) == 1: adj_choices = [] # get rid of heading if there aren't any adjs
 
-        score = forms.FloatField(
-            min_value = 1,
-            max_value = 5,
-        )
+    team_choices = [(None, '-- Teams --')]
+    team_choices.extend(team_choice(dt) for dt in
+            m.DebateTeam.objects.filter(debate__in = debates).select_related('debate').order_by('-debate__round__seq'))
 
-        agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
+    choices = adj_choices + team_choices
 
-        comment = forms.CharField(widget=forms.Textarea, required=False)
+    class FeedbackForm(BaseFeedbackForm):
+        tournament = adjudicator.tournament # BaseFeedbackForm setting
+        source = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
 
         def save(self):
-            # Saves the form and returns the AdjudicatorFeedback object
-
+            """Saves the form and returns the AdjudicatorFeedback object"""
             source = self.cleaned_data['source']
-            source = coerce(source) # Bug in Django 1.6.5
-
-            if isinstance(source, m.DebateAdjudicator):
-                sa = source
-            else:
-                sa = None
-            if isinstance(source, m.DebateTeam):
-                st = source
-            else:
-                st = None
+            sa = source if isinstance(source, m.DebateAdjudicator) else None
+            st = source if isinstance(source, m.DebateTeam) else None
 
             # Discard existing feedbacks
             for fb in m.AdjudicatorFeedback.objects.filter(adjudicator=adjudicator,
@@ -699,116 +712,62 @@ def make_feedback_form_class_for_tabroom(adjudicator, submission_fields, release
                 fb.save()
 
             # Save the new one
-            af = m.AdjudicatorFeedback(
-                adjudicator       =adjudicator,
-                source_adjudicator=sa,
-                source_team       =st,
-                confirmed         =True, # assume confirmed on every submission
-                **submission_fields
-            )
-
-            af.score = self.cleaned_data['score']
-            af.agree_with_decision = self.cleaned_data['agree_with_decision']
-            af.comments = self.cleaned_data['comment']
-
-            af.save()
-
-            return af
+            af = m.AdjudicatorFeedback(adjudicator=adjudicator, confirmed=True,
+                    source_adjudicator=sa, source_team=st, **submission_fields)
+            return self.save_adjudicatorfeedback_questions(af)
 
     return FeedbackForm
 
 def make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=True):
-
-    kwargs = dict()
-    kwargs['debate__round__draw_status'] = m.Round.STATUS_RELEASED
+    """Constructs a FeedbackForm class specific to the given source adjudicator.
+    'source' is the Adjudicator who is giving feedback.
+    'submission_fields' is a dict of fields that is passed directly as keyword
+        arguments to Submission.
+    'include_panellists' is a bool, and indicates whether panellists can give
+        feedback on chairs."""
 
     def adj_choice(da):
-        return (
-            da.id,
-            '%s (R%d, %s)' % (da.adjudicator.name, da.debate.round.seq,
-                           da.get_type_display())
-        )
+        return (da.id, '%s (R%d, %s)' % (da.adjudicator.name,
+                da.debate.round.seq, da.get_type_display()))
+    def coerce_source(value):
+        return m.DebateAdjudicator.objects.get(id=int(value))
+
+    debate_filter = dict(debateadjudicator__adjudicator=source,
+            round__draw_status=m.Round.STATUS_RELEASED)
+    if not include_panellists: # then include only debates for which this adj was the chair
+        debate_filter['debateadjudicator__type'] = m.DebateAdjudicator.TYPE_CHAIR
+    debates = m.Debate.objects.filter(**debate_filter)
+
     choices = [(None, '-- Adjudicators --')]
+    choices.extend(adj_choice(da) for da in     # for an adjudicator, find every adjudicator on their panel except them.
+            m.DebateAdjudicator.objects.filter(debate__in=debates).exclude(adjudicator=source).select_related('debate').order_by('-debate__round__seq'))
 
-    if not include_panellists:
-        # Include only debates for which this adj was the chair.
-        kwargs['type'] = m.DebateAdjudicator.TYPE_CHAIR
-
-    debates = [da.debate for da in m.DebateAdjudicator.objects.filter(
-        adjudicator=source, **kwargs).select_related('debate')]
-
-    # For an adjudicator, find every adjudicator on their panel except them.
-    choices.extend([
-        adj_choice(da) for da in m.DebateAdjudicator.objects.filter(
-            debate__id__in = [d.id for d in debates]
-        ).select_related('debate').order_by('-debate__round') if da.adjudicator != source
-    ])
-
-    def coerce(value):
-        value = int(value)
-        return m.DebateAdjudicator.objects.get(id=value)
-
-    tournament = source.tournament
-
-    class FeedbackForm(forms.Form):
-        debate_adjudicator = RequiredTypedChoiceField(
-            choices = choices,
-            # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
-            # Fix when Django 1.7 is released.
-            #coerce = coerce,
-        )
-
-        score = forms.FloatField(
-            min_value = 1,
-            max_value = 5,
-        )
-
-        agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
-
-        comment = forms.CharField(widget=forms.Textarea, required=False)
-
-        def __init__(self, *args, **kwargs):
-            super(FeedbackForm, self).__init__(*args, **kwargs)
-            if tournament.config.get('public_use_password'):
-                self.fields['password'] = TournamentPasswordField(tournament=tournament)
+    class FeedbackForm(BaseFeedbackForm):
+        tournament = source.tournament  # BaseFeedbackForm setting
+        _use_tournament_password = True # BaseFeedbackForm setting
+        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
 
         def save(self):
-            # Saves the form and returns the AdjudicatorFeedback object
-
+            """Saves the form and returns the AdjudicatorFeedback object."""
             da = self.cleaned_data['debate_adjudicator']
-            da = coerce(da) # Bug in Django 1.6.5
-
             sa = m.DebateAdjudicator.objects.get(adjudicator=source, debate=da.debate)
-
-            af = m.AdjudicatorFeedback(
-                adjudicator       =da.adjudicator,
-                source_adjudicator=sa,
-                source_team       =None,
-                **submission_fields
-            )
-
-            af.score = self.cleaned_data['score']
-            af.agree_with_decision = self.cleaned_data['agree_with_decision']
-            af.comments = self.cleaned_data['comment']
-
-            af.save()
-
-            return af
+            af = m.AdjudicatorFeedback(adjudicator=da.adjudicator,
+                    source_adjudicator=sa, source_team=None, **submission_fields)
+            return self.save_adjudicatorfeedback_questions(af)
 
     return FeedbackForm
 
-def make_feedback_form_class_for_public_team(source, submission_fields, include_panellists=True):
-    """source is an Adjudicator or Team.
-    submission_fields is a dict of fields for Submission.
-    released_only is a boolean."""
-
-    choices = [(None, '-- Adjudicators --')]
+def make_feedback_form_class_for_public_team(source, submission_fields):
+    """Constructs a FeedbackForm class specific to the given source team.
+    'source' is the Team who is giving feedback.
+    'submission_fields' is a dict of fields that is passed directly as keyword
+        arguments to Submission."""
 
     # Only include non-silent rounds for teams.
-    debates = [dt.debate for dt in m.DebateTeam.objects.filter(
-        team=source, debate__round__silent=False,
-        debate__round__draw_status=m.Round.STATUS_RELEASED).select_related('debate').order_by('-debate__round__seq')]
+    debates = m.Debate.objects.filter(debateteam__team=source, round__silent=False,
+        round__draw_status=m.Round.STATUS_RELEASED).order_by('-round__seq')
 
+    choices = [(None, '-- Adjudicators --')]
     for debate in debates:
         try:
             chair = m.DebateAdjudicator.objects.get(debate=debate, type=m.DebateAdjudicator.TYPE_CHAIR)
@@ -825,56 +784,22 @@ def make_feedback_form_class_for_public_team(source, submission_fields, include_
             choices.append((chair.id, '{name} (R{r})'.format(
                 name=chair.adjudicator.name, r=debate.round.seq)))
 
-    def coerce(value):
+    def coerce_source(value):
         value = int(value)
         return m.DebateAdjudicator.objects.get(id=value)
 
-    tournament = source.tournament
-
-    class FeedbackForm(forms.Form):
-        debate_adjudicator = RequiredTypedChoiceField(
-            choices = choices,
-            # Bug in Django 1.6.5, see https://code.djangoproject.com/ticket/21397
-            # Fix when Django 1.7 is released.
-            #coerce = coerce,
-        )
-
-        score = forms.FloatField(
-            min_value = 1,
-            max_value = 5,
-        )
-
-        agree_with_decision = forms.NullBooleanField(widget=CustomNullBooleanSelect, label="Did you agree with their decision?", required=False)
-
-        comment = forms.CharField(widget=forms.Textarea, required=False)
-
-        def __init__(self, *args, **kwargs):
-            super(FeedbackForm, self).__init__(*args, **kwargs)
-            if tournament.config.get('public_use_password'):
-                self.fields['password'] = TournamentPasswordField(tournament=tournament)
+    class FeedbackForm(BaseFeedbackForm):
+        tournament = source.tournament  # BaseFeedbackForm setting
+        _use_tournament_password = True # BaseFeedbackForm setting
+        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
 
         def save(self):
             # Saves the form and returns the m.AdjudicatorFeedback object
-
             da = self.cleaned_data['debate_adjudicator']
-            da = coerce(da) # Bug in Django 1.6.5
-
             st = m.DebateTeam.objects.get(team=source, debate=da.debate)
-
-            af = m.AdjudicatorFeedback(
-                adjudicator       =da.adjudicator,
-                source_adjudicator=None,
-                source_team       =st,
-                **submission_fields
-            )
-
-            af.score = self.cleaned_data['score']
-            af.agree_with_decision = self.cleaned_data['agree_with_decision']
-            af.comments = self.cleaned_data['comment']
-
-            af.save()
-
-            return af
+            af = m.AdjudicatorFeedback(adjudicator=da.adjudicator,
+                    source_adjudicator=None, source_team=st, **submission_fields)
+            return self.save_adjudicatorfeedback_questions(af)
 
     return FeedbackForm
 

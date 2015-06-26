@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib import messages
 from django.db.models import Sum, Count
@@ -97,7 +97,7 @@ def r2r(request, template, extra_context=None):
 
 def index(request):
     tournaments = Tournament.objects.all()
-    if request.user.is_authenticated:
+    if request.user.is_superuser and request.user.is_staff:
         return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
     elif len(tournaments) == 1:
         sole_tournament = list(tournaments)[0]
@@ -786,7 +786,9 @@ def draw_print_scoresheets(request, round):
 @round_view
 def draw_print_feedback(request, round):
     draw = round.get_draw()
-    return r2r(request, "printable_feedback.html", dict(draw=draw))
+    config = round.tournament.config
+    return r2r(request, "printable_feedback.html", dict(
+        draw=draw, config=config))
 
 
 
@@ -1269,11 +1271,18 @@ def edit_ballots(request, t, ballots_id):
         show_adj_contact    =True))
 
 # Don't cache
+@public_optional_tournament_view('public_ballots_hash')
+def public_new_ballots_by_hash(request, t, url_hash):
+    adjudicator = get_object_or_404(Adjudicator, tournament=t, url_hash=url_hash)
+    return public_new_ballots(request, t, adjudicator)
+
+# Don't cache
 @public_optional_tournament_view('public_ballots')
-def public_new_ballots(request, t, adj_id):
+def public_new_ballots_by_id(request, t, adj_id):
+    adjudicator = get_object_or_404(Adjudicator, tournament=t, id=adj_id)
+    return public_new_ballots(request, t, adjudicator)
 
-    adjudicator = get_object_or_404(Adjudicator, id=adj_id)
-
+def public_new_ballots(request, t, adjudicator):
     round = t.current_round
     if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
         return r2r(request, 'public/public_enter_results_error.html', dict(adjudicator=adjudicator, message='The draw and/or motions for the round haven\'t been released yet.'))
@@ -1642,6 +1651,8 @@ def draw_adjudicators_edit(request, round):
     draw = round.get_draw()
     adj0 = Adjudicator.objects.first()
     duplicate_adjs = round.tournament.config.get('duplicate_adjs')
+    regions = Region.objects.filter(tournament=round.tournament).order_by('name')
+    feedback_headings = [q.name for q in round.tournament.adj_feedback_questions]
 
     def calculate_prior_adj_genders(team):
         debates = team.get_debates(round.seq)
@@ -1666,18 +1677,27 @@ def draw_adjudicators_edit(request, round):
             debate.gender_class = (aff_male_adj_percent / 5) - 10
 
     return r2r(request, "draw_adjudicators_edit.html", dict(
-        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs))
+        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs, regions=regions,
+        feedback_headings=feedback_headings))
 
 def _json_adj_allocation(debates, unused_adj):
 
     obj = {}
 
     def _adj(a):
+
+        if a.institution.region:
+            region_name = "region-%s" % a.institution.region.name
+            region_name = region_name.replace(' ', '_').lower()
+        else:
+            region_name = ""
+
         return {
             'id': a.id,
             'name': a.name + " (" + a.institution.short_code + ")",
             'is_unaccredited': a.is_unaccredited,
-            'gender': a.gender
+            'gender': a.gender,
+            'region': region_name
         }
 
     def _debate(d):
@@ -1750,6 +1770,7 @@ def adj_conflicts(request, round):
         'personal': {},
         'history': {},
         'institutional': {},
+        'adjudicator': {},
     }
 
     def add(type, adj_id, target_id):
@@ -1763,6 +1784,9 @@ def adj_conflicts(request, round):
     for ic in AdjudicatorInstitutionConflict.objects.all():
         for team in Team.objects.filter(institution=ic.institution):
             add('institutional', ic.adjudicator_id, team.id)
+
+    for ac in AdjudicatorAdjudicatorConflict.objects.all():
+        add('adjudicator', ac.adjudicator_id, ac.conflict_adjudicator.id)
 
     history = DebateAdjudicator.objects.filter(
         debate__round__seq__lt = round.seq,
@@ -1816,7 +1840,6 @@ def adj_scores(request, t):
 
     return HttpResponse(json.dumps(data), content_type="text/json")
 
-
 @login_required
 @tournament_view
 def adj_feedback(request, t):
@@ -1868,8 +1891,71 @@ def adj_feedback(request, t):
                 adj.avg_score = None
                 adj.avg_margin = None
 
-    return r2r(request, template, dict(adjudicators=adjudicators, breaking_count=breaking_count))
+    feedback_headings = [q.name for q in t.adj_feedback_questions]
 
+    return r2r(request, template, dict(adjudicators=adjudicators, breaking_count=breaking_count, feedback_headings=feedback_headings))
+
+
+@login_required
+@tournament_view
+def adj_source_feedback(request, t):
+    questions = t.adj_feedback_questions
+    teams = Team.objects.filter(tournament=t).select_related('institution')
+    for team in teams:
+        team.feedback_tally = AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
+            'source_team__team').count()
+
+    adjs = Adjudicator.objects.filter(tournament=t).select_related('institution')
+    for adj in adjs:
+        adj.feedback_tally = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
+            'source_adjudicator__adjudicator').count()
+
+    return r2r(request, "adjudicator_source_list.html", dict(teams=teams, adjs=adjs))
+
+def process_feedback(feedbacks, t):
+    questions = t.adj_feedback_questions
+    score_step = t.config.get('adj_max_score')  / 10
+    score_thresholds = {
+        'low_score'     : t.config.get('adj_min_score') + score_step,
+        'medium_score'  : t.config.get('adj_min_score') + score_step + score_step,
+        'high_score'    : t.config.get('adj_max_score') - score_step,
+    }
+    for feedback in feedbacks:
+        feedback.items = []
+        for question in questions:
+            try:
+                qa_set = { "question" : question,
+                           "answer"   : question.answer_set.get(feedback=feedback).answer}
+                feedback.items.append(qa_set)
+            except ObjectDoesNotExist:
+                pass
+    return feedbacks, score_thresholds
+
+@login_required
+@tournament_view
+def adj_latest_feedback(request, t):
+    feedbacks = AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
+        'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+    feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    return r2r(request, "adjudicator_latest_feedback.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
+
+@login_required
+@tournament_view
+def team_feedback_list(request, t, team_id):
+    team = Team.objects.get(pk=team_id)
+    source = team.short_name
+    feedbacks = AdjudicatorFeedback.objects.filter(source_team__team=team).order_by('-timestamp')
+    feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    return r2r(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
+
+@login_required
+@tournament_view
+def adj_feedback_list(request, t, adj_id):
+    adj = Adjudicator.objects.get(pk=team_id)
+    source = adj.name
+    feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).order_by('-timestamp')
+    feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    return r2r(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
 
 @login_required
 @tournament_view
@@ -1877,26 +1963,40 @@ def get_adj_feedback(request, t):
 
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback()
-    data = [ [
-              unicode(f.round.abbreviation),
-              unicode(str(f.version) + (f.confirmed and "*" or "")),
-              f.debate.bracket,
-              f.debate.matchup,
-              unicode(f.source),
-              f.score,
-              {None: "Unsure", True: "Yes", False: "No"}[f.agree_with_decision],
-              f.comments,
-              f.confirmed,
-             ] for f in feedback ]
-
+    questions = t.adj_feedback_questions
+    BOOLEAN_VALUES = {None: "Unsure", True: "Yes", False: "No"}
+    def _parse_feedback(f):
+        data = [
+            unicode(f.round.abbreviation),
+            unicode(str(f.version) + (f.confirmed and "*" or "")),
+            f.debate.bracket,
+            f.debate.matchup,
+            unicode(f.source),
+            f.score,
+        ]
+        for question in questions:
+            try:
+                data.append(question.answer_set.get(feedback=f).answer)
+            except ObjectDoesNotExist:
+                data.append("-")
+        data.append(f.confirmed)
+        return data
+    data = [_parse_feedback(f) for f in feedback]
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
+# Don't cache
+@public_optional_tournament_view('public_feedback_hash')
+def public_enter_feedback_adjudicator_by_hash(request, t, url_hash):
+    source = get_object_or_404(Adjudicator, tournament=t, url_hash=url_hash)
+    return public_enter_feedback_adjudicator(request, t, source)
 
 # Don't cache
 @public_optional_tournament_view('public_feedback')
-def public_enter_feedback_adjudicator(request, t, adj_id):
+def public_enter_feedback_adjudicator_by_id(request, t, adj_id):
+    source = get_object_or_404(Adjudicator, tournament=t, id=adj_id)
+    return public_enter_feedback_adjudicator(request, t, source)
 
-    source = get_object_or_404(Adjudicator, id=adj_id)
+def public_enter_feedback_adjudicator(request, t, source):
     include_panellists = request.tournament.config.get('panellist_feedback_enabled') > 0
     ip_address = get_ip_address(request)
     source_name = source.name
@@ -1919,10 +2019,18 @@ def public_enter_feedback_adjudicator(request, t, adj_id):
     return r2r(request, 'public/public_enter_feedback_adj.html', dict(source_name=source_name, form=form))
 
 # Don't cache
-@public_optional_tournament_view('public_feedback')
-def public_enter_feedback_team(request, t, team_id):
+@public_optional_tournament_view('public_feedback_hash')
+def public_enter_feedback_team_by_hash(request, t, url_hash):
+    source = get_object_or_404(Team, tournament=t, url_hash=url_hash)
+    return public_enter_feedback_team(request, t, source)
 
-    source = get_object_or_404(Team, id=team_id)
+# Don't cache
+@public_optional_tournament_view('public_feedback')
+def public_enter_feedback_team_by_id(request, t, team_id):
+    source = get_object_or_404(Team, tournament=t, id=team_id)
+    return public_enter_feedback_team(request, t, source)
+
+def public_enter_feedback_team(request, t, source):
     ip_address = get_ip_address(request)
     source_name = source.short_name
 
@@ -2050,3 +2158,10 @@ def post_ballot_checkin(request, round):
     obj['ballots_left'] = ballot_checkin_number_left(round)
 
     return HttpResponse(json.dumps(obj))
+
+@admin_required
+@tournament_view
+def hash_urls(request, t):
+    teams = t.team_set.filter(url_hash__isnull=False)
+    adjs = t.adjudicator_set.filter(url_hash__isnull=False)
+    return r2r(request, 'hash_urls.html', dict(teams=teams, adjs=adjs))

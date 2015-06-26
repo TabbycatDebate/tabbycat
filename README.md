@@ -16,6 +16,7 @@ If you're interested in using, developing or otherwise following this software,
 - Responsive templates designed for large screens, laptops, tablets, and phones
 - Configurable [draw generation rules](https://github.com/czlee/tabbycat/wiki/Draw-generation)
 - Supports Australs and NZ [team standings rules](https://github.com/czlee/tabbycat/wiki/Team-standings-rules)
+- Confiugrable [adjudicator feedback questions](https://github.com/czlee/tabbycat/wiki/Adjudicator-feedback)
 - Optional online ballot submission
 - Optional online post-tournament tab display
 

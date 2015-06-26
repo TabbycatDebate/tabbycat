@@ -51,14 +51,19 @@
     margin-right: 220px; // move the search box right to make way for unused
   }
 
+  #helper_holder {
+    z-index: 50; // Higher than main and scratch
+    position: relative;
+  }
+
   #scratch {
     background-color: #fff;
     background-color: rgba(240,240,240,0.90);
     position: fixed;
     overflow-y: scroll;
-    z-index: 100;
     padding-left: 5px;
     padding-right: 5px;
+    z-index: 10;
 
     &.bg-success {
       background: $state-success-bg;
@@ -74,7 +79,7 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 120px;
+      height: 140px;
       thead {
         text-align: center;
       }
@@ -93,31 +98,20 @@
     thead {
       background: none;
     }
+
+    .table > tbody > tr > td {
+      padding: 2px 0 0 0; // Reduce padding in unused area
+    }
+
   }
 
   // Draggables
 
   .ui-droppable {
-    height: 50px;
+    height: 44px;
   }
-
-  .venue, .adj, .team {
-
-    &.history-conflict {
-      background-color: $btn-primary-bg;
-    }
-    &.institutional-conflict {
-      background-color: $btn-warning-bg;
-    }
-    &.personal-conflict {
-      background-color: $btn-danger-bg;
-    }
-    &.history-conflict, &.personal-conflict, &.institutional-conflict {
-      span, a, span a {
-        color: #fff;
-        border-bottom: none;
-      }
-    }
+  .panel-holder, .chair-holder {
+    padding: 5px;
   }
 
   .venue, .adj, .team {
@@ -125,30 +119,42 @@
     padding: 0px 0px 0px 0px;
     text-align: left;
     max-width: 300px; // Needed
+    background: #fff;
 
     span {
       padding: 6px 6px 6px 6px;
       display: block;
     }
-    &.gender-display span {
-      margin-right: 35px;
-      padding-right: 0px;
-    }
     &.gender-display.male span a,
     &.gender-display.female span a {
       color: #fff;
     }
-    &.gender-display.male span {
-      background-color: #0000FF;
-      color: #fff;
-    }
-    &.gender-display.female span {
-      background-color: #D600FF;
-      color: #fff;
+    &:active {
+      box-shadow: none;
+      opacity: 0.5; // Dull the 'shadow' left behind while dragging
     }
   }
+
+  .gender-display.male {
+    background-color: #0000FF;
+    color: #fff;
+  }
+  .gender-display.female {
+    background-color: #D600FF;
+    color: #fff;
+  }
+  .language-display.esl {
+    background-color: #c70062;
+    color: #fff;
+  }
+  .language-display.efl {
+    background-color: #00c79b;
+    color: #fff;
+  }
+
   .venue:hover, .adj:hover, .team:hover,
-  .venue.dragging, .adj.dragging, .team.dragging {
+  .venue.dragging, .adj.dragging, .team.dragging,
+  .ui-draggable-dragging {
     cursor: move;
     border: 1px solid $btn-primary-border;
     @extend .text-primary;
@@ -160,6 +166,61 @@
       color: #fff;
     }
   }
+
+  .history-conflict {
+    background-color: $btn-primary-bg;
+    span::after {
+      background-color: $btn-primary-bg;
+    }
+  }
+  .institutional-conflict {
+    background-color: $btn-warning-bg;
+    span::after {
+      background-color: $btn-warning-bg;
+    }
+  }
+  .personal-conflict {
+    background-color: $btn-danger-bg;
+    span::after {
+      background-color: $btn-danger-bg;
+    }
+  }
+  .adjudicator-conflict {
+    background-color: $btn-danger-bg;
+    span::after {
+      background-color: $btn-danger-bg;
+    }
+  }
+  .panel-incomplete, .chair-incomplete {
+    background-color: #a700a5;
+  }
+  .btn-default.panel-incomplete {
+    color: #fff; // Just for the button
+    border: 1px solid #a700a5;
+  }
+  .history-conflict, .personal-conflict, .institutional-conflict, .adjudicator-conflict {
+    span, a, span a {
+      color: #fff;
+      border-bottom: none;
+    }
+  }
+  .gender-display.male, .gender-display.female, .language-display.esl, .language-display.efl {
+    span a {
+      color: #fff;
+    }
+  }
+  .gender-display.history-conflict, .gender-display.personal-conflict, .gender-display.institutional-conflict, .gender-display.adjudicator-conflict,
+  .region-display.history-conflict, .region-display.personal-conflict, .region-display.institutional-conflict, .region-display.adjudicator-conflict,
+  .language-display.history-conflict, .language-display.personal-conflict, .language-display.institutional-conflict, .language-display.adjudicator-conflict {
+    span::after {
+      content:"";
+      padding: 9px;
+      float: right;
+      border: 1px solid #fff;
+      border-radius: 3px;
+    }
+  }
+
 }
 
 // Gender Colors

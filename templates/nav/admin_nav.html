@@ -12,8 +12,8 @@
   <li {% if ballots_nav %}class="active"{% endif %}>
     <a href="{% round_url results current_round %}">Ballots</a>
   </li>
-  <li {% if feedback_nav %}class="active"{% endif %}>
-    <a href="{% tournament_url adj_feedback %}">Feedback</a>
+  <li {% if feedback_nav %}class="dropdown active"{% endif %}>
+    <a href="{% tournament_url adj_feedback %}" >Feedback</a>
   </li>
   {% if enable_divisions %}
     <li {% if divisions_nav %}class="active"{% endif %}>
@@ -84,7 +84,7 @@
         <li class="divider"></li>
         <li><a href="{% round_url draw r %}">Draw</a></li>
         <li><a href="{% round_url motions r %}">Motions</a></li>
-        <li><a href="{% round_url results r %}">Round Status</a></li>
+        <li><a href="{% round_url results r %}">Ballots</a></li>
         <li><a href="{% round_url ballot_checkin r %}">Ballot Checkin</a></li>
         <li class="divider"></li>
         <li><a href="{% round_url draw_print_scoresheets r %}">Print Ballots</a></li>

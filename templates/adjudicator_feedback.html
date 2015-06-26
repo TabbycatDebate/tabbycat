@@ -1,9 +1,22 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Adjudicator Feedback <small>(<span id="breaking_count">{{ breaking_count }}</span> breaking)</small>{% endblock %}
+{% block head-title %}Adjudicator Feedback{% endblock %}
 {% block page-title %}Adjudicator Feedback{% endblock %}
 {% block page-header %}{% include "table_search.html" %}{% endblock %}
+
+{% block header %}
+  <div class="btn-group">
+    <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">View Latest Feedback</a>
+    <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">View Feedback By Source</a>
+  </div>
+  <div class="btn-group">
+    <div class="btn btn-default">
+      <span class="glyphicon glyphicon-star"></span>
+      <span id="breaking_count">{{ breaking_count }}</span> set as breaking
+    </div>
+  </div>
+{% endblock %}
 
 {% block content %}
 
@@ -118,8 +131,9 @@
             <th>Debate</th>
             <th>Source</th>
             <th>Score</th>
-            <th>Agree</th>
-            <th>Comments</th>
+            {% for heading in feedback_headings %}
+               <th>{{ heading }}</th>
+            {% endfor %}
             <th><span class="glyphicon glyphicon-saved" data-toggle="tooltip" title="Confirmed"></span></th>
           </thead>
           <tbody>

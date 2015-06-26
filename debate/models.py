@@ -8,7 +8,6 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist, Multiple
 from django.core.cache import cache
 
 from django.utils.functional import cached_property
-from debate.utils import pair_list
 from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
 from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
@@ -23,14 +22,14 @@ class ScoreField(models.FloatField):
     pass
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=100)
-    short_name  = models.CharField(max_length=25, blank=True, null=True, default="")
-    seq = models.IntegerField(db_index=True, blank=True, null=True)
-    slug = models.SlugField(unique=True, db_index=True)
+    name = models.CharField(max_length=100, help_text="The full name used on the homepage")
+    short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu")
+    seq = models.IntegerField(db_index=True, blank=True, null=True, help_text="The order in which tournaments are displayed")
+    slug = models.SlugField(unique=True, db_index=True, help_text="The sub-URL of the tournament; cannot have spaces")
     current_round = models.ForeignKey('Round', null=True, blank=True,
-                                     related_name='tournament_',)
-    welcome_msg = models.TextField(blank=True, null=True, default="")
-    release_all = models.BooleanField(default=False)
+                                     related_name='tournament_', help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
+    welcome_msg = models.TextField(blank=True, null=True, default="", help_text="Text/html entered here shows on the homepage")
+    release_all = models.BooleanField(default=False, help_text="This releases all results; do so only after the tournament is finished")
     active = models.BooleanField(default=True)
 
     @property
@@ -122,6 +121,9 @@ class Tournament(models.Model):
             self._config = Config(self)
         return self._config
 
+    @cached_property
+    def adj_feedback_questions(self):
+        return self.adjudicatorfeedbackquestion_set.order_by("seq")
 
     class Meta:
         ordering = ['seq',]
@@ -166,9 +168,9 @@ class VenueGroup(models.Model):
 class Venue(models.Model):
     name = models.CharField(max_length=40)
     group = models.ForeignKey(VenueGroup, blank=True, null=True)
-    priority = models.IntegerField()
+    priority = models.IntegerField(help_text="Venues with a higher priority number will be preferred in the draw")
     tournament = models.ForeignKey(Tournament, blank=True, null=True)
-    time = models.DateTimeField(blank=True, null=True)
+    time = models.DateTimeField(blank=True, null=True, help_text="")
 
     class Meta:
         ordering = ['group', 'name']
@@ -183,6 +185,7 @@ class Venue(models.Model):
 
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
+    tournament = models.ForeignKey(Tournament)
 
     def __unicode__(self):
         return u'%s' % (self.name)
@@ -203,9 +206,9 @@ class InstitutionManager(models.Manager):
 
 
 class Institution(models.Model):
-    code = models.CharField(max_length=20)
-    name = models.CharField(db_index=True, max_length=100)
-    abbreviation = models.CharField(max_length=8, default="")
+    name = models.CharField(db_index=True, max_length=100, help_text="The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\"")
+    code = models.CharField(max_length=20, help_text="What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\"")
+    abbreviation = models.CharField(max_length=8, default="", help_text="For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\"")
     region = models.ForeignKey(Region, blank=True, null=True)
 
     objects = InstitutionManager()
@@ -476,7 +479,7 @@ class TeamManager(models.Manager):
 
 class Division(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name or suffix")
-    seq = models.IntegerField(blank=True, null=True)
+    seq = models.IntegerField(blank=True, null=True, help_text="The order in which divisions are displayed")
     tournament = models.ForeignKey(Tournament)
     time_slot = models.TimeField(blank=True, null=True)
     venue_group = models.ForeignKey(VenueGroup, blank=True, null=True)
@@ -497,14 +500,16 @@ class Division(models.Model):
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
 
+
 class Team(models.Model):
-    reference = models.CharField(max_length=150, verbose_name="Name or suffix")
-    short_reference = models.CharField(max_length=35, verbose_name="Shortened name or suffix")
+    reference = models.CharField(max_length=150, verbose_name="Full name or suffix", help_text="Do not include institution name (see \"uses institutional prefix\" below)")
+    short_reference = models.CharField(max_length=35, verbose_name="Short name/suffix", help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament, db_index=True)
-    emoji_seq = models.IntegerField(blank=True, null=True)
+    emoji_seq = models.IntegerField(blank=True, null=True, help_text="Emoji number to use for this team")
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
-    use_institution_prefix = models.BooleanField(default=True, verbose_name="Name uses institutional prefix then suffix")
+    use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
+    url_hash = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
     # set to True if a team is ineligible to break (other than being
     # swing/composite)
@@ -516,7 +521,7 @@ class Team(models.Model):
     venue_preferences = models.ManyToManyField(VenueGroup,
         through = 'TeamVenuePreference',
         related_name = 'VenueGroup',
-        verbose_name = 'Venue Group Preference'
+        verbose_name = 'Venue group preference'
     )
 
     TYPE_NONE = 'N'
@@ -629,7 +634,6 @@ class Team(models.Model):
             cache.set(cached_key, cached_value, None)
             return cached_value
 
-
 def update_team_cache(sender, instance, created, **kwargs):
     cached_key = "%s_%s_%s" % ('teamid', instance.id, '_institution__object')
     cache.delete(cached_key)
@@ -673,7 +677,8 @@ class Person(models.Model):
         (GENDER_FEMALE,   'Female'),
         (GENDER_OTHER,    'Other'),
     )
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES,blank=True, null=True)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
+    pronoun = models.CharField(max_length=10, blank=True, null=True)
 
     @property
     def has_contact(self):
@@ -707,6 +712,7 @@ class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament, blank=True, null=True)
     test_score = models.FloatField(default=0)
+    url_hash = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
     institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adjudicator_institution_conflicts')
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
@@ -771,18 +777,14 @@ class Adjudicator(Person):
         return r
 
     def _feedback_score(self):
-        return AdjudicatorFeedback.objects.filter(
-            adjudicator = self,
-            confirmed = True
-        ).aggregate(avg=models.Avg('score'))['avg']
+        return self.adjudicatorfeedback_set.filter(confirmed=True).aggregate(avg=models.Avg('score'))['avg']
 
     @property
     def feedback_score(self):
         return self._feedback_score() or None
 
-
     def get_feedback(self):
-        return AdjudicatorFeedback.objects.filter(adjudicator=self)
+        return self.adjudicatorfeedback_set.all()
 
     def seen_team(self, team, before_round=None):
         if not hasattr(self, '_seen_cache'):
@@ -889,11 +891,11 @@ class Round(models.Model):
     objects = RoundManager()
 
     tournament   = models.ForeignKey(Tournament, related_name='rounds',db_index=True)
-    seq          = models.IntegerField()
-    name         = models.CharField(max_length=40)
-    abbreviation = models.CharField(max_length=10)
-    draw_type    = models.CharField(max_length=1, choices=DRAW_CHOICES)
-    stage        = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY)
+    seq          = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
+    name         = models.CharField(max_length=40, help_text="ie \"Round 1\"")
+    abbreviation = models.CharField(max_length=10, help_text="ie \"R1\"")
+    draw_type    = models.CharField(max_length=1, choices=DRAW_CHOICES, help_text="Which draw technique to use")
+    stage        = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY, help_text="Whether it is a break round or not")
 
     draw_status        = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
     venue_status       = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
@@ -1466,6 +1468,7 @@ class Debate(models.Model):
             for team in (self.aff_team, self.neg_team):
                 if adj.conflict_with(team):
                     a.append(Conflict(adj, team))
+
         return a
 
     @cached_property
@@ -1651,11 +1654,80 @@ class Submission(models.Model):
             raise ValidationError("A tab room ballot must have a user associated.")
 
 
+class AdjudicatorFeedbackAnswer(models.Model):
+    question = models.ForeignKey('AdjudicatorFeedbackQuestion')
+    feedback = models.ForeignKey('AdjudicatorFeedback')
+
+    class Meta:
+        abstract = True
+        unique_together = [('question', 'feedback')]
+
+class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
+    answer = models.NullBooleanField()
+
+class AdjudicatorFeedbackIntegerAnswer(AdjudicatorFeedbackAnswer):
+    answer = models.IntegerField()
+
+class AdjudicatorFeedbackFloatAnswer(AdjudicatorFeedbackAnswer):
+    answer = models.FloatField()
+
+class AdjudicatorFeedbackStringAnswer(AdjudicatorFeedbackAnswer):
+    answer = models.CharField(max_length=500)
+
+
+class AdjudicatorFeedbackQuestion(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    seq = models.IntegerField(help_text="The order in which questions are displayed")
+    text = models.CharField(max_length=255, help_text="The question displayed to participants, e.g., \"Did you agree with the decision?\"")
+    name = models.CharField(max_length=30, help_text="A short name for the question, e.g., \"Agree with decision\"")
+    reference = models.SlugField(help_text="Code-compatible reference, e.g., \"agree_with_decision\"")
+
+    chair_on_panellist = models.BooleanField()
+    panellist_on_chair = models.BooleanField()
+    panellist_on_panellist = models.BooleanField()
+    team_on_orallist = models.BooleanField()
+
+    ANSWER_TYPE_BOOLEAN = 'b'
+    ANSWER_TYPE_INTEGER = 'i'
+    ANSWER_TYPE_FLOAT = 'f'
+    ANSWER_TYPE_TEXT = 't'
+    ANSWER_TYPE_TEXTBOX = 'T'
+    ANSWER_TYPE_CHOICES = (
+        (ANSWER_TYPE_BOOLEAN, 'boolean'),
+        (ANSWER_TYPE_INTEGER, 'integer'),
+        (ANSWER_TYPE_FLOAT, 'float'),
+        (ANSWER_TYPE_TEXT, 'text'),
+        (ANSWER_TYPE_TEXTBOX, 'textbox'),
+    )
+    ANSWER_TYPE_CLASSES = {
+        ANSWER_TYPE_BOOLEAN: AdjudicatorFeedbackBooleanAnswer,
+        ANSWER_TYPE_INTEGER: AdjudicatorFeedbackIntegerAnswer,
+        ANSWER_TYPE_FLOAT:   AdjudicatorFeedbackFloatAnswer,
+        ANSWER_TYPE_TEXT:    AdjudicatorFeedbackStringAnswer,
+        ANSWER_TYPE_TEXTBOX: AdjudicatorFeedbackStringAnswer,
+    }
+    answer_type = models.CharField(max_length=1, choices=ANSWER_TYPE_CHOICES)
+    required = models.BooleanField(default=True, help_text="Whether participants are required to fill out this field")
+    min_value = models.FloatField(blank=True, null=True, help_text="Minimum allowed value for numeric fields (ignored for text or boolean fields)")
+    max_value = models.FloatField(blank=True, null=True, help_text="Maximum allowed value for numeric fields (ignored for text or boolean fields)")
+
+    class Meta:
+        unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
+
+    def __unicode__(self):
+        return self.reference
+
+    @property
+    def answer_set(self):
+        return self.answer_type_class.objects.filter(question=self)
+
+    @property
+    def answer_type_class(self):
+        return self.ANSWER_TYPE_CLASSES[self.answer_type]
+
 class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     score = models.FloatField()
-    agree_with_decision = models.NullBooleanField()
-    comments = models.TextField(blank=True)
 
     source_adjudicator = models.ForeignKey(DebateAdjudicator, blank=True,
                                            null=True)
@@ -1722,11 +1794,8 @@ class AdjudicatorAllocation(object):
             yield DebateAdjudicator.TYPE_TRAINEE, a
 
     def delete(self):
-        """
-        Delete existing, current allocation
-        """
-
-        DebateAdjudicator.objects.filter(debate=self.debate).delete()
+        """Delete existing, current allocation"""
+        self.debate.debateadjudicator_set.all().delete()
         self.chair = None
         self.panel = []
         self.trainees = []
@@ -1744,16 +1813,12 @@ class AdjudicatorAllocation(object):
         return self.has_chair and len(self.panel) % 2 == 0
 
     def save(self):
-        DebateAdjudicator.objects.filter(debate=self.debate).delete()
+        self.debate.debateadjudicator_set.all().delete()
         for t, adj in self:
             if isinstance(adj, Adjudicator):
                 adj = adj.id
             if adj:
-                DebateAdjudicator(
-                    debate = self.debate,
-                    adjudicator_id = adj,
-                    type = t,
-                ).save()
+                DebateAdjudicator(debate=self.debate, adjudicator_id=adj, type=t).save()
 
 
 class BallotSubmission(Submission):
@@ -1972,10 +2037,10 @@ class MotionManager(models.Manager):
 class Motion(models.Model):
     """Represents a single motion (not a set of motions)."""
 
-    seq = models.IntegerField(help_text="The order in which motions display")
-    text = models.CharField(max_length=500, help_text="The motion itself")
-    reference = models.CharField(max_length=100, help_text="Shortcode for the motion")
-    flagged = models.BooleanField(default=False, help_text="WADL: Allows for particular motions to be flagged as contentious")
+    seq = models.IntegerField(help_text="The order in which motions are displayed")
+    text = models.CharField(max_length=500, help_text="The motion itself, e.g., \"This House would straighten all bananas\"")
+    reference = models.CharField(max_length=100, help_text="Shortcode for the motion, e.g., \"Bananas\"")
+    flagged = models.BooleanField(default=False, help_text="For WADL: Allows for particular motions to be flagged as contentious")
     round = models.ForeignKey(Round, db_index=True)
     objects = MotionManager()
     divisions = models.ManyToManyField('Division', blank=True)
