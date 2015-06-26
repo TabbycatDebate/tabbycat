@@ -20,6 +20,8 @@ parser.add_argument("--git-remote", type=str, default=None,
     help="Name of Git remote to use")
 parser.add_argument("--git-branch", type=str, default=None,
     help="Git branch to push (default master)")
+parser.add_argument("--pg-plan", "--postgresql-plan", type=str, default="hobby-dev",
+    help="Heroku Postgres plan (default hobby-dev)")
 
 config_group = parser.add_argument_group("heroku configuration settings")
 config_group.add_argument("--public-cache-timeout", type=int, default=None, metavar="TIMEOUT",
@@ -77,17 +79,17 @@ def print_yellow(message):
         message = "\033[1;33m" + message + "\033[0m"
     print message
 
-# Create the app
+# Create the app with addons
+addons = ["memcachier", "heroku-postgresql:%s" % args.pg_plan]
 command = ["heroku", "apps:create"]
+if addons:
+    command.extend(["--addons", ",".join(addons)])
 if args.urlname != "-":
     command.append(args.urlname)
 output = get_output_from_command(command)
 match = re.search("https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
 urlname = match.group(1)
 heroku_url = match.group(2)
-
-# Add add-ons
-run_heroku_command(["addons:create", "memcachier"])
 
 # Set config variables
 command = ["config:add", "WAITRESS_THREADS=4"]
