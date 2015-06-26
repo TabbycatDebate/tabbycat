@@ -44,7 +44,7 @@ class HungarianAllocator(Allocator):
         from debate.models import AdjudicatorAllocation
 
         # remove trainees
-        self.adjudicators = filter(lambda a: a.score > self.MIN_SCORE, self.adjudicators)
+        self.adjudicators = filter(lambda a: a.score >= self.MIN_SCORE, self.adjudicators)
 
         # sort adjudicators and debates in descending score/importance
         self.adjudicators_sorted = list(self.adjudicators)
@@ -69,7 +69,6 @@ class HungarianAllocator(Allocator):
         panellists = [a for a in self.adjudicators_sorted if a not in chairs]
 
         assert len(panel_debates) * 3 <= len(panellists)
-
 
         print "costing chairs"
 
