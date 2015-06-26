@@ -39,7 +39,7 @@
       {% endcache %}
     </div>
     <div class="collapse navbar-collapse">
-      {% if user.is_authenticated %}
+      {% if 'admin' in request.path %}
         {% if user.is_superuser %}
           {% include "nav/admin_nav.html" %}
         {% else %}
