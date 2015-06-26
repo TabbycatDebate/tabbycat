@@ -15,6 +15,11 @@ function removeConflictClasses(el) {
   $(el).removeClass("personal-conflict institutional-conflict history-conflict adjudicator-conflict");
 }
 
+function removeUnusedRow(oldHolder) {
+  var old_row = oldHolder.parent(); // Get the <tr>
+  unusedAdjTable.row(old_row).remove().draw(false);
+}
+
 function rebindHoverEvents(el) {
   $(el).bind("mouseover", function(e) {
     display_conflicts(e.currentTarget);
@@ -344,9 +349,7 @@ $("#allocationsTable .adj-holder").droppable( {
     if ($(this).hasClass("chair-holder")) {
       oldHolder.append(destinationAdjs); // Swap the two around if dropping into a single position
     } else if (!oldHolder.hasClass("adj-holder")) {
-      console.log("coming from scratch")
-      var old_row = oldHolder.parent(); // Get the <tr>
-      unusedAdjTable.row(old_row).remove().draw(false);
+      removeUnusedRow(oldHolder);
     }
 
     $(this).append(adj);
@@ -376,6 +379,7 @@ function _make_adj(data) {
 
 function set_chair(debate_id, data) {
   var td = $('#chair_'+debate_id);
+  removeUnusedRow(td)
   $('div.adj', td).remove();
   _make_adj(data).appendTo(td);
 }
@@ -390,11 +394,13 @@ function clear_trainees(debate_id) {
 
 function add_panellist(debate_id, data) {
   var td = $('#panel_'+debate_id);
+  removeUnusedRow(td)
   _make_adj(data).appendTo(td);
 }
 
 function add_trainee(debate_id, data) {
   var td = $('#trainees_'+debate_id);
+  removeUnusedRow(td)
   _make_adj(data).appendTo(td);
 }
 

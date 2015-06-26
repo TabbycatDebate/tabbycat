@@ -1008,7 +1008,7 @@ class Round(models.Model):
             raise RuntimeError("Tried to allocate adjudicators on unconfirmed draw")
 
         debates = self.get_draw()
-        adjs = list(self.active_adjudicators.accredited().filter(test_score__gt=0))
+        adjs = list(self.active_adjudicators.accredited())
         allocator = alloc_class(debates, adjs)
 
         for alloc in allocator.allocate():
