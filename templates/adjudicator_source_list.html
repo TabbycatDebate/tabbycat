@@ -25,9 +25,11 @@
           <td>{{ team.short_name }}</td>
           <td>{{ team.institution }}</td>
           <td>
+          {% if team.feedback_tally > 0 %}
             <a href="{% tournament_url team_feedback_list team.id %}">
-              {{ team.feedback_tally }} Feedback{{ adj.feedback_tally|pluralize }}
+              {{ team.feedback_tally }} Feedback{{ team.feedback_tally|pluralize }}
             </a>
+          {% endif %}
           </td>
         </tr>
         {% endfor %}
@@ -52,9 +54,11 @@
           <td>{{ adj.name }}</td>
           <td>{{ adj.institution }}</td>
           <td>
+          {% if adj.feedback_tally > 0 %}
             <a href="{% tournament_url adj_feedback_list adj.id %}">
               {{ adj.feedback_tally }} Feedback{{ adj.feedback_tally|pluralize }}
             </a>
+          {% endif %}
           </td>
         </tr>
         {% endfor %}

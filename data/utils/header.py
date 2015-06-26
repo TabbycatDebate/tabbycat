@@ -6,6 +6,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 import sys
 venv = os.environ.get("VIRTUAL_ENV")
 pyhome = os.environ.get("PYTHONHOME", "")
+
 if venv is not None:
     root_path = os.path.abspath(os.path.join(venv, ".."))
 elif "heroku" in pyhome:
@@ -13,6 +14,9 @@ elif "heroku" in pyhome:
 else:
     print("You must be in the virtual environment or Heroku to run this script.")
     exit()
-if root_path not in sys.path: sys.path.append(root_path)
+
+if root_path not in sys.path:
+    sys.path.append(root_path)
+
 import django
 django.setup()
