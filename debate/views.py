@@ -1968,12 +1968,24 @@ def get_adj_feedback(request, t):
     questions = t.adj_feedback_questions
     BOOLEAN_VALUES = {None: "Unsure", True: "Yes", False: "No"}
     def _parse_feedback(f):
+
+        if f.source_team:
+            aff_winner = f.debate.confirmed_ballot.ballot_set.aff_win
+            if (aff_winner and f.debate.aff_team == f.source_team.team):
+                win_status = " (Won)"
+            elif (not aff_winner and f.debate.neg_team == f.source_team.team):
+                win_status = " (Won)"
+            else:
+                win_status = " (Lost)"
+        else:
+            win_status = ""
+
         data = [
             unicode(f.round.abbreviation),
             unicode(str(f.version) + (f.confirmed and "*" or "")),
             f.debate.bracket,
             f.debate.matchup,
-            unicode(f.source),
+            unicode(str(f.source) + win_status),
             f.score,
         ]
         for question in questions:
