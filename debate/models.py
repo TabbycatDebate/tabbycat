@@ -1528,7 +1528,7 @@ class DebateTeam(models.Model):
 
     objects = SRManager()
 
-    debate = models.ForeignKey(Debate, db_index=True, related_name='debateteams')
+    debate = models.ForeignKey(Debate, db_index=True)
     team = models.ForeignKey(Team)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
@@ -1557,7 +1557,7 @@ class DebateAdjudicator(models.Model):
 
     objects = SRManager()
 
-    debate = models.ForeignKey(Debate, db_index=True, related_name='debateadjudicators')
+    debate = models.ForeignKey(Debate, db_index=True)
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
