@@ -68,6 +68,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'debate',
     'compressor',
+    'cachalot',
 )
 
 LOGIN_REDIRECT_URL = '/'
