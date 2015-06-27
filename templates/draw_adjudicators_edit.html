@@ -67,6 +67,7 @@
       <thead>
         <tr>
           <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+          <th><span>Importance Sort</span></th>
           <th><span class="glyphicon glyphicon-fire" data-toggle="tooltip" title="Importance"></span></th>
           <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
           <th><span data-toggle="tooltip" title="Aff wins">AW</span></th>
@@ -85,6 +86,9 @@
       <tr id="debate_{{ debate.id }}">
         <td>
           {{ debate.bracket }}
+        </td>
+        <td class="importance-recording">
+          {{ debate.importance }}
         </td>
         <td class="importance">
           <select class="form-control">

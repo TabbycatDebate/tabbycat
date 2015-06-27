@@ -216,18 +216,20 @@ function updateConflicts(debate_tr) {
 
 // TABLE BEHAVIOURS
 
-$('#allocationsTable .importance').on('change', function() {
+$('#allocationsTable .importance select').on('change', function() {
+  console.log("change");
   var importance = $("option:selected", this).val(); // or $(this).val()
-  var debate_id = DOMIdtoInt($(this).parent());
+  var cell = $(this).parent()
+  var row = $(this).parent().parent();
+  var debate_id = DOMIdtoInt(row);
   $.ajax({
     type: "POST",
     url: "{% round_url update_debate_importance %}",
     data: { debate_id: debate_id, value: importance },
-    success: function(data, status) {
-      allocationsTable.cell(this).data(data); // Update the datatable's value
-    },
   });
-});
+  var adjacent = allocationsTable.cell(cell.siblings(".importance-recording"));
+  // adjacent.data(importance).draw(); // Buggy - breaks the change event
+})
 
 $('#auto_allocate').click(function() {
   var btn = $(this)
@@ -347,7 +349,8 @@ $("#allocationsTable .adj-holder").droppable( {
 
     if ($(this).hasClass("chair-holder")) {
       oldHolder.append(destinationAdjs); // Swap the two around if dropping into a single position
-    } else if (!oldHolder.hasClass("adj-holder")) {
+    }
+    if (!oldHolder.hasClass("adj-holder")) {
       removeUnusedRow(oldHolder);
     }
 
@@ -445,6 +448,7 @@ var allocationsTable = $("#allocationsTable").DataTable( {
   "bAutoWidth": false,
   "aoColumns": [
     { "sWidth": "3%" },
+    { "sWidth": "0%" },
     { "sWidth": "3%" },
     { "sWidth": "3%" },
     { "sWidth": "3%" },
@@ -459,7 +463,9 @@ var allocationsTable = $("#allocationsTable").DataTable( {
   ],
   "aaSorting": [[1, 'desc']],
   "aoColumnDefs": [
-    { "bVisible": false, "aTargets": [2,3,4,6,7] }, //set column visibility
+    { "bVisible": false, "aTargets": [3,4,5,7,8] }, //set column visibility
+    {"iDataSort": 1, "aTargets": [2] },
+    { "bVisible": false, "aTargets": [1] },
   ]
 });
 
