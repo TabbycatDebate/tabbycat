@@ -11,7 +11,15 @@
   {% for item in feedback.items %}
     <li class="list-group-item">
       <small><strong>{{ item.question.text }}</strong></small>
-      <span class="text-right">{{ item.answer }}</span>
+      <span class="text-right">
+        {% if item.question.answer_type == 'f' %}
+          {{ item.answer|floatformat:"2" }}
+        {% elif item.question.answer_type == 'b' %}
+          {{ item.answer|yesno:"Yes,No,Unclear" }}
+        {% else %}
+          {{ item.answer }}
+        {% endif %}
+      </span>
     </li>
   {% endfor %}
   <li class="list-group-item panel-footer">
