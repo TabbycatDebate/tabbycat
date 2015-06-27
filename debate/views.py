@@ -1952,7 +1952,7 @@ def team_feedback_list(request, t, team_id):
 @login_required
 @tournament_view
 def adj_feedback_list(request, t, adj_id):
-    adj = Adjudicator.objects.get(pk=team_id)
+    adj = Adjudicator.objects.get(pk=adj_id)
     source = adj.name
     feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).order_by('-timestamp')
     feedbacks, score_thresholds = process_feedback(feedbacks, t)
