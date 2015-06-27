@@ -105,7 +105,7 @@
       </td>
   {% endfor %}
   {% for debate in draw %}
-    <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+    <tr>
       <td>
         <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
           {{ debate.neg_team.short_name }}

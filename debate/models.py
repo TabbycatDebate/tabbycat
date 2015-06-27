@@ -1033,14 +1033,22 @@ class Round(models.Model):
             return False
 
     def get_draw(self):
-        return self.debate_set.order_by('room_rank').select_related(
-            'venue', 'division', 'division__venue_group'
-        )
+        if self.tournament.config.get('enable_divisions'):
+            select_relateds = 'venue', 'division', 'division__venue_group'
+        else:
+            select_relateds = 'venue'
+
+        debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(select_relateds)
+        return debates
 
     def get_draw_by_room(self):
-        return self.debate_set.order_by('venue__name').select_related(
-            'venue', 'division', 'division__venue_group'
-        )
+        if self.tournament.config.get('enable_divisions'):
+            select_relateds = 'venue', 'division', 'division__venue_group'
+        else:
+            select_relateds = 'venue'
+
+        debates = Debate.objects.filter(round=self).order_by('venue__name').select_related(select_relateds)
+        return debates
 
     def get_draw_by_team(self):
         # TODO is there a more efficient way to do this?
