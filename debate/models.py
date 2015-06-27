@@ -850,8 +850,7 @@ class RoundManager(models.Manager):
         raise self.model.DoesNotExist("No round matching '%s'" % name)
 
     def get_queryset(self):
-        return super(RoundManager,
-                     self).get_queryset().select_related('tournament').order_by('seq')
+        return super(RoundManager, self).get_queryset().select_related('tournament').order_by('seq')
 
 
 class Round(models.Model):
@@ -1038,7 +1037,9 @@ class Round(models.Model):
         else:
             select_relateds = 'venue'
 
-        debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(select_relateds)
+        debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
+            select_relateds)
+
         return debates
 
     def get_draw_by_room(self):
@@ -1288,6 +1289,7 @@ def update_round_cache(sender, instance, created, **kwargs):
 # Update the cached round object when model is changed)
 signals.post_save.connect(update_round_cache, sender=Round)
 
+
 class ActiveVenue(models.Model):
     venue = models.ForeignKey(Venue)
     round = models.ForeignKey(Round, db_index=True)
@@ -1317,8 +1319,7 @@ class DebateManager(models.Manager):
 
     def get_queryset(self):
         return super(DebateManager, self).get_queryset().select_related(
-        'round', 'venue')
-
+            'round')
 
 class Debate(models.Model):
     STATUS_NONE      = 'N'
@@ -1390,12 +1391,12 @@ class Debate(models.Model):
 
     @cached_property
     def aff_dt(self):
-        aff_dt = DebateTeam.objects.select_related('team','team__institution').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
+        aff_dt = DebateTeam.objects.select_related('team', 'team__institution').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
         return aff_dt
 
     @cached_property
     def neg_dt(self):
-        neg_dt = DebateTeam.objects.select_related('team','team__institution').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
+        neg_dt = DebateTeam.objects.select_related('team', 'team__institution').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
         return neg_dt
 
     def get_side(self, team):
@@ -1405,7 +1406,7 @@ class Debate(models.Model):
             return 'neg'
         return None
 
-    @property
+    @cached_property
     def draw_conflicts(self):
         d = []
         history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
@@ -1462,7 +1463,7 @@ class Debate(models.Model):
     def all_conflicts(self):
         return self.draw_conflicts + self.adjudicator_conflicts
 
-    @property
+    @cached_property
     def adjudicator_conflicts(self):
         class Conflict(object):
             def __init__(self, adj, team):
@@ -1527,7 +1528,7 @@ class DebateTeam(models.Model):
 
     objects = SRManager()
 
-    debate = models.ForeignKey(Debate, db_index=True)
+    debate = models.ForeignKey(Debate, db_index=True, related_name='debateteams')
     team = models.ForeignKey(Team)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
@@ -1556,7 +1557,7 @@ class DebateAdjudicator(models.Model):
 
     objects = SRManager()
 
-    debate = models.ForeignKey(Debate, db_index=True)
+    debate = models.ForeignKey(Debate, db_index=True, related_name='debateadjudicators')
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
