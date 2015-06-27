@@ -86,12 +86,24 @@
         <td>
           {{ debate.bracket }}
         </td>
-        <td class="btn-holder btn btn-default importance">
-          {% if debate.importance == None %}
-            n/a
-          {% else %}
-            {{ debate.importance }}
-          {% endif %}
+        <td class="importance">
+          <select class="form-control">
+            <option value="1" {% if debate.importance == 1 %}selected{% endif %}>
+              1
+            </option>
+            <option value="2" {% if debate.importance == 2 %}selected{% endif %}>
+              2
+            </option>
+            <option value="3" {% if debate.importance == 3 %}selected{% endif %}>
+              3
+            </option>
+            <option value="4" {% if debate.importance == 4 %}selected{% endif %}>
+              4
+            </option>
+            <option value="5" {% if debate.importance == 5 %}selected{% endif %}>
+              5
+            </option>
+          </select>
         </td>
         <td>
           {{ debate.venue }}
@@ -246,7 +258,6 @@
 
 {% block extra-js %}
 <script type="text/javascript" language="javascript" src="{% static 'js/jquery-ui-1.10.4.custom.min.js' %}"></script>
-<script type="text/javascript" language="javascript" src="{% static 'js/jquery.jeditable.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
 $(document).ready( function() {
   {% include 'js/draw_adjs_edit_allocation.js' %}

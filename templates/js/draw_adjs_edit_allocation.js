@@ -216,19 +216,18 @@ function updateConflicts(debate_tr) {
 
 // TABLE BEHAVIOURS
 
-// Enabling the priority to be editable; and submitting AJAX updates of its values
-$('#allocationsTable .importance').editable('{% round_url update_debate_importance %}', {
-  "callback": function(sValue, y) {
-    allocationsTable.cell(this).data(sValue); // Update the datatable's value
-  },
-  submitdata: function(value, settings) {
-    return {"debate_id": this.parentNode.getAttribute('id').replace('debate_','')};
-  },
-  type: 'select',
-  onblur: 'submit',
-  data: "{'1':'1', '2':'2', '3':'3', '4':'4', '5':'5'}"
+$('#allocationsTable .importance').on('change', function() {
+  var importance = $("option:selected", this).val(); // or $(this).val()
+  var debate_id = DOMIdtoInt($(this).parent());
+  $.ajax({
+    type: "POST",
+    url: "{% round_url update_debate_importance %}",
+    data: { debate_id: debate_id, value: importance },
+    success: function(data, status) {
+      allocationsTable.cell(this).data(data); // Update the datatable's value
+    },
+  });
 });
-
 
 $('#auto_allocate').click(function() {
   var btn = $(this)

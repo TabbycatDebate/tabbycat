@@ -29,14 +29,17 @@
     padding-left: 5px;
   }
 
+  .table > tbody > tr > td {
+    line-height: 26px; // Align text with boxes
+  }
+
   .importance {
     text-align: left;
-    width: 48px;
-    form {
-      margin: -8px -8px -8px -8px;
-    }
-    select {
-      @extend .form-control;
+    padding: 5px !important;
+    .form-control {
+      min-width: 42px;
+      padding-left: 4px;
+      padding-right: 4px;
     }
   }
 

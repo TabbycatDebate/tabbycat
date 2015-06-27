@@ -1501,22 +1501,6 @@ class Debate(models.Model):
         return a_adj
 
     @property
-    def venue_splitname(self):
-        # Formatting venue names so they can split over multiple lines
-        # TODO: integrate venue group name into here
-        match = re.match(r"([a-z]+)([0-9]+)", str(self.venue.name), re.I)
-        if match:
-            items = match.groups()
-            if len(items[1]) > 3:
-                alloc = u'%s %s %s' % (items[0], items[1][:3], items[1][3:])
-            else:
-                alloc = u'%s %s' % (items[0], items[1])
-        else:
-            alloc = self.venue.name
-
-        return alloc
-
-    @property
     def matchup(self):
         return u'%s vs %s' % (self.aff_team.short_name, self.neg_team.short_name)
 
