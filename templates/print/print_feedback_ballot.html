@@ -63,39 +63,6 @@
 
   <div class="panel panel-default">
     <div class="panel-heading">
-      <p class="italic panel-title small"><em>Did you agree with their decision?</em></p>
-    </div>
-    <div class="panel-body no-vertical-spacing">
-      <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
-        <thead>
-          <tr>
-            <th class="text-center h4">Yes</th>
-            <th class="text-center h4">No</th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <p class="italic panel-title small"><em>Do you think they should be demoted or promoted?</em></p>
-    </div>
-    <div class="panel-body no-vertical-spacing">
-      <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
-        <thead>
-          <tr>
-            <th class="text-center h4">Demote</th>
-            <th class="text-center h4">Keep the same</th>
-            <th class="text-center h4">Promote</th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
       <p class="panel-title small"><em>How convincing was their adjudication?</em></p>
     </div>
     <div class="panel-body no-horizontal-spacing">
@@ -111,34 +78,77 @@
         </thead>
         <tbody>
           <tr class="text-center text-muted em small">
-            <td width="20%" class="no-borders no-vertical-spacing"><em>awful; should trainee</em></td>
-            <td width="20%" class="no-borders no-vertical-spacing"><em>bad; should not chair</em></td>
-            <td width="20%" class="no-borders no-vertical-spacing"><em>ok; should be panelling</em></td>
-            <td width="20%" class="no-borders no-vertical-spacing"><em>good; should be chairing</em></td>
-            <td width="20%" class="no-borders no-vertical-spacing"><em>amazing; should break</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>1. awful; should trainee</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>2. bad; should not chair</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>3. ok; should be panelling</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>4. good; should be chairing</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>5. amazing; should break</em></td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <p class="italic panel-title small"><em>What did you think about the adjudication?</em></p>
+  {% for question in questions %}
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <p class="italic panel-title small"><em>{{ question.text }}</em></p>
+      </div>
+      <div class="panel-body no-vertical-spacing">
+      {% if question.answer_type == 'b' %}
+        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+          <thead>
+            <tr>
+              <th style="width:33%" class="text-center h4">Yes</th>
+              <th style="width:33%" class="text-center h4">Unsure</th>
+              <th style="width:33%" class="text-center h4">No</th>
+            </tr>
+          </thead>
+        </table>
+      {% elif question.answer_type == 'i' %}
+        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+          <thead>
+            <tr>
+              <th style="width:33%" class="text-center h4">Yes</th>
+              <th style="width:33%" class="text-center h4">Unsure</th>
+              <th style="width:33%" class="text-center h4">No</th>
+              <th style="width:33%" class="text-center h4">Unsure</th>
+              <th style="width:33%" class="text-center h4">No</th>
+            </tr>
+          </thead>
+        </table>
+      {% elif question.answer_type == 'f' %}
+        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+          <thead>
+            <tr>
+              <th style="width:20%" class="text-center h4">{{ question.min_value }}</th>
+              <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 2 %}</th>
+              <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 3 %}</th>
+              <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 4 %}</th>
+              <th style="width:20%" class="text-center h4">{{ question.max_value }}</th>
+            </tr>
+          </thead>
+        </table>
+      {% elif question.answer_type == 't' %}
+        <hr class="writeable">
+      {% elif question.answer_type == 'T' %}
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+      {% endif %}
+
+      </div>
     </div>
-    <div class="panel-body no-vertical-spacing">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-    </div>
-  </div>
+
+  {% endfor %}
 
   <div class="panel panel-default">
     <div class="panel-footer no-borders">

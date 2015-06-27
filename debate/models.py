@@ -1717,6 +1717,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
     def answer_type_class(self):
         return self.ANSWER_TYPE_CLASSES[self.answer_type]
 
+
 class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     score = models.FloatField()

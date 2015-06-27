@@ -79,6 +79,12 @@ def debate_draw_status_class(debate):
 register.simple_tag(debate_draw_status_class)
 
 
+def feedback_number_step(min_val, max_val, number):
+    step = (max_val - min_val) / 5
+    value = min_val + (number * step)
+    return value
+
+register.simple_tag(feedback_number_step)
 
 class RoundURLNode(template.Node):
     def __init__(self, view_name, round=None):
