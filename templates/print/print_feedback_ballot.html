@@ -106,27 +106,15 @@
             </tr>
           </thead>
         </table>
-      {% elif question.answer_type == 'i' %}
+      {% elif question.answer_type == 'i' or question.answer_type == 'f' %}
         <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
           <thead>
             <tr>
-              <th style="width:33%" class="text-center h4">Yes</th>
-              <th style="width:33%" class="text-center h4">Unsure</th>
-              <th style="width:33%" class="text-center h4">No</th>
-              <th style="width:33%" class="text-center h4">Unsure</th>
-              <th style="width:33%" class="text-center h4">No</th>
-            </tr>
-          </thead>
-        </table>
-      {% elif question.answer_type == 'f' %}
-        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
-          <thead>
-            <tr>
-              <th style="width:20%" class="text-center h4">{{ question.min_value }}</th>
+              <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 0 %}</th>
+              <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 1 %}</th>
               <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 2 %}</th>
               <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 3 %}</th>
               <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 4 %}</th>
-              <th style="width:20%" class="text-center h4">{{ question.max_value }}</th>
             </tr>
           </thead>
         </table>

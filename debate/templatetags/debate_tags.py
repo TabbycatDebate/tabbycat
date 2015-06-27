@@ -80,7 +80,7 @@ register.simple_tag(debate_draw_status_class)
 
 
 def feedback_number_step(min_val, max_val, number):
-    step = (max_val - min_val) / 5
+    step = (max_val - min_val) / 4
     value = min_val + (number * step)
     return value
 
