@@ -9,7 +9,7 @@ else:
     use_color = True
 
 def print_command(command):
-    message = " $ " + " ".join(command)
+    message = "$ " + " ".join(command)
     if use_color:
         message = "\033[0;36m" + message + "\033[0m"
     print message
