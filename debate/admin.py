@@ -73,8 +73,8 @@ class TeamForm(forms.ModelForm):
         model = models.Team
         fields = '__all__'
 
-    def clean_url_hash(self):
-        return self.cleaned_data['url_hash'] or None # So that the url hash can be unique and also set to blank
+    def clean_url_key(self):
+        return self.cleaned_data['url_key'] or None # So that the url key can be unique and also set to blank
 
 class TeamAdmin(admin.ModelAdmin):
     form = TeamForm

@@ -14,7 +14,7 @@ from ipware.ip import get_real_ip
 from debate.result import BallotSet
 from debate import forms
 from debate.models import *
-from debate.utils import populate_url_hashes
+from debate.utils import populate_url_keys
 
 from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
@@ -1285,9 +1285,9 @@ def edit_ballots(request, t, ballots_id):
         show_adj_contact    =True))
 
 # Don't cache
-@public_optional_tournament_view('public_ballots_hash')
-def public_new_ballots_hash(request, t, url_hash):
-    adjudicator = get_object_or_404(Adjudicator, tournament=t, url_hash=url_hash)
+@public_optional_tournament_view('public_ballots_randomised')
+def public_new_ballots_key(request, t, url_key):
+    adjudicator = get_object_or_404(Adjudicator, tournament=t, url_key=url_key)
     return public_new_ballots(request, t, adjudicator)
 
 # Don't cache
@@ -2011,9 +2011,9 @@ def get_adj_feedback(request, t):
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
 # Don't cache
-@public_optional_tournament_view('public_feedback_hash')
-def public_enter_feedback_hash(request, t, source_type, url_hash):
-    source = get_object_or_404(source_type, tournament=t, url_hash=url_hash)
+@public_optional_tournament_view('public_feedback_randomised')
+def public_enter_feedback_key(request, t, source_type, url_key):
+    source = get_object_or_404(source_type, tournament=t, url_key=url_key)
     return public_enter_feedback(request, t, source)
 
 # Don't cache
@@ -2164,24 +2164,24 @@ def post_ballot_checkin(request, round):
 
 @admin_required
 @tournament_view
-def hash_urls(request, t):
+def randomised_urls(request, t):
     teams = t.team_set.all()
     adjs = t.adjudicator_set.all()
-    exists = t.adjudicator_set.filter(url_hash__isnull=False).exists() or \
-            t.team_set.filter(url_hash__isnull=False).exists()
+    exists = t.adjudicator_set.filter(url_key__isnull=False).exists() or \
+            t.team_set.filter(url_key__isnull=False).exists()
     tournament_slug = t.slug
-    return r2r(request, 'hash_urls.html', dict(teams=teams, adjs=adjs,
+    return r2r(request, 'randomised_urls.html', dict(teams=teams, adjs=adjs,
             exists=exists, tournament_slug=tournament_slug))
 
 @admin_required
 @tournament_view
 @expect_post
-def generate_hash_urls(request, t):
-    # Only works if there are no URL hashes now
-    if t.adjudicator_set.filter(url_hash__isnull=False).exists() or \
-            t.team_set.filter(url_hash__isnull=False).exists():
-        return HttpResponseBadRequest("There are already URL hashes. You must use the Django management commands to populate or delete URL hashes.")
+def generate_randomised_urls(request, t):
+    # Only works if there are no randomised URLs now
+    if t.adjudicator_set.filter(url_key__isnull=False).exists() or \
+            t.team_set.filter(url_key__isnull=False).exists():
+        return HttpResponseBadRequest("There are already randomised URLs. You must use the Django management commands to populate or delete randomised URLs.")
 
-    populate_url_hashes(t.adjudicator_set.all())
-    populate_url_hashes(t.team_set.all())
-    return redirect_tournament('hash_urls', t)
+    populate_url_keys(t.adjudicator_set.all())
+    populate_url_keys(t.team_set.all())
+    return redirect_tournament('randomised_urls', t)

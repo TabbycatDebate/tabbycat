@@ -509,7 +509,7 @@ class Team(models.Model):
     emoji_seq = models.IntegerField(blank=True, null=True, help_text="Emoji number to use for this team")
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
-    url_hash = models.SlugField(blank=True, null=True, unique=True, max_length=24)
+    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
     # set to True if a team is ineligible to break (other than being
     # swing/composite)
@@ -712,7 +712,7 @@ class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament, blank=True, null=True)
     test_score = models.FloatField(default=0)
-    url_hash = models.SlugField(blank=True, null=True, unique=True, max_length=24)
+    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
     institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adjudicator_institution_conflicts')
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
