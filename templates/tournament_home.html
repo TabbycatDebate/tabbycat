@@ -56,9 +56,9 @@
 $(document).ready( function() {
 
   var plotData = [
-    [   [0,{{ stats.0.1 }}]  ],
-    [   [0,{{ stats.1.1 }}]  ],
-    [   [0,{{ stats.2.1 }}]  ]
+    [   [-0.5,{{ stats.0.1 }}], [0,{{ stats.0.1 }}]  ],
+    [   [-0.5,{{ stats.1.1 }}], [0,{{ stats.1.1 }}]  ],
+    [   [-0.5,{{ stats.2.1 }}], [0,{{ stats.2.1 }}]  ]
   ];
   var updateInterval = 30000 // 30 second pings
 
@@ -104,7 +104,7 @@ $(document).ready( function() {
           fill: true,
         },
       },
-      colors: ['#d9534f', '#d5e615', '#5cb85c'],
+      colors: ['#5cb85c', '#d5e615', '#d9534f'],
       yaxis: {
         min: 0,
         max: {{ total_ballots }},
