@@ -404,6 +404,22 @@ class TeamManager(models.Manager):
 
         return teams
 
+    def division_standings(self, round):
+        """Returns a list."""
+
+        teams = self.standings(round)
+
+        prev_rank_value = (None, None)
+        current_rank = 0
+        for i, team in enumerate(teams, start=1):
+            rank_value = (team.points, team.margins, team.speaker_score)
+            if rank_value != prev_rank_value:
+                current_rank = i
+                prev_rank_value = rank_value
+            team.rank = current_rank
+
+        return teams
+
     def subrank_standings(self, round):
         """Returns a list."""
         teams = self.standings(round)
