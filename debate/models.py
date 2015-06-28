@@ -1033,22 +1033,22 @@ class Round(models.Model):
 
     def get_draw(self):
         if self.tournament.config.get('enable_divisions'):
-            select_relateds = 'venue', 'division', 'division__venue_group'
+            debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
+            'venue', 'division', 'division__venue_group')
         else:
-            select_relateds = 'venue'
-
-        debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
-            select_relateds)
+            debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
+            'venue')
 
         return debates
 
     def get_draw_by_room(self):
         if self.tournament.config.get('enable_divisions'):
-            select_relateds = 'venue', 'division', 'division__venue_group'
+            debates = Debate.objects.filter(round=self).order_by('venue__name').select_related(
+                 'venue', 'division', 'division__venue_group')
         else:
-            select_relateds = 'venue'
+            debates = Debate.objects.filter(round=self).order_by('venue__name').select_related(
+                 'venue')
 
-        debates = Debate.objects.filter(round=self).order_by('venue__name').select_related(select_relateds)
         return debates
 
     def get_draw_by_team(self):
