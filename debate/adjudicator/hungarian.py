@@ -17,7 +17,7 @@ class HungarianAllocator(Allocator):
         super(HungarianAllocator, self).__init__(*args, **kwargs)
         config = self.debates[0].round.tournament.config
         self.MAX_SCORE = config.get('adj_max_score')
-        self.MIN_SCORE = config.get('adj_min_score')
+        self.MIN_SCORE = config.get('adj_min_voting_score')
         self.CHAIR_CUTOFF = config.get('adj_chair_min_score')
 
         self.CONFLICT_PENALTY = config.get('adj_conflict_penalty')

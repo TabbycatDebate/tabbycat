@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
+from django.utils.safestring import mark_safe
 
 import debate.models as m
 from debate.result import BallotSet, ForfeitBallotSet
@@ -631,7 +632,6 @@ class DebateResultFormSet(object):
 class BaseFeedbackForm(forms.Form):
     """Base class for all dynamically-created feedback forms. Contains all
     question fields."""
-    score = forms.FloatField(min_value=1, max_value=5)
 
     # parameters set at "compile time" by subclasses
     tournament = NotImplemented
@@ -641,7 +641,7 @@ class BaseFeedbackForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
-        self.fields['score'] = self.fields.pop('score') # for score field to come after source/adjudicator field
+
         self._create_fields()
 
     @staticmethod
@@ -676,6 +676,11 @@ class BaseFeedbackForm(forms.Form):
     def _create_fields(self):
         """Creates dynamic fields in the form."""
         # Feedback questions defined for the tournament
+        adj_min_score = self.tournament.config.get('adj_min_score')
+        adj_max_score = self.tournament.config.get('adj_max_score')
+        score_label = mark_safe("Overall score<br />(%s=lowest, %s=highest)" % (adj_min_score, adj_max_score))
+        self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
+
         for question in self.tournament.adj_feedback_questions.filter(**self.question_filter):
             self.fields[question.reference] = self._make_question_field(question)
 
