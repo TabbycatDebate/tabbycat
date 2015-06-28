@@ -1719,7 +1719,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
     ANSWER_TYPE_CHOICES = (
         (ANSWER_TYPE_BOOLEAN_CHECKBOX , 'checkbox'),
         (ANSWER_TYPE_BOOLEAN_SELECT   , 'yes/no (dropdown)'),
-        (ANSWER_TYPE_INTEGER_TEXTBOX      , 'integer (textbox)'),
+        (ANSWER_TYPE_INTEGER_TEXTBOX  , 'integer (textbox)'),
         (ANSWER_TYPE_INTEGER_SCALE    , 'integer scale'),
         (ANSWER_TYPE_FLOAT            , 'float'),
         (ANSWER_TYPE_TEXT             , 'text'),

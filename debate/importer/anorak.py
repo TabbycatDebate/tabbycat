@@ -173,7 +173,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'use_institution_prefix' : int(line[2]) if len(line) > 2 else 0,
                 'emoji_seq'              : self.get_emoji(),
             }
-        counts, errors = self._import(f, _team_line_parser, m.Team)
+        counts, errors = self._import(f, _team_line_parser, m.Team, generated_fields=['emoji_seq'])
 
         if create_dummy_speakers:
             def _speakers_line_parser(line):
@@ -193,6 +193,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
 
         if auto_create_teams:
+            self.initialise_emoji_options()
             def _team_line_parser(line):
                 return {
                     'tournament'             : self.tournament,
@@ -200,8 +201,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'reference'              : line[2],
                     'short_reference'        : line[2][:35],
                     'use_institution_prefix' : int(line[3]) if len(line) > 3 else 0,
+                    'emoji_seq'              : self.get_emoji(),
                 }
-            counts, errors = self._import(f, _team_line_parser, m.Team, expect_unique=False)
+            counts, errors = self._import(f, _team_line_parser, m.Team, expect_unique=False, generated_fields=['emoji_seq'])
         else:
             counts = None
             errors = None
