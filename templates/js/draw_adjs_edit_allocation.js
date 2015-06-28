@@ -17,7 +17,7 @@ function removeConflictClasses(el) {
 
 function removeUnusedRow(oldHolder) {
   var old_row = oldHolder.parent(); // Get the <tr>
-  unusedAdjTable.row(old_row).remove().draw(false);
+  unusedAdjTable.row(old_row).remove().draw();
 }
 
 function rebindHoverEvents(el) {
@@ -348,9 +348,11 @@ $("#allocationsTable .adj-holder").droppable( {
     var destinationAdjs = $(".adj", this); // Any adjs present in the drop destination
 
     if ($(this).hasClass("chair-holder")) {
-      oldHolder.append(destinationAdjs); // Swap the two around if dropping into a single position
+      // Swap the two around if dropping into a single position
+      oldHolder.append(destinationAdjs);
     }
     if (!oldHolder.hasClass("adj-holder")) {
+      // If placing from the unused column
       removeUnusedRow(oldHolder);
     }
 
