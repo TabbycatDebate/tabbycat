@@ -98,7 +98,7 @@ def r2r(request, template, extra_context=None):
 
 def index(request):
     tournaments = Tournament.objects.all()
-    if request.user.is_superuser and request.user.is_staff:
+    if request.user.is_authenticated():
         return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
     elif len(tournaments) == 1:
         sole_tournament = list(tournaments)[0]
