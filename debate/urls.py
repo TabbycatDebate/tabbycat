@@ -108,6 +108,7 @@ urlpatterns = patterns('debate.views',
 
     url(r'^admin/round/(?P<round_seq>\d+)/results/$', 'results', name='results'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/team/$', 'team_standings', name='team_standings'),
+    url(r'^admin/round/(?P<round_seq>\d+)/standings/division/$', 'division_standings', name='division_standings'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/speaker/$', 'speaker_standings', name='speaker_standings'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/novices/$', 'novice_standings', name='novice_standings'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/reply/$', 'reply_standings', name='reply_standings'),

@@ -24,6 +24,9 @@
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standings<b class="caret"></b></a>
     <ul class="dropdown-menu">
       <li><a href="{% round_url team_standings current_round %}">Teams</a></li>
+      {% if enable_divisions %}
+      <li><a href="{% round_url division_standings current_round %}">Divisions</a></li>
+      {% endif %}
       <li><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
       {% if show_novices %}
         <li><a href="{% round_url novice_standings current_round %}">Novices</a></li>

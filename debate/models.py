@@ -337,14 +337,30 @@ def annotate_team_standings(teams, round=None, shuffle=False):
 
     elif rule == "wadl":
         # Sort by points
-        if shuffle:
-            sorted_teams = list(teams)
-            random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
-            sorted_teams.sort(key=lambda x: (x.points, x.margins), reverse=True)
-            return sorted_teams
-        else:
-            teams = teams.order_by("-points", "-margins")
-            return list(teams)
+        teams = teams.order_by("-points", "-margins", "-speaker_score")
+        teams = [t for t in teams if t.margins > 0]
+
+        final_teams = []
+
+        # Sort by division rank
+        divisions = Division.objects.filter(tournament=tournament)
+        for division in divisions:
+            division_teams = [t for t in teams if t.division == division]
+            if division_teams:
+                for i, team in enumerate(division_teams):
+                    team.division_rank = i + 1 # Assign their in-division rank
+
+                 # Division winners go straight through
+                final_teams.append(division_teams[0])
+                teams.pop(0)
+
+        # Sort division winners
+        final_teams = sorted(final_teams, key = lambda x: (-x.points, -x.margins, -x.speaker_score))
+
+        # Add back on the non-division winners
+        final_teams.extend(teams)
+
+        return final_teams
 
     else:
         raise ValueError("Invalid team_standings_rule option: {0}".format(rule))
@@ -381,6 +397,22 @@ class TeamManager(models.Manager):
         current_rank = 0
         for i, team in enumerate(teams, start=1):
             rank_value = (team.points, team.speaker_score)
+            if rank_value != prev_rank_value:
+                current_rank = i
+                prev_rank_value = rank_value
+            team.rank = current_rank
+
+        return teams
+
+    def division_standings(self, round):
+        """Returns a list."""
+
+        teams = self.standings(round)
+
+        prev_rank_value = (None, None)
+        current_rank = 0
+        for i, team in enumerate(teams, start=1):
+            rank_value = (team.points, team.margins, team.speaker_score)
             if rank_value != prev_rank_value:
                 current_rank = i
                 prev_rank_value = rank_value
@@ -1033,22 +1065,22 @@ class Round(models.Model):
 
     def get_draw(self):
         if self.tournament.config.get('enable_divisions'):
-            select_relateds = 'venue', 'division', 'division__venue_group'
+            debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
+            'venue', 'division', 'division__venue_group')
         else:
-            select_relateds = 'venue'
-
-        debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
-            select_relateds)
+            debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
+            'venue')
 
         return debates
 
     def get_draw_by_room(self):
         if self.tournament.config.get('enable_divisions'):
-            select_relateds = 'venue', 'division', 'division__venue_group'
+            debates = Debate.objects.filter(round=self).order_by('venue__name').select_related(
+                 'venue', 'division', 'division__venue_group')
         else:
-            select_relateds = 'venue'
+            debates = Debate.objects.filter(round=self).order_by('venue__name').select_related(
+                 'venue')
 
-        debates = Debate.objects.filter(round=self).order_by('venue__name').select_related(select_relateds)
         return debates
 
     def get_draw_by_team(self):

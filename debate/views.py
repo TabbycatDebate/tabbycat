@@ -1513,6 +1513,42 @@ def team_standings(request, round, for_print=False):
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds, for_print=for_print,
        show_ballots=False, show_draw_strength=show_draw_strength))
 
+
+@admin_required
+@round_view
+def division_standings(request, round, for_print=False):
+    from debate.models import TeamScore
+    teams = Team.objects.division_standings(round)
+
+    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
+    team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
+
+    def get_round_result(team, r):
+        try:
+            ts = next((x for x in team_scores if x.debate_team.team == team and x.debate_team.debate.round == r), None)
+            return ts
+        except TeamScore.DoesNotExist:
+            return None
+
+    for team in teams:
+        team.round_results = [get_round_result(team, r) for r in rounds]
+        team.wins = [ts.win for ts in team.round_results if ts].count(True)
+        team.points = sum([ts.points for ts in team.round_results if ts])
+        if round.tournament.config.get('show_avg_margin'):
+            try:
+                margins = []
+                for ts in team.round_results:
+                    if ts:
+                        if ts.get_margin is not None:
+                            margins.append(ts.get_margin)
+
+                team.avg_margin = sum(margins) / float(len(margins))
+            except ZeroDivisionError:
+                team.avg_margin = None
+
+
+    return r2r(request, 'division_standings.html', dict(teams=teams))
+
 @admin_required
 @round_view
 def speaker_standings(request, round, for_print=False):
