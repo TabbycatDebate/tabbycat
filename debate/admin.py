@@ -161,7 +161,7 @@ admin.site.register(models.Adjudicator, AdjudicatorAdmin)
 # ==============================================================================
 
 class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type', 'chair_on_panellist', 'panellist_on_chair', 'panellist_on_panellist', 'team_on_orallist')
+    list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type', 'required', 'chair_on_panellist', 'panellist_on_chair', 'panellist_on_panellist', 'team_on_orallist')
     list_filter = ('tournament',)
     ordering = ('tournament', 'seq')
 
@@ -171,51 +171,27 @@ admin.site.register(models.AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuest
 # AdjudicatorFeedback
 # ==============================================================================
 
-class AdjudicatorFeedbackBooleanAnswerInline(admin.TabularInline):
-    model = models.AdjudicatorFeedbackBooleanAnswer
+class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
+    model = NotImplemented
     fields = ('question', 'answer')
     extra = 1
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "question":
-            kwargs["queryset"] = models.AdjudicatorFeedbackQuestion.objects.filter(answer_type=models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN)
-        return super(AdjudicatorFeedbackBooleanAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
-
-class AdjudicatorFeedbackIntegerAnswerInline(admin.TabularInline):
-    model = models.AdjudicatorFeedbackIntegerAnswer
-    fields = ('question', 'answer')
-    extra = 1
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "question":
-            kwargs["queryset"] = models.AdjudicatorFeedbackQuestion.objects.filter(answer_type=models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER)
-        return super(AdjudicatorFeedbackIntegerAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
-
-class AdjudicatorFeedbackFloatAnswerInline(admin.TabularInline):
-    model = models.AdjudicatorFeedbackFloatAnswer
-    fields = ('question', 'answer')
-    extra = 1
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "question":
-            kwargs["queryset"] = models.AdjudicatorFeedbackQuestion.objects.filter(answer_type=models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT)
-        return super(AdjudicatorFeedbackFloatAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
-
-class AdjudicatorFeedbackStringAnswerInline(admin.TabularInline):
-    model = models.AdjudicatorFeedbackStringAnswer
-    fields = ('question', 'answer')
-    extra = 1
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "question":
-            kwargs["queryset"] = models.AdjudicatorFeedbackQuestion.objects.filter(answer_type__in=[models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT, models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXTBOX])
-        return super(AdjudicatorFeedbackStringAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
+            kwargs["queryset"] = models.AdjudicatorFeedbackQuestion.objects.filter(answer_type__in=models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE[self.model])
+        return super(BaseAdjudicatorFeedbackAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'source_adjudicator', 'source_team', 'confirmed', 'score')
     search_fields = ('source_adjudicator__adjudicator__name', 'source_team__team__institution__code', 'source_team__team__reference', 'adjudicator__name', 'adjudicator__institution__code',)
     raw_id_fields = ('source_team',)
-    inlines = (AdjudicatorFeedbackBooleanAnswerInline, AdjudicatorFeedbackIntegerAnswerInline, AdjudicatorFeedbackFloatAnswerInline, AdjudicatorFeedbackStringAnswerInline)
+
+    # dynamically generate inline tables for different answer types
+    inlines = []
+    for _answer_type_class in models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE:
+        _inline_class = type(_answer_type_class.__name__ + "Inline", (BaseAdjudicatorFeedbackAnswerInline,),
+                {"model": _answer_type_class, "__module__": __name__})
+        inlines.append(_inline_class)
 
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 

@@ -110,15 +110,39 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
         return value
 
 
-class CustomNullBooleanSelect(forms.NullBooleanSelect):
+class CustomBooleanSelect(forms.NullBooleanSelect):
+    """Class to do boolean select fields following our conventions.
+    Specifically, if 'required', checks that an option was chosen."""
 
     def __init__(self, attrs=None):
-        choices = (('1', ugettext_lazy('Not sure')),
+        choices = (('1', ugettext_lazy('--------')),
                    ('2', ugettext_lazy('Yes')),
                    ('3', ugettext_lazy('No')))
         # skip the NullBooleanSelect constructor
         super(forms.NullBooleanSelect, self).__init__(attrs, choices)
 
+class BooleanSelectField(forms.NullBooleanField):
+    def clean(self, value):
+        value = super(BooleanSelectField, self).clean(value)
+        if self.required and value is None:
+            raise forms.ValidationError(_("This field is required."))
+        return value
+
+class IntegerRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
+    """Used by IntegerRadioSelect."""
+    outer_html = '<table{id_attr} class="integer-scale-table"><tr>{content}</tr></table>'
+    inner_html = '<td>{choice_value}{sub_widgets}</td>'
+
+class IntegerRadioSelect(forms.RadioSelect):
+    renderer = IntegerRadioFieldRenderer
+
+class IntegerScaleField(forms.IntegerField):
+    """Class to do integer scale fields."""
+    widget = IntegerRadioSelect
+
+    def __init__(self, *args, **kwargs):
+        super(IntegerScaleField, self).__init__(*args, **kwargs)
+        self.widget.choices = tuple((i, str(i)) for i in range(self.min_value, self.max_value+1))
 
 # ==============================================================================
 # Result/ballot forms
@@ -622,17 +646,28 @@ class BaseFeedbackForm(forms.Form):
 
     @staticmethod
     def _make_question_field(question):
-        if question.answer_type == question.ANSWER_TYPE_BOOLEAN:
-            field = forms.NullBooleanField(widget=CustomNullBooleanSelect, required=False)
-        elif question.answer_type == question.ANSWER_TYPE_INTEGER:
-            field = forms.IntegerField(min_value=int(question.min_value),
-                    max_value=int(question.max_value))
+        if question.answer_type == question.ANSWER_TYPE_BOOLEAN_SELECT:
+            field = BooleanSelectField(widget=CustomBooleanSelect)
+        elif question.answer_type == question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
+            field = forms.BooleanField()
+        elif question.answer_type == question.ANSWER_TYPE_INTEGER_TEXTBOX:
+            min_value = int(question.min_value) if question.min_value else None
+            max_value = int(question.max_value) if question.max_value else None
+            field = forms.IntegerField(min_value=min_value, max_value=max_value)
+        elif question.answer_type == question.ANSWER_TYPE_INTEGER_SCALE:
+            min_value = int(question.min_value) if question.min_value is not None else None
+            max_value = int(question.max_value) if question.max_value is not None else None
+            if min_value is None or max_value is None:
+                logger.error("Integer scale %r has no min_value or no max_value" % question.reference)
+                field = forms.IntegerField()
+            else:
+                field = IntegerScaleField(min_value=min_value, max_value=max_value)
         elif question.answer_type == question.ANSWER_TYPE_FLOAT:
             field = forms.FloatField(min_value=question.min_value,
                     max_value=question.max_value)
         elif question.answer_type == question.ANSWER_TYPE_TEXT:
             field = forms.CharField()
-        elif question.answer_type == question.ANSWER_TYPE_TEXTBOX:
+        elif question.answer_type == question.ANSWER_TYPE_LONGTEXT:
             field = forms.CharField(widget=forms.Textarea)
         field.label = question.text
         field.required = question.required
@@ -663,9 +698,10 @@ class BaseFeedbackForm(forms.Form):
         af.save()
 
         for question in self.tournament.adj_feedback_questions.filter(**self.question_filter):
-            answer = question.answer_type_class(feedback=af, question=question,
-                    answer=self.cleaned_data[question.reference])
-            answer.save()
+            if self.cleaned_data[question.reference] is not None:
+                answer = question.answer_type_class(feedback=af, question=question,
+                        answer=self.cleaned_data[question.reference])
+                answer.save()
 
         return af
 

@@ -31,11 +31,13 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     }
 
     FEEDBACK_ANSWER_TYPES = {
-        ("boolean", "bool"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN,
-        ("integer", "int"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER,
+        ("checkbox"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_CHECKBOX,
+        ("yes no select", "yesno"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT,
+        ("integer textbox", "int", "integer"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_TEXTBOX,
+        ("integer scale", "scale"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
         ("float"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT,
         ("text"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT,
-        ("textbox"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXTBOX,
+        ("textbox", "long text", "longtext"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
     }
 
     def import_rounds(self, f):
@@ -326,7 +328,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     def import_adj_feedback_questions(self, f):
         """Imports adjudicator feedback questions from a file.
         Each line has:
-            seq, reference, name, text, answer_type, required, team_on_orallist, chair_on_panel, panel_on_chair, panel_on_panel
+            seq, reference, name, text, answer_type, required, team_on_orallist,
+                chair_on_panel, panel_on_chair, panel_on_panel, min_value, max_value
         """
         def _question_line_parser(line):
             return {
@@ -341,6 +344,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'chair_on_panellist'     : bool(int(line[7])),
                 'panellist_on_chair'     : bool(int(line[8])),
                 'panellist_on_panellist' : bool(int(line[9])),
+                'min_value'              : int(line[10]) if len(line) > 10 and line[10] else None,
+                'max_value'              : int(line[11]) if len(line) > 11 and line[11] else None,
             }
         return self._import(f, _question_line_parser, m.AdjudicatorFeedbackQuestion)
 

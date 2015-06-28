@@ -88,7 +88,7 @@ CACHES = {
     }
 }
 
-# Caching enabled for templtaes
+# Caching enabled for templates
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', (
         'django.template.loaders.filesystem.Loader',
@@ -115,7 +115,7 @@ COMPRESS_PRECOMPILERS = (
 LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
 LIBSASS_SOURCE_COMMENTS = False
 
-COMPRESS_ENABLED = True
+# COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 COMPRESS_URL = STATIC_URL
 COMPRESS_OFFLINE_MANIFEST = "manifest.json"

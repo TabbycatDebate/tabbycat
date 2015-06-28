@@ -13,6 +13,14 @@ SUBMITTER_TYPE_MAP = {
     'public':  m.AdjudicatorFeedback.SUBMITTER_PUBLIC
 }
 
+WORDS = {
+    5: ["perfect", "outstanding", "super", "collected", "insightful"],
+    4: ["great", "methodical", "logical", "insightful", "happy"],
+    3: ["middler", "average", "solid", "fair", "clear"],
+    2: ["biased", "unclear", "convoluted", "learning", "smart"],
+    1: ["useless", "incompetent", "novice", "stupid", "biased"],
+}
+
 COMMENTS = {
     5: ["Amazeballs.", "Saw it exactly how we did.", "Couldn't have been better.", "Really insightful feedback."],
     4: ["Great adjudication but parts were unclear.", "Clear but a bit long. Should break.", "Understood debate but missed a couple of nuances.", "Agreed with adjudication but feedback wasn't super helpful."],
@@ -63,18 +71,23 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
         fb.save()
 
         for question in debate.round.tournament.adj_feedback_questions:
-            if question.answer_type == question.ANSWER_TYPE_BOOLEAN:
+            if question.answer_type_class == m.AdjudicatorFeedbackBooleanAnswer:
                 answer = random.choice([None, True, False])
-            elif question.answer_type == question.ANSWER_TYPE_INTEGER:
+                if answer is None:
+                    continue
+            elif question.answer_type_class == m.AdjudicatorFeedbackIntegerAnswer:
                 min_value = int(question.min_value) or 0
                 max_value = int(question.max_value) or 10
                 answer = random.randrange(min_value, max_value+1)
-            elif question.answer_type == question.ANSWER_TYPE_FLOAT:
+            elif question.answer_type_class == m.AdjudicatorFeedbackFloatAnswer:
                 min_value = question.min_value or 0
                 max_value = question.max_value or 10
                 answer = random.uniform(min_value, max_value)
-            elif question.answer_type in [question.ANSWER_TYPE_TEXT, question.ANSWER_TYPE_TEXTBOX]:
-                answer = random.choice(COMMENTS[score])
+            elif question.answer_type_class == m.AdjudicatorFeedbackStringAnswer:
+                if question.answer_type == m.ANSWER_TYPE_LONGTEXT:
+                    answer = random.choice(COMMENTS[score])
+                else:
+                    answer = random.choice(WORDS[score])
             question.answer_type_class(question=question, feedback=fb, answer=answer).save()
 
         print source, "on", adj, ":", score
