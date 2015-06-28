@@ -6,6 +6,7 @@ from debate import models as m
 
 urlpatterns = patterns('debate.views',
     url(r'^admin/$', 'tournament_home', name='tournament_home'),
+    url(r'^admin/results_status_update/$', 'results_status_update', name='results_status_update'),
     url(r'^admin/config/$', 'tournament_config', name='tournament_config'),
     url(r'^admin/draw/$', 'draw_index', name='draw_index'),
     url(r'^admin/round/(?P<round_seq>\d+)/$', 'round_index', name='round_index'),

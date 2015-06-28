@@ -487,19 +487,31 @@ def tournament_home(request, t):
 
     # Draw Status
     draw = round.get_draw()
-    stats = {
-        'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
-        'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
-        'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
-    }
-    stats['in'] = stats['confirmed']
-    stats['out'] = stats['none'] + stats['draft']
-    if (stats['out'] + stats['in']) > 0:
-        stats['pc'] = int(float(stats['in']) / (stats['out'] + stats['in']) * 100)
-    else:
-        stats['pc'] = 0
+    total_ballots = draw.count()
+    stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
+    stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
+    stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
+    stats = [[0,stats_none], [0,stats_draft], [0,stats_confirmed]]
 
-    return r2r(request, 'tournament_home.html', dict(stats=stats, round=round, actions=a))
+    return r2r(request, 'tournament_home.html', dict(stats=stats,
+        total_ballots=total_ballots, round=round, actions=a))
+
+@login_required
+@tournament_view
+def results_status_update(request, t):
+
+    # Draw Status
+    draw = t.current_round.get_draw()
+
+    stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
+    stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
+    stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
+
+    total = stats_none + stats_draft + stats_confirmed
+
+    stats = [[0,stats_none], [0,stats_draft], [0,stats_confirmed]]
+
+    return HttpResponse(json.dumps(stats), content_type="text/json")
 
 @admin_required
 @tournament_view

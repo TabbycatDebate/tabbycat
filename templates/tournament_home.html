@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+{% load debate_tags %}
 
 {% block head-title %}
   Dashboard <small>{{ round.name }} is
@@ -15,13 +17,13 @@
 {% block content %}
   <div class="row">
     <div class="col-sm-6">
-      <h4 class="text-center">{{ stats.pc }}% of Ballots In</h4>
-      <p class="text-center">
-        <span class="text-danger">{{ stats.none }} None</span> +
-        <span class="text-info">{{ stats.draft }} Drafts</span> +
-        <span class="text-success">{{ stats.confirmed }} Confirmed</span>
-      </p>
-      <img class="center-block img-responsive" src="http://chart.apis.google.com/chart?cht=p&chs=500x500&chd=t:{{ stats.none }},{{ stats.draft }},{{ stats.confirmed }}&chco=d9534f,d5e615,5cb85c" />
+      <h4 class="text-center">
+        Number of Ballots In
+        (<span class="text-danger">None</span>,
+        <span class="text-info">Draft</span>,
+        <span class="text-success">Confirmed</span>)
+      </h4>
+      <div id="ballots_progress" style="width:100%;height:450px"></div>
     </div>
     <div class="col-sm-6">
       <h4 class="text-center">Latest Actions</h4>
@@ -48,10 +50,76 @@
 {% endblock content %}
 
 {% block extra-js %}
-  <script type="text/javascript" charset="utf-8">
-    function reload() {
-      location.reload();
+<script type="text/javascript" language="javascript" src="{% static 'js/jquery.flot.min.js' %}"></script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready( function() {
+
+  var plotData = [
+    [   [0,{{ stats.0.1 }}]  ],
+    [   [0,{{ stats.1.1 }}]  ],
+    [   [0,{{ stats.2.1 }}]  ]
+  ];
+  var updateInterval = 30000 // 30 second pings
+
+  function updateData() {
+    plot.setData(getLatestData());
+    // Since the axes don't change, we don't need to call plot.setupGrid()
+    plot.draw();
+    setTimeout(updateData, updateInterval);
+  }
+
+  function subtractTime(time_sequence) {
+    for (var i = 0; i < time_sequence.length; i++) {
+      time_sequence[i][0] = time_sequence[i][0] - 0.5
     }
-    setTimeout('reload()', 100000);
-  </script>
+    return time_sequence
+  }
+
+  function getLatestData() {
+    $.ajax({
+      type: "GET",
+      url: "{% tournament_url results_status_update %}",
+      success: function(data, status) {
+        plotData[0] = subtractTime(plotData[0]);
+        plotData[1] = subtractTime(plotData[1]);
+        plotData[2] = subtractTime(plotData[2]);
+        plotData[0].push(data[0]);
+        plotData[1].push(data[1]);
+        plotData[2].push(data[2]);
+      },
+    });
+    return plotData
+  }
+
+  function formatter(val, axis) {
+    return val + "m";
+  }
+
+  var plot = $.plot("#ballots_progress", plotData, {
+      colors: ['#d9534f', '#d5e615', '#5cb85c'],
+      yaxis: {
+        min: 0,
+        max: {{ total_ballots }},
+        minTickSize: 1,
+        tickDecimals: 0
+      },
+      xaxis: {
+        min: -10,
+        max: 0,
+        tickSize: 0.5,
+        tickDecimals: 1,
+        tickFormatter: formatter
+      },
+      series: {
+        lines: { show: true },
+        points: { show: true },
+        position: "right"
+      }
+    });
+
+  updateData();
+
+});
+
+</script>
 {% endblock %}
