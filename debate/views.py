@@ -491,7 +491,7 @@ def tournament_home(request, t):
     stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
     stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
     stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
-    stats = [[0,stats_none], [0,stats_draft], [0,stats_confirmed]]
+    stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
     return r2r(request, 'tournament_home.html', dict(stats=stats,
         total_ballots=total_ballots, round=round, actions=a))
@@ -509,7 +509,7 @@ def results_status_update(request, t):
 
     total = stats_none + stats_draft + stats_confirmed
 
-    stats = [[0,stats_none], [0,stats_draft], [0,stats_confirmed]]
+    stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
     return HttpResponse(json.dumps(stats), content_type="text/json")
 

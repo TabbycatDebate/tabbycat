@@ -51,6 +51,7 @@
 
 {% block extra-js %}
 <script type="text/javascript" language="javascript" src="{% static 'js/jquery.flot.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'js/jquery.flot.stack.min.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
 $(document).ready( function() {
 
@@ -96,6 +97,13 @@ $(document).ready( function() {
   }
 
   var plot = $.plot("#ballots_progress", plotData, {
+      series: {
+        stack: true,
+        lines: {
+          show: true,
+          fill: true,
+        },
+      },
       colors: ['#d9534f', '#d5e615', '#5cb85c'],
       yaxis: {
         min: 0,
@@ -110,11 +118,6 @@ $(document).ready( function() {
         tickDecimals: 1,
         tickFormatter: formatter
       },
-      series: {
-        lines: { show: true },
-        points: { show: true },
-        position: "right"
-      }
     });
 
   updateData();
