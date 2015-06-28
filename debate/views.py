@@ -1286,13 +1286,13 @@ def edit_ballots(request, t, ballots_id):
 
 # Don't cache
 @public_optional_tournament_view('public_ballots_hash')
-def public_new_ballots_by_hash(request, t, url_hash):
+def public_new_ballots_hash(request, t, url_hash):
     adjudicator = get_object_or_404(Adjudicator, tournament=t, url_hash=url_hash)
     return public_new_ballots(request, t, adjudicator)
 
 # Don't cache
 @public_optional_tournament_view('public_ballots')
-def public_new_ballots_by_id(request, t, adj_id):
+def public_new_ballots_id(request, t, adj_id):
     adjudicator = get_object_or_404(Adjudicator, tournament=t, id=adj_id)
     return public_new_ballots(request, t, adjudicator)
 
@@ -1907,15 +1907,15 @@ def adj_feedback(request, t):
 
         from debate.models import SpeakerScoreByAdj
         all_adjs_rooms = DebateAdjudicator.objects.select_related('adjudicator').all()
-        all_adjs_scores = SpeakerScoreByAdj.objects.select_related('debate_adjudicator','ballot_submission').all()
+        all_adjs_scores = SpeakerScoreByAdj.objects.select_related('debate_adjudicator','ballot_submission').filter(ballot_submission__confirmed=True)
         for adj in adjudicators:
-            adjs_rooms  = all_adjs_rooms.filter(adjudicator = adj)
+            adjs_rooms  = all_adjs_rooms.filter(adjudicator=adj)
             adj.debates = len(adjs_rooms)
 
             if adj.breaking:
                 breaking_count += 1
 
-            adjs_scores = all_adjs_scores.filter(debate_adjudicator = adjs_rooms)
+            adjs_scores = all_adjs_scores.filter(debate_adjudicator=adjs_rooms)
             if len(adjs_scores) > 0:
                 adj.avg_score = sum(s.score for s in adjs_scores) / len(adjs_scores)
 
@@ -1928,7 +1928,7 @@ def adj_feedback(request, t):
 
                 for ballot_id in ballot_ids:
                     # For each unique ballot id, total its scores
-                    single_round = adjs_scores.filter(ballot_submission = ballot_id)
+                    single_round = adjs_scores.filter(ballot_submission=ballot_id)
                     scores = [s.score for s in single_round] # TODO this is slow - should be prefetched
                     slice_end = len(scores)
                     teamA = sum(scores[:len(scores)/2])
@@ -2017,7 +2017,7 @@ def get_adj_feedback(request, t):
     BOOLEAN_VALUES = {None: "Unsure", True: "Yes", False: "No"}
     def _parse_feedback(f):
 
-        if f.source_team:
+        if f.source_team and f.debate.confirmed_ballot:
             aff_winner = f.debate.confirmed_ballot.ballot_set.aff_win
             if (aff_winner and f.debate.aff_team == f.source_team.team):
                 win_status = " (Won)"
@@ -2048,78 +2048,47 @@ def get_adj_feedback(request, t):
 
 # Don't cache
 @public_optional_tournament_view('public_feedback_hash')
-def public_enter_feedback_adjudicator_by_hash(request, t, url_hash):
-    source = get_object_or_404(Adjudicator, tournament=t, url_hash=url_hash)
-    return public_enter_feedback_adjudicator(request, t, source)
+def public_enter_feedback_hash(request, t, source_type, url_hash):
+    source = get_object_or_404(source_type, tournament=t, url_hash=url_hash)
+    return public_enter_feedback(request, t, source)
 
 # Don't cache
 @public_optional_tournament_view('public_feedback')
-def public_enter_feedback_adjudicator_by_id(request, t, adj_id):
-    source = get_object_or_404(Adjudicator, tournament=t, id=adj_id)
-    return public_enter_feedback_adjudicator(request, t, source)
+def public_enter_feedback_id(request, t, source_type, source_id):
+    source = get_object_or_404(source_type, tournament=t, id=source_id)
+    return public_enter_feedback(request, t, source)
 
-def public_enter_feedback_adjudicator(request, t, source):
-    include_panellists = request.tournament.config.get('panellist_feedback_enabled') > 0
+def public_enter_feedback(request, t, source):
     ip_address = get_ip_address(request)
-    source_name = source.name
-
+    source_name = source.short_name if isinstance(source, Team) else source.name
+    source_type = "adj" if isinstance(source, Adjudicator) else "team" if isinstance(source, Team) else "TypeError!"
     submission_fields = {
         'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
         'ip_address'    : ip_address
     }
 
     if request.method == "POST":
-        form = forms.make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=include_panellists)(request.POST)
+        form = forms.make_feedback_form_class(source, submission_fields, confirm_on_submit=True)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
-                    ip_address=ip_address, adjudicator_feedback=adj_feedback, tournament=t)
-            return r2r(request, 'public/public_success.html', dict(success_kind="feedback"))
+                    ip_address=ip_address, adjudicator_feedback=adj_feedback,
+                    tournament=t)
+            return r2r(request, 'public/public_success.html', dict(
+                    success_kind="feedback"))
     else:
-        form = forms.make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=include_panellists)()
+        form = forms.make_feedback_form_class(source, submission_fields, confirm_on_submit=True)()
 
-    return r2r(request, 'public/public_enter_feedback_adj.html', dict(source_name=source_name, form=form))
-
-# Don't cache
-@public_optional_tournament_view('public_feedback_hash')
-def public_enter_feedback_team_by_hash(request, t, url_hash):
-    source = get_object_or_404(Team, tournament=t, url_hash=url_hash)
-    return public_enter_feedback_team(request, t, source)
-
-# Don't cache
-@public_optional_tournament_view('public_feedback')
-def public_enter_feedback_team_by_id(request, t, team_id):
-    source = get_object_or_404(Team, tournament=t, id=team_id)
-    return public_enter_feedback_team(request, t, source)
-
-def public_enter_feedback_team(request, t, source):
-    ip_address = get_ip_address(request)
-    source_name = source.short_name
-
-    submission_fields = {
-        'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
-        'ip_address'    : ip_address
-    }
-
-    if request.method == "POST":
-        form = forms.make_feedback_form_class_for_public_team(source, submission_fields)(request.POST)
-        if form.is_valid():
-            adj_feedback = form.save()
-            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
-                    ip_address=ip_address, adjudicator_feedback=adj_feedback, tournament=t)
-            return r2r(request, 'public/public_success.html', dict(success_kind="feedback"))
-    else:
-        form = forms.make_feedback_form_class_for_public_team(source, submission_fields)()
-
-    return r2r(request, 'public/public_enter_feedback_team.html', dict(source_name=source_name, form=form))
+    return r2r(request, 'public/public_enter_feedback.html', dict(
+            source_type=source_type, source_name=source_name, form=form))
 
 @login_required
 @tournament_view
-def enter_feedback(request, t, adj_id):
-
-    adj = get_object_or_404(Adjudicator, id=adj_id)
+def enter_feedback(request, t, source_type, source_id):
+    source = get_object_or_404(source_type, tournament=t, id=source_id)
+    source_name = source.short_name if isinstance(source, Team) else source.name
+    source_type = "adj" if isinstance(source, Adjudicator) else "team" if isinstance(source, Team) else "TypeError!"
     ip_address = get_ip_address(request)
-
     submission_fields = {
         'submitter_type': AdjudicatorFeedback.SUBMITTER_TABROOM,
         'user'          : request.user,
@@ -2127,16 +2096,24 @@ def enter_feedback(request, t, adj_id):
     }
 
     if request.method == "POST":
-        form = forms.make_feedback_form_class_for_tabroom(adj, submission_fields)(request.POST)
+        form = forms.make_feedback_form_class(source, submission_fields, confirm_on_submit=True)(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
                 user=request.user, adjudicator_feedback=adj_feedback, tournament=t)
-            return redirect_tournament('adj_feedback', t)
+            return redirect_tournament('add_feedback', t)
     else:
-        form = forms.make_feedback_form_class_for_tabroom(adj, submission_fields)()
+        form = forms.make_feedback_form_class(source, submission_fields, confirm_on_submit=True)()
 
-    return r2r(request, 'enter_feedback.html', dict(adj=adj, form=form))
+    return r2r(request, 'enter_feedback.html', dict(source_type=source_type,
+            source_name=source_name, form=form))
+
+@login_required
+@tournament_view
+def add_feedback(request, t):
+    adjudicators = Adjudicator.objects.all()
+    teams = Team.objects.all()
+    return r2r(request, 'adjudicator_feedback_add.html', dict(adjudicators=adjudicators, teams=teams))
 
 @admin_required
 @round_view

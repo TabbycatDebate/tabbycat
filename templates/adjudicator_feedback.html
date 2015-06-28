@@ -9,6 +9,7 @@
   <div class="btn-group">
     <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">View Latest Feedback</a>
     <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">View Feedback By Source</a>
+    <a class="btn btn-default" href="{% tournament_url add_feedback %}">Add Feedback</a>
   </div>
   <div class="btn-group">
     <div class="btn btn-default">
@@ -37,7 +38,6 @@
           <th><span class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" title="If the Adj is a Trainee" ></span></th>
         {% endif %}
         <th><span class="glyphicon glyphicon-question-sign"></span></th>
-        <th><span class="glyphicon glyphicon-plus-sign"></span></th>
         {% if enable_adj_notes > 0 %}
           <th><span class="glyphicon glyphicon-list-alt"></span></th>
         {% endif %}
@@ -74,9 +74,6 @@
           {% endif %}
           <td>
             <a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View Feedback</a>
-          </td>
-          <td>
-            <a href="{% tournament_url enter_feedback adj.id %}">Add Feedback</a>
           </td>
           {% if enable_adj_notes > 0 %}
             <td>
