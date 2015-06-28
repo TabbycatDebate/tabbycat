@@ -45,7 +45,7 @@
             {% else %}
               <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
                 <div class="panel-heading small">
-                  <em>Which motion?</em>
+                  <em>Selected motion?</em>
                 </div>
               </td>
               {% for motion in motions %}
@@ -55,6 +55,32 @@
               {% endfor %}
             {% endif %}
           </tr>
+          {% if motion_vetoes_enabled %}
+          <tr>
+              <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
+                <div class="panel-heading small">
+                  <em>Neg veto?</em>
+                </div>
+              </td>
+              {% for motion in motions %}
+                <td class="text-center small no-borders no-overflow">
+                  {{ motion.text }}
+                </td>
+              {% endfor %}
+          </tr>
+          <tr>
+              <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
+                <div class="panel-heading small">
+                  <em>Aff veto?</em>
+                </div>
+              </td>
+              {% for motion in motions %}
+                <td class="text-center small no-borders no-overflow">
+                  {{ motion.text }}
+                </td>
+              {% endfor %}
+          </tr>
+          {% endif %}
         </tbody>
       </table>
     </div>
