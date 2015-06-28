@@ -928,9 +928,9 @@ class Round(models.Model):
     draw_type    = models.CharField(max_length=1, choices=DRAW_CHOICES, help_text="Which draw technique to use")
     stage        = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY, help_text="Whether it is a break round or not")
 
-    draw_status        = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
-    venue_status       = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
-    adjudicator_status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    draw_status        = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    venue_status       = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    adjudicator_status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
 
     checkins = models.ManyToManyField('Person', through='Checkin', related_name='checkedin_rounds')
 
@@ -1632,7 +1632,7 @@ class Submission(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
     version = models.PositiveIntegerField()
-    submitter_type = models.IntegerField(choices=SUBMITTER_TYPE_CHOICES)
+    submitter_type = models.PositiveSmallIntegerField(choices=SUBMITTER_TYPE_CHOICES)
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
     ip_address = models.GenericIPAddressField(blank=True, null=True)
