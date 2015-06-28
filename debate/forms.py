@@ -693,7 +693,7 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
     def adj_choice(da):
         return (da.id, '%s (%s, %s)' % (da.adjudicator.name,
                 da.debate.round.name, da.get_type_display()))
-    def coerce_source(value):
+    def coerce_da(value):
         return m.DebateAdjudicator.objects.get(id=int(value))
 
     debate_filter = dict(debateadjudicator__adjudicator=source,
@@ -711,7 +711,7 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
         _use_tournament_password = True # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
 
-        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
+        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
 
         def save(self):
             """Saves the form and returns the AdjudicatorFeedback object."""
@@ -748,14 +748,13 @@ def make_feedback_form_class_for_team(source, submission_fields, confirm_on_subm
             choices.append((chair.id, '{name} ({r})'.format(
                 name=chair.adjudicator.name, r=debate.round.name)))
 
-    def coerce_source(value):
-        value = int(value)
-        return m.DebateAdjudicator.objects.get(id=value)
+    def coerce_da(value):
+        return m.DebateAdjudicator.objects.get(id=int(value))
 
     class FeedbackForm(BaseFeedbackForm):
         tournament = source.tournament  # BaseFeedbackForm setting
         _use_tournament_password = True # BaseFeedbackForm setting
-        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
+        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
 
         _confirm_on_submit = confirm_on_submit
 
