@@ -611,6 +611,7 @@ class BaseFeedbackForm(forms.Form):
 
     tournament = NotImplemented      # set at "compile time" by subclasses
     _use_tournament_password = False # set at "compile time" by subclasses
+    _confirm_on_submit = False        # set at "compile time" by subclasses
 
     def __init__(self, *args, **kwargs):
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
@@ -645,9 +646,17 @@ class BaseFeedbackForm(forms.Form):
         if self._use_tournament_password and self.tournament.config.get('public_use_password'):
             self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
 
-    def save_adjudicatorfeedback_questions(self, af):
+    def save_adjudicatorfeedback(self, **kwargs):
         """Saves the question fields and returns the AdjudicatorFeedback.
         To be called by save() of child classes."""
+        af = m.AdjudicatorFeedback(**kwargs)
+
+        if self._confirm_on_submit:
+            self.discard_all_existing(adjudicator=kwargs['adjudicator'],
+                    source_adjudicator=kwargs['source_adjudicator'],
+                    source_team=kwargs['source_team'])
+            af.confirmed = True
+
         af.score = self.cleaned_data['score']
         af.save()
 
@@ -655,86 +664,41 @@ class BaseFeedbackForm(forms.Form):
             answer = question.answer_type_class(feedback=af, question=question,
                     answer=self.cleaned_data[question.reference])
             answer.save()
+
         return af
 
+    def discard_all_existing(self, **kwargs):
+        for fb in m.AdjudicatorFeedback.objects.filter(**kwargs):
+            fb.discarded = True
+            fb.save()
 
-def make_feedback_form_class_for_tabroom(adjudicator, submission_fields):
-    """Constructs a FeedbackForm class specific to the given adjudicator.
-    'adjudicator' is the Adjudicator who is receiving feedback.
-    'submission_fields' is a dict of fields that is passed directly as keyword
-        arguments to Submission."""
-
-    def adj_choice(da):
-        return (
-            'A:%d' % da.id,
-            '%s (R%d, %s)' % (da.adjudicator.name, da.debate.round.seq, da.get_type_display())
-        )
-    def team_choice(dt):
-        return (
-            'T:%d' % dt.id,
-            '%s (%d)' % (dt.team.short_name, dt.debate.round.seq)
-        )
-    def coerce_source(value):
-        obj_type, id = value.split(':')
-        id = int(id)
-        if obj_type.strip() == 'A':
-            return m.DebateAdjudicator.objects.get(id=id)
-        if obj_type.strip() == 'T':
-            return m.DebateTeam.objects.get(id=id)
-
-    debates = m.Debate.objects.filter(debateadjudicator__adjudicator=adjudicator)
-
-    adj_choices = [(None, '-- Adjudicators --')]
-    adj_choices.extend(adj_choice(da) for da in
-            m.DebateAdjudicator.objects.filter(debate__in=debates).exclude(adjudicator=adjudicator).select_related('debate').order_by('-debate__round__seq'))
-    if len(adj_choices) == 1: adj_choices = [] # get rid of heading if there aren't any adjs
-
-    team_choices = [(None, '-- Teams --')]
-    team_choices.extend(team_choice(dt) for dt in
-            m.DebateTeam.objects.filter(debate__in = debates).select_related('debate').order_by('-debate__round__seq'))
-
-    choices = adj_choices + team_choices
-
-    class FeedbackForm(BaseFeedbackForm):
-        tournament = adjudicator.tournament # BaseFeedbackForm setting
-        source = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
-
-        def save(self):
-            """Saves the form and returns the AdjudicatorFeedback object"""
-            source = self.cleaned_data['source']
-            sa = source if isinstance(source, m.DebateAdjudicator) else None
-            st = source if isinstance(source, m.DebateTeam) else None
-
-            # Discard existing feedbacks
-            for fb in m.AdjudicatorFeedback.objects.filter(adjudicator=adjudicator,
-                    source_adjudicator=sa, source_team=st):
-                fb.discarded = True
-                fb.save()
-
-            # Save the new one
-            af = m.AdjudicatorFeedback(adjudicator=adjudicator, confirmed=True,
-                    source_adjudicator=sa, source_team=st, **submission_fields)
-            return self.save_adjudicatorfeedback_questions(af)
-
-    return FeedbackForm
-
-def make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=True):
-    """Constructs a FeedbackForm class specific to the given source adjudicator.
-    'source' is the Adjudicator who is giving feedback.
+def make_feedback_form_class(source, *args, **kwargs):
+    """Constructs a FeedbackForm class specific to the given source.
+    'source' is the Adjudicator or Team who is giving feedback.
     'submission_fields' is a dict of fields that is passed directly as keyword
         arguments to Submission.
-    'include_panellists' is a bool, and indicates whether panellists can give
-        feedback on chairs."""
+    'confirm_on_submit' is a bool, and indicates that this feedback should be
+        as confirmed and all others discarded."""
+    if isinstance(source, m.Adjudicator):
+        return make_feedback_form_class_for_adj(source, *args, **kwargs)
+    elif isinstance(source, m.Team):
+        return make_feedback_form_class_for_team(source, *args, **kwargs)
+    else:
+        raise TypeError('source must be Adjudicator or Team: %r' % source)
+
+def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submit=False):
+    """Constructs a FeedbackForm class specific to the given source adjudicator.
+    Parameters are as for make_feedback_form_class."""
 
     def adj_choice(da):
-        return (da.id, '%s (R%d, %s)' % (da.adjudicator.name,
-                da.debate.round.seq, da.get_type_display()))
+        return (da.id, '%s (%s, %s)' % (da.adjudicator.name,
+                da.debate.round.name, da.get_type_display()))
     def coerce_source(value):
         return m.DebateAdjudicator.objects.get(id=int(value))
 
     debate_filter = dict(debateadjudicator__adjudicator=source,
             round__draw_status=m.Round.STATUS_RELEASED)
-    if not include_panellists: # then include only debates for which this adj was the chair
+    if not source.tournament.config.get('panellist_feedback_enabled'): # then include only debates for which this adj was the chair
         debate_filter['debateadjudicator__type'] = m.DebateAdjudicator.TYPE_CHAIR
     debates = m.Debate.objects.filter(**debate_filter)
 
@@ -745,23 +709,23 @@ def make_feedback_form_class_for_public_adj(source, submission_fields, include_p
     class FeedbackForm(BaseFeedbackForm):
         tournament = source.tournament  # BaseFeedbackForm setting
         _use_tournament_password = True # BaseFeedbackForm setting
+        _confirm_on_submit = confirm_on_submit
+
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
 
         def save(self):
             """Saves the form and returns the AdjudicatorFeedback object."""
             da = self.cleaned_data['debate_adjudicator']
             sa = m.DebateAdjudicator.objects.get(adjudicator=source, debate=da.debate)
-            af = m.AdjudicatorFeedback(adjudicator=da.adjudicator,
-                    source_adjudicator=sa, source_team=None, **submission_fields)
-            return self.save_adjudicatorfeedback_questions(af)
+            kwargs = dict(adjudicator=da.adjudicator, source_adjudicator=sa, source_team=None)
+            kwargs.update(submission_fields)
+            return self.save_adjudicatorfeedback(**kwargs)
 
     return FeedbackForm
 
-def make_feedback_form_class_for_public_team(source, submission_fields):
+def make_feedback_form_class_for_team(source, submission_fields, confirm_on_submit=False):
     """Constructs a FeedbackForm class specific to the given source team.
-    'source' is the Team who is giving feedback.
-    'submission_fields' is a dict of fields that is passed directly as keyword
-        arguments to Submission."""
+    Parameters are as for make_feedback_form_class."""
 
     # Only include non-silent rounds for teams.
     debates = m.Debate.objects.filter(debateteam__team=source, round__silent=False,
@@ -775,14 +739,14 @@ def make_feedback_form_class_for_public_team(source, submission_fields):
             continue
         panel = m.DebateAdjudicator.objects.filter(debate=debate, type=m.DebateAdjudicator.TYPE_PANEL)
         if panel.exists():
-            choices.append((chair.id, '{name} (R{r} - chair gave oral)'.format(
-                name=chair.adjudicator.name, r=debate.round.seq)))
+            choices.append((chair.id, '{name} ({r} - chair gave oral)'.format(
+                name=chair.adjudicator.name, r=debate.round.name)))
             for da in panel:
-                choices.append((da.id, '{name} (R{r} - chair rolled, this panellist gave oral)'.format(
-                    name=da.adjudicator.name, r=debate.round.seq)))
+                choices.append((da.id, '{name} ({r} - chair rolled, this panellist gave oral)'.format(
+                    name=da.adjudicator.name, r=debate.round.name)))
         else:
-            choices.append((chair.id, '{name} (R{r})'.format(
-                name=chair.adjudicator.name, r=debate.round.seq)))
+            choices.append((chair.id, '{name} ({r})'.format(
+                name=chair.adjudicator.name, r=debate.round.name)))
 
     def coerce_source(value):
         value = int(value)
@@ -793,13 +757,15 @@ def make_feedback_form_class_for_public_team(source, submission_fields):
         _use_tournament_password = True # BaseFeedbackForm setting
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_source)
 
+        _confirm_on_submit = confirm_on_submit
+
         def save(self):
             # Saves the form and returns the m.AdjudicatorFeedback object
             da = self.cleaned_data['debate_adjudicator']
             st = m.DebateTeam.objects.get(team=source, debate=da.debate)
-            af = m.AdjudicatorFeedback(adjudicator=da.adjudicator,
-                    source_adjudicator=None, source_team=st, **submission_fields)
-            return self.save_adjudicatorfeedback_questions(af)
+            kwargs = dict(adjudicator=da.adjudicator, source_adjudicator=None, source_team=st)
+            kwargs.update(submission_fields)
+            return self.save_adjudicatorfeedback(**kwargs)
 
     return FeedbackForm
 

@@ -20,7 +20,6 @@ class Command(BaseCommand):
             help="Overwrite existing hashes")
 
         delete = subparsers.add_parser("delete")
-        # delete.add_argument('tournament', help="Slug of tournament to generate URL hashes for")
 
     def handle(self, *args, **options):
         try:
