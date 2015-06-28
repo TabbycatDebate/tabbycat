@@ -53,7 +53,7 @@ else:
 # Helper functions
 
 def print_command(command):
-    message = " $ " + " ".join(command)
+    message = "$ " + " ".join(command)
     if use_color:
         message = "\033[1;36m" + message + "\033[0m"
     print message
@@ -113,10 +113,7 @@ run_command(["git", "push", remote_name, git_branch])
 
 if args.init_db:
     # Perform initial migrations
-    run_heroku_command(["run", "python", "manage.py", "migrate", "auth"])
-    run_heroku_command(["run", "python", "manage.py", "migrate"])
-    run_heroku_command(["run", "python", "manage.py", "makemigrations", "debate"])
-    run_heroku_command(["run", "python", "manage.py", "migrate"])
+    run_heroku_command(["run", "python", "init_db_heroku.py"])
 
     print_yellow("Now creating a superuser for the Heroku site.")
     print_yellow("You'll need to respond to the prompts:")
