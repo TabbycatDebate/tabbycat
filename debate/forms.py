@@ -609,9 +609,11 @@ class BaseFeedbackForm(forms.Form):
     question fields."""
     score = forms.FloatField(min_value=1, max_value=5)
 
-    tournament = NotImplemented      # set at "compile time" by subclasses
-    _use_tournament_password = False # set at "compile time" by subclasses
-    _confirm_on_submit = False        # set at "compile time" by subclasses
+    # parameters set at "compile time" by subclasses
+    tournament = NotImplemented
+    _use_tournament_password = False
+    _confirm_on_submit = False
+    question_filter = dict()
 
     def __init__(self, *args, **kwargs):
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
@@ -639,7 +641,7 @@ class BaseFeedbackForm(forms.Form):
     def _create_fields(self):
         """Creates dynamic fields in the form."""
         # Feedback questions defined for the tournament
-        for question in self.tournament.adj_feedback_questions:
+        for question in self.tournament.adj_feedback_questions.filter(**self.question_filter):
             self.fields[question.reference] = self._make_question_field(question)
 
         # Tournament password field, if applicable
@@ -660,7 +662,7 @@ class BaseFeedbackForm(forms.Form):
         af.score = self.cleaned_data['score']
         af.save()
 
-        for question in self.tournament.adj_feedback_questions:
+        for question in self.tournament.adj_feedback_questions.filter(**self.question_filter):
             answer = question.answer_type_class(feedback=af, question=question,
                     answer=self.cleaned_data[question.reference])
             answer.save()
@@ -710,6 +712,7 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
         tournament = source.tournament  # BaseFeedbackForm setting
         _use_tournament_password = True # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
+        question_filter = dict(chair_on_panellist=True)
 
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
 
@@ -754,9 +757,10 @@ def make_feedback_form_class_for_team(source, submission_fields, confirm_on_subm
     class FeedbackForm(BaseFeedbackForm):
         tournament = source.tournament  # BaseFeedbackForm setting
         _use_tournament_password = True # BaseFeedbackForm setting
-        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
-
         _confirm_on_submit = confirm_on_submit
+        question_filter = dict(team_on_orallist=True)
+
+        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
 
         def save(self):
             # Saves the form and returns the m.AdjudicatorFeedback object
