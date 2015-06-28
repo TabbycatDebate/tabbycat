@@ -33,10 +33,46 @@
 </p>
 
 {% if exists %}
-<p>
-  If you want to delete these, run this command in a shell on your server:
-  <code>python manage.py randomised_urls delete {{ tournament_slug }}</code>.
-</p>
+  <p>
+    If you want to delete these, run this command in a shell on your server:
+    <code>python manage.py randomised_urls delete {{ tournament_slug }}</code>.
+  </p>
+
+  {% if not ballot_randomised_urls_enabled and not feedback_randomised_urls_enabled %}
+    <div class="alert alert-danger">
+      The <strong>public ballots randomised</strong> and <strong>public feedback
+      randomised</strong> configuration settings are both disabled. These URLs
+      will not work unless you enable them on the
+      <a href="{% tournament_url tournament_config %}">tournament
+      configuration page</a>.
+    </div>
+  {% endif %}
+
+  {% if ballot_normal_urls_enabled and ballot_randomised_urls_enabled %}
+    <div class="alert alert-danger">
+      The <strong>public ballots</strong> (non-randomised) configuration setting
+      is enabled, which means that the <a href="{% tournament_url
+      public_ballot_submit %}">page in the public interface from which anyone
+      can enter any ballot</a>, without knowing any special URLs, is enabled.
+      This defeats the purpose of the <strong>public ballots randomised</strong>
+      setting. You may wish to consider disabling the non-randomised setting on
+      the <a href="{% tournament_url tournament_config %}">tournament
+      configuration page</a>.
+    </div>
+  {% endif %}
+
+  {% if feedback_normal_urls_enabled and feedback_randomised_urls_enabled %}
+    <div class="alert alert-danger">
+      The <strong>public feedback</strong> (non-randomised) configuration
+      setting is enabled, which means that the <a href="{% tournament_url
+      public_feedback_submit %}">page in the public interface from which anyone
+      can enter any feedback</a>, without knowing any special URLs, is enabled.
+      This defeats the purpose of the <strong>public feedback
+      randomised</strong> setting. You may wish to consider disabling the non-
+      randomised settings on the <a href="{% tournament_url tournament_config
+      %}">tournament configuration page</a>.
+    </div>
+  {% endif %}
 
   <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
     <thead>

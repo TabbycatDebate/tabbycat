@@ -2201,13 +2201,17 @@ def post_ballot_checkin(request, round):
 @admin_required
 @tournament_view
 def randomised_urls(request, t):
-    teams = t.team_set.all()
-    adjs = t.adjudicator_set.all()
-    exists = t.adjudicator_set.filter(url_key__isnull=False).exists() or \
+    context = dict()
+    context['teams'] = t.team_set.all()
+    context['adjs'] = t.adjudicator_set.all()
+    context['exists'] = t.adjudicator_set.filter(url_key__isnull=False).exists() or \
             t.team_set.filter(url_key__isnull=False).exists()
-    tournament_slug = t.slug
-    return r2r(request, 'randomised_urls.html', dict(teams=teams, adjs=adjs,
-            exists=exists, tournament_slug=tournament_slug))
+    context['tournament_slug'] = t.slug
+    context['ballot_normal_urls_enabled'] = t.config.get('public_ballots')
+    context['ballot_randomised_urls_enabled'] = t.config.get('public_ballots_randomised')
+    context['feedback_normal_urls_enabled'] = t.config.get('public_feedback')
+    context['feedback_randomised_urls_enabled'] = t.config.get('public_feedback_randomised')
+    return r2r(request, 'randomised_urls.html', context)
 
 @admin_required
 @tournament_view
