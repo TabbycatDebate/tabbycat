@@ -84,8 +84,13 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
                 max_value = question.max_value or 10
                 answer = random.uniform(min_value, max_value)
             elif question.answer_type_class == m.AdjudicatorFeedbackStringAnswer:
-                if question.answer_type == m.ANSWER_TYPE_LONGTEXT:
+                if question.answer_type == m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT:
                     answer = random.choice(COMMENTS[score])
+                elif question.answer_type == m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT:
+                    answer = random.choice(question.choices_for_field)[0]
+                elif question.answer_type == m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT:
+                    answers = random.sample(question.choices_for_field, random.randint(0, len(question.choices_for_field)))
+                    answer = m.AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(a[0] for a in answers)
                 else:
                     answer = random.choice(WORDS[score])
             question.answer_type_class(question=question, feedback=fb, answer=answer).save()
