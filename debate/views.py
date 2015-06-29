@@ -2073,9 +2073,11 @@ def public_enter_feedback(request, t, source):
         'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
         'ip_address'    : ip_address
     }
+    FormClass = forms.make_feedback_form_class(source, submission_fields,
+            confirm_on_submit=True, enforce_required=True)
 
     if request.method == "POST":
-        form = forms.make_feedback_form_class(source, submission_fields, confirm_on_submit=True)(request.POST)
+        form = FormClass(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
@@ -2084,7 +2086,7 @@ def public_enter_feedback(request, t, source):
             return r2r(request, 'public/public_success.html', dict(
                     success_kind="feedback"))
     else:
-        form = forms.make_feedback_form_class(source, submission_fields, confirm_on_submit=True)()
+        form = FormClass()
 
     return r2r(request, 'public/public_enter_feedback.html', dict(
             source_type=source_type, source_name=source_name, form=form))
@@ -2101,16 +2103,18 @@ def enter_feedback(request, t, source_type, source_id):
         'user'          : request.user,
         'ip_address'    : ip_address
     }
+    FormClass = forms.make_feedback_form_class(source, submission_fields,
+            confirm_on_submit=True, enforce_required=False)
 
     if request.method == "POST":
-        form = forms.make_feedback_form_class(source, submission_fields, confirm_on_submit=True)(request.POST)
+        form = FormClass(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
                 user=request.user, adjudicator_feedback=adj_feedback, tournament=t)
             return redirect_tournament('add_feedback', t)
     else:
-        form = forms.make_feedback_form_class(source, submission_fields, confirm_on_submit=True)()
+        form = FormClass()
 
     return r2r(request, 'enter_feedback.html', dict(source_type=source_type,
             source_name=source_name, form=form))

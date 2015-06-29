@@ -659,15 +659,14 @@ class BaseFeedbackForm(forms.Form):
     tournament = NotImplemented
     _use_tournament_password = False
     _confirm_on_submit = False
+    _enforce_required = True
     question_filter = dict()
 
     def __init__(self, *args, **kwargs):
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
-
         self._create_fields()
 
-    @staticmethod
-    def _make_question_field(question):
+    def _make_question_field(self, question):
         if question.answer_type == question.ANSWER_TYPE_BOOLEAN_SELECT:
             field = BooleanSelectField(widget=CustomBooleanSelect)
         elif question.answer_type == question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
@@ -696,7 +695,7 @@ class BaseFeedbackForm(forms.Form):
         elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
             field = CustomMultipleChoiceField(choices=question.choices_for_field)
         field.label = question.text
-        field.required = question.required
+        field.required = self._enforce_required and question.required
         return field
 
     def _create_fields(self):
@@ -755,7 +754,7 @@ def make_feedback_form_class(source, *args, **kwargs):
     else:
         raise TypeError('source must be Adjudicator or Team: %r' % source)
 
-def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submit=False):
+def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submit=False, enforce_required=True):
     """Constructs a FeedbackForm class specific to the given source adjudicator.
     Parameters are as for make_feedback_form_class."""
 
@@ -779,6 +778,7 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
         tournament = source.tournament  # BaseFeedbackForm setting
         _use_tournament_password = True # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
+        _enforce_required = enforce_required
         question_filter = dict(chair_on_panellist=True)
 
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
@@ -793,7 +793,7 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
 
     return FeedbackForm
 
-def make_feedback_form_class_for_team(source, submission_fields, confirm_on_submit=False):
+def make_feedback_form_class_for_team(source, submission_fields, confirm_on_submit=False, enforce_required=True):
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
 
@@ -825,6 +825,7 @@ def make_feedback_form_class_for_team(source, submission_fields, confirm_on_subm
         tournament = source.tournament  # BaseFeedbackForm setting
         _use_tournament_password = True # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
+        _enforce_required = enforce_required
         question_filter = dict(team_on_orallist=True)
 
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
