@@ -38,6 +38,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         ("float"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT,
         ("text"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT,
         ("textbox", "long text", "longtext"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
+        ("select single", "single select"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT,
+        ("select multiple", "multiple select"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
     }
 
     def import_rounds(self, f):
@@ -348,6 +350,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'panellist_on_panellist' : bool(int(line[9])),
                 'min_value'              : int(line[10]) if len(line) > 10 and line[10] else None,
                 'max_value'              : int(line[11]) if len(line) > 11 and line[11] else None,
+                'choices'                : line[12] if len(line) > 12 else "",
             }
         return self._import(f, _question_line_parser, m.AdjudicatorFeedbackQuestion)
 

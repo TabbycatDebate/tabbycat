@@ -131,7 +131,7 @@ class BooleanSelectField(forms.NullBooleanField):
 
 class IntegerRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
     """Used by IntegerRadioSelect."""
-    outer_html = '<table{id_attr} class="integer-scale-table"><tr>{content}</tr></table>'
+    outer_html = '<table{id_attr} class="feedback-integer-scale-table"><tr>{content}</tr></table>'
     inner_html = '<td>{choice_value}{sub_widgets}</td>'
 
 class IntegerRadioSelect(forms.RadioSelect):
@@ -144,6 +144,28 @@ class IntegerScaleField(forms.IntegerField):
     def __init__(self, *args, **kwargs):
         super(IntegerScaleField, self).__init__(*args, **kwargs)
         self.widget.choices = tuple((i, str(i)) for i in range(self.min_value, self.max_value+1))
+
+class OptionalChoiceField(forms.ChoiceField):
+    def __init__(self, *args, **kwargs):
+        super(OptionalChoiceField, self).__init__(*args, **kwargs)
+        self.choices = [(None, '---------')] + list(self.choices)
+
+class CustomCheckboxFieldRenderer(forms.widgets.CheckboxFieldRenderer):
+    """Used by CustomCheckboxSelectMultiple."""
+    outer_html = '<div{id_attr} class="feedback-multiple-select">{content}</div>'
+    inner_html = '<div class="feedback-option">{choice_value}{sub_widgets}</div>'
+
+class CustomCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
+    renderer = CustomCheckboxFieldRenderer
+
+class CustomMultipleChoiceField(forms.MultipleChoiceField):
+    """Class to do multiple choice fields following our conventions.
+    Specifically, converts to a string rather than a list."""
+    widget = CustomCheckboxSelectMultiple
+
+    def clean(self, value):
+        value = super(CustomMultipleChoiceField, self).clean(value)
+        return m.AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(value)
 
 # ==============================================================================
 # Result/ballot forms
@@ -669,6 +691,10 @@ class BaseFeedbackForm(forms.Form):
             field = forms.CharField()
         elif question.answer_type == question.ANSWER_TYPE_LONGTEXT:
             field = forms.CharField(widget=forms.Textarea)
+        elif question.answer_type == question.ANSWER_TYPE_SINGLE_SELECT:
+            field = OptionalChoiceField(choices=question.choices_for_field)
+        elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
+            field = CustomMultipleChoiceField(choices=question.choices_for_field)
         field.label = question.text
         field.required = question.required
         return field

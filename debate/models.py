@@ -1716,6 +1716,8 @@ class AdjudicatorFeedbackQuestion(models.Model):
     ANSWER_TYPE_FLOAT            = 'f'
     ANSWER_TYPE_TEXT             = 't'
     ANSWER_TYPE_LONGTEXT         = 'tl'
+    ANSWER_TYPE_SINGLE_SELECT    = 'ss'
+    ANSWER_TYPE_MULTIPLE_SELECT  = 'ms'
     ANSWER_TYPE_CHOICES = (
         (ANSWER_TYPE_BOOLEAN_CHECKBOX , 'checkbox'),
         (ANSWER_TYPE_BOOLEAN_SELECT   , 'yes/no (dropdown)'),
@@ -1724,6 +1726,8 @@ class AdjudicatorFeedbackQuestion(models.Model):
         (ANSWER_TYPE_FLOAT            , 'float'),
         (ANSWER_TYPE_TEXT             , 'text'),
         (ANSWER_TYPE_LONGTEXT         , 'long text'),
+        (ANSWER_TYPE_SINGLE_SELECT    , 'select one'),
+        (ANSWER_TYPE_MULTIPLE_SELECT  , 'select multiple'),
     )
     ANSWER_TYPE_CLASSES = {
         ANSWER_TYPE_BOOLEAN_CHECKBOX : AdjudicatorFeedbackBooleanAnswer,
@@ -1733,13 +1737,16 @@ class AdjudicatorFeedbackQuestion(models.Model):
         ANSWER_TYPE_FLOAT            : AdjudicatorFeedbackFloatAnswer,
         ANSWER_TYPE_TEXT             : AdjudicatorFeedbackStringAnswer,
         ANSWER_TYPE_LONGTEXT         : AdjudicatorFeedbackStringAnswer,
+        ANSWER_TYPE_SINGLE_SELECT    : AdjudicatorFeedbackStringAnswer,
+        ANSWER_TYPE_MULTIPLE_SELECT  : AdjudicatorFeedbackStringAnswer,
     }
     ANSWER_TYPE_CLASSES_REVERSE = {
-        AdjudicatorFeedbackStringAnswer : [ANSWER_TYPE_TEXT, ANSWER_TYPE_LONGTEXT],
+        AdjudicatorFeedbackStringAnswer : [ANSWER_TYPE_TEXT, ANSWER_TYPE_LONGTEXT, ANSWER_TYPE_SINGLE_SELECT, ANSWER_TYPE_MULTIPLE_SELECT],
         AdjudicatorFeedbackIntegerAnswer: [ANSWER_TYPE_INTEGER_SCALE, ANSWER_TYPE_INTEGER_TEXTBOX],
         AdjudicatorFeedbackFloatAnswer  : [ANSWER_TYPE_FLOAT],
         AdjudicatorFeedbackBooleanAnswer: [ANSWER_TYPE_BOOLEAN_SELECT, ANSWER_TYPE_BOOLEAN_CHECKBOX],
     }
+    CHOICE_SEPARATOR = "//"
 
     tournament = models.ForeignKey(Tournament)
     seq = models.IntegerField(help_text="The order in which questions are displayed")
@@ -1756,6 +1763,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
     required = models.BooleanField(default=True, help_text="Whether participants are required to fill out this field")
     min_value = models.FloatField(blank=True, null=True, help_text="Minimum allowed value for numeric fields (ignored for text or boolean fields)")
     max_value = models.FloatField(blank=True, null=True, help_text="Maximum allowed value for numeric fields (ignored for text or boolean fields)")
+    choices = models.CharField(max_length=500, blank=True, null=True, help_text="Permissible choices for select one/multiple fields, separated by %r (ignored for other fields)" % CHOICE_SEPARATOR)
 
     class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
@@ -1771,6 +1779,9 @@ class AdjudicatorFeedbackQuestion(models.Model):
     def answer_type_class(self):
         return self.ANSWER_TYPE_CLASSES[self.answer_type]
 
+    @property
+    def choices_for_field(self):
+        return tuple((x, x) for x in self.choices.split(self.CHOICE_SEPARATOR))
 
 class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)
