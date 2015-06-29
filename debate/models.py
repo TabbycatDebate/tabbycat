@@ -587,7 +587,10 @@ class Team(models.Model):
         else:
             name = self.reference
         if self.use_institution_prefix is True:
-            return unicode(institution.code + " " + name)
+            if self.institution.code:
+                return unicode(institution.code + " " + name)
+            else:
+                return unicode(institution.abbreviation + " " + name)
         else:
             return unicode(name)
 
@@ -1764,6 +1767,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
     min_value = models.FloatField(blank=True, null=True, help_text="Minimum allowed value for numeric fields (ignored for text or boolean fields)")
     max_value = models.FloatField(blank=True, null=True, help_text="Maximum allowed value for numeric fields (ignored for text or boolean fields)")
     choices = models.CharField(max_length=500, blank=True, null=True, help_text="Permissible choices for select one/multiple fields, separated by %r (ignored for other fields)" % CHOICE_SEPARATOR)
+
 
     class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
