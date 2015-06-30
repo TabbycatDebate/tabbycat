@@ -759,9 +759,11 @@ def draw_none(request, round):
     all_teams_count = Team.objects.filter(tournament=round.tournament).count()
     active_teams = round.active_teams.all()
     active_venues_count = round.active_venues.count()
+    active_adjs = round.active_adjudicators.count()
     rooms = float(active_teams.count()) / 2
     return r2r(request, "draw_none.html", dict(active_teams=active_teams,
                                                active_venues_count=active_venues_count,
+                                               active_adjs=active_adjs,
                                                rooms=rooms,
                                                round=round,
                                                all_teams_count=all_teams_count))
@@ -1911,6 +1913,8 @@ def adj_feedback(request, t):
         template = 'assistant/assistant_adjudicator_feedback.html'
     else:
         template = 'adjudicator_feedback.html'
+        score_min = t.config.get('adj_min_score')
+        score_max = t.config.get('adj_max_score')
 
         from debate.models import SpeakerScoreByAdj
         all_adjs_rooms = DebateAdjudicator.objects.select_related('adjudicator').all()
@@ -1950,7 +1954,10 @@ def adj_feedback(request, t):
 
     feedback_headings = [q.name for q in t.adj_feedback_questions]
 
-    return r2r(request, template, dict(adjudicators=adjudicators, breaking_count=breaking_count, feedback_headings=feedback_headings))
+    return r2r(request, template, dict(
+        adjudicators=adjudicators, breaking_count=breaking_count,
+        feedback_headings=feedback_headings,
+        score_min=score_min, score_max=score_max))
 
 
 @login_required

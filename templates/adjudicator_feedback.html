@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load debate_tags %}
+{% load staticfiles %}
 
 {% block head-title %}Adjudicator Feedback{% endblock %}
 {% block page-title %}Adjudicator Feedback{% endblock %}
@@ -24,7 +25,7 @@
 
 {% block content %}
 
-  <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
+  <table id="dataTable" class="table table-hover table-striped adj-feedback" cellpadding="0" cellspacing="0">
     <thead>
       <tr>
         <th>Name</th>
@@ -34,6 +35,7 @@
         <th><span data-toggle="tooltip" title="Overall Score">Score</span></th>
         <th><span data-toggle="tooltip" title="Test Score; click to edit">Test</span></th>
         <th>Feedback</th>
+        <th>Trend</th>
         {% if show_unaccredited %}
           <th><span class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" title="If the Adj is a Trainee" ></span></th>
         {% endif %}
@@ -65,6 +67,9 @@
             <a data-toggle="modal" data-target="#edit-test-score" class="edit-test-score">{{ adj.test_score }}</a>
           </td>
           <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
+          <td>
+            <div id="graph_{{ adj.id }}" style="width: 100%; min-width: 100px; height: 60px; margin: -13px;"></div>
+          </td>
           {% if show_unaccredited %}
             <td>
               {% if adj.novice %}
@@ -205,90 +210,144 @@
 {% endblock content %}
 
 {% block extra-js %}
-  <script type="text/javascript" charset="utf-8">
+<script type="text/javascript" language="javascript" src="{% static 'js/jquery.flot.min.js' %}"></script>
+<script type="text/javascript" charset="utf-8">
 
-    $(document).ready( function() {
+  $(document).ready( function() {
 
-      var dTable = $('#dataTable').DataTable({
-        'bPaginate': false,
-        "aaSorting": [[ 2, "desc" ],[ 0, "asc" ]],
+    var dTable = $('#dataTable').DataTable({
+      'bPaginate': false,
+      "aaSorting": [[ 2, "desc" ],[ 0, "asc" ]],
+    });
+    new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+    $('#table-search').keyup(function(){
+      dTable.search($(this).val()).draw();
+    })
+
+    var adjTable = $("#modal-adj-table").dataTable({
+      // Grabbing the adj data into a datatable
+      {% if adjudicators.all.count > 0 %}
+      'ajax': '{% tournament_url get_adj_feedback %}?id={{ adjudicators.0.id }}',
+      {% endif %}
+      'bPaginate': false,
+      'bFilter': false
+    })
+
+    function get_adj_information(element) {
+      var adj_info = {}
+      adj_info.adj_row = $(element).parent().parent() // the <tr> for this adjudicator in the table
+      adj_info.adj_name = adj_info.adj_row.find(".adj-name").text()
+      adj_info.adj_id = parseInt(adj_info.adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
+      adj_info.adj_note = adj_info.adj_row.find(".adj-current-note").text()
+      adj_info.adj_score = parseFloat(adj_info.adj_row.find(".adj-current-test-score").text())
+      return adj_info;
+    }
+
+    $(".view-feedback").each( function() {
+      $(this).click( function() {
+        // Remove previous data to prevent confusion during slow loads
+        adjTable.api().clear().draw()
+        var adj_info = get_adj_information(this);
+        $("#modal-adj-name").text(adj_info.adj_name); // Updating header of the modal
+        var newUrl = '{% tournament_url get_adj_feedback %}?id=' + adj_info.adj_id
+        adjTable.api().ajax.url(newUrl).load();
       });
-      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
-      $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
-      })
-
-      var adjTable = $("#modal-adj-table").dataTable({
-        // Grabbing the adj data into a datatable
-        {% if adjudicators.all.count > 0 %}
-        'ajax': '{% tournament_url get_adj_feedback %}?id={{ adjudicators.0.id }}',
-        {% endif %}
-        'bPaginate': false,
-        'bFilter': false
-      })
-
-      function get_adj_information(element) {
-        var adj_info = {}
-        adj_info.adj_row = $(element).parent().parent() // the <tr> for this adjudicator in the table
-        adj_info.adj_name = adj_info.adj_row.find(".adj-name").text()
-        adj_info.adj_id = parseInt(adj_info.adj_row.attr('id').split('_')[1]) // the id of the adjudicator object
-        adj_info.adj_note = adj_info.adj_row.find(".adj-current-note").text()
-        adj_info.adj_score = parseFloat(adj_info.adj_row.find(".adj-current-test-score").text())
-        return adj_info;
-      }
-
-      $(".view-feedback").each( function() {
-        $(this).click( function() {
-          // Remove previous data to prevent confusion during slow loads
-          adjTable.api().clear().draw()
-          var adj_info = get_adj_information(this);
-          $("#modal-adj-name").text(adj_info.adj_name); // Updating header of the modal
-          var newUrl = '{% tournament_url get_adj_feedback %}?id=' + adj_info.adj_id
-          adjTable.api().ajax.url(newUrl).load();
-        });
-      });
-
-      $(".edit-test-score").each( function() {
-        $(this).click( function() {
-          var adj_info = get_adj_information(this);
-          $("#modal-test-name").text(adj_info.adj_name); // Updating header of the modal
-          $("#id_adj_test_id").val(adj_info.adj_id); // Updating header of the modal
-          $("#id_test_score").prop('placeholder', adj_info.adj_score); // updating the form table
-        });
-      });
-
-      $(".edit-note").each( function() {
-        $(this).click( function() {
-          var adj_info = get_adj_information(this);
-          $("#modal-note-name").text(adj_info.adj_name); // Updating header of the modal
-          $("#id_adj_test_id_note").val(adj_info.adj_id); // Updating header of the modal
-          $("#id_note").val(adj_info.adj_note); // updating the form with the note
-        });
-      });
-
-      $(".toggle_breaking_status").each(function() {
-        $(this).change( function() {
-          var adj_info = get_adj_information(this);
-          if (this.checked) {
-            var breaking_status = true
-            $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)+1)
-          } else {
-            var breaking_status = false
-            $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)-1)
-          }
-          $.ajax({
-            type: "POST",
-            url: "{% tournament_url set_adj_breaking_status %}",
-            data: {adj_id: adj_info.adj_id, adj_breaking_status: breaking_status},
-            error: function(xhr, error, ex) {
-              alert("error setting adj status");
-            }
-          });
-          return false;
-        });
-      });
-
     });
 
-  </script>
+    $(".edit-test-score").each( function() {
+      $(this).click( function() {
+        var adj_info = get_adj_information(this);
+        $("#modal-test-name").text(adj_info.adj_name); // Updating header of the modal
+        $("#id_adj_test_id").val(adj_info.adj_id); // Updating header of the modal
+        $("#id_test_score").prop('placeholder', adj_info.adj_score); // updating the form table
+      });
+    });
+
+    $(".edit-note").each( function() {
+      $(this).click( function() {
+        var adj_info = get_adj_information(this);
+        $("#modal-note-name").text(adj_info.adj_name); // Updating header of the modal
+        $("#id_adj_test_id_note").val(adj_info.adj_id); // Updating header of the modal
+        $("#id_note").val(adj_info.adj_note); // updating the form with the note
+      });
+    });
+
+    $(".toggle_breaking_status").each(function() {
+      $(this).change( function() {
+        var adj_info = get_adj_information(this);
+        if (this.checked) {
+          var breaking_status = true
+          $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)+1)
+        } else {
+          var breaking_status = false
+          $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)-1)
+        }
+        $.ajax({
+          type: "POST",
+          url: "{% tournament_url set_adj_breaking_status %}",
+          data: {adj_id: adj_info.adj_id, adj_breaking_status: breaking_status},
+          error: function(xhr, error, ex) {
+            alert("error setting adj status");
+          }
+        });
+        return false;
+      });
+    });
+
+
+    {% for adj in adjudicators %}
+
+      var plotData = [[0,{{ adj.test_score }}],{% for s in adj.rscores %}{% if s %}[{{ forloop.counter }},{{ s }}],{% endif %}{% endfor %}]
+
+      function formatter(val, axis) {
+        return "";
+      }
+
+      $.plot("#graph_{{ adj.id }}", [ plotData ], {
+        xaxis: {
+          min: 0,
+          max: {{ current_round.seq }},
+          tickSize: 1,
+          tickDecimals: 0,
+          tickFormatter: formatter
+        },
+        yaxis: {
+          min: {{ score_min }},
+          max: {{ score_max }},
+          tickSize: 1,
+          tickDecimals: 0,
+          tickFormatter: formatter
+        },
+        grid: {
+          borderWidth: 0
+        },
+        series: {
+          lines: { show: true },
+          points: { show: true }
+        }
+      });
+
+      // $.plot("#graph_{{ adj.id }}", plotData, {
+      //   lines: {
+      //     show: true, fill: true
+      //   },
+      //   xaxis: {
+      //     min: 1,
+      //     max: {{ current_round.seq }}+1,
+      //     tickSize: 1,
+      //     tickDecimals: 0,
+      //   },
+      //   yaxis: {
+      //     min: {{ score_min }},
+      //     max: {{ score_max }},
+      //     tickSize: 1,
+      //     tickDecimals: 0,
+      //   }
+      // });
+
+    {% endfor %}
+
+  });
+
+</script>
 {% endblock extra-js %}
