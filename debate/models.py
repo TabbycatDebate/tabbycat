@@ -510,7 +510,8 @@ class TeamManager(models.Manager):
 
 
     def get_queryset(self):
-        return super(TeamManager, self).get_queryset().select_related('institution')
+        return super(TeamManager, self).get_queryset().select_related('instit').order_by('seq')
+
 
 
 class Division(models.Model):
@@ -1058,7 +1059,7 @@ class Round(models.Model):
 
     @property
     def adjudicators_allocation_validity(self):
-        debates = self.get_draw()
+        debates = self.get_cached_draw
         if not all(debate.adjudicators.has_chair for debate in debates):
             return 1
         if not all(debate.adjudicators.valid for debate in debates):
@@ -1066,11 +1067,15 @@ class Round(models.Model):
         return 0
 
     def venue_allocation_validity(self):
-        debates = self.get_draw()
+        debates = self.get_cached_draw
         if all(debate.venue for debate in debates):
             return True
         else:
             return False
+
+    @cached_property
+    def get_cached_draw(self):
+        return self.get_draw()
 
     def get_draw(self):
         if self.tournament.config.get('enable_divisions'):

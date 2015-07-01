@@ -776,7 +776,7 @@ def draw_draft(request, round):
 
 
 def draw_confirmed(request, round):
-    draw = round.get_draw()
+    draw = round.get_cached_draw
     rooms = float(round.active_teams.count()) / 2
     active_adjs = round.active_adjudicators.all()
 
@@ -1894,7 +1894,7 @@ def adj_scores(request, t):
     data = {}
 
     #TODO: make round-dependent
-    for adj in Adjudicator.objects.all():
+    for adj in Adjudicator.objects.all().select_related('tournament','current_round'):
         data[adj.id] = adj.score
 
     return HttpResponse(json.dumps(data), content_type="text/json")
@@ -1905,7 +1905,8 @@ def adj_feedback(request, t):
     breaking_count = 0
 
     if not t.config.get('share_adjs'):
-        adjudicators = Adjudicator.objects.filter(tournament=t)
+        adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
+            'tournament','tournament__current_round')
     else:
         adjudicators = Adjudicator.objects.all()
 
@@ -1917,29 +1918,31 @@ def adj_feedback(request, t):
         score_max = t.config.get('adj_max_score')
 
         from debate.models import SpeakerScoreByAdj
-        all_adjs_rooms = DebateAdjudicator.objects.select_related('adjudicator').all()
-        all_adjs_scores = SpeakerScoreByAdj.objects.select_related('debate_adjudicator','ballot_submission').filter(ballot_submission__confirmed=True)
-        for adj in adjudicators:
-            adjs_rooms  = all_adjs_rooms.filter(adjudicator=adj)
-            adj.debates = len(adjs_rooms)
+        all_debate_adjudicators = list(DebateAdjudicator.objects.select_related('adjudicator').all())
+        all_adj_scores = list(SpeakerScoreByAdj.objects.select_related('debate_adjudicator','ballot_submission').filter(
+            ballot_submission__confirmed=True))
 
+        for adj in adjudicators:
+            adj_debateadjudications  = [a for a in all_debate_adjudicators if a.adjudicator is adj]
+            adj_scores = [s for s in all_adj_scores if s.debate_adjudicator is adj_debateadjudications]
+
+            adj.debates = len(adj_debateadjudications)
             if adj.breaking:
                 breaking_count += 1
 
-            adjs_scores = all_adjs_scores.filter(debate_adjudicator=adjs_rooms)
-            if len(adjs_scores) > 0:
-                adj.avg_score = sum(s.score for s in adjs_scores) / len(adjs_scores)
+            if len(adj_scores) > 0:
+                adj.avg_score = sum(s.score for s in adj_scores) / len(adj_scores)
 
                 ballot_ids = []
                 ballot_margins = []
-                for score in adjs_scores:
+                for score in adj_scores:
                     ballot_ids.append(score.ballot_submission)
 
                 ballot_ids = sorted(set([b.id for b in ballot_ids])) # Deduplication of ballot IDS
 
                 for ballot_id in ballot_ids:
                     # For each unique ballot id, total its scores
-                    single_round = adjs_scores.filter(ballot_submission=ballot_id)
+                    single_round = adj_scores.filter(ballot_submission=ballot_id)
                     scores = [s.score for s in single_round] # TODO this is slow - should be prefetched
                     slice_end = len(scores)
                     teamA = sum(scores[:len(scores)/2])
