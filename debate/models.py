@@ -509,6 +509,10 @@ class TeamManager(models.Manager):
         return breaking_teams
 
 
+    def get_queryset(self):
+        return super(TeamManager, self).get_queryset().select_related('institution')
+
+
 class Division(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name or suffix")
     seq = models.IntegerField(blank=True, null=True, help_text="The order in which divisions are displayed")
@@ -742,6 +746,8 @@ class AdjudicatorManager(models.Manager):
     def accredited(self):
         return self.filter(novice=False)
 
+    def get_queryset(self):
+        return super(AdjudicatorManager, self).get_queryset().select_related('institution')
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)

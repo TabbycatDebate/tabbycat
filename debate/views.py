@@ -129,7 +129,7 @@ def public_index(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_participants')
 def public_participants(request, t):
-    adjs = Adjudicator.objects.all().select_related('institution')
+    adjs = Adjudicator.objects.all()
     speakers = Speaker.objects.all().select_related('team','team__institution')
     return r2r(request, "public/public_participants.html", dict(adjs=adjs, speakers=speakers))
 
@@ -223,13 +223,13 @@ def breaking_teams(request, t, name, category):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')
 def public_breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, tournament=t).select_related('institution')
+    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
     return r2r(request, 'public/public_breaking_adjudicators.html', dict(adjs=adjs))
 
 @admin_required
 @tournament_view
 def breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, tournament=t).select_related('institution')
+    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
     return r2r(request, 'breaking_adjudicators.html', dict(adjs=adjs))
 
 
@@ -267,7 +267,7 @@ def public_feedback_progress(request, t):
 
     feedback = AdjudicatorFeedback.objects.all()
     adjudicators = Adjudicator.objects.all()
-    teams = Team.objects.all().select_related('institution')
+    teams = Team.objects.all()
     current_round = request.tournament.current_round.seq
 
     for adj in adjudicators:
@@ -353,7 +353,7 @@ def all_draws_for_institution(request, t, institution_id):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_teams(request, t):
-    teams = Team.objects.filter(tournament__active=True).select_related('institution','tournament').prefetch_related('division')
+    teams = Team.objects.filter(tournament__active=True).select_related('tournament').prefetch_related('division')
     return r2r(request, 'public/public_all_tournament_teams.html', dict(
         teams=teams))
 
@@ -371,7 +371,7 @@ def public_all_draws(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
 def public_side_allocations(request, t):
-    teams = Team.objects.filter(tournament=t).select_related('institution')
+    teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
     TPA_MAP = {
@@ -546,7 +546,7 @@ def feedback_progress(request, t):
     feedback = AdjudicatorFeedback.objects.select_related('source_adjudicator__adjudicator','source_team__team').all()
     adjudicators = Adjudicator.objects.all()
     adjudications = DebateAdjudicator.objects.select_related('adjudicator','debate').all()
-    teams = Team.objects.select_related('institution').all()
+    teams = Team.objects.all()
 
     # Teams only owe feedback on non silent rounds
     rounds_owed = request.tournament.rounds.filter(silent=False,
@@ -1905,9 +1905,9 @@ def adj_feedback(request, t):
     breaking_count = 0
 
     if not t.config.get('share_adjs'):
-        adjudicators = Adjudicator.objects.select_related('institution').filter(tournament=t)
+        adjudicators = Adjudicator.objects.filter(tournament=t)
     else:
-        adjudicators = Adjudicator.objects.select_related('institution').all()
+        adjudicators = Adjudicator.objects.all()
 
     if not request.user.is_superuser:
         template = 'assistant/assistant_adjudicator_feedback.html'
@@ -1964,12 +1964,12 @@ def adj_feedback(request, t):
 @tournament_view
 def adj_source_feedback(request, t):
     questions = t.adj_feedback_questions
-    teams = Team.objects.filter(tournament=t).select_related('institution')
+    teams = Team.objects.filter(tournament=t)
     for team in teams:
         team.feedback_tally = AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
             'source_team__team').count()
 
-    adjs = Adjudicator.objects.filter(tournament=t).select_related('institution')
+    adjs = Adjudicator.objects.filter(tournament=t)
     for adj in adjs:
         adj.feedback_tally = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
             'source_adjudicator__adjudicator').count()
