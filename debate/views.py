@@ -467,11 +467,6 @@ def public_ballots_view(request, t, debate_id):
 @login_required
 @tournament_view
 def tournament_home(request, t):
-    # Actions
-    from debate.models import ActionLog
-    a = ActionLog.objects.filter(tournament=t).order_by('-id')[:20].select_related(
-        'user', 'debate', 'ballot_submission'
-    )
 
     # Speaker Scores
     from debate.models import SpeakerScore
@@ -494,7 +489,7 @@ def tournament_home(request, t):
     stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
     return r2r(request, 'tournament_home.html', dict(stats=stats,
-        total_ballots=total_ballots, round=round, actions=a))
+        total_ballots=total_ballots, round=round))
 
 @login_required
 @tournament_view
@@ -512,6 +507,34 @@ def results_status_update(request, t):
     stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
     return HttpResponse(json.dumps(stats), content_type="text/json")
+
+@login_required
+@tournament_view
+def action_log_update(request, t):
+
+    from debate.models import ActionLog
+    actions = ActionLog.objects.filter(tournament=t).order_by('-id')[:20].select_related(
+        'user', 'debate', 'ballot_submission'
+    )
+
+    import datetime
+    now = datetime.datetime.now()
+    action_objects = []
+    for a in actions:
+        elapsed = now - a.timestamp
+        action = {
+            'user': a.user.username or action.ip_address or "anonymous",
+            'type': a.get_type_display(),
+            'param': a.get_parameters_display(),
+            'timestamp': int(elapsed.total_seconds() / 60)
+        }
+        action_objects.append(action)
+
+    print action_objects
+
+    return HttpResponse(json.dumps(action_objects), content_type="text/json")
+
+
 
 @admin_required
 @tournament_view
