@@ -1894,7 +1894,7 @@ def adj_scores(request, t):
     data = {}
 
     #TODO: make round-dependent
-    for adj in Adjudicator.objects.all().select_related('tournament','current_round'):
+    for adj in Adjudicator.objects.all().select_related('tournament','tournament__current_round'):
         data[adj.id] = adj.score
 
     return HttpResponse(json.dumps(data), content_type="text/json")
@@ -1922,6 +1922,7 @@ def adj_feedback(request, t):
         all_adj_scores = list(SpeakerScoreByAdj.objects.select_related('debate_adjudicator','ballot_submission').filter(
             ballot_submission__confirmed=True))
 
+        # Processing scores to get average margins
         for adj in adjudicators:
             adj_debateadjudications  = [a for a in all_debate_adjudicators if a.adjudicator is adj]
             adj_scores = [s for s in all_adj_scores if s.debate_adjudicator is adj_debateadjudications]
@@ -1954,6 +1955,44 @@ def adj_feedback(request, t):
             else:
                 adj.avg_score = None
                 adj.avg_margin = None
+
+        all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(confirmed=True).select_related(
+            'adjudicator', 'source_adjudicator__debate__round', 'source_team__debate__round'))
+        rounds = t.prelim_rounds(until=t.current_round)
+
+        # Filtering/summing feedback by round for the graphs (faster than a model method)
+        for adj in adjudicators:
+            adj.rscores = []
+            adj_feedbacks = [f for f in all_adj_feedbacks if f.adjudicator == adj]
+            print adj
+            print adj_feedbacks
+            for r in rounds:
+                adj_round_feedbacks = [f for f in adj_feedbacks if (f.source_adjudicator and f.source_adjudicator.debate.round == r)]
+                adj_round_feedbacks.extend([f for f in adj_feedbacks if (f.source_team and f.source_team.debate.round == r)])
+
+                if len(adj_round_feedbacks) > 0:
+                    # Getting the position of the adj
+                    # We grab both so there is at least one valid debate, then lookup the debate adjudicator for that
+                    debates = [fb.source_team.debate for fb in adj_round_feedbacks if fb.source_team]
+                    debates.extend([fb.source_adjudicator.debate for fb in adj_round_feedbacks if fb.source_adjudicator])
+                    adj_da = next((da for da in all_debate_adjudicators if (da.adjudicator == adj and da.debate == debates[0])), None)
+
+                    if adj_da.type == adj_da.TYPE_CHAIR:
+                        adj_type = "Chair"
+                    elif adj_da.type == adj_da.TYPE_PANEL:
+                        adj_type = "Panellist"
+                    elif adj_da.type == adj_da.TYPE_TRAINEE:
+                        adj_type = "Trainee"
+
+                    # Average their scores for that round
+                    totals = [f.score for f in adj_round_feedbacks]
+                    average = sum(totals) / len(totals)
+
+                    # Creating the object list for the graph
+                    adj.rscores.append([r.seq, average, adj_type])
+
+            print "_______"
+
 
     feedback_headings = [q.name for q in t.adj_feedback_questions]
 

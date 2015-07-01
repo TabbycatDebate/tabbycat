@@ -510,7 +510,7 @@ class TeamManager(models.Manager):
 
 
     def get_queryset(self):
-        return super(TeamManager, self).get_queryset().select_related('instit').order_by('seq')
+        return super(TeamManager, self).get_queryset().select_related('institution')
 
 
 
@@ -804,19 +804,6 @@ class Adjudicator(Person):
 
         return self.test_score * (1 - weight) + (weight * feedback_score)
 
-
-    @cached_property
-    def rscores(self):
-        r = []
-        for round in self.tournament.rounds.all():
-            q = models.Q(source_adjudicator__debate__round=round) | \
-                    models.Q(source_team__debate__round=round)
-            a = AdjudicatorFeedback.objects.filter(
-                adjudicator = self,
-                confirmed = True
-            ).filter(q).aggregate(avg=models.Avg('score'))['avg']
-            r.append(a)
-        return r
 
     def _feedback_score(self):
         return self.adjudicatorfeedback_set.filter(confirmed=True).aggregate(avg=models.Avg('score'))['avg']
