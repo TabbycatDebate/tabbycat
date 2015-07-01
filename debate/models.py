@@ -84,10 +84,8 @@ class Tournament(models.Model):
         cached_key = "%s_current_round_object" % self.slug
         cached_value = cache.get(cached_key)
         if cached_value:
-            print 'found current round cache'
             return cache.get(cached_key)
         else:
-            print 'set current round cache'
             cache.set(cached_key, self.current_round, None)
             return self.current_round
 
