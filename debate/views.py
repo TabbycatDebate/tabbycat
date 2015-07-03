@@ -235,6 +235,22 @@ def breaking_adjs(request, t):
     adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
     return r2r(request, 'breaking_adjudicators.html', dict(adjs=adjs))
 
+@admin_required
+@tournament_view
+def break_eligibility(request, t):
+    context = dict()
+    if request.method == "POST":
+        form = forms.BreakEligibilityForm(t, request.POST)
+        if form.is_valid():
+            form.save()
+            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT,
+                    user=request.user, tournament=t, ip_address=get_ip_address(request))
+            context['updated'] = True
+    else:
+        form = forms.BreakEligibilityForm(t)
+
+    context['form'] = form
+    return r2r(request, 'break_eligibility.html', context)
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_ballots')
@@ -544,7 +560,7 @@ def action_log_update(request, t):
 def tournament_config(request, t):
     from debate.config import make_config_form
 
-    context = {}
+    context = dict()
     if request.method == 'POST':
         form = make_config_form(t, request.POST)
         if form.is_valid():
