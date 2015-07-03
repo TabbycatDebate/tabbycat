@@ -12,7 +12,7 @@
     {% if public_breaking_teams > 0 %}
       {% for category in tournament.breakcategory_set.all %}
       <li class="list-group-item"><a  href="{% tournament_url public_breaking_teams category.slug %}">
-        {{ category.abbreviation }}
+        {{ category.name }} Break
       </a></li>
       {% endfor %}
     {% endif %}

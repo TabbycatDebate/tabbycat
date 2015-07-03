@@ -161,6 +161,26 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return counts, errors
 
+    def import_break_categories(self, f):
+        """Imports break categories from a file.
+
+        Each line has:
+            tournament, name, slug, seq, break_size, is_general, priority, institution_cap
+        """
+
+        def _break_category_line_parser(line):
+            return {
+                'tournament': self.tournament,
+                'name': line[0],
+                'slug': line[1],
+                'seq': int(line[2]),
+                'break_size': int(line[3]),
+                'is_general': bool(int(line[4])),
+                'priority': int(line[5]),
+                'institution_cap': int(line[6]) if len(line) > 6 and line[6] else None,
+            }
+        return self._import(f, _break_category_line_parser, m.BreakCategory)
+
     def import_teams(self, f, create_dummy_speakers=False):
         """Imports teams from a file, assigning emoji as needed.
         If 'create_dummy_speakers' is True, also creates dummy speakers."""

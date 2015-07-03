@@ -228,7 +228,7 @@ class Institution(models.Model):
             return self.code[:5]
 
 
-def annotate_team_standings(teams, round=None, shuffle=False):
+def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
     """Accepts a QuerySet, returns a list.
     If 'shuffle' is True, it shuffles the list before sorting so that teams that
     are equal are in random order. This should be turned on for draw generation,
@@ -265,10 +265,10 @@ def annotate_team_standings(teams, round=None, shuffle=False):
     }).distinct()
 
     # Extract which rule to use from the tournament config
-    if round is not None:
+    if round is not None and tournament is None:
         tournament = round.tournament
-    else:
-        tournament = teams[0].tournament
+    if tournament is None:
+        raise TypeError("A tournament or a round must be specified.")
     rule = tournament.config.get('team_standings_rule')
 
     if rule == "australs":
@@ -535,18 +535,23 @@ class Division(models.Model):
 
 class BreakCategory(models.Model):
     tournament = models.ForeignKey(Tournament)
-    name = models.CharField(max_length=50, help_text="Name to be displayed as title, e.g., \"ESL Break\"")
-    slug = models.CharField(max_length=20, help_text="Slug for URLs, e.g., \"esl\"")
-    abbreviation = models.CharField(max_length=20, help_text="Abbreviation used for menus and annotations, e.g., \"ESL\"")
+    name = models.CharField(max_length=50, help_text="Name to be displayed, e.g., \"ESL\"")
+    slug = models.SlugField(help_text="Slug for URLs, e.g., \"esl\"")
     seq = models.IntegerField(help_text="The order in which the categories are displayed")
     break_size = models.IntegerField(help_text="Number of breaking teams in this category")
     is_general = models.BooleanField(help_text="True if most teams eligible for this category, e.g. Open, False otherwise")
-    institution_cap = models.IntegerField(help_text="Maximum number of teams from a single institution in this category; set to zero if not applicable")
+    institution_cap = models.IntegerField(blank=True, null=True, help_text="Maximum number of teams from a single institution in this category; leave blank if not applicable")
+    priority = models.IntegerField(help_text="If a team breaks in multiple categories, lower priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority")
+
+    def __unicode__(self):
+        return self.name
 
     class Meta:
         unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
+        verbose_name_plural = "break categories"
+
 
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Full name or suffix", help_text="Do not include institution name (see \"uses institutional prefix\" below)")

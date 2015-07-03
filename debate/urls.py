@@ -142,8 +142,7 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/adjudicators/breaking/set/$', 'set_adj_breaking_status', name='set_adj_breaking_status'),
     url(r'^admin/adjudicators/notes/test/set/$', 'set_adj_note', name='set_adj_note'),
 
-    url(r'^admin/break/teams/open/$', 'breaking_teams', {'name': 'Open Break', 'category': 'open'}, name='breaking_teams_open'),
-    url(r'^admin/break/teams/esl/$', 'breaking_teams', {'name': 'ESL Break', 'category': 'esl'}, name='breaking_teams_esl'),
+    url(r'^admin/break/teams/(?P<category>\w+)/$', 'breaking_teams', name='breaking_teams'),
     url(r'^admin/break/adjudicators/$',  'breaking_adjs', name='breaking_adjs'),
 
     url(r'^admin/side_allocations/$', 'side_allocations', name='side_allocations'),

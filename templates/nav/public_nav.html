@@ -88,7 +88,7 @@
       <ul class="dropdown-menu">
         {% if public_breaking_teams > 0 %}
           {% for category in tournament.breakcategory_set.all %}
-            <li><a href="{% tournament_url public_breaking_teams category.slug %}">{{ category.abbreviation }}</a></li>
+            <li><a href="{% tournament_url public_breaking_teams category.slug %}">{{ category.name }}</a></li>
           {% endfor %}
         {% endif %}
         {% if public_breaking_adjs > 0 %}

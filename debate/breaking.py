@@ -1,14 +1,14 @@
 """Module to compute the teams breaking in a BreakCategory."""
 
 from collections import Counter
+from models import annotate_team_standings
 
-
-def breaking_teams(category):
+def compute_breaking_teams(category):
     """Returns a list of Teams with annotations.
     'category' must be a BreakCategory instance."""
 
     teams = category.team_set.all()
-    teams = annotate_team_standings(teams)
+    teams = annotate_team_standings(teams, tournament=category.tournament)
 
     break_size = category.break_size
     institution_cap = category.institution_cap

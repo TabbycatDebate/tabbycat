@@ -42,7 +42,7 @@
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Break<b class="caret"></b></a>
     <ul class="dropdown-menu">
       {% for category in tournament.breakcategory_set.all %}
-        <li><a href="{% tournament_url breaking_teams category.slug %}">{{ category.abbreviation }}</a></li>
+        <li><a href="{% tournament_url breaking_teams category.slug %}">{{ category.name }}</a></li>
       {% endfor %}
       <li><a href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
     </ul>
