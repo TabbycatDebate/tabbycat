@@ -441,72 +441,72 @@ class TeamManager(models.Manager):
 
         return teams
 
-    def breaking_teams(self, tournament, category='open'):
-        """Returns a list."""
+    # def breaking_teams(self, tournament, category='open'):
+    #     """Returns a list."""
 
-        FILTER_ARGS = {
-            'open': dict(),
-            'esl':  dict(esl=True),
-        }
-        filterargs = FILTER_ARGS[category]
+    #     FILTER_ARGS = {
+    #         'open': dict(),
+    #         'esl':  dict(esl=True),
+    #     }
+    #     filterargs = FILTER_ARGS[category]
 
-        teams = self.filter(tournament=tournament, **filterargs)
-        teams = annotate_team_standings(teams)
+    #     teams = self.filter(tournament=tournament, **filterargs)
+    #     teams = annotate_team_standings(teams)
 
-        BREAK_SIZE_CONFIG_OPTIONS = {
-            'open': 'break_size',
-            'esl':  'esl_break_size',
-        }
-        break_size = tournament.config.get(BREAK_SIZE_CONFIG_OPTIONS[category])
-        institution_cap = tournament.config.get('institution_cap')
+    #     BREAK_SIZE_CONFIG_OPTIONS = {
+    #         'open': 'break_size',
+    #         'esl':  'esl_break_size',
+    #     }
+    #     break_size = tournament.config.get(BREAK_SIZE_CONFIG_OPTIONS[category])
+    #     institution_cap = tournament.config.get('institution_cap')
 
-        prev_rank_value = (None, None)
-        current_rank = 0
-        breaking_teams = list()
+    #     prev_rank_value = (None, None)
+    #     current_rank = 0
+    #     breaking_teams = list()
 
-        # Variables for insutitional caps and non-breaking teams:
-        current_break_rank = 0
-        current_break_seq = 0
-        from collections import Counter
-        teams_from_institution = Counter()
+    #     # Variables for insutitional caps and non-breaking teams:
+    #     current_break_rank = 0
+    #     current_break_seq = 0
+    #     from collections import Counter
+    #     teams_from_institution = Counter()
 
-        for i, team in enumerate(teams, start=1):
+    #     for i, team in enumerate(teams, start=1):
 
-            # Overall rank
-            rank_value = (team.points, team.speaker_score)
-            new_rank = rank_value != prev_rank_value
-            if new_rank:
-                current_rank = i
-                prev_rank_value = rank_value
-            team.rank = current_rank
+    #         # Overall rank
+    #         rank_value = (team.points, team.speaker_score)
+    #         new_rank = rank_value != prev_rank_value
+    #         if new_rank:
+    #             current_rank = i
+    #             prev_rank_value = rank_value
+    #         team.rank = current_rank
 
 
-            # Increment current_break_seq if it won't violate institution cap
-            if institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
-                if new_rank and current_break_rank == break_size:
-                    break
-                team.break_rank = "- (Capped)"
-            elif team.cannot_break == True:
-                if new_rank and current_break_rank == break_size:
-                    break
-                team.break_rank = "- (Ineligible)"
-            else:
-                current_break_seq += 1
-                if new_rank:
-                    if current_break_rank == break_size:
-                        break
-                    current_break_rank = current_break_seq
-                team.break_rank = current_break_rank
+    #         # Increment current_break_seq if it won't violate institution cap
+    #         if institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
+    #             if new_rank and current_break_rank == break_size:
+    #                 break
+    #             team.break_rank = "- (Capped)"
+    #         elif team.cannot_break == True:
+    #             if new_rank and current_break_rank == break_size:
+    #                 break
+    #             team.break_rank = "- (Ineligible)"
+    #         else:
+    #             current_break_seq += 1
+    #             if new_rank:
+    #                 if current_break_rank == break_size:
+    #                     break
+    #                 current_break_rank = current_break_seq
+    #             team.break_rank = current_break_rank
 
-            if current_break_rank > break_size:
-                break
+    #         if current_break_rank > break_size:
+    #             break
 
-            # Take note of the institution
-            teams_from_institution[team.institution] += 1
+    #         # Take note of the institution
+    #         teams_from_institution[team.institution] += 1
 
-            breaking_teams.append(team)
+    #         breaking_teams.append(team)
 
-        return breaking_teams
+    #     return breaking_teams
 
 
 class Division(models.Model):
@@ -533,6 +533,21 @@ class Division(models.Model):
         index_together = ['tournament', 'seq']
 
 
+class BreakCategory(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    name = models.CharField(max_length=50, help_text="Name to be displayed as title, e.g., \"ESL Break\"")
+    slug = models.CharField(max_length=20, help_text="Slug for URLs, e.g., \"esl\"")
+    abbreviation = models.CharField(max_length=20, help_text="Abbreviation used for menus and annotations, e.g., \"ESL\"")
+    seq = models.IntegerField(help_text="The order in which the categories are displayed")
+    break_size = models.IntegerField(help_text="Number of breaking teams in this category")
+    is_general = models.BooleanField(help_text="True if most teams eligible for this category, e.g. Open, False otherwise")
+    institution_cap = models.IntegerField(help_text="Maximum number of teams from a single institution in this category; set to zero if not applicable")
+
+    class Meta:
+        unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
+        ordering = ['tournament', 'seq']
+        index_together = ['tournament', 'seq']
+
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Full name or suffix", help_text="Do not include institution name (see \"uses institutional prefix\" below)")
     short_reference = models.CharField(max_length=35, verbose_name="Short name/suffix", help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
@@ -543,12 +558,14 @@ class Team(models.Model):
     use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
+    break_categories = models.ManyToManyField(BreakCategory)
+
     # set to True if a team is ineligible to break (other than being
     # swing/composite)
-    cannot_break = models.BooleanField(default=False)
+    # cannot_break = models.BooleanField(default=False)
 
-    esl = models.BooleanField(default=False)
-    efl = models.BooleanField(default=False)
+    # esl = models.BooleanField(default=False)
+    # efl = models.BooleanField(default=False)
 
     venue_preferences = models.ManyToManyField(VenueGroup,
         through = 'TeamVenuePreference',

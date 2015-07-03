@@ -78,9 +78,9 @@ class TeamForm(forms.ModelForm):
 
 class TeamAdmin(admin.ModelAdmin):
     form = TeamForm
-    list_display = ('long_name','short_reference','institution', 'division', 'esl', 'efl', 'tournament')
+    list_display = ('long_name','short_reference','institution', 'division', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
-    list_filter = ('tournament', 'division', 'institution')
+    list_filter = ('tournament', 'division', 'institution', 'break_categories')
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
     raw_id_fields = ('division',)
 

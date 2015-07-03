@@ -15,6 +15,7 @@ from debate.result import BallotSet
 from debate import forms
 from debate.models import *
 from debate.utils import populate_url_keys
+from debate.breaking import breaking_teams
 
 from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
@@ -210,15 +211,17 @@ def public_break_index(request, t):
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_teams')
-def public_breaking_teams(request, t, name, category):
-    teams = Team.objects.breaking_teams(t, category)
-    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=category, name=name))
+def public_breaking_teams(request, t, category):
+    bc = BreakCategory.objects.get(slug=category)
+    teams = breaking_teams(bc)
+    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=category))
 
 @admin_required
 @tournament_view
-def breaking_teams(request, t, name, category):
-    teams = Team.objects.breaking_teams(t, category)
-    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=category, name=name))
+def breaking_teams(request, t, category):
+    bc = BreakCategory.objects.get(slug=category)
+    teams = breaking_teams(bc)
+    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=category))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')

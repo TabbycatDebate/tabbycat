@@ -10,14 +10,11 @@
   <div class="col-md-12">
     <ul class="list-group">
     {% if public_breaking_teams > 0 %}
-      <li class="list-group-item"><a  href="{% tournament_url public_breaking_teams_open %}">
-        Open Break
+      {% for category in tournament.breakcategory_set.all %}
+      <li class="list-group-item"><a  href="{% tournament_url public_breaking_teams category.slug %}">
+        {{ category.abbreviation }}
       </a></li>
-      {% if esl_break %}
-        <li class="list-group-item"><a  href="{% tournament_url public_breaking_teams_esl %}">
-          ESL Break
-        </a></li>
-      {% endif %}
+      {% endfor %}
     {% endif %}
     {% if public_breaking_adjs > 0 %}
       <li class="list-group-item"><a href="{% tournament_url public_breaking_adjs %}">
