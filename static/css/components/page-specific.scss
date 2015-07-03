@@ -16,6 +16,12 @@
   text-align: left;
 }
 
+// Feedback Page
+
+.adj-feedback.table > tbody > tr > td {
+  line-height: 32px; // compensates for the graph
+}
+
 // Edit Adjs and Edit Venues Page
 
 .edit-venues, .edit-adjs, .edit-matchups {
@@ -29,7 +35,7 @@
     padding-left: 5px;
   }
 
-  .table > tbody > tr > td {
+  .extra-line-height > tbody > tr > td {
     line-height: 26px; // Align text with boxes
   }
 
@@ -113,8 +119,8 @@
   .ui-droppable {
     height: 44px;
   }
-  .panel-holder, .chair-holder {
-    padding: 5px;
+  .panel-holder, .chair-holder, .team-holder, .venue-holder {
+    padding: 5px; // Reduce padding for droppable areas
   }
 
   .venue, .adj, .team {

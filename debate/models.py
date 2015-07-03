@@ -84,10 +84,8 @@ class Tournament(models.Model):
         cached_key = "%s_current_round_object" % self.slug
         cached_value = cache.get(cached_key)
         if cached_value:
-            print 'found current round cache'
             return cache.get(cached_key)
         else:
-            print 'set current round cache'
             cache.set(cached_key, self.current_round, None)
             return self.current_round
 
@@ -509,6 +507,11 @@ class TeamManager(models.Manager):
     #     return breaking_teams
 
 
+    def get_queryset(self):
+        return super(TeamManager, self).get_queryset().select_related('institution')
+
+
+
 class Division(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name or suffix")
     seq = models.IntegerField(blank=True, null=True, help_text="The order in which divisions are displayed")
@@ -764,6 +767,8 @@ class AdjudicatorManager(models.Manager):
     def accredited(self):
         return self.filter(novice=False)
 
+    def get_queryset(self):
+        return super(AdjudicatorManager, self).get_queryset().select_related('institution')
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
@@ -819,19 +824,6 @@ class Adjudicator(Person):
 
         return self.test_score * (1 - weight) + (weight * feedback_score)
 
-
-    @cached_property
-    def rscores(self):
-        r = []
-        for round in self.tournament.rounds.all():
-            q = models.Q(source_adjudicator__debate__round=round) | \
-                    models.Q(source_team__debate__round=round)
-            a = AdjudicatorFeedback.objects.filter(
-                adjudicator = self,
-                confirmed = True
-            ).filter(q).aggregate(avg=models.Avg('score'))['avg']
-            r.append(a)
-        return r
 
     def _feedback_score(self):
         return self.adjudicatorfeedback_set.filter(confirmed=True).aggregate(avg=models.Avg('score'))['avg']
@@ -1074,7 +1066,7 @@ class Round(models.Model):
 
     @property
     def adjudicators_allocation_validity(self):
-        debates = self.get_draw()
+        debates = self.get_cached_draw
         if not all(debate.adjudicators.has_chair for debate in debates):
             return 1
         if not all(debate.adjudicators.valid for debate in debates):
@@ -1082,11 +1074,15 @@ class Round(models.Model):
         return 0
 
     def venue_allocation_validity(self):
-        debates = self.get_draw()
+        debates = self.get_cached_draw
         if all(debate.venue for debate in debates):
             return True
         else:
             return False
+
+    @cached_property
+    def get_cached_draw(self):
+        return self.get_draw()
 
     def get_draw(self):
         if self.tournament.config.get('enable_divisions'):
