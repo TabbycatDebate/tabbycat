@@ -214,14 +214,24 @@ def public_break_index(request, t):
 def public_breaking_teams(request, t, category):
     bc = get_object_or_404(BreakCategory, slug=category)
     teams = compute_breaking_teams(bc)
-    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=category))
+    if t.config.get('public_break_categories'):
+        for team in teams:
+            categories = team.break_categories_nongeneral.exclude(id=bc.id)
+            team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
+    else:
+        for team in teams:
+            team.categories_for_display = ""
+    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=bc))
 
 @admin_required
 @tournament_view
 def breaking_teams(request, t, category):
     bc = get_object_or_404(BreakCategory, slug=category)
     teams = compute_breaking_teams(bc)
-    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=category))
+    for team in teams:
+        categories = team.break_categories_nongeneral.exclude(id=bc.id)
+        team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
+    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=bc))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')

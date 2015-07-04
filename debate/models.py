@@ -628,10 +628,7 @@ class Team(models.Model):
     @property
     def break_categories_str(self):
         categories = self.break_categories_nongeneral
-        if categories:
-            return "(" + ", ".join(c.name for c in categories) + ")"
-        else:
-            return ""
+        return "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
 
     def get_aff_count(self, seq=None):
         return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)

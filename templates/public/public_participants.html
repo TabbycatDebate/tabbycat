@@ -21,10 +21,8 @@
           <th class="team-emoji"></th>
         {% endif %}
         <th>Team</th>
-        {% if public_break_categories %}
-        <th>
-          Categories
-        </th>
+        {% if public_break_categories > 0 %}
+          <th>Eligible for</th>
         {% endif %}
         {% if show_institutions > 0 %}
           <th>Institution</th>
@@ -49,7 +47,7 @@
           </span>
         </td>
         {% if public_break_categories > 0 %}
-          <td>{{ team.break_categories_str }}</td>
+          <td>{{ person.team.break_categories_nongeneral|join:", " }}</td>
         {% endif %}
         {% if show_institutions > 0 %}
           <td>{{ person.team.institution.name }}</td>
