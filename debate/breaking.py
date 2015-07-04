@@ -4,6 +4,7 @@ from collections import Counter
 from models import annotate_team_standings
 
 def _compute_higher_priority_breaks(category):
+    # TODO make this recursion less inefficient
     higher_breaking_teams = set()
     higher_categories = category.tournament.breakcategory_set.filter(priority__lt=category.priority)
     for higher_category in higher_categories:
