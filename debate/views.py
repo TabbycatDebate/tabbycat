@@ -559,8 +559,6 @@ def action_log_update(request, t):
         }
         action_objects.append(action)
 
-    print action_objects
-
     return HttpResponse(json.dumps(action_objects), content_type="text/json")
 
 
