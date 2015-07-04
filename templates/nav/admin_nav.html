@@ -12,8 +12,8 @@
   <li {% if ballots_nav %}class="active"{% endif %}>
     <a href="{% round_url results current_round %}">Ballots</a>
   </li>
-  <li {% if feedback_nav %}class="active"{% endif %}>
-    <a href="{% tournament_url adj_feedback %}">Feedback</a>
+  <li {% if feedback_nav %}class="dropdown active"{% endif %}>
+    <a href="{% tournament_url adj_feedback %}" >Feedback</a>
   </li>
   {% if enable_divisions %}
     <li {% if divisions_nav %}class="active"{% endif %}>
@@ -24,6 +24,9 @@
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standings<b class="caret"></b></a>
     <ul class="dropdown-menu">
       <li><a href="{% round_url team_standings current_round %}">Teams</a></li>
+      {% if enable_divisions %}
+      <li><a href="{% round_url division_standings current_round %}">Divisions</a></li>
+      {% endif %}
       <li><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
       {% if show_novices %}
         <li><a href="{% round_url novice_standings current_round %}">Novices</a></li>
@@ -38,11 +41,12 @@
   <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Break<b class="caret"></b></a>
     <ul class="dropdown-menu">
-      <li><a href="{% tournament_url breaking_teams_open %}">Open</a></li>
-      {% if esl_break %}
-        <li><a href="{% tournament_url breaking_teams_esl %}">ESL</a></li>
-      {% endif %}
+      {% for category in tournament.breakcategory_set.all %}
+        <li><a href="{% tournament_url breaking_teams category.slug %}">{{ category.name }}</a></li>
+      {% endfor %}
       <li><a href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
+      <li class="divider"></li>
+      <li><a href="{% tournament_url break_eligibility %}">Eligibility</a></li>
     </ul>
   </li>
 </ul>
@@ -84,7 +88,7 @@
         <li class="divider"></li>
         <li><a href="{% round_url draw r %}">Draw</a></li>
         <li><a href="{% round_url motions r %}">Motions</a></li>
-        <li><a href="{% round_url results r %}">Round Status</a></li>
+        <li><a href="{% round_url results r %}">Ballots</a></li>
         <li><a href="{% round_url ballot_checkin r %}">Ballot Checkin</a></li>
         <li class="divider"></li>
         <li><a href="{% round_url draw_print_scoresheets r %}">Print Ballots</a></li>

@@ -112,6 +112,15 @@ thead {
   }
 }
 
+// Table decorators
+
+.no-overflow {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 // To refactor
 
 .col-md-12.table-container {

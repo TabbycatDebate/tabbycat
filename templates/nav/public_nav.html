@@ -50,11 +50,11 @@
     {% endif %}
   {% endif %}
   {% if public_results > 0 and current_round.prev %}
-    <li><a chref="#" data-toggle="dropdown">Results<b class="caret"></b></a>
+    <li><a href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
       <ul class="dropdown-menu">
         {% for r in tournament.rounds.all %}
-          {% if r.draw_status == r.STATUS_RELEASED %}
-            {% if r.seq < current_round.seq and not r.silent or tournament.release_all %}
+          {% if not r.silent %}
+            {% if r.seq < current_round.seq or tournament.release_all %}
               <li><a href="{% round_url public_results r %}">{{ r.name }}</a></li>
             {% endif %}
           {% endif %}
@@ -63,12 +63,12 @@
     </li>
   {% endif %}
   {% if public_divisions > 0 %}
-    <li><a chref="{% tournament_url public_divisions %}">
+    <li><a href="{% tournament_url public_divisions %}">
       Divisions
     </a></li>
   {% endif %}
   {% if public_motions > 0 and motion_tab_released == 0 %}
-    <li><a chref="{% tournament_url public_motions %}">
+    <li><a href="{% tournament_url public_motions %}">
       Motions
     </a></li>
   {% endif %}
@@ -87,10 +87,9 @@
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">Break<b class="caret"></b></a>
       <ul class="dropdown-menu">
         {% if public_breaking_teams > 0 %}
-          <li><a href="{% tournament_url public_breaking_teams_open %}">Open</a></li>
-          {% if esl_break %}
-            <li><a href="{% tournament_url public_breaking_teams_esl %}">ESL</a></li>
-          {% endif %}
+          {% for category in tournament.breakcategory_set.all %}
+            <li><a href="{% tournament_url public_breaking_teams category.slug %}">{{ category.name }}</a></li>
+          {% endfor %}
         {% endif %}
         {% if public_breaking_adjs > 0 %}
           <li><a href="{% tournament_url public_breaking_adjs %}">Adjudicators</a></li>

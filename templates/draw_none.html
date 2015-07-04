@@ -19,6 +19,11 @@
     The draw cannot be generated until some of the teams <a class="alert-link" href="{% round_url team_availability round %}">have been checked in</a> for this round.
   </div>
   {% endif %}
+  {% if active_adjs == 0 %}
+  <div class="alert alert-warning">
+    Note: no adjudicators have been <a class="alert-link" href="{% round_url adjudicator_availability round %}">checked in</a>.
+  </div>
+  {% endif %}
   {% if active_venues_count < rooms or rooms == 0 %}
   <div class="alert alert-danger">
     The draw cannot be generated until there are more venues than team matchups. <a class="alert-link" href="{% round_url venue_availability round %}">Check in some more venues</a>.

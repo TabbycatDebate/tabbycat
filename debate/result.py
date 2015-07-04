@@ -73,15 +73,13 @@ class Scoresheet(object):
     def _save_team(self, dt):
         """Saves the scores in the buffer for the given DebateTeam, to the
         database."""
-        from debate.models import SpeakerScoreByAdj
         for pos in self.POSITIONS:
-            SpeakerScoreByAdj(
-                ballot_submission=self.ballotsub,
+            self.ballotsub.speakerscorebyadj_set.create(
                 debate_adjudicator=self.da,
                 debate_team=dt,
                 position=pos,
                 score=self._get_score(dt, pos),
-            ).save()
+            )
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval
@@ -274,31 +272,26 @@ class BallotSet(object):
     def _save_team(self, dt):
         """Saves the TeamScores, SpeakerScores and DebateTeamMotionPreferences
         for the given DebateTeam."""
-        from debate.models import TeamScore, SpeakerScore, DebateTeamMotionPreference
-
         total = self._get_avg_total(dt)
         points = self._get_points(dt)
         win = self._get_win(dt)
         margin = self._get_margin(dt)
+        self.ballotsub.teamscore_set.filter(debate_team=dt).delete()
+        self.ballotsub.teamscore_set.create(debate_team=dt, score=total,
+                points=points, win=win, margin=margin)
 
-        TeamScore.objects.filter(ballot_submission=self.ballotsub,
-                debate_team=dt).delete()
-        TeamScore(ballot_submission=self.ballotsub, debate_team=dt, score=total,
-                points=points, win=win, margin=margin).save()
-
-        SpeakerScore.objects.filter(ballot_submission=self.ballotsub,
-                debate_team=dt).delete()
+        self.ballotsub.speakerscore_set.filter(debate_team=dt).delete()
         for pos in self.POSITIONS:
             speaker = self.speakers[dt][pos]
             score = self._get_avg_score(dt, pos)
-            SpeakerScore(ballot_submission=self.ballotsub, debate_team=dt,
-                    speaker=speaker, score=score, position=pos).save()
+            self.ballotsub.speakerscore_set.create(debate_team=dt,
+                    speaker=speaker, score=score, position=pos)
 
-        DebateTeamMotionPreference.objects.filter(ballot_submission=self.ballotsub,
-                debate_team=dt, preference=3).delete()
+        self.ballotsub.debateteammotionpreference_set.filter(debate_team=dt,
+                preference=3).delete()
         if self.motion_veto[dt] is not None:
-            DebateTeamMotionPreference(ballot_submission=self.ballotsub,
-                    debate_team=dt, preference=3, motion=self.motion_veto[dt]).save()
+            self.ballotsub.debateteammotionpreference_set.create(debate_team=dt,
+                    preference=3, motion=self.motion_veto[dt])
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval (speakers and per-adjudicator scores)
@@ -653,7 +646,6 @@ class ForfeitBallotSet(BallotSet):
         self.dts = self.debate.debateteam_set.all() # note, this is a QuerySet
 
     def _save_team(self, dt):
-
         if self.forfeiter == dt:
             points = 0
             win = False
@@ -663,16 +655,9 @@ class ForfeitBallotSet(BallotSet):
 
         from debate.models import TeamScore
         # Note: forfeited debates have fake scores/margins, thus the affects_average toggle
-        TeamScore.objects.filter(ballot_submission=self.ballotsub, debate_team=dt).delete()
-        TeamScore(
-            ballot_submission=self.ballotsub,
-            debate_team=dt,
-            points=points,
-            win=win,
-            score=0,
-            margin=0,
-            affects_averages=False).save()
-
+        self.ballotsub.teamscore_set.filter(debate_team=dt).delete()
+        self.ballotsub.teamscore_set.create(debate_team=dt, points=points,
+                win=win, score=0, margin=0, affects_averages=False)
 
     def save(self):
         self.ballotsub.forfeit = self.forfeiter

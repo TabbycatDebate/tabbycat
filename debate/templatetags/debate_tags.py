@@ -55,15 +55,13 @@ register.simple_tag(team_emoji)
 
 
 def team_status_classes(team):
-    classes = ""
+    classes = list()
     if team.region is not None:
-        region_stripped = team.region.name.replace(' ', '_')
-        classes += "region-%s" % region_stripped
-    if team.esl:
-        classes += " language-esl"
-    if team.efl:
-        classes += " language-efl"
-    return classes
+        region_stripped = team.region.name.replace(' ', '_').lower()
+        classes.append("region-%s" % region_stripped)
+    for category in team.break_categories_nongeneral.order_by('priority'):
+        classes.append("breakcategory-" + category.slug)
+    return " ".join(classes)
 register.simple_tag(team_status_classes)
 
 
@@ -79,6 +77,12 @@ def debate_draw_status_class(debate):
 register.simple_tag(debate_draw_status_class)
 
 
+def feedback_number_step(min_val, max_val, number):
+    step = (max_val - min_val) / 4
+    value = min_val + (number * step)
+    return value
+
+register.simple_tag(feedback_number_step)
 
 class RoundURLNode(template.Node):
     def __init__(self, view_name, round=None):
@@ -106,6 +110,12 @@ class TournamentURLNode(template.Node):
         return reverse(self.view_name, args=args,
                        current_app=context.current_app)
 
+class TournamentAbsoluteURLNode(TournamentURLNode):
+    def render(self, context):
+        path = super(TournamentAbsoluteURLNode, self).render(context)
+        return context['request'].build_absolute_uri(path)
+
+
 @register.tag
 def round_url(parser, token):
     bits = token.split_contents()
@@ -118,9 +128,14 @@ def round_url(parser, token):
 @register.tag
 def tournament_url(parser, token):
     bits = token.split_contents()
-
     args = tuple([parser.compile_filter(b) for b in bits[2:]])
     return TournamentURLNode(bits[1], args)
+
+@register.tag
+def tournament_absurl(parser, token):
+    bits = token.split_contents()
+    args = tuple([parser.compile_filter(b) for b in bits[2:]])
+    return TournamentAbsoluteURLNode(bits[1], args)
 
 @register.filter
 def next_value(value, arg):

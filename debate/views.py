@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib import messages
 from django.db.models import Sum, Count
@@ -14,6 +14,8 @@ from ipware.ip import get_real_ip
 from debate.result import BallotSet
 from debate import forms
 from debate.models import *
+from debate.utils import populate_url_keys
+from debate.breaking import compute_breaking_teams
 
 from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
@@ -97,7 +99,7 @@ def r2r(request, template, extra_context=None):
 
 def index(request):
     tournaments = Tournament.objects.all()
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
     elif len(tournaments) == 1:
         sole_tournament = list(tournaments)[0]
@@ -128,7 +130,7 @@ def public_index(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_participants')
 def public_participants(request, t):
-    adjs = Adjudicator.objects.all().select_related('institution')
+    adjs = Adjudicator.objects.all()
     speakers = Speaker.objects.all().select_related('team','team__institution')
     return r2r(request, "public/public_participants.html", dict(adjs=adjs, speakers=speakers))
 
@@ -209,28 +211,56 @@ def public_break_index(request, t):
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_teams')
-def public_breaking_teams(request, t, name, category):
-    teams = Team.objects.breaking_teams(t, category)
-    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=category, name=name))
+def public_breaking_teams(request, t, category):
+    bc = get_object_or_404(BreakCategory, slug=category)
+    teams = compute_breaking_teams(bc)
+    if t.config.get('public_break_categories'):
+        for team in teams:
+            categories = team.break_categories_nongeneral.exclude(id=bc.id)
+            team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
+    else:
+        for team in teams:
+            team.categories_for_display = ""
+    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=bc))
 
 @admin_required
 @tournament_view
-def breaking_teams(request, t, name, category):
-    teams = Team.objects.breaking_teams(t, category)
-    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=category, name=name))
+def breaking_teams(request, t, category):
+    bc = get_object_or_404(BreakCategory, slug=category)
+    teams = compute_breaking_teams(bc)
+    for team in teams:
+        categories = team.break_categories_nongeneral.exclude(id=bc.id)
+        team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
+    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=bc))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')
 def public_breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, tournament=t).select_related('institution')
+    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
     return r2r(request, 'public/public_breaking_adjudicators.html', dict(adjs=adjs))
 
 @admin_required
 @tournament_view
 def breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, tournament=t).select_related('institution')
+    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
     return r2r(request, 'breaking_adjudicators.html', dict(adjs=adjs))
 
+@admin_required
+@tournament_view
+def break_eligibility(request, t):
+    context = dict()
+    if request.method == "POST":
+        form = forms.BreakEligibilityForm(t, request.POST)
+        if form.is_valid():
+            form.save()
+            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT,
+                    user=request.user, tournament=t, ip_address=get_ip_address(request))
+            context['updated'] = True
+    else:
+        form = forms.BreakEligibilityForm(t)
+
+    context['form'] = form
+    return r2r(request, 'break_eligibility.html', context)
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_ballots')
@@ -266,7 +296,7 @@ def public_feedback_progress(request, t):
 
     feedback = AdjudicatorFeedback.objects.all()
     adjudicators = Adjudicator.objects.all()
-    teams = Team.objects.all().select_related('institution')
+    teams = Team.objects.all()
     current_round = request.tournament.current_round.seq
 
     for adj in adjudicators:
@@ -352,7 +382,7 @@ def all_draws_for_institution(request, t, institution_id):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_teams(request, t):
-    teams = Team.objects.filter(tournament__active=True).select_related('institution','tournament').prefetch_related('division')
+    teams = Team.objects.filter(tournament__active=True).select_related('tournament').prefetch_related('division')
     return r2r(request, 'public/public_all_tournament_teams.html', dict(
         teams=teams))
 
@@ -370,7 +400,7 @@ def public_all_draws(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
 def public_side_allocations(request, t):
-    teams = Team.objects.filter(tournament=t).select_related('institution')
+    teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
     TPA_MAP = {
@@ -466,11 +496,6 @@ def public_ballots_view(request, t, debate_id):
 @login_required
 @tournament_view
 def tournament_home(request, t):
-    # Actions
-    from debate.models import ActionLog
-    a = ActionLog.objects.filter(tournament=t).order_by('-id')[:20].select_related(
-        'user', 'debate', 'ballot_submission'
-    )
 
     # Speaker Scores
     from debate.models import SpeakerScore
@@ -486,26 +511,64 @@ def tournament_home(request, t):
 
     # Draw Status
     draw = round.get_draw()
-    stats = {
-        'none': draw.filter(result_status=Debate.STATUS_NONE).count(),
-        'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
-        'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
-    }
-    stats['in'] = stats['confirmed']
-    stats['out'] = stats['none'] + stats['draft']
-    if (stats['out'] + stats['in']) > 0:
-        stats['pc'] = int(float(stats['in']) / (stats['out'] + stats['in']) * 100)
-    else:
-        stats['pc'] = 0
+    total_ballots = draw.count()
+    stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
+    stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
+    stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
+    stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
-    return r2r(request, 'tournament_home.html', dict(stats=stats, round=round, actions=a))
+    return r2r(request, 'tournament_home.html', dict(stats=stats,
+        total_ballots=total_ballots, round=round))
+
+@login_required
+@tournament_view
+def results_status_update(request, t):
+
+    # Draw Status
+    draw = t.current_round.get_draw()
+
+    stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
+    stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
+    stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
+
+    total = stats_none + stats_draft + stats_confirmed
+
+    stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
+
+    return HttpResponse(json.dumps(stats), content_type="text/json")
+
+@login_required
+@tournament_view
+def action_log_update(request, t):
+
+    from debate.models import ActionLog
+    actions = ActionLog.objects.filter(tournament=t).order_by('-id')[:20].select_related(
+        'user', 'debate', 'ballot_submission'
+    )
+
+    import datetime
+    now = datetime.datetime.now()
+    action_objects = []
+    for a in actions:
+        elapsed = now - a.timestamp
+        action = {
+            'user': a.user.username or action.ip_address or "anonymous",
+            'type': a.get_type_display(),
+            'param': a.get_parameters_display(),
+            'timestamp': int(elapsed.total_seconds() / 60)
+        }
+        action_objects.append(action)
+
+    return HttpResponse(json.dumps(action_objects), content_type="text/json")
+
+
 
 @admin_required
 @tournament_view
 def tournament_config(request, t):
     from debate.config import make_config_form
 
-    context = {}
+    context = dict()
     if request.method == 'POST':
         form = make_config_form(t, request.POST)
         if form.is_valid():
@@ -533,7 +596,7 @@ def feedback_progress(request, t):
     feedback = AdjudicatorFeedback.objects.select_related('source_adjudicator__adjudicator','source_team__team').all()
     adjudicators = Adjudicator.objects.all()
     adjudications = DebateAdjudicator.objects.select_related('adjudicator','debate').all()
-    teams = Team.objects.select_related('institution').all()
+    teams = Team.objects.all()
 
     # Teams only owe feedback on non silent rounds
     rounds_owed = request.tournament.rounds.filter(silent=False,
@@ -746,9 +809,11 @@ def draw_none(request, round):
     all_teams_count = Team.objects.filter(tournament=round.tournament).count()
     active_teams = round.active_teams.all()
     active_venues_count = round.active_venues.count()
+    active_adjs = round.active_adjudicators.count()
     rooms = float(active_teams.count()) / 2
     return r2r(request, "draw_none.html", dict(active_teams=active_teams,
                                                active_venues_count=active_venues_count,
+                                               active_adjs=active_adjs,
                                                rooms=rooms,
                                                round=round,
                                                all_teams_count=all_teams_count))
@@ -761,7 +826,7 @@ def draw_draft(request, round):
 
 
 def draw_confirmed(request, round):
-    draw = round.get_draw()
+    draw = round.get_cached_draw
     rooms = float(round.active_teams.count()) / 2
     active_adjs = round.active_adjudicators.all()
 
@@ -786,7 +851,17 @@ def draw_print_scoresheets(request, round):
 @round_view
 def draw_print_feedback(request, round):
     draw = round.get_draw()
-    return r2r(request, "printable_feedback.html", dict(draw=draw))
+    config = round.tournament.config
+    questions = round.tournament.adj_feedback_questions
+    for question in questions:
+        if question.choices:
+            question.choice_options = question.choices.split("//")
+        if question.min_value is not None and question.max_value is not None:
+            step = max((int(question.max_value) - int(question.min_value)) / 10, 1)
+            question.number_options = range(int(question.min_value), int(question.max_value+1), int(step) )
+
+    return r2r(request, "printable_feedback.html", dict(
+        draw=draw, config=config, questions=questions))
 
 
 
@@ -1227,7 +1302,7 @@ def edit_ballotset(request, t, ballotsub_id):
     if not request.user.is_superuser:
         template = 'assistant/assistant_enter_results.html'
         all_ballotsubs = debate.ballotsubmission_set_by_version_except_discarded
-        disable_confirm = request.user == ballotsub.user and not t.config.get('enable_assistant_confirms')
+        disable_confirm = request.submitter == ballotsub.submitter and not t.config.get('enable_assistant_confirms')
     else:
         template = 'enter_results.html'
         all_ballotsubs = debate.ballotsubmission_set.order_by('version')
@@ -1247,6 +1322,9 @@ def edit_ballotset(request, t, ballotsub_id):
             if ballotsub.discarded:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_DISCARD
             elif ballotsub.confirmed:
+                ballotsub.confirmer = request.user
+                ballotsub.confirm_timestamp = datetime.datetime.now()
+                ballotsub.save()
                 action_type = ActionLog.ACTION_TYPE_BALLOT_CONFIRM
             else:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_EDIT
@@ -1269,11 +1347,18 @@ def edit_ballotset(request, t, ballotsub_id):
         show_adj_contact    =True))
 
 # Don't cache
+@public_optional_tournament_view('public_ballots_randomised')
+def public_new_ballotset_key(request, t, url_key):
+    adjudicator = get_object_or_404(Adjudicator, tournament=t, url_key=url_key)
+    return public_new_ballots(request, t, adjudicator)
+
+# Don't cache
 @public_optional_tournament_view('public_ballots')
-def public_new_ballotset(request, t, adj_id):
+def public_new_ballotset_id(request, t, adj_id):
+    adjudicator = get_object_or_404(Adjudicator, tournament=t, id=adj_id)
+    return public_new_ballots(request, t, adjudicator)
 
-    adjudicator = get_object_or_404(Adjudicator, id=adj_id)
-
+def public_new_ballotset(request, t, adjudicator):
     round = t.current_round
     if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
         return r2r(request, 'public/public_enter_results_error.html', dict(adjudicator=adjudicator, message='The draw and/or motions for the round haven\'t been released yet.'))
@@ -1324,7 +1409,7 @@ def new_ballotset(request, t, debate_id):
     ballotsub = BallotSubmission(
         debate        =debate,
         submitter_type=BallotSubmission.SUBMITTER_TABROOM,
-        user          =request.user,
+        submitter     =request.user,
         ip_address    =ip_address)
 
     if not debate.adjudicators.has_chair:
@@ -1490,6 +1575,42 @@ def team_standings(request, round, for_print=False):
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds, for_print=for_print,
        show_ballots=False, show_draw_strength=show_draw_strength))
 
+
+@admin_required
+@round_view
+def division_standings(request, round, for_print=False):
+    from debate.models import TeamScore
+    teams = Team.objects.division_standings(round)
+
+    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
+    team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
+
+    def get_round_result(team, r):
+        try:
+            ts = next((x for x in team_scores if x.debate_team.team == team and x.debate_team.debate.round == r), None)
+            return ts
+        except TeamScore.DoesNotExist:
+            return None
+
+    for team in teams:
+        team.round_results = [get_round_result(team, r) for r in rounds]
+        team.wins = [ts.win for ts in team.round_results if ts].count(True)
+        team.points = sum([ts.points for ts in team.round_results if ts])
+        if round.tournament.config.get('show_avg_margin'):
+            try:
+                margins = []
+                for ts in team.round_results:
+                    if ts:
+                        if ts.get_margin is not None:
+                            margins.append(ts.get_margin)
+
+                team.avg_margin = sum(margins) / float(len(margins))
+            except ZeroDivisionError:
+                team.avg_margin = None
+
+
+    return r2r(request, 'division_standings.html', dict(teams=teams))
+
 @admin_required
 @round_view
 def speaker_standings(request, round, for_print=False):
@@ -1639,9 +1760,11 @@ def save_venues(request, round):
 @admin_required
 @round_view
 def draw_adjudicators_edit(request, round):
-    draw = round.get_draw()
-    adj0 = Adjudicator.objects.first()
-    duplicate_adjs = round.tournament.config.get('duplicate_adjs')
+    context = dict()
+    context['draw'] = draw = round.get_draw()
+    context['adj0'] = Adjudicator.objects.first()
+    context['duplicate_adjs'] = round.tournament.config.get('duplicate_adjs')
+    context['feedback_headings'] = [q.name for q in round.tournament.adj_feedback_questions]
 
     def calculate_prior_adj_genders(team):
         debates = team.get_debates(round.seq)
@@ -1665,19 +1788,32 @@ def draw_adjudicators_edit(request, round):
         else:
             debate.gender_class = (aff_male_adj_percent / 5) - 10
 
-    return r2r(request, "draw_adjudicators_edit.html", dict(
-        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs))
+    regions = round.tournament.region_set.order_by('name')
+    break_categories = round.tournament.breakcategory_set.order_by('seq').exclude(is_general=True)
+    colors = ["#C70062", "#00C79B", "#B1E001", "#476C5E", "#777", "#FF2983", "#6A268C", "#00C0CF", "#0051CF"]
+    context['regions'] = zip(regions, colors + ["black"] * (len(regions) - len(colors)))
+    context['break_categories'] = zip(break_categories, colors + ["black"] * (len(break_categories) - len(colors)))
+
+    return r2r(request, "draw_adjudicators_edit.html", context)
 
 def _json_adj_allocation(debates, unused_adj):
 
     obj = {}
 
     def _adj(a):
+
+        if a.institution.region:
+            region_name = "region-%s" % a.institution.region.name
+            region_name = region_name.replace(' ', '_').lower()
+        else:
+            region_name = ""
+
         return {
             'id': a.id,
             'name': a.name + " (" + a.institution.short_code + ")",
             'is_unaccredited': a.is_unaccredited,
-            'gender': a.gender
+            'gender': a.gender,
+            'region': region_name
         }
 
     def _debate(d):
@@ -1750,6 +1886,7 @@ def adj_conflicts(request, round):
         'personal': {},
         'history': {},
         'institutional': {},
+        'adjudicator': {},
     }
 
     def add(type, adj_id, target_id):
@@ -1763,6 +1900,9 @@ def adj_conflicts(request, round):
     for ic in AdjudicatorInstitutionConflict.objects.all():
         for team in Team.objects.filter(institution=ic.institution):
             add('institutional', ic.adjudicator_id, team.id)
+
+    for ac in AdjudicatorAdjudicatorConflict.objects.all():
+        add('adjudicator', ac.adjudicator_id, ac.conflict_adjudicator.id)
 
     history = DebateAdjudicator.objects.filter(
         debate__round__seq__lt = round.seq,
@@ -1811,11 +1951,10 @@ def adj_scores(request, t):
     data = {}
 
     #TODO: make round-dependent
-    for adj in Adjudicator.objects.all():
+    for adj in Adjudicator.objects.all().select_related('tournament','tournament__current_round'):
         data[adj.id] = adj.score
 
     return HttpResponse(json.dumps(data), content_type="text/json")
-
 
 @login_required
 @tournament_view
@@ -1823,39 +1962,45 @@ def adj_feedback(request, t):
     breaking_count = 0
 
     if not t.config.get('share_adjs'):
-        adjudicators = Adjudicator.objects.select_related('institution').filter(tournament=t)
+        adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
+            'tournament','tournament__current_round')
     else:
-        adjudicators = Adjudicator.objects.select_related('institution').all()
+        adjudicators = Adjudicator.objects.all()
 
     if not request.user.is_superuser:
         template = 'assistant/assistant_adjudicator_feedback.html'
     else:
         template = 'adjudicator_feedback.html'
+        score_min = t.config.get('adj_min_score')
+        score_max = t.config.get('adj_max_score')
 
         from debate.models import SpeakerScoreByAdj
-        all_adjs_rooms = DebateAdjudicator.objects.select_related('adjudicator').all()
-        all_adjs_scores = SpeakerScoreByAdj.objects.select_related('debate_adjudicator','ballot_submission').all()
-        for adj in adjudicators:
-            adjs_rooms  = all_adjs_rooms.filter(adjudicator = adj)
-            adj.debates = len(adjs_rooms)
+        all_debate_adjudicators = list(DebateAdjudicator.objects.select_related('adjudicator').all())
+        all_adj_scores = list(SpeakerScoreByAdj.objects.select_related('debate_adjudicator','ballot_submission').filter(
+            ballot_submission__confirmed=True))
 
+        # Processing scores to get average margins
+        for adj in adjudicators:
+            adj_debateadjudications  = [a for a in all_debate_adjudicators if a.adjudicator is adj]
+            adj_scores = [s for s in all_adj_scores if s.debate_adjudicator is adj_debateadjudications]
+
+            adj.debates = len(adj_debateadjudications)
             if adj.breaking:
                 breaking_count += 1
 
-            adjs_scores = all_adjs_scores.filter(debate_adjudicator = adjs_rooms)
-            if len(adjs_scores) > 0:
-                adj.avg_score = sum(s.score for s in adjs_scores) / len(adjs_scores)
+            if len(adj_scores) > 0:
+                adj.avg_score = sum(s.score for s in adj_scores) / len(adj_scores)
 
                 ballot_ids = []
                 ballot_margins = []
-                for score in adjs_scores:
+                for score in adj_scores:
                     ballot_ids.append(score.ballot_submission)
 
                 ballot_ids = sorted(set([b.id for b in ballot_ids])) # Deduplication of ballot IDS
 
                 for ballot_id in ballot_ids:
                     # For each unique ballot id, total its scores
-                    single_round = adjs_scores.filter(ballot_submission = ballot_id)
+                    single_round = adj_scores.filter(ballot_submission=ballot_id)
                     scores = [s.score for s in single_round] # TODO this is slow - should be prefetched
                     slice_end = len(scores)
                     teamA = sum(scores[:len(scores)/2])
@@ -1868,8 +2013,112 @@ def adj_feedback(request, t):
                 adj.avg_score = None
                 adj.avg_margin = None
 
-    return r2r(request, template, dict(adjudicators=adjudicators, breaking_count=breaking_count))
+        all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(confirmed=True).select_related(
+            'adjudicator', 'source_adjudicator__debate__round', 'source_team__debate__round'))
+        rounds = t.prelim_rounds(until=t.current_round)
 
+        # Filtering/summing feedback by round for the graphs (faster than a model method)
+        for adj in adjudicators:
+            adj.rscores = []
+            adj_feedbacks = [f for f in all_adj_feedbacks if f.adjudicator == adj]
+            print adj
+            print adj_feedbacks
+            for r in rounds:
+                adj_round_feedbacks = [f for f in adj_feedbacks if (f.source_adjudicator and f.source_adjudicator.debate.round == r)]
+                adj_round_feedbacks.extend([f for f in adj_feedbacks if (f.source_team and f.source_team.debate.round == r)])
+
+                if len(adj_round_feedbacks) > 0:
+                    # Getting the position of the adj
+                    # We grab both so there is at least one valid debate, then lookup the debate adjudicator for that
+                    debates = [fb.source_team.debate for fb in adj_round_feedbacks if fb.source_team]
+                    debates.extend([fb.source_adjudicator.debate for fb in adj_round_feedbacks if fb.source_adjudicator])
+                    adj_da = next((da for da in all_debate_adjudicators if (da.adjudicator == adj and da.debate == debates[0])), None)
+
+                    if adj_da.type == adj_da.TYPE_CHAIR:
+                        adj_type = "Chair"
+                    elif adj_da.type == adj_da.TYPE_PANEL:
+                        adj_type = "Panellist"
+                    elif adj_da.type == adj_da.TYPE_TRAINEE:
+                        adj_type = "Trainee"
+
+                    # Average their scores for that round
+                    totals = [f.score for f in adj_round_feedbacks]
+                    average = sum(totals) / len(totals)
+
+                    # Creating the object list for the graph
+                    adj.rscores.append([r.seq, average, adj_type])
+
+            print "_______"
+
+
+    feedback_headings = [q.name for q in t.adj_feedback_questions]
+
+    return r2r(request, template, dict(
+        adjudicators=adjudicators, breaking_count=breaking_count,
+        feedback_headings=feedback_headings,
+        score_min=score_min, score_max=score_max))
+
+
+@login_required
+@tournament_view
+def adj_source_feedback(request, t):
+    questions = t.adj_feedback_questions
+    teams = Team.objects.filter(tournament=t)
+    for team in teams:
+        team.feedback_tally = AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
+            'source_team__team').count()
+
+    adjs = Adjudicator.objects.filter(tournament=t)
+    for adj in adjs:
+        adj.feedback_tally = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
+            'source_adjudicator__adjudicator').count()
+
+    return r2r(request, "adjudicator_source_list.html", dict(teams=teams, adjs=adjs))
+
+def process_feedback(feedbacks, t):
+    questions = t.adj_feedback_questions
+    score_step = t.config.get('adj_max_score')  / 10
+    score_thresholds = {
+        'low_score'     : t.config.get('adj_min_score') + score_step,
+        'medium_score'  : t.config.get('adj_min_score') + score_step + score_step,
+        'high_score'    : t.config.get('adj_max_score') - score_step,
+    }
+    for feedback in feedbacks:
+        feedback.items = []
+        for question in questions:
+            try:
+                qa_set = { "question" : question,
+                           "answer"   : question.answer_set.get(feedback=feedback).answer}
+                feedback.items.append(qa_set)
+            except ObjectDoesNotExist:
+                pass
+    return feedbacks, score_thresholds
+
+@login_required
+@tournament_view
+def adj_latest_feedback(request, t):
+    feedbacks = AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
+        'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+    feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    return r2r(request, "adjudicator_latest_feedback.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
+
+@login_required
+@tournament_view
+def team_feedback_list(request, t, team_id):
+    team = Team.objects.get(pk=team_id)
+    source = team.short_name
+    feedbacks = AdjudicatorFeedback.objects.filter(source_team__team=team).order_by('-timestamp')
+    feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    return r2r(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
+
+@login_required
+@tournament_view
+def adj_feedback_list(request, t, adj_id):
+    adj = Adjudicator.objects.get(pk=adj_id)
+    source = adj.name
+    feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).order_by('-timestamp')
+    feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    return r2r(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
 
 @login_required
 @tournament_view
@@ -1877,96 +2126,111 @@ def get_adj_feedback(request, t):
 
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback()
-    data = [ [
-              unicode(f.round.abbreviation),
-              unicode(str(f.version) + (f.confirmed and "*" or "")),
-              f.debate.bracket,
-              f.debate.matchup,
-              unicode(f.source),
-              f.score,
-              {None: "Unsure", True: "Yes", False: "No"}[f.agree_with_decision],
-              f.comments,
-              f.confirmed,
-             ] for f in feedback ]
+    questions = t.adj_feedback_questions
+    BOOLEAN_VALUES = {None: "Unsure", True: "Yes", False: "No"}
+    def _parse_feedback(f):
 
+        if f.source_team and f.debate.confirmed_ballot:
+            aff_winner = f.debate.confirmed_ballot.ballot_set.aff_win
+            if (aff_winner and f.debate.aff_team == f.source_team.team):
+                win_status = " (Won)"
+            elif (not aff_winner and f.debate.neg_team == f.source_team.team):
+                win_status = " (Won)"
+            else:
+                win_status = " (Lost)"
+        else:
+            win_status = ""
+
+        data = [
+            unicode(f.round.abbreviation),
+            unicode(str(f.version) + (f.confirmed and "*" or "")),
+            f.debate.bracket,
+            f.debate.matchup,
+            unicode(str(f.source) + win_status),
+            f.score,
+        ]
+        for question in questions:
+            try:
+                data.append(question.answer_set.get(feedback=f).answer)
+            except ObjectDoesNotExist:
+                data.append("-")
+        data.append(f.confirmed)
+        return data
+    data = [_parse_feedback(f) for f in feedback]
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
+# Don't cache
+@public_optional_tournament_view('public_feedback_randomised')
+def public_enter_feedback_key(request, t, source_type, url_key):
+    source = get_object_or_404(source_type, tournament=t, url_key=url_key)
+    return public_enter_feedback(request, t, source)
 
 # Don't cache
 @public_optional_tournament_view('public_feedback')
-def public_enter_feedback_adjudicator(request, t, adj_id):
+def public_enter_feedback_id(request, t, source_type, source_id):
+    source = get_object_or_404(source_type, tournament=t, id=source_id)
+    return public_enter_feedback(request, t, source)
 
-    source = get_object_or_404(Adjudicator, id=adj_id)
-    include_panellists = request.tournament.config.get('panellist_feedback_enabled') > 0
+def public_enter_feedback(request, t, source):
     ip_address = get_ip_address(request)
-    source_name = source.name
-
+    source_name = source.short_name if isinstance(source, Team) else source.name
+    source_type = "adj" if isinstance(source, Adjudicator) else "team" if isinstance(source, Team) else "TypeError!"
     submission_fields = {
         'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
         'ip_address'    : ip_address
     }
+    FormClass = forms.make_feedback_form_class(source, submission_fields,
+            confirm_on_submit=True, enforce_required=True)
 
     if request.method == "POST":
-        form = forms.make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=include_panellists)(request.POST)
+        form = FormClass(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
-                    ip_address=ip_address, adjudicator_feedback=adj_feedback, tournament=t)
-            return r2r(request, 'public/public_success.html', dict(success_kind="feedback"))
+                    ip_address=ip_address, adjudicator_feedback=adj_feedback,
+                    tournament=t)
+            return r2r(request, 'public/public_success.html', dict(
+                    success_kind="feedback"))
     else:
-        form = forms.make_feedback_form_class_for_public_adj(source, submission_fields, include_panellists=include_panellists)()
+        form = FormClass()
 
-    return r2r(request, 'public/public_enter_feedback_adj.html', dict(source_name=source_name, form=form))
-
-# Don't cache
-@public_optional_tournament_view('public_feedback')
-def public_enter_feedback_team(request, t, team_id):
-
-    source = get_object_or_404(Team, id=team_id)
-    ip_address = get_ip_address(request)
-    source_name = source.short_name
-
-    submission_fields = {
-        'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
-        'ip_address'    : ip_address
-    }
-
-    if request.method == "POST":
-        form = forms.make_feedback_form_class_for_public_team(source, submission_fields)(request.POST)
-        if form.is_valid():
-            adj_feedback = form.save()
-            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
-                    ip_address=ip_address, adjudicator_feedback=adj_feedback, tournament=t)
-            return r2r(request, 'public/public_success.html', dict(success_kind="feedback"))
-    else:
-        form = forms.make_feedback_form_class_for_public_team(source, submission_fields)()
-
-    return r2r(request, 'public/public_enter_feedback_team.html', dict(source_name=source_name, form=form))
+    return r2r(request, 'public/public_enter_feedback.html', dict(
+            source_type=source_type, source_name=source_name, form=form))
 
 @login_required
 @tournament_view
-def enter_feedback(request, t, adj_id):
-
-    adj = get_object_or_404(Adjudicator, id=adj_id)
+def enter_feedback(request, t, source_type, source_id):
+    source = get_object_or_404(source_type, tournament=t, id=source_id)
+    source_name = source.short_name if isinstance(source, Team) else source.name
+    source_type = "adj" if isinstance(source, Adjudicator) else "team" if isinstance(source, Team) else "TypeError!"
     ip_address = get_ip_address(request)
-
     submission_fields = {
         'submitter_type': AdjudicatorFeedback.SUBMITTER_TABROOM,
         'user'          : request.user,
         'ip_address'    : ip_address
     }
+    FormClass = forms.make_feedback_form_class(source, submission_fields,
+            confirm_on_submit=True, enforce_required=False)
 
     if request.method == "POST":
-        form = forms.make_feedback_form_class_for_tabroom(adj, submission_fields)(request.POST)
+        form = FormClass(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
                 user=request.user, adjudicator_feedback=adj_feedback, tournament=t)
-            return redirect_tournament('adj_feedback', t)
+            return redirect_tournament('add_feedback', t)
     else:
-        form = forms.make_feedback_form_class_for_tabroom(adj, submission_fields)()
+        form = FormClass()
 
-    return r2r(request, 'enter_feedback.html', dict(adj=adj, form=form))
+    return r2r(request, 'enter_feedback.html', dict(source_type=source_type,
+            source_name=source_name, form=form))
+
+@login_required
+@tournament_view
+def add_feedback(request, t):
+    adjudicators = Adjudicator.objects.all()
+    teams = Team.objects.all()
+    return r2r(request, 'adjudicator_feedback_add.html', dict(adjudicators=adjudicators, teams=teams))
 
 @admin_required
 @round_view
@@ -2050,3 +2314,31 @@ def post_ballot_checkin(request, round):
     obj['ballots_left'] = ballot_checkin_number_left(round)
 
     return HttpResponse(json.dumps(obj))
+
+@admin_required
+@tournament_view
+def randomised_urls(request, t):
+    context = dict()
+    context['teams'] = t.team_set.all()
+    context['adjs'] = t.adjudicator_set.all()
+    context['exists'] = t.adjudicator_set.filter(url_key__isnull=False).exists() or \
+            t.team_set.filter(url_key__isnull=False).exists()
+    context['tournament_slug'] = t.slug
+    context['ballot_normal_urls_enabled'] = t.config.get('public_ballots')
+    context['ballot_randomised_urls_enabled'] = t.config.get('public_ballots_randomised')
+    context['feedback_normal_urls_enabled'] = t.config.get('public_feedback')
+    context['feedback_randomised_urls_enabled'] = t.config.get('public_feedback_randomised')
+    return r2r(request, 'randomised_urls.html', context)
+
+@admin_required
+@tournament_view
+@expect_post
+def generate_randomised_urls(request, t):
+    # Only works if there are no randomised URLs now
+    if t.adjudicator_set.filter(url_key__isnull=False).exists() or \
+            t.team_set.filter(url_key__isnull=False).exists():
+        return HttpResponseBadRequest("There are already randomised URLs. You must use the Django management commands to populate or delete randomised URLs.")
+
+    populate_url_keys(t.adjudicator_set.all())
+    populate_url_keys(t.team_set.all())
+    return redirect_tournament('randomised_urls', t)

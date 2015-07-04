@@ -33,18 +33,21 @@
             <span class="badge">CURRENT</span>
           {% endif %}
           {% if other_ballots.submitter_type == ballots.SUBMITTER_TABROOM %}
-            Version {{ other_ballots.version }}, entered by <strong>{{ other_ballots.user }}</strong>
+            Version {{ other_ballots.version }},
+            entered by <strong>{{ other_ballots.submitter }}</strong>
           {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
             Version {{ other_ballots.version }}, submitted from the public form on <strong>{{ other_ballots.ip_address }}</strong>
           {% endif %}
             at {{ other_ballots.timestamp|time:"H:i" }}
             on {{ other_ballots.timestamp|date:"j F" }}
-            ({{ other_ballots.timestamp|timesince }} ago)
+            ({{ other_ballots.timestamp|timesince }} ago),
+          {% if other_ballots.confirmed %}
+            confirmed by <strong>{{ other_ballots.confirmer }}</strong>
+          {% else %}
+            unconfirmed
+          {% endif %}
           {% if other_ballots.discarded %}
             (discarded)
-          {% endif %}
-          {% if other_ballots.confirmed %}
-            (confirmed)
           {% endif %}
           {% if other_ballots.identical_ballot_versions %}
             <em>(identical to version{{other_ballots.identical_ballot_versions.pluralize}} {{ other_ballots.identical_ballot_versions|join:", " }})</em>

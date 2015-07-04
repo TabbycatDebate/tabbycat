@@ -1,72 +1,32 @@
-from functools import wraps
+import string, random
+from django.db import IntegrityError
+import logging
+logger = logging.getLogger(__name__)
 
-def pair_list(ls):
-    half = len(ls)/2
-    return zip(ls[:half], ls[half:])
+def generate_url_key(length=8):
+    """Generates a randomised URL key."""
+    chars = string.ascii_lowercase + string.ascii_uppercase + string.digits
+    return ''.join(random.SystemRandom().choice(chars) for _ in range(length))
 
-def gen_results():
-    import random
+def populate_url_keys(queryset, length=8):
+    """Populates the URL key field for every instance in the given QuerySet."""
+    NUM_ATTEMPTS = 10
+    for instance in queryset:
+        for i in range(NUM_ATTEMPTS):
+            instance.url_key = generate_url_key(length)
+            try:
+                instance.save()
+            except IntegrityError:
+                logger.warning("URL key was not unique, trying again (%d of %d", i, NUM_ATTEMPTS)
+                continue
+            else:
+                break
+        else:
+            logger.error("Could not generate unique URL for %r after %d tries", instance, NUM_ATTEMPTS)
+            return
 
-    r = {'aff': (0,), 'neg': (0,)}
-
-    def do():
-        s = [random.randint(60, 80) for i in range(3)]
-        s.append(random.randint(30,40))
-        return s
-
-    while sum(r['aff']) == sum(r['neg']):
-        r['aff'] = do()
-        r['neg'] = do()
-
-    return r
-
-def generate_random_results(round):
-    # WARNING: This function has probably been broken by the transition to
-    # using BallotSubmissions.  See data/utils/add_ballot_set.py for a new
-    # example.
-    from debate.models import Debate, DebateResult
-
-    debates = Debate.objects.filter(round=round)
-
-    for debate in debates:
-        dr = DebateResult(debate)
-
-        rr = gen_results()
-        for side in ('aff', 'neg'):
-            speakers = getattr(debate, '%s_team' % side).speakers
-            scores = rr[side]
-            for i in range(1, 4):
-                dr.set_speaker(
-                    side = side,
-                    pos = i,
-                    speaker = speakers[i - 1],
-                )
-            dr.set_speaker(
-                side = side,
-                pos = 4,
-                speaker = speakers[0]
-            )
-
-            for adj in debate.adjudicators.list:
-                for pos in range(1, 5):
-                    dr.set_score(adj, side, pos, scores[pos-1])
-
-        dr.save()
-        debate.result_status = debate.STATUS_CONFIRMED
-        debate.save()
-
-
-def test_gen():
-    from debate.models import Round
-    generate_random_results(Round.objects.get(pk=1))
-
-def make_dummy_speakers():
-    from debate import models as m
-    t = m.Tournament.objects.get(pk=1)
-
-    for team in t.teams:
-        assert m.Speaker.objects.filter(team=team).count() == 0
-        for i in range(1, 4):
-            m.Speaker(name='%s %d' % (team, i), team=team).save()
-
-
+def delete_url_keys(queryset):
+    """Deletes URL keys from every instance in the given QuerySet."""
+    for instance in queryset:
+        instance.url_key = None
+        instance.save()

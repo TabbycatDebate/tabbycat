@@ -9,6 +9,7 @@ from collections import Counter
 from types import GeneratorType
 
 import debate.models as m
+from debate.emoji import EMOJI_LIST
 
 NON_FIELD_ERRORS = '__all__'
 DUPLICATE_INFO = 19 # logging level just below INFO
@@ -114,7 +115,7 @@ class BaseTournamentDataImporter(object):
         raise ValueError("Unrecognized code for %s: %s" % (name, code))
 
     def _import(self, csvfile, line_parser, model, counts=None, errors=None,
-                expect_unique=None):
+                expect_unique=None, generated_fields=[]):
         """Parses the object given in f, using the callable line_parser to parse
         each line, and passing the arguments to the given model's constructor.
         'csvfile' can be any object that is supported by csv.reader(), which
@@ -144,6 +145,15 @@ class BaseTournamentDataImporter(object):
         chaining of successive _import calls. If provided, 'counts_in' should
         behave like a Counter object and 'errors_in' should behave like a
         TournamentDataImporterError object.
+
+        If 'expect_unique' is True, this function checks that there are no
+        duplicate objects before saving any of the objects it creates. If
+        'expect_unique' is False, it will just skip objects that would be
+        duplicates and log a DUPLICATE_INFO message to say so.
+
+        If 'generated_fields' is given, the uniqueness checks will not take into
+        account any of the generated fields. This should be used for fields that
+        are generated with each object, not given in the CSV files.
         """
         if hasattr(csvfile, 'seek') and callable(csvfile.seek):
             csvfile.seek(0)
@@ -180,14 +190,18 @@ class BaseTournamentDataImporter(object):
                 description = model.__name__ + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
 
                 # Check if it's a duplicate
-                if kwargs in kwargs_seen:
+                kwargs_expect_unique = kwargs.copy()
+                for key in generated_fields:
+                    if key in kwargs_expect_unique:
+                        del kwargs_expect_unique[key]
+                if kwargs_expect_unique in kwargs_seen:
                     if expect_unique:
                         message = "Duplicate " + description
                         errors.add(lineno, model, message)
                     else:
                         self.logger.log(DUPLICATE_INFO, "Skipping duplicate " + description)
                     continue
-                kwargs_seen.append(kwargs)
+                kwargs_seen.append(kwargs_expect_unique)
 
                 # Retrieve the instance or create it if it doesn't exist
                 try:

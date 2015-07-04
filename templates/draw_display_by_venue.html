@@ -14,21 +14,21 @@
 
 {% block header %}
   <div class="btn-group">
-  <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
-  <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-xs">Medium</span></a>
-  <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
-  <a class="btn btn-default" href="" id="scroll_draw4">Scroll XS</a>
-  <a class="btn btn-default" href="" id="scroll_draw5">Scroll XXS</a>
+    <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
+    <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-xs">Medium</span></a>
+    <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
+    <a class="btn btn-default" href="" id="scroll_draw4">Scroll XS</a>
+    <a class="btn btn-default" href="" id="scroll_draw5">Scroll XXS</a>
   </div>
   <div id="statusBar" class="btn-group">
   <div class="btn btn-default">ESC stops scroll</div>
   </div>
   <div class="btn-group">
-  <a class="btn btn-default" href="" id="tiny_text">XS Text</a>
-  <a class="btn btn-default" href="" id="small_text">S Text</a>
-  <a class="btn btn-default active" href="" id="medium_text">M Text</a>
-  <a class="btn btn-default" href="" id="large_text">L Text</a>
-  <a class="btn btn-default" href="" id="huge_text">XL Text</a>
+    <a class="btn btn-default" href="" id="tiny_text">XS Text</a>
+    <a class="btn btn-default" href="" id="small_text">S Text</a>
+    <a class="btn btn-default active" href="" id="medium_text">M Text</a>
+    <a class="btn btn-default" href="" id="large_text">L Text</a>
+    <a class="btn btn-default" href="" id="huge_text">XL Text</a>
   </div>
 {% endblock %}
 
@@ -63,7 +63,7 @@
   </thead>
   <tbody>
   {% for debate in draw %}
-    <tr class="{% debate_draw_status_class debate %}">
+    <tr {% if enable_divisions %}class="{% debate_draw_status_class debate %}"{% endif %}>
       {% if enable_divisions %}
         <td>{{ debate.division.name }}</td>
       {% endif %}

@@ -68,6 +68,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'debate',
     'compressor',
+    'cachalot',
 )
 
 LOGIN_REDIRECT_URL = '/'
@@ -76,8 +77,8 @@ LOGIN_REDIRECT_URL = '/'
 # = Caching =
 # =========
 
-PUBLIC_PAGE_CACHE_TIMEOUT = os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', None) or (60 * 10)
-TAB_PAGES_CACHE_TIMEOUT = os.environ.get('TAB_PAGES_CACHE_TIMEOUT', None) or (60 * 120)
+PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60 * 1))
+TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120))
 
 # Default non-heroku cache is to use local memory
 CACHES = {
@@ -87,7 +88,7 @@ CACHES = {
     }
 }
 
-# Caching enabled for templtaes
+# Caching enabled for templates
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', (
         'django.template.loaders.filesystem.Loader',
@@ -114,7 +115,7 @@ COMPRESS_PRECOMPILERS = (
 LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
 LIBSASS_SOURCE_COMMENTS = False
 
-COMPRESS_ENABLED = True
+# COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 COMPRESS_URL = STATIC_URL
 COMPRESS_OFFLINE_MANIFEST = "manifest.json"
@@ -162,7 +163,7 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
         }
 
 if os.environ.get('DEBUG', ''):
-    DEBUG = os.environ['DEBUG']
+    DEBUG = bool(int(os.environ['DEBUG']))
     TEMPLATE_DEBUG = DEBUG
 
 # ===========================

@@ -20,9 +20,8 @@
         <tr>
           <th>RSeq</th>
           <th>Round</th>
-          <th>Order</th>
-          <th>Reference</th>
           {% if enable_divisions and enable_division_motions %}
+            <th>Reference</th>
             <th>Venue(s)</th>
             <th>Divisions</th>
           {% endif %}
@@ -38,9 +37,8 @@
           <tr>
             <td>{{ motion.round.seq }}</td>
             <td>{{ motion.round.abbreviation }}</td>
-            <td>{{ motion.seq }}</td>
-            <td>{{ motion.reference }}</td>
             {% if enable_divisions and enable_division_motions %}
+              <td>{{ motion.reference }}</td>
               <td>
                 {% regroup motion.divisions.all by venue_group as unique_venues %}
                 {% for venue_group in unique_venues %}

@@ -4,6 +4,7 @@ from debate.adjudicator.stab import StabAllocator
 from munkres import Munkres
 
 from math import exp
+from random import shuffle
 
 class HungarianAllocator(Allocator):
 
@@ -17,7 +18,7 @@ class HungarianAllocator(Allocator):
         super(HungarianAllocator, self).__init__(*args, **kwargs)
         config = self.debates[0].round.tournament.config
         self.MAX_SCORE = config.get('adj_max_score')
-        self.MIN_SCORE = config.get('adj_min_score')
+        self.MIN_SCORE = config.get('adj_min_voting_score')
         self.CHAIR_CUTOFF = config.get('adj_chair_min_score')
 
         self.CONFLICT_PENALTY = config.get('adj_conflict_penalty')
@@ -44,10 +45,11 @@ class HungarianAllocator(Allocator):
         from debate.models import AdjudicatorAllocation
 
         # remove trainees
-        self.adjudicators = filter(lambda a: a.score > self.MIN_SCORE, self.adjudicators)
+        self.adjudicators = filter(lambda a: a.score >= self.MIN_SCORE, self.adjudicators)
 
         # sort adjudicators and debates in descending score/importance
         self.adjudicators_sorted = list(self.adjudicators)
+        shuffle(self.adjudicators_sorted) # randomize equally-ranked judges
         self.adjudicators_sorted.sort(key=lambda a: a.score, reverse=True)
         self.debates_sorted = list(self.debates)
         self.debates_sorted.sort(key=lambda a: a.importance, reverse=True)
@@ -69,7 +71,6 @@ class HungarianAllocator(Allocator):
         panellists = [a for a in self.adjudicators_sorted if a not in chairs]
 
         assert len(panel_debates) * 3 <= len(panellists)
-
 
         print "costing chairs"
 

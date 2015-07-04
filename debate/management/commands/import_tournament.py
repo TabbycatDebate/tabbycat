@@ -15,6 +15,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('path', help="Directory to import tournament data from")
+        parser.add_argument('items', help="Items to import (default: import all)", nargs="*", default=[])
 
         parser.add_argument('-r', '--auto-rounds', type=int, metavar='N', default=None,
             help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.')
@@ -54,11 +55,13 @@ class Command(BaseCommand):
         self._make('venues')
         self._make('regions')
         self._make('institutions')
+        self._make('break_categories')
         self._make('teams')
         self._make('speakers')
         self._make('judges', self.importer.import_adjudicators)
         self._make('motions')
         self._make('sides')
+        self._make('questions', self.importer.import_adj_feedback_questions)
 
     def _print_stage(self, message):
         if self.verbosity > 0:
@@ -99,6 +102,8 @@ class Command(BaseCommand):
     def _make(self, filename, import_method=None):
         """Imports objects from the given file using the given import method.
         If the import method isn't given, it is inferred from the file name."""
+        if self.options['items'] and filename not in self.options['items']:
+            return
         f = self._open_csv_file(filename)
         if import_method is None:
             import_method = getattr(self.importer, 'import_' + filename)
@@ -164,7 +169,7 @@ class Command(BaseCommand):
         deletes it. If it was used, and the tournament does not exist, raises
         and error."""
         exists = m.Tournament.objects.filter(slug=slug).exists()
-        if exists and not self.options['keep_existing']:
+        if exists and not self.options['keep_existing'] and not self.options['items']:
             if not self.options['force']:
                 self.stdout.write("WARNING! A tournament with slug '" + slug + "' already exists.")
                 self.stdout.write("You are about to delete EVERYTHING for this tournament.")

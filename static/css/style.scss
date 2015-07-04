@@ -88,7 +88,9 @@ table.table > tbody > tr > td.no-horizontal-spacing {
       }
     }
     a.current-round {
-      text-decoration: underline;
+      font-weight: bold;
+      border-top: 2px solid #999999;
+      padding-top: 13px;
     }
   }
 }
@@ -105,11 +107,6 @@ table.table > tbody > tr > td.no-horizontal-spacing {
   }
 }
 
-
-
-.public-draw #header-options .btn {
-  display: none;
-}
 
 // Sticky Footer
 
@@ -234,7 +231,7 @@ input[type="radio"].form-control, input[type="checkbox"].form-control {
   overflow: auto;
 }
 .modal-lg {
-  width: 90%;
+  width: 98%;
 }
 
 // Tables - Specific
@@ -310,6 +307,35 @@ input[type="radio"].form-control, input[type="checkbox"].form-control {
   // Darker than normal link, but not black
   color: #285379;
 }
+
+.feedback-integer-scale-table {
+  width: 100%;
+}
+
+.feedback-integer-scale-table td {
+  text-align: center;
+}
+
+.feedback-integer-scale-table input[type="radio"].form-control {
+  width: 20px;
+  margin: 0 auto;
+  vertical-align: middle;
+  display: block;
+}
+
+.feedback-multiple-select .feedback-option {
+  display: inline-block;
+}
+
+.feedback-multiple-select .feedback-option label {
+  margin-right: 20pt;
+}
+
+.feedback-multiple-select input[type="checkbox"].form-control {
+  vertical-align: middle;
+  width: 20px;
+}
+
 
 
 @media (max-width: $screen-xs-max) {
