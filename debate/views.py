@@ -1304,7 +1304,7 @@ def edit_ballots(request, t, ballots_id):
     if not request.user.is_superuser:
         template = 'assistant/assistant_enter_results.html'
         all_ballot_sets = debate.ballotsubmission_set_by_version_except_discarded
-        disable_confirm = request.user == ballots.user and not t.config.get('enable_assistant_confirms')
+        disable_confirm = request.submitter == ballots.submitter and not t.config.get('enable_assistant_confirms')
     else:
         template = 'enter_results.html'
         all_ballot_sets = debate.ballotsubmission_set.order_by('version')
@@ -1324,6 +1324,9 @@ def edit_ballots(request, t, ballots_id):
             if ballots.discarded:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_DISCARD
             elif ballots.confirmed:
+                ballots.confirmer = request.user
+                ballots.confirm_timestamp = datetime.datetime.now()
+                ballots.save()
                 action_type = ActionLog.ACTION_TYPE_BALLOT_CONFIRM
             else:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_EDIT
@@ -1408,7 +1411,7 @@ def new_ballots(request, t, debate_id):
     ballots = BallotSubmission(
         debate        =debate,
         submitter_type=BallotSubmission.SUBMITTER_TABROOM,
-        user          =request.user,
+        submitter     =request.user,
         ip_address    =ip_address)
 
     if not debate.adjudicators.has_chair:

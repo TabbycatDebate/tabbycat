@@ -380,7 +380,7 @@ admin.site.register(models.Motion, MotionAdmin)
 # ==============================================================================
 
 class BallotSubmissionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'user')
+    list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'submitter', 'confirmer')
     search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__code')
     raw_id_fields = ('debate','motion')
     # This incurs a massive performance hit

@@ -1654,7 +1654,9 @@ class Submission(models.Model):
     version = models.PositiveIntegerField()
     submitter_type = models.PositiveSmallIntegerField(choices=SUBMITTER_TYPE_CHOICES)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted") # only relevant if submitter was in tab room
+    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed")
+    confirm_timestamp = models.DateTimeField()
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     version_semaphore = BoundedSemaphore()
@@ -1695,7 +1697,7 @@ class Submission(models.Model):
         self.version_semaphore.release()
 
     def clean(self):
-        if self.submitter_type == self.SUBMITTER_TABROOM and self.user is None:
+        if self.submitter_type == self.SUBMITTER_TABROOM and self.submitter is None:
             raise ValidationError("A tab room ballot must have a user associated.")
 
 

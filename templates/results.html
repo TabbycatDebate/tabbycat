@@ -89,12 +89,11 @@
               {% if debate.ballotsubmission_set.count > 1%}
                 v{{ ballotset.version }}
               {% endif %}
-            </a>
-            {% if ballotset.submitter_type == ballotset.SUBMITTER_TABROOM %}
-              <small>(entered by {{ ballotset.user }})</small>
-            {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
-              <small>(public submission, {{ ballotset.ip_address }})</small>
-            {% endif %}
+              {% if ballotset.submitter_type == ballotset.SUBMITTER_TABROOM %}
+                <small>(entered by {{ ballotset.submitter }})</small></a>
+              {% elif other_ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+                <small>(public submission, {{ ballotset.ip_address }})</small></a>
+              {% endif %}
             <br>
           {% endfor %}
           {% if not debate.ballotsubmission_set_by_version_except_discarded.exists %}
