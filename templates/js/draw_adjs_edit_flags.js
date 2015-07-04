@@ -16,9 +16,9 @@ $('#toggle_unused_layout').click(function() {
 });
 
 $('#toggle_gender').click(function() {
-  var columnA = allocationsTable.column(4);
+  var columnA = allocationsTable.column(5);
   columnA.visible( ! columnA.visible() );
-  var columnB = allocationsTable.column(7);
+  var columnB = allocationsTable.column(8);
   columnB.visible( ! columnB.visible() );
   $(".adj").toggleClass("gender-display");
   $(".gender-highlight").toggleClass("gender-display");
@@ -39,12 +39,12 @@ $('#toggle_region').click(function() {
   return false
 });
 
-$('#toggle_language').click(function() {
+$('#toggle_breakcategory').click(function() {
   $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
 
-  $(".teaminfo").toggleClass("language-display");
+  $(".teaminfo").toggleClass("breakcategory-display");
   $("#conflict_key").toggle();
-  $("#language_key").toggle();
+  $("#breakcategory_key").toggle();
   return false
 });
 
@@ -56,9 +56,9 @@ $('#toggle_venues').click(function() {
 });
 
 $('#toggle_wins').click(function() {
-  var affWinsColumn = allocationsTable.column(3);
+  var affWinsColumn = allocationsTable.column(4);
   affWinsColumn.visible( ! affWinsColumn.visible() );
-  var negWinsColumn = allocationsTable.column(6);
+  var negWinsColumn = allocationsTable.column(7);
   negWinsColumn.visible( ! negWinsColumn.visible() );
   $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
   return false

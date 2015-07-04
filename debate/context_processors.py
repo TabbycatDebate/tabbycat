@@ -18,7 +18,7 @@ def debate_context(request):
             'public_breaking_teams'   : request.tournament.config.get('public_breaking_teams'),
             'public_breaking_adjs'    : request.tournament.config.get('public_breaking_adjs'),
             'public_participants'     : request.tournament.config.get('public_participants'),
-            'show_public_eslefl'      : request.tournament.config.get('public_participants_eslefl'),
+            'public_break_categories' : request.tournament.config.get('public_break_categories'),
             'public_side_allocations' : request.tournament.config.get('public_side_allocations') \
                                             and request.tournament.config.get('draw_side_allocations') == "preallocated",
             'public_divisions'        : request.tournament.config.get('public_divisions'),

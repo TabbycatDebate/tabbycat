@@ -6,7 +6,7 @@
 
 {% block body-class %}edit-adjs{% endblock %}
 {% block head-title %}{% endblock %}
-{% block page-title %}Edit Adjudicators for {{ round.abbreviation }}{% endblock %}
+{% block page-title %}Edit Adjudicators for {{ round.name }}{% endblock %}
 {% block page-header %}
   <div id="statusBar" class="btn-group">
     <div class="btn btn-default" href="#auto" id="auto_allocate">Auto Allocate</div>
@@ -26,8 +26,8 @@
     <div class="btn btn-default" href="" id="toggle_region">
       <span class="glyphicon glyphicon-eye-open"></span> Region
     </div>
-    <div class="btn btn-default" href="" id="toggle_language">
-      <span class="glyphicon glyphicon-eye-open"></span> Language
+    <div class="btn btn-default" href="" id="toggle_breakcategory">
+      <span class="glyphicon glyphicon-eye-open"></span> Category
     </div>
   </div>
   <div id="conflict_key" class="btn-group">
@@ -44,13 +44,14 @@
     <div class="btn btn-default gender-display female">Female</div>
   </div>
   <div id="region_key" class="btn-group" style="display: none;">
-    {% for region in regions %}
+    {% for region, _ in regions %}
       <div class="btn btn-default region-display region-{{ region.name|slugify }}">{{ region.name }}</div>
     {% endfor %}
   </div>
-  <div id="language_key" class="btn-group" style="display: none;">
-    <div class="btn btn-default language-display esl">ESL</div>
-    <div class="btn btn-default language-display efl">EFL</div>
+  <div id="breakcategory_key" class="btn-group" style="display: none;">
+    {% for category, _ in break_categories %}
+      <div class="btn btn-default breakcategory-display breakcategory-{{ category.slug }}">{{ category.name }}</div>
+    {% endfor %}
   </div>
 {% endblock %}
 
@@ -192,7 +193,28 @@
 </div>
 
 <style style="text/css">
-  {% if regions.0 %}
+
+  {% for region, color in regions %}
+    .region-display.region-{{ region.name|slugify }} {
+      background: {{ color }};
+      color: #fff;
+    }
+    .region-display.region-{{ region.name|slugify }} span a {
+      color: #fff;
+    }
+  {% endfor %}
+
+  {% for category, color in break_categories %}
+    .breakcategory-display.breakcategory-{{ category.slug }} {
+      background: {{ color }};
+      color: #fff;
+    }
+    .breakcategory-display.breakcategory-{{ category.slug }} span a {
+      color: #fff;
+    }
+  {% endfor %}
+
+  {#{% if regions.0 %}
     .region-display.region-{{ regions.0.name|slugify }} {
       background: #B1E001;
       color: #fff;
@@ -272,7 +294,7 @@
     .region-display.region-{{ regions.8.name|slugify }} span a {
       color: #fff;
     }
-  {% endif %}
+  {% endif %}#}
 </style>
 
 {% endblock content %}

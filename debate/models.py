@@ -444,7 +444,6 @@ class TeamManager(models.Manager):
 
     #     FILTER_ARGS = {
     #         'open': dict(),
-    #         'esl':  dict(esl=True),
     #     }
     #     filterargs = FILTER_ARGS[category]
 
@@ -453,7 +452,6 @@ class TeamManager(models.Manager):
 
     #     BREAK_SIZE_CONFIG_OPTIONS = {
     #         'open': 'break_size',
-    #         'esl':  'esl_break_size',
     #     }
     #     break_size = tournament.config.get(BREAK_SIZE_CONFIG_OPTIONS[category])
     #     institution_cap = tournament.config.get('institution_cap')
@@ -565,15 +563,7 @@ class Team(models.Model):
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
-
     break_categories = models.ManyToManyField(BreakCategory)
-
-    # set to True if a team is ineligible to break (other than being
-    # swing/composite)
-    # cannot_break = models.BooleanField(default=False)
-
-    # esl = models.BooleanField(default=False)
-    # efl = models.BooleanField(default=False)
 
     venue_preferences = models.ManyToManyField(VenueGroup,
         through = 'TeamVenuePreference',
@@ -630,6 +620,18 @@ class Team(models.Model):
     @property
     def region(self):
         return self.get_cached_institution().region
+
+    @property
+    def break_categories_nongeneral(self):
+        return self.break_categories.exclude(is_general=True)
+
+    @property
+    def break_categories_str(self):
+        categories = self.break_categories_nongeneral
+        if categories:
+            return "(" + ", ".join(c.name for c in categories) + ")"
+        else:
+            return ""
 
     def get_aff_count(self, seq=None):
         return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)

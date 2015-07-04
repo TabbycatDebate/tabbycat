@@ -1749,11 +1749,11 @@ def save_venues(request, round):
 @admin_required
 @round_view
 def draw_adjudicators_edit(request, round):
-    draw = round.get_draw()
-    adj0 = Adjudicator.objects.first()
-    duplicate_adjs = round.tournament.config.get('duplicate_adjs')
-    regions = Region.objects.filter(tournament=round.tournament).order_by('name')
-    feedback_headings = [q.name for q in round.tournament.adj_feedback_questions]
+    context = dict()
+    context['draw'] = draw = round.get_draw()
+    context['adj0'] = Adjudicator.objects.first()
+    context['duplicate_adjs'] = round.tournament.config.get('duplicate_adjs')
+    context['feedback_headings'] = [q.name for q in round.tournament.adj_feedback_questions]
 
     def calculate_prior_adj_genders(team):
         debates = team.get_debates(round.seq)
@@ -1777,9 +1777,13 @@ def draw_adjudicators_edit(request, round):
         else:
             debate.gender_class = (aff_male_adj_percent / 5) - 10
 
-    return r2r(request, "draw_adjudicators_edit.html", dict(
-        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs, regions=regions,
-        feedback_headings=feedback_headings))
+    regions = round.tournament.region_set.order_by('name')
+    break_categories = round.tournament.breakcategory_set.order_by('seq').exclude(is_general=True)
+    colors = ["#C70062", "#00C79B", "#B1E001", "#476C5E", "#777", "#FF2983", "#6A268C", "#00C0CF", "#0051CF"]
+    context['regions'] = zip(regions, colors + ["black"] * (len(regions) - len(colors)))
+    context['break_categories'] = zip(break_categories, colors + ["black"] * (len(break_categories) - len(colors)))
+
+    return r2r(request, "draw_adjudicators_edit.html", context)
 
 def _json_adj_allocation(debates, unused_adj):
 
