@@ -4,6 +4,7 @@ from debate.adjudicator.stab import StabAllocator
 from munkres import Munkres
 
 from math import exp
+from random import shuffle
 
 class HungarianAllocator(Allocator):
 
@@ -48,6 +49,7 @@ class HungarianAllocator(Allocator):
 
         # sort adjudicators and debates in descending score/importance
         self.adjudicators_sorted = list(self.adjudicators)
+        shuffle(self.adjudicators_sorted) # randomize equally-ranked judges
         self.adjudicators_sorted.sort(key=lambda a: a.score, reverse=True)
         self.debates_sorted = list(self.debates)
         self.debates_sorted.sort(key=lambda a: a.importance, reverse=True)
