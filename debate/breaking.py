@@ -3,12 +3,21 @@
 from collections import Counter
 from models import annotate_team_standings
 
+def _compute_higher_priority_breaks(category):
+    higher_breaking_teams = set()
+    higher_categories = category.tournament.breakcategory_set.filter(priority__lt=category.priority)
+    for higher_category in higher_categories:
+        this_break = compute_breaking_teams(higher_category)
+        higher_breaking_teams.update(this_break)
+    return higher_breaking_teams
+
 def compute_breaking_teams(category):
     """Returns a list of Teams with annotations.
     'category' must be a BreakCategory instance."""
 
-    teams = category.team_set.all()
-    teams = annotate_team_standings(teams, tournament=category.tournament)
+    higher_breaking_teams = _compute_higher_priority_breaks(category)
+    eligible_teams = category.team_set.exclude(id__in=[t.id for t in higher_breaking_teams])
+    eligible_teams = annotate_team_standings(eligible_teams, tournament=category.tournament)
 
     break_size = category.break_size
     institution_cap = category.institution_cap
@@ -22,7 +31,7 @@ def compute_breaking_teams(category):
     current_break_seq = 0
     teams_from_institution = Counter()
 
-    for i, team in enumerate(teams, start=1):
+    for i, team in enumerate(eligible_teams, start=1):
 
         # Overall rank
         rank_value = (team.points, team.speaker_score)
