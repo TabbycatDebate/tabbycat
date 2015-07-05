@@ -2006,8 +2006,6 @@ def adj_feedback(request, t):
         for adj in adjudicators:
             adj.rscores = []
             adj_feedbacks = [f for f in all_adj_feedbacks if f.adjudicator == adj]
-            print adj
-            print adj_feedbacks
             for r in rounds:
                 adj_round_feedbacks = [f for f in adj_feedbacks if (f.source_adjudicator and f.source_adjudicator.debate.round == r)]
                 adj_round_feedbacks.extend([f for f in adj_feedbacks if (f.source_team and f.source_team.debate.round == r)])
@@ -2032,9 +2030,6 @@ def adj_feedback(request, t):
 
                     # Creating the object list for the graph
                     adj.rscores.append([r.seq, average, adj_type])
-
-            print "_______"
-
 
     feedback_headings = [q.name for q in t.adj_feedback_questions]
 
