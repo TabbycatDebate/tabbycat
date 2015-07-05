@@ -1480,7 +1480,7 @@ class Debate(models.Model):
 
     @property
     def ballotsubmission_set_by_version(self):
-        return self.ballotsubmission_set.all().order_by('version')
+        return self.ballotsubmission_set.order_by('version')
 
     @property
     def ballotsubmission_set_by_version_except_discarded(self):
@@ -1656,7 +1656,7 @@ class Submission(models.Model):
 
     submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted") # only relevant if submitter was in tab room
     confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed")
-    confirm_timestamp = models.DateTimeField()
+    confirm_timestamp = models.DateTimeField(blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     version_semaphore = BoundedSemaphore()

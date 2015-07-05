@@ -314,8 +314,9 @@ class BallotSetForm(forms.Form):
                 'confirmed': ballotset.confirmed, 'discarded': ballotset.discarded}
 
         # HACK: Check here to see if self.ballotsub has been saved -- if it's not,
-        # then it's a new ballots form, and choose_sides should not be populated
-        # with an initial value.
+        # then it's a new ballot set, and choose_sides should not be populated
+        # with an initial value. Fix when models support a proper "no side
+        # assigned" state (it currently doesn't).
         if self.choosing_sides and self.ballotsub.pk is not None:
             try:
                 initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)

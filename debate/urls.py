@@ -118,7 +118,7 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/standings/motions/$', 'motion_standings', name='motion_standings'),
     url(r'^admin/standings/feedback_progress/$', 'feedback_progress', name='feedback_progress'),
 
-    url(r'^admin/ballots/(?P<ballots_id>\d+)/edit/$', 'edit_ballotset', name='edit_ballotset'),
+    url(r'^admin/ballots/(?P<ballotsub_id>\d+)/edit/$', 'edit_ballotset', name='edit_ballotset'),
     url(r'^admin/debate/(?P<debate_id>\d+)/new_ballotset/$', 'new_ballotset', name='new_ballotset'),
     url(r'^admin/round/(?P<round_seq>\d+)/ballot_checkin/$', 'ballot_checkin', name='ballot_checkin'),
     url(r'^admin/round/(?P<round_seq>\d+)/ballot_checkin/get_details/$', 'ballot_checkin_get_details', name='ballot_checkin_get_details'),
