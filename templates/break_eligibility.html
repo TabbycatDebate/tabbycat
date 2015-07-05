@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Break Eligibility{% endblock %}
+{% block page-title %}Break Eligibility{% endblock %}
+{% block body-class %}break-eligibility{% endblock %}
+
+{% block header %}
+  {% if updated %}
+  <div class="alert alert-success updated alert-dismissable" id="savedVenues">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    Saved successfully!
+  </div>
+  {% endif %}
+
+  {% if form.errors %}
+    <div class="alert alert-danger alert-dismissable" id="savedVenues">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      Please correct the errors below {{ form.errors }}
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block extra-js %}
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+
+      var dTable = $('#dataTable').DataTable({
+        "aaSorting": [[ 0, "asc" ]],
+        "orderCellsTop": true,
+      });
+
+      var updateCounts = function (value) {
+        $("#count_" + value).text($("input[type='checkbox'][value='" + value + "']:checked").length);
+      }
+
+      // initialize team counts
+      for (i = 1; i <= {{ tournament.breakcategory_set.count }}; i++)
+        updateCounts(String(i));
+
+      $(".select-all").each(function () {
+        $(this).click(function () {
+          var category = $(this).attr("category");
+          $("input[type='checkbox'][value='" + category + "']").each(function () {
+            $(this).prop("checked", true);
+          });
+          updateCounts(category);
+        });
+      });
+
+      $(".select-none").each(function () {
+        $(this).click(function () {
+          var category = $(this).attr("category");
+          $("input[type='checkbox'][value='" + category + "']").each(function () {
+            $(this).prop("checked", false);
+          });
+          updateCounts(category);
+        });
+      });
+
+      $("#dataTable input[type='checkbox']").click(function () {
+        updateCounts($(this).val());
+      });
+
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+
+  <form id="breakEligibilityForm" action="." method="POST" class="form-horizontal">
+    <table id="dataTable" class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th rowspan="2">Team</th>
+          {% if show_emoji > 0 %}
+            <th rowspan="2" class="team-emoji"></th>
+          {% endif %}
+          <th rowspan="2">Institution</th>
+          {% for category in tournament.breakcategory_set.all %}
+            <th>
+              {{ category.name }}
+              (<span id="count_{{ forloop.counter }}"></span>)
+            </th>
+          {% endfor %}
+        </tr>
+        <tr>
+          {% for category in tournament.breakcategory_set.all %}
+            <td>
+              <a class="select-all" href="#" category="{{ forloop.counter }}">all</a>
+              <a class="select-none" href="#" category="{{ forloop.counter }}">none</a>
+            </td>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for teamwr in form.team_iter %}
+          <tr>
+            <td>
+              <span class="team team-speakers-hover" id="team_speakers_{{ teamwr.team.id }}">
+                {{ teamwr.team.short_name }}
+              </span>
+            </td>
+            {% if show_emoji > 0 %}
+              <td class="team-emoji">{% team_emoji teamwr.team %}</td>
+            {% endif %}
+            <td>{{ teamwr.team.institution.name }}</td>
+            {% for checkbox in teamwr.eligibility %}
+              <td>{{ checkbox.tag }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-4">
+        <button type="submit" class="btn btn-success form-control">Save</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}

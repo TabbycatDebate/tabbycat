@@ -409,7 +409,7 @@ function add_trainee(debate_id, data) {
 }
 
 function moveToUnused(adj) {
-  // Build a list of all adjs already on the tab;e
+  // Build a list of all adjs already on the table
   var unusedIDs = [];
   $("#unusedAdjTable .adj").each(function(){
     unusedIDs.push(DOMIdtoInt(this));

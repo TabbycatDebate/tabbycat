@@ -55,6 +55,7 @@ class Command(BaseCommand):
         self._make('venues')
         self._make('regions')
         self._make('institutions')
+        self._make('break_categories')
         self._make('teams')
         self._make('speakers')
         self._make('judges', self.importer.import_adjudicators)

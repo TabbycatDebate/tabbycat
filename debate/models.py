@@ -226,7 +226,7 @@ class Institution(models.Model):
             return self.code[:5]
 
 
-def annotate_team_standings(teams, round=None, shuffle=False):
+def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
     """Accepts a QuerySet, returns a list.
     If 'shuffle' is True, it shuffles the list before sorting so that teams that
     are equal are in random order. This should be turned on for draw generation,
@@ -263,10 +263,10 @@ def annotate_team_standings(teams, round=None, shuffle=False):
     }).distinct()
 
     # Extract which rule to use from the tournament config
-    if round is not None:
+    if round is not None and tournament is None:
         tournament = round.tournament
-    else:
-        tournament = teams[0].tournament
+    if tournament is None:
+        raise TypeError("A tournament or a round must be specified.")
     rule = tournament.config.get('team_standings_rule')
 
     if rule == "australs":
@@ -439,72 +439,70 @@ class TeamManager(models.Manager):
 
         return teams
 
-    def breaking_teams(self, tournament, category='open'):
-        """Returns a list."""
+    # def breaking_teams(self, tournament, category='open'):
+    #     """Returns a list."""
 
-        FILTER_ARGS = {
-            'open': dict(),
-            'esl':  dict(esl=True),
-        }
-        filterargs = FILTER_ARGS[category]
+    #     FILTER_ARGS = {
+    #         'open': dict(),
+    #     }
+    #     filterargs = FILTER_ARGS[category]
 
-        teams = self.filter(tournament=tournament, **filterargs)
-        teams = annotate_team_standings(teams)
+    #     teams = self.filter(tournament=tournament, **filterargs)
+    #     teams = annotate_team_standings(teams)
 
-        BREAK_SIZE_CONFIG_OPTIONS = {
-            'open': 'break_size',
-            'esl':  'esl_break_size',
-        }
-        break_size = tournament.config.get(BREAK_SIZE_CONFIG_OPTIONS[category])
-        institution_cap = tournament.config.get('institution_cap')
+    #     BREAK_SIZE_CONFIG_OPTIONS = {
+    #         'open': 'break_size',
+    #     }
+    #     break_size = tournament.config.get(BREAK_SIZE_CONFIG_OPTIONS[category])
+    #     institution_cap = tournament.config.get('institution_cap')
 
-        prev_rank_value = (None, None)
-        current_rank = 0
-        breaking_teams = list()
+    #     prev_rank_value = (None, None)
+    #     current_rank = 0
+    #     breaking_teams = list()
 
-        # Variables for insutitional caps and non-breaking teams:
-        current_break_rank = 0
-        current_break_seq = 0
-        from collections import Counter
-        teams_from_institution = Counter()
+    #     # Variables for insutitional caps and non-breaking teams:
+    #     current_break_rank = 0
+    #     current_break_seq = 0
+    #     from collections import Counter
+    #     teams_from_institution = Counter()
 
-        for i, team in enumerate(teams, start=1):
+    #     for i, team in enumerate(teams, start=1):
 
-            # Overall rank
-            rank_value = (team.points, team.speaker_score)
-            new_rank = rank_value != prev_rank_value
-            if new_rank:
-                current_rank = i
-                prev_rank_value = rank_value
-            team.rank = current_rank
+    #         # Overall rank
+    #         rank_value = (team.points, team.speaker_score)
+    #         new_rank = rank_value != prev_rank_value
+    #         if new_rank:
+    #             current_rank = i
+    #             prev_rank_value = rank_value
+    #         team.rank = current_rank
 
 
-            # Increment current_break_seq if it won't violate institution cap
-            if institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
-                if new_rank and current_break_rank == break_size:
-                    break
-                team.break_rank = "- (Capped)"
-            elif team.cannot_break == True:
-                if new_rank and current_break_rank == break_size:
-                    break
-                team.break_rank = "- (Ineligible)"
-            else:
-                current_break_seq += 1
-                if new_rank:
-                    if current_break_rank == break_size:
-                        break
-                    current_break_rank = current_break_seq
-                team.break_rank = current_break_rank
+    #         # Increment current_break_seq if it won't violate institution cap
+    #         if institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
+    #             if new_rank and current_break_rank == break_size:
+    #                 break
+    #             team.break_rank = "- (Capped)"
+    #         elif team.cannot_break == True:
+    #             if new_rank and current_break_rank == break_size:
+    #                 break
+    #             team.break_rank = "- (Ineligible)"
+    #         else:
+    #             current_break_seq += 1
+    #             if new_rank:
+    #                 if current_break_rank == break_size:
+    #                     break
+    #                 current_break_rank = current_break_seq
+    #             team.break_rank = current_break_rank
 
-            if current_break_rank > break_size:
-                break
+    #         if current_break_rank > break_size:
+    #             break
 
-            # Take note of the institution
-            teams_from_institution[team.institution] += 1
+    #         # Take note of the institution
+    #         teams_from_institution[team.institution] += 1
 
-            breaking_teams.append(team)
+    #         breaking_teams.append(team)
 
-        return breaking_teams
+    #     return breaking_teams
 
 
     def get_queryset(self):
@@ -536,6 +534,26 @@ class Division(models.Model):
         index_together = ['tournament', 'seq']
 
 
+class BreakCategory(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    name = models.CharField(max_length=50, help_text="Name to be displayed, e.g., \"ESL\"")
+    slug = models.SlugField(help_text="Slug for URLs, e.g., \"esl\"")
+    seq = models.IntegerField(help_text="The order in which the categories are displayed")
+    break_size = models.IntegerField(help_text="Number of breaking teams in this category")
+    is_general = models.BooleanField(help_text="True if most teams eligible for this category, e.g. Open, False otherwise")
+    institution_cap = models.IntegerField(blank=True, null=True, help_text="Maximum number of teams from a single institution in this category; leave blank if not applicable")
+    priority = models.IntegerField(help_text="If a team breaks in multiple categories, lower priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority")
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
+        ordering = ['tournament', 'seq']
+        index_together = ['tournament', 'seq']
+        verbose_name_plural = "break categories"
+
+
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Full name or suffix", help_text="Do not include institution name (see \"uses institutional prefix\" below)")
     short_reference = models.CharField(max_length=35, verbose_name="Short name/suffix", help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
@@ -545,13 +563,7 @@ class Team(models.Model):
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
-
-    # set to True if a team is ineligible to break (other than being
-    # swing/composite)
-    cannot_break = models.BooleanField(default=False)
-
-    esl = models.BooleanField(default=False)
-    efl = models.BooleanField(default=False)
+    break_categories = models.ManyToManyField(BreakCategory)
 
     venue_preferences = models.ManyToManyField(VenueGroup,
         through = 'TeamVenuePreference',
@@ -608,6 +620,15 @@ class Team(models.Model):
     @property
     def region(self):
         return self.get_cached_institution().region
+
+    @property
+    def break_categories_nongeneral(self):
+        return self.break_categories.exclude(is_general=True)
+
+    @property
+    def break_categories_str(self):
+        categories = self.break_categories_nongeneral
+        return "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
 
     def get_aff_count(self, seq=None):
         return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)
@@ -1633,7 +1654,9 @@ class Submission(models.Model):
     version = models.PositiveIntegerField()
     submitter_type = models.PositiveSmallIntegerField(choices=SUBMITTER_TYPE_CHOICES)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted") # only relevant if submitter was in tab room
+    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed")
+    confirm_timestamp = models.DateTimeField()
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     version_semaphore = BoundedSemaphore()
@@ -1674,7 +1697,7 @@ class Submission(models.Model):
         self.version_semaphore.release()
 
     def clean(self):
-        if self.submitter_type == self.SUBMITTER_TABROOM and self.user is None:
+        if self.submitter_type == self.SUBMITTER_TABROOM and self.submitter is None:
             raise ValidationError("A tab room ballot must have a user associated.")
 
 
@@ -2149,6 +2172,7 @@ class ActionLog(models.Model):
     ACTION_TYPE_MOTIONS_UNRELEASE       = 42
     ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  = 50
     ACTION_TYPE_ROUND_START_TIME_SET    = 60
+    ACTION_TYPE_BREAK_ELIGIBILITY_EDIT  = 70
     ACTION_TYPE_AVAIL_TEAMS_SAVE        = 80
     ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE = 81
     ACTION_TYPE_AVAIL_VENUES_SAVE       = 82
@@ -2175,6 +2199,7 @@ class ActionLog(models.Model):
         (ACTION_TYPE_MOTIONS_RELEASE        , 'Released motions'),
         (ACTION_TYPE_MOTIONS_UNRELEASE      , 'Unreleased motions'),
         (ACTION_TYPE_DEBATE_IMPORTANCE_EDIT , 'Edited debate importance'),
+        (ACTION_TYPE_BREAK_ELIGIBILITY_EDIT , 'Edited break eligibility'),
         (ACTION_TYPE_ROUND_START_TIME_SET   , 'Set start time'),
         (ACTION_TYPE_AVAIL_TEAMS_SAVE       , 'Edited teams availability'),
         (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE, 'Edited adjudicators availability'),
@@ -2199,6 +2224,7 @@ class ActionLog(models.Model):
         ACTION_TYPE_DRAW_RELEASE           : ('round',),
         ACTION_TYPE_DRAW_UNRELEASE         : ('round',),
         ACTION_TYPE_DEBATE_IMPORTANCE_EDIT : ('debate',),
+        ACTION_TYPE_BREAK_ELIGIBILITY_EDIT : (),
         ACTION_TYPE_ROUND_START_TIME_SET   : ('round',),
         ACTION_TYPE_MOTION_EDIT            : ('motion',),
         ACTION_TYPE_MOTIONS_RELEASE        : ('round',),

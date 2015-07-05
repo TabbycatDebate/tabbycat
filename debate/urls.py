@@ -22,8 +22,7 @@ urlpatterns = patterns('debate.views',
     url(r'^team_speakers/(?P<team_id>\d+)/$', 'team_speakers', name='team_speakers'),
 
     url(r'^break/$', 'public_break_index', name='public_break_index'),
-    url(r'^break/teams/open/$', 'public_breaking_teams', {'name': 'Open Break', 'category': 'open'}, name='public_breaking_teams_open'),
-    url(r'^break/teams/esl/$', 'public_breaking_teams', {'name': 'ESL Break', 'category': 'esl'}, name='public_breaking_teams_esl'),
+    url(r'^break/teams/(?P<category>\w+)/$', 'public_breaking_teams', name='public_breaking_teams'),
     url(r'^break/adjudicators/$',  'public_breaking_adjs', name='public_breaking_adjs'),
 
     url(r'^add_ballot/$', 'public_ballot_submit', name='public_ballot_submit'),
@@ -144,8 +143,8 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/adjudicators/breaking/set/$', 'set_adj_breaking_status', name='set_adj_breaking_status'),
     url(r'^admin/adjudicators/notes/test/set/$', 'set_adj_note', name='set_adj_note'),
 
-    url(r'^admin/break/teams/open/$', 'breaking_teams', {'name': 'Open Break', 'category': 'open'}, name='breaking_teams_open'),
-    url(r'^admin/break/teams/esl/$', 'breaking_teams', {'name': 'ESL Break', 'category': 'esl'}, name='breaking_teams_esl'),
+    url(r'^admin/break/teams/(?P<category>\w+)/$', 'breaking_teams', name='breaking_teams'),
+    url(r'^admin/break/eligibility/$', 'break_eligibility', name='break_eligibility'),
     url(r'^admin/break/adjudicators/$',  'breaking_adjs', name='breaking_adjs'),
 
     url(r'^admin/side_allocations/$', 'side_allocations', name='side_allocations'),

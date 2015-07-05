@@ -15,6 +15,7 @@ from debate.result import BallotSet
 from debate import forms
 from debate.models import *
 from debate.utils import populate_url_keys
+from debate.breaking import compute_breaking_teams
 
 from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
@@ -210,15 +211,27 @@ def public_break_index(request, t):
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_teams')
-def public_breaking_teams(request, t, name, category):
-    teams = Team.objects.breaking_teams(t, category)
-    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=category, name=name))
+def public_breaking_teams(request, t, category):
+    bc = get_object_or_404(BreakCategory, slug=category)
+    teams = compute_breaking_teams(bc)
+    if t.config.get('public_break_categories'):
+        for team in teams:
+            categories = team.break_categories_nongeneral.exclude(id=bc.id)
+            team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
+    else:
+        for team in teams:
+            team.categories_for_display = ""
+    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=bc))
 
 @admin_required
 @tournament_view
-def breaking_teams(request, t, name, category):
-    teams = Team.objects.breaking_teams(t, category)
-    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=category, name=name))
+def breaking_teams(request, t, category):
+    bc = get_object_or_404(BreakCategory, slug=category)
+    teams = compute_breaking_teams(bc)
+    for team in teams:
+        categories = team.break_categories_nongeneral.exclude(id=bc.id)
+        team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
+    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=bc))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')
@@ -232,6 +245,22 @@ def breaking_adjs(request, t):
     adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
     return r2r(request, 'breaking_adjudicators.html', dict(adjs=adjs))
 
+@admin_required
+@tournament_view
+def break_eligibility(request, t):
+    context = dict()
+    if request.method == "POST":
+        form = forms.BreakEligibilityForm(t, request.POST)
+        if form.is_valid():
+            form.save()
+            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT,
+                    user=request.user, tournament=t, ip_address=get_ip_address(request))
+            context['updated'] = True
+    else:
+        form = forms.BreakEligibilityForm(t)
+
+    context['form'] = form
+    return r2r(request, 'break_eligibility.html', context)
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_ballots')
@@ -530,8 +559,6 @@ def action_log_update(request, t):
         }
         action_objects.append(action)
 
-    print action_objects
-
     return HttpResponse(json.dumps(action_objects), content_type="text/json")
 
 
@@ -541,7 +568,7 @@ def action_log_update(request, t):
 def tournament_config(request, t):
     from debate.config import make_config_form
 
-    context = {}
+    context = dict()
     if request.method == 'POST':
         form = make_config_form(t, request.POST)
         if form.is_valid():
@@ -1275,7 +1302,7 @@ def edit_ballots(request, t, ballots_id):
     if not request.user.is_superuser:
         template = 'assistant/assistant_enter_results.html'
         all_ballot_sets = debate.ballotsubmission_set_by_version_except_discarded
-        disable_confirm = request.user == ballots.user and not t.config.get('enable_assistant_confirms')
+        disable_confirm = request.submitter == ballots.submitter and not t.config.get('enable_assistant_confirms')
     else:
         template = 'enter_results.html'
         all_ballot_sets = debate.ballotsubmission_set.order_by('version')
@@ -1295,6 +1322,9 @@ def edit_ballots(request, t, ballots_id):
             if ballots.discarded:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_DISCARD
             elif ballots.confirmed:
+                ballots.confirmer = request.user
+                ballots.confirm_timestamp = datetime.datetime.now()
+                ballots.save()
                 action_type = ActionLog.ACTION_TYPE_BALLOT_CONFIRM
             else:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_EDIT
@@ -1379,7 +1409,7 @@ def new_ballots(request, t, debate_id):
     ballots = BallotSubmission(
         debate        =debate,
         submitter_type=BallotSubmission.SUBMITTER_TABROOM,
-        user          =request.user,
+        submitter     =request.user,
         ip_address    =ip_address)
 
     if not debate.adjudicators.has_chair:
@@ -1730,11 +1760,11 @@ def save_venues(request, round):
 @admin_required
 @round_view
 def draw_adjudicators_edit(request, round):
-    draw = round.get_draw()
-    adj0 = Adjudicator.objects.first()
-    duplicate_adjs = round.tournament.config.get('duplicate_adjs')
-    regions = Region.objects.filter(tournament=round.tournament).order_by('name')
-    feedback_headings = [q.name for q in round.tournament.adj_feedback_questions]
+    context = dict()
+    context['draw'] = draw = round.get_draw()
+    context['adj0'] = Adjudicator.objects.first()
+    context['duplicate_adjs'] = round.tournament.config.get('duplicate_adjs')
+    context['feedback_headings'] = [q.name for q in round.tournament.adj_feedback_questions]
 
     def calculate_prior_adj_genders(team):
         debates = team.get_debates(round.seq)
@@ -1758,9 +1788,13 @@ def draw_adjudicators_edit(request, round):
         else:
             debate.gender_class = (aff_male_adj_percent / 5) - 10
 
-    return r2r(request, "draw_adjudicators_edit.html", dict(
-        draw=draw, adj0=adj0, duplicate_adjs=duplicate_adjs, regions=regions,
-        feedback_headings=feedback_headings))
+    regions = round.tournament.region_set.order_by('name')
+    break_categories = round.tournament.breakcategory_set.order_by('seq').exclude(is_general=True)
+    colors = ["#C70062", "#00C79B", "#B1E001", "#476C5E", "#777", "#FF2983", "#6A268C", "#00C0CF", "#0051CF"]
+    context['regions'] = zip(regions, colors + ["black"] * (len(regions) - len(colors)))
+    context['break_categories'] = zip(break_categories, colors + ["black"] * (len(break_categories) - len(colors)))
+
+    return r2r(request, "draw_adjudicators_edit.html", context)
 
 def _json_adj_allocation(debates, unused_adj):
 

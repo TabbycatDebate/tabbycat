@@ -78,9 +78,9 @@ class TeamForm(forms.ModelForm):
 
 class TeamAdmin(admin.ModelAdmin):
     form = TeamForm
-    list_display = ('long_name','short_reference','institution', 'division', 'esl', 'efl', 'tournament')
+    list_display = ('long_name','short_reference','institution', 'division', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
-    list_filter = ('tournament', 'division', 'institution')
+    list_filter = ('tournament', 'division', 'institution', 'break_categories')
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
     raw_id_fields = ('division',)
 
@@ -255,15 +255,16 @@ class DebateAdmin(admin.ModelAdmin):
             'round__tournament','division__tournament','venue__group'
         )
 
-for value, verbose_name in models.Debate.STATUS_CHOICES:
-    def _make_set_result_status(value, verbose_name):
-        def _set_result_status(modeladmin, request, queryset):
-            count = queryset.update(result_status=value)
-        _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower() # so that they look different to DebateAdmin
-        _set_result_status.short_description = "Set result status to %s" % verbose_name.lower()
-        return _set_result_status
-    DebateAdmin.actions.append(_make_set_result_status(value, verbose_name))
-del value, verbose_name # for fail-fast
+    actions = list()
+    for value, verbose_name in models.Debate.STATUS_CHOICES:
+        def _make_set_result_status(value, verbose_name):
+            def _set_result_status(modeladmin, request, queryset):
+                count = queryset.update(result_status=value)
+            _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower() # so that they look different to DebateAdmin
+            _set_result_status.short_description = "Set result status to %s" % verbose_name.lower()
+            return _set_result_status
+        actions.append(_make_set_result_status(value, verbose_name))
+    del value, verbose_name # for fail-fast
 
 admin.site.register(models.Debate, DebateAdmin)
 
@@ -379,7 +380,7 @@ admin.site.register(models.Motion, MotionAdmin)
 # ==============================================================================
 
 class BallotSubmissionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'user')
+    list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'submitter', 'confirmer')
     search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__code')
     raw_id_fields = ('debate','motion')
     # This incurs a massive performance hit
@@ -402,3 +403,14 @@ class ActionLogAdmin(admin.ModelAdmin):
         )
 
 admin.site.register(models.ActionLog, ActionLogAdmin)
+
+# ==============================================================================
+# BreakCategory
+# ==============================================================================
+
+class BreakCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'seq', 'tournament', 'break_size', 'priority', 'is_general', 'institution_cap')
+    list_filter = ('tournament',)
+    ordering = ('tournament', 'seq')
+
+admin.site.register(models.BreakCategory, BreakCategoryAdmin)

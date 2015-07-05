@@ -152,14 +152,6 @@
     background-color: #D600FF;
     color: #fff;
   }
-  .language-display.esl {
-    background-color: #c70062;
-    color: #fff;
-  }
-  .language-display.efl {
-    background-color: #00c79b;
-    color: #fff;
-  }
 
   .venue:hover, .adj:hover, .team:hover,
   .venue.dragging, .adj.dragging, .team.dragging,
@@ -216,14 +208,14 @@
       border-bottom: none;
     }
   }
-  .gender-display.male, .gender-display.female, .language-display.esl, .language-display.efl {
+  .gender-display.male, .gender-display.female {
     span a {
       color: #fff;
     }
   }
   .gender-display.history-conflict, .gender-display.personal-conflict, .gender-display.institutional-conflict, .gender-display.adjudicator-conflict,
   .region-display.history-conflict, .region-display.personal-conflict, .region-display.institutional-conflict, .region-display.adjudicator-conflict,
-  .language-display.history-conflict, .language-display.personal-conflict, .language-display.institutional-conflict, .language-display.adjudicator-conflict {
+  .breakcategory-display.history-conflict, .breakcategory-display.personal-conflict, .breakcategory-display.institutional-conflict, .breakcategory-display.adjudicator-conflict {
     span::after {
       content:"";
       padding: 9px;
@@ -312,8 +304,4 @@
 .team-speakers-hover {
   cursor: pointer;
   border-bottom: 2px dotted #ccc;
-}
-
-span.esl {
-  text-transform: uppercase;
 }

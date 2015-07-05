@@ -111,9 +111,8 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
         return value
 
 
-class CustomBooleanSelect(forms.NullBooleanSelect):
-    """Class to do boolean select fields following our conventions.
-    Specifically, if 'required', checks that an option was chosen."""
+class BlankUnknownBooleanSelect(forms.NullBooleanSelect):
+    """Uses '--------' instead of 'Unknown' for the None choice."""
 
     def __init__(self, attrs=None):
         choices = (('1', ugettext_lazy('--------')),
@@ -123,6 +122,9 @@ class CustomBooleanSelect(forms.NullBooleanSelect):
         super(forms.NullBooleanSelect, self).__init__(attrs, choices)
 
 class BooleanSelectField(forms.NullBooleanField):
+    """Widget to do boolean select fields following our conventions.
+    Specifically, if 'required', checks that an option was chosen."""
+    widget = BlankUnknownBooleanSelect
     def clean(self, value):
         value = super(BooleanSelectField, self).clean(value)
         if self.required and value is None:
@@ -150,21 +152,21 @@ class OptionalChoiceField(forms.ChoiceField):
         super(OptionalChoiceField, self).__init__(*args, **kwargs)
         self.choices = [(None, '---------')] + list(self.choices)
 
-class CustomCheckboxFieldRenderer(forms.widgets.CheckboxFieldRenderer):
-    """Used by CustomCheckboxSelectMultiple."""
+class AdjudicatorFeedbackCheckboxFieldRenderer(forms.widgets.CheckboxFieldRenderer):
+    """Used by AdjudicatorFeedbackCheckboxSelectMultiple."""
     outer_html = '<div{id_attr} class="feedback-multiple-select">{content}</div>'
     inner_html = '<div class="feedback-option">{choice_value}{sub_widgets}</div>'
 
-class CustomCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
-    renderer = CustomCheckboxFieldRenderer
+class AdjudicatorFeedbackCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
+    renderer = AdjudicatorFeedbackCheckboxFieldRenderer
 
-class CustomMultipleChoiceField(forms.MultipleChoiceField):
+class AdjudicatorFeedbackCheckboxSelectMultipleField(forms.MultipleChoiceField):
     """Class to do multiple choice fields following our conventions.
     Specifically, converts to a string rather than a list."""
-    widget = CustomCheckboxSelectMultiple
+    widget = AdjudicatorFeedbackCheckboxSelectMultiple
 
     def clean(self, value):
-        value = super(CustomMultipleChoiceField, self).clean(value)
+        value = super(AdjudicatorFeedbackCheckboxSelectMultipleField, self).clean(value)
         return m.AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(value)
 
 # ==============================================================================
@@ -187,15 +189,6 @@ class BallotSetForm(forms.Form):
     _LONG_NAME = {'aff': 'affirmative', 'neg': 'negative'}
 
     def __init__(self, ballots, *args, **kwargs):
-        """Dynamically generate fields for this ballot:
-         - password
-         - choose_sides,         if sides need to be chosen by the user
-         - motion,               if there is more than one motion
-         - aff/neg_motion_veto,  if motion vetoes are being noted, one for each team
-         - aff/neg_speaker_s#,   one for each speaker
-         - aff/neg_score_a#_s#,  one for each score
-        """
-
         self.ballots = ballots
         self.debate = ballots.debate
         self.adjudicators = self.debate.adjudicators.list
@@ -250,7 +243,15 @@ class BallotSetForm(forms.Form):
     # --------------------------------------------------------------------------
 
     def _create_fields(self):
-        """Creates dynamic fields in the form."""
+        """Dynamically generate fields for this ballot:
+         - password
+         - choose_sides,         if sides need to be chosen by the user
+         - motion,               if there is more than one motion
+         - aff/neg_motion_veto,  if motion vetoes are being noted, one for each team
+         - aff/neg_speaker_s#,   one for each speaker
+         - aff/neg_score_a#_s#,  one for each score
+        """
+
         dts = self.debate.debateteam_set.all()
 
         # 1. Tournament password field
@@ -648,6 +649,48 @@ class DebateResultFormSet(object):
 
 
 # ==============================================================================
+# Break eligbility form
+# ==============================================================================
+
+class BreakEligibilityForm(forms.Form):
+    """Sets which teams are eligible for the break."""
+
+    def __init__(self, tournament, *args, **kwargs):
+        super(BreakEligibilityForm, self).__init__(*args, **kwargs)
+        self.tournament = tournament
+        self._create_and_initialise_fields()
+
+    @staticmethod
+    def _fieldname_eligibility(team):
+        return 'eligibility_%(team)d' % {'team': team.id}
+
+    def _create_and_initialise_fields(self):
+        """Dynamically generate fields for this ballot, one
+        ModelMultipleChoiceField for each Team."""
+        for team in self.tournament.team_set.all():
+            self.fields[self._fieldname_eligibility(team)] = forms.ModelMultipleChoiceField(
+                    queryset=self.tournament.breakcategory_set.all(), widget=forms.CheckboxSelectMultiple,
+                    required=False)
+            self.initial[self._fieldname_eligibility(team)] = team.break_categories.all()
+
+    def save(self):
+        for team in self.tournament.team_set.all():
+            team.break_categories = self.cleaned_data[self._fieldname_eligibility(team)]
+            team.save()
+
+    def team_iter(self):
+        form = self # provide access to inner classes
+
+        class TeamWrapper(object):
+            def __init__(self, team):
+                self.team = team
+                self.eligibility = form[form._fieldname_eligibility(self.team)]
+
+        for team in self.tournament.team_set.all():
+            yield TeamWrapper(team)
+
+
+# ==============================================================================
 # Feedback forms
 # ==============================================================================
 
@@ -668,7 +711,7 @@ class BaseFeedbackForm(forms.Form):
 
     def _make_question_field(self, question):
         if question.answer_type == question.ANSWER_TYPE_BOOLEAN_SELECT:
-            field = BooleanSelectField(widget=CustomBooleanSelect)
+            field = BooleanSelectField()
         elif question.answer_type == question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
             field = forms.BooleanField()
         elif question.answer_type == question.ANSWER_TYPE_INTEGER_TEXTBOX:
@@ -693,7 +736,7 @@ class BaseFeedbackForm(forms.Form):
         elif question.answer_type == question.ANSWER_TYPE_SINGLE_SELECT:
             field = OptionalChoiceField(choices=question.choices_for_field)
         elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
-            field = CustomMultipleChoiceField(choices=question.choices_for_field)
+            field = AdjudicatorFeedbackCheckboxSelectMultipleField(choices=question.choices_for_field)
         field.label = question.text
         field.required = self._enforce_required and question.required
         return field
