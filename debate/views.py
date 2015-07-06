@@ -1,6 +1,6 @@
 from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.template import RequestContext, loader
+from django.template import Context, RequestContext, loader, Template
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
@@ -549,14 +549,18 @@ def action_log_update(request, t):
     import datetime
     now = datetime.datetime.now()
     action_objects = []
+    timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
     for a in actions:
-        elapsed = now - a.timestamp
-        action = {
-            'user': a.user.username or action.ip_address or "anonymous",
-            'type': a.get_type_display(),
-            'param': a.get_parameters_display(),
-            'timestamp': int(elapsed.total_seconds() / 60)
-        }
+        try:
+            action = {
+                'user': a.user.username or action.ip_address or "anonymous",
+                'type': a.get_type_display(),
+                'param': a.get_parameters_display(),
+                'timestamp': timestamp_template.render(Context({'t': a.timestamp})),
+            }
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
         action_objects.append(action)
 
     return HttpResponse(json.dumps(action_objects), content_type="text/json")

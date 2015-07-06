@@ -2279,11 +2279,11 @@ class ActionLog(models.Model):
             try:
                 value = getattr(self, field_name)
                 if field_name == 'ballot_submission':
-                    strings.append('%s vs %s' % (value.debate.aff_team, value.debate.neg_team))
+                    strings.append('%s vs %s' % (value.debate.aff_team.short_name, value.debate.neg_team.short_name))
                 elif field_name == 'debate':
-                    strings.append('%s vs %s' % (value.aff_team, value.neg_team))
+                    strings.append('%s vs %s' % (value.aff_team.short_name, value.neg_team.short_name))
                 elif field_name == 'round':
-                    strings.append('round %s' % value.seq)
+                    strings.append(value.name)
                 elif field_name == 'motion':
                     strings.append(value.reference)
                 elif field_name == 'adjudicator_test_score_history':
