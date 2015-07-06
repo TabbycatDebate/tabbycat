@@ -255,7 +255,7 @@ def break_eligibility(request, t):
             form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT,
                     user=request.user, tournament=t, ip_address=get_ip_address(request))
-            context['updated'] = True
+            messages.success(request, "Break eligibility saved.")
     else:
         form = forms.BreakEligibilityForm(t)
 
@@ -573,8 +573,8 @@ def tournament_config(request, t):
         form = make_config_form(t, request.POST)
         if form.is_valid():
             form.save()
-            context['updated'] = True
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_CONFIG_EDIT, user=request.user, tournament=t)
+            messages.success(request, "Tournament configuration saved.")
     else:
         form = make_config_form(t)
 
