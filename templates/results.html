@@ -85,7 +85,7 @@
               {% if ballotset.confirmed %}edit-ballot-link-confirmed{% endif %}
               {% if ballotset.discarded %}edit-ballot-link-discarded{% endif %}
             ">
-              {% if ballotset.confirmed %}Re-{% endif %}Edit
+              {% if ballotset.confirmed %}Re-edit{% else %}{% block edit-link %}Edit{% endblock %}{% endif %}
               {% if debate.ballotsubmission_set.count > 1%}
                 v{{ ballotset.version }}
               {% endif %}

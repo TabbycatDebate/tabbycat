@@ -1317,13 +1317,16 @@ def edit_ballotset(request, t, ballotsub_id):
 
             if ballotsub.discarded:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_DISCARD
+                messages.success(request, "Ballot set for %s discarded." % debate.matchup)
             elif ballotsub.confirmed:
                 ballotsub.confirmer = request.user
                 ballotsub.confirm_timestamp = datetime.datetime.now()
                 ballotsub.save()
                 action_type = ActionLog.ACTION_TYPE_BALLOT_CONFIRM
+                messages.success(request, "Ballot set for %s confirmed." % debate.matchup)
             else:
                 action_type = ActionLog.ACTION_TYPE_BALLOT_EDIT
+                messages.success(request, "Edits to ballot set for %s saved." % debate.matchup)
             ActionLog.objects.log(type=action_type, user=request.user,
                 ballot_submission=ballotsub, ip_address=get_ip_address(request), tournament=t)
 
@@ -1411,6 +1414,7 @@ def new_ballotset(request, t, debate_id):
             form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_CREATE, user=request.user,
                     ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
+            messages.success(request, "Ballot set for %s added." % debate.matchup)
             return redirect_round('results', debate.round)
     else:
         form = forms.BallotSetForm(ballotsub)
