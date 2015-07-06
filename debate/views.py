@@ -1941,7 +1941,7 @@ def adj_scores(request, t):
 
     return HttpResponse(json.dumps(data), content_type="text/json")
 
-@login_required
+@admin_required
 @tournament_view
 def adj_feedback(request, t):
     breaking_count = 0
@@ -1952,91 +1952,86 @@ def adj_feedback(request, t):
     else:
         adjudicators = Adjudicator.objects.all()
 
-    if not request.user.is_superuser:
-        template = 'assistant/assistant_adjudicator_feedback.html'
-    else:
-        template = 'adjudicator_feedback.html'
-        score_min = t.config.get('adj_min_score')
-        score_max = t.config.get('adj_max_score')
+    from debate.models import SpeakerScoreByAdj
+    all_debate_adjudicators = list(DebateAdjudicator.objects.select_related('adjudicator').all())
+    all_adj_scores = list(SpeakerScoreByAdj.objects.select_related('debate_adjudicator','ballot_submission').filter(
+        ballot_submission__confirmed=True))
 
-        from debate.models import SpeakerScoreByAdj
-        all_debate_adjudicators = list(DebateAdjudicator.objects.select_related('adjudicator').all())
-        all_adj_scores = list(SpeakerScoreByAdj.objects.select_related('debate_adjudicator','ballot_submission').filter(
-            ballot_submission__confirmed=True))
+    # Processing scores to get average margins
+    for adj in adjudicators:
+        adj_debateadjudications  = [a for a in all_debate_adjudicators if a.adjudicator is adj]
+        adj_scores = [s for s in all_adj_scores if s.debate_adjudicator is adj_debateadjudications]
 
-        # Processing scores to get average margins
-        for adj in adjudicators:
-            adj_debateadjudications  = [a for a in all_debate_adjudicators if a.adjudicator is adj]
-            adj_scores = [s for s in all_adj_scores if s.debate_adjudicator is adj_debateadjudications]
+        adj.debates = len(adj_debateadjudications)
+        if adj.breaking:
+            breaking_count += 1
 
-            adj.debates = len(adj_debateadjudications)
-            if adj.breaking:
-                breaking_count += 1
+        if len(adj_scores) > 0:
+            adj.avg_score = sum(s.score for s in adj_scores) / len(adj_scores)
 
-            if len(adj_scores) > 0:
-                adj.avg_score = sum(s.score for s in adj_scores) / len(adj_scores)
+            ballot_ids = []
+            ballot_margins = []
+            for score in adj_scores:
+                ballot_ids.append(score.ballot_submission)
 
-                ballot_ids = []
-                ballot_margins = []
-                for score in adj_scores:
-                    ballot_ids.append(score.ballot_submission)
+            ballot_ids = sorted(set([b.id for b in ballot_ids])) # Deduplication of ballot IDS
 
-                ballot_ids = sorted(set([b.id for b in ballot_ids])) # Deduplication of ballot IDS
+            for ballot_id in ballot_ids:
+                # For each unique ballot id, total its scores
+                single_round = adj_scores.filter(ballot_submission=ballot_id)
+                scores = [s.score for s in single_round] # TODO this is slow - should be prefetched
+                slice_end = len(scores)
+                teamA = sum(scores[:len(scores)/2])
+                teamB = sum(scores[len(scores)/2:])
+                ballot_margins.append(max(teamA, teamB) - min(teamA, teamB))
 
-                for ballot_id in ballot_ids:
-                    # For each unique ballot id, total its scores
-                    single_round = adj_scores.filter(ballot_submission=ballot_id)
-                    scores = [s.score for s in single_round] # TODO this is slow - should be prefetched
-                    slice_end = len(scores)
-                    teamA = sum(scores[:len(scores)/2])
-                    teamB = sum(scores[len(scores)/2:])
-                    ballot_margins.append(max(teamA, teamB) - min(teamA, teamB))
+            adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
 
-                adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
+        else:
+            adj.avg_score = None
+            adj.avg_margin = None
 
-            else:
-                adj.avg_score = None
-                adj.avg_margin = None
+    all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(confirmed=True).select_related(
+        'adjudicator', 'source_adjudicator__debate__round', 'source_team__debate__round'))
+    rounds = t.prelim_rounds(until=t.current_round)
 
-        all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(confirmed=True).select_related(
-            'adjudicator', 'source_adjudicator__debate__round', 'source_team__debate__round'))
-        rounds = t.prelim_rounds(until=t.current_round)
+    # Filtering/summing feedback by round for the graphs (faster than a model method)
+    for adj in adjudicators:
+        adj.rscores = []
+        adj_feedbacks = [f for f in all_adj_feedbacks if f.adjudicator == adj]
+        for r in rounds:
+            adj_round_feedbacks = [f for f in adj_feedbacks if (f.source_adjudicator and f.source_adjudicator.debate.round == r)]
+            adj_round_feedbacks.extend([f for f in adj_feedbacks if (f.source_team and f.source_team.debate.round == r)])
 
-        # Filtering/summing feedback by round for the graphs (faster than a model method)
-        for adj in adjudicators:
-            adj.rscores = []
-            adj_feedbacks = [f for f in all_adj_feedbacks if f.adjudicator == adj]
-            for r in rounds:
-                adj_round_feedbacks = [f for f in adj_feedbacks if (f.source_adjudicator and f.source_adjudicator.debate.round == r)]
-                adj_round_feedbacks.extend([f for f in adj_feedbacks if (f.source_team and f.source_team.debate.round == r)])
+            if len(adj_round_feedbacks) > 0:
+                # Getting the position of the adj
+                # We grab both so there is at least one valid debate, then lookup the debate adjudicator for that
+                debates = [fb.source_team.debate for fb in adj_round_feedbacks if fb.source_team]
+                debates.extend([fb.source_adjudicator.debate for fb in adj_round_feedbacks if fb.source_adjudicator])
+                adj_da = next((da for da in all_debate_adjudicators if (da.adjudicator == adj and da.debate == debates[0])), None)
 
-                if len(adj_round_feedbacks) > 0:
-                    # Getting the position of the adj
-                    # We grab both so there is at least one valid debate, then lookup the debate adjudicator for that
-                    debates = [fb.source_team.debate for fb in adj_round_feedbacks if fb.source_team]
-                    debates.extend([fb.source_adjudicator.debate for fb in adj_round_feedbacks if fb.source_adjudicator])
-                    adj_da = next((da for da in all_debate_adjudicators if (da.adjudicator == adj and da.debate == debates[0])), None)
+                if adj_da.type == adj_da.TYPE_CHAIR:
+                    adj_type = "Chair"
+                elif adj_da.type == adj_da.TYPE_PANEL:
+                    adj_type = "Panellist"
+                elif adj_da.type == adj_da.TYPE_TRAINEE:
+                    adj_type = "Trainee"
 
-                    if adj_da.type == adj_da.TYPE_CHAIR:
-                        adj_type = "Chair"
-                    elif adj_da.type == adj_da.TYPE_PANEL:
-                        adj_type = "Panellist"
-                    elif adj_da.type == adj_da.TYPE_TRAINEE:
-                        adj_type = "Trainee"
+                # Average their scores for that round
+                totals = [f.score for f in adj_round_feedbacks]
+                average = sum(totals) / len(totals)
 
-                    # Average their scores for that round
-                    totals = [f.score for f in adj_round_feedbacks]
-                    average = sum(totals) / len(totals)
+                # Creating the object list for the graph
+                adj.rscores.append([r.seq, average, adj_type])
 
-                    # Creating the object list for the graph
-                    adj.rscores.append([r.seq, average, adj_type])
-
-    feedback_headings = [q.name for q in t.adj_feedback_questions]
-
-    return r2r(request, template, dict(
-        adjudicators=adjudicators, breaking_count=breaking_count,
-        feedback_headings=feedback_headings,
-        score_min=score_min, score_max=score_max))
+    context = {
+        'adjudicators'      : adjudicators,
+        'breaking_count'    : breaking_count,
+        'feedback_headings' : [q.name for q in t.adj_feedback_questions],
+        'score_min'         : t.config.get('adj_min_score'),
+        'score_max'         : t.config.get('adj_max_score'),
+    }
+    return r2r(request, 'adjudicator_feedback.html', context)
 
 
 @login_required
@@ -2186,7 +2181,7 @@ def enter_feedback(request, t, source_type, source_id):
     ip_address = get_ip_address(request)
     submission_fields = {
         'submitter_type': AdjudicatorFeedback.SUBMITTER_TABROOM,
-        'user'          : request.user,
+        'submitter'     : request.user,
         'ip_address'    : ip_address
     }
     FormClass = forms.make_feedback_form_class(source, submission_fields,
@@ -2197,7 +2192,9 @@ def enter_feedback(request, t, source_type, source_id):
         if form.is_valid():
             adj_feedback = form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
-                user=request.user, adjudicator_feedback=adj_feedback, tournament=t)
+                    user=request.user, adjudicator_feedback=adj_feedback, tournament=t)
+            messages.success(request, "Feedback from %s on %s added." %
+                    (adj_feedback.source, adj_feedback.adjudicator))
             return redirect_tournament('add_feedback', t)
     else:
         form = FormClass()
@@ -2208,9 +2205,16 @@ def enter_feedback(request, t, source_type, source_id):
 @login_required
 @tournament_view
 def add_feedback(request, t):
-    adjudicators = Adjudicator.objects.all()
-    teams = Team.objects.all()
-    return r2r(request, 'adjudicator_feedback_add.html', dict(adjudicators=adjudicators, teams=teams))
+    context = {
+        'adjudicators' : t.adjudicator_set.all() if not t.config.get('share_adjs')
+                         else Adjudicator.objects.all(),
+        'teams'        : t.team_set.all(),
+    }
+    if request.user.is_superuser:
+        template = 'adjudicator_feedback_add.html'
+    else:
+        template = 'assistant/assistant_adjudicator_feedback.html'
+    return r2r(request, template, context)
 
 @admin_required
 @round_view

@@ -1819,7 +1819,7 @@ class AdjudicatorFeedback(Submission):
     @property
     def source(self):
         if self.source_adjudicator:
-            return self.source_adjudicator.adjudicator
+            return self.source_adjudicator.adjudicator.name
         if self.source_team:
             return self.source_team.team.short_name
 
