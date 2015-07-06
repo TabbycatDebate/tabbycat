@@ -551,16 +551,12 @@ def action_log_update(request, t):
     action_objects = []
     timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
     for a in actions:
-        try:
-            action = {
-                'user': a.user.username or action.ip_address or "anonymous",
-                'type': a.get_type_display(),
-                'param': a.get_parameters_display(),
-                'timestamp': timestamp_template.render(Context({'t': a.timestamp})),
-            }
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
+        action = {
+            'user': a.user.username or action.ip_address or "anonymous",
+            'type': a.get_type_display(),
+            'param': a.get_parameters_display(),
+            'timestamp': timestamp_template.render(Context({'t': a.timestamp})),
+        }
         action_objects.append(action)
 
     return HttpResponse(json.dumps(action_objects), content_type="text/json")
