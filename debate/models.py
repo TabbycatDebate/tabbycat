@@ -11,6 +11,7 @@ from django.utils.functional import cached_property
 from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
 from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
+import standings
 
 from warnings import warn
 from threading import BoundedSemaphore
@@ -225,146 +226,10 @@ class Institution(models.Model):
         else:
             return self.code[:5]
 
-
-def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
-    """Accepts a QuerySet, returns a list.
-    If 'shuffle' is True, it shuffles the list before sorting so that teams that
-    are equal are in random order. This should be turned on for draw generation,
-    and turned off for display."""
-    # This is what might be more concisely expressed, if it were permissible
-    # in Django, as:
-    # teams = teams.annotate_if(
-    #     dict(points = models.Count('debateteam__teamscore__points'),
-    #     speaker_score = models.Count('debateteam__teamscore__score')),
-    #     dict(debateteam__teamscore__ballot_submission__confirmed = True)
-    # )
-    # That is, it adds up all the wins and points of each team on CONFIRMED
-    # ballots and adds them as columns to the table it returns.
-    # The standings include only preliminary rounds.
-
-    EXTRA_QUERY = """
-        SELECT DISTINCT SUM({field:s})
-        FROM "debate_teamscore"
-        JOIN "debate_ballotsubmission" ON "debate_teamscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-        JOIN "debate_debateteam" ON "debate_teamscore"."debate_team_id" = "debate_debateteam"."id"
-        JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-        JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-        WHERE "debate_ballotsubmission"."confirmed" = True
-        AND "debate_debateteam"."team_id" = "debate_team"."id"
-        AND "debate_round"."stage" = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
-
-    if round is not None:
-        EXTRA_QUERY += """AND "debate_round"."seq" <= {round:d}""".format(round=round.seq)
-
-    teams = teams.extra({
-        "points": EXTRA_QUERY.format(field="points"),
-        "speaker_score": EXTRA_QUERY.format(field="score"),
-        "margins": EXTRA_QUERY.format(field="margin"),
-    }).distinct()
-
-    # Extract which rule to use from the tournament config
-    if round is not None and tournament is None:
-        tournament = round.tournament
-    if tournament is None:
-        raise TypeError("A tournament or a round must be specified.")
-    rule = tournament.config.get('team_standings_rule')
-
-    if rule == "australs":
-
-        if shuffle:
-            sorted_teams = list(teams)
-            random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
-            sorted_teams.sort(key=lambda x: (x.points, x.speaker_score), reverse=True)
-            return sorted_teams
-        else:
-            teams = teams.order_by("-points", "-speaker_score")
-            return list(teams)
-
-    elif rule == "nz":
-
-        # Add draw strength annotation.
-        for team in teams:
-            draw_strength = 0
-            # Find all teams that they've faced.
-            debateteam_set = team.debateteam_set.all()
-            if round is not None:
-                debateteam_set = debateteam_set.filter(debate__round__seq__lte=round.seq)
-            for dt in debateteam_set:
-                # Can't just use dt.opposition.team.points, as dt.opposition.team isn't annotated.
-                draw_strength += teams.get(id=dt.opposition.team.id).points
-            team.draw_strength = draw_strength
-
-        def who_beat_whom(team1, team2):
-            """Returns a positive value if team1 won more debates, a negative value
-            if team2 won more, 0 if the teams won the same number against each other
-            or haven't faced each other."""
-            # Find all debates between these two teams
-            def get_wins(team, other):
-                ts =  TeamScore.objects.filter(
-                    ballot_submission__confirmed=True,
-                    debate_team__team=team,
-                    debate_team__debate__debateteam__team=other).aggregate(models.Sum('points'))
-                return ts["points__sum"]
-            wins1 = get_wins(team1, team2)
-            wins2 = get_wins(team2, team1)
-            # Print this to the logs, just so we know it happened
-            print "who beat whom, {0} vs {1}: {2} wins against {3}".format(team1, team2, wins1, wins2)
-            return cmp(wins1, wins2)
-
-        def cmp_teams(team1, team2):
-            """Returns 1 if team1 ranks ahead of team2, -1 if team2 ranks ahead of team1,
-            and 0 if they rank the same. Requires access to teams, so that it knows whether
-            it can apply who-beat-whom."""
-            # If there are only two teams on this number of points, or points/speakers,
-            # or points/speaks/draw-strength, then use who-beat-whom.
-            def two_teams_left(key):
-                return key(team1) == key(team2) and len(filter(lambda x: key(x) == key(team1), teams)) == 2
-            if two_teams_left(lambda x: x.points) or two_teams_left(lambda x: (x.points, x.speaker_score)) \
-                    or two_teams_left(lambda x: (x.points, x.speaker_score, x.draw_strength)):
-                winner = who_beat_whom(team1, team2)
-                if winner != 0: # if this doesn't help, keep going
-                    return winner
-            key = lambda x: (x.points, x.speaker_score, x.draw_strength)
-            return cmp(key(team1), key(team2))
-
-        sorted_teams = list(teams)
-        if shuffle:
-            random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
-        sorted_teams.sort(cmp=cmp_teams, reverse=True)
-        return sorted_teams
-
-    elif rule == "wadl":
-        # Sort by points
-        teams = teams.order_by("-points", "-margins", "-speaker_score")
-        teams = [t for t in teams if t.margins > 0]
-
-        final_teams = []
-
-        # Sort by division rank
-        divisions = Division.objects.filter(tournament=tournament)
-        for division in divisions:
-            division_teams = [t for t in teams if t.division == division]
-            if division_teams:
-                for i, team in enumerate(division_teams):
-                    team.division_rank = i + 1 # Assign their in-division rank
-
-                 # Division winners go straight through
-                final_teams.append(division_teams[0])
-                teams.pop(0)
-
-        # Sort division winners
-        final_teams = sorted(final_teams, key = lambda x: (-x.points, -x.margins, -x.speaker_score))
-
-        # Add back on the non-division winners
-        final_teams.extend(teams)
-
-        return final_teams
-
-    else:
-        raise ValueError("Invalid team_standings_rule option: {0}".format(rule))
-
-
 class TeamManager(models.Manager):
+
+    def get_queryset(self):
+        return super(TeamManager, self).get_queryset().select_related('institution')
 
     def lookup(self, name, **kwargs):
         """Queries for a team with a matching name."""
@@ -378,136 +243,29 @@ class TeamManager(models.Manager):
         institution = Institution.objects.lookup(institution_name)
         return self.get(institution=institution, reference=reference, **kwargs)
 
+    def _teams_for_standings(self, round):
+        return self.filter(debateteam__debate__round__seq__lte=round.seq,
+            tournament=round.tournament).select_related('institution')
+
     def standings(self, round):
         """Returns a list."""
-        teams = self.filter(
-            tournament = round.tournament,
-            debateteam__debate__round__seq__lte = round.seq,
-        ).select_related('institution')
-        return annotate_team_standings(teams, round)
+        teams = self._teams_for_standings(round)
+        return standings.annotate_team_standings(teams, round)
 
     def ranked_standings(self, round):
         """Returns a list."""
-
-        teams = self.standings(round)
-
-        prev_rank_value = (None, None)
-        current_rank = 0
-        for i, team in enumerate(teams, start=1):
-            rank_value = (team.points, team.speaker_score)
-            if rank_value != prev_rank_value:
-                current_rank = i
-                prev_rank_value = rank_value
-            team.rank = current_rank
-
-        return teams
+        teams = self._teams_for_standings(round)
+        return standings.ranked_team_standings(teams, round)
 
     def division_standings(self, round):
         """Returns a list."""
-
-        teams = self.standings(round)
-
-        prev_rank_value = (None, None)
-        current_rank = 0
-        for i, team in enumerate(teams, start=1):
-            rank_value = (team.points, team.margins, team.speaker_score)
-            if rank_value != prev_rank_value:
-                current_rank = i
-                prev_rank_value = rank_value
-            team.rank = current_rank
-
-        return teams
+        teams = self._teams_for_standings(round)
+        return standings.division_ranked_team_standings(teams, round)
 
     def subrank_standings(self, round):
         """Returns a list."""
-        teams = self.standings(round)
-
-        prev_rank_value = None
-        prev_points = None
-        current_rank = 0
-        counter = 0
-        for team in teams:
-            if team.points != prev_points:
-                counter = 1
-                prev_points = team.points
-            rank_value = team.speaker_score
-            if rank_value != prev_rank_value:
-                current_rank = counter
-                prev_rank_value = rank_value
-            team.subrank = current_rank
-            counter += 1
-
-        return teams
-
-    # def breaking_teams(self, tournament, category='open'):
-    #     """Returns a list."""
-
-    #     FILTER_ARGS = {
-    #         'open': dict(),
-    #     }
-    #     filterargs = FILTER_ARGS[category]
-
-    #     teams = self.filter(tournament=tournament, **filterargs)
-    #     teams = annotate_team_standings(teams)
-
-    #     BREAK_SIZE_CONFIG_OPTIONS = {
-    #         'open': 'break_size',
-    #     }
-    #     break_size = tournament.config.get(BREAK_SIZE_CONFIG_OPTIONS[category])
-    #     institution_cap = tournament.config.get('institution_cap')
-
-    #     prev_rank_value = (None, None)
-    #     current_rank = 0
-    #     breaking_teams = list()
-
-    #     # Variables for insutitional caps and non-breaking teams:
-    #     current_break_rank = 0
-    #     current_break_seq = 0
-    #     from collections import Counter
-    #     teams_from_institution = Counter()
-
-    #     for i, team in enumerate(teams, start=1):
-
-    #         # Overall rank
-    #         rank_value = (team.points, team.speaker_score)
-    #         new_rank = rank_value != prev_rank_value
-    #         if new_rank:
-    #             current_rank = i
-    #             prev_rank_value = rank_value
-    #         team.rank = current_rank
-
-
-    #         # Increment current_break_seq if it won't violate institution cap
-    #         if institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
-    #             if new_rank and current_break_rank == break_size:
-    #                 break
-    #             team.break_rank = "- (Capped)"
-    #         elif team.cannot_break == True:
-    #             if new_rank and current_break_rank == break_size:
-    #                 break
-    #             team.break_rank = "- (Ineligible)"
-    #         else:
-    #             current_break_seq += 1
-    #             if new_rank:
-    #                 if current_break_rank == break_size:
-    #                     break
-    #                 current_break_rank = current_break_seq
-    #             team.break_rank = current_break_rank
-
-    #         if current_break_rank > break_size:
-    #             break
-
-    #         # Take note of the institution
-    #         teams_from_institution[team.institution] += 1
-
-    #         breaking_teams.append(team)
-
-    #     return breaking_teams
-
-
-    def get_queryset(self):
-        return super(TeamManager, self).get_queryset().select_related('institution')
-
+        teams = self._teams_for_standings(round)
+        return standings.subranked_team_standings(teams, round)
 
 
 class Division(models.Model):
@@ -1003,7 +761,7 @@ class Round(models.Model):
             teams = draw_teams
             draw_type = "manual"
         elif self.draw_type == self.DRAW_POWERPAIRED:
-            teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
+            teams = standings.annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts" : "draw_avoid_conflicts",
