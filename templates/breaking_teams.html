@@ -6,6 +6,17 @@
 {% block page-title %}{{ category.name }} Break{% endblock %}
 {% block body-class %}breaking-teams-{{ category.slug }}{% endblock %}
 
+{% block header %}
+  {% if request.user.is_superuser %}
+  <div class="alert alert-warning">
+    Please double-check this before announcing the break or releasing it to the
+    public. The code that generates the break has not been robustly tested for
+    corner cases. If there are errors, please take a snapshot of the database
+    and a screenshot and send it to the developers.
+  </div>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
     <thead>

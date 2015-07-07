@@ -213,10 +213,10 @@ def public_break_index(request, t):
 @public_optional_tournament_view('public_breaking_teams')
 def public_breaking_teams(request, t, category):
     bc = get_object_or_404(BreakCategory, slug=category)
-    teams = compute_breaking_teams(bc)
+    teams = compute_breaking_teams(bc, include_all=True)
     if t.config.get('public_break_categories'):
         for team in teams:
-            categories = team.break_categories_nongeneral.exclude(id=bc.id)
+            categories = team.break_categories_nongeneral.exclude(id=bc.id).exclude(priority__lt=bc.priority)
             team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
     else:
         for team in teams:
@@ -227,7 +227,7 @@ def public_breaking_teams(request, t, category):
 @tournament_view
 def breaking_teams(request, t, category):
     bc = get_object_or_404(BreakCategory, slug=category)
-    teams = compute_breaking_teams(bc)
+    teams = compute_breaking_teams(bc, include_all=True)
     for team in teams:
         categories = team.break_categories_nongeneral.exclude(id=bc.id)
         team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
