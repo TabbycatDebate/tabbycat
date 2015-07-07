@@ -97,7 +97,7 @@ $(document).ready( function() {
       xaxis: {
         min: -10,
         max: 0,
-        tickSize: 0.5,
+        tickSize: 1,
         tickDecimals: 1,
         tickFormatter: formatter
       },
@@ -123,11 +123,11 @@ $(document).ready( function() {
           console.log(object);
           new_actions.push( "\
             <li class='list-group-item'>" + "\
-            <span class='badge'>" + object["timestamp"] + " minutes ago</span>" + "\
-            <strong>" + object['user'] + "</strong> -" + "\
-            <em>" + object['type'] + " for " +
-            object['param'] + "</em>\
-            </li>" );
+            <span class='badge'>" + object["timestamp"] + "</span>" + "\
+            <strong>" + object['user'] + "</strong>" + "\
+            <em>" + object['type'] +
+            ((object['param']) ? (" for " + object['param']) : "") +
+            "</em></li>" );
         });
         // Remove existing items and re-add the new ones
         $("#actions_list li").remove()

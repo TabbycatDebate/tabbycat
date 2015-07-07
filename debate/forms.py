@@ -174,10 +174,10 @@ class AdjudicatorFeedbackCheckboxSelectMultipleField(forms.MultipleChoiceField):
 # ==============================================================================
 
 class BallotSetForm(forms.Form):
-    """Form for data entry for a single set of ballots. Responsible for
-    presenting the part that looks like a ballot, i.e. speaker names and scores
-    for each adjudicator. Not responsible for controls that submit the form or
-    anything like that.
+    """Form for data entry for a single ballot set. Responsible for presenting
+    the part that looks like a ballot, i.e. speaker names and scores for each
+    adjudicator. Not responsible for controls that submit the form or anything
+    like that.
     """
 
     confirmed = forms.BooleanField(required=False)
@@ -188,9 +188,9 @@ class BallotSetForm(forms.Form):
     SIDES = ['aff', 'neg']
     _LONG_NAME = {'aff': 'affirmative', 'neg': 'negative'}
 
-    def __init__(self, ballots, *args, **kwargs):
-        self.ballots = ballots
-        self.debate = ballots.debate
+    def __init__(self, ballotsub, *args, **kwargs):
+        self.ballotsub = ballotsub
+        self.debate = ballotsub.debate
         self.adjudicators = self.debate.adjudicators.list
         self.motions = self.debate.round.motion_set
         self.tournament = self.debate.round.tournament
@@ -309,14 +309,15 @@ class BallotSetForm(forms.Form):
     def _initial_data(self):
         """Generates dictionary of initial form data."""
 
-        bs = BallotSet(self.ballots)
+        ballotset = BallotSet(self.ballotsub)
         initial = {'debate_result_status': self.debate.result_status,
-                'confirmed': bs.confirmed, 'discarded': bs.discarded}
+                'confirmed': ballotset.confirmed, 'discarded': ballotset.discarded}
 
-        # HACK: Check here to see if self.ballots has been saved -- if it's not,
-        # then it's a new ballots form, and choose_sides should not be populated
-        # with an initial value.
-        if self.choosing_sides and self.ballots.pk is not None:
+        # HACK: Check here to see if self.ballotsub has been saved -- if it's not,
+        # then it's a new ballot set, and choose_sides should not be populated
+        # with an initial value. Fix when models support a proper "no side
+        # assigned" state (it currently doesn't).
+        if self.choosing_sides and self.ballotsub.pk is not None:
             try:
                 initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)
             except m.DebateTeam.DoesNotExist:
@@ -326,19 +327,19 @@ class BallotSetForm(forms.Form):
         # But if there is only one motion and no motion is currently stored in
         # the database for this round, then default to the only motion there is.
         if self.using_motions:
-            if not bs.motion and self.motions.count() == 1:
+            if not ballotset.motion and self.motions.count() == 1:
                 initial['motion'] = self.motions.get()
             else:
-                initial['motion'] = bs.motion
+                initial['motion'] = ballotset.motion
             for side in self.SIDES:
-                initial[self._fieldname_motion_veto(side)] = bs.get_motion_veto(side)
+                initial[self._fieldname_motion_veto(side)] = ballotset.get_motion_veto(side)
 
         for side, pos in self.SIDES_AND_POSITIONS:
-            speaker = bs.get_speaker(side, pos)
+            speaker = ballotset.get_speaker(side, pos)
             if speaker:
                 initial[self._fieldname_speaker(side, pos)] = speaker.pk
                 for adj in self.adjudicators:
-                    score = bs.get_score(adj, side, pos)
+                    score = ballotset.get_score(adj, side, pos)
                     initial[self._fieldname_score(adj, side, pos)] = score
 
         return initial
@@ -476,7 +477,7 @@ class BallotSetForm(forms.Form):
 
         # 1. Unconfirm the other, if necessary
         if self.cleaned_data['confirmed']:
-            if self.debate.confirmed_ballot != self.ballots and self.debate.confirmed_ballot is not None:
+            if self.debate.confirmed_ballot != self.ballotsub and self.debate.confirmed_ballot is not None:
                 self.debate.confirmed_ballot.confirmed = False
                 self.debate.confirmed_ballot.save()
 
@@ -486,37 +487,37 @@ class BallotSetForm(forms.Form):
                 forfeiter = self.debate.aff_dt
             if self.cleaned_data['forfeits'] == "neg_forfeit":
                 forfeiter = self.debate.neg_dt
-            bs = ForfeitBallotSet(self.ballots, forfeiter)
+            ballotset = ForfeitBallotSet(self.ballotsub, forfeiter)
         else:
-            bs = BallotSet(self.ballots)
+            ballotset = BallotSet(self.ballotsub)
 
         # 3. Save the sides
         if self.choosing_sides:
-            bs.set_sides(*self.cleaned_data['choose_sides'])
+            ballotset.set_sides(*self.cleaned_data['choose_sides'])
 
         # 4. Save motions
         if self.using_motions:
-            bs.motion = self.cleaned_data['motion']
+            ballotset.motion = self.cleaned_data['motion']
 
         if self.using_vetoes:
             for side in self.SIDES:
                 motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)]
-                bs.set_motion_veto(side, motion_veto)
+                ballotset.set_motion_veto(side, motion_veto)
 
         # 5. Save speaker fields
         if not self.forfeit_declared:
             print "saving speaker fields"
             for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
-                bs.set_speaker(side, pos, speaker)
+                ballotset.set_speaker(side, pos, speaker)
                 for adj in self.adjudicators:
                     score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
-                    bs.set_score(adj, side, pos, score)
+                    ballotset.set_score(adj, side, pos, score)
 
         # 6. Save status fields
-        bs.discarded = self.cleaned_data['discarded']
-        bs.confirmed = self.cleaned_data['confirmed']
-        bs.save()
+        ballotset.discarded = self.cleaned_data['discarded']
+        ballotset.confirmed = self.cleaned_data['confirmed']
+        ballotset.save()
 
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()

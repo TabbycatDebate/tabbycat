@@ -1480,26 +1480,26 @@ class Debate(models.Model):
 
     @property
     def ballotsubmission_set_by_version(self):
-        return self.ballotsubmission_set.all().order_by('version')
+        return self.ballotsubmission_set.order_by('version')
 
     @property
     def ballotsubmission_set_by_version_except_discarded(self):
         return self.ballotsubmission_set.filter(discarded=False).order_by('version')
 
     @property
-    def identical_ballots_dict(self):
+    def identical_ballotsubs_dict(self):
         """Returns a dict. Keys are BallotSubmissions, values are lists of
         version numbers of BallotSubmissions that are identical to the key's
         BallotSubmission. Excludes discarded ballots (always)."""
-        ballots = self.ballotsubmission_set_by_version_except_discarded
-        result = {b: list() for b in ballots}
-        for ballot1 in ballots:
+        ballotsubs = self.ballotsubmission_set_by_version_except_discarded
+        result = {b: list() for b in ballotsubs}
+        for ballotsub1 in ballotsubs:
             # Save a bit of time by avoiding comparisons already done.
             # This relies on ballots being ordered by version.
-            for ballot2 in ballots.filter(version__gt=ballot1.version):
-                if ballot1.is_identical(ballot2):
-                    result[ballot1].append(ballot2.version)
-                    result[ballot2].append(ballot1.version)
+            for ballotsub2 in ballotsubs.filter(version__gt=ballotsub1.version):
+                if ballotsub1.is_identical(ballotsub2):
+                    result[ballotsub1].append(ballotsub2.version)
+                    result[ballotsub2].append(ballotsub1.version)
         for l in result.itervalues():
             l.sort()
         return result
@@ -1656,7 +1656,7 @@ class Submission(models.Model):
 
     submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted") # only relevant if submitter was in tab room
     confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed")
-    confirm_timestamp = models.DateTimeField()
+    confirm_timestamp = models.DateTimeField(blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     version_semaphore = BoundedSemaphore()
@@ -1819,7 +1819,7 @@ class AdjudicatorFeedback(Submission):
     @property
     def source(self):
         if self.source_adjudicator:
-            return self.source_adjudicator.adjudicator
+            return self.source_adjudicator.adjudicator.name
         if self.source_team:
             return self.source_team.team.short_name
 
@@ -2064,18 +2064,18 @@ class MotionManager(models.Manager):
         else:
             motions = self.select_related('round').filter(round__seq__lte=round.seq, round__tournament=round.tournament)
 
-        ballots = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
+        ballotsubs = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
         team_scores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
 
         for motion in motions:
-            motion_ballots = [b for b in ballots if b.motion == motion]
+            motion_ballotsubs = [b for b in ballotsubs if b.motion == motion]
 
             motion.aff_wins, motion.aff_wins_percent = 0, 0
             motion.neg_wins, motion.neg_wins_percent = 0, 0
-            motion.chosen_in = len(motion_ballots)
+            motion.chosen_in = len(motion_ballotsubs)
 
             if motion.chosen_in > 0:
-                for ballot in motion_ballots:
+                for ballot in motion_ballotsubs:
                     # Find the team score the matches, return none otherwise
                     teamscore = next((x for x in team_scores if x.ballot_submission == ballot), None)
                     debate_team = teamscore.debate_team
@@ -2279,11 +2279,11 @@ class ActionLog(models.Model):
             try:
                 value = getattr(self, field_name)
                 if field_name == 'ballot_submission':
-                    strings.append('%s vs %s' % (value.debate.aff_team, value.debate.neg_team))
+                    strings.append('%s vs %s' % (value.debate.aff_team.short_name, value.debate.neg_team.short_name))
                 elif field_name == 'debate':
-                    strings.append('%s vs %s' % (value.aff_team, value.neg_team))
+                    strings.append('%s vs %s' % (value.aff_team.short_name, value.neg_team.short_name))
                 elif field_name == 'round':
-                    strings.append('round %s' % value.seq)
+                    strings.append(value.name)
                 elif field_name == 'motion':
                     strings.append(value.reference)
                 elif field_name == 'adjudicator_test_score_history':
