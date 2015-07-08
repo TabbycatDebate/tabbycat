@@ -160,29 +160,23 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
     elif rule == "wadl":
         # Sort by points
         teams = teams.order_by("-points", "-margins", "-speaker_score")
-        teams = [t for t in teams if t.margins > 0]
+        print "%s total teams" % len(teams)
+        teams = [t for t in teams if (t.margins != 0 and t.points > 0)]
 
-        final_teams = []
+        print "%s culled teams" % len(teams)
 
         # Sort by division rank
         divisions = tournament.division_set.all()
         for division in divisions:
-            division_teams = [t for t in teams if t.division == division]
-            if division_teams:
-                for i, team in enumerate(division_teams):
-                    team.division_rank = i + 1 # Assign their in-division rank
-
-                 # Division winners go straight through
-                final_teams.append(division_teams[0])
-                teams.pop(0)
+            rank_count = 1
+            for team in teams:
+                if team.division == division:
+                    team.division_rank = rank_count # Assign their in-division rank
+                    rank_count = rank_count + 1
 
         # Sort division winners
-        final_teams = sorted(final_teams, key = lambda x: (-x.points, -x.margins, -x.speaker_score))
-
-        # Add back on the non-division winners
-        final_teams.extend(teams)
-
-        return final_teams
+        #final_teams = sorted(teams, key = lambda x: (-x.points, -x.margins, -x.speaker_score))
+        return teams
 
     else:
         raise ValueError("Invalid team_standings_rule option: {0}".format(rule))
