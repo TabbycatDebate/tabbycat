@@ -337,9 +337,9 @@ def annotate_team_standings(teams, round=None, shuffle=False):
 
     elif rule == "wadl":
         # Sort by points
-        teams = teams.order_by("-points", "-margins", "-speaker_score")
-        teams = [t for t in teams if t.margins > 0]
 
+        teams = [t for t in teams if t.margins > 0]
+        teams = sorted(teams, key = lambda x: (-x.points, -x.margins, -x.speaker_score))
         final_teams = []
 
         # Sort by division rank
@@ -350,15 +350,17 @@ def annotate_team_standings(teams, round=None, shuffle=False):
                 for i, team in enumerate(division_teams):
                     team.division_rank = i + 1 # Assign their in-division rank
 
-                 # Division winners go straight through
+                # Division winners go straight through
                 final_teams.append(division_teams[0])
-                teams.pop(0)
+                teams.remove(division_teams[0])
 
         # Sort division winners
         final_teams = sorted(final_teams, key = lambda x: (-x.points, -x.margins, -x.speaker_score))
 
         # Add back on the non-division winners
         final_teams.extend(teams)
+        # for team in final_teams:
+        #     print team
 
         return final_teams
 

@@ -56,7 +56,7 @@
           <td>{{ team.points }}</td>
         {% endif %}
         {% if show_avg_margin %}
-          <td>{{ team.avg_margin|stringformat:".2f" }}</td>
+          <td>{{ team.avg_margin|stringformat:".2f" }} / {{ team.margins }}</td>
         {% endif %}
         <td>{{ team.division.name }}</td>
         <td>
