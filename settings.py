@@ -48,6 +48,7 @@ ROOT_URLCONF = 'urls'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
+    "django.contrib.messages.context_processors.messages",
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
@@ -66,6 +67,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.messages',
     'debate',
     'compressor',
     'cachalot',
@@ -77,7 +79,7 @@ LOGIN_REDIRECT_URL = '/'
 # = Caching =
 # =========
 
-PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60 * 10))
+PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60 * 1))
 TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120))
 
 # Default non-heroku cache is to use local memory
@@ -88,7 +90,7 @@ CACHES = {
     }
 }
 
-# Caching enabled for templtaes
+# Caching enabled for templates
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', (
         'django.template.loaders.filesystem.Loader',

@@ -62,9 +62,7 @@
         <td>
           <span class="team team-speakers-hover" id="team_speakers_{{ team.id }}">
             {{ team.short_name }}
-            {% if team.type == 'E' %}
-              <span class="esl">(esl)</span>
-            {% endif %}
+            {{ team.break_categories_str }}
           </span>
         </td>
         {% if show_institutions > 0 %}

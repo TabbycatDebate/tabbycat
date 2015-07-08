@@ -1,7 +1,0 @@
-"seq","reference","name","text","answer_type","required","team_on_orallist","chair_on_panel","panel_on_chair","panel_on_panel"
-1,"agree","Agree","Did you agree with the decision?","boolean",1,1,1,1,1
-2,"adjustment","Adjustment","What adjustment should be applied to this judge's speaker scores?","float",1,1,1,1,1
-3,"word","One word","Choose one word to describe this adjudicator.","text",1,1,1,1,1
-4,"promote","Promote","Do you think this adjudicator should be promoted?","bool",0,1,1,1,1
-5,"demote","Demote","Do you think this adjudicator should be demoted?","bool",0,1,1,1,1
-6,"comments","Comments","Other comments:","textbox",0,1,1,1,1

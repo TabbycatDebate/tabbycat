@@ -8,7 +8,7 @@
   {% elif round.draw_status == 1 %}Draft
   {% elif round.draw_status == 10 %}Confirmed
   {% elif round.draw_status == 99 %}Released
-  </small>{% endif %}
+   {% endif %} (this page will refresh its data automatically)</small>
 {% endblock %}
 {% block page-title %}Dashboard{% endblock %}
 {% block body-class %}dash{% endblock %}
@@ -27,24 +27,7 @@
     </div>
     <div class="col-sm-6">
       <h4 class="text-center">Latest Actions</h4>
-      <ul class="list-group">
-        {% for action in actions %}
-        <li class="list-group-item">
-          <span class="badge">{{ action.timestamp|timesince }} ago</span>
-          <strong>
-          {% if action.user.username %}
-            {{ action.user.username }}
-          {% elif action.ip_address %}
-            {{ action.ip_address }}
-          {% else %}
-            anonymous
-          {% endif %}
-          </strong>
-          <em>{{ action.get_type_display }} -
-          {{ action.get_parameters_display }}</em>
-        </li>
-        {% endfor %}
-      </ul>
+      <ul class="list-group" id="actions_list"></ul>
     </div>
   </div>
 {% endblock content %}
@@ -114,13 +97,47 @@ $(document).ready( function() {
       xaxis: {
         min: -10,
         max: 0,
-        tickSize: 0.5,
+        tickSize: 1,
         tickDecimals: 1,
         tickFormatter: formatter
       },
     });
 
   updateData();
+
+  function updateActions() {
+    plot.setData(getLatestActions());
+    // Since the axes don't change, we don't need to call plot.setupGrid()
+    setTimeout(updateActions, updateInterval);
+  }
+
+  function getLatestActions() {
+    $.ajax({
+      type: "GET",
+      url: "{% tournament_url action_log_update %}",
+      success: function(data, status) {
+        console.log(data);
+        var new_actions = [];
+        // Build new LI items
+        $.each( data, function(index, object ) {
+          console.log(object);
+          new_actions.push( "\
+            <li class='list-group-item'>" + "\
+            <span class='badge'>" + object["timestamp"] + "</span>" + "\
+            <strong>" + object['user'] + "</strong>" + "\
+            <em>" + object['type'] +
+            ((object['param']) ? (" for " + object['param']) : "") +
+            "</em></li>" );
+        });
+        // Remove existing items and re-add the new ones
+        $("#actions_list li").remove()
+        $("#actions_list").html(new_actions.join( "" ));
+      },
+    });
+    return plotData
+  }
+
+  updateActions();
 
 });
 

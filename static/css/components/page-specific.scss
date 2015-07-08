@@ -16,6 +16,12 @@
   text-align: left;
 }
 
+// Feedback Page
+
+.adj-feedback.table > tbody > tr > td {
+  line-height: 32px; // compensates for the graph
+}
+
 // Edit Adjs and Edit Venues Page
 
 .edit-venues, .edit-adjs, .edit-matchups {
@@ -29,7 +35,7 @@
     padding-left: 5px;
   }
 
-  .table > tbody > tr > td {
+  .extra-line-height > tbody > tr > td {
     line-height: 26px; // Align text with boxes
   }
 
@@ -113,8 +119,8 @@
   .ui-droppable {
     height: 44px;
   }
-  .panel-holder, .chair-holder {
-    padding: 5px;
+  .panel-holder, .chair-holder, .team-holder, .venue-holder {
+    padding: 5px; // Reduce padding for droppable areas
   }
 
   .venue, .adj, .team {
@@ -144,14 +150,6 @@
   }
   .gender-display.female {
     background-color: #D600FF;
-    color: #fff;
-  }
-  .language-display.esl {
-    background-color: #c70062;
-    color: #fff;
-  }
-  .language-display.efl {
-    background-color: #00c79b;
     color: #fff;
   }
 
@@ -210,14 +208,14 @@
       border-bottom: none;
     }
   }
-  .gender-display.male, .gender-display.female, .language-display.esl, .language-display.efl {
+  .gender-display.male, .gender-display.female {
     span a {
       color: #fff;
     }
   }
   .gender-display.history-conflict, .gender-display.personal-conflict, .gender-display.institutional-conflict, .gender-display.adjudicator-conflict,
   .region-display.history-conflict, .region-display.personal-conflict, .region-display.institutional-conflict, .region-display.adjudicator-conflict,
-  .language-display.history-conflict, .language-display.personal-conflict, .language-display.institutional-conflict, .language-display.adjudicator-conflict {
+  .breakcategory-display.history-conflict, .breakcategory-display.personal-conflict, .breakcategory-display.institutional-conflict, .breakcategory-display.adjudicator-conflict {
     span::after {
       content:"";
       padding: 9px;
@@ -306,8 +304,4 @@
 .team-speakers-hover {
   cursor: pointer;
   border-bottom: 2px dotted #ccc;
-}
-
-span.esl {
-  text-transform: uppercase;
 }

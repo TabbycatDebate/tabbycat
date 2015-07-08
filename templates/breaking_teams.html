@@ -2,9 +2,20 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}{{ name }}{% endblock %}
-{% block page-title %}{{ name }}{% endblock %}
-{% block body-class %}breaking-teams-{{ category }}{% endblock %}
+{% block head-title %}{{ category.name }} Break{% endblock %}
+{% block page-title %}{{ category.name }} Break{% endblock %}
+{% block body-class %}breaking-teams-{{ category.slug }}{% endblock %}
+
+{% block header %}
+  {% if request.user.is_superuser %}
+  <div class="alert alert-warning">
+    Please double-check this before announcing the break or releasing it to the
+    public. The code that generates the break has not been robustly tested for
+    corner cases. If there are errors, please take a snapshot of the database
+    and a screenshot and send it to the developers.
+  </div>
+  {% endif %}
+{% endblock %}
 
 {% block content %}
   <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
@@ -34,6 +45,7 @@
       <td>
         <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
           {{ team.long_name }}
+          {{ team.categories_for_display }}
         </span>
       </td>
       {% if show_institutions > 0 %}

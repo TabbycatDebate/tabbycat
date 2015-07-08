@@ -4,22 +4,27 @@
 {% block head-title %}
   Draw for {{ round.name }}
   <small>
-  {% if round.draw_status = 10 %}
-    (Debates Confirmed)
-  {% elif round.draw_status = 99 %}
-    (Debates Released to Public)
+  {% if round.draw_status = round.STATUS_CONFIRMED %}
+    (confirmed, draw not released,
+  {% elif round.draw_status = round.STATUS_RELEASED %}
+    (confirmed, draw released,
+  {% else %}
+    (DRAW STATUS ERROR,
+  {% endif %}
+  motions {{ round.motions_released|yesno:",not" }} released)
+  {% if round.starts_at %}
+    debates start at {{ round.starts_at }}
   {% endif %}
   </small>
-  {% if round.starts_at %}
-    <small>debates start at {{ round.starts_at }}</small>
-  {% endif %}
 {% endblock %}
 {% block page-title %}
   Draw for {{ round.name }}
   {% if round.draw_status = round.STATUS_CONFIRMED %}
-    (Debates Confirmed)
+    (confirmed)
   {% elif round.draw_status = round.STATUS_RELEASED %}
-    (Debates Released to Public)
+    (released)
+  {% else %}
+    (DRAW STATUS ERROR)
   {% endif %}
 {% endblock %}
 {% block body-class %}draw{% endblock %}
@@ -28,7 +33,7 @@
   <div class="btn-group">
     <a class="btn {% if round.venue_allocation_validity %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_venues_edit %}">Edit Venues</a>
     <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
-    <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url motions_edit current_round %}">Edit Motions</a>
+    <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url motions current_round %}">View/Edit Motions</a>
     <a class="btn btn-default" href="{% round_url draw_matchups_edit round %}">Edit Matchups</a>
     {% if not enable_venue_times %}
       <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>

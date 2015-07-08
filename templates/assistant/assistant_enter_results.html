@@ -59,10 +59,10 @@
         $('#resultsForm input[type="number"]').attr('readonly', 'true');
         $('#resultsForm select').attr('disabled', 'true');
         $('#incorrect').click(function() {
-          {% if ballot_not_singleton %}
-          $('#id_debate_result_status').val('{{ debate.STATUS_DRAFT }}');
+          {% if not_singleton %}
+            $('#id_debate_result_status').val('{{ debate.STATUS_DRAFT }}');
           {% else %}
-          $('#id_debate_result_status').val('{{ debate.STATUS_NONE }}');
+            $('#id_debate_result_status').val('{{ debate.STATUS_NONE }}');
           {% endif %}
           $('#id_discarded').attr('value', 'True');
           $('#id_confirmed').attr('value', 'False');

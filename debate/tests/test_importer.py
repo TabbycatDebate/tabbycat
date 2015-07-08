@@ -88,7 +88,7 @@ class TestImporterAnorak(TestCase):
     def test_adj_feedback_questions(self):
         f = self._open_csv_file(self.TESTDIR, "questions")
         counts, errors = self.importer.import_adj_feedback_questions(f)
-        self.assertEqual(counts, {m.AdjudicatorFeedbackQuestion: 6})
+        self.assertEqual(counts, {m.AdjudicatorFeedbackQuestion: 7})
         self.assertFalse(errors)
 
     def test_invalid_line(self):

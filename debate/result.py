@@ -178,7 +178,7 @@ class BallotSet(object):
 
     def __init__(self, ballotsub):
         """Constructor.
-        'ballots' must be a BallotSubmission.
+        'ballotsub' must be a BallotSubmission.
         """
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
@@ -634,12 +634,12 @@ class BallotSet(object):
 class ForfeitBallotSet(BallotSet):
     # This is WADL-specific for now
 
-    def __init__(self, ballots, forfeiter):
+    def __init__(self, ballotsub, forfeiter):
         """Constructor.
-        'ballots' must be a BallotSubmission.
+        'ballotsub' must be a BallotSubmission.
         """
-        self.ballotsub = ballots
-        self.debate = ballots.debate
+        self.ballotsub = ballotsub
+        self.debate = ballotsub.debate
         self.adjudicators = self.debate.adjudicators.list
         self.forfeiter = forfeiter
         self.motion_veto = None

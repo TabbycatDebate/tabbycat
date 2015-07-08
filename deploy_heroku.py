@@ -14,14 +14,14 @@ parser.add_argument("--no-open", action="store_false", default=True, dest="open"
     help="Don't open the Heroku website in your browser at the end")
 parser.add_argument("--no-init-db", action="store_false", default=True, dest="init_db",
     help="Don't run initial migrations on the database")
-parser.add_argument("--import-tournament", type=str, metavar="IMPORT_DIR",
-    help="Also run the import_tournament command, importing from IMPORT_DIR")
 parser.add_argument("--git-remote", type=str, default=None,
     help="Name of Git remote to use")
 parser.add_argument("--git-branch", type=str, default=None,
     help="Git branch to push (default master)")
 parser.add_argument("--pg-plan", "--postgresql-plan", type=str, default="hobby-dev",
     help="Heroku Postgres plan (default hobby-dev)")
+parser.add_argument("--import-tournament", type=str, metavar="IMPORT_DIR",
+    help="Also run the import_tournament command, importing from IMPORT_DIR")
 
 config_group = parser.add_argument_group("heroku configuration settings")
 config_group.add_argument("--public-cache-timeout", type=int, default=None, metavar="TIMEOUT",
@@ -33,7 +33,7 @@ config_group.add_argument("--enable-debug", action="store_true", default=False,
 
 # Import tournament arguments are copied from import_tournament.py, and should be
 # updated when these options in import_tournament.py change.
-import_tournament_group = parser.add_argument_group("import tournament options")
+import_tournament_group = parser.add_argument_group("import tournament options", "Passed to the import_tournament command. Ignored unless --import-tournament is used. Provided for convenience; to use other import_tournament options, run the import_tournament command separately instead.")
 import_tournament_group.add_argument('-s', '--slug', type=str, action='store', default=None, dest="tournament_slug",
     help='Override tournament slug. (Default: use name of directory.)'),
 import_tournament_group.add_argument('--name', type=str, action='store', default=None, dest="tournament_name",
@@ -53,7 +53,7 @@ else:
 # Helper functions
 
 def print_command(command):
-    message = " $ " + " ".join(command)
+    message = "$ " + " ".join(command)
     if use_color:
         message = "\033[1;36m" + message + "\033[0m"
     print message
@@ -113,10 +113,7 @@ run_command(["git", "push", remote_name, git_branch])
 
 if args.init_db:
     # Perform initial migrations
-    run_heroku_command(["run", "python", "manage.py", "migrate", "auth"])
-    run_heroku_command(["run", "python", "manage.py", "migrate"])
-    run_heroku_command(["run", "python", "manage.py", "makemigrations", "debate"])
-    run_heroku_command(["run", "python", "manage.py", "migrate"])
+    run_heroku_command(["run", "python", "init_db_heroku.py"])
 
     print_yellow("Now creating a superuser for the Heroku site.")
     print_yellow("You'll need to respond to the prompts:")

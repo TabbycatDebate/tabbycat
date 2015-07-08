@@ -31,11 +31,15 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     }
 
     FEEDBACK_ANSWER_TYPES = {
-        ("boolean", "bool"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN,
-        ("integer", "int"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER,
+        ("checkbox"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_CHECKBOX,
+        ("yes no select", "yesno"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT,
+        ("integer textbox", "int", "integer"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_TEXTBOX,
+        ("integer scale", "scale"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
         ("float"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT,
         ("text"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT,
-        ("textbox"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXTBOX,
+        ("textbox", "long text", "longtext"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
+        ("select single", "single select"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT,
+        ("select multiple", "multiple select"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
     }
 
     def import_rounds(self, f):
@@ -157,6 +161,26 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return counts, errors
 
+    def import_break_categories(self, f):
+        """Imports break categories from a file.
+
+        Each line has:
+            tournament, name, slug, seq, break_size, is_general, priority, institution_cap
+        """
+
+        def _break_category_line_parser(line):
+            return {
+                'tournament': self.tournament,
+                'name': line[0],
+                'slug': line[1],
+                'seq': int(line[2]),
+                'break_size': int(line[3]),
+                'is_general': bool(int(line[4])),
+                'priority': int(line[5]),
+                'institution_cap': int(line[6]) if len(line) > 6 and line[6] else None,
+            }
+        return self._import(f, _break_category_line_parser, m.BreakCategory)
+
     def import_teams(self, f, create_dummy_speakers=False):
         """Imports teams from a file, assigning emoji as needed.
         If 'create_dummy_speakers' is True, also creates dummy speakers."""
@@ -171,7 +195,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'use_institution_prefix' : int(line[2]) if len(line) > 2 else 0,
                 'emoji_seq'              : self.get_emoji(),
             }
-        counts, errors = self._import(f, _team_line_parser, m.Team)
+        counts, errors = self._import(f, _team_line_parser, m.Team, generated_fields=['emoji_seq'])
 
         if create_dummy_speakers:
             def _speakers_line_parser(line):
@@ -191,6 +215,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
 
         if auto_create_teams:
+            self.initialise_emoji_options()
             def _team_line_parser(line):
                 return {
                     'tournament'             : self.tournament,
@@ -198,8 +223,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'reference'              : line[2],
                     'short_reference'        : line[2][:35],
                     'use_institution_prefix' : int(line[3]) if len(line) > 3 else 0,
+                    'emoji_seq'              : self.get_emoji(),
                 }
-            counts, errors = self._import(f, _team_line_parser, m.Team, expect_unique=False)
+            counts, errors = self._import(f, _team_line_parser, m.Team, expect_unique=False, generated_fields=['emoji_seq'])
         else:
             counts = None
             errors = None
@@ -326,7 +352,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     def import_adj_feedback_questions(self, f):
         """Imports adjudicator feedback questions from a file.
         Each line has:
-            seq, reference, name, text, answer_type, required, team_on_orallist, chair_on_panel, panel_on_chair, panel_on_panel
+            seq, reference, name, text, answer_type, required, team_on_orallist,
+                chair_on_panel, panel_on_chair, panel_on_panel, min_value, max_value
         """
         def _question_line_parser(line):
             return {
@@ -341,6 +368,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'chair_on_panellist'     : bool(int(line[7])),
                 'panellist_on_chair'     : bool(int(line[8])),
                 'panellist_on_panellist' : bool(int(line[9])),
+                'min_value'              : int(line[10]) if len(line) > 10 and line[10] else None,
+                'max_value'              : int(line[11]) if len(line) > 11 and line[11] else None,
+                'choices'                : line[12] if len(line) > 12 else "",
             }
         return self._import(f, _question_line_parser, m.AdjudicatorFeedbackQuestion)
 

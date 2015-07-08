@@ -308,6 +308,35 @@ input[type="radio"].form-control, input[type="checkbox"].form-control {
   color: #285379;
 }
 
+.feedback-integer-scale-table {
+  width: 100%;
+}
+
+.feedback-integer-scale-table td {
+  text-align: center;
+}
+
+.feedback-integer-scale-table input[type="radio"].form-control {
+  width: 20px;
+  margin: 0 auto;
+  vertical-align: middle;
+  display: block;
+}
+
+.feedback-multiple-select .feedback-option {
+  display: inline-block;
+}
+
+.feedback-multiple-select .feedback-option label {
+  margin-right: 20pt;
+}
+
+.feedback-multiple-select input[type="checkbox"].form-control {
+  vertical-align: middle;
+  width: 20px;
+}
+
+
 
 @media (max-width: $screen-xs-max) {
   .page-header {

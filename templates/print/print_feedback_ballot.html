@@ -42,16 +42,16 @@
         <thead>
           <tr>
             {% if target %}
-              <th class="text-center h4">
+              <th class="text-center h5">
                 {{ target.name }}
                 {% if target_type == "chair" %}Ⓒ{% elif target_type == "trainee" %}Ⓣ{% endif %}
               </th>
             {% else %}
               {% for type, adj in debate.adjudicators %}
                 {% if type == 'C' and debate.adjudicators.is_panel %}
-                  <th class="text-center h4">{{ adj.name }} Ⓒ</th>
+                  <th class="text-center h5">{{ adj.name }} Ⓒ</th>
                 {% elif type != 'T' %}
-                  <th class="text-center h4">{{ adj.name }}</th>
+                  <th class="text-center h5">{{ adj.name }}</th>
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -59,9 +59,6 @@
         </thead>
       </table>
     </div>
-  </div>
-
-  <div class="panel panel-default">
     <div class="panel-heading">
       <p class="panel-title small"><em>How convincing was their adjudication?</em></p>
     </div>
@@ -89,38 +86,42 @@
     </div>
   </div>
 
+  <div class="panel panel-default">
   {% for question in questions %}
-
-    <div class="panel panel-default">
       <div class="panel-heading">
-        <p class="italic panel-title small"><em>{{ question.text }}</em></p>
+        <p class="italic panel-title small">
+          <em>{{ question.text }}
+          {% if question.answer_type == 'ss' or question.answer_type == 'bs' or question.answer_type == 'bc'%}
+            (choose one)
+          {% elif question.answer_type == 'ms'  %}
+            (choose as many as apply)
+          {% endif %} </em>
+        </p>
       </div>
       <div class="panel-body no-vertical-spacing">
-      {% if question.answer_type == 'b' %}
+      {% if question.answer_type == 'bc' or question.answer_type == 'bs' %}
         <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
           <thead>
             <tr>
-              <th style="width:33%" class="text-center h4">Yes</th>
-              <th style="width:33%" class="text-center h4">Unsure</th>
-              <th style="width:33%" class="text-center h4">No</th>
+              <th style="width:33%" class="text-center">Yes</th>
+              <th style="width:33%" class="text-center">Unsure</th>
+              <th style="width:33%" class="text-center">No</th>
             </tr>
           </thead>
         </table>
-      {% elif question.answer_type == 'i' or question.answer_type == 'f' %}
+      {% elif question.answer_type == 'i' or question.answer_type == 'is' or question.answer_type == 'f' %}
         <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
           <thead>
             <tr>
-              <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 0 %}</th>
-              <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 1 %}</th>
-              <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 2 %}</th>
-              <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 3 %}</th>
-              <th style="width:20%" class="text-center h4">{% feedback_number_step question.min_value question.max_value 4 %}</th>
+              {% for option in question.number_options %}
+                <th style="" class="text-center">{{ option }}</th>
+              {% endfor %}
             </tr>
           </thead>
         </table>
       {% elif question.answer_type == 't' %}
         <hr class="writeable">
-      {% elif question.answer_type == 'T' %}
+      {% elif question.answer_type == 'tl' %}
         <hr class="writeable">
         <hr class="writeable">
         <hr class="writeable">
@@ -129,14 +130,20 @@
         <hr class="writeable">
         <hr class="writeable">
         <hr class="writeable">
-        <hr class="writeable">
-        <hr class="writeable">
+      {% elif question.answer_type == 'ss' or question.answer_type == 'ms' %}
+        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+          <thead>
+            <tr>
+              {% for option in question.choice_options %}
+                <th style="" class="text-center">{{ option }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+        </table>
       {% endif %}
-
       </div>
-    </div>
-
   {% endfor %}
+  </div>
 
   <div class="panel panel-default">
     <div class="panel-footer no-borders">
@@ -146,9 +153,9 @@
             {% if config.feedback_return_location|length > 2 %}
             <td width="30%" class="no-vertical-spacing text-left no-borders"><span class="small"><em>Please return feedback forms to {{ config.feedback_return_location }}</em></span></td>
             {% endif %}
-            <td width="10%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only.</em></span></td>
+            <td width="20%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only.</em></span></td>
             <td width="30%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Entered By</em></span></td>
-            <td width="50%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Checked By</em></span></td>
+            <td width="40%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Checked By</em></span></td>
           </tr>
         </tbody>
       </table>

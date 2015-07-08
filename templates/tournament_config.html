@@ -7,21 +7,12 @@
 {% block body-class %}config{% endblock %}
 
 {% block header %}
-
-{% if updated %}
-<div class="alert alert-success updated alert-dismissable" id="savedVenues">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  Saved successfully!
-</div>
-{% endif %}
-
-{% if form.errors %}
-  <div class="alert alert-danger alert-dismissable" id="savedVenues">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    Please correct the errors below {{ form.errors }}
-  </div>
-{% endif %}
-
+  {% if form.errors %}
+    <div class="alert alert-danger alert-dismissable" id="savedVenues">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      Please correct the errors below {{ form.errors }}
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block content %}

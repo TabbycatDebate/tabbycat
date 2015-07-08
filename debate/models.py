@@ -11,6 +11,7 @@ from django.utils.functional import cached_property
 from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
 from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
+import standings
 
 from warnings import warn
 from threading import BoundedSemaphore
@@ -84,10 +85,8 @@ class Tournament(models.Model):
         cached_key = "%s_current_round_object" % self.slug
         cached_value = cache.get(cached_key)
         if cached_value:
-            print 'found current round cache'
             return cache.get(cached_key)
         else:
-            print 'set current round cache'
             cache.set(cached_key, self.current_round, None)
             return self.current_round
 
@@ -227,148 +226,10 @@ class Institution(models.Model):
         else:
             return self.code[:5]
 
-
-def annotate_team_standings(teams, round=None, shuffle=False):
-    """Accepts a QuerySet, returns a list.
-    If 'shuffle' is True, it shuffles the list before sorting so that teams that
-    are equal are in random order. This should be turned on for draw generation,
-    and turned off for display."""
-    # This is what might be more concisely expressed, if it were permissible
-    # in Django, as:
-    # teams = teams.annotate_if(
-    #     dict(points = models.Count('debateteam__teamscore__points'),
-    #     speaker_score = models.Count('debateteam__teamscore__score')),
-    #     dict(debateteam__teamscore__ballot_submission__confirmed = True)
-    # )
-    # That is, it adds up all the wins and points of each team on CONFIRMED
-    # ballots and adds them as columns to the table it returns.
-    # The standings include only preliminary rounds.
-
-    EXTRA_QUERY = """
-        SELECT DISTINCT SUM({field:s})
-        FROM "debate_teamscore"
-        JOIN "debate_ballotsubmission" ON "debate_teamscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-        JOIN "debate_debateteam" ON "debate_teamscore"."debate_team_id" = "debate_debateteam"."id"
-        JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-        JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-        WHERE "debate_ballotsubmission"."confirmed" = True
-        AND "debate_debateteam"."team_id" = "debate_team"."id"
-        AND "debate_round"."stage" = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
-
-    if round is not None:
-        EXTRA_QUERY += """AND "debate_round"."seq" <= {round:d}""".format(round=round.seq)
-
-    teams = teams.extra({
-        "points": EXTRA_QUERY.format(field="points"),
-        "speaker_score": EXTRA_QUERY.format(field="score"),
-        "margins": EXTRA_QUERY.format(field="margin"),
-    }).distinct()
-
-    # Extract which rule to use from the tournament config
-    if round is not None:
-        tournament = round.tournament
-    else:
-        tournament = teams[0].tournament
-    rule = tournament.config.get('team_standings_rule')
-
-    if rule == "australs":
-
-        if shuffle:
-            sorted_teams = list(teams)
-            random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
-            sorted_teams.sort(key=lambda x: (x.points, x.speaker_score), reverse=True)
-            return sorted_teams
-        else:
-            teams = teams.order_by("-points", "-speaker_score")
-            return list(teams)
-
-    elif rule == "nz":
-
-        # Add draw strength annotation.
-        for team in teams:
-            draw_strength = 0
-            # Find all teams that they've faced.
-            debateteam_set = team.debateteam_set.all()
-            if round is not None:
-                debateteam_set = debateteam_set.filter(debate__round__seq__lte=round.seq)
-            for dt in debateteam_set:
-                # Can't just use dt.opposition.team.points, as dt.opposition.team isn't annotated.
-                draw_strength += teams.get(id=dt.opposition.team.id).points
-            team.draw_strength = draw_strength
-
-        def who_beat_whom(team1, team2):
-            """Returns a positive value if team1 won more debates, a negative value
-            if team2 won more, 0 if the teams won the same number against each other
-            or haven't faced each other."""
-            # Find all debates between these two teams
-            def get_wins(team, other):
-                ts =  TeamScore.objects.filter(
-                    ballot_submission__confirmed=True,
-                    debate_team__team=team,
-                    debate_team__debate__debateteam__team=other).aggregate(models.Sum('points'))
-                return ts["points__sum"]
-            wins1 = get_wins(team1, team2)
-            wins2 = get_wins(team2, team1)
-            # Print this to the logs, just so we know it happened
-            print "who beat whom, {0} vs {1}: {2} wins against {3}".format(team1, team2, wins1, wins2)
-            return cmp(wins1, wins2)
-
-        def cmp_teams(team1, team2):
-            """Returns 1 if team1 ranks ahead of team2, -1 if team2 ranks ahead of team1,
-            and 0 if they rank the same. Requires access to teams, so that it knows whether
-            it can apply who-beat-whom."""
-            # If there are only two teams on this number of points, or points/speakers,
-            # or points/speaks/draw-strength, then use who-beat-whom.
-            def two_teams_left(key):
-                return key(team1) == key(team2) and len(filter(lambda x: key(x) == key(team1), teams)) == 2
-            if two_teams_left(lambda x: x.points) or two_teams_left(lambda x: (x.points, x.speaker_score)) \
-                    or two_teams_left(lambda x: (x.points, x.speaker_score, x.draw_strength)):
-                winner = who_beat_whom(team1, team2)
-                if winner != 0: # if this doesn't help, keep going
-                    return winner
-            key = lambda x: (x.points, x.speaker_score, x.draw_strength)
-            return cmp(key(team1), key(team2))
-
-        sorted_teams = list(teams)
-        if shuffle:
-            random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
-        sorted_teams.sort(cmp=cmp_teams, reverse=True)
-        return sorted_teams
-
-    elif rule == "wadl":
-        # Sort by points
-
-        teams = [t for t in teams if t.margins > 0]
-        teams = sorted(teams, key = lambda x: (-x.points, -x.margins, -x.speaker_score))
-        final_teams = []
-
-        # Sort by division rank
-        divisions = Division.objects.filter(tournament=tournament)
-        for division in divisions:
-            division_teams = [t for t in teams if t.division == division]
-            if division_teams:
-                for i, team in enumerate(division_teams):
-                    team.division_rank = i + 1 # Assign their in-division rank
-
-                # Division winners go straight through
-                final_teams.append(division_teams[0])
-                teams.remove(division_teams[0])
-
-        # Sort division winners
-        final_teams = sorted(final_teams, key = lambda x: (-x.points, -x.margins, -x.speaker_score))
-
-        # Add back on the non-division winners
-        final_teams.extend(teams)
-        # for team in final_teams:
-        #     print team
-
-        return final_teams
-
-    else:
-        raise ValueError("Invalid team_standings_rule option: {0}".format(rule))
-
-
 class TeamManager(models.Manager):
+
+    def get_queryset(self):
+        return super(TeamManager, self).get_queryset().select_related('institution')
 
     def lookup(self, name, **kwargs):
         """Queries for a team with a matching name."""
@@ -382,133 +243,29 @@ class TeamManager(models.Manager):
         institution = Institution.objects.lookup(institution_name)
         return self.get(institution=institution, reference=reference, **kwargs)
 
+    def _teams_for_standings(self, round):
+        return self.filter(debateteam__debate__round__seq__lte=round.seq,
+            tournament=round.tournament).select_related('institution')
+
     def standings(self, round):
         """Returns a list."""
-        teams = self.filter(
-            tournament = round.tournament,
-            debateteam__debate__round__seq__lte = round.seq,
-        ).select_related('institution')
-        return annotate_team_standings(teams, round)
+        teams = self._teams_for_standings(round)
+        return standings.annotate_team_standings(teams, round)
 
     def ranked_standings(self, round):
         """Returns a list."""
-
-        teams = self.standings(round)
-
-        prev_rank_value = (None, None)
-        current_rank = 0
-        for i, team in enumerate(teams, start=1):
-            rank_value = (team.points, team.speaker_score)
-            if rank_value != prev_rank_value:
-                current_rank = i
-                prev_rank_value = rank_value
-            team.rank = current_rank
-
-        return teams
+        teams = self._teams_for_standings(round)
+        return standings.ranked_team_standings(teams, round)
 
     def division_standings(self, round):
         """Returns a list."""
-
-        teams = self.standings(round)
-
-        prev_rank_value = (None, None)
-        current_rank = 0
-        for i, team in enumerate(teams, start=1):
-            rank_value = (team.points, team.margins, team.speaker_score)
-            if rank_value != prev_rank_value:
-                current_rank = i
-                prev_rank_value = rank_value
-            team.rank = current_rank
-
-        return teams
+        teams = self._teams_for_standings(round)
+        return standings.division_ranked_team_standings(teams, round)
 
     def subrank_standings(self, round):
         """Returns a list."""
-        teams = self.standings(round)
-
-        prev_rank_value = None
-        prev_points = None
-        current_rank = 0
-        counter = 0
-        for team in teams:
-            if team.points != prev_points:
-                counter = 1
-                prev_points = team.points
-            rank_value = team.speaker_score
-            if rank_value != prev_rank_value:
-                current_rank = counter
-                prev_rank_value = rank_value
-            team.subrank = current_rank
-            counter += 1
-
-        return teams
-
-    def breaking_teams(self, tournament, category='open'):
-        """Returns a list."""
-
-        FILTER_ARGS = {
-            'open': dict(),
-            'esl':  dict(esl=True),
-        }
-        filterargs = FILTER_ARGS[category]
-
-        teams = self.filter(tournament=tournament, **filterargs)
-        teams = annotate_team_standings(teams)
-
-        BREAK_SIZE_CONFIG_OPTIONS = {
-            'open': 'break_size',
-            'esl':  'esl_break_size',
-        }
-        break_size = tournament.config.get(BREAK_SIZE_CONFIG_OPTIONS[category])
-        institution_cap = tournament.config.get('institution_cap')
-
-        prev_rank_value = (None, None)
-        current_rank = 0
-        breaking_teams = list()
-
-        # Variables for insutitional caps and non-breaking teams:
-        current_break_rank = 0
-        current_break_seq = 0
-        from collections import Counter
-        teams_from_institution = Counter()
-
-        for i, team in enumerate(teams, start=1):
-
-            # Overall rank
-            rank_value = (team.points, team.speaker_score)
-            new_rank = rank_value != prev_rank_value
-            if new_rank:
-                current_rank = i
-                prev_rank_value = rank_value
-            team.rank = current_rank
-
-
-            # Increment current_break_seq if it won't violate institution cap
-            if institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
-                if new_rank and current_break_rank == break_size:
-                    break
-                team.break_rank = "- (Capped)"
-            elif team.cannot_break == True:
-                if new_rank and current_break_rank == break_size:
-                    break
-                team.break_rank = "- (Ineligible)"
-            else:
-                current_break_seq += 1
-                if new_rank:
-                    if current_break_rank == break_size:
-                        break
-                    current_break_rank = current_break_seq
-                team.break_rank = current_break_rank
-
-            if current_break_rank > break_size:
-                break
-
-            # Take note of the institution
-            teams_from_institution[team.institution] += 1
-
-            breaking_teams.append(team)
-
-        return breaking_teams
+        teams = self._teams_for_standings(round)
+        return standings.subranked_team_standings(teams, round)
 
 
 class Division(models.Model):
@@ -535,6 +292,26 @@ class Division(models.Model):
         index_together = ['tournament', 'seq']
 
 
+class BreakCategory(models.Model):
+    tournament = models.ForeignKey(Tournament)
+    name = models.CharField(max_length=50, help_text="Name to be displayed, e.g., \"ESL\"")
+    slug = models.SlugField(help_text="Slug for URLs, e.g., \"esl\"")
+    seq = models.IntegerField(help_text="The order in which the categories are displayed")
+    break_size = models.IntegerField(help_text="Number of breaking teams in this category")
+    is_general = models.BooleanField(help_text="True if most teams eligible for this category, e.g. Open, False otherwise")
+    institution_cap = models.IntegerField(blank=True, null=True, help_text="Maximum number of teams from a single institution in this category; leave blank if not applicable")
+    priority = models.IntegerField(help_text="If a team breaks in multiple categories, lower priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority")
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
+        ordering = ['tournament', 'seq']
+        index_together = ['tournament', 'seq']
+        verbose_name_plural = "break categories"
+
+
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Full name or suffix", help_text="Do not include institution name (see \"uses institutional prefix\" below)")
     short_reference = models.CharField(max_length=35, verbose_name="Short name/suffix", help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
@@ -543,14 +320,8 @@ class Team(models.Model):
     emoji_seq = models.IntegerField(blank=True, null=True, help_text="Emoji number to use for this team")
     division = models.ForeignKey('Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
-    url_hash = models.SlugField(blank=True, null=True, unique=True, max_length=24)
-
-    # set to True if a team is ineligible to break (other than being
-    # swing/composite)
-    cannot_break = models.BooleanField(default=False)
-
-    esl = models.BooleanField(default=False)
-    efl = models.BooleanField(default=False)
+    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
+    break_categories = models.ManyToManyField(BreakCategory)
 
     venue_preferences = models.ManyToManyField(VenueGroup,
         through = 'TeamVenuePreference',
@@ -589,7 +360,10 @@ class Team(models.Model):
         else:
             name = self.reference
         if self.use_institution_prefix is True:
-            return unicode(institution.code + " " + name)
+            if self.institution.code:
+                return unicode(institution.code + " " + name)
+            else:
+                return unicode(institution.abbreviation + " " + name)
         else:
             return unicode(name)
 
@@ -604,6 +378,15 @@ class Team(models.Model):
     @property
     def region(self):
         return self.get_cached_institution().region
+
+    @property
+    def break_categories_nongeneral(self):
+        return self.break_categories.exclude(is_general=True)
+
+    @property
+    def break_categories_str(self):
+        categories = self.break_categories_nongeneral
+        return "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
 
     def get_aff_count(self, seq=None):
         return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)
@@ -741,12 +524,14 @@ class AdjudicatorManager(models.Manager):
     def accredited(self):
         return self.filter(novice=False)
 
+    def get_queryset(self):
+        return super(AdjudicatorManager, self).get_queryset().select_related('institution')
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey(Tournament, blank=True, null=True)
     test_score = models.FloatField(default=0)
-    url_hash = models.SlugField(blank=True, null=True, unique=True, max_length=24)
+    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
     institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adjudicator_institution_conflicts')
     conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
@@ -796,19 +581,6 @@ class Adjudicator(Person):
 
         return self.test_score * (1 - weight) + (weight * feedback_score)
 
-
-    @cached_property
-    def rscores(self):
-        r = []
-        for round in self.tournament.rounds.all():
-            q = models.Q(source_adjudicator__debate__round=round) | \
-                    models.Q(source_team__debate__round=round)
-            a = AdjudicatorFeedback.objects.filter(
-                adjudicator = self,
-                confirmed = True
-            ).filter(q).aggregate(avg=models.Avg('score'))['avg']
-            r.append(a)
-        return r
 
     def _feedback_score(self):
         return self.adjudicatorfeedback_set.filter(confirmed=True).aggregate(avg=models.Avg('score'))['avg']
@@ -930,9 +702,9 @@ class Round(models.Model):
     draw_type    = models.CharField(max_length=1, choices=DRAW_CHOICES, help_text="Which draw technique to use")
     stage        = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY, help_text="Whether it is a break round or not")
 
-    draw_status        = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
-    venue_status       = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
-    adjudicator_status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    draw_status        = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    venue_status       = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    adjudicator_status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
 
     checkins = models.ManyToManyField('Person', through='Checkin', related_name='checkedin_rounds')
 
@@ -989,7 +761,7 @@ class Round(models.Model):
             teams = draw_teams
             draw_type = "manual"
         elif self.draw_type == self.DRAW_POWERPAIRED:
-            teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
+            teams = standings.annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts" : "draw_avoid_conflicts",
@@ -1051,7 +823,7 @@ class Round(models.Model):
 
     @property
     def adjudicators_allocation_validity(self):
-        debates = self.get_draw()
+        debates = self.get_cached_draw
         if not all(debate.adjudicators.has_chair for debate in debates):
             return 1
         if not all(debate.adjudicators.valid for debate in debates):
@@ -1059,11 +831,15 @@ class Round(models.Model):
         return 0
 
     def venue_allocation_validity(self):
-        debates = self.get_draw()
+        debates = self.get_cached_draw
         if all(debate.venue for debate in debates):
             return True
         else:
             return False
+
+    @cached_property
+    def get_cached_draw(self):
+        return self.get_draw()
 
     def get_draw(self):
         if self.tournament.config.get('enable_divisions'):
@@ -1462,26 +1238,26 @@ class Debate(models.Model):
 
     @property
     def ballotsubmission_set_by_version(self):
-        return self.ballotsubmission_set.all().order_by('version')
+        return self.ballotsubmission_set.order_by('version')
 
     @property
     def ballotsubmission_set_by_version_except_discarded(self):
         return self.ballotsubmission_set.filter(discarded=False).order_by('version')
 
     @property
-    def identical_ballots_dict(self):
+    def identical_ballotsubs_dict(self):
         """Returns a dict. Keys are BallotSubmissions, values are lists of
         version numbers of BallotSubmissions that are identical to the key's
         BallotSubmission. Excludes discarded ballots (always)."""
-        ballots = self.ballotsubmission_set_by_version_except_discarded
-        result = {b: list() for b in ballots}
-        for ballot1 in ballots:
+        ballotsubs = self.ballotsubmission_set_by_version_except_discarded
+        result = {b: list() for b in ballotsubs}
+        for ballotsub1 in ballotsubs:
             # Save a bit of time by avoiding comparisons already done.
             # This relies on ballots being ordered by version.
-            for ballot2 in ballots.filter(version__gt=ballot1.version):
-                if ballot1.is_identical(ballot2):
-                    result[ballot1].append(ballot2.version)
-                    result[ballot2].append(ballot1.version)
+            for ballotsub2 in ballotsubs.filter(version__gt=ballotsub1.version):
+                if ballotsub1.is_identical(ballotsub2):
+                    result[ballotsub1].append(ballotsub2.version)
+                    result[ballotsub2].append(ballotsub1.version)
         for l in result.itervalues():
             l.sort()
         return result
@@ -1634,9 +1410,11 @@ class Submission(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
     version = models.PositiveIntegerField()
-    submitter_type = models.IntegerField(choices=SUBMITTER_TYPE_CHOICES)
+    submitter_type = models.PositiveSmallIntegerField(choices=SUBMITTER_TYPE_CHOICES)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True) # only relevant if submitter was in tab room
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted") # only relevant if submitter was in tab room
+    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed")
+    confirm_timestamp = models.DateTimeField(blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     version_semaphore = BoundedSemaphore()
@@ -1677,7 +1455,7 @@ class Submission(models.Model):
         self.version_semaphore.release()
 
     def clean(self):
-        if self.submitter_type == self.SUBMITTER_TABROOM and self.user is None:
+        if self.submitter_type == self.SUBMITTER_TABROOM and self.submitter is None:
             raise ValidationError("A tab room ballot must have a user associated.")
 
 
@@ -1690,7 +1468,10 @@ class AdjudicatorFeedbackAnswer(models.Model):
         unique_together = [('question', 'feedback')]
 
 class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
-    answer = models.NullBooleanField()
+    # Note: by convention, if no answer is chosen for a boolean answer, an
+    # instance of this object should not be created. This way, there is no need
+    # for a NullBooleanField.
+    answer = models.BooleanField()
 
 class AdjudicatorFeedbackIntegerAnswer(AdjudicatorFeedbackAnswer):
     answer = models.IntegerField()
@@ -1703,6 +1484,50 @@ class AdjudicatorFeedbackStringAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackQuestion(models.Model):
+    # When adding or changing an answer type, here are the other places you need
+    # to edit:
+    #   - forms.py : BaseFeedbackForm._make_question_field()
+    #   - importer/anorak.py : AnorakTournamentDataImporter.FEEDBACK_ANSWER_TYPES
+
+    ANSWER_TYPE_BOOLEAN_CHECKBOX = 'bc'
+    ANSWER_TYPE_BOOLEAN_SELECT   = 'bs'
+    ANSWER_TYPE_INTEGER_TEXTBOX  = 'i'
+    ANSWER_TYPE_INTEGER_SCALE    = 'is'
+    ANSWER_TYPE_FLOAT            = 'f'
+    ANSWER_TYPE_TEXT             = 't'
+    ANSWER_TYPE_LONGTEXT         = 'tl'
+    ANSWER_TYPE_SINGLE_SELECT    = 'ss'
+    ANSWER_TYPE_MULTIPLE_SELECT  = 'ms'
+    ANSWER_TYPE_CHOICES = (
+        (ANSWER_TYPE_BOOLEAN_CHECKBOX , 'checkbox'),
+        (ANSWER_TYPE_BOOLEAN_SELECT   , 'yes/no (dropdown)'),
+        (ANSWER_TYPE_INTEGER_TEXTBOX  , 'integer (textbox)'),
+        (ANSWER_TYPE_INTEGER_SCALE    , 'integer scale'),
+        (ANSWER_TYPE_FLOAT            , 'float'),
+        (ANSWER_TYPE_TEXT             , 'text'),
+        (ANSWER_TYPE_LONGTEXT         , 'long text'),
+        (ANSWER_TYPE_SINGLE_SELECT    , 'select one'),
+        (ANSWER_TYPE_MULTIPLE_SELECT  , 'select multiple'),
+    )
+    ANSWER_TYPE_CLASSES = {
+        ANSWER_TYPE_BOOLEAN_CHECKBOX : AdjudicatorFeedbackBooleanAnswer,
+        ANSWER_TYPE_BOOLEAN_SELECT   : AdjudicatorFeedbackBooleanAnswer,
+        ANSWER_TYPE_INTEGER_TEXTBOX  : AdjudicatorFeedbackIntegerAnswer,
+        ANSWER_TYPE_INTEGER_SCALE    : AdjudicatorFeedbackIntegerAnswer,
+        ANSWER_TYPE_FLOAT            : AdjudicatorFeedbackFloatAnswer,
+        ANSWER_TYPE_TEXT             : AdjudicatorFeedbackStringAnswer,
+        ANSWER_TYPE_LONGTEXT         : AdjudicatorFeedbackStringAnswer,
+        ANSWER_TYPE_SINGLE_SELECT    : AdjudicatorFeedbackStringAnswer,
+        ANSWER_TYPE_MULTIPLE_SELECT  : AdjudicatorFeedbackStringAnswer,
+    }
+    ANSWER_TYPE_CLASSES_REVERSE = {
+        AdjudicatorFeedbackStringAnswer : [ANSWER_TYPE_TEXT, ANSWER_TYPE_LONGTEXT, ANSWER_TYPE_SINGLE_SELECT, ANSWER_TYPE_MULTIPLE_SELECT],
+        AdjudicatorFeedbackIntegerAnswer: [ANSWER_TYPE_INTEGER_SCALE, ANSWER_TYPE_INTEGER_TEXTBOX],
+        AdjudicatorFeedbackFloatAnswer  : [ANSWER_TYPE_FLOAT],
+        AdjudicatorFeedbackBooleanAnswer: [ANSWER_TYPE_BOOLEAN_SELECT, ANSWER_TYPE_BOOLEAN_CHECKBOX],
+    }
+    CHOICE_SEPARATOR = "//"
+
     tournament = models.ForeignKey(Tournament)
     seq = models.IntegerField(help_text="The order in which questions are displayed")
     text = models.CharField(max_length=255, help_text="The question displayed to participants, e.g., \"Did you agree with the decision?\"")
@@ -1710,33 +1535,16 @@ class AdjudicatorFeedbackQuestion(models.Model):
     reference = models.SlugField(help_text="Code-compatible reference, e.g., \"agree_with_decision\"")
 
     chair_on_panellist = models.BooleanField()
-    panellist_on_chair = models.BooleanField()
-    panellist_on_panellist = models.BooleanField()
+    panellist_on_chair = models.BooleanField() # for future use
+    panellist_on_panellist = models.BooleanField() # for future use
     team_on_orallist = models.BooleanField()
 
-    ANSWER_TYPE_BOOLEAN = 'b'
-    ANSWER_TYPE_INTEGER = 'i'
-    ANSWER_TYPE_FLOAT = 'f'
-    ANSWER_TYPE_TEXT = 't'
-    ANSWER_TYPE_TEXTBOX = 'T'
-    ANSWER_TYPE_CHOICES = (
-        (ANSWER_TYPE_BOOLEAN, 'boolean'),
-        (ANSWER_TYPE_INTEGER, 'integer'),
-        (ANSWER_TYPE_FLOAT, 'float'),
-        (ANSWER_TYPE_TEXT, 'text'),
-        (ANSWER_TYPE_TEXTBOX, 'textbox'),
-    )
-    ANSWER_TYPE_CLASSES = {
-        ANSWER_TYPE_BOOLEAN: AdjudicatorFeedbackBooleanAnswer,
-        ANSWER_TYPE_INTEGER: AdjudicatorFeedbackIntegerAnswer,
-        ANSWER_TYPE_FLOAT:   AdjudicatorFeedbackFloatAnswer,
-        ANSWER_TYPE_TEXT:    AdjudicatorFeedbackStringAnswer,
-        ANSWER_TYPE_TEXTBOX: AdjudicatorFeedbackStringAnswer,
-    }
-    answer_type = models.CharField(max_length=1, choices=ANSWER_TYPE_CHOICES)
+    answer_type = models.CharField(max_length=2, choices=ANSWER_TYPE_CHOICES)
     required = models.BooleanField(default=True, help_text="Whether participants are required to fill out this field")
     min_value = models.FloatField(blank=True, null=True, help_text="Minimum allowed value for numeric fields (ignored for text or boolean fields)")
     max_value = models.FloatField(blank=True, null=True, help_text="Maximum allowed value for numeric fields (ignored for text or boolean fields)")
+    choices = models.CharField(max_length=500, blank=True, null=True, help_text="Permissible choices for select one/multiple fields, separated by %r (ignored for other fields)" % CHOICE_SEPARATOR)
+
 
     class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
@@ -1752,13 +1560,15 @@ class AdjudicatorFeedbackQuestion(models.Model):
     def answer_type_class(self):
         return self.ANSWER_TYPE_CLASSES[self.answer_type]
 
+    @property
+    def choices_for_field(self):
+        return tuple((x, x) for x in self.choices.split(self.CHOICE_SEPARATOR))
 
 class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     score = models.FloatField()
 
-    source_adjudicator = models.ForeignKey(DebateAdjudicator, blank=True,
-                                           null=True)
+    source_adjudicator = models.ForeignKey(DebateAdjudicator, blank=True, null=True)
     source_team = models.ForeignKey(DebateTeam, blank=True, null=True)
 
     class Meta:
@@ -1767,7 +1577,7 @@ class AdjudicatorFeedback(Submission):
     @property
     def source(self):
         if self.source_adjudicator:
-            return self.source_adjudicator.adjudicator
+            return self.source_adjudicator.adjudicator.name
         if self.source_team:
             return self.source_team.team.short_name
 
@@ -2012,18 +1822,18 @@ class MotionManager(models.Manager):
         else:
             motions = self.select_related('round').filter(round__seq__lte=round.seq, round__tournament=round.tournament)
 
-        ballots = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
+        ballotsubs = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
         team_scores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
 
         for motion in motions:
-            motion_ballots = [b for b in ballots if b.motion == motion]
+            motion_ballotsubs = [b for b in ballotsubs if b.motion == motion]
 
             motion.aff_wins, motion.aff_wins_percent = 0, 0
             motion.neg_wins, motion.neg_wins_percent = 0, 0
-            motion.chosen_in = len(motion_ballots)
+            motion.chosen_in = len(motion_ballotsubs)
 
             if motion.chosen_in > 0:
-                for ballot in motion_ballots:
+                for ballot in motion_ballotsubs:
                     # Find the team score the matches, return none otherwise
                     teamscore = next((x for x in team_scores if x.ballot_submission == ballot), None)
                     debate_team = teamscore.debate_team
@@ -2120,6 +1930,7 @@ class ActionLog(models.Model):
     ACTION_TYPE_MOTIONS_UNRELEASE       = 42
     ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  = 50
     ACTION_TYPE_ROUND_START_TIME_SET    = 60
+    ACTION_TYPE_BREAK_ELIGIBILITY_EDIT  = 70
     ACTION_TYPE_AVAIL_TEAMS_SAVE        = 80
     ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE = 81
     ACTION_TYPE_AVAIL_VENUES_SAVE       = 82
@@ -2146,6 +1957,7 @@ class ActionLog(models.Model):
         (ACTION_TYPE_MOTIONS_RELEASE        , 'Released motions'),
         (ACTION_TYPE_MOTIONS_UNRELEASE      , 'Unreleased motions'),
         (ACTION_TYPE_DEBATE_IMPORTANCE_EDIT , 'Edited debate importance'),
+        (ACTION_TYPE_BREAK_ELIGIBILITY_EDIT , 'Edited break eligibility'),
         (ACTION_TYPE_ROUND_START_TIME_SET   , 'Set start time'),
         (ACTION_TYPE_AVAIL_TEAMS_SAVE       , 'Edited teams availability'),
         (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE, 'Edited adjudicators availability'),
@@ -2170,6 +1982,7 @@ class ActionLog(models.Model):
         ACTION_TYPE_DRAW_RELEASE           : ('round',),
         ACTION_TYPE_DRAW_UNRELEASE         : ('round',),
         ACTION_TYPE_DEBATE_IMPORTANCE_EDIT : ('debate',),
+        ACTION_TYPE_BREAK_ELIGIBILITY_EDIT : (),
         ACTION_TYPE_ROUND_START_TIME_SET   : ('round',),
         ACTION_TYPE_MOTION_EDIT            : ('motion',),
         ACTION_TYPE_MOTIONS_RELEASE        : ('round',),
@@ -2224,11 +2037,11 @@ class ActionLog(models.Model):
             try:
                 value = getattr(self, field_name)
                 if field_name == 'ballot_submission':
-                    strings.append('%s vs %s' % (value.debate.aff_team, value.debate.neg_team))
+                    strings.append('%s vs %s' % (value.debate.aff_team.short_name, value.debate.neg_team.short_name))
                 elif field_name == 'debate':
-                    strings.append('%s vs %s' % (value.aff_team, value.neg_team))
+                    strings.append('%s vs %s' % (value.aff_team.short_name, value.neg_team.short_name))
                 elif field_name == 'round':
-                    strings.append('round %s' % value.seq)
+                    strings.append(value.name)
                 elif field_name == 'motion':
                     strings.append(value.reference)
                 elif field_name == 'adjudicator_test_score_history':

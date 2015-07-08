@@ -41,11 +41,12 @@
   <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Break<b class="caret"></b></a>
     <ul class="dropdown-menu">
-      <li><a href="{% tournament_url breaking_teams_open %}">Open</a></li>
-      {% if esl_break %}
-        <li><a href="{% tournament_url breaking_teams_esl %}">ESL</a></li>
-      {% endif %}
+      {% for category in tournament.breakcategory_set.all %}
+        <li><a href="{% tournament_url breaking_teams category.slug %}">{{ category.name }}</a></li>
+      {% endfor %}
       <li><a href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
+      <li class="divider"></li>
+      <li><a href="{% tournament_url break_eligibility %}">Eligibility</a></li>
     </ul>
   </li>
 </ul>

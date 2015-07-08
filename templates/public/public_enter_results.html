@@ -17,9 +17,9 @@
   </div>
   {% endif %}
 
-  {% if existing_ballots %}
+  {% if existing_ballotset %}
   <div class="alert alert-danger">
-  This form has already been submitted <strong>{{ existing_ballots|apnumber }}</strong> time{{ existing_ballots|pluralize }}. Please contact a tab official after submitting your form.
+  This form has already been submitted <strong>{{ existing_ballotset|apnumber }}</strong> time{{ existing_ballotset|pluralize }}. Please contact a tab official after submitting your form.
   </div>
   {% endif %}
 
@@ -47,7 +47,7 @@
         <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
         <input id="id_discarded" type="hidden" name="discarded" />
         <input id="id_confirmed" type="hidden" name="confirmed" />
-        <input class="form-control save btn-success" type="submit" value="Save results" tabindex="100" />
+        <input class="form-control save btn-success" type="submit" value="Submit ballots" tabindex="100" />
       </div>
     </div>
   </form>
