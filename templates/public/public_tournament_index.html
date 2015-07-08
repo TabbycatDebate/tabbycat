@@ -66,8 +66,17 @@
         </li>
       {% endif %}
       {% if public_breaking_teams > 0 %}
+        {% for category in tournament.breakcategory_set.all %}
+          <li class="list-group-item">
+            <a href="{% tournament_url public_breaking_teams category.slug %}">
+              {{ category.name }}
+            </a>
+          </li>
+        {% endfor %}
+      {% endif %}
+      {% if public_breaking_adjs > 0 %}
         <li class="list-group-item">
-          <a href="{% tournament_url public_break_index %}">Break</a>
+          <a href="{% tournament_url public_breaking_adjs %}">Breaking Adjudicators</a>
         </li>
       {% endif %}
       {% if public_participants > 0 %}
