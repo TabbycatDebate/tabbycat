@@ -1569,6 +1569,8 @@ def team_standings(request, round, for_print=False):
 @round_view
 def division_standings(request, round, for_print=False):
     from debate.models import TeamScore
+
+
     teams = Team.objects.division_standings(round)
 
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
