@@ -302,6 +302,19 @@ class BreakCategory(models.Model):
     institution_cap = models.IntegerField(blank=True, null=True, help_text="Maximum number of teams from a single institution in this category; leave blank if not applicable")
     priority = models.IntegerField(help_text="If a team breaks in multiple categories, lower priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority")
 
+    STATUS_NONE      = 'N'
+    STATUS_DRAFT     = 'D'
+    STATUS_CONFIRMED = 'C'
+    STATUS_RELEASED  = 'R'
+    STATUS_CHOICES = (
+        (STATUS_NONE,      'None'),
+        (STATUS_DRAFT,     'Draft'),
+        (STATUS_CONFIRMED, 'Confirmed'),
+        (STATUS_RELEASED,  'Released'),
+    )
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
+    breaking_teams = models.ManyToManyField(Team, through='BreakingTeam')
+
     def __unicode__(self):
         return self.name
 
@@ -396,21 +409,20 @@ class Team(models.Model):
 
 
     def _get_count(self, position, seq):
-        dts = DebateTeam.objects.filter(team=self, position=position, debate__round__stage=Round.STAGE_PRELIMINARY)
+        dts = self.debateteam_set.filter(position=position, debate__round__stage=Round.STAGE_PRELIMINARY)
         if seq is not None:
             dts = dts.filter(debate__round__seq__lte=seq)
         return dts.count()
 
     def get_debates(self, before_round):
-        dts = DebateTeam.objects.select_related('debate').filter(team=self).order_by('debate__round__seq')
+        dts = self.debateteam_set.select_related('debate').order_by('debate__round__seq')
         if before_round is not None:
             dts = dts.filter(debate__round__seq__lt=before_round)
         return [dt.debate for dt in dts]
 
     @property
     def get_preferences(self):
-        prefs = TeamVenuePreference.objects.filter(team=self)
-        return prefs
+        return self.teamvenuepreference_set.objects.all()
 
     @property
     def debates(self):
@@ -418,7 +430,7 @@ class Team(models.Model):
 
     @cached_property
     def wins_count(self):
-        wins = TeamScore.objects.filter(ballot_submission__confirmed=True,debate_team__team=self,win=True).count()
+        wins = TeamScore.objects.filter(ballot_submission__confirmed=True, debate_team__team=self, win=True).count()
         return wins
 
     @cached_property
@@ -460,6 +472,7 @@ def update_team_cache(sender, instance, created, **kwargs):
 # Update the cached tournament object when model is changed)
 signals.post_save.connect(update_team_cache, sender=Team)
 
+
 class TeamVenuePreference(models.Model):
     team = models.ForeignKey(Team, db_index=True)
     venue_group = models.ForeignKey(VenueGroup)
@@ -472,9 +485,12 @@ class TeamVenuePreference(models.Model):
         return u'%s with priority %s for %s' % (self.team, self.priority, self.venue_group)
 
 
+class BreakingTeam(models.Model):
+    break_category = models.ForeignKey(BreakCategory)
+    team = models.ForeignKey(Team)
+    rank = models.IntegerField()
+    break_rank = models.IntegerField()
 
-class SpeakerManager(models.Manager):
-    pass
 
 class Person(models.Model):
     name = models.CharField(max_length=40, db_index=True)
@@ -504,6 +520,7 @@ class Person(models.Model):
     class Meta:
         ordering = ['name']
 
+
 class Checkin(models.Model):
     person = models.ForeignKey('Person')
     round = models.ForeignKey('Round')
@@ -511,8 +528,6 @@ class Checkin(models.Model):
 
 class Speaker(Person):
     team = models.ForeignKey(Team)
-
-    objects = SpeakerManager()
 
     def __unicode__(self):
         return unicode(self.name)
@@ -682,10 +697,10 @@ class Round(models.Model):
         (STAGE_ELIMINATION, 'Elimination'),
     )
 
-    STATUS_NONE      = 0
-    STATUS_DRAFT     = 1
-    STATUS_CONFIRMED = 10
-    STATUS_RELEASED  = 99
+    STATUS_NONE      = 'N'
+    STATUS_DRAFT     = 'D'
+    STATUS_CONFIRMED = 'C'
+    STATUS_RELEASED  = 'R'
     STATUS_CHOICES = (
         (STATUS_NONE,      'None'),
         (STATUS_DRAFT,     'Draft'),
@@ -695,16 +710,17 @@ class Round(models.Model):
 
     objects = RoundManager()
 
-    tournament   = models.ForeignKey(Tournament, related_name='rounds',db_index=True)
-    seq          = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
-    name         = models.CharField(max_length=40, help_text="ie \"Round 1\"")
-    abbreviation = models.CharField(max_length=10, help_text="ie \"R1\"")
-    draw_type    = models.CharField(max_length=1, choices=DRAW_CHOICES, help_text="Which draw technique to use")
-    stage        = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY, help_text="Whether it is a break round or not")
+    tournament     = models.ForeignKey(Tournament, related_name='rounds', db_index=True)
+    seq            = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
+    name           = models.CharField(max_length=40, help_text="e.g. \"Round 1\"")
+    abbreviation   = models.CharField(max_length=10, help_text="e.g. \"R1\"")
+    draw_type      = models.CharField(max_length=1, choices=DRAW_CHOICES, help_text="Which draw technique to use")
+    stage          = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY, help_text="Preliminary = inrounds, elimination = outrounds")
+    break_category = models.ForeignKey(BreakCategory, blank=True, null=True, help_text="If elimination round, which break category")
 
-    draw_status        = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
-    venue_status       = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
-    adjudicator_status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    draw_status        = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
+    venue_status       = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
+    adjudicator_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
 
     checkins = models.ManyToManyField('Person', through='Checkin', related_name='checkedin_rounds')
 
@@ -724,6 +740,11 @@ class Round(models.Model):
 
     def __unicode__(self):
         return u"%s - %s" % (self.tournament, self.name)
+
+    def clean(self):
+        if self.stage == self.STAGE_ELIMINATION and self.break_category is None:
+            raise ValidationError("An elimination round must have a break category associated with it")
+        super(Round, self).clean()
 
     def motions(self):
         return self.motion_set.order_by('seq')
@@ -1598,10 +1619,10 @@ class AdjudicatorFeedback(Submission):
             return self.round.feedback_weight
         return 1
 
-    def save(self, *args, **kwargs):
+    def clean(self):
         if not (self.source_adjudicator or self.source_team):
             raise ValidationError("Either the source adjudicator or source team wasn't specified.")
-        super(AdjudicatorFeedback, self).save(*args, **kwargs)
+        super(AdjudicatorFeedback, self).clean()
 
 
 class AdjudicatorAllocation(object):

@@ -107,5 +107,4 @@ def _compute_breaking_teams(category, eligible_teams, include_all=False):
         # Take note of the institution
         teams_from_institution[team.institution] += 1
 
-
     return breaking_teams
