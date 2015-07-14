@@ -151,9 +151,10 @@ class BaseTournamentDataImporter(object):
         'expect_unique' is False, it will just skip objects that would be
         duplicates and log a DUPLICATE_INFO message to say so.
 
-        If 'generated_fields' is given, the uniqueness checks will not take into
-        account any of the generated fields. This should be used for fields that
-        are generated with each object, not given in the CSV files.
+        If 'generated_fields' is given, it must be a callable, and the
+        uniqueness checks will not take into account any of the generated
+        fields. This should be used for fields that are generated with each
+        object, not given in the CSV files.
         """
         if hasattr(csvfile, 'seek') and callable(csvfile.seek):
             csvfile.seek(0)
@@ -202,6 +203,10 @@ class BaseTournamentDataImporter(object):
                         self.logger.log(DUPLICATE_INFO, "Skipping duplicate " + description)
                     continue
                 kwargs_seen.append(kwargs_expect_unique)
+
+                # Fill in the generated fields
+                for key in generated_fields:
+                    kwargs[key] = kwargs[key]()
 
                 # Retrieve the instance or create it if it doesn't exist
                 try:
@@ -271,7 +276,7 @@ class BaseTournamentDataImporter(object):
         try:
             emoji_id = random.choice(self.emoji_options)
         except IndexError:
-            logger.error("No more choices left for emoji, choosing at random")
+            self.logger.error("No more choices left for emoji, choosing at random")
             return random.randint(0, len(EMOJI_LIST) - 1)
         self.emoji_options.remove(emoji_id)
         return emoji_id
