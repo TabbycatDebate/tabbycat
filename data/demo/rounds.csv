@@ -1,7 +1,13 @@
-seq,name,abbv,stage,type,is_silent,feedback_weight
-1,Round 1,R1,P,R,0,0.7
-2,Round 2,R2,P,P,0,0.7
-3,Round 3,R3,P,P,0,0.7
-4,Round 4,R4,P,P,0,0.7
-5,Semifinal,SF,E,F,1,0.7
-6,Grand Final,GF,E,B,1,0.7
+seq,name,abbv,stage,type,is_silent,feedback_weight,break_category
+1,Round 1,R1,P,R,0,0.7,
+2,Round 2,R2,P,P,0,0.7,
+3,Round 3,R3,P,P,0,0.7,
+4,Round 4,R4,P,P,0,0.7,
+5,Open Quarterfinal,OQF,E,F,1,0.7,open
+6,Open Semifinal,OSF,E,B,1,0.7,open
+7,Open Grand Final,OGF,E,B,1,0.7,open
+8,ESL Semifinal,SSF,E,F,1,0.7,esl
+9,ESL Grand Final,SGF,E,B,1,0.7,esl
+10,EFL Grand Final,FGF,E,F,1,0.7,efl
+11,Novice Semifinal,NSF,E,F,1,0.7,novice
+12,Novice Grand Final,NGF,E,B,1,0.7,novice

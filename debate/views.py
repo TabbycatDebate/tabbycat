@@ -15,7 +15,7 @@ from debate.result import BallotSet
 from debate import forms
 from debate.models import *
 from debate.utils import populate_url_keys
-from debate.breaking import compute_breaking_teams
+from debate import breaking
 
 from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
@@ -213,7 +213,7 @@ def public_break_index(request, t):
 @public_optional_tournament_view('public_breaking_teams')
 def public_breaking_teams(request, t, category):
     bc = get_object_or_404(BreakCategory, slug=category)
-    teams = compute_breaking_teams(bc, include_all=True)
+    teams = breaking.get_breaking_teams(bc, include_all=True)
     if t.config.get('public_break_categories'):
         for team in teams:
             categories = team.break_categories_nongeneral.exclude(id=bc.id).exclude(priority__lt=bc.priority)
@@ -227,11 +227,22 @@ def public_breaking_teams(request, t, category):
 @tournament_view
 def breaking_teams(request, t, category):
     bc = get_object_or_404(BreakCategory, slug=category)
-    teams = compute_breaking_teams(bc, include_all=True)
+    teams = breaking.get_breaking_teams(bc, include_all=True)
     for team in teams:
-        categories = team.break_categories_nongeneral.exclude(id=bc.id)
+        categories = team.break_categories_nongeneral.exclude(id=bc.id).exclude(priority__lt=bc.priority)
         team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
     return r2r(request, 'breaking_teams.html', dict(teams=teams, category=bc))
+
+@expect_post
+@tournament_view
+def generate_breaking_teams(request, t, category):
+    # generates for all break categories
+    # 'category' is used only for the redirect
+    breaking.generate_breaking_teams(t)
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_GENERATE,
+            user=request.user, tournament=t, ip_address=get_ip_address(request))
+    messages.success(request, "Teams break generated.")
+    return redirect_tournament('breaking_teams', t, category=category)
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')

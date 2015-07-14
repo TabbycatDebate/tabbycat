@@ -48,7 +48,6 @@ class Command(BaseCommand):
         loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
         self.importer = AnorakTournamentDataImporter(self.t, loglevel=loglevel,
                 strict=options['strict'], expect_unique=not options['keep_existing'])
-        self.make_rounds()
 
         self._make('config')
         self._make('venue_groups')
@@ -59,6 +58,7 @@ class Command(BaseCommand):
         self._make('teams')
         self._make('speakers')
         self._make('judges', self.importer.import_adjudicators)
+        self.make_rounds()
         self._make('motions')
         self._make('sides')
         self._make('questions', self.importer.import_adj_feedback_questions)

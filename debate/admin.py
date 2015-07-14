@@ -414,3 +414,15 @@ class BreakCategoryAdmin(admin.ModelAdmin):
     ordering = ('tournament', 'seq')
 
 admin.site.register(models.BreakCategory, BreakCategoryAdmin)
+
+# ==============================================================================
+# BreakingTeam
+# ==============================================================================
+
+class BreakingTeamAdmin(admin.ModelAdmin):
+    list_display = ('break_category', 'team', 'rank', 'break_rank', 'remark')
+    list_filter = ('break_category__tournament', 'break_category')
+    search_fields = ('team',)
+    ordering = ('break_category',)
+
+admin.site.register(models.BreakingTeam, BreakingTeamAdmin)

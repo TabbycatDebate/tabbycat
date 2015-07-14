@@ -302,17 +302,18 @@ class BreakCategory(models.Model):
     institution_cap = models.IntegerField(blank=True, null=True, help_text="Maximum number of teams from a single institution in this category; leave blank if not applicable")
     priority = models.IntegerField(help_text="If a team breaks in multiple categories, lower priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority")
 
-    STATUS_NONE      = 'N'
-    STATUS_DRAFT     = 'D'
-    STATUS_CONFIRMED = 'C'
-    STATUS_RELEASED  = 'R'
-    STATUS_CHOICES = (
-        (STATUS_NONE,      'None'),
-        (STATUS_DRAFT,     'Draft'),
-        (STATUS_CONFIRMED, 'Confirmed'),
-        (STATUS_RELEASED,  'Released'),
-    )
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
+    # Does nothing now, reintroduce later
+    # STATUS_NONE      = 'N'
+    # STATUS_DRAFT     = 'D'
+    # STATUS_CONFIRMED = 'C'
+    # STATUS_RELEASED  = 'R'
+    # STATUS_CHOICES = (
+    #     (STATUS_NONE,      'None'),
+    #     (STATUS_DRAFT,     'Draft'),
+    #     (STATUS_CONFIRMED, 'Confirmed'),
+    #     (STATUS_RELEASED,  'Released'),
+    # )
+    # status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
     breaking_teams = models.ManyToManyField('Team', through='BreakingTeam')
 
     def __unicode__(self):
@@ -489,8 +490,18 @@ class BreakingTeam(models.Model):
     break_category = models.ForeignKey(BreakCategory)
     team = models.ForeignKey(Team)
     rank = models.IntegerField()
-    break_rank = models.IntegerField()
+    break_rank = models.IntegerField(blank=True, null=True)
 
+    REMARK_CAPPED = 'C'
+    REMARK_INELIGIBLE = 'I'
+    REMARK_CHOICES = (
+        (REMARK_CAPPED,     'Capped'),
+        (REMARK_INELIGIBLE, 'Ineligible'),
+    )
+    remark = models.CharField(max_length=1, choices=REMARK_CHOICES, blank=True, null=True)
+
+    class Meta:
+        unique_together = [('break_category', 'team')]
 
 class Person(models.Model):
     name = models.CharField(max_length=40, db_index=True)
@@ -740,11 +751,6 @@ class Round(models.Model):
 
     def __unicode__(self):
         return u"%s - %s" % (self.tournament, self.name)
-
-    def clean(self):
-        if self.stage == self.STAGE_ELIMINATION and self.break_category is None:
-            raise ValidationError("An elimination round must have a break category associated with it")
-        super(Round, self).clean()
 
     def motions(self):
         return self.motion_set.order_by('seq')
@@ -1952,6 +1958,7 @@ class ActionLog(models.Model):
     ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  = 50
     ACTION_TYPE_ROUND_START_TIME_SET    = 60
     ACTION_TYPE_BREAK_ELIGIBILITY_EDIT  = 70
+    ACTION_TYPE_BREAK_GENERATE          = 71
     ACTION_TYPE_AVAIL_TEAMS_SAVE        = 80
     ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE = 81
     ACTION_TYPE_AVAIL_VENUES_SAVE       = 82
@@ -1979,6 +1986,7 @@ class ActionLog(models.Model):
         (ACTION_TYPE_MOTIONS_UNRELEASE      , 'Unreleased motions'),
         (ACTION_TYPE_DEBATE_IMPORTANCE_EDIT , 'Edited debate importance'),
         (ACTION_TYPE_BREAK_ELIGIBILITY_EDIT , 'Edited break eligibility'),
+        (ACTION_TYPE_BREAK_GENERATE         , 'Generated the teams break'),
         (ACTION_TYPE_ROUND_START_TIME_SET   , 'Set start time'),
         (ACTION_TYPE_AVAIL_TEAMS_SAVE       , 'Edited teams availability'),
         (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE, 'Edited adjudicators availability'),
@@ -2004,6 +2012,7 @@ class ActionLog(models.Model):
         ACTION_TYPE_DRAW_UNRELEASE         : ('round',),
         ACTION_TYPE_DEBATE_IMPORTANCE_EDIT : ('debate',),
         ACTION_TYPE_BREAK_ELIGIBILITY_EDIT : (),
+        ACTION_TYPE_BREAK_GENERATE         : (),
         ACTION_TYPE_ROUND_START_TIME_SET   : ('round',),
         ACTION_TYPE_MOTION_EDIT            : ('motion',),
         ACTION_TYPE_MOTIONS_RELEASE        : ('round',),
