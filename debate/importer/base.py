@@ -262,8 +262,8 @@ class BaseTournamentDataImporter(object):
 
         # Then remove the ones that are already in use
         for index in itertools.chain(assigned_emoji_teams, unassigned_emoji_teams):
-            if index in emoji_options:
-                emoji_options.remove(index)
+            if index in self.emoji_options:
+                self.emoji_options.remove(index)
 
     def get_emoji(self):
         """Retrieves an emoji. If there are any not currently in returns one of
