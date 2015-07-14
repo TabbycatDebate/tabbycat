@@ -313,7 +313,7 @@ class BreakCategory(models.Model):
         (STATUS_RELEASED,  'Released'),
     )
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    breaking_teams = models.ManyToManyField(Team, through='BreakingTeam')
+    breaking_teams = models.ManyToManyField('Team', through='BreakingTeam')
 
     def __unicode__(self):
         return self.name
