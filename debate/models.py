@@ -697,10 +697,10 @@ class Round(models.Model):
         (STAGE_ELIMINATION, 'Elimination'),
     )
 
-    STATUS_NONE      = 'N'
-    STATUS_DRAFT     = 'D'
-    STATUS_CONFIRMED = 'C'
-    STATUS_RELEASED  = 'R'
+    STATUS_NONE      = 0
+    STATUS_DRAFT     = 1
+    STATUS_CONFIRMED = 10
+    STATUS_RELEASED  = 99
     STATUS_CHOICES = (
         (STATUS_NONE,      'None'),
         (STATUS_DRAFT,     'Draft'),
@@ -718,9 +718,9 @@ class Round(models.Model):
     stage          = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY, help_text="Preliminary = inrounds, elimination = outrounds")
     break_category = models.ForeignKey(BreakCategory, blank=True, null=True, help_text="If elimination round, which break category")
 
-    draw_status        = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    venue_status       = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    adjudicator_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
+    draw_status        = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    venue_status       = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
+    adjudicator_status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
 
     checkins = models.ManyToManyField('Person', through='Checkin', related_name='checkedin_rounds')
 
