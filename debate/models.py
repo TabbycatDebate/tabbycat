@@ -1628,6 +1628,8 @@ class AdjudicatorFeedback(Submission):
     def clean(self):
         if not (self.source_adjudicator or self.source_team):
             raise ValidationError("Either the source adjudicator or source team wasn't specified.")
+        if self.adjudicator not in self.debate.adjudicators:
+            raise ValidationError("Adjudicator did not see this debate")
         super(AdjudicatorFeedback, self).clean()
 
 
@@ -1657,6 +1659,9 @@ class AdjudicatorAllocation(object):
             yield DebateAdjudicator.TYPE_PANEL, a
         for a in self.trainees:
             yield DebateAdjudicator.TYPE_TRAINEE, a
+
+    def __contains__(self, item):
+        return item == self.chair or item in self.panel or item in self.trainees
 
     def delete(self):
         """Delete existing, current allocation"""
