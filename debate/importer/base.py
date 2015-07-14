@@ -271,7 +271,7 @@ class BaseTournamentDataImporter(object):
         try:
             emoji_id = random.choice(self.emoji_options)
         except IndexError:
-            logger.debug("No more choices left for emoji, choosing at random")
+            logger.error("No more choices left for emoji, choosing at random")
             return random.randint(0, len(EMOJI_LIST) - 1)
         self.emoji_options.remove(emoji_id)
         return emoji_id
