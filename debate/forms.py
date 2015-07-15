@@ -413,11 +413,12 @@ class BallotSetForm(forms.Form):
                     totals = [sum(cleaned_data[self._fieldname_score(adj, side, pos)] for pos in self.POSITIONS) for side in self.SIDES]
                 except KeyError as e:
                     logger.warning("Field %s not found", str(e))
-                if totals[0] == totals[1]:
-                    self.add_error(None, forms.ValidationError(
-                        _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)"),
-                        params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
-                    ))
+                else:
+                    if totals[0] == totals[1]:
+                        self.add_error(None, forms.ValidationError(
+                            _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)"),
+                            params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
+                        ))
 
 
             # Pull team info again, in case it's changed since the form was loaded.
