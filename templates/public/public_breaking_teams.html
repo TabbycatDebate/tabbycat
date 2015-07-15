@@ -7,3 +7,12 @@
 {% block head-title %}{{ category.name }} Break{% endblock %}
 
 {% block header %}{% endblock %}
+
+{% block content %}
+  {{ block.super }}
+
+  {% if not generated %}
+    <p class="lead">The break has yet to be released.</p>
+  {% endif %}
+
+{% endblock %}
