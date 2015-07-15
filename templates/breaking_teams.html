@@ -11,7 +11,7 @@
 
 {% block header %}
   {% if request.user.is_superuser %}
-    {% if teams %}
+    {% if generated %}
       <div class="alert alert-warning">
         Please double-check this before announcing the break or releasing it to the
         public. The code that generates the break has not been robustly tested for
@@ -32,7 +32,7 @@
         </div>
       {% else %}
         <p>
-          There are currently no teams in this break. Would you like to generate
+          The break hasn't yet been generated. Would you like to generate
           the break for all categories?
         </p>
         <p>
@@ -46,8 +46,8 @@
     <p>
       <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
         <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-          {% if teams %}
-            Re-generate the break for all categories
+          {% if generated %}
+            Regenerate the break for all categories
           {% else %}
             Generate the break for all categories
           {% endif %}
@@ -58,7 +58,7 @@
 {% endblock %}
 
 {% block content %}
-  {% if teams %}
+  {% if generated %}
     <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
       <thead>
         <tr>

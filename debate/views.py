@@ -231,7 +231,8 @@ def breaking_teams(request, t, category):
     for team in teams:
         categories = team.break_categories_nongeneral.exclude(id=bc.id).exclude(priority__lt=bc.priority)
         team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
-    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=bc))
+    generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
+    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=bc, generated=generated))
 
 @expect_post
 @tournament_view

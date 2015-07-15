@@ -77,7 +77,7 @@ def generate_breaking_teams(tournament):
 def _generate_breaking_teams(category, eligible_teams):
     """Generates a list of breaking teams for the given category and returns it."""
 
-    category.breaking_teams.all().delete()
+    category.breakingteam_set.all().delete()
 
     eligible_teams = annotate_team_standings(eligible_teams, tournament=category.tournament)
 
