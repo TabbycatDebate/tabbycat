@@ -10,51 +10,49 @@
 {% block body-class %}breaking-teams-{{ category.slug }}{% endblock %}
 
 {% block header %}
-  {% if request.user.is_superuser %}
-    {% if generated %}
-      <div class="alert alert-warning">
-        Please double-check this before announcing the break or releasing it to the
-        public. The code that generates the break has not been robustly tested for
-        corner cases. If there are errors, please take a snapshot of the database
-        and a screenshot and send it to the developers. You can edit the breaking
-        teams list directly in the database through the Django Admin.
+  {% if generated %}
+    <div class="alert alert-warning">
+      Please double-check this before announcing the break or releasing it to the
+      public. The code that generates the break has not been robustly tested for
+      corner cases. If there are errors, please take a snapshot of the database
+      and a screenshot and send it to the developers. You can edit the breaking
+      teams list directly in the database through the Django Admin.
+    </div>
+  {% else %}
+    {% if public_breaking_teams %}
+      <div class="alert alert-danger">
+        The <strong>public breaking teams</strong> configuration setting is
+        enabled. As soon as you click the button, the breaking teams list will
+        be visible on the public site, before you have a chance to
+        double-check it! It is strongly recommended that you disable this
+        setting on the <a href="{% tournament_url tournament_config %}">
+        tournament configuration page</a> before generating the team
+        breaks.
       </div>
     {% else %}
-      {% if public_breaking_teams %}
-        <div class="alert alert-danger">
-          The <strong>public breaking teams</strong> configuration setting is
-          enabled. As soon as you click the button, the breaking teams list will
-          be visible on the public site, before you have a chance to
-          double-check it! It is strongly recommended that you disable this
-          setting on the <a href="{% tournament_url tournament_config %}">
-          tournament configuration page</a> before generating the team
-          breaks.
-        </div>
-      {% else %}
-        <p>
-          The break hasn't yet been generated. Would you like to generate
-          the break for all categories?
-        </p>
-        <p>
-          (It's safe to generate the break before all preliminary rounds are
-          complete, if you're curious. You can regenerate it later.)
-        </p>
-      {% endif %}
-
+      <p>
+        The break hasn't yet been generated. Would you like to generate
+        the break for all categories?
+      </p>
+      <p>
+        (It's safe to generate the break before all preliminary rounds are
+        complete, if you're curious. You can regenerate it later.)
+      </p>
     {% endif %}
 
-    <p>
-      <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
-        <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-          {% if generated %}
-            Regenerate the break for all categories
-          {% else %}
-            Generate the break for all categories
-          {% endif %}
-        </button>
-      </form>
-    </p>
   {% endif %}
+
+  <p>
+    <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
+      <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+        {% if generated %}
+          Regenerate the break for all categories
+        {% else %}
+          Generate the break for all categories
+        {% endif %}
+      </button>
+    </form>
+  </p>
 {% endblock %}
 
 {% block content %}
