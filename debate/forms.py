@@ -770,14 +770,12 @@ class BaseFeedbackForm(forms.Form):
             af.confirmed = True
 
         af.score = self.cleaned_data['score']
-        af.full_clean()
         af.save()
 
         for question in self.tournament.adj_feedback_questions.filter(**self.question_filter):
             if self.cleaned_data[question.reference] is not None:
                 answer = question.answer_type_class(feedback=af, question=question,
                         answer=self.cleaned_data[question.reference])
-                answer.full_clean()
                 answer.save()
 
         return af
