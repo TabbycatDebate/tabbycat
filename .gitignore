@@ -9,7 +9,7 @@ data/*
 
 # Default data to include
 !data/dummy/
-!data/dummy2/
+!data/demo/
 !data/league_template/
 !data/sandbox/
 !data/utils/
