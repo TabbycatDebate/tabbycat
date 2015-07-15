@@ -69,7 +69,7 @@
         {% for category in tournament.breakcategory_set.all %}
           <li class="list-group-item">
             <a href="{% tournament_url public_breaking_teams category.slug %}">
-              {{ category.name }}
+              {{ category.name }} Break
             </a>
           </li>
         {% endfor %}
