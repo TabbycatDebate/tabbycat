@@ -57,7 +57,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'draw_type'       : self._lookup(self.ROUND_DRAW_TYPES, line[4] or "r", "draw type"),
                 'silent'          : bool(int(line[5])),
                 'feedback_weight' : float(line[6]) or 0.7,
-                'break_category'  : m.BreakCategory.objects.get(slug=line[7]) if line[7] else None,
+                'break_category'  : m.BreakCategory.objects.get(slug=line[7]) if len(line) > 7 and line[7] else None,
             }
         counts, errors = self._import(f, _round_line_parser, m.Round)
 
