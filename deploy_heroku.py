@@ -15,7 +15,7 @@ parser.add_argument("--no-open", action="store_false", default=True, dest="open"
 parser.add_argument("--no-init-db", action="store_false", default=True, dest="init_db",
     help="Don't run initial migrations on the database")
 parser.add_argument("--git-remote", type=str, default=None,
-    help="Name of Git remote to use")
+    help="Name of Git remote to use. Use '-' to use the urlname. If omitted, reverts to default Heroku behaviour.")
 parser.add_argument("--git-branch", type=str, default=None,
     help="Git branch to push (default master)")
 parser.add_argument("--pg-plan", "--postgresql-plan", type=str, default="hobby-dev",
@@ -102,8 +102,8 @@ run_heroku_command(command)
 
 # Set up a remote, if applicable
 if args.git_remote:
-    remote_name = args.git_remote
-    run_command(["git", "remote", "add", remote_name, heroku_url])
+    remote_name = args.git_remote if args.git_remote != "-" else urlname
+    run_heroku_command(["git:remote", "--remote", remote_name])
 else:
     remote_name = heroku_url
 
