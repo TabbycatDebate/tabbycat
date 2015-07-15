@@ -1,4 +1,5 @@
 from django.db.models import Sum
+import random
 
 def _add_ranks(standings, key):
     """Adds the 'rank' attribute to each team in 'standings'. Teams in
@@ -43,7 +44,7 @@ def division_ranked_team_standings(teams, *args, **kwargs):
     _add_ranks(standings, lambda t: (t.points, t.margins, t.speaker_score))
     return standings
 
-def subranked_team_standings(team, *args, **kwargs):
+def subranked_team_standings(teams, *args, **kwargs):
     standings = annotate_team_standings(teams, *args, **kwargs)
     _add_subranks(standings, lambda t: t.speaker_score)
     return standings

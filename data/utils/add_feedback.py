@@ -51,7 +51,7 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
 
         fb = m.AdjudicatorFeedback(submitter_type=submitter_type)
         if submitter_type == m.AdjudicatorFeedback.SUBMITTER_TABROOM:
-            fb.user = user
+            fb.submitter = user
 
         fb.adjudicator = adj
         if isinstance(source, m.Adjudicator):
