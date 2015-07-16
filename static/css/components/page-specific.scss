@@ -267,6 +267,17 @@
 #draw {
   margin-top: 0px; // counteracts margin addded from the text size h2/h3/etcs
 }
+.table>tbody>tr>td {
+  line-height: 1;
+}
+@media (max-width: $screen-xs-max) {
+  #draw tbody, #draw thead  {
+    font-size: 0.8em;
+  }
+  .fixedHeader .table thead  {
+    font-size: 0.8em;
+  }
+}
 
 // For the text size buttons
 .h3_minus, .h3_minus {

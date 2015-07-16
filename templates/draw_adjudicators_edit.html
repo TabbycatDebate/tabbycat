@@ -45,7 +45,7 @@
   </div>
   <div id="region_key" class="btn-group" style="display: none;">
     {% for region, _ in regions %}
-      <div class="btn btn-default region-display region-{{ region.name|slugify }}">{{ region.name }}</div>
+      <div class="btn btn-default region-display region-{{ region.id }}">{{ region.name }}</div>
     {% endfor %}
   </div>
   <div id="breakcategory_key" class="btn-group" style="display: none;">
@@ -195,11 +195,11 @@
 <style style="text/css">
 
   {% for region, color in regions %}
-    .region-display.region-{{ region.name|slugify }} {
+    .region-display.region-{{ region.id }} {
       background: {{ color }};
       color: #fff;
     }
-    .region-display.region-{{ region.name|slugify }} span a {
+    .region-display.region-{{ region.id }} span a {
       color: #fff;
     }
   {% endfor %}

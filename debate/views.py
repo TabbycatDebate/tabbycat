@@ -1794,8 +1794,7 @@ def _json_adj_allocation(debates, unused_adj):
     def _adj(a):
 
         if a.institution.region:
-            region_name = "region-%s" % a.institution.region.name
-            region_name = region_name.replace(' ', '_').lower()
+            region_name = "region-%s" % a.institution.region.id
         else:
             region_name = ""
 
