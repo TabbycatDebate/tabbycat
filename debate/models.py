@@ -2049,7 +2049,11 @@ class ActionLog(models.Model):
         return '<Action %d by %s (%s): %s>' % (self.id, self.user, self.timestamp, self.get_type_display())
 
     def clean(self):
-        required_fields = self.REQUIRED_FIELDS_BY_ACTION_TYPE[self.type]
+        try:
+            required_fields = self.REQUIRED_FIELDS_BY_ACTION_TYPE[self.type]
+        except KeyError:
+            raise ValidationError("Unknown action type: %d" % self.type)
+
         errors = list()
         for field_name in self.ALL_OPTIONAL_FIELDS:
             if field_name in required_fields:
@@ -2062,11 +2066,15 @@ class ActionLog(models.Model):
                         (self.get_type_display(), field_name)))
         if self.user is None and self.ip_address is None:
             errors.append(ValidationError('All log entries require at least one of a user and an IP address.'))
+
         if errors:
             raise ValidationError(errors)
 
     def get_parameters_display(self):
-        required_fields = self.REQUIRED_FIELDS_BY_ACTION_TYPE[self.type]
+        try:
+            required_fields = self.REQUIRED_FIELDS_BY_ACTION_TYPE[self.type]
+        except KeyError:
+            return ""
         strings = list()
         for field_name in required_fields:
             try:
