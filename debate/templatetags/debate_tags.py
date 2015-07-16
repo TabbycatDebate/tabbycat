@@ -57,8 +57,7 @@ register.simple_tag(team_emoji)
 def team_status_classes(team):
     classes = list()
     if team.region is not None:
-        region_stripped = team.region.name.replace(' ', '_').lower()
-        classes.append("region-%s" % region_stripped)
+        classes.append("region-%s" % team.region.id)
     for category in team.break_categories_nongeneral.order_by('priority'):
         classes.append("breakcategory-" + category.slug)
     return " ".join(classes)
