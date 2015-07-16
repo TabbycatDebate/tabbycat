@@ -10,16 +10,18 @@
   </li>
   {% for item in feedback.items %}
     <li class="list-group-item">
-      <small><strong>{{ item.question.text }}</strong></small>
-      <span class="text-right">
-        {% if item.question.answer_type == 'f' %}
-          {{ item.answer|floatformat:"2" }}
-        {% elif item.question.answer_type == 'b' %}
-          {{ item.answer|yesno:"Yes,No,Unclear" }}
-        {% else %}
-          {{ item.answer }}
-        {% endif %}
-      </span>
+      {% if item.question.answer_type == 'bc' or item.question.answer_type == 'bs' %}
+        <span class="glyphicon glyphicon-{{ item.answer|yesno:"ok text-success,remove text-danger,minus" }}"></span>
+      <small><strong title="{{ item.question.text }}" data-toggle="tooltip">{{ item.question.reference }}</strong></small>
+      {% elif item.question.answer_type == 'f' %}
+        {{ item.answer|floatformat:"2" }}
+        <small><strong>{{ item.question.text }}</strong></small>
+      {% elif item.question.answer_type == 'tl' %}
+        {{ item.answer }}
+      {% else %}
+        <small><strong>{{ item.question.text }}</strong></small>
+        {{ item.answer }}
+      {% endif %}
     </li>
   {% endfor %}
   <li class="list-group-item panel-footer">
