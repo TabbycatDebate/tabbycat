@@ -272,13 +272,17 @@
 }
 @media (max-width: $screen-xs-max) {
   #draw tbody, #draw thead  {
-    font-size: 0.7em;
+    font-size: 0.65em;
   }
   .fixedHeader .table thead  {
-    font-size: 0.7em;
+    font-size: 0.65em;
   }
   #draw.table>thead>tr>th, #draw.table>tbody>tr>td {
     padding: 4px 0 4px 4px;
+  }
+  #draw.table>thead>tr>th.team-emoji, #draw.table>tbody>tr>td.team-emoji {
+    padding-left: 0px;
+    padding-right: 0px;
   }
 }
 

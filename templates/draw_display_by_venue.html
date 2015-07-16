@@ -46,11 +46,11 @@
         <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
       {% endif %}
       {% if show_emoji > 0 %}
-        <th class="hidden-xs th-emoji"/></th>
+        <th class="th-emoji"/></th>
       {% endif %}
       <th>{% if side_allocations_unknown %}Team 1{% else %}Aff{% endif %}</th>
       {% if show_emoji > 0 %}
-        <th class="hidden-xs th-emoji"/></th>
+        <th class="th-emoji"/></th>
       {% endif %}
       <th>{% if side_allocations_unknown %}Team 2{% else %}Neg{% endif %}</th>
       {% if enable_division_motions %}
@@ -80,7 +80,7 @@
         {% include "tables/debate_status.html" %}
       {% endif %}
       {% if show_emoji > 0 %}
-        <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
+        <td class="team-emoji"><span>{% team_emoji debate.aff_team %}</span></td>
       {% endif %}
       <td class="team-name">
         {% if debate.aff_team.type != 'B' %}
@@ -90,7 +90,7 @@
         {% endif %}
       </td>
       {% if show_emoji > 0 %}
-        <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
+        <td class="team-emoji"><span>{% team_emoji debate.neg_team %}</span></td>
       {% endif %}
       <td class="team-name">
         {% if debate.neg_team.type != 'B'  %}
@@ -111,9 +111,9 @@
         <td class="adj-names">
           {% for type, adj in debate.adjudicators %}
             {% if type == 'C' and debate.adjudicators.is_panel %}
-              <span class="adj-chair">{{ adj.name }}</span> Ⓒ
+              <span class="adj-chair">{{ adj.name }} Ⓒ</span>
             {% elif type == 'T' %}
-              <br><span class="adj-trainee">{{ adj.name }}</span> Ⓣ
+              <br><span class="adj-trainee">{{ adj.name }} Ⓣ</span>
             {% else %}
               {% if debate.adjudicators.panel %}<br>{% endif %}
               <span class="adj-normal">{{ adj.name }}</span>
