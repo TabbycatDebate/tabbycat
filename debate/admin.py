@@ -148,7 +148,17 @@ class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
     model = models.AdjudicatorTestScoreHistory
     extra = 1
 
+class AdjudicatorForm(forms.ModelForm):
+    class Meta:
+        model = models.Adjudicator
+        fields = '__all__'
+
+    def clean_url_key(self):
+        return self.cleaned_data['url_key'] or None # So that the url key can be unique and also set to blank
+
+
 class AdjudicatorAdmin(admin.ModelAdmin):
+    form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament','novice','independent')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code',)
     list_filter = ('tournament', 'name')
