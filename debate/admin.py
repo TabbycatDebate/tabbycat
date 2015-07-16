@@ -131,7 +131,6 @@ admin.site.register(models.Division, DivisionAdmin)
 class AdjudicatorConflictInline(admin.TabularInline):
     model = models.AdjudicatorConflict
     extra = 1
-    raw_id_fields = ('team',)
     verbose_name_plural = "Adjudicator team conflicts"
 
 class AdjudicatorAdjudicatorConflictInline(admin.TabularInline):
