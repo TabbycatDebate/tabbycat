@@ -272,10 +272,13 @@
 }
 @media (max-width: $screen-xs-max) {
   #draw tbody, #draw thead  {
-    font-size: 0.8em;
+    font-size: 0.7em;
   }
   .fixedHeader .table thead  {
-    font-size: 0.8em;
+    font-size: 0.7em;
+  }
+  #draw.table>thead>tr>th, #draw.table>tbody>tr>td {
+    padding: 4px 0 4px 4px;
   }
 }
 
