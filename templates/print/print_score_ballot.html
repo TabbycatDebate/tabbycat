@@ -50,7 +50,7 @@
               </td>
               {% for motion in motions %}
                 <td class="text-center small no-borders">
-                  <strong>{{ motion.text }}</strong>
+                  <strong>{{ motion.seq }}. {{ motion.text }}</strong>
                 </td>
               {% endfor %}
             {% endif %}
@@ -64,7 +64,7 @@
               </td>
               {% for motion in motions %}
                 <td class="text-center small no-borders no-overflow">
-                  {{ motion.reference }}
+                  {{ motion.seq }}. {{ motion.reference }}
                 </td>
               {% endfor %}
           </tr>
@@ -76,7 +76,7 @@
               </td>
               {% for motion in motions %}
                 <td class="text-center small no-borders no-overflow">
-                  {{ motion.reference }}
+                  {{ motion.seq }}. {{ motion.reference }}
                 </td>
               {% endfor %}
           </tr>
