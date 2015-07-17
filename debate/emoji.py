@@ -45,11 +45,11 @@ EMOJI_LIST = [
     "🍺", # beer mug
     "🎁", # wrapped present
     "🎓", # graduation cap
-    "🎲", # game die
+    "🎲", # game die                           44
     "🎹", # musical keyboard
     "🏁", # chequered flag
     "🏩", # love hotel
-    "🐍", # snake                              44
+    "🐍", # snake
     "🐧", # penguin
     "🐨", # koala
     "🐬", # dolphin
