@@ -2107,7 +2107,6 @@ def get_adj_feedback(request, t):
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback()
     questions = t.adj_feedback_questions
-    BOOLEAN_VALUES = {None: "Unsure", True: "Yes", False: "No"}
     def _parse_feedback(f):
 
         if f.source_team:
