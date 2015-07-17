@@ -840,7 +840,7 @@ def draw_confirmed(request, round):
 @admin_required
 @round_view
 def draw_print_scoresheets(request, round):
-    draw = round.get_draw()
+    draw = round.get_draw_by_room()
     config = round.tournament.config
     motions = Motion.objects.filter(round=round)
     return r2r(request, "printable_scoresheets.html", dict(
