@@ -842,7 +842,7 @@ def draw_confirmed(request, round):
 def draw_print_scoresheets(request, round):
     draw = round.get_draw_by_room()
     config = round.tournament.config
-    motions = Motion.objects.filter(round=round)
+    motions = Motion.objects.filter(round=round).order_by("seq")
     return r2r(request, "printable_scoresheets.html", dict(
         draw=draw, config=config, motions=motions))
 
