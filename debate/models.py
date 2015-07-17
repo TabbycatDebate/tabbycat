@@ -1350,8 +1350,20 @@ class DebateTeam(models.Model):
         try:
             return DebateTeam.objects.exclude(position=self.position).get(debate=self.debate)
         except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
-            print "error: ", self.debate, self.position
+            logger.error("Error finding opposition: %s, %s", self.debate, self.position)
             return None
+
+    @cached_property
+    def result(self):
+        """Returns 'won' if won, 'lost' if lost, 'result unknown' if no result confirmed."""
+        if self.debate.confirmed_ballot and self.debate.confirmed_ballot.ballot_set:
+            ballotset = self.debate.confirmed_ballot.ballot_set
+            if ballotset.aff_win and self.position == DebateTeam.POSITION_AFFIRMATIVE:
+                return 'won'
+            if ballotset.neg_win and self.position == DebateTeam.POSITION_NEGATIVE:
+                return 'won'
+            return 'lost'
+        return 'result unknown'
 
 
 class DebateAdjudicator(models.Model):
@@ -1574,25 +1586,32 @@ class AdjudicatorFeedback(Submission):
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]
 
-    @property
+    @cached_property
     def source(self):
         if self.source_adjudicator:
             return self.source_adjudicator.adjudicator.name
         if self.source_team:
             return self.source_team.team.short_name
 
-    @property
+    @cached_property
     def debate(self):
         if self.source_adjudicator:
             return self.source_adjudicator.debate
         if self.source_team:
             return self.source_team.debate
 
+    @cached_property
+    def debate_adjudicator(self):
+        try:
+            return self.adjudicator.debateadjudicator_set.get(debate=self.debate)
+        except DebateAdjudicator.DoesNotExist as e:
+            return None
+
     @property
     def round(self):
         return self.debate.round
 
-    @property
+    @cached_property
     def feedback_weight(self):
         if self.round:
             return self.round.feedback_weight

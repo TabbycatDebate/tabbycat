@@ -2110,23 +2110,19 @@ def get_adj_feedback(request, t):
     BOOLEAN_VALUES = {None: "Unsure", True: "Yes", False: "No"}
     def _parse_feedback(f):
 
-        if f.source_team and f.debate.confirmed_ballot:
-            aff_winner = f.debate.confirmed_ballot.ballot_set.aff_win
-            if (aff_winner and f.debate.aff_team == f.source_team.team):
-                win_status = " (Won)"
-            elif (not aff_winner and f.debate.neg_team == f.source_team.team):
-                win_status = " (Won)"
-            else:
-                win_status = " (Lost)"
+        if f.source_team:
+            source_annotation = " (" + f.source_team.result + ")"
+        elif f.source_adjudicator:
+            source_annotation = " (" + f.source_adjudicator.get_type_display() + ")"
         else:
-            win_status = ""
+            source_annotation = ""
 
         data = [
             unicode(f.round.abbreviation),
             unicode(str(f.version) + (f.confirmed and "*" or "")),
             f.debate.bracket,
             f.debate.matchup,
-            unicode(str(f.source) + win_status),
+            unicode(str(f.source) + source_annotation),
             f.score,
         ]
         for question in questions:
