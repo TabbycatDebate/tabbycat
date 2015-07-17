@@ -95,7 +95,7 @@
               <td class="team-emoji">{% team_emoji teamwr.team %}</td>
             {% endif %}
             <td>{{ teamwr.team.institution.name }}</td>
-            {% for checkbox in teamwr.eligibility reversed %}
+            {% for checkbox in teamwr.eligibility %}
               <td>{{ checkbox.tag }}</td>
             {% endfor %}
           </tr>
