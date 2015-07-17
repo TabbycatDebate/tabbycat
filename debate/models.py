@@ -1907,6 +1907,9 @@ class Motion(models.Model):
     objects = MotionManager()
     divisions = models.ManyToManyField('Division', blank=True)
 
+    class Meta:
+        ordering = ['seq',]
+
     def __unicode__(self):
         return self.text
 

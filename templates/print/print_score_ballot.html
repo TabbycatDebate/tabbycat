@@ -28,7 +28,7 @@
         <tbody>
           <tr>
             {% if motions.count == 0 %}
-              <td width="20%" class="no-horizontal-spacing no-vertical-spacing active no-borders">
+              <td width="20%" style="min-width: 90px;" class="no-horizontal-spacing no-vertical-spacing active no-borders">
                 <div class="panel-heading small no-borders">
                   <em>What was the motion?</em>
                 </div>
@@ -37,13 +37,13 @@
                 <div class="writeable"></div>
               </td>
             {% elif motions.count == 1 %}
-              <td width="20%" class="no-borders no-horizontal-spacing no-vertical-spacing active ">
+              <td width="20%" style="min-width: 90px;" class="no-borders no-horizontal-spacing no-vertical-spacing active ">
                 <div class="panel-heading small no-borders">
                   <em>The motion is</em> <strong>{{ motions.0.text }}</strong>
                 </div>
               </td>
             {% else %}
-              <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
+              <td style="min-width: 90px;" class="no-horizontal-spacing no-vertical-spacing active no-borders">
                 <div class="panel-heading small">
                   <em>Selected motion?</em>
                 </div>
