@@ -1883,7 +1883,7 @@ class MotionManager(models.Manager):
 
 
             if round.tournament.config.get('motion_vetoes_enabled') is True:
-                all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
+                all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3, ballot_submission__confirmed=True)
                 motion.aff_vetoes = 0
                 motion.neg_vetoes = 0
                 if all_vetoes:
