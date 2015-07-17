@@ -552,7 +552,7 @@ def action_log_update(request, t):
     timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
     for a in actions:
         action = {
-            'user': a.user.username or action.ip_address or "anonymous",
+            'user': a.user.username if a.user else action.ip_address or "anonymous",
             'type': a.get_type_display(),
             'param': a.get_parameters_display(),
             'timestamp': timestamp_template.render(Context({'t': a.timestamp})),
