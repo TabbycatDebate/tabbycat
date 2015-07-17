@@ -45,11 +45,11 @@ EMOJI_LIST = [
     "🍺", # beer mug
     "🎁", # wrapped present
     "🎓", # graduation cap
-    "🎲", # game die
+    "🎲", # game die                           44
     "🎹", # musical keyboard
     "🏁", # chequered flag
     "🏩", # love hotel
-    "🐍", # snake                              44
+    "🐍", # snake
     "🐧", # penguin
     "🐨", # koala
     "🐬", # dolphin
@@ -94,9 +94,9 @@ EMOJI_LIST = [
     "💑", # couple with heart
     "💔", # broken heart
     "💘", # heart with arrow
-    "💣", # bomb                               91
+    "💣", # bomb                               93
     "💦", # splashing sweat symbol
-    "💩", # pile of poo                        93
+    "💩", # pile of poo
     "💪", # flexed biceps
     "💯", # hundred points symbol
     "💰", # money bag
@@ -118,7 +118,7 @@ EMOJI_LIST = [
     "🚁", # helicopter
     "🚊", # tram
     "🚔", # oncoming police car
-    "🚜", # tractor                            115
+    "🚜", # tractor                            117
     "🚝", # monorail
     "🚦", # vertical traffic light
     "🚴", # bicyclist
@@ -135,5 +135,5 @@ EMOJI_LIST = [
     "🐉", #
     "👹", #
     "👺", #
-    "🚬"  #
+    "💉"  #                                    134
 ]

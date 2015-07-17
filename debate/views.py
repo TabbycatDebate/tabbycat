@@ -564,7 +564,7 @@ def action_log_update(request, t):
     timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
     for a in actions:
         action = {
-            'user': a.user.username or action.ip_address or "anonymous",
+            'user': a.user.username if a.user else a.ip_address or "anonymous",
             'type': a.get_type_display(),
             'param': a.get_parameters_display(),
             'timestamp': timestamp_template.render(Context({'t': a.timestamp})),
@@ -2119,26 +2119,21 @@ def get_adj_feedback(request, t):
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback()
     questions = t.adj_feedback_questions
-    BOOLEAN_VALUES = {None: "Unsure", True: "Yes", False: "No"}
     def _parse_feedback(f):
 
-        if f.source_team and f.debate.confirmed_ballot:
-            aff_winner = f.debate.confirmed_ballot.ballot_set.aff_win
-            if (aff_winner and f.debate.aff_team == f.source_team.team):
-                win_status = " (Won)"
-            elif (not aff_winner and f.debate.neg_team == f.source_team.team):
-                win_status = " (Won)"
-            else:
-                win_status = " (Lost)"
+        if f.source_team:
+            source_annotation = " (" + f.source_team.result + ")"
+        elif f.source_adjudicator:
+            source_annotation = " (" + f.source_adjudicator.get_type_display() + ")"
         else:
-            win_status = ""
+            source_annotation = ""
 
         data = [
             unicode(f.round.abbreviation),
             unicode(str(f.version) + (f.confirmed and "*" or "")),
             f.debate.bracket,
             f.debate.matchup,
-            unicode(str(f.source) + win_status),
+            unicode(str(f.source) + source_annotation),
             f.score,
         ]
         for question in questions:

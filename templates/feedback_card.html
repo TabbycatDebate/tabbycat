@@ -1,3 +1,4 @@
+{% load humanize %}
 
 <ul class="list-group">
   <li class="list-group-item
@@ -6,7 +7,10 @@
     {% elif feedback.score > score_thresholds.high_score %}list-group-item-success
     {% endif %}">
       <span class="badge">{{ feedback.score }}</span>
-      <span class="h5">{{ feedback.adjudicator }}</span>
+      <span class="h5">
+        {{ feedback.adjudicator.name }}
+        ({{ feedback.adjudicator.institution.code }}{% if feedback.debate_adjudicator %}, {{ feedback.debate_adjudicator.get_type_display }}{% endif %})
+      </span>
   </li>
   {% for item in feedback.items %}
     <li class="list-group-item">
@@ -26,13 +30,15 @@
   {% endfor %}
   <li class="list-group-item panel-footer">
     <em><small>{% if feedback.source_adjudicator %}
-      submitted by {{ feedback.source_adjudicator.adjudicator }},
+      submitted by {{ feedback.source_adjudicator.adjudicator.name }}
+      ({{ feedback.source_adjudicator.adjudicator.institution.code }},
+      {{ feedback.source_adjudicator.get_type_display }}),
+    {% elif feedback.source_team %}
+      submitted by <strong>{{ feedback.source_team.team.long_name }}</strong>
+      ({{ feedback.source_team.result }}),
     {% else %}
-      submitted by <strong>{{ feedback.source_team.team.long_name }}</strong>,
-      {% if feedback.source_team %}
-
-      {% endif %}
+      submitter unknown
     {% endif %}
-    {{ feedback.timestamp|timesince }} ago</small></em>
+    {{ feedback.timestamp|naturaltime }}</small></em>
   </li>
 </ul>

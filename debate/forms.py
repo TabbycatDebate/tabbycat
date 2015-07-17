@@ -102,6 +102,9 @@ class TournamentPasswordField(forms.CharField):
             raise forms.ValidationError(_("That password isn't correct."))
         return value
 
+class MotionModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return "%d. %s" % (obj.seq, obj.text)
 
 class RequiredTypedChoiceField(forms.TypedChoiceField):
     def clean(self, value):
@@ -276,9 +279,9 @@ class BallotSetForm(forms.Form):
 
         # 3. Motions fields
         if self.using_motions:
-            self.fields['motion'] = forms.ModelChoiceField(queryset=self.motions, required=True)
+            self.fields['motion'] = MotionModelChoiceField(queryset=self.motions, required=True)
             for side in self.SIDES:
-                self.fields[self._fieldname_motion_veto(side)] = forms.ModelChoiceField(queryset=self.motions, required=False)
+                self.fields[self._fieldname_motion_veto(side)] = MotionModelChoiceField(queryset=self.motions, required=False)
 
         # 4. Speaker fields
         for side, pos in self.SIDES_AND_POSITIONS:
