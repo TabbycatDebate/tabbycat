@@ -30,7 +30,7 @@
             {% if motions.count == 0 %}
               <td width="20%" class="no-horizontal-spacing no-vertical-spacing active no-borders">
                 <div class="panel-heading small no-borders">
-                  <em>What was the motion?</em>
+                  <em>What was the motion? (circle)</em>
                 </div>
               </td>
               <td width="80%" class="no-borders no-horizontal-spacing no-vertical-spacing no-borders">
@@ -45,7 +45,7 @@
             {% else %}
               <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
                 <div class="panel-heading small">
-                  <em>Selected motion?</em>
+                  <em>Selected motion? (circle)</em>
                 </div>
               </td>
               {% for motion in motions %}
@@ -59,7 +59,7 @@
           <tr>
               <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
                 <div class="panel-heading small">
-                  <em>Aff veto?</em>
+                  <em>Aff veto? (circle)</em>
                 </div>
               </td>
               {% for motion in motions %}
@@ -71,7 +71,7 @@
           <tr>
               <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
                 <div class="panel-heading small">
-                  <em>Neg veto?</em>
+                  <em>Neg veto? (circle)</em>
                 </div>
               </td>
               {% for motion in motions %}

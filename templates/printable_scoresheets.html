@@ -24,11 +24,6 @@
           {% include "print/print_score_ballot.html" %}
         {% endwith %}
       {% endif %}
-      {% if type == 'T' %}
-        {% with source=adj source_type="trainee" %}
-          {% include "print/print_score_ballot.html" %}
-        {% endwith %}
-      {% endif %}
     {% endfor %}
   {% endfor %}
 
