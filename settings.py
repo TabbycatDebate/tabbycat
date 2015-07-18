@@ -150,11 +150,15 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
         CACHES = {
             'default': {
                 'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-                'TIMEOUT': 300,
+                'TIMEOUT': 36000,
                 'BINARY': True,
                 'OPTIONS': {  # Maps to pylibmc "behaviors"
+                    # Enable faster IO
+                    'no_block': True,
                     'tcp_nodelay': True,
-                }
+                },
+                # Timeout for set/get requests
+                '_poll_timeout': 2000,
             }
         }
     except:
