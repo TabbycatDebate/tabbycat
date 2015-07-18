@@ -1838,13 +1838,84 @@ class SpeakerScore(models.Model):
 
 class MotionManager(models.Manager):
 
-    def statistics(self, round=None):
+    def statistics(self, round):
+        import time
+        point1 = time.time()
+        for i in range(3):
+            motions_new = self.statistics_new(round)
+        point2 = time.time()
+        for i in range(3):
+            motions_old = self.statistics_old(round)
+        point3 = time.time()
+        print point1
+        print point2
+        print point3
+        print "new", point2 - point1
+        print "old", point3 - point2
+        def compare(attr):
+            for mnew in motions_new:
+                mold = [m for m in motions_old if m == mnew][0]
+                oldval = getattr(mold, attr)
+                newval = getattr(mnew, attr)
+                if oldval == newval:
+                    print mnew.reference, attr, oldval, newval
+                else:
+                    print mnew.reference, attr, oldval, newval, "***********"
+        for attr in ["aff_wins", "neg_wins", "chosen_in", "aff_vetoes", "neg_vetoes"]:
+            compare(attr)
+        return motions_new
+
+    def statistics_new(self, round):
         #from scipy.stats import chisquare
 
-        if round is None:
-            motions = self.select_related('round').filter(round__tournament=round.tournament)
-        else:
-            motions = self.select_related('round').filter(round__seq__lte=round.seq, round__tournament=round.tournament)
+        motions = self.select_related('round').filter(round__seq__lte=round.seq, round__tournament=round.tournament)
+
+        winners = TeamScore.objects.filter(
+                win=True, ballot_submission__confirmed=True,
+                ballot_submission__debate__round__tournament=round.tournament,
+                ballot_submission__debate__round__seq__lte=round.seq).select_related(
+                'debate_team__position', 'ballot_submission__motion')
+        wins = dict()
+        for pos, _ in DebateTeam.POSITION_CHOICES:
+            wins[pos] = dict.fromkeys(motions, 0)
+        for winner in winners:
+            wins[winner.debate_team.position][winner.ballot_submission.motion] += 1
+
+        for motion in motions:
+            motion.aff_wins = wins[DebateTeam.POSITION_AFFIRMATIVE][motion]
+            motion.neg_wins = wins[DebateTeam.POSITION_NEGATIVE][motion]
+            motion.chosen_in = sum(wins[pos][motion] for pos, _ in DebateTeam.POSITION_CHOICES)
+
+            # motion.c1, motion.p_value = chisquare([motion.aff_wins, motion.neg_wins], f_exp=[motion.chosen_in / 2, motion.chosen_in / 2])
+            # # Culling out the NaN errors
+            # try:
+            #     test = int(motion.c1)
+            # except ValueError:
+            #     motion.c1, motion.p_value = None, None
+            # TODO: temporarily disabled
+            motion.c1, motion.p_value = None, None
+
+        if round.tournament.config.get('motion_vetoes_enabled'):
+            veto_objs = DebateTeamMotionPreference.objects.filter(
+                    preference=3, ballot_submission__confirmed=True,
+                    ballot_submission__debate__round__tournament=round.tournament,
+                    ballot_submission__debate__round__seq__lte=round.seq).select_related(
+                    'debate_team__position', 'ballot_submission__motion')
+            vetoes = dict()
+            for pos, _ in DebateTeam.POSITION_CHOICES:
+                vetoes[pos] = dict.fromkeys(motions, 0)
+            for veto in veto_objs:
+                vetoes[veto.debate_team.position][veto.motion] += 1
+
+            for motion in motions:
+                motion.aff_vetoes = vetoes[DebateTeam.POSITION_AFFIRMATIVE][motion]
+                motion.neg_vetoes = vetoes[DebateTeam.POSITION_NEGATIVE][motion]
+
+        return motions
+
+    def statistics_old(self, round):
+        # Old method
+        motions = self.select_related('round').filter(round__seq__lte=round.seq, round__tournament=round.tournament)
 
         ballotsubs = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
         team_scores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
@@ -1879,8 +1950,7 @@ class MotionManager(models.Manager):
                 # except ValueError:
                 #     motion.c1, motion.p_value = None, None
                 # TODO: temporarily disabled
-                motion.c1, motion.p_value = None, None
-
+                # motion.c1, motion.p_value = None, None
 
             if round.tournament.config.get('motion_vetoes_enabled') is True:
                 all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3, ballot_submission__confirmed=True)
