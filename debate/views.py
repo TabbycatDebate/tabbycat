@@ -2111,7 +2111,7 @@ def adj_feedback_list(request, t, adj_id):
 def get_adj_feedback(request, t):
 
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
-    feedback = adj.get_feedback()
+    feedback = adj.get_feedback().filter(confirmed=True)
     questions = t.adj_feedback_questions
     def _parse_feedback(f):
 
