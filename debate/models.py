@@ -494,9 +494,11 @@ class BreakingTeam(models.Model):
 
     REMARK_CAPPED = 'C'
     REMARK_INELIGIBLE = 'I'
+    REMARK_DIFFERENT_BREAK = 'D'
     REMARK_CHOICES = (
-        (REMARK_CAPPED,     'Capped'),
-        (REMARK_INELIGIBLE, 'Ineligible'),
+        (REMARK_CAPPED,          'Capped'),
+        (REMARK_INELIGIBLE,      'Ineligible'),
+        (REMARK_DIFFERENT_BREAK, 'Different break'),
     )
     remark = models.CharField(max_length=1, choices=REMARK_CHOICES, blank=True, null=True)
 
