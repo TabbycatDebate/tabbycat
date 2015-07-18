@@ -1454,7 +1454,9 @@ def toggle_postponed(request, t):
 def get_speaker_standings(rounds, round, results_override=False, only_novices=False, for_replies=False):
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
     reply_position = round.tournament.REPLY_POSITION
-    minimum_debates_needed = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=round.tournament).count() - round.tournament.config.get('standings_missed_debates')
+    total_prelim_rounds = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=round.tournament).count()
+    missable_debates = round.tournament.config.get('standings_missed_debates')
+    minimum_debates_needed = total_prelim_rounds - missable_debates
 
     if for_replies:
         speaker_scores = SpeakerScore.objects.select_related(
@@ -1485,7 +1487,11 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
         this_speakers_scores = [score for score in speaker_scores if score.speaker == speaker]
         speaker.scores = get_scores(speaker, this_speakers_scores)
         speaker.results_in = speaker.scores[-1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
-        if len(filter(None, speaker.scores)) > minimum_debates_needed:
+
+        if round.seq < total_prelim_rounds:
+            speaker.total = sum(filter(None, speaker.scores))
+            speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
+        elif len(filter(None, speaker.scores)) >= minimum_debates_needed:
             speaker.total = sum(filter(None, speaker.scores))
             speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
         else:
