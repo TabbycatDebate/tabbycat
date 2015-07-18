@@ -4,7 +4,7 @@ from collections import Counter
 from standings import annotate_team_standings
 from models import BreakingTeam
 
-def get_breaking_teams(category, include_all=False):
+def get_breaking_teams(category, include_all=False, include_categories=False):
     """Returns a list of Teams, with additional attributes. For each Team t in
     the returned list:
         t.rank is the rank of the team, including ineligible teams.
@@ -22,6 +22,10 @@ def get_breaking_teams(category, include_all=False):
 
     If 'include_all' is False, the capped and ineligible teams are excluded,
     but t.rank is still the rank including those teams.
+
+    If 'include_categories' is True, t.categories_for_display will be a comma-
+    delimited list of category names that are not this category, and lower
+    or equal priority to this category.
     """
     teams = category.breaking_teams.all()
     if not include_all:
@@ -37,6 +41,13 @@ def get_breaking_teams(category, include_all=False):
                 team.break_rank = "<error>"
         else:
             team.break_rank = bt.break_rank
+
+        if include_categories:
+            categories = team.break_categories_nongeneral.exclude(id=category.id).exclude(priority__lt=category.priority)
+            team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
+        else:
+            team.categories_for_display = ""
+
     return teams
 
 def generate_all_breaking_teams(tournament):
@@ -83,7 +94,7 @@ def update_breaking_teams(category):
     If a breaking team entry already exists and there is a remark associated
     with it, it retains the remark and skips that team.
     """
-    higher_breakingteams = BreakingTeam.objects.filter(break_category__priority__lt=category.priority).select_related('team')
+    higher_breakingteams = BreakingTeam.objects.filter(break_category__priority__lt=category.priority, break_rank__isnull=False).select_related('team')
     higher_teams = {bt.team for bt in higher_breakingteams}
     eligible_teams = _eligible_team_set(category)
     _generate_breaking_teams(category, eligible_teams, higher_teams)
@@ -127,8 +138,8 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
         rank_value = (team.points, team.speaker_score)
         is_new_rank = rank_value != prev_rank_value
         if is_new_rank:
-            # if we were up to the last break rank and this would be a new one, we're done
-            if cur_break_rank == break_size:
+            # if we have enough teams, we're done
+            if len(breaking_teams) >= break_size:
                 break
             cur_rank = i
             prev_rank_value = rank_value
@@ -166,12 +177,12 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
         else:
             breaking_teams_to_create.append(bt)
 
-        if cur_break_rank > break_size:
-            break
-
         # Take note of the institution
         teams_from_institution[team.institution] += 1
 
     BreakingTeam.objects.bulk_create(breaking_teams_to_create)
+    BreakingTeam.objects.filter(break_category=category, break_rank__isnull=False).exclude(
+        team_id__in=[t.id for t in breaking_teams]).delete()
+
 
     return breaking_teams

@@ -1986,6 +1986,7 @@ class ActionLog(models.Model):
     ACTION_TYPE_BREAK_GENERATE_ALL      = 71
     ACTION_TYPE_BREAK_UPDATE_ALL        = 72
     ACTION_TYPE_BREAK_UPDATE_ONE        = 73
+    ACTION_TYPE_BREAK_EDIT_REMARKS      = 74
     ACTION_TYPE_AVAIL_TEAMS_SAVE        = 80
     ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE = 81
     ACTION_TYPE_AVAIL_VENUES_SAVE       = 82
@@ -2016,6 +2017,7 @@ class ActionLog(models.Model):
         (ACTION_TYPE_BREAK_GENERATE_ALL     , 'Generated the teams break for all categories'),
         (ACTION_TYPE_BREAK_UPDATE_ALL       , 'Updated the teams break for all categories'),
         (ACTION_TYPE_BREAK_UPDATE_ONE       , 'Updated the teams break for one category'),
+        (ACTION_TYPE_BREAK_EDIT_REMARKS     , 'Edited breaking team remarks'),
         (ACTION_TYPE_ROUND_START_TIME_SET   , 'Set start time'),
         (ACTION_TYPE_AVAIL_TEAMS_SAVE       , 'Edited teams availability'),
         (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE, 'Edited adjudicators availability'),
@@ -2044,6 +2046,7 @@ class ActionLog(models.Model):
         ACTION_TYPE_BREAK_GENERATE_ALL     : (),
         ACTION_TYPE_BREAK_UPDATE_ALL       : (),
         ACTION_TYPE_BREAK_UPDATE_ONE       : ('break_category'),
+        ACTION_TYPE_BREAK_EDIT_REMARKS     : (),
         ACTION_TYPE_ROUND_START_TIME_SET   : ('round',),
         ACTION_TYPE_MOTION_EDIT            : ('motion',),
         ACTION_TYPE_MOTIONS_RELEASE        : ('round',),

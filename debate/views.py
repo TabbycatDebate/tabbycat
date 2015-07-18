@@ -213,32 +213,34 @@ def public_break_index(request, t):
 @public_optional_tournament_view('public_breaking_teams')
 def public_breaking_teams(request, t, category):
     bc = get_object_or_404(BreakCategory, slug=category)
-    teams = breaking.get_breaking_teams(bc, include_all=True)
-    if t.config.get('public_break_categories'):
-        for team in teams:
-            categories = team.break_categories_nongeneral.exclude(id=bc.id).exclude(priority__lt=bc.priority)
-            team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
-    else:
-        for team in teams:
-            team.categories_for_display = ""
-    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=bc))
+    teams = breaking.get_breaking_teams(bc, include_all=True, include_categories=t.config.get('public_break_categories'))
+    generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
+    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=bc, generated=generated))
 
 @admin_required
 @tournament_view
 def breaking_teams(request, t, category):
     bc = get_object_or_404(BreakCategory, slug=category)
-    teams = breaking.get_breaking_teams(bc, include_all=True)
-    for team in teams:
-        categories = team.break_categories_nongeneral.exclude(id=bc.id).exclude(priority__lt=bc.priority)
-        team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
+
+    if request.method == "POST":
+        form = forms.BreakingTeamsForm(bc, request.POST)
+        if form.is_valid():
+            form.save()
+        ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_EDIT_REMARKS,
+            user=request.user, tournament=t, ip_address=get_ip_address(request))
+        messages.success(request, "Changes to breaking team remarks saved.")
+
+    else:
+        form = forms.BreakingTeamsForm(bc)
+
     generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
-    return r2r(request, 'breaking_teams.html', dict(teams=teams, category=bc, generated=generated))
+    return r2r(request, 'breaking_teams.html', dict(form=form, category=bc, generated=generated))
 
 @expect_post
 @tournament_view
 def generate_all_breaking_teams(request, t, category):
     """Generates for all break categories; 'category' is used only for the redirect"""
-    breaking.generate_breaking_teams(t)
+    breaking.generate_all_breaking_teams(t)
     ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_GENERATE_ALL,
             user=request.user, tournament=t, ip_address=get_ip_address(request))
     messages.success(request, "Teams break generated for all break categories.")
