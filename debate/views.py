@@ -236,13 +236,33 @@ def breaking_teams(request, t, category):
 
 @expect_post
 @tournament_view
-def generate_breaking_teams(request, t, category):
-    # generates for all break categories
-    # 'category' is used only for the redirect
+def generate_all_breaking_teams(request, t, category):
+    """Generates for all break categories; 'category' is used only for the redirect"""
     breaking.generate_breaking_teams(t)
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_GENERATE,
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_GENERATE_ALL,
             user=request.user, tournament=t, ip_address=get_ip_address(request))
-    messages.success(request, "Teams break generated.")
+    messages.success(request, "Teams break generated for all break categories.")
+    return redirect_tournament('breaking_teams', t, category=category)
+
+@expect_post
+@tournament_view
+def update_all_breaking_teams(request, t, category):
+    """Generates for all break categories; 'category' is used only for the redirect"""
+    breaking.update_all_breaking_teams(t)
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_UPDATE_ALL,
+            user=request.user, tournament=t, ip_address=get_ip_address(request))
+    messages.success(request, "Teams break updated for all break categories.")
+    return redirect_tournament('breaking_teams', t, category=category)
+
+@expect_post
+@tournament_view
+def update_breaking_teams(request, t, category):
+    bc = get_object_or_404(BreakCategory, slug=category)
+    breaking.update_breaking_teams(bc)
+    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_UPDATE_ONE,
+            user=request.user, tournament=t, ip_address=get_ip_address(request),
+            break_category=bc)
+    messages.success(request, "Teams break updated for break category %s." % bc.name)
     return redirect_tournament('breaking_teams', t, category=category)
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)

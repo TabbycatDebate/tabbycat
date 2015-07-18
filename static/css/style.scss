@@ -336,6 +336,10 @@ input[type="radio"].form-control, input[type="checkbox"].form-control {
   width: 20px;
 }
 
+.forms-block-inline form {
+  display: inline-block;
+}
+
 
 
 @media (max-width: $screen-xs-max) {

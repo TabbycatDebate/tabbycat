@@ -144,7 +144,9 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/adjudicators/notes/test/set/$', 'set_adj_note', name='set_adj_note'),
 
     url(r'^admin/break/teams/(?P<category>\w+)/$', 'breaking_teams', name='breaking_teams'),
-    url(r'^admin/break/generate/(?P<category>\w+)/$', 'generate_breaking_teams', name='generate_breaking_teams'),
+    url(r'^admin/break/generate_all/(?P<category>\w+)/$', 'generate_all_breaking_teams', name='generate_breaking_teams'),
+    url(r'^admin/break/update_all/(?P<category>\w+)/$', 'update_all_breaking_teams', name='update_all_breaking_teams'),
+    url(r'^admin/break/update/(?P<category>\w+)/$', 'update_breaking_teams', name='update_breaking_teams'),
     url(r'^admin/break/eligibility/$', 'break_eligibility', name='break_eligibility'),
     url(r'^admin/break/adjudicators/$',  'breaking_adjs', name='breaking_adjs'),
 

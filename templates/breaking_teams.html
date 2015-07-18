@@ -42,17 +42,29 @@
 
   {% endif %}
 
-  <p>
+  <div class="forms-block-inline">
     <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
       <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
         {% if generated %}
-          Regenerate the break for all categories
+          Reset and regenerate the break for all categories
         {% else %}
           Generate the break for all categories
         {% endif %}
       </button>
     </form>
-  </p>
+    {% if generated %}
+    <form action="{% tournament_url update_all_breaking_teams category.slug %}" method="POST">
+      <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+        Update the break for all categories
+      </button>
+    </form>
+    <form action="{% tournament_url update_breaking_teams category.slug %}" method="POST">
+      <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+        Update the break for this category ({{ category.name }})
+      </button>
+    </form>
+    {% endif %}
+  </div>
 {% endblock %}
 
 {% block content %}

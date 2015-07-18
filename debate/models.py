@@ -495,12 +495,17 @@ class BreakingTeam(models.Model):
     REMARK_CAPPED = 'C'
     REMARK_INELIGIBLE = 'I'
     REMARK_DIFFERENT_BREAK = 'D'
+    REMARK_DISQUALIFIED = 'd'
+    REMARK_LOST_COIN_TOSS = 't'
     REMARK_CHOICES = (
         (REMARK_CAPPED,          'Capped'),
         (REMARK_INELIGIBLE,      'Ineligible'),
         (REMARK_DIFFERENT_BREAK, 'Different break'),
+        (REMARK_DISQUALIFIED,    'Disqualified'),
+        (REMARK_LOST_COIN_TOSS,  'Lost coin toss'),
     )
-    remark = models.CharField(max_length=1, choices=REMARK_CHOICES, blank=True, null=True)
+    remark = models.CharField(max_length=1, choices=REMARK_CHOICES, blank=True, null=True,
+            help_text="Used to explain why an otherwise-qualified team didn't break")
 
     class Meta:
         unique_together = [('break_category', 'team')]
@@ -1978,7 +1983,9 @@ class ActionLog(models.Model):
     ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  = 50
     ACTION_TYPE_ROUND_START_TIME_SET    = 60
     ACTION_TYPE_BREAK_ELIGIBILITY_EDIT  = 70
-    ACTION_TYPE_BREAK_GENERATE          = 71
+    ACTION_TYPE_BREAK_GENERATE_ALL      = 71
+    ACTION_TYPE_BREAK_UPDATE_ALL        = 72
+    ACTION_TYPE_BREAK_UPDATE_ONE        = 73
     ACTION_TYPE_AVAIL_TEAMS_SAVE        = 80
     ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE = 81
     ACTION_TYPE_AVAIL_VENUES_SAVE       = 82
@@ -2006,7 +2013,9 @@ class ActionLog(models.Model):
         (ACTION_TYPE_MOTIONS_UNRELEASE      , 'Unreleased motions'),
         (ACTION_TYPE_DEBATE_IMPORTANCE_EDIT , 'Edited debate importance'),
         (ACTION_TYPE_BREAK_ELIGIBILITY_EDIT , 'Edited break eligibility'),
-        (ACTION_TYPE_BREAK_GENERATE         , 'Generated the teams break'),
+        (ACTION_TYPE_BREAK_GENERATE_ALL     , 'Generated the teams break for all categories'),
+        (ACTION_TYPE_BREAK_UPDATE_ALL       , 'Updated the teams break for all categories'),
+        (ACTION_TYPE_BREAK_UPDATE_ONE       , 'Updated the teams break for one category'),
         (ACTION_TYPE_ROUND_START_TIME_SET   , 'Set start time'),
         (ACTION_TYPE_AVAIL_TEAMS_SAVE       , 'Edited teams availability'),
         (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE, 'Edited adjudicators availability'),
@@ -2032,7 +2041,9 @@ class ActionLog(models.Model):
         ACTION_TYPE_DRAW_UNRELEASE         : ('round',),
         ACTION_TYPE_DEBATE_IMPORTANCE_EDIT : ('debate',),
         ACTION_TYPE_BREAK_ELIGIBILITY_EDIT : (),
-        ACTION_TYPE_BREAK_GENERATE         : (),
+        ACTION_TYPE_BREAK_GENERATE_ALL     : (),
+        ACTION_TYPE_BREAK_UPDATE_ALL       : (),
+        ACTION_TYPE_BREAK_UPDATE_ONE       : ('break_category'),
         ACTION_TYPE_ROUND_START_TIME_SET   : ('round',),
         ACTION_TYPE_MOTION_EDIT            : ('motion',),
         ACTION_TYPE_MOTIONS_RELEASE        : ('round',),
@@ -2043,7 +2054,7 @@ class ActionLog(models.Model):
         ACTION_TYPE_AVAIL_VENUES_SAVE      : ('round',),
     }
 
-    ALL_OPTIONAL_FIELDS = ('debate', 'ballot_submission', 'adjudicator_feedback', 'round', 'motion')
+    ALL_OPTIONAL_FIELDS = ('debate', 'ballot_submission', 'adjudicator_feedback', 'round', 'motion', 'break_category')
 
     type = models.PositiveSmallIntegerField(choices=ACTION_TYPE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -2057,6 +2068,7 @@ class ActionLog(models.Model):
     adjudicator_feedback = models.ForeignKey(AdjudicatorFeedback, blank=True, null=True)
     round = models.ForeignKey(Round, blank=True, null=True)
     motion = models.ForeignKey(Motion, blank=True, null=True)
+    break_category = models.ForeignKey(BreakCategory, blank=True, null=True)
 
     objects = ActionLogManager()
 
@@ -2106,6 +2118,8 @@ class ActionLog(models.Model):
                     strings.append(value.adjudicator.name + " (" + str(value.score) + ")")
                 elif field_name == 'adjudicator_feedback':
                     strings.append(value.adjudicator.name)
+                elif field_name == 'break_category':
+                    strings.append(value.name)
                 else:
                     strings.append(unicode(value))
             except AttributeError:
