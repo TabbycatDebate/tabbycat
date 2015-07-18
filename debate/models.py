@@ -1865,60 +1865,51 @@ class SpeakerScore(models.Model):
 
 class MotionManager(models.Manager):
 
-    def statistics(self, round=None):
+    def statistics(self, round):
         #from scipy.stats import chisquare
 
-        if round is None:
-            motions = self.select_related('round').filter(round__tournament=round.tournament)
-        else:
-            motions = self.select_related('round').filter(round__seq__lte=round.seq, round__tournament=round.tournament)
+        motions = self.select_related('round').filter(round__seq__lte=round.seq, round__tournament=round.tournament)
 
-        ballotsubs = BallotSubmission.objects.select_related('motion', 'debate').filter(confirmed=True)
-        team_scores = TeamScore.objects.select_related('debate_team', 'ballot_submission')
+        winners = TeamScore.objects.filter(
+                win=True, ballot_submission__confirmed=True,
+                ballot_submission__debate__round__tournament=round.tournament,
+                ballot_submission__debate__round__seq__lte=round.seq).select_related(
+                'debate_team__position', 'ballot_submission__motion')
+        wins = dict()
+        for pos, _ in DebateTeam.POSITION_CHOICES:
+            wins[pos] = dict.fromkeys(motions, 0)
+        for winner in winners:
+            wins[winner.debate_team.position][winner.ballot_submission.motion] += 1
 
         for motion in motions:
-            motion_ballotsubs = [b for b in ballotsubs if b.motion == motion]
+            motion.aff_wins = wins[DebateTeam.POSITION_AFFIRMATIVE][motion]
+            motion.neg_wins = wins[DebateTeam.POSITION_NEGATIVE][motion]
+            motion.chosen_in = sum(wins[pos][motion] for pos, _ in DebateTeam.POSITION_CHOICES)
 
-            motion.aff_wins, motion.aff_wins_percent = 0, 0
-            motion.neg_wins, motion.neg_wins_percent = 0, 0
-            motion.chosen_in = len(motion_ballotsubs)
+            # motion.c1, motion.p_value = chisquare([motion.aff_wins, motion.neg_wins], f_exp=[motion.chosen_in / 2, motion.chosen_in / 2])
+            # # Culling out the NaN errors
+            # try:
+            #     test = int(motion.c1)
+            # except ValueError:
+            #     motion.c1, motion.p_value = None, None
+            # TODO: temporarily disabled
+            motion.c1, motion.p_value = None, None
 
-            if motion.chosen_in > 0:
-                for ballot in motion_ballotsubs:
-                    # Find the team score the matches, return none otherwise
-                    teamscore = next((x for x in team_scores if x.ballot_submission == ballot), None)
-                    debate_team = teamscore.debate_team
-                    if debate_team.position == DebateTeam.POSITION_AFFIRMATIVE:
-                        if teamscore.win:
-                            motion.aff_wins += 1
-                        else:
-                            motion.neg_wins += 1
-                    elif debate_team.position == DebateTeam.POSITION_NEGATIVE:
-                        if teamscore.win:
-                            motion.neg_wins += 1
-                        else:
-                            motion.aff_wins += 1
+        if round.tournament.config.get('motion_vetoes_enabled'):
+            veto_objs = DebateTeamMotionPreference.objects.filter(
+                    preference=3, ballot_submission__confirmed=True,
+                    ballot_submission__debate__round__tournament=round.tournament,
+                    ballot_submission__debate__round__seq__lte=round.seq).select_related(
+                    'debate_team__position', 'ballot_submission__motion')
+            vetoes = dict()
+            for pos, _ in DebateTeam.POSITION_CHOICES:
+                vetoes[pos] = dict.fromkeys(motions, 0)
+            for veto in veto_objs:
+                vetoes[veto.debate_team.position][veto.motion] += 1
 
-                # motion.c1, motion.p_value = chisquare([motion.aff_wins, motion.neg_wins], f_exp=[motion.chosen_in / 2, motion.chosen_in / 2])
-                # # Culling out the NaN errors
-                # try:
-                #     test = int(motion.c1)
-                # except ValueError:
-                #     motion.c1, motion.p_value = None, None
-                # TODO: temporarily disabled
-                motion.c1, motion.p_value = None, None
-
-
-            if round.tournament.config.get('motion_vetoes_enabled') is True:
-                all_vetoes = DebateTeamMotionPreference.objects.filter(motion=motion, preference=3)
-                motion.aff_vetoes = 0
-                motion.neg_vetoes = 0
-                if all_vetoes:
-                    for veto in all_vetoes:
-                        if veto.debate_team.position == DebateTeam.POSITION_AFFIRMATIVE:
-                            motion.aff_vetoes += 1
-                        elif veto.debate_team.position == DebateTeam.POSITION_NEGATIVE:
-                            motion.neg_vetoes += 1
+            for motion in motions:
+                motion.aff_vetoes = vetoes[DebateTeam.POSITION_AFFIRMATIVE][motion]
+                motion.neg_vetoes = vetoes[DebateTeam.POSITION_NEGATIVE][motion]
 
         return motions
 
