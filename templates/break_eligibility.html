@@ -29,8 +29,9 @@
       }
 
       // initialize team counts
-      for (i = 1; i <= {{ tournament.breakcategory_set.count }}; i++)
-        updateCounts(String(i));
+      {% for category in tournament.breakcategory_set.all %}
+        updateCounts(String({{ category.id }}));
+      {% endfor %}
 
       $(".select-all").each(function () {
         $(this).click(function () {
@@ -74,10 +75,10 @@
           {% for category in tournament.breakcategory_set.all %}
             <th>
               {{ category.name }}
-              (<span id="count_{{ forloop.counter }}"></span>)
+              (<span id="count_{{ category.id }}"></span>)
               <span class="small"> select
-                <a class="select-all" href="#" category="{{ forloop.counter }}">all</a> or
-                <a class="select-none" href="#" category="{{ forloop.counter }}">none</a>
+                <a class="select-all" href="#" category="{{ category.id }}">all</a> or
+                <a class="select-none" href="#" category="{{ category.id }}">none</a>
               </span>
             </th>
           {% endfor %}
