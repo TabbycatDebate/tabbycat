@@ -420,6 +420,7 @@ def public_side_allocations(request, t):
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_team_tab(request, t):
+    print "Generating public team tab"
     round = t.current_round
     from debate.models import TeamScore
     teams = Team.objects.ranked_standings(round)
@@ -1621,6 +1622,7 @@ def speaker_standings(request, round, for_print=False):
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_speaker_tab(request, t):
+    print "Generating public speaker tab"
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
