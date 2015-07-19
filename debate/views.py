@@ -109,6 +109,7 @@ def index(request):
 
 ## Public UI
 
+@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @tournament_view
 def team_speakers(request, t, team_id):
     from django.http import JsonResponse
