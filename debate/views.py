@@ -2002,7 +2002,8 @@ def adj_feedback(request, t):
             adj.avg_score = None
             adj.avg_margin = None
 
-    all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(confirmed=True).select_related(
+    all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(
+            confirmed=True).exclude(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).select_related(
         'adjudicator', 'source_adjudicator__debate__round', 'source_team__debate__round'))
     rounds = t.prelim_rounds(until=t.current_round)
 

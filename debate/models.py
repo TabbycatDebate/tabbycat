@@ -583,7 +583,9 @@ class Adjudicator(Person):
 
 
     def _feedback_score(self):
-        return self.adjudicatorfeedback_set.filter(confirmed=True).aggregate(avg=models.Avg('score'))['avg']
+        return self.adjudicatorfeedback_set.filter(confirmed=True).exclude(
+                source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
+                avg=models.Avg('score'))['avg']
 
     @property
     def feedback_score(self):
