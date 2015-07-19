@@ -1291,7 +1291,7 @@ def public_results(request, round):
 @public_optional_tournament_view('public_results')
 def public_results_index(request, tournament):
     rounds = Round.objects.filter(tournament=tournament,
-        seq__lt=tournament.current_round.seq).order_by('seq')
+        seq__lt=tournament.current_round.seq, silent=False).order_by('seq')
     return r2r(request, "public/public_results_index.html", dict(rounds=rounds))
 
 @login_required
