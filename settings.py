@@ -177,7 +177,7 @@ if os.environ.get('DEBUG', ''):
 # =========
 
 def show_toolbar(request):
-    return not request.is_ajax() and request.user and request.user.username == "philip"
+    return not request.is_ajax() and request.user and request.user.is_superuser
 
 if os.environ.get('DEBUGTOOLBAR', ''):
 
