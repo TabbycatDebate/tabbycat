@@ -158,6 +158,7 @@ def public_draw_by_round(request, round):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_team_standings')
 def public_team_standings(request, t):
+    print "Generating public team standings"
     if t.release_all:
         # Assume that the time "release all" is used, the current round
         # is the last round.
