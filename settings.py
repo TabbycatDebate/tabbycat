@@ -142,7 +142,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
-if os.environ.get('MEMCACHE_SERVERS', ''):
+if os.environ.get('MEMCACHIER_SERVERS', ''):
     try:
         os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
         os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
