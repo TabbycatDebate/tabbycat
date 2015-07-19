@@ -109,6 +109,7 @@ def index(request):
 
 ## Public UI
 
+@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @tournament_view
 def team_speakers(request, t, team_id):
     from django.http import JsonResponse
@@ -157,6 +158,7 @@ def public_draw_by_round(request, round):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_team_standings')
 def public_team_standings(request, t):
+    print "Generating public team standings"
     if t.release_all:
         # Assume that the time "release all" is used, the current round
         # is the last round.
@@ -317,7 +319,7 @@ def public_feedback_submit(request, t):
     return r2r(request, 'public/public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
 
 
-@cache_page(3) # short cache - needs to update often
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('feedback_progress')
 def public_feedback_progress(request, t):
     def calculate_coverage(submitted, total):
@@ -336,9 +338,9 @@ def public_feedback_progress(request, t):
     for adj in adjudicators:
         adj.total_ballots = 0
         adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator = adj)
-        adjudications = DebateAdjudicator.objects.filter(adjudicator = adj)
+        adjs_adjudications = [a for a in adjudications if a.adjudicator == adj]
 
-        for item in adjudications:
+        for item in adjs_adjudications:
             # Finding out the composition of their panel, tallying owed ballots
             if item.type == item.TYPE_CHAIR:
                 adj.total_ballots += len(item.debate.adjudicators.trainees)
@@ -452,6 +454,7 @@ def public_side_allocations(request, t):
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_team_tab(request, t):
+    print "Generating public team tab"
     round = t.current_round
     from debate.models import TeamScore
     teams = Team.objects.ranked_standings(round)
@@ -629,7 +632,7 @@ def feedback_progress(request, t):
     from debate.models import AdjudicatorFeedback
     feedback = AdjudicatorFeedback.objects.select_related('source_adjudicator__adjudicator','source_team__team').all()
     adjudicators = Adjudicator.objects.all()
-    adjudications = DebateAdjudicator.objects.select_related('adjudicator','debate').all()
+    adjudications = list(DebateAdjudicator.objects.select_related('adjudicator','debate').all())
     teams = Team.objects.all()
 
     # Teams only owe feedback on non silent rounds
@@ -639,9 +642,9 @@ def feedback_progress(request, t):
     for adj in adjudicators:
         adj.total_ballots = 0
         adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator = adj)
-        adjudications = adjudications.filter(adjudicator = adj)
+        adjs_adjudications = [a for a in adjudications if a.adjudicator == adj]
 
-        for item in adjudications:
+        for item in adjs_adjudications:
             # Finding out the composition of their panel, tallying owed ballots
             if item.type == item.TYPE_CHAIR:
                 adj.total_ballots += len(item.debate.adjudicators.trainees)
@@ -1324,7 +1327,7 @@ def public_results(request, round):
 @public_optional_tournament_view('public_results')
 def public_results_index(request, tournament):
     rounds = Round.objects.filter(tournament=tournament,
-        seq__lt=tournament.current_round.seq).order_by('seq')
+        seq__lt=tournament.current_round.seq, silent=False).order_by('seq')
     return r2r(request, "public/public_results_index.html", dict(rounds=rounds))
 
 @login_required
@@ -1488,7 +1491,9 @@ def toggle_postponed(request, t):
 def get_speaker_standings(rounds, round, results_override=False, only_novices=False, for_replies=False):
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
     reply_position = round.tournament.REPLY_POSITION
-    minimum_debates_needed = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=round.tournament).count() - round.tournament.config.get('standings_missed_debates')
+    total_prelim_rounds = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=round.tournament).count()
+    missable_debates = round.tournament.config.get('standings_missed_debates')
+    minimum_debates_needed = total_prelim_rounds - missable_debates
 
     if for_replies:
         speaker_scores = SpeakerScore.objects.select_related(
@@ -1519,7 +1524,11 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
         this_speakers_scores = [score for score in speaker_scores if score.speaker == speaker]
         speaker.scores = get_scores(speaker, this_speakers_scores)
         speaker.results_in = speaker.scores[-1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
-        if len(filter(None, speaker.scores)) > minimum_debates_needed:
+
+        if round.seq < total_prelim_rounds:
+            speaker.total = sum(filter(None, speaker.scores))
+            speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
+        elif len(filter(None, speaker.scores)) >= minimum_debates_needed:
             speaker.total = sum(filter(None, speaker.scores))
             speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
         else:
@@ -1647,6 +1656,7 @@ def speaker_standings(request, round, for_print=False):
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_speaker_tab(request, t):
+    print "Generating public speaker tab"
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
@@ -2030,7 +2040,8 @@ def adj_feedback(request, t):
             adj.avg_score = None
             adj.avg_margin = None
 
-    all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(confirmed=True).select_related(
+    all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(
+            confirmed=True).exclude(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).select_related(
         'adjudicator', 'source_adjudicator__debate__round', 'source_team__debate__round'))
     rounds = t.prelim_rounds(until=t.current_round)
 
@@ -2139,7 +2150,7 @@ def adj_feedback_list(request, t, adj_id):
 def get_adj_feedback(request, t):
 
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
-    feedback = adj.get_feedback()
+    feedback = adj.get_feedback().filter(confirmed=True)
     questions = t.adj_feedback_questions
     def _parse_feedback(f):
 
