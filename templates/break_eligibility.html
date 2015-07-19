@@ -88,15 +88,15 @@
         {% for team, eligibility in form.team_iter %}
           <tr>
             <td>
-              <span class="team team-speakers-hover" id="team_speakers_{{ teamwr.team.id }}">
-                {{ teamwr.team.short_name }}
+              <span class="team team-speakers-hover" id="team_speakers_{{ team.id }}">
+                {{ team.short_name }}
               </span>
             </td>
             {% if show_emoji > 0 %}
-              <td class="team-emoji">{% team_emoji teamwr.team %}</td>
+              <td class="team-emoji">{% team_emoji team %}</td>
             {% endif %}
-            <td>{{ teamwr.team.institution.name }}</td>
-            {% for checkbox in teamwr.eligibility %}
+            <td>{{ team.institution.name }}</td>
+            {% for checkbox in eligibility %}
               <td>{{ checkbox.tag }}</td>
             {% endfor %}
           </tr>
