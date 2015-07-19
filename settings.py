@@ -181,11 +181,6 @@ def show_toolbar(request):
 
 if os.environ.get('DEBUGTOOLBAR', ''):
 
-    INTERNAL_IPS = (
-        '0.0.0.0',
-        '127.0.0.1'
-    )
-
     MIDDLEWARE_CLASSES += (
         'debug_toolbar.middleware.DebugToolbarMiddleware',
     )
