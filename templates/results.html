@@ -40,7 +40,7 @@
     </button>
     {% endif %}
   </div>
-  {% if round.seq < tournament.round_set.count and current_round == round %}
+  {% if round.seq < tournament.rounds.count and current_round == round %}
     <div class="btn-group">
       <a class="btn btn-default form-control btn-success" href="{% round_url round_increment_check %}">Advance to Next Round</a>
     </div>
