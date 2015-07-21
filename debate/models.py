@@ -496,12 +496,14 @@ class BreakingTeam(models.Model):
     REMARK_DIFFERENT_BREAK = 'D'
     REMARK_DISQUALIFIED = 'd'
     REMARK_LOST_COIN_TOSS = 't'
+    REMARK_WITHDRAWN = 'w'
     REMARK_CHOICES = (
         (REMARK_CAPPED,          'Capped'),
         (REMARK_INELIGIBLE,      'Ineligible'),
         (REMARK_DIFFERENT_BREAK, 'Different break'),
         (REMARK_DISQUALIFIED,    'Disqualified'),
         (REMARK_LOST_COIN_TOSS,  'Lost coin toss'),
+        (REMARK_WITHDRAWN,       'Withdrawn'),
     )
     remark = models.CharField(max_length=1, choices=REMARK_CHOICES, blank=True, null=True,
             help_text="Used to explain why an otherwise-qualified team didn't break")
