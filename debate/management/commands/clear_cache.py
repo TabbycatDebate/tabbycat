@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.utils.cache import get_cache_key
 from django.core.cache import cache
 from django.test import RequestFactory
+from django.contrib.auth.models import AnonymousUser
 
 class Command(BaseCommand):
 
@@ -13,6 +14,7 @@ class Command(BaseCommand):
         path = options['path']
         factory = RequestFactory()
         request = factory.get(path)
+        request.user = AnonymousUser()
         key = get_cache_key(request, key_prefix=None)
         if not key:
             self.stdout.write("Could not find key for " + str(path) + "\n")
