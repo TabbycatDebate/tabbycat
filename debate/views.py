@@ -455,7 +455,6 @@ def public_side_allocations(request, t):
 @public_optional_tournament_view('tab_released')
 def public_team_tab(request, t):
     print "Generating public team tab"
-
     round = t.current_round
     teams = Team.objects.ranked_standings(round)
     rounds = t.prelim_rounds(until=round).order_by('seq')
@@ -466,11 +465,10 @@ def public_team_tab(request, t):
         try:
             ts.opposition = ts.debate_team.opposition.team # TODO: this slows down the page generation considerably
         except AttributeError:
-            ts.opposition = None
+            pass
         except Exception as e:
             print "Unexpected exception in view.team_standings.get_round_result"
             print e
-            ts.opposition = None
         return ts
 
     for team in teams:
