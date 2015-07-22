@@ -44,6 +44,8 @@ def neg_count(team, round):
 register.simple_tag(neg_count)
 
 def team_emoji(team):
+    if team is None:
+        return ""
     if team.emoji_seq:
         return b"%s" % EMOJI_LIST[team.emoji_seq]
     else:

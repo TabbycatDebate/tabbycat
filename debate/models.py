@@ -1385,7 +1385,7 @@ class DebateTeam(models.Model):
     @cached_property # TODO: this slows down the standings pages reasonably heavily
     def opposition(self):
         try:
-            return DebateTeam.objects.exclude(position=self.position).get(debate=self.debate)
+            return DebateTeam.objects.exclude(position=self.position).get(debate=self.debate).select_related('team', 'team__institution')
         except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
             logger.error("Error finding opposition: %s, %s", self.debate, self.position)
             return None
