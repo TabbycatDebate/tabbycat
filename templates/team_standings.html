@@ -118,9 +118,9 @@
             <td></td>
           {% endif %}
           {% if round_results.win >= 0 %}
-            {% if show_ballots and round_results.oppositon %}
+            {% if show_ballots and round_results.debate_team.debate_id %}
               <td>
-                <a class="team-score" href="{% tournament_url public_ballots_view round_results.opposition %}">
+                <a class="team-score" href="{% tournament_url public_ballots_view round_results.debate_team.debate_id %}">
                   {{ round_results.get_score|stringformat:".2f" }}
                 </a>
               </td>

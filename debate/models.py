@@ -1828,14 +1828,14 @@ class TeamScore(models.Model):
     affects_averages = models.BooleanField(default=True, blank=False, null=False,
         help_text="Whether to count this when determining average speaker points and/or margins")
 
-    @property
+    @property # TODO this should be called something more descriptive, or turned into a method
     def get_margin(self):
         if self.affects_averages == True:
             return self.margin
         else:
             return None
 
-    @property
+    @property # TODO this should be called something more descriptive, or turned into a method
     def get_score(self):
         if self.affects_averages == True:
             return self.score

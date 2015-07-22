@@ -456,47 +456,44 @@ def public_side_allocations(request, t):
 def public_team_tab(request, t):
     print "Generating public team tab"
     round = t.current_round
-    from debate.models import TeamScore
     teams = Team.objects.ranked_standings(round)
-
     rounds = t.prelim_rounds(until=round).order_by('seq')
+    team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
 
     def get_round_result(team, r):
+        ts = next((x for x in team_scores if x.debate_team.team == team and x.debate_team.debate.round == r), None)
         try:
-            ts = TeamScore.objects.get(
-                ballot_submission__confirmed=True,
-                debate_team__team=team,
-                debate_team__debate__round=r,
-            )
-            ts.opposition = ts.debate_team.opposition.team
-            return ts
-        except TeamScore.DoesNotExist:
-            return None
-
-    def get_score(team, r):
-        try:
-            ts = TeamScore.objects.get(
-                ballot_submission__confirmed=True,
-                debate_team__team=team,
-                debate_team__debate__round=r,
-            )
-            opposition = ts.debate_team.opposition.team
-            debate_id = ts.debate_team.debate.id
-            return ts.score, ts.points, opposition, debate_id
-        except TeamScore.DoesNotExist:
-            return None
+            ts.opposition = ts.debate_team.opposition.team # TODO: this slows down the page generation considerably
+        except AttributeError:
+            pass
+        except Exception as e:
+            print "Unexpected exception in view.team_standings.get_round_result"
+            print e
+        return ts
 
     for team in teams:
         team.results_in = True # always
-        team.scores = [get_score(team, r) for r in rounds]
         team.round_results = [get_round_result(team, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
+        if round.tournament.config.get('show_avg_margin'):
+            try:
+                margins = []
+                for ts in team.round_results:
+                    if ts:
+                        if ts.get_margin is not None:
+                            margins.append(ts.get_margin)
+
+                team.avg_margin = sum(margins) / float(len(margins))
+            except ZeroDivisionError:
+                team.avg_margin = None
 
     show_ballots = round.tournament.config.get('ballots_released')
+    show_draw_strength = decide_show_draw_strength(round.tournament)
 
     return r2r(request, 'public/public_team_tab.html', dict(teams=teams,
-            rounds=rounds, round=round, show_ballots=show_ballots))
+            rounds=rounds, round=round, show_ballots=show_ballots,
+            show_draw_strength=show_draw_strength))
 
 
 
@@ -1568,22 +1565,20 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
 @admin_required
 @round_view
 def team_standings(request, round, for_print=False):
-    from debate.models import TeamScore
     teams = Team.objects.ranked_standings(round)
-
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
 
     def get_round_result(team, r):
+        ts = next((x for x in team_scores if x.debate_team.team == team and x.debate_team.debate.round == r), None)
         try:
-            ts = next((x for x in team_scores if x.debate_team.team == team and x.debate_team.debate.round == r), None)
-            try:
-                ts.opposition = ts.debate_team.opposition.team # TODO: this slows down the page generation considerably
-            except:
-                pass
-            return ts
-        except TeamScore.DoesNotExist:
-            return None
+            ts.opposition = ts.debate_team.opposition.team # TODO: this slows down the page generation considerably
+        except AttributeError:
+            pass
+        except Exception as e:
+            print "Unexpected exception in view.team_standings.get_round_result"
+            print e
+        return ts
 
     for team in teams:
         team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(team, round) is not None
@@ -1604,8 +1599,8 @@ def team_standings(request, round, for_print=False):
 
     show_draw_strength = decide_show_draw_strength(round.tournament)
 
-    return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds, for_print=for_print,
-       show_ballots=False, show_draw_strength=show_draw_strength))
+    return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds,
+        for_print=for_print, show_ballots=False, show_draw_strength=show_draw_strength))
 
 
 @admin_required
