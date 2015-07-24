@@ -11,11 +11,11 @@
 
   {% for debate in draw %}
 
-    {% with source=debate.aff_team %}
+    {% with source=debate.aff_team target_type="orallist" %}
       {% include "print/print_feedback_ballot.html" %}
     {% endwith %}
 
-    {% with source=debate.neg_team %}
+    {% with source=debate.neg_team target_type="orallist" %}
       {% include "print/print_feedback_ballot.html" %}
     {% endwith %}
 
