@@ -54,6 +54,9 @@
         "aaSorting": [[ 0, "asc" ]],
       });
       new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      });
     });
   </script>
 {% endblock extra-js %}

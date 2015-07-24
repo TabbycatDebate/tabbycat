@@ -4,6 +4,7 @@
 {% block head-title %}Break Eligibility{% endblock %}
 {% block page-title %}Break Eligibility{% endblock %}
 {% block body-class %}break-eligibility{% endblock %}
+{% block page-header %}{% include "table_search.html" %}{% endblock %}
 
 {% block header %}
   {% if form.errors %}
@@ -13,52 +14,6 @@
       {{ form.errors }}
     </div>
   {% endif %}
-{% endblock %}
-
-{% block extra-js %}
-  <script type="text/javascript" charset="utf-8">
-    $(document).ready( function() {
-
-      var dTable = $('#dataTable').DataTable({
-        "aaSorting": [[ 0, "asc" ]],
-        "orderCellsTop": true,
-      });
-
-      var updateCounts = function (value) {
-        $("#count_" + value).text($("input[type='checkbox'][value='" + value + "']:checked").length);
-      }
-
-      // initialize team counts
-      {% for category in tournament.breakcategory_set.all %}
-        updateCounts(String({{ category.id }}));
-      {% endfor %}
-
-      $(".select-all").each(function () {
-        $(this).click(function () {
-          var category = $(this).attr("category");
-          $("input[type='checkbox'][value='" + category + "']").each(function () {
-            $(this).prop("checked", true);
-          });
-          updateCounts(category);
-        });
-      });
-
-      $(".select-none").each(function () {
-        $(this).click(function () {
-          var category = $(this).attr("category");
-          $("input[type='checkbox'][value='" + category + "']").each(function () {
-            $(this).prop("checked", false);
-          });
-          updateCounts(category);
-        });
-      });
-
-      $("#dataTable input[type='checkbox']").click(function () {
-        updateCounts($(this).val());
-      });
-
-    });
-  </script>
 {% endblock %}
 
 {% block content %}
@@ -109,4 +64,55 @@
       </div>
     </div>
   </form>
+{% endblock %}
+
+
+{% block extra-js %}
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+
+      var dTable = $('#dataTable').DataTable({
+        "aaSorting": [[ 0, "asc" ]],
+        "orderCellsTop": true,
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      });
+
+      var updateCounts = function (value) {
+        $("#count_" + value).text($("input[type='checkbox'][value='" + value + "']:checked").length);
+      }
+
+      // initialize team counts
+      {% for category in tournament.breakcategory_set.all %}
+        updateCounts(String({{ category.id }}));
+      {% endfor %}
+
+      $(".select-all").each(function () {
+        $(this).click(function () {
+          var category = $(this).attr("category");
+          $("input[type='checkbox'][value='" + category + "']").each(function () {
+            $(this).prop("checked", true);
+          });
+          updateCounts(category);
+        });
+      });
+
+      $(".select-none").each(function () {
+        $(this).click(function () {
+          var category = $(this).attr("category");
+          $("input[type='checkbox'][value='" + category + "']").each(function () {
+            $(this).prop("checked", false);
+          });
+          updateCounts(category);
+        });
+      });
+
+      $("#dataTable input[type='checkbox']").click(function () {
+        updateCounts($(this).val());
+      });
+
+    });
+  </script>
 {% endblock %}
