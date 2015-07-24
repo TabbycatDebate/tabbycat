@@ -55,7 +55,7 @@
                         {{ form.debate_result_status.errors }}
                     </div>
                     <div class="col-sm-2">
-                        <input id="submit" class="save form-control btn btn-success" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" />
+                        <input id="submit" class="save form-control btn btn-success submit-disable" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
                     </div>
                     <div class="col-sm-2">
                         <a class="form-control btn btn-default btn-danger" href="{% round_url results %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel</a>

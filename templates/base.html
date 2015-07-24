@@ -108,6 +108,10 @@
         'placement': 'bottom'
       });
 
+      $('.submit-disable').on('click', function () {
+        var $btn = $(this).button('loading');
+      });
+
       var cachedData = Array();
 
       function getTeamSpeakers(){
