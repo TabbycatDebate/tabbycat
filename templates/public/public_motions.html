@@ -4,7 +4,11 @@
 
 {% block head-title %}Motions{% endblock %}
 {% block page-title %}Motions{% endblock %}
-{% block page-header %}{% include "table_search.html" %}{% endblock %}
+{% block page-header %}
+  {% if enable_divisions and enable_division_motions %}
+    {% include "table_search.html" %}
+  {% endif %}
+{% endblock %}
 {% block body-class %}public-motions{% endblock %}
 
 {% block header %}
