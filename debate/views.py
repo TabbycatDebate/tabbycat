@@ -1522,12 +1522,12 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
         speaker.scores = get_scores(speaker, this_speakers_scores)
         speaker.results_in = speaker.scores[-1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
 
-        if round.seq < total_prelim_rounds:
+        if round.seq < total_prelim_rounds or len(filter(None, speaker.scores)) >= minimum_debates_needed:
             speaker.total = sum(filter(None, speaker.scores))
-            speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
-        elif len(filter(None, speaker.scores)) >= minimum_debates_needed:
-            speaker.total = sum(filter(None, speaker.scores))
-            speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
+            try:
+                speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
+            except ZeroDivisionError:
+                speaker.average = None
         else:
             speaker.total = None
             speaker.average = None
@@ -1541,7 +1541,7 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
     prev_total = None
     current_rank = 0
 
-    if round.tournament.config.get('standings_method') is False:
+    if for_replies or round.tournament.config.get('standings_method') is False:
         method = False
         speakers.sort(key=lambda x: x.average, reverse=True)
     else:
