@@ -28,7 +28,7 @@
         <input id="id_discarded" type="hidden" name="discarded" />
         <input id="id_confirmed" type="hidden" name="confirmed" />
         <div class="col-sm-2">
-          <input class="btn save form-control btn-success col-sm-2" type="submit" value="Save draft results" tabindex="100" />
+          <input class="btn save form-control btn-success col-sm-2 submit-disable" type="submit" value="Save draft results" tabindex="100" data-loading-text="Saving..." />
         </div>
       {% else %}
         <!-- If confirming, always go into CONFIRMED. If incorrect, go into DRAFT or NONE depending on whether there are still ballots left. -->
@@ -59,10 +59,10 @@
         $('#resultsForm input[type="number"]').attr('readonly', 'true');
         $('#resultsForm select').attr('disabled', 'true');
         $('#incorrect').click(function() {
-          {% if ballot_not_singleton %}
-          $('#id_debate_result_status').val('{{ debate.STATUS_DRAFT }}');
+          {% if not_singleton %}
+            $('#id_debate_result_status').val('{{ debate.STATUS_DRAFT }}');
           {% else %}
-          $('#id_debate_result_status').val('{{ debate.STATUS_NONE }}');
+            $('#id_debate_result_status').val('{{ debate.STATUS_NONE }}');
           {% endif %}
           $('#id_discarded').attr('value', 'True');
           $('#id_confirmed').attr('value', 'False');

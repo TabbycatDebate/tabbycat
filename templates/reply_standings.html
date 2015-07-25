@@ -55,7 +55,7 @@
           <td class="team-emoji">{% team_emoji speaker.team %}</td>
         {% endif %}
         <td>
-          <span title="<h5>{{ speaker.team.long_name }}</h5>{% if show_speakers_in_draw %}{{ speaker.team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+          <span class="team-speakers-hover" id="team_speakers_{{ speaker.team.id }}">
             {{ speaker.team.short_name }}
           </span>
         </td>
@@ -85,14 +85,17 @@
   <script type="text/javascript" charset="utf-8">
 
     $(document).ready( function() {
-      var table = $("#dataTable").DataTable({
+      var dTable = $("#dataTable").DataTable({
         "aaSorting": [[1, "asc"]],
         "aoColumnDefs": [
           {"iDataSort": 0, "aTargets": [1] }, //sort based on a hidden column when another column is clicked
           { "bVisible": false, "aTargets": [0] }, //set column visibility
         ]
       });
-      new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      });
 
     } );
 

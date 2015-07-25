@@ -38,7 +38,6 @@ TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'debate.middleware.DebateMiddleware',
@@ -49,12 +48,14 @@ ROOT_URLCONF = 'urls'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
+    "django.contrib.messages.context_processors.messages",
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.csrf",
     "django.core.context_processors.static",
-    "debate.context_processors.debate_context",
+    "debate.context_processors.debate_context", # For tournament config vars
+    "debate.context_processors.get_menu_highlight", # For nav highlights
     'django.core.context_processors.request', # For SUIT
 )
 
@@ -66,8 +67,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.messages',
     'debate',
     'compressor',
+    'cachalot',
 )
 
 LOGIN_REDIRECT_URL = '/'
@@ -75,6 +78,9 @@ LOGIN_REDIRECT_URL = '/'
 # =========
 # = Caching =
 # =========
+
+PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60 * 1))
+TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120))
 
 # Default non-heroku cache is to use local memory
 CACHES = {
@@ -84,7 +90,7 @@ CACHES = {
     }
 }
 
-# Caching enabled for templtaes
+# Caching enabled for templates
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', (
         'django.template.loaders.filesystem.Loader',
@@ -136,7 +142,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
-if os.environ.get('MEMCACHE_SERVERS', ''):
+if os.environ.get('MEMCACHIER_SERVERS', ''):
     try:
         os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
         os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
@@ -144,11 +150,15 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
         CACHES = {
             'default': {
                 'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-                'TIMEOUT': 300,
+                'TIMEOUT': 36000,
                 'BINARY': True,
                 'OPTIONS': {  # Maps to pylibmc "behaviors"
+                    # Enable faster IO
+                    'no_block': True,
                     'tcp_nodelay': True,
-                }
+                },
+                # Timeout for set/get requests
+                '_poll_timeout': 2000,
             }
         }
     except:
@@ -159,7 +169,7 @@ if os.environ.get('MEMCACHE_SERVERS', ''):
         }
 
 if os.environ.get('DEBUG', ''):
-    DEBUG = os.environ['DEBUG']
+    DEBUG = bool(int(os.environ['DEBUG']))
     TEMPLATE_DEBUG = DEBUG
 
 # ===========================

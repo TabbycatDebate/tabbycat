@@ -5,11 +5,11 @@
 {% block head-title %}Breaking Adjudicators{% endblock %}
 {% block page-title %}Breaking Adjudicators{% endblock %}
 {% block page-header %}{% include "table_search.html" %}{% endblock %}
-{% block body-class %}breakk breaking-adjs{% endblock %}
+{% block body-class %}break breaking-adjs{% endblock %}
 
 {% block header %}
   {% if adjs.all.count == 0 %}
-    <p class="lead">The breaking adjudicators have not been released yet.</p>
+    <p class="lead">Breaking adjudicators can be set in the <a href="{% tournament_url adj_feedback %}"> Feedback section.</a></p>
   {% endif %}
 {% endblock %}
 
@@ -29,7 +29,15 @@
       <tr>
         <td>{{ adj.name }}</td>
         {% if show_institutions > 0 %}
-          <td>{{ adj.institution }}</td>
+          <td>
+            {{ adj.institution }}
+            {% if person.independent %}
+              (Independent)
+            {% endif %}
+            {% if person.adj_core %}
+              (Adj Core)
+            {% endif %}
+          </td>
         {% endif %}
       </tr>
       {% endfor %}
@@ -46,6 +54,9 @@
         "aaSorting": [[ 0, "asc" ]],
       });
       new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      });
     });
   </script>
 {% endblock extra-js %}

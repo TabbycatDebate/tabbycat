@@ -14,18 +14,13 @@
   {% for debate in draw %}
 
     {% for type, adj in debate.adjudicators %}
-      {% if type == 'C' and debate.adjudicators.is_panel %}
+      {% if type == 'C' %}
         {% with source=adj source_type="chair" %}
           {% include "print/print_score_ballot.html" %}
         {% endwith %}
       {% endif %}
-      {% if type == 'P' and debate.adjudicators.is_panel %}
+      {% if type == 'P' %}
         {% with source=adj source_type="panelist" %}
-          {% include "print/print_score_ballot.html" %}
-        {% endwith %}
-      {% endif %}
-      {% if type == 'T' and debate.adjudicators.is_panel %}
-        {% with source=adj source_type="trainee" %}
           {% include "print/print_score_ballot.html" %}
         {% endwith %}
       {% endif %}

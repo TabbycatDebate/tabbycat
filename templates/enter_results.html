@@ -12,7 +12,7 @@
 {% block header %}
     {% include "other_ballots_list.html" %}
     {% if not new %}
-    <a class="btn btn-default" href="{% tournament_url new_ballots debate.id %}">Create a new ballot set for this debate</a>
+    <a class="btn btn-default" href="{% tournament_url new_ballotset debate.id %}">Create a new ballot set for this debate</a>
     {% endif %}
 {% endblock %}
 
@@ -55,7 +55,7 @@
                         {{ form.debate_result_status.errors }}
                     </div>
                     <div class="col-sm-2">
-                        <input id="submit" class="save form-control btn btn-success" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" />
+                        <input id="submit" class="save form-control btn btn-success submit-disable" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
                     </div>
                     <div class="col-sm-2">
                         <a class="form-control btn btn-default btn-danger" href="{% round_url results %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel</a>
@@ -70,7 +70,7 @@
 
 {% block extra-js %}
     {% include "enter_results_head.html" %}
-    {% if ballots.submitter_type == ballots.SUBMITTER_PUBLIC %}
+    {% if ballotsub.submitter_type == ballotsub.SUBMITTER_PUBLIC %}
         <script>
             $(document).ready(function() {
                 function preSubmit() {

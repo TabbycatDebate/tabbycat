@@ -76,11 +76,9 @@
           <td class="team-emoji">{% team_emoji team %}</td>
         {% endif %}
         <td>
-          <span title="<h5>{{ team.long_name }}</h5>{% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
+          <span class="team team-speakers-hover" id="team_speakers_{{ team.id }}">
             {{ team.short_name }}
-            {% if team.type == 'E' %}
-              <span class="esl">(esl)</span>
-            {% endif %}
+            {{ team.break_categories_str }}
           </span>
         </td>
         {% if show_institutions > 0 %}
@@ -98,12 +96,12 @@
               <td>
                 {% if round_results.score == 0 %}
                   {% with status=round_results.win|yesno:"Won (via forfeit),Forfeitted" icon=round_results.win|yesno:"glyphicon-share-alt text-success,glyphicon-eye-close text-danger" %}
-                  <span title="{{ status }} against {{ round_results.opposition.short_name }} ({% if show_speakers_in_draw %}{{ round_results.opposition.speakers|join:"<br>" }}{% endif %})" data-toggle="tooltip">
+                  <span title="{{ status }} against {{ round_results.opposition.short_name }}" data-toggle="tooltip" class="team-emoji">
                     <span class="glyphicon {{ icon }}"></span>
                   {% endwith %}
                 {% else %}
                   {% with status=round_results.win|yesno:"Won,Lost" icon=round_results.win|yesno:"glyphicon-arrow-up text-success,glyphicon-arrow-down text-danger" %}
-                  <span title="{{ status }} against {{ round_results.opposition.short_name }} ({% if show_speakers_in_draw %}{{ round_results.opposition.speakers|join:"<br>" }}{% endif %})" data-toggle="tooltip">
+                  <span title="{{ status }} against {{ round_results.opposition.short_name }}" data-toggle="tooltip" class="team-emoji">
                     <span class="glyphicon {{ icon }}"></span>
                   {% endwith %}
                 {% endif %}
@@ -120,9 +118,9 @@
             <td></td>
           {% endif %}
           {% if round_results.win >= 0 %}
-            {% if show_ballots and round_results.oppositon %}
+            {% if show_ballots and round_results.debate_team.debate_id %}
               <td>
-                <a class="team-score" href="{% tournament_url public_ballots_view round_results.opposition %}">
+                <a class="team-score" href="{% tournament_url public_ballots_view round_results.debate_team.debate_id %}">
                   {{ round_results.get_score|stringformat:".2f" }}
                 </a>
               </td>

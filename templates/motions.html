@@ -3,12 +3,12 @@
 
 {% block body-class %}display-motions{% endblock %}
 {% block head-title %}
-  Motions
+  Motions for {{ round.name }}
   <small>
   {% if round.motions_released %}(released){% else %}(not released){% endif %}
   </small>
 {% endblock %}
-{% block page-title %}Motions{% endblock %}
+{% block page-title %}Motions for {{ round.name }}{% endblock %}
 
 {% block header %}
   <div class="btn-group">

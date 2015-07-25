@@ -13,22 +13,22 @@
 {% block body-class %}draw-public-display{% endblock %}
 
 {% block header %}
-  <div class="btn-group">
-  <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
-  <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-xs">Medium</span></a>
-  <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
-  <a class="btn btn-default" href="" id="scroll_draw4">Scroll XS</a>
-  <a class="btn btn-default" href="" id="scroll_draw5">Scroll XXS</a>
+  <div class="btn-group hidden-xs">
+    <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
+    <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-xs">Medium</span></a>
+    <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
+    <a class="btn btn-default" href="" id="scroll_draw4">Scroll XS</a>
+    <a class="btn btn-default" href="" id="scroll_draw5">Scroll XXS</a>
   </div>
-  <div id="statusBar" class="btn-group">
+  <div id="statusBar" class="btn-group hidden-xs">
   <div class="btn btn-default">ESC stops scroll</div>
   </div>
   <div class="btn-group">
-  <a class="btn btn-default" href="" id="tiny_text">XS Text</a>
-  <a class="btn btn-default" href="" id="small_text">S Text</a>
-  <a class="btn btn-default active" href="" id="medium_text">M Text</a>
-  <a class="btn btn-default" href="" id="large_text">L Text</a>
-  <a class="btn btn-default" href="" id="huge_text">XL Text</a>
+    <a class="btn btn-default" href="" id="tiny_text">XS Text</a>
+    <a class="btn btn-default" href="" id="small_text">S Text</a>
+    <a class="btn btn-default active" href="" id="medium_text">M Text</a>
+    <a class="btn btn-default" href="" id="large_text">L Text</a>
+    <a class="btn btn-default" href="" id="huge_text">XL Text</a>
   </div>
 {% endblock %}
 
@@ -46,11 +46,11 @@
         <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
       {% endif %}
       {% if show_emoji > 0 %}
-        <th class="hidden-xs th-emoji"/></th>
+        <th class="th-emoji"/></th>
       {% endif %}
       <th>{% if side_allocations_unknown %}Team 1{% else %}Aff{% endif %}</th>
       {% if show_emoji > 0 %}
-        <th class="hidden-xs th-emoji"/></th>
+        <th class="th-emoji"/></th>
       {% endif %}
       <th>{% if side_allocations_unknown %}Team 2{% else %}Neg{% endif %}</th>
       {% if enable_division_motions %}
@@ -63,7 +63,7 @@
   </thead>
   <tbody>
   {% for debate in draw %}
-    <tr class="{% debate_draw_status_class debate %}">
+    <tr {% if enable_divisions %}class="{% debate_draw_status_class debate %}"{% endif %}>
       {% if enable_divisions %}
         <td>{{ debate.division.name }}</td>
       {% endif %}
@@ -80,33 +80,23 @@
         {% include "tables/debate_status.html" %}
       {% endif %}
       {% if show_emoji > 0 %}
-        <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
+        <td class="team-emoji"><span>{% team_emoji debate.aff_team %}</span></td>
       {% endif %}
       <td class="team-name">
         {% if debate.aff_team.type != 'B' %}
-          <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+          <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
             {{ debate.aff_team.short_name }}
           </span>
-          {% if show_speakers_in_draw %}
-            <span class="hidden">
-               {{ debate.aff_team.speakers|join:', ' }}
-            </span>
-          {% endif %}
         {% endif %}
       </td>
       {% if show_emoji > 0 %}
-        <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
+        <td class="team-emoji"><span>{% team_emoji debate.neg_team %}</span></td>
       {% endif %}
       <td class="team-name">
         {% if debate.neg_team.type != 'B'  %}
-          <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+          <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
             {{ debate.neg_team.short_name }}
           </span>
-          {% if show_speakers_in_draw %}
-            <span class="hidden">
-               {{ debate.neg_team.speakers|join:', ' }}
-            </span>
-          {% endif %}
         {% endif %}
       </td>
       {% if enable_division_motions %}

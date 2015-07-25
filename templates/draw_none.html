@@ -1,6 +1,7 @@
 {% extends "draw_rbase.html" %}
 {% load debate_tags %}
 
+{% block page-title %}No draw for {{ round.name }}{% endblock %}
 {% block head-title %}No draw for {{ round.name }} currently exists{% endblock %}
 
 {% block header %}
@@ -17,6 +18,11 @@
   {% elif active_teams.count == 0 %}
   <div class="alert alert-danger">
     The draw cannot be generated until some of the teams <a class="alert-link" href="{% round_url team_availability round %}">have been checked in</a> for this round.
+  </div>
+  {% endif %}
+  {% if active_adjs == 0 %}
+  <div class="alert alert-warning">
+    Note: no adjudicators have been <a class="alert-link" href="{% round_url adjudicator_availability round %}">checked in</a>.
   </div>
   {% endif %}
   {% if active_venues_count < rooms or rooms == 0 %}

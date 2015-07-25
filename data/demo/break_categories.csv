@@ -1,0 +1,5 @@
+name,slug,seq,break_size,is_general,priority,institution_cap
+Open,open,10,8,1,10,2
+ESL,esl,20,4,0,20,2
+EFL,efl,30,2,0,30,1
+Novice,novice,40,4,0,20,1

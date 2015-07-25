@@ -19,7 +19,7 @@ def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=Fals
     # Create a new BallotSubmission
     bsub = m.BallotSubmission(submitter_type=submitter_type, debate=debate)
     if submitter_type == m.BallotSubmission.SUBMITTER_TABROOM:
-        bsub.user = user
+        bsub.submitter = user
     bsub.save()
 
     def gen_results():

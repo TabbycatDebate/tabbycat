@@ -1,7 +1,0 @@
-seq,name,abbv,stage,type,is_silent,feedback_weight
-1,Round 1,R1,P,R,0,0.7
-2,Round 2,R2,P,P,0,0.7
-3,Round 3,R3,P,P,0,0.7
-4,Round 4,R4,P,P,0,0.7
-5,Semifinal,SF,E,F,1,0.7
-6,Grand Final,GF,E,B,1,0.7

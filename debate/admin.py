@@ -18,11 +18,20 @@ admin.site.register(models.Tournament,TournamentAdmin)
 # ==============================================================================
 
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ('name','code','abbreviation')
+    list_display = ('name','code','abbreviation','region')
     ordering = ('name',)
     search_fields = ('name',)
 
 admin.site.register(models.Institution, InstitutionAdmin)
+
+# ==============================================================================
+# Region
+# ==============================================================================
+
+class RegionAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(models.Region, RegionAdmin)
 
 # ==============================================================================
 # DebateTeam
@@ -50,7 +59,7 @@ admin.site.register(models.DebateTeam, DebateTeamAdmin)
 
 class SpeakerInline(admin.TabularInline):
     model = models.Speaker
-    fields = ('name', 'barcode_id', 'email', 'phone')
+    fields = ('name', 'novice', 'gender')
 
 class TeamPositionAllocationInline(admin.TabularInline):
     model = models.TeamPositionAllocation
@@ -59,11 +68,19 @@ class TeamVenuePreferenceInline(admin.TabularInline):
     model = models.TeamVenuePreference
     extra = 6
 
+class TeamForm(forms.ModelForm):
+    class Meta:
+        model = models.Team
+        fields = '__all__'
+
+    def clean_url_key(self):
+        return self.cleaned_data['url_key'] or None # So that the url key can be unique and also set to blank
 
 class TeamAdmin(admin.ModelAdmin):
+    form = TeamForm
     list_display = ('long_name','short_reference','institution', 'division', 'tournament')
     search_fields = ('reference', 'short_reference', 'institution__name', 'institution__code', 'tournament__name')
-    list_filter = ('tournament', 'division', 'institution')
+    list_filter = ('tournament', 'division', 'institution', 'break_categories')
     inlines = (SpeakerInline, TeamPositionAllocationInline, TeamVenuePreferenceInline)
     raw_id_fields = ('division',)
 
@@ -114,7 +131,13 @@ admin.site.register(models.Division, DivisionAdmin)
 class AdjudicatorConflictInline(admin.TabularInline):
     model = models.AdjudicatorConflict
     extra = 1
-    raw_id_fields = ('team',)
+    verbose_name_plural = "Adjudicator team conflicts"
+
+class AdjudicatorAdjudicatorConflictInline(admin.TabularInline):
+    model = models.AdjudicatorAdjudicatorConflict
+    fk_name = "adjudicator"
+    extra = 1
+    raw_id_fields = ('conflict_adjudicator',)
 
 class AdjudicatorInstitutionConflictInline(admin.TabularInline):
     model = models.AdjudicatorInstitutionConflict
@@ -124,22 +147,60 @@ class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
     model = models.AdjudicatorTestScoreHistory
     extra = 1
 
+class AdjudicatorForm(forms.ModelForm):
+    class Meta:
+        model = models.Adjudicator
+        fields = '__all__'
+
+    def clean_url_key(self):
+        return self.cleaned_data['url_key'] or None # So that the url key can be unique and also set to blank
+
+
 class AdjudicatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution', 'tournament','novice')
+    form = AdjudicatorForm
+    list_display = ('name', 'institution', 'tournament','novice','independent')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code',)
     list_filter = ('tournament', 'name')
-    inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorTestScoreHistoryInline)
+    inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
 
 admin.site.register(models.Adjudicator, AdjudicatorAdmin)
+
+# ==============================================================================
+# AdjudicatorFeedbackQuestion
+# ==============================================================================
+
+class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
+    list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type', 'required', 'chair_on_panellist', 'panellist_on_chair', 'panellist_on_panellist', 'team_on_orallist')
+    list_filter = ('tournament',)
+    ordering = ('tournament', 'seq')
+
+admin.site.register(models.AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuestionAdmin)
 
 # ==============================================================================
 # AdjudicatorFeedback
 # ==============================================================================
 
+class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
+    model = NotImplemented
+    fields = ('question', 'answer')
+    extra = 1
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "question":
+            kwargs["queryset"] = models.AdjudicatorFeedbackQuestion.objects.filter(answer_type__in=models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE[self.model])
+        return super(BaseAdjudicatorFeedbackAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
-    list_display = ('adjudicator', 'source_adjudicator', 'source_team', 'confirmed', 'score', 'comments')
+    list_display = ('adjudicator', 'source_adjudicator', 'source_team', 'confirmed', 'score')
     search_fields = ('source_adjudicator__adjudicator__name', 'source_team__team__institution__code', 'source_team__team__reference', 'adjudicator__name', 'adjudicator__institution__code',)
     raw_id_fields = ('source_team',)
+
+    # dynamically generate inline tables for different answer types
+    inlines = []
+    for _answer_type_class in models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE:
+        _inline_class = type(_answer_type_class.__name__ + "Inline", (BaseAdjudicatorFeedbackAnswerInline,),
+                {"model": _answer_type_class, "__module__": __name__})
+        inlines.append(_inline_class)
 
 admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
 
@@ -203,15 +264,16 @@ class DebateAdmin(admin.ModelAdmin):
             'round__tournament','division__tournament','venue__group'
         )
 
-for value, verbose_name in models.Debate.STATUS_CHOICES:
-    def _make_set_result_status(value, verbose_name):
-        def _set_result_status(modeladmin, request, queryset):
-            count = queryset.update(result_status=value)
-        _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower() # so that they look different to DebateAdmin
-        _set_result_status.short_description = "Set result status to %s" % verbose_name.lower()
-        return _set_result_status
-    DebateAdmin.actions.append(_make_set_result_status(value, verbose_name))
-del value, verbose_name # for fail-fast
+    actions = list()
+    for value, verbose_name in models.Debate.STATUS_CHOICES:
+        def _make_set_result_status(value, verbose_name):
+            def _set_result_status(modeladmin, request, queryset):
+                count = queryset.update(result_status=value)
+            _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower() # so that they look different to DebateAdmin
+            _set_result_status.short_description = "Set result status to %s" % verbose_name.lower()
+            return _set_result_status
+        actions.append(_make_set_result_status(value, verbose_name))
+    del value, verbose_name # for fail-fast
 
 admin.site.register(models.Debate, DebateAdmin)
 
@@ -327,7 +389,7 @@ admin.site.register(models.Motion, MotionAdmin)
 # ==============================================================================
 
 class BallotSubmissionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'user')
+    list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'submitter', 'confirmer')
     search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__code')
     raw_id_fields = ('debate','motion')
     # This incurs a massive performance hit
@@ -350,3 +412,26 @@ class ActionLogAdmin(admin.ModelAdmin):
         )
 
 admin.site.register(models.ActionLog, ActionLogAdmin)
+
+# ==============================================================================
+# BreakCategory
+# ==============================================================================
+
+class BreakCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'seq', 'tournament', 'break_size', 'priority', 'is_general', 'institution_cap')
+    list_filter = ('tournament',)
+    ordering = ('tournament', 'seq')
+
+admin.site.register(models.BreakCategory, BreakCategoryAdmin)
+
+# ==============================================================================
+# BreakingTeam
+# ==============================================================================
+
+class BreakingTeamAdmin(admin.ModelAdmin):
+    list_display = ('break_category', 'team', 'rank', 'break_rank', 'remark')
+    list_filter = ('break_category__tournament', 'break_category')
+    search_fields = ('team',)
+    ordering = ('break_category',)
+
+admin.site.register(models.BreakingTeam, BreakingTeamAdmin)

@@ -10,15 +10,18 @@
         {{ source.short_name }}'s Feedback
       {% endif %}
     </span>
-    <span class="badge h3 no-vertical-spacing pull-right">{{ round.abbreviation }}</span>
-    <span class="badge h3 no-vertical-spacing pull-right">{{ debate.venue_splitname }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">{{ round.name }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">Room {{ debate.venue.name }}</span>
   </div>
   <p class="small text-muted">
-    {% if debate.adjudicators.count > 0 %}
-      Panel was {% for type, adj in debate.adjudicators %}{% if forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}{{ adj.name }}{% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}{% endfor %}
-    {% else %}
-      {{ debate.adjudicators }} was the sole adjudicator
-    {% endif %}
+    {% if debate.adjudicators.list|length > 1 %}The panel was {% endif %}
+    {% for type, adj in debate.adjudicators %}
+      {% if debate.adjudicators.list|length > 1 and forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}
+      {{ adj.name }}
+      {% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}
+      {% if adj.pronoun %} ({{ adj.pronoun }}){% endif %}
+    {% endfor %}
+    {% if debate.adjudicators.list|length == 1 %} was the sole adjudicator{% endif %}
   </p>
   <br>
 
@@ -39,16 +42,16 @@
         <thead>
           <tr>
             {% if target %}
-              <th class="text-center h4">
+              <th class="text-center h5">
                 {{ target.name }}
                 {% if target_type == "chair" %}Ⓒ{% elif target_type == "trainee" %}Ⓣ{% endif %}
               </th>
             {% else %}
               {% for type, adj in debate.adjudicators %}
                 {% if type == 'C' and debate.adjudicators.is_panel %}
-                  <th class="text-center h4">{{ adj.name }} Ⓒ</th>
+                  <th class="text-center h5">{{ adj.name }} Ⓒ</th>
                 {% elif type != 'T' %}
-                  <th class="text-center h4">{{ adj.name }}</th>
+                  <th class="text-center h5">{{ adj.name }}</th>
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -56,26 +59,6 @@
         </thead>
       </table>
     </div>
-  </div>
-
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <p class="italic panel-title small"><em>Did you agree with their decision?</em></p>
-    </div>
-    <div class="panel-body no-vertical-spacing">
-      <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
-        <thead>
-          <tr>
-            <th class="text-center h4">Yes</th>
-            <th class="text-center h4">No</th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-  </div>
-
-  <div class="panel panel-default">
     <div class="panel-heading">
       <p class="panel-title small"><em>How convincing was their adjudication?</em></p>
     </div>
@@ -92,11 +75,11 @@
         </thead>
         <tbody>
           <tr class="text-center text-muted em small">
-            <td width="20%" class="no-borders no-vertical-spacing"><em>awful; should trainee</em></td>
-            <td width="20%" class="no-borders no-vertical-spacing"><em>bad; should not chair</em></td>
-            <td width="20%" class="no-borders no-vertical-spacing"><em>ok; should be panelling</em></td>
-            <td width="20%" class="no-borders no-vertical-spacing"><em>good; should be chairing</em></td>
-            <td width="20%" class="no-borders no-vertical-spacing"><em>amazing; should break</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>1. awful; should trainee</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>2. bad; should not chair</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>3. ok; should be panelling</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>4. good; should be chairing</em></td>
+            <td width="20%" class="no-borders no-vertical-spacing"><em>5. amazing; should break</em></td>
           </tr>
         </tbody>
       </table>
@@ -104,21 +87,62 @@
   </div>
 
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <p class="italic panel-title small"><em>What did you think about the adjudication?</em></p>
-    </div>
-    <div class="panel-body no-vertical-spacing">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-      <hr class="writeable">
-    </div>
+  {% for question in questions %}
+      <div class="panel-heading">
+        <p class="italic panel-title small">
+          <em>{{ question.text }}
+          {% if question.answer_type == 'ss' or question.answer_type == 'bs' or question.answer_type == 'bc'%}
+            (choose one)
+          {% elif question.answer_type == 'ms'  %}
+            (choose as many as apply)
+          {% endif %} </em>
+        </p>
+      </div>
+      <div class="panel-body no-vertical-spacing">
+      {% if question.answer_type == 'bc' or question.answer_type == 'bs' %}
+        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+          <thead>
+            <tr>
+              <th style="width:33%" class="text-center">Yes</th>
+              <th style="width:33%" class="text-center">Unsure</th>
+              <th style="width:33%" class="text-center">No</th>
+            </tr>
+          </thead>
+        </table>
+      {% elif question.answer_type == 'i' or question.answer_type == 'is' or question.answer_type == 'f' %}
+        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+          <thead>
+            <tr>
+              {% for option in question.number_options %}
+                <th style="" class="text-center">{{ option }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+        </table>
+      {% elif question.answer_type == 't' %}
+        <hr class="writeable">
+      {% elif question.answer_type == 'tl' %}
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+        <hr class="writeable">
+      {% elif question.answer_type == 'ss' or question.answer_type == 'ms' %}
+        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
+          <thead>
+            <tr>
+              {% for option in question.choice_options %}
+                <th style="" class="text-center">{{ option }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+        </table>
+      {% endif %}
+      </div>
+  {% endfor %}
   </div>
 
   <div class="panel panel-default">
@@ -126,9 +150,12 @@
       <table class="table" cellspacing="10" cellpadding="10">
         <tbody>
           <tr>
-            <td width="20%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only</em></span></td>
-            <td width="40%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small">Entered By</span></td>
-            <td width="40%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small">Checked By</span></td>
+            {% if config.feedback_return_location|length > 2 %}
+            <td width="30%" class="no-vertical-spacing text-left no-borders"><span class="small"><em>Please return feedback forms to {{ config.feedback_return_location }}</em></span></td>
+            {% endif %}
+            <td width="20%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only.</em></span></td>
+            <td width="30%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Entered By</em></span></td>
+            <td width="40%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Checked By</em></span></td>
           </tr>
         </tbody>
       </table>

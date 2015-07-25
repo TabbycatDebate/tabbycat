@@ -13,22 +13,22 @@
 {% block page-header %}{% include "table_search.html" %}{% endblock %}
 
 {% block header %}
-  <div class="btn-group">
-  <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
-  <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-md">Medium</span></a>
-  <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
-  <a class="btn btn-default" href="" id="scroll_draw4">Scroll XS</a>
-  <a class="btn btn-default" href="" id="scroll_draw5">Scroll XXS</a>
+  <div class="btn-group hidden-xs">
+    <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
+    <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-md">Medium</span></a>
+    <a class="btn btn-default" href="" id="scroll_draw3">Scroll Slow</a>
+    <a class="btn btn-default" href="" id="scroll_draw4">Scroll XS</a>
+    <a class="btn btn-default" href="" id="scroll_draw5">Scroll XXS</a>
   </div>
-  <div id="statusBar" class="btn-group">
-  <div class="btn btn-default">Hit ESC to stop scrolling</div>
+  <div id="statusBar" class="btn-group hidden-xs">
+    <div class="btn btn-default">Hit ESC to stop scrolling</div>
   </div>
   <div class="btn-group">
-  <a class="btn btn-default" href="" id="tiny_text">Tiny Text</a>
-  <a class="btn btn-default" href="" id="small_text">Small Text</a>
-  <a class="btn btn-default active" href="" id="medium_text">Medium Text</a>
-  <a class="btn btn-default" href="" id="large_text">Large Text</a>
-  <a class="btn btn-default" href="" id="huge_text">Huge Text</a>
+    <a class="btn btn-default" href="" id="tiny_text">Tiny Text</a>
+    <a class="btn btn-default" href="" id="small_text">Small Text</a>
+    <a class="btn btn-default active" href="" id="medium_text">Medium Text</a>
+    <a class="btn btn-default" href="" id="large_text">Large Text</a>
+    <a class="btn btn-default" href="" id="huge_text">Huge Text</a>
   </div>
 {% endblock %}
 
@@ -55,14 +55,9 @@
   {% for debate in draw %}
     <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
       <td>
-        <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
-        {% if show_speakers_in_draw %}
-        <span class="hidden">
-           {{ debate.aff_team.speakers|join:', ' }}
-        </span>
-        {% endif %}
       </td>
       {% if show_emoji > 0 %}
         <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
@@ -86,21 +81,21 @@
         {% endif %}
       {% endif %}
       <td class="team-name" id="">
-        <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
       </td>
       <td class="team-name">
-        <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
           {{ debate.neg_team.short_name }}
         </span>
       </td>
       <td class="adj-names">
         {% for type, adj in debate.adjudicators %}
           {% if type == 'C' and debate.adjudicators.is_panel %}
-            <span class="adj-chair">{{ adj.name }} Ⓒ</span>
+            <span class="adj-chair">{{ adj.name }}</span> Ⓒ
           {% elif type == 'T' %}
-            <br><span class="adj-trainee">{{ adj.name }} Ⓣ</span>
+            <br><span class="adj-trainee">{{ adj.name }}</span> Ⓣ
           {% else %}
             {% if debate.adjudicators.panel %}<br>{% endif %}
             <span class="adj-normal">{{ adj.name }}</span>
@@ -110,16 +105,11 @@
       </td>
   {% endfor %}
   {% for debate in draw %}
-    <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+    <tr>
       <td>
-        <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
           {{ debate.neg_team.short_name }}
         </span>
-        {% if show_speakers_in_draw %}
-          <span class="hidden">
-             {{ debate.neg_team.speakers|join:', ' }}
-          </span>
-        {% endif %}
       </td>
       {% if show_emoji > 0 %}
         <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
@@ -139,24 +129,14 @@
         </td>
       {% endif %}
       <td class="team-name">
-        <span title="<h5>{{ debate.aff_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.aff_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
-        {% if show_speakers_in_draw %}
-          <span class="hidden">
-             {{ debate.aff_team.speakers|join:', ' }}
-          </span>
-        {% endif %}
       </td>
       <td class="team-name">
-        <span title="<h5>{{ debate.neg_team.long_name }}</h5>{% if show_speakers_in_draw %}{{ debate.neg_team.speakers|join:'<br>' }}{% endif %}" data-toggle="tooltip">
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
           {{ debate.neg_team.short_name }}
         </span>
-        {% if show_speakers_in_draw %}
-        <span class="hidden">
-           {{ debate.neg_team.speakers|join:', ' }}
-        </span>
-        {% endif %}
       </td>
       <td class="adj-names">
         {% for type, adj in debate.adjudicators %}

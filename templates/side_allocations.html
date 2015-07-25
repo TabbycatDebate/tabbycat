@@ -29,8 +29,8 @@
         <td class="team-emoji">{% team_emoji team %}</td>
       {% endif %}
       <td>
-        <span title="{% if show_speakers_in_draw %}{{ team.speakers|join:"<br>" }}{% endif %}" data-toggle="tooltip" id="team_{{ team.id }}" class="team" href="#">
-        {{ team.short_name }} {% if team.type == 'E' %} <span class="esl">(esl)</span>{% endif %}
+        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
+          {{ team.short_name }} {{ team.break_categories_str }}
         </span>
       </td>
       {% if show_institutions > 0 %}

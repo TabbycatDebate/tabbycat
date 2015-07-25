@@ -1,15 +1,15 @@
 name,code,abbreviation
-Adjudication Core,Adj Core
-Independent Adjudicators,Indep
-Colonial University of Colony,Colony
-Young Hacks,Young
-Obligatory Schools Team,Children
-Moderate Cabal,Cabal
-University of Barely a City,City
-University of Major Capital,Capital
-Social Justice League,Justice
-Business School of Business,Business
-University of University,University
-Univeristy of Internet,Internet
-University of Foreignland,Foreign
-Old Hacks, Old
+Adjudication Core,Adj Core,Adj Core,
+Independent Adjudicators,Indep,Indie,
+Colonial University of Colony,Colony,CU,
+Young Hacks,Young,YH,
+Obligatory Schools Team,Children,C,
+Moderate Cabal,Cabal,MC,
+University of Barely a City,City,UBC,
+University of Major Capital,Capital,UMC,
+Social Justice League,Justice,SJL,
+Business School of Business,Business,BSB,
+University of University,University,UoU,
+University of Internet,Internet,IU,
+University of Foreignland,Foreign,FU,
+Old Hacks, Old,OH,
