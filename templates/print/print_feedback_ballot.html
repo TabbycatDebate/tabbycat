@@ -88,60 +88,15 @@
 
   <div class="panel panel-default">
   {% for question in questions %}
-      <div class="panel-heading">
-        <p class="italic panel-title small">
-          <em>{{ question.text }}
-          {% if question.answer_type == 'ss' or question.answer_type == 'bs' or question.answer_type == 'bc'%}
-            (choose one)
-          {% elif question.answer_type == 'ms'  %}
-            (choose as many as apply)
-          {% endif %} </em>
-        </p>
-      </div>
-      <div class="panel-body no-vertical-spacing">
-      {% if question.answer_type == 'bc' or question.answer_type == 'bs' %}
-        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
-          <thead>
-            <tr>
-              <th style="width:33%" class="text-center">Yes</th>
-              <th style="width:33%" class="text-center">Unsure</th>
-              <th style="width:33%" class="text-center">No</th>
-            </tr>
-          </thead>
-        </table>
-      {% elif question.answer_type == 'i' or question.answer_type == 'is' or question.answer_type == 'f' %}
-        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
-          <thead>
-            <tr>
-              {% for option in question.number_options %}
-                <th style="" class="text-center">{{ option }}</th>
-              {% endfor %}
-            </tr>
-          </thead>
-        </table>
-      {% elif question.answer_type == 't' %}
-        <hr class="writeable">
-      {% elif question.answer_type == 'tl' %}
-        <hr class="writeable">
-        <hr class="writeable">
-        <hr class="writeable">
-        <hr class="writeable">
-        <hr class="writeable">
-        <hr class="writeable">
-        <hr class="writeable">
-        <hr class="writeable">
-      {% elif question.answer_type == 'ss' or question.answer_type == 'ms' %}
-        <table class="table table-printed-selection" cellspacing="10" cellpadding="10">
-          <thead>
-            <tr>
-              {% for option in question.choice_options %}
-                <th style="" class="text-center">{{ option }}</th>
-              {% endfor %}
-            </tr>
-          </thead>
-        </table>
-      {% endif %}
-      </div>
+    {% if target_type == "chair" and source.name and question.panellist_on_chair %}
+      {% include "print/print_feedback_question.html" %}
+    {% elif target_type == "panellist" and source.name and question.chair_on_panellist %}
+      {% include "print/print_feedback_question.html" %}
+    {% elif target_type == "panellist" and source.name and question.panellist_on_panellist %}
+      {% include "print/print_feedback_question.html" %}
+    {% elif target_type == "orallist" and not source.name and question.team_on_orallist %}
+      {% include "print/print_feedback_question.html" %}
+    {% endif %}
   {% endfor %}
   </div>
 

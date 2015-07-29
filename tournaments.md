@@ -7,6 +7,7 @@
 - ALSA E-Comp
 - [Australian Easters](https://aueasters2015.herokuapp.com)
 - [Auckland Schools Regionals](http://aucklandregionals2015.herokuapp.com)
+- [Daejeon Australs](http://tab.australasians2015.org)
 - [Malaysia Debate Open](http://tabs.altairtechlab.com/malaysiadebateopen2015/)
 - [Mad Mini](http://tabs.monashdebaters.com/t/mad-mini-2015/)
 - [President's Cup](http://tabs.monashdebaters.com/t/presidents-cup-2015/)
