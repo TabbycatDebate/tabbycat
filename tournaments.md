@@ -18,7 +18,7 @@
 
 #### 2014
 
-- [Otago Australs](http://tab.australs2014.com/t/australs2014/)
+- [Otago Australs](http://australs2014.herokuapp.com/)
 - [Joynt Scroll](http://joyntscroll2014.herokuapp.com)
 - Another Day at Melbourne
 
