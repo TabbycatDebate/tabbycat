@@ -3,7 +3,7 @@
 #### 2015
 
 - [Another Day at Melbourne](http://mudstab.herokuapp.com)
-- [ANU Pre-Australs](https://anupreaust2015.herokuapp.com/)
+- [ANU Pre-Australs](http://anupreaust2015.herokuapp.com)
 - ALSA E-Comp
 - [Auckland Schools Regionals](http://aucklandregionals2015.herokuapp.com)
 - [Bali UADC](http://tabs.altairtechlab.com/baliuadc2015/t/baliuadc/index.html)
@@ -19,11 +19,9 @@
 
 #### 2014
 
-- [Otago Australs](http://australs2014.herokuapp.com/)
+- [Otago Australs](http://australs2014.herokuapp.com)
 - [Joynt Scroll](http://joyntscroll2014.herokuapp.com)
 - Another Day at Melbourne
-
-#### 2013
 
 #### 2012
 

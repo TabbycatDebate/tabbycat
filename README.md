@@ -1,6 +1,6 @@
 # Tabbycat
 
-Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Auckland Australs 2010, [Victoria Australs 2012](http://australs2012.com), [Otago Australs 2014](http://australs2014.com), and [Daejeon Australs 2015](http://australasians2015.org).
+Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Auckland Australs 2010, [Victoria Australs 2012](https://www.facebook.com/Australs2012), [Otago Australs 2014](http://australs2014.com), [Daejeon Australs 2015](http://australasians2015.org) and [many others](http://github.com/czlee/tabbycat/blob/master/tournaments.md).
 
 Our **demo site** is at http://tabbycatdebate.herokuapp.com/. It's normally up, but its form will vary from time to time as we set up new feature demos for people. If it's down and you'd like to see it, or if you want to play with it as if you were running a tournament, contact us (details below). To see a post-tournament website, have a look at the Daejeon Australs 2015 tab website at [tab.australasians2015.org](http://tab.australasians2015.org).
 
@@ -10,7 +10,7 @@ If you're interested in using, developing or otherwise following this software,
 ## Features
 
 - Enter data from multiple computers simultaneously
-- Easily deployable to [Heroku](https://www.heroku.com) for a super fast setup
+- Easily deployable to [Heroku](http://www.heroku.com) for a super fast setup
 - Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts
 - A drag and drop interface for adjudicator allocation that automatically displays conflicts
 - Responsive templates designed for large screens, laptops, tablets, and phones
