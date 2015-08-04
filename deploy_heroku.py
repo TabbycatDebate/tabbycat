@@ -22,6 +22,8 @@ parser.add_argument("--pg-plan", "--postgresql-plan", type=str, default="hobby-d
     help="Heroku Postgres plan (default hobby-dev)")
 parser.add_argument("--import-tournament", type=str, metavar="IMPORT_DIR",
     help="Also run the import_tournament command, importing from IMPORT_DIR")
+parser.add_argument("--dry-run", action="store_true", default=False,
+    help="Print commands, don't run them.")
 
 config_group = parser.add_argument_group("heroku configuration settings")
 config_group.add_argument("--public-cache-timeout", type=int, default=None, metavar="TIMEOUT",
@@ -60,7 +62,8 @@ def print_command(command):
 
 def run_command(command):
     print_command(command)
-    subprocess.check_call(command, **subprocess_kwargs)
+    if not args.dry_run:
+        subprocess.check_call(command, **subprocess_kwargs)
 
 def run_heroku_command(command):
     command.insert(0, "heroku")

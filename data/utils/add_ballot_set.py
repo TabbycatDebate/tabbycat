@@ -82,7 +82,7 @@ if __name__ == "__main__":
     parser.add_argument("debate", type=int, nargs='+', help="Debate ID(s) to add to")
     parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=SUBMITTER_TYPE_MAP.keys(), default="tabroom")
     parser.add_argument("-u", "--user", type=str, help="User ID", default="original")
-    status = parser.add_mutually_exclusive_group(required=True)
+    status = parser.add_mutually_exclusive_group()
     status.add_argument("-d", "--discarded", action="store_true", help="Ballot set is discarded")
     status.add_argument("-c", "--confirmed", action="store_true", help="Ballot set is confirmed")
     parser.add_argument("-m", "--min-score", type=float, help="Minimum speaker score (for substantive)", default=72)
