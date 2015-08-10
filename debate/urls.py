@@ -16,8 +16,11 @@ urlpatterns = patterns('debate.views',
     url(r'^draw/$', 'public_draw', name='public_draw'),
     url(r'^draw/round/(?P<round_seq>\d+)/$', 'public_draw_by_round', name='public_draw_by_round'),
     url(r'^draw/all/$', 'public_all_draws', name='public_all_draws'),
+
+    url(r'^admin/round/(?P<round_seq>\d+)/results/$', 'results', name='results'),
     url(r'^results/$', 'public_results_index', name='public_results_index'),
     url(r'^results/round/(?P<round_seq>\d+)/$', 'public_results', name='public_results'),
+    url(r'^standings/$',    'public_team_standings', name='public_team_standings'),
 
     url(r'^team_speakers/(?P<team_id>\d+)/$', 'team_speakers', name='team_speakers'),
 
@@ -40,13 +43,7 @@ urlpatterns = patterns('debate.views',
     url(r'^motions/$', 'public_motions', name='public_motions'),
     url(r'^divisions/$', 'public_divisions', name='public_divisions'),
     url(r'^side_allocations/$', 'public_side_allocations', name='public_side_allocations'),
-    url(r'^standings/$', 'public_team_standings', name='public_team_standings'),
 
-    url(r'^tab/team/$', 'public_team_tab', name='public_team_tab'),
-    url(r'^tab/speaker/$', 'public_speaker_tab', name='public_speaker_tab'),
-    url(r'^tab/novices/$', 'public_novices_tab', name='public_novices_tab'),
-    url(r'^tab/replies/$', 'public_replies_tab', name='public_replies_tab'),
-    url(r'^tab/motions/$', 'public_motions_tab', name='public_motions_tab'),
     url(r'^ballots/debate/(?P<debate_id>\d+)/$', 'public_ballots_view', name='public_ballots_view'),
 
     #url(r'^admin/actions/$', 'action_log', name='action_log'),
@@ -103,18 +100,6 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/motions/unrelease/$', 'unrelease_motions', name='unrelease_motions'),
     url(r'^admin/round/(?P<round_seq>\d+)/start_time/set/$', 'set_round_start_time', name='set_round_start_time'),
 
-    url(r'^admin/round/(?P<round_seq>\d+)/results/$', 'results', name='results'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/team/$', 'team_standings', name='team_standings'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/division/$', 'division_standings', name='division_standings'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/speaker/$', 'speaker_standings', name='speaker_standings'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/novices/$', 'novice_standings', name='novice_standings'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/reply/$', 'reply_standings', name='reply_standings'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/team/print/$', 'team_standings', name='team_standings_print'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/speaker/print/$', 'speaker_standings', name='speaker_standings_print'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/reply/print/$', 'reply_standings', name='reply_standings_print'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/motions/$', 'motion_standings', name='motion_standings'),
-    url(r'^admin/standings/feedback_progress/$', 'feedback_progress', name='feedback_progress'),
-
     url(r'^admin/ballots/(?P<ballotsub_id>\d+)/edit/$', 'edit_ballotset', name='edit_ballotset'),
     url(r'^admin/debate/(?P<debate_id>\d+)/new_ballotset/$', 'new_ballotset', name='new_ballotset'),
     url(r'^admin/round/(?P<round_seq>\d+)/ballot_checkin/$', 'ballot_checkin', name='ballot_checkin'),
@@ -140,6 +125,8 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/adjudicators/breaking/set/$', 'set_adj_breaking_status', name='set_adj_breaking_status'),
     url(r'^admin/adjudicators/notes/test/set/$', 'set_adj_note', name='set_adj_note'),
 
+    url(r'^admin/adjudicators/progress$', 'feedback_progress', name='feedback_progress'),
+
     url(r'^admin/break/teams/(?P<category>\w+)/$', 'breaking_teams', name='breaking_teams'),
     url(r'^admin/break/generate_all/(?P<category>\w+)/$', 'generate_all_breaking_teams', name='generate_breaking_teams'),
     url(r'^admin/break/update_all/(?P<category>\w+)/$', 'update_all_breaking_teams', name='update_all_breaking_teams'),
@@ -161,6 +148,10 @@ urlpatterns = patterns('debate.views',
     url(r'^all_tournaments_all_institutions/all_draws/(?P<institution_id>\d+)$', 'all_draws_for_institution', name='all_draws_for_institution'),
     url(r'^all_tournaments_all_teams/$', 'all_tournaments_all_teams', name='all_tournaments_all_teams'),
 
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/print/', include('printing.urls')),
+    # Printing App
+    url(r'^admin/round/(?P<round_seq>\d+)/print/',      include('printing.urls')),
 
+    # Standings App
+    url(r'^tab/$',                                      include('standings.urls')),
+    url(r'^admin/round/(?P<round_seq>\d+)/standings/',  include('standings.urls')),
 )

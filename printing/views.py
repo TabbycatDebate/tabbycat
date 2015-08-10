@@ -1,6 +1,5 @@
 from debate.views import round_view, admin_required, r2r
-from debate.models import Round
-from debate.models import Motion
+from debate.models import Round, Motion
 
 @admin_required
 @round_view
