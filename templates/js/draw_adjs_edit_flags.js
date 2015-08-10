@@ -7,10 +7,10 @@
 $('#toggle_unused_layout').click(function() {
   if ($('#scratch').hasClass("fixed-right")) {
     $('#scratch').removeClass("fixed-right").addClass("fixed-bottom");
-    $('#main').removeClass("col-xs-10").addClass("col-xs-2");
+    $('#main').removeClass("col-xs-10").addClass("col-xs-12");
   } else {
     $('#scratch').removeClass("fixed-bottom").addClass("fixed-right");
-    $('#main').addClass("col-xs-10").removeClass("col-xs-2");
+    $('#main').addClass("col-xs-10").removeClass("col-xs-12");
   }
   return false
 });
