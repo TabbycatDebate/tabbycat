@@ -871,31 +871,6 @@ def draw_confirmed(request, round):
 
 
 
-@admin_required
-@round_view
-def draw_print_scoresheets(request, round):
-    draw = round.get_draw_by_room()
-    config = round.tournament.config
-    motions = Motion.objects.filter(round=round)
-    return r2r(request, "printable_scoresheets.html", dict(
-        draw=draw, config=config, motions=motions))
-
-
-@admin_required
-@round_view
-def draw_print_feedback(request, round):
-    draw = round.get_draw_by_room()
-    config = round.tournament.config
-    questions = round.tournament.adj_feedback_questions
-    for question in questions:
-        if question.choices:
-            question.choice_options = question.choices.split("//")
-        if question.min_value is not None and question.max_value is not None:
-            step = max((int(question.max_value) - int(question.min_value)) / 10, 1)
-            question.number_options = range(int(question.min_value), int(question.max_value+1), int(step) )
-
-    return r2r(request, "printable_feedback.html", dict(
-        draw=draw, config=config, questions=questions))
 
 
 
@@ -1074,7 +1049,7 @@ def update_debate_importance(request, round):
 
 @admin_required
 @round_view
-def motion_standings(request, round, for_print=False):
+def motion_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     motions = list()
     motions = Motion.objects.statistics(round=round)
@@ -1564,7 +1539,7 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
 
 @admin_required
 @round_view
-def team_standings(request, round, for_print=False):
+def team_standings(request, round):
     teams = Team.objects.ranked_standings(round)
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
@@ -1600,12 +1575,12 @@ def team_standings(request, round, for_print=False):
     show_draw_strength = decide_show_draw_strength(round.tournament)
 
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds,
-        for_print=for_print, show_ballots=False, show_draw_strength=show_draw_strength))
+        show_ballots=False, show_draw_strength=show_draw_strength))
 
 
 @admin_required
 @round_view
-def division_standings(request, round, for_print=False):
+def division_standings(request, round):
     from debate.models import TeamScore
 
 
@@ -1642,11 +1617,11 @@ def division_standings(request, round, for_print=False):
 
 @admin_required
 @round_view
-def speaker_standings(request, round, for_print=False):
+def speaker_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
     return r2r(request, "speaker_standings.html", dict(speakers=speakers,
-                                        rounds=rounds, for_print=for_print))
+                                        rounds=rounds))
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
@@ -1660,7 +1635,7 @@ def public_speaker_tab(request, t):
 
 @admin_required
 @round_view
-def novice_standings(request, round, for_print=False):
+def novice_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, only_novices=True)
     return r2r(request, "novice_standings.html", dict(speakers=speakers,
@@ -1678,11 +1653,11 @@ def public_novices_tab(request, t):
 
 @admin_required
 @round_view
-def reply_standings(request, round, for_print=False):
+def reply_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, for_replies=True)
     return r2r(request, 'reply_standings.html', dict(speakers=speakers,
-                                        rounds=rounds, for_print=for_print))
+                                        rounds=rounds))
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')

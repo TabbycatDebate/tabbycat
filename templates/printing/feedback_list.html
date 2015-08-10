@@ -12,11 +12,11 @@
   {% for debate in draw %}
 
     {% with source=debate.aff_team target_type="orallist" %}
-      {% include "print/print_feedback_ballot.html" %}
+      {% include "printing/feedback_sheet.html" %}
     {% endwith %}
 
     {% with source=debate.neg_team target_type="orallist" %}
-      {% include "print/print_feedback_ballot.html" %}
+      {% include "printing/feedback_sheet.html" %}
     {% endwith %}
 
 
@@ -26,11 +26,11 @@
         {% for subtype, subadj in debate.adjudicators %}
           {% if subtype == 'T' %}
             {% with source=adj target=subadj target_type="trainee" %}
-              {% include "print/print_feedback_ballot.html" %}
+              {% include "printing/feedback_sheet.html" %}
             {% endwith %}
           {% elif subtype == 'P' %}
             {% with source=adj target=subadj target_type="panelist" %}
-              {% include "print/print_feedback_ballot.html" %}
+              {% include "printing/feedback_sheet.html" %}
             {% endwith %}
           {% endif %}
         {% endfor %}
@@ -42,13 +42,13 @@
       {% elif type == 'P' %}
 
         {% with source=adj target=debate.chair target_type="chair" %}
-          {% include "print/print_feedback_ballot.html" %}
+          {% include "printing/feedback_sheet.html" %}
         {% endwith %}
 
       {% elif type == 'T' %}
 
         {% with source=adj target=debate.chair target_type="chair" %}
-          {% include "print/print_feedback_ballot.html" %}
+          {% include "printing/feedback_sheet.html" %}
         {% endwith %}
       {% endif %}
 

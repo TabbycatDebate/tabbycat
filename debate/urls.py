@@ -86,9 +86,6 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/draw/venues/$', 'draw_venues_edit', name='draw_venues_edit'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw/venues/save/$', 'save_venues', name='save_venues'),
 
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/print/scoresheets/$', 'draw_print_scoresheets', name='draw_print_scoresheets'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/print/feedback/$', 'draw_print_feedback', name='draw_print_feedback'),
-
     url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/$', 'draw_adjudicators_edit', name='draw_adjudicators_edit'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/_get/$', 'draw_adjudicators_get', name='draw_adjudicators_get'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/save/$', 'save_adjudicators', name='save_adjudicators'),
@@ -112,9 +109,9 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/standings/speaker/$', 'speaker_standings', name='speaker_standings'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/novices/$', 'novice_standings', name='novice_standings'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/reply/$', 'reply_standings', name='reply_standings'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/team/print/$', 'team_standings', { 'for_print': True }, name='team_standings_print'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/speaker/print/$', 'speaker_standings', { 'for_print': True }, name='speaker_standings_print'),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/reply/print/$', 'reply_standings', { 'for_print': True }, name='reply_standings_print'),
+    url(r'^admin/round/(?P<round_seq>\d+)/standings/team/print/$', 'team_standings', name='team_standings_print'),
+    url(r'^admin/round/(?P<round_seq>\d+)/standings/speaker/print/$', 'speaker_standings', name='speaker_standings_print'),
+    url(r'^admin/round/(?P<round_seq>\d+)/standings/reply/print/$', 'reply_standings', name='reply_standings_print'),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/motions/$', 'motion_standings', name='motion_standings'),
     url(r'^admin/standings/feedback_progress/$', 'feedback_progress', name='feedback_progress'),
 
@@ -163,5 +160,7 @@ urlpatterns = patterns('debate.views',
     url(r'^all_tournaments_all_institutions/$', 'all_tournaments_all_institutions', name='all_tournaments_all_institutions'),
     url(r'^all_tournaments_all_institutions/all_draws/(?P<institution_id>\d+)$', 'all_draws_for_institution', name='all_draws_for_institution'),
     url(r'^all_tournaments_all_teams/$', 'all_tournaments_all_teams', name='all_tournaments_all_teams'),
+
+    url(r'^admin/round/(?P<round_seq>\d+)/draw/print/', include('printing.urls')),
 
 )

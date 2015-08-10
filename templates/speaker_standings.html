@@ -12,16 +12,12 @@
     <thead>
       <tr>
         <th class="hidden"></th>
-        {% if for_print %}
-          <th>Rank</th>
-        {% else %}
-          <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
-        {% endif %}
+        <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
         <th>Name</th>
         {% if show_novices > 0 %}
           <th><span class="glyphicon glyphicon-leaf" data-toggle="tooltip" title="Speaker's Novice Status"></span></th>
         {% endif %}
-        {% if show_emoji > 0 and not for_print %}
+        {% if show_emoji > 0 %}
           <th class="team-emoji"></th>
         {% endif %}
         <th>Team</th>
@@ -54,7 +50,7 @@
         {% if show_novices > 0 %}
           <td>{% if speaker.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
         {% endif %}
-        {% if show_emoji > 0 and not for_print %}
+        {% if show_emoji > 0 %}
           <td class="team-emoji">{% team_emoji speaker.team %}</td>
         {% endif %}
         <td>

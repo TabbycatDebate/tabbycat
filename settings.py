@@ -69,6 +69,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.messages',
     'debate',
+    'printing',
     'compressor',
     'cachalot',
 )

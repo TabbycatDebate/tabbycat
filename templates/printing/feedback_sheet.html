@@ -89,13 +89,13 @@
   <div class="panel panel-default">
   {% for question in questions %}
     {% if target_type == "chair" and source.name and question.panellist_on_chair %}
-      {% include "print/print_feedback_question.html" %}
+      {% include "printing/feedback_question.html" %}
     {% elif target_type == "panellist" and source.name and question.chair_on_panellist %}
-      {% include "print/print_feedback_question.html" %}
+      {% include "printing/feedback_question.html" %}
     {% elif target_type == "panellist" and source.name and question.panellist_on_panellist %}
-      {% include "print/print_feedback_question.html" %}
+      {% include "printing/feedback_question.html" %}
     {% elif target_type == "orallist" and not source.name and question.team_on_orallist %}
-      {% include "print/print_feedback_question.html" %}
+      {% include "printing/feedback_question.html" %}
     {% endif %}
   {% endfor %}
   </div>

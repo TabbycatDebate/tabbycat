@@ -10,7 +10,7 @@
   <table id="dataTable" class="team-tab table table-hover table-striped" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
-        {% if show_emoji > 0 and not for_print %}
+        {% if show_emoji > 0 %}
           <th class="team-emoji"></th>
         {% endif %}
         <th>Team</th>
@@ -25,7 +25,7 @@
     <tbody>
     {% for team in teams %}
     <tr>
-      {% if show_emoji > 0 and not for_print %}
+      {% if show_emoji > 0 %}
         <td class="team-emoji">{% team_emoji team %}</td>
       {% endif %}
       <td>

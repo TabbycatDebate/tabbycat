@@ -8,24 +8,26 @@
 {% block page-title %}Printable Scoresheets Forms for {{ round.name }}{% endblock %}
 {% block body-class %}print-scoresheet{% endblock %}
 
-
 {% block content %}
 
   {% for debate in draw %}
 
     {% for type, adj in debate.adjudicators %}
+
       {% if type == 'C' %}
         {% with source=adj source_type="chair" %}
-          {% include "print/print_score_ballot.html" %}
+          {% include "printing/scoresheet.html" %}
         {% endwith %}
       {% endif %}
+
       {% if type == 'P' %}
         {% with source=adj source_type="panelist" %}
-          {% include "print/print_score_ballot.html" %}
+          {% include "printing/scoresheet.html" %}
         {% endwith %}
       {% endif %}
-    {% endfor %}
-  {% endfor %}
 
+    {% endfor %}
+
+  {% endfor %}
 
 {% endblock content %}
