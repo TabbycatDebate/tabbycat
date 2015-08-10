@@ -62,13 +62,15 @@
       {% if show_emoji > 0 %}
         <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
       {% endif %}
-      <td class="venue-name">
-      {% if debate.division %}
-        {{ debate.division.venue_group.short_name }}
+      {% if enable_venue_groups %}
+        {% if debate.division %}
+          <td class="venue-name">{{ debate.division.venue_group.short_name }}</td>
+        {% else %}
+          <td class="venue-name">{{ debate.venue.group.short_name }} {{ debate.venue.name }}</td>
+        {% endif %}
       {% else %}
-        {{ debate.venue.group.short_name }}
+        <td class="venue-name">{{ debate.venue.name }}</td>
       {% endif %}
-      </td>
       {% if enable_venue_times %}
         <td>
           {% if debate.venue.time %}
