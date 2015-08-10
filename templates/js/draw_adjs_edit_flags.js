@@ -49,7 +49,7 @@ $('#toggle_breakcategory').click(function() {
 });
 
 $('#toggle_venues').click(function() {
-  var venuesColumn = allocationsTable.column(2);
+  var venuesColumn = allocationsTable.column(3);
   venuesColumn.visible( ! venuesColumn.visible() );
   $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
   return false
