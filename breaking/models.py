@@ -1,32 +1,5 @@
 from django.db import models
 
-# class BreakingTeam(models.Model):
-#     break_category = models.ForeignKey('BreakCategory')
-#     team = models.ForeignKey(debate.Team)
-#     rank = models.IntegerField()
-#     break_rank = models.IntegerField(blank=True, null=True)
-
-#     REMARK_CAPPED = 'C'
-#     REMARK_INELIGIBLE = 'I'
-#     REMARK_DIFFERENT_BREAK = 'D'
-#     REMARK_DISQUALIFIED = 'd'
-#     REMARK_LOST_COIN_TOSS = 't'
-#     REMARK_WITHDRAWN = 'w'
-#     REMARK_CHOICES = (
-#         (REMARK_CAPPED,          'Capped'),
-#         (REMARK_INELIGIBLE,      'Ineligible'),
-#         (REMARK_DIFFERENT_BREAK, 'Different break'),
-#         (REMARK_DISQUALIFIED,    'Disqualified'),
-#         (REMARK_LOST_COIN_TOSS,  'Lost coin toss'),
-#         (REMARK_WITHDRAWN,       'Withdrawn'),
-#     )
-#     remark = models.CharField(max_length=1, choices=REMARK_CHOICES, blank=True, null=True,
-#             help_text="Used to explain why an otherwise-qualified team didn't break")
-
-#     class Meta:
-#         unique_together = [('break_category', 'team')]
-
-
 class BreakCategory(models.Model):
     tournament = models.ForeignKey('debate.Tournament')
     name = models.CharField(max_length=50, help_text="Name to be displayed, e.g., \"ESL\"")
@@ -49,7 +22,8 @@ class BreakCategory(models.Model):
     #     (STATUS_RELEASED,  'Released'),
     # )
     # status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    #breaking_teams = models.ManyToManyField('debate.Team', through='BreakingTeam')
+
+    breaking_teams = models.ManyToManyField('debate.Team', through='BreakingTeam')
 
     def __unicode__(self):
         return self.name
@@ -59,3 +33,30 @@ class BreakCategory(models.Model):
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
         verbose_name_plural = "break categories"
+
+
+class BreakingTeam(models.Model):
+    break_category = models.ForeignKey(BreakCategory)
+    team = models.ForeignKey('debate.Team')
+    rank = models.IntegerField()
+    break_rank = models.IntegerField(blank=True, null=True)
+
+    REMARK_CAPPED = 'C'
+    REMARK_INELIGIBLE = 'I'
+    REMARK_DIFFERENT_BREAK = 'D'
+    REMARK_DISQUALIFIED = 'd'
+    REMARK_LOST_COIN_TOSS = 't'
+    REMARK_WITHDRAWN = 'w'
+    REMARK_CHOICES = (
+        (REMARK_CAPPED,          'Capped'),
+        (REMARK_INELIGIBLE,      'Ineligible'),
+        (REMARK_DIFFERENT_BREAK, 'Different break'),
+        (REMARK_DISQUALIFIED,    'Disqualified'),
+        (REMARK_LOST_COIN_TOSS,  'Lost coin toss'),
+        (REMARK_WITHDRAWN,       'Withdrawn'),
+    )
+    remark = models.CharField(max_length=1, choices=REMARK_CHOICES, blank=True, null=True,
+            help_text="Used to explain why an otherwise-qualified team didn't break")
+
+    class Meta:
+        unique_together = [('break_category', 'team')]
