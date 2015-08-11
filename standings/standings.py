@@ -65,7 +65,8 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
     # ballots and adds them as columns to the table it returns.
     # The standings include only preliminary rounds.
 
-    from models import Round
+    from debate.models import Round
+
     EXTRA_QUERY = """
         SELECT DISTINCT SUM({field:s})
         FROM "debate_teamscore"
