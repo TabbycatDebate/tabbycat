@@ -44,25 +44,6 @@ urlpatterns = patterns('debate.views',
 
     #url(r'^admin/actions/$', 'action_log', name='action_log'),
 
-    url(r'^admin/round/(?P<round_seq>\d+)/venues/$', 'availability', { 'model': 'venue', 'context_name': 'venues' }, 'venue_availability'),
-    url(r'^admin/round/(?P<round_seq>\d+)/venues/update/$',
-        'update_availability', { 'active_attr': 'venue', 'active_model': m.ActiveVenue, 'update_method': 'set_available_venues' }, 'update_venue_availability'),
-
-    url(r'^admin/round/(?P<round_seq>\d+)/adjudicators/$', 'availability', { 'model': 'adjudicator', 'context_name': 'adjudicators' }, 'adjudicator_availability'),
-    url(r'^admin/round/(?P<round_seq>\d+)/adjudicators/update/$',
-        'update_availability', { 'active_attr': 'adjudicator', 'active_model': m.ActiveAdjudicator, 'update_method': 'set_available_adjudicators' }, 'update_adjudicator_availability'),
-
-    url(r'^admin/round/(?P<round_seq>\d+)/people/$', 'checkin_results', { 'model': 'person', 'context_name': 'people' }, 'people_availability'),
-    url(r'^admin/round/(?P<round_seq>\d+)/people/update/$',
-        'checkin_update', { 'active_attr': None, 'active_model': None, 'update_method': 'set_available_people' }, 'update_people_availability'),
-
-    url(r'^admin/round/(?P<round_seq>\d+)/teams/$', 'availability', { 'model': 'team', 'context_name': 'teams' }, 'team_availability'),
-    url(r'^admin/round/(?P<round_seq>\d+)/teams/update/$',
-        'update_availability', { 'active_attr': 'team', 'active_model': m.ActiveTeam, 'update_method': 'set_available_teams' }, 'update_team_availability'),
-
-    url(r'^admin/round/(?P<round_seq>\d+)/checkin/$', 'checkin', name='checkin'),
-    url(r'^admin/round/(?P<round_seq>\d+)/checkin/post/$', 'post_checkin', name='post_checkin'),
-
     url(r'^admin/round/(?P<round_seq>\d+)/draw/$', 'draw', name='draw'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw/details/$', 'draw_with_standings', name='draw_with_standings'),
     url(r'^admin/round/(?P<round_seq>\d+)/draw_display_by_venue/$', 'draw_display_by_venue', name='draw_display_by_venue'),
@@ -147,4 +128,8 @@ urlpatterns = patterns('debate.views',
     # Break App
     url(r'^break/$',                                    include('breaking.urls_public')),
     url(r'^admin/break/',                               include('breaking.urls_admin')),
+
+    # Availability App
+    url(r'^admin/round/(?P<round_seq>\d+)/availability/$', include('availability.urls')),
+
 )

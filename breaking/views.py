@@ -9,7 +9,7 @@ from . import models
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
 def public_break_index(request, t):
-    return r2r(request, "public/public_break_index.html")
+    return r2r(request, "breaking/public_index.html")
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_teams')
@@ -18,7 +18,7 @@ def public_breaking_teams(request, t, category):
     bc = get_object_or_404(BreakCategory, slug=category)
     teams = get_breaking_teams(bc, include_all=True, include_categories=t.config.get('public_break_categories'))
     generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
-    return r2r(request, 'public/public_breaking_teams.html', dict(teams=teams, category=bc, generated=generated))
+    return r2r(request, 'breaking/public_teams.html', dict(teams=teams, category=bc, generated=generated))
 
 @admin_required
 @tournament_view
@@ -37,7 +37,7 @@ def breaking_teams(request, t, category):
         form = forms.BreakingTeamsForm(bc)
 
     generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
-    return r2r(request, 'breaking_teams.html', dict(form=form, category=bc, generated=generated))
+    return r2r(request, 'breaking/teams.html', dict(form=form, category=bc, generated=generated))
 
 
 @expect_post
@@ -48,7 +48,7 @@ def generate_all_breaking_teams(request, t, category):
     ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_GENERATE_ALL,
             user=request.user, tournament=t, ip_address=get_ip_address(request))
     messages.success(request, "Teams break generated for all break categories.")
-    return redirect_tournament('breaking_teams', t, category=category)
+    return redirect_tournament('breaking/teams', t, category=category)
 
 @expect_post
 @tournament_view
@@ -58,7 +58,7 @@ def update_all_breaking_teams(request, t, category):
     ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_UPDATE_ALL,
             user=request.user, tournament=t, ip_address=get_ip_address(request))
     messages.success(request, "Teams break updated for all break categories.")
-    return redirect_tournament('breaking_teams', t, category=category)
+    return redirect_tournament('breaking/teams', t, category=category)
 
 @expect_post
 @tournament_view
@@ -69,19 +69,19 @@ def update_breaking_teams(request, t, category):
             user=request.user, tournament=t, ip_address=get_ip_address(request),
             break_category=bc)
     messages.success(request, "Teams break updated for break category %s." % bc.name)
-    return redirect_tournament('breaking_teams', t, category=category)
+    return redirect_tournament('breaking/teams', t, category=category)
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_adjs')
 def public_breaking_adjs(request, t):
     adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
-    return r2r(request, 'public/public_breaking_adjudicators.html', dict(adjs=adjs))
+    return r2r(request, 'breaking/public_adjudicators.html', dict(adjs=adjs))
 
 @admin_required
 @tournament_view
 def breaking_adjs(request, t):
     adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
-    return r2r(request, 'breaking_adjudicators.html', dict(adjs=adjs))
+    return r2r(request, 'breaking/adjudicators.html', dict(adjs=adjs))
 
 @admin_required
 @tournament_view
@@ -98,4 +98,4 @@ def break_eligibility(request, t):
         form = forms.BreakEligibilityForm(t)
 
     context['form'] = form
-    return r2r(request, 'break_eligibility.html', context)
+    return r2r(request, 'breaking/eligibility.html', context)

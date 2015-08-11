@@ -480,10 +480,6 @@ class Person(models.Model):
         ordering = ['name']
 
 
-class Checkin(models.Model):
-    person = models.ForeignKey('Person')
-    round = models.ForeignKey('Round')
-
 
 class Speaker(Person):
     team = models.ForeignKey(Team)
@@ -683,11 +679,11 @@ class Round(models.Model):
     venue_status       = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
     adjudicator_status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
 
-    checkins = models.ManyToManyField('Person', through='Checkin', related_name='checkedin_rounds')
+    checkins = models.ManyToManyField('Person', through='availability.Checkin', related_name='checkedin_rounds')
 
-    active_venues       = models.ManyToManyField('Venue', through='ActiveVenue')
-    active_adjudicators = models.ManyToManyField('Adjudicator', through='ActiveAdjudicator')
-    active_teams        = models.ManyToManyField('Team', through='ActiveTeam')
+    active_venues       = models.ManyToManyField('Venue', through='availability.ActiveVenue')
+    active_adjudicators = models.ManyToManyField('Adjudicator', through='availability.ActiveAdjudicator')
+    active_teams        = models.ManyToManyField('Team', through='availability.ActiveTeam')
 
     feedback_weight = models.FloatField(default=0)
     silent = models.BooleanField(default=False)
@@ -928,12 +924,12 @@ class Round(models.Model):
                                                  drav.round_id=%(id)d)""" % d })
 
     def person_availability(self):
-        return self.base_availability(Person, 'debate_checkin', 'person_id',
+        return self.base_availability(Person, 'availability_checkin', 'person_id',
                                       'debate_person')
 
 
     def venue_availability(self):
-        all_venues = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
+        all_venues = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
                                       'debate_venue')
         all_venues = [v for v in all_venues if v.tournament == self.tournament]
         return all_venues
@@ -941,7 +937,7 @@ class Round(models.Model):
     def unused_venues(self):
         # Had to replicate venue_availability via base_availability so extra()
         # could still function on the query set
-        result = self.base_availability(Venue, 'debate_activevenue', 'venue_id',
+        result = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
                                       'debate_venue').extra(select =
                                       {'is_used': """EXISTS (SELECT 1
                                       FROM debate_debate da
@@ -951,7 +947,7 @@ class Round(models.Model):
         return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
 
     def adjudicator_availability(self):
-        all_adjs = self.base_availability(Adjudicator, 'debate_activeadjudicator',
+        all_adjs = self.base_availability(Adjudicator, 'availability_activeadjudicator',
                                       'adjudicator_id',
                                       'debate_adjudicator', id_field='person_ptr_id')
 
@@ -977,7 +973,7 @@ class Round(models.Model):
             return [a for a in result if not a.is_used]
 
     def team_availability(self):
-        all_teams = self.base_availability(Team, 'debate_activeteam', 'team_id',
+        all_teams = self.base_availability(Team, 'availability_activeteam', 'team_id',
                                       'debate_team')
         relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
         return relevant_teams
@@ -1013,26 +1009,31 @@ class Round(models.Model):
             m.save()
 
     def set_available_people(self, ids):
+        from availability import Checkin
         return self.set_available_base(ids, Person, Checkin,
                                       self.checkins, 'person_id',
                                       'person__id', remove=False)
 
     def set_available_venues(self, ids):
+        from availability.models import ActiveVenue
         return self.set_available_base(ids, Venue, ActiveVenue,
                                        self.active_venues, 'venue_id',
                                        'venue__id')
 
     def set_available_adjudicators(self, ids):
+        from availability.models import ActiveAdjudicator
         return self.set_available_base(ids, Adjudicator, ActiveAdjudicator,
                                        self.active_adjudicators,
                                        'adjudicator_id', 'adjudicator__id')
 
     def set_available_teams(self, ids):
+        from availability.models import ActiveTeam
         return self.set_available_base(ids, Team, ActiveTeam,
                                        self.active_teams, 'team_id',
                                       'team__id')
 
     def activate_adjudicator(self, adj, state=True):
+        from availability.models import ActiveAdjudicator
         if state:
             ActiveAdjudicator.objects.get_or_create(round=self, adjudicator=adj)
         else:
@@ -1040,12 +1041,14 @@ class Round(models.Model):
                                              adjudicator=adj).delete()
 
     def activate_venue(self, venue, state=True):
+        from availability.models import ActiveVenue
         if state:
             ActiveVenue.objects.get_or_create(round=self, venue=venue)
         else:
             ActiveVenue.objects.filter(round=self, venue=venue).delete()
 
     def activate_team(self, team, state=True):
+        from availability.models import ActiveTeam
         if state:
             ActiveTeam.objects.get_or_create(round=self, team=team)
         else:
@@ -1077,28 +1080,6 @@ def update_round_cache(sender, instance, created, **kwargs):
 signals.post_save.connect(update_round_cache, sender=Round)
 
 
-class ActiveVenue(models.Model):
-    venue = models.ForeignKey(Venue)
-    round = models.ForeignKey(Round, db_index=True)
-
-    class Meta:
-        unique_together = [('venue', 'round')]
-
-
-class ActiveTeam(models.Model):
-    team = models.ForeignKey(Team)
-    round = models.ForeignKey(Round, db_index=True)
-
-    class Meta:
-        unique_together = [('team', 'round')]
-
-
-class ActiveAdjudicator(models.Model):
-    adjudicator = models.ForeignKey(Adjudicator)
-    round = models.ForeignKey(Round, db_index=True)
-
-    class Meta:
-        unique_together = [('adjudicator', 'round')]
 
 
 class DebateManager(models.Manager):

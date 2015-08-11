@@ -72,6 +72,7 @@ INSTALLED_APPS = (
     'standings',
     'printing',
     'breaking',
+    'availability',
     'compressor',
     'cachalot',
 )
