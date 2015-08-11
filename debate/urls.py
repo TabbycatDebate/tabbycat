@@ -141,8 +141,8 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/print/',      include('printing.urls')),
 
     # Standings App
-    url(r'^tab/$',                                      include('standings.urls')),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/',  include('standings.urls')),
+    url(r'^tab/$',                                      include('standings.urls_public')),
+    url(r'^admin/round/(?P<round_seq>\d+)/standings/',  include('standings.urls_admin')),
 
     # Break App
     url(r'^break/$',                                    include('breaking.urls_public')),
