@@ -1,5 +1,6 @@
 from base import BaseTournamentDataImporter, TournamentDataImporterError
 import debate.models as m
+import breaking.models as bm
 import csv
 
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):
@@ -57,7 +58,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'draw_type'       : self._lookup(self.ROUND_DRAW_TYPES, line[4] or "r", "draw type"),
                 'silent'          : bool(int(line[5])),
                 'feedback_weight' : float(line[6]) or 0.7,
-                'break_category'  : m.BreakCategory.objects.get(slug=line[7], tournament=self.tournament) if len(line) > 7 and line[7] else None,
+                'break_category'  : bm.BreakCategory.objects.get(slug=line[7], tournament=self.tournament) if len(line) > 7 and line[7] else None,
             }
         counts, errors = self._import(f, _round_line_parser, m.Round)
 
@@ -180,7 +181,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'priority': int(line[5]),
                 'institution_cap': int(line[6]) if len(line) > 6 and line[6] else None,
             }
-        return self._import(f, _break_category_line_parser, m.BreakCategory)
+        return self._import(f, _break_category_line_parser, bm.BreakCategory)
 
     def import_teams(self, f, create_dummy_speakers=False):
         """Imports teams from a file, assigning emoji as needed.

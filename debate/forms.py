@@ -727,7 +727,7 @@ class BreakingTeamsForm(forms.Form):
             bt.save()
 
     def team_iter(self):
-        for team in debate.breaking.get_breaking_teams(self.category, include_all=True, include_categories=True):
+        for team in breaking.breaking.get_breaking_teams(self.category, include_all=True, include_categories=True):
             yield team, self[self._fieldname_remark(team)]
 
 

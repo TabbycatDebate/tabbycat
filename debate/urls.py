@@ -24,10 +24,6 @@ urlpatterns = patterns('debate.views',
 
     url(r'^team_speakers/(?P<team_id>\d+)/$', 'team_speakers', name='team_speakers'),
 
-    url(r'^break/$', 'public_break_index', name='public_break_index'),
-    url(r'^break/teams/(?P<category>\w+)/$', 'public_breaking_teams', name='public_breaking_teams'),
-    url(r'^break/adjudicators/$',  'public_breaking_adjs', name='public_breaking_adjs'),
-
     url(r'^add_ballot/$', 'public_ballot_submit', name='public_ballot_submit'),
     url(r'^add_ballot/adjudicator/(?P<adj_id>\d+)/$', 'public_new_ballotset_id', name='public_new_ballotset'),
     url(r'^add_ballot/adjudicator/h/(?P<url_key>\w+)/$', 'public_new_ballotset_key', name='public_new_ballotset_key'),
@@ -127,13 +123,6 @@ urlpatterns = patterns('debate.views',
 
     url(r'^admin/adjudicators/progress$', 'feedback_progress', name='feedback_progress'),
 
-    url(r'^admin/break/teams/(?P<category>\w+)/$', 'breaking_teams', name='breaking_teams'),
-    url(r'^admin/break/generate_all/(?P<category>\w+)/$', 'generate_all_breaking_teams', name='generate_breaking_teams'),
-    url(r'^admin/break/update_all/(?P<category>\w+)/$', 'update_all_breaking_teams', name='update_all_breaking_teams'),
-    url(r'^admin/break/update/(?P<category>\w+)/$', 'update_breaking_teams', name='update_breaking_teams'),
-    url(r'^admin/break/eligibility/$', 'break_eligibility', name='break_eligibility'),
-    url(r'^admin/break/adjudicators/$',  'breaking_adjs', name='breaking_adjs'),
-
     url(r'^admin/side_allocations/$', 'side_allocations', name='side_allocations'),
     url(r'^admin/randomised_urls/$', 'randomised_urls', name='randomised_urls'),
     url(r'^admin/randomised_urls/generate/$', 'generate_randomised_urls', name='generate_randomised_urls'),
@@ -154,4 +143,8 @@ urlpatterns = patterns('debate.views',
     # Standings App
     url(r'^tab/$',                                      include('standings.urls')),
     url(r'^admin/round/(?P<round_seq>\d+)/standings/',  include('standings.urls')),
+
+    # Break App
+    url(r'^break/$',                                    include('breaking.urls_public')),
+    url(r'^admin/break/',                               include('breaking.urls_admin')),
 )

@@ -71,6 +71,7 @@ INSTALLED_APPS = (
     'debate',
     'standings',
     'printing',
+    'breaking',
     'compressor',
     'cachalot',
 )
