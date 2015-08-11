@@ -119,17 +119,17 @@ urlpatterns = patterns('debate.views',
     url(r'^all_tournaments_all_teams/$', 'all_tournaments_all_teams', name='all_tournaments_all_teams'),
 
     # Printing App
-    url(r'^admin/round/(?P<round_seq>\d+)/print/',      include('printing.urls')),
+    url(r'^admin/round/(?P<round_seq>\d+)/print/',          include('printing.urls')),
 
     # Standings App
-    url(r'^tab/$',                                      include('standings.urls_public')),
-    url(r'^admin/round/(?P<round_seq>\d+)/standings/',  include('standings.urls_admin')),
+    url(r'^tab/',                                           include('standings.urls_public')),
+    url(r'^admin/round/(?P<round_seq>\d+)/standings/',      include('standings.urls_admin')),
 
     # Break App
-    url(r'^break/$',                                    include('breaking.urls_public')),
-    url(r'^admin/break/',                               include('breaking.urls_admin')),
+    url(r'^break/',                                         include('breaking.urls_public')),
+    url(r'^admin/break/',                                   include('breaking.urls_admin')),
 
     # Availability App
-    url(r'^admin/round/(?P<round_seq>\d+)/availability/$', include('availability.urls')),
+    url(r'^admin/round/(?P<round_seq>\d+)/availability/',   include('availability.urls')),
 
 )

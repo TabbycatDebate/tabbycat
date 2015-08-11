@@ -1,4 +1,5 @@
 from django.views.decorators.cache import cache_page
+from django.shortcuts import get_object_or_404
 from django.conf import settings
 
 from debate.views import tournament_view, admin_required, expect_post
