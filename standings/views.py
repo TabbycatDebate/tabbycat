@@ -1,5 +1,6 @@
 from debate.views import round_view, admin_required, public_optional_tournament_view, r2r, decide_show_draw_strength
-from debate.models import Team, TeamScore, Speaker, SpeakerScore, Round, Motion
+from debate.models import Team, TeamScore, Speaker, SpeakerScore, Round
+from motions.models import Motion
 from django.views.decorators.cache import cache_page
 from django.conf import settings
 

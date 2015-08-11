@@ -3,6 +3,7 @@
 from django.test import TestCase
 from unittest import skip
 import debate.models as m
+import motions.models as mm
 import os.path
 import logging
 
@@ -76,7 +77,7 @@ class TestImporterAnorak(TestCase):
         self.test_rounds()
         f = self._open_csv_file(self.TESTDIR, "motions")
         counts, errors = self.importer.import_motions(f)
-        self.assertEqual(counts, {m.Motion: 18})
+        self.assertEqual(counts, {mm.Motion: 18})
         self.assertFalse(errors)
 
     def test_config(self):

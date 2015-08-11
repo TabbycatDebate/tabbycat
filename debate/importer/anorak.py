@@ -1,6 +1,7 @@
 from base import BaseTournamentDataImporter, TournamentDataImporterError
 import debate.models as m
 import breaking.models as bm
+import motions.models as mm
 import csv
 
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):
@@ -334,7 +335,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'reference' : line[2],
                 'text'      : line[3],
             }
-        return self._import(f, _motion_line_parser, m.Motion)
+        return self._import(f, _motion_line_parser, mm.Motion)
 
     def import_sides(self, f):
         """Imports sides from a file.

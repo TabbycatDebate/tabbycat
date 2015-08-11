@@ -70,11 +70,8 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/round_increment/$', 'round_increment', name='round_increment'),
 
     url(r'^admin/round/(?P<round_seq>\d+)/adj_allocation/create/$', 'create_adj_allocation', name='create_adj_allocation'),
-    url(r'^admin/round/(?P<round_seq>\d+)/motions/$', 'motions', name='motions'),
-    url(r'^admin/round/(?P<round_seq>\d+)/motions/edit/$', 'motions_edit', name='motions_edit'),
-    url(r'^admin/round/(?P<round_seq>\d+)/motions/assign/$', 'motions_assign', name='motions_assign'),
-    url(r'^admin/round/(?P<round_seq>\d+)/motions/release/$', 'release_motions', name='release_motions'),
-    url(r'^admin/round/(?P<round_seq>\d+)/motions/unrelease/$', 'unrelease_motions', name='unrelease_motions'),
+
+
     url(r'^admin/round/(?P<round_seq>\d+)/start_time/set/$', 'set_round_start_time', name='set_round_start_time'),
 
     url(r'^admin/ballots/(?P<ballotsub_id>\d+)/edit/$', 'edit_ballotset', name='edit_ballotset'),
@@ -131,5 +128,8 @@ urlpatterns = patterns('debate.views',
 
     # Availability App
     url(r'^admin/round/(?P<round_seq>\d+)/availability/',   include('availability.urls')),
+
+    # Motions App
+    url(r'^admin/round/(?P<round_seq>\d+)/motions/',        include('motions.urls')),
 
 )
