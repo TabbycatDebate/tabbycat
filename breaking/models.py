@@ -2,7 +2,7 @@ from django.db import models
 
 # class BreakingTeam(models.Model):
 #     break_category = models.ForeignKey('BreakCategory')
-#     team = models.ForeignKey(Team)
+#     team = models.ForeignKey(debate.Team)
 #     rank = models.IntegerField()
 #     break_rank = models.IntegerField(blank=True, null=True)
 
