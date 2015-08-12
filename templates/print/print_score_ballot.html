@@ -5,8 +5,12 @@
     <span class="h3 pull-left no-vertical-spacing">
         {{ source.name }}'s {% if source_type == "chair" %}Ⓒ{% elif source_type == "trainee" %}Ⓣ{% endif %} Ballot
     </span>
-    <span class="badge h3 no-vertical-spacing pull-right">{{ round.name }}</span>
-    <span class="badge h3 no-vertical-spacing pull-right">Room {{ debate.venue.name }}</span>
+    <span class="badge h3 no-vertical-spacing pull-right">
+      {{ round.name }}
+    </span>
+    <span class="badge h3 no-vertical-spacing pull-right">
+      {% if debate.venue.group %}{{ debate.venue.group.short_name }} {% endif %}{{ debate.venue.name }}
+    </span>
   </div>
   <p class="small text-muted">
 

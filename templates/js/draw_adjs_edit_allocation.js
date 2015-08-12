@@ -109,24 +109,31 @@ function append_adj_scores() {
     }).tooltip();
   });
 }
-;
 
 // CONFLICT BEHAVIOURS
 
 // Read the dicitionary and check if the adj has any conflicts
 function eachConflictingTeam(adj_id, fn) {
-  $.each(all_adj_conflicts['personal'][adj_id], function (i, n) {
-    $("#team_" + n).each( function() { fn('personal', this); });
-  });
-  $.each(all_adj_conflicts['history'][adj_id], function (i, n) {
-    $("#team_" + n).each( function() { fn('history', this); });
-  });
-  $.each(all_adj_conflicts['institutional'][adj_id], function (i, n) {
-    $("#team_" + n).each( function() { fn('institutional', this); });
-  });
-  $.each(all_adj_conflicts['adjudicator'][adj_id], function (i, n) {
-    $("#adj_" + n).each( function() { fn('adjudicator', this); });
-  });
+  if (all_adj_conflicts['personal'][adj_id].length > 0) {
+    $.each(all_adj_conflicts['personal'][adj_id], function (i, n) {
+      $("#team_" + n).each( function() { fn('personal', this); });
+    });
+  }
+  if (all_adj_conflicts['history'][adj_id].length > 0) {
+    $.each(all_adj_conflicts['history'][adj_id], function (i, n) {
+      $("#team_" + n).each( function() { fn('history', this); });
+    });
+  }
+  if (all_adj_conflicts['institutional'][adj_id].length > 0) {
+    $.each(all_adj_conflicts['institutional'][adj_id], function (i, n) {
+      $("#team_" + n).each( function() { fn('institutional', this); });
+    });
+  }
+  if (all_adj_conflicts['adjudicator'][adj_id].length > 0) {
+    $.each(all_adj_conflicts['adjudicator'][adj_id], function (i, n) {
+      $("#adj_" + n).each( function() { fn('adjudicator', this); });
+    });
+  }
 }
 
 function display_conflicts(target) {
@@ -198,7 +205,6 @@ function updateConflicts(debate_tr) {
 
   // Check for incomplete panels
   if ($(".panel-holder .adj", debate_tr).length % 2 != 0) {
-    console.log('incomplete');
     $(".panel-holder", debate_tr).addClass("panel-incomplete");
   } else {
     $(".panel-holder", debate_tr).removeClass("panel-incomplete");
@@ -206,7 +212,6 @@ function updateConflicts(debate_tr) {
 
   // Check for missing chairs
   if ($(".chair-holder .adj", debate_tr).length != 1) {
-    console.log('no chair');
     $(".chair-holder", debate_tr).addClass("chair-incomplete");
   } else {
     $(".chair-holder", debate_tr).removeClass("chair-incomplete");
@@ -217,7 +222,6 @@ function updateConflicts(debate_tr) {
 // TABLE BEHAVIOURS
 
 $('#allocationsTable .importance select').on('change', function() {
-  console.log("change");
   var importance = $("option:selected", this).val(); // or $(this).val()
   var cell = $(this).parent()
   var row = $(this).parent().parent();
@@ -347,17 +351,29 @@ $("#allocationsTable .adj-holder").droppable( {
     var oldHolder = adj[0].oldHolder; // Where the element came from
     var destinationAdjs = $(".adj", this); // Any adjs present in the drop destination
 
+    // Adding the new judge to the new position
+
     if ($(this).hasClass("chair-holder")) {
-      // Swap the two around if dropping into a single position
+      // Swap the two around if dropping into a chair (single) position
       oldHolder.append(destinationAdjs);
-    }
-    if (!oldHolder.hasClass("adj-holder")) {
-      // If placing from the unused column
-      removeUnusedRow(oldHolder);
+      $(this).append(adj);
+      rebindHoverEvents($(adj));
+    } else if ($(this).hasClass("adj-holder")) {
+      // If placing from any other position within the draw table just append
+      $(this).append(adj);
+      rebindHoverEvents($(adj));
     }
 
-    $(this).append(adj);
-    rebindHoverEvents($(adj));
+    if (!oldHolder.hasClass("adj-holder")) {
+      // If placing from the unused column remove the old (now empty) row
+      removeUnusedRow(oldHolder);
+      // If duplicate adjs is on we make a duplicate and append to unused
+      {% if duplicate_adjs %}
+      var adj_copy = adj.clone()
+      moveToUnused(adj_copy);
+      init_adj($(adj_copy)); // Need to enable all events
+      {% endif %}
+    }
   }
 });
 
@@ -420,8 +436,6 @@ function moveToUnused(adj) {
     // If the adj isn't already in the table
     var new_row = unusedAdjTable.row.add( ["",formatScore(all_adj_scores[moving_adj_id])] ).draw(); // Adds a new row
     var first_cell = $("td:first", new_row.node()).append(adj); // Append the adj element
-  } else {
-    // Adj is already in the table (probably just be dragging back)
   }
 
 }

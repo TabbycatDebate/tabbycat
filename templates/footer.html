@@ -4,7 +4,6 @@
 <div id="footer" class="clearfix">
   <nav class="navbar navbar-default {% if '/admin/' in request.path %}navbar-inverse{% endif %}" role="navigation">
     <div class="container-fluid">
-      {% cache 600 footerleft request.tournament %}
         <p class="navbar-brand text-muted"><small>
         {% if tournament and enable_divisions == 0 %}
           {% if tournament %}{{ tournament }} runs on {% endif %}
@@ -17,8 +16,6 @@
            <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
         {% endif %}
         </small></p>
-      {% endcache %}
-      {% cache 600 footerright request.user request.tournament %}
       <p class="navbar-brand text-muted pull-right {% if '/admin/' in request.path %}navbar-inverse{% endif %}">
         <a href="/">Home</a> |
         {% if user.is_authenticated %}
@@ -33,7 +30,6 @@
           <a href="/accounts/login/" title="Log in">Log in</a>
         {% endif %}
       </p>
-      {% endcache %}
     </div>
   </nav>
 </div>

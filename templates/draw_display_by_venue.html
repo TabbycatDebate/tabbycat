@@ -69,9 +69,9 @@
       {% endif %}
       {% if enable_venue_groups %}
         {% if debate.division %}
-          <td>{{ debate.division.venue_group.short_name }}</td>
+          <td class="venue-name">{{ debate.division.venue_group.short_name }}</td>
         {% else %}
-          <td>{{ debate.venue.group.short_name }}</td>
+          <td class="venue-name">{{ debate.venue.group.short_name }} {{ debate.venue.name }}</td>
         {% endif %}
       {% else %}
         <td class="venue-name">{{ debate.venue.name }}</td>
