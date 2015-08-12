@@ -15,7 +15,6 @@ from debate.result import BallotSet
 from debate import forms
 from debate.models import *
 from debate.utils import populate_url_keys
-from debate import breaking
 
 from motions.models import Motion
 
