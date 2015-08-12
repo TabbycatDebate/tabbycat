@@ -4,7 +4,7 @@ from debate.views import round_view, admin_required, expect_post, redirect_round
 from debate.views import r2r
 
 from . import models
-from debate.models import ActionLog
+from action_log.models import ActionLog
 
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory

@@ -17,6 +17,7 @@ from debate.models import *
 from debate.utils import populate_url_keys
 
 from motions.models import Motion
+from action_log.models import ActionLog
 
 from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
@@ -421,31 +422,6 @@ def results_status_update(request, t):
     stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
     return HttpResponse(json.dumps(stats), content_type="text/json")
-
-@login_required
-@tournament_view
-def action_log_update(request, t):
-
-    from debate.models import ActionLog
-    actions = ActionLog.objects.filter(tournament=t).order_by('-id')[:20].select_related(
-        'user', 'debate', 'ballot_submission'
-    )
-
-    import datetime
-    now = datetime.datetime.now()
-    action_objects = []
-    timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
-    for a in actions:
-        action = {
-            'user': a.user.username if a.user else a.ip_address or "anonymous",
-            'type': a.get_type_display(),
-            'param': a.get_parameters_display(),
-            'timestamp': timestamp_template.render(Context({'t': a.timestamp})),
-        }
-        action_objects.append(action)
-
-    return HttpResponse(json.dumps(action_objects), content_type="text/json")
-
 
 
 @admin_required

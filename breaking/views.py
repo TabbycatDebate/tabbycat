@@ -5,7 +5,8 @@ from django.contrib import messages
 
 from debate.views import tournament_view, redirect_tournament, admin_required, expect_post
 from debate.views import public_optional_tournament_view, r2r, get_ip_address
-from debate.models import Adjudicator, ActionLog
+from debate.models import Adjudicator
+from action_log.models import ActionLog
 
 from . import models
 from . import forms
