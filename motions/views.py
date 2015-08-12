@@ -19,7 +19,7 @@ def motions(request, round):
     if len(motions) > 0:
         motions = [m for m in motions if m.round == round]
 
-    return r2r(request, "motions/list.html", dict(motions=motions))
+    return r2r(request, "list.html", dict(motions=motions))
 
 @admin_required
 @round_view
@@ -43,7 +43,7 @@ def motions_edit(request, round):
     else:
         formset = MotionFormSet(queryset=models.Motion.objects.filter(round=round))
 
-    return r2r(request, "motions/edit.html", dict(formset=formset))
+    return r2r(request, "edit.html", dict(formset=formset))
 
 
 @admin_required
@@ -74,7 +74,7 @@ def motions_assign(request, round):
             return redirect_round('motions', round)
 
     formset = MotionFormSet(queryset=models.Motion.objects.filter(round=round))
-    return r2r(request, "motions_assign.html", dict(formset=formset))
+    return r2r(request, "assign.html", dict(formset=formset))
 
 
 @admin_required

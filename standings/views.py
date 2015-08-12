@@ -117,7 +117,7 @@ def team_standings(request, round):
 
     show_draw_strength = decide_show_draw_strength(round.tournament)
 
-    return r2r(request, 'standings/teams.html', dict(teams=teams, rounds=rounds,
+    return r2r(request, 'teams.html', dict(teams=teams, rounds=rounds,
         show_ballots=False, show_draw_strength=show_draw_strength))
 
 
@@ -146,7 +146,7 @@ def division_standings(request, round):
             except ZeroDivisionError:
                 team.avg_margin = None
 
-    return r2r(request, 'standings/divisions.html', dict(teams=teams))
+    return r2r(request, 'divisions.html', dict(teams=teams))
 
 
 @admin_required
@@ -154,7 +154,7 @@ def division_standings(request, round):
 def speaker_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
-    return r2r(request, 'standings/speakers.html', dict(speakers=speakers,
+    return r2r(request, 'speakers.html', dict(speakers=speakers,
                                         rounds=rounds))
 
 
@@ -163,7 +163,7 @@ def speaker_standings(request, round):
 def novice_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, only_novices=True)
-    return r2r(request, "standings/novices.html", dict(speakers=speakers,
+    return r2r(request, "novices.html", dict(speakers=speakers,
                                         rounds=rounds))
 
 
@@ -172,7 +172,7 @@ def novice_standings(request, round):
 def reply_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, for_replies=True)
-    return r2r(request, 'standings/replies.html', dict(speakers=speakers,
+    return r2r(request, 'replies.html', dict(speakers=speakers,
                                         rounds=rounds))
 
 @admin_required
@@ -181,7 +181,7 @@ def motion_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     motions = list()
     motions = Motion.objects.statistics(round=round)
-    return r2r(request, 'standings/motions.html', dict(motions=motions))
+    return r2r(request, 'motions.html', dict(motions=motions))
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -191,7 +191,7 @@ def public_speaker_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
-    return r2r(request, 'standings/public_speaker_tab.html', dict(speakers=speakers,
+    return r2r(request, 'public_speaker_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
 
@@ -202,7 +202,7 @@ def public_novices_tab(request, t):
     round = t.current_round
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, only_novices=True)
-    return r2r(request, 'standings/public_novices_tab.html', dict(speakers=speakers,
+    return r2r(request, 'public_novices_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
 
@@ -212,7 +212,7 @@ def public_replies_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, for_replies=True)
-    return r2r(request, 'standings/public_reply_tab.html', dict(speakers=speakers,
+    return r2r(request, 'public_reply_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
 
@@ -245,7 +245,7 @@ def public_team_tab(request, t):
     show_ballots = round.tournament.config.get('ballots_released')
     show_draw_strength = decide_show_draw_strength(round.tournament)
 
-    return r2r(request, 'standings/public_team_tab.html', dict(teams=teams,
+    return r2r(request, 'public_team_tab.html', dict(teams=teams,
             rounds=rounds, round=round, show_ballots=show_ballots,
             show_draw_strength=show_draw_strength))
 
@@ -258,5 +258,5 @@ def public_motions_tab(request, t):
     print rounds
     motions = list()
     motions = Motion.objects.statistics(round=round)
-    return r2r(request, 'standings/public_motions_tab.html', dict(motions=motions))
+    return r2r(request, 'public_motions_tab.html', dict(motions=motions))
 
