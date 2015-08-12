@@ -25,7 +25,7 @@ SETTINGS = OrderedDict([
     ('maximum_margin',              (float, 'The largest amount one team can beat another by (0 means no limit)',  0.0)),
     ('motion_vetoes_enabled',       (_bool, 'Whether teams can veto motions',                                      True)),
     ('adj_min_score',               (float, 'Minimum adjudicator score',                                           1.0)),
-    ('adj_min_voting_score',        (float, 'Minimum adjudicator score required for non-trainee in auto-allocation', 1.5)),
+    ('adj_min_voting_score',        (float, 'Minimum adjudicator score required to not trainee in auto-allocation',1.5)),
     ('adj_max_score',               (float, 'Maximum adjudicator score',                                           5)),
     ('adj_chair_min_score',         (float, 'Minimum chair score',                                                 3.5)),
     ('draw_odd_bracket',            (str,   'Odd bracket resolution method, see wiki for allowed values',          'intermediate_bubble_up_down')),
@@ -111,7 +111,7 @@ class Config(object):
         if key in SETTINGS:
             coerce, help, _default = SETTINGS[key]
             default = default or _default
-            value = models.Config.objects.get_(self._t, key, default)
+            value = models.Option.objects.get_(self._t, key, default)
             try:
                 return coerce(value)
             except TypeError:
@@ -124,11 +124,11 @@ class Config(object):
     def set(self, key, value):
 
         if key in SETTINGS:
-            models.Config.objects.set(self._t, key, str(value))
+            models.Option.objects.set(self._t, key, str(value))
         else:
             raise KeyError("Setting {0} does not exist.".format(key))
 
-def make_config_form(tournament, data=None):
+def make_options_form(tournament, data=None):
 
     def _field(t, help):
         if t is int:
@@ -159,5 +159,3 @@ def make_config_form(tournament, data=None):
         return klass(initial=initial_data)
     else:
         return klass(data)
-
-

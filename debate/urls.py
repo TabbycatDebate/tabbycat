@@ -134,6 +134,6 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/action_log/',                              include('action_log.urls')),
 
     # Config App
-    url(r'^admin/config/',                                  include('config.urls')),
+    url(r'^admin/options/',                                  include('options.urls')),
 
 )

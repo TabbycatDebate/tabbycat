@@ -24,7 +24,7 @@
         {% if user.is_authenticated %}
           {% if user.is_superuser %}
             {% if tournament %}
-              <a href="{% tournament_url tournament_config %}">Tournament Config</a> |
+              <a href="{% tournament_url tournament_options %}">Tournament Options</a> |
             {% endif %}
             <a href="/admin/">Django Admin</a> |
           {% endif %}

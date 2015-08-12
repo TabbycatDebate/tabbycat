@@ -7,7 +7,7 @@ class Checkin(models.Model):
 
 
 class ActiveVenue(models.Model):
-    venue = models.ForeignKey('debate.Venue')
+    venue = models.ForeignKey('venues.Venue')
     round = models.ForeignKey('debate.Round')
 
     class Meta:

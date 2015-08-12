@@ -2,7 +2,8 @@ from base import BaseTournamentDataImporter, TournamentDataImporterError
 import debate.models as m
 import breaking.models as bm
 import motions.models as mm
-import config.models as cm
+import options.models as cm
+import venues.models as vm
 import csv
 
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):
@@ -129,7 +130,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             if len(line) > 2:
                 kwargs['team_capacity'] = line[2]
             return kwargs
-        return self._import(f, _venue_group_line_parser, m.VenueGroup)
+        return self._import(f, _venue_group_line_parser, vm.VenueGroup)
 
     def import_venues(self, f, auto_create_groups=True):
         """Imports venues from a file, also creating venue groups as needed
@@ -148,7 +149,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'short_name' : line[2][:25],
                 }
             counts, errors = self._import(f, _venue_group_line_parser,
-                    m.VenueGroup, expect_unique=False)
+                    vm.VenueGroup, expect_unique=False)
         else:
             counts = None
             errors = None
@@ -158,10 +159,10 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'tournament' : self.tournament,
                 'name'       : line[0],
                 'priority'   : int(line[1]) if len(line) > 1 else 10,
-                'group'      : m.VenueGroup.objects.get(name=line[2]) if len(line) > 2 and line[2] else None,
+                'group'      : vm.VenueGroup.objects.get(name=line[2]) if len(line) > 2 and line[2] else None,
                 'time'       : line[3] if len(line) > 3 and line[3] else None,
             }
-        counts, errors = self._import(f, _venue_line_parser, m.Venue, counts=counts, errors=errors)
+        counts, errors = self._import(f, _venue_line_parser, vm.Venue, counts=counts, errors=errors)
 
         return counts, errors
 
@@ -403,18 +404,18 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             try:
                 key, value_type, value = line
             except ValueError as e:
-                errors.add(lineno, cm.Config, "Couldn't parse line: " + str(e))
+                errors.add(lineno, cm.Option, "Couldn't parse line: " + str(e))
                 continue
             if value:
                 try:
                     coercefunc = coercefuncs[value_type]
                 except KeyError:
-                    errors.add(lineno, cm.Config, "Unrecognized value type: %r" % value_type)
+                    errors.add(lineno, cm.Option, "Unrecognized value type: %r" % value_type)
                     continue
                 try:
                     value = coercefunc(value)
                 except ValueError as e:
-                    errors.add(lineno, cm.Config, "Invalid value for type %r: %r" % (value_type, value))
+                    errors.add(lineno, cm.Option, "Invalid value for type %r: %r" % (value_type, value))
                     continue
                 self.tournament.config.set(key, value)
                 count += 1
@@ -429,7 +430,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 for message in errors.itermessages():
                     self.logger.warning(message)
 
-        return {cm.Config: count}, errors
+        return {cm.Option: count}, errors
 
     def auto_make_rounds(self, num_rounds):
         """Makes the number of rounds specified. The first one is random and the

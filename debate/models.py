@@ -116,7 +116,7 @@ class Tournament(models.Model):
     @cached_property
     def config(self):
         if not hasattr(self, '_config'):
-            from config.config import Config # TODO: improve the semantics here
+            from options.options import Config # TODO: improve the semantics here
             self._config = Config(self)
         return self._config
 
@@ -142,44 +142,6 @@ def update_tournament_cache(sender, instance, created, **kwargs):
 # Update the cached tournament object when model is changed)
 signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
-class VenueGroup(models.Model):
-    name = models.CharField(unique=True, max_length=200)
-    short_name = models.CharField(db_index=True, max_length=25)
-    team_capacity = models.IntegerField(blank=True, null=True)
-
-    @property
-    def divisions_count(self):
-        return self.division_set.count()
-
-    @property
-    def venues(self):
-        return self.venue_set.all()
-
-    class Meta:
-        ordering = ['short_name']
-
-    def __unicode__(self):
-        if self.short_name:
-            return u"%s" % (self.short_name)
-        else:
-            return u"%s" % (self.name)
-
-class Venue(models.Model):
-    name = models.CharField(max_length=40)
-    group = models.ForeignKey(VenueGroup, blank=True, null=True)
-    priority = models.IntegerField(help_text="Venues with a higher priority number will be preferred in the draw")
-    tournament = models.ForeignKey(Tournament, blank=True, null=True)
-    time = models.DateTimeField(blank=True, null=True, help_text="")
-
-    class Meta:
-        ordering = ['group', 'name']
-        index_together = ['group', 'name']
-
-    def __unicode__(self):
-        if self.group:
-            return u'%s - %s' % (self.group, self.name)
-        else:
-            return u'%s' % (self.name)
 
 
 class Region(models.Model):
@@ -273,7 +235,7 @@ class Division(models.Model):
     seq = models.IntegerField(blank=True, null=True, help_text="The order in which divisions are displayed")
     tournament = models.ForeignKey(Tournament)
     time_slot = models.TimeField(blank=True, null=True)
-    venue_group = models.ForeignKey(VenueGroup, blank=True, null=True)
+    venue_group = models.ForeignKey('venues.VenueGroup', blank=True, null=True)
 
     @property
     def teams_count(self):
@@ -303,7 +265,7 @@ class Team(models.Model):
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
     break_categories = models.ManyToManyField('breaking.BreakCategory', blank=True)
 
-    venue_preferences = models.ManyToManyField(VenueGroup,
+    venue_preferences = models.ManyToManyField('venues.VenueGroup',
         through = 'TeamVenuePreference',
         related_name = 'VenueGroup',
         verbose_name = 'Venue group preference'
@@ -442,7 +404,7 @@ signals.post_save.connect(update_team_cache, sender=Team)
 
 class TeamVenuePreference(models.Model):
     team = models.ForeignKey(Team, db_index=True)
-    venue_group = models.ForeignKey(VenueGroup)
+    venue_group = models.ForeignKey('venues.VenueGroup')
     priority = models.IntegerField()
 
     class Meta:
@@ -682,7 +644,7 @@ class Round(models.Model):
 
     checkins = models.ManyToManyField('Person', through='availability.Checkin', related_name='checkedin_rounds')
 
-    active_venues       = models.ManyToManyField('Venue', through='availability.ActiveVenue')
+    active_venues       = models.ManyToManyField('venues.Venue', through='availability.ActiveVenue')
     active_adjudicators = models.ManyToManyField('Adjudicator', through='availability.ActiveAdjudicator')
     active_teams        = models.ManyToManyField('Team', through='availability.ActiveTeam')
 
@@ -908,6 +870,8 @@ class Round(models.Model):
             aff.save()
             neg.save()
 
+    # TODO: these availability methods should probably be rolled into the app
+
     def base_availability(self, model, active_table, active_column, model_table,
                          id_field='id'):
         d = {
@@ -1056,6 +1020,7 @@ class Round(models.Model):
             ActiveTeam.objects.filter(round=self, team=team).delete()
 
     def activate_all(self):
+        from venues.models import Venue
         self.set_available_venues([v.id for v in Venue.objects.all()])
         self.set_available_adjudicators([a.id for a in
                                          Adjudicator.objects.all()])
@@ -1105,7 +1070,7 @@ class Debate(models.Model):
     objects = DebateManager()
 
     round = models.ForeignKey(Round, db_index=True)
-    venue = models.ForeignKey(Venue, blank=True, null=True)
+    venue = models.ForeignKey('venues.Venue', blank=True, null=True)
     division = models.ForeignKey('Division', blank=True, null=True)
 
     bracket = models.FloatField(default=0)

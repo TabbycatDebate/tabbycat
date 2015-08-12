@@ -2,7 +2,7 @@ from django.db import models
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 
-class ConfigManager(models.Manager):
+class OptionManager(models.Manager):
 
     def set(self, tournament, key, value):
         obj, created = self.get_or_create(tournament=tournament, key=key)
@@ -30,9 +30,9 @@ class ConfigManager(models.Manager):
             return noncached_value
 
 
-class Config(models.Model):
+class Option(models.Model):
     tournament = models.ForeignKey('debate.Tournament', db_index=True)
     key = models.CharField(max_length=40)
     value = models.CharField(max_length=40)
 
-    objects = ConfigManager()
+    objects = OptionManager()
