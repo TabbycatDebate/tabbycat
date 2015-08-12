@@ -116,7 +116,7 @@ class Tournament(models.Model):
     @cached_property
     def config(self):
         if not hasattr(self, '_config'):
-            from debate.config import Config
+            from config.config import Config # TODO: improve the semantics here
             self._config = Config(self)
         return self._config
 
@@ -1794,38 +1794,3 @@ class SpeakerScore(models.Model):
     class Meta:
         unique_together = [('debate_team', 'speaker', 'position', 'ballot_submission')]
 
-
-class ConfigManager(models.Manager):
-
-    def set(self, tournament, key, value):
-        obj, created = self.get_or_create(tournament=tournament, key=key)
-        obj.value = value
-        obj.save()
-        #print "set config cache via set() call"
-        cached_key = "%s_%s" % (tournament.slug, key)
-        cache.set(cached_key, value, None)
-
-    def get_(self, tournament, key, default=None):
-        cached_key = "%s_%s" % (tournament.slug, key)
-        cached_value = cache.get(cached_key)
-        if cached_value:
-            return cached_value
-        else:
-            #print "couldnt get cache key %s" % cached_key
-            #print "\t value is %s" % cache.get(cached_key)
-            try:
-                noncached_value = self.get(tournament=tournament, key=key).value
-            except ObjectDoesNotExist:
-                noncached_value = default
-
-            cache.set(cached_key, noncached_value, None)
-            #print "\tset config cache %s to %s via get() call" % (cached_key, noncached_value)
-            return noncached_value
-
-
-class Config(models.Model):
-    tournament = models.ForeignKey(Tournament, db_index=True)
-    key = models.CharField(max_length=40)
-    value = models.CharField(max_length=40)
-
-    objects = ConfigManager()

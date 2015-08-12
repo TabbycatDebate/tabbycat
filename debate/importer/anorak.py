@@ -2,6 +2,7 @@ from base import BaseTournamentDataImporter, TournamentDataImporterError
 import debate.models as m
 import breaking.models as bm
 import motions.models as mm
+import config.models as cm
 import csv
 
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):
@@ -402,18 +403,18 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             try:
                 key, value_type, value = line
             except ValueError as e:
-                errors.add(lineno, m.Config, "Couldn't parse line: " + str(e))
+                errors.add(lineno, cm.Config, "Couldn't parse line: " + str(e))
                 continue
             if value:
                 try:
                     coercefunc = coercefuncs[value_type]
                 except KeyError:
-                    errors.add(lineno, m.Config, "Unrecognized value type: %r" % value_type)
+                    errors.add(lineno, cm.Config, "Unrecognized value type: %r" % value_type)
                     continue
                 try:
                     value = coercefunc(value)
                 except ValueError as e:
-                    errors.add(lineno, m.Config, "Invalid value for type %r: %r" % (value_type, value))
+                    errors.add(lineno, cm.Config, "Invalid value for type %r: %r" % (value_type, value))
                     continue
                 self.tournament.config.set(key, value)
                 count += 1
@@ -428,7 +429,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 for message in errors.itermessages():
                     self.logger.warning(message)
 
-        return {m.Config: count}, errors
+        return {cm.Config: count}, errors
 
     def auto_make_rounds(self, num_rounds):
         """Makes the number of rounds specified. The first one is random and the

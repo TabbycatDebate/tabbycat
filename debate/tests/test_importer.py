@@ -4,6 +4,7 @@ from django.test import TestCase
 from unittest import skip
 import debate.models as m
 import motions.models as mm
+import config.models as cm
 import os.path
 import logging
 
@@ -83,7 +84,7 @@ class TestImporterAnorak(TestCase):
     def test_config(self):
         f = self._open_csv_file(self.TESTDIR_CHOICES, "config")
         counts, errors = self.importer.import_config(f)
-        self.assertEqual(counts, {m.Config: 28})
+        self.assertEqual(counts, {cm.Config: 28})
         self.assertFalse(errors)
 
     def test_adj_feedback_questions(self):

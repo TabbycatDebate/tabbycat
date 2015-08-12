@@ -1,5 +1,7 @@
 from collections import OrderedDict
-from django.forms import Select
+from django import forms
+
+from . import models
 
 def _bool(value):
     try:
@@ -106,11 +108,10 @@ class Config(object):
             raise AttributeError(key)
 
     def get(self, key, default=None):
-        from debate.models import Config
         if key in SETTINGS:
             coerce, help, _default = SETTINGS[key]
             default = default or _default
-            value = Config.objects.get_(self._t, key, default)
+            value = models.Config.objects.get_(self._t, key, default)
             try:
                 return coerce(value)
             except TypeError:
@@ -121,14 +122,13 @@ class Config(object):
             raise KeyError("Setting {0} does not exist.".format(key))
 
     def set(self, key, value):
-        from debate.models import Config
+
         if key in SETTINGS:
-            Config.objects.set(self._t, key, str(value))
+            models.Config.objects.set(self._t, key, str(value))
         else:
             raise KeyError("Setting {0} does not exist.".format(key))
 
 def make_config_form(tournament, data=None):
-    from django import forms
 
     def _field(t, help):
         if t is int:
@@ -138,7 +138,7 @@ def make_config_form(tournament, data=None):
         elif t is str:
             return forms.CharField(help_text=help)
         elif t is _bool:
-            return forms.BooleanField(help_text=help, widget=Select(choices=BOOL_CHOICES), required=False)
+            return forms.BooleanField(help_text=help, widget=forms.Select(choices=BOOL_CHOICES), required=False)
         else:
             raise TypeError
 

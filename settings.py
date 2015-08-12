@@ -75,6 +75,7 @@ INSTALLED_APPS = (
     'availability',
     'motions',
     'action_log',
+    'config',
     'compressor',
     'cachalot',
 )

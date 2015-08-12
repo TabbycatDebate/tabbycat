@@ -1,5 +1,5 @@
 from debate.models import Tournament, Round
-from debate.models import Config
+from config.models import Config
 
 def debate_context(request):
 

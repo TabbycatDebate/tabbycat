@@ -424,25 +424,6 @@ def results_status_update(request, t):
     return HttpResponse(json.dumps(stats), content_type="text/json")
 
 
-@admin_required
-@tournament_view
-def tournament_config(request, t):
-    from debate.config import make_config_form
-
-    context = dict()
-    if request.method == 'POST':
-        form = make_config_form(t, request.POST)
-        if form.is_valid():
-            form.save()
-            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_CONFIG_EDIT, user=request.user, tournament=t)
-            messages.success(request, "Tournament configuration saved.")
-    else:
-        form = make_config_form(t)
-
-    context['form'] = form
-
-    return r2r(request, 'tournament_config.html', context)
-
 
 @admin_required
 @tournament_view
