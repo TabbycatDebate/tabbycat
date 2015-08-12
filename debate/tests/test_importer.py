@@ -6,6 +6,7 @@ import debate.models as m
 import motions.models as mm
 import options.models as cm
 import venues.models as vm
+import feedback.models as fm
 import os.path
 import logging
 
@@ -69,7 +70,7 @@ class TestImporterAnorak(TestCase):
         counts, errors = self.importer.import_adjudicators(f)
         self.assertEqual(counts, {
             m.Adjudicator: 27,
-            m.AdjudicatorTestScoreHistory: 27,
+            fm.AdjudicatorTestScoreHistory: 27,
             m.AdjudicatorInstitutionConflict: 36,
             m.AdjudicatorConflict: 7,
         })
@@ -91,7 +92,7 @@ class TestImporterAnorak(TestCase):
     def test_adj_feedback_questions(self):
         f = self._open_csv_file(self.TESTDIR, "questions")
         counts, errors = self.importer.import_adj_feedback_questions(f)
-        self.assertEqual(counts, {m.AdjudicatorFeedbackQuestion: 7})
+        self.assertEqual(counts, {fm.AdjudicatorFeedbackQuestion: 7})
         self.assertFalse(errors)
 
     def test_invalid_line(self):
@@ -108,7 +109,7 @@ class TestImporterAnorak(TestCase):
         counts, errors = self.importer.import_adjudicators(f)
         self.assertEqual(counts, {
             m.Adjudicator: 27,
-            m.AdjudicatorTestScoreHistory: 27,
+            fm.AdjudicatorTestScoreHistory: 27,
             m.AdjudicatorInstitutionConflict: 36,
             m.AdjudicatorConflict: 7,
         })

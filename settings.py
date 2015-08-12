@@ -77,6 +77,7 @@ INSTALLED_APPS = (
     'standings',
     'options',
     'venues',
+    'feedback',
     'compressor',
     'cachalot',
 )

@@ -4,6 +4,7 @@ import breaking.models as bm
 import motions.models as mm
 import options.models as cm
 import venues.models as vm
+import feedback.models as fm
 import csv
 
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):
@@ -35,15 +36,15 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     }
 
     FEEDBACK_ANSWER_TYPES = {
-        ("checkbox"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_CHECKBOX,
-        ("yes no select", "yesno"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT,
-        ("integer textbox", "int", "integer"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_TEXTBOX,
-        ("integer scale", "scale"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
-        ("float"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT,
-        ("text"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT,
-        ("textbox", "long text", "longtext"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
-        ("select single", "single select"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT,
-        ("select multiple", "multiple select"): m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
+        ("checkbox"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_CHECKBOX,
+        ("yes no select", "yesno"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT,
+        ("integer textbox", "int", "integer"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_TEXTBOX,
+        ("integer scale", "scale"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
+        ("float"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT,
+        ("text"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT,
+        ("textbox", "long text", "longtext"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
+        ("select single", "single select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT,
+        ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
     }
 
     def import_rounds(self, f):
@@ -282,7 +283,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'score'       : float(line[2]),
                 'round'       : None,
             }
-        counts, errors = self._import(f, _test_score_line_parser, m.AdjudicatorTestScoreHistory,
+        counts, errors = self._import(f, _test_score_line_parser, fm.AdjudicatorTestScoreHistory,
                 counts=counts, errors=errors)
 
         def _own_institution_conflict_parser(line):
@@ -377,7 +378,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'max_value'              : int(line[11]) if len(line) > 11 and line[11] else None,
                 'choices'                : line[12] if len(line) > 12 else "",
             }
-        return self._import(f, _question_line_parser, m.AdjudicatorFeedbackQuestion)
+        return self._import(f, _question_line_parser, fm.AdjudicatorFeedbackQuestion)
 
     def import_config(self, f):
         """Imports configuration settings from a file.
