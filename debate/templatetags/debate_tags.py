@@ -1,6 +1,5 @@
 from django import template
 from django.utils.encoding import force_unicode
-from django.utils.safestring import mark_safe
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from debate.emoji import EMOJI_LIST

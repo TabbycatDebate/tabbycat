@@ -66,7 +66,6 @@ def availability(request, round, model, context_name):
     return _availability(request, round, model, context_name)
 
 def _update_availability(request, round, update_method, active_model, active_attr):
-
     if request.POST.get('copy'):
         prev_round = Round.objects.get(tournament=round.tournament,
                                        seq=round.seq-1)
@@ -80,6 +79,7 @@ def _update_availability(request, round, update_method, active_model, active_att
     available_ids = [int(a.replace("check_", "")) for a in request.POST.keys()
                      if a.startswith("check_")]
 
+    # Calling the relevenat update method as defined in Round
     getattr(round, update_method)(available_ids)
 
     ACTION_TYPES = {

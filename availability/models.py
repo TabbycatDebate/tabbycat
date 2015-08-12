@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Checkin(models.Model):
     person = models.ForeignKey('debate.Person')
     round = models.ForeignKey('debate.Round')

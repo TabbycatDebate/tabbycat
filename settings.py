@@ -68,7 +68,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages',
-    'debate',
     'action_log',
     'availability',
     'breaking',
@@ -77,6 +76,8 @@ INSTALLED_APPS = (
     'standings',
     'options',
     'venues',
+    'feedback',
+    'debate',
     'compressor',
     'cachalot',
 )

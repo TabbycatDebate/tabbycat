@@ -25,14 +25,14 @@ urlpatterns = patterns('debate.views',
     url(r'^add_ballot/$', 'public_ballot_submit', name='public_ballot_submit'),
     url(r'^add_ballot/adjudicator/(?P<adj_id>\d+)/$', 'public_new_ballotset_id', name='public_new_ballotset'),
     url(r'^add_ballot/adjudicator/h/(?P<url_key>\w+)/$', 'public_new_ballotset_key', name='public_new_ballotset_key'),
-    url(r'^add_feedback/$', 'public_feedback_submit', name='public_feedback_submit'),
-    url(r'^add_feedback/team/(?P<source_id>\d+)/$', 'public_enter_feedback_id', {'source_type': m.Team}, name='public_enter_feedback_team'),
-    url(r'^add_feedback/team/h/(?P<url_key>\w+)/$', 'public_enter_feedback_key', {'source_type': m.Team}, name='public_enter_feedback_team_key'),
-    url(r'^add_feedback/adjudicator/(?P<source_id>\d+)/$', 'public_enter_feedback_id', {'source_type': m.Adjudicator}, name='public_enter_feedback_adjudicator'),
-    url(r'^add_feedback/adjudicator/h/(?P<url_key>\w+)/$', 'public_enter_feedback_key', {'source_type': m.Adjudicator}, name='public_enter_feedback_adjudicator_key'),
+
+
+
     url(r'^toggle_postponed/$', 'toggle_postponed', name='toggle_postponed'),
 
-    url(r'^feedback_progress/$', 'public_feedback_progress', name='public_feedback_progress'),
+
+
+
     url(r'^participants/$', 'public_participants', name='public_participants'),
     url(r'^motions/$', 'public_motions', name='public_motions'),
     url(r'^divisions/$', 'public_divisions', name='public_divisions'),
@@ -82,22 +82,6 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/round/(?P<round_seq>\d+)/master_sheets/list/$', 'master_sheets_list', name='master_sheets_list'),
     url(r'^admin/round/(?P<round_seq>\d+)/master_sheets/venue_group/(?P<venue_group_id>\d+)/$', 'master_sheets_view', name='master_sheets_view'),
 
-    url(r'^admin/adjudicators/scores/$', 'adj_scores', name='adj_scores'),
-    url(r'^admin/adjudicators/feedback/$', 'adj_feedback', name='adj_feedback'),
-    url(r'^admin/adjudicators/feedback/latest/$', 'adj_latest_feedback', name='adj_latest_feedback'),
-    url(r'^admin/adjudicators/feedback/source/list/$', 'adj_source_feedback', name='adj_source_feedback'),
-    url(r'^admin/adjudicators/feedback/source/team/(?P<team_id>\d+)/$', 'team_feedback_list', name='team_feedback_list'),
-    url(r'^admin/adjudicators/feedback/source/adjudicator(?P<adj_id>\d+)/$', 'adj_feedback_list', name='adj_feedback_list'),
-
-    url(r'^admin/adjudicators/feedback/get/$', 'get_adj_feedback', name='get_adj_feedback'),
-    url(r'^admin/adjudicators/feedback/add/$', 'add_feedback', name='add_feedback'),
-    url(r'^admin/adjudicators/feedback/add/team/(?P<source_id>\d+)/$', 'enter_feedback', {'source_type': m.Team}, name='enter_feedback_team'),
-    url(r'^admin/adjudicators/feedback/add/adjudicator/(?P<source_id>\d+)/$', 'enter_feedback', {'source_type': m.Adjudicator}, name='enter_feedback_adjudicator'),
-    url(r'^admin/adjudicators/scores/test/set/$', 'set_adj_test_score', name='set_adj_test_score'),
-    url(r'^admin/adjudicators/breaking/set/$', 'set_adj_breaking_status', name='set_adj_breaking_status'),
-    url(r'^admin/adjudicators/notes/test/set/$', 'set_adj_note', name='set_adj_note'),
-
-    url(r'^admin/adjudicators/progress$', 'feedback_progress', name='feedback_progress'),
 
     url(r'^admin/side_allocations/$', 'side_allocations', name='side_allocations'),
     url(r'^admin/randomised_urls/$', 'randomised_urls', name='randomised_urls'),
@@ -134,6 +118,11 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/action_log/',                              include('action_log.urls')),
 
     # Config App
-    url(r'^admin/options/',                                  include('options.urls')),
+    url(r'^admin/options/',                                 include('options.urls')),
+
+    # Feedback App
+    url(r'^feedback/',                                      include('feedback.urls_public')),
+    url(r'^admin/feedback/',                                include('feedback.urls_admin')),
+
 
 )
