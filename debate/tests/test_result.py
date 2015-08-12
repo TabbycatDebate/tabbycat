@@ -3,6 +3,7 @@
 from unittest import SkipTest
 from django.test import TestCase
 import debate.models as m
+import venues.models as vm
 import random
 from debate.result import BallotSet
 
@@ -68,7 +69,7 @@ class BaseTestResult(TestCase):
             adj = m.Adjudicator(tournament=self.t, institution=inst,
                     name="Adjudicator %d"%i, test_score=5)
             adj.save()
-        venue = m.Venue(name="Venue", priority=10)
+        venue = vm.Venue(name="Venue", priority=10)
         venue.save()
 
         self.adjs = list(m.Adjudicator.objects.all())
@@ -76,7 +77,7 @@ class BaseTestResult(TestCase):
 
         self.round = m.Round(tournament=self.t, seq=1, abbreviation="R1")
         self.round.save()
-        for venue in m.Venue.objects.all():
+        for venue in vm.Venue.objects.all():
             self.round.activate_venue(venue, True)
         self.debate = m.Debate(round=self.round, venue=venue)
         self.debate.save()

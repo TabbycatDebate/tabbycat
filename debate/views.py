@@ -16,6 +16,8 @@ from debate import forms
 from debate.models import *
 from debate.utils import populate_url_keys
 
+from venues.models import VenueGroup, Venue
+
 from motions.models import Motion
 from action_log.models import ActionLog
 

@@ -12,6 +12,8 @@ from debate.adjudicator.anneal import SAAllocator
 from debate.result import BallotSet
 from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
 
+from venues.models import Venue
+
 import standings
 
 from warnings import warn
@@ -895,7 +897,7 @@ class Round(models.Model):
 
     def venue_availability(self):
         all_venues = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
-                                      'debate_venue')
+                                      'venues_venue')
         all_venues = [v for v in all_venues if v.tournament == self.tournament]
         return all_venues
 
@@ -903,7 +905,7 @@ class Round(models.Model):
         # Had to replicate venue_availability via base_availability so extra()
         # could still function on the query set
         result = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
-                                      'debate_venue').extra(select =
+                                      'venues_venue').extra(select =
                                       {'is_used': """EXISTS (SELECT 1
                                       FROM debate_debate da
                                       WHERE da.round_id=%d AND
