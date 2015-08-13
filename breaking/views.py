@@ -1,15 +1,16 @@
 from django.views.decorators.cache import cache_page
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib import messages
 
-from debate.views import tournament_view, redirect_tournament, admin_required, expect_post
-from debate.views import public_optional_tournament_view, r2r, get_ip_address
 from debate.models import Adjudicator
 from action_log.models import ActionLog
 
 from . import models
 from . import forms
+
+from utils import *
 
 from breaking import get_breaking_teams, update_breaking_teams, update_all_breaking_teams, generate_all_breaking_teams
 

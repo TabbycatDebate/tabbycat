@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from debate.utils import populate_url_keys, delete_url_keys
+from debate.keys import populate_url_keys, delete_url_keys
 from debate.models import Tournament
 from argparse import ArgumentParser
 

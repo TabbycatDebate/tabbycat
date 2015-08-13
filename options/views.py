@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django import forms
+from django.contrib.auth.decorators import login_required
 
-from debate.views import admin_required, tournament_view, r2r
 from options import make_options_form
 
 from . import models
 from action_log.models import ActionLog
 
+from utils import *
 
 @admin_required
 @tournament_view

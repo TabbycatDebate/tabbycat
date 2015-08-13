@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -6,15 +7,13 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 import json
 
-from debate.views import tournament_view, login_required, admin_required, r2r, get_ip_address, redirect_tournament
-from debate.views import public_optional_tournament_view, expect_post
-
 from debate.models import Adjudicator, DebateAdjudicator, SpeakerScoreByAdj, Team
 from action_log.models import ActionLog
 
 from . import models
 from forms import make_feedback_form_class
 
+from utils import *
 
 @admin_required
 @tournament_view

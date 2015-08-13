@@ -890,6 +890,7 @@ class Round(models.Model):
         return all_venues
 
     def unused_venues(self):
+        from venues.models import Venue
         # Had to replicate venue_availability via base_availability so extra()
         # could still function on the query set
         result = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
@@ -897,7 +898,7 @@ class Round(models.Model):
                                       {'is_used': """EXISTS (SELECT 1
                                       FROM debate_debate da
                                       WHERE da.round_id=%d AND
-                                      da.venue_id = debate_venue.id)""" % self.id},
+                                      da.venue_id = venues_venue.id)""" % self.id},
         )
         return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
 

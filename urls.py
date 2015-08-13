@@ -13,6 +13,7 @@ def redirect(view):
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
+
     (r'^$', 'debate.views.index'),
 
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),

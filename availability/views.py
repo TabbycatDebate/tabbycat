@@ -1,7 +1,9 @@
 from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
-from debate.views import admin_required, expect_post, round_view, r2r
 from debate.models import Person, Round
 from action_log.models import ActionLog
+from django.contrib.auth.decorators import login_required
+
+from utils import *
 
 def _availability(request, round, model, context_name):
 

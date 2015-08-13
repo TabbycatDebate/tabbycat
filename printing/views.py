@@ -1,6 +1,8 @@
-from debate.views import round_view, admin_required, r2r
 from debate.models import Round
 from motions.models import Motion
+from django.contrib.auth.decorators import login_required
+
+from utils import *
 
 @admin_required
 @round_view

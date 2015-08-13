@@ -1,8 +1,10 @@
-from debate.views import round_view, admin_required, public_optional_tournament_view, r2r, decide_show_draw_strength
 from debate.models import Team, TeamScore, Speaker, SpeakerScore, Round
 from motions.models import Motion
 from django.views.decorators.cache import cache_page
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+
+from utils import *
 
 def get_speaker_standings(rounds, round, results_override=False, only_novices=False, for_replies=False):
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
@@ -80,7 +82,7 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
 
     return speakers
 
-def get_round_result(team, r):
+def get_round_result(team, team_scores, r):
     ts = next((x for x in team_scores if x.debate_team.team == team and x.debate_team.debate.round == r), None)
     try:
         ts.opposition = ts.debate_team.opposition.team # TODO: this slows down the page generation considerably
@@ -99,8 +101,8 @@ def team_standings(request, round):
     team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
 
     for team in teams:
-        team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(team, round) is not None
-        team.round_results = [get_round_result(team, r) for r in rounds]
+        team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(team, team_scores, round) is not None
+        team.round_results = [get_round_result(team, team_scores, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
         if round.tournament.config.get('show_avg_margin'):
@@ -131,7 +133,7 @@ def division_standings(request, round):
     team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
 
     for team in teams:
-        team.round_results = [get_round_result(team, r) for r in rounds]
+        team.round_results = [get_round_result(team, team_scores, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
         if round.tournament.config.get('show_avg_margin'):

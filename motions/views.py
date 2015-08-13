@@ -1,7 +1,5 @@
 from django.shortcuts import render
-
-from debate.views import round_view, admin_required, expect_post, redirect_round
-from debate.views import r2r
+from django.contrib.auth.decorators import login_required
 
 from . import models
 from action_log.models import ActionLog
@@ -10,6 +8,8 @@ from django.forms import ModelForm
 from django.forms.models import modelformset_factory
 from django.forms.widgets import CheckboxSelectMultiple
 from django.forms.models import ModelMultipleChoiceField
+
+from utils import *
 
 @admin_required
 @round_view
