@@ -192,8 +192,12 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
     debates = Debate.objects.filter(**debate_filter)
 
     choices = [(None, '-- Adjudicators --')]
-    choices.extend(adj_choice(da) for da in     # for an adjudicator, find every adjudicator on their panel except them.
-            DebateAdjudicator.objects.filter(debate__in=debates).exclude(adjudicator=source).select_related('debate').order_by('-debate__round__seq'))
+    # for an adjudicator, find every adjudicator on their panel except them
+    choices.extend(adj_choice(da) for da in DebateAdjudicator.objects.filter(
+        debate__in=debates).exclude(
+        adjudicator=source).select_related(
+        'debate').order_by(
+        '-debate__round__seq'))
 
     class FeedbackForm(BaseFeedbackForm):
         tournament = source.tournament  # BaseFeedbackForm setting

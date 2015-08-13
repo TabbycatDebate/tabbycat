@@ -1,11 +1,12 @@
 from django.conf import settings
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_page
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 import json
 
-from debate.views import tournament_view, login_required, admin_required, r2r, get_ip_address
+from debate.views import tournament_view, login_required, admin_required, r2r, get_ip_address, redirect_tournament
 from debate.views import public_optional_tournament_view, expect_post
 
 from debate.models import Adjudicator, DebateAdjudicator, SpeakerScoreByAdj, Team
