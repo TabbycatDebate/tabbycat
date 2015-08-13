@@ -1,15 +1,10 @@
-from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import Context, RequestContext, loader, Template
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.db.models import Sum, Count
-from django.conf import settings
-from django.views.decorators.cache import cache_page
-from ipware.ip import get_real_ip
 
 from results.result import BallotSet
 from debate.keys import populate_url_keys
@@ -24,7 +19,6 @@ from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
 
 import datetime
-from functools import wraps
 import json
 
 from utils import *

@@ -1,8 +1,4 @@
-from django.views.decorators.cache import cache_page
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
-from django.conf import settings
-from django.contrib import messages
+
 
 from debate.models import Adjudicator
 from action_log.models import ActionLog

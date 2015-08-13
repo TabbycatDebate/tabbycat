@@ -1,8 +1,3 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseBadRequest
-from django.views.decorators.cache import cache_page
-from django.conf import settings
-
 from debate.models import Debate, Round, Adjudicator, DebateAdjudicator
 from motions.models import Motion
 from action_log.models import ActionLog

@@ -1,6 +1,4 @@
-from django.contrib import messages
 from django import forms
-from django.contrib.auth.decorators import login_required
 
 from options import make_options_form
 

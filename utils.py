@@ -1,10 +1,13 @@
+from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib import messages
+from django.conf import settings
+from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.template import RequestContext
-from django.shortcuts import render_to_response
-from django.http import HttpResponseBadRequest
-from ipware.ip import get_real_ip
+from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.views.decorators.cache import cache_page
+
 from functools import wraps
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import user_passes_test
+
 
 def get_ip_address(request):
     ip = get_real_ip(request)

@@ -1,10 +1,6 @@
-from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-
 from . import models
 
-from utils import tournament_view
+from utils import *
 
 @login_required
 @tournament_view

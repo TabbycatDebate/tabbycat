@@ -1,7 +1,5 @@
-from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from debate.models import Person, Round
 from action_log.models import ActionLog
-from django.contrib.auth.decorators import login_required
 
 from utils import *
 

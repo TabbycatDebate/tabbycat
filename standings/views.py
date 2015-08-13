@@ -1,9 +1,6 @@
 from debate.models import Team, Speaker, Round
 from results.models import TeamScore, SpeakerScore
 from motions.models import Motion
-from django.views.decorators.cache import cache_page
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
 
 from utils import *
 

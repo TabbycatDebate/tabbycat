@@ -1,6 +1,5 @@
 from debate.models import Round
 from motions.models import Motion
-from django.contrib.auth.decorators import login_required
 
 from utils import *
 
