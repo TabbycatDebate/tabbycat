@@ -9,7 +9,7 @@ from django.forms.models import modelformset_factory
 from django.forms.widgets import CheckboxSelectMultiple
 from django.forms.models import ModelMultipleChoiceField
 
-from utils import *
+from utils.views import *
 
 @admin_required
 @round_view

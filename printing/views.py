@@ -1,7 +1,7 @@
 from debate.models import Round
 from motions.models import Motion
 
-from utils import *
+from utils.views import *
 
 @admin_required
 @round_view

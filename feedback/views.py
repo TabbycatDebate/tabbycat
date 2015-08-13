@@ -10,7 +10,7 @@ from action_log.models import ActionLog
 from . import models
 from forms import make_feedback_form_class
 
-from utils import *
+from utils.views import *
 
 @admin_required
 @tournament_view

@@ -8,7 +8,7 @@ from action_log.models import ActionLog
 from result import BallotSet
 from forms import BallotSetForm
 
-from utils import *
+from utils.views import *
 from models import *
 
 

@@ -4,7 +4,7 @@ from action_log.models import ActionLog
 from . import models
 from . import forms
 
-from utils import *
+from utils.views import *
 
 from breaking import get_breaking_teams, update_breaking_teams, update_all_breaking_teams, generate_all_breaking_teams
 

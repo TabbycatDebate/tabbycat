@@ -3,7 +3,7 @@ from participants.models import Team
 from debate.models import Round
 from draws.models import TeamPositionAllocation
 
-from utils import *
+from utils.views import *
 
 import datetime
 

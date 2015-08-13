@@ -82,6 +82,7 @@ INSTALLED_APPS = (
     'options',
     'venues',
     'debate',
+    'utils', # So management commands can be used
     'compressor',
     'cachalot',
 )

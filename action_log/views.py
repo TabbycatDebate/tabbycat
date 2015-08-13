@@ -1,6 +1,6 @@
 from . import models
 
-from utils import *
+from utils.views import *
 
 @login_required
 @tournament_view

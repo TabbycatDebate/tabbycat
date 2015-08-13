@@ -2,7 +2,7 @@ from django import template
 from django.utils.encoding import force_unicode
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from debate.emoji import EMOJI_LIST
+from participants.emoji import EMOJI_LIST
 
 import re
 import os

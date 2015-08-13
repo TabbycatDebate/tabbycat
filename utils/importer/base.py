@@ -9,7 +9,7 @@ from collections import Counter
 from types import GeneratorType
 
 from participants.models import Team
-from debate.emoji import EMOJI_LIST
+from participants.emoji import EMOJI_LIST
 
 NON_FIELD_ERRORS = '__all__'
 DUPLICATE_INFO = 19 # logging level just below INFO

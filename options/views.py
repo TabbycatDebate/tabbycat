@@ -5,7 +5,7 @@ from options import make_options_form
 from . import models
 from action_log.models import ActionLog
 
-from utils import *
+from utils.views import *
 
 @admin_required
 @tournament_view

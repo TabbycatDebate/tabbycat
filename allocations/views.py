@@ -4,7 +4,7 @@ from participants.models import Adjudicator, Team
 
 from . import models
 
-from utils import *
+from utils.views import *
 
 @admin_required
 @expect_post

@@ -3,7 +3,7 @@ from debate.models import Round
 from results.models import TeamScore, SpeakerScore
 from motions.models import Motion
 
-from utils import *
+from utils.views import *
 
 def get_speaker_standings(rounds, round, results_override=False, only_novices=False, for_replies=False):
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION

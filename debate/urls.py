@@ -13,11 +13,6 @@ urlpatterns = patterns('debate.views',
 
     #url(r'^admin/actions/$', 'action_log', name='action_log'),
 
-    # TODO: participants app functionality?
-    url(r'^participants/$', 'public_participants', name='public_participants'),
-    url(r'^team_speakers/(?P<team_id>\d+)/$', 'team_speakers', name='team_speakers'),
-    url(r'^all_tournaments_all_teams/$', 'all_tournaments_all_teams', name='all_tournaments_all_teams'),
-
     # TODO: 'core' app functionality?
     url(r'^admin/round/(?P<round_seq>\d+)/round_increment_check/$', 'round_increment_check', name='round_increment_check'),
     url(r'^admin/round/(?P<round_seq>\d+)/round_increment/$', 'round_increment', name='round_increment'),
@@ -33,7 +28,6 @@ urlpatterns = patterns('debate.views',
     # WADL-specific; unclear if draws or participants
     url(r'^all_tournaments_all_venues/$', 'all_tournaments_all_venues', name='all_tournaments_all_venues'),
     url(r'^all_tournaments_all_venues/all_draws/(?P<venue_id>\d+)$', 'all_draws_for_venue', name='all_draws_for_venue'),
-    url(r'^all_tournaments_all_institutions/$', 'all_tournaments_all_institutions', name='all_tournaments_all_institutions'),
     url(r'^all_tournaments_all_institutions/all_draws/(?P<institution_id>\d+)$', 'all_draws_for_institution', name='all_draws_for_institution'),
 
     # Allocations App
@@ -75,5 +69,8 @@ urlpatterns = patterns('debate.views',
     # Draws App
     url(r'^draw/',                                          include('draws.urls_public')),
     url(r'^admin/draw/',                                    include('draws.urls_admin')),
+
+    # Participants App
+    url(r'^participants/',                                  include('participants.urls_public')),
 
 )

@@ -12,7 +12,7 @@ import feedback.models as fm
 import os.path
 import logging
 
-from debate.importer.anorak import AnorakTournamentDataImporter, TournamentDataImporterError
+from utils.importer.anorak import AnorakTournamentDataImporter, TournamentDataImporterError
 
 class TestImporterAnorak(TestCase):
 

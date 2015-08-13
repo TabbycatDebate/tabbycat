@@ -2,7 +2,7 @@ from debate.models import Round
 from participants.models import Person
 from action_log.models import ActionLog
 
-from utils import *
+from utils.views import *
 
 def _availability(request, round, model, context_name):
 
