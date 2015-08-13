@@ -9,14 +9,13 @@ from django.db.models import Sum, Count
 from results.result import BallotSet
 from debate.keys import populate_url_keys
 
-from debate.models import *
+from tournaments.models import *
 from allocations.models import DebateAdjudicator
 from venues.models import VenueGroup, Venue
 from motions.models import Motion
 from draws.models import Debate
 from action_log.models import ActionLog
 
-from debate import forms
 from django.forms.models import modelformset_factory, formset_factory
 from django.forms import Textarea
 
@@ -198,7 +197,7 @@ def save_divisions(request, t):
 @expect_post
 @tournament_view
 def create_division_allocation(request, t):
-    from debate.division_allocator import DivisionAllocator
+    from tournament.division_allocator import DivisionAllocator
     from participants.models import Team
 
     teams = list(Team.objects.filter(tournament=t))

@@ -7,7 +7,7 @@ from django.utils.functional import cached_property
 
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
-    tournament = models.ForeignKey('debate.Tournament')
+    tournament = models.ForeignKey('tournaments.Tournament')
 
     def __unicode__(self):
         return u'%s' % (self.name)
@@ -131,9 +131,9 @@ class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Full name or suffix", help_text="Do not include institution name (see \"uses institutional prefix\" below)")
     short_reference = models.CharField(max_length=35, verbose_name="Short name/suffix", help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
     institution = models.ForeignKey(Institution)
-    tournament = models.ForeignKey('debate.Tournament', db_index=True)
+    tournament = models.ForeignKey('tournaments.Tournament', db_index=True)
     emoji_seq = models.IntegerField(blank=True, null=True, help_text="Emoji number to use for this team")
-    division = models.ForeignKey('debate.Division', blank=True, null=True, on_delete=models.SET_NULL)
+    division = models.ForeignKey('tournaments.Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
     break_categories = models.ManyToManyField('breaking.BreakCategory', blank=True)
@@ -295,7 +295,7 @@ class AdjudicatorManager(models.Manager):
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
-    tournament = models.ForeignKey('debate.Tournament', blank=True, null=True)
+    tournament = models.ForeignKey('tournaments.Tournament', blank=True, null=True)
     test_score = models.FloatField(default=0)
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 

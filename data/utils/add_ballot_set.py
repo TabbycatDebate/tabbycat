@@ -1,7 +1,6 @@
 """Adds a randomly generated ballot set to the given debates."""
 
 import header
-import debate.models as m
 import draws.models as dm
 import results.models as rm
 from django.contrib.auth.models import User

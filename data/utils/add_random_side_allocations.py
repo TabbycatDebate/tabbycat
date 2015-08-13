@@ -1,7 +1,7 @@
 """Adds randomly generated side allocations to teams."""
 
 import header
-import debate.models as m
+import tournaments.models as tm
 import draws.models as dm
 import participants.models as pm
 import random
@@ -14,7 +14,7 @@ parser.add_argument("-q", "--quiet", action="store_true", help="Don't print the 
 args = parser.parse_args()
 
 for seq in args.rounds:
-    round = m.Round.objects.get(seq=seq)
+    round = tm.Round.objects.get(seq=seq)
     teams = list(pm.Team.objects.all())
     assert len(teams) % 2 == 0, "There aren't an even number of teams ({0})".format(len(teams))
     random.shuffle(teams)

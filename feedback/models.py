@@ -5,7 +5,7 @@ from results.models import Submission
 
 class AdjudicatorTestScoreHistory(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator')
-    round = models.ForeignKey('debate.Round', blank=True, null=True)
+    round = models.ForeignKey('tournaments.Round', blank=True, null=True)
     score = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -81,7 +81,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
     }
     CHOICE_SEPARATOR = "//"
 
-    tournament = models.ForeignKey('debate.Tournament')
+    tournament = models.ForeignKey('tournaments.Tournament')
     seq = models.IntegerField(help_text="The order in which questions are displayed")
     text = models.CharField(max_length=255, help_text="The question displayed to participants, e.g., \"Did you agree with the decision?\"")
     name = models.CharField(max_length=30, help_text="A short name for the question, e.g., \"Agree with decision\"")

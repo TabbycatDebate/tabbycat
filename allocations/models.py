@@ -1,6 +1,6 @@
 from django.db import models
 
-from debate.models import SRManager
+from tournaments.models import SRManager
 
 class DebateAdjudicator(models.Model):
     TYPE_CHAIR = 'C'

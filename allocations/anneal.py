@@ -192,8 +192,8 @@ class SAAllocator(Allocator):
         return self.SCORE_TARGET_PANEL * diff * debate.target_panel * avg
 
 def test():
-    from debate.models import Round
-    from debate.adjudicator.stab import StabAllocator
+    from tournaments.models import Round
+    from allocations.stab import StabAllocator
 
     r = Round.objects.get(pk=4)
     debates = r.debates()

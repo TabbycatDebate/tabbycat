@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-import debate.models as models
+from . import models
 
 # ==============================================================================
 # Tournament
@@ -11,7 +11,7 @@ class TournamentAdmin(admin.ModelAdmin):
     list_display = ('name','short_name','current_round')
     ordering = ('name',)
 
-admin.site.register(models.Tournament,TournamentAdmin)
+admin.site.register(models.Tournament, TournamentAdmin)
 
 # ==============================================================================
 # Division
@@ -35,5 +35,3 @@ class RoundAdmin(admin.ModelAdmin):
     search_fields = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status')
 
 admin.site.register(models.Round, RoundAdmin)
-
-

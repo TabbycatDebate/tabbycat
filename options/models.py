@@ -31,7 +31,7 @@ class OptionManager(models.Manager):
 
 
 class Option(models.Model):
-    tournament = models.ForeignKey('debate.Tournament', db_index=True)
+    tournament = models.ForeignKey('tournaments.Tournament', db_index=True)
     key = models.CharField(max_length=40)
     value = models.CharField(max_length=40)
 

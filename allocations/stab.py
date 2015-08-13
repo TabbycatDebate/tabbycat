@@ -139,7 +139,8 @@ class StabAllocator(Allocator):
         return allocation
 
     def get_debate_energy(self, debate, bubble=False):
-        from debate.models import TeamAtRound
+        # TODO: does TeamAtRound exist?
+        from tournaments.models import TeamAtRound
         from draws.models import DebateTeam
         aff_team = TeamAtRound(debate.aff_team, debate.round)
         neg_team = TeamAtRound(debate.neg_team, debate.round)
@@ -189,7 +190,7 @@ class StabPanel(object):
 
 def test():
     p = PanelMaker()
-    from debate.models import Round
+    from tournaments.models import Round
     r = Round.objects.get(pk=1)
 
     a = StabAllocator(r.debates(), r.active_adjudicators.all())

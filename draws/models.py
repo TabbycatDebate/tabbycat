@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 
-from debate.models import SRManager
+from tournaments.models import SRManager
 
 class DebateManager(models.Manager):
     use_for_related_fields = True
@@ -25,9 +25,9 @@ class Debate(models.Model):
 
     objects = DebateManager()
 
-    round = models.ForeignKey('debate.Round', db_index=True)
+    round = models.ForeignKey('tournaments.Round', db_index=True)
     venue = models.ForeignKey('venues.Venue', blank=True, null=True)
-    division = models.ForeignKey('debate.Division', blank=True, null=True)
+    division = models.ForeignKey('tournaments.Division', blank=True, null=True)
 
     bracket = models.FloatField(default=0)
     room_rank = models.IntegerField(default=0)
@@ -60,7 +60,7 @@ class Debate(models.Model):
 
     @property
     def teams(self):
-        from debate.models import Team
+        from tournaments.models import Team
         return Team.objects.select_related('debate_team').filter(debateteam__debate=self)
 
     @cached_property
@@ -256,7 +256,7 @@ class TeamPositionAllocation(models.Model):
     POSITION_UNALLOCATED = DebateTeam.POSITION_UNALLOCATED
     POSITION_CHOICES = DebateTeam.POSITION_CHOICES
 
-    round = models.ForeignKey('debate.Round')
+    round = models.ForeignKey('tournaments.Round')
     team = models.ForeignKey('participants.Team')
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 

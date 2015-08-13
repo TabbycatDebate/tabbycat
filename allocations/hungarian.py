@@ -153,7 +153,7 @@ class HungarianAllocator(Allocator):
         return alloc
 
 def test():
-    from debate.models import Round
+    from tournaments.models import Round
     r = Round.objects.get(pk=4)
     debates = r.debates()
     adjs = list(r.active_adjudicators.all())

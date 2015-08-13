@@ -1,5 +1,5 @@
 from participants.models import Team, Speaker
-from debate.models import Round
+from tournaments.models import Round
 from results.models import TeamScore, SpeakerScore
 from motions.models import Motion
 

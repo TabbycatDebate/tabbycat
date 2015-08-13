@@ -1,7 +1,7 @@
 """Sandbox for figuring out how to do standings and other aggregates."""
 
 import header
-import debate.models as m
+import tournaments.models as tm
 from django.db import models
 
 import argparse
@@ -12,10 +12,10 @@ parser.add_argument("--speakers", action="store_true")
 parser.add_argument("--replies", action="store_true")
 args = parser.parse_args()
 
-round = m.Round.objects.get(seq=args.round)
+round = tm.Round.objects.get(seq=args.round)
 
 if args.teams:
-    teams = m.Team.objects
+    teams = tm.Team.objects
 
     teams = teams.filter(
         institution__tournament = round.tournament,

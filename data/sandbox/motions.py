@@ -1,7 +1,7 @@
 """Sandbox for figuring out how to do motion aggregations."""
 
 import header
-import debate.models as m
+import tournaments.models as tm
 import draws.models as dm
 import motions.models as mm
 
@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("round", type=int, help="Round to look at")
 args = parser.parse_args()
 
-round = m.Round.objects.get(seq=args.round)
+round = tm.Round.objects.get(seq=args.round)
 
 motions = mm.Motion.objects.filter(round__seq=round.seq)
 

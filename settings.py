@@ -80,7 +80,7 @@ INSTALLED_APPS = (
     'printing',
     'results',
     'standings',
-    'tournament',
+    'tournaments',
     'venues',
     'debate',
     'utils', # So management commands can be used

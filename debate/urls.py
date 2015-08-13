@@ -2,8 +2,6 @@ from django.conf.urls import *
 
 from django.core.urlresolvers import reverse
 
-from debate import models as m
-
 urlpatterns = patterns('debate.views',
 
     url(r'^admin/$', 'tournament_home', name='tournament_home'),

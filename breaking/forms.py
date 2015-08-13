@@ -1,7 +1,6 @@
 from django import forms
-import debate.models as dm
 from . import models
-from debate.forms import OptionalChoiceField
+from utils.forms import OptionalChoiceField
 from breaking import get_breaking_teams
 
 # ==============================================================================

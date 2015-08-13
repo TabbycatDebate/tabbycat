@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from . import models
 from participants.models import Team, Speaker, Adjudicator
-from debate.models import Round
+from tournaments.models import Round
 from results.models import SpeakerScore
 
 # ==============================================================================

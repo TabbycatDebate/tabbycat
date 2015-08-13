@@ -10,7 +10,7 @@ This requires a user called "original" to exist. You need to set this up
 before running the script if you don't have one.
 """
 import header
-import debate.models as m
+import tournaments.models as m
 import draws.models as dm
 import motions.models as mm
 import debate.results as rm
@@ -42,7 +42,7 @@ for bs in rm.BallotSubmission.objects.all():
 
 # Add motions
 import random
-for round in m.Round.objects.all():
+for round in tm.Round.objects.all():
     motions = mm.Motion.objects.filter(round=round)
     for ballots in rm.BallotSubmission.objects.filter(debate__round=round):
         ballots.motion = random.choice(motions)

@@ -1,4 +1,4 @@
-from debate.models import Round
+from tournaments.models import Round
 from motions.models import Motion
 
 from utils.views import *

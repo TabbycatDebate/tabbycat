@@ -1,4 +1,4 @@
-from debate.models import Round
+from tournaments.models import Round
 from participants.models import Person
 from action_log.models import ActionLog
 

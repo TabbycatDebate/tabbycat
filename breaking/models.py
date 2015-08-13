@@ -1,7 +1,7 @@
 from django.db import models
 
 class BreakCategory(models.Model):
-    tournament = models.ForeignKey('debate.Tournament')
+    tournament = models.ForeignKey('tournaments.Tournament')
     name = models.CharField(max_length=50, help_text="Name to be displayed, e.g., \"ESL\"")
     slug = models.SlugField(help_text="Slug for URLs, e.g., \"esl\"")
     seq = models.IntegerField(help_text="The order in which the categories are displayed")

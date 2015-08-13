@@ -1,23 +1,9 @@
-import logging
-import random
-import re
 from django.db import models
-from django.conf import settings
 from django.db.models import signals
-from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.cache import cache
 from django.utils.functional import cached_property
 
 from allocations.anneal import SAAllocator
-
-from results.result import BallotSet
-from draws.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
-
-from warnings import warn
-from collections import OrderedDict
-
-logger = logging.getLogger(__name__)
-
 
 class Tournament(models.Model):
     name = models.CharField(max_length=100, help_text="The full name used on the homepage")
@@ -648,6 +634,7 @@ def update_round_cache(sender, instance, created, **kwargs):
 
 # Update the cached round object when model is changed)
 signals.post_save.connect(update_round_cache, sender=Round)
+
 
 
 class SRManager(models.Manager):

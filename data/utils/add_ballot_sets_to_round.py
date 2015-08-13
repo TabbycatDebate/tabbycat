@@ -4,7 +4,7 @@ debates. Don't use this to generate good results for a round -- use
 generate_random_results.py to do that."""
 
 import header
-import debate.models as m
+import tournaments.models as tm
 import results.models as rm
 from django.contrib.auth.models import User
 import random
@@ -29,7 +29,7 @@ if submitter_type == rm.BallotSubmission.SUBMITTER_TABROOM:
 else:
     user = None
 
-round = m.Round.objects.get(seq=args.round)
+round = tm.Round.objects.get(seq=args.round)
 debates = round.debate_set.all()
 
 for i in xrange(args.no_ballots):

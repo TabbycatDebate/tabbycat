@@ -1,4 +1,4 @@
-from debate.models import Division
+from tournaments.models import Division
 import random
 
 class DivisionAllocator():

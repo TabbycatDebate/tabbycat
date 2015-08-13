@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 
-from debate.models import Tournament, Round
+from tournaments.models import Tournament, Round
 from django.core.cache import cache
 
 class DebateMiddleware(object):

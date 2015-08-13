@@ -26,7 +26,7 @@ class Venue(models.Model):
     name = models.CharField(max_length=40)
     group = models.ForeignKey(VenueGroup, blank=True, null=True)
     priority = models.IntegerField(help_text="Venues with a higher priority number will be preferred in the draw")
-    tournament = models.ForeignKey('debate.Tournament', blank=True, null=True)
+    tournament = models.ForeignKey('tournaments.Tournament', blank=True, null=True)
     time = models.DateTimeField(blank=True, null=True, help_text="")
 
     class Meta:

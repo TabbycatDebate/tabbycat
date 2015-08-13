@@ -1,7 +1,7 @@
 """Adds fake entries to the action log."""
 
 import header
-import debate.models as m
+
 from action_log.models import ActionLog
 from motions.models import Motion
 from draws.models import Debate

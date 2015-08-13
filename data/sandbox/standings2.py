@@ -1,7 +1,7 @@
 """Sandbox for figuring out how to do team standings with more complicated rules."""
 
 import header
-import debate.models as m
+import tournaments.models as m
 from participants.models import Team
 import results.models as m
 from django.db import models
@@ -13,7 +13,7 @@ parser.add_argument("round", type=int, help="Round to look at")
 parser.add_argument("--who-beat-whom", action="store_true", help="Print who-beat-whom results")
 args = parser.parse_args()
 
-round = m.Round.objects.get(seq=args.round)
+round = tm.Round.objects.get(seq=args.round)
 
 teams = Team.objects
 

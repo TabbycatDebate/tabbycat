@@ -3,12 +3,12 @@
 from django.test import TestCase
 from unittest import skip
 import allocations.models as am
-import debate.models as m
 import motions.models as mm
 import options.models as cm
 import participants.models as cm
 import venues.models as vm
 import feedback.models as fm
+import tournament.models as tm
 import os.path
 import logging
 
@@ -24,7 +24,7 @@ class TestImporterAnorak(TestCase):
         super(TestImporterAnorak, self).setUp()
 
         # create tournament
-        self.t = m.Tournament(slug="import-test")
+        self.t = tm.Tournament(slug="import-test")
         self.t.save()
         logger = logging.getLogger(__name__)
         logger.setLevel(logging.INFO)
@@ -37,7 +37,7 @@ class TestImporterAnorak(TestCase):
     def test_rounds(self):
         f = self._open_csv_file(self.TESTDIR, "rounds")
         counts, errors = self.importer.import_rounds(f)
-        self.assertEqual(counts, {m.Round: 6})
+        self.assertEqual(counts, {tm.Round: 6})
         self.assertFalse(errors)
 
     def test_venues(self):
