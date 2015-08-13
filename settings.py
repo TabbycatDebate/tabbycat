@@ -40,7 +40,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'debate.middleware.DebateMiddleware',
+    'utils.middleware.DebateMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
@@ -54,8 +54,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.csrf",
     "django.core.context_processors.static",
-    "debate.context_processors.debate_context", # For tournament config vars
-    "debate.context_processors.get_menu_highlight", # For nav highlights
+    "utils.context_processors.debate_context", # For tournament config vars
+    "utils.context_processors.get_menu_highlight", # For nav highlights
     'django.core.context_processors.request', # For SUIT
 )
 
@@ -75,11 +75,12 @@ INSTALLED_APPS = (
     'draws',
     'feedback',
     'motions',
+    'options',
     'participants',
     'printing',
     'results',
     'standings',
-    'options',
+    'tournament',
     'venues',
     'debate',
     'utils', # So management commands can be used
