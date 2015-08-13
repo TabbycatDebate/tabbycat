@@ -1,6 +1,6 @@
 import os.path, sys
 import unittest
-from debate.one_up_one_down import OneUpOneDownSwapper
+from draws.one_up_one_down import OneUpOneDownSwapper
 
 class TestTeam(object):
     """Basic implementation of team interface"""

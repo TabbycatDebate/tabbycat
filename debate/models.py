@@ -11,7 +11,7 @@ from django.utils.functional import cached_property
 from debate.adjudicator.anneal import SAAllocator
 
 from results.result import BallotSet
-from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
+from draws.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
 
 from warnings import warn
 from collections import OrderedDict
@@ -817,8 +817,8 @@ class Round(models.Model):
 
     def make_debates(self, pairings):
         from draws.models import Debate, DebateTeam
-
         import random
+
         venues = list(self.active_venues.order_by('-priority'))[:len(pairings)]
 
         if len(venues) < len(pairings):
