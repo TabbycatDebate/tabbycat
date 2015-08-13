@@ -762,6 +762,7 @@ class Round(models.Model):
         return self.get_draw()
 
     def get_draw(self):
+        from draws.models import Debate
         if self.tournament.config.get('enable_divisions'):
             debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
             'venue', 'division', 'division__venue_group')

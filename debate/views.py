@@ -12,6 +12,7 @@ from debate.keys import populate_url_keys
 from debate.models import *
 from venues.models import VenueGroup, Venue
 from motions.models import Motion
+from draws.models import Debate
 from action_log.models import ActionLog
 
 from debate import forms

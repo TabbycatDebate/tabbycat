@@ -4,7 +4,7 @@ from collections import Counter
 import logging
 
 import debate.models as m
-import draws.models import Debate, DebateTeam
+from draws.models import Debate, DebateTeam
 from result import BallotSet
 
 

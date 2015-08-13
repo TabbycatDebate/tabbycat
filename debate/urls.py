@@ -6,13 +6,10 @@ from debate import models as m
 
 urlpatterns = patterns('debate.views',
     url(r'^admin/$', 'tournament_home', name='tournament_home'),
-    url(r'^admin/draw/$', 'draw_index', name='draw_index'),
     url(r'^admin/round/(?P<round_seq>\d+)/$', 'round_index', name='round_index'),
 
     url(r'^$', 'public_index', name='public_index'),
-    url(r'^draw/$', 'public_draw', name='public_draw'),
-    url(r'^draw/round/(?P<round_seq>\d+)/$', 'public_draw_by_round', name='public_draw_by_round'),
-    url(r'^draw/all/$', 'public_all_draws', name='public_all_draws'),
+
 
 
     url(r'^standings/$',    'public_team_standings', name='public_team_standings'),
@@ -112,6 +109,15 @@ urlpatterns = patterns('debate.views',
     url(r'^results/',                                       include('results.urls_public')),
     url(r'^admin/results/',                                 include('results.urls_admin')),
 
+    # Draw App
+
+    # Public Draw
+    url(r'^draw/$', 'public_draw', name='public_draw'),
+    url(r'^draw/round/(?P<round_seq>\d+)/$', 'public_draw_by_round', name='public_draw_by_round'),
+    url(r'^draw/all/$', 'public_all_draws', name='public_all_draws'),
+
+    # Admin Draw
+    url(r'^admin/draw/$', 'draw_index', name='draw_index'),
 
 
 
