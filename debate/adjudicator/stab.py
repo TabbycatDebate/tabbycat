@@ -80,7 +80,7 @@ class PanelMaker(object):
             num_ccc = num_c % 2
             num_ccd = (num_c // 2) - num_ccc
             num_ddd = panels_left - (num_c // 2)
-            
+
             self.build(self.RANK_C, self.RANK_C, self.RANK_C, num_ccc)
             self.build(self.RANK_C, self.RANK_C, self.RANK_D, num_ccd)
             self.build(self.RANK_D, self.RANK_D, self.RANK_D, num_ddd)
@@ -139,7 +139,8 @@ class StabAllocator(Allocator):
         return allocation
 
     def get_debate_energy(self, debate, bubble=False):
-        from debate.models import DebateTeam, TeamAtRound
+        from debate.models import TeamAtRound
+        from draws.models import DebateTeam
         aff_team = TeamAtRound(debate.aff_team, debate.round)
         neg_team = TeamAtRound(debate.neg_team, debate.round)
 

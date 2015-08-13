@@ -1,6 +1,8 @@
 # cannot import debate.models here - would create circular dep
 from django.core.exceptions import ObjectDoesNotExist
 
+from . import models
+
 class ResultError(RuntimeError):
     pass
 
@@ -186,8 +188,7 @@ class BallotSet(object):
         self.dts = self.debate.debateteam_set.all() # note, this is a QuerySet
         assert self.dts.count() == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
 
-        from debate.models import DebateTeam
-        self.SIDES = (DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE)
+        self.SIDES = (models.DebateTeam.POSITION_AFFIRMATIVE, models.DebateTeam.POSITION_NEGATIVE)
         self.POSITIONS = self.debate.round.tournament.POSITIONS
 
         self.loaded_sheets = False

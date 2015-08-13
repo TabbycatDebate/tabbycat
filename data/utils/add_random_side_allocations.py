@@ -2,6 +2,7 @@
 
 import header
 import debate.models as m
+import draws.models as m
 import random
 import argparse
 
@@ -18,7 +19,7 @@ for seq in args.rounds:
     random.shuffle(teams)
     affs = teams[:len(teams)/2]
     negs = teams[len(teams)/2:]
-    m.TeamPositionAllocation.objects.filter(round=round).delete()
+    dm.TeamPositionAllocation.objects.filter(round=round).delete()
     if not args.quiet:
         print(str(round))
         print("Affirmative:                   Negative:")
@@ -27,6 +28,6 @@ for seq in args.rounds:
     if args.delete:
         continue
     for team in affs:
-        m.TeamPositionAllocation(round=round, team=team, position=m.TeamPositionAllocation.POSITION_AFFIRMATIVE).save()
+        dm.TeamPositionAllocation(round=round, team=team, position=dm.TeamPositionAllocation.POSITION_AFFIRMATIVE).save()
     for team in negs:
-        m.TeamPositionAllocation(round=round, team=team, position=m.TeamPositionAllocation.POSITION_NEGATIVE).save()
+        dm.TeamPositionAllocation(round=round, team=team, position=dm.TeamPositionAllocation.POSITION_NEGATIVE).save()

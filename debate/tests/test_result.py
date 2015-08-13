@@ -5,8 +5,11 @@ from django.test import TestCase
 import debate.models as m
 import results.models as rm
 import venues.models as vm
+import draws.models as dm
 import random
 from results.result import BallotSet
+
+from draws.models import DebateTeam
 
 class BaseTestResult(TestCase):
 
@@ -82,10 +85,10 @@ class BaseTestResult(TestCase):
             self.round.activate_venue(venue, True)
         self.debate = m.Debate(round=self.round, venue=venue)
         self.debate.save()
-        positions = [m.DebateTeam.POSITION_AFFIRMATIVE, m.DebateTeam.POSITION_NEGATIVE]
+        positions = [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]
         for team, pos in zip(self.teams, positions):
             self.round.activate_team(team, True)
-            m.DebateTeam(debate=self.debate, team=team, position=pos).save()
+            DebateTeam(debate=self.debate, team=team, position=pos).save()
         adjtypes = [m.DebateAdjudicator.TYPE_CHAIR, m.DebateAdjudicator.TYPE_PANEL, m.DebateAdjudicator.TYPE_PANEL]
         for adj, adjtype in zip(self.adjs, adjtypes):
             self.round.activate_adjudicator(adj, True)
@@ -251,7 +254,7 @@ class TestResultWithInitiallyUnknownSides(BaseTestResult, CommonTests):
     def setUp(self):
         BaseTestResult.setUp(self)
         for dt in self.debate.debateteam_set.all():
-            dt.position = m.DebateTeam.POSITION_UNALLOCATED
+            dt.position = DebateTeam.POSITION_UNALLOCATED
             dt.save()
         self.teams_input = ['aff', 'neg']
 
@@ -260,5 +263,5 @@ class TestResultWithInitiallyUnknownSides(BaseTestResult, CommonTests):
                 post_ballotset_create=lambda ballotset: ballotset.set_sides(*self.teams))
 
     def test_unknown_sides(self):
-        self.assertRaises(m.DebateTeam.DoesNotExist, self._save_complete_ballotset,
+        self.assertRaises(DebateTeam.DoesNotExist, self._save_complete_ballotset,
                 self.teams_input, self.testdata.values()[0])

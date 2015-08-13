@@ -1,5 +1,6 @@
 import header
 import debate.models as m
+import draws.models as dm
 import random
 import argparse
 
@@ -11,8 +12,8 @@ args = parser.parse_args()
 
 for seq in args.rounds:
     round = m.Round.objects.get(seq=seq)
-    affs = [x.team for x in m.TeamPositionAllocation.objects.filter(round=round, position=m.TeamPositionAllocation.POSITION_AFFIRMATIVE).select_related('team')]
-    negs = [x.team for x in m.TeamPositionAllocation.objects.filter(round=round, position=m.TeamPositionAllocation.POSITION_NEGATIVE).select_related('team')]
+    affs = [x.team for x in dm.TeamPositionAllocation.objects.filter(round=round, position=dm.TeamPositionAllocation.POSITION_AFFIRMATIVE).select_related('team')]
+    negs = [x.team for x in dm.TeamPositionAllocation.objects.filter(round=round, position=dm.TeamPositionAllocation.POSITION_NEGATIVE).select_related('team')]
     print(str(round))
     print("Affirmative                    Negative")
     for aff, neg in zip(sorted(affs), sorted(negs)):

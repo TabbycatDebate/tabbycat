@@ -1,4 +1,5 @@
-from debate.models import Debate, Round, Adjudicator, DebateAdjudicator
+from debate.models import Round, Adjudicator, DebateAdjudicator
+from draws.models import Debate
 from motions.models import Motion
 from action_log.models import ActionLog
 

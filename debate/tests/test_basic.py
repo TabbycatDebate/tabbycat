@@ -1,7 +1,8 @@
 """Some very basic tests to check model creation and a few basic functions."""
 
 from django.test import TestCase
-from debate.models import Tournament, Institution, Team, Speaker, Adjudicator, Debate, Round, DebateTeam
+from debate.models import Tournament, Institution, Team, Speaker, Adjudicator, Round
+from draws.models import Debate, DebateTeam
 from venues.models import Venue
 
 class BaseDebateTestCase(TestCase):

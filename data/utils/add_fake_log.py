@@ -4,6 +4,8 @@ import header
 import debate.models as m
 from action_log.models import ActionLog
 from motions.models import Motion
+from draws.models import Debate
+from feedback.models import AdjudicatorFeedback
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -27,10 +29,10 @@ def get_user(username):
     return User.objects.get(username=username)
 
 def get_debate(id):
-    return m.Debate.objects.get(id=id)
+    return Debate.objects.get(id=id)
 
 def get_adjudicator_feedback(id):
-    return m.AdjudicatorFeedback.objects.get(id=id)
+    return AdjudicatorFeedback.objects.get(id=id)
 
 def get_motion(id):
     return Motion.objects.get(id=id)

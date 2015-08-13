@@ -1,10 +1,11 @@
 from base import BaseTournamentDataImporter, TournamentDataImporterError
 import debate.models as m
 import breaking.models as bm
+import draws.models as dm
+import feedback.models as fm
 import motions.models as mm
 import options.models as cm
 import venues.models as vm
-import feedback.models as fm
 import csv
 
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):
@@ -31,8 +32,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     }
 
     TEAM_POSITIONS = {
-        ("affirmative", "aff", "a"): m.TeamPositionAllocation.POSITION_AFFIRMATIVE,
-        ("negative", "neg", "n"): m.TeamPositionAllocation.POSITION_NEGATIVE,
+        ("affirmative", "aff", "a"): dm.TeamPositionAllocation.POSITION_AFFIRMATIVE,
+        ("negative", "neg", "n"): dm.TeamPositionAllocation.POSITION_NEGATIVE,
     }
 
     FEEDBACK_ANSWER_TYPES = {

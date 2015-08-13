@@ -39,40 +39,40 @@ if args.teams:
     # Sum the team scores for each team for which
     #teams = teams.extra({"points": """
         #SELECT DISTINCT SUM("points")
-        #FROM "debate_teamscore"
-        #JOIN "debate_ballotsubmission" ON "debate_teamscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-        #JOIN "debate_debateteam" ON "debate_teamscore"."debate_team_id" = "debate_debateteam"."id"
-        #JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-        #JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
+        #FROM "results_teamscore"
+        #JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
+        #JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
+        #JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
+        #JOIN "debate_round" ON "draws_debate"."round_id" = "debate_round"."id"
         #JOIN "debate_institution" ON "debate_team"."instition_id" = "debate_institution"."id"
-        #WHERE "debate_ballotsubmission"."confirmed" = True
-        #AND "debate_debateteam"."team_id" = "debate_team"."id"
+        #WHERE "results_ballotsubmission"."confirmed" = True
+        #AND "draws_debateteam"."team_id" = "debate_team"."id"
         #AND "debate_institution"."tournament_id" = {tournament:d}
         #AND "debate_round"."seq" <= {round:d}
     #""".format(tournament=round.tournament.id, round=round.seq),
     #"speaker_score": """
         #SELECT SUM("score")
-        #FROM "debate_teamscore"
-        #JOIN "debate_ballotsubmission" ON "debate_teamscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-        #JOIN "debate_debateteam" ON "debate_teamscore"."debate_team_id" = "debate_debateteam"."id"
-        #JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-        #JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
+        #FROM "results_teamscore"
+        #JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
+        #JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
+        #JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
+        #JOIN "debate_round" ON "draws_debate"."round_id" = "debate_round"."id"
         #JOIN "debate_institution" ON "debate_team"."institution_id" = "debate_institution"."id"
-        #WHERE "debate_ballotsubmission"."confirmed" = True
-        #AND "debate_debateteam"."team_id" = "debate_team"."id"
+        #WHERE "results_ballotsubmission"."confirmed" = True
+        #AND "draws_debateteam"."team_id" = "debate_team"."id"
         #AND "debate_institution"."tournament_id" = {tournament:d}
         #AND "debate_round"."seq" <= {round:d}
     #""".format(tournament=round.tournament.id, round=round.seq)}).distinct()
 
     EXTRA_QUERY = """
         SELECT DISTINCT SUM({field:s})
-        FROM "debate_teamscore"
-        JOIN "debate_ballotsubmission" ON "debate_teamscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-        JOIN "debate_debateteam" ON "debate_teamscore"."debate_team_id" = "debate_debateteam"."id"
-        JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-        JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-        WHERE "debate_ballotsubmission"."confirmed" = True
-        AND "debate_debateteam"."team_id" = "debate_team"."id"
+        FROM "results_teamscore"
+        JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
+        JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
+        JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
+        JOIN "debate_round" ON "draws_debate"."round_id" = "debate_round"."id"
+        WHERE "results_ballotsubmission"."confirmed" = True
+        AND "draws_debateteam"."team_id" = "debate_team"."id"
         AND "debate_round"."seq" <= {round:d}
     """
     teams = teams.extra({
@@ -101,11 +101,11 @@ if args.speakers:
     EXTRA_QUERY = """
         SELECT DISTINCT SUM("score")
         FROM "debate_speakerscore"
-        JOIN "debate_debateteam" ON "debate_speakerscore"."debate_team_id" = "debate_debateteam"."id"
-        JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-        JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-        JOIN "debate_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-        WHERE "debate_ballotsubmission"."confirmed" = True
+        JOIN "draws_debateteam" ON "debate_speakerscore"."debate_team_id" = "draws_debateteam"."id"
+        JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
+        JOIN "debate_round" ON "draws_debate"."round_id" = "debate_round"."id"
+        JOIN "results_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "results_ballotsubmission"."id"
+        WHERE "results_ballotsubmission"."confirmed" = True
         AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
         AND "debate_speakerscore"."position" <= {position:d}
         AND "debate_round"."seq" <= {round:d}
@@ -137,11 +137,11 @@ if args.replies:
     EXTRA_QUERY = """
         SELECT DISTINCT {aggregator:s}("score")
         FROM "debate_speakerscore"
-        JOIN "debate_debateteam" ON "debate_speakerscore"."debate_team_id" = "debate_debateteam"."id"
-        JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-        JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-        JOIN "debate_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-        WHERE "debate_ballotsubmission"."confirmed" = True
+        JOIN "draws_debateteam" ON "debate_speakerscore"."debate_team_id" = "draws_debateteam"."id"
+        JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
+        JOIN "debate_round" ON "draws_debate"."round_id" = "debate_round"."id"
+        JOIN "results_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "results_ballotsubmission"."id"
+        WHERE "results_ballotsubmission"."confirmed" = True
         AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
         AND "debate_speakerscore"."position" = {position:d}
         AND "debate_round"."seq" <= {round:d}

@@ -2,6 +2,7 @@
 
 import header
 import debate.models as m
+import draws.models as dm
 import results.models as rm
 from django.contrib.auth.models import User
 from results.result import BallotSet
@@ -72,7 +73,7 @@ def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=Fals
 
     # If the ballot is confirmed, the debate should be too.
     if confirmed:
-        debate.result_status = m.Debate.STATUS_CONFIRMED
+        debate.result_status = dm.Debate.STATUS_CONFIRMED
         debate.save()
 
     return bset
@@ -97,7 +98,7 @@ if __name__ == "__main__":
         user = None
 
     for debate_id in args.debate:
-        debate = m.Debate.objects.get(id=debate_id)
+        debate = dm.Debate.objects.get(id=debate_id)
 
         print debate
 

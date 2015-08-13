@@ -1,5 +1,5 @@
 from django.db import models
-from debate.models import DebateTeam
+from draws.models import DebateTeam
 from results.models import TeamScore
 
 class MotionManager(models.Manager):
@@ -73,7 +73,7 @@ class Motion(models.Model):
 
 class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""
-    debate_team = models.ForeignKey('debate.DebateTeam')
+    debate_team = models.ForeignKey('draws.DebateTeam')
     motion = models.ForeignKey(Motion, db_index=True)
     preference = models.IntegerField(db_index=True)
     ballot_submission = models.ForeignKey('results.BallotSubmission')

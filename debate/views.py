@@ -177,6 +177,7 @@ def all_tournaments_all_institutions(request, t):
 
 @tournament_view
 def all_draws_for_institution(request, t, institution_id):
+    # TODO: move to draws app
     institution = Institution.objects.get(pk=institution_id)
     debate_teams = DebateTeam.objects.filter(team__institution=institution).select_related(
         'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')
@@ -206,6 +207,7 @@ def public_all_draws(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_side_allocations')
 def public_side_allocations(request, t):
+    # TODO: move to draws app
     teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
@@ -448,6 +450,7 @@ def unrelease_draw(request, round):
 @admin_required
 @tournament_view
 def side_allocations(request, t):
+    # TODO: move to draws app
     teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
@@ -573,6 +576,7 @@ def set_round_start_time(request, round):
 @tournament_view
 @expect_post
 def toggle_postponed(request, t):
+    # TODO: move to draws app
     debate_id = request.POST.get('debate')
     debate = Debate.objects.get(pk=debate_id)
     if debate.result_status == debate.STATUS_POSTPONED:
@@ -601,6 +605,7 @@ def draw_matchups_edit(request, round):
 @expect_post
 @round_view
 def save_matchups(request, round):
+    # TODO: move to draws app
     #print request.POST.keys()
 
     existing_debate_ids = [int(a.replace('debate_', '')) for a in request.POST.keys() if a.startswith('debate_')]
@@ -654,6 +659,7 @@ def draw_venues_edit(request, round):
 @expect_post
 @round_view
 def save_venues(request, round):
+    # TODO: move to draws app
 
     def v_id(a):
         try:

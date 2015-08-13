@@ -3,6 +3,7 @@ specified"""
 
 import header
 import debate.models as m
+from draws.models import DebateTeam
 from django.contrib.auth.models import User
 from results.result import BallotSet
 import random
@@ -58,7 +59,7 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
             fb.source_adjudicator = m.DebateAdjudicator.objects.get(
                     debate=debate, adjudicator=source)
         elif isinstance(source, m.Team):
-            fb.source_team = m.DebateTeam.objects.get(
+            fb.source_team = DebateTeam.objects.get(
                     debate=debate, team=source)
         else:
             raise TypeError("source must be an Adjudicator or a Team")

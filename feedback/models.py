@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.functional import cached_property
 
-from debate.models import Submission
+from results.models import Submission
 
 class AdjudicatorTestScoreHistory(models.Model):
     adjudicator = models.ForeignKey('debate.Adjudicator')
@@ -122,7 +122,7 @@ class AdjudicatorFeedback(Submission):
     score = models.FloatField()
 
     source_adjudicator = models.ForeignKey('debate.DebateAdjudicator', blank=True, null=True)
-    source_team = models.ForeignKey('debate.DebateTeam', blank=True, null=True)
+    source_team = models.ForeignKey('draws.DebateTeam', blank=True, null=True)
 
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]

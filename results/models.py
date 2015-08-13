@@ -1,23 +1,90 @@
 from django.db import models
 from django.utils.functional import cached_property
-
-from debate.models import Submission
-from result import BallotSet
+from django.conf import settings
+from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
+from threading import BoundedSemaphore
 
 class ScoreField(models.FloatField):
     pass
+
+
+class Submission(models.Model):
+    """Abstract base class to provide functionality common to different
+    types of submissions.
+
+    The unique_together class attribute of the Meta class MUST be set in
+    all subclasses."""
+
+    SUBMITTER_TABROOM = 0
+    SUBMITTER_PUBLIC  = 1
+    SUBMITTER_TYPE_CHOICES = (
+        (SUBMITTER_TABROOM, 'Tab room'),
+        (SUBMITTER_PUBLIC,  'Public'),
+    )
+
+    timestamp = models.DateTimeField(auto_now_add=True)
+    version = models.PositiveIntegerField()
+    submitter_type = models.PositiveSmallIntegerField(choices=SUBMITTER_TYPE_CHOICES)
+
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted") # only relevant if submitter was in tab room
+    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed")
+    confirm_timestamp = models.DateTimeField(blank=True, null=True)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+
+    version_semaphore = BoundedSemaphore()
+
+    confirmed = models.BooleanField(default=False, db_index=True)
+
+    class Meta:
+        abstract = True
+
+    @property
+    def _unique_filter_args(self):
+        return dict((arg, getattr(self, arg)) for arg in self._meta.unique_together[0] if arg != 'version')
+
+    def save(self, *args, **kwargs):
+        # Check for uniqueness.
+        if self.confirmed:
+            try:
+                current = self.__class__.objects.get(confirmed=True, **self._unique_filter_args)
+            except self.DoesNotExist:
+                pass
+            else:
+                if current != self:
+                    warn("%s confirmed while %s was already confirmed, setting latter to unconfirmed" % (self, current))
+                    current.confirmed = False
+                    current.save()
+
+        # Assign the version field to one more than the current maximum version.
+        # Use a semaphore to protect against the possibility that two submissions do this
+        # at the same time and get the same version number.
+        self.version_semaphore.acquire()
+        if self.pk is None:
+            existing = self.__class__.objects.filter(**self._unique_filter_args)
+            if existing.exists():
+                self.version = existing.aggregate(models.Max('version'))['version__max'] + 1
+            else:
+                self.version = 1
+        super(Submission, self).save(*args, **kwargs)
+        self.version_semaphore.release()
+
+    def clean(self):
+        if self.submitter_type == self.SUBMITTER_TABROOM and self.submitter is None:
+            raise ValidationError("A tab room ballot must have a user associated.")
+
+
 
 class BallotSubmission(Submission):
     """Represents a single submission of ballots for a debate.
     (Not a single motion, but a single submission of all ballots for a debate.)"""
 
-    debate = models.ForeignKey('debate.Debate', db_index=True)
+    debate = models.ForeignKey('draws.Debate', db_index=True)
     motion = models.ForeignKey('motions.Motion', blank=True, null=True, on_delete=models.SET_NULL)
 
     copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
     discarded = models.BooleanField(default=False)
 
-    forfeit = models.ForeignKey('debate.DebateTeam', blank=True, null=True)
+    forfeit = models.ForeignKey('draws.DebateTeam', blank=True, null=True)
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -30,6 +97,7 @@ class BallotSubmission(Submission):
     @cached_property
     def ballot_set(self):
         if not hasattr(self, "_ballot_set"):
+            from results import BallotSet
             self._ballot_set = BallotSet(self)
         return self._ballot_set
 
@@ -89,7 +157,7 @@ class SpeakerScoreByAdj(models.Model):
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_adjudicator = models.ForeignKey('debate.DebateAdjudicator')
-    debate_team = models.ForeignKey('debate.DebateTeam')
+    debate_team = models.ForeignKey('draws.DebateTeam')
     score = ScoreField()
     position = models.IntegerField()
 
@@ -107,7 +175,7 @@ class TeamScore(models.Model):
     Holds a teams total score and points in a debate
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_team = models.ForeignKey('debate.DebateTeam', db_index=True)
+    debate_team = models.ForeignKey('draws.DebateTeam', db_index=True)
     points = models.PositiveSmallIntegerField()
     margin = ScoreField()
     win = models.NullBooleanField()
@@ -149,7 +217,7 @@ class SpeakerScore(models.Model):
     BallotSet class in result.py calculates this when it saves a ballot set.
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_team = models.ForeignKey('debate.DebateTeam')
+    debate_team = models.ForeignKey('draws.DebateTeam')
     speaker = models.ForeignKey('debate.Speaker', db_index=True)
     score = ScoreField()
     position = models.IntegerField()

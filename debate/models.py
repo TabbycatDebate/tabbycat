@@ -9,13 +9,11 @@ from django.core.cache import cache
 from django.utils.functional import cached_property
 
 from debate.adjudicator.anneal import SAAllocator
+
 from results.result import BallotSet
 from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
 
-import standings
-
 from warnings import warn
-from threading import BoundedSemaphore
 from collections import OrderedDict
 
 logger = logging.getLogger(__name__)
@@ -141,7 +139,6 @@ def update_tournament_cache(sender, instance, created, **kwargs):
 signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
 
-
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
     tournament = models.ForeignKey(Tournament)
@@ -208,24 +205,28 @@ class TeamManager(models.Manager):
             tournament=round.tournament).select_related('institution')
 
     def standings(self, round):
+        from standings.standings import annotate_team_standings
         """Returns a list."""
         teams = self._teams_for_standings(round)
-        return standings.annotate_team_standings(teams, round)
+        return annotate_team_standings(teams, round)
 
     def ranked_standings(self, round):
+        from standings.standings import ranked_team_standings
         """Returns a list."""
         teams = self._teams_for_standings(round)
-        return standings.ranked_team_standings(teams, round)
+        return ranked_team_standings(teams, round)
 
     def division_standings(self, round):
+        from standings.standings import division_ranked_team_standings
         """Returns a list."""
         teams = self._teams_for_standings(round)
-        return standings.division_ranked_team_standings(teams, round)
+        return division_ranked_team_standings(teams, round)
 
     def subrank_standings(self, round):
+        from standings.standings import subranked_team_standings
         """Returns a list."""
         teams = self._teams_for_standings(round)
-        return standings.subranked_team_standings(teams, round)
+        return subranked_team_standings(teams, round)
 
 
 class Division(models.Model):
@@ -264,8 +265,8 @@ class Team(models.Model):
     break_categories = models.ManyToManyField('breaking.BreakCategory', blank=True)
 
     venue_preferences = models.ManyToManyField('venues.VenueGroup',
-        through = 'TeamVenuePreference',
-        related_name = 'VenueGroup',
+        through = 'draws.TeamVenuePreference',
+        related_name = 'venue_preferences',
         verbose_name = 'Venue group preference'
     )
 
@@ -329,11 +330,12 @@ class Team(models.Model):
         return "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
 
     def get_aff_count(self, seq=None):
+        from draws.models import DebateTeam
         return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)
 
     def get_neg_count(self, seq=None):
+        from draws.models import DebateTeam
         return self._get_count(DebateTeam.POSITION_NEGATIVE, seq)
-
 
     def _get_count(self, position, seq):
         dts = self.debateteam_set.filter(position=position, debate__round__stage=Round.STAGE_PRELIMINARY)
@@ -373,6 +375,7 @@ class Team(models.Model):
         return self.institution_id == other.institution_id
 
     def prev_debate(self, round_seq):
+        from draws.models import DebateTeam
         try:
             return DebateTeam.objects.filter(
                 debate__round__seq__lt=round_seq,
@@ -401,16 +404,6 @@ def update_team_cache(sender, instance, created, **kwargs):
 signals.post_save.connect(update_team_cache, sender=Team)
 
 
-class TeamVenuePreference(models.Model):
-    team = models.ForeignKey(Team, db_index=True)
-    venue_group = models.ForeignKey('venues.VenueGroup')
-    priority = models.IntegerField()
-
-    class Meta:
-        ordering = ['priority',]
-
-    def __unicode__(self):
-        return u'%s with priority %s for %s' % (self.team, self.priority, self.venue_group)
 
 
 class Person(models.Model):
@@ -465,8 +458,8 @@ class Adjudicator(Person):
     test_score = models.FloatField(default=0)
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
-    institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adjudicator_institution_conflicts')
-    conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict')
+    institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adj_inst_conflicts')
+    conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict', related_name='adj_adj_conflicts')
 
     breaking = models.BooleanField(default=False)
     independent = models.BooleanField(default=False, blank=True)
@@ -527,6 +520,7 @@ class Adjudicator(Person):
         return self.adjudicatorfeedback_set.all()
 
     def seen_team(self, team, before_round=None):
+        from draws.models import DebateTeam
         if not hasattr(self, '_seen_cache'):
             self._seen_cache = {}
         if before_round not in self._seen_cache:
@@ -653,6 +647,8 @@ class Round(models.Model):
         return self.motion_set.order_by('seq')
 
     def draw(self, override_team_checkins=False):
+        from draws.models import Debate, TeamPositionAllocation
+
         if self.draw_status != self.STATUS_NONE:
             raise RuntimeError("Tried to run draw on round that already has a draw")
 
@@ -819,6 +815,7 @@ class Round(models.Model):
         return draw
 
     def make_debates(self, pairings):
+        from draws.models import DebateTeam
 
         import random
         venues = list(self.active_venues.order_by('-priority'))[:len(pairings)]
@@ -895,7 +892,7 @@ class Round(models.Model):
         result = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
                                       'venues_venue').extra(select =
                                       {'is_used': """EXISTS (SELECT 1
-                                      FROM debate_debate da
+                                      FROM draws_debate da
                                       WHERE da.round_id=%d AND
                                       da.venue_id = venues_venue.id)""" % self.id},
         )
@@ -918,7 +915,7 @@ class Round(models.Model):
                                       id_field='person_ptr_id').extra(
                                         select = {'is_used': """EXISTS (SELECT 1
                                                   FROM debate_debateadjudicator da
-                                                  LEFT JOIN debate_debate d ON da.debate_id = d.id
+                                                  LEFT JOIN draws_debate d ON da.debate_id = d.id
                                                   WHERE d.round_id = %d AND
                                                   da.adjudicator_id = debate_adjudicator.person_ptr_id)""" % self.id },
         )
@@ -1037,248 +1034,10 @@ def update_round_cache(sender, instance, created, **kwargs):
 signals.post_save.connect(update_round_cache, sender=Round)
 
 
-
-
-class DebateManager(models.Manager):
-    use_for_related_fields = True
-
-    def get_queryset(self):
-        return super(DebateManager, self).get_queryset().select_related(
-            'round')
-
-class Debate(models.Model):
-    STATUS_NONE      = 'N'
-    STATUS_POSTPONED = 'P'
-    STATUS_DRAFT     = 'D'
-    STATUS_CONFIRMED = 'C'
-    STATUS_CHOICES = (
-        (STATUS_NONE,      'None'),
-        (STATUS_POSTPONED, 'Postponed'),
-        (STATUS_DRAFT,     'Draft'),
-        (STATUS_CONFIRMED, 'Confirmed'),
-    )
-
-    objects = DebateManager()
-
-    round = models.ForeignKey(Round, db_index=True)
-    venue = models.ForeignKey('venues.Venue', blank=True, null=True)
-    division = models.ForeignKey('Division', blank=True, null=True)
-
-    bracket = models.FloatField(default=0)
-    room_rank = models.IntegerField(default=0)
-
-    # comma-separated list of strings
-    flags = models.CharField(max_length=100, blank=True, null=True)
-
-    importance = models.IntegerField(default=2)
-    result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
-            default=STATUS_NONE)
-    ballot_in = models.BooleanField(default=False)
-
-    def __contains__(self, team):
-        return team in (self.aff_team, self.neg_team)
-
-    def __unicode__(self):
-        try:
-            return u"%s - [%s] %s vs %s" % (
-                self.round.tournament,
-                self.round.abbreviation,
-                self.aff_team.short_name,
-                self.neg_team.short_name
-            )
-        except DebateTeam.DoesNotExist:
-            return u"%s - [%s] %s" % (
-                self.round.tournament,
-                self.round.abbreviation,
-                ", ".join(map(lambda x: x.short_name, self.teams))
-            )
-
-    @property
-    def teams(self):
-        return Team.objects.select_related('debate_team').filter(debateteam__debate=self)
-
-    @cached_property
-    def aff_team(self):
-        aff_dt = self.aff_dt
-        return aff_dt.team
-
-    @cached_property
-    def neg_team(self):
-        neg_dt = self.neg_dt
-        return neg_dt.team
-
-    def get_team(self, side):
-        return getattr(self, '%s_team' % side)
-
-    def get_dt(self, side):
-        """dt = DebateTeam"""
-        return getattr(self, '%s_dt' % side)
-
-    @cached_property
-    def aff_dt(self):
-        aff_dt = DebateTeam.objects.select_related('team', 'team__institution').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
-        return aff_dt
-
-    @cached_property
-    def neg_dt(self):
-        neg_dt = DebateTeam.objects.select_related('team', 'team__institution').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
-        return neg_dt
-
-    def get_side(self, team):
-        if self.aff_team == team:
-            return 'aff'
-        if self.neg_team == team:
-            return 'neg'
-        return None
-
-    @cached_property
-    def draw_conflicts(self):
-        d = []
-        history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
-        if history:
-            d.append("History conflict (%d)" % history)
-        if self.aff_team.institution == self.neg_team.institution:
-            d.append("Institution conflict")
-
-        return d
-
-    @cached_property
-    def confirmed_ballot(self):
-        """Returns the confirmed BallotSubmission for this debate, or None if
-        there is no such ballot submission."""
-        try:
-            return self.ballotsubmission_set.get(confirmed=True)
-        except ObjectDoesNotExist: # BallotSubmission isn't defined yet, so can't use BallotSubmission.DoesNotExist
-            return None
-
-    @property
-    def ballotsubmission_set_by_version(self):
-        return self.ballotsubmission_set.order_by('version')
-
-    @property
-    def ballotsubmission_set_by_version_except_discarded(self):
-        return self.ballotsubmission_set.filter(discarded=False).order_by('version')
-
-    @property
-    def identical_ballotsubs_dict(self):
-        """Returns a dict. Keys are BallotSubmissions, values are lists of
-        version numbers of BallotSubmissions that are identical to the key's
-        BallotSubmission. Excludes discarded ballots (always)."""
-        ballotsubs = self.ballotsubmission_set_by_version_except_discarded
-        result = {b: list() for b in ballotsubs}
-        for ballotsub1 in ballotsubs:
-            # Save a bit of time by avoiding comparisons already done.
-            # This relies on ballots being ordered by version.
-            for ballotsub2 in ballotsubs.filter(version__gt=ballotsub1.version):
-                if ballotsub1.is_identical(ballotsub2):
-                    result[ballotsub1].append(ballotsub2.version)
-                    result[ballotsub2].append(ballotsub1.version)
-        for l in result.itervalues():
-            l.sort()
-        return result
-
-    @property
-    def flags_all(self):
-        if not self.flags:
-            return []
-        else:
-            return [DRAW_FLAG_DESCRIPTIONS[f] for f in self.flags.split(",")]
-
-    @property
-    def all_conflicts(self):
-        return self.draw_conflicts + self.adjudicator_conflicts
-
-    @cached_property
-    def adjudicator_conflicts(self):
-        class Conflict(object):
-            def __init__(self, adj, team):
-                self.adj = adj
-                self.team = team
-            def __unicode__(self):
-                return u'Adj %s + %s' % (self.adj, self.team)
-
-        a = []
-        for t, adj in self.adjudicators:
-            for team in (self.aff_team, self.neg_team):
-                if adj.conflict_with(team):
-                    a.append(Conflict(adj, team))
-
-        return a
-
-    @cached_property
-    def adjudicators(self):
-        """Returns an AdjudicatorAllocation containing the adjudicators for this
-        debate."""
-        adjs = DebateAdjudicator.objects.filter(debate=self).select_related('adjudicator')
-        alloc = AdjudicatorAllocation(self)
-        for a in adjs:
-            if a.type == a.TYPE_CHAIR:
-                alloc.chair = a.adjudicator
-            if a.type == a.TYPE_PANEL:
-                alloc.panel.append(a.adjudicator)
-            if a.type == a.TYPE_TRAINEE:
-                alloc.trainees.append(a.adjudicator)
-        return alloc
-
-    @property
-    def chair(self):
-        da_adj = list(DebateAdjudicator.objects.filter(debate=self, type="C"))
-        a_adj = da_adj[0].adjudicator
-        return a_adj
-
-    @property
-    def matchup(self):
-        return u'%s vs %s' % (self.aff_team.short_name, self.neg_team.short_name)
-
-    @property
-    def division_motion(self):
-        return Motion.objects.filter(round=self.round, divisions=self.division)
-
-
 class SRManager(models.Manager):
     use_for_related_fields = True
     def get_queryset(self):
         return super(SRManager, self).get_queryset().select_related('debate')
-
-
-class DebateTeam(models.Model):
-    POSITION_AFFIRMATIVE = 'A'
-    POSITION_NEGATIVE = 'N'
-    POSITION_UNALLOCATED = 'u'
-    POSITION_CHOICES = (
-        (POSITION_AFFIRMATIVE, 'Affirmative'),
-        (POSITION_NEGATIVE, 'Negative'),
-        (POSITION_UNALLOCATED, 'Unallocated'),
-    )
-
-    objects = SRManager()
-
-    debate = models.ForeignKey(Debate, db_index=True)
-    team = models.ForeignKey(Team)
-    position = models.CharField(max_length=1, choices=POSITION_CHOICES)
-
-    def __unicode__(self):
-        return u'%s (%s)' % (self.team, self.debate)
-
-    @cached_property # TODO: this slows down the standings pages reasonably heavily
-    def opposition(self):
-        try:
-            return DebateTeam.objects.exclude(position=self.position).get(debate=self.debate)
-        except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
-            logger.error("Error finding opposition: %s, %s", self.debate, self.position)
-            return None
-
-    @cached_property
-    def result(self):
-        """Returns 'won' if won, 'lost' if lost, 'result unknown' if no result confirmed."""
-        if self.debate.confirmed_ballot and self.debate.confirmed_ballot.ballot_set:
-            ballotset = self.debate.confirmed_ballot.ballot_set
-            if ballotset.aff_win and self.position == DebateTeam.POSITION_AFFIRMATIVE:
-                return 'won'
-            if ballotset.neg_win and self.position == DebateTeam.POSITION_NEGATIVE:
-                return 'won'
-            return 'lost'
-        return 'result unknown'
 
 
 class DebateAdjudicator(models.Model):
@@ -1294,96 +1053,12 @@ class DebateAdjudicator(models.Model):
 
     objects = SRManager()
 
-    debate = models.ForeignKey(Debate, db_index=True)
+    debate = models.ForeignKey('draws.Debate', db_index=True)
     adjudicator = models.ForeignKey(Adjudicator, db_index=True)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
     def __unicode__(self):
         return u'%s %s' % (self.adjudicator, self.debate)
-
-
-class TeamPositionAllocation(models.Model):
-    """Model to store team position allocations for tournaments like Joynt
-    Scroll (New Zealand). Each team-round combination should have one of these.
-    In tournaments without team position allocations, just don't use this
-    model."""
-
-    POSITION_AFFIRMATIVE = DebateTeam.POSITION_AFFIRMATIVE
-    POSITION_NEGATIVE = DebateTeam.POSITION_NEGATIVE
-    POSITION_UNALLOCATED = DebateTeam.POSITION_UNALLOCATED
-    POSITION_CHOICES = DebateTeam.POSITION_CHOICES
-
-    round = models.ForeignKey(Round)
-    team = models.ForeignKey(Team)
-    position = models.CharField(max_length=1, choices=POSITION_CHOICES)
-
-    class Meta:
-        unique_together = [('round', 'team')]
-
-
-class Submission(models.Model):
-    """Abstract base class to provide functionality common to different
-    types of submissions.
-
-    The unique_together class attribute of the Meta class MUST be set in
-    all subclasses."""
-
-    SUBMITTER_TABROOM = 0
-    SUBMITTER_PUBLIC  = 1
-    SUBMITTER_TYPE_CHOICES = (
-        (SUBMITTER_TABROOM, 'Tab room'),
-        (SUBMITTER_PUBLIC,  'Public'),
-    )
-
-    timestamp = models.DateTimeField(auto_now_add=True)
-    version = models.PositiveIntegerField()
-    submitter_type = models.PositiveSmallIntegerField(choices=SUBMITTER_TYPE_CHOICES)
-
-    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted") # only relevant if submitter was in tab room
-    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed")
-    confirm_timestamp = models.DateTimeField(blank=True, null=True)
-    ip_address = models.GenericIPAddressField(blank=True, null=True)
-
-    version_semaphore = BoundedSemaphore()
-
-    confirmed = models.BooleanField(default=False, db_index=True)
-
-    class Meta:
-        abstract = True
-
-    @property
-    def _unique_filter_args(self):
-        return dict((arg, getattr(self, arg)) for arg in self._meta.unique_together[0] if arg != 'version')
-
-    def save(self, *args, **kwargs):
-        # Check for uniqueness.
-        if self.confirmed:
-            try:
-                current = self.__class__.objects.get(confirmed=True, **self._unique_filter_args)
-            except self.DoesNotExist:
-                pass
-            else:
-                if current != self:
-                    warn("%s confirmed while %s was already confirmed, setting latter to unconfirmed" % (self, current))
-                    current.confirmed = False
-                    current.save()
-
-        # Assign the version field to one more than the current maximum version.
-        # Use a semaphore to protect against the possibility that two submissions do this
-        # at the same time and get the same version number.
-        self.version_semaphore.acquire()
-        if self.pk is None:
-            existing = self.__class__.objects.filter(**self._unique_filter_args)
-            if existing.exists():
-                self.version = existing.aggregate(models.Max('version'))['version__max'] + 1
-            else:
-                self.version = 1
-        super(Submission, self).save(*args, **kwargs)
-        self.version_semaphore.release()
-
-    def clean(self):
-        if self.submitter_type == self.SUBMITTER_TABROOM and self.submitter is None:
-            raise ValidationError("A tab room ballot must have a user associated.")
 
 
 

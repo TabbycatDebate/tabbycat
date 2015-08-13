@@ -70,13 +70,13 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
 
     EXTRA_QUERY = """
         SELECT DISTINCT SUM({field:s})
-        FROM "debate_teamscore"
-        JOIN "debate_ballotsubmission" ON "debate_teamscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-        JOIN "debate_debateteam" ON "debate_teamscore"."debate_team_id" = "debate_debateteam"."id"
-        JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-        JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-        WHERE "debate_ballotsubmission"."confirmed" = True
-        AND "debate_debateteam"."team_id" = "debate_team"."id"
+        FROM "results_teamscore"
+        JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
+        JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
+        JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
+        JOIN "debate_round" ON "draws_debate"."round_id" = "debate_round"."id"
+        WHERE "results_ballotsubmission"."confirmed" = True
+        AND "draws_debateteam"."team_id" = "debate_team"."id"
         AND "debate_round"."stage" = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
 
     if round is not None:

@@ -11,6 +11,7 @@ before running the script if you don't have one.
 """
 import header
 import debate.models as m
+import draws.models as dm
 import motions.models as mm
 import debate.results as rm
 from django.contrib.auth.models import User
@@ -19,7 +20,7 @@ import argparse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.parse_args()
 
-for debate in m.Debate.objects.all():
+for debate in dm.Debate.objects.all():
     bs = rm.BallotSubmission(submitter_type=rm.BallotSubmission.SUBMITTER_TABROOM, debate=debate)
     bs.user = User.objects.get(username='original')
     bs.confirmed = True

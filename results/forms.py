@@ -4,6 +4,7 @@ from collections import Counter
 import logging
 
 import debate.models as m
+import draws.models import Debate, DebateTeam
 from result import BallotSet
 
 
@@ -117,7 +118,7 @@ class BallotSetForm(forms.Form):
     confirmed = forms.BooleanField(required=False)
     discarded = forms.BooleanField(required=False)
 
-    debate_result_status = forms.ChoiceField(choices=m.Debate.STATUS_CHOICES)
+    debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
 
     SIDES = ['aff', 'neg']
     _LONG_NAME = {'aff': 'affirmative', 'neg': 'negative'}
@@ -254,7 +255,7 @@ class BallotSetForm(forms.Form):
         if self.choosing_sides and self.ballotsub.pk is not None:
             try:
                 initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)
-            except m.DebateTeam.DoesNotExist:
+            except DebateTeam.DoesNotExist:
                 pass
 
         # Generally, initialise the motion to what is currently in the database.
