@@ -1,7 +1,7 @@
 from django.db import models
 
 class Checkin(models.Model):
-    person = models.ForeignKey('debate.Person')
+    person = models.ForeignKey('participants.Person')
     round = models.ForeignKey('debate.Round')
 
 
@@ -14,7 +14,7 @@ class ActiveVenue(models.Model):
 
 
 class ActiveTeam(models.Model):
-    team = models.ForeignKey('debate.Team')
+    team = models.ForeignKey('participants.Team')
     round = models.ForeignKey('debate.Round')
 
     class Meta:
@@ -22,7 +22,7 @@ class ActiveTeam(models.Model):
 
 
 class ActiveAdjudicator(models.Model):
-    adjudicator = models.ForeignKey('debate.Adjudicator')
+    adjudicator = models.ForeignKey('participants.Adjudicator')
     round = models.ForeignKey('debate.Round')
 
     class Meta:

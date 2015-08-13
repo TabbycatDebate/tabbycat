@@ -1,6 +1,6 @@
 from action_log.models import ActionLog
 from draws.models import Debate
-from debate.models import Adjudicator, Team
+from participants.models import Adjudicator, Team
 
 from . import models
 
@@ -16,7 +16,7 @@ def create_adj_allocation(request, round):
     if round.draw_status != round.STATUS_CONFIRMED:
         return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
 
-    from debate.adjudicator.hungarian import HungarianAllocator
+    from allocations.hungarian import HungarianAllocator
     round.allocate_adjudicators(HungarianAllocator)
 
     return _json_adj_allocation(round.get_draw(), round.unused_adjudicators())

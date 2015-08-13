@@ -4,7 +4,7 @@ from django.utils.functional import cached_property
 from results.models import Submission
 
 class AdjudicatorTestScoreHistory(models.Model):
-    adjudicator = models.ForeignKey('debate.Adjudicator')
+    adjudicator = models.ForeignKey('participants.Adjudicator')
     round = models.ForeignKey('debate.Round', blank=True, null=True)
     score = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -118,7 +118,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
         return tuple((x, x) for x in self.choices.split(self.CHOICE_SEPARATOR))
 
 class AdjudicatorFeedback(Submission):
-    adjudicator = models.ForeignKey('debate.Adjudicator', db_index=True)
+    adjudicator = models.ForeignKey('participants.Adjudicator', db_index=True)
     score = models.FloatField()
 
     source_adjudicator = models.ForeignKey('allocations.DebateAdjudicator', blank=True, null=True)

@@ -1,6 +1,9 @@
 from django.contrib import admin
 
 from . import models
+from participants.models import Team, Speaker, Adjudicator
+from debate.models import Round
+from results.models import SpeakerScore
 
 # ==============================================================================
 # BallotSubmission
@@ -68,6 +71,10 @@ class SpeakerScoreByAdjAdmin(admin.ModelAdmin):
     search_fields = ('debate_team__debate__round__seq',
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'debate_adjudicator__adjudicator__name')
-    list_filter = ('debate_team__debate__round__seq', 'debate_team__team__institution__code')
+    # TODO: re-enable
+    #list_filter = ('debate_team__debate__round__seq', 'debate_team__team__institution__code')
     raw_id_fields = ('debate_team','ballot_submission')
+
 admin.site.register(models.SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)
+
+

@@ -5,6 +5,7 @@ import logging
 
 import debate.models as m
 from draws.models import Debate, DebateTeam
+from participants.models import Speaker
 from result import BallotSet
 
 
@@ -220,7 +221,7 @@ class BallotSetForm(forms.Form):
 
             # 4(a). Speaker identity
             if self.choosing_sides:
-                queryset = m.Speaker.objects.filter(team__in=self.debate.teams)
+                queryset = Speaker.objects.filter(team__in=self.debate.teams)
             else:
                 queryset = self.debate.get_team(side).speakers
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(queryset=queryset)

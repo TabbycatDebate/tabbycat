@@ -218,7 +218,7 @@ class SpeakerScore(models.Model):
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_team = models.ForeignKey('draws.DebateTeam')
-    speaker = models.ForeignKey('debate.Speaker', db_index=True)
+    speaker = models.ForeignKey('participants.Speaker', db_index=True)
     score = ScoreField()
     position = models.IntegerField()
 

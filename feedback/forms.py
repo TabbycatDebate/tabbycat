@@ -3,7 +3,8 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
 
 from . import models
-from debate.models import Adjudicator, Round, Team
+from debate.models import Round
+from participants.models import Adjudicator, Team
 from allocations.models import DebateAdjudicator
 from draws.models import Debate, DebateTeam
 from debate.forms import OptionalChoiceField

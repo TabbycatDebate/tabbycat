@@ -75,6 +75,7 @@ INSTALLED_APPS = (
     'draws',
     'feedback',
     'motions',
+    'participants',
     'printing',
     'results',
     'standings',

@@ -2,6 +2,7 @@
 
 import header
 import debate.models as m
+from participants.models import Team
 import results.models as m
 from django.db import models
 import random
@@ -14,7 +15,7 @@ args = parser.parse_args()
 
 round = m.Round.objects.get(seq=args.round)
 
-teams = m.Team.objects
+teams = Team.objects
 
 teams = teams.filter(
     institution__tournament = round.tournament,

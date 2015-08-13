@@ -1081,7 +1081,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         # Assigning bye teams as needed
         for bracket in brackets.itervalues():
             if len(bracket) % 2 != 0:
-                from debate.models import Institution,Team
+                from participants.models import Institution, Team
                 bye_tournament = bracket[0].tournament
                 bye_institution, created = Institution.objects.get_or_create(
                     name="Byes"

@@ -23,7 +23,7 @@ class BreakCategory(models.Model):
     # )
     # status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
 
-    breaking_teams = models.ManyToManyField('debate.Team', through='breaking.BreakingTeam')
+    breaking_teams = models.ManyToManyField('participants.Team', through='breaking.BreakingTeam')
 
     def __unicode__(self):
         return self.name
@@ -37,7 +37,7 @@ class BreakCategory(models.Model):
 
 class BreakingTeam(models.Model):
     break_category = models.ForeignKey(BreakCategory)
-    team = models.ForeignKey('debate.Team')
+    team = models.ForeignKey('participants.Team')
     rank = models.IntegerField()
     break_rank = models.IntegerField(blank=True, null=True)
 

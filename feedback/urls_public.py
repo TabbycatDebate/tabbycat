@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from debate.models import Team, Adjudicator
+from participants.models import Team, Adjudicator
 from . import views
 
 urlpatterns = [

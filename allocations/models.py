@@ -16,23 +16,23 @@ class DebateAdjudicator(models.Model):
     objects = SRManager()
 
     debate = models.ForeignKey('draws.Debate', db_index=True)
-    adjudicator = models.ForeignKey('debate.Adjudicator', db_index=True)
+    adjudicator = models.ForeignKey('participants.Adjudicator', db_index=True)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
     def __unicode__(self):
         return u'%s %s' % (self.adjudicator, self.debate)
 
 class AdjudicatorConflict(models.Model):
-    adjudicator = models.ForeignKey('debate.Adjudicator')
-    team = models.ForeignKey('debate.Team')
+    adjudicator = models.ForeignKey('participants.Adjudicator')
+    team = models.ForeignKey('participants.Team')
 
 class AdjudicatorAdjudicatorConflict(models.Model):
-    adjudicator = models.ForeignKey('debate.Adjudicator', related_name="source_adjudicator")
-    conflict_adjudicator = models.ForeignKey('debate.Adjudicator', related_name="target_adjudicator", verbose_name="Adjudicator")
+    adjudicator = models.ForeignKey('participants.Adjudicator', related_name="source_adjudicator")
+    conflict_adjudicator = models.ForeignKey('participants.Adjudicator', related_name="target_adjudicator", verbose_name="Adjudicator")
 
 class AdjudicatorInstitutionConflict(models.Model):
-    adjudicator = models.ForeignKey('debate.Adjudicator')
-    institution = models.ForeignKey('debate.Institution')
+    adjudicator = models.ForeignKey('participants.Adjudicator')
+    institution = models.ForeignKey('participants.Institution')
 
 
 class AdjudicatorAllocation(object):

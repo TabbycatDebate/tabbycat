@@ -6,6 +6,7 @@ import draws.models as dm
 import feedback.models as fm
 import motions.models as mm
 import options.models as cm
+import participants.models as pm
 import venues.models as vm
 import csv
 
@@ -27,9 +28,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     }
 
     GENDERS = {
-        ("male", "m"): m.Person.GENDER_MALE,
-        ("female", "f"): m.Person.GENDER_FEMALE,
-        ("other", "o"): m.Person.GENDER_OTHER,
+        ("male", "m"): pm.Person.GENDER_MALE,
+        ("female", "f"): pm.Person.GENDER_FEMALE,
+        ("other", "o"): pm.Person.GENDER_OTHER,
     }
 
     TEAM_POSITIONS = {
@@ -87,7 +88,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'tournament' : self.tournament,
             }
             return kwargs
-        return self._import(f, _region_line_parser, m.Region)
+        return self._import(f, _region_line_parser, pm.Region)
 
     def import_institutions(self, f, auto_create_regions=True):
         """Imports institutions from a file, also creating regions as needed
@@ -104,7 +105,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'tournament' : self.tournament,
                 }
             counts, errors = self._import(f, _region_line_parser,
-                    m.Region, expect_unique=False)
+                    pm.Region, expect_unique=False)
         else:
             counts = None
             errors = None
@@ -114,9 +115,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'name'         : line[0],
                 'code'         : line[1],
                 'abbreviation' : line[2],
-                'region'       : m.Region.objects.get(name=line[3]) if len(line) > 3  and line[3] else None,
+                'region'       : pm.Region.objects.get(name=line[3]) if len(line) > 3  and line[3] else None,
             }
-        counts, errors = self._import(f, _institution_line_parser, m.Institution, counts=counts, errors=errors)
+        counts, errors = self._import(f, _institution_line_parser, pm.Institution, counts=counts, errors=errors)
 
         return counts, errors
 
@@ -197,20 +198,20 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         def _team_line_parser(line):
             return {
                 'tournament'             : self.tournament,
-                'institution'            : m.Institution.objects.lookup(line[1]),
+                'institution'            : pm.Institution.objects.lookup(line[1]),
                 'reference'              : line[0],
                 'short_reference'        : line[0][:34],
                 'use_institution_prefix' : int(line[2]) if len(line) > 2 and line[2] else 0,
                 'emoji_seq'              : self.get_emoji,
             }
-        counts, errors = self._import(f, _team_line_parser, m.Team, generated_fields=['emoji_seq'])
+        counts, errors = self._import(f, _team_line_parser, pm.Team, generated_fields=['emoji_seq'])
 
         if create_dummy_speakers:
             def _speakers_line_parser(line):
-                team = m.Teams.objects.get(name=line[0])
+                team = pm.Teams.objects.get(name=line[0])
                 for name in ["1st Speaker", "2nd Speaker", "3rd Speaker", "Reply Speaker"]:
                     yield dict(name=name, team=team)
-            counts, errors = self._import(f, _speakers_line_parser, m.Speaker, counts=counts, errors=errors)
+            counts, errors = self._import(f, _speakers_line_parser, pm.Speaker, counts=counts, errors=errors)
 
     def import_speakers(self, f, auto_create_teams=True):
         """Imports speakers from a file, also creating teams as needed (unless
@@ -227,28 +228,28 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             def _team_line_parser(line):
                 return {
                     'tournament'             : self.tournament,
-                    'institution'            : m.Institution.objects.lookup(line[1]),
+                    'institution'            : pm.Institution.objects.lookup(line[1]),
                     'reference'              : line[2],
                     'short_reference'        : line[2][:35],
                     'use_institution_prefix' : int(line[3]) if len(line) > 3 and line[3] else 0,
                     'emoji_seq'              : self.get_emoji,
                 }
-            counts, errors = self._import(f, _team_line_parser, m.Team, expect_unique=False, generated_fields=['emoji_seq'])
+            counts, errors = self._import(f, _team_line_parser, pm.Team, expect_unique=False, generated_fields=['emoji_seq'])
         else:
             counts = None
             errors = None
 
         def _speaker_line_parser(line):
-            institution = m.Institution.objects.lookup(line[1])
+            institution = pm.Institution.objects.lookup(line[1])
             return {
                 'name'   : line[0],
-                'team'   : m.Team.objects.get(institution=institution,
+                'team'   : pm.Team.objects.get(institution=institution,
                                       reference=line[2], tournament=self.tournament),
                 'gender' : self._lookup(self.GENDERS, line[4], "gender") if len(line) > 4 and line[4] else None,
                 'pronoun': str(line[5]) if len(line) > 5 and line[5] else None,
                 'novice' : int(line[6]) if len(line) > 6 and line[6] else False,
             }
-        counts, errors = self._import(f, _speaker_line_parser, m.Speaker, counts=counts, errors=errors)
+        counts, errors = self._import(f, _speaker_line_parser, pm.Speaker, counts=counts, errors=errors)
 
         return counts, errors
 
@@ -265,7 +266,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         def _adjudicator_line_parser(line):
             return {
                 'name'        : line[0],
-                'institution' : m.Institution.objects.lookup(line[1]),
+                'institution' : pm.Institution.objects.lookup(line[1]),
                 'tournament'  : self.tournament,
                 'test_score'  : float(line[2]),
                 'gender'      : self._lookup(self.GENDERS, line[3], "gender") if len(line) > 3 and line[3] else None,
@@ -276,12 +277,12 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'email'       : line[8] if len(line) > 8 else None,
                 'notes'       : line[9] if len(line) > 9 else None,
             }
-        counts, errors = self._import(f, _adjudicator_line_parser, m.Adjudicator)
+        counts, errors = self._import(f, _adjudicator_line_parser, pm.Adjudicator)
 
         def _test_score_line_parser(line):
-            institution = m.Institution.objects.lookup(line[1])
+            institution = pm.Institution.objects.lookup(line[1])
             return {
-                'adjudicator' : m.Adjudicator.objects.get(name=line[0], institution=institution, tournament=self.tournament),
+                'adjudicator' : pm.Adjudicator.objects.get(name=line[0], institution=institution, tournament=self.tournament),
                 'score'       : float(line[2]),
                 'round'       : None,
             }
@@ -289,9 +290,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 counts=counts, errors=errors)
 
         def _own_institution_conflict_parser(line):
-            institution = m.Institution.objects.lookup(line[1])
+            institution = pm.Institution.objects.lookup(line[1])
             return {
-                'adjudicator' : m.Adjudicator.objects.get(name=line[0], institution=institution, tournament=self.tournament),
+                'adjudicator' : pm.Adjudicator.objects.get(name=line[0], institution=institution, tournament=self.tournament),
                 'institution' : institution,
             }
         counts, errors = self._import(f, _own_institution_conflict_parser, am.AdjudicatorInstitutionConflict,
@@ -300,11 +301,11 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         def _institution_conflict_parser(line):
             if len(line) <= 10 or not line[10]:
                 return
-            adj_inst = m.Institution.objects.lookup(line[1])
-            adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
+            adj_inst = pm.Institution.objects.lookup(line[1])
+            adjudicator = pm.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
             for institution_name in line[10].split(","):
                 institution_name = institution_name.strip()
-                institution = m.Institution.objects.lookup(institution_name)
+                institution = pm.Institution.objects.lookup(institution_name)
                 yield {
                     'adjudicator' : adjudicator,
                     'institution' : institution,
@@ -315,10 +316,10 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         def _team_conflict_parser(line):
             if len(line) <= 11 or not line[11]:
                 return
-            adj_inst = m.Institution.objects.lookup(line[1])
-            adjudicator = m.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
+            adj_inst = pm.Institution.objects.lookup(line[1])
+            adjudicator = pm.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
             for team_name in line[11].split(","):
-                team = m.Team.objects.lookup(team_name)
+                team = pm.Team.objects.lookup(team_name)
                 yield {
                     'adjudicator' : adjudicator,
                     'team'        : team,
@@ -348,14 +349,14 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             team_name, side_for_round1, side_for_round2, ...
         """
         def _side_line_parser(line):
-            team = m.Team.objects.lookup(line[0])
+            team = pm.Team.objects.lookup(line[0])
             for seq, side in enumerate(line[1:], start=1):
                 yield {
                     'round'    : m.Round.objects.get(seq=seq),
                     'team'     : team,
                     'position' : self._lookup(self.TEAM_POSITIONS, side, "side"),
                 }
-        return self._import(f, _side_line_parser, m.TeamPositionAllocation)
+        return self._import(f, _side_line_parser, dm.TeamPositionAllocation)
 
     def import_adj_feedback_questions(self, f):
         """Imports adjudicator feedback questions from a file.

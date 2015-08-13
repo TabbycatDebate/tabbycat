@@ -1,5 +1,5 @@
-from debate.adjudicator import Allocator
-from debate.adjudicator.stab import StabAllocator
+from allocator import Allocator
+from stab import StabAllocator
 
 from munkres import Munkres
 

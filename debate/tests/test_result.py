@@ -3,6 +3,7 @@
 from unittest import SkipTest
 from django.test import TestCase
 import debate.models as m
+import participants.models as pm
 import results.models as rm
 import venues.models as vm
 import draws.models as dm
@@ -60,25 +61,25 @@ class BaseTestResult(TestCase):
         self.t = m.Tournament(slug="resulttest", name="ResultTest")
         self.t.save()
         for i in range(2):
-            inst = m.Institution(code="Inst%d"%i, name="Institution %d"%i)
+            inst = pm.Institution(code="Inst%d"%i, name="Institution %d"%i)
             inst.save()
-            team = m.Team(tournament=self.t, institution=inst, reference="Team %d"%i,
+            team = pm.Team(tournament=self.t, institution=inst, reference="Team %d"%i,
                 use_institution_prefix=False)
             team.save()
             for j in range(3):
-                speaker = m.Speaker(team=team, name="Speaker %d-%d"%(i,j))
+                speaker = pm.Speaker(team=team, name="Speaker %d-%d"%(i,j))
                 speaker.save()
-        inst = m.Institution(code="Indep", name="Independent %d"%i)
+        inst = pm.Institution(code="Indep", name="Independent %d"%i)
         inst.save()
         for i in range(3):
-            adj = m.Adjudicator(tournament=self.t, institution=inst,
+            adj = pm.Adjudicator(tournament=self.t, institution=inst,
                     name="Adjudicator %d"%i, test_score=5)
             adj.save()
         venue = vm.Venue(name="Venue", priority=10)
         venue.save()
 
-        self.adjs = list(m.Adjudicator.objects.all())
-        self.teams = list(m.Team.objects.all())
+        self.adjs = list(pm.Adjudicator.objects.all())
+        self.teams = list(pm.Team.objects.all())
 
         self.round = m.Round(tournament=self.t, seq=1, abbreviation="R1")
         self.round.save()

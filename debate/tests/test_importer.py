@@ -6,6 +6,7 @@ import allocations.models as am
 import debate.models as m
 import motions.models as mm
 import options.models as cm
+import participants.models as cm
 import venues.models as vm
 import feedback.models as fm
 import os.path
@@ -48,21 +49,21 @@ class TestImporterAnorak(TestCase):
     def test_institutions(self):
         f = self._open_csv_file(self.TESTDIR, "institutions")
         counts, errors = self.importer.import_institutions(f)
-        self.assertEqual(counts, {m.Institution: 13, m.Region: 6})
+        self.assertEqual(counts, {pm.Institution: 13, pm.Region: 6})
         self.assertFalse(errors)
 
     @skip("test file does not yet exist")
     def test_teams(self):
         f = self._open_csv_file(self.TESTDIR, "teams")
         counts, errors = self.importer.import_teams(self)
-        self.assertEqual(counts, {m.Team: 12})
+        self.assertEqual(counts, {pm.Team: 12})
         self.assertFalse(errors)
 
     def test_speakers(self):
         self.test_institutions()
         f = self._open_csv_file(self.TESTDIR, "speakers")
         counts, errors = self.importer.import_speakers(f)
-        self.assertEqual(counts, {m.Team: 24, m.Speaker: 72})
+        self.assertEqual(counts, {pm.Team: 24, pm.Speaker: 72})
         self.assertFalse(errors)
 
     def test_adjudicators(self):

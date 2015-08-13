@@ -1,5 +1,6 @@
 from allocations.models import DebateAdjudicator
-from debate.models import Round, Adjudicator
+from debate.models import Round
+from participants.models import Adjudicator
 from draws.models import Debate
 from motions.models import Motion
 from action_log.models import ActionLog

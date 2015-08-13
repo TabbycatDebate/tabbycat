@@ -218,7 +218,7 @@ class DebateTeam(models.Model):
     objects = SRManager()
 
     debate = models.ForeignKey(Debate, db_index=True)
-    team = models.ForeignKey('debate.Team')
+    team = models.ForeignKey('participants.Team')
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __unicode__(self):
@@ -257,7 +257,7 @@ class TeamPositionAllocation(models.Model):
     POSITION_CHOICES = DebateTeam.POSITION_CHOICES
 
     round = models.ForeignKey('debate.Round')
-    team = models.ForeignKey('debate.Team')
+    team = models.ForeignKey('participants.Team')
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     class Meta:
@@ -265,7 +265,7 @@ class TeamPositionAllocation(models.Model):
 
 
 class TeamVenuePreference(models.Model):
-    team = models.ForeignKey('debate.Team', db_index=True)
+    team = models.ForeignKey('participants.Team', db_index=True)
     venue_group = models.ForeignKey('venues.VenueGroup')
     priority = models.IntegerField()
 

@@ -1,4 +1,5 @@
-from debate.models import Person, Round
+from debate.models import Round
+from participants.models import Person
 from action_log.models import ActionLog
 
 from utils import *

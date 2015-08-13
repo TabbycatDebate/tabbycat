@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 
 from . import models
-from debate.models import Speaker, Team
+from participants.models import Speaker, Team
 from allocations.models import DebateAdjudicator
 
 # ==============================================================================

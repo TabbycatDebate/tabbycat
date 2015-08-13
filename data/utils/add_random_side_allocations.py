@@ -2,7 +2,8 @@
 
 import header
 import debate.models as m
-import draws.models as m
+import draws.models as dm
+import participants.models as pm
 import random
 import argparse
 
@@ -14,7 +15,7 @@ args = parser.parse_args()
 
 for seq in args.rounds:
     round = m.Round.objects.get(seq=seq)
-    teams = list(m.Team.objects.all())
+    teams = list(pm.Team.objects.all())
     assert len(teams) % 2 == 0, "There aren't an even number of teams ({0})".format(len(teams))
     random.shuffle(teams)
     affs = teams[:len(teams)/2]

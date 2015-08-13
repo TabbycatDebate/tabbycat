@@ -39,6 +39,7 @@ def index(request):
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @tournament_view
 def team_speakers(request, t, team_id):
+    # TODO: move to participants
     from django.http import JsonResponse
     team = Team.objects.get(pk=team_id)
     speakers = team.speakers
@@ -58,11 +59,10 @@ def public_index(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_participants')
 def public_participants(request, t):
+    # TODO: move to participants
     adjs = Adjudicator.objects.all()
     speakers = Speaker.objects.all().select_related('team','team__institution')
     return r2r(request, "public/public_participants.html", dict(adjs=adjs, speakers=speakers))
-
-
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')
@@ -78,12 +78,15 @@ def public_divisions(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_venues(request, t):
+    from venues.models import VenueGroup
     venues = VenueGroup.objects.all()
     return r2r(request, 'public/public_all_tournament_venues.html', dict(venues=venues))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_draws_for_venue(request, t, venue_id):
+    from venues.models import VenueGroup
+    from draws.models import Debate
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
         'round','round__tournament','division')
@@ -93,6 +96,8 @@ def all_draws_for_venue(request, t, venue_id):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_institutions(request, t):
+    # TODO: move to participants
+    from participants.models import Institution
     institutions = Institution.objects.all()
     return r2r(request, 'public/public_all_tournament_institutions.html', dict(
         institutions=institutions))
@@ -100,6 +105,8 @@ def all_tournaments_all_institutions(request, t):
 @tournament_view
 def all_draws_for_institution(request, t, institution_id):
     # TODO: move to draws app
+    from participants.models import Institution
+    from draws.models import DebateTeam
     institution = Institution.objects.get(pk=institution_id)
     debate_teams = DebateTeam.objects.filter(team__institution=institution).select_related(
         'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')
@@ -111,6 +118,8 @@ def all_draws_for_institution(request, t, institution_id):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_teams(request, t):
+    # TODO: move to participants
+    from participants.models import Team
     teams = Team.objects.filter(tournament__active=True).select_related('tournament').prefetch_related('division')
     return r2r(request, 'public/public_all_tournament_teams.html', dict(
         teams=teams))
@@ -172,6 +181,7 @@ def round_increment(request, round):
 # public (for barcode checkins)
 @round_view
 def checkin(request, round):
+    from participants.models import Person
     context = {}
     if request.method == 'POST':
         v = request.POST.get('barcode_id')
@@ -193,6 +203,8 @@ def checkin(request, round):
 @admin_required
 @tournament_view
 def division_allocations(request, t):
+    from participants.models import Team
+    from venues.models import VenueGroup
     teams = Team.objects.filter(tournament=t).all()
     divisions = Division.objects.filter(tournament=t).all()
     divisions = sorted(divisions, key=lambda x: float(x.name))
@@ -224,6 +236,7 @@ def save_divisions(request, t):
 @tournament_view
 def create_division_allocation(request, t):
     from debate.division_allocator import DivisionAllocator
+    from participants.models import Team
 
     teams = list(Team.objects.filter(tournament=t))
     for team in teams:

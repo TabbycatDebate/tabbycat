@@ -106,7 +106,7 @@ if args.speakers:
         JOIN "debate_round" ON "draws_debate"."round_id" = "debate_round"."id"
         JOIN "results_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "results_ballotsubmission"."id"
         WHERE "results_ballotsubmission"."confirmed" = True
-        AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
+        AND "debate_speakerscore"."speaker_id" = "participants_speaker"."person_ptr_id"
         AND "debate_speakerscore"."position" <= {position:d}
         AND "debate_round"."seq" <= {round:d}
     """.format(
@@ -142,7 +142,7 @@ if args.replies:
         JOIN "debate_round" ON "draws_debate"."round_id" = "debate_round"."id"
         JOIN "results_ballotsubmission" ON "debate_speakerscore"."ballot_submission_id" = "results_ballotsubmission"."id"
         WHERE "results_ballotsubmission"."confirmed" = True
-        AND "debate_speakerscore"."speaker_id" = "debate_speaker"."person_ptr_id"
+        AND "debate_speakerscore"."speaker_id" = "participants_speaker"."person_ptr_id"
         AND "debate_speakerscore"."position" = {position:d}
         AND "debate_round"."seq" <= {round:d}
     """

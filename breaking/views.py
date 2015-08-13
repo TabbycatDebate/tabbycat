@@ -1,6 +1,4 @@
-
-
-from debate.models import Adjudicator
+from participants.models import Adjudicator
 from action_log.models import ActionLog
 
 from . import models

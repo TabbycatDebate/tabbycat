@@ -1,5 +1,6 @@
 from action_log.models import ActionLog
-from debate.models import Team, Round
+from participants.models import Team
+from debate.models import Round
 from draws.models import TeamPositionAllocation
 
 from utils import *

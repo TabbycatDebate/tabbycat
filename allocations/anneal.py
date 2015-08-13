@@ -1,4 +1,4 @@
-from . import Allocator
+from allocator import Allocator
 from stab import StabAllocator
 import random
 import math
@@ -12,7 +12,7 @@ class SAAllocator(Allocator):
     MAX_TRIES = 3
 
     def allocate(self, initial=None):
-        from . import models.AdjudicatorAllocation
+        from . import models
 
         if initial is None:
             initial = StabAllocator(self.debates, self.adjudicators).allocate()
@@ -46,7 +46,7 @@ class SAAllocator(Allocator):
 
         result = []
         for debate, panel in self.best_state.items():
-            aa = AdjudicatorAllocation(debate)
+            aa = models.AdjudicatorAllocation(debate)
             panel = list(panel)
             panel.sort(key=lambda x: x.score, reverse=True)
 

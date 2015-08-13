@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, 
 from collections import Counter
 from types import GeneratorType
 
-import debate.models as m
+from participants.models import Team
 from debate.emoji import EMOJI_LIST
 
 NON_FIELD_ERRORS = '__all__'
@@ -91,7 +91,7 @@ class BaseTournamentDataImporter(object):
                 'instutition': debate.models.Institution.objects.get(name=line[0]),
                 'name':        line[1]
             }
-        counts, errors = self._import(f, _thing_line_parser, debate.models.Speaker)
+        counts, errors = self._import(f, _thing_line_parser, participants.models.Speaker)
         return counts, errors
 
     See the documentation for _import for more details.
@@ -259,8 +259,8 @@ class BaseTournamentDataImporter(object):
         self.get_emoji()."""
 
         # Get list of all emoji already in use. Teams without emoji are assigned by team ID.
-        assigned_emoji_teams = m.Team.objects.filter(emoji_seq__isnull=False).values_list('emoji_seq', flat=True)
-        unassigned_emoji_teams = m.Team.objects.filter(emoji_seq__isnull=True).values_list('id', flat=True)
+        assigned_emoji_teams = Team.objects.filter(emoji_seq__isnull=False).values_list('emoji_seq', flat=True)
+        unassigned_emoji_teams = Team.objects.filter(emoji_seq__isnull=True).values_list('id', flat=True)
 
         # Start with a list of all emoji...
         self.emoji_options = range(0, len(EMOJI_LIST) - 1)

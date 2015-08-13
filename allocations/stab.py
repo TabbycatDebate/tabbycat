@@ -1,4 +1,4 @@
-from debate.adjudicator import Allocator
+from allocator import Allocator
 
 class PanelMaker(object):
     RANK_A = 0

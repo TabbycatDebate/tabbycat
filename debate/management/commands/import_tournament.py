@@ -8,6 +8,7 @@ from django.conf import settings
 from django.template.defaultfilters import slugify
 
 import debate.models as m
+import participants.models as pm
 from debate.importer import AnorakTournamentDataImporter, DUPLICATE_INFO
 
 class Command(BaseCommand):
@@ -134,7 +135,7 @@ class Command(BaseCommand):
     def delete_institutions(self):
         """Deletes all institutions from the database."""
         self._warning("Deleting all institutions from the database")
-        m.Institution.objects.all().delete()
+        pm.Institution.objects.all().delete()
 
     def make_tournament(self):
         """Given the path, does everything necessary to create the tournament,
