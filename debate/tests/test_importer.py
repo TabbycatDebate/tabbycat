@@ -2,6 +2,7 @@
 
 from django.test import TestCase
 from unittest import skip
+import allocations.models as am
 import debate.models as m
 import motions.models as mm
 import options.models as cm
@@ -71,8 +72,8 @@ class TestImporterAnorak(TestCase):
         self.assertEqual(counts, {
             m.Adjudicator: 27,
             fm.AdjudicatorTestScoreHistory: 27,
-            m.AdjudicatorInstitutionConflict: 36,
-            m.AdjudicatorConflict: 7,
+            am.AdjudicatorInstitutionConflict: 36,
+            am.AdjudicatorConflict: 7,
         })
         self.assertFalse(errors)
 
@@ -110,8 +111,8 @@ class TestImporterAnorak(TestCase):
         self.assertEqual(counts, {
             m.Adjudicator: 27,
             fm.AdjudicatorTestScoreHistory: 27,
-            m.AdjudicatorInstitutionConflict: 36,
-            m.AdjudicatorConflict: 7,
+            am.AdjudicatorInstitutionConflict: 36,
+            am.AdjudicatorConflict: 7,
         })
         self.assertFalse(errors)
 

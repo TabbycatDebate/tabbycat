@@ -121,7 +121,7 @@ class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey('debate.Adjudicator', db_index=True)
     score = models.FloatField()
 
-    source_adjudicator = models.ForeignKey('debate.DebateAdjudicator', blank=True, null=True)
+    source_adjudicator = models.ForeignKey('allocations.DebateAdjudicator', blank=True, null=True)
     source_team = models.ForeignKey('draws.DebateTeam', blank=True, null=True)
 
     class Meta:

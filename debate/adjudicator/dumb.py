@@ -2,7 +2,7 @@ from debate.adjudicator import Allocator
 
 class DumbAllocator(Allocator):
     def allocate(self):
-        from debate.models import AdjudicatorAllocation
+        from allocations.models import AdjudicatorAllocation
 
         debates = self.debates
         adjs = self.adjudicators

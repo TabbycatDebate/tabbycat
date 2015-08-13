@@ -156,7 +156,7 @@ class SpeakerScoreByAdj(models.Model):
     Holds score given by a particular adjudicator in a debate
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_adjudicator = models.ForeignKey('debate.DebateAdjudicator')
+    debate_adjudicator = models.ForeignKey('allocations.DebateAdjudicator')
     debate_team = models.ForeignKey('draws.DebateTeam')
     score = ScoreField()
     position = models.IntegerField()

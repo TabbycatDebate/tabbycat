@@ -13,7 +13,7 @@ class SAAllocator(Allocator):
     MAX_TRIES = 3
 
     def allocate(self, initial=None):
-        from debate.models import AdjudicatorAllocation
+        from allocations.models import AdjudicatorAllocation
 
         if initial is None:
             initial = StabAllocator(self.debates, self.adjudicators).allocate()
@@ -152,7 +152,7 @@ class SAAllocator(Allocator):
         for debate, panel in swap:
             self.state[debate] = panel
 
-    
+
     def score(self, debate, panel):
         score = sum(getattr(self, f)(debate, panel) for f in dir(self) if f.startswith('score_'))
         return score

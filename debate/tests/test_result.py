@@ -10,6 +10,7 @@ import random
 from results.result import BallotSet
 
 from draws.models import DebateTeam
+from allocations.models import DebateAdjudicator
 
 class BaseTestResult(TestCase):
 
@@ -89,10 +90,10 @@ class BaseTestResult(TestCase):
         for team, pos in zip(self.teams, positions):
             self.round.activate_team(team, True)
             DebateTeam(debate=self.debate, team=team, position=pos).save()
-        adjtypes = [m.DebateAdjudicator.TYPE_CHAIR, m.DebateAdjudicator.TYPE_PANEL, m.DebateAdjudicator.TYPE_PANEL]
+        adjtypes = [DebateAdjudicator.TYPE_CHAIR, DebateAdjudicator.TYPE_PANEL, DebateAdjudicator.TYPE_PANEL]
         for adj, adjtype in zip(self.adjs, adjtypes):
             self.round.activate_adjudicator(adj, True)
-            m.DebateAdjudicator(debate=self.debate, adjudicator=adj, type=adjtype).save()
+            DebateAdjudicator(debate=self.debate, adjudicator=adj, type=adjtype).save()
 
     def _get_team(self, team):
         if team in ['aff', 'neg']:

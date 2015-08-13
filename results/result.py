@@ -547,7 +547,7 @@ class BallotSet(object):
         object, and split is True if the adjudicator was in the minority and
         not a trainee, False if the adjudicator was in the majority or is a
         trainee. If there is no available result, split is always False."""
-        from debate.models import DebateAdjudicator
+        from allocations.models import DebateAdjudicator
         try:
             self._calc_decision()
         except (ResultError, AssertionError):

@@ -1,4 +1,5 @@
 from base import BaseTournamentDataImporter, TournamentDataImporterError
+import allocations.models as am
 import debate.models as m
 import breaking.models as bm
 import draws.models as dm
@@ -293,7 +294,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'adjudicator' : m.Adjudicator.objects.get(name=line[0], institution=institution, tournament=self.tournament),
                 'institution' : institution,
             }
-        counts, errors = self._import(f, _own_institution_conflict_parser, m.AdjudicatorInstitutionConflict,
+        counts, errors = self._import(f, _own_institution_conflict_parser, am.AdjudicatorInstitutionConflict,
                 counts=counts, errors=errors)
 
         def _institution_conflict_parser(line):
@@ -308,7 +309,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'adjudicator' : adjudicator,
                     'institution' : institution,
                 }
-        counts, errors = self._import(f, _institution_conflict_parser, m.AdjudicatorInstitutionConflict,
+        counts, errors = self._import(f, _institution_conflict_parser, am.AdjudicatorInstitutionConflict,
                 counts=counts, errors=errors)
 
         def _team_conflict_parser(line):
@@ -322,7 +323,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'adjudicator' : adjudicator,
                     'team'        : team,
                 }
-        counts, errors = self._import(f, _team_conflict_parser, m.AdjudicatorConflict,
+        counts, errors = self._import(f, _team_conflict_parser, am.AdjudicatorConflict,
                 counts=counts, errors=errors)
 
         return counts, errors

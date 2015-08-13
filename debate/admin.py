@@ -4,6 +4,8 @@ from django import forms
 import debate.models as models
 import feedback.models as fm
 
+from allocations.models import AdjudicatorConflict, AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict
+
 # ==============================================================================
 # Tournament
 # ==============================================================================
@@ -63,18 +65,18 @@ admin.site.register(models.Division, DivisionAdmin)
 # ==============================================================================
 
 class AdjudicatorConflictInline(admin.TabularInline):
-    model = models.AdjudicatorConflict
+    model = AdjudicatorConflict
     extra = 1
     verbose_name_plural = "Adjudicator team conflicts"
 
 class AdjudicatorAdjudicatorConflictInline(admin.TabularInline):
-    model = models.AdjudicatorAdjudicatorConflict
+    model = AdjudicatorAdjudicatorConflict
     fk_name = "adjudicator"
     extra = 1
     raw_id_fields = ('conflict_adjudicator',)
 
 class AdjudicatorInstitutionConflictInline(admin.TabularInline):
-    model = models.AdjudicatorInstitutionConflict
+    model = AdjudicatorInstitutionConflict
     extra = 1
 
 class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
@@ -110,14 +112,4 @@ class RoundAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Round, RoundAdmin)
 
-# ==============================================================================
-# DebateAdjudicator
-# ==============================================================================
-
-class DebateAdjudicatorAdmin(admin.ModelAdmin):
-    list_display = ('debate', 'adjudicator', 'type')
-    search_fields = ('adjudicator__name', 'type')
-    raw_id_fields = ('debate',)
-
-admin.site.register(models.DebateAdjudicator, DebateAdjudicatorAdmin)
 

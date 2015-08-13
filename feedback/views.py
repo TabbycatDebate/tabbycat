@@ -2,7 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 import json
 
-from debate.models import Adjudicator, DebateAdjudicator, Team
+from allocations.models import DebateAdjudicator
+from debate.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
 from action_log.models import ActionLog
 

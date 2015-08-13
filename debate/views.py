@@ -10,6 +10,7 @@ from results.result import BallotSet
 from debate.keys import populate_url_keys
 
 from debate.models import *
+from allocations.models import DebateAdjudicator
 from venues.models import VenueGroup, Venue
 from motions.models import Motion
 from draws.models import Debate
@@ -203,7 +204,7 @@ def division_allocations(request, t):
     divisions = sorted(divisions, key=lambda x: float(x.name))
     venue_groups = VenueGroup.objects.all()
 
-    return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
+    return r2r(request, "division_allocation.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 
 
 @admin_required
@@ -254,9 +255,9 @@ def create_division_allocation(request, t):
 def create_adj_allocation(request, round):
 
     if round.draw_status == round.STATUS_RELEASED:
-        return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocation.")
+        return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocations.")
     if round.draw_status != round.STATUS_CONFIRMED:
-        return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocation.")
+        return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
 
     from debate.adjudicator.hungarian import HungarianAllocator
     round.allocate_adjudicators(HungarianAllocator)

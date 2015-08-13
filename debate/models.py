@@ -458,8 +458,8 @@ class Adjudicator(Person):
     test_score = models.FloatField(default=0)
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
-    institution_conflicts = models.ManyToManyField('Institution', through='AdjudicatorInstitutionConflict', related_name='adj_inst_conflicts')
-    conflicts = models.ManyToManyField('Team', through='AdjudicatorConflict', related_name='adj_adj_conflicts')
+    institution_conflicts = models.ManyToManyField('Institution', through='allocations.AdjudicatorInstitutionConflict', related_name='adj_inst_conflicts')
+    conflicts = models.ManyToManyField('Team', through='allocations.AdjudicatorConflict', related_name='adj_adj_conflicts')
 
     breaking = models.BooleanField(default=False)
     independent = models.BooleanField(default=False, blank=True)
@@ -475,6 +475,7 @@ class Adjudicator(Person):
 
     def conflict_with(self, team):
         if not hasattr(self, '_conflict_cache'):
+            from allocations.models import AdjudicatorConflict, AdjudicatorInstitutionConflict
             self._conflict_cache = set(c['team_id'] for c in
                 AdjudicatorConflict.objects.filter(adjudicator=self).values('team_id')
             )
@@ -508,6 +509,7 @@ class Adjudicator(Person):
 
 
     def _feedback_score(self):
+        from allocations.models import DebateAdjudicator
         return self.adjudicatorfeedback_set.filter(confirmed=True).exclude(
                 source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
                 avg=models.Avg('score'))['avg']
@@ -525,7 +527,7 @@ class Adjudicator(Person):
             self._seen_cache = {}
         if before_round not in self._seen_cache:
             qs = DebateTeam.objects.filter(
-                debate__debateadjudicator__adjudicator=self
+                allocations__debateadjudicator__adjudicator=self
             )
             if before_round is not None:
                 qs = qs.filter(
@@ -535,27 +537,16 @@ class Adjudicator(Person):
         return team.id in self._seen_cache[before_round]
 
     def seen_adjudicator(self, adj, before_round=None):
+        from allocations.models import DebateAdjudicator
         d = DebateAdjudicator.objects.filter(
             adjudicator = self,
-            debate__debateadjudicator__adjudicator = adj,
+            allocations__debateadjudicator__adjudicator = adj,
         )
         if before_round is not None:
             d = d.filter(
                 debate__round__seq__lt = before_round.seq
             )
         return d.count()
-
-class AdjudicatorConflict(models.Model):
-    adjudicator = models.ForeignKey(Adjudicator)
-    team = models.ForeignKey(Team)
-
-class AdjudicatorAdjudicatorConflict(models.Model):
-    adjudicator = models.ForeignKey(Adjudicator, related_name="source_adjudicator")
-    conflict_adjudicator = models.ForeignKey(Adjudicator, related_name="target_adjudicator", verbose_name="Adjudicator")
-
-class AdjudicatorInstitutionConflict(models.Model):
-    adjudicator = models.ForeignKey(Adjudicator)
-    institution = models.ForeignKey(Institution)
 
 
 class RoundManager(models.Manager):
@@ -915,7 +906,7 @@ class Round(models.Model):
                                       'debate_adjudicator',
                                       id_field='person_ptr_id').extra(
                                         select = {'is_used': """EXISTS (SELECT 1
-                                                  FROM debate_debateadjudicator da
+                                                  FROM allocations_debateadjudicator da
                                                   LEFT JOIN draws_debate d ON da.debate_id = d.id
                                                   WHERE d.round_id = %d AND
                                                   da.adjudicator_id = debate_adjudicator.person_ptr_id)""" % self.id },
@@ -1041,83 +1032,4 @@ class SRManager(models.Manager):
     def get_queryset(self):
         return super(SRManager, self).get_queryset().select_related('debate')
 
-
-class DebateAdjudicator(models.Model):
-    TYPE_CHAIR = 'C'
-    TYPE_PANEL = 'P'
-    TYPE_TRAINEE = 'T'
-
-    TYPE_CHOICES = (
-        (TYPE_CHAIR,   'chair'),
-        (TYPE_PANEL,   'panellist'),
-        (TYPE_TRAINEE, 'trainee'),
-    )
-
-    objects = SRManager()
-
-    debate = models.ForeignKey('draws.Debate', db_index=True)
-    adjudicator = models.ForeignKey(Adjudicator, db_index=True)
-    type = models.CharField(max_length=2, choices=TYPE_CHOICES)
-
-    def __unicode__(self):
-        return u'%s %s' % (self.adjudicator, self.debate)
-
-
-
-class AdjudicatorAllocation(object):
-    """Not a model, just a container object for the adjudicators on a panel."""
-    def __init__(self, debate, chair=None, panel=None):
-        self.debate = debate
-        self.chair = chair
-        self.panel = panel or []
-        self.trainees = []
-
-    @property
-    def list(self):
-        """Panel only, excludes trainees."""
-        a = [self.chair]
-        a.extend(self.panel)
-        return a
-
-    def __unicode__(self):
-        return ", ".join(map(lambda x: (x is not None) and x.name or "<None>", self.list))
-
-    def __iter__(self):
-        """Iterates through all, including trainees."""
-        if self.chair is not None:
-            yield DebateAdjudicator.TYPE_CHAIR, self.chair
-        for a in self.panel:
-            yield DebateAdjudicator.TYPE_PANEL, a
-        for a in self.trainees:
-            yield DebateAdjudicator.TYPE_TRAINEE, a
-
-    def __contains__(self, item):
-        return item == self.chair or item in self.panel or item in self.trainees
-
-    def delete(self):
-        """Delete existing, current allocation"""
-        self.debate.debateadjudicator_set.all().delete()
-        self.chair = None
-        self.panel = []
-        self.trainees = []
-
-    @property
-    def has_chair(self):
-        return self.chair is not None
-
-    @property
-    def is_panel(self):
-        return len(self.panel) > 0
-
-    @property
-    def valid(self):
-        return self.has_chair and len(self.panel) % 2 == 0
-
-    def save(self):
-        self.debate.debateadjudicator_set.all().delete()
-        for t, adj in self:
-            if isinstance(adj, Adjudicator):
-                adj = adj.id
-            if adj:
-                DebateAdjudicator(debate=self.debate, adjudicator_id=adj, type=t).save()
 
