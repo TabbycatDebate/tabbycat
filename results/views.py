@@ -3,6 +3,7 @@ from motions.models import Motion
 from action_log.models import ActionLog
 
 from result import BallotSet
+from forms import BallotSetForm
 
 from utils import *
 from models import *
@@ -80,7 +81,7 @@ def edit_ballotset(request, t, ballotsub_id):
             b.identical_ballotsub_versions = identical_ballotsubs_dict[b]
 
     if request.method == 'POST':
-        form = forms.BallotSetForm(ballotsub, request.POST)
+        form = BallotSetForm(ballotsub, request.POST)
 
         if form.is_valid():
             form.save()
@@ -102,7 +103,7 @@ def edit_ballotset(request, t, ballotsub_id):
 
             return redirect_round('results', debate.round)
     else:
-        form = forms.BallotSetForm(ballotsub)
+        form = BallotSetForm(ballotsub)
 
     template = 'enter_results.html' if request.user.is_superuser else 'assistant/assistant_enter_results.html'
     context = {
@@ -149,14 +150,14 @@ def public_new_ballotset(request, t, adjudicator):
             submitter_type=BallotSubmission.SUBMITTER_PUBLIC)
 
     if request.method == 'POST':
-        form = forms.BallotSetForm(ballotsub, request.POST, password=True)
+        form = BallotSetForm(ballotsub, request.POST, password=True)
         if form.is_valid():
             form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_SUBMIT,
                     ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
             return r2r(request, 'public_success.html', dict(success_kind="ballot"))
     else:
-        form = forms.BallotSetForm(ballotsub, password=True)
+        form = BallotSetForm(ballotsub, password=True)
 
     context = {
         'form'                : form,
@@ -182,7 +183,7 @@ def new_ballotset(request, t, debate_id):
         return HttpResponseBadRequest("Whoops! This debate doesn't have a chair, so you can't enter results for it.")
 
     if request.method == 'POST':
-        form = forms.BallotSetForm(ballotsub, request.POST)
+        form = BallotSetForm(ballotsub, request.POST)
         if form.is_valid():
             form.save()
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_CREATE, user=request.user,
@@ -190,7 +191,7 @@ def new_ballotset(request, t, debate_id):
             messages.success(request, "Ballot set for %s added." % debate.matchup)
             return redirect_round('results', debate.round)
     else:
-        form = forms.BallotSetForm(ballotsub)
+        form = BallotSetForm(ballotsub)
 
     template = 'enter_results.html' if request.user.is_superuser else 'assistant/assistant_enter_results.html'
     all_ballotsubs = debate.ballotsubmission_set_by_version if request.user.is_superuser \

@@ -6,8 +6,8 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.views.decorators.cache import cache_page
 
+from ipware.ip import get_real_ip
 from functools import wraps
-
 
 def get_ip_address(request):
     ip = get_real_ip(request)

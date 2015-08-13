@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.functional import cached_property
 
 from debate.models import Submission
+from result import BallotSet
 
 class ScoreField(models.FloatField):
     pass
