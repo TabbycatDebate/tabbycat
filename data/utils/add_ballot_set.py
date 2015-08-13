@@ -4,7 +4,7 @@ import header
 import debate.models as m
 import results.models as rm
 from django.contrib.auth.models import User
-from debate.result import BallotSet
+from results.result import BallotSet
 import random
 
 SUBMITTER_TYPE_MAP = {

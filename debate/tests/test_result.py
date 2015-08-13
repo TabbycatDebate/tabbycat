@@ -6,7 +6,7 @@ import debate.models as m
 import results.models as rm
 import venues.models as vm
 import random
-from debate.result import BallotSet
+from results.result import BallotSet
 
 class BaseTestResult(TestCase):
 

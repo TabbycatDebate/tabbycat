@@ -109,28 +109,9 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/feedback/',                                include('feedback.urls_admin')),
 
     # Results App
+    url(r'^results/',                                       include('results.urls_public')),
+    url(r'^admin/results/',                                 include('results.urls_admin')),
 
-    # public facing; viewing results
-    url(r'^results/$', 'public_results_index', name='public_results_index'),
-    url(r'^results/round/(?P<round_seq>\d+)/$', 'public_results', name='public_results'),
-
-    # public facing; adding results
-    url(r'^results/add_ballot/$', 'public_ballot_submit', name='public_ballot_submit'),
-    url(r'^results/add_ballot/adjudicator/(?P<adj_id>\d+)/$', 'public_new_ballotset_id', name='public_new_ballotset'),
-    url(r'^results/add_ballot/adjudicator/h/(?P<url_key>\w+)/$', 'public_new_ballotset_key', name='public_new_ballotset_key'),
-
-    # private facing; viewing results
-    url(r'^admin/round/(?P<round_seq>\d+)/results/$', 'results', name='results'),
-    url(r'^admin/results/status/$', 'results_status_update', name='results_status_update'),
-
-    # private facing; adding results
-    url(r'^admin/round/(?P<round_seq>\d+)/results/ballot_checkin/$', 'ballot_checkin', name='ballot_checkin'),
-    url(r'^admin/round/(?P<round_seq>\d+)/results/ballot_checkin/get_details/$', 'ballot_checkin_get_details', name='ballot_checkin_get_details'),
-    url(r'^admin/round/(?P<round_seq>\d+)/results/ballot_checkin/post/$', 'post_ballot_checkin', name='post_ballot_checkin'),
-
-    url(r'^admin/ballots/(?P<ballotsub_id>\d+)/edit/$', 'edit_ballotset', name='edit_ballotset'),
-    url(r'^admin/debate/(?P<debate_id>\d+)/new_ballotset/$', 'new_ballotset', name='new_ballotset'),
-    url(r'^ballots/debate/(?P<debate_id>\d+)/$', 'public_ballots_view', name='public_ballots_view'),
 
 
 

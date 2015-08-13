@@ -9,7 +9,7 @@ from django.core.cache import cache
 from django.utils.functional import cached_property
 
 from debate.adjudicator.anneal import SAAllocator
-from debate.result import BallotSet
+from results.result import BallotSet
 from debate.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
 
 import standings

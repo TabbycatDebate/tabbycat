@@ -4,7 +4,7 @@ specified"""
 import header
 import debate.models as m
 from django.contrib.auth.models import User
-from debate.result import BallotSet
+from results.result import BallotSet
 import random
 import itertools
 
