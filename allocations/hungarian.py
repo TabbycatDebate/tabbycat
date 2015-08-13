@@ -75,7 +75,6 @@ class HungarianAllocator(Allocator):
         print "costing chairs"
 
         n = len(chairs)
-
         cost_matrix = [[0] * n for i in range(n)]
 
         for i, debate in enumerate(chair_debates):

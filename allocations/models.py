@@ -55,7 +55,6 @@ class AdjudicatorAllocation(object):
 
     def __iter__(self):
         """Iterates through all, including trainees."""
-        from allocations.models import DebateAdjudicator
         if self.chair is not None:
             yield DebateAdjudicator.TYPE_CHAIR, self.chair
         for a in self.panel:

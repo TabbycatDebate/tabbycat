@@ -1,4 +1,4 @@
-from debate.adjudicator import Allocator
+from . import Allocator
 
 class DumbAllocator(Allocator):
     def allocate(self):

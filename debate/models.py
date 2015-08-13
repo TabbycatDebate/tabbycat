@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist, Multiple
 from django.core.cache import cache
 from django.utils.functional import cached_property
 
-from debate.adjudicator.anneal import SAAllocator
+from allocations.anneal import SAAllocator
 
 from results.result import BallotSet
 from draws.draw import DrawGenerator, DrawError, DRAW_FLAG_DESCRIPTIONS
@@ -729,6 +729,7 @@ class Round(models.Model):
 
         for alloc in allocator.allocate():
             alloc.save()
+
         self.adjudicator_status = self.STATUS_DRAFT
         self.save()
 

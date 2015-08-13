@@ -26,14 +26,6 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/division_allocations/save/$', 'save_divisions', name='save_divisions'),
     url(r'^admin/division_allocations/create/$', 'create_division_allocation', name='create_division_allocation'),
 
-    # TODO: spin off into the adj allocation app
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/$', 'draw_adjudicators_edit', name='draw_adjudicators_edit'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/_get/$', 'draw_adjudicators_get', name='draw_adjudicators_get'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/adjudicators/save/$', 'save_adjudicators', name='save_adjudicators'),
-    url(r'^admin/round/(?P<round_seq>\d+)/_update_importance/$', 'update_debate_importance', name='update_debate_importance'),
-    url(r'^admin/round/(?P<round_seq>\d+)/adj_allocation/create/$', 'create_adj_allocation', name='create_adj_allocation'),
-    url(r'^admin/round/(?P<round_seq>\d+)/adjudicators/conflicts/$', 'adj_conflicts', name='adj_conflicts'),
-
     # TODO: unclear if these fit in feedback or not given they also work for ballots
     url(r'^admin/randomised_urls/$', 'randomised_urls', name='randomised_urls'),
     url(r'^admin/randomised_urls/generate/$', 'generate_randomised_urls', name='generate_randomised_urls'),
@@ -43,6 +35,9 @@ urlpatterns = patterns('debate.views',
     url(r'^all_tournaments_all_venues/all_draws/(?P<venue_id>\d+)$', 'all_draws_for_venue', name='all_draws_for_venue'),
     url(r'^all_tournaments_all_institutions/$', 'all_tournaments_all_institutions', name='all_tournaments_all_institutions'),
     url(r'^all_tournaments_all_institutions/all_draws/(?P<institution_id>\d+)$', 'all_draws_for_institution', name='all_draws_for_institution'),
+
+    # Allocations App
+    url(r'^admin/allocations/round/(?P<round_seq>\d+)/',    include('allocations.urls')),
 
     # Printing App
     url(r'^admin/print/round/(?P<round_seq>\d+)/',          include('printing.urls')),

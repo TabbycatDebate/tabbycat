@@ -1,6 +1,5 @@
-from debate.adjudicator import Allocator
-from debate.adjudicator import Allocator
-from debate.adjudicator.stab import StabAllocator
+from . import Allocator
+from stab import StabAllocator
 import random
 import math
 
@@ -13,7 +12,7 @@ class SAAllocator(Allocator):
     MAX_TRIES = 3
 
     def allocate(self, initial=None):
-        from allocations.models import AdjudicatorAllocation
+        from . import models.AdjudicatorAllocation
 
         if initial is None:
             initial = StabAllocator(self.debates, self.adjudicators).allocate()
