@@ -816,7 +816,7 @@ class Round(models.Model):
         return draw
 
     def make_debates(self, pairings):
-        from draws.models import DebateTeam
+        from draws.models import Debate, DebateTeam
 
         import random
         venues = list(self.active_venues.order_by('-priority'))[:len(pairings)]
@@ -932,6 +932,7 @@ class Round(models.Model):
         return relevant_teams
 
     def unused_teams(self):
+        from draws.models import DebateTeam
         all_teams = self.active_teams.all()
         all_teams = [t for t in all_teams if t.tournament == self.tournament]
 

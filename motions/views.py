@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from . import models
 from action_log.models import ActionLog
+from debate.models import Round
 
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory
@@ -104,4 +105,4 @@ def unrelease_motions(request, round):
 def public_motions(request, t):
     order_by = t.config.get('public_motions_descending') and '-seq' or 'seq'
     rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
-    return r2r(request, 'public/public_motions.html', dict(rounds=rounds))
+    return r2r(request, 'public_motions.html', dict(rounds=rounds))

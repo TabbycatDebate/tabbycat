@@ -78,37 +78,7 @@ urlpatterns = patterns('debate.views',
     url(r'^admin/results/',                                 include('results.urls_admin')),
 
     # Draws App
-
-    # Public Draw
-    url(r'^draw/$', 'public_draw', name='public_draw'),
-    url(r'^draw/round/(?P<round_seq>\d+)/$', 'public_draw_by_round', name='public_draw_by_round'),
-    url(r'^draw/all/$', 'public_all_draws', name='public_all_draws'),
-    url(r'^draw/side_allocations/$', 'public_side_allocations', name='public_side_allocations'),
-
-    # Admin Draw
-    url(r'^admin/draw/$', 'draw_index', name='draw_index'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/$', 'draw', name='draw'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/details/$', 'draw_with_standings', name='draw_with_standings'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw_display_by_venue/$', 'draw_display_by_venue', name='draw_display_by_venue'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw_display_by_team/$', 'draw_display_by_team', name='draw_display_by_team'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/create/$', 'create_draw', name='create_draw'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/create_draw_with_all_teams/$', 'create_draw_with_all_teams', name='create_draw_with_all_teams'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/confirm/$', 'confirm_draw', name='confirm_draw'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/release/$', 'release_draw', name='release_draw'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/unrelease/$', 'unrelease_draw', name='unrelease_draw'),
-
-
-    url(r'^admin/side_allocations/$', 'side_allocations', name='side_allocations'),
-
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/matchups/edit/$', 'draw_matchups_edit', name='draw_matchups_edit'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/matchups/save/$', 'save_matchups', name='save_matchups'),
-    url(r'^admin/round/(?P<round_seq>\d+)/start_time/set/$', 'set_round_start_time', name='set_round_start_time'),
-
-
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/venues/$', 'draw_venues_edit', name='draw_venues_edit'),
-    url(r'^admin/round/(?P<round_seq>\d+)/draw/venues/save/$', 'save_venues', name='save_venues'),
-
-    url(r'^admin/round/(?P<round_seq>\d+)/master_sheets/list/$', 'master_sheets_list', name='master_sheets_list'),
-    url(r'^admin/round/(?P<round_seq>\d+)/master_sheets/venue_group/(?P<venue_group_id>\d+)/$', 'master_sheets_view', name='master_sheets_view'),
+    url(r'^draw/',                                          include('draws.urls_public')),
+    url(r'^admin/draw/',                                    include('draws.urls_admin')),
 
 )

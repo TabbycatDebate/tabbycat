@@ -48,7 +48,7 @@
   <div class="row">
     <div class="col-sm-12">
       {% if active_teams.count < all_teams_count %}
-        <form id="createFormWithAllTeams" action="{% round_url create_draw_with_all_teams %}" method="POST"></form>
+        <form id="createFormWithAllTeams" action="{% round_url create_with_all %}" method="POST"></form>
       {% endif %}
       <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
       <ul>

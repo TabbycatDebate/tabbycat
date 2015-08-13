@@ -173,7 +173,7 @@ class Debate(models.Model):
 
     @cached_property
     def adjudicators(self):
-        from debate.models import DebateAdjudicator
+        from debate.models import DebateAdjudicator, AdjudicatorAllocation
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
         adjs = DebateAdjudicator.objects.filter(debate=self).select_related('adjudicator')
