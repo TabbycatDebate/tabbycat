@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_page
@@ -7,6 +8,13 @@ import json
 
 from debate.views import tournament_view, login_required, admin_required, r2r, get_ip_address
 from debate.views import public_optional_tournament_view, expect_post
+=======
+from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
+
+from debate.views import tournament_view, login_required, r2r
+from debate.views import public_optional_tournament_view
+>>>>>>> 4c54c3b1ae8ffeec9ff361d93d5eae96bdf24134
 
 from debate.models import Adjudicator, DebateAdjudicator, SpeakerScoreByAdj, Team
 from action_log.models import ActionLog
@@ -14,6 +22,7 @@ from action_log.models import ActionLog
 from . import models
 from forms import make_feedback_form_class
 
+<<<<<<< HEAD
 
 @admin_required
 @tournament_view
@@ -26,6 +35,8 @@ def adj_scores(request, t):
 
     return HttpResponse(json.dumps(data), content_type="text/json")
 
+=======
+>>>>>>> 4c54c3b1ae8ffeec9ff361d93d5eae96bdf24134
 @admin_required
 @tournament_view
 def adj_feedback(request, t):
@@ -282,6 +293,7 @@ def enter_feedback(request, t, source_type, source_id):
     return r2r(request, 'enter_feedback.html', dict(source_type=source_type,
             source_name=source_name, form=form))
 
+<<<<<<< HEAD
 
 @admin_required
 @expect_post
@@ -339,6 +351,8 @@ def set_adj_breaking_status(request, t):
     adjudicator.save()
     return HttpResponse("ok")
 
+=======
+>>>>>>> 4c54c3b1ae8ffeec9ff361d93d5eae96bdf24134
 @login_required
 @tournament_view
 def add_feedback(request, t):
@@ -365,7 +379,11 @@ def public_feedback_submit(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('feedback_progress')
 def public_feedback_progress(request, t):
+<<<<<<< HEAD
     # TODO: merge with the admin function below
+=======
+    # TODO: merge with the admin function
+>>>>>>> 4c54c3b1ae8ffeec9ff361d93d5eae96bdf24134
     def calculate_coverage(submitted, total):
         if total == 0:
             return False # Don't show these ones
@@ -457,6 +475,7 @@ def feedback_progress(request, t):
         team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
 
     return r2r(request, 'wall_of_shame.html', dict(teams=teams, adjudicators=adjudicators))
+<<<<<<< HEAD
 
 
 # TODO: move to a different app?
@@ -488,3 +507,5 @@ def set_adj_note(request, t):
     return redirect_tournament('adj_feedback', t)
 
 
+=======
+>>>>>>> 4c54c3b1ae8ffeec9ff361d93d5eae96bdf24134

@@ -1,4 +1,5 @@
 from django import forms
+<<<<<<< HEAD
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
 
@@ -44,6 +45,14 @@ class BooleanSelectField(forms.NullBooleanField):
             raise forms.ValidationError(_("This field is required."))
         return value
 
+=======
+
+from . import models
+from debate.models import Debate, DebateTeam, DebateAdjudicator
+
+# General, but only used here
+
+>>>>>>> 4c54c3b1ae8ffeec9ff361d93d5eae96bdf24134
 class RequiredTypedChoiceField(forms.TypedChoiceField):
     def clean(self, value):
         value = super(RequiredTypedChoiceField, self).clean(value)
@@ -168,9 +177,15 @@ def make_feedback_form_class(source, *args, **kwargs):
         arguments to Submission.
     'confirm_on_submit' is a bool, and indicates that this feedback should be
         as confirmed and all others discarded."""
+<<<<<<< HEAD
     if isinstance(source, Adjudicator):
         return make_feedback_form_class_for_adj(source, *args, **kwargs)
     elif isinstance(source, Team):
+=======
+    if isinstance(source, m.Adjudicator):
+        return make_feedback_form_class_for_adj(source, *args, **kwargs)
+    elif isinstance(source, m.Team):
+>>>>>>> 4c54c3b1ae8ffeec9ff361d93d5eae96bdf24134
         return make_feedback_form_class_for_team(source, *args, **kwargs)
     else:
         raise TypeError('source must be Adjudicator or Team: %r' % source)
@@ -186,7 +201,11 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
         return DebateAdjudicator.objects.get(id=int(value))
 
     debate_filter = dict(debateadjudicator__adjudicator=source,
+<<<<<<< HEAD
             round__draw_status=Round.STATUS_RELEASED)
+=======
+            round__draw_status=m.Round.STATUS_RELEASED)
+>>>>>>> 4c54c3b1ae8ffeec9ff361d93d5eae96bdf24134
     if not source.tournament.config.get('panellist_feedback_enabled'): # then include only debates for which this adj was the chair
         debate_filter['debateadjudicator__type'] = DebateAdjudicator.TYPE_CHAIR
     debates = Debate.objects.filter(**debate_filter)
@@ -220,7 +239,11 @@ def make_feedback_form_class_for_team(source, submission_fields, confirm_on_subm
 
     # Only include non-silent rounds for teams.
     debates = Debate.objects.filter(debateteam__team=source, round__silent=False,
+<<<<<<< HEAD
         round__draw_status=Round.STATUS_RELEASED).order_by('-round__seq')
+=======
+        round__draw_status=m.Round.STATUS_RELEASED).order_by('-round__seq')
+>>>>>>> 4c54c3b1ae8ffeec9ff361d93d5eae96bdf24134
 
     choices = [(None, '-- Adjudicators --')]
     for debate in debates:
