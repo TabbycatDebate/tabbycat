@@ -82,66 +82,8 @@ def public_draw_by_round(request, round):
         return r2r(request, 'public/public_draw_unreleased.html', dict(draw=None, round=round))
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_team_standings')
-def public_team_standings(request, t):
-    # TODO: should be in the standings app
-    print "Generating public team standings"
-    if t.release_all:
-        # Assume that the time "release all" is used, the current round
-        # is the last round.
-        round = t.current_round
-    else:
-        round = t.current_round.prev
-
-    # Find the most recent non-silent preliminary round
-    while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
-        round = round.prev
-
-    if round is not None and round.silent is False:
-
-        from results.models import TeamScore
-
-        # Ranking by institution__name and reference isn't the same as ordering by
-        # short_name, which is what we really want. But we can't rank by short_name,
-        # because it's not a field (it's a property). So we'll do this in JavaScript.
-        # The real purpose of this ordering is to obscure the *true* ranking of teams
-        # - teams are not supposed to know rankings between teams on the same number
-        # of wins.
-        teams = Team.objects.order_by('institution__code', 'reference')
-        rounds = t.prelim_rounds(until=round).filter(silent=False).order_by('seq')
-
-        def get_round_result(team, r):
-            try:
-                ts = TeamScore.objects.get(
-                    ballot_submission__confirmed=True,
-                    debate_team__team=team,
-                    debate_team__debate__round=r,
-                )
-                ts.opposition = ts.debate_team.opposition.team
-                return ts
-            except TeamScore.DoesNotExist:
-                return None
-
-        for team in teams:
-            team.round_results = [get_round_result(team, r) for r in rounds]
-            # Do this manually, in case there are silent rounds
-            team.wins = [ts.win for ts in team.round_results if ts].count(True)
-            team.points = sum([ts.points for ts in team.round_results if ts])
 
 
-        return r2r(request, 'public/public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
-    else:
-        return r2r(request, 'public/index.html')
-
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_motions')
-def public_motions(request, t):
-    order_by = t.config.get('public_motions_descending') and '-seq' or 'seq'
-    rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
-    return r2r(request, 'public/public_motions.html', dict(rounds=rounds))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')
@@ -570,24 +512,6 @@ def set_round_start_time(request, round):
 
     return redirect_round('draw', round)
 
-
-
-
-@login_required
-@tournament_view
-@expect_post
-def toggle_postponed(request, t):
-    # TODO: move to draws app
-    debate_id = request.POST.get('debate')
-    debate = Debate.objects.get(pk=debate_id)
-    if debate.result_status == debate.STATUS_POSTPONED:
-        debate.result_status = debate.STATUS_NONE
-    else:
-        debate.result_status = debate.STATUS_POSTPONED
-
-    print debate.result_status
-    debate.save()
-    return HttpResponse("ok")
 
 
 

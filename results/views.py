@@ -9,6 +9,23 @@ from forms import BallotSetForm
 from utils import *
 from models import *
 
+
+@login_required
+@tournament_view
+@expect_post
+def toggle_postponed(request, t):
+    debate_id = request.POST.get('debate')
+    debate = Debate.objects.get(pk=debate_id)
+    if debate.result_status == debate.STATUS_POSTPONED:
+        debate.result_status = debate.STATUS_NONE
+    else:
+        debate.result_status = debate.STATUS_POSTPONED
+
+    print debate.result_status
+    debate.save()
+    return HttpResponse("ok")
+
+
 @login_required
 @round_view
 def results(request, round):
