@@ -73,6 +73,7 @@ INSTALLED_APPS = (
     'breaking',
     'motions',
     'printing',
+    'results',
     'standings',
     'options',
     'venues',

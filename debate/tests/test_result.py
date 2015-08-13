@@ -3,6 +3,7 @@
 from unittest import SkipTest
 from django.test import TestCase
 import debate.models as m
+import results.models as rm
 import venues.models as vm
 import random
 from debate.result import BallotSet
@@ -96,7 +97,7 @@ class BaseTestResult(TestCase):
         return team
 
     def _get_ballotset(self):
-        ballotsub = m.BallotSubmission.objects.get(debate=self.debate, confirmed=True)
+        ballotsub = rm.BallotSubmission.objects.get(debate=self.debate, confirmed=True)
         return BallotSet(ballotsub)
 
     def save_complete_ballotset(self, teams, testdata):
@@ -105,14 +106,14 @@ class BaseTestResult(TestCase):
     def _save_complete_ballotset(self, teams, testdata, post_ballotset_create=None):
         # unconfirm existing ballot
         try:
-            existing = m.BallotSubmission.objects.get(debate=self.debate, confirmed=True)
-        except m.BallotSubmission.DoesNotExist:
+            existing = rm.BallotSubmission.objects.get(debate=self.debate, confirmed=True)
+        except rm.BallotSubmission.DoesNotExist:
             pass
         else:
             existing.confirmed = False
             existing.save()
 
-        ballotsub = m.BallotSubmission(debate=self.debate, submitter_type=m.BallotSubmission.SUBMITTER_TABROOM)
+        ballotsub = rm.BallotSubmission(debate=self.debate, submitter_type=rm.BallotSubmission.SUBMITTER_TABROOM)
         ballotset = BallotSet(ballotsub)
         if post_ballotset_create:
             post_ballotset_create(ballotset)

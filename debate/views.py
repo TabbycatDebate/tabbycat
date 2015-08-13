@@ -104,7 +104,7 @@ def public_team_standings(request, t):
 
     if round is not None and round.silent is False:
 
-        from debate.models import TeamScore
+        from results.models import TeamScore
 
         # Ranking by institution__name and reference isn't the same as ordering by
         # short_name, which is what we really want. But we can't rank by short_name,

@@ -5,6 +5,7 @@ generate_random_results.py to do that."""
 
 import header
 import debate.models as m
+import results.models as rm
 from django.contrib.auth.models import User
 import random
 
@@ -23,7 +24,7 @@ parser.add_argument("-M", "--max-score", type=float, help="Maximum speaker score
 args = parser.parse_args()
 
 submitter_type = SUBMITTER_TYPE_MAP[args.type]
-if submitter_type == m.BallotSubmission.SUBMITTER_TABROOM:
+if submitter_type == rm.BallotSubmission.SUBMITTER_TABROOM:
     user = User.objects.get(username=args.user)
 else:
     user = None

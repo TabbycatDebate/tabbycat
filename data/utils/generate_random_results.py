@@ -4,6 +4,7 @@ Requires a draw to exist."""
 import django # Requried post-1.7 for standalone scripts
 import header
 import debate.models as m
+import results.models as rm
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -31,7 +32,7 @@ user = User.objects.get(username=args.user)
 for round in args.rounds:
     if args.clean:
         print("Deleting all ballot submissions for round %d..." % round)
-        m.BallotSubmission.objects.filter(debate__round__seq=round).delete()
+        rm.BallotSubmission.objects.filter(debate__round__seq=round).delete()
 
     for debate in m.Round.objects.get(seq=round).get_draw():
         bset = add_ballot_set(debate, submitter_type, user, False, args.status == m.Debate.STATUS_CONFIRMED, args.min_score, args.max_score)

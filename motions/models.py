@@ -1,5 +1,6 @@
 from django.db import models
-from debate.models import DebateTeam, TeamScore
+from debate.models import DebateTeam
+from results.models import TeamScore
 
 class MotionManager(models.Manager):
 
@@ -75,7 +76,7 @@ class DebateTeamMotionPreference(models.Model):
     debate_team = models.ForeignKey('debate.DebateTeam')
     motion = models.ForeignKey(Motion, db_index=True)
     preference = models.IntegerField(db_index=True)
-    ballot_submission = models.ForeignKey('debate.BallotSubmission')
+    ballot_submission = models.ForeignKey('results.BallotSubmission')
 
     class Meta:
         unique_together = [('debate_team', 'preference', 'ballot_submission')]

@@ -7,7 +7,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 import json
 
-from debate.models import Adjudicator, DebateAdjudicator, SpeakerScoreByAdj, Team
+from debate.models import Adjudicator, DebateAdjudicator, Team
+from results.models import SpeakerScoreByAdj
 from action_log.models import ActionLog
 
 from . import models

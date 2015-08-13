@@ -2,13 +2,14 @@
 
 import header
 import debate.models as m
+import results.models as rm
 from django.contrib.auth.models import User
 from debate.result import BallotSet
 import random
 
 SUBMITTER_TYPE_MAP = {
-    'tabroom': m.BallotSubmission.SUBMITTER_TABROOM,
-    'public':  m.BallotSubmission.SUBMITTER_PUBLIC
+    'tabroom': rm.BallotSubmission.SUBMITTER_TABROOM,
+    'public':  rm.BallotSubmission.SUBMITTER_PUBLIC
 }
 
 def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=False, min_score=72, max_score=78):
@@ -17,8 +18,8 @@ def add_ballot_set(debate, submitter_type, user, discarded=False, confirmed=Fals
         raise ValueError("Ballot can't be both discarded and confirmed!")
 
     # Create a new BallotSubmission
-    bsub = m.BallotSubmission(submitter_type=submitter_type, debate=debate)
-    if submitter_type == m.BallotSubmission.SUBMITTER_TABROOM:
+    bsub = rm.BallotSubmission(submitter_type=submitter_type, debate=debate)
+    if submitter_type == rm.BallotSubmission.SUBMITTER_TABROOM:
         bsub.submitter = user
     bsub.save()
 
@@ -90,7 +91,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     submitter_type = SUBMITTER_TYPE_MAP[args.type]
-    if submitter_type == m.BallotSubmission.SUBMITTER_TABROOM:
+    if submitter_type == rm.BallotSubmission.SUBMITTER_TABROOM:
         user = User.objects.get(username=args.user)
     else:
         user = None

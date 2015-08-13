@@ -117,7 +117,7 @@ class ActionLog(models.Model):
     tournament = models.ForeignKey('debate.Tournament', blank=True, null=True)
 
     debate = models.ForeignKey('debate.Debate', blank=True, null=True)
-    ballot_submission = models.ForeignKey('debate.BallotSubmission', blank=True, null=True)
+    ballot_submission = models.ForeignKey('results.BallotSubmission', blank=True, null=True)
     adjudicator_test_score_history = models.ForeignKey('feedback.AdjudicatorTestScoreHistory', blank=True, null=True)
     adjudicator_feedback = models.ForeignKey('feedback.AdjudicatorFeedback', blank=True, null=True)
     round = models.ForeignKey('debate.Round', blank=True, null=True)

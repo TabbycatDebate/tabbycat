@@ -1,4 +1,5 @@
 from django.db.models import Sum
+from results.models import TeamScore
 import random
 
 def _add_ranks(standings, key):
@@ -124,7 +125,6 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
             if team2 won more, 0 if the teams won the same number against each other
             or haven't faced each other."""
             # Find all debates between these two teams
-            from models import TeamScore
             def get_wins(team, other):
                 ts = TeamScore.objects.filter(
                     ballot_submission__confirmed=True,

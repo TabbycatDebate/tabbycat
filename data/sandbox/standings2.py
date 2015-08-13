@@ -2,6 +2,7 @@
 
 import header
 import debate.models as m
+import results.models as m
 from django.db import models
 import random
 
@@ -59,7 +60,7 @@ def who_beat_whom(team1, team2):
     or haven't faced each other."""
     # Find all debates between these two teams
     def get_wins(team, other):
-        ts =  m.TeamScore.objects.filter(
+        ts = rm.TeamScore.objects.filter(
             ballot_submission__confirmed=True,
             debate_team__team=team,
             debate_team__debate__debateteam__team=other).aggregate(models.Sum('points'))

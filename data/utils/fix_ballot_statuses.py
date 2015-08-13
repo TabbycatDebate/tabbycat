@@ -1,13 +1,13 @@
 """Makes BallotSubmission status consistent with debate statuses."""
 
 import header
-import debate.models as m
+import results.models as rm
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.parse_args()
 
-for bsub in m.BallotSubmission.objects.all():
+for bsub in rm.BallotSubmission.objects.all():
     debate_status = bsub.debate.result_status
     original = (bsub.discarded, bsub.confirmed)
     if debate_status == m.Debate.STATUS_NONE:
