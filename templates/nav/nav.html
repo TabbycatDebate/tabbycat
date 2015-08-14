@@ -41,12 +41,12 @@
     <div class="collapse navbar-collapse">
       {% if 'admin' in request.path %}
         {% if user.is_superuser %}
-          {% include "admin_nav.html" %}
+          {% include "nav/admin_nav.html" %}
         {% else %}
-          {% include "assistant_nav.html" %}
+          {% include "nav/assistant_nav.html" %}
         {% endif %}
       {% else %}
-        {% include "public_nav.html" %}
+        {% include "nav/public_nav.html" %}
       {% endif %}
     </div>
   </div>
