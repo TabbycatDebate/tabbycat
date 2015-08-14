@@ -82,7 +82,6 @@ INSTALLED_APPS = (
     'standings',
     'tournaments',
     'venues',
-    'debate',
     'utils', # So management commands can be used
     'compressor',
     'cachalot',

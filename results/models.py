@@ -33,7 +33,7 @@ class Submission(models.Model):
 
     version_semaphore = BoundedSemaphore()
 
-    confirmed = models.BooleanField(default=False, db_index=True)
+    confirmed = models.BooleanField(default=False)
 
     class Meta:
         abstract = True

@@ -8,8 +8,8 @@ from allocations.anneal import SAAllocator
 class Tournament(models.Model):
     name = models.CharField(max_length=100, help_text="The full name used on the homepage")
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu")
-    seq = models.IntegerField(db_index=True, blank=True, null=True, help_text="The order in which tournaments are displayed")
-    slug = models.SlugField(unique=True, db_index=True, help_text="The sub-URL of the tournament; cannot have spaces")
+    seq = models.IntegerField(blank=True, null=True, help_text="The order in which tournaments are displayed")
+    slug = models.SlugField(unique=True, help_text="The sub-URL of the tournament; cannot have spaces")
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_', help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
     welcome_msg = models.TextField(blank=True, null=True, default="", help_text="Text/html entered here shows on the homepage")
@@ -204,7 +204,7 @@ class Round(models.Model):
 
     objects = RoundManager()
 
-    tournament     = models.ForeignKey(Tournament, related_name='rounds', db_index=True)
+    tournament     = models.ForeignKey(Tournament, related_name='rounds')
     seq            = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
     name           = models.CharField(max_length=40, help_text="e.g. \"Round 1\"")
     abbreviation   = models.CharField(max_length=10, help_text="e.g. \"R1\"")

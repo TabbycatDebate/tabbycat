@@ -15,8 +15,8 @@ class DebateAdjudicator(models.Model):
 
     objects = SRManager()
 
-    debate = models.ForeignKey('draws.Debate', db_index=True)
-    adjudicator = models.ForeignKey('participants.Adjudicator', db_index=True)
+    debate = models.ForeignKey('draws.Debate')
+    adjudicator = models.ForeignKey('participants.Adjudicator')
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
     def __unicode__(self):

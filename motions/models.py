@@ -60,7 +60,7 @@ class Motion(models.Model):
     text = models.CharField(max_length=500, help_text="The motion itself, e.g., \"This House would straighten all bananas\"")
     reference = models.CharField(max_length=100, help_text="Shortcode for the motion, e.g., \"Bananas\"")
     flagged = models.BooleanField(default=False, help_text="For WADL: Allows for particular motions to be flagged as contentious")
-    round = models.ForeignKey('tournaments.Round', db_index=True)
+    round = models.ForeignKey('tournaments.Round')
     objects = MotionManager()
     divisions = models.ManyToManyField('tournaments.Division', blank=True)
 
