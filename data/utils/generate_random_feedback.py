@@ -3,7 +3,6 @@ Requires a draw to exist."""
 
 import django # Requried post-1.7 for standalone scripts
 import header
-import debate.models as m
 
 from django.contrib.auth.models import User
 from add_feedback import add_feedback, SUBMITTER_TYPE_MAP

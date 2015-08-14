@@ -5,10 +5,9 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^$', views.public_index, name='public_index'),
+    url(r'^$',                                  views.public_index,     name='public_index'),
 
-    url(r'^admin/$',                            views.tournament_home, name='tournament_home'),
-    url(r'^admin/round/(?P<round_seq>\d+)/$',   views.round_index, name='round_index'),
+    url(r'^admin/$',                            views.tournament_home,  name='tournament_home'),
 
     #url(r'^admin/actions/$', 'action_log', name='action_log'),
 

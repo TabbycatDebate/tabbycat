@@ -88,7 +88,7 @@ class BaseTournamentDataImporter(object):
     def import_things(self, f):
         def _speaker_line_parser(line):
             return {
-                'instutition': debate.models.Institution.objects.get(name=line[0]),
+                'instutition': participants.models.Institution.objects.get(name=line[0]),
                 'name':        line[1]
             }
         counts, errors = self._import(f, _thing_line_parser, participants.models.Speaker)

@@ -1,4 +1,3 @@
-# cannot import debate.models here - would create circular dep
 from django.core.exceptions import ObjectDoesNotExist
 
 from . import models

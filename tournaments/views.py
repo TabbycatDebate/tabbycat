@@ -115,12 +115,6 @@ def tournament_home(request, t):
         total_ballots=total_ballots, round=round))
 
 
-
-@admin_required
-@round_view
-def round_index(request, round):
-    return r2r(request, 'round_index.html')
-
 @admin_required
 @round_view
 def round_increment_check(request, round):
