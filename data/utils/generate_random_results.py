@@ -3,9 +3,9 @@ Requires a draw to exist."""
 
 import django # Requried post-1.7 for standalone scripts
 import header
-import debate.models as m
-import results.models as rm
-from draws.models import Debate
+import results.models import BallotSubmission
+from tournaments.models import Round
+
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -33,9 +33,9 @@ user = User.objects.get(username=args.user)
 for round in args.rounds:
     if args.clean:
         print("Deleting all ballot submissions for round %d..." % round)
-        rm.BallotSubmission.objects.filter(debate__round__seq=round).delete()
+        BallotSubmission.objects.filter(debate__round__seq=round).delete()
 
-    for debate in m.Round.objects.get(seq=round).get_draw():
+    for debate in Round.objects.get(seq=round).get_draw():
         bset = add_ballot_set(debate, submitter_type, user, False, args.status == Debate.STATUS_CONFIRMED, args.min_score, args.max_score)
         debate.result_status = args.status
         print debate, "won by", bset.aff_win and "affirmative" or "negative", "on", bset.motion and bset.motion.reference or "<No motion>"

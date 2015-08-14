@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count
 
 from results.result import BallotSet
-from debate.keys import populate_url_keys
+from tournaments.keys import populate_url_keys
 
 from tournaments.models import *
 from allocations.models import DebateAdjudicator

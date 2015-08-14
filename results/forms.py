@@ -5,7 +5,7 @@ import logging
 
 import debate.models as m
 from draws.models import Debate, DebateTeam
-from participants.models import Speaker
+from participants.models import Speaker, Team
 from result import BallotSet
 
 
@@ -205,7 +205,7 @@ class BallotSetForm(forms.Form):
                 (str(teams[1].id) + "," + str(teams[0].id), "%s affirmed, %s negated" % (teams[1].short_name, teams[0].short_name))
             ]
             self.fields['choose_sides'] = forms.TypedChoiceField(
-                choices=side_choices, coerce=lambda x: tuple(m.Team.objects.get(id=int(v)) for v in x.split(","))
+                choices=side_choices, coerce=lambda x: tuple(Team.objects.get(id=int(v)) for v in x.split(","))
             )
             for team in self.debate.teams:
                 self.fields['team_%d' % team.id] = forms.ModelChoiceField(queryset=team.speakers, required=False)
@@ -336,7 +336,7 @@ class BallotSetForm(forms.Form):
                     code='discard_confirm'
                 ))
 
-        if cleaned_data.get('debate_result_status') == m.Debate.STATUS_CONFIRMED and not cleaned_data.get('confirmed') and self.debate.confirmed_ballot is None:
+        if cleaned_data.get('debate_result_status') == Debate.STATUS_CONFIRMED and not cleaned_data.get('confirmed') and self.debate.confirmed_ballot is None:
             self.add_error('debate_result_status', forms.ValidationError(
                 _("The debate status can't be confirmed unless one of the ballot sets is confirmed."),
                 code='status_confirm'

@@ -7,6 +7,8 @@ import debate.models as m
 
 from django.contrib.auth.models import User
 from add_feedback import add_feedback, SUBMITTER_TYPE_MAP
+from tournaments.models import Round
+from feedback.models import AdjudicatorFeedback
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)
@@ -26,8 +28,8 @@ user = User.objects.get(username=args.user)
 for round in args.rounds:
     if args.clean:
         print("Deleting all feedback for round %d..." % round)
-        m.AdjudicatorFeedback.objects.filter(source_adjudicator__debate__round__seq=round).delete()
-        m.AdjudicatorFeedback.objects.filter(source_team__debate__round__seq=round).delete()
+        AdjudicatorFeedback.objects.filter(source_adjudicator__debate__round__seq=round).delete()
+        AdjudicatorFeedback.objects.filter(source_team__debate__round__seq=round).delete()
 
-    for debate in m.Round.objects.get(seq=round).get_draw():
+    for debate in Round.objects.get(seq=round).get_draw():
         fbs = add_feedback(debate, submitter_type, user, args.probability, False, args.confirmed)

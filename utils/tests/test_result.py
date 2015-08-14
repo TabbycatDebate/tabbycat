@@ -2,11 +2,11 @@
 
 from unittest import SkipTest
 from django.test import TestCase
-import debate.models as m
 import participants.models as pm
 import results.models as rm
 import venues.models as vm
 import draws.models as dm
+import tournament.models as dm
 import random
 from results.result import BallotSet
 
@@ -58,7 +58,7 @@ class BaseTestResult(TestCase):
                       'winner': None}
 
     def setUp(self):
-        self.t = m.Tournament(slug="resulttest", name="ResultTest")
+        self.t = tm.Tournament(slug="resulttest", name="ResultTest")
         self.t.save()
         for i in range(2):
             inst = pm.Institution(code="Inst%d"%i, name="Institution %d"%i)

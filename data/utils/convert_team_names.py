@@ -8,8 +8,6 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--dry-run", action="store_true")
 args = parser.parse_args()
 
-import debate.models as m
-
 for team in Team.objects.all():
     if team.reference.startswith(team.institution.code):
         new_reference = team.reference[len(team.institution.code):].strip()

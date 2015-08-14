@@ -1,9 +1,13 @@
 from django.db import models
 from django.db.models import signals
 from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.functional import cached_property
 
 from allocations.anneal import SAAllocator
+
+import logging
+logger = logging.getLogger(__name__)
 
 class Tournament(models.Model):
     name = models.CharField(max_length=100, help_text="The full name used on the homepage")
@@ -317,9 +321,6 @@ class Round(models.Model):
         self.make_debates(draw)
         self.draw_status = self.STATUS_DRAFT
         self.save()
-
-        #from debate.draw import assign_importance
-        #assign_importance(self)
 
     def allocate_adjudicators(self, alloc_class=SAAllocator):
         if self.draw_status != self.STATUS_CONFIRMED:

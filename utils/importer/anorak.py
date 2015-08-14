@@ -1,12 +1,12 @@
 from base import BaseTournamentDataImporter, TournamentDataImporterError
 import allocations.models as am
-import debate.models as m
 import breaking.models as bm
 import draws.models as dm
 import feedback.models as fm
 import motions.models as mm
 import options.models as cm
 import participants.models as pm
+import tournaments.models as tm
 import venues.models as vm
 import csv
 
@@ -14,17 +14,17 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     """Anorak: The original tournament data format."""
 
     ROUND_STAGES = {
-        ("preliminary", "p"): m.Round.STAGE_PRELIMINARY,
-        ("elimination", "break", "e", "b"): m.Round.STAGE_ELIMINATION,
+        ("preliminary", "p"): tm.Round.STAGE_PRELIMINARY,
+        ("elimination", "break", "e", "b"): tm.Round.STAGE_ELIMINATION,
     }
 
     ROUND_DRAW_TYPES = {
-        ("random", "r"): m.Round.DRAW_RANDOM,
-        ("manual", "m"): m.Round.DRAW_MANUAL,
-        ("round robin", "d"): m.Round.DRAW_ROUNDROBIN,
-        ("power paired", "p"): m.Round.DRAW_POWERPAIRED,
-        ("first elimination", "1st elimination", "1e", "f"): m.Round.DRAW_FIRSTBREAK,
-        ("subsequent elimination", "2nd elimination", "2e", "b"): m.Round.DRAW_BREAK,
+        ("random", "r"): tm.Round.DRAW_RANDOM,
+        ("manual", "m"): tm.Round.DRAW_MANUAL,
+        ("round robin", "d"): tm.Round.DRAW_ROUNDROBIN,
+        ("power paired", "p"): tm.Round.DRAW_POWERPAIRED,
+        ("first elimination", "1st elimination", "1e", "f"): tm.Round.DRAW_FIRSTBREAK,
+        ("subsequent elimination", "2nd elimination", "2e", "b"): tm.Round.DRAW_BREAK,
     }
 
     GENDERS = {
@@ -67,11 +67,11 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'feedback_weight' : float(line[6]) or 0.7,
                 'break_category'  : bm.BreakCategory.objects.get(slug=line[7], tournament=self.tournament) if len(line) > 7 and line[7] else None,
             }
-        counts, errors = self._import(f, _round_line_parser, m.Round)
+        counts, errors = self._import(f, _round_line_parser, tm.Round)
 
         # Set the round with the lowest known seqno to be the current round.
         # TODO (as above)
-        self.tournament.current_round = m.Round.objects.get(
+        self.tournament.current_round = tm.Round.objects.get(
                 tournament=self.tournament, seq=1)
         self.tournament.save()
 
@@ -336,7 +336,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
         def _motion_line_parser(line):
             return {
-                'round'     : m.Round.objects.lookup(line[0], tournament=self.tournament),
+                'round'     : tm.Round.objects.lookup(line[0], tournament=self.tournament),
                 'seq'       : int(line[1]),
                 'reference' : line[2],
                 'text'      : line[3],
@@ -352,7 +352,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             team = pm.Team.objects.lookup(line[0])
             for seq, side in enumerate(line[1:], start=1):
                 yield {
-                    'round'    : m.Round.objects.get(seq=seq),
+                    'round'    : tm.Round.objects.get(seq=seq),
                     'team'     : team,
                     'position' : self._lookup(self.TEAM_POSITIONS, side, "side"),
                 }
@@ -442,12 +442,12 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         convenience function. For anything more complicated, the user should use
         import_rounds() instead."""
         for i in range(1, num_rounds+1):
-            m.Round(
+            tm.Round(
                 tournament=self.tournament,
                 seq=i,
                 name='Round %d' % i,
                 abbreviation='R%d' % i,
-                draw_type=m.Round.DRAW_RANDOM if (i == 1) else m.Round.DRAW_POWERPAIRED,
+                draw_type=tm.Round.DRAW_RANDOM if (i == 1) else tm.Round.DRAW_POWERPAIRED,
                 feedback_weight=min((i-1)*0.1, 0.5),
                 silent=(i == num_rounds),
             ).save()

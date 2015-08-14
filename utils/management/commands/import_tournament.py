@@ -7,8 +7,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from django.template.defaultfilters import slugify
 
-import debate.models as m
 import participants.models as pm
+from tournaments.models import Tournament
 from utils.importer import AnorakTournamentDataImporter, DUPLICATE_INFO
 
 class Command(BaseCommand):
@@ -169,7 +169,7 @@ class Command(BaseCommand):
         """Checks if a tournament exists. If --keep-existing was not used,
         deletes it. If it was used, and the tournament does not exist, raises
         and error."""
-        exists = m.Tournament.objects.filter(slug=slug).exists()
+        exists = Tournament.objects.filter(slug=slug).exists()
         if exists and not self.options['keep_existing'] and not self.options['items']:
             if not self.options['force']:
                 self.stdout.write("WARNING! A tournament with slug '" + slug + "' already exists.")
@@ -177,7 +177,7 @@ class Command(BaseCommand):
                 response = raw_input("Are you sure? ")
                 if response != "yes":
                     raise CommandError("Cancelled by user.")
-            m.Tournament.objects.filter(slug=slug).delete()
+            Tournament.objects.filter(slug=slug).delete()
 
         elif not exists and self.options['keep_existing']:
             raise CommandError("Used --keep-existing, but tournament %r does not exist" % slug)
@@ -186,10 +186,10 @@ class Command(BaseCommand):
         """Creates, saves and returns a tournament with the given slug.
         Raises exception on error."""
         try:
-            existing = m.Tournament.objects.get(slug=slug)
-        except m.Tournament.DoesNotExist:
+            existing = Tournament.objects.get(slug=slug)
+        except Tournament.DoesNotExist:
             self._print_stage("Creating tournament %r" % slug)
-            t = m.Tournament(name=name, short_name=short_name, slug=slug)
+            t = Tournament(name=name, short_name=short_name, slug=slug)
             t.save()
             return t
         else:

@@ -13,7 +13,7 @@ import header
 import tournaments.models as m
 import draws.models as dm
 import motions.models as mm
-import debate.results as rm
+import results.models as rm
 from django.contrib.auth.models import User
 
 import argparse
