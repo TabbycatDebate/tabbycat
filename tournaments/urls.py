@@ -6,18 +6,17 @@ from . import views
 urlpatterns = [
 
     url(r'^$',                                  views.public_index,     name='public_index'),
-
     url(r'^admin/$',                            views.tournament_home,  name='tournament_home'),
 
     #url(r'^admin/actions/$', 'action_log', name='action_log'),
 
     # TODO: 'core' app functionality?
-    url(r'^admin/round/(?P<round_seq>\d+)/round_increment_check/$', views.round_increment_check,     name='round_increment_check'),
-    url(r'^admin/round/(?P<round_seq>\d+)/round_increment/$',       views.round_increment,   name='round_increment'),
-    url(r'^divisions/$',                                            views.public_divisions,  name='public_divisions'),
-    url(r'^admin/division_allocations/$',                           views.division_allocations,  name='division_allocations'),
-    url(r'^admin/division_allocations/save/$',                      views.save_divisions,    name='save_divisions'),
-    url(r'^admin/division_allocations/create/$',                    views.create_division_allocation,    name='create_division_allocation'),
+    url(r'^admin/round/(?P<round_seq>\d+)/round_increment_check/$',                 views.round_increment_check,     name='round_increment_check'),
+    url(r'^admin/round/(?P<round_seq>\d+)/round_increment/$',                       views.round_increment,   name='round_increment'),
+    url(r'^divisions/$',                                                            views.public_divisions,  name='public_divisions'),
+    url(r'^admin/division_allocations/$',                                           views.division_allocations,  name='division_allocations'),
+    url(r'^admin/division_allocations/save/$',                                      views.save_divisions,    name='save_divisions'),
+    url(r'^admin/division_allocations/create/$',                                    views.create_division_allocation,    name='create_division_allocation'),
 
     # TODO: unclear if these fit in feedback or not given they also work for ballots
     url(r'^admin/randomised_urls/$',                                                views.randomised_urls, name='randomised_urls'),

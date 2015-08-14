@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from . import models
+from allocations.models import DebateAdjudicator
 
 class ResultError(RuntimeError):
     pass
@@ -537,7 +538,7 @@ class BallotSet(object):
 
     def _is_trainee(self, adj):
         da = self.debate.debateadjudicator_set.get(adjudicator=adj)
-        return da.type == m.DebateAdjudicator.TYPE_TRAINEE
+        return da.type == DebateAdjudicator.TYPE_TRAINEE
 
     @property
     def adjudicator_results(self):
@@ -546,7 +547,6 @@ class BallotSet(object):
         object, and split is True if the adjudicator was in the minority and
         not a trainee, False if the adjudicator was in the majority or is a
         trainee. If there is no available result, split is always False."""
-        from allocations.models import DebateAdjudicator
         try:
             self._calc_decision()
         except (ResultError, AssertionError):

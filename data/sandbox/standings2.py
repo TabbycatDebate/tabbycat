@@ -28,10 +28,10 @@ EXTRA_QUERY = """
     JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
     JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
     JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
-    JOIN "debate_round" ON "draws_debate"."round_id" = "debate_round"."id"
+    JOIN "tournaments_round" ON "draws_debate"."round_id" = "tournaments_round"."id"
     WHERE "results_ballotsubmission"."confirmed" = True
     AND "draws_debateteam"."team_id" = "debate_team"."id"
-    AND "debate_round"."seq" <= {round:d}
+    AND "tournaments_round"."seq" <= {round:d}
 """
 teams = teams.extra({
     "points": EXTRA_QUERY.format(field="points", round=round.seq),

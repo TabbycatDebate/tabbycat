@@ -244,6 +244,7 @@ class Round(models.Model):
 
     def draw(self, override_team_checkins=False):
         from draws.models import Debate, TeamPositionAllocation
+        from draws.draw import DrawGenerator
         from participants.models import Team
 
         if self.draw_status != self.STATUS_NONE:

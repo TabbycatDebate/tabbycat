@@ -6,7 +6,7 @@ from . import forms
 
 from utils.views import *
 
-from breaking import get_breaking_teams, update_breaking_teams, update_all_breaking_teams, generate_all_breaking_teams
+from breaking import get_breaking_teams, update_breaking_teams, update_all_breaking_teams
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
@@ -45,7 +45,7 @@ def breaking_teams(request, t, category):
 @tournament_view
 def generate_all_breaking_teams(request, t, category):
     """Generates for all break categories; 'category' is used only for the redirect"""
-
+    from breaking import generate_all_breaking_teams
     generate_all_breaking_teams(t)
     ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_GENERATE_ALL,
             user=request.user, tournament=t, ip_address=get_ip_address(request))

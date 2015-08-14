@@ -81,11 +81,11 @@ class BaseTestResult(TestCase):
         self.adjs = list(pm.Adjudicator.objects.all())
         self.teams = list(pm.Team.objects.all())
 
-        self.round = m.Round(tournament=self.t, seq=1, abbreviation="R1")
+        self.round = tm.Round(tournament=self.t, seq=1, abbreviation="R1")
         self.round.save()
         for venue in vm.Venue.objects.all():
             self.round.activate_venue(venue, True)
-        self.debate = m.Debate(round=self.round, venue=venue)
+        self.debate = dm.Debate(round=self.round, venue=venue)
         self.debate.save()
         positions = [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]
         for team, pos in zip(self.teams, positions):

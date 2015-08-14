@@ -71,7 +71,7 @@ class TestImporterAnorak(TestCase):
         f = self._open_csv_file(self.TESTDIR, "judges")
         counts, errors = self.importer.import_adjudicators(f)
         self.assertEqual(counts, {
-            m.Adjudicator: 27,
+            pm.Adjudicator: 27,
             fm.AdjudicatorTestScoreHistory: 27,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorConflict: 7,
@@ -110,7 +110,7 @@ class TestImporterAnorak(TestCase):
         f = self._open_csv_file(self.TESTDIR_CHOICES, "judges")
         counts, errors = self.importer.import_adjudicators(f)
         self.assertEqual(counts, {
-            m.Adjudicator: 27,
+            pm.Adjudicator: 27,
             fm.AdjudicatorTestScoreHistory: 27,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorConflict: 7,
