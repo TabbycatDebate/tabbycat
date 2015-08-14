@@ -30,9 +30,6 @@ urlpatterns = [
     # Allocations App
     url(r'^admin/allocations/round/(?P<round_seq>\d+)/',    include('allocations.urls')),
 
-    # Printing App
-    url(r'^admin/print/round/(?P<round_seq>\d+)/',          include('printing.urls')),
-
     # Standings App
     url(r'^standings/',                                     include('standings.urls_public')),
     url(r'^tab/',                                           include('standings.urls_public')),

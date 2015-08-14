@@ -11,6 +11,9 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/display_by_venue/$',    views.draw_display_by_venue,name='draw_display_by_venue'),
     url(r'^round/(?P<round_seq>\d+)/display_by_team/$',     views.draw_display_by_team, name='draw_display_by_team'),
 
+    url(r'^round/(?P<round_seq>\d+)/print/scoresheets/$',   views.draw_print_scoresheets,    name='draw_print_scoresheets'),
+    url(r'^round/(?P<round_seq>\d+)/print/feedback/$',      views.draw_print_feedback,       name='draw_print_feedback'),
+
     url(r'^round/(?P<round_seq>\d+)/create/$',              views.create_draw,          name='create_draw'),
     url(r'^round/(?P<round_seq>\d+)/create_with_all/$',     views.create_with_all,      name='create_with_all'),
     url(r'^round/(?P<round_seq>\d+)/confirm/$',             views.confirm_draw,         name='confirm_draw'),

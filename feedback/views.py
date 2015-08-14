@@ -241,7 +241,7 @@ def public_enter_feedback(request, t, source):
             ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
                     ip_address=ip_address, adjudicator_feedback=adj_feedback,
                     tournament=t)
-            return r2r(request, 'public/public_success.html', dict(
+            return r2r(request, 'public_success.html', dict(
                     success_kind="feedback"))
     else:
         form = FormClass()
@@ -347,7 +347,7 @@ def add_feedback(request, t):
     if request.user.is_superuser:
         template = 'add_feedback.html'
     else:
-        template = 'assistant/assistant_adjudicator_feedback.html'
+        template = 'assistant_adjudicator_feedback.html'
     return r2r(request, template, context)
 
 
@@ -356,7 +356,7 @@ def add_feedback(request, t):
 def public_feedback_submit(request, t):
     adjudicators = Adjudicator.objects.all()
     teams = Team.objects.all()
-    return r2r(request, 'public/public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
+    return r2r(request, 'public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)

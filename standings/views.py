@@ -309,7 +309,7 @@ def public_team_standings(request, t):
             team.points = sum([ts.points for ts in team.round_results if ts])
 
 
-        return r2r(request, 'public/public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
+        return r2r(request, 'public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
     else:
-        return r2r(request, 'public/index.html')
+        return r2r(request, 'index.html')
 

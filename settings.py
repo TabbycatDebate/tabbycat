@@ -77,7 +77,6 @@ INSTALLED_APPS = (
     'motions',
     'options',
     'participants',
-    'printing',
     'results',
     'standings',
     'tournaments',

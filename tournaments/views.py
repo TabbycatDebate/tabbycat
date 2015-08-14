@@ -6,10 +6,10 @@ from draws.models import Debate
 @cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view
 def public_index(request, t):
-    return r2r(request, 'public/public_tournament_index.html')
+    return r2r(request, 'public_tournament_index.html')
 
 def index(request):
-    tournaments = Tournament.objects.all()
+    tournaments = models.Tournament.objects.all()
     return r2r(request, 'site_index.html', dict(tournaments=models.Tournament.objects.all()))
 
 @login_required
@@ -40,9 +40,7 @@ def tournament_home(request, t):
 @cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view
 def public_index(request, t):
-    return r2r(request, 'public/public_tournament_index.html')
-
-
+    return r2r(request, 'public_tournament_index.html')
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -54,14 +52,14 @@ def public_divisions(request, t):
     for uvg in venue_groups:
         uvg.divisions = [d for d in divisions if d.venue_group == uvg]
 
-    return r2r(request, 'public/public_divisions.html', dict(venue_groups=venue_groups))
+    return r2r(request, 'public_divisions.html', dict(venue_groups=venue_groups))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_venues(request, t):
     from venues.models import VenueGroup
     venues = VenueGroup.objects.all()
-    return r2r(request, 'public/public_all_tournament_venues.html', dict(venues=venues))
+    return r2r(request, 'public_all_tournament_venues.html', dict(venues=venues))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
@@ -70,7 +68,7 @@ def all_draws_for_venue(request, t, venue_id):
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
         'round','round__tournament','division')
-    return r2r(request, 'public/public_all_draws_for_venue.html', dict(
+    return r2r(request, 'public_all_draws_for_venue.html', dict(
         venue_group=venue_group, debates=debates))
 
 
@@ -84,7 +82,7 @@ def all_draws_for_institution(request, t, institution_id):
         'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')
     debates = [dt.debate for dt in debate_teams]
 
-    return r2r(request, 'public/public_all_draws_for_institution.html', dict(
+    return r2r(request, 'public_all_draws_for_institution.html', dict(
         institution=institution, debates=debates))
 
 

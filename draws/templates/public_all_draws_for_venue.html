@@ -2,9 +2,9 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block head-title %}All Debates for {{ institution.name }} Teams{% endblock %}
-{% block page-title %}All Debates for {{ institution.name }} Teams{% endblock %}
-{% block page-header %}{% include "table_search.html" %}{% endblock %}
+{% block head-title %}All Debates at {{ venue_group.name}}{% endblock %}
+{% block page-title %}All Debates at {{ venue_group.name}}{% endblock %}
+{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
 {% block body-class %}all-venues{% endblock %}
 
 {% block content %}
@@ -26,28 +26,26 @@
     <tbody>
       {% for debate in debates %}
         <tr class="{% debate_draw_status_class debate %}">
-          <td><span title="{{ debate.round.name }}" data-toggle="tooltip">{{ debate.round.abbreviation }}</span></td>
-          <td>{{ debate.aff_team.tournament.short_name }}</td>
-          <td>{{ debate.division.name }}</td>
-            {% if debate.division %}
-              <td>{{ debate.division.venue_group.short_name }}</td>
-            {% else %}
-              <td>{{ debate.venue.group.short_name }}</td>
-            {% endif %}
+          <td>
+            <span title="{{ debate.round.name }}" data-toggle="tooltip">{{ debate.round.abbreviation }}</span>
+          </td>
+          <td>
+            {{ debate.round.tournament.short_name }}
+          </td>
+          <td>
+            {{ debate.division.name }}
+          </td>
+          {% if debate.division %}
+            <td>{{ debate.division.venue_group.short_name }}</td>
+          {% else %}
+            <td>{{ debate.venue.group.short_name }}</td>
+          {% endif %}
           {% if enable_venue_times %}{% include "tables/debate_status.html" %}{% endif %}
           <td class="team-name">
-            {% if debate.aff_team.institution == institution %}
-              {{ debate.aff_team.short_name }}
-            {% else %}
-              <span class="text-muted">{{ debate.aff_team.short_name }}</span>
-            {% endif %}
+            {{ debate.aff_team.short_name }}
           </td>
           <td class="team-name">
-            {% if debate.neg_team.institution == institution %}
-              {{ debate.neg_team.short_name }}
-            {% else %}
-              <span class="text-muted">{{ debate.neg_team.short_name }}</span>
-            {% endif %}
+            {{ debate.neg_team.short_name }}
           </td>
           <td>
             {% for motion in debate.division_motion %}
@@ -75,5 +73,3 @@
     });
   </script>
 {% endblock extra-js %}
-
-

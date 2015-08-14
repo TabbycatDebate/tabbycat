@@ -1,6 +1,7 @@
 from action_log.models import ActionLog
 from participants.models import Team
 from tournaments.models import Round
+from motions.models import Motion
 from draws.models import TeamPositionAllocation
 
 from utils.views import *
@@ -47,9 +48,9 @@ def draw(request, round):
     else:
         if round.draw_status == round.STATUS_RELEASED:
             draw = round.get_draw()
-            return r2r(request, "public/public_draw_released.html", dict(draw=draw, round=round))
+            return r2r(request, "public_draw_released.html", dict(draw=draw, round=round))
         else:
-            return r2r(request, 'public/public_draw_unreleased.html', dict(draw=None, round=round))
+            return r2r(request, 'public_draw_unreleased.html', dict(draw=None, round=round))
 
     raise
 
@@ -304,18 +305,18 @@ def public_draw(request, t):
     r = t.current_round
     if r.draw_status == r.STATUS_RELEASED:
         draw = r.get_draw()
-        return r2r(request, "public/public_draw_released.html", dict(draw=draw, round=r))
+        return r2r(request, "public_draw_released.html", dict(draw=draw, round=r))
     else:
-        return r2r(request, 'public/public_draw_unreleased.html', dict(draw=None, round=r))
+        return r2r(request, 'public_draw_unreleased.html', dict(draw=None, round=r))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_round_view('show_all_draws')
 def public_draw_by_round(request, round):
     if round.draw_status == round.STATUS_RELEASED:
         draw = round.get_draw()
-        return r2r(request, "public/public_draw_released.html", dict(draw=draw, round=round))
+        return r2r(request, "public_draw_released.html", dict(draw=draw, round=round))
     else:
-        return r2r(request, 'public/public_draw_unreleased.html', dict(draw=None, round=round))
+        return r2r(request, 'public_draw_unreleased.html', dict(draw=None, round=round))
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -325,7 +326,7 @@ def public_all_draws(request, t):
     for r in all_rounds:
         r.draw = r.get_draw()
 
-    return r2r(request, 'public/public_draw_display_all.html', dict(
+    return r2r(request, 'public_draw_display_all.html', dict(
         all_rounds=all_rounds))
 
 
@@ -344,7 +345,7 @@ def public_side_allocations(request, t):
         tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
     for team in teams:
         team.side_allocations = [tpas.get((team.id, round.id), "-") for round in rounds]
-    return r2r(request, "public/public_side_allocations.html", dict(teams=teams, rounds=rounds))
+    return r2r(request, "public_side_allocations.html", dict(teams=teams, rounds=rounds))
 
 # Mastersheets
 
@@ -376,3 +377,32 @@ def master_sheets_view(request, round, venue_group_id):
         base_venue_group=base_venue_group,
         active_tournaments=active_tournaments
     ))
+
+
+@admin_required
+@round_view
+def draw_print_feedback(request, round):
+    draw = round.get_draw_by_room()
+    config = round.tournament.config
+    questions = round.tournament.adj_feedback_questions
+    for question in questions:
+        if question.choices:
+            question.choice_options = question.choices.split("//")
+        if question.min_value is not None and question.max_value is not None:
+            step = max((int(question.max_value) - int(question.min_value)) / 10, 1)
+            question.number_options = range(int(question.min_value), int(question.max_value+1), int(step) )
+
+    return r2r(request, "printing/feedback_list.html", dict(
+        draw=draw, config=config, questions=questions))
+
+@admin_required
+@round_view
+def draw_print_scoresheets(request, round):
+    draw = round.get_draw_by_room()
+    config = round.tournament.config
+    motions = Motion.objects.filter(round=round)
+
+    return r2r(request, "printing/scoresheet_list.html", dict(
+        draw=draw, config=config, motions=motions))
+
+

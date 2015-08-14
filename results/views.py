@@ -44,7 +44,7 @@ def results(request, round):
     if not request.user.is_superuser:
         if round != request.tournament.current_round:
             raise Http404()
-        template = "assistant/assistant_results.html"
+        template = "assistant_results.html"
         draw = draw.filter(result_status__in=(
             Debate.STATUS_NONE, Debate.STATUS_DRAFT, Debate.STATUS_POSTPONED))
     else:
@@ -125,7 +125,7 @@ def edit_ballotset(request, t, ballotsub_id):
     else:
         form = BallotSetForm(ballotsub)
 
-    template = 'enter_results.html' if request.user.is_superuser else 'assistant/assistant_enter_results.html'
+    template = 'enter_results.html' if request.user.is_superuser else 'assistant_enter_results.html'
     context = {
         'form'             : form,
         'ballotsub'        : ballotsub,
@@ -213,7 +213,7 @@ def new_ballotset(request, t, debate_id):
     else:
         form = BallotSetForm(ballotsub)
 
-    template = 'enter_results.html' if request.user.is_superuser else 'assistant/assistant_enter_results.html'
+    template = 'enter_results.html' if request.user.is_superuser else 'assistant_enter_results.html'
     all_ballotsubs = debate.ballotsubmission_set_by_version if request.user.is_superuser \
             else debate.ballotsubmission_set_by_version_except_discarded
     context = {
