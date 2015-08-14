@@ -2,10 +2,10 @@
 
 import header
 
-from action_log.models import ActionLog
+from action_logs.models import ActionLog
 from motions.models import Motion
 from draws.models import Debate
-from feedback.models import AdjudicatorFeedback
+from feedbacks.models import AdjudicatorFeedback
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError

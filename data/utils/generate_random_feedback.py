@@ -7,7 +7,7 @@ import header
 from django.contrib.auth.models import User
 from add_feedback import add_feedback, SUBMITTER_TYPE_MAP
 from tournaments.models import Round
-from feedback.models import AdjudicatorFeedback
+from feedbacks.models import AdjudicatorFeedback
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)

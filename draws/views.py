@@ -1,4 +1,4 @@
-from action_log.models import ActionLog
+from action_logs.models import ActionLog
 from participants.models import Team
 from tournaments.models import Round
 from motions.models import Motion

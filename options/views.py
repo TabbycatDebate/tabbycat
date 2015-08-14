@@ -3,7 +3,7 @@ from django import forms
 from options import make_options_form
 
 from . import models
-from action_log.models import ActionLog
+from action_logs.models import ActionLog
 
 from utils.views import *
 

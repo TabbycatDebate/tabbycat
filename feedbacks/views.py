@@ -5,7 +5,7 @@ import json
 from allocations.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
-from action_log.models import ActionLog
+from action_logs.models import ActionLog
 
 from . import models
 from forms import make_feedback_form_class

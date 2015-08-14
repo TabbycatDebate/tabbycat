@@ -1,4 +1,4 @@
-from action_log.models import ActionLog
+from action_logs.models import ActionLog
 from draws.models import Debate
 from participants.models import Adjudicator, Team
 

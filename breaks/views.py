@@ -1,5 +1,5 @@
 from participants.models import Adjudicator
-from action_log.models import ActionLog
+from action_logs.models import ActionLog
 
 from . import models
 from . import forms
@@ -45,7 +45,7 @@ def breaking_teams(request, t, category):
 @tournament_view
 def generate_all_breaking_teams(request, t, category):
     """Generates for all break categories; 'category' is used only for the redirect"""
-    from breaking import generate_all_breaking_teams
+    from breaks import generate_all_breaking_teams
     generate_all_breaking_teams(t)
     ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_GENERATE_ALL,
             user=request.user, tournament=t, ip_address=get_ip_address(request))

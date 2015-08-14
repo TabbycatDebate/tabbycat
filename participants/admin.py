@@ -3,7 +3,7 @@ from django import forms
 
 from . import models
 from allocations.models import AdjudicatorConflict, AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict
-from feedback.models import AdjudicatorTestScoreHistory
+from feedbacks.models import AdjudicatorTestScoreHistory
 
 # ==============================================================================
 # Region

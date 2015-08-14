@@ -118,11 +118,11 @@ class ActionLog(models.Model):
 
     debate = models.ForeignKey('draws.Debate', blank=True, null=True)
     ballot_submission = models.ForeignKey('results.BallotSubmission', blank=True, null=True)
-    adjudicator_test_score_history = models.ForeignKey('feedback.AdjudicatorTestScoreHistory', blank=True, null=True)
-    adjudicator_feedback = models.ForeignKey('feedback.AdjudicatorFeedback', blank=True, null=True)
+    adjudicator_test_score_history = models.ForeignKey('feedbacks.AdjudicatorTestScoreHistory', blank=True, null=True)
+    adjudicator_feedback = models.ForeignKey('feedbacks.AdjudicatorFeedback', blank=True, null=True)
     round = models.ForeignKey('tournaments.Round', blank=True, null=True)
     motion = models.ForeignKey('motions.Motion', blank=True, null=True)
-    break_category = models.ForeignKey('breaking.BreakCategory', blank=True, null=True)
+    break_category = models.ForeignKey('breaks.BreakCategory', blank=True, null=True)
 
     objects = ActionLogManager()
 

@@ -2,7 +2,7 @@
 specified"""
 
 import header
-import feedback.models as fm
+import feedbacks.models as fm
 
 from draws.models import Debate, DebateTeam
 from participants.models import Team, Adjudicator

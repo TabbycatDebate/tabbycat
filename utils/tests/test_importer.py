@@ -7,8 +7,8 @@ import motions.models as mm
 import options.models as cm
 import participants.models as cm
 import venues.models as vm
-import feedback.models as fm
-import tournament.models as tm
+import feedbacks.models as fm
+import tournaments.models as tm
 import os.path
 import logging
 

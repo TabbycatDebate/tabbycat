@@ -1,8 +1,8 @@
 from base import BaseTournamentDataImporter, TournamentDataImporterError
 import allocations.models as am
-import breaking.models as bm
+import breaks.models as bm
 import draws.models as dm
-import feedback.models as fm
+import feedbacks.models as fm
 import motions.models as mm
 import options.models as cm
 import participants.models as pm

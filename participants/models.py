@@ -136,7 +136,7 @@ class Team(models.Model):
     division = models.ForeignKey('tournaments.Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
-    break_categories = models.ManyToManyField('breaking.BreakCategory', blank=True)
+    break_categories = models.ManyToManyField('breaks.BreakCategory', blank=True)
 
     venue_preferences = models.ManyToManyField('venues.VenueGroup',
         through = 'draws.TeamVenuePreference',
