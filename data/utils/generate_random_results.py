@@ -3,8 +3,9 @@ Requires a draw to exist."""
 
 import django # Requried post-1.7 for standalone scripts
 import header
-import results.models import BallotSubmission
+from results.models import BallotSubmission
 from tournaments.models import Round
+from draw.models import Debate, DebateTeam
 
 
 from django.conf import settings

@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
-from . import models
 from adjallocation.models import DebateAdjudicator
+from draw.models import DebateTeam
 
 class ResultError(RuntimeError):
     pass
@@ -188,7 +188,7 @@ class BallotSet(object):
         self.dts = self.debate.debateteam_set.all() # note, this is a QuerySet
         assert self.dts.count() == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
 
-        self.SIDES = (models.DebateTeam.POSITION_AFFIRMATIVE, models.DebateTeam.POSITION_NEGATIVE)
+        self.SIDES = (DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE)
         self.POSITIONS = self.debate.round.tournament.POSITIONS
 
         self.loaded_sheets = False
@@ -653,7 +653,6 @@ class ForfeitBallotSet(BallotSet):
             points = 2
             win = True
 
-        from results.models import TeamScore
         # Note: forfeited debates have fake scores/margins, thus the affects_average toggle
         self.ballotsub.teamscore_set.filter(debate_team=dt).delete()
         self.ballotsub.teamscore_set.create(debate_team=dt, points=points,
