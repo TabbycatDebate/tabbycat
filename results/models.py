@@ -164,6 +164,8 @@ class SpeakerScoreByAdj(models.Model):
     class Meta:
         unique_together = [('debate_adjudicator', 'debate_team', 'position', 'ballot_submission')]
         index_together = ['ballot_submission','debate_adjudicator']
+        verbose_name = 'speaker score by adjudicator'
+        verbose_name_plural = 'speaker scores by adjudicator'
 
     @property
     def debate(self):
