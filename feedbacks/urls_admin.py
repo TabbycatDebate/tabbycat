@@ -27,4 +27,9 @@ urlpatterns = [
     url(r'^add/team/(?P<source_id>\d+)/$',          views.enter_feedback, {'source_type': Team},        name='enter_feedback_team'),
     url(r'^add/adjudicator/(?P<source_id>\d+)/$',   views.enter_feedback, {'source_type': Adjudicator}, name='enter_feedback_adjudicator'),
 
+    # URLS
+    url(r'^randomised_urls/$',                      views.randomised_urls,          name='randomised_urls'),
+    url(r'^randomised_urls/generate/$',             views.generate_randomised_urls, name='generate_randomised_urls'),
+
+
 ]

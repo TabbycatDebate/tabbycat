@@ -9,6 +9,7 @@ from action_logs.models import ActionLog
 
 from . import models
 from forms import make_feedback_form_class
+from keys import populate_url_keys
 
 from utils.views import *
 
@@ -483,5 +484,34 @@ def set_adj_note(request, t):
     adjudicator.save()
 
     return redirect_tournament('adj_feedback', t)
+
+
+@admin_required
+@tournament_view
+def randomised_urls(request, t):
+    context = dict()
+    context['teams'] = t.team_set.all()
+    context['adjs'] = t.adjudicator_set.all()
+    context['exists'] = t.adjudicator_set.filter(url_key__isnull=False).exists() or \
+            t.team_set.filter(url_key__isnull=False).exists()
+    context['tournament_slug'] = t.slug
+    context['ballot_normal_urls_enabled'] = t.config.get('public_ballots')
+    context['ballot_randomised_urls_enabled'] = t.config.get('public_ballots_randomised')
+    context['feedback_normal_urls_enabled'] = t.config.get('public_feedback')
+    context['feedback_randomised_urls_enabled'] = t.config.get('public_feedback_randomised')
+    return r2r(request, 'randomised_urls.html', context)
+
+@admin_required
+@tournament_view
+@expect_post
+def generate_randomised_urls(request, t):
+    # Only works if there are no randomised URLs now
+    if t.adjudicator_set.filter(url_key__isnull=False).exists() or \
+            t.team_set.filter(url_key__isnull=False).exists():
+        return HttpResponseBadRequest("There are already randomised URLs. You must use the Django management commands to populate or delete randomised URLs.")
+
+    populate_url_keys(t.adjudicator_set.all())
+    populate_url_keys(t.team_set.all())
+    return redirect_tournament('randomised_urls', t)
 
 

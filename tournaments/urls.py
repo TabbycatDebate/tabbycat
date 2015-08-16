@@ -18,10 +18,6 @@ urlpatterns = [
     url(r'^admin/division_allocations/save/$',                                      views.save_divisions,    name='save_divisions'),
     url(r'^admin/division_allocations/create/$',                                    views.create_division_allocation,    name='create_division_allocation'),
 
-    # TODO: unclear if these fit in feedback or not given they also work for ballots
-    url(r'^admin/randomised_urls/$',                                                views.randomised_urls, name='randomised_urls'),
-    url(r'^admin/randomised_urls/generate/$',                                       views.generate_randomised_urls, name='generate_randomised_urls'),
-
     # WADL-specific; unclear if draws or participants
     url(r'^all_tournaments_all_venues/$',                                           views.all_tournaments_all_venues, name='all_tournaments_all_venues'),
     url(r'^all_tournaments_all_venues/all_draws/(?P<venue_id>\d+)$',                views.all_draws_for_venue, name='all_draws_for_venue'),
