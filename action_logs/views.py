@@ -1,3 +1,6 @@
+from django.template import Template, Context
+import json
+
 from . import models
 
 from utils.views import *

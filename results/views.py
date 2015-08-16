@@ -1,3 +1,5 @@
+import json
+
 from allocations.models import DebateAdjudicator
 from tournaments.models import Round
 from participants.models import Adjudicator
