@@ -5,7 +5,7 @@ from tournaments.models import Round
 from participants.models import Adjudicator
 from draw.models import Debate
 from motions.models import Motion
-from actionlog.models import ActionLog
+from actionlog.models import ActionLogEntry
 
 from result import BallotSet
 from forms import BallotSetForm
@@ -109,18 +109,18 @@ def edit_ballotset(request, t, ballotsub_id):
             form.save()
 
             if ballotsub.discarded:
-                action_type = ActionLog.ACTION_TYPE_BALLOT_DISCARD
+                action_type = ActionLogEntry.ACTION_TYPE_BALLOT_DISCARD
                 messages.success(request, "Ballot set for %s discarded." % debate.matchup)
             elif ballotsub.confirmed:
                 ballotsub.confirmer = request.user
                 ballotsub.confirm_timestamp = datetime.datetime.now()
                 ballotsub.save()
-                action_type = ActionLog.ACTION_TYPE_BALLOT_CONFIRM
+                action_type = ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM
                 messages.success(request, "Ballot set for %s confirmed." % debate.matchup)
             else:
-                action_type = ActionLog.ACTION_TYPE_BALLOT_EDIT
+                action_type = ActionLogEntry.ACTION_TYPE_BALLOT_EDIT
                 messages.success(request, "Edits to ballot set for %s saved." % debate.matchup)
-            ActionLog.objects.log(type=action_type, user=request.user,
+            ActionLogEntry.objects.log(type=action_type, user=request.user,
                 ballot_submission=ballotsub, ip_address=get_ip_address(request), tournament=t)
 
             return redirect_round('results', debate.round)
@@ -175,7 +175,7 @@ def public_new_ballotset(request, t, adjudicator):
         form = BallotSetForm(ballotsub, request.POST, password=True)
         if form.is_valid():
             form.save()
-            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_SUBMIT,
+            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT,
                     ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
             return r2r(request, 'public_success.html', dict(success_kind="ballot"))
     else:
@@ -208,7 +208,7 @@ def new_ballotset(request, t, debate_id):
         form = BallotSetForm(ballotsub, request.POST)
         if form.is_valid():
             form.save()
-            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_CREATE, user=request.user,
+            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_CREATE, user=request.user,
                     ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
             messages.success(request, "Ballot set for %s added." % debate.matchup)
             return redirect_round('results', debate.round)
@@ -320,7 +320,7 @@ def post_ballot_checkin(request, round):
     debate.ballot_in = True
     debate.save()
 
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BALLOT_CHECKIN,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN,
             user=request.user, debate=debate, tournament=round.tournament)
 
     obj = dict()

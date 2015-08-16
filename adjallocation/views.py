@@ -1,4 +1,4 @@
-from actionlog.models import ActionLog
+from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from participants.models import Adjudicator, Team
 
@@ -31,7 +31,7 @@ def update_debate_importance(request, round):
     debate = Debate.objects.get(pk=id)
     debate.importance = im
     debate.save()
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
             user=request.user, debate=debate, tournament=round.tournament)
     return HttpResponse(im)
 
@@ -150,7 +150,7 @@ def save_adjudicators(request, round):
     for d_id, alloc in debate_adjudicators.items():
         alloc.save()
 
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_ADJUDICATORS_SAVE,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE,
         user=request.user, round=round, tournament=round.tournament)
 
     return HttpResponse("ok")

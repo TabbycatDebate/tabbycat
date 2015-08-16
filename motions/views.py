@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from . import models
-from actionlog.models import ActionLog
+from actionlog.models import ActionLogEntry
 from tournaments.models import Round
 
 from django.forms import ModelForm
@@ -34,7 +34,7 @@ def motions_edit(request, round):
             for motion in motions:
                 motion.round = round
                 motion.save()
-                ActionLog.objects.log(type=ActionLog.ACTION_TYPE_MOTION_EDIT,
+                ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_MOTION_EDIT,
                     user=request.user, motion=motion, tournament=round.tournament)
             for motions in formset.deleted_objects:
                 motions.delete()
@@ -83,7 +83,7 @@ def motions_assign(request, round):
 def release_motions(request, round):
     round.motions_released = True
     round.save()
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_MOTIONS_RELEASE,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE,
         user=request.user, round=round, tournament=round.tournament)
 
     return redirect_round('motions', round)
@@ -94,7 +94,7 @@ def release_motions(request, round):
 def unrelease_motions(request, round):
     round.motions_released = False
     round.save()
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_MOTIONS_UNRELEASE,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE,
         user=request.user, round=round, tournament=round.tournament)
 
     return redirect_round('motions', round)

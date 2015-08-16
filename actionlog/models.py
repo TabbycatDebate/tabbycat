@@ -8,7 +8,7 @@ class ActionLogManager(models.Manager):
         obj.save()
 
 
-class ActionLog(models.Model):
+class ActionLogEntry(models.Model):
     # These aren't generated automatically - all generations of these should
     # be done in views (not models).
 
@@ -125,6 +125,9 @@ class ActionLog(models.Model):
     break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True)
 
     objects = ActionLogManager()
+
+    class Meta:
+        verbose_name_plural = "action log entries"
 
     def __repr__(self):
         return '<Action %d by %s (%s): %s>' % (self.id, self.user, self.timestamp, self.get_type_display())

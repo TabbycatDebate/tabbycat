@@ -157,21 +157,26 @@
               updateCheckbox(this);
             });
             {% block post-success %}{% endblock %}
+            var draw_url = '{% block draw-url %}{% endblock %}';
 
+            $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id="saved_availability">' +
+              '<button type="button" class="close" data-dismiss="alert">' +
+              '&times;</button>' +
+              'Saved successfully! ' +
+              '<a href="' +
+              draw_url +
+              '" class="alert-link">Return to the draw</a>' +
+              '</div>');
           },
           error: function(req, txtStatus, err) {
+            $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id="saved_availability">' +
+              '<button type="button" class="close" data-dismiss="alert">' +
+              '&times;</button>' +
+              'There was an error saving availability. (' +
+              err +
+              ')</div>');
           },
         });
-        var draw_url = '{% block draw-url %}{% endblock %}';
-
-        $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id="savedVenues">' +
-          '<button type="button" class="close" data-dismiss="alert">' +
-          '&times;</button>' +
-          'Saved successfully! ' +
-          '<a href="' +
-          draw_url +
-          '" class="alert-link">Return to the draw</a>' +
-          '</div>');
         $(this).removeClass("active");
         return false;
       });

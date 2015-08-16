@@ -1,4 +1,4 @@
-from actionlog.models import ActionLog
+from actionlog.models import ActionLogEntry
 from participants.models import Team
 from tournaments.models import Round
 from motions.models import Motion
@@ -103,7 +103,7 @@ def draw_with_standings(request, round):
 @round_view
 def create_draw(request, round):
     round.draw()
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CREATE,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
         user=request.user, round=round, tournament=round.tournament)
     return redirect_round('draw', round)
 
@@ -112,7 +112,7 @@ def create_draw(request, round):
 @round_view
 def create_with_all(request, round):
     round.draw(override_team_checkins=True)
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CREATE,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
         user=request.user, round=round, tournament=round.tournament)
     return redirect_round('draw', round)
 
@@ -126,7 +126,7 @@ def confirm_draw(request, round):
 
     round.draw_status = round.STATUS_CONFIRMED
     round.save()
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_CONFIRM,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CONFIRM,
         user=request.user, round=round, tournament=round.tournament)
 
     return redirect_round('draw', round)
@@ -141,7 +141,7 @@ def release_draw(request, round):
 
     round.draw_status = round.STATUS_RELEASED
     round.save()
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_RELEASE,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_RELEASE,
         user=request.user, round=round, tournament=round.tournament)
 
     return redirect_round('draw', round)
@@ -156,7 +156,7 @@ def unrelease_draw(request, round):
 
     round.draw_status = round.STATUS_CONFIRMED
     round.save()
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DRAW_UNRELEASE,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_UNRELEASE,
         user=request.user, round=round, tournament=round.tournament)
 
     return redirect_round('draw', round)
@@ -195,7 +195,7 @@ def set_round_start_time(request, round):
     round.starts_at = time
     round.save()
 
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_ROUND_START_TIME_SET,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ROUND_START_TIME_SET,
         user=request.user, round=round, tournament=round.tournament)
 
     return redirect_round('draw', round)
@@ -291,7 +291,7 @@ def save_venues(request, round):
 
         debates[debate_id].save()
 
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_VENUES_SAVE,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_VENUES_SAVE,
         user=request.user, round=round, tournament=round.tournament)
 
     return HttpResponse("ok")

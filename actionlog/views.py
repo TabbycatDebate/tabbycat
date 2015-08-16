@@ -9,7 +9,7 @@ from utils.views import *
 @tournament_view
 def action_log_update(request, t):
 
-    actions = models.ActionLog.objects.filter(tournament=t).order_by('-id')[:20].select_related(
+    actions = models.ActionLogEntry.objects.filter(tournament=t).order_by('-id')[:20].select_related(
         'user', 'debate', 'ballot_submission'
     )
 

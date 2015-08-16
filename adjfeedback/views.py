@@ -5,7 +5,7 @@ import json
 from adjallocation.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
-from actionlog.models import ActionLog
+from actionlog.models import ActionLogEntry
 
 from . import models
 from forms import make_feedback_form_class
@@ -239,7 +239,7 @@ def public_enter_feedback(request, t, source):
         form = FormClass(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
-            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SUBMIT,
+            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_FEEDBACK_SUBMIT,
                     ip_address=ip_address, adjudicator_feedback=adj_feedback,
                     tournament=t)
             return r2r(request, 'public_success.html', dict(
@@ -269,7 +269,7 @@ def enter_feedback(request, t, source_type, source_id):
         form = FormClass(request.POST)
         if form.is_valid():
             adj_feedback = form.save()
-            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_FEEDBACK_SAVE,
+            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_FEEDBACK_SAVE,
                     user=request.user, adjudicator_feedback=adj_feedback, tournament=t)
             messages.success(request, "Feedback from %s on %s added." %
                     (adj_feedback.source, adj_feedback.adjudicator))
@@ -310,7 +310,7 @@ def set_adj_test_score(request, t):
     atsh = AdjudicatorTestScoreHistory(adjudicator=adjudicator,
         round=t.current_round, score=score)
     atsh.save()
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_TEST_SCORE_EDIT,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT,
         user=request.user, adjudicator_test_score_history=atsh, tournament=t)
 
     return redirect_tournament('adj_feedback', t)

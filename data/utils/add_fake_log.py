@@ -2,7 +2,7 @@
 
 import header
 
-from actionlog.models import ActionLog
+from actionlog.models import ActionLogEntry
 from motions.models import Motion
 from draw.models import Debate
 from adjfeedback.models import AdjudicatorFeedback
@@ -14,10 +14,10 @@ import argparse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.parse_args()
 
-AL = ActionLog
+AL = ActionLogEntry
 
 def log(*args, **kwargs):
-    action = ActionLog(*args, **kwargs)
+    action = ActionLogEntry(*args, **kwargs)
     try:
         action.full_clean()
     except ValidationError, e:
@@ -45,5 +45,5 @@ log(type=AL.ACTION_TYPE_FEEDBACK_SUBMIT, user=get_user('notsuper'), adjudicator_
 log(type=AL.ACTION_TYPE_FEEDBACK_SAVE, user=get_user('notsuper'), adjudicator_feedback=get_adjudicator_feedback(138))
 log(type=AL.ACTION_TYPE_MOTION_EDIT, user=get_user('ravi'), motion=get_motion(43))
 
-for al in ActionLog.objects.all():
+for al in ActionLogEntry.objects.all():
     print repr(al)

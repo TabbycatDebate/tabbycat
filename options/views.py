@@ -3,7 +3,7 @@ from django import forms
 from options import make_options_form
 
 from . import models
-from actionlog.models import ActionLog
+from actionlog.models import ActionLogEntry
 
 from utils.views import *
 
@@ -16,7 +16,7 @@ def tournament_options(request, t):
         form = make_options_form(t, request.POST)
         if form.is_valid():
             form.save()
-            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_CONFIG_EDIT, user=request.user, tournament=t)
+            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_CONFIG_EDIT, user=request.user, tournament=t)
             messages.success(request, "Tournament option saved.")
     else:
         form = make_options_form(t)

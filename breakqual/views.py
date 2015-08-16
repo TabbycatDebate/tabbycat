@@ -1,5 +1,5 @@
 from participants.models import Adjudicator
-from actionlog.models import ActionLog
+from actionlog.models import ActionLogEntry
 
 from . import models
 from . import forms
@@ -30,7 +30,7 @@ def breaking_teams(request, t, category):
         form = forms.BreakingTeamsForm(bc, request.POST)
         if form.is_valid():
             form.save()
-        ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_EDIT_REMARKS,
+        ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BREAK_EDIT_REMARKS,
             user=request.user, tournament=t, ip_address=get_ip_address(request))
         messages.success(request, "Changes to breaking team remarks saved.")
 
@@ -47,7 +47,7 @@ def generate_all_breaking_teams(request, t, category):
     """Generates for all break categories; 'category' is used only for the redirect"""
     from breaks import generate_all_breaking_teams
     generate_all_breaking_teams(t)
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_GENERATE_ALL,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BREAK_GENERATE_ALL,
             user=request.user, tournament=t, ip_address=get_ip_address(request))
     messages.success(request, "Teams break generated for all break categories.")
     return redirect_tournament('breaking/teams', t, category=category)
@@ -57,7 +57,7 @@ def generate_all_breaking_teams(request, t, category):
 def update_all_breaking_teams(request, t, category):
     """Generates for all break categories; 'category' is used only for the redirect"""
     update_all_breaking_teams(t)
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_UPDATE_ALL,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ALL,
             user=request.user, tournament=t, ip_address=get_ip_address(request))
     messages.success(request, "Teams break updated for all break categories.")
     return redirect_tournament('breaking/teams', t, category=category)
@@ -67,7 +67,7 @@ def update_all_breaking_teams(request, t, category):
 def update_breaking_teams(request, t, category):
     bc = get_object_or_404(models.BreakCategory, slug=category)
     update_breaking_teams(bc)
-    ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_UPDATE_ONE,
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ONE,
             user=request.user, tournament=t, ip_address=get_ip_address(request),
             break_category=bc)
     messages.success(request, "Teams break updated for break category %s." % bc.name)
@@ -93,7 +93,7 @@ def edit_eligibility(request, t):
         form = forms.BreakEligibilityForm(t, request.POST)
         if form.is_valid():
             form.save()
-            ActionLog.objects.log(type=ActionLog.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT,
+            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT,
                     user=request.user, tournament=t, ip_address=get_ip_address(request))
             messages.success(request, "Break eligibility saved.")
     else:

@@ -1,6 +1,7 @@
 from tournaments.models import Round
 from participants.models import Person
-from actionlog.models import ActionLog
+from actionlog.models import ActionLogEntry
+from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
 
 from utils.views import *
 
@@ -84,12 +85,12 @@ def _update_availability(request, round, update_method, active_model, active_att
     getattr(round, update_method)(available_ids)
 
     ACTION_TYPES = {
-        ActiveVenue:       ActionLog.ACTION_TYPE_AVAIL_VENUES_SAVE,
-        ActiveTeam:        ActionLog.ACTION_TYPE_AVAIL_TEAMS_SAVE,
-        ActiveAdjudicator: ActionLog.ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE,
+        ActiveVenue:       ActionLogEntry.ACTION_TYPE_AVAIL_VENUES_SAVE,
+        ActiveTeam:        ActionLogEntry.ACTION_TYPE_AVAIL_TEAMS_SAVE,
+        ActiveAdjudicator: ActionLogEntry.ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE,
     }
     if active_model in ACTION_TYPES:
-        ActionLog.objects.log(type=ACTION_TYPES[active_model],
+        ActionLogEntry.objects.log(type=ACTION_TYPES[active_model],
             user=request.user, round=round, tournament=round.tournament)
 
     return HttpResponse("ok")
