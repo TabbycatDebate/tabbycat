@@ -491,7 +491,7 @@ class Round(models.Model):
         result = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
                                       'venues_venue').extra(select =
                                       {'is_used': """EXISTS (SELECT 1
-                                      FROM draws_debate da
+                                      FROM draw_debate da
                                       WHERE da.round_id=%d AND
                                       da.venue_id = venues_venue.id)""" % self.id},
         )
@@ -509,13 +509,14 @@ class Round(models.Model):
         return all_adjs
 
     def unused_adjudicators(self):
+        from participants.models import Adjudicator
         result = self.base_availability(Adjudicator, 'availability_activeadjudicator',
                                       'adjudicator_id',
                                       'participants_adjudicator',
                                       id_field='person_ptr_id').extra(
                                         select = {'is_used': """EXISTS (SELECT 1
-                                                  FROM allocations_debateadjudicator da
-                                                  LEFT JOIN draws_debate d ON da.debate_id = d.id
+                                                  FROM adjallocation_debateadjudicator da
+                                                  LEFT JOIN draw_debate d ON da.debate_id = d.id
                                                   WHERE d.round_id = %d AND
                                                   da.adjudicator_id = participants_adjudicator.person_ptr_id)""" % self.id },
         )

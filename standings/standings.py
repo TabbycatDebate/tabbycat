@@ -72,11 +72,11 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
         SELECT DISTINCT SUM({field:s})
         FROM "results_teamscore"
         JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
-        JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
-        JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
-        JOIN "tournaments_round" ON "draws_debate"."round_id" = "tournaments_round"."id"
+        JOIN "draw_debateteam" ON "results_teamscore"."debate_team_id" = "draw_debateteam"."id"
+        JOIN "draw_debate" ON "draw_debateteam"."debate_id" = "draw_debate"."id"
+        JOIN "tournaments_round" ON "draw_debate"."round_id" = "tournaments_round"."id"
         WHERE "results_ballotsubmission"."confirmed" = True
-        AND "draws_debateteam"."team_id" = "debate_team"."id"
+        AND "draw_debateteam"."team_id" = "participants_team"."id"
         AND "tournaments_round"."stage" = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
 
     if round is not None:

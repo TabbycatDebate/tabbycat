@@ -368,7 +368,7 @@ class Adjudicator(Person):
             self._seen_cache = {}
         if before_round not in self._seen_cache:
             qs = DebateTeam.objects.filter(
-                allocations__debateadjudicator__adjudicator=self
+                debate__debateadjudicator__adjudicator=self
             )
             if before_round is not None:
                 qs = qs.filter(
