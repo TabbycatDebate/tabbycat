@@ -1,7 +1,5 @@
 from django.http import JsonResponse
-
 from utils.views import *
-
 from . import models
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)

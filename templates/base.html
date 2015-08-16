@@ -121,7 +121,7 @@
               return cachedData[id];
           }
           var localData = "error";
-          $.ajax('{{ tournament.get_public_url  }}team_speakers/' + id + '/', {
+          $.ajax('{{ tournament.get_public_url  }}participants/team_list/' + id + '/', {
               async: false,
               success: function(data){
                   localData = data[0] + ", " + data[1] + ", " + data[2];
