@@ -157,7 +157,7 @@ def adj_latest_feedback(request, t):
     feedbacks = models.AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
         'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
     feedbacks, score_thresholds = process_feedback(feedbacks, t)
-    return r2r(request, "adjudicator_latest_feedback.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
+    return r2r(request, "feedback_latest.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
 
 @login_required
 @tournament_view
@@ -347,7 +347,7 @@ def add_feedback(request, t):
     if request.user.is_superuser:
         template = 'add_feedback.html'
     else:
-        template = 'assistant_adjudicator_feedback.html'
+        template = 'assistant_add_feedback.html'
     return r2r(request, template, context)
 
 
