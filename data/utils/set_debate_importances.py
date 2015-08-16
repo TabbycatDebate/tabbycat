@@ -3,7 +3,7 @@ Use this when migrating to a database that makes Debate.importance required.
 You may need to run this before running ./manage.py migrate debate."""
 
 import header
-import debate.models as m
+from tournaments.models import Round
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)
@@ -13,6 +13,6 @@ args = parser.parse_args()
 
 for round in args.rounds:
 
-    for debate in m.Round.objects.get(seq=round).get_draw():
+    for debate in Round.objects.get(seq=round).get_draw():
         debate.importance = args.value
         debate.save()

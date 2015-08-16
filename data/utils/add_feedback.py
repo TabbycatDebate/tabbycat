@@ -2,15 +2,21 @@
 specified"""
 
 import header
-import debate.models as m
+import feedbacks.models as fm
+
+from draws.models import Debate, DebateTeam
+from participants.models import Team, Adjudicator
+
 from django.contrib.auth.models import User
-from debate.result import BallotSet
+from results.result import BallotSet
+from allocations.models import DebateAdjudicator
+
 import random
 import itertools
 
 SUBMITTER_TYPE_MAP = {
-    'tabroom': m.AdjudicatorFeedback.SUBMITTER_TABROOM,
-    'public':  m.AdjudicatorFeedback.SUBMITTER_PUBLIC
+    'tabroom': fm.AdjudicatorFeedback.SUBMITTER_TABROOM,
+    'public':  fm.AdjudicatorFeedback.SUBMITTER_PUBLIC
 }
 
 WORDS = {
@@ -49,16 +55,16 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
             print " - Skipping", source, "on", adj
             continue
 
-        fb = m.AdjudicatorFeedback(submitter_type=submitter_type)
-        if submitter_type == m.AdjudicatorFeedback.SUBMITTER_TABROOM:
+        fb = fm.AdjudicatorFeedback(submitter_type=submitter_type)
+        if submitter_type == fm.AdjudicatorFeedback.SUBMITTER_TABROOM:
             fb.submitter = user
 
         fb.adjudicator = adj
-        if isinstance(source, m.Adjudicator):
-            fb.source_adjudicator = m.DebateAdjudicator.objects.get(
+        if isinstance(source, Adjudicator):
+            fb.source_adjudicator = DebateAdjudicator.objects.get(
                     debate=debate, adjudicator=source)
-        elif isinstance(source, m.Team):
-            fb.source_team = m.DebateTeam.objects.get(
+        elif isinstance(source, Team):
+            fb.source_team = DebateTeam.objects.get(
                     debate=debate, team=source)
         else:
             raise TypeError("source must be an Adjudicator or a Team")
@@ -71,26 +77,26 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
         fb.save()
 
         for question in debate.round.tournament.adj_feedback_questions:
-            if question.answer_type_class == m.AdjudicatorFeedbackBooleanAnswer:
+            if question.answer_type_class == fm.AdjudicatorFeedbackBooleanAnswer:
                 answer = random.choice([None, True, False])
                 if answer is None:
                     continue
-            elif question.answer_type_class == m.AdjudicatorFeedbackIntegerAnswer:
+            elif question.answer_type_class == fm.AdjudicatorFeedbackIntegerAnswer:
                 min_value = int(question.min_value) or 0
                 max_value = int(question.max_value) or 10
                 answer = random.randrange(min_value, max_value+1)
-            elif question.answer_type_class == m.AdjudicatorFeedbackFloatAnswer:
+            elif question.answer_type_class == fm.AdjudicatorFeedbackFloatAnswer:
                 min_value = question.min_value or 0
                 max_value = question.max_value or 10
                 answer = random.uniform(min_value, max_value)
-            elif question.answer_type_class == m.AdjudicatorFeedbackStringAnswer:
-                if question.answer_type == m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT:
+            elif question.answer_type_class == fm.AdjudicatorFeedbackStringAnswer:
+                if question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT:
                     answer = random.choice(COMMENTS[score])
-                elif question.answer_type == m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT:
+                elif question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT:
                     answer = random.choice(question.choices_for_field)[0]
-                elif question.answer_type == m.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT:
+                elif question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT:
                     answers = random.sample(question.choices_for_field, random.randint(0, len(question.choices_for_field)))
-                    answer = m.AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(a[0] for a in answers)
+                    answer = fm.AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(a[0] for a in answers)
                 else:
                     answer = random.choice(WORDS[score])
             question.answer_type_class(question=question, feedback=fb, answer=answer).save()
@@ -114,13 +120,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     submitter_type = SUBMITTER_TYPE_MAP[args.type]
-    if submitter_type == m.AdjudicatorFeedback.SUBMITTER_TABROOM:
+    if submitter_type == fm.AdjudicatorFeedback.SUBMITTER_TABROOM:
         user = User.objects.get(username=args.user)
     else:
         user = None
 
     for debate_id in args.debate:
-        debate = m.Debate.objects.get(id=debate_id)
+        debate = Debate.objects.get(id=debate_id)
 
         print debate
 

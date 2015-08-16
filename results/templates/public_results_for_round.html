@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}Results for {{ round.name }}{% endblock %}
+{% block page-title %}Results for {{ round.name }}{% endblock %}
+{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
+{% block body-class %}public-results{% endblock %}
+
+{% block content %}
+  <table id="dataTable" class="table table-hover" cellpadding="0" cellspacing="0">
+    <thead>
+      <tr>
+        {% if enable_divisions %}
+          <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+        {% endif %}
+        <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+        {% if show_ballots %}<th>Ballots</th>{% endif %}
+        {% if show_emoji > 0 %}
+          <th class="team-emoji"></th>
+        {% endif %}
+        <th>Aff<span class="hidden-xs">irmative</span></th>
+        {% if show_emoji > 0 %}
+          <th class="team-emoji"></th>
+        {% endif %}
+        <th>Neg<span class="hidden-xs">ative</span></th>
+        <th>Adj<span class="hidden-xs">udicator</span>s</th>
+        {% if show_motions_column %}
+          <th>M<span class="hidden-xs">otion</span></th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+    {% for debate in draw %}
+      <tr>
+        {% if enable_divisions %}
+          <td>{{ debate.division.name }}</td>
+        {% endif %}
+        <td>{% if debate.venue %}{{ debate.venue.name }}{% endif %}</td>
+        {% if show_ballots %}
+          <td>
+            {% if debate.confirmed_ballot %}
+              <a href="{% tournament_url public_ballots_view debate.id %}">View ballots</a>
+            {% else %}
+              No result
+            {% endif %}
+          </td>
+        {% endif %}
+        {% if show_emoji > 0 %}
+          <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
+        {% endif %}
+        <td>
+          {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
+            <span class="glyphicon glyphicon-arrow-up text-success"></span>
+          {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
+            <span class="glyphicon glyphicon-arrow-down text-danger"></span>
+          {% endif %}
+          <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
+            {{ debate.aff_team.short_name }}
+          </span>
+        </td>
+        {% if show_emoji > 0 %}
+          <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
+        {% endif %}
+        <td>
+          {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
+            <span class="glyphicon glyphicon-arrow-up text-success"></span>
+          {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
+            <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
+          {% endif %}
+          <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
+            {{ debate.neg_team.short_name }}
+          </span>
+        </td>
+        <td>
+          {% if debate.confirmed_ballot and show_splits %}
+            {% for type, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results %}
+              {% if split %}
+                <span class="text-danger">{{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}</span> <span class="glyphicon glyphicon-resize-full text-danger"></span>{% if not forloop.last %},{% endif %}
+              {% else %}
+                {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% for type, adj in debate.adjudicators %}
+              {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          {% endif %}
+        </td>
+        {% if show_motions_column %}
+          <td>
+            <span data-toggle="tooltip" title="{{ debate.confirmed_ballot.motion }}">
+            {{ debate.confirmed_ballot.motion.reference }}
+            </span>
+          </td>
+        {% endif %}
+
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock content %}
+
+{% block extra-js %}
+  {{ block.super }}
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+      var dTable = $("#dataTable").DataTable({
+        "aaSorting": [[ 0, "asc" ]],
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
+    } );
+  </script>
+{% endblock extra-js %}

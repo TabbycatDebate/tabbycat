@@ -1,19 +1,21 @@
 """Checks for feedbacks with more than one version."""
 
 import header
-import debate.models as m
+
+from participants.models import Adjudicator
+from feedbacks.models import AdjudicatorFeedback
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.parse_args()
 
-for adj in m.Adjudicator.objects.all():
+for adj in Adjudicator.objects.all():
     seen = list()
-    for feedback in m.AdjudicatorFeedback.objects.filter(adjudicator=adj):
+    for feedback in AdjudicatorFeedback.objects.filter(adjudicator=adj):
         if feedback.source in seen:
             continue
         seen.append(feedback.source)
-        others = m.AdjudicatorFeedback.objects.filter(adjudicator=adj,
+        others = AdjudicatorFeedback.objects.filter(adjudicator=adj,
             source_adjudicator=feedback.source_adjudicator,
             source_team=feedback.source_team).order_by('version')
         num = others.count()

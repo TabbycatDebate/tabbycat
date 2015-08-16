@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}Breaking Adjudicators{% endblock %}
+{% block page-title %}Breaking Adjudicators{% endblock %}
+{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
+{% block body-class %}break breaking-adjs{% endblock %}
+
+{% block header %}
+  {% if adjs.all.count == 0 %}
+    <p class="lead">Breaking adjudicators can be set in the <a href="{% tournament_url adj_feedback %}"> Feedback section.</a></p>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if adjs.all.count > 0 %}
+    <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          {% if show_institutions > 0 %}
+            <th>Institution</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for adj in adjs %}
+      <tr>
+        <td>{{ adj.name }}</td>
+        {% if show_institutions > 0 %}
+          <td>
+            {{ adj.institution }}
+            {% if person.independent %}
+              (Independent)
+            {% endif %}
+            {% if person.adj_core %}
+              (Adj Core)
+            {% endif %}
+          </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock content %}
+
+{% block extra-js %}
+  {{ block.super }}
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+      var dTable = $("#dataTable").DataTable({
+        "aaSorting": [[ 0, "asc" ]],
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      });
+    });
+  </script>
+{% endblock extra-js %}

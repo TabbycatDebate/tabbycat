@@ -1,7 +1,8 @@
 """Deletes all debates in a round."""
 
 import header
-import debate.models as m
+from draws.models import Debate
+from tournaments.models import Round
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)
@@ -18,9 +19,9 @@ if response != "yes":
 
 
 for seq in args.round:
-    round = m.Round.objects.get(seq=seq)
+    round = Round.objects.get(seq=seq)
     print("Deleting everything in round " + str(round) + "...")
-    m.Debate.objects.filter(round=round).delete()
-    round.draw_status = m.Round.STATUS_NONE
+    Debate.objects.filter(round=round).delete()
+    round.draw_status = Round.STATUS_NONE
     round.save()
 print("Done.")

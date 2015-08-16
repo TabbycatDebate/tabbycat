@@ -5,13 +5,13 @@ Only run this script after migrating.
 """
 
 import header
-import debate.models as m
+from draws.models import Debate
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.parse_args()
 
-for debate in m.Debate.objects.all():
+for debate in Debate.objects.all():
     if debate.result_status == "B":
         print debate
         debate.result_status = debate.STATUS_NONE

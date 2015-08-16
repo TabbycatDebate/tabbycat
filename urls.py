@@ -12,15 +12,17 @@ def redirect(view):
     return foo
 
 urlpatterns = patterns('',
-    (r'^admin/', include(admin.site.urls)),
-    (r'^$', 'debate.views.index'),
 
-    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
-    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', name='logout'),
+    url(r'^admin/', include(admin.site.urls)),
 
-    (r'^t/(?P<tournament_slug>[-\w_]+)/', include('debate.urls')),
+    url(r'^accounts/login/$',                   'django.contrib.auth.views.login'),
+    url(r'^accounts/logout/$',                  'django.contrib.auth.views.logout', name='logout'),
 
-    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+    url(r'^$',                                  'tournaments.views.index'),
+    url(r'^t/(?P<tournament_slug>[-\w_]+)/',    include('tournaments.urls')),
+
+    url(r'^static/(?P<path>.*)$',               'django.views.static.serve',
+        {'document_root': settings.STATIC_ROOT}),
 )
 
 if settings.DEBUG:

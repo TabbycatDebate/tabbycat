@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load compress %}
+{% load debate_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +22,6 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
   <![endif]-->
-  {% load debate_tags %}
 </head>
 
 <body id="{% block body-id %}{% endblock %}" class="{% block body-class %}{% endblock %}">
@@ -30,7 +30,7 @@
 
     {% block body %}
 
-    {% block nav %}{% include "nav.html" %}{% endblock nav %}
+    {% block nav %}{% include "nav/nav.html" %}{% endblock nav %}
 
     <div id="container" class="container-fluid">
 

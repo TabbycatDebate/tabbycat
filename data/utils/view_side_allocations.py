@@ -1,7 +1,9 @@
 import header
-import debate.models as m
 import random
 import argparse
+
+from tournaments.models import Round
+from draws.models import TeamPositionAllocation
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("rounds", type=int, nargs="+", help="Round to generate for.")
@@ -10,9 +12,9 @@ parser.add_argument("-q", "--quiet", action="store_true", help="Don't print the 
 args = parser.parse_args()
 
 for seq in args.rounds:
-    round = m.Round.objects.get(seq=seq)
-    affs = [x.team for x in m.TeamPositionAllocation.objects.filter(round=round, position=m.TeamPositionAllocation.POSITION_AFFIRMATIVE).select_related('team')]
-    negs = [x.team for x in m.TeamPositionAllocation.objects.filter(round=round, position=m.TeamPositionAllocation.POSITION_NEGATIVE).select_related('team')]
+    round = Round.objects.get(seq=seq)
+    affs = [x.team for x in TeamPositionAllocation.objects.filter(round=round, position=TeamPositionAllocation.POSITION_AFFIRMATIVE).select_related('team')]
+    negs = [x.team for x in TeamPositionAllocation.objects.filter(round=round, position=TeamPositionAllocation.POSITION_NEGATIVE).select_related('team')]
     print(str(round))
     print("Affirmative                    Negative")
     for aff, neg in zip(sorted(affs), sorted(negs)):
