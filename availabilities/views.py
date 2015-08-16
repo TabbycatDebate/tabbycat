@@ -32,7 +32,7 @@ def checkin(request, round):
         except (ValueError, Person.DoesNotExist):
             context['unknown_id'] = v
 
-    return r2r(request, 'checkin.html', context)
+    return r2r(request, 'person_checkin.html', context)
 
 # public (for barcode checkins)
 # public

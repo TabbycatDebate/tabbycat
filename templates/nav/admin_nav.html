@@ -13,7 +13,7 @@
     <a href="{% round_url results current_round %}">Ballots</a>
   </li>
   <li {% if feedback_nav %}class="dropdown active"{% endif %}>
-    <a href="{% tournament_url adj_feedback %}" >Feedback</a>
+    <a href="{% tournament_url feedback_overview %}" >Feedback</a>
   </li>
   {% if enable_divisions %}
     <li {% if divisions_nav %}class="active"{% endif %}>
@@ -46,7 +46,7 @@
       {% endfor %}
       <li><a href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
       <li class="divider"></li>
-      <li><a href="{% tournament_url break_eligibility %}">Edit Eligibility</a></li>
+      <li><a href="{% tournament_url edit_eligibility %}">Edit Eligibility</a></li>
     </ul>
   </li>
 </ul>

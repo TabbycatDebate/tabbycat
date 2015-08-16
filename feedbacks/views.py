@@ -25,7 +25,7 @@ def adj_scores(request, t):
 
 @admin_required
 @tournament_view
-def adj_feedback(request, t):
+def feedback_overview(request, t):
     breaking_count = 0
 
     if not t.config.get('share_adjs'):
@@ -113,7 +113,7 @@ def adj_feedback(request, t):
         'score_min'         : t.config.get('adj_min_score'),
         'score_max'         : t.config.get('adj_max_score'),
     }
-    return r2r(request, 'adjudicator_feedback.html', context)
+    return r2r(request, 'feedback_overview.html', context)
 
 
 @login_required
@@ -404,7 +404,7 @@ def public_feedback_progress(request, t):
         team.owed_ballots = max((current_round - team.submitted_ballots), 0)
         team.coverage = min(calculate_coverage(team.submitted_ballots, current_round), 100)
 
-    return r2r(request, 'wall_of_shame.html', dict(teams=teams, adjudicators=adjudicators))
+    return r2r(request, 'feedback_progress.html', dict(teams=teams, adjudicators=adjudicators))
 
 
 @admin_required
@@ -453,7 +453,7 @@ def feedback_progress(request, t):
         team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
         team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
 
-    return r2r(request, 'wall_of_shame.html', dict(teams=teams, adjudicators=adjudicators))
+    return r2r(request, 'feedback_progress.html', dict(teams=teams, adjudicators=adjudicators))
 
 
 # TODO: move to a different app?

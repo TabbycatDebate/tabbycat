@@ -5,7 +5,7 @@ from participants.models import Team, Adjudicator
 
 urlpatterns = [
 
-    url(r'^$',                                      views.adj_feedback,             name='adj_feedback'),
+    url(r'^$',                                      views.feedback_overview,             name='feedback_overview'),
     url(r'^progress/$',                             views.feedback_progress,        name='feedback_progress'),
 
     # Getting/setting values

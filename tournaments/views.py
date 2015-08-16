@@ -98,29 +98,6 @@ def round_increment(request, round):
     request.tournament.advance_round()
     return redirect_round('draw', request.tournament.current_round )
 
-
-# public (for barcode checkins)
-@round_view
-def checkin(request, round):
-    from participants.models import Person
-    context = {}
-    if request.method == 'POST':
-        v = request.POST.get('barcode_id')
-        try:
-            barcode_id = int(v)
-            p = Person.objects.get(barcode_id=barcode_id)
-            ch, created = Checkin.objects.get_or_create(
-                person = p,
-                round = round
-            )
-            context['person'] = p
-
-        except (ValueError, Person.DoesNotExist):
-            context['unknown_id'] = v
-
-    return r2r(request, 'checkin.html', context)
-
-
 @admin_required
 @tournament_view
 def division_allocations(request, t):

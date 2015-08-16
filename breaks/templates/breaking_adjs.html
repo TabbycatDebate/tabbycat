@@ -9,7 +9,7 @@
 
 {% block header %}
   {% if adjs.all.count == 0 %}
-    <p class="lead">Breaking adjudicators can be set in the <a href="{% tournament_url adj_feedback %}"> Feedback section.</a></p>
+    <p class="lead">Breaking adjudicators can be set in the <a href="{% tournament_url feedback_overview %}"> Feedback section.</a></p>
   {% endif %}
 {% endblock %}
 
