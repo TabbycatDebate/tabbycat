@@ -1,8 +1,8 @@
-from action_logs.models import ActionLog
+from actionlog.models import ActionLog
 from participants.models import Team
 from tournaments.models import Round
 from motions.models import Motion
-from draws.models import TeamPositionAllocation
+from .models import TeamPositionAllocation
 
 from utils.views import *
 

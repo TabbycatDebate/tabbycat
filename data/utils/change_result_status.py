@@ -1,7 +1,7 @@
 """Changes all debates in a round to STATUS_NONE."""
 
 import header
-from draws.models import Debate
+from draw.models import Debate
 
 import csv
 

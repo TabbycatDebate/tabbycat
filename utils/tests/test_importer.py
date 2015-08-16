@@ -2,12 +2,12 @@
 
 from django.test import TestCase
 from unittest import skip
-import allocations.models as am
+import adjallocation.models as am
 import motions.models as mm
 import options.models as cm
 import participants.models as cm
 import venues.models as vm
-import feedbacks.models as fm
+import adjfeedback.models as fm
 import tournaments.models as tm
 import os.path
 import logging

@@ -42,7 +42,7 @@ class HungarianAllocator(Allocator):
         return cost
 
     def allocate(self):
-        from allocations.models import AdjudicatorAllocation
+        from adjallocation.models import AdjudicatorAllocation
 
         # remove trainees
         self.adjudicators = filter(lambda a: a.score >= self.MIN_SCORE, self.adjudicators)

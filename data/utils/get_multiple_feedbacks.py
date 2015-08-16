@@ -3,7 +3,7 @@
 import header
 
 from participants.models import Adjudicator
-from feedbacks.models import AdjudicatorFeedback
+from adjfeedback.models import AdjudicatorFeedback
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)

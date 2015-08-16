@@ -3,7 +3,7 @@ import random
 import argparse
 
 from tournaments.models import Round
-from draws.models import TeamPositionAllocation
+from draw.models import TeamPositionAllocation
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("rounds", type=int, nargs="+", help="Round to generate for.")

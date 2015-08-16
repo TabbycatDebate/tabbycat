@@ -136,10 +136,10 @@ class Team(models.Model):
     division = models.ForeignKey('tournaments.Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
-    break_categories = models.ManyToManyField('breaks.BreakCategory', blank=True)
+    break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True)
 
     venue_preferences = models.ManyToManyField('venues.VenueGroup',
-        through = 'draws.TeamVenuePreference',
+        through = 'draw.TeamVenuePreference',
         related_name = 'venue_preferences',
         verbose_name = 'Venue group preference'
     )
@@ -204,11 +204,11 @@ class Team(models.Model):
         return "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
 
     def get_aff_count(self, seq=None):
-        from draws.models import DebateTeam
+        from draw.models import DebateTeam
         return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)
 
     def get_neg_count(self, seq=None):
-        from draws.models import DebateTeam
+        from draw.models import DebateTeam
         return self._get_count(DebateTeam.POSITION_NEGATIVE, seq)
 
     def _get_count(self, position, seq):
@@ -249,7 +249,7 @@ class Team(models.Model):
         return self.institution_id == other.institution_id
 
     def prev_debate(self, round_seq):
-        from draws.models import DebateTeam
+        from draw.models import DebateTeam
         try:
             return DebateTeam.objects.filter(
                 debate__round__seq__lt=round_seq,
@@ -299,8 +299,8 @@ class Adjudicator(Person):
     test_score = models.FloatField(default=0)
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
 
-    institution_conflicts = models.ManyToManyField('Institution', through='allocations.AdjudicatorInstitutionConflict', related_name='adj_inst_conflicts')
-    conflicts = models.ManyToManyField('Team', through='allocations.AdjudicatorConflict', related_name='adj_adj_conflicts')
+    institution_conflicts = models.ManyToManyField('Institution', through='adjallocation.AdjudicatorInstitutionConflict', related_name='adj_inst_conflicts')
+    conflicts = models.ManyToManyField('Team', through='adjallocation.AdjudicatorConflict', related_name='adj_adj_conflicts')
 
     breaking = models.BooleanField(default=False)
     independent = models.BooleanField(default=False, blank=True)
@@ -316,7 +316,7 @@ class Adjudicator(Person):
 
     def conflict_with(self, team):
         if not hasattr(self, '_conflict_cache'):
-            from allocations.models import AdjudicatorConflict, AdjudicatorInstitutionConflict
+            from adjallocation.models import AdjudicatorConflict, AdjudicatorInstitutionConflict
             self._conflict_cache = set(c['team_id'] for c in
                 AdjudicatorConflict.objects.filter(adjudicator=self).values('team_id')
             )
@@ -350,7 +350,7 @@ class Adjudicator(Person):
 
 
     def _feedback_score(self):
-        from allocations.models import DebateAdjudicator
+        from adjallocation.models import DebateAdjudicator
         return self.adjudicatorfeedback_set.filter(confirmed=True).exclude(
                 source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
                 avg=models.Avg('score'))['avg']
@@ -363,7 +363,7 @@ class Adjudicator(Person):
         return self.adjudicatorfeedback_set.all()
 
     def seen_team(self, team, before_round=None):
-        from draws.models import DebateTeam
+        from draw.models import DebateTeam
         if not hasattr(self, '_seen_cache'):
             self._seen_cache = {}
         if before_round not in self._seen_cache:
@@ -378,7 +378,7 @@ class Adjudicator(Person):
         return team.id in self._seen_cache[before_round]
 
     def seen_adjudicator(self, adj, before_round=None):
-        from allocations.models import DebateAdjudicator
+        from adjallocation.models import DebateAdjudicator
         d = DebateAdjudicator.objects.filter(
             adjudicator = self,
             allocations__debateadjudicator__adjudicator = adj,

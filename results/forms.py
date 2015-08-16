@@ -3,7 +3,7 @@ import itertools
 from collections import Counter
 import logging
 
-from draws.models import Debate, DebateTeam
+from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 from result import BallotSet
 

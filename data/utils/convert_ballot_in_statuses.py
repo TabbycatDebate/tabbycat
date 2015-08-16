@@ -5,7 +5,7 @@ Only run this script after migrating.
 """
 
 import header
-from draws.models import Debate
+from draw.models import Debate
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)

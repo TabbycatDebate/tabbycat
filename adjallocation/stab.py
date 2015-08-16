@@ -127,7 +127,7 @@ class StabAllocator(Allocator):
                     if j is None:
                         j = self.search_swap(i, range(i+1, len(panels)))
 
-        from allocations.models import AdjudicatorAllocation
+        from adjallocation.models import AdjudicatorAllocation
 
         allocation = []
         for debate, panel in self.pairings:
@@ -141,7 +141,7 @@ class StabAllocator(Allocator):
     def get_debate_energy(self, debate, bubble=False):
         # TODO: does TeamAtRound exist?
         from tournaments.models import TeamAtRound
-        from draws.models import DebateTeam
+        from draw.models import DebateTeam
         aff_team = TeamAtRound(debate.aff_team, debate.round)
         neg_team = TeamAtRound(debate.neg_team, debate.round)
 

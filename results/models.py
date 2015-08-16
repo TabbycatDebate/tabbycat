@@ -78,13 +78,13 @@ class BallotSubmission(Submission):
     """Represents a single submission of ballots for a debate.
     (Not a single motion, but a single submission of all ballots for a debate.)"""
 
-    debate = models.ForeignKey('draws.Debate', db_index=True)
+    debate = models.ForeignKey('draw.Debate', db_index=True)
     motion = models.ForeignKey('motions.Motion', blank=True, null=True, on_delete=models.SET_NULL)
 
     copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
     discarded = models.BooleanField(default=False)
 
-    forfeit = models.ForeignKey('draws.DebateTeam', blank=True, null=True)
+    forfeit = models.ForeignKey('draw.DebateTeam', blank=True, null=True)
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -156,8 +156,8 @@ class SpeakerScoreByAdj(models.Model):
     Holds score given by a particular adjudicator in a debate
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_adjudicator = models.ForeignKey('allocations.DebateAdjudicator')
-    debate_team = models.ForeignKey('draws.DebateTeam')
+    debate_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator')
+    debate_team = models.ForeignKey('draw.DebateTeam')
     score = ScoreField()
     position = models.IntegerField()
 
@@ -175,7 +175,7 @@ class TeamScore(models.Model):
     Holds a teams total score and points in a debate
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_team = models.ForeignKey('draws.DebateTeam', db_index=True)
+    debate_team = models.ForeignKey('draw.DebateTeam', db_index=True)
     points = models.PositiveSmallIntegerField()
     margin = ScoreField()
     win = models.NullBooleanField()
@@ -217,7 +217,7 @@ class SpeakerScore(models.Model):
     BallotSet class in result.py calculates this when it saves a ballot set.
     """
     ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_team = models.ForeignKey('draws.DebateTeam')
+    debate_team = models.ForeignKey('draw.DebateTeam')
     speaker = models.ForeignKey('participants.Speaker', db_index=True)
     score = ScoreField()
     position = models.IntegerField()

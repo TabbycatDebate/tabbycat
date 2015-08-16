@@ -2,8 +2,8 @@ from django.contrib import admin
 from django import forms
 
 from . import models
-from allocations.models import AdjudicatorConflict, AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict
-from feedbacks.models import AdjudicatorTestScoreHistory
+from adjallocation.models import AdjudicatorConflict, AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict
+from adjfeedback.models import AdjudicatorTestScoreHistory
 
 # ==============================================================================
 # Region

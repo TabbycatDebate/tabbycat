@@ -5,8 +5,8 @@ from django.utils.translation import ugettext_lazy
 from . import models
 from tournaments.models import Round
 from participants.models import Adjudicator, Team
-from allocations.models import DebateAdjudicator
-from draws.models import Debate, DebateTeam
+from adjallocation.models import DebateAdjudicator
+from draw.models import Debate, DebateTeam
 from utils.forms import OptionalChoiceField
 
 # General, but only used here

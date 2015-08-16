@@ -3,7 +3,7 @@ from django import forms
 
 from . import models
 from participants.models import Speaker, Team
-from allocations.models import DebateAdjudicator
+from adjallocation.models import DebateAdjudicator
 
 # ==============================================================================
 # DebateTeam

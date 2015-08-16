@@ -11,7 +11,7 @@ before running the script if you don't have one.
 """
 import header
 import tournaments.models as m
-import draws.models as dm
+import draw.models as dm
 import motions.models as mm
 import results.models as rm
 from django.contrib.auth.models import User

@@ -116,13 +116,13 @@ class ActionLog(models.Model):
     ip_address = models.GenericIPAddressField(blank=True, null=True)
     tournament = models.ForeignKey('tournaments.Tournament', blank=True, null=True)
 
-    debate = models.ForeignKey('draws.Debate', blank=True, null=True)
+    debate = models.ForeignKey('draw.Debate', blank=True, null=True)
     ballot_submission = models.ForeignKey('results.BallotSubmission', blank=True, null=True)
-    adjudicator_test_score_history = models.ForeignKey('feedbacks.AdjudicatorTestScoreHistory', blank=True, null=True)
-    adjudicator_feedback = models.ForeignKey('feedbacks.AdjudicatorFeedback', blank=True, null=True)
+    adjudicator_test_score_history = models.ForeignKey('adjfeedback.AdjudicatorTestScoreHistory', blank=True, null=True)
+    adjudicator_feedback = models.ForeignKey('adjfeedback.AdjudicatorFeedback', blank=True, null=True)
     round = models.ForeignKey('tournaments.Round', blank=True, null=True)
     motion = models.ForeignKey('motions.Motion', blank=True, null=True)
-    break_category = models.ForeignKey('breaks.BreakCategory', blank=True, null=True)
+    break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True)
 
     objects = ActionLogManager()
 

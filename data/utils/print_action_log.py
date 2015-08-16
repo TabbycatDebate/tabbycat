@@ -1,7 +1,7 @@
 """Prints the entire action log."""
 
 import header
-from action_logs.models import ActionLog
+from actionlog.models import ActionLog
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)

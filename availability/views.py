@@ -1,6 +1,6 @@
 from tournaments.models import Round
 from participants.models import Person
-from action_logs.models import ActionLog
+from actionlog.models import ActionLog
 
 from utils.views import *
 

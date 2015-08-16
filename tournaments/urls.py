@@ -24,25 +24,25 @@ urlpatterns = [
     url(r'^all_tournaments_all_institutions/all_draws/(?P<institution_id>\d+)$',    views.all_draws_for_institution, name='all_draws_for_institution'),
 
     # Action Logs App
-    url(r'^admin/action_log/',                              include('action_logs.urls')),
+    url(r'^admin/action_log/',                              include('actionlog.urls')),
 
     # Allocations App
-    url(r'^admin/allocations/round/(?P<round_seq>\d+)/',    include('allocations.urls')),
+    url(r'^admin/allocations/round/(?P<round_seq>\d+)/',    include('adjallocation.urls')),
 
     # Availabilities App
-    url(r'^admin/availability/round/(?P<round_seq>\d+)/',   include('availabilities.urls')),
+    url(r'^admin/availability/round/(?P<round_seq>\d+)/',   include('availability.urls')),
 
     # Breaks App
-    url(r'^break/',                                         include('breaks.urls_public')),
-    url(r'^admin/break/',                                   include('breaks.urls_admin')),
+    url(r'^break/',                                         include('breakqual.urls_public')),
+    url(r'^admin/break/',                                   include('breakqual.urls_admin')),
 
     # Draws App
-    url(r'^draw/',                                          include('draws.urls_public')),
-    url(r'^admin/draw/',                                    include('draws.urls_admin')),
+    url(r'^draw/',                                          include('draw.urls_public')),
+    url(r'^admin/draw/',                                    include('draw.urls_admin')),
 
     # Feedbacks App
-    url(r'^feedback/',                                      include('feedbacks.urls_public')),
-    url(r'^admin/feedback/',                                include('feedbacks.urls_admin')),
+    url(r'^feedback/',                                      include('adjfeedback.urls_public')),
+    url(r'^admin/feedback/',                                include('adjfeedback.urls_admin')),
 
     # Motions App
     url(r'^motions/',                                       include('motions.urls_public')),

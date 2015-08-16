@@ -3,7 +3,7 @@
 from django.test import TestCase
 from tournaments.models import Tournament, Round
 from participants.models import Institution, Team, Speaker, Adjudicator
-from draws.models import Debate, DebateTeam
+from draw.models import Debate, DebateTeam
 from venues.models import Venue
 
 class BaseDebateTestCase(TestCase):

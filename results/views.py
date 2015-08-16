@@ -1,11 +1,11 @@
 import json
 
-from allocations.models import DebateAdjudicator
+from adjallocation.models import DebateAdjudicator
 from tournaments.models import Round
 from participants.models import Adjudicator
-from draws.models import Debate
+from draw.models import Debate
 from motions.models import Motion
-from action_logs.models import ActionLog
+from actionlog.models import ActionLog
 
 from result import BallotSet
 from forms import BallotSetForm

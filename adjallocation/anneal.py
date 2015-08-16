@@ -193,7 +193,7 @@ class SAAllocator(Allocator):
 
 def test():
     from tournaments.models import Round
-    from allocations.stab import StabAllocator
+    from adjallocation.stab import StabAllocator
 
     r = Round.objects.get(pk=4)
     debates = r.debates()

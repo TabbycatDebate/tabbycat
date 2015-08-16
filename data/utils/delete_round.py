@@ -1,7 +1,7 @@
 """Deletes all debates in a round."""
 
 import header
-from draws.models import Debate
+from draw.models import Debate
 from tournaments.models import Round
 
 import argparse

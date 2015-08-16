@@ -4,7 +4,7 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.functional import cached_property
 
-from allocations.anneal import SAAllocator
+from adjallocation.anneal import SAAllocator
 
 import logging
 logger = logging.getLogger(__name__)
@@ -214,17 +214,17 @@ class Round(models.Model):
     abbreviation   = models.CharField(max_length=10, help_text="e.g. \"R1\"")
     draw_type      = models.CharField(max_length=1, choices=DRAW_CHOICES, help_text="Which draw technique to use")
     stage          = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY, help_text="Preliminary = inrounds, elimination = outrounds")
-    break_category = models.ForeignKey('breaks.BreakCategory', blank=True, null=True, help_text="If elimination round, which break category")
+    break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True, help_text="If elimination round, which break category")
 
     draw_status        = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
     venue_status       = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
     adjudicator_status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NONE)
 
-    checkins = models.ManyToManyField('participants.Person', through='availabilities.Checkin', related_name='checkedin_rounds')
+    checkins = models.ManyToManyField('participants.Person', through='availability.Checkin', related_name='checkedin_rounds')
 
-    active_venues       = models.ManyToManyField('venues.Venue', through='availabilities.ActiveVenue')
-    active_adjudicators = models.ManyToManyField('participants.Adjudicator', through='availabilities.ActiveAdjudicator')
-    active_teams        = models.ManyToManyField('participants.Team', through='availabilities.ActiveTeam')
+    active_venues       = models.ManyToManyField('venues.Venue', through='availability.ActiveVenue')
+    active_adjudicators = models.ManyToManyField('participants.Adjudicator', through='availability.ActiveAdjudicator')
+    active_teams        = models.ManyToManyField('participants.Team', through='availability.ActiveTeam')
 
     feedback_weight = models.FloatField(default=0)
     silent = models.BooleanField(default=False)
@@ -243,8 +243,8 @@ class Round(models.Model):
         return self.motion_set.order_by('seq')
 
     def draw(self, override_team_checkins=False):
-        from draws.models import Debate, TeamPositionAllocation
-        from draws.draw import DrawGenerator
+        from draw.models import Debate, TeamPositionAllocation
+        from draw.draw import DrawGenerator
         from participants.models import Team
 
         if self.draw_status != self.STATUS_NONE:
@@ -358,7 +358,7 @@ class Round(models.Model):
         return self.get_draw()
 
     def get_draw(self):
-        from draws.models import Debate
+        from draw.models import Debate
         if self.tournament.config.get('enable_divisions'):
             debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
             'venue', 'division', 'division__venue_group')
@@ -369,7 +369,7 @@ class Round(models.Model):
         return debates
 
     def get_draw_by_room(self):
-        from draws.models import Debate
+        from draw.models import Debate
         if self.tournament.config.get('enable_divisions'):
             debates = Debate.objects.filter(round=self).order_by('venue__name').select_related(
                  'venue', 'division', 'division__venue_group')
@@ -413,7 +413,7 @@ class Round(models.Model):
         return draw
 
     def make_debates(self, pairings):
-        from draws.models import Debate, DebateTeam
+        from draw.models import Debate, DebateTeam
         import random
 
         venues = list(self.active_venues.order_by('-priority'))[:len(pairings)]
@@ -473,13 +473,13 @@ class Round(models.Model):
 
     def person_availability(self):
         from participants.models import Person
-        return self.base_availability(Person, 'availabilities_checkin', 'person_id',
+        return self.base_availability(Person, 'availability_checkin', 'person_id',
                                       'participants_person')
 
 
     def venue_availability(self):
         from venues.models import Venue
-        all_venues = self.base_availability(Venue, 'availabilities_activevenue', 'venue_id',
+        all_venues = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
                                       'venues_venue')
         all_venues = [v for v in all_venues if v.tournament == self.tournament]
         return all_venues
@@ -488,7 +488,7 @@ class Round(models.Model):
         from venues.models import Venue
         # Had to replicate venue_availability via base_availability so extra()
         # could still function on the query set
-        result = self.base_availability(Venue, 'availabilities_activevenue', 'venue_id',
+        result = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
                                       'venues_venue').extra(select =
                                       {'is_used': """EXISTS (SELECT 1
                                       FROM draws_debate da
@@ -499,7 +499,7 @@ class Round(models.Model):
 
     def adjudicator_availability(self):
         from participants.models import Adjudicator
-        all_adjs = self.base_availability(Adjudicator, 'availabilities_activeadjudicator',
+        all_adjs = self.base_availability(Adjudicator, 'availability_activeadjudicator',
                                       'adjudicator_id',
                                       'participants_adjudicator', id_field='person_ptr_id')
 
@@ -509,7 +509,7 @@ class Round(models.Model):
         return all_adjs
 
     def unused_adjudicators(self):
-        result = self.base_availability(Adjudicator, 'availabilities_activeadjudicator',
+        result = self.base_availability(Adjudicator, 'availability_activeadjudicator',
                                       'adjudicator_id',
                                       'participants_adjudicator',
                                       id_field='person_ptr_id').extra(
@@ -526,13 +526,13 @@ class Round(models.Model):
 
     def team_availability(self):
         from participants.models import Team
-        all_teams = self.base_availability(Team, 'availabilities_activeteam', 'team_id',
+        all_teams = self.base_availability(Team, 'availability_activeteam', 'team_id',
                                       'participants_team')
         relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
         return relevant_teams
 
     def unused_teams(self):
-        from draws.models import DebateTeam
+        from draw.models import DebateTeam
         all_teams = self.active_teams.all()
         all_teams = [t for t in all_teams if t.tournament == self.tournament]
 
@@ -563,35 +563,35 @@ class Round(models.Model):
             m.save()
 
     def set_available_people(self, ids):
-        from availabilities.models import Checkin
+        from availability.models import Checkin
         from participants.models import Person
         return self.set_available_base(ids, Person, Checkin,
                                       self.checkins, 'person_id',
                                       'person__id', remove=False)
 
     def set_available_venues(self, ids):
-        from availabilities.models import ActiveVenue
+        from availability.models import ActiveVenue
         from venues.models import Venue
         return self.set_available_base(ids, Venue, ActiveVenue,
                                        self.active_venues, 'venue_id',
                                        'venue__id')
 
     def set_available_adjudicators(self, ids):
-        from availabilities.models import ActiveAdjudicator
+        from availability.models import ActiveAdjudicator
         from participants.models import Adjudicator
         return self.set_available_base(ids, Adjudicator, ActiveAdjudicator,
                                        self.active_adjudicators,
                                        'adjudicator_id', 'adjudicator__id')
 
     def set_available_teams(self, ids):
-        from availabilities.models import ActiveTeam
+        from availability.models import ActiveTeam
         from participants.models import Team
         return self.set_available_base(ids, Team, ActiveTeam,
                                        self.active_teams, 'team_id',
                                       'team__id')
 
     def activate_adjudicator(self, adj, state=True):
-        from availabilities.models import ActiveAdjudicator
+        from availability.models import ActiveAdjudicator
         if state:
             ActiveAdjudicator.objects.get_or_create(round=self, adjudicator=adj)
         else:
@@ -599,14 +599,14 @@ class Round(models.Model):
                                              adjudicator=adj).delete()
 
     def activate_venue(self, venue, state=True):
-        from availabilities.models import ActiveVenue
+        from availability.models import ActiveVenue
         if state:
             ActiveVenue.objects.get_or_create(round=self, venue=venue)
         else:
             ActiveVenue.objects.filter(round=self, venue=venue).delete()
 
     def activate_team(self, team, state=True):
-        from availabilities.models import ActiveTeam
+        from availability.models import ActiveTeam
         if state:
             ActiveTeam.objects.get_or_create(round=self, team=team)
         else:

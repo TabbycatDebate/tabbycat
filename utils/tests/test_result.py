@@ -5,13 +5,13 @@ from django.test import TestCase
 import participants.models as pm
 import results.models as rm
 import venues.models as vm
-import draws.models as dm
+import draw.models as dm
 import tournament.models as dm
 import random
 from results.result import BallotSet
 
-from draws.models import DebateTeam
-from allocations.models import DebateAdjudicator
+from draw.models import DebateTeam
+from adjallocation.models import DebateAdjudicator
 
 class BaseTestResult(TestCase):
 

@@ -1,5 +1,5 @@
 from participants.models import Adjudicator
-from action_logs.models import ActionLog
+from actionlog.models import ActionLog
 
 from . import models
 from . import forms

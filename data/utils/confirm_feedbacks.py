@@ -2,7 +2,7 @@
 Will confirm all non-unique ones, so only the last one will remain confirmed."""
 
 import header
-from feedbacks.models import AdjudicatorFeedback
+from adjfeedback.models import AdjudicatorFeedback
 
 import argparse
 parser = argparse.ArgumentParser(description=__doc__)

@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from . import models
-from allocations.models import DebateAdjudicator
+from adjallocation.models import DebateAdjudicator
 
 class ResultError(RuntimeError):
     pass

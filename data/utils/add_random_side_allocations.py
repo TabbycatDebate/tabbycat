@@ -2,7 +2,7 @@
 
 import header
 import tournaments.models as tm
-import draws.models as dm
+import draw.models as dm
 import participants.models as pm
 import random
 import argparse

@@ -2,14 +2,14 @@
 specified"""
 
 import header
-import feedbacks.models as fm
+import adjfeedback.models as fm
 
-from draws.models import Debate, DebateTeam
+from draw.models import Debate, DebateTeam
 from participants.models import Team, Adjudicator
 
 from django.contrib.auth.models import User
 from results.result import BallotSet
-from allocations.models import DebateAdjudicator
+from adjallocation.models import DebateAdjudicator
 
 import random
 import itertools

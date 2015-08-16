@@ -1,7 +1,7 @@
 from utils.views import *
 
 from . import models
-from draws.models import Debate
+from draw.models import Debate
 
 @cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view
@@ -69,7 +69,7 @@ def all_draws_for_venue(request, t, venue_id):
 def all_draws_for_institution(request, t, institution_id):
     # TODO: move to draws app
     from participants.models import Institution
-    from draws.models import DebateTeam
+    from draw.models import DebateTeam
     institution = Institution.objects.get(pk=institution_id)
     debate_teams = DebateTeam.objects.filter(team__institution=institution).select_related(
         'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')

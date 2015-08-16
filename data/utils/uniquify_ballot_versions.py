@@ -3,7 +3,7 @@ See https://github.com/czlee/tabbycat/issues/38#issuecomment-44149213 for more
 information."""
 
 import header
-from draws.models import Debate
+from draw.models import Debate
 import results.models as rm
 
 import argparse

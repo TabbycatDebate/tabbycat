@@ -23,7 +23,7 @@ class BreakCategory(models.Model):
     # )
     # status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
 
-    breaking_teams = models.ManyToManyField('participants.Team', through='breaks.BreakingTeam')
+    breaking_teams = models.ManyToManyField('participants.Team', through='BreakingTeam')
 
     def __unicode__(self):
         return self.name
