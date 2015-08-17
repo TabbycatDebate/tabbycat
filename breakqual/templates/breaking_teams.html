@@ -11,6 +11,25 @@
 
 {% block header %}
   {% if generated %}
+
+    <div class="btn-group">
+      <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
+        <button class="btn btn-danger form-control" id="generateBreakingTeams" type="submit">
+            Delete and regenerate the break for all categories
+        </button>
+      </form>
+      <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
+        <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+          Update the break for all categories
+        </button>
+      </form>
+      <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
+        <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+          Update the break for this category ({{ category.name }})
+        </button>
+      </form>
+    </div>
+
     <div class="alert alert-warning">
       Please double-check this before announcing the break or releasing it to the
       public. The code that generates the break has not been robustly tested for
@@ -33,23 +52,7 @@
       breaking teams list directly in the database through the Django Admin.
     </p>
 
-    <div class="forms-block-inline">
-      <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
-        <button class="btn btn-danger form-control" id="generateBreakingTeams" type="submit">
-            Delete and regenerate the break for all categories
-        </button>
-      </form>
-      <form action="{% tournament_url update_all_breaking_teams category.slug %}" method="POST">
-        <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-          Update the break for all categories
-        </button>
-      </form>
-      <form action="{% tournament_url update_breaking_teams category.slug %}" method="POST">
-        <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-          Update the break for this category ({{ category.name }})
-        </button>
-      </form>
-    </div>
+
   {% else %}
     {% if public_breaking_teams %}
       <div class="alert alert-danger">
@@ -86,13 +89,6 @@
 {% block content %}
   {% if generated %}
     <form action="." method="POST">
-      <div class="row">
-        <div class="form-inline col-md-12">
-          <button class="btn btn-default form-control btn-{{ public_breaking_teams|yesno:"danger,success" }}" id="submit" type="submit" value="submit">
-              Save remarks
-          </button>
-        </div>
-      </div>
 
       <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
         <thead>
@@ -141,6 +137,15 @@
           {% endfor %}
         </tbody>
         </table>
+
+      <div class="row">
+        <div class="form-inline col-md-12">
+          <button class="btn btn-default form-control btn-{{ public_breaking_teams|yesno:"danger,success" }}" id="submit" type="submit" value="submit">
+              Save remarks
+          </button>
+        </div>
+      </div>
+
     </form>
   {% endif %}
 
