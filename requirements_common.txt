@@ -8,7 +8,7 @@ django-debug-toolbar==1.3.0 # Debug Toolbar
 django-ipware==0.1.0 # IP Address logging
 django-libsass==0.3  # SASS Compilation
 django-suit==0.2.13 # Admin Backend
-psycopg2==2.5.4 # For Django to talk to postgres
+psycopg2==2.6.1 # For Django to talk to postgres
 libsass==0.8.2 # SASS Compilation Dependency
 six==1.9.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.1.14
