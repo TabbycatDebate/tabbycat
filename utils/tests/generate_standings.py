@@ -9,7 +9,7 @@ test_draw.py."""
 from test_one_up_one_down import TestTeam
 import os.path, sys
 if os.path.abspath("..") not in sys.path: sys.path.append(os.path.abspath(".."))
-from draw.draw import PowerPairedDrawGenerator
+from draw import DrawGenerator
 
 import string
 import random

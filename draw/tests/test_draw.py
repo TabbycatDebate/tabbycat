@@ -757,7 +757,6 @@ class TestEliminationDrawGenerator(unittest.TestCase):
     def _results(self, *args):
         _t = lambda id: self.teams[id-1]
         _p = lambda ids: map(_t, ids)
-        from draw.draw import Pairing
         pairings = list()
         for i, (teams, winner) in enumerate(args):
             pairing = Pairing(_p(teams), 0, i, winner=_t(winner))

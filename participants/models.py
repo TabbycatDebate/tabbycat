@@ -4,6 +4,7 @@ from django.db.models import signals
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.cache import cache
 from django.utils.functional import cached_property
+from tournaments.models import Round
 
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
@@ -102,25 +103,25 @@ class TeamManager(models.Manager):
             tournament=round.tournament).select_related('institution')
 
     def standings(self, round):
-        from standings.standings import annotate_team_standings
+        from standings import annotate_team_standings
         """Returns a list."""
         teams = self._teams_for_standings(round)
         return annotate_team_standings(teams, round)
 
     def ranked_standings(self, round):
-        from standings.standings import ranked_team_standings
+        from standings import ranked_team_standings
         """Returns a list."""
         teams = self._teams_for_standings(round)
         return ranked_team_standings(teams, round)
 
     def division_standings(self, round):
-        from standings.standings import division_ranked_team_standings
+        from standings import division_ranked_team_standings
         """Returns a list."""
         teams = self._teams_for_standings(round)
         return division_ranked_team_standings(teams, round)
 
     def subrank_standings(self, round):
-        from standings.standings import subranked_team_standings
+        from standings import subranked_team_standings
         """Returns a list."""
         teams = self._teams_for_standings(round)
         return subranked_team_standings(teams, round)

@@ -244,7 +244,7 @@ class Round(models.Model):
 
     def draw(self, override_team_checkins=False):
         from draw.models import Debate, TeamPositionAllocation
-        from draw.draw import DrawGenerator
+        from draw import DrawGenerator
         from participants.models import Team
 
         if self.draw_status != self.STATUS_NONE:
@@ -279,7 +279,8 @@ class Round(models.Model):
             teams = draw_teams
             draw_type = "manual"
         elif self.draw_type == self.DRAW_POWERPAIRED:
-            teams = standings.annotate_team_standings(draw_teams, self.prev, shuffle=True)
+            from standings import annotate_team_standings
+            teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts" : "draw_avoid_conflicts",
@@ -389,6 +390,7 @@ class Round(models.Model):
         return draw_by_team
 
     def get_draw_with_standings(self, round):
+        from participants.models import Team
         draw = self.get_draw()
         if round.prev:
             if round.tournament.config.get('team_points_rule') != "wadl":

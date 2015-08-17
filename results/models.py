@@ -3,6 +3,7 @@ from django.utils.functional import cached_property
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 from threading import BoundedSemaphore
+from .result import BallotSet
 
 class ScoreField(models.FloatField):
     pass
@@ -97,7 +98,6 @@ class BallotSubmission(Submission):
     @cached_property
     def ballot_set(self):
         if not hasattr(self, "_ballot_set"):
-            from results import BallotSet
             self._ballot_set = BallotSet(self)
         return self._ballot_set
 

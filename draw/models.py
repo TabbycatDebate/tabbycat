@@ -3,6 +3,7 @@ from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 
 from tournaments.models import SRManager
+from generator import DRAW_FLAG_DESCRIPTIONS
 
 class DebateManager(models.Manager):
     use_for_related_fields = True
