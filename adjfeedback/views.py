@@ -302,7 +302,7 @@ def set_adj_test_score(request, t):
         score = float(score_text)
     except ValueError, e:
         print e
-        return redirect_tournament('adj_feedback', t)
+        return redirect_tournament('feedback_overview', t)
 
     adjudicator.test_score = score
     adjudicator.save()
@@ -313,7 +313,7 @@ def set_adj_test_score(request, t):
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT,
         user=request.user, adjudicator_test_score_history=atsh, tournament=t)
 
-    return redirect_tournament('adj_feedback', t)
+    return redirect_tournament('feedback_overview', t)
 
 
 # TODO: move to breaking app?
@@ -478,12 +478,12 @@ def set_adj_note(request, t):
         note = str(note_text)
     except ValueError, e:
         print e
-        return redirect_tournament('adj_feedback', t)
+        return redirect_tournament('feedback_overview', t)
 
     adjudicator.notes = note
     adjudicator.save()
 
-    return redirect_tournament('adj_feedback', t)
+    return redirect_tournament('feedback_overview', t)
 
 
 @admin_required
