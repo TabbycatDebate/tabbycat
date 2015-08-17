@@ -45,7 +45,7 @@ def breaking_teams(request, t, category):
 @tournament_view
 def generate_all_breaking_teams(request, t, category):
     """Generates for all break categories; 'category' is used only for the redirect"""
-    from breaks import generate_all_breaking_teams
+    from breaking import generate_all_breaking_teams
     generate_all_breaking_teams(t)
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BREAK_GENERATE_ALL,
             user=request.user, tournament=t, ip_address=get_ip_address(request))
