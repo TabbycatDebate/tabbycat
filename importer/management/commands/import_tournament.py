@@ -9,7 +9,7 @@ from django.template.defaultfilters import slugify
 
 import participants.models as pm
 from tournaments.models import Tournament
-from utils.importer import AnorakTournamentDataImporter, DUPLICATE_INFO
+from ... import AnorakTournamentDataImporter, DUPLICATE_INFO
 
 class Command(BaseCommand):
     help = 'Delete all data for a tournament and import from specified directory.'

@@ -383,8 +383,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             }
         return self._import(f, _question_line_parser, fm.AdjudicatorFeedbackQuestion)
 
-    def import_config(self, f):
-        """Imports configuration settings from a file.
+    def import_options(self, f):
+        """Imports tournament options from a file.
         Each line has:
             key, value_type, value
         """

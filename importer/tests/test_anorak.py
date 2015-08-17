@@ -1,18 +1,20 @@
-"""Unit tests for the importer module."""
+"""Unit tests for the Anorak importer."""
 
 from django.test import TestCase
 from unittest import skip
 import adjallocation.models as am
+import breakqual.models as bm
 import motions.models as mm
 import options.models as cm
-import participants.models as cm
+import participants.models as pm
 import venues.models as vm
 import adjfeedback.models as fm
 import tournaments.models as tm
 import os.path
 import logging
 
-from utils.importer.anorak import AnorakTournamentDataImporter, TournamentDataImporterError
+from ..anorak import AnorakTournamentDataImporter
+from ..base import TournamentDataImporterError
 
 class TestImporterAnorak(TestCase):
 
@@ -34,10 +36,17 @@ class TestImporterAnorak(TestCase):
         path = os.path.join(dir, filename + ".csv")
         return open(path, 'r')
 
+    def test_break_categories(self):
+        f = self._open_csv_file(self.TESTDIR, "break_categories")
+        counts, errors = self.importer.import_break_categories(f)
+        self.assertEqual(counts, {bm.BreakCategory: 4})
+        self.assertFalse(errors)
+
     def test_rounds(self):
+        self.test_break_categories()
         f = self._open_csv_file(self.TESTDIR, "rounds")
         counts, errors = self.importer.import_rounds(f)
-        self.assertEqual(counts, {tm.Round: 6})
+        self.assertEqual(counts, {tm.Round: 12})
         self.assertFalse(errors)
 
     def test_venues(self):
@@ -85,16 +94,16 @@ class TestImporterAnorak(TestCase):
         self.assertEqual(counts, {mm.Motion: 18})
         self.assertFalse(errors)
 
-    def test_config(self):
-        f = self._open_csv_file(self.TESTDIR_CHOICES, "config")
-        counts, errors = self.importer.import_config(f)
-        self.assertEqual(counts, {cm.Config: 28})
+    def test_options(self):
+        f = self._open_csv_file(self.TESTDIR_CHOICES, "options")
+        counts, errors = self.importer.import_options(f)
+        self.assertEqual(counts, {cm.Option: 25})
         self.assertFalse(errors)
 
     def test_adj_feedback_questions(self):
         f = self._open_csv_file(self.TESTDIR, "questions")
         counts, errors = self.importer.import_adj_feedback_questions(f)
-        self.assertEqual(counts, {fm.AdjudicatorFeedbackQuestion: 7})
+        self.assertEqual(counts, {fm.AdjudicatorFeedbackQuestion: 11})
         self.assertFalse(errors)
 
     def test_invalid_line(self):
