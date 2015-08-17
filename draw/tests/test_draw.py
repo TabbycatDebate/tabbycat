@@ -1,7 +1,7 @@
 import os.path, sys
 import unittest
 from collections import OrderedDict
-from ..draw import DrawGenerator, Pairing, DrawError
+from .. import DrawGenerator, Pairing, DrawError
 import copy
 from test_one_up_one_down import TestTeam
 
