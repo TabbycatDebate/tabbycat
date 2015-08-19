@@ -7,6 +7,7 @@ from . import models
 
 from utils.views import *
 
+
 @admin_required
 @expect_post
 @round_view
@@ -33,7 +34,7 @@ def update_debate_importance(request, round):
     debate.importance = im
     debate.save()
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
-            user=request.user, debate=debate, tournament=round.tournament)
+                               user=request.user, debate=debate, tournament=round.tournament)
     return HttpResponse(im)
 
 
@@ -44,12 +45,15 @@ def draw_adjudicators_edit(request, round):
     context['draw'] = draw = round.get_draw()
     context['adj0'] = Adjudicator.objects.first()
     context['duplicate_adjs'] = round.tournament.config.get('duplicate_adjs')
-    context['feedback_headings'] = [q.name for q in round.tournament.adj_feedback_questions]
+    context['feedback_headings'] = [
+        q.name for q in round.tournament.adj_feedback_questions]
 
     def calculate_prior_adj_genders(team):
         debates = team.get_debates(round.seq)
-        adjs = models.DebateAdjudicator.objects.filter(debate__in=debates).count()
-        male_adjs = models.DebateAdjudicator.objects.filter(debate__in=debates,adjudicator__gender="M").count()
+        adjs = models.DebateAdjudicator.objects.filter(
+            debate__in=debates).count()
+        male_adjs = models.DebateAdjudicator.objects.filter(
+            debate__in=debates, adjudicator__gender="M").count()
         if male_adjs > 0:
             male_adj_percent = int((float(male_adjs) / float(adjs)) * 100)
             return male_adj_percent
@@ -69,12 +73,17 @@ def draw_adjudicators_edit(request, round):
             debate.gender_class = (aff_male_adj_percent / 5) - 10
 
     regions = round.tournament.region_set.order_by('name')
-    break_categories = round.tournament.breakcategory_set.order_by('seq').exclude(is_general=True)
-    colors = ["#C70062", "#00C79B", "#B1E001", "#476C5E", "#777", "#FF2983", "#6A268C", "#00C0CF", "#0051CF"]
-    context['regions'] = zip(regions, colors + ["black"] * (len(regions) - len(colors)))
-    context['break_categories'] = zip(break_categories, colors + ["black"] * (len(break_categories) - len(colors)))
+    break_categories = round.tournament.breakcategory_set.order_by(
+        'seq').exclude(is_general=True)
+    colors = ["#C70062", "#00C79B", "#B1E001", "#476C5E",
+              "#777", "#FF2983", "#6A268C", "#00C0CF", "#0051CF"]
+    context['regions'] = zip(regions, colors + ["black"]
+                             * (len(regions) - len(colors)))
+    context['break_categories'] = zip(
+        break_categories, colors + ["black"] * (len(break_categories) - len(colors)))
 
     return r2r(request, "draw_adjudicators_edit.html", context)
+
 
 def _json_adj_allocation(debates, unused_adj):
 
@@ -127,8 +136,8 @@ def save_adjudicators(request, round):
         s = s.replace('[]', '')
         return int(s.split('_')[1])
 
-    debate_ids = set(id(a) for a in request.POST);
-    debates = Debate.objects.in_bulk(list(debate_ids));
+    debate_ids = set(id(a) for a in request.POST)
+    debates = Debate.objects.in_bulk(list(debate_ids))
     debate_adjudicators = {}
     for d_id, debate in debates.items():
         a = debate.adjudicators
@@ -152,7 +161,7 @@ def save_adjudicators(request, round):
         alloc.save()
 
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE,
-        user=request.user, round=round, tournament=round.tournament)
+                               user=request.user, round=round, tournament=round.tournament)
 
     return HttpResponse("ok")
 
@@ -184,7 +193,7 @@ def adj_conflicts(request, round):
         add('adjudicator', ac.adjudicator_id, ac.conflict_adjudicator.id)
 
     history = models.DebateAdjudicator.objects.filter(
-        debate__round__seq__lt = round.seq,
+        debate__round__seq__lt=round.seq,
     )
 
     for da in history:
@@ -192,4 +201,3 @@ def adj_conflicts(request, round):
         add('history', da.adjudicator_id, da.debate.neg_team.id)
 
     return HttpResponse(json.dumps(data), content_type="text/json")
-
