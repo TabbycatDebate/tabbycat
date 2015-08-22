@@ -1,2 +1,2 @@
-from anorak import AnorakTournamentDataImporter
-from base import DUPLICATE_INFO
+from .anorak import AnorakTournamentDataImporter
+from .base import DUPLICATE_INFO

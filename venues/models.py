@@ -18,9 +18,9 @@ class VenueGroup(models.Model):
 
     def __unicode__(self):
         if self.short_name:
-            return u"%s" % (self.short_name)
+            return "%s" % (self.short_name)
         else:
-            return u"%s" % (self.name)
+            return "%s" % (self.name)
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
@@ -35,6 +35,6 @@ class Venue(models.Model):
 
     def __unicode__(self):
         if self.group:
-            return u'%s - %s' % (self.group, self.name)
+            return '%s - %s' % (self.group, self.name)
         else:
-            return u'%s' % (self.name)
+            return '%s' % (self.name)

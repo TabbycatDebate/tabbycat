@@ -188,8 +188,8 @@ def set_round_start_time(request, round):
     time_text = request.POST["start_time"]
     try:
         time = datetime.datetime.strptime(time_text, "%H:%M").time()
-    except ValueError, e:
-        print e
+    except ValueError as e:
+        print(e)
         return redirect_round('draw', round)
 
     round.starts_at = time
@@ -220,7 +220,7 @@ def save_matchups(request, round):
     # TODO: move to draws app
     #print request.POST.keys()
 
-    existing_debate_ids = [int(a.replace('debate_', '')) for a in request.POST.keys() if a.startswith('debate_')]
+    existing_debate_ids = [int(a.replace('debate_', '')) for a in list(request.POST.keys()) if a.startswith('debate_')]
     for debate_id in existing_debate_ids:
         debate = Debate.objects.get(id=debate_id)
         new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_', '')
@@ -241,7 +241,7 @@ def save_matchups(request, round):
             # If there's blank debates we need to delete those
             debate.delete()
 
-    new_debate_ids = [int(a.replace('new_debate_', '')) for a in request.POST.keys() if a.startswith('new_debate_')]
+    new_debate_ids = [int(a.replace('new_debate_', '')) for a in list(request.POST.keys()) if a.startswith('new_debate_')]
     for debate_id in new_debate_ids:
         new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_', '')
         new_neg_id = request.POST.get('neg_%s' % debate_id).replace('team_', '')
@@ -279,7 +279,7 @@ def save_venues(request, round):
         except IndexError:
             return None
     data = [(int(a.split('_')[1]), v_id(a))
-             for a in request.POST.keys()]
+             for a in list(request.POST.keys())]
 
     debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
     venues = Venue.objects.in_bulk([v_id for _, v_id in data])
@@ -390,7 +390,7 @@ def draw_print_feedback(request, round):
             question.choice_options = question.choices.split("//")
         if question.min_value is not None and question.max_value is not None:
             step = max((int(question.max_value) - int(question.min_value)) / 10, 1)
-            question.number_options = range(int(question.min_value), int(question.max_value+1), int(step) )
+            question.number_options = list(range(int(question.min_value), int(question.max_value+1), int(step)))
 
     return r2r(request, "printing/feedback_list.html", dict(
         draw=draw, config=config, questions=questions))

@@ -1,4 +1,4 @@
-from base import BaseTournamentDataImporter, TournamentDataImporterError
+from .base import BaseTournamentDataImporter, TournamentDataImporterError
 import adjallocation.models as am
 import breakqual.models as bm
 import draw.models as dm
@@ -402,7 +402,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         count = 0
         errors = TournamentDataImporterError()
         if self.header_row:
-            reader.next()
+            next(reader)
 
         for lineno, line in enumerate(reader, start=2 if self.header_row else 1):
             try:

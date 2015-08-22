@@ -2,8 +2,9 @@ from collections import OrderedDict
 import random
 import math
 import copy
-from one_up_one_down import OneUpOneDownSwapper
+from .one_up_one_down import OneUpOneDownSwapper
 from warnings import warn
+import collections
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
 DRAW_FLAG_DESCRIPTIONS = {
@@ -225,7 +226,7 @@ class BaseDrawGenerator(object):
 
     def get_option_function(self, option_name, option_dict):
         option = self.options[option_name]
-        if callable(option):
+        if isinstance(option, collections.Callable):
             return option
         try:
             return getattr(self, option_dict[option])
@@ -265,7 +266,7 @@ class BaseDrawGenerator(object):
     @classmethod
     def available_options(cls):
         keys = set(cls.BASE_DEFAULT_OPTIONS.keys())
-        keys |= cls.DEFAULT_OPTIONS.keys()
+        keys |= list(cls.DEFAULT_OPTIONS.keys())
         return sorted(list(keys))
 
     def check_teams_for_attribute(self, name, choices=None, checkfunc=None):
@@ -276,15 +277,15 @@ class BaseDrawGenerator(object):
         'name' is the name of the attribute.
         'choices', if specified, is a list of allowed values for the attribute.
         """
-        has_attribute = map(lambda x: hasattr(x, name), self.teams)
+        has_attribute = [hasattr(x, name) for x in self.teams]
         if not all(has_attribute):
             offending_teams = has_attribute.count(False)
             raise DrawError("{0} out of {1} teams don't have a '{name}' attribute.".format(
                     offending_teams, len(self.teams), name=name))
         if choices:
-            attribute_value_valid = map(lambda x: getattr(x, name) in choices, self.teams)
+            attribute_value_valid = [getattr(x, name) in choices for x in self.teams]
         elif checkfunc:
-            attribute_value_valid = map(lambda x: checkfunc(getattr(x, name)), self.teams)
+            attribute_value_valid = [checkfunc(getattr(x, name)) for x in self.teams]
         else:
             return
         if not all(attribute_value_valid):
@@ -354,9 +355,9 @@ class RandomDrawGenerator(BaseDrawGenerator):
         """Returns a weighted conflict intensity for all of the pairings given."""
         score = 0
         if self.options["avoid_history"]:
-            score += sum(map(lambda x: x.conflict_hist, pairings)) * self.options["history_penalty"]
+            score += sum([x.conflict_hist for x in pairings]) * self.options["history_penalty"]
         if self.options["avoid_institution"]:
-            score += sum(map(lambda x: x.conflict_inst, pairings)) * self.options["institution_penalty"]
+            score += sum([x.conflict_inst for x in pairings]) * self.options["institution_penalty"]
         return score
 
 
@@ -374,8 +375,8 @@ class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
         if not all(hasattr(t, 'allocated_side') for t in self.teams):
             raise DrawError("To use allocated sides, all teams must have an 'allocated_side' attribute, which must be 'aff' or 'neg'.")
 
-        aff_teams = filter(lambda t: t.allocated_side == "aff", self.teams)
-        neg_teams = filter(lambda t: t.allocated_side == "neg", self.teams)
+        aff_teams = [t for t in self.teams if t.allocated_side == "aff"]
+        neg_teams = [t for t in self.teams if t.allocated_side == "neg"]
 
         if len(aff_teams) != len(neg_teams):
             raise DrawError("There were {0} aff teams but {1} neg teams.".format(len(aff_teams), len(neg_teams)))
@@ -439,7 +440,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         self._pairings = self.generate_pairings(self._brackets)
         self.avoid_conflicts(self._pairings) # operates in-place
         self._draw = list()
-        for bracket in self._pairings.itervalues():
+        for bracket in self._pairings.values():
             self._draw.extend(bracket)
 
         self.balance_sides(self._draw) # operates in-place
@@ -492,7 +493,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         and returning an index for which team to take as the pullup.
         Operates in-place. Does not remove empty brackets."""
         pullup_needed_for = None
-        for points, teams in brackets.iteritems():
+        for points, teams in brackets.items():
             if pullup_needed_for:
                 pullup_team = teams.pop(pos(len(teams)))
                 self.add_team_flag(pullup_team, "pullup")
@@ -508,7 +509,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         """Operates in-place."""
         new = OrderedDict()
         odd_team = None
-        for points, teams in brackets.iteritems():
+        for points, teams in brackets.items():
             if odd_team:
                 new[points+0.5] = [odd_team, teams.pop(0)]
                 odd_team = None
@@ -540,7 +541,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
                 raise DrawError("For conflict avoidance, teams must have attributes 'institution' and 'seen'.")
             return 0 # no conflict
 
-        for points, teams in brackets.iteritems():
+        for points, teams in brackets.items():
             if int(points) == points:
                 continue # skip non-intermediate brackets
             # a couple of checks
@@ -592,7 +593,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     def _pairings(brackets, subpool_func):
         pairings = OrderedDict()
         i = 1
-        for points, teams in brackets.iteritems():
+        for points, teams in brackets.items():
             bracket = list()
             top, bottom = subpool_func(teams)
             for teams in zip(top, bottom):
@@ -649,7 +650,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         """We pass the pairings to one_up_one_down.py, then infer annotations
         based on the result."""
 
-        for bracket in pairings.itervalues():
+        for bracket in pairings.values():
             pairs = [tuple(p.teams) for p in bracket]
             pairs_orig = list(pairs) # keep a copy for comparison
             OPTIONS = ["avoid_history", "avoid_institution", "history_penalty",
@@ -733,13 +734,13 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
     }
 
     def _pullup_top(self, brackets):
-        self._pullup(brackets, lambda x, num: xrange(0, num))
+        self._pullup(brackets, lambda x, num: range(0, num))
 
     def _pullup_bottom(self, brackets):
-        self._pullup(brackets, lambda x, num: xrange(-num, 0))
+        self._pullup(brackets, lambda x, num: range(-num, 0))
 
     def _pullup_random(self, brackets):
-        self._pullup(brackets, lambda x, num: random.sample(range(x), num))
+        self._pullup(brackets, lambda x, num: random.sample(list(range(x)), num))
 
     # Overriding functions for resolving odd brackets:
     def _pullup(self, brackets, indices):
@@ -753,7 +754,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         # List by highest bracket first.
         pullups_needed_for = list()
 
-        for points, pool in brackets.iteritems():
+        for points, pool in brackets.items():
 
             # First, try to fulfil any pullups needed from higher brackets.
             # There's no guarantee we will have enough teams in this bracket to
@@ -764,7 +765,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                 if len(pool[side]) < number_needed:
                     # If there are an unsufficient number of teams, pull up all of them
                     # and add to next pullups needed list.
-                    pullup_indices = xrange(len(pool[side]))
+                    pullup_indices = range(len(pool[side]))
                     new_pullups_needed_for.append((pullups_needed_teams, side, number_needed - len(pool[side])))
                 else:
                     # Otherwise, pull up the number required.
@@ -808,10 +809,10 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         new = OrderedDict()
         unfilled = OrderedDict()
 
-        for points, pool in brackets.iteritems():
+        for points, pool in brackets.items():
 
             # First, check for unfilled intermediate brackets
-            for unfilled_points, unfilled_pool in unfilled.iteritems():
+            for unfilled_points, unfilled_pool in unfilled.items():
                 aff_surplus = len(unfilled_pool["aff"]) - len(unfilled_pool["neg"])
                 if aff_surplus > 0:
                     # Take the top teams from negative pool as appropriate.
@@ -830,7 +831,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                     del unfilled[unfilled_points]
 
             # Find lesser and greater of number of aff and neg teams.
-            nums_teams = map(len, pool.values())
+            nums_teams = list(map(len, list(pool.values())))
             n = min(nums_teams)
             m = max(nums_teams)
 
@@ -846,7 +847,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
 
         # Currently, the brackets are out of order, since e.g. 3.5 would have been
         # inserted after 3 (or maybe even after 2). Let's change that:
-        new_sorted = sorted(new.items(), key=lambda x: x[0], reverse=True)
+        new_sorted = sorted(list(new.items()), key=lambda x: x[0], reverse=True)
 
         brackets.clear()
         brackets.update(new_sorted)
@@ -862,10 +863,10 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         new = OrderedDict()
         unfilled = OrderedDict()
         intermediates = OrderedDict() # values are lists of {"aff", "neg"} dicts
-        for points, pool in brackets.iteritems():
+        for points, pool in brackets.items():
 
             # First, check for unfilled intermediate brackets
-            for unfilled_points, unfilled_pool in unfilled.iteritems():
+            for unfilled_points, unfilled_pool in unfilled.items():
                 intermediates.setdefault(unfilled_points, list())
                 if unfilled_pool["aff"] and unfilled_pool["neg"]:
                     raise DrawError("An unfilled pool unexpectedly had both affirmative and negative teams.")
@@ -898,7 +899,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                     del unfilled[unfilled_points]
 
             # Find lesser and greater of number of aff and neg teams.
-            nums_teams = map(len, pool.values())
+            nums_teams = list(map(len, list(pool.values())))
             n = min(nums_teams)
             m = max(nums_teams)
 
@@ -914,7 +915,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
 
         # Currently, the brackets are out of order, since e.g. 3.5 would have been
         # inserted after 3 (or maybe even after 2). Let's change that:
-        new_sorted = sorted(new.items(), key=lambda x: x[0], reverse=True)
+        new_sorted = sorted(list(new.items()), key=lambda x: x[0], reverse=True)
 
         brackets.clear()
         brackets.update(new_sorted)
@@ -928,7 +929,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
     def _pairings(brackets, presort_func):
         pairings = OrderedDict()
         i = 1
-        for points, pool in brackets.iteritems():
+        for points, pool in brackets.items():
             assert len(pool["aff"]) == len(pool["neg"])
             bracket = list()
             presort_func(pool)
@@ -1057,7 +1058,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         self._pairings = self.generate_pairings(self._brackets)
         # TODO: avoiding history conflicts here
         self._draw = list()
-        for bracket in self._pairings.itervalues():
+        for bracket in self._pairings.values():
             self._draw.extend(bracket)
 
         self.balance_sides(self._draw) # operates in-place
@@ -1076,10 +1077,10 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             else:
                 brackets[division] = [team]
 
-        print "------"
+        print("------")
 
         # Assigning bye teams as needed
-        for bracket in brackets.itervalues():
+        for bracket in brackets.values():
             if len(bracket) % 2 != 0:
                 from participants.models import Institution, Team
                 bye_tournament = bracket[0].tournament
@@ -1102,10 +1103,10 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                 bye_team.neg_count = 0
                 bye_team.save()
                 bracket.append(bye_team)
-                print "\t Created a bye team for divison %s" % bracket[0].division
+                print("\t Created a bye team for divison %s" % bracket[0].division)
 
         # Assigning subranks - fixed based on alphabetical
-        for bracket in brackets.itervalues():
+        for bracket in brackets.values():
             bracket.sort(key=lambda x: x.short_name, reverse=False)
             for i, team in enumerate(bracket):
                 i += 1
@@ -1119,27 +1120,27 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         # have been. TODO: This is pretty flawed.
         effective_round = 1
         for i in range(1, len(teams_list)):
-            print "\ttesting round %s" % i
+            print("\ttesting round %s" % i)
             right_team_index = -1 * i
             if teams_list[0].seen(teams_list[right_team_index]):
                 effective_round += 1
 
-        print "effective roud of %s" % effective_round
+        print("effective roud of %s" % effective_round)
         return effective_round
 
 
     def generate_pairings(self, brackets):
         pairings = OrderedDict()
 
-        first_bracket_teams = brackets.itervalues().next()
+        first_bracket_teams = next(iter(brackets.values()))
         effective_round = self.determine_effective_round(first_bracket_teams)
-        print "-------\nTaking as effective round of %s" % effective_round
+        print("-------\nTaking as effective round of %s" % effective_round)
 
-        for bracket in brackets.iteritems():
+        for bracket in brackets.items():
             teams_list = bracket[1] # Team Array is second item
             points =  bracket[0]
             total_debates = int(len(teams_list) / 2)
-            print "BRACKET %s with %s teams" % (points, len(teams_list))
+            print("BRACKET %s with %s teams" % (points, len(teams_list)))
 
             fold_top = teams_list[:total_debates]
             fold_bottom = teams_list[total_debates:]
@@ -1149,8 +1150,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             folded_list = list(fold_top)
             folded_list.extend(fold_bottom)
 
-            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
-            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
+            print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]])
+            print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]])
 
             for i in range(1, effective_round):
                  # left-most bottom goes to position[1] on the top
@@ -1159,8 +1160,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                 folded_list.append(folded_list.pop(total_debates))
                 #print "popping %s iteration %s" % (i, total_debates)
 
-            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]]
-            print ["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]]
+            print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]])
+            print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]])
 
             # IE For Round 2 - before and after
             # ['1 - Aquinas 1', '2 - Aquinas 2', '3 - Penrhos 1']
@@ -1182,13 +1183,13 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                         room_rank=1,
                         division=aff.division
                     )
-                    print "\t matchup is %s (%s) vs %s (%s)" % (aff, teams_list.index(aff) + 1, neg, teams_list.index(neg) + 1)
+                    print("\t matchup is %s (%s) vs %s (%s)" % (aff, teams_list.index(aff) + 1, neg, teams_list.index(neg) + 1))
                     assigned_pairings.append(pairing)
                     assigned_teams.append(aff)
                     assigned_teams.append(neg)
                 else:
                     # Need to deal with Byes and the like here
-                    print "couldn't find an opposition"
+                    print("couldn't find an opposition")
 
             pairings[points] = assigned_pairings
 

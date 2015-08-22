@@ -1,7 +1,7 @@
 import os
 
 LOCAL_SETTINGS = True
-from settings import *
+from .settings import *
 
 # ===================
 # = Server Settings =

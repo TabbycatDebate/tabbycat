@@ -1,5 +1,5 @@
 from django import template
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from participants.emoji import EMOJI_LIST
@@ -151,4 +151,4 @@ def prev_value(value, arg):
 
 @register.filter(name='times')
 def times(number):
-    return range(number)
+    return list(range(number))

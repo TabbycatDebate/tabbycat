@@ -6,7 +6,7 @@ import logging
 
 from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
-from result import BallotSet
+from .result import BallotSet
 
 
 logger = logging.getLogger(__name__)
@@ -368,7 +368,7 @@ class BallotSetForm(forms.Form):
             for side, team in zip(self.SIDES, teams):
 
                 speaker_counts = Counter()
-                for pos in xrange(1, self.LAST_SUBSTANTIVE_POSITION + 1):
+                for pos in range(1, self.LAST_SUBSTANTIVE_POSITION + 1):
                     speaker = self.cleaned_data.get(self._fieldname_speaker(side, pos))
                     if speaker is None:
                         logger.warning("Field '%s' not found", self._fieldname_speaker(side, pos))
@@ -383,7 +383,7 @@ class BallotSetForm(forms.Form):
                     speaker_counts[speaker] += 1
 
                 # The substantive speakers must be unique.
-                for speaker, count in speaker_counts.iteritems():
+                for speaker, count in speaker_counts.items():
                     if count > 1:
                         self.add_error(None, forms.ValidationError(
                             _("The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team."),
@@ -443,7 +443,7 @@ class BallotSetForm(forms.Form):
 
         # 5. Save speaker fields
         if not self.forfeit_declared:
-            print "saving speaker fields"
+            print("saving speaker fields")
             for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 ballotset.set_speaker(side, pos, speaker)
@@ -480,7 +480,7 @@ class BallotSetForm(forms.Form):
                 return (self.pos == form.REPLY_POSITION) and "Reply" or str(self.pos)
 
             def __unicode__(self):
-                return unicode(self.name)
+                return str(self.name)
 
             def aff_speaker(self):
                 return form[form._fieldname_speaker('aff', self.pos)]

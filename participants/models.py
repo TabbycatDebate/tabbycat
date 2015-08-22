@@ -11,7 +11,7 @@ class Region(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament')
 
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return '%s' % (self.name)
 
 class InstitutionManager(models.Manager):
 
@@ -39,7 +39,7 @@ class Institution(models.Model):
         ordering = ['name']
 
     def __unicode__(self):
-        return unicode(self.name)
+        return str(self.name)
 
     @property
     def short_code(self):
@@ -92,7 +92,7 @@ class TeamManager(models.Manager):
         try:
             institution_name, reference = name.rsplit(None, 1)
         except:
-            print "Error in", repr(name)
+            print("Error in", repr(name))
             raise
         institution_name = institution_name.strip()
         institution = Institution.objects.lookup(institution_name)
@@ -166,7 +166,7 @@ class Team(models.Model):
     objects = TeamManager()
 
     def __unicode__(self):
-        return u"%s - %s" % (self.tournament, self.short_name)
+        return "%s - %s" % (self.tournament, self.short_name)
 
     @property
     def short_name(self):
@@ -177,19 +177,19 @@ class Team(models.Model):
             name = self.reference
         if self.use_institution_prefix is True:
             if self.institution.code:
-                return unicode(institution.code + " " + name)
+                return str(institution.code + " " + name)
             else:
-                return unicode(institution.abbreviation + " " + name)
+                return str(institution.abbreviation + " " + name)
         else:
-            return unicode(name)
+            return str(name)
 
     @property
     def long_name(self):
         institution = self.get_cached_institution()
         if self.use_institution_prefix is True:
-            return unicode(institution.name + " " + self.reference)
+            return str(institution.name + " " + self.reference)
         else:
-            return unicode(self.reference)
+            return str(self.reference)
 
     @property
     def region(self):
@@ -282,7 +282,7 @@ class Speaker(Person):
     team = models.ForeignKey(Team)
 
     def __unicode__(self):
-        return unicode(self.name)
+        return str(self.name)
 
 
 class AdjudicatorManager(models.Manager):
@@ -313,7 +313,7 @@ class Adjudicator(Person):
         ordering = ['tournament', 'institution', 'name']
 
     def __unicode__(self):
-        return u"%s (%s)" % (self.name, self.institution.code)
+        return "%s (%s)" % (self.name, self.institution.code)
 
     def conflict_with(self, team):
         if not hasattr(self, '_conflict_cache'):

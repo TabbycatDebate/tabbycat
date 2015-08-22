@@ -1,1 +1,1 @@
-from generator import DrawGenerator, DrawError, Pairing
+from .generator import DrawGenerator, DrawError, Pairing

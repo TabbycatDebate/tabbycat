@@ -134,7 +134,7 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
             wins1 = get_wins(team1, team2)
             wins2 = get_wins(team2, team1)
             # Print this to the logs, just so we know it happened
-            print "who beat whom, {0} vs {1}: {2} wins against {3}".format(team1, team2, wins1, wins2)
+            print("who beat whom, {0} vs {1}: {2} wins against {3}".format(team1, team2, wins1, wins2))
             return cmp(wins1, wins2)
 
         def cmp_teams(team1, team2):
@@ -144,7 +144,7 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
             # If there are only two teams on this number of points, or points/speakers,
             # or points/speaks/draw-strength, then use who-beat-whom.
             def two_teams_left(key):
-                return key(team1) == key(team2) and len(filter(lambda x: key(x) == key(team1), teams)) == 2
+                return key(team1) == key(team2) and len([x for x in teams if key(x) == key(team1)]) == 2
             if two_teams_left(lambda x: x.points) or two_teams_left(lambda x: (x.points, x.speaker_score)) \
                     or two_teams_left(lambda x: (x.points, x.speaker_score, x.draw_strength)):
                 winner = who_beat_whom(team1, team2)
@@ -162,10 +162,10 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
     elif rule == "wadl":
         # Sort by points
         teams = teams.order_by("-points", "-margins", "-speaker_score")
-        print "%s total teams" % len(teams)
+        print("%s total teams" % len(teams))
         teams = [t for t in teams if (t.margins != 0 and t.points > 0)]
 
-        print "%s culled teams" % len(teams)
+        print("%s culled teams" % len(teams))
 
         # Sort by division rank
         divisions = tournament.division_set.all()

@@ -78,7 +78,7 @@ def _update_availability(request, round, update_method, active_model, active_att
 
         return HttpResponseRedirect(request.path.replace('update/', ''))
 
-    available_ids = [int(a.replace("check_", "")) for a in request.POST.keys()
+    available_ids = [int(a.replace("check_", "")) for a in list(request.POST.keys())
                      if a.startswith("check_")]
 
     # Calling the relevenat update method as defined in Round

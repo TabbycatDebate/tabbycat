@@ -61,3 +61,6 @@ nosetests.xml
 data/Schools Junior 2014
 data/Schools Novice 2014
 data/Schools Senior 2014
+
+# Python 2to3 backup files
+*.bak

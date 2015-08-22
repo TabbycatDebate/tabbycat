@@ -115,12 +115,12 @@ def division_allocations(request, t):
 @expect_post
 @tournament_view
 def save_divisions(request, t):
-    culled_dict = dict((int(k), int(v)) for k, v in request.POST.iteritems() if v)
+    culled_dict = dict((int(k), int(v)) for k, v in request.POST.items() if v)
 
-    teams = Team.objects.in_bulk([t_id for t_id in culled_dict.keys()])
-    divisions = Division.objects.in_bulk([d_id for d_id in culled_dict.values()])
+    teams = Team.objects.in_bulk([t_id for t_id in list(culled_dict.keys())])
+    divisions = Division.objects.in_bulk([d_id for d_id in list(culled_dict.values())])
 
-    for team_id, division_id in culled_dict.iteritems():
+    for team_id, division_id in culled_dict.items():
         teams[team_id].division = divisions[division_id]
         teams[team_id].save()
 

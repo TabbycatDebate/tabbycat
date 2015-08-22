@@ -41,7 +41,7 @@ class Tournament(models.Model):
         speaker_positions = 1 + self.config.get('substantive_speakers')
         if self.config.get('reply_scores_enabled') is True:
             speaker_positions = speaker_positions + 1
-        return range(1, speaker_positions)
+        return list(range(1, speaker_positions))
 
     @models.permalink
     def get_absolute_url(self):
@@ -116,9 +116,9 @@ class Tournament(models.Model):
 
     def __unicode__(self):
         if self.short_name:
-            return unicode(self.short_name)
+            return str(self.short_name)
         else:
-            return unicode(self.name)
+            return str(self.name)
 
 def update_tournament_cache(sender, instance, created, **kwargs):
     cached_key = "%s_%s" % (instance.slug, 'object')
@@ -146,7 +146,7 @@ class Division(models.Model):
         return self.team_set.all().order_by('institution','reference').select_related('institution')
 
     def __unicode__(self):
-        return u"%s - %s" % (self.tournament, self.name)
+        return "%s - %s" % (self.tournament, self.name)
 
     class Meta:
         unique_together = [('tournament', 'name')]
@@ -237,7 +237,7 @@ class Round(models.Model):
         index_together = ['tournament', 'seq']
 
     def __unicode__(self):
-        return u"%s - %s" % (self.tournament, self.name)
+        return "%s - %s" % (self.tournament, self.name)
 
     def motions(self):
         return self.motion_set.order_by('seq')
@@ -313,7 +313,7 @@ class Round(models.Model):
         del tpas
 
         options = dict()
-        for key, value in OPTIONS_TO_CONFIG_MAPPING.iteritems():
+        for key, value in OPTIONS_TO_CONFIG_MAPPING.items():
             options[key] = self.tournament.config.get(value)
         if options["side_allocations"] == "manual-ballot":
             options["side_allocations"] = "balance"
@@ -400,7 +400,7 @@ class Round(models.Model):
                         # TODO is there a more efficient way to do this?
                         team = getattr(debate, side)
                         setattr(debate, side + "_cached", team)
-                        annotated_team = filter(lambda x: x == team, standings)
+                        annotated_team = [x for x in standings if x == team]
                         if len(annotated_team) == 1:
                             annotated_team = annotated_team[0]
                             team.points = annotated_team.points
@@ -438,7 +438,7 @@ class Round(models.Model):
                 else:
                     selected_venue = venues.pop(0)
             except:
-                print "Error assigning venues"
+                print("Error assigning venues")
                 selected_venue = None
 
             debate = Debate(round=self, venue=selected_venue)

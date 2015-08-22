@@ -3,7 +3,7 @@ from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 
 from tournaments.models import SRManager
-from generator import DRAW_FLAG_DESCRIPTIONS
+from .generator import DRAW_FLAG_DESCRIPTIONS
 
 class DebateManager(models.Manager):
     use_for_related_fields = True
@@ -46,17 +46,17 @@ class Debate(models.Model):
 
     def __unicode__(self):
         try:
-            return u"%s - [%s] %s vs %s" % (
+            return "%s - [%s] %s vs %s" % (
                 self.round.tournament,
                 self.round.abbreviation,
                 self.aff_team.short_name,
                 self.neg_team.short_name
             )
         except DebateTeam.DoesNotExist:
-            return u"%s - [%s] %s" % (
+            return "%s - [%s] %s" % (
                 self.round.tournament,
                 self.round.abbreviation,
-                ", ".join(map(lambda x: x.short_name, self.teams))
+                ", ".join([x.short_name for x in self.teams])
             )
 
     @property
@@ -140,7 +140,7 @@ class Debate(models.Model):
                 if ballotsub1.is_identical(ballotsub2):
                     result[ballotsub1].append(ballotsub2.version)
                     result[ballotsub2].append(ballotsub1.version)
-        for l in result.itervalues():
+        for l in result.values():
             l.sort()
         return result
 
@@ -162,7 +162,7 @@ class Debate(models.Model):
                 self.adj = adj
                 self.team = team
             def __unicode__(self):
-                return u'Adj %s + %s' % (self.adj, self.team)
+                return 'Adj %s + %s' % (self.adj, self.team)
 
         a = []
         for t, adj in self.adjudicators:
@@ -197,7 +197,7 @@ class Debate(models.Model):
 
     @property
     def matchup(self):
-        return u'%s vs %s' % (self.aff_team.short_name, self.neg_team.short_name)
+        return '%s vs %s' % (self.aff_team.short_name, self.neg_team.short_name)
 
     @property
     def division_motion(self):
@@ -223,7 +223,7 @@ class DebateTeam(models.Model):
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __unicode__(self):
-        return u'%s (%s)' % (self.team, self.debate)
+        return '%s (%s)' % (self.team, self.debate)
 
     @cached_property # TODO: this slows down the standings pages reasonably heavily
     def opposition(self):
@@ -274,4 +274,4 @@ class TeamVenuePreference(models.Model):
         ordering = ['priority',]
 
     def __unicode__(self):
-        return u'%s with priority %s for %s' % (self.team, self.priority, self.venue_group)
+        return '%s with priority %s for %s' % (self.team, self.priority, self.venue_group)

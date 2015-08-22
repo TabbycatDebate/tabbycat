@@ -178,7 +178,7 @@ class ActionLogEntry(models.Model):
                 elif field_name == 'break_category':
                     strings.append(value.name)
                 else:
-                    strings.append(unicode(value))
+                    strings.append(str(value))
             except AttributeError:
                 strings.append("Unknown " + field_name)
         return ", ".join(strings)

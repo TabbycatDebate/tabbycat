@@ -3,7 +3,7 @@ import unittest
 from collections import OrderedDict
 from .. import DrawGenerator, Pairing, DrawError
 import copy
-from test_one_up_one_down import TestTeam
+from .test_one_up_one_down import TestTeam
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
 
@@ -21,7 +21,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
         self.assertRaises(ValueError, go)
 
     def test_draw(self):
-        for i in xrange(100):
+        for i in range(100):
             teams = [TestTeam(*args, aff_count=0) for args in self.teams]
             self.rd = DrawGenerator("random", teams, avoid_conflicts="on")
             _draw = self.rd.make_draw()
@@ -29,7 +29,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
                 if pairing.aff_team.seen(pairing.neg_team) or \
                         pairing.neg_team.seen(pairing.aff_team) or \
                         pairing.aff_team.institution == pairing.neg_team.institution:
-                    print pairing
+                    print(pairing)
                     self.assertEqual(pairing.flags, ["max_swapped"])
                 else:
                     self.assertEqual(pairing.flags, [])
@@ -113,7 +113,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         b2 = copy.deepcopy(brackets)
         expected_team_flags = dict()
         # Set up the brackets
-        for p, b in b2.iteritems():
+        for p, b in b2.items():
             for i, x in enumerate(b):
                 if isinstance(x[-1], str) and len(x) > 2:
                     flags = [x[-1]]
@@ -131,11 +131,11 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         self.ppd.resolve_odd_brackets(b2)
         # Check that the brackets are correct
         b3 = dict()
-        for p, b in b2.iteritems():
-            b3[p] = map(lambda x: x.id, b)
+        for p, b in b2.items():
+            b3[p] = [x.id for x in b]
         self.assertDictEqual(b3, expected)
         # Check that the team flags worked
-        for team, flags in expected_team_flags.iteritems():
+        for team, flags in expected_team_flags.items():
             if team in self.ppd.team_flags:
                 self.assertEqual(self.ppd.team_flags[team], flags)
             else:
@@ -233,7 +233,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         ppd.resolve_odd_brackets(self.b2)
         pairings = ppd.generate_pairings(self.b2)
         pairings_list = list()
-        for bracket in pairings.itervalues():
+        for bracket in pairings.values():
             pairings_list.extend(bracket)
         result = tuple(tuple(p.teams) for p in pairings_list)
         self.assertEqual(result, expected)
@@ -250,7 +250,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
 
 
     def one_up_one_down(self, data, expected, **options):
-        for option, value in options.iteritems():
+        for option, value in options.items():
             self.ppd.options[option] = value
         pairings = []
         for data1, data2 in data:
@@ -505,7 +505,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
 
     def bracket_resolve_odd(self, name, expecteds):
         self.ppd.options["odd_bracket"] = name
-        for index, expected in expecteds.iteritems():
+        for index, expected in expecteds.items():
             self.b2 = copy.deepcopy(self.brackets[index])
             self.ppd.resolve_odd_brackets(self.b2)
             self.assertDictEqual(self.b2, expected)
@@ -756,7 +756,7 @@ class TestEliminationDrawGenerator(unittest.TestCase):
 
     def _results(self, *args):
         _t = lambda id: self.teams[id-1]
-        _p = lambda ids: map(_t, ids)
+        _p = lambda ids: list(map(_t, ids))
         pairings = list()
         for i, (teams, winner) in enumerate(args):
             pairing = Pairing(_p(teams), 0, i, winner=_t(winner))
@@ -765,7 +765,7 @@ class TestEliminationDrawGenerator(unittest.TestCase):
 
     def _teams(self, *args):
         _t = lambda id: self.teams[id-1]
-        return map(_t, args)
+        return list(map(_t, args))
 
     def test_no_bypass(self):
         teams = list()

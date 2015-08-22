@@ -231,13 +231,13 @@ class BallotSet(object):
 
     @property
     def is_complete(self):
-        return all(sheet.is_complete for sheet in self.adjudicator_sheets.itervalues())
+        return all(sheet.is_complete for sheet in self.adjudicator_sheets.values())
 
     def save(self):
         assert self.is_complete, "Tried to save ballot set when it is incomplete"
 
         self.ballotsub.save() # need BallotSubmission object to exist first
-        for sheet in self.adjudicator_sheets.itervalues():
+        for sheet in self.adjudicator_sheets.values():
             sheet.save()
         self._calc_decision()
         for dt in self.dts:
@@ -303,7 +303,7 @@ class BallotSet(object):
         first team is the affirmative team, the second team is the negative
         team. (Sides are saved immediately to enable the use of 'aff' and 'neg'
         to refer to teams.)"""
-        dts = map(self._dt, teams)
+        dts = list(map(self._dt, teams))
         for position, dt in zip(self.SIDES, dts):
             dt.position = position
             dt.save()
@@ -398,18 +398,18 @@ class BallotSet(object):
         assert self.is_complete, "Tried to calculate decision on an incomplete ballot set."
 
         adjs_by_dt = {dt: [] for dt in self.dts} # group adjs by vote
-        for adj, sheet in self.adjudicator_sheets.iteritems():
+        for adj, sheet in self.adjudicator_sheets.items():
             winner = sheet._get_winner()
             if winner is None:
                 raise ResultError("The scoresheet for %s does not have a winner." % adj.name)
             adjs_by_dt[winner].append(adj)
 
-        counts = {dt: len(adjs) for dt, adjs in adjs_by_dt.iteritems()}
+        counts = {dt: len(adjs) for dt, adjs in adjs_by_dt.items()}
         max_count = max(counts.values()) # check that we have a majority
         if max_count < len(self.adjudicators) / 2 + 1:
             raise ResultError("No team had a majority in %s." % self.debate.matchup)
 
-        for dt, count in counts.iteritems(): # set self._majority_adj
+        for dt, count in counts.items(): # set self._majority_adj
             if count == max_count:
                 self._majority_adj = adjs_by_dt[dt]
                 self._winner = dt

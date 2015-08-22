@@ -7,11 +7,11 @@ from draw.models import Debate
 from motions.models import Motion
 from actionlog.models import ActionLogEntry
 
-from result import BallotSet
-from forms import BallotSetForm
+from .result import BallotSet
+from .forms import BallotSetForm
 
 from utils.views import *
-from models import *
+from .models import *
 
 
 @login_required
@@ -25,7 +25,7 @@ def toggle_postponed(request, t):
     else:
         debate.result_status = debate.STATUS_POSTPONED
 
-    print debate.result_status
+    print(debate.result_status)
     debate.save()
     return HttpResponse("ok")
 
@@ -66,7 +66,7 @@ def results(request, round):
 def public_results(request, round):
     # Can't see results for current round or later
     if (round.seq >= round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
-        print "Result page denied: round %d, current round %d, release all %s, silent %s" % (round.seq, round.tournament.current_round.seq, round.tournament.release_all, round.silent)
+        print("Result page denied: round %d, current round %d, release all %s, silent %s" % (round.seq, round.tournament.current_round.seq, round.tournament.release_all, round.silent))
         raise Http404()
     draw = round.get_draw()
     show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.config.get('show_motions_in_results')
@@ -287,7 +287,7 @@ def ballot_checkin_number_left(round):
 def ballot_checkin_get_details(request, round):
     try:
         debate = get_debate_from_ballot_checkin_request(request, round)
-    except DebateBallotCheckinError, e:
+    except DebateBallotCheckinError as e:
         data = {'exists': False, 'message': str(e)}
         return HttpResponse(json.dumps(data))
 
@@ -313,7 +313,7 @@ def ballot_checkin_get_details(request, round):
 def post_ballot_checkin(request, round):
     try:
         debate = get_debate_from_ballot_checkin_request(request, round)
-    except DebateBallotCheckinError, e:
+    except DebateBallotCheckinError as e:
         data = {'exists': False, 'message': str(e)}
         return HttpResponse(json.dumps(data))
 

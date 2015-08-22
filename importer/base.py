@@ -41,7 +41,7 @@ class TournamentDataImporterError(Exception):
     def __init__(self):
         self.entries = []
 
-    def __nonzero__(self):
+    def __bool__(self):
         return len(self.entries) > 0
 
     def __len__(self):
@@ -58,7 +58,7 @@ class TournamentDataImporterError(Exception):
     def update_with_validation_error(self, lineno, model, ve):
         """Adds the information in a Django ValidationError to this error."""
         if hasattr(ve, 'error_dict'):
-            for field, error_list in ve.error_dict.items():
+            for field, error_list in list(ve.error_dict.items()):
                 for error in error_list:
                     self.add(lineno, model, "; ".join(error), field)
         elif hasattr(ve, 'error_list'):
@@ -109,7 +109,7 @@ class BaseTournamentDataImporter(object):
     def _lookup(self, d, code, name):
         if not code:
             return None
-        for k, v in d.iteritems():
+        for k, v in d.items():
             if code.lower().replace("-"," ") in k:
                 return v
         raise ValueError("Unrecognized code for %s: %s" % (name, code))
@@ -160,7 +160,7 @@ class BaseTournamentDataImporter(object):
             csvfile.seek(0)
         reader = csv.reader(csvfile)
         if self.header_row:
-            reader.next()
+            next(reader)
         kwargs_seen = list()
         insts = list()
         if counts is None:
@@ -263,7 +263,7 @@ class BaseTournamentDataImporter(object):
         unassigned_emoji_teams = Team.objects.filter(emoji_seq__isnull=True).values_list('id', flat=True)
 
         # Start with a list of all emoji...
-        self.emoji_options = range(0, len(EMOJI_LIST) - 1)
+        self.emoji_options = list(range(0, len(EMOJI_LIST) - 1))
 
         # Then remove the ones that are already in use
         for index in itertools.chain(assigned_emoji_teams, unassigned_emoji_teams):

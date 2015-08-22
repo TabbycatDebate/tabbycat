@@ -266,4 +266,4 @@ class TestResultWithInitiallyUnknownSides(BaseTestResult, CommonTests):
 
     def test_unknown_sides(self):
         self.assertRaises(dm.DebateTeam.DoesNotExist, self._save_complete_ballotset,
-                self.teams_input, self.testdata.values()[0])
+                self.teams_input, list(self.testdata.values())[0])
