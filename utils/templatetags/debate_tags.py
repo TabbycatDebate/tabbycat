@@ -44,12 +44,12 @@ register.simple_tag(neg_count)
 
 def team_emoji(team):
     if team.emoji_seq:
-        return b"%s" % EMOJI_LIST[team.emoji_seq]
+        return EMOJI_LIST[team.emoji_seq]
     else:
         if team.id > len(EMOJI_LIST):
-            return b"%s" % EMOJI_LIST[(team.id % len(EMOJI_LIST))] # Wrapping around if too high
+            return EMOJI_LIST[(team.id % len(EMOJI_LIST))] # Wrapping around if too high
         else:
-            return b"%s" % EMOJI_LIST[team.id]
+            return EMOJI_LIST[team.id]
 register.simple_tag(team_emoji)
 
 

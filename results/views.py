@@ -11,7 +11,7 @@ from .result import BallotSet
 from .forms import BallotSetForm
 
 from utils.views import *
-from .models import *
+from .models import BallotSubmission
 
 
 @login_required
@@ -89,7 +89,7 @@ def public_results_index(request, tournament):
 @login_required
 @tournament_view
 def edit_ballotset(request, t, ballotsub_id):
-    ballotsub = get_object_or_404(models.BallotSubmission, id=ballotsub_id)
+    ballotsub = get_object_or_404(BallotSubmission, id=ballotsub_id)
     debate = ballotsub.debate
 
     if not request.user.is_superuser:
@@ -168,7 +168,7 @@ def public_new_ballotset(request, t, adjudicator):
                 message='It looks like you don\'t have a debate this round.'))
 
     ip_address = get_ip_address(request)
-    ballotsub = models.BallotSubmission(debate=da.debate, ip_address=ip_address,
+    ballotsub = BallotSubmission(debate=da.debate, ip_address=ip_address,
             submitter_type=BallotSubmission.SUBMITTER_PUBLIC)
 
     if request.method == 'POST':
