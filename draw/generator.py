@@ -321,7 +321,7 @@ class RandomDrawGenerator(BaseDrawGenerator):
     def _make_initial_pairings(self):
         teams = list(self.teams) # make a copy
         random.shuffle(teams)
-        debates = int(len(teams) / 2)
+        debates = len(teams) // 2
         pairings = [Pairing(teams=t, bracket=0, room_rank=0) for t in zip(teams[:debates], teams[debates:])]
         return pairings
 
