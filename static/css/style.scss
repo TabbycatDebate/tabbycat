@@ -1,34 +1,31 @@
 // Note tabby cat's modules are imported in the <head> — concatenation happens using the compressor
-
 // Core variables and mixins
 @import "bootstrap/variables";
 @import "bootstrap/mixins";
 @import "bootstrap/type";
 @import "bootstrap/forms";
-
 @include text-emphasis-variant('.text-success', $brand-success);
 @include text-emphasis-variant('.text-info', $brand-info);
 @include text-emphasis-variant('.text-warning', $brand-warning);
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
 // General utilities
-
 .no-vertical-spacing,
 table.table > thead > tr > th.no-vertical-spacing,
 table.table > tbody > tr > td.no-vertical-spacing {
-  padding-top: 0px;
-  padding-bottom: 0px;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .no-horizontal-spacing,
 table.table > thead > tr > th.no-horizontal-spacing,
 table.table > tbody > tr > td.no-horizontal-spacing {
-  padding-left: 0px;
-  padding-right: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .no-borders,
@@ -40,35 +37,38 @@ table.table > tbody > tr > td.no-horizontal-spacing {
   border-right: none;
 }
 
-
-
 // For the collapsedmdouble menu
-
 .navbar-nav {
   @media (max-width: $screen-xs-max) {
     &.navbar-left {
       float: left;
       width: 40%;
     }
+
     &.navbar-right {
       float: right;
       width: 60%;
     }
-    .dropdown-menu
-    .dropdown.open ul {
+
+    .dropdown-menu .dropdown.open ul {
       clear: both;
     }
+
     .dropdown.open li {
       display: block;
     }
+
     .dropdown.open li a {
       padding-left: 15px;
       padding-right: 0;
     }
+
     .dropdown.open .divider {
       display: none;
     }
+
     .dropdown.open .dropdown-menu {
+
     }
   }
 }
@@ -80,16 +80,19 @@ table.table > tbody > tr > td.no-horizontal-spacing {
       padding: 15px 10px;
     }
   }
+
   > li.round-nav {
     > a {
-      padding: 15px 5px 15px 5px;
+      padding: 15px 5px;
+
       .caret {
         margin-left: -2px;
       }
     }
+
     a.current-round {
       font-weight: bold;
-      border-top: 2px solid #999999;
+      border-top: 2px solid #999;
       padding-top: 13px;
     }
   }
@@ -98,7 +101,9 @@ table.table > tbody > tr > td.no-horizontal-spacing {
 .page-header {
   margin-bottom: 20px;
 }
+
 #header-options {
+
   //min-height: 34px; // Spacer pre-form relocation via JS
   margin-right: 0;
 
@@ -107,52 +112,62 @@ table.table > tbody > tr > td.no-horizontal-spacing {
   }
 }
 
-
 // Sticky Footer
-
-html, body {
+html,
+body {
   height: 100%;
 }
+
 #wrap {
   min-height: 100%;
   height: auto;
   margin: 0 auto -100px;
   padding: 0 0 115px;
+
   #container {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
   }
 }
+
 #footer {
   height: 115px;
+
   .navbar {
     height: 115px;
     margin-bottom: 0;
   }
+
   .navbar {
-    border-radius: 0px;
+    border-radius: 0;
   }
+
   .navbar-brand {
     font-size: 14px;
     margin-bottom: 0;
   }
 }
+
 @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
   #wrap {
     margin: 0 auto -100px;
     padding: 0 0 100px;
   }
+
   #footer {
     height: 100px;
+
     .navbar {
       height: 100px;
     }
   }
 }
+
 @media (min-width: $screen-md-min) {
   #wrap {
     margin: 0 auto -50px;
     padding: 0 0 50px;
   }
+
   #footer {
     height: 50px;
     overflow: hidden;
@@ -160,150 +175,169 @@ html, body {
 }
 
 // Universal Style overrides
-
 .page-header h1 {
   margin-top: 0; // fixes button alignment easily
 }
+
 [data-toggle="tooltip"] {
   cursor: pointer; // for tooltips
   border-bottom: 2px dotted #ccc;
 }
+
 .alert-link {
   text-decoration: underline;
   font-weight: normal;
 }
+
 .check_target {
   cursor: pointer;
 }
 
 // Forms
-
 #resultsForm {
   overflow: hidden;
 }
-input.error, select.error, .error input {
+
+input.error,
+select.error,
+.error input {
   border-color: $state-danger-text;
   color: $state-danger-text;
   background: $state-danger-bg;
 }
+
 .errorlist {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-.error, .errorlist li {
+
+.error,
+.errorlist li {
   border-color: $state-danger-text;
   color: $state-danger-text;
 }
+
 .form-control-parent input {
   @extend .form-control;
 }
+
 .ballot-errors .errorlist {
   list-style-type: disc;
   margin: 0 2.5em;
   padding: 0;
 }
+
 .forfeits-group ul {
   list-style-type: none;
+
   label {
     width: 200px;
+
     input[type="radio"].form-control {
       margin-right: 6px;
-      float:left;
+      float: left;
       margin-top: -8px;
     }
   }
+
   li {
     display: inline;
   }
 }
-input[type="radio"].form-control, input[type="checkbox"].form-control {
+
+input[type="radio"].form-control,
+input[type="checkbox"].form-control {
   margin-top: 0;
   max-width: 20px;
   display: inline;
 }
 
-
-
 // Modals
-
 .modal-body {
   overflow: auto;
 }
+
 .modal-lg {
   width: 98%;
 }
 
 // Tables - Specific
-
 .adj-chair {
   text-decoration: underline;
 }
+
 .adj-trainee {
   font-style: italic;
 }
 
 // Ballots
-
 .scoresheet {
   .score input {
     width: 70px;
   }
-  .aff_total, .neg_total {
+
+  .aff_total,
+  .neg_total {
     width: 70px;
     font-weight: bold;
     cursor: default;
   }
 }
 
-.edit-ballot-link-discarded, .edit-ballot-link-discarded:hover {
+.edit-ballot-link-discarded,
+.edit-ballot-link-discarded:hover {
   color: #808080;
   text-decoration: line-through;
 }
 
 // Motions
-
 .assign-motions .list-group-item-text {
   height: 54px;
   overflow: hidden;
 }
 
-
 // Scoresheets
-
 .scoresheet-view {
   .control-label {
     text-align: right;
     vertical-align: middle;
   }
+
   .score {
     width: 70px;
     text-align: right;
   }
+
   .total {
     padding-top: 5px;
     padding-bottom: 5px;
   }
+
   .total.score {
     font-weight: bold;
     border-radius: 3px;
   }
+
   .win {
     background-color: #47a447;
     color: white;
     border-color: #398439;
   }
+
   .loss {
     background-color: #d2322d;
     color: white;
     border-color: #ac2925;
   }
+
   .motion-veto {
-    text-decoration: line-through
+    text-decoration: line-through;
   }
 }
 
 .team-tab a.team-score {
+
   // Darker than normal link, but not black
   color: #285379;
 }
@@ -340,13 +374,12 @@ input[type="radio"].form-control, input[type="checkbox"].form-control {
   display: inline-block;
 }
 
-
-
 @media (max-width: $screen-xs-max) {
   .page-header {
     margin-top: 0;
   }
+
   #header-options {
-    min-height: 82px
+    min-height: 82px;
   }
 }

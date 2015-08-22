@@ -23,7 +23,7 @@ function removeUnusedRow(oldHolder) {
 function rebindHoverEvents(el) {
   $(el).bind("mouseover", function(e) {
     display_conflicts(e.currentTarget);
-  }).bind( "mouseout", function(e) {
+  }).bind("mouseout", function(e) {
     remove_conflicts(e.currentTarget);
   })
 }
@@ -46,24 +46,27 @@ function load_adjudicator_scores(callback) {
 function load_allocation_data(data) {
   $.each(data.debates, function(debate_id, adj_data) {
     if (adj_data.chair) {
-      set_chair(debate_id, adj_data.chair);
-      {% if duplicate_adjs %} // If duplicating adjs need to copy over those allocated
-      moveToUnused(_make_adj(adj_data.chair));
-      {% endif %}
+      set_chair(debate_id, adj_data.chair); { %
+        if duplicate_adjs %
+      } // If duplicating adjs need to copy over those allocated
+      moveToUnused(_make_adj(adj_data.chair)); { % endif %
+      }
     }
     clear_panel(debate_id);
     $.each(adj_data.panel, function(idx, adj) {
-      add_panellist(debate_id, adj);
-      {% if duplicate_adjs %} // If duplicating adjs need to copy over those allocated
-      moveToUnused(_make_adj(adj));
-      {% endif %}
+      add_panellist(debate_id, adj); { %
+        if duplicate_adjs %
+      } // If duplicating adjs need to copy over those allocated
+      moveToUnused(_make_adj(adj)); { % endif %
+      }
     });
     clear_trainees(debate_id);
     $.each(adj_data.trainees, function(idx, adj) {
-      add_trainee(debate_id, adj);
-      {% if duplicate_adjs %} // If duplicating adjs need to copy over those allocated
-      moveToUnused(_make_adj(adj));
-      {% endif %}
+      add_trainee(debate_id, adj); { %
+        if duplicate_adjs %
+      } // If duplicating adjs need to copy over those allocated
+      moveToUnused(_make_adj(adj)); { % endif %
+      }
     });
 
   });
@@ -73,7 +76,7 @@ function load_allocation_data(data) {
 }
 
 function load_allocation(callback) {
-  $.getJSON("{% round_url draw_adjudicators_get %}", function(data){
+  $.getJSON("{% round_url draw_adjudicators_get %}", function(data) {
     load_allocation_data(data);
     callback();
   });
@@ -82,13 +85,21 @@ function load_allocation(callback) {
 function load_conflict_data() {
   $.getJSON("{% round_url adj_conflicts %}", function(data) {
     all_adj_conflicts = data;
-    $(".adj").each( function() {
+    $(".adj").each(function() {
       // insert blank entries for adjs who aren't there (those without conflicts)
       var id = DOMIdtoInt(this);
-      if (all_adj_conflicts['personal'][id] == undefined) { all_adj_conflicts['personal'][id] = []; }
-      if (all_adj_conflicts['history'][id] == undefined) { all_adj_conflicts['history'][id] = []; }
-      if (all_adj_conflicts['institutional'][id] == undefined) { all_adj_conflicts['institutional'][id] = []; }
-      if (all_adj_conflicts['adjudicator'][id] == undefined) { all_adj_conflicts['adjudicator'][id] = []; }
+      if (all_adj_conflicts['personal'][id] == undefined) {
+        all_adj_conflicts['personal'][id] = [];
+      }
+      if (all_adj_conflicts['history'][id] == undefined) {
+        all_adj_conflicts['history'][id] = [];
+      }
+      if (all_adj_conflicts['institutional'][id] == undefined) {
+        all_adj_conflicts['institutional'][id] = [];
+      }
+      if (all_adj_conflicts['adjudicator'][id] == undefined) {
+        all_adj_conflicts['adjudicator'][id] = [];
+      }
     });
     update_all_conflicts();
   });
@@ -115,23 +126,31 @@ function append_adj_scores() {
 // Read the dicitionary and check if the adj has any conflicts
 function eachConflictingTeam(adj_id, fn) {
   if (all_adj_conflicts['personal'][adj_id].length > 0) {
-    $.each(all_adj_conflicts['personal'][adj_id], function (i, n) {
-      $("#team_" + n).each( function() { fn('personal', this); });
+    $.each(all_adj_conflicts['personal'][adj_id], function(i, n) {
+      $("#team_" + n).each(function() {
+        fn('personal', this);
+      });
     });
   }
   if (all_adj_conflicts['history'][adj_id].length > 0) {
-    $.each(all_adj_conflicts['history'][adj_id], function (i, n) {
-      $("#team_" + n).each( function() { fn('history', this); });
+    $.each(all_adj_conflicts['history'][adj_id], function(i, n) {
+      $("#team_" + n).each(function() {
+        fn('history', this);
+      });
     });
   }
   if (all_adj_conflicts['institutional'][adj_id].length > 0) {
-    $.each(all_adj_conflicts['institutional'][adj_id], function (i, n) {
-      $("#team_" + n).each( function() { fn('institutional', this); });
+    $.each(all_adj_conflicts['institutional'][adj_id], function(i, n) {
+      $("#team_" + n).each(function() {
+        fn('institutional', this);
+      });
     });
   }
   if (all_adj_conflicts['adjudicator'][adj_id].length > 0) {
-    $.each(all_adj_conflicts['adjudicator'][adj_id], function (i, n) {
-      $("#adj_" + n).each( function() { fn('adjudicator', this); });
+    $.each(all_adj_conflicts['adjudicator'][adj_id], function(i, n) {
+      $("#adj_" + n).each(function() {
+        fn('adjudicator', this);
+      });
     });
   }
 }
@@ -139,7 +158,7 @@ function eachConflictingTeam(adj_id, fn) {
 function display_conflicts(target) {
   if (draggingCurrently === false) {
     eachConflictingTeam(DOMIdtoInt(target),
-      function (type, elem) {
+      function(type, elem) {
         $(elem).addClass(conflictTypeClass[type]);
       }
     );
@@ -149,7 +168,7 @@ function display_conflicts(target) {
 function remove_conflicts(target) {
   if (draggingCurrently === false) {
     eachConflictingTeam(DOMIdtoInt(target),
-      function (type, elem) {
+      function(type, elem) {
         $(elem).removeClass(conflictTypeClass[type]);
       }
     );
@@ -164,23 +183,23 @@ function update_all_conflicts() {
   removeConflictClasses($(".teaminfo"));
   removeConflictClasses($(".adj"));
   // Recalculate in-situ conflicts
-  $("#allocationsTable tbody tr").each( function() {
+  $("#allocationsTable tbody tr").each(function() {
     updateConflicts(this);
   });
 }
 
 // Checks an individual debate for circumstances of conflict on each row
 function updateConflicts(debate_tr) {
-  $(".adj", debate_tr).each( function() {
+  $(".adj", debate_tr).each(function() {
     var adj = this;
     var adj_id = DOMIdtoInt(this);
 
     // Check each team within each debate
-    $("td.teaminfo", debate_tr).each( function() {
-      if ($.inArray(DOMIdtoInt(this),all_adj_conflicts['personal'][adj_id]) != -1) {
+    $("td.teaminfo", debate_tr).each(function() {
+      if ($.inArray(DOMIdtoInt(this), all_adj_conflicts['personal'][adj_id]) != -1) {
         $(this).addClass("personal-conflict");
         $(adj).addClass("personal-conflict");
-      } else if ($.inArray(DOMIdtoInt(this),all_adj_conflicts['institutional'][adj_id]) != -1) {
+      } else if ($.inArray(DOMIdtoInt(this), all_adj_conflicts['institutional'][adj_id]) != -1) {
         $(this).addClass("institutional-conflict");
         $(adj).addClass("institutional-conflict");
       } else if ($.inArray(DOMIdtoInt(this), all_adj_conflicts['history'][adj_id]) != -1) {
@@ -190,7 +209,7 @@ function updateConflicts(debate_tr) {
     });
 
     // Check each panelist within each debate
-    $(".adj", debate_tr).each( function() {
+    $(".adj", debate_tr).each(function() {
       //console.log(this);
       var adj_adj_conflict_ids = all_adj_conflicts['adjudicator'][adj_id];
       if ($.inArray(DOMIdtoInt(this), adj_adj_conflict_ids) != -1) {
@@ -229,7 +248,10 @@ $('#allocationsTable .importance select').on('change', function() {
   $.ajax({
     type: "POST",
     url: "{% round_url update_debate_importance %}",
-    data: { debate_id: debate_id, value: importance },
+    data: {
+      debate_id: debate_id,
+      value: importance
+    },
   });
   var adjacent = allocationsTable.cell(cell.siblings(".importance-recording"));
   // adjacent.data(importance).draw(); // Buggy - breaks the change event
@@ -251,36 +273,35 @@ $('#auto_allocate').click(function() {
       btn.button('reset')
     },
     error: function(xhr, error, ex) {
-      $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Auto-allocation failed! '
-        + xhr.responseText + ' (' + xhr.status + ')</div>');
+      $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Auto-allocation failed! ' + xhr.responseText + ' (' + xhr.status + ')</div>');
       $(this).button('reset');
       btn.button('reset')
     }
   });
 });
 
-$('#save').click( function() {
+$('#save').click(function() {
   var btn = $(this)
   btn.button('loading')
   var data = {};
 
-  $("#allocationsTable tbody tr").each( function() {
+  $("#allocationsTable tbody tr").each(function() {
     var debateId = DOMIdtoInt(this); // Purpose of the value is to ID this debate as being saved, so if following values are blank it is still processed
     data['debate_' + debateId] = true;
-    $(".chair-holder .adj", this).each( function() {
+    $(".chair-holder .adj", this).each(function() {
       data['chair_' + debateId] = DOMIdtoInt(this);
     });
-    data['panel_' + debateId]  = [];
-    $(".panel-holder .adj", this).each( function() {
+    data['panel_' + debateId] = [];
+    $(".panel-holder .adj", this).each(function() {
       data['panel_' + debateId].push(DOMIdtoInt(this));
     });
-    data['trainees_' + debateId]  = [];
-    $(".trainee-holder .adj", this).each( function() {
+    data['trainees_' + debateId] = [];
+    $(".trainee-holder .adj", this).each(function() {
       data['trainees_' + debateId].push(DOMIdtoInt(this));
     });
   });
 
-  $.ajax( {
+  $.ajax({
     type: "POST",
     url: "{% round_url save_adjudicators %}",
     data: data,
@@ -302,11 +323,11 @@ $('#save').click( function() {
 
 function init_adj(el) {
 
-  el.mouseover( function(e) {
+  el.mouseover(function(e) {
     display_conflicts(e.currentTarget);
   });
 
-  el.mouseout( function(e) {
+  el.mouseout(function(e) {
     remove_conflicts(e.currentTarget);
   });
 
@@ -334,7 +355,7 @@ function init_adj(el) {
   });
 }
 
-$("#scratch").droppable( {
+$("#scratch").droppable({
   accept: '.adj',
   hoverClass: 'bg-success',
   drop: function(event, ui) {
@@ -344,7 +365,7 @@ $("#scratch").droppable( {
   }
 });
 
-$("#allocationsTable .adj-holder").droppable( {
+$("#allocationsTable .adj-holder").droppable({
   hoverClass: 'bg-info',
   drop: function(event, ui) {
     var adj = ui.draggable; // The adj being dragged
@@ -368,11 +389,14 @@ $("#allocationsTable .adj-holder").droppable( {
       // If placing from the unused column remove the old (now empty) row
       removeUnusedRow(oldHolder);
       // If duplicate adjs is on we make a duplicate and append to unused
-      {% if duplicate_adjs %}
+      { %
+        if duplicate_adjs %
+      }
       var adj_copy = adj.clone()
       moveToUnused(adj_copy);
       init_adj($(adj_copy)); // Need to enable all events
-      {% endif %}
+      { % endif %
+      }
     }
   }
 });
@@ -398,28 +422,28 @@ function _make_adj(data) {
 }
 
 function set_chair(debate_id, data) {
-  var td = $('#chair_'+debate_id);
+  var td = $('#chair_' + debate_id);
   removeUnusedRow(td)
   $('div.adj', td).remove();
   _make_adj(data).appendTo(td);
 }
 
 function clear_panel(debate_id) {
-  $('#panel_'+debate_id).find('div.adj').remove();
+  $('#panel_' + debate_id).find('div.adj').remove();
 }
 
 function clear_trainees(debate_id) {
-  $('#trainees_'+debate_id).find('div.adj').remove();
+  $('#trainees_' + debate_id).find('div.adj').remove();
 }
 
 function add_panellist(debate_id, data) {
-  var td = $('#panel_'+debate_id);
+  var td = $('#panel_' + debate_id);
   removeUnusedRow(td)
   _make_adj(data).appendTo(td);
 }
 
 function add_trainee(debate_id, data) {
-  var td = $('#trainees_'+debate_id);
+  var td = $('#trainees_' + debate_id);
   removeUnusedRow(td)
   _make_adj(data).appendTo(td);
 }
@@ -427,14 +451,14 @@ function add_trainee(debate_id, data) {
 function moveToUnused(adj) {
   // Build a list of all adjs already on the table
   var unusedIDs = [];
-  $("#unusedAdjTable .adj").each(function(){
+  $("#unusedAdjTable .adj").each(function() {
     unusedIDs.push(DOMIdtoInt(this));
   });
   var moving_adj_id = DOMIdtoInt(adj);
 
   if (unusedIDs.indexOf(moving_adj_id) == -1) {
     // If the adj isn't already in the table
-    var new_row = unusedAdjTable.row.add( ["",formatScore(all_adj_scores[moving_adj_id])] ).draw(); // Adds a new row
+    var new_row = unusedAdjTable.row.add(["", formatScore(all_adj_scores[moving_adj_id])]).draw(); // Adds a new row
     var first_cell = $("td:first", new_row.node()).append(adj); // Append the adj element
   }
 
@@ -460,41 +484,73 @@ var draggingCurrently = false;
 
 // DATATABLE INITIALISATION
 
-var allocationsTable = $("#allocationsTable").DataTable( {
+var allocationsTable = $("#allocationsTable").DataTable({
   "bAutoWidth": false,
-  "aoColumns": [
-    { "sWidth": "3%" },
-    { "sWidth": "0%" },
-    { "sWidth": "3%" },
-    { "sWidth": "3%" },
-    { "sWidth": "3%" },
-    { "sWidth": "3%" },
-    { "sWidth": "17%" },
-    { "sWidth": "3%" },
-    { "sWidth": "3%" },
-    { "sWidth": "17%" },
-    { "sWidth": "18%" },
-    { "sWidth": "18%" },
-    { "sWidth": "18%" }
+  "aoColumns": [{
+    "sWidth": "3%"
+  }, {
+    "sWidth": "0%"
+  }, {
+    "sWidth": "3%"
+  }, {
+    "sWidth": "3%"
+  }, {
+    "sWidth": "3%"
+  }, {
+    "sWidth": "3%"
+  }, {
+    "sWidth": "17%"
+  }, {
+    "sWidth": "3%"
+  }, {
+    "sWidth": "3%"
+  }, {
+    "sWidth": "17%"
+  }, {
+    "sWidth": "18%"
+  }, {
+    "sWidth": "18%"
+  }, {
+    "sWidth": "18%"
+  }],
+  "aaSorting": [
+    [1, 'desc']
   ],
-  "aaSorting": [[1, 'desc']],
-  "aoColumnDefs": [
-    { "bVisible": false, "aTargets": [3,4,5,7,8] }, //set column visibility
-    {"iDataSort": 1, "aTargets": [2] },
-    { "bVisible": false, "aTargets": [1] },
+  "aoColumnDefs": [{
+      "bVisible": false,
+      "aTargets": [3, 4, 5, 7, 8]
+    }, //set column visibility
+    {
+      "iDataSort": 1,
+      "aTargets": [2]
+    }, {
+      "bVisible": false,
+      "aTargets": [1]
+    },
   ]
 });
 
 var unusedAdjTable = $("#unusedAdjTable").DataTable({
-  aoColumns: [
-    { "sWdith": "90%", "sType": "string" },
-    { "sWidth": "10%", "sType": "string" }
+  aoColumns: [{
+    "sWdith": "90%",
+    "sType": "string"
+  }, {
+    "sWidth": "10%",
+    "sType": "string"
+  }],
+  "aaSorting": [
+    [1, 'desc'],
+    [0, 'desc']
   ],
-  "aaSorting": [[1, 'desc'], [0, 'desc']],
   "aoColumnDefs": [
     // Sort based on feedback despite it being a hidden column
-    {"iDataSort": 1, "aTargets": [0] },
-    { "bVisible": false, "aTargets": [1] },
+    {
+      "iDataSort": 1,
+      "aTargets": [0]
+    }, {
+      "bVisible": false,
+      "aTargets": [1]
+    },
   ],
   "autoWidth": false,
   bFilter: false,
@@ -502,13 +558,15 @@ var unusedAdjTable = $("#unusedAdjTable").DataTable({
 
 // Setup feedback popover
 var adjFeedbackModalTable = $("#modal-adj-table").DataTable({
-  {% if adj0.id %}
-  'ajax': '{% tournament_url get_adj_feedback %}?id={{ adj0.id }}',
-  {% endif %}
+  { %
+    if adj0.id %
+  }
+  'ajax': '{% tournament_url get_adj_feedback %}?id={{ adj0.id }}', { % endif %
+  }
   'bPaginate': false,
   'bFilter': false
 });
-$('#table-search').keyup(function(){
+$('#table-search').keyup(function() {
   adjFeedbackModalTable.search($(this).val()).draw();
 })
 

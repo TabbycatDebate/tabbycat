@@ -17,9 +17,9 @@ $('#toggle_unused_layout').click(function() {
 
 $('#toggle_gender').click(function() {
   var columnA = allocationsTable.column(5);
-  columnA.visible( ! columnA.visible() );
+  columnA.visible(!columnA.visible());
   var columnB = allocationsTable.column(8);
-  columnB.visible( ! columnB.visible() );
+  columnB.visible(!columnB.visible());
   $(".adj").toggleClass("gender-display");
   $(".gender-highlight").toggleClass("gender-display");
   $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
@@ -50,17 +50,16 @@ $('#toggle_breakcategory').click(function() {
 
 $('#toggle_venues').click(function() {
   var venuesColumn = allocationsTable.column(3);
-  venuesColumn.visible( ! venuesColumn.visible() );
+  venuesColumn.visible(!venuesColumn.visible());
   $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
   return false
 });
 
 $('#toggle_wins').click(function() {
   var affWinsColumn = allocationsTable.column(4);
-  affWinsColumn.visible( ! affWinsColumn.visible() );
+  affWinsColumn.visible(!affWinsColumn.visible());
   var negWinsColumn = allocationsTable.column(7);
-  negWinsColumn.visible( ! negWinsColumn.visible() );
+  negWinsColumn.visible(!negWinsColumn.visible());
   $("span", this).toggleClass("glyphicon-eye-open").toggleClass("glyphicon-eye-close");
   return false
 })
-
