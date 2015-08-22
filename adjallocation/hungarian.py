@@ -57,7 +57,7 @@ class HungarianAllocator(Allocator):
         n_adjudicators = len(self.adjudicators)
         n_debates = len(self.debates)
 
-        n_solos = n_debates - (n_adjudicators - n_debates)/2
+        n_solos = n_debates - (n_adjudicators - n_debates)//2
 
         # get adjudicators that can adjudicate solo
         chairs = self.adjudicators_sorted[:n_solos]
@@ -162,5 +162,3 @@ def test():
 
 if __name__ == '__main__':
     test()
-
-
