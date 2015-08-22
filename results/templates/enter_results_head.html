@@ -96,7 +96,11 @@
 
     }
 
-    $("#resultsForm").validate({});
+    $("#resultsForm").validate({
+      invalidHandler: function(event, validator) {
+        $('.submit-disable').button('reset');
+      }
+    });
 
     $('.scoresheet').each(function() {
         refresh_totals($(this));
@@ -217,7 +221,6 @@
     {% endif %}
 
   });
-
 
 </script>
 

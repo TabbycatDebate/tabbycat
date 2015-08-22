@@ -75,7 +75,6 @@
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
   {% endcompress %}
@@ -92,7 +91,6 @@
       }
     });
 
-    // Enable all bootstrap tooltips
     $(document).ready(function(){
 
       // Enable hover tooltips for all elements
@@ -108,6 +106,7 @@
         'placement': 'bottom'
       });
 
+      // Disable buttons post submission
       $('.submit-disable').on('click', function () {
         var $btn = $(this).button('loading');
       });

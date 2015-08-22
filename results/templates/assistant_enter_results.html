@@ -47,34 +47,35 @@
 {% endblock content %}
 
 {% block extra-js %}
-  {{ block.super }}
-  {% include "enter_results_head.html" %}
-  {% if not new %}
-    <script>
-      $(document).ready(function() {
-        function preSubmit() {
-          $('#resultsForm input').removeAttr('readonly');
-          $('#resultsForm select').removeAttr('disabled');
-        }
-        $('#resultsForm input[type="number"]').attr('readonly', 'true');
-        $('#resultsForm select').attr('disabled', 'true');
-        $('#incorrect').click(function() {
-          {% if not_singleton %}
-            $('#id_debate_result_status').val('{{ debate.STATUS_DRAFT }}');
-          {% else %}
-            $('#id_debate_result_status').val('{{ debate.STATUS_NONE }}');
-          {% endif %}
-          $('#id_discarded').attr('value', 'True');
-          $('#id_confirmed').attr('value', 'False');
-          preSubmit();
-          $('#resultsForm').submit();
-          return false;
-        });
-        $('#correct').click(function() {
-          preSubmit();
-        });
+{{ block.super }}
+<script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready( function() {
+    {% include "js/enter_results.js" %}
+    {% if not new %}
+      function preSubmit() {
+        $('#resultsForm input').removeAttr('readonly');
+        $('#resultsForm select').removeAttr('disabled');
+      }
+      $('#resultsForm input[type="number"]').attr('readonly', 'true');
+      $('#resultsForm select').attr('disabled', 'true');
+      $('#incorrect').click(function() {
+        {% if not_singleton %}
+          $('#id_debate_result_status').val('{{ debate.STATUS_DRAFT }}');
+        {% else %}
+          $('#id_debate_result_status').val('{{ debate.STATUS_NONE }}');
+        {% endif %}
+        $('#id_discarded').attr('value', 'True');
+        $('#id_confirmed').attr('value', 'False');
+        preSubmit();
+        $('#resultsForm').submit();
+        return false;
+      });
+      $('#correct').click(function() {
+        preSubmit();
       });
 
-    </script>
-  {% endif %}
+    {% endif %}
+  });
+</script>
 {% endblock %}
