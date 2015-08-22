@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from tournaments.keys import populate_url_keys, delete_url_keys
+from adjfeedback.keys import populate_url_keys, delete_url_keys
 from tournaments.models import Tournament
 from argparse import ArgumentParser
 
