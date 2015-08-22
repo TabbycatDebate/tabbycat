@@ -97,9 +97,7 @@ class Command(BaseCommand):
         try:
             return open(path, 'r')
         except OSError as e:
-            print("1%s" % filename)
-            print("2%s" % e)
-            self._warning("Problem opening '{0:s}': {1:s}".format(filename, e))
+            self._warning("Problem opening '{0:s}': {1:s}".format(filename, e.strerror))
             return None
 
     def _make(self, filename, import_method=None):
