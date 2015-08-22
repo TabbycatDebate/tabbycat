@@ -52,7 +52,7 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
     for source, adj in sources_and_subjects:
 
         if random.random() > probability:
-            print " - Skipping", source, "on", adj
+            print(" - Skipping", source, "on", adj)
             continue
 
         fb = fm.AdjudicatorFeedback(submitter_type=submitter_type)
@@ -101,7 +101,7 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
                     answer = random.choice(WORDS[score])
             question.answer_type_class(question=question, feedback=fb, answer=answer).save()
 
-        print source, "on", adj, ":", score
+        print(source, "on", adj, ":", score)
 
         fbs.append(fb)
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("debate", type=int, nargs='+', help="Debate ID(s) to add to")
     parser.add_argument("-p", "--probability", type=float, help="Probability with which to add feedback", default=1.0)
-    parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=SUBMITTER_TYPE_MAP.keys(), default="tabroom")
+    parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
     parser.add_argument("-u", "--user", type=str, help="User ID", default="random")
     status = parser.add_mutually_exclusive_group(required=True)
     status.add_argument("-d", "--discarded", action="store_true", help="Ballot set is discarded")
@@ -128,9 +128,9 @@ if __name__ == "__main__":
     for debate_id in args.debate:
         debate = Debate.objects.get(id=debate_id)
 
-        print debate
+        print(debate)
 
         try:
             fbs = add_feedback(debate, submitter_type, user, args.probability, args.discarded, args.confirmed)
-        except ValueError, e:
-            print "Error:", e
+        except ValueError as e:
+            print("Error:", e)

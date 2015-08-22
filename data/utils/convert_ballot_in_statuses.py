@@ -13,7 +13,7 @@ parser.parse_args()
 
 for debate in Debate.objects.all():
     if debate.result_status == "B":
-        print debate
+        print(debate)
         debate.result_status = debate.STATUS_NONE
         debate.ballot_in = True
         debate.save()

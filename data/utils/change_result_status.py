@@ -12,6 +12,6 @@ args = parser.parse_args()
 round = args.round
 
 for debate in Debate.objects.filter(round__seq=round):
-    print debate
+    print(debate)
     debate.result_status = Debate.STATUS_NONE
     debate.save()

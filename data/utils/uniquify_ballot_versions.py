@@ -16,5 +16,5 @@ for bsub in rm.BallotSubmission.objects.all():
     bsub.version = versions_so_far[bsub.debate]
     versions_so_far[bsub.debate] += 1
     if bsub.version > 1:
-        print "On version %d, %s" % (bsub.version, bsub)
+        print("On version %d, %s" % (bsub.version, bsub))
     bsub.save()

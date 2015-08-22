@@ -15,7 +15,7 @@ import argparse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("round", type=int, help="Round(s) to add to")
 parser.add_argument("no_ballots", type=int, help="Number of ballots to add")
-parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=SUBMITTER_TYPE_MAP.keys(), default="tabroom")
+parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
 parser.add_argument("-u", "--user", type=str, help="User ID", default="original")
 parser.add_argument("-d", "--discarded", action="store_true", help="Ballot set is discarded")
 parser.add_argument("-c", "--confirmed", action="store_true", help="Ballot set is confirmed")
@@ -32,15 +32,15 @@ else:
 round = tm.Round.objects.get(seq=args.round)
 debates = round.debate_set.all()
 
-for i in xrange(args.no_ballots):
+for i in range(args.no_ballots):
 
     debate = random.choice(debates)
 
-    print debate
+    print(debate)
 
     try:
         bset = add_ballot_set(debate, submitter_type, user, args.discarded, args.confirmed, args.min_score, args.max_score)
-    except ValueError, e:
-        print "Error:", e
+    except ValueError as e:
+        print("Error:", e)
 
-    print "  Won by", bset.aff_win and "affirmative" or "negative"
+    print("  Won by", bset.aff_win and "affirmative" or "negative")

@@ -20,8 +20,8 @@ def log(*args, **kwargs):
     action = ActionLogEntry(*args, **kwargs)
     try:
         action.full_clean()
-    except ValidationError, e:
-        print str(e)
+    except ValidationError as e:
+        print(str(e))
         return
     action.save()
 
@@ -46,4 +46,4 @@ log(type=AL.ACTION_TYPE_FEEDBACK_SAVE, user=get_user('notsuper'), adjudicator_fe
 log(type=AL.ACTION_TYPE_MOTION_EDIT, user=get_user('ravi'), motion=get_motion(43))
 
 for al in ActionLogEntry.objects.all():
-    print repr(al)
+    print(repr(al))

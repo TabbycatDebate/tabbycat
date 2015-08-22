@@ -46,5 +46,5 @@ for round in tm.Round.objects.all():
     motions = mm.Motion.objects.filter(round=round)
     for ballots in rm.BallotSubmission.objects.filter(debate__round=round):
         ballots.motion = random.choice(motions)
-        print "Chose motion", ballots.motion.reference, "for ballot", ballots
+        print("Chose motion", ballots.motion.reference, "for ballot", ballots)
         ballots.save()

@@ -20,7 +20,7 @@ for adj in Adjudicator.objects.all():
             source_team=feedback.source_team).order_by('version')
         num = others.count()
         if num > 1:
-            print " *** Adjudicator: {0}, from: {1}, {2:d} versions".format(adj, feedback.source, num)
+            print(" *** Adjudicator: {0}, from: {1}, {2:d} versions".format(adj, feedback.source, num))
             for other in others:
                 #print other.timestamp.isoformat()
-                print "   {4:>3} {3:<12} {2} {5} {1} {0:.1f}".format(other.score, other.version, other.round, other.user, other.id, other.confirmed and "c" or "-")
+                print("   {4:>3} {3:<12} {2} {5} {1} {0:.1f}".format(other.score, other.version, other.round, other.user, other.id, other.confirmed and "c" or "-"))

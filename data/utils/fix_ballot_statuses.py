@@ -21,5 +21,5 @@ for bsub in rm.BallotSubmission.objects.all():
             bsub.confirmed = True
     new = (bsub.discarded, bsub.confirmed)
     if original != new:
-        print "%s changed from %s to %s" % (bsub, original, new)
+        print("%s changed from %s to %s" % (bsub, original, new))
         bsub.save()

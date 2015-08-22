@@ -10,4 +10,4 @@ parser.parse_args()
 AL = ActionLogEntry
 
 for al in ActionLogEntry.objects.order_by('-timestamp'):
-    print repr(al)
+    print(repr(al))

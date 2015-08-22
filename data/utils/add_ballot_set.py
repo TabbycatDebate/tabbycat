@@ -81,7 +81,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("debate", type=int, nargs='+', help="Debate ID(s) to add to")
-    parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=SUBMITTER_TYPE_MAP.keys(), default="tabroom")
+    parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
     parser.add_argument("-u", "--user", type=str, help="User ID", default="original")
     status = parser.add_mutually_exclusive_group()
     status.add_argument("-d", "--discarded", action="store_true", help="Ballot set is discarded")
@@ -99,11 +99,11 @@ if __name__ == "__main__":
     for debate_id in args.debate:
         debate = dm.Debate.objects.get(id=debate_id)
 
-        print debate
+        print(debate)
 
         try:
             bset = add_ballot_set(debate, submitter_type, user, args.discarded, args.confirmed, args.min_score, args.max_score)
-        except ValueError, e:
-            print "Error:", e
+        except ValueError as e:
+            print("Error:", e)
 
-        print "  Won by", bset.aff_win and "affirmative" or "negative"
+        print("  Won by", bset.aff_win and "affirmative" or "negative")

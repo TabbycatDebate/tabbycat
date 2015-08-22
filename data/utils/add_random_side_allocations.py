@@ -22,10 +22,10 @@ for seq in args.rounds:
     negs = teams[len(teams)/2:]
     dm.TeamPositionAllocation.objects.filter(round=round).delete()
     if not args.quiet:
-        print(str(round))
+        print((str(round)))
         print("Affirmative:                   Negative:")
         for aff, neg in zip(sorted(affs), sorted(negs)):
-            print("{0:30} {1:30}".format(aff.short_name, neg.short_name))
+            print(("{0:30} {1:30}".format(aff.short_name, neg.short_name)))
     if args.delete:
         continue
     for team in affs:
