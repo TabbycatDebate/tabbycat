@@ -114,7 +114,7 @@ class Tournament(models.Model):
     class Meta:
         ordering = ['seq',]
 
-    def __unicode__(self):
+    def __str__(self):
         if self.short_name:
             return str(self.short_name)
         else:
@@ -145,7 +145,7 @@ class Division(models.Model):
     def teams(self):
         return self.team_set.all().order_by('institution','reference').select_related('institution')
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s - %s" % (self.tournament, self.name)
 
     class Meta:
@@ -236,7 +236,7 @@ class Round(models.Model):
         ordering = ['tournament', str('seq')]
         index_together = ['tournament', 'seq']
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s - %s" % (self.tournament, self.name)
 
     def motions(self):

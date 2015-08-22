@@ -10,7 +10,7 @@ class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
     tournament = models.ForeignKey('tournaments.Tournament')
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % (self.name)
 
 class InstitutionManager(models.Manager):
@@ -38,7 +38,7 @@ class Institution(models.Model):
         unique_together = [('name', 'code')]
         ordering = ['name']
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.name)
 
     @property
@@ -165,7 +165,7 @@ class Team(models.Model):
 
     objects = TeamManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s - %s" % (self.tournament, self.short_name)
 
     @property
@@ -281,7 +281,7 @@ signals.post_save.connect(update_team_cache, sender=Team)
 class Speaker(Person):
     team = models.ForeignKey(Team)
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.name)
 
 
@@ -312,7 +312,7 @@ class Adjudicator(Person):
     class Meta:
         ordering = ['tournament', 'institution', 'name']
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s (%s)" % (self.name, self.institution.code)
 
     def conflict_with(self, team):

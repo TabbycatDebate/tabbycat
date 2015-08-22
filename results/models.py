@@ -90,7 +90,7 @@ class BallotSubmission(Submission):
     class Meta:
         unique_together = [('debate', 'version')]
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Ballot for ' + str(self.debate) + ' submitted at ' + \
                 ('<unknown>' if self.timestamp is None else str(self.timestamp.isoformat()))
 

@@ -102,7 +102,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
     class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
 
-    def __unicode__(self):
+    def __str__(self):
         return self.reference
 
     @property

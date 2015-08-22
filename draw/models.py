@@ -44,7 +44,7 @@ class Debate(models.Model):
     def __contains__(self, team):
         return team in (self.aff_team, self.neg_team)
 
-    def __unicode__(self):
+    def __str__(self):
         try:
             return "%s - [%s] %s vs %s" % (
                 self.round.tournament,
@@ -161,7 +161,7 @@ class Debate(models.Model):
             def __init__(self, adj, team):
                 self.adj = adj
                 self.team = team
-            def __unicode__(self):
+            def __str__(self):
                 return 'Adj %s + %s' % (self.adj, self.team)
 
         a = []
@@ -222,7 +222,7 @@ class DebateTeam(models.Model):
     team = models.ForeignKey('participants.Team')
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s (%s)' % (self.team, self.debate)
 
     @cached_property # TODO: this slows down the standings pages reasonably heavily
@@ -273,5 +273,5 @@ class TeamVenuePreference(models.Model):
     class Meta:
         ordering = ['priority',]
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s with priority %s for %s' % (self.team, self.priority, self.venue_group)

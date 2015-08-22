@@ -479,7 +479,7 @@ class BallotSetForm(forms.Form):
             def name(self):
                 return (self.pos == form.REPLY_POSITION) and "Reply" or str(self.pos)
 
-            def __unicode__(self):
+            def __str__(self):
                 return str(self.name)
 
             def aff_speaker(self):

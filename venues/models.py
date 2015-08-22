@@ -16,7 +16,7 @@ class VenueGroup(models.Model):
     class Meta:
         ordering = ['short_name']
 
-    def __unicode__(self):
+    def __str__(self):
         if self.short_name:
             return "%s" % (self.short_name)
         else:
@@ -33,7 +33,7 @@ class Venue(models.Model):
         ordering = ['group', 'name']
         index_together = ['group', 'name']
 
-    def __unicode__(self):
+    def __str__(self):
         if self.group:
             return '%s - %s' % (self.group, self.name)
         else:
