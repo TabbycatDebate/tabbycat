@@ -50,11 +50,10 @@ function load_allocation_data(data) {
       {% if duplicate_adjs %} // If duplicating adjs need to copy over those allocated
       moveToUnused(_make_adj(adj_data.chair));
       {% endif %}
-      }
     }
     clear_panel(debate_id);
     $.each(adj_data.panel, function(idx, adj) {
-      add_panellist(debate_id, adj); \
+      add_panellist(debate_id, adj);
       {% if duplicate_adjs %} // If duplicating adjs need to copy over those allocated
       moveToUnused(_make_adj(adj));
       {% endif %}
