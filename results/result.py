@@ -342,7 +342,7 @@ class BallotSet(object):
         if not self.is_complete:
             return None
         return sum(self.adjudicator_sheets[adj]._get_score(dt, position)
-                   for adj in self.majority_adj) / len(self.majority_adj)
+                   for adj in self.majority_adj) // len(self.majority_adj)
 
     def _set_speaker(self, dt, position, speaker):
         if speaker not in dt.team.speakers:
@@ -406,7 +406,7 @@ class BallotSet(object):
 
         counts = {dt: len(adjs) for dt, adjs in adjs_by_dt.items()}
         max_count = max(counts.values()) # check that we have a majority
-        if max_count < len(self.adjudicators) / 2 + 1:
+        if max_count < len(self.adjudicators) // 2 + 1:
             raise ResultError("No team had a majority in %s." % self.debate.matchup)
 
         for dt, count in counts.items(): # set self._majority_adj
@@ -443,11 +443,11 @@ class BallotSet(object):
         if not self.loaded_sheets:
             return self.total_score_from_db[dt]
         return sum(self.adjudicator_sheets[adj]._get_total(dt) for adj in
-                   self.majority_adj) / len(self.majority_adj)
+                   self.majority_adj) // len(self.majority_adj)
 
     def _dissenting_inclusive_score(self, dt):
         dissenting_score = sum(self.adjudicator_sheets[adj]._get_total(dt) for adj in
-                   self.adjudicators) / len(self.adjudicators)
+                   self.adjudicators) // len(self.adjudicators)
         return dissenting_score
 
     # Abstracted to not be tied to wins

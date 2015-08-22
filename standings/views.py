@@ -112,7 +112,7 @@ def team_standings(request, round):
                         if ts.get_margin is not None:
                             margins.append(ts.get_margin)
 
-                team.avg_margin = sum(margins) / float(len(margins))
+                team.avg_margin = sum(margins) / len(margins)
             except ZeroDivisionError:
                 team.avg_margin = None
 
@@ -143,7 +143,7 @@ def division_standings(request, round):
                         if ts.get_margin is not None:
                             margins.append(ts.get_margin)
 
-                team.avg_margin = sum(margins) / float(len(margins))
+                team.avg_margin = sum(margins) / len(margins)
             except ZeroDivisionError:
                 team.avg_margin = None
 
@@ -239,7 +239,7 @@ def public_team_tab(request, t):
                         if ts.get_margin is not None:
                             margins.append(ts.get_margin)
 
-                team.avg_margin = sum(margins) / float(len(margins))
+                team.avg_margin = sum(margins) / len(margins)
             except ZeroDivisionError:
                 team.avg_margin = None
 

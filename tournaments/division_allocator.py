@@ -46,10 +46,10 @@ class DivisionAllocator():
                 print("------\n%s has %s/%s teams" % (group, len(group_teams), group.team_capacity))
 
                 # Using the ideal division size, how many divisions can we support?
-                possible_ideal_divisions = len(group_teams) / self.ideal_division_size
+                possible_ideal_divisions = len(group_teams) // self.ideal_division_size
                 possible_ideal_remainder = len(group_teams) % self.ideal_division_size
                 #print "\t %s possible_ideal_division of 6 with %s leftover" % (possible_ideal_divisions, possible_ideal_remainder)
-                possible_small_divisions = len(group_teams) / self.minimum_division_size
+                possible_small_divisions = len(group_teams) // self.minimum_division_size
                 possible_small_remainder = len(group_teams) % self.minimum_division_size
                 #print "\t %s possible_small_division of 5 with %s leftover" % (possible_small_divisions, possible_small_remainder)
 

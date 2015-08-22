@@ -55,7 +55,7 @@ def draw_adjudicators_edit(request, round):
         male_adjs = models.DebateAdjudicator.objects.filter(
             debate__in=debates, adjudicator__gender="M").count()
         if male_adjs > 0:
-            male_adj_percent = int((float(male_adjs) / float(adjs)) * 100)
+            male_adj_percent = int(male_adjs / adjs * 100)
             return male_adj_percent
         else:
             return 0
@@ -68,9 +68,9 @@ def draw_adjudicators_edit(request, round):
         debate.neg_team.male_adj_percent = neg_male_adj_percent
 
         if neg_male_adj_percent > aff_male_adj_percent:
-            debate.gender_class = (neg_male_adj_percent / 5) - 10
+            debate.gender_class = (neg_male_adj_percent // 5) - 10
         else:
-            debate.gender_class = (aff_male_adj_percent / 5) - 10
+            debate.gender_class = (aff_male_adj_percent // 5) - 10
 
     regions = round.tournament.region_set.order_by('name')
     break_categories = round.tournament.breakcategory_set.order_by(

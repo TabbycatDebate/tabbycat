@@ -370,7 +370,7 @@ def public_feedback_progress(request, t):
         elif submitted == 0:
             return 0
         else:
-            return int((float(submitted) / float(total)) * 100)
+            return int(submitted / total * 100)
 
     feedback = models.AdjudicatorFeedback.objects.all()
     adjudicators = Adjudicator.objects.all()
@@ -415,7 +415,7 @@ def feedback_progress(request, t):
         if total == 0 or submitted == 0:
             return 0 # avoid divide-by-zero error
         else:
-            return int((float(submitted) / float(total)) * 100)
+            return int(submitted / total * 100)
 
     feedback = models.AdjudicatorFeedback.objects.select_related('source_adjudicator__adjudicator','source_team__team').all()
     adjudicators = Adjudicator.objects.all()

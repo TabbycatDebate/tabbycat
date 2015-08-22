@@ -606,7 +606,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     @classmethod
     def _pairings_slide(cls, brackets):
         def slide(teams):
-            num_debates = len(teams) / 2
+            num_debates = len(teams) // 2
             top = teams[:num_debates]
             bottom = teams[num_debates:]
             return top, bottom
@@ -615,7 +615,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     @classmethod
     def _pairings_fold(cls, brackets):
         def fold(teams):
-            num_debates = len(teams) / 2
+            num_debates = len(teams) // 2
             top = teams[:num_debates]
             bottom = teams[num_debates:]
             bottom.reverse()
@@ -625,7 +625,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     @classmethod
     def _pairings_random(cls, brackets):
         def shuffle(teams):
-            num_debates = len(teams) / 2
+            num_debates = len(teams) // 2
             random.shuffle(teams)
             top = teams[:num_debates]
             bottom = teams[num_debates:]
@@ -894,7 +894,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                 if not unfilled_pool["aff"] and not unfilled_pool["neg"]:
                     num_brackets = len(intermediates[unfilled_points])
                     for i, intermediate_pool in enumerate(intermediates[unfilled_points], start=1):
-                        intermediate_points = unfilled_points - float(i) / (num_brackets + 1)
+                        intermediate_points = unfilled_points - i / (num_brackets + 1)
                         new[intermediate_points] = intermediate_pool
                     del unfilled[unfilled_points]
 
@@ -1139,7 +1139,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         for bracket in brackets.items():
             teams_list = bracket[1] # Team Array is second item
             points =  bracket[0]
-            total_debates = int(len(teams_list) / 2)
+            total_debates = len(teams_list) // 2
             print("BRACKET %s with %s teams" % (points, len(teams_list)))
 
             fold_top = teams_list[:total_debates]

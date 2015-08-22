@@ -64,7 +64,7 @@ def draw_none(request, round):
     active_teams = round.active_teams.all()
     active_venues_count = round.active_venues.count()
     active_adjs = round.active_adjudicators.count()
-    rooms = float(active_teams.count()) / 2
+    rooms = float(active_teams.count()) // 2
     return r2r(request, "draw_none.html", dict(active_teams=active_teams,
                                                active_venues_count=active_venues_count,
                                                active_adjs=active_adjs,
@@ -81,7 +81,7 @@ def draw_draft(request, round):
 
 def draw_confirmed(request, round):
     draw = round.get_cached_draw
-    rooms = float(round.active_teams.count()) / 2
+    rooms = float(round.active_teams.count()) // 2
     active_adjs = round.active_adjudicators.all()
 
     return r2r(request, "draw_confirmed.html", dict(draw=draw,
@@ -208,7 +208,7 @@ def draw_matchups_edit(request, round):
     draw = round.get_draw_with_standings(round)
     debates = len(draw)
     unused_teams = round.unused_teams()
-    possible_debates = int(len(unused_teams) / 2) + 1 # The blank rows to add
+    possible_debates = len(unused_teams) // 2 + 1 # The blank rows to add
     possible_debates = [None] * possible_debates
     return r2r(request, "draw_matchups_edit.html", dict(draw=draw,
         possible_debates=possible_debates,unused_teams=unused_teams))
