@@ -46,27 +46,25 @@ function load_adjudicator_scores(callback) {
 function load_allocation_data(data) {
   $.each(data.debates, function(debate_id, adj_data) {
     if (adj_data.chair) {
-      set_chair(debate_id, adj_data.chair); { %
-        if duplicate_adjs %
-      } // If duplicating adjs need to copy over those allocated
-      moveToUnused(_make_adj(adj_data.chair)); { % endif %
+      set_chair(debate_id, adj_data.chair);
+      {% if duplicate_adjs %} // If duplicating adjs need to copy over those allocated
+      moveToUnused(_make_adj(adj_data.chair));
+      {% endif %}
       }
     }
     clear_panel(debate_id);
     $.each(adj_data.panel, function(idx, adj) {
-      add_panellist(debate_id, adj); { %
-        if duplicate_adjs %
-      } // If duplicating adjs need to copy over those allocated
-      moveToUnused(_make_adj(adj)); { % endif %
-      }
+      add_panellist(debate_id, adj); \
+      {% if duplicate_adjs %} // If duplicating adjs need to copy over those allocated
+      moveToUnused(_make_adj(adj));
+      {% endif %}
     });
     clear_trainees(debate_id);
     $.each(adj_data.trainees, function(idx, adj) {
-      add_trainee(debate_id, adj); { %
-        if duplicate_adjs %
-      } // If duplicating adjs need to copy over those allocated
-      moveToUnused(_make_adj(adj)); { % endif %
-      }
+      add_trainee(debate_id, adj);
+      {% if duplicate_adjs %} // If duplicating adjs need to copy over those allocated
+      moveToUnused(_make_adj(adj));
+      {% endif %}
     });
 
   });
@@ -389,14 +387,11 @@ $("#allocationsTable .adj-holder").droppable({
       // If placing from the unused column remove the old (now empty) row
       removeUnusedRow(oldHolder);
       // If duplicate adjs is on we make a duplicate and append to unused
-      { %
-        if duplicate_adjs %
-      }
+      {% if duplicate_adjs %}
       var adj_copy = adj.clone()
       moveToUnused(adj_copy);
       init_adj($(adj_copy)); // Need to enable all events
-      { % endif %
-      }
+      {% endif %}
     }
   }
 });
@@ -558,11 +553,9 @@ var unusedAdjTable = $("#unusedAdjTable").DataTable({
 
 // Setup feedback popover
 var adjFeedbackModalTable = $("#modal-adj-table").DataTable({
-  { %
-    if adj0.id %
-  }
-  'ajax': '{% tournament_url get_adj_feedback %}?id={{ adj0.id }}', { % endif %
-  }
+  {% if adj0.id %}
+  'ajax': '{% tournament_url get_adj_feedback %}?id={{ adj0.id }}',
+  {% endif %}
   'bPaginate': false,
   'bFilter': false
 });
