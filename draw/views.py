@@ -2,7 +2,7 @@ from actionlog.models import ActionLogEntry
 from participants.models import Team
 from tournaments.models import Round
 from motions.models import Motion
-from .models import TeamPositionAllocation, Debate
+from .models import TeamPositionAllocation, Debate, DebateTeam
 
 from utils.views import *
 
