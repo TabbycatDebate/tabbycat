@@ -41,6 +41,7 @@
           <th>Total</th>
         {% if show_draw_strength %}
           <th><span data-toggle="tooltip" title="Draw strength">DS</span></th>
+          <th><span data-toggle="tooltip" title="Who beat whom">WBW</span></th>
         {% endif %}
       </tr>
     </thead>
@@ -136,6 +137,7 @@
         </td>
         {% if show_draw_strength %}
           <td>{{ team.draw_strength }}</td>
+          <td>{{ team.who_beat_whom_display }}</td>
         {% endif %}
       </tr>
       {% endwith %}

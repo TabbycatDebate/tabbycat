@@ -1,5 +1,9 @@
 from django.db.models import Sum
 import random
+from functools import cmp_to_key
+from operator import attrgetter
+import logging
+logger = logging.getLogger(__name__)
 
 def _add_ranks(standings, key):
     """Adds the 'rank' attribute to each team in 'standings'. Teams in
@@ -106,7 +110,7 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
 
     elif rule == "nz":
 
-        # Add draw strength annotation.
+        # Add draw strength annotations.
         for team in teams:
             draw_strength = 0
             # Find all teams that they've faced.
@@ -118,44 +122,35 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False):
                 draw_strength += teams.get(id=dt.opposition.team.id).points
             team.draw_strength = draw_strength
 
-        def who_beat_whom(team1, team2):
-            """Returns a positive value if team1 won more debates, a negative value
-            if team2 won more, 0 if the teams won the same number against each other
-            or haven't faced each other."""
-            # Find all debates between these two teams
+        # Add who-beat-whom annotations.
+        def who_beat_whom(team, original_key):
+            equal_teams = [x for x in teams if original_key(x) == original_key(team)]
+            if len(equal_teams) != 2:
+                return "n/a" # fail fast if attempt to compare with an int
+            equal_teams.remove(team)
+            other = equal_teams[0]
             from models import TeamScore
-            def get_wins(team, other):
-                ts = TeamScore.objects.filter(
-                    ballot_submission__confirmed=True,
-                    debate_team__team=team,
-                    debate_team__debate__debateteam__team=other).aggregate(Sum('points'))
-                return ts["points__sum"]
-            wins1 = get_wins(team1, team2)
-            wins2 = get_wins(team2, team1)
-            # Print this to the logs, just so we know it happened
-            print "who beat whom, {0} vs {1}: {2} wins against {3}".format(team1, team2, wins1, wins2)
-            return cmp(wins1, wins2)
+            ts = TeamScore.objects.filter(
+                ballot_submission__confirmed=True,
+                debate_team__team=team,
+                debate_team__debate__debateteam__team=other).aggregate(Sum('points'))
+            logger.info("who beat whom, {0} vs {1}: {2}".format(team, other, ts["points__sum"]))
+            return ts["points__sum"] or 0
 
-        def cmp_teams(team1, team2):
-            """Returns 1 if team1 ranks ahead of team2, -1 if team2 ranks ahead of team1,
-            and 0 if they rank the same. Requires access to teams, so that it knows whether
-            it can apply who-beat-whom."""
-            # If there are only two teams on this number of points, or points/speakers,
-            # or points/speaks/draw-strength, then use who-beat-whom.
-            def two_teams_left(key):
-                return key(team1) == key(team2) and len(filter(lambda x: key(x) == key(team1), teams)) == 2
-            if two_teams_left(lambda x: x.points) or two_teams_left(lambda x: (x.points, x.speaker_score)) \
-                    or two_teams_left(lambda x: (x.points, x.speaker_score, x.draw_strength)):
-                winner = who_beat_whom(team1, team2)
-                if winner != 0: # if this doesn't help, keep going
-                    return winner
-            key = lambda x: (x.points, x.speaker_score, x.draw_strength)
-            return cmp(key(team1), key(team2))
+        for team in teams:
+            team.wbw1 = who_beat_whom(team, attrgetter('points'))
+            team.wbw2 = who_beat_whom(team, attrgetter('points', 'speaker_score'))
+            team.wbw3 = who_beat_whom(team, attrgetter('points', 'speaker_score', 'draw_strength'))
+            team.who_beat_whom_display = "{}, {}, {}".format(team.wbw1, team.wbw2, team.wbw3)
 
+        # Now, sort!
         sorted_teams = list(teams)
         if shuffle:
             random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
-        sorted_teams.sort(cmp=cmp_teams, reverse=True)
+        key_teams = attrgetter('points', 'wbw1', 'speaker_score', 'wbw2', 'draw_strength', 'wbw3')
+        sorted_teams.sort(key=key_teams, reverse=True)
+        for team in sorted_teams:
+            print("{0:25s} {1}".format(team.short_name, key_teams(team)))
         return sorted_teams
 
     elif rule == "wadl":
