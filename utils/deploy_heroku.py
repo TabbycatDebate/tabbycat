@@ -1,4 +1,6 @@
 #!/usr/bin/python
+"""Deploys Tabbycat to Heroku.
+This script is compatible with both Python 2 and Python 3."""
 
 import argparse
 import subprocess
@@ -58,7 +60,7 @@ def print_command(command):
     message = "$ " + " ".join(command)
     if use_color:
         message = "\033[1;36m" + message + "\033[0m"
-    print message
+    print(message)
 
 def run_command(command):
     print_command(command)
@@ -73,6 +75,7 @@ def run_heroku_command(command):
 def get_output_from_command(command):
     print_command(command)
     output = subprocess.check_output(command, **subprocess_kwargs)
+    output = output.decode()
     sys.stdout.write(output)
     sys.stdout.flush()
     return output
@@ -80,7 +83,7 @@ def get_output_from_command(command):
 def print_yellow(message):
     if use_color:
         message = "\033[1;33m" + message + "\033[0m"
-    print message
+    print(message)
 
 # Create the app with addons
 addons = ["memcachier", "heroku-postgresql:%s" % args.pg_plan]
