@@ -96,7 +96,9 @@ class Command(BaseCommand):
         path = self._csv_file_path(filename)
         try:
             return open(path, 'r')
-        except IOError as e:
+        except OSError as e:
+            print("1%s" % filename)
+            print("2%s" % e)
             self._warning("Problem opening '{0:s}': {1:s}".format(filename, e))
             return None
 
