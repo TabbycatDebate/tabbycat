@@ -1,6 +1,5 @@
 from django.db.models import Sum
 import random
-from functools import cmp_to_key
 from operator import attrgetter
 import logging
 logger = logging.getLogger(__name__)
@@ -30,13 +29,10 @@ def _extract_key_and_wbw(precedence):
         if attr == "wbw":
             numbered.append(attr + str(counter))
             wbw_attrs = tuple(attr for attr in precedence[0:i] if attr != "wbw")
-            print("wbw_key:", wbw_attrs)
             wbw_keys.append(attrgetter(*wbw_attrs))
             counter += 1
         else:
             numbered.append(attr)
-
-    print("numbered:", numbered)
 
     return tuple(numbered), tuple(wbw_keys)
 
@@ -221,13 +217,14 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False, r
     if shuffle:
         random.shuffle(standings)
 
-    print("Unsorted:")
-    for team in standings:
-        print("{0:20s} {1}".format(team.short_name, attrgetter(*precedence)(team)))
-    print()
-
     # Sort!
-    standings.sort(key=attrgetter(*precedence), reverse=True)
+    try:
+        standings.sort(key=attrgetter(*precedence), reverse=True)
+    except TypeError:
+        print("Unsorted:")
+        for team in standings:
+            print("{0:20s} {1}".format(team.short_name, attrgetter(*precedence)(team)))
+        raise
 
     print("Sorted:")
     for team in standings:
