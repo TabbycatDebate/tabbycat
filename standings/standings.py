@@ -82,7 +82,7 @@ def _add_draw_strength(teams, round):
             debateteam_set = debateteam_set.filter(debate__round__seq__lte=round.seq)
         for dt in debateteam_set:
             # Can't just use dt.opposition.team.points, as dt.opposition.team isn't annotated.
-            draw_strength += teams.get(id=dt.opposition.team.id).points
+            draw_strength += teams.get(id=dt.opposition.team_id).points
         team.draw_strength = draw_strength
 
 def _add_who_beat_whom(teams, round, keys):
