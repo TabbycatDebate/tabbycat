@@ -254,17 +254,17 @@ class TeamManager(models.Manager):
     def ranked_standings(self, round):
         """Returns a list."""
         teams = self._teams_for_standings(round)
-        return standings.ranked_team_standings(teams, round)
+        return standings.annotate_team_standings(teams, round, ranks=True)
 
     def division_standings(self, round):
         """Returns a list."""
         teams = self._teams_for_standings(round)
-        return standings.division_ranked_team_standings(teams, round)
+        return standings.annotate_team_standings(teams, round, division_ranks=True)
 
     def subrank_standings(self, round):
         """Returns a list."""
         teams = self._teams_for_standings(round)
-        return standings.subranked_team_standings(teams, round)
+        return standings.annotate_team_standings(teams, round, subranks=True)
 
 
 class Division(models.Model):
