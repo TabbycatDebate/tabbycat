@@ -30,8 +30,14 @@ def get_ip_address(request):
         return "0.0.0.0"
     return ip
 
-def decide_show_draw_strength(tournament):
-    return tournament.config.get('team_standings_rule') == "nz"
+def relevant_team_standings_metrics(tournament):
+    rule = tournament.config.get('team_standings_rule')
+    precedence = PRECEDENCE_BY_RULE[rule]
+    metrics = dict()
+    metrics["draw_strength"] = "draw_strength" in precedence
+    metrics["sum_of_margins"] = "margins" in precedence
+    metrics["who_beat_whom"] = "wbw" in precedence
+    return metrics
 
 def redirect_round(to, round, **kwargs):
     return redirect(to, tournament_slug=round.tournament.slug,
@@ -489,11 +495,11 @@ def public_team_tab(request, t):
                 team.avg_margin = None
 
     show_ballots = round.tournament.config.get('ballots_released')
-    show_draw_strength = decide_show_draw_strength(round.tournament)
+    metrics = relevant_team_standings_metrics(round.tournament)
 
     return r2r(request, 'public/public_team_tab.html', dict(teams=teams,
             rounds=rounds, round=round, show_ballots=show_ballots,
-            show_draw_strength=show_draw_strength))
+            metrics=metrics))
 
 
 
@@ -855,8 +861,8 @@ def draw_none(request, round):
 
 def draw_draft(request, round):
     draw = round.get_draw_with_standings(round)
-    show_draw_strength = decide_show_draw_strength(round.tournament)
-    return r2r(request, "draw_draft.html", dict(draw=draw, show_draw_strength=show_draw_strength))
+    metrics = relevant_team_standings_metrics(round.tournament)
+    return r2r(request, "draw_draft.html", dict(draw=draw, metrics=metrics))
 
 
 def draw_confirmed(request, round):
@@ -904,8 +910,8 @@ def draw_print_feedback(request, round):
 @round_view
 def draw_with_standings(request, round):
     draw = round.get_draw_with_standings(round)
-    show_draw_strength = decide_show_draw_strength(round.tournament)
-    return r2r(request, "draw_with_standings.html", dict(draw=draw, show_draw_strength=show_draw_strength))
+    metrics = relevant_team_standings_metrics(round.tournament)
+    return r2r(request, "draw_with_standings.html", dict(draw=draw, metrics=metrics))
 
 @admin_required
 @expect_post
@@ -1597,10 +1603,10 @@ def team_standings(request, round, for_print=False):
             except ZeroDivisionError:
                 team.avg_margin = None
 
-    show_draw_strength = decide_show_draw_strength(round.tournament)
+    metrics = relevant_team_standings_metrics(round.tournament)
 
     return r2r(request, 'team_standings.html', dict(teams=teams, rounds=rounds,
-        for_print=for_print, show_ballots=False, show_draw_strength=show_draw_strength))
+        for_print=for_print, show_ballots=False, metrics=metrics))
 
 
 @admin_required

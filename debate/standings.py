@@ -4,10 +4,15 @@ from operator import attrgetter
 import logging
 logger = logging.getLogger(__name__)
 
+# More rules can be added here.
+# Valid metrics include any orderable attributes of team, as well as
+# 'points', 'speaker_score', 'margins', 'draw_strength' and 'wbw'.
+# The 'wbw' (who-beat-whom) metric can be used more than once.
 PRECEDENCE_BY_RULE = {
     "australs": ('points', 'speaker_score'),
     "nz"      : ('points', 'wbw', 'speaker_score', 'wbw', 'draw_strength', 'wbw'),
     "wadl"    : ('points', 'wbw', 'margins', 'speaker_score'),
+    "test"    : ('points', 'wbw', 'draw_strength', 'wbw', 'speaker_score', 'wbw', 'margins', 'wbw'),
 }
 
 def _extract_key_and_wbw(precedence):

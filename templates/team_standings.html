@@ -21,7 +21,7 @@
           <th>Points</th>
         {% endif %}
         {% if show_avg_margin %}
-          <th><span data-toggle="tooltip" title="Average Winning Margin">AWM</span></th>
+          <th><span data-toggle="tooltip" title="Average winning margin">AWM</span></th>
         {% endif %}
         {% if enable_divisions %}
           <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
@@ -39,8 +39,13 @@
           <th>{{ round.abbreviation }}</th>
         {% endfor %}
           <th>Total</th>
-        {% if show_draw_strength %}
+        {% if metrics.draw_strength %}
           <th><span data-toggle="tooltip" title="Draw strength">DS</span></th>
+        {% endif %}
+        {% if metrics.sum_of_margins %}
+          <th><span data-toggle="tooltip" title="Sum of margins">SM</span></th>
+        {% endif %}
+        {% if metrics.who_beat_whom %}
           <th><span data-toggle="tooltip" title="Who beat whom">WBW</span></th>
         {% endif %}
       </tr>
@@ -135,8 +140,13 @@
         <td>
           {{ team.speaker_score|stringformat:".2f" }}
         </td>
-        {% if show_draw_strength %}
+        {% if metrics.draw_strength %}
           <td>{{ team.draw_strength }}</td>
+        {% endif %}
+        {% if metrics.sum_of_margins %}
+          <td>{{ team.margins|stringformat:".2f" }}</td>
+        {% endif %}
+        {% if metrics.who_beat_whom %}
           <td>{{ team.who_beat_whom_display }}</td>
         {% endif %}
       </tr>
