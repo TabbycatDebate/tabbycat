@@ -85,15 +85,17 @@ def print_yellow(message):
         message = "\033[1;33m" + message + "\033[0m"
     print(message)
 
-def get_git_push_source():
+def get_git_push_spec():
     if args.git_branch:
-        return args.git_branch
+        return "master" if args.git_branch == "master" else args.git_branch + ":master"
     try:
-        return get_output_from_command(["git", "symbolic-ref", "--short", "--quiet", "HEAD"]).strip()
+        branch = get_output_from_command(["git", "symbolic-ref", "--short", "--quiet", "HEAD"]).strip()
     except subprocess.CalledProcessError:
         print_yellow("Attempt to find git branch name failed, trying for commit instead...")
+    else:
+        return "master" if branch == "master" else branch + ":master"
     try:
-        return get_output_from_command(["git", "rev-parse", "--short", "--quiet", "HEAD"]).strip()
+        return get_output_from_command(["git", "rev-parse", "--short", "--quiet", "HEAD"]).strip() + ":refs/heads/master"
     except subprocess.CalledProcessError:
         print_yellow("Could not determine current git commit or branch. Use --git-branch to specify a git branch to push.")
     exit(1)
@@ -127,9 +129,8 @@ else:
     remote_name = heroku_url
 
 # Push source code to Heroku
-push_source = get_git_push_source()
-git_branch = push_source + ":master" if push_source != "master" else "master"
-run_command(["git", "push", remote_name, git_branch])
+push_spec = get_git_push_spec()
+run_command(["git", "push", remote_name, push_spec])
 
 if args.init_db:
     # Perform initial migrations
