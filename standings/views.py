@@ -116,10 +116,10 @@ def team_standings(request, round):
             except ZeroDivisionError:
                 team.avg_margin = None
 
-    show_draw_strength = decide_show_draw_strength(round.tournament)
+    metrics = relevant_team_standings_metrics(round.tournament)
 
     return r2r(request, 'teams.html', dict(teams=teams, rounds=rounds,
-        show_ballots=False, show_draw_strength=show_draw_strength))
+        show_ballots=False, metrics=metrics))
 
 
 @admin_required
@@ -244,11 +244,11 @@ def public_team_tab(request, t):
                 team.avg_margin = None
 
     show_ballots = round.tournament.config.get('ballots_released')
-    show_draw_strength = decide_show_draw_strength(round.tournament)
+    metrics = relevant_team_standings_metrics(round.tournament)
 
     return r2r(request, 'public_team_tab.html', dict(teams=teams,
             rounds=rounds, round=round, show_ballots=show_ballots,
-            show_draw_strength=show_draw_strength))
+            metrics=metrics))
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)

@@ -31,9 +31,6 @@
         {% for round in rounds %}
           <th>{{ round.abbreviation }}</th>
         {% endfor %}
-        {% if show_draw_strength %}
-          <th><span data-toggle="tooltip" title="Draw strength">DS</span></th>
-        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -86,9 +83,6 @@
           <td></td>
         {% endif %}
       {% endfor %}
-      {% if show_draw_strength %}
-        <td>{{ team.draw_strength }}</td>
-      {% endif %}
 
     </tr>
     {% endfor %}

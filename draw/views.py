@@ -75,8 +75,8 @@ def draw_none(request, round):
 
 def draw_draft(request, round):
     draw = round.get_draw_with_standings(round)
-    show_draw_strength = decide_show_draw_strength(round.tournament)
-    return r2r(request, "draw_draft.html", dict(draw=draw, show_draw_strength=show_draw_strength))
+    metrics = relevant_team_standings_metrics(round.tournament)
+    return r2r(request, "draw_draft.html", dict(draw=draw, metrics=metrics))
 
 
 def draw_confirmed(request, round):
@@ -94,8 +94,8 @@ def draw_confirmed(request, round):
 @round_view
 def draw_with_standings(request, round):
     draw = round.get_draw_with_standings(round)
-    show_draw_strength = decide_show_draw_strength(round.tournament)
-    return r2r(request, "draw_with_standings.html", dict(draw=draw, show_draw_strength=show_draw_strength))
+    metrics = relevant_team_standings_metrics(round.tournament)
+    return r2r(request, "draw_with_standings.html", dict(draw=draw, metrics=metrics))
 
 
 @admin_required

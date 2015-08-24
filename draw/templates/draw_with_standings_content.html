@@ -16,9 +16,17 @@
       <th><span data-toggle="tooltip" title="Subrank (rank within bracket) (neg)">NSR</span></th>
       <th><span data-toggle="tooltip" title="Total speaker score (aff)">ATS</span></th>
       <th><span data-toggle="tooltip" title="Total speaker score (neg)">NTS</span></th>
-      {% if show_draw_strength %}
+      {% if metrics.draw_strength %}
         <th><span data-toggle="tooltip" title="Draw strength (aff)">ADS</span></th>
         <th><span data-toggle="tooltip" title="Draw strength (neg)">NDS</span></th>
+      {% endif %}
+      {% if metrics.sum_of_margins %}
+        <th><span data-toggle="tooltip" title="Sum of margins (aff)">ASM</span></th>
+        <th><span data-toggle="tooltip" title="Sum of margins (neg)">NSM</span></th>
+      {% endif %}
+      {% if metrics.who_beat_whom %}
+        <th><span data-toggle="tooltip" title="Who beat whom (aff)">AWBW</span></th>
+        <th><span data-toggle="tooltip" title="Who beat whom (neg)">NWBW</span></th>
       {% endif %}
       <th><span data-toggle="tooltip" title="Debates on aff before this round (aff)">AAffs</span></th>
       <th><span data-toggle="tooltip" title="Debates on aff before this round (neg)">NAffs</span></th>
@@ -53,9 +61,17 @@
     </td>
     <td>{{ debate.aff_team_cached.speaker_score|stringformat:".2f" }}</td>
     <td>{{ debate.neg_team_cached.speaker_score|stringformat:".2f" }}</td>
-    {% if show_draw_strength %}
-    <td>{{ debate.aff_team_cached.draw_strength }}</td>
-    <td>{{ debate.neg_team_cached.draw_strength }}</td>
+    {% if metrics.draw_strength %}
+      <td>{{ debate.aff_team_cached.draw_strength }}</td>
+      <td>{{ debate.neg_team_cached.draw_strength }}</td>
+    {% endif %}
+    {% if metrics.sum_of_margins %}
+      <td>{{ debate.aff_team_cached.margins|stringformat:".2f" }}</td>
+      <td>{{ debate.neg_team_cached.margins|stringformat:".2f" }}</td>
+    {% endif %}
+    {% if metrics.who_beat_whom %}
+      <td>{{ debate.aff_team_cached.who_beat_whom_display }}</td>
+      <td>{{ debate.neg_team_cached.who_beat_whom_display }}</td>
     {% endif %}
     <td>{% aff_count debate.aff_team debate.round.prev %}</td>
     <td>{% aff_count debate.neg_team debate.round.prev %}</td>
