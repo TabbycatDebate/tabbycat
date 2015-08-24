@@ -18,5 +18,5 @@ def run_command(command):
     print_command(command)
     subprocess.check_call(command, **subprocess_kwargs)
 
-run_command(["python", "manage.py", "makemigrations", "debate"])
+run_command(["python", "manage.py", "makemigrations", "actionlog", "adjallocation", "adjfeedback", "availability", "breakqual", "draw", "motions", "options", "participants", "results", "tournaments", "venues"])
 run_command(["python", "manage.py", "migrate"])
