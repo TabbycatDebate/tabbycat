@@ -4,7 +4,6 @@
 # Base Heroku Requirements (from the toolbelt)
 dj-database-url==0.3.0
 static3==0.5.1
-wsgiref==0.1.2
 dj-static==0.0.6
 
 # For Mem-Caching
