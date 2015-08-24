@@ -920,10 +920,8 @@ class Round(models.Model):
                         annotated_team = filter(lambda x: x == team, standings)
                         if len(annotated_team) == 1:
                             annotated_team = annotated_team[0]
-                            team.points = annotated_team.points
-                            team.speaker_score = annotated_team.speaker_score
-                            team.subrank = annotated_team.subrank
-                            team.draw_strength = getattr(annotated_team, 'draw_strength', None) # only exists in NZ standings rules
+                            for attr in ('points', 'speaker_score', 'subrank', 'draw_strength', 'margins', 'who_beat_whom_display'):
+                                setattr(team, attr, getattr(annotated_team, attr, None))
                             if annotated_team.points:
                                 team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
             else:

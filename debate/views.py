@@ -23,6 +23,7 @@ from django.forms import Textarea
 import datetime
 from functools import wraps
 import json
+from standings import PRECEDENCE_BY_RULE
 
 def get_ip_address(request):
     ip = get_real_ip(request)

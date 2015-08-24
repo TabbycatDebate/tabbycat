@@ -96,6 +96,8 @@ def _add_who_beat_whom(teams, round, keys):
     keys. Operates in-place.
     """
 
+    from models import TeamScore
+
     def who_beat_whom(team, key):
         equal_teams = [x for x in teams if key(x) == key(team)]
         if len(equal_teams) != 2:
@@ -156,7 +158,7 @@ def _add_subranks(standings, key, subkey):
             current_subrank = counter
             prev_subkey = this_subkey
 
-        team.subrank = current_rank
+        team.subrank = current_subrank
         counter += 1
 
     return standings
@@ -239,7 +241,7 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False, r
     if ranks:
         _add_ranks(standings, attrgetter(*precedence))
     if subranks:
-        _add_subranks(standings, attrgetter(*precedence[0]), attrgetter(*precedence[1:]))
+        _add_subranks(standings, attrgetter(precedence[0]), attrgetter(*precedence[1:]))
     if division_ranks:
         _add_division_ranks(standings, tournament.division_set.all())
 
