@@ -157,7 +157,7 @@ def _add_subranks(standings, key, subkey):
             current_subrank = counter
             prev_subkey = this_subkey
 
-        team.subrank = current_rank
+        team.subrank = current_subrank
         counter += 1
 
     return standings
@@ -240,7 +240,7 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False, r
     if ranks:
         _add_ranks(standings, attrgetter(*precedence))
     if subranks:
-        _add_subranks(standings, attrgetter(*precedence[0]), attrgetter(*precedence[1:]))
+        _add_subranks(standings, attrgetter(precedence[0]), attrgetter(*precedence[1:]))
     if division_ranks:
         _add_division_ranks(standings, tournament.division_set.all())
 
