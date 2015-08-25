@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from tournaments.models import Tournament
+import logging
 
 class TournamentCommand(BaseCommand):
     """Implements common functionality for commands specific to a tournament.
@@ -17,6 +18,9 @@ class TournamentCommand(BaseCommand):
                 "Can be specified multiple times to run the command on multiple tournaments.")
 
     def handle(self, *args, **options):
+        loglevel = [logging.WARNING, logging.INFO, logging.DEBUG, logging.DEBUG][options["verbosity"]]
+        logging.getLogger().setLevel(loglevel)
+
         tournament_option = options.pop("tournament")
         tournaments = list()
 
