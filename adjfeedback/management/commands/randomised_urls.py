@@ -1,13 +1,13 @@
-from django.core.management.base import BaseCommand, CommandError
+from utils.management.base import TournamentCommand
 from adjfeedback.keys import populate_url_keys, delete_url_keys
 from tournaments.models import Tournament
 from argparse import ArgumentParser
 
-class Command(BaseCommand):
+class Command(TournamentCommand):
 
     def add_arguments(self, parser):
+        super(Command, self).add_arguments(parser)
         subparsers = parser.add_subparsers(dest="subcommand", parser_class=ArgumentParser)
-        parser.add_argument('tournament', help="Slug of tournament to generate randomised URLs for")
 
         generate = subparsers.add_parser("generate")
         generate.add_argument('--teams-only', action="store_true", default=False,
@@ -21,12 +21,7 @@ class Command(BaseCommand):
 
         delete = subparsers.add_parser("delete")
 
-    def handle(self, *args, **options):
-        try:
-            tournament = Tournament.objects.get(slug=options['tournament'])
-        except Tournament.DoesNotExist:
-            raise CommandError("There is no tournament with slug %r", options['tournament'])
-
+    def handle_tournament(self, tournament, **options):
         self.options = options
 
         if options['subcommand'] == "delete":

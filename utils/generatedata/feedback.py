@@ -1,8 +1,6 @@
 import adjfeedback.models as fm
-
 from draw.models import Debate, DebateTeam
 from participants.models import Team, Adjudicator
-
 from django.contrib.auth.models import User
 from results.result import BallotSet
 from adjallocation.models import DebateAdjudicator
@@ -31,7 +29,20 @@ COMMENTS = {
     1: ["It's as if (s)he was listening to a different debate.", "Worst adjudication I've ever seen.", "Give his/her own analysis to rebut our arguments.", "Should not be adjudicating at this tournament."]
 }
 
-def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False, confirmed=False):
+def add_feedback(debate, submitter_type='tabroom', user='random', probability=1.0, discarded=False, confirmed=False):
+    """Adds feedback to a debate.
+    Specifically, adds feedback from both teams on the chair, and from every
+    adjudicator on every other adjudicator.
+
+    ``debate`` is the Debate to which feedback should be added.
+    ``submitter_type`` is either ``tabroom`` or ``public``.
+    ``user`` is the username of a User, and is ignored if ``submitter_type`` is
+        ``public``.
+    ``probability``, a float between 0.0 and 1.0, is the probability with which
+        feedback is generated.
+    ``discarded`` and ``confirmed`` are whether the feedback should be discarded or
+        confirmed, respectively."""
+
 
     if discarded and confirmed:
         raise ValueError("Feedback can't be both discarded and confirmed!")
