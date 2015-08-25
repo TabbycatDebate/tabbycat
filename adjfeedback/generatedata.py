@@ -1,4 +1,4 @@
-import adjfeedback.models as fm
+from . import models as fm
 from draw.models import Debate, DebateTeam
 from participants.models import Team, Adjudicator
 from django.contrib.auth.models import User
@@ -7,6 +7,8 @@ from adjallocation.models import DebateAdjudicator
 
 import random
 import itertools
+import logging
+logger = logging.getLogger(__name__)
 
 SUBMITTER_TYPE_MAP = {
     'tabroom': fm.AdjudicatorFeedback.SUBMITTER_TABROOM,
@@ -30,15 +32,19 @@ COMMENTS = {
 }
 
 def add_feedback_to_round(round, **kwargs):
-    """Calls add_feedback() for every deabte in the given round."""
+    """Calls add_feedback() for every debate in the given round."""
     for debate in round.get_draw():
         add_feedback(debate, **kwargs)
 
 def delete_all_feedback_for_round(round):
     """Deletes all feedback for the given round."""
-    print("Deleting all feedback for round {}...".format(round.name))
     fm.AdjudicatorFeedback.objects.filter(source_adjudicator__debate__round=round).delete()
     fm.AdjudicatorFeedback.objects.filter(source_team__debate__round=round).delete()
+
+def delete_feedback(debate):
+    """Deletes all feedback for the given debate."""
+    fm.AdjudicatorFeedback.objects.filter(source_adjudicator__debate=debate).delete()
+    fm.AdjudicatorFeedback.objects.filter(source_team__debate=debate).delete()
 
 def add_feedback(debate, submitter_type='tabroom', user='random', probability=1.0, discarded=False, confirmed=False):
     """Adds feedback to a debate.
@@ -73,7 +79,7 @@ def add_feedback(debate, submitter_type='tabroom', user='random', probability=1.
     for source, adj in sources_and_subjects:
 
         if random.random() > probability:
-            print(" - Skipping", source, "on", adj)
+            logger.info(" - Skipping {} on {}".format(source, adj))
             continue
 
         fb = fm.AdjudicatorFeedback(submitter_type=submitter_type)
@@ -122,7 +128,7 @@ def add_feedback(debate, submitter_type='tabroom', user='random', probability=1.
                     answer = random.choice(WORDS[score])
             question.answer_type_class(question=question, feedback=fb, answer=answer).save()
 
-        print(source, "on", adj, ":", score)
+        logger.info("{} on {}: {}".format(source, adj, score))
 
         fbs.append(fb)
 
