@@ -12,36 +12,36 @@ class ActionLogEntry(models.Model):
     # These aren't generated automatically - all generations of these should
     # be done in views (not models).
 
-    ACTION_TYPE_BALLOT_CHECKIN          = 10
-    ACTION_TYPE_BALLOT_CREATE           = 11
-    ACTION_TYPE_BALLOT_CONFIRM          = 12
-    ACTION_TYPE_BALLOT_DISCARD          = 13
-    ACTION_TYPE_BALLOT_SUBMIT           = 14
-    ACTION_TYPE_BALLOT_EDIT             = 15
-    ACTION_TYPE_FEEDBACK_SUBMIT         = 20
-    ACTION_TYPE_FEEDBACK_SAVE           = 21
-    ACTION_TYPE_TEST_SCORE_EDIT         = 22
-    ACTION_TYPE_DRAW_CREATE             = 30
-    ACTION_TYPE_DRAW_CONFIRM            = 31
-    ACTION_TYPE_ADJUDICATORS_SAVE       = 32
-    ACTION_TYPE_VENUES_SAVE             = 33
-    ACTION_TYPE_DRAW_RELEASE            = 34
-    ACTION_TYPE_DRAW_UNRELEASE          = 35
-    ACTION_TYPE_DIVISIONS_SAVE          = 36
-    ACTION_TYPE_MOTION_EDIT             = 40
-    ACTION_TYPE_MOTIONS_RELEASE         = 41
-    ACTION_TYPE_MOTIONS_UNRELEASE       = 42
-    ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  = 50
-    ACTION_TYPE_ROUND_START_TIME_SET    = 60
-    ACTION_TYPE_BREAK_ELIGIBILITY_EDIT  = 70
-    ACTION_TYPE_BREAK_GENERATE_ALL      = 71
-    ACTION_TYPE_BREAK_UPDATE_ALL        = 72
-    ACTION_TYPE_BREAK_UPDATE_ONE        = 73
-    ACTION_TYPE_BREAK_EDIT_REMARKS      = 74
-    ACTION_TYPE_AVAIL_TEAMS_SAVE        = 80
-    ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE = 81
-    ACTION_TYPE_AVAIL_VENUES_SAVE       = 82
-    ACTION_TYPE_CONFIG_EDIT             = 90
+    ACTION_TYPE_BALLOT_CHECKIN          = 'ba.ckin'
+    ACTION_TYPE_BALLOT_CREATE           = 'ba.crea'
+    ACTION_TYPE_BALLOT_CONFIRM          = 'ba.conf'
+    ACTION_TYPE_BALLOT_DISCARD          = 'ba.disc'
+    ACTION_TYPE_BALLOT_SUBMIT           = 'ba.subm'
+    ACTION_TYPE_BALLOT_EDIT             = 'ba.edit'
+    ACTION_TYPE_FEEDBACK_SUBMIT         = 'fb.subm'
+    ACTION_TYPE_FEEDBACK_SAVE           = 'fb.save'
+    ACTION_TYPE_TEST_SCORE_EDIT         = 'ts.edit'
+    ACTION_TYPE_DRAW_CREATE             = 'dr.crea'
+    ACTION_TYPE_DRAW_CONFIRM            = 'dr.conf'
+    ACTION_TYPE_ADJUDICATORS_SAVE       = 'aa.save'
+    ACTION_TYPE_VENUES_SAVE             = 've.save'
+    ACTION_TYPE_DRAW_RELEASE            = 'dr.rele'
+    ACTION_TYPE_DRAW_UNRELEASE          = 'dr.unre'
+    ACTION_TYPE_DIVISIONS_SAVE          = 'dv.save'
+    ACTION_TYPE_MOTION_EDIT             = 'mo.edit'
+    ACTION_TYPE_MOTIONS_RELEASE         = 'mo.rele'
+    ACTION_TYPE_MOTIONS_UNRELEASE       = 'mo.unre'
+    ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  = 'db.im.edit'
+    ACTION_TYPE_ROUND_START_TIME_SET    = 'rd.st.set'
+    ACTION_TYPE_BREAK_ELIGIBILITY_EDIT  = 'br.el.edit'
+    ACTION_TYPE_BREAK_GENERATE_ALL      = 'br.gene'
+    ACTION_TYPE_BREAK_UPDATE_ALL        = 'br.upda'
+    ACTION_TYPE_BREAK_UPDATE_ONE        = 'br.upd1'
+    ACTION_TYPE_BREAK_EDIT_REMARKS      = 'br.rm.edit'
+    ACTION_TYPE_AVAIL_TEAMS_SAVE        = 'av.tm.save'
+    ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE = 'av.aj.save'
+    ACTION_TYPE_AVAIL_VENUES_SAVE       = 'av.ve.save'
+    ACTION_TYPE_OPTIONS_EDIT            = 'op.edit'
 
     ACTION_TYPE_CHOICES = (
         (ACTION_TYPE_BALLOT_DISCARD         , 'Discarded ballot set'),
@@ -73,7 +73,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_AVAIL_TEAMS_SAVE       , 'Edited teams availability'),
         (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE, 'Edited adjudicators availability'),
         (ACTION_TYPE_AVAIL_VENUES_SAVE      , 'Edited venue availability'),
-        (ACTION_TYPE_CONFIG_EDIT            , 'Edited tournament configuration'),
+        (ACTION_TYPE_OPTIONS_EDIT           , 'Edited tournament options'),
     )
 
     REQUIRED_FIELDS_BY_ACTION_TYPE = {
@@ -102,7 +102,7 @@ class ActionLogEntry(models.Model):
         ACTION_TYPE_MOTION_EDIT            : ('motion',),
         ACTION_TYPE_MOTIONS_RELEASE        : ('round',),
         ACTION_TYPE_MOTIONS_UNRELEASE      : ('round',),
-        ACTION_TYPE_CONFIG_EDIT            : (),
+        ACTION_TYPE_OPTIONS_EDIT           : (),
         ACTION_TYPE_AVAIL_TEAMS_SAVE       : ('round',),
         ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE: ('round',),
         ACTION_TYPE_AVAIL_VENUES_SAVE      : ('round',),
@@ -110,7 +110,7 @@ class ActionLogEntry(models.Model):
 
     ALL_OPTIONAL_FIELDS = ('debate', 'ballot_submission', 'adjudicator_feedback', 'round', 'motion', 'break_category')
 
-    type = models.PositiveSmallIntegerField(choices=ACTION_TYPE_CHOICES)
+    type = models.CharField(max_length=9, choices=ACTION_TYPE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
