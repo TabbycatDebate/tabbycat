@@ -10,9 +10,9 @@ TEMPLATE_DIRS       = (os.path.join(PROJECT_PATH, 'templates'),)
 MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
 SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
-# ===================
+# ========================
 # = Overwritten in Local =
-# ===================
+# ========================
 
 ADMINS              = ('Test', 'test@test.com')
 MANAGERS            = ADMINS
@@ -89,9 +89,9 @@ INSTALLED_APPS = (
 
 LOGIN_REDIRECT_URL = '/'
 
-# =========
+# ===========
 # = Caching =
-# =========
+# ===========
 
 PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60 * 1))
 TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120))
@@ -115,9 +115,9 @@ TEMPLATE_LOADERS = (
 # Use the cache for sessions rather than the db
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
-# =========
+# =============
 # = Pipelines =
-# =========
+# =============
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -138,9 +138,32 @@ COMPRESS_OFFLINE_MANIFEST = "manifest.json"
 COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
 COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compression
 
-# ===========================
-# = Heroku
-# ===========================
+# ===========
+# = Logging =
+# ===========
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        '': { # all loggers
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
+
+# ===========
+# = Heroku  =
+# ===========
 
 # Parse database configuration from $DATABASE_URL
 try:
