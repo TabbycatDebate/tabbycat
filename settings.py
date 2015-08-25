@@ -59,15 +59,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request', # For SUIT
 )
 
-INSTALLED_APPS = (
-    'suit',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-    'django.contrib.messages',
+TABBYCAT_APPS = (
     'actionlog',
     'adjallocation',
     'adjfeedback',
@@ -83,9 +75,22 @@ INSTALLED_APPS = (
     'utils',
     'standings',
     'importer',
+)
+
+INSTALLED_APPS = (
+    'suit',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'django.contrib.messages') \
+    + TABBYCAT_APPS + (
     'compressor',
     'cachalot',
-)
+    )
+
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -154,12 +159,15 @@ LOGGING = {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
-        '': { # all loggers
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-        },
     },
 }
+
+for app in TABBYCAT_APPS:
+    LOGGING['loggers'][app] = {
+        'handlers': ['console'],
+        'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+    }
+
 
 # ===========
 # = Heroku  =

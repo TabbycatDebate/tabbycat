@@ -1,6 +1,11 @@
 from django.core.management.base import BaseCommand, CommandError
 from tournaments.models import Tournament
+from settings import TABBYCAT_APPS
 import logging
+
+def _set_log_level(level):
+    for app in TABBYCAT_APPS:
+        logging.getLogger(app).setLevel(level)
 
 class TournamentCommand(BaseCommand):
     """Implements common functionality for commands specific to a tournament.
@@ -19,7 +24,7 @@ class TournamentCommand(BaseCommand):
 
     def handle(self, *args, **options):
         loglevel = [logging.WARNING, logging.INFO, logging.DEBUG, logging.DEBUG][options["verbosity"]]
-        logging.getLogger().setLevel(loglevel)
+        _set_log_level(loglevel)
 
         tournament_option = options.pop("tournament")
         tournaments = list()
