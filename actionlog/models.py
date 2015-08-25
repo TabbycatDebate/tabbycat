@@ -110,7 +110,7 @@ class ActionLogEntry(models.Model):
 
     ALL_OPTIONAL_FIELDS = ('debate', 'ballot_submission', 'adjudicator_feedback', 'round', 'motion', 'break_category')
 
-    type = models.CharField(max_length=9, choices=ACTION_TYPE_CHOICES)
+    type = models.CharField(max_length=10, choices=ACTION_TYPE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
