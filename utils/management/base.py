@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from tournaments.models import Tournament
 
 class TournamentCommand(BaseCommand):
@@ -8,6 +8,8 @@ class TournamentCommand(BaseCommand):
     Subclasses that override ``add_arguments()`` must call
         ``TournamentCommand``'s ``add_arguments()``, using
         ``super(Command, self).add_arguments(parser)``.
+    If a subclass uses subparsers, the above line should be called once for
+        every subparser, passing it in as ``parser``.
     """
 
     def add_arguments(self, parser):
@@ -15,15 +17,16 @@ class TournamentCommand(BaseCommand):
                 "Can be specified multiple times to run the command on multiple tournaments.")
 
     def handle(self, *args, **options):
+        tournament_option = options.pop("tournament")
         tournaments = list()
 
-        if not self.options["tournament"]:
+        if not tournament_option:
             # if there is only one tournament, that'll do.
             if Tournament.objects.count() == 1:
                 tournaments.append(Tournament.objects.get())
         else:
             bad_slugs = list()
-            for slug in self.options["tournament"]:
+            for slug in tournament_option:
                 try:
                     tournament = Tournament.objects.get(slug=slug)
                 except Tournament.DoesNotExist:
@@ -32,7 +35,7 @@ class TournamentCommand(BaseCommand):
                 tournaments.append(tournament)
 
             if bad_slugs:
-                raise CommandError("There {verb} no tournament with the following slug{s}: {slugs}".format(
+                raise CommandError("There {verb} no tournament{s} with the following slug{s}: {slugs}".format(
                         verb="is" if len(bad_slugs) == 1 else "are",
                         s="" if len(bad_slugs) == 1 else "s",
                         slugs=", ".join(bad_slugs)))

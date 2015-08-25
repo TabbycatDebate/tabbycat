@@ -5,11 +5,13 @@ from argparse import ArgumentParser
 
 class Command(TournamentCommand):
 
+    help = "Generates or deletes randomised URLs"
+
     def add_arguments(self, parser):
-        super(Command, self).add_arguments(parser)
         subparsers = parser.add_subparsers(dest="subcommand", parser_class=ArgumentParser)
 
         generate = subparsers.add_parser("generate")
+        super(Command, self).add_arguments(generate)
         generate.add_argument('--teams-only', action="store_true", default=False,
             help="Only generate randomised URLs for teams")
         generate.add_argument('--adjs-only', action="store_true", default=False,
@@ -20,6 +22,7 @@ class Command(TournamentCommand):
             help="Overwrite existing URL keys")
 
         delete = subparsers.add_parser("delete")
+        super(Command, self).add_arguments(delete)
 
     def handle_tournament(self, tournament, **options):
         self.options = options

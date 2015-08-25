@@ -47,6 +47,9 @@ def add_feedback(debate, submitter_type='tabroom', user='random', probability=1.
     if discarded and confirmed:
         raise ValueError("Feedback can't be both discarded and confirmed!")
 
+    if debate.adjudicators.chair is None:
+        raise ValueError("This debate ({}) doesn't have a chair.".format(debate.matchup))
+
     sources_and_subjects = [
         (debate.aff_team, debate.adjudicators.chair),
         (debate.neg_team, debate.adjudicators.chair),
