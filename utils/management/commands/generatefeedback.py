@@ -1,5 +1,5 @@
 from ..base import TournamentCommand, CommandError
-from ...generatedata.feedback import add_feedback, SUBMITTER_TYPE_MAP
+from ...generatedata.feedback import add_feedback, add_feedback_to_round, delete_all_feedback_for_round, SUBMITTER_TYPE_MAP
 
 from django.contrib.auth.models import User
 from tournaments.models import Round
@@ -44,22 +44,19 @@ class Command(TournamentCommand):
 
         if options["type"] == "round":
             for seq in options["specifiers"]:
-                round = Round.objects.get(seq=seq)
+                round = Round.objects.get(tournament=tournament, seq=seq)
 
                 if options["clean"]:
-                    print(("Deleting all feedback for round {}...".format(round.name)))
-                    AdjudicatorFeedback.objects.filter(source_adjudicator__debate__round__seq=seq).delete()
-                    AdjudicatorFeedback.objects.filter(source_team__debate__round__seq=seq).delete()
+                    delete_all_feedback_for_round(round)
 
-                for debate in round.get_draw():
-                    try:
-                        fbs = add_feedback(debate, **feedback_kwargs)
-                    except ValueError as e:
-                        raise CommandError(e)
+                try:
+                    fbs = add_feedback_to_round(round, **feedback_kwargs)
+                except ValueError as e:
+                    raise CommandError(e)
 
         elif options["type"] == "debate":
             for debate_id in options["specifiers"]:
-                debate = Debate.objects.get(id=debate_id)
+                debate = Debate.objects.get(tournament=tournament, id=debate_id)
                 try:
                     fbs = add_feedback(debate, **feedback_kwargs)
                 except ValueError as e:

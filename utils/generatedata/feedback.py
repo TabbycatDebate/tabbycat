@@ -29,6 +29,17 @@ COMMENTS = {
     1: ["It's as if (s)he was listening to a different debate.", "Worst adjudication I've ever seen.", "Give his/her own analysis to rebut our arguments.", "Should not be adjudicating at this tournament."]
 }
 
+def add_feedback_to_round(round, **kwargs):
+    """Calls add_feedback() for every deabte in the given round."""
+    for debate in round.get_draw():
+        add_feedback(debate, **kwargs)
+
+def delete_all_feedback_for_round(round):
+    """Deletes all feedback for the given round."""
+    print("Deleting all feedback for round {}...".format(round.name))
+    fm.AdjudicatorFeedback.objects.filter(source_adjudicator__debate__round=round).delete()
+    fm.AdjudicatorFeedback.objects.filter(source_team__debate__round=round).delete()
+
 def add_feedback(debate, submitter_type='tabroom', user='random', probability=1.0, discarded=False, confirmed=False):
     """Adds feedback to a debate.
     Specifically, adds feedback from both teams on the chair, and from every
