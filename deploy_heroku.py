@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """Deploys Tabbycat to Heroku.
-This script is compatible with both Python 2 and Python 3."""
+This script is compatible with both Python 2.7 and Python 3.4 (and later)."""
 
 import argparse
 import subprocess
