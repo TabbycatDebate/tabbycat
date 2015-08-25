@@ -2,6 +2,7 @@ from actionlog.models import ActionLogEntry
 from participants.models import Team
 from tournaments.models import Round
 from motions.models import Motion
+from venues.models import Venue
 from .models import TeamPositionAllocation, Debate, DebateTeam
 
 from utils.views import *
@@ -272,7 +273,6 @@ def draw_venues_edit(request, round):
 @round_view
 def save_venues(request, round):
     # TODO: move to draws app
-
     def v_id(a):
         try:
             return int(request.POST[a].split('_')[1])
