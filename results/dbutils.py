@@ -18,7 +18,7 @@ def add_ballotsets_to_round(round, **kwargs):
         add_ballotset(debate, **kwargs)
 
 def add_ballotsets_to_round_partial(round, num, **kwargs):
-    """Calls add_ballotset() on num randomly-chosen debates in the given round."""
+    """Calls ``add_ballotset()`` on ``num`` randomly-chosen debates in the given round."""
     debates = random.sample(list(round.debate_set.all()), num)
     for debate in debates:
         add_ballotset(debate, **kwargs)
