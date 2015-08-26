@@ -1,3 +1,9 @@
+"""Contains utilities that add or remove things from the database, relating
+to adjudicator feedback.
+
+These are mainly used in management commands, but in principle could be used
+by a front-end interface as well."""
+
 from . import models as fm
 from draw.models import Debate, DebateTeam
 from participants.models import Team, Adjudicator
@@ -9,11 +15,6 @@ import random
 import itertools
 import logging
 logger = logging.getLogger(__name__)
-
-SUBMITTER_TYPE_MAP = {
-    'tabroom': fm.AdjudicatorFeedback.SUBMITTER_TABROOM,
-    'public':  fm.AdjudicatorFeedback.SUBMITTER_PUBLIC
-}
 
 WORDS = {
     5: ["perfect", "outstanding", "super", "collected", "insightful"],
@@ -46,15 +47,14 @@ def delete_feedback(debate):
     fm.AdjudicatorFeedback.objects.filter(source_adjudicator__debate=debate).delete()
     fm.AdjudicatorFeedback.objects.filter(source_team__debate=debate).delete()
 
-def add_feedback(debate, submitter_type='tabroom', user='random', probability=1.0, discarded=False, confirmed=False):
+def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False, confirmed=False):
     """Adds feedback to a debate.
     Specifically, adds feedback from both teams on the chair, and from every
     adjudicator on every other adjudicator.
 
     ``debate`` is the Debate to which feedback should be added.
-    ``submitter_type`` is either ``tabroom`` or ``public``.
-    ``user`` is the username of a User, and is ignored if ``submitter_type`` is
-        ``public``.
+    ``submitter_type`` is a valid value of AdjudicatorFeedback.submitter_type.
+    ``user`` is a User object.
     ``probability``, a float between 0.0 and 1.0, is the probability with which
         feedback is generated.
     ``discarded`` and ``confirmed`` are whether the feedback should be discarded or
