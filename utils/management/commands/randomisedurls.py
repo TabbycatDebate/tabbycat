@@ -1,5 +1,5 @@
 from utils.management.base import TournamentCommand
-from ...keys import populate_url_keys, delete_url_keys
+from ...urlkeys import populate_url_keys, delete_url_keys
 from tournaments.models import Tournament
 from argparse import ArgumentParser
 
