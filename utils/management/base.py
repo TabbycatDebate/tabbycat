@@ -21,6 +21,7 @@ class TournamentCommand(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("-t", "--tournament", type=str, action="append", help="Slug of tournament(s), required if there is more than one tournament. "
                 "Can be specified multiple times to run the command on multiple tournaments.")
+        parser.add_argument("--all-tournaments", action="store_true", help="Run on all tournaments in the database. Overrides --tournament.")
 
     def handle(self, *args, **options):
         loglevel = [logging.WARNING, logging.INFO, logging.DEBUG, logging.DEBUG][options["verbosity"]]
@@ -29,7 +30,10 @@ class TournamentCommand(BaseCommand):
         tournament_option = options.pop("tournament")
         tournaments = list()
 
-        if not tournament_option:
+        if options.pop("all_tournaments"):
+            tournaments = Tournament.objects.all()
+
+        elif not tournament_option:
             # if there is only one tournament, that'll do.
             if Tournament.objects.count() == 1:
                 tournaments.append(Tournament.objects.get())
