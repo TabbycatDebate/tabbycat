@@ -65,8 +65,7 @@ class Tournament(models.Model):
 
     @property
     def teams(self):
-        from participants.models import Team
-        return Team.objects.filter(tournament=self)
+        return self.team_set
 
     @cached_property
     def get_current_round_cached(self):
@@ -79,7 +78,7 @@ class Tournament(models.Model):
             return self.current_round
 
     def prelim_rounds(self, before=None, until=None):
-        qs = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=self)
+        qs = self.round_set.filter(stage=Round.STAGE_PRELIMINARY)
         if until:
             qs = qs.filter(seq__lte=until.seq)
         if before:
@@ -251,7 +250,7 @@ class Round(models.Model):
             raise RuntimeError("Tried to run draw on round that already has a draw")
 
         # Delete all existing debates for this round.
-        Debate.objects.filter(round=self).delete()
+        self.debate_set.all().delete()
 
         # There is a bit of logic to go through to figure out what we need to
         # provide to the draw class.
@@ -264,7 +263,7 @@ class Round(models.Model):
         }
 
         if override_team_checkins is True:
-            draw_teams = Team.objects.filter(tournament=self.tournament).all()
+            draw_teams = self.tournament.team_set.all()
         else:
             draw_teams = self.active_teams.all()
 
@@ -359,24 +358,22 @@ class Round(models.Model):
         return self.get_draw()
 
     def get_draw(self):
-        from draw.models import Debate
         if self.tournament.config.get('enable_divisions'):
-            debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
-            'venue', 'division', 'division__venue_group')
+            debates = self.debate_set.order_by('room_rank').select_related(
+                    'venue', 'division', 'division__venue_group')
         else:
-            debates = Debate.objects.filter(round=self).order_by('room_rank').select_related(
-            'venue')
+            debates = self.debate_set.order_by('room_rank').select_related(
+                    'venue')
 
         return debates
 
     def get_draw_by_room(self):
-        from draw.models import Debate
         if self.tournament.config.get('enable_divisions'):
-            debates = Debate.objects.filter(round=self).order_by('venue__name').select_related(
-                 'venue', 'division', 'division__venue_group')
+            debates = self.debate_set.order_by('venue__name').select_related(
+                    'venue', 'division', 'division__venue_group')
         else:
-            debates = Debate.objects.filter(round=self).order_by('venue__name').select_related(
-                 'venue')
+            debates = self.debate_set.order_by('venue__name').select_related(
+                    'venue')
 
         return debates
 
@@ -596,28 +593,26 @@ class Round(models.Model):
         if state:
             ActiveAdjudicator.objects.get_or_create(round=self, adjudicator=adj)
         else:
-            ActiveAdjudicator.objects.filter(round=self,
-                                             adjudicator=adj).delete()
+            self.activeadjudicator_set.filter(adjudicator=adj).delete()
 
     def activate_venue(self, venue, state=True):
         from availability.models import ActiveVenue
         if state:
             ActiveVenue.objects.get_or_create(round=self, venue=venue)
         else:
-            ActiveVenue.objects.filter(round=self, venue=venue).delete()
+            self.activevenue_set.filter(venue=venue).delete()
 
     def activate_team(self, team, state=True):
         from availability.models import ActiveTeam
         if state:
             ActiveTeam.objects.get_or_create(round=self, team=team)
         else:
-            ActiveTeam.objects.filter(round=self, team=team).delete()
+            self.activeteam_set.filter(team=team).delete()
 
     def activate_all(self):
         from venues.models import Venue
         self.set_available_venues([v.id for v in Venue.objects.all()])
-        self.set_available_adjudicators([a.id for a in
-                                         Adjudicator.objects.all()])
+        self.set_available_adjudicators([a.id for a in Adjudicator.objects.all()])
         self.set_available_teams([t.id for t in Team.objects.all()])
 
     @property
