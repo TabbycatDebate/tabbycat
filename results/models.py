@@ -16,8 +16,8 @@ class Submission(models.Model):
     The unique_together class attribute of the Meta class MUST be set in
     all subclasses."""
 
-    SUBMITTER_TABROOM = 0
-    SUBMITTER_PUBLIC  = 1
+    SUBMITTER_TABROOM = 'T'
+    SUBMITTER_PUBLIC  = 'P'
     SUBMITTER_TYPE_CHOICES = (
         (SUBMITTER_TABROOM, 'Tab room'),
         (SUBMITTER_PUBLIC,  'Public'),
@@ -25,7 +25,7 @@ class Submission(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
     version = models.PositiveIntegerField()
-    submitter_type = models.PositiveSmallIntegerField(choices=SUBMITTER_TYPE_CHOICES)
+    submitter_type = models.CharField(max_length=1, choices=SUBMITTER_TYPE_CHOICES)
 
     submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted") # only relevant if submitter was in tab room
     confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed")
@@ -90,9 +90,9 @@ class BallotSubmission(Submission):
     class Meta:
         unique_together = [('debate', 'version')]
 
-    def __unicode__(self):
-        return 'Ballot for ' + unicode(self.debate) + ' submitted at ' + \
-                ('<unknown>' if self.timestamp is None else unicode(self.timestamp.isoformat()))
+    def __str__(self):
+        return 'Ballot for ' + str(self.debate) + ' submitted at ' + \
+                ('<unknown>' if self.timestamp is None else str(self.timestamp.isoformat()))
 
 
     @cached_property

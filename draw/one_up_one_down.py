@@ -9,7 +9,7 @@ class OneUpOneDownSwapper(object):
     }
 
     def __init__(self, **kwargs):
-        for key, value in self.DEFAULT_OPTIONS.iteritems():
+        for key, value in self.DEFAULT_OPTIONS.items():
             if key in kwargs and kwargs[key] is not None:
                 setattr(self, key, kwargs[key])
             else:
@@ -75,10 +75,12 @@ class OneUpOneDownSwapper(object):
             j -= (action[j] + 1)
         return state[N], L
 
-    def score_swap(self, (a1, n1), (a2, n2)):
+    def score_swap(self, debate1, debate2):
         """Returns an integer representing the improvement from swapping the
         teams in these two debates.  The higher the integer, the more you want to
         do the swap."""
+        (a1, n1) = debate1
+        (a2, n2) = debate2
         inst = (a1.institution == n1.institution,
                 a2.institution == n2.institution)
         hist = (a1.seen(n1), a2.seen(n2))

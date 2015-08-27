@@ -67,7 +67,7 @@ class Motion(models.Model):
     class Meta:
         ordering = ['seq',]
 
-    def __unicode__(self):
+    def __str__(self):
         return self.text
 
 

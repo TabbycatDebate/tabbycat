@@ -8,8 +8,8 @@ from results.models import SpeakerScoreByAdj
 from actionlog.models import ActionLogEntry
 
 from . import models
-from forms import make_feedback_form_class
-from keys import populate_url_keys
+from .forms import make_feedback_form_class
+from .keys import populate_url_keys
 
 from utils.views import *
 
@@ -195,11 +195,11 @@ def get_adj_feedback(request, t):
             source_annotation = ""
 
         data = [
-            unicode(f.round.abbreviation),
-            unicode(str(f.version) + (f.confirmed and "*" or "")),
+            str(f.round.abbreviation),
+            str(str(f.version) + (f.confirmed and "*" or "")),
             f.debate.bracket,
             f.debate.matchup,
-            unicode(str(f.source) + source_annotation),
+            str(str(f.source) + source_annotation),
             f.score,
         ]
         for question in questions:
@@ -300,8 +300,8 @@ def set_adj_test_score(request, t):
     score_text = request.POST["test_score"]
     try:
         score = float(score_text)
-    except ValueError, e:
-        print e
+    except ValueError as e:
+        print(e)
         return redirect_tournament('feedback_overview', t)
 
     adjudicator.test_score = score
@@ -370,7 +370,7 @@ def public_feedback_progress(request, t):
         elif submitted == 0:
             return 0
         else:
-            return int((float(submitted) / float(total)) * 100)
+            return int(submitted / total * 100)
 
     feedback = models.AdjudicatorFeedback.objects.all()
     adjudicators = Adjudicator.objects.all()
@@ -415,7 +415,7 @@ def feedback_progress(request, t):
         if total == 0 or submitted == 0:
             return 0 # avoid divide-by-zero error
         else:
-            return int((float(submitted) / float(total)) * 100)
+            return int(submitted / total * 100)
 
     feedback = models.AdjudicatorFeedback.objects.select_related('source_adjudicator__adjudicator','source_team__team').all()
     adjudicators = Adjudicator.objects.all()
@@ -476,8 +476,8 @@ def set_adj_note(request, t):
     note_text = request.POST["note"]
     try:
         note = str(note_text)
-    except ValueError, e:
-        print e
+    except ValueError as e:
+        print(e)
         return redirect_tournament('feedback_overview', t)
 
     adjudicator.notes = note

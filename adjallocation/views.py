@@ -55,7 +55,7 @@ def draw_adjudicators_edit(request, round):
         male_adjs = models.DebateAdjudicator.objects.filter(
             debate__in=debates, adjudicator__gender="M").count()
         if male_adjs > 0:
-            male_adj_percent = int((float(male_adjs) / float(adjs)) * 100)
+            male_adj_percent = int(male_adjs / adjs * 100)
             return male_adj_percent
         else:
             return 0
@@ -68,19 +68,19 @@ def draw_adjudicators_edit(request, round):
         debate.neg_team.male_adj_percent = neg_male_adj_percent
 
         if neg_male_adj_percent > aff_male_adj_percent:
-            debate.gender_class = (neg_male_adj_percent / 5) - 10
+            debate.gender_class = (neg_male_adj_percent // 5) - 10
         else:
-            debate.gender_class = (aff_male_adj_percent / 5) - 10
+            debate.gender_class = (aff_male_adj_percent // 5) - 10
 
     regions = round.tournament.region_set.order_by('name')
     break_categories = round.tournament.breakcategory_set.order_by(
         'seq').exclude(is_general=True)
     colors = ["#C70062", "#00C79B", "#B1E001", "#476C5E",
               "#777", "#FF2983", "#6A268C", "#00C0CF", "#0051CF"]
-    context['regions'] = zip(regions, colors + ["black"]
-                             * (len(regions) - len(colors)))
-    context['break_categories'] = zip(
-        break_categories, colors + ["black"] * (len(break_categories) - len(colors)))
+    context['regions'] = list(zip(regions, colors + ["black"]
+                             * (len(regions) - len(colors))))
+    context['break_categories'] = list(zip(
+        break_categories, colors + ["black"] * (len(break_categories) - len(colors))))
 
     return r2r(request, "draw_adjudicators_edit.html", context)
 
@@ -139,7 +139,7 @@ def save_adjudicators(request, round):
     debate_ids = set(id(a) for a in request.POST)
     debates = Debate.objects.in_bulk(list(debate_ids))
     debate_adjudicators = {}
-    for d_id, debate in debates.items():
+    for d_id, debate in list(debates.items()):
         a = debate.adjudicators
         a.delete()
         debate_adjudicators[d_id] = a
@@ -157,7 +157,7 @@ def save_adjudicators(request, round):
     # We don't do any validity checking here, so that the adjudication
     # core can save a work in progress.
 
-    for d_id, alloc in debate_adjudicators.items():
+    for d_id, alloc in list(debate_adjudicators.items()):
         alloc.save()
 
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE,

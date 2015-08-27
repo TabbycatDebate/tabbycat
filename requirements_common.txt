@@ -1,15 +1,15 @@
 # This file contains the necessary dependencies for a local install
 
-Django==1.8.2
-dj-cmd==0.3 # Provides the dj command alias
+Django==1.8.3
+dj-cmd==0.5 # Provides the dj command alias
 django-appconf==1.0.1 # Adds helper class for handling app configs
 django-compressor==1.5 # Compression
-django-debug-toolbar==1.3.0 # Debug Toolbar
-django-ipware==0.1.0 # IP Address logging
+django-debug-toolbar==1.3.2 # Debug Toolbar
+django-ipware==1.1.0 # IP Address logging
 django-libsass==0.3  # SASS Compilation
-django-suit==0.2.13 # Admin Backend
+django-suit==0.2.14 # Admin Backend
 psycopg2==2.6.1 # For Django to talk to postgres
-libsass==0.8.2 # SASS Compilation Dependency
+libsass==0.8.3 # SASS Compilation Dependency
 six==1.9.0 # Six is a Python 2 and 3 compatibility library.
-sqlparse==0.1.14
+sqlparse==0.1.16
 django-cachalot==1.0.3

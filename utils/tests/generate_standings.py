@@ -42,7 +42,7 @@ for i in range(R):
     ppdg = DrawGenerator("power_paired", teams)
     ppdg._pullup_top(brackets)
 
-    for wins, bracket_teams in brackets.iteritems():
+    for wins, bracket_teams in brackets.items():
         random.shuffle(bracket_teams)
         N = len(bracket_teams)/2
         winners = bracket_teams[:N]
@@ -60,11 +60,11 @@ for i in range(R):
             team.points += 1
 
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
-    print "({id}, '{inst}', {points}, {hist}, {aff_count}),".format(
+    print("({id}, '{inst}', {points}, {hist}, {aff_count}),".format(
         id=team.id, inst=team.institution, points=team.points,
-            hist=[t.id for t in team.hist], aff_count=team.aff_count)
-print
+            hist=[t.id for t in team.hist], aff_count=team.aff_count))
+print()
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
-    print "{id}, {inst}, {points}, {hist}, {aff_count}".format(
+    print("{id}, {inst}, {points}, {hist}, {aff_count}".format(
         id=team.id, inst=team.institution, points=team.points,
-            hist=", ".join([str(t.id) for t in team.hist]), aff_count=team.aff_count)
+            hist=", ".join([str(t.id) for t in team.hist]), aff_count=team.aff_count))

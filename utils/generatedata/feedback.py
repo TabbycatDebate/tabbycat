@@ -1,7 +1,3 @@
-"""Adds randomly generated feedbacks to the given debates, with probability
-specified"""
-
-import header
 import adjfeedback.models as fm
 
 from draw.models import Debate, DebateTeam
@@ -106,31 +102,3 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
         fbs.append(fb)
 
     return fbs
-
-if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("debate", type=int, nargs='+', help="Debate ID(s) to add to")
-    parser.add_argument("-p", "--probability", type=float, help="Probability with which to add feedback", default=1.0)
-    parser.add_argument("-t", "--type", type=str, help="'tabroom' or 'public'", choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
-    parser.add_argument("-u", "--user", type=str, help="User ID", default="random")
-    status = parser.add_mutually_exclusive_group(required=True)
-    status.add_argument("-d", "--discarded", action="store_true", help="Ballot set is discarded")
-    status.add_argument("-c", "--confirmed", action="store_true", help="Ballot set is confirmed")
-    args = parser.parse_args()
-
-    submitter_type = SUBMITTER_TYPE_MAP[args.type]
-    if submitter_type == fm.AdjudicatorFeedback.SUBMITTER_TABROOM:
-        user = User.objects.get(username=args.user)
-    else:
-        user = None
-
-    for debate_id in args.debate:
-        debate = Debate.objects.get(id=debate_id)
-
-        print(debate)
-
-        try:
-            fbs = add_feedback(debate, submitter_type, user, args.probability, args.discarded, args.confirmed)
-        except ValueError as e:
-            print("Error:", e)

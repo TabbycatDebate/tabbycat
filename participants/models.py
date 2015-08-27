@@ -10,8 +10,8 @@ class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
     tournament = models.ForeignKey('tournaments.Tournament')
 
-    def __unicode__(self):
-        return u'%s' % (self.name)
+    def __str__(self):
+        return '%s' % (self.name)
 
 class InstitutionManager(models.Manager):
 
@@ -38,8 +38,8 @@ class Institution(models.Model):
         unique_together = [('name', 'code')]
         ordering = ['name']
 
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return str(self.name)
 
     @property
     def short_code(self):
@@ -92,7 +92,7 @@ class TeamManager(models.Manager):
         try:
             institution_name, reference = name.rsplit(None, 1)
         except:
-            print "Error in", repr(name)
+            print("Error in", repr(name))
             raise
         institution_name = institution_name.strip()
         institution = Institution.objects.lookup(institution_name)
@@ -103,28 +103,28 @@ class TeamManager(models.Manager):
             tournament=round.tournament).select_related('institution')
 
     def standings(self, round):
-        from standings import annotate_team_standings
         """Returns a list."""
+        from standings import annotate_team_standings
         teams = self._teams_for_standings(round)
         return annotate_team_standings(teams, round)
 
     def ranked_standings(self, round):
-        from standings import ranked_team_standings
         """Returns a list."""
+        from standings import annotate_team_standings
         teams = self._teams_for_standings(round)
-        return ranked_team_standings(teams, round)
+        return annotate_team_standings(teams, round, ranks=True)
 
     def division_standings(self, round):
-        from standings import division_ranked_team_standings
         """Returns a list."""
+        from standings import annotate_team_standings
         teams = self._teams_for_standings(round)
-        return division_ranked_team_standings(teams, round)
+        return annotate_team_standings(teams, round, division_ranks=True)
 
     def subrank_standings(self, round):
-        from standings import subranked_team_standings
         """Returns a list."""
+        from standings import annotate_team_standings
         teams = self._teams_for_standings(round)
-        return subranked_team_standings(teams, round)
+        return annotate_team_standings(teams, round, subranks=True)
 
 
 
@@ -165,8 +165,8 @@ class Team(models.Model):
 
     objects = TeamManager()
 
-    def __unicode__(self):
-        return u"%s - %s" % (self.tournament, self.short_name)
+    def __str__(self):
+        return "%s - %s" % (self.tournament, self.short_name)
 
     @property
     def short_name(self):
@@ -177,19 +177,19 @@ class Team(models.Model):
             name = self.reference
         if self.use_institution_prefix is True:
             if self.institution.code:
-                return unicode(institution.code + " " + name)
+                return str(institution.code + " " + name)
             else:
-                return unicode(institution.abbreviation + " " + name)
+                return str(institution.abbreviation + " " + name)
         else:
-            return unicode(name)
+            return str(name)
 
     @property
     def long_name(self):
         institution = self.get_cached_institution()
         if self.use_institution_prefix is True:
-            return unicode(institution.name + " " + self.reference)
+            return str(institution.name + " " + self.reference)
         else:
-            return unicode(self.reference)
+            return str(self.reference)
 
     @property
     def region(self):
@@ -281,8 +281,8 @@ signals.post_save.connect(update_team_cache, sender=Team)
 class Speaker(Person):
     team = models.ForeignKey(Team)
 
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return str(self.name)
 
 
 class AdjudicatorManager(models.Manager):
@@ -312,8 +312,8 @@ class Adjudicator(Person):
     class Meta:
         ordering = ['tournament', 'institution', 'name']
 
-    def __unicode__(self):
-        return u"%s (%s)" % (self.name, self.institution.code)
+    def __str__(self):
+        return "%s (%s)" % (self.name, self.institution.code)
 
     def conflict_with(self, team):
         if not hasattr(self, '_conflict_cache'):

@@ -2,6 +2,7 @@ from actionlog.models import ActionLogEntry
 from participants.models import Team
 from tournaments.models import Round
 from motions.models import Motion
+from venues.models import Venue
 from .models import TeamPositionAllocation, Debate, DebateTeam
 
 from utils.views import *
@@ -64,7 +65,7 @@ def draw_none(request, round):
     active_teams = round.active_teams.all()
     active_venues_count = round.active_venues.count()
     active_adjs = round.active_adjudicators.count()
-    rooms = float(active_teams.count()) / 2
+    rooms = float(active_teams.count()) // 2
     return r2r(request, "draw_none.html", dict(active_teams=active_teams,
                                                active_venues_count=active_venues_count,
                                                active_adjs=active_adjs,
@@ -75,13 +76,13 @@ def draw_none(request, round):
 
 def draw_draft(request, round):
     draw = round.get_draw_with_standings(round)
-    show_draw_strength = decide_show_draw_strength(round.tournament)
-    return r2r(request, "draw_draft.html", dict(draw=draw, show_draw_strength=show_draw_strength))
+    metrics = relevant_team_standings_metrics(round.tournament)
+    return r2r(request, "draw_draft.html", dict(draw=draw, metrics=metrics))
 
 
 def draw_confirmed(request, round):
     draw = round.get_cached_draw
-    rooms = float(round.active_teams.count()) / 2
+    rooms = float(round.active_teams.count()) // 2
     active_adjs = round.active_adjudicators.all()
 
     return r2r(request, "draw_confirmed.html", dict(draw=draw,
@@ -94,8 +95,8 @@ def draw_confirmed(request, round):
 @round_view
 def draw_with_standings(request, round):
     draw = round.get_draw_with_standings(round)
-    show_draw_strength = decide_show_draw_strength(round.tournament)
-    return r2r(request, "draw_with_standings.html", dict(draw=draw, show_draw_strength=show_draw_strength))
+    metrics = relevant_team_standings_metrics(round.tournament)
+    return r2r(request, "draw_with_standings.html", dict(draw=draw, metrics=metrics))
 
 
 @admin_required
@@ -188,8 +189,8 @@ def set_round_start_time(request, round):
     time_text = request.POST["start_time"]
     try:
         time = datetime.datetime.strptime(time_text, "%H:%M").time()
-    except ValueError, e:
-        print e
+    except ValueError as e:
+        print(e)
         return redirect_round('draw', round)
 
     round.starts_at = time
@@ -208,7 +209,7 @@ def draw_matchups_edit(request, round):
     draw = round.get_draw_with_standings(round)
     debates = len(draw)
     unused_teams = round.unused_teams()
-    possible_debates = int(len(unused_teams) / 2) + 1 # The blank rows to add
+    possible_debates = len(unused_teams) // 2 + 1 # The blank rows to add
     possible_debates = [None] * possible_debates
     return r2r(request, "draw_matchups_edit.html", dict(draw=draw,
         possible_debates=possible_debates,unused_teams=unused_teams))
@@ -220,7 +221,7 @@ def save_matchups(request, round):
     # TODO: move to draws app
     #print request.POST.keys()
 
-    existing_debate_ids = [int(a.replace('debate_', '')) for a in request.POST.keys() if a.startswith('debate_')]
+    existing_debate_ids = [int(a.replace('debate_', '')) for a in list(request.POST.keys()) if a.startswith('debate_')]
     for debate_id in existing_debate_ids:
         debate = Debate.objects.get(id=debate_id)
         new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_', '')
@@ -241,7 +242,7 @@ def save_matchups(request, round):
             # If there's blank debates we need to delete those
             debate.delete()
 
-    new_debate_ids = [int(a.replace('new_debate_', '')) for a in request.POST.keys() if a.startswith('new_debate_')]
+    new_debate_ids = [int(a.replace('new_debate_', '')) for a in list(request.POST.keys()) if a.startswith('new_debate_')]
     for debate_id in new_debate_ids:
         new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_', '')
         new_neg_id = request.POST.get('neg_%s' % debate_id).replace('team_', '')
@@ -272,14 +273,13 @@ def draw_venues_edit(request, round):
 @round_view
 def save_venues(request, round):
     # TODO: move to draws app
-
     def v_id(a):
         try:
             return int(request.POST[a].split('_')[1])
         except IndexError:
             return None
     data = [(int(a.split('_')[1]), v_id(a))
-             for a in request.POST.keys()]
+             for a in list(request.POST.keys())]
 
     debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
     venues = Venue.objects.in_bulk([v_id for _, v_id in data])
@@ -390,7 +390,7 @@ def draw_print_feedback(request, round):
             question.choice_options = question.choices.split("//")
         if question.min_value is not None and question.max_value is not None:
             step = max((int(question.max_value) - int(question.min_value)) / 10, 1)
-            question.number_options = range(int(question.min_value), int(question.max_value+1), int(step) )
+            question.number_options = list(range(int(question.min_value), int(question.max_value+1), int(step)))
 
     return r2r(request, "printing/feedback_list.html", dict(
         draw=draw, config=config, questions=questions))

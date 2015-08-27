@@ -75,7 +75,7 @@ class Command(BaseCommand):
                 for message in errors.itermessages():
                     if self.color: message = "\033[1;32m" + message + "\032[0m\n"
                     self.stdout.write(message)
-            count_strs = ("{1:d} {0:s}".format(model._meta.verbose_name_plural.lower(), count) for model, count in counts.iteritems())
+            count_strs = ("{1:d} {0:s}".format(model._meta.verbose_name_plural.lower(), count) for model, count in counts.items())
             message = "Imported " + ", ".join(count_strs) + ", hit {1:d} errors".format(counts, len(errors))
             if self.color: "\033[0;36m" + message + "\033[0m\n"
             self.stdout.write(message)
@@ -96,8 +96,8 @@ class Command(BaseCommand):
         path = self._csv_file_path(filename)
         try:
             return open(path, 'r')
-        except IOError as e:
-            self._warning("Problem opening '{0:s}': {1:s}".format(filename, e))
+        except OSError as e:
+            self._warning("Problem opening '{0:s}': {1:s}".format(filename, e.strerror))
             return None
 
     def _make(self, filename, import_method=None):
@@ -159,7 +159,7 @@ class Command(BaseCommand):
         """Figures out what the tournament slug, name and short name should be,
         and returns the three as a 3-tuple.
         """
-        basename = unicode(os.path.basename(self.dirpath.rstrip('/')))
+        basename = str(os.path.basename(self.dirpath.rstrip('/')))
         name = self.options['name'] or basename
         short_name = self.options['short_name'] or (basename[:24] + '..' if len(basename) > 24 else basename)
         slug = self.options['slug'] or slugify(basename)
@@ -174,7 +174,7 @@ class Command(BaseCommand):
             if not self.options['force']:
                 self.stdout.write("WARNING! A tournament with slug '" + slug + "' already exists.")
                 self.stdout.write("You are about to delete EVERYTHING for this tournament.")
-                response = raw_input("Are you sure? ")
+                response = input("Are you sure? ")
                 if response != "yes":
                     raise CommandError("Cancelled by user.")
             Tournament.objects.filter(slug=slug).delete()

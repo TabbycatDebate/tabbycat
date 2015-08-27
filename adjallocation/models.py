@@ -20,8 +20,8 @@ class DebateAdjudicator(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator')
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
-    def __unicode__(self):
-        return u'%s %s' % (self.adjudicator, self.debate)
+    def __str__(self):
+        return '%s %s' % (self.adjudicator, self.debate)
 
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator')
@@ -51,8 +51,8 @@ class AdjudicatorAllocation(object):
         a.extend(self.panel)
         return a
 
-    def __unicode__(self):
-        return ", ".join(map(lambda x: (x is not None) and x.name or "<None>", self.list))
+    def __str__(self):
+        return ", ".join([(x is not None) and x.name or "<None>" for x in self.list])
 
     def __iter__(self):
         """Iterates through all, including trainees."""

@@ -11,9 +11,9 @@ args = parser.parse_args()
 for team in Team.objects.all():
     if team.reference.startswith(team.institution.code):
         new_reference = team.reference[len(team.institution.code):].strip()
-        print "Renaming team", team.reference, "to", new_reference
+        print("Renaming team", team.reference, "to", new_reference)
         team.reference = new_reference
         if not args.dry_run:
             team.save()
     else:
-        print "Leaving team", team.reference, "alone."
+        print("Leaving team", team.reference, "alone.")

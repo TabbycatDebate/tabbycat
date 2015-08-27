@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """Deploys Tabbycat to Heroku.
-This script is compatible with both Python 2 and Python 3."""
+This script is compatible with both Python 2.7 and Python 3.4 (and later)."""
 
 import argparse
 import subprocess
@@ -19,7 +19,7 @@ parser.add_argument("--no-init-db", action="store_false", default=True, dest="in
 parser.add_argument("--git-remote", type=str, default=None,
     help="Name of Git remote to use. Use '-' to use the urlname. If omitted, reverts to default Heroku behaviour.")
 parser.add_argument("--git-branch", type=str, default=None,
-    help="Git branch to push (default master)")
+    help="Git branch to push (defaults to current branch)")
 parser.add_argument("--pg-plan", "--postgresql-plan", type=str, default="hobby-dev",
     help="Heroku Postgres plan (default hobby-dev)")
 parser.add_argument("--import-tournament", type=str, metavar="IMPORT_DIR",
@@ -85,6 +85,21 @@ def print_yellow(message):
         message = "\033[1;33m" + message + "\033[0m"
     print(message)
 
+def get_git_push_spec():
+    if args.git_branch:
+        return "master" if args.git_branch == "master" else args.git_branch + ":master"
+    try:
+        branch = get_output_from_command(["git", "symbolic-ref", "--short", "--quiet", "HEAD"]).strip()
+    except subprocess.CalledProcessError:
+        print_yellow("Attempt to find git branch name failed, trying for commit instead...")
+    else:
+        return "master" if branch == "master" else branch + ":master"
+    try:
+        return get_output_from_command(["git", "rev-parse", "--short", "--quiet", "HEAD"]).strip() + ":refs/heads/master"
+    except subprocess.CalledProcessError:
+        print_yellow("Could not determine current git commit or branch. Use --git-branch to specify a git branch to push.")
+    exit(1)
+
 # Create the app with addons
 addons = ["memcachier", "heroku-postgresql:%s" % args.pg_plan]
 command = ["heroku", "apps:create"]
@@ -114,12 +129,12 @@ else:
     remote_name = heroku_url
 
 # Push source code to Heroku
-git_branch = args.git_branch + ":master" if args.git_branch else "master"
-run_command(["git", "push", remote_name, git_branch])
+push_spec = get_git_push_spec()
+run_command(["git", "push", remote_name, push_spec])
 
 if args.init_db:
     # Perform initial migrations
-    run_heroku_command(["run", "python", "init_db_heroku.py"])
+    run_heroku_command(["run", "python", "utils/init_db_heroku.py"])
 
     print_yellow("Now creating a superuser for the Heroku site.")
     print_yellow("You'll need to respond to the prompts:")

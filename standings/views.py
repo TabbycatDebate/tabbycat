@@ -42,10 +42,10 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
         speaker.scores = get_scores(speaker, this_speakers_scores)
         speaker.results_in = speaker.scores[-1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
 
-        if round.seq < total_prelim_rounds or len(filter(None, speaker.scores)) >= minimum_debates_needed:
-            speaker.total = sum(filter(None, speaker.scores))
+        if round.seq < total_prelim_rounds or len([_f for _f in speaker.scores if _f]) >= minimum_debates_needed:
+            speaker.total = sum([_f for _f in speaker.scores if _f])
             try:
-                speaker.average = sum(filter(None, speaker.scores)) / len(filter(None, speaker.scores))
+                speaker.average = sum([_f for _f in speaker.scores if _f]) / len([_f for _f in speaker.scores if _f])
             except ZeroDivisionError:
                 speaker.average = None
         else:
@@ -53,7 +53,7 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
             speaker.average = None
 
         if for_replies:
-            speaker.replies_given = len(filter(None, speaker.scores))
+            speaker.replies_given = len([_f for _f in speaker.scores if _f])
 
     if for_replies:
         speakers = [s for s in speakers if s.replies_given > 0]
@@ -88,8 +88,8 @@ def get_round_result(team, team_scores, r):
     except AttributeError:
         pass
     except Exception as e:
-        print "Unexpected exception in view.teams.get_round_result"
-        print e
+        print("Unexpected exception in view.teams.get_round_result")
+        print(e)
     return ts
 
 @admin_required
@@ -112,14 +112,14 @@ def team_standings(request, round):
                         if ts.get_margin is not None:
                             margins.append(ts.get_margin)
 
-                team.avg_margin = sum(margins) / float(len(margins))
+                team.avg_margin = sum(margins) / len(margins)
             except ZeroDivisionError:
                 team.avg_margin = None
 
-    show_draw_strength = decide_show_draw_strength(round.tournament)
+    metrics = relevant_team_standings_metrics(round.tournament)
 
     return r2r(request, 'teams.html', dict(teams=teams, rounds=rounds,
-        show_ballots=False, show_draw_strength=show_draw_strength))
+        show_ballots=False, metrics=metrics))
 
 
 @admin_required
@@ -143,7 +143,7 @@ def division_standings(request, round):
                         if ts.get_margin is not None:
                             margins.append(ts.get_margin)
 
-                team.avg_margin = sum(margins) / float(len(margins))
+                team.avg_margin = sum(margins) / len(margins)
             except ZeroDivisionError:
                 team.avg_margin = None
 
@@ -188,7 +188,7 @@ def motion_standings(request, round):
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_speaker_tab(request, t):
-    print "Generating public speaker tab"
+    print("Generating public speaker tab")
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
@@ -220,7 +220,7 @@ def public_replies_tab(request, t):
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('tab_released')
 def public_team_tab(request, t):
-    print "Generating public team tab"
+    print("Generating public team tab")
     round = t.current_round
     teams = Team.objects.ranked_standings(round)
     rounds = t.prelim_rounds(until=round).order_by('seq')
@@ -239,16 +239,16 @@ def public_team_tab(request, t):
                         if ts.get_margin is not None:
                             margins.append(ts.get_margin)
 
-                team.avg_margin = sum(margins) / float(len(margins))
+                team.avg_margin = sum(margins) / len(margins)
             except ZeroDivisionError:
                 team.avg_margin = None
 
     show_ballots = round.tournament.config.get('ballots_released')
-    show_draw_strength = decide_show_draw_strength(round.tournament)
+    metrics = relevant_team_standings_metrics(round.tournament)
 
     return r2r(request, 'public_team_tab.html', dict(teams=teams,
             rounds=rounds, round=round, show_ballots=show_ballots,
-            show_draw_strength=show_draw_strength))
+            metrics=metrics))
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -256,7 +256,7 @@ def public_team_tab(request, t):
 def public_motions_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
-    print rounds
+    print(rounds)
     motions = list()
     motions = Motion.objects.statistics(round=round)
     return r2r(request, 'public_motions_tab.html', dict(motions=motions))
@@ -265,7 +265,7 @@ def public_motions_tab(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_team_standings')
 def public_team_standings(request, t):
-    print "Generating public team standings"
+    print("Generating public team standings")
     if t.release_all:
         # Assume that the time "release all" is used, the current round
         # is the last round.

@@ -8,6 +8,7 @@ from django.views.decorators.cache import cache_page
 
 from ipware.ip import get_real_ip
 from functools import wraps
+from standings.standings import PRECEDENCE_BY_RULE
 
 def get_ip_address(request):
     ip = get_real_ip(request)
@@ -76,7 +77,11 @@ def r2r(request, template, extra_context=None):
         rc.update(extra_context)
     return render_to_response(template, context_instance=rc)
 
-def decide_show_draw_strength(tournament):
-    # redundant
-    return tournament.config.get('team_standings_rule') == "nz"
-
+def relevant_team_standings_metrics(tournament):
+    rule = tournament.config.get('team_standings_rule')
+    precedence = PRECEDENCE_BY_RULE[rule]
+    metrics = dict()
+    metrics["draw_strength"] = "draw_strength" in precedence
+    metrics["sum_of_margins"] = "margins" in precedence
+    metrics["who_beat_whom"] = "wbw" in precedence
+    return metrics

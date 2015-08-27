@@ -11,6 +11,6 @@ args = parser.parse_args()
 for bsub in rm.BallotSubmission.objects.all():
     ssba = rm.SpeakerScoreByAdj.objects.filter(ballot_submission=bsub).exists()
     if not ssba:
-        print "Deleting", bsub
+        print("Deleting", bsub)
         if not args.dry_run:
             bsub.delete()

@@ -1,5 +1,5 @@
-from allocator import Allocator
-from stab import StabAllocator
+from .allocator import Allocator
+from .stab import StabAllocator
 import random
 import math
 
@@ -33,7 +33,7 @@ class SAAllocator(Allocator):
             setattr(debate, 'target_panel', 2 + (debate.bracket - bot_bracket +
                                                  1) * div)
 
-        print [d.target_panel for d, p in pairs]
+        print([d.target_panel for d, p in pairs])
 
         self.state = dict(pairs)
 
@@ -45,7 +45,7 @@ class SAAllocator(Allocator):
         #    i += 1
 
         result = []
-        for debate, panel in self.best_state.items():
+        for debate, panel in list(self.best_state.items()):
             aa = models.AdjudicatorAllocation(debate)
             panel = list(panel)
             panel.sort(key=lambda x: x.score, reverse=True)
@@ -63,7 +63,7 @@ class SAAllocator(Allocator):
     def anneal(self, steps, min_temp, max_temp, state):
 
         self.energy = self.calc_energy(state)
-        print "start energy", self.energy
+        print("start energy", self.energy)
         self.save_best()
         tf = -math.log(float(max_temp) / min_temp)
 
@@ -87,13 +87,13 @@ class SAAllocator(Allocator):
                         self.save_best()
                         if self.energy == 0: break
 
-        print "accepts", accepts, "improves", improves
-        print "end energy", self.best_energy
-        print "end energy", self.calc_energy(self.best_state)
-        print self.best_state
+        print("accepts", accepts, "improves", improves)
+        print("end energy", self.best_energy)
+        print("end energy", self.calc_energy(self.best_state))
+        print(self.best_state)
 
     def calc_energy(self, state):
-        return sum(self.score(debate, panel) for debate, panel in state.items())
+        return sum(self.score(debate, panel) for debate, panel in list(state.items()))
 
 
     def candidate_swap(self):
@@ -101,7 +101,7 @@ class SAAllocator(Allocator):
         return meth()
 
     def member_swap(self):
-        d1 = random.choice(self.state.keys())
+        d1 = random.choice(list(self.state.keys()))
         panel1 = self.state[d1]
         a1 = random.choice(panel1)
 
@@ -109,7 +109,7 @@ class SAAllocator(Allocator):
         panel2 = self.state[d2]
 
         while d1 == d2 or len(panel1) != len(panel2):
-            d2 = random.choice(self.state.keys())
+            d2 = random.choice(list(self.state.keys()))
             panel2 = self.state[d2]
             a2 = random.choice(panel2)
 
@@ -130,13 +130,13 @@ class SAAllocator(Allocator):
     def panel_swap(self):
 
         # panel swap
-        d1 = random.choice(self.state.keys())
+        d1 = random.choice(list(self.state.keys()))
         d2 = d1
         panel1 = self.state[d1]
         panel2 = self.state[d2]
 
         while d2 == d1 or len(panel1) != len(panel2):
-            d2 = random.choice(self.state.keys())
+            d2 = random.choice(list(self.state.keys()))
             panel2 = self.state[d2]
 
         curr_score = self.score(d1, panel1) + self.score(d2, panel2)

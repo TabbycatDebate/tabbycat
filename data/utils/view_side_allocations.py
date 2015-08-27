@@ -15,7 +15,7 @@ for seq in args.rounds:
     round = Round.objects.get(seq=seq)
     affs = [x.team for x in TeamPositionAllocation.objects.filter(round=round, position=TeamPositionAllocation.POSITION_AFFIRMATIVE).select_related('team')]
     negs = [x.team for x in TeamPositionAllocation.objects.filter(round=round, position=TeamPositionAllocation.POSITION_NEGATIVE).select_related('team')]
-    print(str(round))
+    print((str(round)))
     print("Affirmative                    Negative")
     for aff, neg in zip(sorted(affs), sorted(negs)):
-        print("{0:30} {1:30}".format(aff.short_name, neg.short_name))
+        print(("{0:30} {1:30}".format(aff.short_name, neg.short_name)))

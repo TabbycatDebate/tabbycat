@@ -25,7 +25,7 @@ class BreakCategory(models.Model):
 
     breaking_teams = models.ManyToManyField('participants.Team', through='BreakingTeam')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:

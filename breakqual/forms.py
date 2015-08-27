@@ -1,7 +1,7 @@
 from django import forms
 from . import models
 from utils.forms import OptionalChoiceField
-from breaking import get_breaking_teams
+from .breaking import get_breaking_teams
 
 # ==============================================================================
 # Break eligbility form

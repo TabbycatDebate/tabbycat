@@ -12,11 +12,11 @@ def print_command(command):
     message = "$ " + " ".join(command)
     if use_color:
         message = "\033[0;36m" + message + "\033[0m"
-    print message
+    print(message)
 
 def run_command(command):
     print_command(command)
     subprocess.check_call(command, **subprocess_kwargs)
 
-run_command(["python", "manage.py", "makemigrations", "debate"])
+run_command(["python", "manage.py", "makemigrations", "actionlog", "adjallocation", "adjfeedback", "availability", "breakqual", "draw", "motions", "options", "participants", "results", "tournaments", "venues"])
 run_command(["python", "manage.py", "migrate"])

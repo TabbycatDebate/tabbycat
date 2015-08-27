@@ -323,7 +323,7 @@ class Munkres:
 
         Please use the module function ``make_cost_matrix()``.
         """
-        import munkres
+        from . import munkres
         return munkres.make_cost_matrix(profit_matrix, inversion_function)
 
     make_cost_matrix = staticmethod(make_cost_matrix)
@@ -576,7 +576,7 @@ class Munkres:
 
     def __find_smallest(self):
         """Find the smallest uncovered value in the matrix."""
-        minval = sys.maxint
+        minval = sys.maxsize
         for i in range(self.n):
             for j in range(self.n):
                 if (not self.row_covered[i]) and (not self.col_covered[j]):
@@ -722,7 +722,7 @@ def print_matrix(matrix, msg=None):
     import math
 
     if msg is not None:
-        print msg
+        print(msg)
 
     # Calculate the appropriate format width.
     width = 0
@@ -786,7 +786,7 @@ if __name__ == '__main__':
         for r, c in indexes:
             x = cost_matrix[r][c]
             total_cost += x
-            print '(%d, %d) -> %d' % (r, c, x)
-        print 'lowest cost=%d' % total_cost
+            print('(%d, %d) -> %d' % (r, c, x))
+        print('lowest cost=%d' % total_cost)
         assert expected_total == total_cost
 

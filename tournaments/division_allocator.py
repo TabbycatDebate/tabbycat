@@ -4,7 +4,7 @@ import random
 class DivisionAllocator():
 
     def __init__(self, teams, divisions, venue_groups, tournament):
-        print "Allocating divisions for %s" % tournament
+        print("Allocating divisions for %s" % tournament)
         self.teams = teams
         self.divisions = divisions
         self.venue_groups = venue_groups
@@ -23,16 +23,16 @@ class DivisionAllocator():
 
         # First sweep of allocations
         division_dict, allocated_teams = self.allocate_teams(division_dict, allocated_teams, all_teams)
-        print "Post-Allocate 1: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict))
+        print("Post-Allocate 1: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict)))
 
         # First round of culls
         division_dict, allocated_teams = self.cull_venues(division_dict, allocated_teams)
-        print "Post-Cull 1: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict))
+        print("Post-Cull 1: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict)))
 
         # Second sweep of allocations
         unalloacted_teams = [te for te in all_teams if not te in allocated_teams]
         division_dict, allocated_teams = self.allocate_teams(division_dict, allocated_teams, unalloacted_teams)
-        print "Post-Allocate 2: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict))
+        print("Post-Allocate 2: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict)))
 
         self.determine_division_size(division_dict, allocated_teams,all_teams)
 
@@ -41,15 +41,15 @@ class DivisionAllocator():
     def determine_division_size(self,division_dict, allocated_teams,all_teams):
         di = 1 # index of current division
 
-        for group,group_teams in division_dict.iteritems():
+        for group,group_teams in division_dict.items():
             if len(group_teams) > 0:
-                print "------\n%s has %s/%s teams" % (group, len(group_teams), group.team_capacity)
+                print("------\n%s has %s/%s teams" % (group, len(group_teams), group.team_capacity))
 
                 # Using the ideal division size, how many divisions can we support?
-                possible_ideal_divisions = len(group_teams) / self.ideal_division_size
+                possible_ideal_divisions = len(group_teams) // self.ideal_division_size
                 possible_ideal_remainder = len(group_teams) % self.ideal_division_size
                 #print "\t %s possible_ideal_division of 6 with %s leftover" % (possible_ideal_divisions, possible_ideal_remainder)
-                possible_small_divisions = len(group_teams) / self.minimum_division_size
+                possible_small_divisions = len(group_teams) // self.minimum_division_size
                 possible_small_remainder = len(group_teams) % self.minimum_division_size
                 #print "\t %s possible_small_division of 5 with %s leftover" % (possible_small_divisions, possible_small_remainder)
 
@@ -58,14 +58,14 @@ class DivisionAllocator():
                 elif min(possible_ideal_remainder, possible_small_remainder) == possible_small_remainder and possible_small_divisions > 0:
                     di = self.create_venue_divisions(group,group_teams,di,self.minimum_division_size,possible_small_divisions,possible_small_remainder)
                 else:
-                    print "\t no options - this shouldn't happen"
+                    print("\t no options - this shouldn't happen")
 
-        print "------"
-        print "Made %s divisions over %s venues, Allocated %s / %s teams" % (di, len(division_dict), len(allocated_teams), len(all_teams))
+        print("------")
+        print("Made %s divisions over %s venues, Allocated %s / %s teams" % (di, len(division_dict), len(allocated_teams), len(all_teams)))
 
         unalloacted_teams = [te for te in all_teams if not te in allocated_teams]
         for ute in unalloacted_teams:
-            print "\t %s not allocated" % ute.name
+            print("\t %s not allocated" % ute.name)
 
 
     def create_division(self, di, group, group_teams, team_index, division_size):
@@ -79,7 +79,7 @@ class DivisionAllocator():
             group_teams[i].division = new_division
             group_teams[i].save()
 
-        print "\t Made division #%s of size %s" % (new_division, division_size)
+        print("\t Made division #%s of size %s" % (new_division, division_size))
 
 
     def create_venue_divisions(self,group,group_teams,di,base_division_size,possible_divisions,remainder):
@@ -103,10 +103,10 @@ class DivisionAllocator():
     def cull_venues(self, division_dict, allocated_teams):
 
         culled_division_dict = {}
-        for group, group_teams in division_dict.iteritems():
+        for group, group_teams in division_dict.items():
             if len(group_teams) > 0 and len(group_teams) < self.minimum_division_size:
                 # If the amount of allocated teams is not enough for one division
-                print "\t culling %s because too few teams (%s)" % (group, len(group_teams))
+                print("\t culling %s because too few teams (%s)" % (group, len(group_teams)))
                 for ttr in group_teams:
                     allocated_teams.remove(ttr)
             else:
@@ -120,7 +120,7 @@ class DivisionAllocator():
         for i in range(0, 12):
             # For each possible preference priority (0 through 12)
             #print "%sst round" % i
-            for group, group_teams in division_dict.iteritems():
+            for group, group_teams in division_dict.items():
                 for team in teams_to_allocate:
                     # We go through each group
                     if len(group_teams) <= group.team_capacity - 1:
@@ -135,7 +135,7 @@ class DivisionAllocator():
                         #print "\t\t%s is full (%s/%s)" % (group, len(group_teams), group.team_capacity)
                         pass
 
-        for group, group_teams in division_dict.iteritems():
+        for group, group_teams in division_dict.items():
             # Trying to mix up the distributions within divisions
             random.shuffle(group_teams)
             random.shuffle(group_teams)

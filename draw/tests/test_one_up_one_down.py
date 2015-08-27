@@ -13,7 +13,7 @@ class TestTeam(object):
             self.hist = list(hist)
         except TypeError:
             self.hist = (hist,)
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
     def __repr__(self):

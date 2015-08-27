@@ -1,4 +1,4 @@
-from allocator import Allocator
+from .allocator import Allocator
 
 class PanelMaker(object):
     RANK_A = 0
@@ -118,14 +118,14 @@ class StabAllocator(Allocator):
         self.debates.sort(key=lambda d: self.get_debate_energy(d), reverse=True)
         panels.sort(key=lambda p:p.get_energy(), reverse=True)
 
-        self.pairings = zip(self.debates, panels)
+        self.pairings = list(zip(self.debates, panels))
 
         if avoid_conflicts:
             for i, (debate, panel) in enumerate(self.pairings):
                 if panel.conflicts(debate):
-                    j = self.search_swap(i, range(i, 0, -1))
+                    j = self.search_swap(i, list(range(i, 0, -1)))
                     if j is None:
-                        j = self.search_swap(i, range(i+1, len(panels)))
+                        j = self.search_swap(i, list(range(i+1, len(panels))))
 
         from adjallocation.models import AdjudicatorAllocation
 

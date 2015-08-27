@@ -144,14 +144,14 @@ def make_options_form(tournament, data=None):
 
     fields = OrderedDict()
     initial_data = {}
-    for name, (coerce, help, default) in SETTINGS.items():
+    for name, (coerce, help, default) in list(SETTINGS.items()):
         fields[name] = _field(coerce, help)
         fields[name].default = default
         initial_data[name] = tournament.config.get(name)
 
     class BaseConfigForm(forms.BaseForm):
         def save(self):
-            for name in SETTINGS.keys():
+            for name in list(SETTINGS.keys()):
                 tournament.config.set(name, self.cleaned_data[name])
 
     klass = type('ConfigForm', (BaseConfigForm,), {'base_fields': fields})
