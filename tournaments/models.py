@@ -629,7 +629,7 @@ class Round(models.Model):
 def update_round_cache(sender, instance, created, **kwargs):
     cached_key = "%s_%s_%s" % (instance.tournament.slug, instance.seq, 'object')
     cache.delete(cached_key)
-    logger.info("Updated cache %s for %s" % (cached_key, instance))
+    logger.debug("Updated cache %s for %s" % (cached_key, instance))
 
 # Update the cached round object when model is changed)
 signals.post_save.connect(update_round_cache, sender=Round)
