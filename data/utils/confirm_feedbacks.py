@@ -1,5 +1,8 @@
 """Confirms all feedbacks.
-Will confirm all non-unique ones, so only the last one will remain confirmed."""
+Will confirm all non-unique ones, so only the last one will remain confirmed.
+
+TODO Implement as a Django admin action. Remove from management scripts.
+"""
 
 import header
 from adjfeedback.models import AdjudicatorFeedback

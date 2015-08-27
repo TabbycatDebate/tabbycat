@@ -1,4 +1,7 @@
-"""Changes all debates in a round to STATUS_NONE."""
+"""Changes all debates in a round to STATUS_NONE.
+
+TODO Implement as a Django admin action. Remove from management scripts.
+"""
 
 import header
 from draw.models import Debate
