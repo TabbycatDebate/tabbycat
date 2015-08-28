@@ -7,7 +7,7 @@ class Command(TournamentCommand):
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
-        parser.add_argument("--dry-run", action="store_true")
+        parser.add_argument("--dry-run", action="store_true", help="Show what it would delete, but do not actually delete")
 
     def handle_tournament(self, tournament, **options):
         for bsub in BallotSubmission.objects.filter(debate__round__tournament=tournament):
