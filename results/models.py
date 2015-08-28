@@ -55,7 +55,7 @@ class Submission(models.Model):
                 pass
             else:
                 if current != self:
-                    logger.warning("{:s} confirmed while {:s} was already confirmed, setting latter to unconfirmed".format(self, current))
+                    logger.warning("{} confirmed while {} was already confirmed, setting latter to unconfirmed".format(self, current))
                     current.confirmed = False
                     current.save()
 
