@@ -1,4 +1,4 @@
-from utils.management.base import TournamentCommand, CommandError
+from utils.management.base import TournamentCommand
 
 class Command(TournamentCommand):
 
@@ -16,12 +16,13 @@ class Command(TournamentCommand):
         for team in tournament.team_set.all():
             if team.reference.startswith(team.institution.code + " "):
                 new_reference = team.reference[len(team.institution.code):].strip()
+                self.stdout.write("{verb} team {!r} from {} to {!r}".format(team.reference, team.institution.code, new_reference,
+                        verb="Would rename" if options["dry_run"] else "Renaming"))
+
                 if options["dry_run"]:
-                    self.stdout.write("Would rename team {!r} from {} to {!r}".format(team.reference, team.institution.code, new_reference))
-                else:
-                    self.stdout.write("Renaming team {!r} from {} to {!r}".format(team.reference, team.institution.code, new_reference))
                     team.reference = new_reference
                     team.use_institution_prefix = True
                     team.save()
             else:
-                self.stdout.write("Leaving team {!r} from {} alone".format(team.reference, team.institution.code))
+                self.stdout.write("{verb} team {!r} from {} alone".format(team.reference, team.institution.code,
+                        verb="Would leave" if options["dry_run"] else "Leaving"))
