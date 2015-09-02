@@ -46,15 +46,15 @@ class Debate(models.Model):
 
     def __str__(self):
         try:
-            return "%s - [%s] %s vs %s" % (
-                self.round.tournament,
+            return "[{}/{}] {} vs {}".format(
+                self.round.tournament.slug,
                 self.round.abbreviation,
                 self.aff_team.short_name,
                 self.neg_team.short_name
             )
         except DebateTeam.DoesNotExist:
-            return "%s - [%s] %s" % (
-                self.round.tournament,
+            return "[{}/{}] {}".format(
+                self.round.tournament.slug,
                 self.round.abbreviation,
                 ", ".join([x.short_name for x in self.teams])
             )
@@ -223,7 +223,7 @@ class DebateTeam(models.Model):
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __str__(self):
-        return '%s (%s)' % (self.team, self.debate)
+        return '{} in {}'.format(self.team.short_name, self.debate)
 
     @cached_property # TODO: this slows down the standings pages reasonably heavily
     def opposition(self):

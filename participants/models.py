@@ -166,7 +166,7 @@ class Team(models.Model):
     objects = TeamManager()
 
     def __str__(self):
-        return "%s - %s" % (self.tournament, self.short_name)
+        return "[{}] {}".format(self.tournament.slug, self.short_name)
 
     @property
     def short_name(self):

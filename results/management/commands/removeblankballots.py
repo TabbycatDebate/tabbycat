@@ -12,7 +12,7 @@ class Command(TournamentCommand):
     def handle_tournament(self, tournament, **options):
         for bsub in BallotSubmission.objects.filter(debate__round__tournament=tournament):
             if not SpeakerScoreByAdj.objects.filter(ballot_submission=bsub).exists():
-                if not args.dry_run:
+                if not options["dry_run"]:
                     self.stdout.write("Deleting {:s}".format(str(bsub)))
                     bsub.delete()
                 else:

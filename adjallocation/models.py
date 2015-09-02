@@ -21,7 +21,7 @@ class DebateAdjudicator(models.Model):
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
     def __str__(self):
-        return '%s %s' % (self.adjudicator, self.debate)
+        return '{} in {}'.format(self.adjudicator, self.debate)
 
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator')

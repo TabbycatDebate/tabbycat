@@ -35,7 +35,7 @@
     {% if show_all_draws > 0 %}
       <li><a href="#" data-toggle="dropdown">Draws<b class="caret"></b></a>
         <ul class="dropdown-menu">
-          {% for r in tournament.rounds.all %}
+          {% for r in tournament.round_set.all %}
             {% if r.draw_status == r.STATUS_RELEASED %}
               <li><a href="{% round_url public_draw_by_round r %}">{{ r.name }}</a></li>
             {% endif %}
@@ -52,7 +52,7 @@
   {% if public_results > 0 and current_round.prev %}
     <li><a href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
       <ul class="dropdown-menu">
-        {% for r in tournament.rounds.all %}
+        {% for r in tournament.round_set.all %}
           {% if not r.silent %}
             {% if r.seq < current_round.seq or tournament.release_all %}
               <li><a href="{% round_url public_results r %}">{{ r.name }}</a></li>

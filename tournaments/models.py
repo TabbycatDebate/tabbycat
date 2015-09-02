@@ -85,6 +85,9 @@ class Tournament(models.Model):
             qs = qs.filter(seq__lt=before.seq)
         return qs
 
+    def break_rounds(self):
+        return self.round_set.filter(stage=Round.STAGE_ELIMINATION)
+
     def create_next_round(self):
         curr = self.current_round
         next = curr.seq + 1
@@ -207,7 +210,7 @@ class Round(models.Model):
 
     objects = RoundManager()
 
-    tournament     = models.ForeignKey(Tournament, related_name='rounds')
+    tournament     = models.ForeignKey(Tournament)
     seq            = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
     name           = models.CharField(max_length=40, help_text="e.g. \"Round 1\"")
     abbreviation   = models.CharField(max_length=10, help_text="e.g. \"R1\"")
@@ -232,14 +235,22 @@ class Round(models.Model):
 
     class Meta:
         unique_together = [('tournament', 'seq')]
-        ordering = ['tournament', str('seq')]
+        ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
 
     def __str__(self):
         return "%s - %s" % (self.tournament, self.name)
 
+    @property
+    def rounds(self):
+        from warnings import warn
+        warn("Tournament.rounds is deprecated, use Tournament.round_set instead.", DeprecationWarning)
+        return self.round_set
+
     def motions(self):
-        return self.motion_set.order_by('seq')
+        from warnings import warn
+        warn("Tournament.motions is deprecated, use Tournament.motion_set instead.", DeprecationWarning)
+        return self.motion_set
 
     def draw(self, override_team_checkins=False):
         from draw.models import Debate, TeamPositionAllocation

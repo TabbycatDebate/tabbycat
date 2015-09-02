@@ -52,7 +52,7 @@
 </ul>
 
 <ul id="nav_right" class="nav navbar-nav navbar-right">
-  {% for r in tournament.rounds.all %}
+  {% for r in tournament.round_set.all %}
     <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown round-nav">
       <a href="#" class="dropdown-toggle {% if r.seq == current_round.seq %}current-round{% endif %}" data-toggle="dropdown">
         <span class="

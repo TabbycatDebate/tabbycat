@@ -128,7 +128,8 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
                     answer = random.choice(WORDS[score])
             question.answer_type_class(question=question, feedback=fb, answer=answer).save()
 
-        logger.info("{} on {}: {}".format(source, adj, score))
+        name = source.name if isinstance(source, Adjudicator) else source.short_name
+        logger.info("[{}] {} on {}: {}".format(debate.round.tournament.slug, name, adj, score))
 
         fbs.append(fb)
 

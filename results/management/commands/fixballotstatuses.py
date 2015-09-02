@@ -20,5 +20,5 @@ class Command(TournamentCommand):
                     bsub.confirmed = True
             new = (bsub.discarded, bsub.confirmed)
             if original != new:
-                self.stdout.write("%s changed from %s to %s" % (bsub, original, new))
+                self.stdout.write("{} changed from {} to {}".format(bsub, original, new))
                 bsub.save()

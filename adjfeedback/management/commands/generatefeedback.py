@@ -1,4 +1,4 @@
-from utils.management.base import TournamentCommand, CommandError
+from utils.management.base import RoundCommand, CommandError
 from ...dbutils import add_feedback, add_feedback_to_round, delete_all_feedback_for_round, delete_feedback
 
 from django.contrib.auth.models import User
@@ -12,14 +12,14 @@ SUBMITTER_TYPE_MAP = {
     'public':  AdjudicatorFeedback.SUBMITTER_PUBLIC
 }
 
-class Command(TournamentCommand):
+class Command(RoundCommand):
 
     help = "Adds randomly-generated feedback to the database"
+    rounds_required = False
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
-        parser.add_argument("type", type=str, choices=OBJECT_TYPE_CHOICES, help="'round' to add feedback to entire round, 'debate' for a particular debate")
-        parser.add_argument("specifiers", type=int, nargs="+", help="What to add feedback to. For rounds: seq numbers. For debates: database IDs.")
+        parser.add_argument("--debates", type=int, nargs="+", help="IDs of specific debates to add feedback to. Done in addition to rounds, if any.", default=[])
         parser.add_argument("-p", "--probability", type=float, help="Probability with which to add feedback", default=1.0)
         parser.add_argument("-T", "--submitter-type", type=str, help="Submitter type, either 'tabroom' or 'public'", choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
         parser.add_argument("-u", "--user", type=str, help="Username of submitter", default="random")
@@ -43,39 +43,43 @@ class Command(TournamentCommand):
             else:
                 raise CommandError("There is no user called {user!r}. Use the --create-user option to create it.".format(user=options["user"]))
 
-    def handle_tournament(self, tournament, **options):
-        feedback_kwargs = {
+    @classmethod
+    def feedback_kwargs(cls, options):
+        return {
             "submitter_type": SUBMITTER_TYPE_MAP[options["submitter_type"]],
-            "user"          : self._get_user(options),
+            "user"          : cls._get_user(options),
             "probability"   : options["probability"],
             "discarded"     : options["discarded"],
             "confirmed"     : options["confirmed"],
         }
 
-        if options["type"] == "round":
-            for seq in options["specifiers"]:
-                round = Round.objects.get(tournament=tournament, seq=seq)
+    def handle(self, *args, **options):
+        super(Command, self).handle(*args, **options) # handles rounds
 
-                if options["clean"]:
-                    self.stdout.write("Deleting all feedback for round {}...".format(round.name))
-                    delete_all_feedback_for_round(round)
-
-                self.stdout.write("Generating feedback for round {}...".format(round.name))
-                try:
-                    add_feedback_to_round(round, **feedback_kwargs)
-                except ValueError as e:
-                    raise CommandError(e)
-
-        elif options["type"] == "debate":
-            for debate_id in options["specifiers"]:
+        for tournament in self.get_tournaments(**options):
+            for debate_id in options["debates"]:
                 debate = Debate.objects.get(round__tournament=tournament, id=debate_id)
+                self.handle_debate(debate, **options)
 
-                if options["clean"]:
-                    self.stdout.write("Deleting all feedback for debate {}...".format(debate.matchup))
-                    delete_feedback(debate)
+    def handle_round(self, round, **options):
+        if options["clean"]:
+            self.stdout.write(self.style.WARNING("Deleting all feedback for round {}...".format(round.name)))
+            delete_all_feedback_for_round(round)
 
-                self.stdout.write("Generating feedback for debate {}...".format(debate.matchup))
-                try:
-                    add_feedback(debate, **feedback_kwargs)
-                except ValueError as e:
-                    raise CommandError(e)
+        self.stdout.write(self.style.MIGRATE_HEADING("Generating feedback for round {}...".format(round.name)))
+        try:
+            add_feedback_to_round(round, **self.feedback_kwargs(options))
+        except ValueError as e:
+            raise CommandError(e)
+
+    def handle_debate(self, debate, **options):
+        if options["clean"]:
+            self.stdout.write(self.style.WARNING("Deleting all feedback for debate {}...".format(debate.matchup)))
+            delete_feedback(debate)
+
+        self.stdout.write(self.style.MIGRATE_HEADING("Generating feedback for debate {}...".format(debate.matchup)))
+        try:
+            add_feedback(debate, **self.feedback_kwargs(options))
+        except ValueError as e:
+            raise CommandError(e)
+

@@ -10,7 +10,7 @@
 <div class="row">
   <div class="col-md-12">
     <ul class="list-group">
-      {% for r in tournament.rounds.all %}
+      {% for r in tournament.round_set.all %}
         {% if not r.silent %}
           {% if r.seq < current_round.seq or tournament.release_all %}
           <li class="list-group-item"><a class="public-results-nav" href="{% round_url public_results r %}">
