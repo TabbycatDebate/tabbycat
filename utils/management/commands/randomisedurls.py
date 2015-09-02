@@ -8,7 +8,8 @@ class Command(TournamentCommand):
     help = "Generates or deletes randomised URLs"
 
     def add_arguments(self, parser):
-        subparsers = parser.add_subparsers(dest="subcommand", parser_class=ArgumentParser)
+        subparsers = parser.add_subparsers(dest="subcommand", parser_class=ArgumentParser, metavar="{generate,delete}")
+        subparsers.required = True
 
         generate = subparsers.add_parser("generate")
         super(Command, self).add_arguments(generate)
@@ -48,7 +49,7 @@ class Command(TournamentCommand):
 
         model_name = relatedmanager.model._meta.verbose_name_plural.lower()
         if existing.exists():
-            self.stdout.write("* Skipping {0:d} {1:s} that already have randomised URLs. Use --overwrite to overwrite them.\n".format(existing.count(), model_name))
+            self.stdout.write(self.style.WARNING("Skipping {0:d} {1:s} that already have randomised URLs. Use --overwrite to overwrite them.".format(existing.count(), model_name)))
 
         self.stdout.write("Generating randomised URLs for {0:d} {1:s}".format(queryset.count(), model_name))
         populate_url_keys(queryset, self.options['length'])
