@@ -9,8 +9,8 @@ from actionlog.models import ActionLogEntry
 
 from . import models
 from .forms import make_feedback_form_class
-from .keys import populate_url_keys
 
+from utils.urlkeys import populate_url_keys
 from utils.views import *
 
 @admin_required
@@ -423,7 +423,7 @@ def feedback_progress(request, t):
     teams = Team.objects.all()
 
     # Teams only owe feedback on non silent rounds
-    rounds_owed = request.tournament.rounds.filter(silent=False,
+    rounds_owed = request.tournament.round_set.filter(silent=False,
         draw_status=request.tournament.current_round.STATUS_RELEASED).count()
 
     for adj in adjudicators:

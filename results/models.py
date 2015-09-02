@@ -5,6 +5,9 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist, Multiple
 from threading import BoundedSemaphore
 from .result import BallotSet
 
+import logging
+logger = logging.getLogger(__name__)
+
 class ScoreField(models.FloatField):
     pass
 
@@ -52,7 +55,7 @@ class Submission(models.Model):
                 pass
             else:
                 if current != self:
-                    warn("%s confirmed while %s was already confirmed, setting latter to unconfirmed" % (self, current))
+                    logger.warning("{} confirmed while {} was already confirmed, setting latter to unconfirmed".format(self, current))
                     current.confirmed = False
                     current.save()
 
@@ -91,9 +94,9 @@ class BallotSubmission(Submission):
         unique_together = [('debate', 'version')]
 
     def __str__(self):
-        return 'Ballot for ' + str(self.debate) + ' submitted at ' + \
-                ('<unknown>' if self.timestamp is None else str(self.timestamp.isoformat()))
-
+        return "Ballot for {debate} submitted at {time} (version {version})".format(
+            debate=self.debate.matchup, version=self.version,
+            time=('<unknown>' if self.timestamp is None else str(self.timestamp.isoformat())))
 
     @cached_property
     def ballot_set(self):
@@ -105,7 +108,7 @@ class BallotSubmission(Submission):
         # The motion must be from the relevant round
         super(BallotSubmission, self).clean()
         if self.motion.round != self.debate.round:
-                raise ValidationError("Debate is in round %d but motion (%s) is from round %d" % (self.debate.round, self.motion.reference, self.motion.round))
+                raise ValidationError("Debate is in round {:d} but motion ({:s}) is from round {:d}".format(self.debate.round, self.motion.reference, self.motion.round))
         if self.confirmed and self.discarded:
             raise ValidationError("A ballot can't be both confirmed and discarded!")
 

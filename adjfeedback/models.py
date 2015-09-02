@@ -127,6 +127,11 @@ class AdjudicatorFeedback(Submission):
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]
 
+    def __str__(self):
+        return "Feedback from {source} on {adj} submitted at {time} (version {version})".format(
+                source=self.source, adj=self.adjudicator.name, version=self.version,
+                time=('<unknown>' if self.timestamp is None else str(self.timestamp.isoformat())))
+
     @cached_property
     def source(self):
         if self.source_adjudicator:

@@ -10,9 +10,9 @@ TEMPLATE_DIRS       = (os.path.join(PROJECT_PATH, 'templates'),)
 MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
 SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
-# ===================
+# ========================
 # = Overwritten in Local =
-# ===================
+# ========================
 
 ADMINS              = ('Test', 'test@test.com')
 MANAGERS            = ADMINS
@@ -59,15 +59,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request', # For SUIT
 )
 
-INSTALLED_APPS = (
-    'suit',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-    'django.contrib.messages',
+TABBYCAT_APPS = (
     'actionlog',
     'adjallocation',
     'adjfeedback',
@@ -83,15 +75,28 @@ INSTALLED_APPS = (
     'utils',
     'standings',
     'importer',
+)
+
+INSTALLED_APPS = (
+    'suit',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'django.contrib.messages') \
+    + TABBYCAT_APPS + (
     'compressor',
     'cachalot',
-)
+    )
+
 
 LOGIN_REDIRECT_URL = '/'
 
-# =========
+# ===========
 # = Caching =
-# =========
+# ===========
 
 PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60 * 1))
 TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120))
@@ -115,9 +120,9 @@ TEMPLATE_LOADERS = (
 # Use the cache for sessions rather than the db
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
-# =========
+# =============
 # = Pipelines =
-# =========
+# =============
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -138,9 +143,39 @@ COMPRESS_OFFLINE_MANIFEST = "manifest.json"
 COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
 COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compression
 
-# ===========================
-# = Heroku
-# ===========================
+# ===========
+# = Logging =
+# ===========
+if os.environ.get('DEBUG', ''):
+    DEBUG = bool(int(os.environ['DEBUG']))
+    TEMPLATE_DEBUG = DEBUG
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
+
+for app in TABBYCAT_APPS:
+    LOGGING['loggers'][app] = {
+        'handlers': ['console'],
+        'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG' if DEBUG else 'INFO'),
+    }
+
+
+# ===========
+# = Heroku  =
+# ===========
 
 # Parse database configuration from $DATABASE_URL
 try:
@@ -181,10 +216,6 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
             }
         }
-
-if os.environ.get('DEBUG', ''):
-    DEBUG = bool(int(os.environ['DEBUG']))
-    TEMPLATE_DEBUG = DEBUG
 
 # ===========================
 # = Local Overrides
