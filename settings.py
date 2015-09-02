@@ -146,6 +146,10 @@ COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compres
 # ===========
 # = Logging =
 # ===========
+if os.environ.get('DEBUG', ''):
+    DEBUG = bool(int(os.environ['DEBUG']))
+    TEMPLATE_DEBUG = DEBUG
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -165,7 +169,7 @@ LOGGING = {
 for app in TABBYCAT_APPS:
     LOGGING['loggers'][app] = {
         'handlers': ['console'],
-        'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG' if DEBUG else 'INFO'),
     }
 
 
@@ -212,10 +216,6 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
             }
         }
-
-if os.environ.get('DEBUG', ''):
-    DEBUG = bool(int(os.environ['DEBUG']))
-    TEMPLATE_DEBUG = DEBUG
 
 # ===========================
 # = Local Overrides
