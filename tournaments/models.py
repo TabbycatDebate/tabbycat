@@ -88,14 +88,6 @@ class Tournament(models.Model):
     def break_rounds(self):
         return self.round_set.filter(stage=Round.STAGE_ELIMINATION)
 
-    def create_next_round(self):
-        curr = self.current_round
-        next = curr.seq + 1
-        r = Round(name="Round %d" % next, seq=next, type=Round.DRAW_POWERPAIRED,
-                  tournament=self)
-        r.save()
-        r.activate_all()
-
     def advance_round(self):
         next_round_seq = self.current_round.seq + 1
         next_round = Round.objects.get(seq=next_round_seq, tournament=self)
