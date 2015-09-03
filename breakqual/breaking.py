@@ -117,6 +117,7 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
     institution_cap = category.institution_cap
 
     prev_rank_value = (None, None) # (points, speaks)
+    prev_break_rank_value = (None, None)
     cur_rank = 0
     breaking_teams = list()
     breaking_teams_to_create = list()
@@ -137,8 +138,7 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
 
         # Compute overall rank
         rank_value = (team.points, team.speaker_score)
-        is_new_rank = rank_value != prev_rank_value
-        if is_new_rank:
+        if rank_value != prev_rank_value:
             # if we have enough teams, we're done
             if len(breaking_teams) >= break_size:
                 break
@@ -166,8 +166,9 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
         else:
             # Compute break rank
             cur_break_seq += 1
-            if is_new_rank:
+            if rank_value != prev_break_rank_value:
                 cur_break_rank = cur_break_seq
+                prev_break_rank_value = rank_value
             bt.break_rank = cur_break_rank
 
             breaking_teams.append(team)

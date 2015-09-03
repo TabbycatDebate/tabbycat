@@ -18,7 +18,8 @@ def public_breaking_teams(request, t, category):
     bc = get_object_or_404(models.BreakCategory, slug=category)
     teams = breaking.get_breaking_teams(bc, include_all=True, include_categories=t.config.get('public_break_categories'))
     generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
-    return r2r(request, 'public_breaking_teams.html', dict(teams=teams, category=bc, generated=generated))
+    metrics = relevant_team_standings_metrics(t)
+    return r2r(request, 'public_breaking_teams.html', dict(teams=teams, category=bc, generated=generated, metrics=metrics))
 
 @admin_required
 @tournament_view
@@ -37,7 +38,8 @@ def breaking_teams(request, t, category):
         form = forms.BreakingTeamsForm(bc)
 
     generated = models.BreakingTeam.objects.filter(break_category__tournament=t).exists()
-    return r2r(request, 'breaking_teams.html', dict(form=form, category=bc, generated=generated))
+    metrics = relevant_team_standings_metrics(t)
+    return r2r(request, 'breaking_teams.html', dict(form=form, category=bc, generated=generated, metrics=metrics))
 
 
 @expect_post
