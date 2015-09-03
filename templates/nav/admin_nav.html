@@ -70,15 +70,17 @@
       </a>
       <ul class="dropdown-menu">
         <li class="dropdown-header">Draw Status:
-          {% if r.draw_status == r.STATUS_RELEASED %}
-            <span class="text-success">Released</span>
-          {% elif r.draw_status == r.STATUS_CONFIRMED %}
-            <span class="text-primary">Confirmed</span>
-          {% elif r.draw_status == r.STATUS_DRAFT %}
-            <span class="text-warning">Draft</span>
-          {% elif r.draw_status == 0 %}
-            <span class="">None</span>
-          {% endif %}
+          <span class="
+            {% if r.draw_status == r.STATUS_RELEASED %}
+              text-success
+            {% elif r.draw_status == r.STATUS_CONFIRMED %}
+              text-primary
+            {% elif r.draw_status == r.STATUS_DRAFT %}
+              text-warning
+            {% endif %}
+          ">
+            {{ r.get_draw_status_display }}
+          </span>
         </li>
         <li class="divider"></li>
         <li><a href="{% round_url team_availability r %}">Team Checkins</a></li>

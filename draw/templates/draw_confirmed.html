@@ -45,9 +45,9 @@
   <div class="btn-group">
     <a class="btn btn-default form-control" href="{% round_url draw_display_by_venue %}">Show by Venue</a>
     <a class="btn btn-default form-control" href="{% round_url draw_display_by_team %}">Show by Team</a>
-    {% if round.draw_status = 10 %}
+    {% if round.draw_status = round.STATUS_CONFIRMED %}
       <button class="btn btn-success form-control" id="release_draw">Release Draw to Public</button>
-    {% elif round.draw_status = 99 %}
+    {% elif round.draw_status = round.STATUS_RELEASED %}
       <button class="btn btn-danger form-control" id="unrelease_draw">Unrelease Draw to Public</button>
     {% endif %}
   </div>
