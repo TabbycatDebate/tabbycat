@@ -54,11 +54,17 @@ class Command(RoundCommand):
         }
 
     def handle(self, *args, **options):
+        if not self.get_rounds(options) and not options["debates"]:
+            raise CommandError("No rounds or debates were given. (Use --help for more info.)")
+
         super(Command, self).handle(*args, **options) # handles rounds
 
-        for tournament in self.get_tournaments(**options):
+        for tournament in self.get_tournaments(options):
             for debate_id in options["debates"]:
-                debate = Debate.objects.get(round__tournament=tournament, id=debate_id)
+                try:
+                    debate = Debate.objects.get(round__tournament=tournament, id=debate_id)
+                except Debate.DoesNotExist:
+                    self.stdout.write(self.style.WARNING("Warning: There is no debate with id {:d} for tournament {!r}, skipping".format(debate_id, tournament.slug)))
                 self.handle_debate(debate, **options)
 
     def handle_round(self, round, **options):

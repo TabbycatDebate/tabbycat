@@ -24,25 +24,31 @@ class TournamentCommand(BaseCommand):
         tournaments_group.add_argument("-t", "--tournament", type=str, action="append", dest="tournament_selection", metavar="TOURNAMENT",
                 help="Slug of tournament(s), required if there is more than one tournament. "
                 "Can be specified multiple times to run the command on multiple tournaments.")
-        tournaments_group.add_argument("--all-tournaments", action="store_true", help="Run on all tournaments in the database.")
+        tournaments_group.add_argument("--all-tournaments", action="store_true", help="Run on all tournaments in the database. "
+                "--tournament options are ignored if this is used.")
 
     def _set_log_level(self, **options):
         loglevel = [logging.WARNING, logging.INFO, logging.DEBUG, logging.DEBUG][options["verbosity"]]
         _set_log_level(loglevel)
 
-    def get_tournaments(self, **options):
-        """Returns a list of tournaments implied by command-line arguments."""
+    def get_tournaments(self, options):
+        """Returns a list of tournaments implied by command-line arguments.
+        Implementation note: For caching purposes, this stores the result in
+        the "__tournaments__" key of the options dict."""
 
-        if options["all_tournaments"]:
+        if "__tournaments__" in options:
+            pass
+
+        elif options["all_tournaments"]:
             if tournament_option:
                 raise CommandError("You can't use --tournament and --all-tournaments together.")
-            return list(Tournament.objects.all())
+            options["__tournaments__"] = list(Tournament.objects.all())
 
         elif not options["tournament_selection"]:
             # if there is only one tournament, that'll do.
             if Tournament.objects.count() > 1:
                 raise CommandError("You must specify a tournament, because there is more than one tournament in the database.")
-            return [Tournament.objects.get()]
+            options["__tournaments__"] = [Tournament.objects.get()]
 
         else:
             tournaments = list()
@@ -61,11 +67,13 @@ class TournamentCommand(BaseCommand):
                         s="" if len(bad_slugs) == 1 else "s",
                         slugs=", ".join(bad_slugs)))
 
-            return tournaments
+            options["__tournaments__"] = tournaments
+
+        return options["__tournaments__"]
 
     def handle(self, *args, **options):
         self._set_log_level(**options)
-        for tournament in self.get_tournaments(**options):
+        for tournament in self.get_tournaments(options):
             self.handle_tournament(tournament, **options)
 
     def handle_tournament(self, tournament, **options):
@@ -100,14 +108,15 @@ class RoundCommand(TournamentCommand):
 
     def add_arguments(self, parser):
         super(RoundCommand, self).add_arguments(parser)
-        rounds_group = parser.add_argument_group("round selection")
+        rounds_group = parser.add_argument_group("round selection", "Options to select rounds on which to run command. "
+                "Every option adds the associated round(s); duplicates are not filtered out. So, for example, "
+                "'--all-rounds 2' will run on round 2 twice.")
         rounds_group.add_argument("round_selection", type=str, nargs='+' if self.rounds_required else '*', metavar="round",
                 help="Seq numbers (if integers) or abbreviations (if not "
                 "integers) of rounds. Multiple rounds can be specified. If a "
                 "round's abbreviation is an integer, only its seq number may be "
                 "used. If multiple tournaments are specified, the rounds must "
-                "exist in every tournament. No attempt is made to filter out "
-                "duplicates.")
+                "exist in every tournament.")
 
         if self.confirm_round_destruction:
             rounds_group.add_argument("--confirm", type=str, nargs='+', metavar="ROUND", help="If specified with "
@@ -130,12 +139,19 @@ class RoundCommand(TournamentCommand):
         try:
             return tournament.round_set.get(**{spectype: specifier})
         except Round.DoesNotExist:
-            raise CommandError("The tournament {tournament:r} has no round with {type} {spec:r}".format(
+            raise CommandError("The tournament {tournament!r} has no round with {type} {spec!r}".format(
                     tournament=tournament.slug, type=spectype, spec=specifier))
 
-    def get_rounds(self, **options):
+    def get_rounds(self, options):
+        """Returns a list of rounds implied by command-line arguments.
+        Implementation note: For caching purposes, this stores the result in
+        the "__rounds__" key of the options dict."""
+
+        if "__rounds__" in options:
+            return options["__rounds__"]
+
         rounds = list()
-        for tournament in self.get_tournaments(**options):
+        for tournament in self.get_tournaments(options):
             rounds.extend(self._get_round(tournament, spec) for spec in options["round_selection"])
             if options.get("all_rounds", False):
                 rounds.extend(tournament.round_set.all())
@@ -144,7 +160,9 @@ class RoundCommand(TournamentCommand):
             if options.get("break_rounds", False):
                 rounds.extend(tournament.break_rounds.all())
         if not rounds and self.rounds_required:
-            raise CommandError("No rounds were given.")
+            raise CommandError("No rounds were given. (Use --help for more info.)")
+
+        options["__rounds__"] = rounds
         return rounds
 
     def _confirm_rounds(self, rounds, **options):
@@ -161,7 +179,7 @@ class RoundCommand(TournamentCommand):
 
     def handle(self, *args, **options):
         self._set_log_level(**options)
-        rounds = self.get_rounds(**options)
+        rounds = self.get_rounds(options)
         if self.confirm_round_destruction:
             self._confirm_rounds(rounds, **options)
         for round in rounds:

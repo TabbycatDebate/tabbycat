@@ -25,7 +25,7 @@ class Command(RoundCommand):
 
         parser.add_argument("--clean", help="Remove all associated ballot sets first", action="store_true")
         parser.add_argument("--create-user", help="Create user if it doesn't exist", action="store_true")
-        parser.add_argument("-N", "--num-ballots", type=int, help="Number of ballot sets to add per round (default all) or debate (default 1)", default=None)
+        parser.add_argument("-n", "--num-ballots", type=int, help="Number of ballot sets to add per round (default all) or debate (default 1)", default=None)
 
         status = parser.add_mutually_exclusive_group(required=True)
         status.add_argument("-D", "--discarded", action="store_true", help="Make added ballot sets discarded")
@@ -57,11 +57,17 @@ class Command(RoundCommand):
         }
 
     def handle(self, *args, **options):
+        if not self.get_rounds(options) and not options["debates"]:
+            raise CommandError("No rounds or debates were given. (Use --help for more info.)")
+
         super(Command, self).handle(*args, **options) # handles rounds
 
-        for tournament in self.get_tournaments(**options):
+        for tournament in self.get_tournaments(options):
             for debate_id in options["debates"]:
-                debate = Debate.objects.get(round__tournament=tournament, id=debate_id)
+                try:
+                    debate = Debate.objects.get(round__tournament=tournament, id=debate_id)
+                except Debate.DoesNotExist:
+                    self.stdout.write(self.style.WARNING("Warning: There is no debate with id {:d} for tournament {!r}, skipping".format(debate_id, tournament.slug)))
                 self.handle_debate(debate, **options)
 
     def handle_round(self, round, **options):
@@ -69,11 +75,12 @@ class Command(RoundCommand):
             self.stdout.write(self.style.WARNING("Deleting all ballot sets for round {}...".format(round.name)))
             delete_all_ballotsets_for_round(round)
 
-        self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot sets for round {}...".format(round.name)))
         try:
             if options["num_ballots"] is not None:
-                add_ballotsets_to_round_partial(round, options["num_ballots"], **ballotset_kwargs)
+                self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot sets for {:d} randomly-chosen debates in round {}...".format(options["num_ballots"], round.name)))
+                add_ballotsets_to_round_partial(round, options["num_ballots"], **self.ballotset_kwargs(options))
             else:
+                self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot sets for all debates in round {}...".format(round.name)))
                 add_ballotsets_to_round(round, **self.ballotset_kwargs(options))
         except ValueError as e:
             raise CommandError(e)
