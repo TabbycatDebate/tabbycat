@@ -10,6 +10,7 @@ class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
 
 admin.site.register(models.AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuestionAdmin)
 
+
 class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
     model = NotImplemented
     fields = ('question', 'answer')
@@ -20,7 +21,9 @@ class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
             kwargs["queryset"] = models.AdjudicatorFeedbackQuestion.objects.filter(answer_type__in=models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE[self.model])
         return super(BaseAdjudicatorFeedbackAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
+
 class RoundListFilter(admin.SimpleListFilter):
+    """Filters AdjudicatorFeedbacks by round."""
     title = "round"
     parameter_name = "round"
 
@@ -30,6 +33,7 @@ class RoundListFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         return queryset.filter(source_team__debate__round_id=self.value()) | queryset.filter(source_adjudicator__debate__round_id=self.value())
+
 
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'source_adjudicator', 'source_team', 'confirmed', 'score', 'version')

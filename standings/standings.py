@@ -110,7 +110,7 @@ def _add_who_beat_whom(teams, round, keys):
         if round is not None:
             ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)
         ts = ts.aggregate(Sum('points'))
-        print("who beat whom, {0}{3} vs {1}{4}: {2}".format(team.short_name, other.short_name, ts["points__sum"], key(team), key(other)))
+        logger.info("who beat whom, {0}{3} vs {1}{4}: {2}".format(team.short_name, other.short_name, ts["points__sum"], key(team), key(other)))
         return ts["points__sum"] or 0
 
     for team in teams:
