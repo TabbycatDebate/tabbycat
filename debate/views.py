@@ -455,7 +455,7 @@ def public_side_allocations(request, t):
     for tpa in TeamPositionAllocation.objects.all():
         tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
     for team in teams:
-        team.side_allocations = [tpas.get((team.id, round.id), "-") for round in rounds]
+        team.side_allocations = [tpas.get((team.id, round.seq), "-") for round in rounds]
     return r2r(request, "public/public_side_allocations.html", dict(teams=teams, rounds=rounds))
 
 ## Tab
