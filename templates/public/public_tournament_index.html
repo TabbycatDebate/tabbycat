@@ -36,6 +36,11 @@
           <a href="{% tournament_url public_motions_tab %}">Motions Tab</a>
         </li>
       {% endif %}
+      {% if public_side_allocations %}
+        <li class="list-group-item">
+          <a href="{% tournament_url public_side_allocations %}">Sides</a>
+        </li>
+      {% endif %}
       {% if public_draw > 0  and tab_released == 0 and show_all_draws == 0 %}
         <li class="list-group-item"><a class="public-draw-nav" href="{% tournament_url public_draw %}">
           Draw for {{ current_round.name }}
@@ -48,7 +53,8 @@
       {% endif %}
       {% if public_divisions > 0 %}
         <li class="list-group-item">
-          <a href="{% tournament_url public_divisions %}">Divisions</a></li>
+          <a href="{% tournament_url public_divisions %}">Divisions</a>
+        </li>
       {% endif %}
       {% if public_motions > 0 %}
         <li class="list-group-item">
