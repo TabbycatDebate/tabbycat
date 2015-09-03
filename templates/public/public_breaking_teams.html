@@ -23,6 +23,15 @@
           {% endif %}
           <th>Wins</th>
           <th>Total speaker score</th>
+          {% if metrics.draw_strength %}
+            <th>Draw strength</th>
+          {% endif %}
+          {% if metrics.sum_of_margins %}
+            <th>Sum of margins</th>
+          {% endif %}
+          {% if metrics.who_beat_whom %}
+            <th>Who beat whom</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -48,6 +57,15 @@
           <td>
             {{ team.speaker_score|stringformat:".2f" }}
           </td>
+          {% if metrics.draw_strength %}
+            <td>{{ team.draw_strength }}</td>
+          {% endif %}
+          {% if metrics.sum_of_margins %}
+            <td>{{ team.margins|stringformat:".2f" }}</td>
+          {% endif %}
+          {% if metrics.who_beat_whom %}
+            <td>{{ team.who_beat_whom_display }}</td>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>
