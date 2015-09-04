@@ -4,7 +4,6 @@ import math
 import copy
 from .one_up_one_down import OneUpOneDownSwapper
 from warnings import warn
-import collections
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
 DRAW_FLAG_DESCRIPTIONS = {
@@ -226,7 +225,7 @@ class BaseDrawGenerator(object):
 
     def get_option_function(self, option_name, option_dict):
         option = self.options[option_name]
-        if isinstance(option, collections.Callable):
+        if callable(option):
             return option
         try:
             return getattr(self, option_dict[option])
