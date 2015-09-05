@@ -258,7 +258,7 @@ class BaseDrawGenerator(object):
         elif self.options["side_allocations"] not in ["none", "preallocated"]:
             raise ValueError("side_allocations setting not recognized: {0!r}".format(self.options["side_allocations"]))
 
-    def make_draw(self):
+    def generate(self):
         """Abstract method."""
         raise NotImplementedError
 
@@ -311,7 +311,7 @@ class RandomDrawGenerator(BaseDrawGenerator):
 
     DEFAULT_OPTIONS = {"max_swap_attempts": 20, "avoid_conflicts": "off"}
 
-    def make_draw(self):
+    def generate(self):
         self._draw = self._make_initial_pairings()
         self.avoid_conflicts(self._draw) # operates in-place
         self.balance_sides(self._draw) # operates in-place
@@ -432,7 +432,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         super(PowerPairedDrawGenerator, self).__init__(*args, **kwargs)
         self.check_teams_for_attribute("points")
 
-    def make_draw(self):
+    def generate(self):
         self._brackets = self._make_raw_brackets()
         self.resolve_odd_brackets(self._brackets) # operates in-place
         self._pairings = self.generate_pairings(self._brackets)
@@ -971,7 +971,7 @@ class FirstEliminationDrawGenerator(BaseDrawGenerator):
         "break_size": 8,
     }
 
-    def make_draw(self):
+    def generate(self):
         # Determine who breaks
         break_size = self.options["break_size"]
         breaking_teams = self.teams[:break_size]
@@ -1002,7 +1002,7 @@ class FirstEliminationDrawGenerator(BaseDrawGenerator):
     def get_bypassing_teams(self):
         if hasattr(self, "_bypassing_teams"):
             return self._bypassing_teams
-        raise RuntimeError("get_bypassing_teams() must not be called before make_draw().")
+        raise RuntimeError("get_bypassing_teams() must not be called before generate().")
 
 
 class EliminationDrawGenerator(BaseDrawGenerator):
@@ -1016,7 +1016,7 @@ class EliminationDrawGenerator(BaseDrawGenerator):
     requires_prev_results = True
     draw_type = "elimination"
 
-    def make_draw(self):
+    def generate(self):
         # Check for argument sanity.
         num_teams = len(self.teams) + len(self.results)
         if num_teams != 1 << (num_teams.bit_length() - 1):
@@ -1050,7 +1050,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
     DEFAULT_OPTIONS = {"max_swap_attempts": 20, "avoid_conflicts": "off"}
 
-    def make_draw(self):
+    def generate(self):
         self._brackets = self._make_raw_brackets_from_divisions()
         # TODO: resolving brackets with odd numbers here (see resolve_odd_brackets)
         self._pairings = self.generate_pairings(self._brackets)
@@ -1203,6 +1203,6 @@ class ManualDrawGenerator(BaseDrawGenerator):
     requires_even_teams = False
     requires_prev_results = False
 
-    def make_draw(self):
+    def generate(self):
         self._draw = list()
         return self._draw

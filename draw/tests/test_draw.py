@@ -24,7 +24,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
         for i in range(100):
             teams = [TestTeam(*args, aff_count=0) for args in self.teams]
             self.rd = DrawGenerator("random", teams, avoid_conflicts="on")
-            _draw = self.rd.make_draw()
+            _draw = self.rd.generate()
             for pairing in _draw:
                 if pairing.aff_team.seen(pairing.neg_team) or \
                         pairing.neg_team.seen(pairing.aff_team) or \
@@ -428,7 +428,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
     def do_draw(self, standings, options):
         standings = [TestTeam(*args, **kwargs) for args, kwargs in standings]
         self.ppd = DrawGenerator("power_paired", standings, **options)
-        return self.ppd.make_draw()
+        return self.ppd.generate()
 
     def draw_test(self, standings_key, expected_key):
         standings = self.standings[standings_key]
@@ -740,7 +740,7 @@ class TestPartialEliminationDrawGenerator(unittest.TestCase):
     def run_draw(self, break_size, expected, exp_bypassing=None):
         teams = [TestTeam(*args) for args in self.teams]
         self.fed = DrawGenerator("first_elimination", teams, break_size=break_size)
-        pairings = self.fed.make_draw()
+        pairings = self.fed.generate()
         self.assertEqual([(p.aff_team.id, p.neg_team.id) for p in pairings], expected)
         if exp_bypassing is not None:
             bypassing = [t.id for t in self.fed.get_bypassing_teams()]
@@ -781,11 +781,11 @@ class TestEliminationDrawGenerator(unittest.TestCase):
         teams = self._teams(9, 11, 12)
         results = self._results(([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
         self.ed = DrawGenerator("elimination", teams, results)
-        self.assertRaises(RuntimeError, self.ed.make_draw)
+        self.assertRaises(RuntimeError, self.ed.generate)
 
     def run_draw(self, teams, results, expected):
         self.ed = DrawGenerator("elimination", teams, results)
-        pairings = self.ed.make_draw()
+        pairings = self.ed.generate()
         self.assertEqual([(p.aff_team.id, p.neg_team.id) for p in pairings], expected)
 
 if __name__ == '__main__':

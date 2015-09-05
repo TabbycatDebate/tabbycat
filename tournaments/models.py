@@ -321,7 +321,7 @@ class Round(models.Model):
             options["side_allocations"] = "balance"
 
         drawer = DrawGenerator(draw_type, teams, results=None, **options)
-        draw = drawer.make_draw()
+        draw = drawer.generate()
         self.make_debates(draw)
         self.draw_status = self.STATUS_DRAFT
         self.save()
