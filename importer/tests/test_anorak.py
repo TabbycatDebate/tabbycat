@@ -112,7 +112,7 @@ class TestImporterAnorak(TestCase):
         with self.assertRaises(TournamentDataImporterError) as cm:
             counts, errors = self.importer.import_adjudicators(f)
         self.assertEqual(len(cm.exception), 10)
-        self.assertItemsEqual([e.lineno for e in cm.exception.entries], (2, 5, 9, 10, 15, 16, 23, 24, 26, 28))
+        self.assertCountEqual([e.lineno for e in cm.exception.entries], (2, 5, 9, 10, 15, 16, 23, 24, 26, 28))
 
     def test_weird_choices_judges(self):
         self.test_speakers()

@@ -981,7 +981,7 @@ class FirstEliminationDrawGenerator(BaseDrawGenerator):
         self._bypassing_teams = breaking_teams[:bypassing]
         debating_teams = breaking_teams[-debating:]
         # Pair the debating teams
-        debates = len(debating_teams)/2
+        debates = len(debating_teams) // 2
         top = debating_teams[:debates]
         bottom = debating_teams[debates:]
         bottom.reverse()
@@ -1024,7 +1024,7 @@ class EliminationDrawGenerator(BaseDrawGenerator):
         self.results.sort(key=lambda x: x.room_rank)
         teams = list(self.teams)
         teams.extend([p.winner for p in self.results])
-        debates = len(teams)/2
+        debates = len(teams) // 2
         top = teams[:debates]
         bottom = teams[debates:]
         bottom.reverse()

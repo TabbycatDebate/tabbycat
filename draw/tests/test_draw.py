@@ -438,7 +438,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
             actual_teams = (actual.aff_team.id, actual.neg_team.id)
             expected_teams = (exp_aff, exp_neg)
             if same_affs:
-                self.assertItemsEqual(actual_teams, expected_teams)
+                self.assertCountEqual(actual_teams, expected_teams)
             else:
                 self.assertEqual(actual_teams, expected_teams)
             self.assertEqual(actual.flags, exp_flags)
@@ -699,7 +699,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             self.assertEqual([i in b2[5]["neg"] for i in [14, 15, 16]].count(True), 1)
             self.assertEqual(b2[4]["aff"], [3, 4])
             self.assertEqual([i in b2[4]["neg"] for i in [14, 15, 16]].count(True), 2)
-            self.assertItemsEqual(b2[5]["neg"] + b2[4]["neg"], [13, 14, 15, 16])
+            self.assertCountEqual(b2[5]["neg"] + b2[4]["neg"], [13, 14, 15, 16])
             self.assertEqual(b2[3]["aff"], [5, 6, 7, 8, 9])
             self.assertTrue(all(i in b2[3]["neg"] for i in [17, 18, 19]))
             self.assertEqual([i in b2[3]["neg"] for i in [20, 21, 22, 23, 24]].count(True), 2)
