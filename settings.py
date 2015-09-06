@@ -88,7 +88,6 @@ INSTALLED_APPS = (
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'compressor',
-    'cachalot',
     )
 
 
