@@ -1,4 +1,5 @@
 from django.db.models import Sum
+from django.db.models.expressions import RawSQL
 from results.models import TeamScore
 import random
 from operator import attrgetter
@@ -69,13 +70,13 @@ def _add_database_annotations(teams, round):
         AND "tournaments_round"."stage" = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
 
     if round is not None:
-        EXTRA_QUERY += """AND "tournaments_round"."seq" <= {round:d}""".format(round=round.seq)
+        EXTRA_QUERY += """ AND "tournaments_round"."seq" <= {round:d}""".format(round=round.seq)
 
-    return teams.extra({
-        "points": EXTRA_QUERY.format(field="points"),
-        "speaker_score": EXTRA_QUERY.format(field="score"),
-        "margins": EXTRA_QUERY.format(field="margin"),
-    }).distinct()
+    return teams.annotate(
+        points=RawSQL(EXTRA_QUERY.format(field="points"), ()),
+        speaker_score=RawSQL(EXTRA_QUERY.format(field="score"), ()),
+        margins=RawSQL(EXTRA_QUERY.format(field="margin"), ()),
+    ).distinct()
 
 def _add_draw_strength(teams, round):
     """Adds draw strength. Operates in-place."""
