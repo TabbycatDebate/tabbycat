@@ -17,8 +17,8 @@ class TeamStandingInfo:
         else:
             raise TypeError("'team' should be a object with 'id' attribute or an integer")
 
-        self.metrics = OrderedDict()
-        self.rankings = OrderedDict()
+        self.metrics = dict()
+        self.rankings = dict()
 
     @property
     def team(self):
@@ -42,28 +42,34 @@ class TeamStandings:
     by `TeamStandingsGenerator`."""
 
     def __init__(self, teams):
-        self._infos = {team: TeamStandingInfo(team) for team in teams}
-        self._ranked = False
+        self.infos = {team: TeamStandingInfo(team) for team in teams}
+        self.ranked = False
 
     @property
     def standings(self):
-        if self._ranked:
+        if self.ranked:
             return self._standings
         else:
-            raise AttributeError("TeamStandings.standings can't be accessed before TeamStandings.run_ranking() is called.")
+            raise AttributeError("TeamStandings.standings can't be accessed before sort() is called.")
 
     def __iter__(self):
         """Returns an iterator that iterates over constituent TeamStandingInfo
         objects in ranked order. Raises AttributeError if rankings have not yet
         been generated."""
-        return iter(self.standings)
+        if self.ranked:
+            return iter(self.standings)
+        else:
+            raise AttributeError("TeamStandings can't be iterated before sort() is called. Use infoview() for a dictview instead.")
+
+    def infoview(self):
+        return self.infos.values()
 
     def get_team_list(self):
         return [s.team for s in self.standings]
 
     def get_team_standing(self, team):
         try:
-            return self._infos[team]
+            return self.infos[team]
         except KeyError:
             raise ValueError("The team {!r} isn't in these standings.")
 
@@ -77,10 +83,10 @@ class TeamStandings:
             raise RuntimeError("Can't add rankings before TeamStandings object is sorted")
         self.get_team_standing(team).add_ranking(key, value)
 
-    def sort_teams(self, metrics):
-        key = lambda x: itemgetter(metrics)(x.metrics)
-        self._standings = sorted(self._infos.values(), key=key)
-        self._sorted = True
+    def sort(self, metrics):
+        key = lambda x: itemgetter(*metrics)(x.metrics)
+        self._standings = sorted(self.infos.values(), key=key)
+        self.ranked = True
 
 
 class TeamStandingsGenerator:

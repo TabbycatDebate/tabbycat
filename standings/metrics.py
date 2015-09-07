@@ -1,22 +1,23 @@
 from participants.models import Round
+import logging
+logger = logging.getLogger(__name__)
 
-_registry = {}
+registry = {}
 
 def register(name, annotator):
-    if name in _registry:
+    if name in registry:
         raise ValueError("There is already an annotator called {!r}".format(name))
-    _register[name] = annotator
+    registry[name] = annotator
 
 def get_annotator(name):
     try:
-        return _register[name]
+        return registry[name]
     except KeyError:
         raise ValueError("There is no annotator {!r}".format(name))
 
 class MetricAnnotator:
     name = NotImplemented
     type = None
-    dependencies = []
     adds = []
 
     def annotate(self, queryset, standings, round=None):
@@ -76,18 +77,21 @@ class TeamScoreQuerySetMetricAnnotator(MetricAnnotator):
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total number of points."""
     function = "SUM"
     field = "points"
     adds = ["points"]
 register("points", PointsMetricAnnotator)
 
 class SpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total speaker score."""
     function = "SUM"
     field = "score"
     adds = ["speaker_score"]
 register("speaker_score", SpeakerScoreMetricAnnotator)
 
 class MarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for sum of margins."""
     function = "SUM"
     field = "margin"
     adds = ["margin"]
@@ -95,12 +99,13 @@ register("margin", MarginMetricAnnotator)
 
 
 class DrawStrengthMetricAnnotator(MetricAnnotator):
-    dependencies = ["points"]
+    """Metric annotator for draw strength."""
     adds = ["draw_strength"]
 
     def annotate(self, queryset, standings, round=None):
 
         # QuerySets aren't evaluated until needed, so just construct now
+        # TODO consider forcing this to evaluate in order to get one big db hit
         full_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
                 queryset[0].tournament.team_set.all(), "points", "SUM", round, "points")
 
@@ -128,11 +133,38 @@ register("num_adjs", PointsMetricAnnotator)
 
 
 class WhoBeatWhomMetricAnnotator(MetricAnnotator):
-    def __init__(self, key):
-        self.key = key
+
+    def __init__(self, keys):
+        self.keys = keys
+        self.adds = ["wbw" + i for i in range(len(keys), start=1)]
+        self.adds.append("who_beat_whom_display")
+        self.keyfuncs = [lambda x: itemgetter(*key)(x.metrics) for key in keys]
 
     def annotate(self, queryset, standings, round=None):
-        pass
+
+        def who_beat_whom(tsi, key):
+            equal_teams = [x for x in standings if key(x) == key(tsi)]
+            if len(equal_teams) != 2:
+                return "n/a" # fail fast if attempt to compare with an int
+            equal_teams.remove(tsi)
+            other = equal_teams[0]
+            ts = TeamScore.objects.filter(
+                    ballot_submission__confirmed=True,
+                    debate_team__team=team,
+                    debate_team__debate__debateteam__team=other)
+            if round is not None:
+                ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)
+            ts = ts.aggregate(Sum('points'))
+            logger.info("who beat whom, {0} {3} vs {1} {4}: {2}".format(team.short_name, other.short_name, ts["points__sum"], key(team), key(other)))
+            return ts["points__sum"] or 0
+
+        for tsi in standings.infoview():
+            wbws = []
+            for i, key in enumerate(self.keyfuncs, start=1):
+                wbw = who_beat_whom(tsi, key)
+                tsi.add_metric("wbw" + str(i), wbw)
+                wbws.append(wbw)
+            tsi.add_metric("who_beat_whom_display", ", ".join(str(wbw) for wbw in wbws))
 
 register("wbw", PointsMetricAnnotator)
 
