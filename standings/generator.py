@@ -1,6 +1,8 @@
 from collections import OrderedDict
 from operator import itemgetter
 from participants.models import Team
+from .metrics import METRIC_ANNOTATORS, WhoBeatWhomMetricAnnotator, WhoBeatWhomDisplayMetricAnnotator
+import random
 
 class TeamStandingInfo:
     """Stores standing information for a team."""
@@ -47,19 +49,14 @@ class TeamStandings:
 
     @property
     def standings(self):
-        if self.ranked:
-            return self._standings
-        else:
-            raise AttributeError("TeamStandings.standings can't be accessed before sort() is called.")
+        assert self.ranked, "sort() must be called before accessing standings"
+        return self._standings
 
     def __iter__(self):
         """Returns an iterator that iterates over constituent TeamStandingInfo
         objects in ranked order. Raises AttributeError if rankings have not yet
         been generated."""
-        if self.ranked:
-            return iter(self.standings)
-        else:
-            raise AttributeError("TeamStandings can't be iterated before sort() is called. Use infoview() for a dictview instead.")
+        return iter(self.standings)
 
     def infoview(self):
         return self.infos.values()
@@ -74,50 +71,97 @@ class TeamStandings:
             raise ValueError("The team {!r} isn't in these standings.")
 
     def add_metric(self, team, key, value):
-        if self._sorted:
-            raise RuntimeError("Can't add metrics once TeamStandings object is sorted")
+        assert not self.ranked, "Can't add metrics once TeamStandings object is sorted"
         self.get_team_standing(team).add_metric(key, value)
 
     def add_ranking(self, team, key, value):
-        if not self._sorted:
-            raise RuntimeError("Can't add rankings before TeamStandings object is sorted")
+        assert self.ranked, "Can't add rankings before TeamStandings object is sorted"
         self.get_team_standing(team).add_ranking(key, value)
 
-    def sort(self, metrics):
-        key = lambda x: itemgetter(*metrics)(x.metrics)
-        self._standings = sorted(self.infos.values(), key=key)
+    def sort(self, precedence, tiebreak_func=None):
+        self._standings = list(self.infos.values())
+        if tiebreak_func:
+            tiebreak_func(self._standings)
+        self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics))
         self.ranked = True
 
 
 class TeamStandingsGenerator:
 
     DEFAULT_OPTIONS = {
-        "last_resort": "random",
+        "tiebreak": "random",
+    }
+
+    TIEBREAK_FUNCTIONS = {
+        "random": random.shuffle,
+        "alpha" : lambda x: x.sort(key=lambda y: y.team.short_name),
     }
 
     def __init__(self, metrics, rankings, **options):
 
-        # set up options dictionary
+        # Set up options dictionary
         self.options = DEFAULT_OPTIONS.copy()
         for key in options:
             if key not in self.options:
                 raise ValueError("Unrecognized option: {0}".format(key))
         self.options.update(options)
 
+        # Set up metric annotators
+        self._interpret_metrics(metrics)
+
+        # Set up ranking annotators
+
+    def _interpret_metrics(self, metrics):
+        """Given a list of metrics, sets:
+            - `self.precedence` to a copy of `metrics` with who-beat-whoms numbered
+            - `self.metric_annotators` to the appropriate metric annotators
+        For example:
+            ('points', 'wbw', 'speaks', 'wbw', 'margins')
+        sets:
+        ```
+            self.precedence = ['points', 'wbw1', 'speaks', 'wbw2', 'margins']
+            self.metric_annotators = [PointsMetricAnnotator(), WhoBeatWhomMetricAnnotator(1, ('points',)) ...]
+        ```
+        """
+        self.precedence = list()
+        self.metric_annotators = list()
+        counter = 1
+
+        for i, metric in enumerate(metrics):
+            if metric == "wbw":
+                self.precedence.append("wbw" + str(counter))
+                wbw_keys = tuple(m for m in precedence[0:i] if m != "wbw")
+                self.metric_annotators.append(WhoBeatWhomMetricAnnotator(counter, wbw_keys))
+                counter += 1
+            else:
+                self.precedence.append(metric)
+                self.metric_annotators.append(METRIC_ANNOTATORS[metric]())
+
+        if "wbw" in metrics:
+            self.metric_annotators.append(WhoBeatWhomDisplayMetricAnnotator())
+
+    def _interpret_rankings(self, rankings):
 
 
-    def apply_annotation(self, queryset):
-        pass
+    @property
+    def _tiebreak_func(self):
+        return self.TIEBREAK_FUNCTIONS[self.options["tiebreak"]]
 
-    def generate(self, queryset):
+    def generate(self, queryset, round=None):
         """Generates standings for the teams in queryset.
 
-        'queryset' can be a QuerySet or Manager object, and should return just
-        those teams of interest for these standings.
+        `queryset` can be a QuerySet or Manager object, and should return just
+            those teams of interest for these standings.
+        `round`, if specified, is the round for which to generate the standings.
+            (That is, rounds after `round` are excluded from the standings.)
         """
-
-        if all_queryset is None:
-            all_queryset = queryset
 
         standings = TeamStandings()
 
+        for annotator in self.metric_annotators:
+            annotator(queryset, standings, round)
+
+        standings.sort(self.precedence, self._tiebreak_func)
+
+        for annotator in self.ranking_annotators:
+            annotator(standings)
