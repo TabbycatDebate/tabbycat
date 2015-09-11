@@ -1,16 +1,54 @@
+"""Metric annotators for the standings generator.
+
+Each metric annotator is responsible for computing a particular metric for each
+team and annotating team standings with them, for example, number of wins
+(points), or draw strength.
+"""
+
+from django.db.models import Sum
+from django.db.models.expressions import RawSQL
 from participants.models import Round
+from results.models import TeamScore
+from operator import itemgetter
+
+import random
 import logging
 logger = logging.getLogger(__name__)
 
-METRIC_ANNOTATORS = {
-    "points": PointsMetricAnnotator,
-    "margin": MarginMetricAnnotator,
-    "draw_strength": DrawStrengthMetricAnnotator,
-    "speaker_score": SpeakerScoreMetricAnnotator,
-    "num_adjs": NumberOfAdjudicatorsMetricAnnotator,
+registry = {
+    "points"        : PointsMetricAnnotator,
+    "margin"        : MarginMetricAnnotator,
+    "draw_strength" : DrawStrengthMetricAnnotator,
+    "speaker_score" : SpeakerScoreMetricAnnotator,
+    "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
+    "wbw"           : WhoBeatWhomMetricAnnotator,
 }
 
-class MetricAnnotator:
+def metricgetter(*items):
+    """Returns a callable object that fetches `item` from its operand's
+    `metrics` attribute. If multiple items are specified, returns a tuple.
+    For example:
+     - After `f = metricgetter("a")`, the call `f(x)` returns `x.metrics["a"]`.
+     - After `g = metricgetter(4, 9)`, the call `g(x)` returns `(x.metrics[4], x.metrics[9])`.
+    """
+    return lambda x: itemgetter(*items)(x.metrics)
+
+def MetricAnnotator(name, *args, **kwargs):
+    """Factory function. Returns an instance of an appropriate subclass of
+    BaseMetricAnnotator, with the given arguments passed to the constructor."""
+    klass = registry[name]
+    return klass(*args, **kwargs)
+
+
+class BaseMetricAnnotator:
+    """Base class for all metric annotators.
+
+    A metric annotator is a class that adds metrics to a TeamStandings object.
+    It has one method that subclasses must implement: `annotate()`.
+
+    The default constructor does nothing, but subclasses may have constructors
+    that initialise themselves with parameters."""
+
     adds = NotImplemented
 
     def annotate(self, queryset, standings, round=None):
@@ -22,9 +60,10 @@ class MetricAnnotator:
         `round`, if specified, is a `Round` object that is assumed to be in the
             relevant tournament.
         """
-        raise NotImplementedError("MetricAnnotator subclasses must implement annotate()")
+        raise NotImplementedError("BaseMetricAnnotator subclasses must implement annotate()")
 
-class TeamScoreQuerySetMetricAnnotator(MetricAnnotator):
+
+class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations
     of TeamScore instances.
 
@@ -88,7 +127,7 @@ class MarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     adds = ["margin"]
 
 
-class DrawStrengthMetricAnnotator(MetricAnnotator):
+class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
     """Metric annotator for draw strength."""
     adds = ["draw_strength"]
 
@@ -105,16 +144,20 @@ class DrawStrengthMetricAnnotator(MetricAnnotator):
                 draw_strength += full_queryset.get(id=dt.opposition.team_id).points
             standings.add_metric(team, "draw_strength", draw_strength)
 
-register("draw_strength", PointsMetricAnnotator)
+
+class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
+    """Metric annotator for number of adjudicators."""
+
+    def __init__(self, adjs_per_debate=3):
+        self.adjs_per_debate = 3
+
+    def annotate(self, queryset, standings, round=None):
+        pass
 
 
-class NumberOfAdjudicatorsMetricAnnotator(MetricAnnotator):
-    pass
-
-
-class WhoBeatWhomMetricAnnotator(MetricAnnotator):
-    """Adds a who-beat-whom metric. Use once for every who-beat-whom in the
-    precedence."""
+class WhoBeatWhomMetricAnnotator(BaseMetricAnnotator):
+    """Metric annotator for who-beat-whom. Use once for every who-beat-whom in
+    the precedence."""
 
     def __init__(self, index, keys):
         self.index = index
@@ -126,7 +169,7 @@ class WhoBeatWhomMetricAnnotator(MetricAnnotator):
         return [self.metricname]
 
     def annotate(self, queryset, standings, round=None):
-        key = lambda x: itemgetter(*self.keys)(x.metrics)
+        key = metricgetter(*self.keys)
 
         def who_beat_whom(tsi):
             equal_teams = [x for x in standings if key(x) == key(tsi)]
@@ -147,15 +190,3 @@ class WhoBeatWhomMetricAnnotator(MetricAnnotator):
         for tsi in standings.infoview():
             wbw = who_beat_whom(tsi)
             tsi.add_metric(self.metricname, wbw)
-
-
-class WhoBeatWhomDisplayMetricAnnotator(MetricAnnotator):
-    """Adds the 'who_beat_whom_display' annotation. Should be run after all
-    WhoBeatWhomMetricAnnotators are run."""
-    adds = ["who_beat_whom_display"]
-
-    def annotate(self, queryset, standings, round=None):
-        for tsi in standings.infoview():
-            wbws = [(k, str(v)) for k, v in tsi.metrics if k.startswith("wbw") and k[3:].isdigit()]
-            wbws.sort(key=itemgetter(0))
-            tsi.add_metric("who_beat_whom_display", ", ".join(i[1] for i in wbws))

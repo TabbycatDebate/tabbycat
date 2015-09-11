@@ -1,8 +1,16 @@
+"""Standings generator.
+
+The main engine for generating team standings."""
+
 from collections import OrderedDict
 from operator import itemgetter
 from participants.models import Team
-from .metrics import METRIC_ANNOTATORS, WhoBeatWhomMetricAnnotator, WhoBeatWhomDisplayMetricAnnotator
+from .metrics import MetricAnnotator
+from .ranking import RankAnnotator
 import random
+
+class StandingsError(RuntimeError):
+    pass
 
 class TeamStandingInfo:
     """Stores standing information for a team."""
@@ -22,6 +30,19 @@ class TeamStandingInfo:
         self.metrics = dict()
         self.rankings = dict()
 
+        class TeamStandingInfoMetricLists:
+            """Supports item lookup only. Finds all metrics that start with the
+            requested metric name and have a numeric suffix, and returns a list
+            of them, sorted by the numeric suffix. For example, if a
+            `TeamStandingInfo` object `tsi` has metrics `wbw1`, `wbw3`, `wbw4`,
+            then `tsi.metric_lists["wbw"]` returns `[tsi.metrics["wbw1"],
+            tsi.metrics["wbw3"], tsi.metrics["wbw4"]]`."""
+            def __getitem__(this, key):
+                metrics = [k for k in self.metrics.keys() if k.startswith(key) and k[len(key):].isdigit()]
+                metrics.sort()
+                return [self.metrics[m] for m in metrics]
+        self.metric_lists = TeamStandingInfoMetricLists()
+
     @property
     def team(self):
         if not self._team:
@@ -29,12 +50,12 @@ class TeamStandingInfo:
         return self._team
 
     def add_metric(self, name, value):
-        if name in metrics:
+        if name in self.metrics:
             raise KeyError("There is already a metric {!r} for this team", name)
         self.metrics[name] = value
 
     def add_ranking(self, name, value):
-        if name in ranking:
+        if name in self.ranking:
             raise KeyError("There is already a ranking {!r} for this team", name)
         self.rankings[name] = value
 
@@ -46,6 +67,10 @@ class TeamStandings:
     def __init__(self, teams):
         self.infos = {team: TeamStandingInfo(team) for team in teams}
         self.ranked = False
+
+        self.metrics_added = list()
+        self.rankings_added = list()
+        self.general_added = list()
 
     @property
     def standings(self):
@@ -70,13 +95,9 @@ class TeamStandings:
         except KeyError:
             raise ValueError("The team {!r} isn't in these standings.")
 
-    def add_metric(self, team, key, value):
+    def add_metric_to_team(self, team, key, value):
         assert not self.ranked, "Can't add metrics once TeamStandings object is sorted"
         self.get_team_standing(team).add_metric(key, value)
-
-    def add_ranking(self, team, key, value):
-        assert self.ranked, "Can't add rankings before TeamStandings object is sorted"
-        self.get_team_standing(team).add_ranking(key, value)
 
     def sort(self, precedence, tiebreak_func=None):
         self._standings = list(self.infos.values())
@@ -93,8 +114,9 @@ class TeamStandingsGenerator:
     }
 
     TIEBREAK_FUNCTIONS = {
-        "random": random.shuffle,
-        "alpha" : lambda x: x.sort(key=lambda y: y.team.short_name),
+        "random"     : random.shuffle,
+        "shortname"  : lambda x: x.sort(key=lambda y: y.team.short_name),
+        "institution": lambda x: x.sort(key=lambda y: y.team.institution.name)
     }
 
     def __init__(self, metrics, rankings, **options):
@@ -106,10 +128,11 @@ class TeamStandingsGenerator:
                 raise ValueError("Unrecognized option: {0}".format(key))
         self.options.update(options)
 
-        # Set up metric annotators
+        # Set up annotators
         self._interpret_metrics(metrics)
-
-        # Set up ranking annotators
+        self._interpret_rankings(rankings)
+        self._check_annotators(self.metric_annotators, "metric")
+        self._check_annotators(self.ranking_annotators, "ranking")
 
     def _interpret_metrics(self, metrics):
         """Given a list of metrics, sets:
@@ -125,22 +148,38 @@ class TeamStandingsGenerator:
         """
         self.precedence = list()
         self.metric_annotators = list()
-        counter = 1
+        index = 1
 
         for i, metric in enumerate(metrics):
             if metric == "wbw":
-                self.precedence.append("wbw" + str(counter))
                 wbw_keys = tuple(m for m in precedence[0:i] if m != "wbw")
-                self.metric_annotators.append(WhoBeatWhomMetricAnnotator(counter, wbw_keys))
-                counter += 1
+                args = (index, wbw_keys)
+                index += 1
             else:
                 self.precedence.append(metric)
-                self.metric_annotators.append(METRIC_ANNOTATORS[metric]())
+                args = ()
 
-        if "wbw" in metrics:
-            self.metric_annotators.append(WhoBeatWhomDisplayMetricAnnotator())
+            annotator = MetricAnnotator(metric, *args)
+            self.metric_annotators.append(annotator)
+            self.precedence.extend(annotator.adds)
+
+    def _check_annotators(self, annotators, type_str):
+        """Checks the given list of annotators to ensure there are no conflicts.
+        A conflict occurs if two annotators would add annotations of the same
+        name."""
+        names = list()
+        for annotator in annotators:
+            names.extend(annotator.adds)
+        if len(names) != len(set(names)):
+            raise StandingsError("The same {} would be added twice:\n{!r}".format(type_str, names))
 
     def _interpret_rankings(self, rankings):
+        """Given a list of rankings, sets `self.ranking_annotators` to the
+        appropriate ranking annotators."""
+        self.ranking_annotators = list()
+
+        for ranking in enumerate(rankings):
+            self.ranking_annotators.append(RankAnnotator(ranking))
 
 
     @property
@@ -156,7 +195,7 @@ class TeamStandingsGenerator:
             (That is, rounds after `round` are excluded from the standings.)
         """
 
-        standings = TeamStandings()
+        standings = TeamStandings(queryset)
 
         for annotator in self.metric_annotators:
             annotator(queryset, standings, round)
@@ -165,3 +204,5 @@ class TeamStandingsGenerator:
 
         for annotator in self.ranking_annotators:
             annotator(standings)
+
+        return standings
