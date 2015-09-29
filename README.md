@@ -21,7 +21,7 @@ If you're interested in using, developing or otherwise following this software,
 
 #### Something missing?
 
-The system's currently optimized for Australs, but we're developing for all two-team formats. So if your tournament has different requirements to what we have (say, different draw rules or number of speakers), odds are we've already thought about it and it's on the [to-do list](https://github.com/czlee/tabbycat/issues).
+If your tournament has different requirements to what we have (say, different draw rules or number of speakers), odds are we've already thought about it and it's on the [to-do list](https://github.com/czlee/tabbycat/issues).
 
 That said, our to-do list is long. **We prioritise our work by the features that will be used first.** So if you're planning to use it for a tournament but need some changes, please don't be shy—get in touch with us (below) and we'll be more than happy to help. Please don't just wait for us to implement your requirement: we'd rather have the real-time feedback about which features are most useful!
 
