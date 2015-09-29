@@ -12,10 +12,11 @@ If you're interested in using, developing or otherwise following this software,
 - Enter data from multiple computers simultaneously
 - Easily deployable to [Heroku](https://www.heroku.com/) for a fast and free setup
 - Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts
-- A drag and drop interface for adjudicator allocation that automatically displays conflicts alongside gender and regional balance
-- A fully responsive design that automatically adapts to suit large screens, laptops, tablets, and phones
+- Drag and drop interface for adjudicator allocation, automatically highlights conflicts, gender and regional balance
+- Fully responsive design that automatically adapts to suit large screens, laptops, tablets, and phones
 - Configurable [draw generation rules](https://github.com/czlee/tabbycat/wiki/Draw-generation) and support for Australs and NZ [team standings rules](https://github.com/czlee/tabbycat/wiki/Team-standings-rules)
-- Confiugrable [adjudicator feedback questions](https://github.com/czlee/tabbycat/wiki/Adjudicator-feedback) and optional online submission of feedback and scoresheets
+- Confiugrable [adjudicator feedback questions](https://github.com/czlee/tabbycat/wiki/Adjudicator-feedback)
+- Optional online submission of feedback and scoresheets
 - Optional online post-tournament tab display
 
 #### Something missing?
