@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head-title %}Bulk Add Venues{% endblock %}
+{% block page-title %}Bulk Add Venues{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info alert-dismissable" id="">
+  <p>Copy+paste in a venues list, with one venue per line, using the format of:<br><br>
+    <strong>Name, Priority</strong><br><br>For example: </p>
+  <p>
+    <em>Green 140, 200VIC<br>
+    Red 290, 100<br>
+    BLack 11, 50</em>
+  </p>
+  <p>Rooms with a higher priority value will be selected first.
+</div>
+
+<form>
+
+  <div class="form-group">
+    <textarea class="form-control" rows="20"></textarea>
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+
+</form>
+
+{% endblock content %}

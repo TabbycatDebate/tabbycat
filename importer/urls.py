@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^data/institutions/$',    views.add_institutions,     name='add_institutions'),
     url(r'^data/teams/$',           views.add_teams,            name='add_teams'),
     url(r'^data/adjudicators/$',    views.add_adjudicators,     name='add_adjudicators'),
+    url(r'^data/venues/$',          views.add_venues,           name='add_venues'),
 
 ]

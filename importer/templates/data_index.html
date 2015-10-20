@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Bulk Add Data{% endblock %}
+{% block page-title %}Bulk Add Data{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <a href="{% tournament_url add_institutions %}">Add Institutions</a>
+      </li>
+      <li class="list-group-item">
+        <a href="{% tournament_url add_teams %}">Add Teans</a>
+      </li>
+      <li class="list-group-item">
+        <a href="{% tournament_url add_adjudicators %}">Add Adjudicators</a>
+      </li>
+      <li class="list-group-item">
+        <a href="{% tournament_url add_venues %}">Add Venues</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endblock content %}

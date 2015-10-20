@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head-title %}Bulk Add Teams{% endblock %}
+{% block page-title %}Bulk Add Teams{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info alert-dismissable" id="">
+  <p>Specify the number of new teams to add per institution. In the next step you can specify team and speaker names.</p>
+</div>
+
+<form>
+
+  {% for institution in institutions %}
+  <div class="form-group">
+    <label for="">{{ institution }} ({{ institution.code }})</label>
+    <input type="number" class="form-control" id="" placeholder="0">
+  </div>
+  {% endfor %}
+
+  <button type="submit" class="btn btn-default">Submit</button>
+
+</form>
+
+{% endblock content %}
