@@ -21,6 +21,7 @@
         {% if user.is_authenticated %}
           {% if user.is_superuser %}
             {% if tournament %}
+              <a href="{% tournament_url data_index %}">Data Import</a> |
               <a href="{% tournament_url tournament_options %}">Tournament Options</a> |
             {% endif %}
             <a href="/admin/">Django Admin</a> |
