@@ -152,7 +152,7 @@ class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
         self.adjs_per_debate = 3
 
     def annotate(self, queryset, standings, round=None):
-        pass
+        raise NotImplementedError("number of adjudicators doesn't work yet")
 
 
 class WhoBeatWhomMetricAnnotator(BaseMetricAnnotator):
