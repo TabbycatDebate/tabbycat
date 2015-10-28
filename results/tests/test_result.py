@@ -4,12 +4,12 @@ import random
 from unittest import SkipTest
 from django.test import TestCase
 
-import tournaments.models as tm
-import participants.models as pm
-import venues.models as vm
-import draw.models as dm
+from tournaments.models import Tournament, Round
+from participants.models import Institution, Team, Speaker, Adjudicator
+from venues.models import Venue
+from draw.models import Debate, DebateTeam
 from results.models import BallotSubmission
-from .result import BallotSet
+from ..result import BallotSet
 from adjallocation.models import DebateAdjudicator
 
 
@@ -17,14 +17,15 @@ class BaseTestResult(TestCase):
 
     testdata = dict()
     testdata[1] = {
-        'scores': [[[75.0, 76.0, 74.0, 38.0],   [76.0, 73.0, 75.0, 37.5]],
-                  [[74.0, 75.0, 76.0, 37.0],   [77.0, 74.0, 74.0, 38.0]],
-                  [[75.0, 75.0, 75.0, 37.5], [76.0, 78.0, 77.0, 37.0]]],
-       'totals_by_adj': [[263, 261.5], [262, 263], [262.5, 268]],
-       'majority_scores': [[74.5, 75, 75.5, 37.25], [76.5, 76, 75.5, 37.5]],
-       'majority_totals': [262.25, 265.5],
-       'winner_by_adj': [0, 1, 1],
-       'winner': 1
+        'scores': [[[75.0, 76.0, 74.0, 38.0], [76.0, 73.0, 75.0, 37.5]],
+                   [[74.0, 75.0, 76.0, 37.0], [77.0, 74.0, 74.0, 38.0]],
+                   [[75.0, 75.0, 75.0, 37.5], [76.0, 78.0, 77.0, 37.0]]],
+        'totals_by_adj': [[263, 261.5], [262, 263], [262.5, 268]],
+        'majority_scores': [[74.5, 75, 75.5, 37.25], [76.5, 76, 75.5, 37.5]],
+        'majority_totals': [262.25, 265.5],
+        'winner_by_adj': [0, 1, 1],
+        'winner': 1,
+        'num_adjs_for_team': [1, 2],
    }
     testdata[2] = {
         'scores': [[[73.0, 76.0, 79.0, 37.5], [77.0, 77.0, 78.0, 39.0]],
@@ -35,7 +36,8 @@ class BaseTestResult(TestCase):
                             [77.0, 77.33333333333333, 76.0, 37.666666666666664]],
         'majority_totals': [261.8333333333333, 268.0],
         'winner_by_adj': [1, 1, 1],
-        'winner': 1
+        'winner': 1,
+        'num_adjs_for_team': [0, 3],
     }
     testdata[3] = {
         'majority_scores': [[75.5, 76.5, 77.5, 38.75], [71.5, 71.5, 75.0, 38.5]],
@@ -45,7 +47,8 @@ class BaseTestResult(TestCase):
         'majority_totals': [268.25, 256.5],
         'scores': [[[73.0, 70.0, 78.0, 40.0], [80.0, 78.0, 75.0, 38.5]],
                    [[79.0, 75.0, 75.0, 39.5], [73.0, 73.0, 73.0, 40.0]],
-                   [[72.0, 78.0, 80.0, 38.0], [70.0, 70.0, 77.0, 37.0]]]
+                   [[72.0, 78.0, 80.0, 38.0], [70.0, 70.0, 77.0, 37.0]]],
+        'num_adjs_for_team': [2, 1],
     }
 
     incompletedata = {'scores': [[[75, 76, None, 38],   [76, 73, 75, 37.5]],
@@ -55,46 +58,34 @@ class BaseTestResult(TestCase):
                       'majority_scores': [[None, 75, 75.5, 37.25], [76.5, None, 75.5, None]],
                       'majority_totals': [None, None],
                       'winner_by_adj': [None, None, None],
-                      'winner': None}
+                      'winner': None,
+                      'num_adjs_for_team': [None, None],
+    }
 
     def setUp(self):
-        self.t = tm.Tournament(slug="resulttest", name="ResultTest")
-        self.t.save()
+        self.t = Tournament.objects.create(slug="resulttest", name="ResultTest")
         for i in range(2):
-            inst = pm.Institution(code="Inst%d"%i, name="Institution %d"%i)
-            inst.save()
-            team = pm.Team(tournament=self.t, institution=inst, reference="Team %d"%i,
-                use_institution_prefix=False)
-            team.save()
+            inst = Institution.objects.create(code="Inst{:d}".format(i), name="Institution {:d}".format(i))
+            team = Team.objects.create(tournament=self.t, institution=inst, reference="Team {:d}".format(i), use_institution_prefix=False)
             for j in range(3):
-                speaker = pm.Speaker(team=team, name="Speaker %d-%d"%(i,j))
-                speaker.save()
-        inst = pm.Institution(code="Indep", name="Independent %d"%i)
-        inst.save()
+                Speaker.objects.create(team=team, name="Speaker %d-%d"%(i,j))
+        inst = Institution.objects.create(code="Adjs", name="Adjudicators")
         for i in range(3):
-            adj = pm.Adjudicator(tournament=self.t, institution=inst,
-                    name="Adjudicator %d"%i, test_score=5)
-            adj.save()
-        venue = vm.Venue(name="Venue", priority=10)
-        venue.save()
+            Adjudicator.objects.create(tournament=self.t, institution=inst, name="Adjudicator {:d}".format(i), test_score=5)
+        venue = Venue.objects.create(name="Venue", priority=10)
 
-        self.adjs = list(pm.Adjudicator.objects.all())
-        self.teams = list(pm.Team.objects.all())
+        self.adjs = list(Adjudicator.objects.all())
+        self.teams = list(Team.objects.all())
 
-        self.round = tm.Round(tournament=self.t, seq=1, abbreviation="R1")
-        self.round.save()
-        for venue in vm.Venue.objects.all():
-            self.round.activate_venue(venue, True)
-        self.debate = dm.Debate(round=self.round, venue=venue)
-        self.debate.save()
-        positions = [dm.DebateTeam.POSITION_AFFIRMATIVE, dm.DebateTeam.POSITION_NEGATIVE]
+        rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
+        self.debate = Debate.objects.create(round=rd, venue=venue)
+
+        positions = [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]
         for team, pos in zip(self.teams, positions):
-            self.round.activate_team(team, True)
-            dm.DebateTeam(debate=self.debate, team=team, position=pos).save()
+            DebateTeam.objects.create(debate=self.debate, team=team, position=pos)
         adjtypes = [DebateAdjudicator.TYPE_CHAIR, DebateAdjudicator.TYPE_PANEL, DebateAdjudicator.TYPE_PANEL]
         for adj, adjtype in zip(self.adjs, adjtypes):
-            self.round.activate_adjudicator(adj, True)
-            DebateAdjudicator(debate=self.debate, adjudicator=adj, type=adjtype).save()
+            DebateAdjudicator.objects.create(debate=self.debate, adjudicator=adj, type=adjtype)
 
     def _get_team(self, team):
         if team in ['aff', 'neg']:
@@ -202,6 +193,11 @@ class CommonTests(object):
                     winner == 1)
 
     @on_all_datasets
+    def test_num_adjs_for_team(self, ballotset, testdata):
+        for team, num_adjs in zip(self.teams_input, testdata['num_adjs_for_team']):
+            self.assertEqual(ballotset.num_adjs_for_team(team), num_adjs)
+
+    @on_all_datasets
     def test_winner(self, ballotset, testdata):
         self.assertEqual(ballotset.winner, self.teams[testdata['winner']])
 
@@ -256,7 +252,7 @@ class TestResultWithInitiallyUnknownSides(BaseTestResult, CommonTests):
     def setUp(self):
         BaseTestResult.setUp(self)
         for dt in self.debate.debateteam_set.all():
-            dt.position = dm.DebateTeam.POSITION_UNALLOCATED
+            dt.position = DebateTeam.POSITION_UNALLOCATED
             dt.save()
         self.teams_input = ['aff', 'neg']
 
@@ -265,5 +261,5 @@ class TestResultWithInitiallyUnknownSides(BaseTestResult, CommonTests):
                 post_ballotset_create=lambda ballotset: ballotset.set_sides(*self.teams))
 
     def test_unknown_sides(self):
-        self.assertRaises(dm.DebateTeam.DoesNotExist, self._save_complete_ballotset,
+        self.assertRaises(DebateTeam.DoesNotExist, self._save_complete_ballotset,
                 self.teams_input, list(self.testdata.values())[0])

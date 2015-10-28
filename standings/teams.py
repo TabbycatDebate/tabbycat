@@ -1,4 +1,4 @@
-"""Standings generator.
+"""Standings generator for teams.
 
 The main engine for generating team standings."""
 

@@ -5,11 +5,19 @@ institutions (letters), number of wins, history (team numbers) and aff counts.
 This script does not interact with the database at all. It is used for
 generating test cases for the tests in test_draw.py. It also does not have any
 unit tests itself: it is used to generate test cases to insert into
-test_draw.py."""
-from test_one_up_one_down import TestTeam
+test_draw.py.
+
+This script must be run from the directory it is in."""
+
+# Some import gymnastics.
 import os.path, sys
-if os.path.abspath("..") not in sys.path: sys.path.append(os.path.abspath(".."))
-from draw import DrawGenerator
+draw_dir = os.path.abspath(os.path.join("..", ".."))
+if draw_dir not in sys.path: sys.path.append(draw_dir)
+print(draw_dir)
+del draw_dir
+
+from draw.tests.utils import TestTeam
+from draw.generator import DrawGenerator
 
 import string
 import random
@@ -63,7 +71,7 @@ for team in sorted(teams, key=lambda x: x.points, reverse=True):
     print("({id}, '{inst}', {points}, {hist}, {aff_count}),".format(
         id=team.id, inst=team.institution, points=team.points,
             hist=[t.id for t in team.hist], aff_count=team.aff_count))
-print()
+print("")
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
     print("{id}, {inst}, {points}, {hist}, {aff_count}".format(
         id=team.id, inst=team.institution, points=team.points,

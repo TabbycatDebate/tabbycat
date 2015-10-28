@@ -13,12 +13,6 @@ from operator import attrgetter
 import logging
 logger = logging.getLogger(__name__)
 
-registry = {
-    "basic"    : BasicRankAnnotator,
-    "subrank"  : SubrankAnnotator,
-    "division" : DivisionRankAnnotator,
-}
-
 def RankAnnotator(name, *args, **kwargs):
     """Factory function. Returns an instance of an appropriate subclass of
     BaseRankAnnotator, with the given arguments passed to the constructor."""
@@ -99,3 +93,11 @@ class DivisionRankAnnotator(BaseRankAnnotator):
                     tsi.add_ranking("division_rank", rank)
                     tsi.add_ranking("division_rank_eq", len(group) > 1)
                 rank += len(group)
+
+
+registry = {
+    "basic"    : BasicRankAnnotator,
+    "subrank"  : SubrankAnnotator,
+    "division" : DivisionRankAnnotator,
+}
+

@@ -32,7 +32,7 @@ def public_optional_tournament_view(config_option):
     def bar(view_fn):
         @wraps(view_fn)
         @tournament_view
-        def foo(request, tournament, *args      , **kwargs):
+        def foo(request, tournament, *args, **kwargs):
             if tournament.config.get(config_option):
                 return view_fn(request, tournament, *args, **kwargs)
             else:

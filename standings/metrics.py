@@ -15,15 +15,6 @@ import random
 import logging
 logger = logging.getLogger(__name__)
 
-registry = {
-    "points"        : PointsMetricAnnotator,
-    "margin"        : MarginMetricAnnotator,
-    "draw_strength" : DrawStrengthMetricAnnotator,
-    "speaker_score" : SpeakerScoreMetricAnnotator,
-    "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
-    "wbw"           : WhoBeatWhomMetricAnnotator,
-}
-
 def metricgetter(*items):
     """Returns a callable object that fetches `item` from its operand's
     `metrics` attribute. If multiple items are specified, returns a tuple.
@@ -190,3 +181,14 @@ class WhoBeatWhomMetricAnnotator(BaseMetricAnnotator):
         for tsi in standings.infoview():
             wbw = who_beat_whom(tsi)
             tsi.add_metric(self.metricname, wbw)
+
+
+registry = {
+    "points"        : PointsMetricAnnotator,
+    "margin"        : MarginMetricAnnotator,
+    "draw_strength" : DrawStrengthMetricAnnotator,
+    "speaker_score" : SpeakerScoreMetricAnnotator,
+    "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
+    "wbw"           : WhoBeatWhomMetricAnnotator,
+}
+
