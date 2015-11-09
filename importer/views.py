@@ -12,9 +12,18 @@ def data_index(request, t):
 @admin_required
 @tournament_view
 def add_institutions(request, t):
-    form = forms.AddInstitutionsForm
+    print("adding insts")
+    #form = forms.AddInstitutionsForm
     return r2r(request, 'add_institutions.html')
 
+@admin_required
+@expect_post
+@tournament_view
+def confirm_institutions(request, t):
+    print(request.POST['institutions_raw'])
+    institution_lines = request.POST['institutions_raw'].split()
+    institutions = []
+    return r2r(request, 'confirm_institutions.html', dict(institutions=institutions))
 
 @admin_required
 @tournament_view

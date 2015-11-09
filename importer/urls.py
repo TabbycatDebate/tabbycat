@@ -5,10 +5,11 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^data/$',                 views.data_index,           name='data_index'),
-    url(r'^data/institutions/$',    views.add_institutions,     name='add_institutions'),
-    url(r'^data/teams/$',           views.add_teams,            name='add_teams'),
-    url(r'^data/adjudicators/$',    views.add_adjudicators,     name='add_adjudicators'),
-    url(r'^data/venues/$',          views.add_venues,           name='add_venues'),
+    url(r'^data/$',                         views.data_index,           name='data_index'),
+    url(r'^data/institutions/$',            views.add_institutions,     name='add_institutions'),
+    url(r'^data/institutions/confirm/$',    views.confirm_institutions, name='confirm_institutions'),
+    url(r'^data/teams/$',                   views.add_teams,            name='add_teams'),
+    url(r'^data/adjudicators/$',            views.add_adjudicators,     name='add_adjudicators'),
+    url(r'^data/venues/$',                  views.add_venues,           name='add_venues'),
 
 ]

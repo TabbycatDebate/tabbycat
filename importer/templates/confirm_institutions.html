@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head-title %}Confirm Institutions{% endblock %}
+{% block page-title %}Confirm Institutions{% endblock %}
+
+{% block content %}
+
+
+<form id="addInstitutions" action="." method="POST">
+
+  {% for institution in institutions %}
+  <div class="form-group">
+    <input class="form-control" type="text" value="Test" />
+    <input class="form-control" type="text" value="Test" />
+    <input class="form-control" type="text" value="Test" />
+  </div>
+  {% endfor %}
+
+  <button type="submit" class="btn btn-default">Confirm</button>
+
+</form>
+
+{% endblock content %}

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load debate_tags %}
 
 {% block head-title %}Bulk Add Institutions{% endblock %}
 {% block page-title %}Bulk Add Institutions{% endblock %}
@@ -16,13 +17,12 @@
   </p>
 </div>
 
-<form>
-
+<form action="{% tournament_url confirm_institutions %}" method="POST">
+  {% csrf_token %}
   <div class="form-group">
-    <textarea class="form-control" rows="20"></textarea>
+    <textarea class="form-control" name="institutions_raw" id="insts" rows="20"></textarea>
   </div>
-  <button type="submit" class="btn btn-default">Submit</button>
-
+  <input type="submit" class="btn btn-default">Submit</button>
 </form>
 
 {% endblock content %}
