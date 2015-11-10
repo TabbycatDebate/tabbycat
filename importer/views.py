@@ -20,9 +20,17 @@ def add_institutions(request, t):
 @expect_post
 @tournament_view
 def confirm_institutions(request, t):
-    print(request.POST['institutions_raw'])
-    institution_lines = request.POST['institutions_raw'].split()
     institutions = []
+    institution_lines = request.POST['institutions_raw'].split('\n')
+    for line in institution_lines:
+        try:
+            full_name = line.split(',')[0].strip()
+            short_name = line.split(',')[1].strip()
+            institution = Institution(name=full_name, code=short_name)
+            institutions.append(institution)
+        except:
+            pass # TODO
+
     return r2r(request, 'confirm_institutions.html', dict(institutions=institutions))
 
 @admin_required

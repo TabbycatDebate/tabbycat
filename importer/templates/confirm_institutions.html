@@ -10,14 +10,26 @@
 <form id="addInstitutions" action="." method="POST">
 
   {% for institution in institutions %}
-  <div class="form-group">
-    <input class="form-control" type="text" value="Test" />
-    <input class="form-control" type="text" value="Test" />
-    <input class="form-control" type="text" value="Test" />
+  <div class="ballot-checkin-form form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-1 control-label">Full Name</label>
+      <div class="col-sm-4">
+        <input class="form-control" type="text" value="{{ institution.name }}" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-1 control-label">Code</label>
+      <div class="col-sm-4">
+        <input class="form-control" type="text" value="{{institution.code}}" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-1 col-sm-offset-1">
+        <input class="form-control btn btn-success submit-disable" type="submit" value="Save" />
+      </div>
+    </div>
   </div>
   {% endfor %}
-
-  <button type="submit" class="btn btn-default">Confirm</button>
 
 </form>
 
