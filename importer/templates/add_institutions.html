@@ -17,7 +17,7 @@
   </p>
 </div>
 
-<form action="{% tournament_url confirm_institutions %}" method="POST">
+<form action="{% tournament_url edit_institutions %}" method="POST">
   {% csrf_token %}
   <div class="form-group">
     <textarea class="form-control" name="institutions_raw" id="insts" rows="20"></textarea>

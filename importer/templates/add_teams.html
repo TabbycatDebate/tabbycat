@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load debate_tags %}
 
 {% block head-title %}Bulk Add Teams{% endblock %}
 {% block page-title %}Bulk Add Teams{% endblock %}
@@ -10,12 +11,13 @@
   <p>Specify the number of new teams to add per institution. In the next step you can specify team and speaker names.</p>
 </div>
 
-<form>
+
+<form action="{% tournament_url edit_teams %}" method="POST">
 
   {% for institution in institutions %}
   <div class="form-group">
-    <label for="">{{ institution }} ({{ institution.code }})</label>
-    <input type="number" class="form-control" id="" placeholder="0">
+    <label>{{ institution }} ({{ institution.code }})</label>
+    <input type="number" class="form-control" name="{{ institution }}"" id="" placeholder="0">
   </div>
   {% endfor %}
 
