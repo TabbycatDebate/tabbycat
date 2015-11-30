@@ -4,6 +4,8 @@ from tournaments.models import Tournament, Round
 from participants.models import Institution, Team, Speaker, Adjudicator
 from venues.models import Venue
 from draw.models import Debate, DebateTeam
+from adjallocation.models import DebateAdjudicator
+from results.models import BallotSubmission, TeamScore
 
 
 # does it ignore unconfirmed ballot submissions?
@@ -55,7 +57,7 @@ class TestBasicStandings(TestCase):
         self.t = Tournament.objects.create(slug="basicstandingstest", name="Basic standings test")
         self.teams = dict()
         for team_name in testdata["teams"]:
-            inst = Institution.objects.create(code=team, name=team_name)
+            inst = Institution.objects.create(code=team_name, name=team_name)
             team = Team.objects.create(tournament=self.t, institution=inst, reference=team_name, use_institution_prefix=False)
             self.teams[team_name] = team
         inst = Institution.objects.create(code="Adjs", name="Adjudicators")
@@ -71,11 +73,12 @@ class TestBasicStandings(TestCase):
             for adj, venue, (teams, teamscores) in zip(adjs, venues, debatedict.items()):
                 debate = Debate.objects.create(round=rd, venue=venue)
                 for team, pos in zip(teams, positions):
-                    DebateTeam.objects.create(debate=debate, team=self.teams[team], pos=pos)
-                DebateAdjudicator.objects.create(debate=debate, adj=adj, type=DebateAdjudicator.TYPE_CHAIR)
+                    DebateTeam.objects.create(debate=debate, team=self.teams[team], position=pos)
+                DebateAdjudicator.objects.create(debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
                 ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=True)
                 for team, teamscore_dict in teamscores.items():
-                    TeamScore.objects.create(team=self.teams[team], ballot_submission=ballotsub, **teamscore_dict)
+                    dt = DebateTeam.objects.get(debate=debate, team=self.teams[team])
+                    TeamScore.objects.create(debate_team=dt, ballot_submission=ballotsub, **teamscore_dict)
 
     def tearDown(self):
         self.t.delete()
