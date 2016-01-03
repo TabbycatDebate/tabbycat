@@ -17,7 +17,7 @@ def public_break_index(request, t):
 def public_breaking_teams(request, t, category):
     bc = get_object_or_404(models.BreakCategory, slug=category)
     teams = breaking.get_breaking_teams(bc, include_all=True, include_categories=t.config.get('public_break_categories'))
-    generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
+    generated = models.BreakingTeam.objects.filter(break_category__tournament=t).exists()
     metrics = relevant_team_standings_metrics(t)
     return r2r(request, 'public_breaking_teams.html', dict(teams=teams, category=bc, generated=generated, metrics=metrics))
 
