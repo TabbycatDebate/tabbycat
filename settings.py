@@ -88,7 +88,6 @@ MIGRATION_MODULES = {
 
 TEMPLATES = [
     {
-        'APP_DIRS':     True,
         'BACKEND':      'django.template.backends.django.DjangoTemplates',
         'DIRS':         [os.path.join(PROJECT_PATH, 'templates')],
         'OPTIONS': {
@@ -103,6 +102,12 @@ TEMPLATES = [
                 "utils.context_processors.debate_context", # For tournament config vars
                 "utils.context_processors.get_menu_highlight", # For nav highlights
                 'django.core.context_processors.request', # For SUIT
+            ],
+            'loaders': [
+                ('django.template.loaders.cached.Loader', [
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                ]),
             ]
         }
     }
