@@ -281,7 +281,7 @@ class Round(models.Model):
             teams = draw_teams
             draw_type = "manual"
         elif self.draw_type == self.DRAW_POWERPAIRED:
-            from standings import annotate_team_standings
+            from standings.standings import annotate_team_standings
             teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
