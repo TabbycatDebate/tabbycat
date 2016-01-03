@@ -58,7 +58,7 @@ class Person(models.Model):
     novice = models.BooleanField(default=False)
 
     checkin_message = models.TextField(blank=True)
-    notes = models.TextField(blank=True)
+    notes = models.TextField(blank=True, null=True)
 
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'

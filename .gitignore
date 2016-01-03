@@ -1,7 +1,5 @@
 local_settings.py
 staticfiles/
-migrations
-migrations-*/
 .gitmodules
 
 # Data to ignore
@@ -12,7 +10,6 @@ data/*
 !data/demo/
 !data/league_template/
 !data/sandbox/
-!data/utils/
 !data/tabbycat_datasets/
 !data/test/
 
@@ -58,9 +55,6 @@ nosetests.xml
 *.log
 *.pot
 *.pyc
-data/Schools Junior 2014
-data/Schools Novice 2014
-data/Schools Senior 2014
 
 # Python 2to3 backup files
 *.bak
