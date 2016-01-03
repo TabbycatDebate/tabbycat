@@ -92,16 +92,16 @@ TEMPLATES = [
         'DIRS':         [os.path.join(PROJECT_PATH, 'templates')],
         'OPTIONS': {
             'context_processors': [
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-                "django.core.context_processors.debug",
-                "django.core.context_processors.i18n",
-                "django.core.context_processors.media",
-                "django.core.context_processors.csrf",
-                "django.core.context_processors.static",
-                "utils.context_processors.debate_context", # For tournament config vars
-                "utils.context_processors.get_menu_highlight", # For nav highlights
-                'django.core.context_processors.request', # For SUIT
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.template.context_processors.request',  # For SUIT
+                'utils.context_processors.debate_context', # For tournament config vars
+                'utils.context_processors.get_menu_highlight', # For nav highlights
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
@@ -129,7 +129,7 @@ CACHES = {
 }
 
 # Use the cache for sessions rather than the db
-SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # =============
 # = Pipelines =
@@ -150,7 +150,7 @@ LIBSASS_SOURCE_COMMENTS = False
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 COMPRESS_URL = STATIC_URL
-COMPRESS_OFFLINE_MANIFEST = "manifest.json"
+COMPRESS_OFFLINE_MANIFEST = 'manifest.json'
 COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
 COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compression
 
