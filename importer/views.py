@@ -2,12 +2,15 @@ from utils.views import *
 
 from . import forms
 
-from participants.models import Institution, Team, Speaker
+from participants.models import Adjudicator, Institution, Team, Speaker
+from venues.models import Venue
 
 @admin_required
 @tournament_view
 def data_index(request, t):
     return r2r(request, 'data_index.html')
+
+# INSTITUTIONS
 
 @admin_required
 @tournament_view
@@ -53,11 +56,47 @@ def confirm_institutions(request, t):
     confirmed = {"kind": "Institutions", "quantity": len(institution_names) }
     return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
+# VENUES
+
 @admin_required
 @tournament_view
 def add_venues(request, t):
     form = forms.AddVenuesForm
     return r2r(request, 'add_venues.html')
+
+@admin_required
+@expect_post
+@tournament_view
+def edit_venues(request, t):
+    venues = {}
+    venue_lines = request.POST['venues_raw'].split('\n')
+    for line in venue_lines:
+        try:
+            name = line.split(',')[0].strip()
+            priority = line.split(',')[1].strip()
+            venues[name] = priority
+        except:
+            pass # TODO
+
+    return r2r(request, 'edit_venues.html', dict(venues=venues))
+
+@admin_required
+@expect_post
+@tournament_view
+def confirm_venues(request, t):
+    venue_names = request.POST.getlist('venue_names')
+    venue_priorities = request.POST.getlist('venue_priorities')
+    for i, key in enumerate(venue_names):
+        try:
+            venue = Venue(name=venue_names[i], priority=venue_priorities[i])
+            venue.save()
+        except:
+            pass
+
+    confirmed = {"kind": "Venues", "quantity": len(venue_names) }
+    return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
+
+# TEAMS
 
 @admin_required
 @tournament_view
@@ -114,6 +153,8 @@ def confirm_teams(request, t):
 
     confirmed = {"kind": "Teams", "quantity": int((len(sorted_post) - 1) / 3) }
     return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
+
+# ADJUDICATORS
 
 @admin_required
 @tournament_view

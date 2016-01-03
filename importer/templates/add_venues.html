@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load debate_tags %}
 
 {% block head-title %}Bulk Add Venues{% endblock %}
 {% block page-title %}Bulk Add Venues{% endblock %}
@@ -7,20 +8,21 @@
 {% block content %}
 
 <div class="alert alert-info alert-dismissable" id="">
-  <p>Copy+paste in a venues list, with one venue per line, using the format of:<br><br>
-    <strong>Name, Priority</strong><br><br>For example:<br><br></p>
+  <p>
+    Copy+paste in a venues list, with one venue per line, using the format of:<br><br>
+    <strong>Name, Priority</strong><br><br>For example:<br><br>
+  </p>
   <p>
     <em>Green 140, 200<br>
     Red 2.9.0, 100<br>
     Black 11G, 50</em>
   </p>
-  <br><p>Rooms with a higher priority value will be allocated first in the draw.
 </div>
 
-<form>
+<form action="{% tournament_url edit_venues %}" method="POST">
 
   <div class="form-group">
-    <textarea class="form-control" rows="20"></textarea>
+    <textarea class="form-control" name="venues_raw" rows="20"></textarea>
   </div>
   <button type="submit" class="btn btn-default">Submit</button>
 
