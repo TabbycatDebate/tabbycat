@@ -14,25 +14,39 @@
 </div>
 
 <form id="" action="{% tournament_url confirm_teams %}" method="POST">
-  {% csrf_token %}
 
   {% for key, values in institutions.items %}
-    <div class="row">
-      <h2>{{ key }}'s Teams</h2>
 
+    <div class="row">
+      <div class="col-sm-12">
+        <h2>{{ key }}'s Teams</h2>
+      </div>
+    </div>
+
+    <div class="row">
       {% for team in values %}
         <div class="ballot-checkin-form form-horizontal col-sm-6">
 
           <h4>Team #{{ team }}</h4>
+
+          <input class="hidden" type="text" name="{{ key }}_{{ team }}_Instititution" value="{{ key }}" />
+
           <div class="form-group row">
-            <label class="col-sm-3 control-label">Team Name</label>
+            <label class="col-sm-3 control-label">Name</label>
             <div class="col-sm-9">
-              <input class="form-control team-name" type="text" name="{{ key }}_{{ team }}_Name" value="{{ key }} {{ team }}" />
+              <input class="form-control team-name" type="text" name="{{ key }}_{{ team }}_Name" value="{{ team }}" />
             </div>
           </div>
 
           <div class="form-group row">
-            <label class="col-sm-3 control-label">Team Speakers</label>
+            <label class="col-sm-3 control-label">Prefix Institution</label>
+            <div class="col-sm-9">
+              <input class="form-control team-name" type="checkbox" name="{{ key }}_{{ team }}_Prefix" checked />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3 control-label">Speakers</label>
             <div class="col-sm-9">
               <input class="form-control team-speakers" type="text" name="{{ key }}_{{ team }}_Speakers" value="Speaker 1, Speaker 2, Speaker 3" />
             </div>
@@ -41,13 +55,18 @@
         </div>
       {% endfor %}
     </div>
+
   {% endfor %}
+  {% csrf_token %}
   <div class="ballot-checkin-form form-horizontal row">
+
     <div class="form-group">
-      <div class="col-sm-1 col-sm-offset-1">
+      <label class="col-sm-3"></label>
+      <div class="col-sm-1">
         <input class="form-control btn btn-success submit-disable" type="submit" value="Save All" />
       </div>
     </div>
+
   </div>
 
 </form>

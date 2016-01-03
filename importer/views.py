@@ -2,7 +2,7 @@ from utils.views import *
 
 from . import forms
 
-from participants.models import Institution, Team
+from participants.models import Institution, Team, Speaker
 
 @admin_required
 @tournament_view
@@ -85,22 +85,34 @@ def edit_teams(request, t):
 def confirm_teams(request, t):
 
     sorted_post = sorted(request.POST.items())
-    for i in range(0, len(sorted_post), 2):
-        name = sorted_post[i][1]
-        speakers = sorted_post[i+1][1].split(',')
-        if name and speakers:
-            # TODO: create team name and speakers now
-            team = Team(
-                institution = bye_institution,
-                reference = name,
-                short_reference = name[:34],
-                tournament= this,
-                use_institution_prefix = False,
-            ).save()
-            for speaker in speakers:
-                print(speaker)
 
-    confirmed = {"kind": "Teams", "quantity": 11 }
+    for i in range(0, len(sorted_post) - 1, 4): # Sort through the items advancing 3 at a time
+        instititution_name = sorted_post[i][1]
+        team_name = sorted_post[i+1][1]
+        use_prefix = False
+        if (sorted_post[i+2][1] == "on"):
+            use_prefix = True
+        use_prefix = sorted_post[i+2][1]
+        speaker_names = sorted_post[i+3][1].split(',')
+
+        institution = Institution.objects.get(name=instititution_name)
+        if team_name and speaker_names and institution:
+            newteam = Team(
+                institution = institution,
+                reference = team_name,
+                short_reference = team_name[:34],
+                tournament=t,
+                use_institution_prefix = use_prefix,
+            )
+            newteam.save()
+            for speaker in speaker_names:
+                newspeaker = Speaker(
+                    name = speaker,
+                    team = newteam
+                )
+                newspeaker.save()
+
+    confirmed = {"kind": "Teams", "quantity": int((len(sorted_post) - 1) / 3) }
     return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
 @admin_required
