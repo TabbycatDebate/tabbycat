@@ -7,9 +7,8 @@
 
 {% block content %}
 
-
 <div class="alert alert-info alert-dismissable" id="">
-  <p>When adding speakers use the format<br><br>
+  <p>When adding speakers use the format:<br><br>
     <strong>Name Speaker1, Name Speaker2, Name Speaker3</strong>
     </p>
 </div>
@@ -17,33 +16,33 @@
 <form id="" action="{% tournament_url confirm_teams %}" method="POST">
   {% csrf_token %}
 
-  {{ institutions }}
-
   {% for key, values in institutions.items %}
-    <h2>{{ key }}'s Teams</h2>
-    {% for team in values %}
-      <div class="ballot-checkin-form form-horizontal">
+    <div class="row">
+      <h2>{{ key }}'s Teams</h2>
 
-        <h4>Team #{{ team }}</h4>
-        <div class="form-group">
-          <label class="col-sm-1 control-label">Team Name</label>
-          <div class="col-sm-8">
-            <input class="form-control team-name" type="text" name="{{ key }}_{{ team }}_Name" value="{{ key }} {{ team }}" />
+      {% for team in values %}
+        <div class="ballot-checkin-form form-horizontal col-sm-6">
+
+          <h4>Team #{{ team }}</h4>
+          <div class="form-group row">
+            <label class="col-sm-3 control-label">Team Name</label>
+            <div class="col-sm-9">
+              <input class="form-control team-name" type="text" name="{{ key }}_{{ team }}_Name" value="{{ key }} {{ team }}" />
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="col-sm-1 control-label">Team Speakers</label>
-          <div class="col-sm-8">
-            <input class="form-control team-speakers" type="text" name="{{ key }}_{{ team }}_Speakers" value="" />
+          <div class="form-group row">
+            <label class="col-sm-3 control-label">Team Speakers</label>
+            <div class="col-sm-9">
+              <input class="form-control team-speakers" type="text" name="{{ key }}_{{ team }}_Speakers" value="Speaker 1, Speaker 2, Speaker 3" />
+            </div>
           </div>
+
         </div>
-
-      </div>
-
-    {% endfor %}
+      {% endfor %}
+    </div>
   {% endfor %}
-  <div class="ballot-checkin-form form-horizontal">
+  <div class="ballot-checkin-form form-horizontal row">
     <div class="form-group">
       <div class="col-sm-1 col-sm-offset-1">
         <input class="form-control btn btn-success submit-disable" type="submit" value="Save All" />

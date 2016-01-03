@@ -2,7 +2,7 @@ from utils.views import *
 
 from . import forms
 
-from participants.models import Institution
+from participants.models import Institution, Team
 
 @admin_required
 @tournament_view
