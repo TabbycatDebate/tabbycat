@@ -6,11 +6,12 @@ by a front-end interface as well."""
 
 from draw.models import Debate
 from results.models import BallotSubmission
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from results.result import BallotSet
 import random
 import logging
 logger = logging.getLogger(__name__)
+User = get_user_model()
 
 def add_ballotsets_to_round(round, **kwargs):
     """Calls add_ballotset() for every debate in the given round."""

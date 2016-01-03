@@ -58,7 +58,7 @@ class Person(models.Model):
     novice = models.BooleanField(default=False)
 
     checkin_message = models.TextField(blank=True)
-    notes = models.TextField(blank=True)
+    notes = models.TextField(blank=True, null=True)
 
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
@@ -104,25 +104,25 @@ class TeamManager(models.Manager):
 
     def standings(self, round):
         """Returns a list."""
-        from standings import annotate_team_standings
+        from standings.standings import annotate_team_standings
         teams = self._teams_for_standings(round)
         return annotate_team_standings(teams, round)
 
     def ranked_standings(self, round):
         """Returns a list."""
-        from standings import annotate_team_standings
+        from standings.standings import annotate_team_standings
         teams = self._teams_for_standings(round)
         return annotate_team_standings(teams, round, ranks=True)
 
     def division_standings(self, round):
         """Returns a list."""
-        from standings import annotate_team_standings
+        from standings.standings import annotate_team_standings
         teams = self._teams_for_standings(round)
         return annotate_team_standings(teams, round, division_ranks=True)
 
     def subrank_standings(self, round):
         """Returns a list."""
-        from standings import annotate_team_standings
+        from standings.standings import annotate_team_standings
         teams = self._teams_for_standings(round)
         return annotate_team_standings(teams, round, subranks=True)
 

@@ -1,7 +1,7 @@
 from utils.management.base import RoundCommand, CommandError
 from ...dbutils import add_feedback, add_feedback_to_round, delete_all_feedback_for_round, delete_feedback
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from tournaments.models import Round
 from draw.models import Debate
 from adjfeedback.models import AdjudicatorFeedback
@@ -11,6 +11,7 @@ SUBMITTER_TYPE_MAP = {
     'tabroom': AdjudicatorFeedback.SUBMITTER_TABROOM,
     'public':  AdjudicatorFeedback.SUBMITTER_PUBLIC
 }
+User = get_user_model()
 
 class Command(RoundCommand):
 

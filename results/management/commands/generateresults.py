@@ -1,7 +1,7 @@
 from utils.management.base import RoundCommand, CommandError
 from results.dbutils import add_ballotset, add_ballotsets_to_round, delete_ballotset, delete_all_ballotsets_for_round, add_ballotsets_to_round_partial
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from tournaments.models import Round
 from draw.models import Debate
 from results.models import BallotSubmission
@@ -11,6 +11,7 @@ SUBMITTER_TYPE_MAP = {
     'tabroom': BallotSubmission.SUBMITTER_TABROOM,
     'public':  BallotSubmission.SUBMITTER_PUBLIC
 }
+User = get_user_model()
 
 class Command(RoundCommand):
 

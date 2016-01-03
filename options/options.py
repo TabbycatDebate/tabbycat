@@ -66,7 +66,7 @@ SETTINGS = OrderedDict([
     ('public_feedback',             (_bool, 'Public interface to add feedback using normal URLs',                  False)),
     ('public_feedback_randomised',  (_bool, 'Public interface to add feedback using randomised URLs',              False)),
     ('public_use_password',         (_bool, 'Require password to submit public feedback and ballots',              False)),
-    ('public_password',             (str,   'Value of the password for public submissions',                        ' ')),
+    ('public_password',             (str,   'Value of the password for public submissions',                        '?')),
     ('panellist_feedback_enabled',  (_bool, 'Allow public feedback to be submitted by panellists',                 True)),
     ('feedback_progress',           (_bool, 'Public interface to show who has unsubmitted ballots',                False)),
     ('tab_released',                (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament',                 False)),
@@ -91,8 +91,8 @@ SETTINGS = OrderedDict([
     ('minimum_division_size',       (int,   'Smallest allowed size for a division',                                5)),
     ('ideal_division_size',         (int,   'Ideal size for a division',                                           6)),
     ('maximum_division_size',       (int,   'Largest allowed size for a division',                                 8)),
-    ('score_return_location',       (str,   'The location to return scoresheets to (put on preprinted ballots)',   ' ')),
-    ('feedback_return_location',    (str,   'The location to return feedback to (put on preprinted feedbacks)',    ' ')),
+    ('score_return_location',       (str,   'The location to return scoresheets to (put on preprinted ballots)',   '?')),
+    ('feedback_return_location',    (str,   'The location to return feedback to (put on preprinted feedbacks)',    '?')),
 ])
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
