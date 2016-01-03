@@ -83,7 +83,7 @@ MIGRATION_MODULES = {
 }
 
 # ===========
-# = Caching =
+# = Templates =
 # ===========
 
 TEMPLATES = [

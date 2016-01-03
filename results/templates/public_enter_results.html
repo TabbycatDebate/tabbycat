@@ -55,7 +55,7 @@
 
 {% block extra-js %}
   {{ block.super }}
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery.validate.min.js' %}"></script>
+  <script type="text/javascript" language="javascript" charset="utf-8" src={% static 'js/jquery.validate.min.js' %}></script>
   <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
       {% include "js/enter_results.js" %}
