@@ -8,7 +8,7 @@ dj-static==0.0.6
 
 # For Mem-Caching
 # Must be in requirements.txt for memcachier to work https://www.memcachier.com/documentation#django
-pylibmc==1.5.1
+pylibmc==1.5.0
 django-pylibmc==0.6.1
 
 # For web serving
