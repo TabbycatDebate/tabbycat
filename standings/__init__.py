@@ -1,1 +1,0 @@
-from .standings import annotate_team_standings

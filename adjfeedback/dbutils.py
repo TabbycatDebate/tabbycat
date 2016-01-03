@@ -7,7 +7,7 @@ by a front-end interface as well."""
 from . import models as fm
 from draw.models import Debate, DebateTeam
 from participants.models import Team, Adjudicator
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from results.result import BallotSet
 from adjallocation.models import DebateAdjudicator
 
@@ -15,6 +15,7 @@ import random
 import itertools
 import logging
 logger = logging.getLogger(__name__)
+User = get_user_model()
 
 WORDS = {
     5: ["perfect", "outstanding", "super", "collected", "insightful"],

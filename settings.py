@@ -6,7 +6,6 @@ PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
 STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
 STATIC_ROOT         = 'staticfiles'
 STATIC_URL          = '/static/'
-TEMPLATE_DIRS       = (os.path.join(PROJECT_PATH, 'templates'),)
 MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
 SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
@@ -17,7 +16,6 @@ SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 ADMINS              = ('Test', 'test@test.com')
 MANAGERS            = ADMINS
 DEBUG               = False
-TEMPLATE_DEBUG      = DEBUG
 DEBUG_ASSETS        = DEBUG
 
 # ===================
@@ -45,19 +43,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'urls'
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.csrf",
-    "django.core.context_processors.static",
-    "utils.context_processors.debate_context", # For tournament config vars
-    "utils.context_processors.get_menu_highlight", # For nav highlights
-    'django.core.context_processors.request', # For SUIT
-)
 
 TABBYCAT_APPS = (
     'actionlog',
@@ -93,6 +78,36 @@ INSTALLED_APPS = (
 
 LOGIN_REDIRECT_URL = '/'
 
+MIGRATION_MODULES = {
+    'blog': 'blog.db_migrations'
+}
+
+# ===========
+# = Caching =
+# ===========
+
+TEMPLATES = [
+    {
+        'APP_DIRS':     True,
+        'BACKEND':      'django.template.backends.django.DjangoTemplates',
+        'DIRS':         [os.path.join(PROJECT_PATH, 'templates')],
+        'OPTIONS': {
+            'context_processors': [
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "django.core.context_processors.debug",
+                "django.core.context_processors.i18n",
+                "django.core.context_processors.media",
+                "django.core.context_processors.csrf",
+                "django.core.context_processors.static",
+                "utils.context_processors.debate_context", # For tournament config vars
+                "utils.context_processors.get_menu_highlight", # For nav highlights
+                'django.core.context_processors.request', # For SUIT
+            ]
+        }
+    }
+]
+
 # ===========
 # = Caching =
 # ===========
@@ -107,14 +122,6 @@ CACHES = {
         'LOCATION': 'unique-snowflake'
     }
 }
-
-# Caching enabled for templates
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
 
 # Use the cache for sessions rather than the db
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
@@ -147,7 +154,6 @@ COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compres
 # ===========
 if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
-    TEMPLATE_DEBUG = DEBUG
 
 LOGGING = {
     'version': 1,
