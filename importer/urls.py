@@ -16,9 +16,11 @@ urlpatterns = [
     url(r'^data/teams/confirm/$',           views.confirm_teams,        name='confirm_teams'),
 
     url(r'^data/adjudicators/$',            views.add_adjudicators,     name='add_adjudicators'),
+    url(r'^data/adjudicators/edit/$',       views.edit_adjudicators,    name='edit_adjudicators'),
+    url(r'^data/adjudicators/confirm/$',    views.confirm_adjudicators, name='confirm_adjudicators'),
 
     url(r'^data/venues/$',                  views.add_venues,           name='add_venues'),
     url(r'^data/venues/edit/$',             views.edit_venues,          name='edit_venues'),
-    url(r'^data/venues/confirm$',           views.confirm_venues,       name='confirm_venues'),
+    url(r'^data/venues/confirm/$',          views.confirm_venues,       name='confirm_venues'),
 
 ]

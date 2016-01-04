@@ -122,10 +122,9 @@ def edit_teams(request, t):
 @expect_post
 @tournament_view
 def confirm_teams(request, t):
-
     sorted_post = sorted(request.POST.items())
 
-    for i in range(0, len(sorted_post) - 1, 4): # Sort through the items advancing 3 at a time
+    for i in range(0, len(sorted_post) - 1, 4): # Sort through the items advancing 4 at a time
         instititution_name = sorted_post[i][1]
         team_name = sorted_post[i+1][1]
         use_prefix = False
@@ -151,7 +150,7 @@ def confirm_teams(request, t):
                 )
                 newspeaker.save()
 
-    confirmed = {"kind": "Teams", "quantity": int((len(sorted_post) - 1) / 3) }
+    confirmed = {"kind": "Teams", "quantity": int((len(sorted_post) - 1) / 4) }
     return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
 # ADJUDICATORS
@@ -162,3 +161,45 @@ def add_adjudicators(request, t):
     institutions = Institution.objects.all()
     form = forms.AddAdjudicatorsForm
     return r2r(request, 'add_adjudicators.html', dict(institutions=institutions))
+
+
+@admin_required
+@expect_post
+@tournament_view
+def edit_adjudicators(request, t):
+    institutions = {}
+    for name, quantity in request.POST.items():
+        if quantity:
+            institutions[name] = list(range(1, int(quantity) + 1)) # Create a placeholder for loop
+
+    context = {
+        'institutions'      : institutions,
+        'score_min'         : t.config.get('adj_min_score'),
+        'score_max'         : t.config.get('adj_max_score'),
+        'score_avg'         : round((t.config.get('adj_max_score') + t.config.get('adj_min_score')) / 2, 1),
+    }
+    return r2r(request, 'edit_adjudicators.html', context)
+
+@admin_required
+@expect_post
+@tournament_view
+def confirm_adjudicators(request, t):
+    sorted_post = sorted(request.POST.items())
+
+    for i in range(0, len(sorted_post) - 1, 3): # Sort through the items advancing 3 at a time
+        institution_name = sorted_post[i][1]
+        adj_name = sorted_post[i+1][1]
+        adj_rating = sorted_post[i+2][1]
+
+        institution = Institution.objects.get(name=institution_name)
+        if adj_name and adj_rating and institution:
+            newadj = Adjudicator(
+                institution = institution,
+                name = adj_name,
+                tournament = t,
+                test_score = adj_rating,
+            )
+            newadj.save()
+
+    confirmed = {"kind": "Adjudicators", "quantity": int((len(sorted_post) - 1) / 3) }
+    return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
