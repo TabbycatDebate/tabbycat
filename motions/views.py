@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from . import models
+from .models import Motion
 from actionlog.models import ActionLogEntry
 from tournaments.models import Round
 
@@ -15,7 +15,7 @@ from utils.views import *
 @round_view
 def motions(request, round):
     motions = list()
-    motions = models.Motion.objects.statistics(round=round)
+    motions = Motion.objects.statistics(round=round)
     if len(motions) > 0:
         motions = [m for m in motions if m.round == round]
 
@@ -24,7 +24,7 @@ def motions(request, round):
 @admin_required
 @round_view
 def motions_edit(request, round):
-    MotionFormSet = modelformset_factory(models.Motion,
+    MotionFormSet = modelformset_factory(Motion,
         can_delete=True, extra=3, exclude=['round'])
 
     if request.method == 'POST':
@@ -41,7 +41,7 @@ def motions_edit(request, round):
             if 'submit' in request.POST:
                 return redirect_round('motions', round)
     else:
-        formset = MotionFormSet(queryset=models.Motion.objects.filter(round=round))
+        formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
     return r2r(request, "edit.html", dict(formset=formset))
 
@@ -65,7 +65,7 @@ def motions_assign(request, round):
             model = Motion
             fields = ("divisions",)
 
-    MotionFormSet = modelformset_factory(models.Motion, ModelAssignForm, extra=0, fields=['divisions'])
+    MotionFormSet = modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
 
     if request.method == 'POST':
         formset = MotionFormSet(request.POST)
@@ -73,7 +73,7 @@ def motions_assign(request, round):
         if 'submit' in request.POST:
             return redirect_round('motions', round)
 
-    formset = MotionFormSet(queryset=models.Motion.objects.filter(round=round))
+    formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
     return r2r(request, "assign.html", dict(formset=formset))
 
 

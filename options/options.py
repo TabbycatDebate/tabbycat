@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from django import forms
 
-from . import models
+from .models import Option
 
 def _bool(value):
     try:
@@ -111,7 +111,7 @@ class Config(object):
         if key in SETTINGS:
             coerce, help, _default = SETTINGS[key]
             default = default or _default
-            value = models.Option.objects.get_(self._t, key, default)
+            value = Option.objects.get_(self._t, key, default)
             try:
                 return coerce(value)
             except TypeError:
@@ -124,7 +124,7 @@ class Config(object):
     def set(self, key, value):
 
         if key in SETTINGS:
-            models.Option.objects.set(self._t, key, str(value))
+            Option.objects.set(self._t, key, str(value))
         else:
             raise KeyError("Setting {0} does not exist.".format(key))
 

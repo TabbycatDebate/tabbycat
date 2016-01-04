@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from . import models
+from .models import Region,Institution,Speaker,Adjudicator
 from adjallocation.models import AdjudicatorConflict, AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict
 from adjfeedback.models import AdjudicatorTestScoreHistory
 
@@ -12,7 +12,7 @@ from adjfeedback.models import AdjudicatorTestScoreHistory
 class RegionAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(models.Region, RegionAdmin)
+admin.site.register(Region, RegionAdmin)
 
 # ==============================================================================
 # Institution
@@ -23,7 +23,7 @@ class InstitutionAdmin(admin.ModelAdmin):
     ordering = ('name',)
     search_fields = ('name',)
 
-admin.site.register(models.Institution, InstitutionAdmin)
+admin.site.register(Institution, InstitutionAdmin)
 
 # ==============================================================================
 # Speaker
@@ -34,7 +34,7 @@ class SpeakerAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     raw_id_fields = ('team',)
 
-admin.site.register(models.Speaker, SpeakerAdmin)
+admin.site.register(Speaker, SpeakerAdmin)
 
 # ==============================================================================
 # Adjudicator
@@ -61,7 +61,7 @@ class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
 
 class AdjudicatorForm(forms.ModelForm):
     class Meta:
-        model = models.Adjudicator
+        model = Adjudicator
         fields = '__all__'
 
     def clean_url_key(self):
@@ -75,4 +75,4 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     list_filter = ('tournament', 'name')
     inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
 
-admin.site.register(models.Adjudicator, AdjudicatorAdmin)
+admin.site.register(Adjudicator, AdjudicatorAdmin)

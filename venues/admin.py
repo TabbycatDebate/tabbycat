@@ -1,12 +1,12 @@
 from django.contrib import admin
 
-from . import models
+from .models import VenueGroup, Venue
 
 class VenueGroupAdmin(admin.ModelAdmin):
     list_display = ('name','short_name','team_capacity')
     search_fields = ('name',)
 
-admin.site.register(models.VenueGroup, VenueGroupAdmin)
+admin.site.register(VenueGroup, VenueGroupAdmin)
 
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'priority', 'time','tournament')
@@ -16,4 +16,4 @@ class VenueAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super(VenueAdmin, self).get_queryset(request).select_related('group')
 
-admin.site.register(models.Venue, VenueAdmin)
+admin.site.register(Venue, VenueAdmin)

@@ -1,5 +1,5 @@
 from django import forms
-from . import models
+from .models import BreakingTeam
 from utils.forms import OptionalChoiceField
 from .breaking import get_breaking_teams
 
@@ -60,17 +60,17 @@ class BreakingTeamsForm(forms.Form):
     def _create_and_initialise_fields(self):
         """Dynamically generate fields, one Select for each BreakingTeam."""
         for team in self.category.breaking_teams.all():
-            self.fields[self._fieldname_remark(team)] = OptionalChoiceField(choices=models.BreakingTeam.REMARK_CHOICES, required=False)
+            self.fields[self._fieldname_remark(team)] = OptionalChoiceField(choices=BreakingTeam.REMARK_CHOICES, required=False)
             try:
                 self.initial[self._fieldname_remark(team)] = self._bt(team).remark
-            except models.BreakingTeam.DoesNotExist:
+            except BreakingTeam.DoesNotExist:
                 self.initial[self._fieldname_remark(team)] = None
 
     def save(self):
         for team in self.category.breaking_teams.all():
             try:
                 bt = self._bt(team)
-            except models.BreakingTeam.DoesNotExist:
+            except BreakingTeam.DoesNotExist:
                 continue
             bt.remark = self.cleaned_data[self._fieldname_remark(team)]
             bt.save()

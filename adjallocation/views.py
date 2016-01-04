@@ -3,7 +3,7 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from participants.models import Adjudicator, Team
 
-from . import models
+from .models import AdjudicatorConflict, AdjudicatorInstitutionConflict, AdjudicatorAdjudicatorConflict, DebateAdjudicator
 
 from utils.views import *
 
@@ -50,9 +50,9 @@ def draw_adjudicators_edit(request, round):
 
     def calculate_prior_adj_genders(team):
         debates = team.get_debates(round.seq)
-        adjs = models.DebateAdjudicator.objects.filter(
+        adjs = DebateAdjudicator.objects.filter(
             debate__in=debates).count()
-        male_adjs = models.DebateAdjudicator.objects.filter(
+        male_adjs = DebateAdjudicator.objects.filter(
             debate__in=debates, adjudicator__gender="M").count()
         if male_adjs > 0:
             male_adj_percent = int(male_adjs / adjs * 100)
@@ -182,17 +182,17 @@ def adj_conflicts(request, round):
             data[type][adj_id] = []
         data[type][adj_id].append(target_id)
 
-    for ac in models.AdjudicatorConflict.objects.all():
+    for ac in AdjudicatorConflict.objects.all():
         add('personal', ac.adjudicator_id, ac.team_id)
 
-    for ic in models.AdjudicatorInstitutionConflict.objects.all():
+    for ic in AdjudicatorInstitutionConflict.objects.all():
         for team in Team.objects.filter(institution=ic.institution):
             add('institutional', ic.adjudicator_id, team.id)
 
-    for ac in models.AdjudicatorAdjudicatorConflict.objects.all():
+    for ac in AdjudicatorAdjudicatorConflict.objects.all():
         add('adjudicator', ac.adjudicator_id, ac.conflict_adjudicator.id)
 
-    history = models.DebateAdjudicator.objects.filter(
+    history = DebateAdjudicator.objects.filter(
         debate__round__seq__lt=round.seq,
     )
 

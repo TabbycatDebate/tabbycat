@@ -2,7 +2,7 @@ from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
 
-from . import models
+from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from tournaments.models import Round
 from participants.models import Adjudicator, Team
 from adjallocation.models import DebateAdjudicator
@@ -71,7 +71,7 @@ class AdjudicatorFeedbackCheckboxSelectMultipleField(forms.MultipleChoiceField):
 
     def clean(self, value):
         value = super(AdjudicatorFeedbackCheckboxSelectMultipleField, self).clean(value)
-        return models.AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(value)
+        return AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(value)
 
 # Feedback Forms
 
@@ -140,7 +140,7 @@ class BaseFeedbackForm(forms.Form):
     def save_adjudicatorfeedback(self, **kwargs):
         """Saves the question fields and returns the AdjudicatorFeedback.
         To be called by save() of child classes."""
-        af = models.AdjudicatorFeedback(**kwargs)
+        af = AdjudicatorFeedback(**kwargs)
 
         if self._confirm_on_submit:
             self.discard_all_existing(adjudicator=kwargs['adjudicator'],
@@ -160,7 +160,7 @@ class BaseFeedbackForm(forms.Form):
         return af
 
     def discard_all_existing(self, **kwargs):
-        for fb in models.AdjudicatorFeedback.objects.filter(**kwargs):
+        for fb in AdjudicatorFeedback.objects.filter(**kwargs):
             fb.discarded = True
             fb.save()
 

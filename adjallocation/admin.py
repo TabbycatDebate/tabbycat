@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from . import models
+from .models import DebateAdjudicator
 
 
 class DebateAdjudicatorAdmin(admin.ModelAdmin):
@@ -8,4 +8,4 @@ class DebateAdjudicatorAdmin(admin.ModelAdmin):
     search_fields = ('adjudicator__name', 'type')
     raw_id_fields = ('debate',)
 
-admin.site.register(models.DebateAdjudicator, DebateAdjudicatorAdmin)
+admin.site.register(DebateAdjudicator, DebateAdjudicatorAdmin)

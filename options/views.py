@@ -1,10 +1,6 @@
 from django import forms
-
 from .options import make_options_form
-
-from . import models
 from actionlog.models import ActionLogEntry
-
 from utils.views import *
 
 @admin_required

@@ -1,13 +1,13 @@
 from django.contrib import admin
 
-from . import models
+from .models import Motion, DebateTeamMotionPreference
 
 _m_tournament = lambda o: o.round.tournament
 class MotionAdmin(admin.ModelAdmin):
     list_display = ('reference', 'round','seq', _m_tournament)
     list_filter = ('round', 'divisions')
 
-admin.site.register(models.Motion, MotionAdmin)
+admin.site.register(Motion, MotionAdmin)
 
 _dtmp_team_name =  lambda o: o.debate_team.team.short_name
 _dtmp_team_name.short_description = 'Team'
@@ -20,4 +20,4 @@ _dtmp_confirmed.short_description = 'Confirmed'
 
 class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin):
     list_display = ('ballot_submission', _dtmp_confirmed, _dtmp_team_name, _dtmp_position, 'preference', _dtmp_motion)
-admin.site.register(models.DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
+admin.site.register(DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
