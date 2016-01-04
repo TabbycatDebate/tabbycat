@@ -225,10 +225,6 @@ class Team(models.Model):
         return [dt.debate for dt in dts]
 
     @property
-    def get_preferences(self):
-        return self.teamvenuepreference_set.objects.all()
-
-    @property
     def debates(self):
         return self.get_debates(None)
 

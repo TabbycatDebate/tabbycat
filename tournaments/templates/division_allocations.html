@@ -92,7 +92,8 @@
         {% endif %}
       </td>
       <td>
-      {% for pref in team.get_preferences.all %}
+      TODO: fix below call
+      {% for pref in team.venue_preferences.all %}
         {% if pref.venue_group %}
           <span class="small">{{ pref.priority }}: {{ pref.venue_group.short_name }}</span>,{% if pref.counter == 4 %}<br>{% endif %}
         {% endif %}

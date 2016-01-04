@@ -1,6 +1,6 @@
 from utils.views import *
 
-from . import models
+from .models import Tournament, Division
 from draw.models import Debate
 
 @cache_page(10) # Set slower to show new indexes so it will show new pages
@@ -9,8 +9,8 @@ def public_index(request, t):
     return r2r(request, 'public_tournament_index.html')
 
 def index(request):
-    tournaments = models.Tournament.objects.all()
-    return r2r(request, 'site_index.html', dict(tournaments=models.Tournament.objects.all()))
+    tournaments = Tournament.objects.all()
+    return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
 
 @login_required
 @tournament_view
@@ -39,7 +39,7 @@ def tournament_home(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')
 def public_divisions(request, t):
-    divisions = models.Division.objects.filter(tournament=t).all().select_related('venue_group')
+    divisions = Division.objects.filter(tournament=t).all().select_related('venue_group')
     divisions = sorted(divisions, key=lambda x: float(x.name))
     venue_groups = set(d.venue_group for d in divisions)
     for uvg in venue_groups:
@@ -104,11 +104,11 @@ def division_allocations(request, t):
     from participants.models import Team
     from venues.models import VenueGroup
     teams = Team.objects.filter(tournament=t).all()
-    divisions = models.Division.objects.filter(tournament=t).all()
+    divisions = Division.objects.filter(tournament=t).all()
     divisions = sorted(divisions, key=lambda x: float(x.name))
     venue_groups = VenueGroup.objects.all()
 
-    return r2r(request, "division_allocation.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
+    return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 
 
 @admin_required
@@ -133,8 +133,9 @@ def save_divisions(request, t):
 @expect_post
 @tournament_view
 def create_division_allocation(request, t):
-    from tournament.division_allocator import DivisionAllocator
+    from tournaments.division_allocator import DivisionAllocator
     from participants.models import Team
+    from draw.models import TeamVenuePreference
 
     teams = list(Team.objects.filter(tournament=t))
     for team in teams:

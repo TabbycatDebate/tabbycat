@@ -8,6 +8,7 @@ from django.conf import settings
 from django.template.defaultfilters import slugify
 
 import participants.models as pm
+import venues.models as vm
 from tournaments.models import Tournament
 from importer.anorak import AnorakTournamentDataImporter
 from importer.base import DUPLICATE_INFO
@@ -27,6 +28,8 @@ class Command(BaseCommand):
             help='Keep existing tournament and data, skipping lines if they are duplicates.')
         parser.add_argument('--delete-institutions', action='store_true', default=False,
             help='Delete all institutions from the database. Overrides --keep-existing.')
+        parser.add_argument('--delete-venue-groups', action='store_true', default=False,
+            help='Delete all venue groups from the database. Overrides --keep-existing.')
         parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
             help='Don\'t crash if there is an error, just skip and keep going.')
 
@@ -46,6 +49,8 @@ class Command(BaseCommand):
 
         if options['delete_institutions']:
             self.delete_institutions()
+        if options['delete_venue_groups']:
+            self.delete_venue_groups()
         self.make_tournament()
         loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
         self.importer = AnorakTournamentDataImporter(self.t, loglevel=loglevel,
@@ -137,6 +142,11 @@ class Command(BaseCommand):
         """Deletes all institutions from the database."""
         self._warning("Deleting all institutions from the database")
         pm.Institution.objects.all().delete()
+
+    def delete_venue_groups(self):
+        """Deletes all venue groups from the database."""
+        self._warning("Deleting all venue groups from the database")
+        vm.VenueGroup.objects.all().delete()
 
     def make_tournament(self):
         """Given the path, does everything necessary to create the tournament,
