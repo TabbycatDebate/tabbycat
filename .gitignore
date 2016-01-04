@@ -58,4 +58,3 @@ nosetests.xml
 
 # Python 2to3 backup files
 *.bak
-data/tabbycat_datasets
