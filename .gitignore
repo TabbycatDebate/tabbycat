@@ -10,7 +10,6 @@ data/*
 !data/demo/
 !data/league_template/
 !data/sandbox/
-!data/tabbycat_datasets/
 !data/test/
 
 env/
