@@ -65,7 +65,7 @@ class DivisionAllocator():
 
         unalloacted_teams = [te for te in all_teams if not te in allocated_teams]
         for ute in unalloacted_teams:
-            print("\t %s not allocated" % ute.name)
+            print("\t %s not allocated" % ute.short_reference)
 
 
     def create_division(self, di, group, group_teams, team_index, division_size):

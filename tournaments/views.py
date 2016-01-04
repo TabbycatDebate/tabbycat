@@ -136,6 +136,7 @@ def create_division_allocation(request, t):
     from tournaments.division_allocator import DivisionAllocator
     from participants.models import Team
     from draw.models import TeamVenuePreference
+    from venues.models import VenueGroup
 
     teams = list(Team.objects.filter(tournament=t))
     for team in teams:
