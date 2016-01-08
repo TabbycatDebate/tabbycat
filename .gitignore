@@ -13,6 +13,7 @@ data/*
 
 env/
 venv/
+venv-*/
 *.pyc
 *.swp
 *~
