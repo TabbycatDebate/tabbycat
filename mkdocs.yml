@@ -1,2 +1,36 @@
 site_name: Tabby Cat Documentation
 theme: readthedocs
+
+pages:
+- Home: 'index.md'
+- Installation:
+    -                               'installation/intro.md'
+    - 'On the Web using Heroku':    'installation/heroku.md'
+    - 'Locally on Linux':           'installation/linux.md'
+    - 'Locally on OS X':            'installation/osx.md'
+    - 'Locally on Windows':         'installation/windows.md'
+- Use:
+    -                               'use/intro.md'
+    - 'Importing Tournament Data':  'use/importing-data.md'
+    - 'Starting a Tournament':      'use/starting-a-tournament.md'
+    - 'Running a Tournament':       'use/running-a-tournament.md'
+    - 'Finishing a Tournament':     'use/finishing-a-tournament.md'
+- Feature Documentation:
+    -                               'features/intro.md'
+    - 'Draw Generation':            'features/draw-generation.md'
+    - 'Adjudicator Feedback':       'features/adjudicator-feedback.md'
+    - 'Data Entry':                 'features/data-entry.md'
+    - 'User Accounts':              'features/user-accounts-and-interfaces.md'
+    - 'Team Standings':             'features/team-standings-rules.md'
+    - 'Data Importers':             'features/data-importers.md'
+    - 'Adjudicator Allocation':     'features/adjudicator-allocation.md'
+    # - 'Public Interface':           'features/public-interface.md'
+    # - 'Usage-Tracking':             'features/usage-tracking.md'
+- Developer Documentation:
+    - 'Documentation':              'developer/documentation.md'
+    - 'Versioning':                 'developer/versioning.md'
+- About:
+    - 'License':                    'about/license.md'
+    - 'Release Notes':              'about/release-notes.md'
+
+

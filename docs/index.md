@@ -1,2 +1,3 @@
-# Welcome to Tabby Cat
+# Tabby Cat
 
+A draw tabulation system for 3 vs 3 debating tournaments.
