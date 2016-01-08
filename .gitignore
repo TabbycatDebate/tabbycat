@@ -6,9 +6,8 @@ staticfiles/
 data/*
 
 # Default data to include
-!data/dummy/
 !data/demo/
-!data/league_template/
+!data/demo_simple/
 !data/sandbox/
 !data/test/
 
