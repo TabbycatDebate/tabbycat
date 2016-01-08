@@ -57,3 +57,6 @@ nosetests.xml
 
 # Python 2to3 backup files
 *.bak
+
+# Docs
+site/
