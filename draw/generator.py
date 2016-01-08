@@ -809,6 +809,8 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
 
         for points, pool in brackets.items():
 
+            to_delete_from_unfilled = []
+
             # First, check for unfilled intermediate brackets
             for unfilled_points, unfilled_pool in unfilled.items():
                 aff_surplus = len(unfilled_pool["aff"]) - len(unfilled_pool["neg"])
@@ -823,10 +825,14 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                     unfilled_pool["aff"].extend(pool["aff"][:-aff_surplus])
                     del pool["aff"][:-aff_surplus]
                 # If the bubble now looks good, move it to the main brackets and
-                # remove from the unfilled buffer.
+                # mark it for deletion from the unfilled buffer.
                 if len(unfilled_pool["aff"]) == len(unfilled_pool["neg"]):
                     new[unfilled_points] = unfilled_pool
-                    del unfilled[unfilled_points]
+                    to_delete_from_unfilled.append(unfilled_points)
+
+            # Delete the unfilled brackets tht were marked for deletion
+            for unfilled_points in to_delete_from_unfilled:
+                del unfilled[unfilled_points]
 
             # Find lesser and greater of number of aff and neg teams.
             nums_teams = list(map(len, list(pool.values())))
@@ -863,6 +869,8 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         intermediates = OrderedDict() # values are lists of {"aff", "neg"} dicts
         for points, pool in brackets.items():
 
+            to_delete_from_unfilled = []
+
             # First, check for unfilled intermediate brackets
             for unfilled_points, unfilled_pool in unfilled.items():
                 intermediates.setdefault(unfilled_points, list())
@@ -887,14 +895,19 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                     })
                     del pool["aff"][:num_teams]
                     del unfilled_pool["neg"][:num_teams]
-                # If we've exhausted the unfilled pool, add all these intermediate
-                # brackets to the main list of brackets.
+                # If we've exhausted the unfilled pool, add all these
+                # intermediate brackets to the main list of brackets and mark
+                # them for deletion from the unfilled buffer.
                 if not unfilled_pool["aff"] and not unfilled_pool["neg"]:
                     num_brackets = len(intermediates[unfilled_points])
                     for i, intermediate_pool in enumerate(intermediates[unfilled_points], start=1):
                         intermediate_points = unfilled_points - i / (num_brackets + 1)
                         new[intermediate_points] = intermediate_pool
-                    del unfilled[unfilled_points]
+                    to_delete_from_unfilled.append(unfilled_points)
+
+            # Delete the unfilled brackets tht were marked for deletion
+            for unfilled_points in to_delete_from_unfilled:
+                del unfilled[unfilled_points]
 
             # Find lesser and greater of number of aff and neg teams.
             nums_teams = list(map(len, list(pool.values())))
