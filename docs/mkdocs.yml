@@ -1,6 +1,8 @@
 site_name: Tabby Cat Documentation
 theme: readthedocs
 
+docs_dir: .
+
 pages:
 - Home: 'index.md'
 - Installation:
@@ -32,5 +34,6 @@ pages:
 - About:
     - 'License':                    'about/license.md'
     - 'Release Notes':              'about/release-notes.md'
+    - 'Tournaments History':        'about/tournaments-history.md'
 
 
