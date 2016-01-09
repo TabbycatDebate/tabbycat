@@ -9,46 +9,46 @@
 
 <div class="alert alert-info alert-dismissable" id="">
   <p>When adding speakers use the format:<br><br>
-    <strong>Name Speaker1, Name Speaker2, Name Speaker3</strong>
+    <strong>Name of Speaker1, Name of Speaker2, Name of Speaker3</strong>
     </p>
 </div>
 
 <form id="" action="{% tournament_url confirm_teams %}" method="POST">
 
-  {% for key, values in institutions.items %}
+  {% for institution in institutions %}
 
     <div class="row">
       <div class="col-sm-12">
-        <h2>{{ key }}'s Teams</h2>
+        <h2>{{ institution.name }}'s Teams</h2>
       </div>
     </div>
 
     <div class="row">
-      {% for team in values %}
+      {% for team_number in institution.available_team_numbers %}
         <div class="ballot-checkin-form form-horizontal col-sm-6">
 
           <h4>Team #{{ team }}</h4>
 
-          <input class="hidden" type="text" name="{{ key }}_{{ team }}_Instititution" value="{{ key }}" />
+          <input class="hidden" type="text" name="{{ institution.id }}_{{ team_number }}_Instititution" value="{{ institution.id }}" />
 
           <div class="form-group row">
-            <label class="col-sm-3 control-label">Name</label>
-            <div class="col-sm-9">
-              <input class="form-control team-name" type="text" name="{{ key }}_{{ team }}_Name" value="{{ team }}" />
+            <label class="col-sm-4 control-label">Name</label>
+            <div class="col-sm-8">
+              <input class="form-control team-name" type="text" name="{{ institution.id }}_{{ team_number }}_Name" value="{{ team_number }}" />
             </div>
           </div>
 
           <div class="form-group row">
-            <label class="col-sm-3 control-label">Prefix Institution</label>
-            <div class="col-sm-9">
-              <input class="form-control team-name" type="checkbox" name="{{ key }}_{{ team }}_Prefix" checked />
+            <label class="col-sm-4 control-label">Prefix Institution</label>
+            <div class="col-sm-8">
+              <input class="form-control team-name" type="checkbox" name="{{ institution.id }}_{{ team_number }}_Prefix" checked />
             </div>
           </div>
 
           <div class="form-group row">
-            <label class="col-sm-3 control-label">Speakers</label>
-            <div class="col-sm-9">
-              <input class="form-control team-speakers" type="text" name="{{ key }}_{{ team }}_Speakers" value="Speaker 1, Speaker 2, Speaker 3" />
+            <label class="col-sm-4 control-label">Speakers</label>
+            <div class="col-sm-8">
+              <input class="form-control team-speakers" type="text" name="{{ institution.id }}_{{ team_number }}_Speakers" value="Speaker 1, Speaker 2, Speaker 3" />
             </div>
           </div>
 
@@ -58,12 +58,13 @@
 
   {% endfor %}
   {% csrf_token %}
-  <div class="ballot-checkin-form form-horizontal row">
-
-    <div class="form-group">
-      <label class="col-sm-3"></label>
-      <div class="col-sm-1">
-        <input class="form-control btn btn-success submit-disable" type="submit" value="Save All" />
+  <div class="row">
+    <div class="ballot-checkin-form form-horizontal col-sm-6">
+      <div class="form-group row">
+        <label class="col-sm-2"></label>
+        <div class="col-sm-2">
+          <input class="form-control btn btn-success submit-disable" type="submit" value="Save All" />
+        </div>
       </div>
     </div>
 
