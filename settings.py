@@ -99,9 +99,9 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
-                'django.template.context_processors.request',  # For SUIT
-                'utils.context_processors.debate_context', # For tournament config vars
-                'utils.context_processors.get_menu_highlight', # For nav highlights
+                'django.template.context_processors.request',   # For SUIT
+                'utils.context_processors.debate_context',      # For tournament config vars
+                'utils.context_processors.get_menu_highlight',  # For nav highlights
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
