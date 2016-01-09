@@ -3,7 +3,7 @@ from utils.views import *
 from . import forms
 
 from participants.models import Adjudicator, Institution, Team, Speaker
-from venues.models import Venue
+from venues.models import Venue, VenueGroup
 
 @admin_required
 @tournament_view
@@ -68,13 +68,23 @@ def add_venues(request, t):
 @expect_post
 @tournament_view
 def edit_venues(request, t):
-    venues = {}
+    venues = []
     venue_lines = request.POST['venues_raw'].split('\n')
     for line in venue_lines:
         try:
             name = line.split(',')[0].strip()
             priority = line.split(',')[1].strip()
-            venues[name] = priority
+            if len(line.split(',')) > 2:
+                venues.append({
+                    'name': name,
+                    'priority': priority,
+                    'group': line.split(',')[2].strip()
+                })
+            else:
+                venues.append({
+                    'name': name,
+                    'priority': priority,
+                })
         except:
             pass # TODO
 
@@ -86,9 +96,17 @@ def edit_venues(request, t):
 def confirm_venues(request, t):
     venue_names = request.POST.getlist('venue_names')
     venue_priorities = request.POST.getlist('venue_priorities')
+    venue_groups = request.POST.getlist('venue_groups')
     for i, key in enumerate(venue_names):
+        if venue_groups[i]:
+            venue_group = VenueGroup.objects.get(name=venue_groups[i])
+        else:
+            venue_group = None
         try:
-            venue = Venue(name=venue_names[i], priority=venue_priorities[i])
+            venue = Venue(
+                name=venue_names[i],
+                priority=venue_priorities[i],
+                group=venue_group)
             venue.save()
         except:
             pass
