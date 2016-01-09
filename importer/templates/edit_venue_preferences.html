@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}📑 Edit Venue Preferences{% endblock %}
+{% block page-title %}📑 Edit Venue Preferences{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info alert-dismissable" id="">
+  <p>
+    For each institution set a number that represents the priority for each venue (higher = more preferred). Leave as blank if you don't wish to add a priority.
+</div>
+
+<div class="alert alert-danger alert-dismissable" id="">
+  <p>
+    Submitting this form will delete all previous preferences for each instutution, and then add these preferences to all institutions. Note that these preferences apply across all tournaments!
+  </p>
+</div>
+
+<form action="{% tournament_url confirm_venue_preferences %}" method="POST">
+
+  {% for institution in institutions %}
+
+    <div class="row">
+      <div class="col-sm-12">
+        <h2>{{ institution.name }}</h2>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <input class="hidden" type="number" name="institutionIDs" value={{ institution.id }} />
+
+      {% for venue_group in venue_groups %}
+        <div class="ballot-checkin-form form-horizontal form-group row">
+
+          <label class="col-sm-4 control-label">Priority for {{ venue_group.name }}</label>
+          <div class="col-sm-1">
+            <input class="form-control team-name" type="number" name="{{ institution.id }}_{{ venue_group.id }}" value="" />
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  {% endfor %}
+
+  <div class="form-group row">
+    <label class="col-sm-4"></label>
+    <div class="col-sm-2">
+      <button type="submit" class="btn btn-default">Save All</button>
+    </div>
+  </div>
+
+</form>
+
+{% endblock content %}

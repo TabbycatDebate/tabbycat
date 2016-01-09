@@ -27,6 +27,11 @@
       <li class="list-group-item">
         <a href="{% tournament_url add_venues %}">🎪 Add Venues</a>
       </li>
+      {% if enable_venue_groups %}
+        <li class="list-group-item">
+          <a href="{% tournament_url add_venue_preferences %}">🏩 Add Venue Preferences</a>
+        </li>
+      {% endif %}
     </ul>
   </div>
 </div>

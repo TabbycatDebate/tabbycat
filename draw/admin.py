@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from .models import DebateTeam, TeamPositionAllocation, TeamVenuePreference, TeamVenuePreference, Debate
+from .models import DebateTeam, TeamPositionAllocation, TeamVenuePreference, TeamVenuePreference, InstitutionVenuePreference, Debate
 from participants.models import Speaker, Team
 from adjallocation.models import DebateAdjudicator
 
@@ -73,6 +73,18 @@ class TeamVenuePreferenceAdmin(admin.ModelAdmin):
 
 admin.site.register(TeamVenuePreference, TeamVenuePreferenceAdmin)
 
+
+# ==============================================================================
+# InstitutionVenuePreference
+# ==============================================================================
+
+class InstitutionVenuePreferenceAdmin(admin.ModelAdmin):
+    list_display = ('institution', 'venue_group', 'priority')
+    search_fields = ('institution','venue_group', 'priority')
+    list_filter = ('institution','venue_group', 'priority')
+    raw_id_fields = ('institution',)
+
+admin.site.register(InstitutionVenuePreference, InstitutionVenuePreferenceAdmin)
 
 # ==============================================================================
 # Debate

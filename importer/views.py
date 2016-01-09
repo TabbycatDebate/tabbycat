@@ -4,6 +4,7 @@ from . import forms
 
 from participants.models import Adjudicator, Institution, Team, Speaker
 from venues.models import Venue, VenueGroup
+from draw.models import InstitutionVenuePreference
 
 @admin_required
 @tournament_view
@@ -112,6 +113,61 @@ def confirm_venues(request, t):
             pass
 
     confirmed = {"kind": "Venues", "quantity": len(venue_names) }
+    return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
+
+
+# VENUE PREFERENCES
+
+@admin_required
+@tournament_view
+def add_venue_preferences(request, t):
+    institutions = Institution.objects.all()
+    return r2r(request, 'add_venue_preferences.html', dict(institutions=institutions))
+
+@admin_required
+@expect_post
+@tournament_view
+def edit_venue_preferences(request, t):
+
+    venue_groups = VenueGroup.objects.all()
+    institutions = []
+
+    for institution_id, checked in request.POST.items():
+        institutions.append(Institution.objects.get(pk=institution_id))
+
+    return r2r(request, 'edit_venue_preferences.html', dict(institutions=institutions, venue_groups=venue_groups))
+
+@admin_required
+@expect_post
+@tournament_view
+def confirm_venue_preferences(request, t):
+
+    institutions = []
+    for institution_id in request.POST.getlist('institutionIDs'):
+        institution = Institution.objects.get(pk=institution_id)
+        InstitutionVenuePreference.objects.filter(institution=institution).delete()
+
+    venue_priorities = request.POST.dict()
+    del venue_priorities["institutionIDs"]
+
+    created_preferences = 0
+
+    for idset, priority in venue_priorities.items():
+        institution_id = idset.split('_')[0]
+        venue_group_id = idset.split('_')[1]
+
+        if institution_id and venue_group_id and priority:
+            print('making a pref')
+            institution = Institution.objects.get(pk=int(institution_id))
+            venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
+            venue_preference = InstitutionVenuePreference(
+                institution=institution,
+                priority=priority,
+                venue_group=venue_group)
+            venue_preference.save()
+            created_preferences += 1
+
+    confirmed = {"kind": "Venue Preferences", "quantity": created_preferences }
     return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
 # TEAMS

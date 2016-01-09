@@ -277,7 +277,20 @@ class TeamVenuePreference(models.Model):
 
     class Meta:
         ordering = ['priority',]
-        verbose_name = "🏩 Team Venue Preference"
+        verbose_name = "🏩 Team Venue Pref"
 
     def __str__(self):
         return '%s with priority %s for %s' % (self.team, self.priority, self.venue_group)
+
+
+class InstitutionVenuePreference(models.Model):
+    institution = models.ForeignKey('participants.Institution', db_index=True)
+    venue_group = models.ForeignKey('venues.VenueGroup')
+    priority = models.IntegerField()
+
+    class Meta:
+        ordering = ['priority',]
+        verbose_name = "🏩 Institutional Venue Pref"
+
+    def __str__(self):
+        return '%s with priority %s for %s' % (self.institution, self.priority, self.venue_group)
