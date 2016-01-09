@@ -66,6 +66,7 @@ class Motion(models.Model):
 
     class Meta:
         ordering = ['seq',]
+        verbose_name = "📨 Motion"
 
     def __str__(self):
         return self.text
@@ -80,4 +81,5 @@ class DebateTeamMotionPreference(models.Model):
 
     class Meta:
         unique_together = [('debate_team', 'preference', 'ballot_submission')]
+        verbose_name = "💌 Motion Preference"
 

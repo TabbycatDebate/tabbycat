@@ -107,6 +107,7 @@ class Tournament(models.Model):
 
     class Meta:
         ordering = ['seq',]
+        verbose_name = "🏆 Tournament"
 
     def __str__(self):
         if self.short_name:
@@ -146,6 +147,7 @@ class Division(models.Model):
         unique_together = [('tournament', 'name')]
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
+        verbose_name = "➗ Division"
 
 
 class RoundManager(models.Manager):
@@ -229,6 +231,7 @@ class Round(models.Model):
         unique_together = [('tournament', 'seq')]
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
+        verbose_name = "⏰ Round"
 
     def __str__(self):
         return "%s - %s" % (self.tournament, self.name)

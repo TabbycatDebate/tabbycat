@@ -13,6 +13,9 @@ class Region(models.Model):
     def __str__(self):
         return '%s' % (self.name)
 
+    class Meta:
+        verbose_name = "🌏 Region"
+
 class InstitutionManager(models.Manager):
 
     def lookup(self, name, **kwargs):
@@ -35,6 +38,7 @@ class Institution(models.Model):
     objects = InstitutionManager()
 
     class Meta:
+        verbose_name = "🏫 Institution"
         unique_together = [('name', 'code')]
         ordering = ['name']
 
@@ -77,7 +81,6 @@ class Person(models.Model):
 
     class Meta:
         ordering = ['name']
-
 
 
 
@@ -162,6 +165,7 @@ class Team(models.Model):
         unique_together = [('reference', 'institution', 'tournament'),('emoji_seq', 'tournament')]
         ordering = ['tournament', 'institution', 'short_reference']
         index_together = ['tournament', 'institution', 'short_reference']
+        verbose_name = "👯 Team"
 
     objects = TeamManager()
 
@@ -280,6 +284,9 @@ class Speaker(Person):
     def __str__(self):
         return str(self.name)
 
+    class Meta:
+        verbose_name = "🔊 Speaker"
+
 
 class AdjudicatorManager(models.Manager):
     use_for_related_fields = True
@@ -307,6 +314,7 @@ class Adjudicator(Person):
 
     class Meta:
         ordering = ['tournament', 'institution', 'name']
+        verbose_name = "👂 Adjudicator"
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.institution.code)

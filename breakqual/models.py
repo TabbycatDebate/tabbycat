@@ -32,7 +32,8 @@ class BreakCategory(models.Model):
         unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
-        verbose_name_plural = "break categories"
+        verbose_name = "🎉 Break Category"
+        verbose_name_plural = "🎉 Break Categories"
 
 
 class BreakingTeam(models.Model):
@@ -60,3 +61,4 @@ class BreakingTeam(models.Model):
 
     class Meta:
         unique_together = [('break_category', 'team')]
+        verbose_name = "👑 Breaking Team"
