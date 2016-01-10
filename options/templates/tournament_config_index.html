@@ -3,13 +3,13 @@
 
 {% load add_field_css %}
 
-{% block head-title %}Configuration{% endblock %}
-{% block page-title %}Configuration{% endblock %}
+{% block head-title %}🔧Configuration{% endblock %}
+{% block page-title %}🔧Configuration{% endblock %}
 {% block body-class %}config{% endblock %}
 
 {% block content %}
 
-<div class="col-md-6">
+<div class="col-md-4">
   <ul class="list-group">
       <a href="{% tournament_url scoring %}" class="list-group-item">
         <h4 class="list-group-item-heading">💯 Score Rules</h4>
@@ -33,7 +33,7 @@
       </a>
   </ul>
 </div>
-<div class="col-md-6">
+<div class="col-md-4">
   <ul class="list-group">
       <a href="{% tournament_url tab_release %}" class="list-group-item">
         <h4 class="list-group-item-heading">🚨 Tab Release</h4>
@@ -45,15 +45,42 @@
       </a>
       <a href="{% tournament_url public_features %}" class="list-group-item">
         <h4 class="list-group-item-heading">📢 Public Features</h4>
-        <p class="list-group-item-text">The settings that determine what information the online site displays</p>
+        <p class="list-group-item-text">The settings that determine what information the online site displays to the public</p>
       </a>
       <a href="{% tournament_url ui_options %}" class="list-group-item">
         <h4 class="list-group-item-heading">💻 UI Options</h4>
-        <p class="list-group-item-text">The settings that determine what information the online site displays</p>
+        <p class="list-group-item-text">The settings that determine small tweaks in what information is presented by the interface</p>
       </a>
       <a href="{% tournament_url league_options %}" class="list-group-item">
         <h4 class="list-group-item-heading">🏫 League Options</h4>
         <p class="list-group-item-text">Special options for running high school debating competitions</p>
+      </a>
+  </ul>
+</div>
+<div class="col-md-4">
+  <ul class="list-group">
+      <div class="list-group-item list-group-item-info">
+        <p class="list-group-item-text">Note: these presets only modify common the settings for basic rules, you should also check the other
+        settings and our <a href="https://readthedocs.org">documentation</a> to ensure they are correct and that you do not want additional
+        features/settings enabled.</p>
+      </div>
+      <a href="{% tournament_url tab_release %}" class="list-group-item">
+        <h4 class="list-group-item-heading">Apply Australs Presets</h4>
+      </a>
+      <a href="{% tournament_url tab_release %}" class="list-group-item">
+        <h4 class="list-group-item-heading">Apply New Zealand Easters Presets</h4>
+      </a>
+      <a href="{% tournament_url tab_release %}" class="list-group-item">
+        <h4 class="list-group-item-heading">Apply Australian Easters Presets</h4>
+      </a>
+      <a href="{% tournament_url tab_release %}" class="list-group-item">
+        <h4 class="list-group-item-heading">Apply Joynt Scroll Presets</h4>
+      </a>
+      <a href="{% tournament_url tab_release %}" class="list-group-item">
+        <h4 class="list-group-item-heading">Apply UADC Presets</h4>
+      </a>
+      <a href="{% tournament_url tab_release %}" class="list-group-item">
+        <h4 class="list-group-item-heading">Apply WADL Presets</h4>
       </a>
   </ul>
 </div>
