@@ -40,7 +40,7 @@
             {{ form.motion.errors }}
         </div>
     </div>
-    {% if motion_vetoes_enabled %}
+    {% if preferences.debate_rules__motion_vetoes_enabled %}
         <div class="form-group">
             <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Aff Veto</label>
             <div class="col-sm-10">
@@ -68,7 +68,7 @@
                 {{ adj.adj }}
             {% endif %}
             </p>
-            {% if side_allocations_unknown %}
+            {% if preferences.draw_rules__side_allocations_unknown == 'manual-ballot' %}
                 <p class="text-warning col-xs-12">Assign sides before entering scores</p>
             {% endif %}
         </div>
@@ -137,7 +137,7 @@
         </div>
     {% endfor %}
 
-    {% if enable_forfeits %}
+    {% if preferences.league_options__enable_forfeits %}
         <div class="row">
             <p class="col-xs-12 lead h3 page-header">Forfeits</p>
         </div>

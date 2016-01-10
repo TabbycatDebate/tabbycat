@@ -27,7 +27,7 @@
       <li class="list-group-item">
         <a href="{% tournament_url add_venues %}">🎪 Add Venues</a>
       </li>
-      {% if enable_venue_groups %}
+      {% if preferences.league_options__enable_venue_groups %}
         <li class="list-group-item">
           <a href="{% tournament_url add_venue_preferences %}">🏩 Add Venue Preferences</a>
         </li>

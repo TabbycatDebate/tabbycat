@@ -95,11 +95,11 @@
           <tr>
             <th>Rank</th>
             <th>Break</th>
-            {% if show_emoji > 0 %}
+            {% if preferences.ui_options__show_emoji %}
               <th class="team-emoji"></th>
             {% endif %}
             <th>Team</th>
-            {% if show_institutions > 0 %}
+            {% if preferences.ui_options__show_institutions %}
               <th>Inst<span class="hidden-xs">itution</span></th>
             {% endif %}
             <th>Wins</th>
@@ -121,16 +121,16 @@
           <tr>
             <td>{{ team.rank }}</td>
             <td>{{ team.break_rank|default_if_none:"&ndash;" }}</td>
-            {% if show_emoji > 0 %}
+            {% if preferences.ui_options__show_emoji %}
               <td class="team-emoji">{% team_emoji team %}</td>
             {% endif %}
             <td>
-              <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
+              <span {% if preferences.ui_options__show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
                 {{ team.long_name }}
                 {{ team.categories_for_display }}
               </span>
             </td>
-            {% if show_institutions > 0 %}
+            {% if preferences.ui_options__show_institutions %}
               <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
             {% endif %}
             <td>

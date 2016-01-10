@@ -278,14 +278,14 @@ class MotionVetoes(BooleanPreference):
 
 
 # ==============================================================================
-break_standings = Section('break_standings')
+standings = Section('standings')
 # ==============================================================================
 
 @tournament_preferences_registry.register
 class StandingsMissedDebates(IntegerPreference):
     help_text = 'The number of debates you can miss and still be on the speaker tab'
     verbose_name = "Standings Missed Debates"
-    section =break_standings
+    section = standings
     name = "standings_missed_debates"
     default = 1
 
@@ -293,7 +293,7 @@ class StandingsMissedDebates(IntegerPreference):
 class StandingsMethod(StringPreference):
     help_text = 'Speaker rankings are by total (Yes) or average score (No)'
     verbose_name = "Standings Method"
-    section = break_standings
+    section = standings
     name = "standings_method"
     default = 'australs'
 
@@ -302,7 +302,7 @@ class StandingsMethod(StringPreference):
 class TeamStandingsRule(StringPreference):
     help_text = 'Rule for ordering teams, "australs" or "nz" or "wadl" see wiki'
     verbose_name = "Team Standings Rule"
-    section = break_standings
+    section = standings
     name = "team_standings_rule"
     default = 'australs'
 
@@ -338,13 +338,13 @@ class BallotsReleased(BooleanPreference):
 
 
 # ==============================================================================
-data_entry = Section('data entry')
+data_entry = Section('data_entry')
 # ==============================================================================
 
 @tournament_preferences_registry.register
 class PublicBallots(BooleanPreference):
     help_text = 'Public interface to add ballots using normal URLs'
-    verbose_name = "PublicBallots"
+    verbose_name = "Public Ballots"
     section = data_entry
     name = "public_ballots"
     default = False
@@ -387,7 +387,7 @@ class PublicPassword(StringPreference):
     verbose_name = "Public Password"
     section = data_entry
     name = "public_password"
-    default = ''
+    default = 'Enter Password'
 
 @tournament_preferences_registry.register
 class EnableAssistantConfirms(BooleanPreference):
@@ -399,14 +399,14 @@ class EnableAssistantConfirms(BooleanPreference):
 
 
 # ==============================================================================
-public_website_features = Section('public website features')
-# = False==============================================================================
+public_features = Section('public_features')
+# ==============================================================================
 
 @tournament_preferences_registry.register
 class PublicParticipants(BooleanPreference):
     help_text = 'Public interface to see all participants'
     verbose_name = "Public Participants"
-    section = public_website_features
+    section = public_features
     name = "public_participants"
     default = False
 
@@ -414,7 +414,7 @@ class PublicParticipants(BooleanPreference):
 class PublicBreakCategories(BooleanPreference):
     help_text = 'Show break categories on the participants page'
     verbose_name = "Public Break Categories"
-    section = public_website_features
+    section = public_features
     name = "public_break_categories"
     default = False
 
@@ -422,7 +422,7 @@ class PublicBreakCategories(BooleanPreference):
 class PublicSideAllocations(BooleanPreference):
     help_text = 'Public interface to see side pre-allocations'
     verbose_name = "Public Side Allocations"
-    section = public_website_features
+    section = public_features
     name = "public_side_allocations"
     default = False
 
@@ -430,7 +430,7 @@ class PublicSideAllocations(BooleanPreference):
 class PublicDraw(BooleanPreference):
     help_text = 'Public interface to see RELEASED draws'
     verbose_name = "Public Draw"
-    section = public_website_features
+    section = public_features
     name = "public_draw"
     default = False
 
@@ -439,7 +439,7 @@ class PublicDraw(BooleanPreference):
 class PublicResults(BooleanPreference):
     help_text = 'Public interface to see results from previous rounds'
     verbose_name = "Public Results"
-    section = public_website_features
+    section = public_features
     name = "public_results"
     default = False
 
@@ -448,7 +448,7 @@ class PublicResults(BooleanPreference):
 class PublicMotions(BooleanPreference):
     help_text = 'Public interface to see RELEASED motions'
     verbose_name = "Public Motions"
-    section = public_website_features
+    section = public_features
     name = "public_motions"
     default = True
 
@@ -456,7 +456,7 @@ class PublicMotions(BooleanPreference):
 class PublicTeamStandings(BooleanPreference):
     help_text = 'Public interface to see team standings DURING tournament'
     verbose_name = "Public Team Standings"
-    section = public_website_features
+    section = public_features
     name = "public_team_standings"
     default = False
 
@@ -464,7 +464,7 @@ class PublicTeamStandings(BooleanPreference):
 class PublicBreakingTeams(BooleanPreference):
     help_text = 'Public interface to see breaking teams, for AFTER the break announcement'
     verbose_name = "Public Breaking Teams"
-    section =public_website_features
+    section = public_features
     name = "public_breaking_teams"
     default = False
 
@@ -472,73 +472,79 @@ class PublicBreakingTeams(BooleanPreference):
 class PublicBreakingAdjs(BooleanPreference):
     help_text = 'Public interface to see breaking adjudicators, for AFTER the break announcement'
     verbose_name = "Public Breaking Adjs"
-    section = public_website_features
+    section = public_features
     name = "public_breaking_adjs"
     default = False
 
 # ==============================================================================
-public_website_options = Section('public website tweaks')
+ui_options = Section('ui_options')
 # ==============================================================================
 
 @tournament_preferences_registry.register
 class ShowSplittingAdjudicators(BooleanPreference):
     help_text = 'If showing public results, show splitting adjudicators',
     verbose_name = 'Show Splitting Adjudicators'
-    section = public_website_options
+    section = ui_options
     default = False
 
 @tournament_preferences_registry.register
 class ShowMotionsInResults(BooleanPreference):
     help_text = 'If showing public results, show motions with results',
     verbose_name = 'Show Motions In Results'
-    section = public_website_options
+    section = ui_options
+    name = 'show_motions_in_results'
     default = False
 
 @tournament_preferences_registry.register
 class ShowEmoji(BooleanPreference):
     help_text = 'Shows Emoji in the draw UI',
     verbose_name = 'Show Emoji'
-    section = public_website_options
+    section = ui_options
+    name = 'show_emoji'
     default = True
 
 @tournament_preferences_registry.register
 class ShowInstitutions(BooleanPreference):
     help_text = 'Shows the institutions column in draw and other UIs',
     verbose_name = 'Show Institutions'
-    section = public_website_options
+    section = ui_options
+    name = 'show_institutions'
     default = True
 
 @tournament_preferences_registry.register
 class ShowNovices(BooleanPreference):
     help_text = 'Show if a speaker is a novice',
     verbose_name = 'Show Novices'
-    section = public_website_options
+    section = ui_options
+    name = 'show_novices'
     default = False
 
 @tournament_preferences_registry.register
 class ShowSpeakersInDraw(BooleanPreference):
     help_text = 'Disable/Enable a hover element showing each teams speakers in the UI',
     verbose_name = 'Show Speakers In Draw'
-    section = public_website_options
+    section = ui_options
+    name = 'show_speakers_in_draw'
     default = True
 
 @tournament_preferences_registry.register
 class ShowAllDraws(BooleanPreference):
     help_text = 'If showing public draws, show all (past & future) RELEASED draws',
     verbose_name = 'Show All Draws'
-    section = public_website_options
+    section = ui_options
+    name = 'show_all_draws'
     default = False
 
 @tournament_preferences_registry.register
 class PublicMotionsDescending(BooleanPreference):
     help_text = 'List motions by round in descending order (as opposed to ascending)'
     verbose_name = "Public Motions Descending"
-    section = public_website_options
+    section = ui_options
     name = "public_motions_descending"
     default = True
 
 # ==============================================================================
-league_options = Section('league options')
+league_options = Section('league_options')
 # ==============================================================================
 
 @tournament_preferences_registry.register

@@ -26,7 +26,7 @@
     </li>
     {% endfor %}
   {% endif %}
-  {% if tournaments.all.count > 1 and tournaments.0.config.public_divisions > 0 %}
+  {% if tournaments.all.count > 1 and tournaments.0.preferences.league_options__public_divisions %}
   <li class="list-group-item">
     <a href="{{ tournaments.0.get_all_tournaments_all_venues }}">All Draws by Venue</a>
   </li>

@@ -23,14 +23,14 @@ class Tournament(models.Model):
     @property
     def LAST_SUBSTANTIVE_POSITION(self):
         """Returns the number of substantive speakers."""
-        return self.config.get('substantive_speakers')
+        return self.preferences.debate_rules__substantive_speakers
 
     @property
     def REPLY_POSITION(self):
         """If there is a reply position, returns one more than the number of
         substantive speakers. If there is no reply position, returns None."""
-        if self.config.get('reply_scores_enabled'):
-            return self.config.get('substantive_speakers') + 1
+        if self.preferences.debate_rules__reply_scores_enabled:
+            return self.preferences.debate_rules__substantive_speakers + 1
         else:
             return None
 
@@ -38,8 +38,8 @@ class Tournament(models.Model):
     def POSITIONS(self):
         """Guaranteed to be consecutive numbers starting at one. Includes the
         reply speaker."""
-        speaker_positions = 1 + self.config.get('substantive_speakers')
-        if self.config.get('reply_scores_enabled') is True:
+        speaker_positions = 1 + self.preferences.debate_rules__substantive_speakers
+        if self.preferences.debate_rules__reply_scores_enabled is True:
             speaker_positions = speaker_positions + 1
         return list(range(1, speaker_positions))
 
