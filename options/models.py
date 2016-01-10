@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
+from tournaments.models import Tournament
+from dynamic_preferences.models import PerInstancePreferenceModel
 
 class OptionManager(models.Manager):
 
@@ -36,3 +38,13 @@ class Option(models.Model):
     value = models.CharField(max_length=40)
 
     objects = OptionManager()
+
+
+class TournamentPreferenceModel(PerInstancePreferenceModel):
+
+    instance = models.ForeignKey(Tournament)
+
+    class Meta(PerInstancePreferenceModel.Meta):
+        app_label = 'dynamic_preferences' # Can't change this
+        verbose_name = "Tournament Preference"
+        verbose_name_plural = "Tournament Preferencess"

@@ -1,13 +1,6 @@
 from django.contrib import admin
 from django import forms
 
-
-from dynamic_preferences.admin import PerInstancePreferenceAdmin
-from dynamic_preferences.forms import SinglePerInstancePreferenceForm
-
-from results.dynamic_preferences_registry import TournamentPreferenceModel
-from dynamic_preferences.settings import preferences_settings
-
 from .models import Tournament, Division, Round
 
 # ==============================================================================
@@ -43,15 +36,3 @@ class RoundAdmin(admin.ModelAdmin):
 
 admin.site.register(Round, RoundAdmin)
 
-# ==============================================================================
-# Preferences
-# ==============================================================================
-
-class TournamentPreferenceAdmin(PerInstancePreferenceAdmin):
-  pass
-
-admin.site.register(TournamentPreferenceModel, TournamentPreferenceAdmin)
-
-from dynamic_preferences.models import GlobalPreferenceModel, UserPreferenceModel
-admin.site.unregister(GlobalPreferenceModel)
-admin.site.unregister(UserPreferenceModel)

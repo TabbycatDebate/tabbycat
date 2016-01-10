@@ -8,7 +8,7 @@ from utils.views import *
 def tournament_options(request, t):
 
 
-    from results.dynamic_preferences_registry import tournament_preferences_registry
+    from options.dynamic_preferences_registry import tournament_preferences_registry
     # We instanciate a manager for our global preferences
     tournament_preferences_registry = tournament_preferences_registry.manager()
 
@@ -31,7 +31,7 @@ def tournament_options(request, t):
     return r2r(request, 'tournament_options.html', context)
 
 
-from results.dynamic_preferences_registry import tournament_preferences_registry
+from options.dynamic_preferences_registry import tournament_preferences_registry
 from dynamic_preferences.forms import preference_form_builder, PreferenceForm
 
 class TournamentPreferenceForm(PreferenceForm):
