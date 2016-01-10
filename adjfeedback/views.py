@@ -111,8 +111,8 @@ def feedback_overview(request, t):
         'adjudicators'      : adjudicators,
         'breaking_count'    : breaking_count,
         'feedback_headings' : [q.name for q in t.adj_feedback_questions],
-        'score_min'         : t.config.get('adj_min_score'),
-        'score_max'         : t.config.get('adj_max_score'),
+        'score_min'         : t.preferences.feedack__adj_min_score,
+        'score_max'         : t.preferences.feedack__adj_max_score,
     }
     return r2r(request, 'feedback_overview.html', context)
 
@@ -135,11 +135,11 @@ def adj_source_feedback(request, t):
 
 def process_feedback(feedbacks, t):
     questions = t.adj_feedback_questions
-    score_step = t.config.get('adj_max_score')  / 10
+    score_step = t.preferences.feedack__adj_max_score / 10
     score_thresholds = {
-        'low_score'     : t.config.get('adj_min_score') + score_step,
-        'medium_score'  : t.config.get('adj_min_score') + score_step + score_step,
-        'high_score'    : t.config.get('adj_max_score') - score_step,
+        'low_score'     : t.preferences.feedack__adj_min_score + score_step,
+        'medium_score'  : t.preferences.feedack__adj_min_score + score_step + score_step,
+        'high_score'    : t.preferences.feedack__adj_max_score - score_step,
     }
     for feedback in feedbacks:
         feedback.items = []

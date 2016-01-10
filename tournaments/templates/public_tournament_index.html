@@ -86,7 +86,7 @@
       {% endif %}
       {% if preferences.feedback__feedback_progress %}
         <li class="list-group-item">
-          <a href="{% tournament_urlpreferences.feedback__public_feedback_progress %}">
+          <a href="{% tournament_url feedback_progress %}">
           Feedback Progress</a>
           </li>
       {% endif %}
@@ -97,7 +97,7 @@
       {% endif %}
       {% if preferences.feedback__public_feedback %}
         <li class="list-group-item">
-          <a href="{% tournament_urlpreferences.feedback__public_feedback_submit %}">Enter Feedback</a>
+          <a href="{% tournament_url public_feedback_submit %}">Enter Feedback</a>
         </li>
       {% endif %}
       {% if preferences.ui_options__show_all_draws > 0 %}

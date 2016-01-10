@@ -103,7 +103,7 @@
     </a></li>
   {% endif %}
   {% if preferences.feedback__feedback_progress > 0 %}
-    <li><a href="{% tournament_urlpreferences.feedback__public_feedback_progress %}">
+    <li><a href="{% tournament_url public_feedback_progress %}">
       Feedback Progress
     </a></li>
   {% endif %}
@@ -113,7 +113,7 @@
     </a></li>
   {% endif %}
   {% if preferences.feedback__public_feedback > 0 %}
-    <li><a href="{% tournament_urlpreferences.feedback__public_feedback_submit %}">
+    <li><a href="{% tournament_url public_feedback_submit %}">
       Enter Feedback
     </a></li>
   {% endif %}

@@ -26,7 +26,7 @@ SETTINGS = OrderedDict([
     ('motion_vetoes_enabled',       (_bool, 'Whether teams can veto motions',                                      True)),
     ('adj_min_score',               (float, 'Minimum adjudicator score',                                           1.0)),
     ('adj_min_voting_score',        (float, 'Minimum adjudicator score required to not trainee in auto-allocation',1.5)),
-    ('adj_max_score',               (float, 'Maximum adjudicator score',                                           5)),
+    # ('adj_max_score',               (float, 'Maximum adjudicator score',                                           5)),
     ('adj_chair_min_score',         (float, 'Minimum chair score',                                                 3.5)),
     ('draw_odd_bracket',            (str,   'Odd bracket resolution method, see wiki for allowed values',          'intermediate_bubble_up_down')),
     ('draw_side_allocations',       (str,   'Side allocations method, see wiki for allowed values',                'balance')),

@@ -125,8 +125,8 @@ class BaseFeedbackForm(forms.Form):
     def _create_fields(self):
         """Creates dynamic fields in the form."""
         # Feedback questions defined for the tournament
-        adj_min_score = self.tournament.config.get('adj_min_score')
-        adj_max_score = self.tournament.config.get('adj_max_score')
+        adj_min_score = self.tournament.preferences.feedback__adj_min_score
+        adj_max_score = self.tournament.preferences.feedback__adj_max_score
         score_label = mark_safe("Overall score<br />(%s=lowest, %s=highest)" % (adj_min_score, adj_max_score))
         self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
 
