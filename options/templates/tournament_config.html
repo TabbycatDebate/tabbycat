@@ -17,12 +17,6 @@
 
 {% block content %}
 
-<ul class="sections">
-    {% for section in registry.sections %}
-        <li><a href="./{{ section }}">{{ section }}</a></li>
-    {% endfor %}
-</ul>
-
 <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
 
   {% csrf_token %}

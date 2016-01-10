@@ -237,13 +237,6 @@ class PanellistFeedbackEnabled(BooleanPreference):
     name = 'panellist_feedback_enabled'
     default = True
 
-@tournament_preferences_registry.register
-class FeedbackProgress(BooleanPreference):
-    help_text = "Public interface to show who has unsubmitted ballots"
-    verbose_name = "Feedback Progress"
-    section = feedback
-    name = 'feedback_progress'
-    default = False
 
 
 # ==============================================================================
@@ -434,7 +427,6 @@ class PublicDraw(BooleanPreference):
     name = "public_draw"
     default = False
 
-# ('public_results',              (BooleanPreference, ,                False)),
 @tournament_preferences_registry.register
 class PublicResults(BooleanPreference):
     help_text = 'Public interface to see results from previous rounds'
@@ -443,7 +435,6 @@ class PublicResults(BooleanPreference):
     name = "public_results"
     default = False
 
-# ('public_motions',              (BooleanPreference, ,                            False)),
 @tournament_preferences_registry.register
 class PublicMotions(BooleanPreference):
     help_text = 'Public interface to see RELEASED motions'
@@ -474,6 +465,14 @@ class PublicBreakingAdjs(BooleanPreference):
     verbose_name = "Public Breaking Adjs"
     section = public_features
     name = "public_breaking_adjs"
+    default = False
+
+@tournament_preferences_registry.register
+class FeedbackProgress(BooleanPreference):
+    help_text = "Public interface to show who has unsubmitted ballots"
+    verbose_name = "Feedback Progress"
+    section = public_features
+    name = 'feedback_progress'
     default = False
 
 # ==============================================================================

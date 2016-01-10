@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% load add_field_css %}
+
+{% block head-title %}Configuration{% endblock %}
+{% block page-title %}Configuration{% endblock %}
+{% block body-class %}config{% endblock %}
+
+{% block content %}
+
+<div class="col-md-6">
+  <ul class="list-group">
+      <a href="{% tournament_url scoring %}" class="list-group-item">
+        <h4 class="list-group-item-heading">💯 Score Rules</h4>
+        <p class="list-group-item-text">The settings that determine the range of points that can awarded to speeches, replies, and teams</p>
+      </a>
+      <a href="{% tournament_url draw_rules %}" class="list-group-item">
+        <h4 class="list-group-item-heading">📏 ️Draw Rules</h4>
+        <p class="list-group-item-text">The settings that determine how teams are matched together in the draw and how adjudicators are auto-allocated</p>
+      </a>
+      <a href="{% tournament_url debate_rules %}" class="list-group-item">
+        <h4 class="list-group-item-heading">⚖ Debate Rules</h4>
+        <p class="list-group-item-text">The settings that determine how many speeches there are per side, how motions are decided, and whether replies are delivered</p>
+      </a>
+      <a href="{% tournament_url standings %}" class="list-group-item">
+        <h4 class="list-group-item-heading">📊 Standings</h4>
+        <p class="list-group-item-text">The settings that determine how teams and speakers are ranked for the tab</p>
+      </a>
+      <a href="{% tournament_url feedback %}" class="list-group-item">
+        <h4 class="list-group-item-heading">🙅 Feedback</h4>
+        <p class="list-group-item-text">The settings that determine how an adj can be scored and who can submit feedback</p>
+      </a>
+  </ul>
+</div>
+<div class="col-md-6">
+  <ul class="list-group">
+      <a href="{% tournament_url tab_release %}" class="list-group-item">
+        <h4 class="list-group-item-heading">🚨 Tab Release</h4>
+        <p class="list-group-item-text">The settings that determine when to release a public tab and what is shown</p>
+      </a>
+      <a href="{% tournament_url data_entry %}" class="list-group-item">
+        <h4 class="list-group-item-heading">📝 Data Entry</h4>
+        <p class="list-group-item-text">The settings that determine whether ballots and feedback can be submitted online</p>
+      </a>
+      <a href="{% tournament_url public_features %}" class="list-group-item">
+        <h4 class="list-group-item-heading">📢 Public Features</h4>
+        <p class="list-group-item-text">The settings that determine what information the online site displays</p>
+      </a>
+      <a href="{% tournament_url ui_options %}" class="list-group-item">
+        <h4 class="list-group-item-heading">💻 UI Options</h4>
+        <p class="list-group-item-text">The settings that determine what information the online site displays</p>
+      </a>
+      <a href="{% tournament_url league_options %}" class="list-group-item">
+        <h4 class="list-group-item-heading">🏫 League Options</h4>
+        <p class="list-group-item-text">Special options for running high school debating competitions</p>
+      </a>
+  </ul>
+</div>
+{% endblock content %}
