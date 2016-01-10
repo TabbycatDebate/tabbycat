@@ -17,9 +17,6 @@
 
 {% block content %}
 
-tournament_preferences_registry: {{ tournament_preferences_registry }} <br>
-tournament_preferences: {{ tournament_preferences }}
-
 <form id="configForm" action="." method="POST" class="form-horizontal">
   {% for field in form %}
   <div class="form-group">
@@ -28,7 +25,9 @@ tournament_preferences: {{ tournament_preferences }}
       {{field|addcss:"form-control"}}
     </div>
     <div class="col-sm-5">
-      <span class="help-block">{{ field.help_text }}</span>
+      <span class="help-block">
+        {{ field.help_text }}
+      </span>
     </div>
     {% if field.errors %}
       {{ field.errors }}
