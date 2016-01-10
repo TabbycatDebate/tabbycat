@@ -7,6 +7,14 @@ from utils.views import *
 @tournament_view
 def tournament_options(request, t):
 
+
+    from results.dynamic_preferences_registry import tournament_preferences_registry
+    # We instanciate a manager for our global preferences
+    tournament_preferences_registry = tournament_preferences_registry.manager()
+
+    tournament_preferences = t.preferences
+
+
     context = dict()
     if request.method == 'POST':
         form = make_options_form(t, request.POST)
@@ -18,5 +26,7 @@ def tournament_options(request, t):
         form = make_options_form(t)
 
     context['form'] = form
+    context['tournament_preferences_registry'] = tournament_preferences_registry
+    context['tournament_preferences'] = tournament_preferences
 
     return r2r(request, 'tournament_options.html', context)

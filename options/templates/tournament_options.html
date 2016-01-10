@@ -17,6 +17,9 @@
 
 {% block content %}
 
+tournament_preferences_registry: {{ tournament_preferences_registry }} <br>
+tournament_preferences: {{ tournament_preferences }}
+
 <form id="configForm" action="." method="POST" class="form-horizontal">
   {% for field in form %}
   <div class="form-group">
