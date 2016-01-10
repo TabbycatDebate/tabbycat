@@ -8,23 +8,23 @@
           {% if tournament and enable_divisions == 0 %}
             {{ tournament }} runs on <a href="https://github.com/czlee/tabbycat/" target="_new">😸Tabby Cat v0.8.0, </a>
             as developed by Qi-Shan, <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, & <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
-            Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> (Android) and
+            Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> (Android) &
              <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
           {% endif %}
         </small>
       </p>
       <p class="navbar-brand text-muted pull-right {% if '/admin/' in request.path %}navbar-inverse{% endif %}">
         <small>
-          <a href="/">Home</a> |
+          <a href="/">🏠Home</a> |
           {% if user.is_authenticated %}
             {% if user.is_superuser %}
               {% if tournament %}
-                <a href="{% tournament_url tournament_options %}">Tournament Configuration</a> |
+                <a href="{% tournament_url tournament_options %}">🏆Configuration</a> |
                 <a href="{% tournament_url data_index %}">Data Import</a> |
               {% endif %}
               <a href="/admin/">Data Admin</a> |
             {% endif %}
-            <a href="/accounts/logout/" title="Log out of {{ user }}">Log out of {{ user }}</a>
+            <a href="/accounts/logout/" title="Log out of {{ user }}">Logout of {{ user }}</a>
           {% else %}
             <a href="/accounts/login/" title="Log in">Log in</a>
           {% endif %}

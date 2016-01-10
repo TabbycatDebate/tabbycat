@@ -14,7 +14,7 @@ def _bool(value):
 
 #name,  coerce, help, default
 SETTINGS = OrderedDict([
-    ('substantive_speakers',        (int,   'How many substantive speakers each team will feature',                3)),
+    # ('substantive_speakers',        (int,   'How many substantive speakers each team will feature',                3)),
     ('score_min',                   (float, 'Minimum allowed score',                                               68)),
     ('score_max',                   (float, 'Maximum allowed score',                                               82)),
     ('score_step',                  (float, 'Score steps allowed',                                                 1)),
