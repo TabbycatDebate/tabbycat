@@ -17,7 +17,8 @@
 
 {% block content %}
 
-<form id="configForm" action="." method="POST" class="form-horizontal">
+<form id="configForm" action="" enctype="multipart/form-data"  method="POST" class="form-horizontal">
+
   {% for field in form %}
   <div class="form-group">
     <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">{{ field.label }}</label>
@@ -34,6 +35,7 @@
     {% endif %}
   </div>
   {% endfor %}
+
   <div class="form-group">
     <div class="col-sm-offset-3 col-sm-2">
       <button type="submit" class="btn btn-success form-control submit-disable" data-loading-text="Saving...">

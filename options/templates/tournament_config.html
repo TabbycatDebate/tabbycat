@@ -17,7 +17,6 @@
 
 {% block content %}
 
-sectionss
 <ul class="sections">
     {% for section in registry.sections %}
         <li><a href="./{{ section }}">{{ section }}</a></li>
@@ -28,9 +27,31 @@ sectionss
 
   {% csrf_token %}
 
-  {{ form.as_p }}
-
-  <input type="submit" value="Submit" />
+  {% for field in form %}
+  <div class="form-group">
+    <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">
+      {{ field.label }} {{ field.section.name }}
+    </label>
+    <div class="col-sm-2">
+      {{field|addcss:"form-control"}}
+    </div>
+    <div class="col-sm-5">
+      <span class="help-block">
+        {{ field.help_text }}
+      </span>
+    </div>
+    {% if field.errors %}
+      {{ field.errors }}
+    {% endif %}
+  </div>
+  {% endfor %}
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-2">
+      <button type="submit" class="btn btn-success form-control submit-disable" data-loading-text="Saving...">
+        Save
+      </button>
+    </div>
+  </div>
 
 </form>
 

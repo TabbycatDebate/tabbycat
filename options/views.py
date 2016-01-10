@@ -46,9 +46,7 @@ def tournament_preference_form_builder(instance, preferences=[], **kwargs):
 
 from dynamic_preferences.views import PreferenceFormView
 class TournamentPreferenceFormView(PreferenceFormView):
-    """
-    Will pass `request.user` to form_builder
-    """
+
     registry = tournament_preferences_registry
 
     template_name = "tournament_config.html"
