@@ -70,9 +70,9 @@ def public_results(request, round):
         print("Result page denied: round %d, current round %d, release all %s, silent %s" % (round.seq, round.tournament.current_round.seq, round.tournament.release_all, round.silent))
         raise Http404()
     draw = round.get_draw()
-    show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.preferences.ui_options__show_motions_in_results
-    show_splits = round.tournament.preferences.ui_options__show_splitting_adjudicators
-    show_ballots = round.tournament.config.get('ballots_released')
+    show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.preferences['ui_options__show_motions_in_results']
+    show_splits = round.tournament.preferences['ui_options__show_splitting_adjudicators']
+    show_ballots = round.tournament.preferences['tab_release__ballots_released']
     return r2r(request, "public_results_for_round.html", dict(
             draw=draw, show_motions_column=show_motions_column, show_splits=show_splits,
             show_ballots=show_ballots))
@@ -134,7 +134,7 @@ def edit_ballotset(request, t, ballotsub_id):
         'ballotsub'        : ballotsub,
         'debate'           : debate,
         'all_ballotsubs'   : all_ballotsubs,
-        'disable_confirm'  : request.user == ballotsub.submitter and not t.preferences.data_entry__enable_assistant_confirms and not request.user.is_superuser,
+        'disable_confirm'  : request.user == ballotsub.submitter and not t.preferences['data_entry__enable_assistant_confirms'] and not request.user.is_superuser,
         'round'            : debate.round,
         'not_singleton'    : all_ballotsubs.exclude(id=ballotsub_id).exists(),
         'new'              : False,

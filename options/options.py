@@ -33,6 +33,8 @@ SETTINGS = OrderedDict([
     ('team_history_penalty',        (int,   'Penalty for team-team history conflict',                              1000)),
     ('draw_odd_bracket',            (str,   'Odd bracket resolution method, see wiki for allowed values',          'intermediate_bubble_up_down')),
 
+    # CHeck other OPTIONS_TO_CONFIG_MAPPING, such as 321-324 of tournament models
+
     # TODO: below options need a rework of the way public_optional_tournament_view works
     ('public_participants',         (_bool, 'Public interface to see all participants',                            False)),
     ('public_side_allocations',     (_bool, 'Public interface to see side pre-allocations',                        False)),

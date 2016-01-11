@@ -29,7 +29,7 @@ def adj_scores(request, t):
 def feedback_overview(request, t):
     breaking_count = 0
 
-    if not t.preferences.league_options__share_adjs:
+    if not t.preferences['league_options__share_adjs']:
         adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
             'tournament','tournament__current_round')
     else:
@@ -111,8 +111,8 @@ def feedback_overview(request, t):
         'adjudicators'      : adjudicators,
         'breaking_count'    : breaking_count,
         'feedback_headings' : [q.name for q in t.adj_feedback_questions],
-        'score_min'         : t.preferences.feedack__adj_min_score,
-        'score_max'         : t.preferences.feedack__adj_max_score,
+        'score_min'         : t.preferences['feedback__adj_min_score'],
+        'score_max'         : t.preferences['feedback__adj_max_score'],
     }
     return r2r(request, 'feedback_overview.html', context)
 
@@ -135,11 +135,11 @@ def adj_source_feedback(request, t):
 
 def process_feedback(feedbacks, t):
     questions = t.adj_feedback_questions
-    score_step = t.preferences.feedack__adj_max_score / 10
+    score_step = t.preferences['feedback__adj_max_score / 10']
     score_thresholds = {
-        'low_score'     : t.preferences.feedack__adj_min_score + score_step,
-        'medium_score'  : t.preferences.feedack__adj_min_score + score_step + score_step,
-        'high_score'    : t.preferences.feedack__adj_max_score - score_step,
+        'low_score'     : t.preferences['feedback__adj_min_score + score_step'],
+        'medium_score'  : t.preferences['feedback__adj_min_score + score_step'] + score_step,
+        'high_score'    : t.preferences['feedback__adj_max_score - score_step'],
     }
     for feedback in feedbacks:
         feedback.items = []
@@ -341,7 +341,7 @@ def set_adj_breaking_status(request, t):
 @tournament_view
 def add_feedback(request, t):
     context = {
-        'adjudicators' : t.adjudicator_set.all() if not t.preferences.league_options__share_adjs
+        'adjudicators' : t.adjudicator_set.all() if not t.preferences['league_options__share_adjs']
                          else Adjudicator.objects.all(),
         'teams'        : t.team_set.all(),
     }

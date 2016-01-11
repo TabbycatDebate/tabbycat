@@ -478,7 +478,7 @@ class BallotSet(object):
         if not self.loaded_sheets:
             return self.margins_from_db[dt]
 
-        if self.debate.round.tournament.preferences.league_options__margin_includes_dissenters is False:
+        if self.debate.round.tournament.preferences['league_options__margin_includes_dissenters'] is False:
             if self._get_avg_total(dt) and self._get_avg_total(self._other[dt]):
                 return self._get_avg_total(dt) - self._get_avg_total(self._other[dt])
         else:

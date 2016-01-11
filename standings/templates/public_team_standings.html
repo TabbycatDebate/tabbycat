@@ -15,7 +15,7 @@
           <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
         {% endif %}
         <th>Team</th>
-        preferences.ui_options__show_emoji
+        {% if preferences.ui_options__show_emoji %}
           <th class="team-emoji"></th>
         {% endif %}
         {% if preferences.ui_options__show_institutions %}
@@ -44,7 +44,7 @@
           {{ team.short_name }}
         </span>
       </td>
-      preferences.ui_options__show_emoji
+      {% if preferences.ui_options__show_emoji %}
         <td class="team-emoji">{% team_emoji team %}</td>
       {% endif %}
       {% if preferences.ui_options__show_institutions %}
@@ -72,7 +72,7 @@
               {% endwith %}
             {% endif %}
                 vs
-                preferences.ui_options__show_emoji
+                {% if preferences.ui_options__show_emoji %}
                   <span>{% team_emoji round_results.opposition %}</span>
                 {% else %}
                   {{ round_results.opposition.short_reference|slice:"5"}}&hellip;

@@ -14,7 +14,7 @@
         <tr>
           <th>Rank</th>
           <th>Break</th>
-          preferences.ui_options__show_emoji
+          {% if preferences.ui_options__show_emoji %}
             <th class="team-emoji"></th>
           {% endif %}
           <th>Team</th>
@@ -39,7 +39,7 @@
         <tr>
           <td>{{ team.rank }}</td>
           <td>{{ team.break_rank|default_if_none:"&ndash;" }}</td>
-          preferences.ui_options__show_emoji
+          {% if preferences.ui_options__show_emoji %}
             <td class="team-emoji">{% team_emoji team %}</td>
           {% endif %}
           <td>

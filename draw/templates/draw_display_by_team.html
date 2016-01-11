@@ -38,7 +38,7 @@
   <thead>
     <tr>
       <th>Team</th>
-      preferences.ui_options__show_emoji
+      {% if preferences.ui_options__show_emoji %}
         <th class="th-emoji"></th>
       {% endif %}
       <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
@@ -59,7 +59,7 @@
           {{ debate.aff_team.short_name }}
         </span>
       </td>
-      preferences.ui_options__show_emoji
+      {% if preferences.ui_options__show_emoji %}
         <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
       {% endif %}
       {% if preferences.league_options__enable_venue_groups %}
@@ -113,7 +113,7 @@
           {{ debate.neg_team.short_name }}
         </span>
       </td>
-      preferences.ui_options__show_emoji
+      {% if preferences.ui_options__show_emoji %}
         <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
       {% endif %}
       <td class="venue-name">

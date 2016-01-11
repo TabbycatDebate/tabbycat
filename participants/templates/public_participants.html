@@ -17,7 +17,7 @@
         {% if preferences.ui_options__show_novices %}
           <th><span class="glyphicon glyphicon-leaf" data-toggle="tooltip" title="Speaker's Novice Status"></span></th>
         {% endif %}
-        preferences.ui_options__show_emoji
+        {% if preferences.ui_options__show_emoji %}
           <th class="team-emoji"></th>
         {% endif %}
         <th>Team</th>
@@ -38,7 +38,7 @@
             {% if person.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% else %}<span></span>{% endif %}
           </td>
         {% endif %}
-        preferences.ui_options__show_emoji
+        {% if preferences.ui_options__show_emoji %}
           <td class="team-emoji">{% team_emoji person.team %}</td>
         {% endif %}
         <td class="team-name">

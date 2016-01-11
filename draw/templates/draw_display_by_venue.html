@@ -45,11 +45,11 @@
         <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
         <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
       {% endif %}
-      preferences.ui_options__show_emoji
+      {% if preferences.ui_options__show_emoji %}
         <th class="th-emoji"/></th>
       {% endif %}
       <th>{% if preferences.draw_rules__side_allocations_unknown == 'manual-ballot' %}Team 1{% else %}Aff{% endif %}</th>
-      preferences.ui_options__show_emoji
+      {% if preferences.ui_options__show_emoji %}
         <th class="th-emoji"/></th>
       {% endif %}
       <th>{% if preferences.draw_rules__side_allocations_unknown == 'manual-ballot' %}Team 2{% else %}Neg{% endif %}</th>
@@ -79,7 +79,7 @@
       {% if preferences.league_options__enable_venue_times %}
         {% include "tables/debate_status.html" %}
       {% endif %}
-      preferences.ui_options__show_emoji
+      {% if preferences.ui_options__show_emoji %}
         <td class="team-emoji"><span>{% team_emoji debate.aff_team %}</span></td>
       {% endif %}
       <td class="team-name">
@@ -89,7 +89,7 @@
           </span>
         {% endif %}
       </td>
-      preferences.ui_options__show_emoji
+      {% if preferences.ui_options__show_emoji %}
         <td class="team-emoji"><span>{% team_emoji debate.neg_team %}</span></td>
       {% endif %}
       <td class="team-name">

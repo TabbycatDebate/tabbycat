@@ -11,7 +11,7 @@
   <table id="dataTable" class="team-tab table table-hover table-striped" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
-        preferences.ui_options__show_emoji
+        {% if preferences.ui_options__show_emoji %}
           <th class="team-emoji"></th>
         {% endif %}
         <th>Team</th>
@@ -26,7 +26,7 @@
     <tbody>
     {% for team in teams %}
     <tr>
-      preferences.ui_options__show_emoji
+      {% if preferences.ui_options__show_emoji %}
         <td class="team-emoji">{% team_emoji team %}</td>
       {% endif %}
       <td>

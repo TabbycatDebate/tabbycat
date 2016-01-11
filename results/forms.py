@@ -132,9 +132,9 @@ class BallotSetForm(forms.Form):
         self.tournament = self.debate.round.tournament
         self.tconfig = self.tournament.config
         self.using_motions = self.tconfig.get('enable_motions')
-        self.using_vetoes = self.tournament.preferences.debate_rules__motion_vetoes_enabled
-        self.using_forfeits = self.tournament.preferences.leage_options__enable_forfeits
-        self.using_replies = self.tournament.preferences.debate_rules__reply_scores_enabled
+        self.using_vetoes = self.tournament.preferences['debate_rules__motion_vetoes_enabled']
+        self.using_forfeits = self.tournament.preferences['leage_options__enable_forfeits']
+        self.using_replies = self.tournament.preferences['debate_rules__reply_scores_enabled']
         self.choosing_sides = self.tconfig.get('draw_side_allocations') == 'manual-ballot'
 
         self.forfeit_declared = False

@@ -78,7 +78,7 @@ def r2r(request, template, extra_context=None):
     return render_to_response(template, context_instance=rc)
 
 def relevant_team_standings_metrics(tournament):
-    rule = tournament.preferences.standings__team_standings_rule
+    rule = tournament.preferences['standings__team_standings_rule']
     precedence = PRECEDENCE_BY_RULE[rule]
     metrics = dict()
     metrics["draw_strength"] = "draw_strength" in precedence
