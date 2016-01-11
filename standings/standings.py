@@ -165,7 +165,7 @@ def _add_subranks(standings, key, subkey):
 
     return standings
 
-def _add_division_ranks(standings, key, divisions):
+def _add_division_ranks(standings, divisions):
     """Adds subranks for each division."""
     for division in divisions:
         division_teams = [team for team in standings if team.division == division]

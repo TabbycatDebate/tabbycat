@@ -135,11 +135,11 @@ def adj_source_feedback(request, t):
 
 def process_feedback(feedbacks, t):
     questions = t.adj_feedback_questions
-    score_step = t.preferences['feedback__adj_max_score / 10']
+    score_step = t.preferences['feedback__adj_max_score'] / 10
     score_thresholds = {
-        'low_score'     : t.preferences['feedback__adj_min_score + score_step'],
-        'medium_score'  : t.preferences['feedback__adj_min_score + score_step'] + score_step,
-        'high_score'    : t.preferences['feedback__adj_max_score - score_step'],
+        'low_score'     : t.preferences['feedback__adj_min_score'] + score_step,
+        'medium_score'  : t.preferences['feedback__adj_min_score'] + score_step + score_step,
+        'high_score'    : t.preferences['feedback__adj_max_score'] - score_step,
     }
     for feedback in feedbacks:
         feedback.items = []
@@ -496,7 +496,7 @@ def randomised_urls(request, t):
             t.team_set.filter(url_key__isnull=False).exists()
     context['tournament_slug'] = t.slug
     context['ballot_normal_urls_enabled'] = t.preferences['data_entry__public_ballots']
-    context['ballot_randomised_urls_enabled'] = t.preferences['data_entry_public_ballots_randomised']
+    context['ballot_randomised_urls_enabled'] = t.preferences['data_entry__public_ballots_randomised']
     context['feedback_normal_urls_enabled'] = t.preferences['data_entry__public_feedback']
     context['feedback_randomised_urls_enabled'] = t.preferences['data_entry__public_feedback_randomised']
     return r2r(request, 'randomised_urls.html', context)

@@ -126,7 +126,7 @@ def team_standings(request, round):
 @round_view
 def division_standings(request, round):
     # TODO: this can largely be merged/abstracted with teams
-    teams = Team.objects.divisions(round)
+    teams = Team.objects.division_standings(round)
 
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
