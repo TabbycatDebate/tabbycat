@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from .models import Motion
 from actionlog.models import ActionLogEntry
-from tournaments.models import Round
+from tournaments.models import Round, Division
 
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory
