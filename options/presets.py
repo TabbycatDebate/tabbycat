@@ -38,34 +38,77 @@ class AustralianEastersPreferences(AustralsPreferences):
     def __init__(self):
         self.name                                      = "Australian Easters"
         self.show_in_list                              = True
-        # Scoring= easters has a lower range
         self.scoring__score_min                        = 70.0
         self.scoring__score_max                        = 80.0
-        # TODO= pretty sure this is constitutional
         self.scoring__maximum_margin                   = 15.0
-        # Debate Rules= no replies; singular motions
+        # Debate Rules
         self.debate_rules__reply_scores_enabled        = False
         self.debate_rules__motion_vetoes_enabled       = False
         # UI Options
         self.ui_options__show_novices                  = True
 
 class NZEastersPreferences(AustralsPreferences):
-    """ 2vs2 with replies, set motions, novices, and... UNCOMPLETE """
+    """ 2vs2 with replies, chosen motions, chosen sides, novices, and... UNCOMPLETE """
     def __init__(self):
         self.name                                      = "NZ Easters"
         self.show_in_list                              = True
+        # Scoring
+        self.scoring__score_min                        = 60.0
+        self.scoring__score_max                        = 80.0
+        self.scoring__reply_score_min                  = 30.0
+        self.scoring__reply_score_max                  = 40.0
+        # Debate Rules
+        self.debate_rules__reply_scores_enabled        = True
+        self.debate_rules__motion_vetoes_enabled       = True
+        self.debate_rules__substantive_speakers        = 2
+        # Standings
+        self.standings__team_standings_rule            = 'nz'
+        # Draw Rules
+        self.draw_rules__draw_side_allocations         = 'manual-ballot'
+        self.draw_rules__draw_odd_bracket              = 'intermediate'
+        self.draw_rules__draw_pairing_method           = 'fold'
+        self.draw_rules__draw_avoid_conflicts          = 'off'
+        self.draw_rules__avoid_same_institution        = False # TODO: CHECK
+        self.draw_rules__avoid_team_history            = False # TODO: CHECK
+        # UI Options
+        self.ui_options__show_novices                  = True
 
-class UADCPreferences(AustralsPreferences):
-    """ Idk... UNCOMPLETE """
-    def __init__(self):
-        self.name                                      = "UADC"
-        self.show_in_list                              = True
 
 class JoyntPreferences(AustralsPreferences):
     """ 3vs3 with replies, set sides, publicly displayed sides and motions... UNCOMPLETE """
     def __init__(self):
         self.name                                      = "Joynt Scroll"
         self.show_in_list                              = True
+        # Scoring
+        self.scoring__score_min                        = 60.0
+        self.scoring__score_max                        = 80.0
+        self.scoring__reply_score_min                  = 30.0
+        self.scoring__reply_score_max                  = 40.0
+        # Debate Rules
+        self.debate_rules__reply_scores_enabled        = True
+        self.debate_rules__motion_vetoes_enabled       = False
+        self.debate_rules__substantive_speakers        = 3
+        # Draw Rules
+        self.draw_rules__draw_side_allocations         = 'preallocated'
+        self.draw_rules__draw_odd_bracket              = 'intermediate2'
+        self.draw_rules__draw_pairing_method           = 'fold'
+        self.draw_rules__draw_avoid_conflicts          = 'off'
+        self.draw_rules__avoid_same_institution        = False
+        self.draw_rules__avoid_team_history            = False
+        # Standings
+        self.standings__team_standings_rule            = 'nz'
+        # Public Features
+        self.public_features__public_side_allocations   = True
+        # UI Options
+        self.ui_options__show_novices                  = True
+
+
+class UADCPreferences(AustralsPreferences):
+    """ Idk... UNCOMPLETE """
+    def __init__(self):
+        self.name                                      = "UADC"
+        self.show_in_list
+
 
 class WADLPreferences(PreferencesPreset):
     """ Example high school league setup """
