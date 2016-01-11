@@ -1,9 +1,9 @@
 {% extends "base.html" %}
+{% load debate_tags %}
 
-{% load add_field_css %}
 
-{% block head-title %}Apply {{ preset_name }} Presets{% endblock %}
-{% block page-title %}Apply {{ preset_name }} Presets{% endblock %}
+{% block head-title %}Apply {{ preset_title }} Presets{% endblock %}
+{% block page-title %}Apply {{ preset_title }} Presets{% endblock %}
 {% block body-class %}config{% endblock %}
 
 {% block header %}
@@ -16,7 +16,7 @@
 {% for preference in preferences %}
 
   <li class="list-group-item">
-    <h4 class="">
+    <h4 class="{% if preference.current_value != preference.new_value %}text-success{% else %}text-muted{% endif %}">
       {{ preference.name }}
     </h4>
     <h4 class="list-group-item-heading">
@@ -30,5 +30,9 @@
 
 {% endfor %}
 </ul>
+
+  <div class=" col-sm-2">
+    <a href="{% tournament_url tournament_preference_apply preset_name %}" class="btn btn-success form-control submit-disable" data-loading-text="Saving...">Set Presets</a>
+  </div>
 
 {% endblock content %}

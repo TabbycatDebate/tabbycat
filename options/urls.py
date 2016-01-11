@@ -39,9 +39,11 @@ urlpatterns = [
         admin_required(views.TournamentPreferenceFormView.as_view(section='public_features')),
         name="public_features"),
 
+    url(r'^presets/confirm/(?P<preset_name>[a-zA-z-_]+)/$',
+        views.tournament_preference_confirm,
+        name="tournament_preference_confirm"),
 
-    url(r'^presets/$',
-        admin_required(views.TournamentPreferenceConfirmView.as_view(preset='australs')),
-        name="preset_confirm"),
-
+    url(r'^presets/apply/(?P<preset_name>[a-zA-z-_]+)/$',
+        views.tournament_preference_apply,
+        name="tournament_preference_apply"),
 ]

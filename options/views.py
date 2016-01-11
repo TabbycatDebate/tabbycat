@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 from actionlog.models import ActionLogEntry
 from utils.views import *
 from dynamic_preferences.views import PreferenceFormView
+from django.utils.text import slugify
 
 import options.presets
 import inspect
@@ -18,6 +19,7 @@ def tournament_config_index(request, t):
             test = obj()
             # Check if each object should be shown
             if test.show_in_list:
+                obj.slugified_name = slugify(name)
                 preset_options.append(obj)
 
     return r2r(request, 'preferences_index.html', dict(presets=preset_options))
@@ -44,36 +46,68 @@ class TournamentPreferenceFormView(PreferenceFormView):
         return form_class
 
 
-class TournamentPreferenceConfirmView(TemplateView):
-    preset = None
-    template_name = "preferences_presets_confirm.html"
+@admin_required
+@tournament_view
+def tournament_preference_confirm(request, t, preset_name):
+    # Grab the registry of the preferences
+    registry = tournament_preferences_registry
+    # Get a list of classes from options.presets
+    preset_classes = inspect.getmembers(options.presets)
+    # Retrieve the class that matches the name
+    selected_preset = [item for item in preset_classes if slugify(item[0]) == preset_name]
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(TemplateView, self).get_context_data(*args, **kwargs)
-        # Grab the registry of the preferences
-        registry = tournament_preferences_registry
-        # Get a list of classes from options.presets
-        preset_classes = inspect.getmembers(options.presets)
-        # Retrieve the class that matches the name
-        selected_preset = [item for item in preset_classes if item[0] == 'AustralsPreferences']
-        preset_preferences = []
+    preset_preferences = []
 
-        # Create an instance of the class and iterate over its properties for the UI
-        print(selected_preset[0][1]().__dict__.items())
-        for key, value in selected_preset[0][1]().__dict__.items():
+    # Create an instance of the class and iterate over its properties for the UI
+    for key, value in selected_preset[0][1]().__dict__.items():
+        # Lookup the base object
+        if key is not 'name' and key is not 'show_in_list':
+            preset_object = registry[key.split('__')[0]][key.split('__')[1]]
+            preset_preferences.append({
+                'name': preset_object.verbose_name,
+                'current_value': request.tournament.preferences[key],
+                'new_value': value[0],
+                'help_text': preset_object.help_text
+            })
+
+    context = {}
+    context['preset_title'] = selected_preset[0][1]().name
+    context['preset_name'] = preset_name
+    context['preferences'] = preset_preferences
+
+
+    return r2r(request, 'preferences_presets_confirm.html', context)
+
+
+@admin_required
+@tournament_view
+def tournament_preference_apply(request, t, preset_name):
+
+    registry = tournament_preferences_registry
+    preset_classes = inspect.getmembers(options.presets)
+    selected_preset = [item for item in preset_classes if slugify(item[0]) == preset_name]
+
+    preset_preferences = []
+    # Create an instance of the class and iterate over its properties for the UI
+    for key, value in selected_preset[0][1]().__dict__.items():
+        if key is not 'name' and key is not 'show_in_list':
             # Lookup the base object
-            if key is not 'name' and key is not 'show_in_list':
-                preset_object = registry[key.split('__')[0]][key.split('__')[1]]
-                preset_preferences.append({
-                    'name': preset_object.verbose_name,
-                    'current_value': self.request.tournament.preferences[key],
-                    'new_value': value[0],
-                    'help_text': preset_object.help_text
-                })
+            print(str(key),str(value[0]))
+            preset_object = registry[key.split('__')[0]][key.split('__')[1]]
+            preset_preferences.append({
+                'name': preset_object.verbose_name,
+                'current_value': request.tournament.preferences[key],
+                'new_value': value[0],
+                'help_text': preset_object.help_text
+            })
+            t.preferences[key] = value[0]
 
-        context['preset_name'] = self.preset
-        context['preferences'] = preset_preferences
-        return context
+    context = {}
+    context['preset_title'] = selected_preset[0][1]().name
+    context['preferences'] = preset_preferences
+
+
+    return r2r(request, 'preferences_presets_apply.html', context)
 
 
 class TournamentPreferenceApplyView(TemplateView):
