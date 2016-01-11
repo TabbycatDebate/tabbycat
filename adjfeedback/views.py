@@ -29,7 +29,7 @@ def adj_scores(request, t):
 def feedback_overview(request, t):
     breaking_count = 0
 
-    if not t.config.get('share_adjs'):
+    if not t.preferences.league_options__share_adjs:
         adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
             'tournament','tournament__current_round')
     else:
@@ -341,7 +341,7 @@ def set_adj_breaking_status(request, t):
 @tournament_view
 def add_feedback(request, t):
     context = {
-        'adjudicators' : t.adjudicator_set.all() if not t.config.get('share_adjs')
+        'adjudicators' : t.adjudicator_set.all() if not t.preferences.league_options__share_adjs
                          else Adjudicator.objects.all(),
         'teams'        : t.team_set.all(),
     }

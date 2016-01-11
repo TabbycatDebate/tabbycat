@@ -9,9 +9,9 @@ class DivisionAllocator():
         self.divisions = divisions
         self.venue_groups = venue_groups
         self.tournament = tournament
-        self.minimum_division_size = tournament.config.get('minimum_division_size') # cannot see teams more than once
-        self.ideal_division_size = tournament.config.get('ideal_division_size')
-        self.maximum_division_size = tournament.config.get('maximum_division_size') # shouldn't have more than two byes?
+        self.minimum_division_size = tournament.preferences.league_options__minimum_division_size # cannot see teams more than once
+        self.ideal_division_size = tournament.preferences.league_options__ideal_division_size
+        self.maximum_division_size = tournament.preferences.league_options__maximum_division_size # shouldn't have more than two byes?
 
 
     def allocate(self):

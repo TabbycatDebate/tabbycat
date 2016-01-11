@@ -190,7 +190,7 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
 
     debate_filter = dict(debateadjudicator__adjudicator=source,
             round__draw_status=Round.STATUS_RELEASED)
-    if not source.tournament.config.get('panellist_feedback_enabled'): # then include only debates for which this adj was the chair
+    if not source.tournament.preferences.feedback__panellist_feedback_enabled: # then include only debates for which this adj was the chair
         debate_filter['debateadjudicator__type'] = DebateAdjudicator.TYPE_CHAIR
     debates = Debate.objects.filter(**debate_filter)
 

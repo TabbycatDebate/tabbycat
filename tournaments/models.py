@@ -364,7 +364,7 @@ class Round(models.Model):
         return self.get_draw()
 
     def get_draw(self):
-        if self.tournament.config.get('enable_divisions'):
+        if self.tournament.preferences.league_options__enable_divisions:
             debates = self.debate_set.order_by('room_rank').select_related(
                     'venue', 'division', 'division__venue_group')
         else:
@@ -374,7 +374,7 @@ class Round(models.Model):
         return debates
 
     def get_draw_by_room(self):
-        if self.tournament.config.get('enable_divisions'):
+        if self.tournament.preferences.league_options__enable_divisions:
             debates = self.debate_set.order_by('venue__name').select_related(
                     'venue', 'division', 'division__venue_group')
         else:
@@ -396,7 +396,7 @@ class Round(models.Model):
         from participants.models import Team
         draw = self.get_draw()
         if round.prev:
-            if round.tournament.config.get('team_points_rule') != "wadl":
+            if round.tournament.preferences.league_options__team_points_rule != "wadl":
                 standings = list(Team.objects.subrank_standings(round.prev))
                 for debate in draw:
                     for side in ('aff_team', 'neg_team'):
@@ -506,7 +506,7 @@ class Round(models.Model):
                                       'adjudicator_id',
                                       'participants_adjudicator', id_field='person_ptr_id')
 
-        if not self.tournament.config.get('share_adjs'):
+        if not self.tournament.preferences.league_options__share_adjs:
             all_adjs = [a for a in all_adjs if a.tournament == self.tournament]
 
         return all_adjs
@@ -523,7 +523,7 @@ class Round(models.Model):
                                                   WHERE d.round_id = %d AND
                                                   da.adjudicator_id = participants_adjudicator.person_ptr_id)""" % self.id },
         )
-        if not self.tournament.config.get('draw_skip_adj_checkins'):
+        if not self.tournament.preferences.draw_rules__draw_skip_adj_checkins:
             return [a for a in result if a.is_active and not a.is_used]
         else:
             return [a for a in result if not a.is_used]

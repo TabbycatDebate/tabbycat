@@ -483,6 +483,7 @@ ui_options = Section('ui_options')
 class ShowSplittingAdjudicators(BooleanPreference):
     help_text = 'If showing public results, show splitting adjudicators',
     verbose_name = 'Show Splitting Adjudicators'
+    name = 'show_splitting_adjudicators'
     section = ui_options
     default = False
 
