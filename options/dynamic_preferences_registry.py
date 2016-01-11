@@ -285,9 +285,9 @@ class StandingsMissedDebates(IntegerPreference):
 @tournament_preferences_registry.register
 class StandingsMethod(StringPreference):
     help_text = 'Speaker rankings are by total (Yes) or average score (No)'
-    verbose_name = "Standings Method"
+    verbose_name = "Speaker Standings Method"
     section = standings
-    name = "standings_method"
+    name = "speaker_standings_rule"
     default = 'australs'
 
 

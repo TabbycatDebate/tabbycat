@@ -61,7 +61,7 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
     prev_total = None
     current_rank = 0
 
-    if for_replies or round.tournament.preferences['standings__standings_method'] is False:
+    if for_replies or round.tournament.preferences['standings__speaker_standings_rule'] == 'wadl':
         method = False
         speakers.sort(key=lambda x: x.average, reverse=True)
     else:

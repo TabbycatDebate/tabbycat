@@ -1,0 +1,3 @@
+
+class PreferencesPreset:
+    pass
