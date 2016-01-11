@@ -44,6 +44,8 @@ class TournamentPreferenceFormView(PreferenceFormView):
     template_name = "preferences_section_set.html"
 
     def get_success_url(self):
+        ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT, user=self.request.user, tournament=self.request.tournament)
+        messages.success(self.request, "Tournament option saved.")
         return reverse('tournament_config_index', args=[self.request.tournament.slug])
 
     def get_form_class(self, *args, **kwargs):
