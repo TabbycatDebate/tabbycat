@@ -39,4 +39,9 @@ urlpatterns = [
         admin_required(views.TournamentPreferenceFormView.as_view(section='public_features')),
         name="public_features"),
 
+
+    url(r'^presets/$',
+        admin_required(views.TournamentPreferenceConfirmView.as_view(preset='australs')),
+        name="preset_confirm"),
+
 ]

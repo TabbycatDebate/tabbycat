@@ -147,7 +147,7 @@ class TeamHistoryPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class DrawOddBracket(StringPreference):
-    help_text = "'Odd bracket resolution method, see wiki for allowed values"
+    help_text = "Odd bracket resolution method, see wiki for allowed values"
     verbose_name = "Draw Odd Bracket"
     section = draw_rules
     name = "draw_odd_bracket"
@@ -155,7 +155,7 @@ class DrawOddBracket(StringPreference):
 
 @tournament_preferences_registry.register
 class DrawSideAllocations(StringPreference):
-    help_text = "'Side allocations method, see wiki for allowed values"
+    help_text = "Side allocations method, see wiki for allowed values"
     verbose_name = "Draw Side Allocations"
     section = draw_rules
     name = "draw_side_allocations"
@@ -163,7 +163,7 @@ class DrawSideAllocations(StringPreference):
 
 @tournament_preferences_registry.register
 class DrawPairingMethod(StringPreference):
-    help_text = "'Pairing method, see wiki for allowed values"
+    help_text = "Pairing method, see wiki for allowed values"
     verbose_name = "DrawPairingMethod"
     section = draw_rules
     name = "draw_pairing_method"

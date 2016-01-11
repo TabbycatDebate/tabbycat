@@ -64,24 +64,11 @@
         settings and our <a href="https://readthedocs.org">documentation</a> to ensure they are correct and that you do not want additional
         features/settings enabled.</p>
       </div>
-      <a href="{% tournament_url tab_release %}" class="list-group-item">
-        <h4 class="list-group-item-heading">Apply Australs Presets</h4>
-      </a>
-      <a href="{% tournament_url tab_release %}" class="list-group-item">
-        <h4 class="list-group-item-heading">Apply New Zealand Easters Presets</h4>
-      </a>
-      <a href="{% tournament_url tab_release %}" class="list-group-item">
-        <h4 class="list-group-item-heading">Apply Australian Easters Presets</h4>
-      </a>
-      <a href="{% tournament_url tab_release %}" class="list-group-item">
-        <h4 class="list-group-item-heading">Apply Joynt Scroll Presets</h4>
-      </a>
-      <a href="{% tournament_url tab_release %}" class="list-group-item">
-        <h4 class="list-group-item-heading">Apply UADC Presets</h4>
-      </a>
-      <a href="{% tournament_url tab_release %}" class="list-group-item">
-        <h4 class="list-group-item-heading">Apply WADL Presets</h4>
-      </a>
+      {% for preset in presets %}
+        <a href="{% tournament_url preset_confirm %}" class="list-group-item">
+          <h4 class="list-group-item-heading">{{ preset.name }}</h4>
+        </a>
+      {% endfor %}
   </ul>
 </div>
 {% endblock content %}
