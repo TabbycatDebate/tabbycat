@@ -186,7 +186,7 @@ def motion_standings(request, round):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('tab_release__tab_released')
 def public_speaker_tab(request, t):
     print("Generating public speaker tab")
     round = t.current_round
@@ -198,7 +198,7 @@ def public_speaker_tab(request, t):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('tab_release__tab_released')
 def public_novices_tab(request, t):
     round = t.current_round
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
@@ -208,7 +208,7 @@ def public_novices_tab(request, t):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('tab_release__tab_released')
 def public_replies_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
@@ -218,7 +218,7 @@ def public_replies_tab(request, t):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('tab_release__tab_released')
 def public_team_tab(request, t):
     print("Generating public team tab")
     round = t.current_round
@@ -252,7 +252,7 @@ def public_team_tab(request, t):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('motion_tab_released')
+@public_optional_tournament_view('tab_release__motion_tab_released')
 def public_motions_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
@@ -263,7 +263,7 @@ def public_motions_tab(request, t):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_team_standings')
+@public_optional_tournament_view('public_features__public_team_standings')
 def public_team_standings(request, t):
     print("Generating public team standings")
     if t.release_all:

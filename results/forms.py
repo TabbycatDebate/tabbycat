@@ -23,7 +23,7 @@ class TournamentPasswordField(forms.CharField):
     def __init__(self, *args, **kwargs):
         if 'tournament' in kwargs:
             tournament = kwargs.pop('tournament')
-            self.password = tournament.config.get('public_password')
+            self.password = tournament.preferences['data_entry__public_password']
         else:
             raise TypeError("'tournament' is a required keyword argument")
         if 'label' not in kwargs:

@@ -4,7 +4,7 @@
 {% load add_field_css %}
 {% block head-title %}
   {{ category.name }} Break
-  <small>({{ public_breaking_teams|yesno:",not "}}publicly visible)</small>
+  <small>({{ preferences.public_features__public_breaking_teams|yesno:",not "}}publicly visible)</small>
 {% endblock %}
 {% block page-title %}{{ category.name }} Break{% endblock %}
 {% block body-class %}breaking-teams-{{ category.slug }}{% endblock %}
@@ -19,12 +19,12 @@
         </button>
       </form>
       <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
-        <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+        <button class="btn btn-{{ preferences.public_features__public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
           Update the break for all categories
         </button>
       </form>
       <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
-        <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+        <button class="btn btn-{{ preferences.public_features__public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
           Update the break for this category ({{ category.name }})
         </button>
       </form>
@@ -54,7 +54,7 @@
 
 
   {% else %}
-    {% if public_breaking_teams %}
+    {% if preferences.public_features__public_breaking_teams %}
       <div class="alert alert-danger">
         The <strong>public breaking teams</strong> configuration setting is
         enabled. As soon as you click the button, the breaking teams list will
@@ -76,7 +76,7 @@
     {% endif %}
     <div class="forms-block-inline">
       <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
-        <button class="btn btn-{{ public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+        <button class="btn btn-{{ preferences.public_features__public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
             Generate the break for all categories
         </button>
       </form>
@@ -158,7 +158,7 @@
 
       <div class="row">
         <div class="form-inline col-md-12">
-          <button class="btn btn-default form-control btn-{{ public_breaking_teams|yesno:"danger,success" }}" id="submit" type="submit" value="submit">
+          <button class="btn btn-default form-control btn-{{ preferences.public_features__public_breaking_teams|yesno:"danger,success" }}" id="submit" type="submit" value="submit">
               Save remarks
           </button>
         </div>

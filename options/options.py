@@ -35,27 +35,6 @@ SETTINGS = OrderedDict([
 
     # CHeck other OPTIONS_TO_CONFIG_MAPPING, such as 321-324 of tournament models
 
-    # TODO: below options need a rework of the way public_optional_tournament_view works
-    ('public_participants',         (_bool, 'Public interface to see all participants',                            False)),
-    ('public_side_allocations',     (_bool, 'Public interface to see side pre-allocations',                        False)),
-    ('public_draw',                 (_bool, 'Public interface to see RELEASED draws',                              False)),
-    ('show_all_draws',              (_bool, 'If showing public draws, show all (past & future) RELEASED draws',    False)),
-    ('public_motions',              (_bool, 'Public interface to see RELEASED motions',                            False)),
-    ('public_results',              (_bool, 'Public interface to see results from previous rounds',                False)),
-    ('public_divisions',            (_bool, 'Public interface to see divisions',                                   False)),
-    ('public_team_standings',       (_bool, 'Public interface to see team standings DURING tournament',            False)),
-    ('public_breaking_teams',       (_bool, 'Public interface to see breaking teams, for AFTER the break announcement',                              False)),
-    ('public_breaking_adjs',        (_bool, 'Public interface to see breaking adjudicators, for AFTER the break announcement',                       False)),
-    ('public_ballots',              (_bool, 'Public interface to add ballots using normal URLs',                   False)),
-    ('public_ballots_randomised',   (_bool, 'Public interface to add ballots using randomised URLs',               False)),
-    ('public_feedback',             (_bool, 'Public interface to add feedback using normal URLs',                  False)),
-    ('public_feedback_randomised',  (_bool, 'Public interface to add feedback using randomised URLs',              False)),
-    ('public_use_password',         (_bool, 'Require password to submit public feedback and ballots',              False)),
-    ('public_password',             (str,   'Value of the password for public submissions',                        '?')),
-    ('feedback_progress',           (_bool, 'Public interface to show who has unsubmitted ballots',                False)),
-    ('tab_released',                (_bool, 'Displays the tab PUBLICLY. For AFTER the tournament',                 False)),
-    ('motion_tab_released',         (_bool, 'Displays the motions tab PUBLICLY. For AFTER the tournament',         False)),
-    ('ballots_released',            (_bool, 'Displays ballots PUBLICLY. For AFTER the tournament',                 False)),
 
 ])
 
