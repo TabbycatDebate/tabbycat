@@ -19,7 +19,7 @@
           {% if user.is_authenticated %}
             {% if user.is_superuser %}
               {% if tournament %}
-                <a href="{% tournament_url tournament_config_index %}">Tournament Configuration</a> |
+                <a href="{% tournament_url tournament_config_index %}">🏆Configuration</a> |
                 <a href="{% tournament_url data_index %}">Data Import</a> |
               {% endif %}
               <a href="/admin/">Data Admin</a> |

@@ -49,6 +49,23 @@ class AustralianEastersPreferences(AustralsPreferences):
         # UI Options
         self.ui_options__show_novices                  = True
 
+class NZEastersPreferences(AustralsPreferences):
+    """ 2vs2 with replies, set motions, novices, and... UNCOMPLETE """
+    def __init__(self):
+        self.name                                      = "NZ Easters"
+        self.show_in_list                              = True
+
+class UADCPreferences(AustralsPreferences):
+    """ Idk... UNCOMPLETE """
+    def __init__(self):
+        self.name                                      = "UADC"
+        self.show_in_list                              = True
+
+class JoyntPreferences(AustralsPreferences):
+    """ 3vs3 with replies, set sides, publicly displayed sides and motions... UNCOMPLETE """
+    def __init__(self):
+        self.name                                      = "Joynt Scroll"
+        self.show_in_list                              = True
 
 class WADLPreferences(PreferencesPreset):
     """ Example high school league setup """
@@ -95,4 +112,28 @@ class WADLPreferences(PreferencesPreset):
         self.league_options__enable_forfeits           = True
         self.league_options__enable_division_motions   = True
         self.league_options__team_points_rule          = 'wadl'
+
+
+
+class PublicInformation(PreferencesPreset):
+    """ For tournaments hosted online: this sets it up so that people can access the draw and other information via the tab site """
+    def __init__(self):
+        self.name                                      = "Public Information"
+        self.show_in_list                              = True
+        self.public_features__public_draw              = True
+        self.public_features__public_break_categories  = True
+        self.public_features__public_results           = True
+        self.public_features__public_motions           = True
+        self.public_features__public_team_standings    = True
+        self.public_features__public_breaking_teams    = True
+        self.public_features__public_breaking_adjs     = True
+
+
+
+
+
+
+
+
+
 
