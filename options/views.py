@@ -1,5 +1,6 @@
 from django import forms
 from django.views.generic import TemplateView
+from django.core.urlresolvers import reverse
 from actionlog.models import ActionLogEntry
 from utils.views import *
 from dynamic_preferences.views import PreferenceFormView
@@ -42,6 +43,9 @@ class TournamentPreferenceFormView(PreferenceFormView):
     section = None
     template_name = "preferences_section_set.html"
 
+    def get_success_url(self):
+        return reverse('tournament_config_index', args=[self.request.tournament.slug])
+
     def get_form_class(self, *args, **kwargs):
         form_class = tournament_preference_form_builder(instance=self.request.tournament, section=self.section)
         return form_class
@@ -76,7 +80,6 @@ def tournament_preference_confirm(request, t, preset_name):
     context['preset_name'] = preset_name
     context['preferences'] = preset_preferences
 
-
     return r2r(request, 'preferences_presets_confirm.html', context)
 
 
@@ -101,6 +104,9 @@ def tournament_preference_apply(request, t, preset_name):
                 'help_text': preset_object.help_text
             })
             t.preferences[key] = value
+
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT, user=request.user, tournament=t)
+    messages.success(request, "Tournament option saved.")
 
     context = {}
     context['preset_title'] = selected_preset[0][1]().name
