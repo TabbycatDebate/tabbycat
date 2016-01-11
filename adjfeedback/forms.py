@@ -134,7 +134,7 @@ class BaseFeedbackForm(forms.Form):
             self.fields[question.reference] = self._make_question_field(question)
 
         # Tournament password field, if applicable
-        if self._use_tournament_password and self.tournament.config.get('public_use_password'):
+        if self._use_tournament_password and self.tournament.preferences['data_entry__public_use_password']:
             self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
 
     def save_adjudicatorfeedback(self, **kwargs):

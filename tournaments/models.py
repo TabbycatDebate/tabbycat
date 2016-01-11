@@ -261,11 +261,11 @@ class Round(models.Model):
         # There is a bit of logic to go through to figure out what we need to
         # provide to the draw class.
         OPTIONS_TO_CONFIG_MAPPING = {
-            "avoid_institution"  : "avoid_same_institution",
-            "avoid_history"      : "avoid_team_history",
-            "history_penalty"    : "team_history_penalty",
-            "institution_penalty": "team_institution_penalty",
-            "side_allocations"   : "draw_side_allocations",
+            "avoid_institution"  : "draw_rules__avoid_same_institution",
+            "avoid_history"      : "draw_rules__avoid_team_history",
+            "history_penalty"    : "draw_rules__team_history_penalty",
+            "institution_penalty": "draw_rules__team_institution_penalty",
+            "side_allocations"   : "draw_rules__draw_side_allocations",
         }
 
         if override_team_checkins is True:
@@ -278,7 +278,7 @@ class Round(models.Model):
             teams = draw_teams
             draw_type = "random"
             OPTIONS_TO_CONFIG_MAPPING.update({
-                "avoid_conflicts" : "draw_avoid_conflicts",
+                "avoid_conflicts" : "draw_rules__draw_avoid_conflicts",
             })
         elif self.draw_type == self.DRAW_MANUAL:
             teams = draw_teams
@@ -288,9 +288,9 @@ class Round(models.Model):
             teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
-                "avoid_conflicts" : "draw_avoid_conflicts",
-                "odd_bracket"     : "draw_odd_bracket",
-                "pairing_method"  : "draw_pairing_method",
+                "avoid_conflicts" : "draw_rules__draw_avoid_conflicts",
+                "odd_bracket"     : "draw_rules__draw_odd_bracket",
+                "pairing_method"  : "draw_rules__draw_pairing_method",
             })
         elif self.draw_type == self.DRAW_ROUNDROBIN:
             teams = draw_teams
@@ -319,7 +319,7 @@ class Round(models.Model):
 
         options = dict()
         for key, value in OPTIONS_TO_CONFIG_MAPPING.items():
-            options[key] = self.tournament.config.get(value)
+            options[key] = self.tournament.preferences[value]
         if options["side_allocations"] == "manual-ballot":
             options["side_allocations"] = "balance"
 

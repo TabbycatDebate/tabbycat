@@ -468,7 +468,7 @@ def master_sheets_view(request, round, venue_group_id):
 @round_view
 def draw_print_feedback(request, round):
     draw = round.get_draw_by_room()
-    config = round.tournament.config
+    preferences = round.tournament.preferences
     questions = round.tournament.adj_feedback_questions
     for question in questions:
         if question.choices:
@@ -483,7 +483,7 @@ def draw_print_feedback(request, round):
     return r2r(request,
                "printing/feedback_list.html",
                dict(draw=draw,
-                    config=config,
+                    preferences=preferences,
                     questions=questions))
 
 
@@ -491,11 +491,11 @@ def draw_print_feedback(request, round):
 @round_view
 def draw_print_scoresheets(request, round):
     draw = round.get_draw_by_room()
-    config = round.tournament.config
+    preferences = round.tournament.preferences
     motions = Motion.objects.filter(round=round)
 
     return r2r(request,
                "printing/scoresheet_list.html",
                dict(draw=draw,
-                    config=config,
+                    preferences=preferences,
                     motions=motions))

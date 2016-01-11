@@ -34,7 +34,7 @@ class MotionManager(models.Manager):
             # TODO: temporarily disabled
             motion.c1, motion.p_value = None, None
 
-        if round.tournament.config.get('motion_vetoes_enabled'):
+        if round.tournament.preferences['debate_rules__motion_vetoes_enabled']:
             veto_objs = DebateTeamMotionPreference.objects.filter(
                     preference=3, ballot_submission__confirmed=True,
                     ballot_submission__debate__round__tournament=round.tournament,
