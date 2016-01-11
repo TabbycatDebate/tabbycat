@@ -481,7 +481,7 @@ ui_options = Section('ui_options')
 
 @tournament_preferences_registry.register
 class ShowSplittingAdjudicators(BooleanPreference):
-    help_text = 'If showing public results, show splitting adjudicators',
+    help_text = 'If showing public results, show splitting adjudicators'
     verbose_name = 'Show Splitting Adjudicators'
     name = 'show_splitting_adjudicators'
     section = ui_options
@@ -489,7 +489,7 @@ class ShowSplittingAdjudicators(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowMotionsInResults(BooleanPreference):
-    help_text = 'If showing public results, show motions with results',
+    help_text = 'If showing public results, show motions with results'
     verbose_name = 'Show Motions In Results'
     section = ui_options
     name = 'show_motions_in_results'
@@ -505,7 +505,7 @@ class ShowEmoji(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowInstitutions(BooleanPreference):
-    help_text = 'Shows the institutions column in draw and other UIs',
+    help_text = 'Shows the institutions column in draw and other UIs'
     verbose_name = 'Show Institutions'
     section = ui_options
     name = 'show_institutions'
@@ -513,7 +513,7 @@ class ShowInstitutions(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowNovices(BooleanPreference):
-    help_text = 'Show if a speaker is a novice',
+    help_text = 'Show if a speaker is a novice'
     verbose_name = 'Show Novices'
     section = ui_options
     name = 'show_novices'
@@ -521,7 +521,7 @@ class ShowNovices(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowSpeakersInDraw(BooleanPreference):
-    help_text = 'Disable/Enable a hover element showing each teams speakers in the UI',
+    help_text = 'Disable/Enable a hover element showing each teams speakers in the UI'
     verbose_name = 'Show Speakers In Draw'
     section = ui_options
     name = 'show_speakers_in_draw'
@@ -529,7 +529,7 @@ class ShowSpeakersInDraw(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowAllDraws(BooleanPreference):
-    help_text = 'If showing public draws, show all (past & future) RELEASED draws',
+    help_text = 'If showing public draws, show all (past & future) RELEASED draws'
     verbose_name = 'Show All Draws'
     section = ui_options
     name = 'show_all_draws'

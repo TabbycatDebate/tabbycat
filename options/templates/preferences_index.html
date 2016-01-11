@@ -67,6 +67,7 @@
       {% for preset in presets %}
         <a href="{% tournament_url tournament_preference_confirm preset.slugified_name %}" class="list-group-item">
           <h4 class="list-group-item-heading">{{ preset.name }}</h4>
+          <p>{{ preset.description }}</p>
         </a>
       {% endfor %}
   </ul>

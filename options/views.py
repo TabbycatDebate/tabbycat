@@ -20,6 +20,7 @@ def tournament_config_index(request, t):
             # Check if each object should be shown
             if test.show_in_list:
                 obj.slugified_name = slugify(name)
+                obj.description = inspect.getdoc(test)
                 preset_options.append(obj)
 
     return r2r(request, 'preferences_index.html', dict(presets=preset_options))
@@ -66,7 +67,7 @@ def tournament_preference_confirm(request, t, preset_name):
             preset_preferences.append({
                 'name': preset_object.verbose_name,
                 'current_value': request.tournament.preferences[key],
-                'new_value': value[0],
+                'new_value': value,
                 'help_text': preset_object.help_text
             })
 
@@ -92,15 +93,14 @@ def tournament_preference_apply(request, t, preset_name):
     for key, value in selected_preset[0][1]().__dict__.items():
         if key is not 'name' and key is not 'show_in_list':
             # Lookup the base object
-            print(str(key),str(value[0]))
             preset_object = registry[key.split('__')[0]][key.split('__')[1]]
             preset_preferences.append({
                 'name': preset_object.verbose_name,
                 'current_value': request.tournament.preferences[key],
-                'new_value': value[0],
+                'new_value': value,
                 'help_text': preset_object.help_text
             })
-            t.preferences[key] = value[0]
+            t.preferences[key] = value
 
     context = {}
     context['preset_title'] = selected_preset[0][1]().name
