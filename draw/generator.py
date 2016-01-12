@@ -1108,7 +1108,6 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                     type = "B",
                     use_institution_prefix = False,
                     division = bye_division,
-                    cannot_break = True
                 )
                 bye_team.aff_count = 0
                 bye_team.neg_count = 0
