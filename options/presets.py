@@ -106,8 +106,8 @@ class JoyntPreferences(AustralsPreferences):
 class UADCPreferences(AustralsPreferences):
     """ Idk... UNCOMPLETE """
     def __init__(self):
-        self.name                                      = "UADC"
-        self.show_in_list
+        self.name                                        = "UADC"
+        self.show_in_list                                = True
         # Rules source = http://www.alcheringa.in/pdrules.pdf
         # Scoring
         self.scoring__score_min                          = 69.0 # From Rules Book
