@@ -133,8 +133,8 @@ class UADCPreferences(AustralsPreferences):
         # self.standings__team_standings_rule            = 'australs' # TODO: need a new standings rule
         self.standings__speaker_standings_rule         = 'australs'
         # Feedback
-        self.feedback.adj_min_score                      = 1.0 # Explicit in the rules
-        self.feedback.adj_max_score                      = 5.0 # Explicit in the rules
+        self.feedback__adj_min_score                      = 1.0 # Explicit in the rules
+        self.feedback__adj_max_score                      = 5.0 # Explicit in the rules
         # UI Options
         self.public_features__feedback_progress          = True # Feedback is compulsory
 
