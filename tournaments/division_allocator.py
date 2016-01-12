@@ -15,6 +15,7 @@ class DivisionAllocator():
 
 
     def allocate(self):
+        # Entry Point
         division_dict = {v:[] for v in self.venue_groups}
         allocated_teams = []
 
@@ -37,6 +38,62 @@ class DivisionAllocator():
         self.determine_division_size(division_dict, allocated_teams,all_teams)
 
         return True
+
+
+    def allocate_teams(self, division_dict, allocated_teams, all_teams):
+        teams_to_allocate = list(all_teams)
+        # print("division dictionary is", division_dict)
+        # print("teams_to_allocate is", teams_to_allocate)
+
+        for i in range(0, 12):
+            # For each possible preference priority (0 through 12)
+            print("________ start %s round" % i)
+            for group, group_teams in division_dict.items():
+                print("   loooking at group %s group_teams %s" % (group, group_teams))
+                for team in teams_to_allocate:
+                    # We go through each group
+                    print('group teams len: %s group.teamcapacity: %s' % (len(group_teams), group.team_capacity))
+                    if group.team_capacity is not None and len(group_teams) <= group.team_capacity - 1:
+                        # And find a team which has them as a preference
+                        if i in team.team_preferences_dict and team.team_preferences_dict[i] == group:
+                            # And there is space
+                            group_teams.append(team)
+                            allocated_teams.append(team)
+                            teams_to_allocate.remove(team)
+                            print("\t\t %s given %s (%s/%s)" % (team, group, len(group_teams), group.team_capacity))
+                        elif i in team.institutional_preferences_dict and team.institutional_preferences_dict[i] == group:
+                            # And there is space
+                            group_teams.append(team)
+                            allocated_teams.append(team)
+                            teams_to_allocate.remove(team)
+                            print("\t\t %s given %s (%s/%s)" % (team, group, len(group_teams), group.team_capacity))
+                    else:
+                        print("\t\t%s is full (%s/%s)" % (group, len(group_teams), group.team_capacity))
+                        pass
+
+            print("________ end %s round" % i)
+
+        for group, group_teams in division_dict.items():
+            # Trying to mix up the distributions within divisions
+            random.shuffle(group_teams)
+            random.shuffle(group_teams)
+            random.shuffle(group_teams)
+
+        return division_dict, allocated_teams
+
+    def cull_venues(self, division_dict, allocated_teams):
+
+        culled_division_dict = {}
+        for group, group_teams in division_dict.items():
+            if len(group_teams) > 0 and len(group_teams) < self.minimum_division_size:
+                # If the amount of allocated teams is not enough for one division
+                print("\t culling %s because too few teams (%s)" % (group, len(group_teams)))
+                for ttr in group_teams:
+                    allocated_teams.remove(ttr)
+            else:
+                culled_division_dict[group] = group_teams
+
+        return culled_division_dict, allocated_teams
 
     def determine_division_size(self,division_dict, allocated_teams,all_teams):
         di = 1 # index of current division
@@ -99,46 +156,3 @@ class DivisionAllocator():
             di += 1
 
         return di
-
-    def cull_venues(self, division_dict, allocated_teams):
-
-        culled_division_dict = {}
-        for group, group_teams in division_dict.items():
-            if len(group_teams) > 0 and len(group_teams) < self.minimum_division_size:
-                # If the amount of allocated teams is not enough for one division
-                print("\t culling %s because too few teams (%s)" % (group, len(group_teams)))
-                for ttr in group_teams:
-                    allocated_teams.remove(ttr)
-            else:
-                culled_division_dict[group] = group_teams
-
-        return culled_division_dict, allocated_teams
-
-    def allocate_teams(self, division_dict,allocated_teams,all_teams):
-        teams_to_allocate = list(all_teams)
-
-        for i in range(0, 12):
-            # For each possible preference priority (0 through 12)
-            #print "%sst round" % i
-            for group, group_teams in division_dict.items():
-                for team in teams_to_allocate:
-                    # We go through each group
-                    if len(group_teams) <= group.team_capacity - 1:
-                        # And find a team which has them as a preference
-                        if i in team.preferences_dict and team.preferences_dict[i] == group:
-                            # And there is space
-                            group_teams.append(team)
-                            allocated_teams.append(team)
-                            teams_to_allocate.remove(team)
-                            #print "\t\t %s given %s (%s/%s)" % (team, group, len(group_teams), group.team_capacity)
-                    else:
-                        #print "\t\t%s is full (%s/%s)" % (group, len(group_teams), group.team_capacity)
-                        pass
-
-        for group, group_teams in division_dict.items():
-            # Trying to mix up the distributions within divisions
-            random.shuffle(group_teams)
-            random.shuffle(group_teams)
-            random.shuffle(group_teams)
-
-        return division_dict, allocated_teams

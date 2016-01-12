@@ -37,6 +37,10 @@ class Institution(models.Model):
 
     objects = InstitutionManager()
 
+    @property
+    def venue_preferences(self):
+        return self.institutionvenuepreference_set.all()
+
     class Meta:
         verbose_name = "🏫 Institution"
         unique_together = [('name', 'code')]
@@ -142,11 +146,9 @@ class Team(models.Model):
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
     break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True)
 
-    venue_preferences = models.ManyToManyField('venues.VenueGroup',
-        through = 'draw.TeamVenuePreference',
-        related_name = 'venue_preferences',
-        verbose_name = 'Venue group preference'
-    )
+    @property
+    def venue_preferences(self):
+        return self.teamvenuepreference_set.all()
 
     TYPE_NONE = 'N'
     TYPE_SWING = 'S'

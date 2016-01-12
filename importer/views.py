@@ -157,7 +157,7 @@ def confirm_venue_preferences(request, t):
         venue_group_id = idset.split('_')[1]
 
         if institution_id and venue_group_id and priority:
-            print('making a pref')
+            # print('making a pref')
             institution = Institution.objects.get(pk=int(institution_id))
             venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
             venue_preference = InstitutionVenuePreference(
@@ -194,13 +194,13 @@ def edit_teams(request, t):
 
             name_to_check = 1
             while name_to_check < desired_teams_count:
-                print('i is ', name_to_check)
+                # print('i is ', name_to_check)
                 # Check if the team name/number already exists
                 if str(name_to_check) in team_names:
-                    print('     team exists:', name_to_check)
+                    # print('     team exists:', name_to_check)
                     desired_teams_count += 1
                 else:
-                    print('     team doesnt exist:', name_to_check)
+                    # print('     team doesnt exist:', name_to_check)
                     available_team_numbers.append(name_to_check)
 
                 name_to_check += 1

@@ -36,7 +36,8 @@
         <th>Venue</th>
         <th>Time</th>
         <th>Status</th>
-        <th>Preferences</th>
+        <th>Team Preferences</th>
+        <th>Institution Preferences</th>
       </tr>
     </thead>
     <tbody>
@@ -92,12 +93,14 @@
         {% endif %}
       </td>
       <td>
-      TODO: fix below call
-      {% for pref in team.venue_preferences.all %}
-        {% if pref.venue_group %}
-          <span class="small">{{ pref.priority }}: {{ pref.venue_group.short_name }}</span>,{% if pref.counter == 4 %}<br>{% endif %}
-        {% endif %}
-      {% endfor %}
+        {% for pref in team.venue_preferences.all %}
+          <span class="small">{{ pref.venue_group.short_name }} ({{ pref.priority }})</span>
+        {% endfor %}
+      </td>
+      <td>
+        {% for pref in team.institution.venue_preferences.all %}
+          <span class="small">{{ pref.venue_group.short_name }} ({{ pref.priority }})</span>
+        {% endfor %}
       </td>
     </tr>
     {% endfor %}
