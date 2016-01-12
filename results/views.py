@@ -63,16 +63,16 @@ def results(request, round):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_round_view('public_results')
+@public_optional_round_view('public_features__public_results')
 def public_results(request, round):
     # Can't see results for current round or later
     if (round.seq >= round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
         print("Result page denied: round %d, current round %d, release all %s, silent %s" % (round.seq, round.tournament.current_round.seq, round.tournament.release_all, round.silent))
         raise Http404()
     draw = round.get_draw()
-    show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.config.get('show_motions_in_results')
-    show_splits = round.tournament.config.get('show_splitting_adjudicators')
-    show_ballots = round.tournament.config.get('ballots_released')
+    show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.preferences['ui_options__show_motions_in_results']
+    show_splits = round.tournament.preferences['ui_options__show_splitting_adjudicators']
+    show_ballots = round.tournament.preferences['tab_release__ballots_released']
     return r2r(request, "public_results_for_round.html", dict(
             draw=draw, show_motions_column=show_motions_column, show_splits=show_splits,
             show_ballots=show_ballots))
@@ -80,7 +80,7 @@ def public_results(request, round):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_results')
+@public_optional_tournament_view('public_features__public_results')
 def public_results_index(request, tournament):
     rounds = Round.objects.filter(tournament=tournament,
         seq__lt=tournament.current_round.seq, silent=False).order_by('seq')
@@ -134,7 +134,7 @@ def edit_ballotset(request, t, ballotsub_id):
         'ballotsub'        : ballotsub,
         'debate'           : debate,
         'all_ballotsubs'   : all_ballotsubs,
-        'disable_confirm'  : request.user == ballotsub.submitter and not t.config.get('enable_assistant_confirms') and not request.user.is_superuser,
+        'disable_confirm'  : request.user == ballotsub.submitter and not t.preferences['data_entry__enable_assistant_confirms'] and not request.user.is_superuser,
         'round'            : debate.round,
         'not_singleton'    : all_ballotsubs.exclude(id=ballotsub_id).exists(),
         'new'              : False,
@@ -144,14 +144,14 @@ def edit_ballotset(request, t, ballotsub_id):
 
 
 # Don't cache
-@public_optional_tournament_view('public_ballots_randomised')
+@public_optional_tournament_view('data_entry__public_ballots_randomised')
 def public_new_ballotset_key(request, t, url_key):
     adjudicator = get_object_or_404(Adjudicator, tournament=t, url_key=url_key)
     return public_new_ballotset(request, t, adjudicator)
 
 
 # Don't cache
-@public_optional_tournament_view('public_ballots')
+@public_optional_tournament_view('data_entry__public_ballots')
 def public_new_ballotset_id(request, t, adj_id):
     adjudicator = get_object_or_404(Adjudicator, tournament=t, id=adj_id)
     return public_new_ballotset(request, t, adjudicator)
@@ -336,7 +336,7 @@ def post_ballot_checkin(request, round):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('ballots_released')
+@public_optional_tournament_view('tab_release__ballots_released')
 def public_ballots_view(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
     if debate.result_status != Debate.STATUS_CONFIRMED:
@@ -356,7 +356,7 @@ def public_ballots_view(request, t, debate_id):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_ballots')
+@public_optional_tournament_view('data_entry__public_ballots')
 def public_ballot_submit(request, t):
     r = t.current_round
 

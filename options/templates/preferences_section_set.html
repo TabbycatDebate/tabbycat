@@ -17,15 +17,22 @@
 
 {% block content %}
 
-<form id="configForm" action="." method="POST" class="form-horizontal">
+<form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
+
+  {% csrf_token %}
+
   {% for field in form %}
   <div class="form-group">
-    <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">{{ field.label }}</label>
+    <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">
+      {{ field.label }} {{ field.section.name }}
+    </label>
     <div class="col-sm-2">
       {{field|addcss:"form-control"}}
     </div>
     <div class="col-sm-5">
-      <span class="help-block">{{ field.help_text }}</span>
+      <span class="help-block">
+        {{ field.help_text }}
+      </span>
     </div>
     {% if field.errors %}
       {{ field.errors }}
@@ -39,6 +46,7 @@
       </button>
     </div>
   </div>
+
 </form>
 
 {% endblock content %}

@@ -9,7 +9,7 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
     reply_position = round.tournament.REPLY_POSITION
     total_prelim_rounds = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=round.tournament).count()
-    missable_debates = round.tournament.config.get('standings_missed_debates')
+    missable_debates = round.tournament.preferences['standings__standings_missed_debates']
     minimum_debates_needed = total_prelim_rounds - missable_debates
 
     if for_replies:
@@ -61,7 +61,7 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
     prev_total = None
     current_rank = 0
 
-    if for_replies or round.tournament.config.get('standings_method') is False:
+    if for_replies or round.tournament.preferences['standings__speaker_standings_rule'] == 'wadl':
         method = False
         speakers.sort(key=lambda x: x.average, reverse=True)
     else:
@@ -104,7 +104,7 @@ def team_standings(request, round):
         team.round_results = [get_round_result(team, team_scores, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
-        if round.tournament.config.get('show_avg_margin'):
+        if round.tournament.preferences['league_options__show_avg_margin']:
             try:
                 margins = []
                 for ts in team.round_results:
@@ -126,7 +126,7 @@ def team_standings(request, round):
 @round_view
 def division_standings(request, round):
     # TODO: this can largely be merged/abstracted with teams
-    teams = Team.objects.divisions(round)
+    teams = Team.objects.division_standings(round)
 
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
@@ -135,7 +135,7 @@ def division_standings(request, round):
         team.round_results = [get_round_result(team, team_scores, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
-        if round.tournament.config.get('show_avg_margin'):
+        if round.tournament.preferences['league_options__show_avg_margin']:
             try:
                 margins = []
                 for ts in team.round_results:
@@ -186,7 +186,7 @@ def motion_standings(request, round):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('tab_release__tab_released')
 def public_speaker_tab(request, t):
     print("Generating public speaker tab")
     round = t.current_round
@@ -198,7 +198,7 @@ def public_speaker_tab(request, t):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('tab_release__tab_released')
 def public_novices_tab(request, t):
     round = t.current_round
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
@@ -208,7 +208,7 @@ def public_novices_tab(request, t):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('tab_release__tab_released')
 def public_replies_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
@@ -218,7 +218,7 @@ def public_replies_tab(request, t):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('tab_release__tab_released')
 def public_team_tab(request, t):
     print("Generating public team tab")
     round = t.current_round
@@ -231,7 +231,7 @@ def public_team_tab(request, t):
         team.round_results = [get_round_result(team, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
-        if round.tournament.config.get('show_avg_margin'):
+        if round.tournament.preferences['league_options__show_avg_margin']:
             try:
                 margins = []
                 for ts in team.round_results:
@@ -243,7 +243,7 @@ def public_team_tab(request, t):
             except ZeroDivisionError:
                 team.avg_margin = None
 
-    show_ballots = round.tournament.config.get('ballots_released')
+    show_ballots = round.tournament.preferences['tab_release__ballots_released']
     metrics = relevant_team_standings_metrics(round.tournament)
 
     return r2r(request, 'public_team_tab.html', dict(teams=teams,
@@ -252,7 +252,7 @@ def public_team_tab(request, t):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('motion_tab_released')
+@public_optional_tournament_view('tab_release__motion_tab_released')
 def public_motions_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
@@ -263,7 +263,7 @@ def public_motions_tab(request, t):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_team_standings')
+@public_optional_tournament_view('public_features__public_team_standings')
 def public_team_standings(request, t):
     print("Generating public team standings")
     if t.release_all:

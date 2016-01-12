@@ -125,8 +125,8 @@ class BaseFeedbackForm(forms.Form):
     def _create_fields(self):
         """Creates dynamic fields in the form."""
         # Feedback questions defined for the tournament
-        adj_min_score = self.tournament.config.get('adj_min_score')
-        adj_max_score = self.tournament.config.get('adj_max_score')
+        adj_min_score = self.tournament.preferences['feedback__adj_min_score']
+        adj_max_score = self.tournament.preferences['feedback__adj_max_score']
         score_label = mark_safe("Overall score<br />(%s=lowest, %s=highest)" % (adj_min_score, adj_max_score))
         self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
 
@@ -134,7 +134,7 @@ class BaseFeedbackForm(forms.Form):
             self.fields[question.reference] = self._make_question_field(question)
 
         # Tournament password field, if applicable
-        if self._use_tournament_password and self.tournament.config.get('public_use_password'):
+        if self._use_tournament_password and self.tournament.preferences['data_entry__public_use_password']:
             self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
 
     def save_adjudicatorfeedback(self, **kwargs):
@@ -190,7 +190,7 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
 
     debate_filter = dict(debateadjudicator__adjudicator=source,
             round__draw_status=Round.STATUS_RELEASED)
-    if not source.tournament.config.get('panellist_feedback_enabled'): # then include only debates for which this adj was the chair
+    if not source.tournament.preferences['feedback__panellist_feedback_enabled']: # then include only debates for which this adj was the chair
         debate_filter['debateadjudicator__type'] = DebateAdjudicator.TYPE_CHAIR
     debates = Debate.objects.filter(**debate_filter)
 

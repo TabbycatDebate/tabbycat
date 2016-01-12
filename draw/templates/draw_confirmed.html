@@ -35,7 +35,7 @@
     <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
     <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url motions current_round %}">View/Edit Motions</a>
     <a class="btn btn-default" href="{% round_url draw_matchups_edit round %}">Edit Matchups</a>
-    {% if not enable_venue_times %}
+    {% if not preferences.league_options__enable_venue_times %}
       <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
     {% endif %}
   </div>
@@ -89,23 +89,23 @@
     <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
-                {% if enable_divisions %}
+                {% if preferences.league_options__enable_divisions %}
                     <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip"title="Division">{{ debate.division.name }}</span></th>
                 {% else %}
                     <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
                 {% endif %}
-                {% if enable_venue_groups %}
+                {% if preferences.league_options__enable_venue_groups %}
                     <th>Venue</th>
                 {% endif %}
                 <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Room"></span></th>
-                {% if enable_venue_times %}
+                {% if preferences.league_options__enable_venue_times %}
                     <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip"title="Date"></span></th>
                 {% endif %}
-                {% if enable_venue_times %}
+                {% if preferences.league_options__enable_venue_times %}
                     <th><span class="glyphicon glyphicon-time" data-toggle="tooltip"title="Time"></span></th>
                 {% endif %}
-                <th>{% if side_allocations_unknown %}Team 1{% else %}Affirmative{% endif %}</th>
-                <th>{% if side_allocations_unknown %}Team 2{% else %}Negative{% endif %}</th>
+                <th>{% if preferences.draw_rules__side_allocations_unknown == 'manual-ballot' %}Team 1{% else %}Affirmative{% endif %}</th>
+                <th>{% if preferences.draw_rules__side_allocations_unknown == 'manual-ballot' %}Team 2{% else %}Negative{% endif %}</th>
                 <th>Adj<span class="hidden-xs">udicator</span>s</th>
                 <th>Conflict</th>
             </tr>
@@ -113,12 +113,12 @@
         <tbody>
         {% for debate in draw %}
         <tr class="{% if debate.all_conflicts or not debate.adjudicators.valid %}danger{% endif %}">
-          {% if enable_divisions %}
+          {% if preferences.league_options__enable_divisions %}
             <td>{{ debate.division.name }}</td>
           {% else %}
             <td>{{ debate.bracket }}</td>
           {% endif %}
-          {% if enable_venue_groups %}
+          {% if preferences.league_options__enable_venue_groups %}
             {% if debate.division %}
               <td>{{ debate.division.venue_group.short_name }}</td>
             {% else %}
@@ -126,7 +126,7 @@
             {% endif %}
           {% endif %}
           <td>{{ debate.venue.name }}</td>
-          {% if enable_venue_times %}
+          {% if preferences.league_options__enable_venue_times %}
           <td>
               {% if debate.venue.time %}
                   <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
@@ -142,12 +142,12 @@
           </td>
           {% endif %}
           <td title="{% if debate.aff_team %}{% aff_count debate.aff_team round.prev %} prior affs{% endif %}">
-            <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
+            <span {% if preferences.ui_options__show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
               {{ debate.aff_team.short_name }}
             </span>
           </td>
           <td title="{% if debate.neg_team %}{% neg_count debate.neg_team round.prev %} prior negs{% endif %}">
-            <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
+            <span {% if preferences.ui_options__show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
               {{ debate.neg_team.short_name }}
             </span>
           </td>

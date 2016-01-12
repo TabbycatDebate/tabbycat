@@ -23,7 +23,7 @@
                     <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament }}</a></li>
                   {% endif %}
                 {% endfor %}
-                {% if all_tournaments.0.config.public_divisions > 0 %}
+                {% if all_tournaments.0.preferences.public_divisions > 0 %}
                   <li><a href="{{ all_tournaments.0.get_all_divisions_url }}">All Tournament's Teams</a></li>
                 {% endif %}
               </ul>

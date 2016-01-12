@@ -23,7 +23,6 @@ urlpatterns = [
     url(r'^$',                                  index),
     url(r'^t/(?P<tournament_slug>[-\w_]+)/',    include('tournaments.urls')),
     url(r'^static/(?P<path>.*)$',               serve, {'document_root': settings.STATIC_ROOT}),
-
 ]
 
 if settings.DEBUG:

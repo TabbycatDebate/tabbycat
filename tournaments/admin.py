@@ -35,3 +35,4 @@ class RoundAdmin(admin.ModelAdmin):
     search_fields = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status')
 
 admin.site.register(Round, RoundAdmin)
+

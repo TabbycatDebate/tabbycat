@@ -10,6 +10,7 @@ data/*
 !data/demo_simple/
 !data/sandbox/
 !data/test/
+!data/presets/
 
 env/
 venv/

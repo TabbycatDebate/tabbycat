@@ -1,7 +1,7 @@
 {% load debate_tags %}
 
 <ul id="nav_left" class="nav navbar-nav navbar-left">
-  {% if side_allocations_enabled %}
+  {% if preferences.draw_rules__side_allocations_enabled == 'preallocated' %}
     <li {% if sides_nav %}class="active"{% endif %}>
       <a href="{% tournament_url side_allocations %}">Sides</a>
     </li>
@@ -15,7 +15,7 @@
   <li {% if feedback_nav %}class="dropdown active"{% endif %}>
     <a href="{% tournament_url feedback_overview %}" >Feedback</a>
   </li>
-  {% if enable_divisions %}
+  {% if preferences.league_options__enable_divisions %}
     <li {% if divisions_nav %}class="active"{% endif %}>
       <a href="{% tournament_url division_allocations %}">Divisions</a>
     </li>
@@ -24,14 +24,14 @@
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standings<b class="caret"></b></a>
     <ul class="dropdown-menu">
       <li><a href="{% round_url team_standings current_round %}">Teams</a></li>
-      {% if enable_divisions %}
+      {% if preferences.league_options__enable_divisions %}
       <li><a href="{% round_url division_standings current_round %}">Divisions</a></li>
       {% endif %}
       <li><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
-      {% if show_novices %}
+      {% if preferences.ui_options__show_novices %}
         <li><a href="{% round_url novice_standings current_round %}">Novices</a></li>
       {% endif %}
-      {% if reply_scores_enabled %}
+      {% if preferences.debate_rules__reply_scores_enabled %}
         <li><a href="{% round_url reply_standings current_round %}">Replies</a></li>
       {% endif %}
       <li><a href="{% tournament_url feedback_progress %}">Feedback</a></li>
@@ -98,10 +98,10 @@
         <li class="divider"></li>
         <li><a href="{% round_url team_standings r %}">Team Standings</a></li>
         <li><a href="{% round_url speaker_standings r %}">Speaker Standings</a></li>
-        {% if reply_scores_enabled %}
+        {% if preferences.debate_rules__reply_scores_enabled %}
         <li><a href="{% round_url reply_standings r %}">Reply Standings</a></li>
         {% endif %}
-        {% if enable_divisions %}
+        {% if preferences.league_options__enable_divisions %}
           <li class="divider"></li>
           <li><a class="" href="{% round_url master_sheets_list r %}">Mastersheets</a></li>
         {% endif %}

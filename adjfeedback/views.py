@@ -29,7 +29,7 @@ def adj_scores(request, t):
 def feedback_overview(request, t):
     breaking_count = 0
 
-    if not t.config.get('share_adjs'):
+    if not t.preferences['league_options__share_adjs']:
         adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
             'tournament','tournament__current_round')
     else:
@@ -111,8 +111,8 @@ def feedback_overview(request, t):
         'adjudicators'      : adjudicators,
         'breaking_count'    : breaking_count,
         'feedback_headings' : [q.name for q in t.adj_feedback_questions],
-        'score_min'         : t.config.get('adj_min_score'),
-        'score_max'         : t.config.get('adj_max_score'),
+        'score_min'         : t.preferences['feedback__adj_min_score'],
+        'score_max'         : t.preferences['feedback__adj_max_score'],
     }
     return r2r(request, 'feedback_overview.html', context)
 
@@ -135,11 +135,11 @@ def adj_source_feedback(request, t):
 
 def process_feedback(feedbacks, t):
     questions = t.adj_feedback_questions
-    score_step = t.config.get('adj_max_score')  / 10
+    score_step = t.preferences['feedback__adj_max_score'] / 10
     score_thresholds = {
-        'low_score'     : t.config.get('adj_min_score') + score_step,
-        'medium_score'  : t.config.get('adj_min_score') + score_step + score_step,
-        'high_score'    : t.config.get('adj_max_score') - score_step,
+        'low_score'     : t.preferences['feedback__adj_min_score'] + score_step,
+        'medium_score'  : t.preferences['feedback__adj_min_score'] + score_step + score_step,
+        'high_score'    : t.preferences['feedback__adj_max_score'] - score_step,
     }
     for feedback in feedbacks:
         feedback.items = []
@@ -213,13 +213,13 @@ def get_adj_feedback(request, t):
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
 # Don't cache
-@public_optional_tournament_view('public_feedback_randomised')
+@public_optional_tournament_view('data_entry__public_feedback_randomised')
 def public_enter_feedback_key(request, t, source_type, url_key):
     source = get_object_or_404(source_type, tournament=t, url_key=url_key)
     return public_enter_feedback(request, t, source)
 
 # Don't cache
-@public_optional_tournament_view('public_feedback')
+@public_optional_tournament_view('data_entry__public_feedback')
 def public_enter_feedback_id(request, t, source_type, source_id):
     source = get_object_or_404(source_type, tournament=t, id=source_id)
     return public_enter_feedback(request, t, source)
@@ -341,7 +341,7 @@ def set_adj_breaking_status(request, t):
 @tournament_view
 def add_feedback(request, t):
     context = {
-        'adjudicators' : t.adjudicator_set.all() if not t.config.get('share_adjs')
+        'adjudicators' : t.adjudicator_set.all() if not t.preferences['league_options__share_adjs']
                          else Adjudicator.objects.all(),
         'teams'        : t.team_set.all(),
     }
@@ -353,7 +353,7 @@ def add_feedback(request, t):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_feedback')
+@public_optional_tournament_view('data_entry__public_feedback')
 def public_feedback_submit(request, t):
     adjudicators = Adjudicator.objects.all()
     teams = Team.objects.all()
@@ -361,7 +361,7 @@ def public_feedback_submit(request, t):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('feedback_progress')
+@public_optional_tournament_view('public_features__feedback_progress')
 def public_feedback_progress(request, t):
     # TODO: merge with the admin function below
     def calculate_coverage(submitted, total):
@@ -495,10 +495,10 @@ def randomised_urls(request, t):
     context['exists'] = t.adjudicator_set.filter(url_key__isnull=False).exists() or \
             t.team_set.filter(url_key__isnull=False).exists()
     context['tournament_slug'] = t.slug
-    context['ballot_normal_urls_enabled'] = t.config.get('public_ballots')
-    context['ballot_randomised_urls_enabled'] = t.config.get('public_ballots_randomised')
-    context['feedback_normal_urls_enabled'] = t.config.get('public_feedback')
-    context['feedback_randomised_urls_enabled'] = t.config.get('public_feedback_randomised')
+    context['ballot_normal_urls_enabled'] = t.preferences['data_entry__public_ballots']
+    context['ballot_randomised_urls_enabled'] = t.preferences['data_entry__public_ballots_randomised']
+    context['feedback_normal_urls_enabled'] = t.preferences['data_entry__public_feedback']
+    context['feedback_randomised_urls_enabled'] = t.preferences['data_entry__public_feedback_randomised']
     return r2r(request, 'randomised_urls.html', context)
 
 @admin_required

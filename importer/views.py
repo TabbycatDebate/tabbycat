@@ -272,9 +272,9 @@ def edit_adjudicators(request, t):
 
     context = {
         'institutions'      : institutions,
-        'score_min'         : t.config.get('adj_min_score'),
-        'score_max'         : t.config.get('adj_max_score'),
-        'score_avg'         : round((t.config.get('adj_max_score') + t.config.get('adj_min_score')) / 2, 1),
+        'score_min'         : t.preferences['feedback__adj_min_score'],
+        'score_max'         : t.preferences['feedback__adj_max_score'],
+        'score_avg'         : round((t.preferences['feedback__adj_max_score'] + t.preferences['feedback__adj_min_score']) / 2, 1),
     }
     return r2r(request, 'edit_adjudicators.html', context)
 

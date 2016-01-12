@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from .models import Motion
 from actionlog.models import ActionLogEntry
-from tournaments.models import Round
+from tournaments.models import Round, Division
 
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory
@@ -101,8 +101,8 @@ def unrelease_motions(request, round):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_motions')
+@public_optional_tournament_view('public_features__public_motions')
 def public_motions(request, t):
-    order_by = t.config.get('public_motions_descending') and '-seq' or 'seq'
+    order_by = t.preferences['ui_options__public_motions_descending'] and '-seq' or 'seq'
     rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
     return r2r(request, 'public_motions.html', dict(rounds=rounds))

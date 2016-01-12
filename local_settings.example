@@ -63,7 +63,7 @@ COMPRESS_OFFLINE    = True
 
 CACHES = { # Use a dummy cache in development
     'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
    }
 }
 

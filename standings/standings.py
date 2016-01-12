@@ -165,7 +165,7 @@ def _add_subranks(standings, key, subkey):
 
     return standings
 
-def _add_division_ranks(standings, key, divisions):
+def _add_division_ranks(standings, divisions):
     """Adds subranks for each division."""
     for division in divisions:
         division_teams = [team for team in standings if team.division == division]
@@ -196,7 +196,7 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False, r
         raise TypeError("A tournament or a round must be specified.")
 
     # Identify standings rule
-    rule = tournament.config.get('team_standings_rule')
+    rule = tournament.preferences['standings__team_standings_rule']
     if rule not in PRECEDENCE_BY_RULE:
         raise ValueError("Invalid team_standings_rule option: {0}".format(rule))
 

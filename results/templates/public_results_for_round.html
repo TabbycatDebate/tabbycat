@@ -11,16 +11,16 @@
   <table id="dataTable" class="table table-hover" cellpadding="0" cellspacing="0">
     <thead>
       <tr>
-        {% if enable_divisions %}
+        {% if preferences.league_options__enable_divisions %}
           <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
         {% endif %}
         <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
         {% if show_ballots %}<th>Ballots</th>{% endif %}
-        {% if show_emoji > 0 %}
+        {% if preferences.ui_options__show_emoji %}
           <th class="team-emoji"></th>
         {% endif %}
         <th>Aff<span class="hidden-xs">irmative</span></th>
-        {% if show_emoji > 0 %}
+        {% if preferences.ui_options__show_emoji %}
           <th class="team-emoji"></th>
         {% endif %}
         <th>Neg<span class="hidden-xs">ative</span></th>
@@ -33,7 +33,7 @@
     <tbody>
     {% for debate in draw %}
       <tr>
-        {% if enable_divisions %}
+        {% if preferences.league_options__enable_divisions %}
           <td>{{ debate.division.name }}</td>
         {% endif %}
         <td>{% if debate.venue %}{{ debate.venue.name }}{% endif %}</td>
@@ -46,7 +46,7 @@
             {% endif %}
           </td>
         {% endif %}
-        {% if show_emoji > 0 %}
+        {% if preferences.ui_options__show_emoji %}
           <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
         {% endif %}
         <td>
@@ -59,7 +59,7 @@
             {{ debate.aff_team.short_name }}
           </span>
         </td>
-        {% if show_emoji > 0 %}
+        {% if preferences.ui_options__show_emoji %}
           <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
         {% endif %}
         <td>

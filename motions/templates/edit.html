@@ -56,7 +56,7 @@
             </div>
           </div>
 
-          {% if enable_flagged_motions %}
+          {% if preferences.league_options__enable_flagged_motions %}
           <div class="form-group">
             <label for="{{ form.flagged.id_for_label }}" class="col-sm-1 control-label" {% if form.flagged.help_text %}data-toggle="tooltip" title="{{ form.flagged.help_text }}"{% endif %}>
               {{ form.flagged.label }} {{ form.flagged.errors }}

@@ -16,13 +16,13 @@ class HungarianAllocator(Allocator):
 
     def __init__(self, *args, **kwargs):
         super(HungarianAllocator, self).__init__(*args, **kwargs)
-        config = self.debates[0].round.tournament.config
-        self.MAX_SCORE = config.get('adj_max_score')
-        self.MIN_SCORE = config.get('adj_min_voting_score')
-        self.CHAIR_CUTOFF = config.get('adj_chair_min_score')
+        preferences = self.debates[0].round.tournament.preferences
+        self.MAX_SCORE = preferences['feedback__adj_max_score']
+        self.MIN_SCORE = preferences['draw_rules__adj_min_voting_score']
+        self.CHAIR_CUTOFF = preferences['draw_rules__adj_chair_min_score']
 
-        self.CONFLICT_PENALTY = config.get('adj_conflict_penalty')
-        self.HISTORY_PENALTY = config.get('adj_history_penalty')
+        self.CONFLICT_PENALTY = preferences['draw_rules__adj_conflict_penalty']
+        self.HISTORY_PENALTY = preferences['draw_rules__adj_history_penalty']
 
     def calc_cost(self, debate, adj, adjustment=0):
         cost = 0
