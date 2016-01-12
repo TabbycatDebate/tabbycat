@@ -39,7 +39,7 @@ class Institution(models.Model):
 
     @property
     def venue_preferences(self):
-        return self.institutionvenuepreference_set.all()
+        return self.institutionvenuepreference_set.all().order_by('-priority')
 
     class Meta:
         verbose_name = "🏫 Institution"
@@ -148,7 +148,7 @@ class Team(models.Model):
 
     @property
     def venue_preferences(self):
-        return self.teamvenuepreference_set.all()
+        return self.teamvenuepreference_set.all().order_by('-priority')
 
     TYPE_NONE = 'N'
     TYPE_SWING = 'S'

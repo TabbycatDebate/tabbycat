@@ -132,20 +132,13 @@ def create_division_allocation(request, t):
     from tournaments.division_allocator import DivisionAllocator
 
     teams = list(Team.objects.filter(tournament=t))
+    institutions = Institution.objects.all()
     venue_groups = VenueGroup.objects.all()
-
-    for team in teams:
-        print(team)
-        team_preferences = list(TeamVenuePreference.objects.filter(team=team))
-        team.team_preferences_dict = dict((p.priority, p.venue_group) for p in team_preferences)
-
-        institution_preferences = list(InstitutionVenuePreference.objects.filter(institution=team.institution))
-        team.institutional_preferences_dict = dict((p.priority, p.venue_group) for p in institution_preferences)
 
     # Delete all existing divisions - this shouldn't affect teams (on_delete=models.SET_NULL))
     divisions = Division.objects.filter(tournament=t).delete()
 
-    alloc = DivisionAllocator(teams=teams, divisions=divisions, venue_groups=venue_groups, tournament=t)
+    alloc = DivisionAllocator(teams=teams, divisions=divisions, venue_groups=venue_groups, tournament=t, institutions=institutions)
     success = alloc.allocate()
 
     if success:
