@@ -29,8 +29,8 @@
 {% endblock content %}
 
 {% block extra-js %}
-<script type="text/javascript" language="javascript" src="{% static 'js/jquery.flot.min.js' %}"></script>
-<script type="text/javascript" language="javascript" src="{% static 'js/jquery.flot.stack.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.stack.min.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
 $(document).ready( function() {
 
@@ -112,7 +112,7 @@ $(document).ready( function() {
       type: "GET",
       url: "{% tournament_url action_log_update %}",
       success: function(data, status) {
-        console.log(data);
+        // console.log(data);
         var new_actions = [];
         // Build new LI items
         $.each( data, function(index, object ) {

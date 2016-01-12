@@ -71,12 +71,11 @@
   {% block footer %}{% include "footer.html" %}{% endblock footer %}
 
   {% compress js %}
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/modernizr.js' %}"></script>
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'bootstrap/javascripts/bootstrap.min.js' %}"></script>
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.bootstrap.js' %}"></script>
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/datatables/dataTables.fixedHeader.min.js' %}"></script>
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/jquery-1.12.0.min.js' %}"></script> <!-- 1.12.0 -->
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/bootstrap.min.js' %}"></script> <!-- 3.3.6 -->
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/jquery.dataTables.min.js' %}"></script> <!-- 1.10.0 -->
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/dataTables.bootstrap.js' %}"></script>
+  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/dataTables.fixedHeader.min.js' %}"></script>
   {% endcompress %}
   <script type="text/javascript">
     $.extend( true, $.fn.dataTable.defaults, {
@@ -98,21 +97,18 @@
         'html': true,
         'placement': 'bottom'
       });
-
+      // Disable buttons post submission
+      $('.submit-disable').on('click', function () {
+        var $btn = $(this).button('loading');
+      });
       // Enable AJAX-based hover tooltips to lookup speaker names
       $('.team-speakers-hover').tooltip({
         title: getTeamSpeakers,
         'html': true,
         'placement': 'bottom'
       });
-
-      // Disable buttons post submission
-      $('.submit-disable').on('click', function () {
-        var $btn = $(this).button('loading');
-      });
-
+      // Dynamic lookup speakers on hover
       var cachedData = Array();
-
       function getTeamSpeakers(){
           var element = $(this);
           var id = element.attr('id').replace("team_speakers_", "");
@@ -129,19 +125,8 @@
           cachedData[id] = localData;
           return localData;
       }
-
     });
 
-    // Test for emoji support, if not present then load and execute a polyfill
-    Modernizr.load({
-      test: Modernizr.emoji,
-      nope: '{% static '//twemoji.maxcdn.com/twemoji.min.js' %}',
-      complete : function () {
-        if (!Modernizr.emoji) {
-          twemoji.parse(document.body);
-        }
-      }
-    });
 
   </script>
   {% block extra-js %}{% endblock extra-js %}

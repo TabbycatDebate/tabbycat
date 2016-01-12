@@ -48,7 +48,7 @@ DEBUG_TOOLBAR_PANELS = (
 
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
-    'JQUERY_URL': '/static/js/jquery-2.1.0.min.js', # Enables offline work
+    'JQUERY_URL': '/static/js/vendor/jquery-1.12.0.min.js', # Enables offline work
 }
 
 # ===================
