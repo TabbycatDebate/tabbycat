@@ -72,6 +72,7 @@ class HungarianAllocator(Allocator):
 
         assert len(panel_debates) * 3 <= len(panellists)
 
+        m = Munkres()
         # TODO I think "chairs" actually means "solos", rename variables if correct
         if len(chairs) > 0:
 
@@ -87,7 +88,6 @@ class HungarianAllocator(Allocator):
 
             print "optimizing"
 
-            m = Munkres()
             indexes = m.compute(cost_matrix)
 
             total_cost = 0
