@@ -101,7 +101,7 @@ def get_git_push_spec():
     exit(1)
 
 # Create the app with addons
-addons = ["memcachier", "heroku-postgresql:%s" % args.pg_plan]
+addons = ["memcachier", "papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan]
 command = ["heroku", "apps:create"]
 if addons:
     command.extend(["--addons", ",".join(addons)])
