@@ -184,6 +184,7 @@ class WADLPreferences(PreferencesPreset):
         self.league_options__enable_forfeits           = True
         self.league_options__enable_division_motions   = True
         self.league_options__team_points_rule          = 'wadl'
+        self.league_options__allocation_confirmations  = True
 
 
 

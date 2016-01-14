@@ -131,6 +131,7 @@
     <form action="{% tournament_url generate_randomised_urls %}" method="POST">
       <button class="btn btn-default" id="generateRandomisedUrls" type="submit">
         Generate randomised URLs for ballot and feedback submission
+        {% if preferences.allocation_confirmations %} test {% endif %}
       </button>
     </form>
   </p>

@@ -19,6 +19,7 @@ class DebateAdjudicator(models.Model):
     debate = models.ForeignKey('draw.Debate')
     adjudicator = models.ForeignKey('participants.Adjudicator')
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
+    timing_confirmed = models.NullBooleanField()
 
     def __str__(self):
         return '{} in {}'.format(self.adjudicator, self.debate)
