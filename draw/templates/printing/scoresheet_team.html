@@ -22,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for i in preferences.debate_rules__substantive_speakers|times %}
+        {% for i in pref.substantive_speakers|times %}
         <tr class="text-muted text-center">
           <td>
             <h5>
@@ -33,10 +33,10 @@
           <td class="text-muted text-center">
             <h5>
               <small>
-              {% if preferences.scoring__score_step >= 1 %}
-                {{ preferences.scoring__score_min|floatformat:"0" }}-{{ preferences.scoring__.score_max|floatformat:"0" }}
+              {% if pref.score_step >= 1 %}
+                {{ pref.score_min|floatformat:"0" }}-{{ pref..score_max|floatformat:"0" }}
               {% else %}
-                {{ preferences.scoring__score_min }}-{{ preferences.scoring__.score_max }}
+                {{ pref.score_min }}-{{ pref..score_max }}
               {% endif %}
               </small>
             </h5>
@@ -44,7 +44,7 @@
           <td class="writeable"></td>
         </tr>
         {% endfor %}
-        {% if preferences.debate_rules__reply_scores_enabled %}
+        {% if pref.reply_scores_enabled %}
         <tr class="text-muted text-center">
           <td>
             <h5><small>R</small></h5>
@@ -53,10 +53,10 @@
           <td class="text-muted text-center">
             <h5>
               <small>
-              {% if references.scoring__score_step >= 1 %}
-                {{preferences.scoring__reply_score_min|floatformat:"0" }}-{{ preferences.scoring__reply_score_max|floatformat:"0" }}
+              {% if pref.score_step >= 1 %}
+                {{pref.reply_score_min|floatformat:"0" }}-{{ pref.reply_score_max|floatformat:"0" }}
               {% else %}
-                {{preferences.scoring__reply_score_min }}-{{ preferences.scoring__reply_score_max }}
+                {{pref.reply_score_min }}-{{ pref.reply_score_max }}
               {% endif %}
               </small>
             </h5>

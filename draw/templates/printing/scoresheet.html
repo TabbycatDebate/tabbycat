@@ -59,7 +59,7 @@
               {% endfor %}
             {% endif %}
           </tr>
-          {% if preferences.debate_rules__motion_vetoes_enabled %}
+          {% if pref.motion_vetoes_enabled %}
           <tr>
               <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
                 <div class="panel-heading small">
@@ -167,8 +167,8 @@
       <table class="table" cellspacing="10" cellpadding="10">
         <tbody>
           <tr>
-            {% if preferences.feedback__score_return_location|length > 2 %}
-            <td width="30%" class="no-vertical-spacing text-left no-borders"><span class="small"><em>Please return ballots to {{ preferences.feedback__score_return_location }}</em></span></td>
+            {% if pref.score_return_location|length > 2 %}
+            <td width="30%" class="no-vertical-spacing text-left no-borders"><span class="small"><em>Please return ballots to {{ pref.score_return_location }}</em></span></td>
             {% endif %}
             <td width="10%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only:</em></span></td>
             <td width="30%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Entered By</em></span></td>

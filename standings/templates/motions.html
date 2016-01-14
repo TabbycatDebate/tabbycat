@@ -15,7 +15,7 @@
   <a href="{% round_url motions_edit %}" class="btn btn-default form-control">
     Edit Motions for {{ round.name }}
   </a>
-  {% if preferences.league_options__enable_division_motions %}
+  {% if pref.enable_division_motions %}
     <a href="{% round_url motions_assign %}" class="btn btn-default form-control">
       Assign {{ round.name }} Motions to Divisions
     </a>
@@ -40,14 +40,14 @@
       <th>Order</th>
       <th>Reference</th>
       <th>M<span class="hidden-xs">otion</span></th>
-      {% if preferences.league_options__enable_flagged_motions %}
+      {% if pref.enable_flagged_motions %}
         <th>Flagged</th>
       {% endif %}
-      {% if preferences.league_options__enable_division_motions %}
+      {% if pref.enable_division_motions %}
         <th>Divisions</th>
       {% endif %}
       <th>Chosen</th>
-      {% if preferences.debate_rules__motion_vetoes_enabled %}
+      {% if pref.motion_vetoes_enabled %}
         <th><span title="Aff vetoes" data-toggle="tooltip">AV</th>
         <th><span title="Neg vetoes" data-toggle="tooltip">NV</th>
       {% endif %}
@@ -65,7 +65,7 @@
       <td>{{ motion.seq }}</td>
       <td>{{ motion.reference }}</td>
       <td>{{ motion.text }}</td>
-      {% if preferences.league_options__enable_flagged_motions %}
+      {% if pref.enable_flagged_motions %}
       <td>
         {% if motion.flagged %}
           Yes
@@ -74,7 +74,7 @@
         {% endif %}
       </td>
       {% endif %}
-      {% if preferences.league_options__enable_division_motions %}
+      {% if pref.enable_division_motions %}
         <td>
         {% for division in motion.divisions.all %}
           {{ division.name }},
@@ -82,7 +82,7 @@
         </td>
       {% endif %}
       <td>{{ motion.chosen_in }}</td>
-      {% if preferences.debate_rules__motion_vetoes_enabled %}
+      {% if pref.motion_vetoes_enabled %}
       <td>{{ motion.aff_vetoes }}</td>
       <td>{{ motion.neg_vetoes }}</td>
       {% endif %}

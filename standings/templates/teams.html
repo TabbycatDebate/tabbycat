@@ -13,20 +13,20 @@
       <tr>
         <th class="hidden"></th>
         <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
-        {% if preferences.league_options__team_points_rule == 'wadl' %}
+        {% if pref.team_points_rule == 'wadl' %}
           <th>Points</th>
         {% endif %}
-        {% if preferences.league_options__show_avg_margin %}
+        {% if pref.show_avg_margin %}
           <th><span data-toggle="tooltip" title="Average winning margin">AWM</span></th>
         {% endif %}
-        {% if preferences.league_options__enable_divisions %}
+        {% if pref.enable_divisions %}
           <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
         {% endif %}
-        {% if preferences.ui_options__show_emoji %}
+        {% if pref.show_emoji %}
           <th class="team-emoji"></th>
         {% endif %}
         <th>Team</th>
-        {% if preferences.ui_options__show_institutions %}
+        {% if pref.show_institutions %}
           <th>Inst<span class="hidden-xs">itution</span></th>
         {% endif %}
         <th>Wins</th>
@@ -65,16 +65,16 @@
             {% endif %}
           </strong>
         </td>
-        {% if preferences.league_options__team_points_rule == 'wadl' %}
+        {% if pref.team_points_rule == 'wadl' %}
           <td>{{ team.points }}</td>
         {% endif %}
-        {% if preferences.league_options__show_avg_margin %}
+        {% if pref.show_avg_margin %}
           <td>{{ team.avg_margin|stringformat:".2f" }}</td>
         {% endif %}
-        {% if preferences.league_options__enable_divisions %}
+        {% if pref.enable_divisions %}
           <td>{{ team.division.name }}</td>
         {% endif %}
-        {% if preferences.ui_options__show_emoji %}
+        {% if pref.show_emoji %}
           <td class="team-emoji">{% team_emoji team %}</td>
         {% endif %}
         <td>
@@ -83,7 +83,7 @@
             {{ team.break_categories_str }}
           </span>
         </td>
-        {% if preferences.ui_options__show_institutions %}
+        {% if pref.show_institutions %}
           <td>
             <span class="hidden-xs">{{ team.institution }}</span>
             <span class="visible-xs">{{ team.institution.code }}</span>
@@ -105,7 +105,7 @@
                 {% endwith %}
               {% endif %}
                   vs
-                  {% if preferences.ui_options__show_emoji %}
+                  {% if pref.show_emoji %}
                     <span>{% team_emoji round_results.opposition %}</span>
                   {% else %}
                     {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
@@ -154,7 +154,7 @@
    <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
       var dTable = $("#dataTable").DataTable({
-        {% if preferences.league_options__enable_divisions %}
+        {% if pref.enable_divisions %}
           "aaSorting": [[ 1, "asc" ], [ 2, "asc" ]],
         {% else %}
           "aaSorting": [[ 1, "asc" ]],

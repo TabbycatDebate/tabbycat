@@ -14,17 +14,17 @@
     <thead>
       <tr>
         <th>Name</th>
-        {% if preferences.ui_options__show_novices %}
+        {% if pref.show_novices %}
           <th><span class="glyphicon glyphicon-leaf" data-toggle="tooltip" title="Speaker's Novice Status"></span></th>
         {% endif %}
-        {% if preferences.ui_options__show_emoji %}
+        {% if pref.show_emoji %}
           <th class="team-emoji"></th>
         {% endif %}
         <th>Team</th>
-        {% if preferences.public_features__public_break_categories %}
+        {% if pref.public_break_categories %}
           <th>Eligible for</th>
         {% endif %}
-        {% if preferences.ui_options__show_institutions %}
+        {% if pref.show_institutions %}
           <th>Institution</th>
         {% endif %}
       </tr>
@@ -33,12 +33,12 @@
     {% for person in speakers %}
       <tr>
         <td>{{ person.name }}</td>
-        {% if preferences.ui_options__show_novices %}
+        {% if pref.show_novices %}
           <td>
             {% if person.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% else %}<span></span>{% endif %}
           </td>
         {% endif %}
-        {% if preferences.ui_options__show_emoji %}
+        {% if pref.show_emoji %}
           <td class="team-emoji">{% team_emoji person.team %}</td>
         {% endif %}
         <td class="team-name">
@@ -46,10 +46,10 @@
             {{ person.team.long_name }}
           </span>
         </td>
-        {% if preferences.public_features__public_break_categories %}
+        {% if pref.public_break_categories %}
           <td>{{ person.team.break_categories_nongeneral|join:", " }}</td>
         {% endif %}
-        {% if preferences.ui_options__show_institutions %}
+        {% if pref.show_institutions %}
           <td>{{ person.team.institution.name }}</td>
         {% endif %}
       </tr>
@@ -78,7 +78,7 @@
     <thead>
       <tr>
         <th>Name</th>
-        {% if preferences.ui_options__show_institutions %}
+        {% if pref.show_institutions %}
         <th>Institution</th>
         {% endif %}
       </tr>
@@ -87,7 +87,7 @@
     {% for person in adjs %}
       <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
         <td>{{ person.name }}</td>
-        {% if preferences.ui_options__show_institutions %}
+        {% if pref.show_institutions %}
           <td>
             {{ person.institution.name }}
             {% if person.independent %}

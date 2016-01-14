@@ -9,7 +9,7 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
     reply_position = round.tournament.REPLY_POSITION
     total_prelim_rounds = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=round.tournament).count()
-    missable_debates = round.tournament.preferences['standings__standings_missed_debates']
+    missable_debates = round.tournament.preferences.get_by_name('standings_missed_debates')
     minimum_debates_needed = total_prelim_rounds - missable_debates
 
     if for_replies:
@@ -104,7 +104,7 @@ def team_standings(request, round):
         team.round_results = [get_round_result(team, team_scores, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
-        if round.tournament.preferences['league_options__show_avg_margin']:
+        if round.tournament.preferences.get_by_name('show_avg_margin'):
             try:
                 margins = []
                 for ts in team.round_results:
@@ -135,7 +135,7 @@ def division_standings(request, round):
         team.round_results = [get_round_result(team, team_scores, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
-        if round.tournament.preferences['league_options__show_avg_margin']:
+        if round.tournament.preferences.get_by_name('show_avg_margin'):
             try:
                 margins = []
                 for ts in team.round_results:

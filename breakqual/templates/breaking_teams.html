@@ -4,7 +4,7 @@
 {% load add_field_css %}
 {% block head-title %}
   {{ category.name }} Break
-  <small>({{ preferences.public_features__public_breaking_teams|yesno:",not "}}publicly visible)</small>
+  <small>({{ pref.public_breaking_teams|yesno:",not "}}publicly visible)</small>
 {% endblock %}
 {% block page-title %}{{ category.name }} Break{% endblock %}
 {% block body-class %}breaking-teams-{{ category.slug }}{% endblock %}
@@ -19,12 +19,12 @@
         </button>
       </form>
       <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
-        <button class="btn btn-{{ preferences.public_features__public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
           Update the break for all categories
         </button>
       </form>
       <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
-        <button class="btn btn-{{ preferences.public_features__public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
           Update the break for this category ({{ category.name }})
         </button>
       </form>
@@ -54,7 +54,7 @@
 
 
   {% else %}
-    {% if preferences.public_features__public_breaking_teams %}
+    {% if pref.public_breaking_teams %}
       <div class="alert alert-danger">
         The <strong>public breaking teams</strong> configuration setting is
         enabled. As soon as you click the button, the breaking teams list will
@@ -76,7 +76,7 @@
     {% endif %}
     <div class="forms-block-inline">
       <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
-        <button class="btn btn-{{ preferences.public_features__public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
             Generate the break for all categories
         </button>
       </form>
@@ -95,11 +95,11 @@
           <tr>
             <th>Rank</th>
             <th>Break</th>
-            {% if preferences.ui_options__show_emoji %}
+            {% if pref.show_emoji %}
               <th class="team-emoji"></th>
             {% endif %}
             <th>Team</th>
-            {% if preferences.ui_options__show_institutions %}
+            {% if pref.show_institutions %}
               <th>Inst<span class="hidden-xs">itution</span></th>
             {% endif %}
             <th>Wins</th>
@@ -121,16 +121,16 @@
           <tr>
             <td>{{ team.rank }}</td>
             <td>{{ team.break_rank|default_if_none:"&ndash;" }}</td>
-            {% if preferences.ui_options__show_emoji %}
+            {% if pref.show_emoji %}
               <td class="team-emoji">{% team_emoji team %}</td>
             {% endif %}
             <td>
-              <span {% if preferences.ui_options__show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
+              <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
                 {{ team.long_name }}
                 {{ team.categories_for_display }}
               </span>
             </td>
-            {% if preferences.ui_options__show_institutions %}
+            {% if pref.show_institutions %}
               <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
             {% endif %}
             <td>
@@ -158,7 +158,7 @@
 
       <div class="row">
         <div class="form-inline col-md-12">
-          <button class="btn btn-default form-control btn-{{ preferences.public_features__public_breaking_teams|yesno:"danger,success" }}" id="submit" type="submit" value="submit">
+          <button class="btn btn-default form-control btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="submit" type="submit" value="submit">
               Save remarks
           </button>
         </div>

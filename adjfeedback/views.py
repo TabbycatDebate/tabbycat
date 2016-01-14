@@ -111,8 +111,8 @@ def feedback_overview(request, t):
         'adjudicators'      : adjudicators,
         'breaking_count'    : breaking_count,
         'feedback_headings' : [q.name for q in t.adj_feedback_questions],
-        'score_min'         : t.preferences['feedback__adj_min_score'],
-        'score_max'         : t.preferences['feedback__adj_max_score'],
+        'score_min'         : t.preferences.get_by_name('adj_min_score'),
+        'score_max'         : t.preferences.get_by_name('adj_max_score'),
     }
     return r2r(request, 'feedback_overview.html', context)
 
@@ -135,11 +135,11 @@ def adj_source_feedback(request, t):
 
 def process_feedback(feedbacks, t):
     questions = t.adj_feedback_questions
-    score_step = t.preferences['feedback__adj_max_score'] / 10
+    score_step = t.preferences.get_by_name('adj_max_score') / 10
     score_thresholds = {
-        'low_score'     : t.preferences['feedback__adj_min_score'] + score_step,
-        'medium_score'  : t.preferences['feedback__adj_min_score'] + score_step + score_step,
-        'high_score'    : t.preferences['feedback__adj_max_score'] - score_step,
+        'low_score'     : t.preferences.get_by_name('adj_min_score') + score_step,
+        'medium_score'  : t.preferences.get_by_name('adj_min_score') + score_step + score_step,
+        'high_score'    : t.preferences.get_by_name('adj_max_score') - score_step,
     }
     for feedback in feedbacks:
         feedback.items = []
@@ -341,7 +341,7 @@ def set_adj_breaking_status(request, t):
 @tournament_view
 def add_feedback(request, t):
     context = {
-        'adjudicators' : t.adjudicator_set.all() if not t.preferences['league_options__share_adjs']
+        'adjudicators' : t.adjudicator_set.all() if not t.preferences.get_by_name('share_adjs')
                          else Adjudicator.objects.all(),
         'teams'        : t.team_set.all(),
     }
@@ -495,10 +495,10 @@ def randomised_urls(request, t):
     context['exists'] = t.adjudicator_set.filter(url_key__isnull=False).exists() or \
             t.team_set.filter(url_key__isnull=False).exists()
     context['tournament_slug'] = t.slug
-    context['ballot_normal_urls_enabled'] = t.preferences['data_entry__public_ballots']
-    context['ballot_randomised_urls_enabled'] = t.preferences['data_entry__public_ballots_randomised']
-    context['feedback_normal_urls_enabled'] = t.preferences['data_entry__public_feedback']
-    context['feedback_randomised_urls_enabled'] = t.preferences['data_entry__public_feedback_randomised']
+    context['ballot_normal_urls_enabled'] = t.preferences.get_by_name('public_ballots')
+    context['ballot_randomised_urls_enabled'] = t.preferences.get_by_name('public_ballots_randomised')
+    context['feedback_normal_urls_enabled'] = t.preferences.get_by_name('data_entry__public_feedback')
+    context['feedback_randomised_urls_enabled'] = t.preferences.get_by_name('public_feedback_randomised')
     return r2r(request, 'randomised_urls.html', context)
 
 @admin_required

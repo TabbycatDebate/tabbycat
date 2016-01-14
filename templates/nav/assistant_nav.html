@@ -7,7 +7,7 @@
   <li {% if feedback_nav %}class="active"{% endif %}>
     <a href="{% tournament_url add_feedback %}">Enter Feedback</a>
   </li>
-  {% if preferences.league_options__enable_divisions %}
+  {% if pref.enable_divisions %}
     <li><a href="{% round_url master_sheets_list current_round %}">Mastersheets</a></li>
   {% endif %}
   <li {% if draw_nav %}class="active"{% endif %}>

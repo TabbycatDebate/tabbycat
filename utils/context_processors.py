@@ -5,7 +5,7 @@ def debate_context(request):
     if hasattr(request, 'tournament'):
         d = {
             'tournament'              : request.tournament,
-            'preferences'             : request.tournament.preferences,
+            'pref'                    : request.tournament.preferences.by_name(),
             'current_round'           : request.tournament.get_current_round_cached,
         }
         if hasattr(request, 'round'):

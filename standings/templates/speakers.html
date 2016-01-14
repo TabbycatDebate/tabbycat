@@ -14,14 +14,14 @@
         <th class="hidden"></th>
         <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
         <th>Name</th>
-        {% if preferences.ui_options__show_novices %}
+        {% if pref.show_novices %}
           <th><span class="glyphicon glyphicon-leaf" data-toggle="tooltip" title="Speaker's Novice Status"></span></th>
         {% endif %}
-        {% if preferences.ui_options__show_emoji %}
+        {% if pref.show_emoji %}
           <th class="team-emoji"></th>
         {% endif %}
         <th>Team</th>
-        {% if preferences.ui_options__show_institutions %}
+        {% if pref.show_institutions %}
           <th>Institution</th>
         {% endif %}
         {% for round in rounds %}
@@ -47,10 +47,10 @@
           </strong>
         </td>
         <td>{{ speaker.name }}</td>
-        {% if preferences.ui_options__show_novices %}
+        {% if pref.show_novices %}
           <td>{% if speaker.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
         {% endif %}
-        {% if preferences.ui_options__show_emoji %}
+        {% if pref.show_emoji %}
           <td class="team-emoji">{% team_emoji speaker.team %}</td>
         {% endif %}
         <td>
@@ -58,7 +58,7 @@
             {{ speaker.team.short_name }}
           </span>
         </td>
-        {% if preferences.ui_options__show_institutions %}
+        {% if pref.show_institutions %}
           <td>{{ speaker.team.institution.code }}</td>
         {% endif %}
         {% for score in speaker.scores %}

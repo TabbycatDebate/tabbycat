@@ -23,7 +23,7 @@ class TournamentPasswordField(forms.CharField):
     def __init__(self, *args, **kwargs):
         if 'tournament' in kwargs:
             tournament = kwargs.pop('tournament')
-            self.password = tournament.preferences['data_entry__public_password']
+            self.password = tournament.preferences.get_by_name('public_password')
         else:
             raise TypeError("'tournament' is a required keyword argument")
         if 'label' not in kwargs:
@@ -130,15 +130,15 @@ class BallotSetForm(forms.Form):
         self.adjudicators = self.debate.adjudicators.list
         self.motions = self.debate.round.motion_set
         self.tournament = self.debate.round.tournament
-        self.using_motions = self.tournament.preferences['data_entry__enable_motions']
-        self.using_vetoes = self.tournament.preferences['debate_rules__motion_vetoes_enabled']
-        self.using_forfeits = self.tournament.preferences['leage_options__enable_forfeits']
-        self.using_replies = self.tournament.preferences['debate_rules__reply_scores_enabled']
-        self.choosing_sides = self.tournament.preferences['draw_rules__draw_side_allocations'] == 'manual-ballot'
+        self.using_motions = self.tournament.preferences.get_by_name('enable_motions')
+        self.using_vetoes = self.tournament.preferences.get_by_name('motion_vetoes_enabled')
+        self.using_forfeits = self.tournament.preferences.get_by_name('enable_forfeits')
+        self.using_replies = self.tournament.preferences.get_by_name('reply_scores_enabled')
+        self.choosing_sides = self.tournament.preferences.get_by_name('draw_side_allocations') == 'manual-ballot'
 
         self.forfeit_declared = False
 
-        self.has_tournament_password = kwargs.pop('password', False) and self.tournament.preferences['data_entry__public_use_password']
+        self.has_tournament_password = kwargs.pop('password', False) and self.tournament.preferences.get_by_name('public_use_password')
 
         super(BallotSetForm, self).__init__(*args, **kwargs)
 

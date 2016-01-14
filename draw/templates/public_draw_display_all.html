@@ -13,20 +13,20 @@
     <thead>
       <tr>
         <th><span data-toggle="tooltip" title="Round">R</span></th>
-        {% if preferences.league_options__enable_divisions %}
+        {% if pref.enable_divisions %}
           <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
         {% endif %}
         <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-        {% if preferences.league_options__enable_venue_times %}
+        {% if pref.enable_venue_times %}
           <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
           <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
         {% endif %}
         <th>Aff<span class="hidden-xs">irmative</span></th>
         <th>Neg<span class="hidden-xs">ative</span></th>
-        {% if preferences.league_options__enable_division_motions %}
+        {% if pref.enable_division_motions %}
           <th>Motion</th>
         {% endif %}
-        {% if not preferences.league_options__enable_divisions %}
+        {% if not pref.enable_divisions %}
           <th>Adj<span class="hidden-xs">udicator</span>s</th>
         {% endif %}
       </tr>
@@ -44,7 +44,7 @@
             {% else %}
               <td>{{ debate.venue.group.short_name }}</td>
             {% endif %}
-            {% if preferences.league_options__enable_venue_times %}
+            {% if pref.enable_venue_times %}
               {% include "tables/debate_status.html" %}
             {% endif %}
             <td class="team-name">

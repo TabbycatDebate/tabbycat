@@ -44,7 +44,7 @@ def draw_adjudicators_edit(request, round):
     context = dict()
     context['draw'] = draw = round.get_draw()
     context['adj0'] = Adjudicator.objects.first()
-    context['duplicate_adjs'] = round.tournament.preferences['league_options__duplicate_adjs']
+    context['duplicate_adjs'] = round.tournament.preferences.get_by_name('duplicate_adjs')
     context['feedback_headings'] = [
         q.name for q in round.tournament.adj_feedback_questions]
 

@@ -9,14 +9,14 @@
 <div class="row">
   <div class="col-md-12">
     <ul class="list-group">
-    {% if preferences.public_features__public_breaking_teams %}
+    {% if pref.public_breaking_teams %}
       {% for category in tournament.breakcategory_set.all %}
       <li class="list-group-item"><a  href="{% tournament_url public_breaking_teams category.slug %}">
         {{ category.name }} Break
       </a></li>
       {% endfor %}
     {% endif %}
-    {% if preferences.public_features__public_breaking_adjs %}
+    {% if pref.public_breaking_adjs %}
       <li class="list-group-item"><a href="{% tournament_url public_breaking_adjs %}">
         Adjudicators
       </a></li>

@@ -9,13 +9,13 @@
   <thead>
     <tr>
       <th>Team</th>
-      {% if preferences.ui_options__show_emoji %}
+      {% if pref.show_emoji %}
         <th class="team-emoji"></th>
       {% endif %}
-      {% if preferences.league_options__enable_divisions %}
+      {% if pref.enable_divisions %}
         <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
       {% endif %}
-      {% if preferences.ui_options__show_institutions %}
+      {% if pref.show_institutions %}
         <th>Institution</th>
       {% endif %}
       <th>Active</th>
@@ -29,13 +29,13 @@
            {{ team.long_name }}
          </span>
       </td>
-      {% if preferences.ui_options__show_emoji %}
+      {% if pref.show_emoji %}
         <td class="team-emoji">{% team_emoji team %}</td>
       {% endif %}
-      {% if preferences.league_options__enable_divisions %}
+      {% if pref.enable_divisions %}
         <td>{{ team.division.name }}</td>
       {% endif %}
-      {% if preferences.ui_options__show_institutions %}
+      {% if pref.show_institutions %}
         <td>{{ team.institution.code }}</td>
       {% endif %}
       <td class="check_target">
