@@ -17,3 +17,6 @@ waitress==0.8.9
 
 # For monitoring
 newrelic
+
+# For emailing
+sendgrid>=0.5.0
