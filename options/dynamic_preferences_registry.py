@@ -1,6 +1,5 @@
-from .forms import FloatPreference
 from .models import TournamentPreferenceModel
-from dynamic_preferences.types import BooleanPreference, StringPreference, IntegerPreference, Section
+from dynamic_preferences.types import BooleanPreference, StringPreference, IntegerPreference, FloatPreference, Section
 from dynamic_preferences.registries import PreferenceRegistry, PerInstancePreferenceRegistry, preference_models
 
 # Key
