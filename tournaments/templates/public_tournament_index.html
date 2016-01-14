@@ -37,6 +37,11 @@
         </li>
       {% endif %}
       {% if preferences.public_features__public_draw and preferences.tab_release__tab_released == 0 and preferences.ui_options__show_all_draws == 0 %}
+        <li class="list-group-item">
+          <a href="{% tournament_url public_side_allocations %}">Sides</a>
+        </li>
+      {% endif %}
+      {% if public_draw > 0  and tab_released == 0 and show_all_draws == 0 %}
         <li class="list-group-item"><a class="public-draw-nav" href="{% tournament_url public_draw %}">
           Draw for {{ current_round.name }}
         </a></li>
@@ -48,7 +53,8 @@
       {% endif %}
       {% if preferences.league_options__public_divisions > 0 %}
         <li class="list-group-item">
-          <a href="{% tournament_url public_divisions %}">Divisions</a></li>
+          <a href="{% tournament_url public_divisions %}">Divisions</a>
+        </li>
       {% endif %}
       {% if preferences.public_features__public_motions %}
         <li class="list-group-item">

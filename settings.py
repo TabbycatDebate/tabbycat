@@ -13,7 +13,7 @@ SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # = Overwritten in Local =
 # ========================
 
-ADMINS              = ('Test', 'test@test.com')
+ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com')
 MANAGERS            = ADMINS
 DEBUG               = False
 DEBUG_ASSETS        = DEBUG
@@ -227,6 +227,17 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
             }
         }
+
+if os.environ.get('DEBUG', ''):
+    DEBUG = bool(int(os.environ['DEBUG']))
+    TEMPLATE_DEBUG = DEBUG
+
+if os.environ.get('SENDGRID_USERNAME', ''):
+    EMAIL_HOST= 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
+    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
 
 # ===========================
 # = Local Overrides
