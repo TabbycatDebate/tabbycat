@@ -23,14 +23,14 @@ class Tournament(models.Model):
     @property
     def LAST_SUBSTANTIVE_POSITION(self):
         """Returns the number of substantive speakers."""
-        return self.preferences['debate_rules__substantive_speakers']
+        return self.pref('substantive_speakers')
 
     @property
     def REPLY_POSITION(self):
         """If there is a reply position, returns one more than the number of
         substantive speakers. If there is no reply position, returns None."""
-        if self.preferences['debate_rules__reply_scores_enabled']:
-            return self.preferences['debate_rules__substantive_speakers'] + 1
+        if self.pref('reply_scores_enabled'):
+            return self.pref('substantive_speakers') + 1
         else:
             return None
 
@@ -38,8 +38,8 @@ class Tournament(models.Model):
     def POSITIONS(self):
         """Guaranteed to be consecutive numbers starting at one. Includes the
         reply speaker."""
-        speaker_positions = 1 + self.preferences['debate_rules__substantive_speakers']
-        if self.preferences['debate_rules__reply_scores_enabled'] is True:
+        speaker_positions = 1 + self.pref('substantive_speakers')
+        if self.pref('reply_scores_enabled') is True:
             speaker_positions = speaker_positions + 1
         return list(range(1, speaker_positions))
 
@@ -93,6 +93,9 @@ class Tournament(models.Model):
         next_round = Round.objects.get(seq=next_round_seq, tournament=self)
         self.current_round = next_round
         self.save()
+
+    def pref(self, name):
+        return self.preferences.get_by_name(name)
 
     @cached_property
     def config(self):
@@ -364,7 +367,7 @@ class Round(models.Model):
         return self.get_draw()
 
     def get_draw(self):
-        if self.tournament.preferences.get_by_name('enable_divisions'):
+        if self.tournament.pref('enable_divisions'):
             debates = self.debate_set.order_by('room_rank').select_related(
                     'venue', 'division', 'division__venue_group')
         else:
@@ -374,7 +377,7 @@ class Round(models.Model):
         return debates
 
     def get_draw_by_room(self):
-        if self.tournament.preferences.get_by_name('enable_divisions'):
+        if self.tournament.pref('enable_divisions'):
             debates = self.debate_set.order_by('venue__name').select_related(
                     'venue', 'division', 'division__venue_group')
         else:
@@ -396,7 +399,7 @@ class Round(models.Model):
         from participants.models import Team
         draw = self.get_draw()
         if round.prev:
-            if round.tournament.preferences.get_by_name('team_points_rule') != "wadl":
+            if round.tournament.pref('team_points_rule') != "wadl":
                 standings = list(Team.objects.subrank_standings(round.prev))
                 for debate in draw:
                     for side in ('aff_team', 'neg_team'):
@@ -506,7 +509,7 @@ class Round(models.Model):
                                       'adjudicator_id',
                                       'participants_adjudicator', id_field='person_ptr_id')
 
-        if not self.tournament.preferences.get_by_name('share_adjs'):
+        if not self.tournament.pref('share_adjs'):
             all_adjs = [a for a in all_adjs if a.tournament == self.tournament]
 
         return all_adjs
@@ -523,7 +526,7 @@ class Round(models.Model):
                                                   WHERE d.round_id = %d AND
                                                   da.adjudicator_id = participants_adjudicator.person_ptr_id)""" % self.id },
         )
-        if not self.tournament.preferences.get_by_name('draw_skip_adj_checkins'):
+        if not self.tournament.pref('draw_skip_adj_checkins'):
             return [a for a in result if a.is_active and not a.is_used]
         else:
             return [a for a in result if not a.is_used]

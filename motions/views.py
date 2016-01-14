@@ -101,8 +101,8 @@ def unrelease_motions(request, round):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_features__public_motions')
+@public_optional_tournament_view('public_motions')
 def public_motions(request, t):
-    order_by = t.preferences.get_by_name('public_motions_descending') and '-seq' or 'seq'
+    order_by = t.pref('public_motions_descending') and '-seq' or 'seq'
     rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
     return r2r(request, 'public_motions.html', dict(rounds=rounds))

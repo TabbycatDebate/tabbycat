@@ -196,7 +196,7 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False, r
         raise TypeError("A tournament or a round must be specified.")
 
     # Identify standings rule
-    rule = tournament.preferences['standings__team_standings_rule']
+    rule = tournament.pref('team_standings_rule')
     if rule not in PRECEDENCE_BY_RULE:
         raise ValueError("Invalid team_standings_rule option: {0}".format(rule))
 

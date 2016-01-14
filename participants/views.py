@@ -14,7 +14,7 @@ def team_speakers(request, t, team_id):
     return JsonResponse(data, safe=False)
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_features__public_participants')
+@public_optional_tournament_view('public_participants')
 def public_participants(request, t):
     adjs = Adjudicator.objects.all()
     speakers = Speaker.objects.all().select_related('team','team__institution')

@@ -362,7 +362,7 @@ def save_venues(request, round):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_features__public_draw')
+@public_optional_tournament_view('public_draw')
 def public_draw(request, t):
     r = t.current_round
     if r.draw_status == r.STATUS_RELEASED:
@@ -379,7 +379,7 @@ def public_draw(request, t):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_round_view('ui_options__show_all_draws')
+@public_optional_round_view('show_all_draws')
 def public_draw_by_round(request, round):
     if round.draw_status == round.STATUS_RELEASED:
         draw = round.get_draw()
@@ -407,7 +407,7 @@ def public_all_draws(request, t):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_features__public_side_allocations')
+@public_optional_tournament_view('public_side_allocations')
 def public_side_allocations(request, t):
     # TODO: move to draws app
     teams = Team.objects.filter(tournament=t)

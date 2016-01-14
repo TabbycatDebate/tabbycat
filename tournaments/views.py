@@ -39,7 +39,7 @@ def tournament_home(request, t):
         total_ballots=total_ballots, round=round))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('league_options__public_divisions')
+@public_optional_tournament_view('public_divisions')
 def public_divisions(request, t):
     divisions = Division.objects.filter(tournament=t).all().select_related('venue_group')
     divisions = sorted(divisions, key=lambda x: float(x.name))
