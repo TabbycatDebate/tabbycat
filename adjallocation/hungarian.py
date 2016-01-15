@@ -16,13 +16,13 @@ class HungarianAllocator(Allocator):
 
     def __init__(self, *args, **kwargs):
         super(HungarianAllocator, self).__init__(*args, **kwargs)
-        config = self.debates[0].round.tournament.config
-        self.MAX_SCORE = config.get('adj_max_score')
-        self.MIN_SCORE = config.get('adj_min_voting_score')
-        self.CHAIR_CUTOFF = config.get('adj_chair_min_score')
+        t = self.debates[0].round.tournament
+        self.MAX_SCORE = t.pref('adj_max_score')
+        self.MIN_SCORE = t.pref('adj_min_voting_score')
+        self.CHAIR_CUTOFF = t.pref('adj_chair_min_score')
 
-        self.CONFLICT_PENALTY = config.get('adj_conflict_penalty')
-        self.HISTORY_PENALTY = config.get('adj_history_penalty')
+        self.CONFLICT_PENALTY = t.pref('adj_conflict_penalty')
+        self.HISTORY_PENALTY = t.pref('adj_history_penalty')
 
     def calc_cost(self, debate, adj, adjustment=0):
         cost = 0
@@ -72,32 +72,40 @@ class HungarianAllocator(Allocator):
 
         assert len(panel_debates) * 3 <= len(panellists)
 
-        print("costing chairs")
-
-        n = len(chairs)
-        cost_matrix = [[0] * n for i in range(n)]
-
-        for i, debate in enumerate(chair_debates):
-            for j, adj in enumerate(chairs):
-                cost_matrix[i][j] = self.calc_cost(debate, adj)
-
-        print("optimizing")
-
         m = Munkres()
-        indexes = m.compute(cost_matrix)
+        # TODO I think "chairs" actually means "solos", rename variables if correct
+        if len(chairs) > 0:
 
-        total_cost = 0
-        for r, c in indexes:
-            total_cost += cost_matrix[r][c]
+            print("costing chairs")
 
-        print('total cost for solos', total_cost)
-        print('number of solo debates', n)
+            n = len(chairs)
 
-        result = ((chair_debates[i], chairs[j]) for i, j in indexes if i <
-                  len(chair_debates))
-        alloc = [AdjudicatorAllocation(d, c) for d, c in result]
+            cost_matrix = [[0] * n for i in range(n)]
 
-        print([(a.debate, a.chair) for a in alloc])
+            for i, debate in enumerate(chair_debates):
+                for j, adj in enumerate(chairs):
+                    cost_matrix[i][j] = self.calc_cost(debate, adj)
+
+            print("optimizing")
+
+            indexes = m.compute(cost_matrix)
+
+            total_cost = 0
+            for r, c in indexes:
+                total_cost += cost_matrix[r][c]
+
+            print('total cost for solos', total_cost)
+            print('number of solo debates', n)
+
+            result = ((chair_debates[i], chairs[j]) for i, j in indexes if i <
+                      len(chair_debates))
+            alloc = [AdjudicatorAllocation(d, c) for d, c in result]
+
+            print([(a.debate, a.chair) for a in alloc])
+
+        else:
+            print("No solo adjudicators.")
+            alloc = []
 
         # do panels
         n = len(panel_debates)

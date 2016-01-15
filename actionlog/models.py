@@ -127,7 +127,8 @@ class ActionLogEntry(models.Model):
     objects = ActionLogManager()
 
     class Meta:
-        verbose_name_plural = "action log entries"
+        verbose_name = "🕐 Action Log Entry"
+        verbose_name_plural = "🕐 Action Log Entries"
 
     def __repr__(self):
         return '<Action %d by %s (%s): %s>' % (self.id, self.user, self.timestamp, self.get_type_display())

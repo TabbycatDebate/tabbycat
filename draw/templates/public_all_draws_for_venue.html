@@ -40,7 +40,7 @@
           {% else %}
             <td>{{ debate.venue.group.short_name }}</td>
           {% endif %}
-          {% if enable_venue_times %}{% include "tables/debate_status.html" %}{% endif %}
+          {% if pref.enable_venue_times %}{% include "tables/debate_status.html" %}{% endif %}
           <td class="team-name">
             {{ debate.aff_team.short_name }}
           </td>

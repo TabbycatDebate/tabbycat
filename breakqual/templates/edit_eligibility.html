@@ -23,7 +23,7 @@
       <thead>
         <tr>
           <th>Team</th>
-          {% if show_emoji > 0 %}
+          {% if pref.show_emoji %}
             <th class="team-emoji"></th>
           {% endif %}
           <th>Institution</th>
@@ -47,7 +47,7 @@
                 {{ team.short_name }}
               </span>
             </td>
-            {% if show_emoji > 0 %}
+            {% if pref.show_emoji %}
               <td class="team-emoji">{% team_emoji team %}</td>
             {% endif %}
             <td>{{ team.institution.name }}</td>

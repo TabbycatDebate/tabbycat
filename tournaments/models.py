@@ -23,14 +23,14 @@ class Tournament(models.Model):
     @property
     def LAST_SUBSTANTIVE_POSITION(self):
         """Returns the number of substantive speakers."""
-        return self.config.get('substantive_speakers')
+        return self.pref('substantive_speakers')
 
     @property
     def REPLY_POSITION(self):
         """If there is a reply position, returns one more than the number of
         substantive speakers. If there is no reply position, returns None."""
-        if self.config.get('reply_scores_enabled'):
-            return self.config.get('substantive_speakers') + 1
+        if self.pref('reply_scores_enabled'):
+            return self.pref('substantive_speakers') + 1
         else:
             return None
 
@@ -38,8 +38,8 @@ class Tournament(models.Model):
     def POSITIONS(self):
         """Guaranteed to be consecutive numbers starting at one. Includes the
         reply speaker."""
-        speaker_positions = 1 + self.config.get('substantive_speakers')
-        if self.config.get('reply_scores_enabled') is True:
+        speaker_positions = 1 + self.pref('substantive_speakers')
+        if self.pref('reply_scores_enabled') is True:
             speaker_positions = speaker_positions + 1
         return list(range(1, speaker_positions))
 
@@ -94,6 +94,9 @@ class Tournament(models.Model):
         self.current_round = next_round
         self.save()
 
+    def pref(self, name):
+        return self.preferences.get_by_name(name)
+
     @cached_property
     def config(self):
         if not hasattr(self, '_config'):
@@ -107,6 +110,7 @@ class Tournament(models.Model):
 
     class Meta:
         ordering = ['seq',]
+        verbose_name = "🏆 Tournament"
 
     def __str__(self):
         if self.short_name:
@@ -146,6 +150,7 @@ class Division(models.Model):
         unique_together = [('tournament', 'name')]
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
+        verbose_name = "➗ Division"
 
 
 class RoundManager(models.Manager):
@@ -229,6 +234,7 @@ class Round(models.Model):
         unique_together = [('tournament', 'seq')]
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
+        verbose_name = "⏰ Round"
 
     def __str__(self):
         return "%s - %s" % (self.tournament, self.name)
@@ -258,11 +264,11 @@ class Round(models.Model):
         # There is a bit of logic to go through to figure out what we need to
         # provide to the draw class.
         OPTIONS_TO_CONFIG_MAPPING = {
-            "avoid_institution"  : "avoid_same_institution",
-            "avoid_history"      : "avoid_team_history",
-            "history_penalty"    : "team_history_penalty",
-            "institution_penalty": "team_institution_penalty",
-            "side_allocations"   : "draw_side_allocations",
+            "avoid_institution"  : "draw_rules__avoid_same_institution",
+            "avoid_history"      : "draw_rules__avoid_team_history",
+            "history_penalty"    : "draw_rules__team_history_penalty",
+            "institution_penalty": "draw_rules__team_institution_penalty",
+            "side_allocations"   : "draw_rules__draw_side_allocations",
         }
 
         if override_team_checkins is True:
@@ -275,19 +281,19 @@ class Round(models.Model):
             teams = draw_teams
             draw_type = "random"
             OPTIONS_TO_CONFIG_MAPPING.update({
-                "avoid_conflicts" : "draw_avoid_conflicts",
+                "avoid_conflicts" : "draw_rules__draw_avoid_conflicts",
             })
         elif self.draw_type == self.DRAW_MANUAL:
             teams = draw_teams
             draw_type = "manual"
         elif self.draw_type == self.DRAW_POWERPAIRED:
-            from standings import annotate_team_standings
+            from standings.standings import annotate_team_standings
             teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
-                "avoid_conflicts" : "draw_avoid_conflicts",
-                "odd_bracket"     : "draw_odd_bracket",
-                "pairing_method"  : "draw_pairing_method",
+                "avoid_conflicts" : "draw_rules__draw_avoid_conflicts",
+                "odd_bracket"     : "draw_rules__draw_odd_bracket",
+                "pairing_method"  : "draw_rules__draw_pairing_method",
             })
         elif self.draw_type == self.DRAW_ROUNDROBIN:
             teams = draw_teams
@@ -316,7 +322,7 @@ class Round(models.Model):
 
         options = dict()
         for key, value in OPTIONS_TO_CONFIG_MAPPING.items():
-            options[key] = self.tournament.config.get(value)
+            options[key] = self.tournament.preferences[value]
         if options["side_allocations"] == "manual-ballot":
             options["side_allocations"] = "balance"
 
@@ -361,7 +367,7 @@ class Round(models.Model):
         return self.get_draw()
 
     def get_draw(self):
-        if self.tournament.config.get('enable_divisions'):
+        if self.tournament.pref('enable_divisions'):
             debates = self.debate_set.order_by('room_rank').select_related(
                     'venue', 'division', 'division__venue_group')
         else:
@@ -371,7 +377,7 @@ class Round(models.Model):
         return debates
 
     def get_draw_by_room(self):
-        if self.tournament.config.get('enable_divisions'):
+        if self.tournament.pref('enable_divisions'):
             debates = self.debate_set.order_by('venue__name').select_related(
                     'venue', 'division', 'division__venue_group')
         else:
@@ -393,7 +399,7 @@ class Round(models.Model):
         from participants.models import Team
         draw = self.get_draw()
         if round.prev:
-            if round.tournament.config.get('team_points_rule') != "wadl":
+            if round.tournament.pref('team_points_rule') != "wadl":
                 standings = list(Team.objects.subrank_standings(round.prev))
                 for debate in draw:
                     for side in ('aff_team', 'neg_team'):
@@ -503,7 +509,7 @@ class Round(models.Model):
                                       'adjudicator_id',
                                       'participants_adjudicator', id_field='person_ptr_id')
 
-        if not self.tournament.config.get('share_adjs'):
+        if not self.tournament.pref('share_adjs'):
             all_adjs = [a for a in all_adjs if a.tournament == self.tournament]
 
         return all_adjs
@@ -520,7 +526,7 @@ class Round(models.Model):
                                                   WHERE d.round_id = %d AND
                                                   da.adjudicator_id = participants_adjudicator.person_ptr_id)""" % self.id },
         )
-        if not self.tournament.config.get('draw_skip_adj_checkins'):
+        if not self.tournament.pref('draw_skip_adj_checkins'):
             return [a for a in result if a.is_active and not a.is_used]
         else:
             return [a for a in result if not a.is_used]

@@ -18,10 +18,10 @@ urlpatterns = [
     url(r'^notes/test/set/$',                       views.set_adj_note,             name='set_adj_note'),
 
     # Source
-    url(r'^source/latest/$',                        views.adj_latest_feedback,  name='adj_latest_feedback'),
-    url(r'^source/list/$',                          views.adj_source_feedback,  name='adj_source_feedback'),
-    url(r'^source/team/(?P<team_id>\d+)/$',         views.team_feedback_list,   name='team_feedback_list'),
-    url(r'^source/adjudicator(?P<adj_id>\d+)/$',    views.adj_feedback_list,    name='adj_feedback_list'),
+    url(r'^source/latest/$',                        views.adj_latest_feedback,      name='adj_latest_feedback'),
+    url(r'^source/list/$',                          views.adj_source_feedback,      name='adj_source_feedback'),
+    url(r'^source/team/(?P<team_id>\d+)/$',         views.team_feedback_list,       name='team_feedback_list'),
+    url(r'^source/adjudicator(?P<adj_id>\d+)/$',    views.adj_feedback_list,        name='adj_feedback_list'),
 
     # Adding
     url(r'^add/team/(?P<source_id>\d+)/$',          views.enter_feedback, {'source_type': Team},        name='enter_feedback_team'),

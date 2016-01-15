@@ -31,18 +31,18 @@
     <thead>
       <tr>
         <th>Name</th>
-        {% if show_institutions > 0 %}
+        {% if pref.show_institutions %}
           <th>Institution</th>
         {% endif %}
         <th><span data-toggle="tooltip" title="Overall Score">Score</span></th>
         <th><span data-toggle="tooltip" title="Test Score; click to edit">Test</span></th>
         <th>Feedback</th>
         <th>Trend</th>
-        {% if show_unaccredited %}
+        {% if pref.show_unaccredited %}
           <th><span class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" title="If the Adj is a Trainee" ></span></th>
         {% endif %}
         <th><span class="glyphicon glyphicon-question-sign"></span></th>
-        {% if enable_adj_notes > 0 %}
+        {% if pref.enable_adj_notes > 0 %}
           <th><span class="glyphicon glyphicon-list-alt"></span></th>
         {% endif %}
         <th><span class="glyphicon glyphicon-star" data-toggle="tooltip" title="Breaking Adjudicator"></span></th>
@@ -57,7 +57,7 @@
           <td class="adj-name">
               <span>{{ adj.name }}</span>
           </td>
-          {% if show_institutions > 0 %}
+          {% if pref.show_institutions %}
             <td>
               {{ adj.institution.code }}
             </td>
@@ -72,7 +72,7 @@
           <td>
             <div id="graph_{{ adj.id }}" style="width: 100%; min-width: 100px; height: 60px; margin: -13px;"></div>
           </td>
-          {% if show_unaccredited %}
+          {% if pref.show_unaccredited %}
             <td>
               {% if adj.novice %}
                 <span class="glyphicon glyphicon-ok"></span>
@@ -82,7 +82,7 @@
           <td>
             <a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View Feedback</a>
           </td>
-          {% if enable_adj_notes > 0 %}
+          {% if pref.enable_adj_notes > 0 %}
             <td>
               <a data-toggle="modal" data-target="#edit-note" class="edit-note">Edit Note</a>
               <span class="adj-current-note hidden">{{ adj.notes }}</span>
@@ -105,7 +105,7 @@
       {% empty %}
         <tr id="">
           <td class="">No Feedback Yet.</td>
-          {% if show_institutions > 0 %}
+          {% if pref.show_institutions %}
           <td></td>
           {% endif %}
           <td></td>
@@ -113,7 +113,7 @@
           <td></td>
           <td></td>
           <td></td>
-          {% if enable_adj_notes > 0 %}<td></td>{% endif %}
+          {% if pref.enable_adj_notes > 0 %}<td></td>{% endif %}
           <td></td>
           <td></td>
           <td></td>
@@ -185,7 +185,7 @@
     </div>
   </div>
 
-  {% if enable_adj_notes > 0 %}
+  {% if pref.enable_adj_notes > 0 %}
     <div class="modal fade" id="edit-note" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-md">
       <div class="modal-content">
@@ -350,8 +350,8 @@
           tickFormatter: formatter
         },
         yaxis: {
-          min: {{ score_min }},
-          max: {{ score_max }},
+          min: {{ pref.score_min }},
+          max: {{ pref.score_max }},
           tickSize: 1,
           tickDecimals: 0,
           tickFormatter: formatter

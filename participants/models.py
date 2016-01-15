@@ -13,6 +13,9 @@ class Region(models.Model):
     def __str__(self):
         return '%s' % (self.name)
 
+    class Meta:
+        verbose_name = "🌏 Region"
+
 class InstitutionManager(models.Manager):
 
     def lookup(self, name, **kwargs):
@@ -34,7 +37,12 @@ class Institution(models.Model):
 
     objects = InstitutionManager()
 
+    @property
+    def venue_preferences(self):
+        return self.institutionvenuepreference_set.all().order_by('-priority')
+
     class Meta:
+        verbose_name = "🏫 Institution"
         unique_together = [('name', 'code')]
         ordering = ['name']
 
@@ -58,7 +66,7 @@ class Person(models.Model):
     novice = models.BooleanField(default=False)
 
     checkin_message = models.TextField(blank=True)
-    notes = models.TextField(blank=True)
+    notes = models.TextField(blank=True, null=True)
 
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
@@ -77,7 +85,6 @@ class Person(models.Model):
 
     class Meta:
         ordering = ['name']
-
 
 
 
@@ -104,25 +111,25 @@ class TeamManager(models.Manager):
 
     def standings(self, round):
         """Returns a list."""
-        from standings import annotate_team_standings
+        from standings.standings import annotate_team_standings
         teams = self._teams_for_standings(round)
         return annotate_team_standings(teams, round)
 
     def ranked_standings(self, round):
         """Returns a list."""
-        from standings import annotate_team_standings
+        from standings.standings import annotate_team_standings
         teams = self._teams_for_standings(round)
         return annotate_team_standings(teams, round, ranks=True)
 
     def division_standings(self, round):
         """Returns a list."""
-        from standings import annotate_team_standings
+        from standings.standings import annotate_team_standings
         teams = self._teams_for_standings(round)
         return annotate_team_standings(teams, round, division_ranks=True)
 
     def subrank_standings(self, round):
         """Returns a list."""
-        from standings import annotate_team_standings
+        from standings.standings import annotate_team_standings
         teams = self._teams_for_standings(round)
         return annotate_team_standings(teams, round, subranks=True)
 
@@ -139,11 +146,9 @@ class Team(models.Model):
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
     break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True)
 
-    venue_preferences = models.ManyToManyField('venues.VenueGroup',
-        through = 'draw.TeamVenuePreference',
-        related_name = 'venue_preferences',
-        verbose_name = 'Venue group preference'
-    )
+    @property
+    def venue_preferences(self):
+        return self.teamvenuepreference_set.all().order_by('-priority')
 
     TYPE_NONE = 'N'
     TYPE_SWING = 'S'
@@ -162,6 +167,7 @@ class Team(models.Model):
         unique_together = [('reference', 'institution', 'tournament'),('emoji_seq', 'tournament')]
         ordering = ['tournament', 'institution', 'short_reference']
         index_together = ['tournament', 'institution', 'short_reference']
+        verbose_name = "👯 Team"
 
     objects = TeamManager()
 
@@ -225,10 +231,6 @@ class Team(models.Model):
         return [dt.debate for dt in dts]
 
     @property
-    def get_preferences(self):
-        return self.teamvenuepreference_set.objects.all()
-
-    @property
     def debates(self):
         return self.get_debates(None)
 
@@ -284,6 +286,9 @@ class Speaker(Person):
     def __str__(self):
         return str(self.name)
 
+    class Meta:
+        verbose_name = "🔊 Speaker"
+
 
 class AdjudicatorManager(models.Manager):
     use_for_related_fields = True
@@ -311,6 +316,7 @@ class Adjudicator(Person):
 
     class Meta:
         ordering = ['tournament', 'institution', 'name']
+        verbose_name = "👂 Adjudicator"
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.institution.code)

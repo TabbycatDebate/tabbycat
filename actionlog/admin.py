@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from . import models
+from .models import ActionLogEntry
 
 class ActionLogEntryAdmin(admin.ModelAdmin):
     list_display = ('type', 'user', 'timestamp', 'get_parameters_display', 'tournament')
@@ -12,4 +12,4 @@ class ActionLogEntryAdmin(admin.ModelAdmin):
             'tournament','user'
         )
 
-admin.site.register(models.ActionLogEntry, ActionLogEntryAdmin)
+admin.site.register(ActionLogEntry, ActionLogEntryAdmin)

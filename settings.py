@@ -6,7 +6,6 @@ PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
 STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
 STATIC_ROOT         = 'staticfiles'
 STATIC_URL          = '/static/'
-TEMPLATE_DIRS       = (os.path.join(PROJECT_PATH, 'templates'),)
 MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
 SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
@@ -14,10 +13,9 @@ SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # = Overwritten in Local =
 # ========================
 
-ADMINS              = ('Test', 'test@test.com')
+ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com')
 MANAGERS            = ADMINS
 DEBUG               = False
-TEMPLATE_DEBUG      = DEBUG
 DEBUG_ASSETS        = DEBUG
 
 # ===================
@@ -45,19 +43,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'urls'
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.csrf",
-    "django.core.context_processors.static",
-    "utils.context_processors.debate_context", # For tournament config vars
-    "utils.context_processors.get_menu_highlight", # For nav highlights
-    'django.core.context_processors.request', # For SUIT
-)
 
 TABBYCAT_APPS = (
     'actionlog',
@@ -87,12 +72,47 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
+    'dynamic_preferences',
     'compressor',
-    'cachalot',
     )
 
 
 LOGIN_REDIRECT_URL = '/'
+
+MIGRATION_MODULES = {
+    'blog': 'blog.db_migrations'
+}
+
+# ===========
+# = Templates =
+# ===========
+
+TEMPLATES = [
+    {
+        'BACKEND':      'django.template.backends.django.DjangoTemplates',
+        'DIRS':         [os.path.join(PROJECT_PATH, 'templates')],
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.template.context_processors.request',           # For SUIT
+                'utils.context_processors.debate_context',              # For tournament config vars
+                'utils.context_processors.get_menu_highlight',          # For nav highlight
+            ],
+            'loaders': [
+                ('django.template.loaders.cached.Loader', [
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                ]),
+            ]
+        }
+    }
+]
 
 # ===========
 # = Caching =
@@ -109,16 +129,8 @@ CACHES = {
     }
 }
 
-# Caching enabled for templates
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
-
 # Use the cache for sessions rather than the db
-SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # =============
 # = Pipelines =
@@ -136,10 +148,10 @@ COMPRESS_PRECOMPILERS = (
 LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
 LIBSASS_SOURCE_COMMENTS = False
 
-COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = True
+COMPRESS_ENABLED = False # Temporary Disabled
+COMPRESS_OFFLINE = False # Temporary Disabled
 COMPRESS_URL = STATIC_URL
-COMPRESS_OFFLINE_MANIFEST = "manifest.json"
+COMPRESS_OFFLINE_MANIFEST = 'manifest.json'
 COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
 COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compression
 
@@ -148,7 +160,6 @@ COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compres
 # ===========
 if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
-    TEMPLATE_DEBUG = DEBUG
 
 LOGGING = {
     'version': 1,
@@ -216,6 +227,17 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
             }
         }
+
+if os.environ.get('DEBUG', ''):
+    DEBUG = bool(int(os.environ['DEBUG']))
+    TEMPLATE_DEBUG = DEBUG
+
+if os.environ.get('SENDGRID_USERNAME', ''):
+    EMAIL_HOST= 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
+    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
 
 # ===========================
 # = Local Overrides

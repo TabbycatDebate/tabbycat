@@ -1,9 +1,9 @@
 """Module to compute the teams breaking in a BreakCategory."""
 
 from collections import Counter
-from standings import annotate_team_standings
+from standings.standings import annotate_team_standings
 
-from . import models
+from .models import BreakingTeam
 
 def get_breaking_teams(category, include_all=False, include_categories=False):
     """Returns a list of Teams, with additional attributes. For each Team t in
@@ -95,7 +95,7 @@ def update_breaking_teams(category):
     If a breaking team entry already exists and there is a remark associated
     with it, it retains the remark and skips that team.
     """
-    higher_breakingteams = models.BreakingTeam.objects.filter(break_category__priority__lt=category.priority, break_rank__isnull=False).select_related('team')
+    higher_breakingteams = BreakingTeam.objects.filter(break_category__priority__lt=category.priority, break_rank__isnull=False).select_related('team')
     higher_teams = {bt.team for bt in higher_breakingteams}
     eligible_teams = _eligible_team_set(category)
     _generate_breaking_teams(category, eligible_teams, higher_teams)
@@ -130,10 +130,10 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
     for i, team in enumerate(eligible_teams, start=1):
 
         try:
-            bt = models.BreakingTeam.objects.get(break_category=category, team=team)
+            bt = BreakingTeam.objects.get(break_category=category, team=team)
             existing = True
-        except models.BreakingTeam.DoesNotExist:
-            bt = models.BreakingTeam(break_category=category, team=team)
+        except BreakingTeam.DoesNotExist:
+            bt = BreakingTeam(break_category=category, team=team)
             existing = False
 
         # Compute overall rank
@@ -182,8 +182,8 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
         # Take note of the institution
         teams_from_institution[team.institution] += 1
 
-    models.BreakingTeam.objects.bulk_create(breaking_teams_to_create)
-    models.BreakingTeam.objects.filter(break_category=category, break_rank__isnull=False).exclude(
+    BreakingTeam.objects.bulk_create(breaking_teams_to_create)
+    BreakingTeam.objects.filter(break_category=category, break_rank__isnull=False).exclude(
         team_id__in=[t.id for t in breaking_teams]).delete()
 
 

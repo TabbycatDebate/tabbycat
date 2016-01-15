@@ -23,7 +23,7 @@ class TournamentPasswordField(forms.CharField):
     def __init__(self, *args, **kwargs):
         if 'tournament' in kwargs:
             tournament = kwargs.pop('tournament')
-            self.password = tournament.config.get('public_password')
+            self.password = tournament.pref('public_password')
         else:
             raise TypeError("'tournament' is a required keyword argument")
         if 'label' not in kwargs:
@@ -39,14 +39,14 @@ class TournamentPasswordField(forms.CharField):
 
 class BaseScoreField(forms.FloatField):
     def __init__(self, *args, **kwargs):
-        """Takes an additional optional keyword argument: tournament_config,
-        the Config object for the Tournament."""
+        """Takes an additional optional keyword argument: preferences,
+        the Preferences register for the Tournament."""
 
-        tournament_config = kwargs.pop('tournament_config')
-        if tournament_config:
-            min_value  = tournament_config.get(self.CONFIG_MIN_VALUE_FIELD, default=self.DEFAULT_MIN_VALUE)
-            max_value  = tournament_config.get(self.CONFIG_MAX_VALUE_FIELD, default=self.DEFAULT_MAX_VALUE)
-            step_value = tournament_config.get(self.CONFIG_STEP_VALUE_FIELD, default=self.DEFAULT_STEP_VALUE)
+        preferences = kwargs.pop('tournament_preferences')
+        if preferences:
+            min_value  = preferences[self.CONFIG_MIN_VALUE_FIELD]
+            max_value  = preferences[self.CONFIG_MAX_VALUE_FIELD]
+            step_value = preferences[self.CONFIG_STEP_VALUE_FIELD]
         else:
             min_value  = self.DEFAULT_MIN_VALUE
             max_value  = self.DEFAULT_MAX_VALUE
@@ -89,18 +89,18 @@ class MotionModelChoiceField(forms.ModelChoiceField):
         return "%d. %s" % (obj.seq, obj.text)
 
 class SubstantiveScoreField(BaseScoreField):
-    CONFIG_MIN_VALUE_FIELD  = 'score_min'
-    CONFIG_MAX_VALUE_FIELD  = 'score_max'
-    CONFIG_STEP_VALUE_FIELD = 'score_step'
+    CONFIG_MIN_VALUE_FIELD  = 'scoring__score_min'
+    CONFIG_MAX_VALUE_FIELD  = 'scoring__score_max'
+    CONFIG_STEP_VALUE_FIELD = 'scoring__score_step'
     DEFAULT_MIN_VALUE = 68
     DEFAULT_MAX_VALUE = 82
     DEFAULT_STEP_VALUE = 1
 
 
 class ReplyScoreField(BaseScoreField):
-    CONFIG_MIN_VALUE_FIELD  = 'reply_score_min'
-    CONFIG_MAX_VALUE_FIELD  = 'reply_score_max'
-    CONFIG_STEP_VALUE_FIELD = 'reply_score_step'
+    CONFIG_MIN_VALUE_FIELD  = 'scoring__reply_score_min'
+    CONFIG_MAX_VALUE_FIELD  = 'scoring__reply_score_max'
+    CONFIG_STEP_VALUE_FIELD = 'scoring__reply_score_step'
     DEFAULT_MIN_VALUE = 34
     DEFAULT_MAX_VALUE = 41
     DEFAULT_STEP_VALUE = 0.5
@@ -130,16 +130,15 @@ class BallotSetForm(forms.Form):
         self.adjudicators = self.debate.adjudicators.list
         self.motions = self.debate.round.motion_set
         self.tournament = self.debate.round.tournament
-        self.tconfig = self.tournament.config
-        self.using_motions = self.tconfig.get('enable_motions')
-        self.using_vetoes = self.tconfig.get('motion_vetoes_enabled')
-        self.using_forfeits = self.tconfig.get('enable_forfeits')
-        self.using_replies = self.tconfig.get('reply_scores_enabled')
-        self.choosing_sides = self.tconfig.get('draw_side_allocations') == 'manual-ballot'
+        self.using_motions = self.tournament.pref('enable_motions')
+        self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
+        self.using_forfeits = self.tournament.pref('enable_forfeits')
+        self.using_replies = self.tournament.pref('reply_scores_enabled')
+        self.choosing_sides = self.tournament.pref('draw_side_allocations') == 'manual-ballot'
 
         self.forfeit_declared = False
 
-        self.has_tournament_password = kwargs.pop('password', False) and self.tournament.config.get('public_use_password')
+        self.has_tournament_password = kwargs.pop('password', False) and self.tournament.pref('public_use_password')
 
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
@@ -231,7 +230,7 @@ class BallotSetForm(forms.Form):
             for adj in self.adjudicators:
                 self.fields[self._fieldname_score(adj, side, pos)] = ScoreField(
                         widget=forms.NumberInput(attrs={'class': 'required number'}),
-                        tournament_config=self.tconfig)
+                        tournament_preferences=self.tournament.preferences)
 
         # 5. If forfeits are enabled, don't require some fields and add the forfeit field
         if self.using_forfeits:

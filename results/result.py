@@ -473,13 +473,15 @@ class BallotSet(object):
         if not self._sheets_created:
             return self.teamscore_objects[dt].margin
 
-        if self.debate.round.tournament.config.get('margin_includes_dissenters') is False:
+        if self.debate.round.tournament.pref('margin_includes_dissenters') is False:
             this_total = self._get_avg_total(dt)
             other_total = self._get_avg_total(self._other[dt])
-            if this_total is not None and other_total is not None:
-                return this_total - other_total
         else:
-            return self._dissenting_inclusive_score(dt) - self._dissenting_inclusive_score(self._other[dt])
+            this_total = self._dissenting_inclusive_score(dt)
+            other_total = self._dissenting_inclusive_score(self._other[dt])
+
+        if this_total is not None and other_total is not None:
+            return this_total - other_total
 
         return None
 

@@ -1,7 +1,7 @@
 from django.template import Template, Context
 import json
 
-from . import models
+from .models import ActionLogEntry
 
 from utils.views import *
 
@@ -9,7 +9,7 @@ from utils.views import *
 @tournament_view
 def action_log_update(request, t):
 
-    actions = models.ActionLogEntry.objects.filter(tournament=t).order_by('-id')[:20].select_related(
+    actions = ActionLogEntry.objects.filter(tournament=t).order_by('-id')[:20].select_related(
         'user', 'debate', 'ballot_submission'
     )
 

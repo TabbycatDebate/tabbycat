@@ -11,11 +11,11 @@
   <thead>
     <tr>
       <th>Adjudicator</th>
-      {% if show_institutions > 0 %}
+      {% if pref.show_institutions %}
         <th>Institution</th>
       {% endif %}
       <th>Score</th>
-      {% if enable_adj_notes > 0 %}
+      {% if pref.enable_adj_notes > 0 %}
         <th>Notes</th>
       {% endif %}
       <th>Breaking</th>
@@ -28,7 +28,7 @@
         <td class="adj-name">
           {{ adj.name }}
         </td>
-        {% if show_institutions > 0 %}
+        {% if pref.show_institutions %}
           <td>
             {{ adj.institution.code }}
           </td>
@@ -36,7 +36,7 @@
         <td>
           {{ adj.score|stringformat:".2f" }}
         </td>
-        {% if enable_adj_notes > 0 %}
+        {% if pref.enable_adj_notes > 0 %}
           <td>
             {% if adj.notes %}
               <a data-toggle="tooltip" data-placement="left" title="{{ adj.notes }}">View</a>

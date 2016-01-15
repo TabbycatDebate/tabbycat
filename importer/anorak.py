@@ -64,7 +64,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'stage'           : self._lookup(self.ROUND_STAGES, line[3] or "p", "draw stage"),
                 'draw_type'       : self._lookup(self.ROUND_DRAW_TYPES, line[4] or "r", "draw type"),
                 'silent'          : bool(int(line[5])),
-                'feedback_weight' : float(line[6]) or 0.7,
+                'feedback_weight' : float(line[6]) if len(line) > 6 and line[6] else 0.7,
                 'break_category'  : bm.BreakCategory.objects.get(slug=line[7], tournament=self.tournament) if len(line) > 7 and line[7] else None,
             }
         counts, errors = self._import(f, _round_line_parser, tm.Round)
@@ -98,7 +98,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
         if auto_create_regions:
             def _region_line_parser(line):
-                if not line[3]:
+                if len(line) < 4 or not line[3]:
                     return None
                 return {
                     'name': line[3],
@@ -269,13 +269,13 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'institution' : pm.Institution.objects.lookup(line[1]),
                 'tournament'  : self.tournament,
                 'test_score'  : float(line[2]),
-                'gender'      : self._lookup(self.GENDERS, line[3], "gender") if len(line) > 3 and line[3] else None,
-                'pronoun'     : line[4] if len(line) > 4 else None,
-                'independent' : bool(int(line[5])) if len(line) > 5 and line[5] else False,
-                'novice'      : int(line[6]) if len(line) > 6 and line[6] else False,
-                'phone'       : line[7] if len(line) > 7 else None,
-                'email'       : line[8] if len(line) > 8 else None,
-                'notes'       : line[9] if len(line) > 9 else None,
+                'gender'      : self._lookup(self.GENDERS, line[5], "gender") if len(line) > 5 and line[5] else None,
+                'pronoun'     : line[6] if len(line) > 6 else None,
+                'independent' : bool(int(line[7])) if len(line) > 7 and line[7] else False,
+                'novice'      : int(line[8]) if len(line) > 8 and line[8] else False,
+                'phone'       : line[9] if len(line) > 9 else None,
+                'email'       : line[10] if len(line) > 10 else None,
+                'notes'       : line[11] if len(line) > 11 else None,
             }
         counts, errors = self._import(f, _adjudicator_line_parser, pm.Adjudicator)
 
@@ -299,11 +299,11 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 counts=counts, errors=errors)
 
         def _institution_conflict_parser(line):
-            if len(line) <= 10 or not line[10]:
+            if len(line) <= 3 or not line[3]:
                 return
             adj_inst = pm.Institution.objects.lookup(line[1])
             adjudicator = pm.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
-            for institution_name in line[10].split(","):
+            for institution_name in line[3].split(","):
                 institution_name = institution_name.strip()
                 institution = pm.Institution.objects.lookup(institution_name)
                 yield {
@@ -314,11 +314,11 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 counts=counts, errors=errors)
 
         def _team_conflict_parser(line):
-            if len(line) <= 11 or not line[11]:
+            if len(line) <= 4 or not line[4]:
                 return
             adj_inst = pm.Institution.objects.lookup(line[1])
             adjudicator = pm.Adjudicator.objects.get(name=line[0], institution=adj_inst, tournament=self.tournament)
-            for team_name in line[11].split(","):
+            for team_name in line[4].split(","):
                 team = pm.Team.objects.lookup(team_name)
                 yield {
                     'adjudicator' : adjudicator,

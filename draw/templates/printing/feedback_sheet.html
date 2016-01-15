@@ -105,8 +105,8 @@
       <table class="table" cellspacing="10" cellpadding="10">
         <tbody>
           <tr>
-            {% if config.feedback_return_location|length > 2 %}
-            <td width="30%" class="no-vertical-spacing text-left no-borders"><span class="small"><em>Please return feedback forms to {{ config.feedback_return_location }}</em></span></td>
+            {% if pref.feedback_return_location|length > 2 %}
+            <td width="30%" class="no-vertical-spacing text-left no-borders"><span class="small"><em>Please return feedback forms to {{ pref.feedback_return_location }}</em></span></td>
             {% endif %}
             <td width="20%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only.</em></span></td>
             <td width="30%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Entered By</em></span></td>

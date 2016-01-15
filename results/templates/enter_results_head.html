@@ -125,7 +125,7 @@
 
     {% endif %}
 
-    {% if enable_forfeits %}
+    {% if pref.enable_forfeits %}
 
       function disable_required() {
         $("#ballot_set").find(".form-control").removeClass("required").removeClass("error");
@@ -149,7 +149,7 @@
 
     {% endif %}
 
-    {% if side_allocations_unknown %}
+    {% if pref.side_allocations_unknown == 'manual-ballot' %}
 
       var team_names = {};
       {% for team in form.debate.teams %}team_names['{{team.id}}'] = '{{team.short_name}}';

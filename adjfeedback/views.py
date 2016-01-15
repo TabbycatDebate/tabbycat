@@ -7,7 +7,7 @@ from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
 from actionlog.models import ActionLogEntry
 
-from . import models
+from .models import AdjudicatorFeedback
 from .forms import make_feedback_form_class
 
 from utils.urlkeys import populate_url_keys
@@ -29,7 +29,7 @@ def adj_scores(request, t):
 def feedback_overview(request, t):
     breaking_count = 0
 
-    if not t.config.get('share_adjs'):
+    if not t.pref('league_options__share_adjs'):
         adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
             'tournament','tournament__current_round')
     else:
@@ -73,7 +73,7 @@ def feedback_overview(request, t):
             adj.avg_score = None
             adj.avg_margin = None
 
-    all_adj_feedbacks = list(models.AdjudicatorFeedback.objects.filter(
+    all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(
             confirmed=True).exclude(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).select_related(
         'adjudicator', 'source_adjudicator__debate__round', 'source_team__debate__round'))
     rounds = t.prelim_rounds(until=t.current_round)
@@ -111,8 +111,8 @@ def feedback_overview(request, t):
         'adjudicators'      : adjudicators,
         'breaking_count'    : breaking_count,
         'feedback_headings' : [q.name for q in t.adj_feedback_questions],
-        'score_min'         : t.config.get('adj_min_score'),
-        'score_max'         : t.config.get('adj_max_score'),
+        'score_min'         : t.pref('adj_min_score'),
+        'score_max'         : t.pref('adj_max_score'),
     }
     return r2r(request, 'feedback_overview.html', context)
 
@@ -123,23 +123,23 @@ def adj_source_feedback(request, t):
     questions = t.adj_feedback_questions
     teams = Team.objects.filter(tournament=t)
     for team in teams:
-        team.feedback_tally = models.AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
+        team.feedback_tally = AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
             'source_team__team').count()
 
     adjs = Adjudicator.objects.filter(tournament=t)
     for adj in adjs:
-        adj.feedback_tally = models.AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
+        adj.feedback_tally = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
             'source_adjudicator__adjudicator').count()
 
     return r2r(request, "adjudicator_source_list.html", dict(teams=teams, adjs=adjs))
 
 def process_feedback(feedbacks, t):
     questions = t.adj_feedback_questions
-    score_step = t.config.get('adj_max_score')  / 10
+    score_step = t.pref('adj_max_score') / 10
     score_thresholds = {
-        'low_score'     : t.config.get('adj_min_score') + score_step,
-        'medium_score'  : t.config.get('adj_min_score') + score_step + score_step,
-        'high_score'    : t.config.get('adj_max_score') - score_step,
+        'low_score'     : t.pref('adj_min_score') + score_step,
+        'medium_score'  : t.pref('adj_min_score') + score_step + score_step,
+        'high_score'    : t.pref('adj_max_score') - score_step,
     }
     for feedback in feedbacks:
         feedback.items = []
@@ -155,7 +155,7 @@ def process_feedback(feedbacks, t):
 @login_required
 @tournament_view
 def adj_latest_feedback(request, t):
-    feedbacks = models.AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
+    feedbacks = AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
         'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
     feedbacks, score_thresholds = process_feedback(feedbacks, t)
     return r2r(request, "feedback_latest.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
@@ -165,7 +165,7 @@ def adj_latest_feedback(request, t):
 def team_feedback_list(request, t, team_id):
     team = Team.objects.get(pk=team_id)
     source = team.short_name
-    feedbacks = models.AdjudicatorFeedback.objects.filter(source_team__team=team).order_by('-timestamp')
+    feedbacks = AdjudicatorFeedback.objects.filter(source_team__team=team).order_by('-timestamp')
     feedbacks, score_thresholds = process_feedback(feedbacks, t)
     return r2r(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
 
@@ -174,7 +174,7 @@ def team_feedback_list(request, t, team_id):
 def adj_feedback_list(request, t, adj_id):
     adj = Adjudicator.objects.get(pk=adj_id)
     source = adj.name
-    feedbacks = models.AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).order_by('-timestamp')
+    feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).order_by('-timestamp')
     feedbacks, score_thresholds = process_feedback(feedbacks, t)
     return r2r(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
 
@@ -229,7 +229,7 @@ def public_enter_feedback(request, t, source):
     source_name = source.short_name if isinstance(source, Team) else source.name
     source_type = "adj" if isinstance(source, Adjudicator) else "team" if isinstance(source, Team) else "TypeError!"
     submission_fields = {
-        'submitter_type': models.AdjudicatorFeedback.SUBMITTER_PUBLIC,
+        'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
         'ip_address'    : ip_address
     }
     FormClass = make_feedback_form_class(source, submission_fields,
@@ -258,7 +258,7 @@ def enter_feedback(request, t, source_type, source_id):
     source_type = "adj" if isinstance(source, Adjudicator) else "team" if isinstance(source, Team) else "TypeError!"
     ip_address = get_ip_address(request)
     submission_fields = {
-        'submitter_type': models.AdjudicatorFeedback.SUBMITTER_TABROOM,
+        'submitter_type': AdjudicatorFeedback.SUBMITTER_TABROOM,
         'submitter'     : request.user,
         'ip_address'    : ip_address
     }
@@ -341,7 +341,7 @@ def set_adj_breaking_status(request, t):
 @tournament_view
 def add_feedback(request, t):
     context = {
-        'adjudicators' : t.adjudicator_set.all() if not t.config.get('share_adjs')
+        'adjudicators' : t.adjudicator_set.all() if not t.pref('share_adjs')
                          else Adjudicator.objects.all(),
         'teams'        : t.team_set.all(),
     }
@@ -372,7 +372,7 @@ def public_feedback_progress(request, t):
         else:
             return int(submitted / total * 100)
 
-    feedback = models.AdjudicatorFeedback.objects.all()
+    feedback = AdjudicatorFeedback.objects.all()
     adjudicators = Adjudicator.objects.all()
     teams = Team.objects.all()
     current_round = request.tournament.current_round.seq
@@ -417,7 +417,7 @@ def feedback_progress(request, t):
         else:
             return int(submitted / total * 100)
 
-    feedback = models.AdjudicatorFeedback.objects.select_related('source_adjudicator__adjudicator','source_team__team').all()
+    feedback = AdjudicatorFeedback.objects.select_related('source_adjudicator__adjudicator','source_team__team').all()
     adjudicators = Adjudicator.objects.all()
     adjudications = list(DebateAdjudicator.objects.select_related('adjudicator','debate').all())
     teams = Team.objects.all()
@@ -495,10 +495,10 @@ def randomised_urls(request, t):
     context['exists'] = t.adjudicator_set.filter(url_key__isnull=False).exists() or \
             t.team_set.filter(url_key__isnull=False).exists()
     context['tournament_slug'] = t.slug
-    context['ballot_normal_urls_enabled'] = t.config.get('public_ballots')
-    context['ballot_randomised_urls_enabled'] = t.config.get('public_ballots_randomised')
-    context['feedback_normal_urls_enabled'] = t.config.get('public_feedback')
-    context['feedback_randomised_urls_enabled'] = t.config.get('public_feedback_randomised')
+    context['ballot_normal_urls_enabled'] = t.pref('public_ballots')
+    context['ballot_randomised_urls_enabled'] = t.pref('public_ballots_randomised')
+    context['feedback_normal_urls_enabled'] = t.pref('data_entry__public_feedback')
+    context['feedback_randomised_urls_enabled'] = t.pref('public_feedback_randomised')
     return r2r(request, 'randomised_urls.html', context)
 
 @admin_required

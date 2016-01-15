@@ -38,16 +38,16 @@
   <thead>
     <tr>
       <th>Team</th>
-      {% if show_emoji > 0 %}
+      {% if pref.show_emoji %}
         <th class="th-emoji"></th>
       {% endif %}
       <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-      {% if enable_venue_times %}
+      {% if pref.enable_venue_times %}
         <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
         <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
       {% endif %}
-      <th>{% if side_allocations_unknown %}Team 1{% else %}Aff{% endif %}</th>
-      <th>{% if side_allocations_unknown %}Team 2{% else %}Neg{% endif %}</th>
+      <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 1{% else %}Aff{% endif %}</th>
+      <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 2{% else %}Neg{% endif %}</th>
       <th>Adj<span class="hidden-xs">udicator</span>s</th>
     </tr>
   </thead>
@@ -55,14 +55,14 @@
   {% for debate in draw %}
     <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
       <td>
-        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
+        <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
       </td>
-      {% if show_emoji > 0 %}
+      {% if pref.show_emoji %}
         <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
       {% endif %}
-      {% if enable_venue_groups %}
+      {% if pref.enable_venue_groups %}
         {% if debate.division %}
           <td class="venue-name">{{ debate.division.venue_group.short_name }}</td>
         {% else %}
@@ -71,24 +71,24 @@
       {% else %}
         <td class="venue-name">{{ debate.venue.name }}</td>
       {% endif %}
-      {% if enable_venue_times %}
+      {% if pref.enable_venue_times %}
         <td>
           {% if debate.venue.time %}
             <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
             {{ debate.venue.time|date:"D jS F" }}
           {% endif %}
         </td>
-        {% if enable_venue_times %}
+        {% if pref.enable_venue_times %}
           {% include "tables/debate_status.html" %}
         {% endif %}
       {% endif %}
       <td class="team-name" id="">
-        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
+        <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
       </td>
       <td class="team-name">
-        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
+        <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
           {{ debate.neg_team.short_name }}
         </span>
       </td>
@@ -113,13 +113,13 @@
           {{ debate.neg_team.short_name }}
         </span>
       </td>
-      {% if show_emoji > 0 %}
+      {% if pref.show_emoji %}
         <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
       {% endif %}
       <td class="venue-name">
         {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }}{% else %}{{ debate.venue.name }} {% endif %}
       </td>
-      {% if enable_venue_times %}
+      {% if pref.enable_venue_times %}
         <td>
           {% if debate.venue.time %}
             <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
@@ -131,12 +131,12 @@
         </td>
       {% endif %}
       <td class="team-name">
-        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
+        <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
           {{ debate.aff_team.short_name }}
         </span>
       </td>
       <td class="team-name">
-        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
+        <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
           {{ debate.neg_team.short_name }}
         </span>
       </td>

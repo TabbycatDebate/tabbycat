@@ -1,14 +1,14 @@
 from django.contrib import admin
 import django.contrib.messages as messages
 
-from . import models
+from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 
 class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type', 'required', 'chair_on_panellist', 'panellist_on_chair', 'panellist_on_panellist', 'team_on_orallist')
     list_filter = ('tournament',)
     ordering = ('tournament', 'seq')
 
-admin.site.register(models.AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuestionAdmin)
+admin.site.register(AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuestionAdmin)
 
 
 class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
@@ -18,7 +18,7 @@ class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "question":
-            kwargs["queryset"] = models.AdjudicatorFeedbackQuestion.objects.filter(answer_type__in=models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE[self.model])
+            kwargs["queryset"] = AdjudicatorFeedbackQuestion.objects.filter(answer_type__in=AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE[self.model])
         return super(BaseAdjudicatorFeedbackAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -44,7 +44,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
     # dynamically generate inline tables for different answer types
     inlines = []
-    for _answer_type_class in models.AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE:
+    for _answer_type_class in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE:
         _inline_class = type(_answer_type_class.__name__ + "Inline", (BaseAdjudicatorFeedbackAnswerInline,),
                 {"model": _answer_type_class, "__module__": __name__})
         inlines.append(_inline_class)
@@ -71,4 +71,4 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         count = queryset.update(confirmed=False)
         self._construct_message_for_user(request, count, "marked as unconfirmed.")
 
-admin.site.register(models.AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
+admin.site.register(AdjudicatorFeedback, AdjudicatorFeedbackAdmin)

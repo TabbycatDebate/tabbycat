@@ -34,7 +34,7 @@ class MotionManager(models.Manager):
             # TODO: temporarily disabled
             motion.c1, motion.p_value = None, None
 
-        if round.tournament.config.get('motion_vetoes_enabled'):
+        if round.tournament.pref('motion_vetoes_enabled'):
             veto_objs = DebateTeamMotionPreference.objects.filter(
                     preference=3, ballot_submission__confirmed=True,
                     ballot_submission__debate__round__tournament=round.tournament,
@@ -66,6 +66,7 @@ class Motion(models.Model):
 
     class Meta:
         ordering = ['seq',]
+        verbose_name = "📨 Motion"
 
     def __str__(self):
         return self.text
@@ -80,4 +81,5 @@ class DebateTeamMotionPreference(models.Model):
 
     class Meta:
         unique_together = [('debate_team', 'preference', 'ballot_submission')]
+        verbose_name = "💌 Motion Preference"
 

@@ -18,13 +18,13 @@
           <span data-toggle="tooltip" title="Division Rank" class="glyphicon glyphicon-signal"></span>
         </th>
         <th>Points</th>
-        {% if show_avg_margin %}
+        {% if pref.show_avg_margin %}
           <th><span data-toggle="tooltip" title="Average Winning Margin">AWM</span></th>
         {% endif %}
         <th>Total Speaks</th>
         <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
         <th>Team</th>
-        {% if show_institutions > 0 %}
+        {% if pref.show_institutions %}
           <th>Inst<span class="hidden-xs">itution</span></th>
         {% endif %}
         <th>Wins</th>
@@ -52,10 +52,10 @@
         <td>
           {{ team.division_rank }}
         </td>
-        {% if show_team_points %}
+        {% if pref.team_points_rule == 'wadl' %}
           <td>{{ team.points }}</td>
         {% endif %}
-        {% if show_avg_margin %}
+        {% if pref.show_avg_margin %}
           <td>{{ team.avg_margin|stringformat:".2f" }}</td>
         {% endif %}
         <td>
@@ -68,7 +68,7 @@
             {{ team.break_categories_str }}
           </span>
         </td>
-        {% if show_institutions > 0 %}
+        {% if pref.show_institutions %}
           <td>
             <span class="hidden-xs">{{ team.institution }}</span>
             <span class="visible-xs">{{ team.institution.code }}</span>

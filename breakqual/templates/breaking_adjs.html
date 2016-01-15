@@ -19,7 +19,7 @@
       <thead>
         <tr>
           <th>Name</th>
-          {% if show_institutions > 0 %}
+          {% if pref.show_institutions %}
             <th>Institution</th>
           {% endif %}
         </tr>
@@ -28,7 +28,7 @@
       {% for adj in adjs %}
       <tr>
         <td>{{ adj.name }}</td>
-        {% if show_institutions > 0 %}
+        {% if pref.show_institutions %}
           <td>
             {{ adj.institution }}
             {% if person.independent %}

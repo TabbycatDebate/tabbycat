@@ -13,8 +13,8 @@ import tournaments.models as tm
 import os.path
 import logging
 
-from ..anorak import AnorakTournamentDataImporter
-from ..base import TournamentDataImporterError
+from importer.anorak import AnorakTournamentDataImporter
+from importer.base import TournamentDataImporterError
 
 class TestImporterAnorak(TestCase):
 

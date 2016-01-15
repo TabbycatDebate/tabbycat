@@ -28,7 +28,7 @@
 <p>
   If you're not fussed at all about security or data entry fraud, it's easier
   for everyone if you just enable the normal public ballots and feedback pages
-  instead, on the <a href="{% tournament_url tournament_options %}">tournament
+  instead, on the <a href="{% tournament_url tournament_config_index %}">tournament
   configuration page</a>.
 </p>
 
@@ -43,7 +43,7 @@
       The <strong>public ballots randomised</strong> and <strong>public feedback
       randomised</strong> configuration settings are both disabled. These URLs
       will not work unless you enable them on the
-      <a href="{% tournament_url tournament_options %}">tournament
+      <a href="{% tournament_url tournament_config_index %}">tournament
       configuration page</a>.
     </div>
   {% endif %}
@@ -56,7 +56,7 @@
       can enter any ballot</a>, without knowing any special URLs, is enabled.
       This defeats the purpose of the <strong>public ballots randomised</strong>
       setting. You may wish to consider disabling the non-randomised setting on
-      the <a href="{% tournament_url tournament_options %}">tournament
+      the <a href="{% tournament_url tournament_config_index %}">tournament
       configuration page</a>.
     </div>
   {% endif %}
@@ -65,11 +65,11 @@
     <div class="alert alert-danger">
       The <strong>public feedback</strong> (non-randomised) configuration
       setting is enabled, which means that the <a href="{% tournament_url
-      public_feedback_submit %}">page in the public interface from which anyone
+     pref.public_feedback_submit %}">page in the public interface from which anyone
       can enter any feedback</a>, without knowing any special URLs, is enabled.
       This defeats the purpose of the <strong>public feedback
       randomised</strong> setting. You may wish to consider disabling the non-
-      randomised settings on the <a href="{% tournament_url tournament_config
+      randomised settings on the <a href="{% tournament_url tournament_config_index
       %}">tournament configuration page</a>.
     </div>
   {% endif %}
@@ -136,7 +136,7 @@
   </p>
   <p>
     Note: You also need to enable <b>public feedback randomised</b> and/or
-    <b>public ballots randomised</b> on the <a href="{% tournament_url tournament_options %}">
+    <b>public ballots randomised</b> on the <a href="{% tournament_url tournament_config_index %}">
     tournament configuration page</a> for this to work. (You don't need to
     enable both, just whichever ones you want to work.)
   </p>

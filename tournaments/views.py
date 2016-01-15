@@ -1,7 +1,9 @@
 from utils.views import *
-
-from . import models
-from draw.models import Debate
+from .models import Tournament, Division
+from participants.models import Team, Institution
+from draw.models import Debate, DebateTeam
+from draw.models import TeamVenuePreference, InstitutionVenuePreference
+from venues.models import VenueGroup
 
 @cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view
@@ -9,8 +11,8 @@ def public_index(request, t):
     return r2r(request, 'public_tournament_index.html')
 
 def index(request):
-    tournaments = models.Tournament.objects.all()
-    return r2r(request, 'site_index.html', dict(tournaments=models.Tournament.objects.all()))
+    tournaments = Tournament.objects.all()
+    return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
 
 @login_required
 @tournament_view
@@ -39,7 +41,7 @@ def tournament_home(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')
 def public_divisions(request, t):
-    divisions = models.Division.objects.filter(tournament=t).all().select_related('venue_group')
+    divisions = Division.objects.filter(tournament=t).all().select_related('venue_group')
     divisions = sorted(divisions, key=lambda x: float(x.name))
     venue_groups = set(d.venue_group for d in divisions)
     for uvg in venue_groups:
@@ -50,14 +52,12 @@ def public_divisions(request, t):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_venues(request, t):
-    from venues.models import VenueGroup
     venues = VenueGroup.objects.all()
     return r2r(request, 'public_all_tournament_venues.html', dict(venues=venues))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_draws_for_venue(request, t, venue_id):
-    from venues.models import VenueGroup
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
         'round','round__tournament','division')
@@ -68,8 +68,6 @@ def all_draws_for_venue(request, t, venue_id):
 @tournament_view
 def all_draws_for_institution(request, t, institution_id):
     # TODO: move to draws app
-    from participants.models import Institution
-    from draw.models import DebateTeam
     institution = Institution.objects.get(pk=institution_id)
     debate_teams = DebateTeam.objects.filter(team__institution=institution).select_related(
         'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')
@@ -101,14 +99,12 @@ def round_increment(request, round):
 @admin_required
 @tournament_view
 def division_allocations(request, t):
-    from participants.models import Team
-    from venues.models import VenueGroup
     teams = Team.objects.filter(tournament=t).all()
-    divisions = models.Division.objects.filter(tournament=t).all()
+    divisions = Division.objects.filter(tournament=t).all()
     divisions = sorted(divisions, key=lambda x: float(x.name))
     venue_groups = VenueGroup.objects.all()
 
-    return r2r(request, "division_allocation.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
+    return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 
 
 @admin_required
@@ -133,20 +129,16 @@ def save_divisions(request, t):
 @expect_post
 @tournament_view
 def create_division_allocation(request, t):
-    from tournament.division_allocator import DivisionAllocator
-    from participants.models import Team
+    from tournaments.division_allocator import DivisionAllocator
 
     teams = list(Team.objects.filter(tournament=t))
-    for team in teams:
-        preferences = list(TeamVenuePreference.objects.filter(team=team))
-        team.preferences_dict = dict((p.priority, p.venue_group) for p in preferences)
+    institutions = Institution.objects.all()
+    venue_groups = VenueGroup.objects.all()
 
     # Delete all existing divisions - this shouldn't affect teams (on_delete=models.SET_NULL))
     divisions = Division.objects.filter(tournament=t).delete()
 
-    venue_groups = VenueGroup.objects.all()
-
-    alloc = DivisionAllocator(teams=teams, divisions=divisions,venue_groups=venue_groups, tournament=t)
+    alloc = DivisionAllocator(teams=teams, divisions=divisions, venue_groups=venue_groups, tournament=t, institutions=institutions)
     success = alloc.allocate()
 
     if success:

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from . import models
+from .models import DebateTeam, TeamPositionAllocation, TeamVenuePreference, TeamVenuePreference, InstitutionVenuePreference, Debate
 from participants.models import Speaker, Team
 from adjallocation.models import DebateAdjudicator
 
@@ -23,7 +23,7 @@ class DebateTeamAdmin(admin.ModelAdmin):
         return super(DebateTeamAdmin, self).get_queryset(request).select_related('debate__round', 'debate__round__tournament')
 
 
-admin.site.register(models.DebateTeam, DebateTeamAdmin)
+admin.site.register(DebateTeam, DebateTeamAdmin)
 
 # ==============================================================================
 # Team
@@ -34,10 +34,10 @@ class SpeakerInline(admin.TabularInline):
     fields = ('name', 'novice', 'gender')
 
 class TeamPositionAllocationInline(admin.TabularInline):
-    model = models.TeamPositionAllocation
+    model = TeamPositionAllocation
 
 class TeamVenuePreferenceInline(admin.TabularInline):
-    model = models.TeamVenuePreference
+    model = TeamVenuePreference
     extra = 6
 
 class TeamForm(forms.ModelForm):
@@ -71,27 +71,39 @@ class TeamVenuePreferenceAdmin(admin.ModelAdmin):
     list_filter = ('team','venue_group', 'priority')
     raw_id_fields = ('team',)
 
-admin.site.register(models.TeamVenuePreference, TeamVenuePreferenceAdmin)
+admin.site.register(TeamVenuePreference, TeamVenuePreferenceAdmin)
 
+
+# ==============================================================================
+# InstitutionVenuePreference
+# ==============================================================================
+
+class InstitutionVenuePreferenceAdmin(admin.ModelAdmin):
+    list_display = ('institution', 'venue_group', 'priority')
+    search_fields = ('institution','venue_group', 'priority')
+    list_filter = ('institution','venue_group', 'priority')
+    raw_id_fields = ('institution',)
+
+admin.site.register(InstitutionVenuePreference, InstitutionVenuePreferenceAdmin)
 
 # ==============================================================================
 # Debate
 # ==============================================================================
 
 def make_result_status_none(modeladmin, request, queryset):
-    queryset.update(result_status=models.Debate.STATUS_NONE)
+    queryset.update(result_status=Debate.STATUS_NONE)
 
 def make_result_status_postponed(modeladmin, request, queryset):
-    queryset.update(result_status=models.Debate.STATUS_POSTPONED)
+    queryset.update(result_status=Debate.STATUS_POSTPONED)
 
 def make_result_status_draft(modeladmin, request, queryset):
-    queryset.update(result_status=models.Debate.STATUS_DRAFT)
+    queryset.update(result_status=Debate.STATUS_DRAFT)
 
 def make_result_status_confirmed(modeladmin, request, queryset):
-    queryset.update(result_status=models.Debate.STATUS_CONFIRMED)
+    queryset.update(result_status=Debate.STATUS_CONFIRMED)
 
 class DebateTeamInline(admin.TabularInline):
-    model = models.DebateTeam
+    model = DebateTeam
     extra = 1
     raw_id_fields = ('team',)
 
@@ -111,7 +123,7 @@ class DebateAdmin(admin.ModelAdmin):
         )
 
     actions = list()
-    for value, verbose_name in models.Debate.STATUS_CHOICES:
+    for value, verbose_name in Debate.STATUS_CHOICES:
         def _make_set_result_status(value, verbose_name):
             def _set_result_status(modeladmin, request, queryset):
                 count = queryset.update(result_status=value)
@@ -123,5 +135,5 @@ class DebateAdmin(admin.ModelAdmin):
         actions.append(_make_set_result_status(value, verbose_name))
     del value, verbose_name # for fail-fast
 
-admin.site.register(models.Debate, DebateAdmin)
+admin.site.register(Debate, DebateAdmin)
 

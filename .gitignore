@@ -1,23 +1,20 @@
 local_settings.py
 staticfiles/
-migrations
-migrations-*/
 .gitmodules
 
 # Data to ignore
 data/*
 
 # Default data to include
-!data/dummy/
 !data/demo/
-!data/league_template/
+!data/demo_simple/
 !data/sandbox/
-!data/utils/
-!data/tabbycat_datasets/
 !data/test/
+!data/presets/
 
 env/
 venv/
+venv-*/
 *.pyc
 *.swp
 *~
@@ -58,9 +55,9 @@ nosetests.xml
 *.log
 *.pot
 *.pyc
-data/Schools Junior 2014
-data/Schools Novice 2014
-data/Schools Senior 2014
 
 # Python 2to3 backup files
 *.bak
+
+# Docs
+site/

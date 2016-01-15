@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
-from . import models
+from .models import Motion
 from actionlog.models import ActionLogEntry
-from tournaments.models import Round
+from tournaments.models import Round, Division
 
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory
@@ -15,7 +15,7 @@ from utils.views import *
 @round_view
 def motions(request, round):
     motions = list()
-    motions = models.Motion.objects.statistics(round=round)
+    motions = Motion.objects.statistics(round=round)
     if len(motions) > 0:
         motions = [m for m in motions if m.round == round]
 
@@ -24,7 +24,7 @@ def motions(request, round):
 @admin_required
 @round_view
 def motions_edit(request, round):
-    MotionFormSet = modelformset_factory(models.Motion,
+    MotionFormSet = modelformset_factory(Motion,
         can_delete=True, extra=3, exclude=['round'])
 
     if request.method == 'POST':
@@ -41,7 +41,7 @@ def motions_edit(request, round):
             if 'submit' in request.POST:
                 return redirect_round('motions', round)
     else:
-        formset = MotionFormSet(queryset=models.Motion.objects.filter(round=round))
+        formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
     return r2r(request, "edit.html", dict(formset=formset))
 
@@ -65,7 +65,7 @@ def motions_assign(request, round):
             model = Motion
             fields = ("divisions",)
 
-    MotionFormSet = modelformset_factory(models.Motion, ModelAssignForm, extra=0, fields=['divisions'])
+    MotionFormSet = modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
 
     if request.method == 'POST':
         formset = MotionFormSet(request.POST)
@@ -73,7 +73,7 @@ def motions_assign(request, round):
         if 'submit' in request.POST:
             return redirect_round('motions', round)
 
-    formset = MotionFormSet(queryset=models.Motion.objects.filter(round=round))
+    formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
     return r2r(request, "assign.html", dict(formset=formset))
 
 
@@ -103,6 +103,6 @@ def unrelease_motions(request, round):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_motions')
 def public_motions(request, t):
-    order_by = t.config.get('public_motions_descending') and '-seq' or 'seq'
+    order_by = t.pref('public_motions_descending') and '-seq' or 'seq'
     rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
     return r2r(request, 'public_motions.html', dict(rounds=rounds))

@@ -44,6 +44,9 @@ urlpatterns = [
     url(r'^feedback/',                                      include('adjfeedback.urls_public')),
     url(r'^admin/feedback/',                                include('adjfeedback.urls_admin')),
 
+    # Importer App
+    url(r'^admin/import/',                                  include('importer.urls')),
+
     # Motions App
     url(r'^motions/',                                       include('motions.urls_public')),
     url(r'^admin/motions/round/(?P<round_seq>\d+)/',        include('motions.urls_admin')),

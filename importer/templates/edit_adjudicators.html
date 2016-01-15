@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}👂 Edit Adjudicators{% endblock %}
+{% block page-title %}👂 Edit Adjudicators{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info alert-dismissable" id="">
+  <p>As per the tournament's configuration, an adjudicator's rating must be between {{ pref.score_min }} and {{ pref.score_max }}.</p>
+</div>
+
+<form id="addAdjudicators" action="{% tournament_url confirm_adjudicators %}" method="POST">
+
+  {% for key, values in institutions.items %}
+
+    <div class="row">
+      <div class="col-sm-12">
+        <h2>{{ key }}'s Adjudicators</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      {% for adjudicator in values %}
+        <div class="ballot-checkin-form form-horizontal col-sm-4">
+
+          <h4>Adjudicator #{{ adjudicator }}</h4>
+
+          <input class="hidden" type="text" name="{{ key }}_{{ adjudicator }}_Instititution" value="{{ key }}" />
+
+          <div class="form-group row">
+            <label class="col-sm-2 control-label">
+              Name
+            </label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" list="adj-ticks" name="{{ key }}_{{ adjudicator }}_Name" value="An Adjudicator" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-2 control-label">
+              Rating
+            </label>
+            <div class="col-sm-10">
+              <input class="form-control" type="number" min="{{ pref.score_min }}" max="{{ pref.score_max}}" step=0.5 value=2.5 name="{{ key }}_{{ adjudicator }}_Rating" />
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+  {% endfor %}
+
+  {% csrf_token %}
+  <div class="ballot-checkin-form form-horizontal">
+    <div class="form-group">
+      <div class="col-sm-1 col-sm-offset-1">
+        <input class="form-control btn btn-success submit-disable" type="submit" value="Save All" />
+      </div>
+    </div>
+  </div>
+
+</form>
+
+{% endblock content %}

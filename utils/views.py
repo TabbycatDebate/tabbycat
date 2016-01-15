@@ -28,12 +28,12 @@ def tournament_view(view_fn):
 def redirect_tournament(to, tournament, **kwargs):
     return redirect(to, tournament_slug=tournament.slug, **kwargs)
 
-def public_optional_tournament_view(config_option):
+def public_optional_tournament_view(preferences_option):
     def bar(view_fn):
         @wraps(view_fn)
         @tournament_view
         def foo(request, tournament, *args, **kwargs):
-            if tournament.config.get(config_option):
+            if tournament.pref(preferences_option):
                 return view_fn(request, tournament, *args, **kwargs)
             else:
                 return redirect_tournament('public_index', tournament)
@@ -51,12 +51,12 @@ def redirect_round(to, round, **kwargs):
     return redirect(to, tournament_slug=round.tournament.slug,
                     round_seq=round.seq, *kwargs)
 
-def public_optional_round_view(config_option):
+def public_optional_round_view(preference_option):
     def bar(view_fn):
         @wraps(view_fn)
         @round_view
         def foo(request, round, *args, **kwargs):
-            if round.tournament.config.get(config_option):
+            if round.tournament.pref(preference_option):
                 return view_fn(request, round, *args, **kwargs)
             else:
                 return redirect_tournament('public_index', round.tournament)
@@ -78,7 +78,7 @@ def r2r(request, template, extra_context=None):
     return render_to_response(template, context_instance=rc)
 
 def relevant_team_standings_metrics(tournament):
-    rule = tournament.config.get('team_standings_rule')
+    rule = tournament.pref('team_standings_rule')
     precedence = PRECEDENCE_BY_RULE[rule]
     metrics = dict()
     metrics["draw_strength"] = "draw_strength" in precedence

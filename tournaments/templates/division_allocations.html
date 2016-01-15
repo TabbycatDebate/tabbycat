@@ -36,14 +36,15 @@
         <th>Venue</th>
         <th>Time</th>
         <th>Status</th>
-        <th>Preferences</th>
+        <th>Team Preferences</th>
+        <th>Institution Preferences</th>
       </tr>
     </thead>
     <tbody>
     {% for team in teams %}
     <tr>
       <td>
-        <span {% if show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
+        <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
           {{ team.short_name }} {{ team.break_categories_str }}
         </span>
       </td>
@@ -92,11 +93,14 @@
         {% endif %}
       </td>
       <td>
-      {% for pref in team.get_preferences.all %}
-        {% if pref.venue_group %}
-          <span class="small">{{ pref.priority }}: {{ pref.venue_group.short_name }}</span>,{% if pref.counter == 4 %}<br>{% endif %}
-        {% endif %}
-      {% endfor %}
+        {% for pref in team.venue_preferences.all %}
+          <span class="small">{{ pref.venue_group.short_name }} ({{ pref.priority }})</span>
+        {% endfor %}
+      </td>
+      <td>
+        {% for pref in team.institution.venue_preferences.all %}
+          <span class="small">{{ pref.venue_group.short_name }} ({{ pref.priority }})</span>
+        {% endfor %}
       </td>
     </tr>
     {% endfor %}
@@ -157,7 +161,7 @@
 {% endblock content %}
 
 {% block extra-js %}
-  <script type="text/javascript" language="javascript" src="{% static 'js/jquery-ui-1.10.4.custom.min.js' %}"></script>  <script type="text/javascript" language="javascript" src="{% static 'js/jquery.jeditable.js' %}"></script>
+  <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery-ui-custom-1.11.4.min.js' %}"></script>
   <script type="text/javascript" charset="utf-8">
 
     $(document).ready( function() {

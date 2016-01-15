@@ -27,7 +27,7 @@
         {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span>
       </span>
     </button>
-    {% if enable_postponements %}
+    {% if pref.enable_postponements %}
     <button class="btn btn-default btn-primary">
       <span class="label confirmed">
         {{ stats.postponed }} Postponed <span class="glyphicon glyphicon-pause"></span>
@@ -59,7 +59,7 @@
       <tr>
         <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="Ballot Status"></span></th>
         <th>Ballots</th>
-        {% if enable_postponements %}
+        {% if pref.enable_postponements %}
           <th><span class="glyphicon glyphicon-pause" data-toggle="tooltip" title="Postponements"></span></th>
         {% endif %}
         <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
@@ -104,7 +104,7 @@
           <!-- end TODO -->
         </td>
 
-        {% if enable_postponements %}
+        {% if pref.enable_postponements %}
           <td>
           {% if debate.result_status == debate.STATUS_POSTPONED %}
             <a class="postpone-toggle" id="{{ debate.id }}" href="{% tournament_url toggle_postponed %}">Un-postpone</a>

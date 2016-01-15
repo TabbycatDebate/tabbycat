@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from . import models
+from .models import BallotSubmission, TeamScore, SpeakerScore, SpeakerScore, SpeakerScoreByAdj
 from participants.models import Team, Speaker, Adjudicator
 from tournaments.models import Round
 from results.models import SpeakerScore
@@ -16,7 +16,7 @@ class BallotSubmissionAdmin(admin.ModelAdmin):
     # This incurs a massive performance hit
     #inlines = (SpeakerScoreByAdjInline, SpeakerScoreInline, TeamScoreInline)
 
-admin.site.register(models.BallotSubmission, BallotSubmissionAdmin)
+admin.site.register(BallotSubmission, BallotSubmissionAdmin)
 
 # ==============================================================================
 # TeamScore
@@ -32,7 +32,7 @@ class TeamScoreAdmin(admin.ModelAdmin):
                      'debate_team__team__reference', 'debate_team__team__institution__code')
     raw_id_fields = ('ballot_submission','debate_team')
 
-admin.site.register(models.TeamScore, TeamScoreAdmin)
+admin.site.register(TeamScore, TeamScoreAdmin)
 
 # ==============================================================================
 # SpeakerScore
@@ -55,13 +55,13 @@ class SpeakerScoreAdmin(admin.ModelAdmin):
             'debate_team__team__institution','debate_team__team__tournament',
             'ballot_submission')
 
-admin.site.register(models.SpeakerScore, SpeakerScoreAdmin)
+admin.site.register(SpeakerScore, SpeakerScoreAdmin)
 
 # ==============================================================================
 # SpeakerScoreByAdj
 # ==============================================================================
 
-_ssba_speaker = lambda o: models.SpeakerScore.objects.filter(debate_team=o.debate_team, position=o.position)[0].speaker.name
+_ssba_speaker = lambda o: SpeakerScore.objects.filter(debate_team=o.debate_team, position=o.position)[0].speaker.name
 _ssba_speaker.short_description = 'Speaker'
 _ssba_adj = lambda o: o.debate_adjudicator.adjudicator.name
 _ssba_adj.short_description = 'Adjudicator'
@@ -75,6 +75,6 @@ class SpeakerScoreByAdjAdmin(admin.ModelAdmin):
     #list_filter = ('debate_team__debate__round__seq', 'debate_team__team__institution__code')
     raw_id_fields = ('debate_team','ballot_submission')
 
-admin.site.register(models.SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)
+admin.site.register(SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)
 
 
