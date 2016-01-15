@@ -3,7 +3,7 @@
 
 <header class="overall-header">
 
-<nav class="navbar navbar-transparent navbar-static-top {% if '/admin/' in request.path %}navbar-inverse{% endif %}" role="navigation">
+<nav class="navbar navbar-default navbar-transparent navbar-static-top" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -40,10 +40,10 @@
         {% endif %}
       {% endcache %}
 
-      <ul id="nav_left" class="nav navbar-nav navbar-right">
+      <ul id="nav_left" class="nav navbar-nav nav-pills">
         {% for r in tournament.round_set.all %}
-          <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown round-nav">
-            <a href="#" class="dropdown-toggle {% if r.seq == current_round.seq %}current-round{% endif %}" data-toggle="dropdown">
+          <li id="round-{{ r.seq }}" class="{% if r.seq == current_round.seq %}active{% endif %} dropdown round-nav">
+            <a href="#" class="dropdown-toggle round-nav {% if r.seq == current_round.seq %}current-round{% endif %}" data-toggle="dropdown">
               <span class="
                 {% if r.draw_status == r.STATUS_RELEASED %}
                   text-success
@@ -104,6 +104,9 @@
   </div>
 </nav>
 
+<nav>
+  <div class="container-fluid">
+    <ul id="nav_left" class="nav nav-tabs">
       {% if 'admin' in request.path %}
         {% if user.is_superuser %}
           {% include "nav/admin_nav.html" %}
@@ -113,5 +116,8 @@
       {% else %}
         {% include "nav/public_nav.html" %}
       {% endif %}
+    </ul>
+  </div>
+</nav>
 
 </header>
