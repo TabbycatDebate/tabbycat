@@ -1,6 +1,6 @@
 {% load debate_tags %}
 
-<ul id="nav_left" class="nav navbar-nav navbar-left">
+<ul id="nav_left" class="nav nav-tabs">
   {% if pref.side_allocations_enabled == 'preallocated' %}
     <li {% if sides_nav %}class="active"{% endif %}>
       <a href="{% tournament_url side_allocations %}">Sides</a>
@@ -49,63 +49,4 @@
       <li><a href="{% tournament_url edit_eligibility %}">Edit Eligibility</a></li>
     </ul>
   </li>
-</ul>
-
-<ul id="nav_right" class="nav navbar-nav navbar-right">
-  {% for r in tournament.round_set.all %}
-    <li id="round-{{ r.seq }}" class="{% if r == round %}selected{% endif %} dropdown round-nav">
-      <a href="#" class="dropdown-toggle {% if r.seq == current_round.seq %}current-round{% endif %}" data-toggle="dropdown">
-        <span class="
-          {% if r.draw_status == r.STATUS_RELEASED %}
-            text-success
-          {% elif r.draw_status == r.STATUS_CONFIRMED %}
-            text-primary
-          {% elif r.draw_status == r.STATUS_DRAFT %}
-            text-warning
-          {% endif %}
-        ">
-          {{ r.abbreviation }}
-          <b class="caret"></b>
-        </span>
-      </a>
-      <ul class="dropdown-menu">
-        <li class="dropdown-header">Draw Status:
-          <span class="
-            {% if r.draw_status == r.STATUS_RELEASED %}
-              text-success
-            {% elif r.draw_status == r.STATUS_CONFIRMED %}
-              text-primary
-            {% elif r.draw_status == r.STATUS_DRAFT %}
-              text-warning
-            {% endif %}
-          ">
-            {{ r.get_draw_status_display }}
-          </span>
-        </li>
-        <li class="divider"></li>
-        <li><a href="{% round_url team_availability r %}">Team Checkins</a></li>
-        <li><a href="{% round_url venue_availability r %}">Venue Checkins</a></li>
-        <li><a href="{% round_url adjudicator_availability r %}">Adj Checkins</a></li>
-        <li><a href="{% round_url people_availability r %}">Participant Checkins</a></li>
-        <li class="divider"></li>
-        <li><a href="{% round_url draw r %}">Draw</a></li>
-        <li><a href="{% round_url motions r %}">Motions</a></li>
-        <li><a href="{% round_url results r %}">Ballots</a></li>
-        <li><a href="{% round_url ballot_checkin r %}">Ballot Checkin</a></li>
-        <li class="divider"></li>
-        <li><a href="{% round_url draw_print_scoresheets r %}">Print Ballots</a></li>
-        <li><a href="{% round_url draw_print_feedback r %}">Print Feedback Forms</a></li>
-        <li class="divider"></li>
-        <li><a href="{% round_url team_standings r %}">Team Standings</a></li>
-        <li><a href="{% round_url speaker_standings r %}">Speaker Standings</a></li>
-        {% if pref.reply_scores_enabled %}
-        <li><a href="{% round_url reply_standings r %}">Reply Standings</a></li>
-        {% endif %}
-        {% if pref.enable_divisions %}
-          <li class="divider"></li>
-          <li><a class="" href="{% round_url master_sheets_list r %}">Mastersheets</a></li>
-        {% endif %}
-      </ul>
-    </li>
-  {% endfor %}
 </ul>

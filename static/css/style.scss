@@ -98,8 +98,12 @@ table.table > tbody > tr > td.no-horizontal-spacing {
   }
 }
 
-.page-header {
-  margin-bottom: 20px;
+.overall-header {
+  background-color: #f2f2f2;
+}
+.navbar-transparent {
+  border: none;
+  background: none;
 }
 
 #header-options {
