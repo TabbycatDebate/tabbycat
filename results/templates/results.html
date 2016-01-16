@@ -5,13 +5,7 @@
 {% block page-title %}Status of {{ round.name }} Results{% endblock %}
 
 {% block page-subnav-sections %}
-  <li><a class="btn btn-default" href="{% round_url ballot_checkin current_round %}">Ballot Checkin</a></li>
-  {% if not has_motions %}
-    <div class="alert alert-danger">
-      Currently there are no motions entered for this round, so debate results
-      cannot be entered. <a href="{% round_url motions current_round %}" class="alert-link">Add Motions.</a>
-    </div>
-  {% endif %}
+  <li><a href="{% round_url ballot_checkin current_round %}">Ballot Checkin</a></li>
 {% endblock %}
 {% block page-subnav-actions %}
   {% if round.seq < tournament.round_set.count and current_round == round %}
@@ -20,6 +14,15 @@
     </a>
   {% endif %}
 {% endblock %}
+{% block page-alerts %}
+  {% if not has_motions %}
+    <div class="alert alert-danger">
+      Currently there are no motions entered for this round, so debate results
+      cannot be entered. <a href="{% round_url motions current_round %}" class="alert-link">Add Motions.</a>
+    </div>
+  {% endif %}
+{% endblock %}
+
 
 {% block content %}
 

@@ -4,6 +4,11 @@
 
   <li {% if availability_nav %}class="active"{% endif %}>
     <a href="{% round_url availability_index current_round %}">
+      {{ current_round.abbreviation }} Overview
+    </a>
+  </li>
+  <li {% if availability_nav %}class="active"{% endif %}>
+    <a href="{% round_url availability_index current_round %}">
       {{ current_round.abbreviation }} Checkins
     </a>
   </li>

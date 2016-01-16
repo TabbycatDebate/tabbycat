@@ -32,12 +32,12 @@
 
 {% block page-subnav-sections %}
 <ul class="nav nav-pills navbar-left">
-  <li><a class="" href="{% round_url draw_with_standings %}">Draw Details</a></li>
-  <li><a class="" href="{% round_url draw_display_by_venue %}">Show by Venue</a></li>
-  <li><a class="" href="{% round_url draw_display_by_team %}">Show by Team</a></li>
-  <li><a class="" href="{% round_url draw_print_scoresheets round %}">Print Ballots</a></li>
-  <li><a class="" href="{% round_url draw_print_feedback round %}">Print Feedback Forms</a></li>
-  <li><a class="" href="{% round_url master_sheets_list round %}">Print Mastersheets</a></li>
+  <li><a href="{% round_url draw_with_standings %}">Draw Details</a></li>
+  <li><a href="{% round_url draw_display_by_venue %}">Show by Venue</a></li>
+  <li><a href="{% round_url draw_display_by_team %}">Show by Team</a></li>
+  <li><a href="{% round_url draw_print_scoresheets round %}">Print Ballots</a></li>
+  <li><a href="{% round_url draw_print_feedback round %}">Print Feedback Forms</a></li>
+  <li><a href="{% round_url master_sheets_list round %}">Print Mastersheets</a></li>
 </ul>
 {% endblock %}
 
@@ -59,19 +59,18 @@
   {% elif round.draw_status = round.STATUS_RELEASED %}
     <button class="btn btn-danger" id="unrelease_draw">Unrelease Draw to Public</button>
   {% endif %}
-{% endblock %}
-
-{% block content %}
   <form id="releaseForm" method="POST" action="{% round_url release_draw %}"></form>
   <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}"></form>
   <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}"></form>
+{% endblock %}
 
+
+{% block page-alerts %}
   {% if round.motion_set.all.count == 0 %}
   <div class="alert alert-danger">
     There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit current_round %}" class="alert-link">Edit the motions.</a>
   </div>
   {% endif %}
-
   {% if not round.venue_allocation_validity %}
     <div class="alert alert-danger alert-dismissable" id="">
       One or more debates does not have a venue <a href="{% round_url draw_venues_edit current_round %}" class="alert-link">Edit the venues</a>.
@@ -93,7 +92,9 @@
       </div>
     {% endif %}
   {% endif %}
+{% endblock %}
 
+{% block content %}
 
   {% include "tables/table_search.html" %}
 
