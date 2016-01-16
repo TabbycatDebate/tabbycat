@@ -4,55 +4,59 @@
 {% block head-title %}Status <small>of {{ round.name }} Results</small>{% endblock %}
 {% block page-title %}Status of {{ round.name }} Results{% endblock %}
 
-{% block page-header %}
-  <div class="btn-group">
-    <button class="btn btn-default btn-danger">
-      <span class="label none">
-        {{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span>
-      </span>
-    </button>
-    <button class="btn btn-default btn-warning">
-      <span class="label ballotin">
-        {{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span>
-      </span>
-    </button>
-    <button class="btn btn-default btn-info">
-      <span class="label unconfirmed">
-        {{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span>
-      </span>
-    </button>
-    <button class="btn btn-default btn-success">
-      <span class="label confirmed">
-        {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span>
-      </span>
-    </button>
-    {% if pref.enable_postponements %}
-    <button class="btn btn-default btn-primary">
-      <span class="label confirmed">
-        {{ stats.postponed }} Postponed <span class="glyphicon glyphicon-pause"></span>
-      </span>
-    </button>
-    <button class="btn btn-default active">
-      <span class="label confirmed text-muted">
-        Bye <span class="glyphicon glyphicon-fast-forward"></span>
-      </span>
-    </button>
-    {% endif %}
-  </div>
-  {% if round.seq < tournament.round_set.count and current_round == round %}
-    <div class="btn-group pull-right">
-      <a class="btn btn-default btn-success" href="{% round_url round_increment_check %}">Advance to Next Round</a>
-    </div>
-  {% endif %}
+{% block page-subnav-sections %}
+  <li><a class="btn btn-default" href="{% round_url ballot_checkin current_round %}">Ballot Checkin</a></li>
   {% if not has_motions %}
     <div class="alert alert-danger">
-      Currently there are no motions entered for this round, so debate results cannot be entered. <a href="{% round_url motions current_round %}" class="alert-link">Add Motions.</a>
+      Currently there are no motions entered for this round, so debate results
+      cannot be entered. <a href="{% round_url motions current_round %}" class="alert-link">Add Motions.</a>
     </div>
   {% endif %}
-  {% include "tables/table_search.html" %}
+{% endblock %}
+{% block page-subnav-actions %}
+  {% if round.seq < tournament.round_set.count and current_round == round %}
+    <a class="btn btn-default btn-success" href="{% round_url round_increment_check %}">
+      Advance to Next Round
+    </a>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
+
+  <div class="row vertical-space">
+
+    <div class="col-sm-9">
+      <table id="" class="table table-bordered table-condensed" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td class="debate-status-C">
+              <span class="glyphicon glyphicon-inbox"></span> {{ stats.ballot_in }} Checked In
+            </td>
+            <td class="debate-status-N">
+              <span class="glyphicon glyphicon-remove"></span> {{ stats.none }} Unknown
+            </td>
+            <td class="debate-status-D">
+              <span class="glyphicon glyphicon-adjust"></span> {{ stats.draft }} Unconfirmed
+            </td>
+            <td class="debate-status-C">
+              <span class="glyphicon glyphicon-ok"></span> {{ stats.confirmed }} Confirmed
+            </td>
+            {% if pref.enable_postponements %}
+            <td class="debate-status-P">
+              <span class="glyphicon glyphicon-pause"></span> {{ stats.postponed }} Postponed
+            </td>
+            <td class="debate-status-B">
+              <span class="glyphicon glyphicon-fast-forward"></span> Bye
+            </td>
+            {% endif %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    {% include "tables/table_search.html" %}
+
+  </div>
+
 
   <table id="dataTable" class="table table-hover" cellpadding="0" cellspacing="0">
     <thead>

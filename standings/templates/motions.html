@@ -1,7 +1,6 @@
 {% extends "draw_base.html" %}
 {% load debate_tags %}
 
-{% block body-class %}display-motions{% endblock %}
 {% block head-title %}
   Motions for {{ round.name }}
   <small>
@@ -10,16 +9,18 @@
 {% endblock %}
 {% block page-title %}Motions for {{ round.name }}{% endblock %}
 
-{% block header %}
-  <div class="btn-group">
-  <a href="{% round_url motions_edit %}" class="btn btn-default form-control">
+{% block page-subnav-sections %}
+  <li><a href="{% round_url motions_edit %}" class="btn btn-default form-control">
     Edit Motions for {{ round.name }}
-  </a>
+  </a></li>
   {% if pref.enable_division_motions %}
-    <a href="{% round_url motions_assign %}" class="btn btn-default form-control">
+    <li><a href="{% round_url motions_assign %}" class="btn btn-default form-control">
       Assign {{ round.name }} Motions to Divisions
-    </a>
+    </a></li>
   {% endif %}
+{% endblock %}
+
+{% block page-subnav-actions %}
   {% if round.motions_released %}
     <button class="btn btn-danger form-control" id="unrelease_motions">Unrelease {{ round.name }} Motions to Public</button>
   {% else %}

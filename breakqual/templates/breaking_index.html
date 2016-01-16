@@ -6,19 +6,18 @@
 {% block page-title %}{% endblock %}
 
 
-{% block page-header %}
+{% block pagesub-sections %}
 
-  <div class="btn-group">
+  {% for category in tournament.breakcategory_set.all %}
+    <li><a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">{{ category.name }}</a></li>
+  {% endfor %}
+  <li><a class="btn btn-default" href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
 
-    {% for category in tournament.breakcategory_set.all %}
-      <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">{{ category.name }}</a></li>
-    {% endfor %}    <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
-  </div>
-  <div class="btn-group pull-right">
-    <a class="btn btn-success" href="{% tournament_url edit_eligibility %}">Edit Eligibility</a></li>
-  </div>
-
-{% endblock page-header %}
+  </ul>
+{% endblock %}
+{% block pagesub-actions %}
+  <a class="btn btn-success" href="{% tournament_url edit_eligibility %}">Edit Eligibility</a></li>
+{% endblock %}
 
 {% block content %}
 

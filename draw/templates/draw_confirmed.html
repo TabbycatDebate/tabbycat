@@ -17,6 +17,7 @@
   {% endif %}
   </small>
 {% endblock %}
+
 {% block page-title %}
   Draw for {{ round.name }}
   {% if round.draw_status = round.STATUS_CONFIRMED %}
@@ -29,36 +30,35 @@
 {% endblock %}
 {% block body-class %}draw{% endblock %}
 
-{% block page-header %}
-  <div class="btn-group">
-    <a class="btn {% if round.venue_allocation_validity %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_venues_edit %}">
-      Edit Venues
-    </a>
-    <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">
-      Edit Adjs
-    </a>
-    <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url motions current_round %}">
-      Edit Motions
-    </a>
-    <a class="btn btn-default" href="{% round_url draw_matchups_edit round %}">
-      Edit Matchups
-    </a>
-    {% if not pref.enable_venue_times %}
-      <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
-    {% endif %}
-  </div>
-  <div class="btn-group">
-    <a class="btn btn-default form-control" href="{% round_url draw_with_standings %}">View Details</a>
-    <a class="btn btn-default form-control" href="{% round_url draw_display_by_venue %}">Show by Venue</a>
-    <a class="btn btn-default form-control" href="{% round_url draw_display_by_team %}">Show by Team</a>
-  </div>
-  <div class="btn-group pull-right">
-    {% if round.draw_status = round.STATUS_CONFIRMED %}
-      <button class="btn btn-success" id="release_draw">Release Draw to Public</button>
-    {% elif round.draw_status = round.STATUS_RELEASED %}
-      <button class="btn btn-danger" id="unrelease_draw">Unrelease Draw to Public</button>
-    {% endif %}
-  </div>
+{% block page-subnav-sections %}
+<ul class="nav nav-pills navbar-left">
+  <li><a class="" href="{% round_url draw_with_standings %}">Draw Details</a></li>
+  <li><a class="" href="{% round_url draw_display_by_venue %}">Show by Venue</a></li>
+  <li><a class="" href="{% round_url draw_display_by_team %}">Show by Team</a></li>
+  <li><a class="" href="{% round_url draw_print_scoresheets round %}">Print Ballots</a></li>
+  <li><a class="" href="{% round_url draw_print_feedback round %}">Print Feedback Forms</a></li>
+  <li><a class="" href="{% round_url master_sheets_list round %}">Print Mastersheets</a></li>
+</ul>
+{% endblock %}
+
+{% block page-subnav-actions %}
+  <a class="btn {% if round.venue_allocation_validity %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_venues_edit %}">
+    Edit Venues
+  </a>
+  <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">
+    Edit Adjs
+  </a>
+  <a class="btn btn-default" href="{% round_url draw_matchups_edit round %}">
+    Edit Matchups
+  </a>
+  {% if not pref.enable_venue_times %}
+    <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
+  {% endif %}
+  {% if round.draw_status = round.STATUS_CONFIRMED %}
+    <button class="btn btn-success" id="release_draw">Release Draw to Public</button>
+  {% elif round.draw_status = round.STATUS_RELEASED %}
+    <button class="btn btn-danger" id="unrelease_draw">Unrelease Draw to Public</button>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -93,6 +93,9 @@
       </div>
     {% endif %}
   {% endif %}
+
+
+  {% include "tables/table_search.html" %}
 
     <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
         <thead>

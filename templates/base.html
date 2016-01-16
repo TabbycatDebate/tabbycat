@@ -35,37 +35,42 @@
 
     <div id="container" class="container-fluid">
 
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-inline hidden-print" id="header-options">
-            {% block page-header %}{% endblock %}
+      <div class="row vertical-space">
+        <div class="col-md-12 hidden-print page-sub-nav">
+          <ul class="nav nav-pills navbar-left">
+            {% block page-subnav-sections %}{% endblock %}
+          </ul>
+          <div class="nav btn-group navbar-right">
+            {% block page-subnav-actions %}{% endblock %}
           </div>
-          {% block no-head-title %}
-            <h1 class="h2 pull-left">{% block head-title %}{% endblock %}</h1>
-          {% endblock %}
-        </div>
-       </div>
-
-      {% if messages %}
-        <div class="row">
-          <div class="form-inline hidden-print" id="messages">
-            {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                {{ message }}
-              </div>
-            {% endfor %}
-            </div>
-        </div>
-      {% endif %}
-
-      <div class="row">
-        <div class="form-inline hidden-print" id="header-options">
-        {% block header %}{% endblock %}
         </div>
       </div>
 
-      {% block content %}{% endblock content %}
+        <div class="row">
+          <div class="col-md-12">
+          {% if messages %}
+            <div class="form-inline hidden-print" id="messages">
+              {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% block page-alerts %}{% endblock %}
+          </div>
+        </div>
+
+      <div class="alert-info">
+        {% block header %}{% endblock %}{% block page-header %}{% endblock %}
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          {% block content %}{% endblock content %}
+        </div>
+      </div>
 
     </div>
 

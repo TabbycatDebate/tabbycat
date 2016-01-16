@@ -5,27 +5,31 @@
 {% block head-title %}{% endblock %}
 {% block page-title %}Adjudicator Feedback Summary{% endblock %}
 
-{% block page-header %}
-  <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">Latest Feedback</a>
-    <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">Find By Source</a>
-    <a class="btn btn-default" href="{% tournament_url randomised_urls %}">Randomised URLs</a>
-    <a class="btn btn-default" href="{% tournament_url feedback_progress %}">Unsubmitted Counts</a>
-  </div>
-  <div class="btn-group">
-    <div class="btn btn-default">
-      <span class="glyphicon glyphicon-star"></span>
-      <span id="breaking_count">{{ breaking_count }}</span> set as breaking
-    </div>
-  </div>
-  <div class="btn-group pull-right">
+{% block page-subnav-sections %}
+  <li><a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">Latest Feedback</a></li>
+  <li><a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">Find By Source</a></li>
+  <li><a class="btn btn-default" href="{% tournament_url randomised_urls %}">Randomised URLs</a></li>
+  <li><a class="btn btn-default" href="{% tournament_url feedback_progress %}">Unsubmitted Counts</a></li>
+{% endblock %}
+{% block page-subnav-actions %}
     <a class="btn btn-success" href="{% tournament_url add_feedback %}">Add Feedback</a>
-  </div>
 {% endblock %}
 
 {% block content %}
 
-  <table id="dataTable" class="table table-hover table-striped adj-feedback" cellpadding="0" cellspacing="0">
+  <div class="row vertical-space">
+
+    <div class="col-md-6">
+      <div class="btn btn-default">
+        <span class="glyphicon glyphicon-star"></span>
+        <span id="breaking_count">{{ breaking_count }}</span> set as breaking
+      </div>
+    </div>
+    {% include "tables/table_search.html" %}
+
+  </div>
+
+  <table id="dataTable" class="table table-hover table-striped adj-feedback vertical-space" cellpadding="0" cellspacing="0">
     <thead>
       <tr>
         <th>Name</th>
@@ -214,7 +218,7 @@
 {% endblock content %}
 
 {% block extra-js %}
-<script type="text/javascript" language="javascript" src="{% static 'js/jquery.flot.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.min.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
 
   $(document).ready( function() {

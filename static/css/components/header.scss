@@ -1,6 +1,6 @@
 
-// Override
-.nav {
+// Override for topmost bar
+.overall-header .nav {
 
   > li {
     > a {
@@ -59,11 +59,15 @@
   background: none;
 }
 
-#header-options {
+// For sub nav
 
-  .btn {
-    margin-bottom: 20px; // Give buttons spacing
+.nav-pills > li > a {
+    border: 1px dotted #ccc;
+    padding: 6px 12px;
+}
+.page-sub-nav .navbar-right {
+    padding-right: 30px; // compensate for the pull-rights negative margin
+}
+.vertical-space {
     margin-top: 20px; // Give buttons spacing
-  }
-
 }
