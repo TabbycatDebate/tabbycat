@@ -1,24 +1,58 @@
 {% load debate_tags %}
 
-{% if pref.side_allocations_enabled == 'preallocated' %}
-  <li {% if sides_nav %}class="active"{% endif %}>
-    <a href="{% tournament_url side_allocations %}">Sides</a>
+<ul id="" class="nav nav-tabs">
+
+  <li>
+    <a class="">
+      {{ current_round.name }}
+    </a>
   </li>
-{% endif %}
-<li {% if draw_nav %}class="active"{% endif %}>
-  <a href="{% round_url draw current_round %}">Draw</a>
-</li>
-<li {% if ballots_nav %}class="active"{% endif %}>
-  <a href="{% round_url results current_round %}">Ballots</a>
-</li>
-<li {% if feedback_nav %}class="dropdown active"{% endif %}>
-  <a href="{% tournament_url feedback_overview %}" >Feedback</a>
-</li>
-{% if pref.enable_divisions %}
-  <li {% if divisions_nav %}class="active"{% endif %}>
-    <a href="{% tournament_url division_allocations %}">Divisions</a>
+  <li>
+    <a {% if availability_nav %}class="active"{% endif %} href="{% round_url availability_index current_round %}">
+      Checkins
+    </a>
   </li>
-{% endif %}
+  <li {% if draw_nav %}class="active"{% endif %}>
+    <a href="{% round_url draw current_round %}">
+      Draw
+    </a>
+  </li>
+  <li>
+    <a href="{% tournament_url division_allocations %}">
+      Motions
+    </a>
+  </li>
+  <li {% if ballots_nav %}class="active"{% endif %}>
+    <a href="{% round_url results current_round %}">
+      Results
+    </a>
+  </li>
+
+  {% if pref.side_allocations_enabled == 'preallocated' %}
+    <li {% if sides_nav %}class="active"{% endif %} class="pull-right">
+      <a href="{% tournament_url side_allocations %}">Sides</a>
+    </li>
+  {% endif %}
+  {% if pref.enable_divisions %}
+    <li class="{% if divisions_nav %}active {% endif %}pull-right">
+      <a href="{% tournament_url division_allocations %}">Divisions</a>
+    </li>
+  {% endif %}
+  <li class="{% if standings_nav %}dropdown active {% endif %}pull-right">
+    <a href="{% tournament_url feedback_overview %}" >Standings</a>
+  </li>
+  <li class="{% if break_nav %}dropdown active {% endif %}pull-right">
+    <a href="{% tournament_url feedback_overview %}" >Break</a>
+  </li>
+  <li class="{% if feedback_nav %}dropdown active {% endif %}pull-right">
+    <a href="{% tournament_url feedback_overview %}" >Feedback</a>
+  </li>
+
+</ul>
+
+
+
+<!--
 <li class="dropdown {% if standings_nav %}active{% endif %}">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standings<b class="caret"></b></a>
   <ul class="dropdown-menu">
@@ -47,4 +81,4 @@
     <li class="divider"></li>
     <li><a href="{% tournament_url edit_eligibility %}">Edit Eligibility</a></li>
   </ul>
-</li>
+</li> -->

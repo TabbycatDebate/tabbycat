@@ -5,6 +5,8 @@ from .models import ActiveTeam, ActiveVenue, ActiveAdjudicator
 
 urlpatterns = [
 
+    url(r'^$',                       views.availability_index,   name='availability_index'),
+
     url(r'people/$',                views.checkin_results,
         { 'model': 'person', 'context_name': 'people' }, 'people_availability'),
     url(r'people/update/$',         views.checkin_update,

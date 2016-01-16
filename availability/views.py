@@ -15,6 +15,11 @@ def _availability(request, round, model, context_name):
 
     return r2r(request, '%s_availability.html' % model, context)
 
+@round_view
+def availability_index(request, round):
+    context = {}
+    return r2r(request, 'availability_index.html', context)
+
 # public (for barcode checkins)
 @round_view
 def checkin(request, round):

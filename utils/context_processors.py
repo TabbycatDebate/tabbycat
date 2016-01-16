@@ -26,6 +26,8 @@ def get_menu_highlight(request):
         return {'draw_nav': True}
     elif "feedback" in request.path:
         return {'feedback_nav': True}
+    elif "availability" in request.path:
+        return {'availability_nav': True}
     elif "division_allocations" in request.path:
         return {'divisions_nav': True}
     elif "standings" in request.path:

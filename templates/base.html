@@ -14,6 +14,7 @@
   <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/bootstrap.scss' %}">
   <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/style.scss' %}" />
   <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/components/tables.scss' %}" />
+  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/components/header.scss' %}" />
   <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/components/page-specific.scss' %}" />
   <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/components/print.scss' %}" />
   {% endcompress %}
@@ -34,16 +35,20 @@
 
     <div id="container" class="container-fluid">
 
-      <div class="row page-header">
+      <div class="row">
         <div class="col-md-12">
-          <h1 class="h2 pull-left">{% block head-title %}{% endblock %}</h1>
-          {% block page-header %}{% endblock %}
+          {% block no-head-title %}
+            <h1 class="h2 pull-left">{% block head-title %}{% endblock %}</h1>
+          {% endblock %}
+          <div class="form-inline hidden-print" id="header-options">
+            {% block page-header %}{% endblock %}
+          </div>
         </div>
        </div>
 
       {% if messages %}
         <div class="row">
-          <div class="col-md-12 form-inline hidden-print" id="messages">
+          <div class="form-inline hidden-print" id="messages">
             {% for message in messages %}
               <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -55,7 +60,7 @@
       {% endif %}
 
       <div class="row">
-        <div class="col-md-12 form-inline hidden-print" id="header-options">
+        <div class="form-inline hidden-print" id="header-options">
         {% block header %}{% endblock %}
         </div>
       </div>

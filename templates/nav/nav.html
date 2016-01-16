@@ -40,80 +40,31 @@
         {% endif %}
       {% endcache %}
 
-      <ul id="nav_left" class="nav navbar-nav nav-pills">
+      <ul class="nav navbar-nav nav-pills">
         {% for r in tournament.round_set.all %}
-          <li id="round-{{ r.seq }}" class="{% if r.seq == current_round.seq %}active{% endif %} dropdown round-nav">
-            <a href="#" class="dropdown-toggle round-nav {% if r.seq == current_round.seq %}current-round{% endif %}" data-toggle="dropdown">
-              <span class="
-                {% if r.draw_status == r.STATUS_RELEASED %}
-                  text-success
-                {% elif r.draw_status == r.STATUS_CONFIRMED %}
-                  text-primary
-                {% elif r.draw_status == r.STATUS_DRAFT %}
-                  text-warning
-                {% endif %}
-              ">
+          <li id="round-{{ r.seq }}" class="{% if r.seq == current_round.seq %}active{% endif %} round-nav">
+            <a href="#" class="dropdown-toggle round-nav {% if r.seq == current_round.seq %}current-round{% endif %}">
+              <span class="{% if r.draw_status == r.STATUS_RELEASED %}text-success{% elif r.draw_status == r.STATUS_CONFIRMED %}text-primary{% elif r.draw_status == r.STATUS_DRAFT %}text-warning{% endif %}">
                 {{ r.abbreviation }}
-                <b class="caret"></b>
               </span>
             </a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-header">Draw Status:
-                <span class="
-                  {% if r.draw_status == r.STATUS_RELEASED %}
-                    text-success
-                  {% elif r.draw_status == r.STATUS_CONFIRMED %}
-                    text-primary
-                  {% elif r.draw_status == r.STATUS_DRAFT %}
-                    text-warning
-                  {% endif %}
-                ">
-                  {{ r.get_draw_status_display }}
-                </span>
-              </li>
-              <li class="divider"></li>
-              <li><a href="{% round_url team_availability r %}">Team Checkins</a></li>
-              <li><a href="{% round_url venue_availability r %}">Venue Checkins</a></li>
-              <li><a href="{% round_url adjudicator_availability r %}">Adj Checkins</a></li>
-              <li><a href="{% round_url people_availability r %}">Participant Checkins</a></li>
-              <li class="divider"></li>
-              <li><a href="{% round_url draw r %}">Draw</a></li>
-              <li><a href="{% round_url motions r %}">Motions</a></li>
-              <li><a href="{% round_url results r %}">Ballots</a></li>
-              <li><a href="{% round_url ballot_checkin r %}">Ballot Checkin</a></li>
-              <li class="divider"></li>
-              <li><a href="{% round_url draw_print_scoresheets r %}">Print Ballots</a></li>
-              <li><a href="{% round_url draw_print_feedback r %}">Print Feedback Forms</a></li>
-              <li class="divider"></li>
-              <li><a href="{% round_url team_standings r %}">Team Standings</a></li>
-              <li><a href="{% round_url speaker_standings r %}">Speaker Standings</a></li>
-              {% if pref.reply_scores_enabled %}
-              <li><a href="{% round_url reply_standings r %}">Reply Standings</a></li>
-              {% endif %}
-              {% if pref.enable_divisions %}
-                <li class="divider"></li>
-                <li><a class="" href="{% round_url master_sheets_list r %}">Mastersheets</a></li>
-              {% endif %}
-            </ul>
           </li>
         {% endfor %}
       </ul>
 
-
-
-      <ul id="" class="nav navbar-nav navbar-right ">
+      <ul class="nav navbar-nav navbar-right ">
 
         {% if user.is_authenticated %}
           {% if user.is_superuser %}
             {% if tournament %}
-              <li><a href="{% tournament_url tournament_config_index %}"> 🏆Configuration</a></li>
-              <li><a href="{% tournament_url data_index %}"> 📩Data Import</a></li>
-              <li><a href="/admin/"> 📧Data Admin</a></li>
+              <li><a href="{% tournament_url tournament_config_index %}">Config</a></li>
+              <li><a href="{% tournament_url data_index %}">Data Import</a></li>
+              <li><a href="/admin/">Data Admin</a></li>
             {% endif %}
           {% endif %}
-          <li><a href="/accounts/logout/" title="Log out of {{ user }}">🔒Logout of {{ user }}</a></li>
+          <li><a href="/accounts/logout/" title="Log out of {{ user }}">Logout of {{ user }}</a></li>
         {% else %}
-          <li><a href="/accounts/login/" title="Log in">🔓Log in</a></li>
+          <li><a href="/accounts/login/" title="Log in">Log in</a></li>
         {% endif %}
 
       </ul>
@@ -125,17 +76,15 @@
 
 <nav>
   <div class="container-fluid">
-    <ul id="nav_left" class="nav nav-tabs">
-      {% if 'admin' in request.path %}
-        {% if user.is_superuser %}
-          {% include "nav/admin_nav.html" %}
-        {% else %}
-          {% include "nav/assistant_nav.html" %}
-        {% endif %}
+    {% if 'admin' in request.path %}
+      {% if user.is_superuser %}
+        {% include "nav/admin_nav.html" %}
       {% else %}
-        {% include "nav/public_nav.html" %}
+        {% include "nav/assistant_nav.html" %}
       {% endif %}
-    </ul>
+    {% else %}
+      {% include "nav/public_nav.html" %}
+    {% endif %}
   </div>
 </nav>
 
