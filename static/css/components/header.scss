@@ -61,10 +61,9 @@
 
 #header-options {
 
-  //min-height: 34px; // Spacer pre-form relocation via JS
-  margin-right: 0;
-
   .btn {
-    margin-bottom: 20px;
+    margin-bottom: 20px; // Give buttons spacing
+    margin-top: 20px; // Give buttons spacing
   }
+
 }

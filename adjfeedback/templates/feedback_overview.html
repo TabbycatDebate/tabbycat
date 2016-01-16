@@ -2,17 +2,15 @@
 {% load debate_tags %}
 {% load staticfiles %}
 
-{% block head-title %}Adjudicator Feedback Summary{% endblock %}
+{% block head-title %}{% endblock %}
 {% block page-title %}Adjudicator Feedback Summary{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
 
-{% block header %}
+{% block page-header %}
   <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url add_feedback %}">Add Feedback</a>
-  </div>
-  <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">View Latest Feedback</a>
-    <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">View Feedback By Source</a>
+    <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">Latest Feedback</a>
+    <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">Find By Source</a>
+    <a class="btn btn-default" href="{% tournament_url randomised_urls %}">Randomised URLs</a>
+    <a class="btn btn-default" href="{% tournament_url feedback_progress %}">Unsubmitted Counts</a>
   </div>
   <div class="btn-group">
     <div class="btn btn-default">
@@ -20,8 +18,8 @@
       <span id="breaking_count">{{ breaking_count }}</span> set as breaking
     </div>
   </div>
-  <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url randomised_urls %}">View Randomised URLs</a>
+  <div class="btn-group pull-right">
+    <a class="btn btn-success" href="{% tournament_url add_feedback %}">Add Feedback</a>
   </div>
 {% endblock %}
 

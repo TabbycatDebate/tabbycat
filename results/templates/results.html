@@ -3,9 +3,8 @@
 
 {% block head-title %}Status <small>of {{ round.name }} Results</small>{% endblock %}
 {% block page-title %}Status of {{ round.name }} Results{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
 
-{% block header %}
+{% block page-header %}
   <div class="btn-group">
     <button class="btn btn-default btn-danger">
       <span class="label none">
@@ -41,8 +40,8 @@
     {% endif %}
   </div>
   {% if round.seq < tournament.round_set.count and current_round == round %}
-    <div class="btn-group">
-      <a class="btn btn-default form-control btn-success" href="{% round_url round_increment_check %}">Advance to Next Round</a>
+    <div class="btn-group pull-right">
+      <a class="btn btn-default btn-success" href="{% round_url round_increment_check %}">Advance to Next Round</a>
     </div>
   {% endif %}
   {% if not has_motions %}
@@ -50,6 +49,7 @@
       Currently there are no motions entered for this round, so debate results cannot be entered. <a href="{% round_url motions current_round %}" class="alert-link">Add Motions.</a>
     </div>
   {% endif %}
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block content %}

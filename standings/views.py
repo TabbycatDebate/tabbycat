@@ -5,6 +5,13 @@ from motions.models import Motion
 
 from utils.views import *
 
+
+@admin_required
+@round_view
+def standings_index(request, round):
+    return r2r(request, 'standings_index.html', dict())
+
+
 def get_speaker_standings(rounds, round, results_override=False, only_novices=False, for_replies=False):
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
     reply_position = round.tournament.REPLY_POSITION

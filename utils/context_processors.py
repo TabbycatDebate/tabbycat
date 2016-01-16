@@ -20,6 +20,8 @@ def get_menu_highlight(request):
         return {'sides_nav': True}
     elif "ballots" in request.path:
         return {'ballots_nav': True}
+    elif "motions" in request.path:
+        return {'motions_nav': True}
     elif "results" in request.path:
         return {'ballots_nav': True}
     elif "draw" in request.path:

@@ -2,29 +2,24 @@
 
 <ul id="" class="nav nav-tabs">
 
-  <li>
-    <a class="">
-      {{ current_round.name }}
-    </a>
-  </li>
-  <li>
-    <a {% if availability_nav %}class="active"{% endif %} href="{% round_url availability_index current_round %}">
-      Checkins
+  <li {% if availability_nav %}class="active"{% endif %}>
+    <a href="{% round_url availability_index current_round %}">
+      {{ current_round.abbreviation }} Checkins
     </a>
   </li>
   <li {% if draw_nav %}class="active"{% endif %}>
     <a href="{% round_url draw current_round %}">
-      Draw
+      {{ current_round.abbreviation }} Draw
     </a>
   </li>
-  <li>
-    <a href="{% tournament_url division_allocations %}">
-      Motions
+  <li {% if motions_nav %}class="active"{% endif %}>
+    <a href="{% round_url motions current_round %}">
+      {{ current_round.abbreviation }} Motions
     </a>
   </li>
   <li {% if ballots_nav %}class="active"{% endif %}>
     <a href="{% round_url results current_round %}">
-      Results
+      {{ current_round.abbreviation }} Results
     </a>
   </li>
 
@@ -39,13 +34,18 @@
     </li>
   {% endif %}
   <li class="{% if standings_nav %}dropdown active {% endif %}pull-right">
-    <a href="{% tournament_url feedback_overview %}" >Standings</a>
+    <a href="{% round_url standings_index current_round %}" >Standings</a>
   </li>
   <li class="{% if break_nav %}dropdown active {% endif %}pull-right">
-    <a href="{% tournament_url feedback_overview %}" >Break</a>
+    <a href="{% tournament_url breaking_index %}" >Breaks</a>
   </li>
   <li class="{% if feedback_nav %}dropdown active {% endif %}pull-right">
     <a href="{% tournament_url feedback_overview %}" >Feedback</a>
+  </li>
+  <li class="pull-right">
+    <a href="{% tournament_url tournament_home %}">
+      Overview
+    </a>
   </li>
 
 </ul>

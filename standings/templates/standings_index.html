@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}Standings{% endblock %}
+{% block page-title %}{% endblock %}
+
+
+{% block page-header %}
+
+  <div class="btn-group">
+    <a class="btn btn-default" href="{% round_url team_standings current_round %}">
+      Team Standings
+    </a>
+    {% if pref.enable_divisions %}
+    <a class="btn btn-default" href="{% round_url division_standings current_round %}">
+      Divisions Standings
+    </a>
+    {% endif %}
+    <a class="btn btn-default" href="{% round_url speaker_standings current_round %}">
+      Speakers Standings
+    </a>
+    {% if pref.show_novices %}
+      <a class="btn btn-default" href="{% round_url novice_standings current_round %}">
+        Novices Standings
+      </a>
+    {% endif %}
+    {% if pref.reply_scores_enabled %}
+      <a class="btn btn-default" href="{% round_url reply_standings current_round %}">
+        Replies Standings
+      </a>
+    {% endif %}
+    <a class="btn btn-default" href="{% round_url motion_standings current_round %}">
+      Motion Balance
+    </a>
+  </div>
+
+{% endblock page-header %}
+
+{% block content %}
+
+
+{% endblock content %}
+

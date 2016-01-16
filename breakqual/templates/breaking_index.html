@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}Breaks{% endblock %}
+{% block page-title %}{% endblock %}
+
+
+{% block page-header %}
+
+  <div class="btn-group">
+
+    {% for category in tournament.breakcategory_set.all %}
+      <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">{{ category.name }}</a></li>
+    {% endfor %}    <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
+  </div>
+  <div class="btn-group pull-right">
+    <a class="btn btn-success" href="{% tournament_url edit_eligibility %}">Edit Eligibility</a></li>
+  </div>
+
+{% endblock page-header %}
+
+{% block content %}
+
+{% endblock content %}
+

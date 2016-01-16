@@ -37,12 +37,12 @@
 
       <div class="row">
         <div class="col-md-12">
-          {% block no-head-title %}
-            <h1 class="h2 pull-left">{% block head-title %}{% endblock %}</h1>
-          {% endblock %}
           <div class="form-inline hidden-print" id="header-options">
             {% block page-header %}{% endblock %}
           </div>
+          {% block no-head-title %}
+            <h1 class="h2 pull-left">{% block head-title %}{% endblock %}</h1>
+          {% endblock %}
         </div>
        </div>
 
