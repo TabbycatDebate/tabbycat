@@ -1,6 +1,13 @@
+.. _install-osx:
+
+==========================
+Installing locally on OS X
+==========================
+
 Before you start, be sure to read our general information on [[local installations]] to help you understand what's going on.
 
-## Requisite technical knowledge
+Requisite technical knowledge
+=======================================================================
 
 You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest. You just need to be prepared to bear with us. It'll take a while the first time, but it gets easier after that.
 
@@ -8,7 +15,8 @@ Every line in the instructions that begins with `$` is a command that you need t
 
 > <i>Advanced users: Tabbycat is a Django project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we might not have tried it.</i></td></tr></table>
 
-## 1. Install dependencies
+1. Install dependencies
+=======================================================================
 
 In order to use Tabbycat, you must have Python 2.7, pip, virtualenv, Git and PostgresQL already installed on your machine. See the following for install instructions:
 
@@ -18,7 +26,8 @@ In order to use Tabbycat, you must have Python 2.7, pip, virtualenv, Git and Pos
 
 > <strong>Note:</strong> Tabbycat requires Python 2.7, not 2.6 or any 3.x. We don't currently have plans to migrate to Python 3.</td></tr></table>
 
-## Installing
+Installing
+=======================================================================
 1. Install the dependencies above.
 
 2. Clone the repository:
@@ -73,7 +82,8 @@ In order to use Tabbycat, you must have Python 2.7, pip, virtualenv, Git and Pos
 
 Naturally, your database is probably currently empty, so proceed to [[importing initial data]].
 
-### Starting up the server the next time
+Starting up the server the next time
+-------------------------------------------------------------------------
 To resume running the server at a later date, change to the Tabbycat directory and repeat steps 3 and 10, that is:
 
         $ cd [wherever your tabbycat directory is]/tabbycat
