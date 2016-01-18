@@ -154,13 +154,13 @@ Almost there!
   If you installed **32-bit Python**::
 
     > python -m pip install --upgrade pip
-    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py2.7-pg9.4.4-release.exe
+    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.4-pg9.4.4-release.exe
     > pip install -r requirements_common.txt
 
   If you installed **64-bit Python**::
 
     > python -m pip install --upgrade pip
-    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py2.7-pg9.4.4-release.exe
+    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.4-pg9.4.4-release.exe
     > pip install -r requirements_common.txt
 
 .. attention:: Because you're on Windows, the ``psycopg2`` package won't work. There is a good Windows version called `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, which we'll use instead. The purpose of the second line above is to install it, and therefore stop the third line—which installs everything—from trying to install the Unix version.
