@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Shift Checking for {{ adjudicator.name }}{% endblock %}
+{% block page-title %}Shift Checking for {{ adjudicator.name }}{% endblock %}
+
+{% block content %}
+
+
+
+{% for debate in debates %}
+has a debate shift: {{ debate }}
+{% endfor %}
+
+{% endblock content %}

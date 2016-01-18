@@ -187,7 +187,6 @@ class WADLPreferences(PreferencesPreset):
         self.league_options__allocation_confirmations  = True
 
 
-
 class PublicInformation(PreferencesPreset):
     """ For tournaments hosted online: this sets it up so that people can access the draw and other information via the tab site """
     def __init__(self):

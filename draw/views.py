@@ -11,7 +11,6 @@ import datetime
 
 # Viewing Draw
 
-
 @admin_required
 @tournament_view
 def draw_index(request, t):
@@ -35,7 +34,6 @@ def draw_display_by_team(request, round):
     return r2r(request, "draw_display_by_team.html", dict(draw=draw))
 
 # Creating Draw
-
 
 @login_required
 @round_view
@@ -428,7 +426,6 @@ def public_side_allocations(request, t):
                     rounds=rounds))
 
 # Mastersheets
-
 
 @login_required
 @round_view

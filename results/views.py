@@ -149,7 +149,6 @@ def public_new_ballotset_key(request, t, url_key):
     adjudicator = get_object_or_404(Adjudicator, tournament=t, url_key=url_key)
     return public_new_ballotset(request, t, adjudicator)
 
-
 # Don't cache
 @public_optional_tournament_view('public_ballots')
 def public_new_ballotset_id(request, t, adj_id):
