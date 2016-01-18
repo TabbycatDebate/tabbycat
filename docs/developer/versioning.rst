@@ -1,4 +1,8 @@
-We follow [Semantic Versioning](http://semver.org/). That said, since this is end-user software, there aren't any downstream dependencies so the concept of a "public API" isn't quite as obvious for Tabbycat as it is for projects more reliant on semantic versioning to manage dependencies. In complying with Semantic Versioning, we consider the following to be our "public API", along with the following criteria for backwards incompatibility:
+==============================
+Semantic versioning convention
+==============================
+
+We follow `Semantic Versioning <http://semver.org/>`_. That said, since this is end-user software, there aren't any downstream dependencies so the concept of a "public API" isn't quite as obvious for Tabbycat as it is for projects more reliant on semantic versioning to manage dependencies. In complying with Semantic Versioning, we consider the following to be our "public API", along with the following criteria for backwards incompatibility:
 
  - **Database schema**
     - if it cannot be migrated forwards or backwards using the standard migration function without user-input defaults

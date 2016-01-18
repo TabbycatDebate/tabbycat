@@ -16,6 +16,19 @@ Contents:
    installation/osx
    installation/windows
 
+   use/importing-data
+
+   features/adjudicator-allocation
+   features/draw-generation
+
+   developer/contributing
+   developer/documentation
+   developer/versioning
+
+   about/licence
+   about/release-notes
+   about/tournament-history
+
 
 
 Indices and tables

@@ -1,8 +1,11 @@
-# Documentation
+=============
+Documentation
+=============
 
 Documentation is created using [MkDocs](http://mkdocs.readthedocs.org/en/stable/) and hosted using [Read the Docs](https://readthedocs.org). Pushes to ```develop``` will update the *latest* documentation set, while pushes to ```master``` will update the *stable* documentation set.
 
-## Previewing Locally
+Previewing Locally
+==================
 
 Install Mkdocs:
 
@@ -18,13 +21,14 @@ Start the MkDocs server:
 
 Open the local site at [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
-Page hierarchies and organisation are defined in ```mkdocs.yml```
+Page hierarchies and organisation are defined in ``mkdocs.yml``
 
-## Provisional Style Guide
+Provisional Style Guide
+=======================
 
-- All pages should have their title at the top as an ```h1``` in
+- All pages should have their title at the top as an ``h1`` in
 - Headings should use Title Case
-- All subheadings should be ```h2```s
+- All subheadings should be ``h2``
 - Note that any subheadings inside a file will show in the sidebar as a third level of navigation. Best use them sparingly, with lists or bolds taking the place of minor section seperators
 - No inline html
 - Prefer:

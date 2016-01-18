@@ -1,4 +1,4 @@
-.. _install-linux:
+.. _install-heroku:
 
 ====================
 Installing on Heroku
