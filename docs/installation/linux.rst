@@ -14,7 +14,7 @@ You need to be familiar with command-line interfaces to get through this comfort
 .. admonition:: Advanced users
   :class: tip
 
-  Tabbycat is a Django project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we might not have tried it.
+  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we might not have tried it.
 
 1. Install dependencies
 ================================================================================

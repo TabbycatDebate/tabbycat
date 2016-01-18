@@ -16,13 +16,14 @@ In these instructions, we'll use **Windows PowerShell**, a command-line interfac
 .. admonition:: Advanced users
   :class: tip
 
-  Tabbycat is a Django project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we might not have tried it.
+  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we might not have tried it.
 
 1. Install dependencies
 ================================================================================
 
 First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed.
 
+.. _install-python-windows:
 1(a). Python
 --------------------------------------------------------------------------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*
