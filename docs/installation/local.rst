@@ -17,11 +17,12 @@ Should I use a local installation, or one on the internet?
 ==========================================================
 
 You should use a local installation if:
+
 - you won't have access to the internet at your tournament, or internet access will be flaky
 - your tournament is small, doesn't require a public interface and you have a good technical background
 - you're involved in or interested in developing Tabbycat
 
-In most cases, you'll want to run Tabbycat on an internet-accessible site. Have a look at [[installing on Heroku]] to see how.
+In most cases, you'll want to run Tabbycat on an internet-accessible site. Have a look at :ref:`install-heroku` to see how.
 
 If you're trying out Tabbycat for the first time and just want to see it in action, it's probably easier overall to create a Heroku account and install it on Heroku. But if you're happy to install all the dependencies or want to get more visibility into what's going on, a local installation is also a great way to try it out.
 
@@ -34,7 +35,7 @@ Instructions are here:
 - :ref:`install-osx`
 - :ref:`install-windows`
 
-.. note:: If you're expecting not to have reliable internet access, be sure to have fully installed Tabbycat **before** you get to your tournament.
+.. attention:: If you're expecting not to have reliable internet access, be sure to have fully installed Tabbycat **before** you get to your tournament.
 
 Advanced uses
 =============
@@ -54,7 +55,7 @@ We don't provide detailed instructions for this; we leave it for advanced users 
 Can I run an internet-accessible website from a local installation?
 -------------------------------------------------------------------
 
-Probably not. Even if you disable your firewall, chances are your home router (or university router) will block any connections from the outside world to you. Even if you can though, **you really shouldn't**. The local installation uses the *Django development server*, which is a lightweight server designed for developers. Specifically, Django **does not test the security of its development server** in the way that proper web servers do. That is: It's a security risk to run a local installation as an internet-accessible site. Don't do it. [[Install Tabbycat on Heroku|installing on Heroku]] instead.
+Probably not. Even if you disable your firewall, chances are your home router (or university router) will block any connections from the outside world to you. Even if you can though, **you really shouldn't**. The local installation uses the *Django development server*, which is a lightweight server designed for developers. Specifically, Django **does not test the security of its development server** in the way that proper web servers do. That is: It's a security risk to run a local installation as an internet-accessible site. Don't do it. `Install Tabbycat on Heroku <install-heroku>`_ instead.
 
 Alternatively, if you have a background in web development, you might choose to install Tabbycat on your own production server. It's a Django project, so any means of supporting Django projects should work fine.
 

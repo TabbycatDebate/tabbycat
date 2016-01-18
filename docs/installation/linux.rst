@@ -11,13 +11,19 @@ Requisite technical background
 
 You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest.
 
-.. note:: Advanced users: Tabbycat is a Django project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we might not have tried it.
+.. admonition:: Advanced users
+  :class: tip
+
+  Tabbycat is a Django project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we might not have tried it.
 
 1. Install dependencies
 ================================================================================
 First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed.
 
-.. caution:: **These instructions are for Ubuntu.** If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
+.. admonition:: Advanced users
+  :class: tip
+
+  **These instructions are for Ubuntu.** If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
 1(a). Python
 --------------------------------------------------------------------------------
@@ -34,10 +40,7 @@ If it's not installed, run ``sudo apt-get install python3``, or `download the la
 
 1(b). Pyvenv
 --------------------------------------------------------------------------------
-  *Virtualenv allows you to create separate, isolated virtual Python environments,
-  each with their own packages installed.*
-
-**If you installed Python 3.5 or later:** ``pyvenv-3.5`` should already be working.
+**If you installed Python 3.5 or later:** ``pyvenv-3.5`` (or whatever your version is) should already be working.
 
 **If you are using Python 3.4:** Ubuntu 14.04 had a `broken pyvenv-3.4 package
 <https://bugs.launchpad.net/ubuntu/+source/python3.4/+bug/1290847>`_,
@@ -45,7 +48,10 @@ so there is a small workaround to get it to work.::
 
     $ sudo apt-get install python3.4-venv
 
-.. note:: If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
+.. admonition:: Advanced users
+  :class: tip
+
+  If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
 
 1(c). PostgreSQL
 --------------------------------------------------------------------------------
@@ -69,7 +75,7 @@ Option 1: Clone the Git repository
 
 If you don't have Git, install it first using ``sudo apt-get install git``.
 
-.. note:: If you have a GitHub account, you might like to fork the repository
+.. tip:: If you have a GitHub account, you might like to fork the repository
     first, to give yourself a little more freedom.
 
 Option 2: Download a release package
@@ -86,7 +92,7 @@ Option 2: Download a release package
 3. Set up a new database
 ================================================================================
 
-.. note:: You can skip step 1 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
+.. hint:: You can skip step 1 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
 1. Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``.
 
@@ -94,7 +100,7 @@ Option 2: Download a release package
 
     $ sudo -u postgres createuser myusername --pwprompt
 
-  .. note:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.4/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the ``pg_hba.conf`` file, or you could define a mapping in ``pg_ident.conf`` and append the ``map=`` option to the ``local all all peer`` line. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
+  .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.4/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the ``pg_hba.conf`` file, or you could define a mapping in ``pg_ident.conf`` and append the ``map=`` option to the ``local all all peer`` line. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
 
 2. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
 
