@@ -23,7 +23,7 @@ First, you need to install all of the software on which Tabbycat depends, if you
 .. admonition:: Advanced users
   :class: tip
 
-  **These instructions are for Ubuntu.** If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
+  These instructions are for Ubuntu. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
 1(a). Python
 --------------------------------------------------------------------------------
@@ -31,16 +31,16 @@ As of version 0.8, Tabbycat requires Python 3.4 or later. You probably already
 have this installed, but it'll be called ``python3``. Check::
 
     $ python3 --version
-    Python 3.4.3
+    Python 3.4.4
 
-If it's not installed, run ``sudo apt-get install python3``, or `download the latest version from the Python website <https://www.python.org/downloads/>`_.
+If it's not installed, run ``sudo apt-get install python3``, or download the latest version from the `Python website <https://www.python.org/downloads/>`_.
 
 .. warning:: As of version 0.8, Python 2 is not supported. You must use Python 3.4 or
   higher.
 
 1(b). Pyvenv
 --------------------------------------------------------------------------------
-**If you installed Python 3.5 or later:** ``pyvenv-3.5`` (or whatever your version is) should already be working.
+**If you installed Python 3.5 or later:** Nothing to do, ``pyvenv-3.5`` (or whatever your version is) should already be working.
 
 **If you are using Python 3.4:** Ubuntu 14.04 had a `broken pyvenv-3.4 package
 <https://bugs.launchpad.net/ubuntu/+source/python3.4/+bug/1290847>`_,
@@ -130,11 +130,15 @@ Almost there!
          }
      }
 
-3. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
+3. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:
 
+  .. code:: bash
+
+    # If you installed Python 3.4
     $ pyvenv-3.4 venv
 
-  (If you installed Python 3.5, use ``pyvenv-3.5``. If you're using Virtualenv, use ``virtualenv``.)
+    # If you installed Python 3.5
+    $ pyvenv-3.5 venv
 
 4. Run the ``activate`` script. This puts you "into" the virtual environment::
 
@@ -147,7 +151,6 @@ Almost there!
 
 6. Initialize the database and create a user account for yourself::
 
-    $ dj makemigrations debate
     $ dj migrate
     $ dj createsuperuser
 

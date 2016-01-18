@@ -76,10 +76,12 @@ Option 1: Clone the Git repository
 .. |github-clone-desktop| image:: images/github-clone-in-desktop.png
 .. note:: The link above is the same one as the button |github-clone-desktop| on the `repository page <https://github.com/czlee/tabbycat/>`_.
 
+.. tip:: If you have a GitHub account, you might like to fork the repository first, to give yourself a little more freedom.
+
 .. admonition:: Advanced users
   :class: tip
 
-  Cloning from the command line works too. Also, if you have a GitHub account, you might like to fork the repository first, to give yourself a little more freedom.
+  Cloning from the command line works too.
 
 Option 2: Download a release package
 --------------------------------------------------------------------------------
@@ -169,7 +171,6 @@ Almost there!
 
 6. Initialize the database and create a user account for yourself::
 
-    > dj makemigrations debate
     > dj migrate
     > dj createsuperuser
 
