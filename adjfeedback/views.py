@@ -497,7 +497,7 @@ def randomised_urls(request, t):
     context['tournament_slug'] = t.slug
     context['ballot_normal_urls_enabled'] = t.pref('public_ballots')
     context['ballot_randomised_urls_enabled'] = t.pref('public_ballots_randomised')
-    context['feedback_normal_urls_enabled'] = t.pref('data_entry__public_feedback')
+    context['feedback_normal_urls_enabled'] = t.pref('public_feedback')
     context['feedback_randomised_urls_enabled'] = t.pref('public_feedback_randomised')
     return r2r(request, 'randomised_urls.html', context)
 

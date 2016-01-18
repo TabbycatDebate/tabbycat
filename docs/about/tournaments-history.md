@@ -1,6 +1,6 @@
 ## Tournaments History
 
-#### 2015
+__2015__
 
 - [Another Day at Melbourne](http://mudstab.herokuapp.com)
 - [ANU Pre-Australs](http://anupreaust2015.herokuapp.com)
@@ -18,16 +18,16 @@
 - The National Law School Debate
 - [UNSW/UTS Easters](https://aueasters2015.herokuapp.com)
 
-#### 2014
+__2014__
 
 - [Otago Australs](http://australs2014.herokuapp.com)
 - [Joynt Scroll](http://joyntscroll2014.herokuapp.com)
 - Another Day at Melbourne
 
-#### 2012
+__2012__
 
 - [Wellington Australs](http://australs2012tab.herokuapp.com)
 
-#### 2010
+__2010__
 
 - Auckland Australs
