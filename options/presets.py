@@ -6,7 +6,7 @@ class PreferencesPreset:
 class AustralsPreferences(PreferencesPreset):
     """ 3v3 with replies, chosen motions, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
     def __init__(self):
-        self.name                                     = "Australs"
+        self.name                                     = "Australs Rules"
         self.show_in_list                             = True
         # Scoring
         self.scoring__score_min                        = 68.0
@@ -36,7 +36,7 @@ class AustralsPreferences(PreferencesPreset):
 class AustralianEastersPreferences(AustralsPreferences):
     """ 3v3 without replies, with set motions, novices, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
     def __init__(self):
-        self.name                                      = "Australian Easters"
+        self.name                                      = "Australian Easters Rules"
         self.show_in_list                              = True
         self.scoring__score_min                        = 70.0
         self.scoring__score_max                        = 80.0
@@ -48,9 +48,9 @@ class AustralianEastersPreferences(AustralsPreferences):
         self.ui_options__show_novices                  = True
 
 class NZEastersPreferences(AustralsPreferences):
-    """ 2vs2 with replies, chosen motions, chosen sides, novices, and... UNCOMPLETE """
+    """ 2vs2 with replies, chosen motions, chosen sides, and novice statuses."""
     def __init__(self):
-        self.name                                      = "NZ Easters"
+        self.name                                      = "New Zealand Easters Rules"
         self.show_in_list                              = True
         # Scoring
         self.scoring__score_min                        = 60.0
@@ -75,9 +75,9 @@ class NZEastersPreferences(AustralsPreferences):
 
 
 class JoyntPreferences(AustralsPreferences):
-    """ 3vs3 with replies, set sides, publicly displayed sides and motions... UNCOMPLETE """
+    """ 3vs3 with replies, set sides, publicly displayed sides and motions, and novice statuses"""
     def __init__(self):
-        self.name                                      = "Joynt Scroll"
+        self.name                                      = "Joynt Scroll Rules"
         self.show_in_list                              = True
         # Scoring
         self.scoring__score_min                        = 60.0
@@ -104,9 +104,9 @@ class JoyntPreferences(AustralsPreferences):
 
 
 class UADCPreferences(AustralsPreferences):
-    """ Idk... UNCOMPLETE """
+    """ Note: the full set of rules for UADC are not implemented (such as for single ballots)."""
     def __init__(self):
-        self.name                                        = "UADC"
+        self.name                                        = "UADC Rules"
         self.show_in_list                                = True
         # Rules source = http://www.alcheringa.in/pdrules.pdf
         # Scoring
@@ -142,7 +142,7 @@ class UADCPreferences(AustralsPreferences):
 class WADLPreferences(PreferencesPreset):
     """ Example high school league setup """
     def __init__(self):
-        self.name                                      = "WADL"
+        self.name                                      = "WADL Options & Rules"
         self.show_in_list                              = True
         # Debate Rules= no replies; singular motions
         self.debate_rules__reply_scores_enabled        = False
@@ -190,7 +190,7 @@ class WADLPreferences(PreferencesPreset):
 class PublicInformation(PreferencesPreset):
     """ For tournaments hosted online: this sets it up so that people can access the draw and other information via the tab site """
     def __init__(self):
-        self.name                                      = "Public Information"
+        self.name                                      = "Public Information Options"
         self.show_in_list                              = True
         self.public_features__public_draw              = True
         self.public_features__public_break_categories  = True
