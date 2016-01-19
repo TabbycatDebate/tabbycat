@@ -73,9 +73,9 @@ Open a command shell. Navigate to an appropriate directory on your computer usin
 
   This script has other options that you might find useful. Run ``python deploy_heroku.py --help`` for details.
 
-    .. note:: If you'd prefer to import tournament data locally and `push <https://devcenter.heroku.com/articles/heroku-postgresql#pg-push>`_ the database to Heroku using ``heroku pg:push``, use the ``--no-init-db`` option to prevent ``deploy_heroku.py`` from running initial migrations on the database.
+  .. note:: If you'd prefer to import tournament data locally and `push <https://devcenter.heroku.com/articles/heroku-postgresql#pg-push>`_ the database to Heroku using ``heroku pg:push``, use the ``--no-init-db`` option to prevent ``deploy_heroku.py`` from running initial migrations on the database.
 
-    .. note:: If this isn't your first tournament, the ``heroku`` Git remote might already be pointing to your first tournament. In this case, you should use the ``--git-remote <new_remote_name>`` option to get the script to create a new git remote for you, so you can use when importing tournament data.
+  .. note:: If this isn't your first tournament, the ``heroku`` Git remote might already be pointing to your first tournament. In this case, you should use the ``--git-remote <new_remote_name>`` option to get the script to create a new git remote for you, so you can use when importing tournament data.
 
   When this script finishes, it will open the app in your browser. It should look something like this:
 
