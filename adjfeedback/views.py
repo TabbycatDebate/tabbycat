@@ -29,7 +29,7 @@ def adj_scores(request, t):
 def feedback_overview(request, t):
     breaking_count = 0
 
-    if not t.pref('league_options__share_adjs'):
+    if not t.pref('share_adjs'):
         adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
             'tournament','tournament__current_round')
     else:
@@ -497,7 +497,7 @@ def randomised_urls(request, t):
     context['tournament_slug'] = t.slug
     context['ballot_normal_urls_enabled'] = t.pref('public_ballots')
     context['ballot_randomised_urls_enabled'] = t.pref('public_ballots_randomised')
-    context['feedback_normal_urls_enabled'] = t.pref('data_entry__public_feedback')
+    context['feedback_normal_urls_enabled'] = t.pref('public_feedback')
     context['feedback_randomised_urls_enabled'] = t.pref('public_feedback_randomised')
     return r2r(request, 'randomised_urls.html', context)
 
