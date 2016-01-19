@@ -24,6 +24,7 @@ In these instructions, we'll use **Windows PowerShell**, a command-line interfac
 First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed.
 
 .. _install-python-windows:
+
 1(a). Python
 --------------------------------------------------------------------------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*

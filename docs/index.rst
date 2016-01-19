@@ -21,11 +21,8 @@ Contents:
    features/adjudicator-allocation
    features/draw-generation
 
-   developer/contributing
-   developer/documentation
-   developer/versioning
-
    about/licence
+   about/contributing
    about/release-notes
    about/tournament-history
 

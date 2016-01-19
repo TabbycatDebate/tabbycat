@@ -7,7 +7,7 @@ The draw generator is quite flexible. You can specify a number of settings to su
 
 Options
 ================================================================================
-The options are on the **Config** page.
+The options discussed here are set in the **Config** page as described in :ref:`starting a tournament <starting-a-tournament>`.
 
 .. caution:: These settings are **not** checked for validity when you save them. If you use an invalid string, Tabbycat will just crash when you try to generate the draw. This won't corrupt the database, but it might be momentarily frustrating.
 
@@ -125,7 +125,7 @@ It's a bit more complicated than that, for two reasons:
 * History conflicts are prioritised over (*i.e.*, "worse than") institution conflicts. So it's fine to resolve a history conflict by creating an institution conflict, but not the vice versa.
 * Each swap obviously affects the debates around it, so it's not legal to have two adjacent swaps. (Otherwise, in theory, a team could "one down" all the way to the bottom of the draw!) So there is an optimization algorithm that finds the best combination of swaps, *i.e.* the one that minimises conflict, and if there are two profiles that have the same least conflict, then it chooses the one with fewer swaps.
 
-Known tournaments
+Known tournaments draw options
 ================================================================================
 The settings that should be used for some tournaments are as follows:
 

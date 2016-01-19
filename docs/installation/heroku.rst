@@ -109,7 +109,7 @@ In order to use the ``importtournament`` command directly on the server, your da
 Addons
 ================================================================================
 
-For Australs 2014, we found that the ``hobby-dev`` plan of Heroku Postgres didn't allow for more than 10,000 database rows, so we upgraded to ``hobby-basic``, which was enough (and costs a few dollars). At the end of that tournament, we had about 20,000 rows. For similar-sized tournaments (84 teams, 8 prelim rounds), you'll probably find your usage about the same, wheras small tournaments should fit within the 10,000 row limit easily.
+For Australs 2014, we found that the ``hobby-dev`` plan of `Heroku Postgres <https://elements.heroku.com/addons/heroku-postgresql>`_ didn't allow for more than 10,000 database rows, so we upgraded to ``hobby-basic``, which was enough (and costs a few dollars). At the end of that tournament, we had about 20,000 rows. For similar-sized tournaments (84 teams, 8 prelim rounds), you'll probably find your usage about the same, wheras small tournaments should fit within the 10,000 row limit easily.
 
 If you're not sure, you can always start at ``hobby-dev``—just be prepared to `upgrade <https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups>`_ during the tournament if you run close to capacity.
 

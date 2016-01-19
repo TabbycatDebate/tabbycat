@@ -4,9 +4,11 @@
 Importing initial data
 ======================
 
-Once you've got Tabbycat [[installed|Installing locally]], the next step is to import data for the tournament. The initial import requires details of all institutions, teams, speakers and adjudicators, and specifications for how many rounds and their properties. We don't currently have a way of doing this from the web interface. There are a few ways to do it.
+Once you've got Tabbycat installed, the next step is to import data for the tournament. The initial import requires details of all institutions, teams, speakers and adjudicators, and specifications for how many rounds and their properties. We don't currently have a way of doing this from the web interface. There are a few ways to do it.
 
-> *Note: With any method, the objective is to create one ``Tournament`` object, and ``Round``, ``Venue``, ``Institution``, ``Team``, ``Speaker``, ``Adjudicator``, ``AdjudicatorConflict`` and ``AdjudicatorInstitutionConflict`` objects for each round, venue, and so on*
+.. note:: With any method, the objective is to create one ``Tournament`` object, and ``Round``, ``Venue``, ``Institution``, ``Team``, ``Speaker``, ``Adjudicator``, ``AdjudicatorConflict`` and ``AdjudicatorInstitutionConflict`` objects for each round, venue, and so on*
+
+.. _import-manual-setup:
 
 Manual setup
 ================================================================================
@@ -22,6 +24,15 @@ For sufficiently small tournaments, you might just choose to edit the database v
 5. Create the Institutions
 6. Create the Teams, and input their speakers
 7. Create the Adjudicators, and input their conflicts
+
+Visual importer
+================================================================================
+For medium sized tournaments there are a number of tools that allow you to import information by copy and pasting from spreadsheets. Or by adding data in bulk and editing key information later.
+
+1. Open the "Data Import" area of the site using the link in the top right menu (once your have created a tournament and logged in)
+2. Follow the instructions for each particular section
+
+.. note:: If copy-pasting from a spreadsheet, it is often easiest to make values be separated by commas by saving the spreadsheet as a \*.csv file, then opening said file in a plain text editor (such as Notepad or TextEdit) and copy/pasting from there.
 
 The ``import_tournament`` command
 ================================================================================
@@ -40,16 +51,16 @@ This script has a number of options. They're worth taking a look at before you r
 
   $ ./manage.py import_tournament --help
 
-4. Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in *Manual setup.* In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly.
+4. Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in :ref:`import-manual-setup`. In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly.
 
-Pushing a database to Heroku
+``import_tournament`` on Heroku installs
 ================================================================================
 
 The ``import_tournament`` script can be run on Heroku directly; you just need to commit and push your new data directory to your server first. See :ref:`install-heroku` for details. If you have a local installation ready, you might like to iron out all the errors in your data until you can import locally without error, before pushing your data files to your server to be imported there.
 
-If you want to import locally and push the database to the server, you can use the `heroku pg:push` command. We assume that, if you want to use this method, you know what you're doing or are comfortable reading the Heroku documentation to find out. We're happy to help if you have questions about this, but for most tournaments, committing the data to the server and running the script on the server directly will be easier.
+If you want to import locally and push the database to the server, you can use the ``heroku pg:push`` command. We assume that, if you want to use this method, you know what you're doing or are comfortable reading the Heroku documentation to find out. We're happy to help if you have questions about this, but for most tournaments, committing the data to the server and running the script on the server directly will be easier.
 
 Writing your own importer
 ================================================================================
 
-If our suggested file formats cause you headaches, it might be easier to write your own importer. We have a generic importer framework that should make this easier, so for some tournaments it might (very conceivably) be faster to write your own importer to conform to your data, than it is to make your data conform to our importer. You need a background in Python in order to do this. For more details, see [[Tournament data importers]].
+If our suggested file formats cause you headaches, it might be easier to write your own importer. We have a generic importer framework that should make this easier, so for some tournaments it might (very conceivably) be faster to write your own importer to conform to your data, than it is to make your data conform to our importer. You need a background in Python in order to do this. For more details, see :ref:`tournament-data-importers`.

@@ -147,10 +147,10 @@ Almost there!
 
 8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000/.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
+  .. todo:: Replace this with a screenshot of OS X
+
   .. image:: images/tabbycat-bare-linux.png
       :alt: Bare Tabbycat installation
-.. TODO Replace this with a screenshot of OS X
-
 
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
 
