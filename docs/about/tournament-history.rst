@@ -2,11 +2,15 @@
 Tournament history
 ==================
 
+Here is a list of tournaments at which Tabbycat has been used.
+
 2016
+----
 
 - The National Law School Debate 2016
 
 2015
+----
 
 - `Another Day at Melbourne <http://mudstab.herokuapp.com>`_
 - `ANU Pre-Australs <http://anupreaust2015.herokuapp.com>`_
@@ -25,6 +29,7 @@ Tournament history
 - `UNSW/UTS Easters <https://aueasters2015.herokuapp.com>`_
 
 2014
+----
 
 - Another Day at Melbourne
 - `Joynt Scroll <http://joyntscroll2014.herokuapp.com>`_
@@ -32,9 +37,11 @@ Tournament history
 - `Otago Australs <http://australs2014.herokuapp.com>`_
 
 2012
+----
 
 - `Wellington Australs <http://australs2012tab.herokuapp.com>`_
 
 2010
+----
 
 - Auckland Australs

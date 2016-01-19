@@ -91,7 +91,7 @@ There isn't currently any way to edit side allocations from the front end. To do
 * If you're using the ``import_tournament`` command, it reads sides from the file sides.csv.
 * You can do this from the Django admin interface, by going to the relevant team and adding a **team position allocation** entry. That is:
 
-  #. Click **Admin** on the bottom right of any page after logging into an account with [[User accounts and interfaces|superuser access]].
+  #. Click **Admin** on the bottom right of any page after logging into an account with :ref:`superuser access <user-accounts>`.
   #. Next to **Teams**, click **Change**.
   #. Click on the name of the team you want to edit side allocations for.
   #. Add or edit the entry or entries in the **Team position allocations** table at the bottom.
@@ -151,36 +151,8 @@ The settings that should be used for some tournaments are as follows:
 
 What do I do if the draw looks wrong?
 ================================================================================
-We've never encountered this situation before, but if you look at a draft draw and notice there's something wrong&mdash;say, it pulled up the wrong team&mdash;the only resolution is to edit the database through the back-end.
 
-You can do this before the first result is entered for any of the affected debates. There's no continued relationship between the draw and previous rounds' results, so it's safe to edit it. But it's an exceptionally bad idea to do this once any result for the round is entered (by which time the debates should be over anyway), because some data will be deleted, and not necessarily all the data that should be.
-
-.. warning:: You can wreak a *lot* of havoc by editing the database, if you get something wrong. When you do this, the system doesn't check that a team isn't in two debates in the same round or anything like that, so you won't get any warnings, but Tabbycat will break later, possibly spectacularly. So be really, *really*, careful.
-
-To do this:
-
-- Go to the Django admin interface (*BASE_URL/admin*).
-- Next to *Debates*, click **Change**.
-- Edit the draw.
-
-- To edit a debate:
-
-  - Find the debate you want to switch, and click on its ID.
-  - Edit the *Debate teams*. Always make sure there is exactly one affirmative team and exactly one negative team. (It's fine if the database is in an "invalid" state momentarily, so long as no-one else is doing anything at the same time.)
-
-- To add a debate:
-
-  - Click **Add debate** (in the top-right corner)
-  - Fill out the fields. Fields marked with an asterisk are mandatory, fields not are optional.
-  - Add two debate teams, one affirmative and one negative. (This isn't mandatory, but Tabbycat will break if you leave the database in a state where each debate doesn't have one affirmative and one negative team.)
-  - If you like, add debate adjudicators&mdash;but you can still do this from the normal "Edit adjudicators" interface, provided you haven't entered any results.
-
-- To remove a debate:
-
-  - Find the debate(s) you want to delete, and click the checkbox next to it (them).
-  - Scroll to the bottom of the page, set the dropdown box to "Delete selected debates", and click Go.
-  - Review the confirmation before proceeding.
-  - Once you've made *all* the necessary changes, go back to the draw page, check that the new draft draw looks as you expect, and confirm it.
+You can edit match-ups directly from the draw page. Technically, you can do anything you want. Of course, operationally, you should only edit the draw when you *know* that the draw algorithm got something wrong. If you need to do this, even just once, please file a bug report by creating a new issue on `our issues page on GitHub <https://github.com/czlee/tabbycat/issues>`_.
 
 Technical notes
 ================================================================================
