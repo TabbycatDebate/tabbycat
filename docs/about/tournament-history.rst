@@ -2,6 +2,10 @@
 Tournament history
 ==================
 
+2016
+
+- The National Law School Debate 2016
+
 2015
 
 - `Another Day at Melbourne <http://mudstab.herokuapp.com>`_
@@ -17,14 +21,15 @@ Tournament history
 - `RMIT Women's Open <http://radtabs.herokuapp.com>`_
 - `New Zealand Easters <https://nzeasters2015.herokuapp.com>`_
 - `The Western Australian Debating League <http://draw.wadl.org>`_
-- The National Law School Debate
+- The National Law School Debate 2015
 - `UNSW/UTS Easters <https://aueasters2015.herokuapp.com>`_
 
 2014
 
-- `Otago Australs <http://australs2014.herokuapp.com>`_
-- `Joynt Scroll <http://joyntscroll2014.herokuapp.com>`_
 - Another Day at Melbourne
+- `Joynt Scroll <http://joyntscroll2014.herokuapp.com>`_
+- NTU UADC
+- `Otago Australs <http://australs2014.herokuapp.com>`_
 
 2012
 
