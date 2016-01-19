@@ -105,6 +105,9 @@
           <li class="divider"></li>
           <li><a class="" href="{% round_url master_sheets_list r %}">Mastersheets</a></li>
         {% endif %}
+        {% if pref.allocation_confirmations %}
+          <li><a class="" href="{% round_url confirmations_view r %}">Shift Confirms</a></li>
+        {% endif %}
       </ul>
     </li>
   {% endfor %}

@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.forms.models import modelformset_factory
 from utils.views import *
 from .models import Adjudicator, Speaker, Institution, Team
 from adjallocation.models import DebateAdjudicator
@@ -42,7 +43,21 @@ def all_tournaments_all_teams(request, t):
 
 @public_optional_tournament_view('allocation_confirmations')
 def public_confirm_shift_key(request, t, url_key):
-    adjudicator = get_object_or_404(Adjudicator, tournament=t, url_key=url_key)
-    debates = DebateAdjudicator.objects.filter(adjudicator=adjudicator)
-    return r2r(request, 'confirm_shifts.html', dict(debates=debates, adjudicator=adjudicator))
+    adj = get_object_or_404(Adjudicator, tournament=t, url_key=url_key)
+    adj_debates = DebateAdjudicator.objects.filter(adjudicator=adj)
+
+    ShiftsFormset = modelformset_factory(DebateAdjudicator,
+        can_delete=False, extra=0, fields=['timing_confirmed'])
+
+    if request.method == 'POST':
+        formset = ShiftsFormset(request.POST, request.FILES)
+        if formset.is_valid():
+            formset.save()
+            messages.success(request, "Your shift checkins have been saved")
+    else:
+        formset = ShiftsFormset(queryset=adj_debates)
+
+
+
+    return r2r(request, 'confirm_shifts.html', dict(formset=formset, adjudicator=adj))
 

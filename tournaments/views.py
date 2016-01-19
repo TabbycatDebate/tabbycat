@@ -42,7 +42,7 @@ def tournament_home(request, t):
 @public_optional_tournament_view('public_divisions')
 def public_divisions(request, t):
     divisions = Division.objects.filter(tournament=t).all().select_related('venue_group')
-    divisions = sorted(divisions, key=lambda x: float(x.name))
+    divisions = sorted(divisions, key=lambda x: x.name)
     venue_groups = set(d.venue_group for d in divisions)
     for uvg in venue_groups:
         uvg.divisions = [d for d in divisions if d.venue_group == uvg]
@@ -101,7 +101,7 @@ def round_increment(request, round):
 def division_allocations(request, t):
     teams = Team.objects.filter(tournament=t).all()
     divisions = Division.objects.filter(tournament=t).all()
-    divisions = sorted(divisions, key=lambda x: float(x.name))
+    divisions = sorted(divisions, key=lambda x: x.name)
     venue_groups = VenueGroup.objects.all()
 
     return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))

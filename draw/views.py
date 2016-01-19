@@ -446,7 +446,7 @@ def master_sheets_view(request, round, venue_group_id):
     for tournament in list(active_tournaments):
         tournament.debates = Debate.objects.select_related(
             'division', 'division__venue_group__short_name', 'round',
-            'round__tournament', 'aff_team', 'neg_team').filter(
+            'round__tournament').filter(
                 # All Debates, with a matching round, at the same venue group name
                 round__seq=round.seq,
                 round__tournament=tournament,
@@ -460,6 +460,19 @@ def master_sheets_view(request, round, venue_group_id):
                dict(base_venue_group=base_venue_group,
                     active_tournaments=active_tournaments))
 
+
+@login_required
+@round_view
+def confirmations_view(request, round):
+    from participants.models import Adjudicator
+    from adjallocation.models import DebateAdjudicator
+    adjs = Adjudicator.objects.all().order_by('name')
+    for adj in adjs:
+        shifts = DebateAdjudicator.objects.filter(adjudicator=adj, debate__round__tournament__active=True)
+        if len(shifts) > 0:
+            adj.shifts = shifts
+
+    return r2r(request, 'confirmations_view.html', dict(adjs=adjs))
 
 @admin_required
 @round_view
