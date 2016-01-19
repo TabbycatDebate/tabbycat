@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from utils.views import *
-from .models import Adjudicator,Speaker,Institution,Team
+from .models import Adjudicator, Speaker, Institution, Team
+from adjallocation.models import DebateAdjudicator
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @tournament_view
@@ -35,4 +36,13 @@ def all_tournaments_all_teams(request, t):
     teams = Team.objects.filter(tournament__active=True).select_related('tournament').prefetch_related('division')
     return r2r(request, 'public_all_tournament_teams.html', dict(
         teams=teams))
+
+
+# Scheduling
+
+@public_optional_tournament_view('allocation_confirmations')
+def public_confirm_shift_key(request, t, url_key):
+    adjudicator = get_object_or_404(Adjudicator, tournament=t, url_key=url_key)
+    debates = DebateAdjudicator.objects.filter(adjudicator=adjudicator)
+    return r2r(request, 'confirm_shifts.html', dict(debates=debates, adjudicator=adjudicator))
 

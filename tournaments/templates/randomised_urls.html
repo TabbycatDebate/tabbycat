@@ -38,7 +38,7 @@
     <code>python manage.py randomised_urls delete {{ tournament_slug }}</code>.
   </p>
 
-  {% if not ballot_randomised_urls_enabled and not feedback_randomised_urls_enabled %}
+  {% if not pref.public_ballots_randomised and not pref.public_feedback_randomised %}
     <div class="alert alert-danger">
       The <strong>public ballots randomised</strong> and <strong>public feedback
       randomised</strong> configuration settings are both disabled. These URLs
@@ -48,7 +48,7 @@
     </div>
   {% endif %}
 
-  {% if ballot_normal_urls_enabled and ballot_randomised_urls_enabled %}
+  {% if pref.public_ballots and pref.public_ballots_randomised %}
     <div class="alert alert-danger">
       The <strong>public ballots</strong> (non-randomised) configuration setting
       is enabled, which means that the <a href="{% tournament_url
@@ -61,7 +61,7 @@
     </div>
   {% endif %}
 
-  {% if feedback_normal_urls_enabled and feedback_randomised_urls_enabled %}
+  {% if pref.public_feedback and pref.public_feedback_randomised %}
     <div class="alert alert-danger">
       The <strong>public feedback</strong> (non-randomised) configuration
       setting is enabled, which means that the <a href="{% tournament_url
@@ -74,10 +74,19 @@
     </div>
   {% endif %}
 
+  {% if pref.allocation_confirmations %}
+    <div class="alert alert-success">
+      These URLs will however work for allowing adjudicators to mark off shifts.
+    </div>
+  {% endif %}
+
   <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
     <thead>
       <tr>
         <th>Team or Adjudicator</th>
+        {% if pref.allocation_confirmations %}
+        <th>Schedule URL</th>
+        {% endif %}
         <th>Feedback URL</th>
         <th>Ballot URL</th>
       </tr>
@@ -86,6 +95,9 @@
       {% for team in teams %}
       <tr>
         <td><span class="team-speakers-hover" id="team_speakers_{{ team.id }}">{{ team.short_name }}</span></td>
+        {% if pref.allocation_confirmations %}
+          <td>N/A</td>
+        {% endif %}
         <td>
           {% if team.url_key %}
             {% tournament_absurl public_enter_feedback_team_key team.url_key %}
@@ -104,14 +116,19 @@
       <tr>
         <td>{{ adj.name }}</td>
           {% if adj.url_key %}
-          <td>
-            {% tournament_absurl public_enter_feedback_adjudicator_key adj.url_key %}
-          </td>
-          <td>
-            {% tournament_absurl public_new_ballotset_key adj.url_key %}
-          </td>
+            {% if pref.allocation_confirmations %}
+              <td>
+                {% tournament_absurl public_confirm_shift_key adj.url_key %}
+              </td>
+            {% endif %}
+            <td>
+              {% tournament_absurl public_enter_feedback_adjudicator_key adj.url_key %}
+            </td>
+            <td>
+              {% tournament_absurl public_new_ballotset_key adj.url_key %}
+            </td>
           {% else %}
-          <td>no URL</td><td>no URL</td>
+            <td>no URL</td><td>no URL</td>
           {% endif %}
         </td>
       </tr>
@@ -131,7 +148,7 @@
     <form action="{% tournament_url generate_randomised_urls %}" method="POST">
       <button class="btn btn-default" id="generateRandomisedUrls" type="submit">
         Generate randomised URLs for ballot and feedback submission
-        {% if preferences.allocation_confirmations %} test {% endif %}
+        {% if pref.allocation_confirmations %} test {% endif %}
       </button>
     </form>
   </p>
