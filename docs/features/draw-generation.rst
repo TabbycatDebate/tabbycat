@@ -91,7 +91,7 @@ There isn't currently any way to edit side allocations from the front end. To do
 * If you're using the ``import_tournament`` command, it reads sides from the file sides.csv.
 * You can do this from the Django admin interface, by going to the relevant team and adding a **team position allocation** entry. That is:
 
-  #. Click **Admin** on the bottom right of any page after logging into an account with [[User accounts and interfaces|superuser access]].
+  #. Click **Admin** on the bottom right of any page after logging into an account with :ref:`superuser access <user-accounts>`.
   #. Next to **Teams**, click **Change**.
   #. Click on the name of the team you want to edit side allocations for.
   #. Add or edit the entry or entries in the **Team position allocations** table at the bottom.

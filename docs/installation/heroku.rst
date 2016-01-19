@@ -84,7 +84,7 @@ Open a command shell. Navigate to an appropriate directory on your computer usin
 4. Import tournament data
 --------------------------------------------------------------------------------
 
-.. note:: This step is optional and there are other methods of :ref:`importing data <importing-data>`. However the following method is most useful for large tournaments where manual entry would be tedious.
+.. note:: This step is optional and there are other methods of :ref:`importing data <importing-initial-data>`. However the following method is most useful for large tournaments where manual entry would be tedious.
 
 In order to use the ``importtournament`` command directly on the server, your data also needs to be on the server. The easiest way to get this data on to the server is to make a Git commit and ``git push`` it to the server.
 
