@@ -134,7 +134,7 @@ run_command(["git", "push", remote_name, push_spec])
 
 if args.init_db:
     # Perform initial migrations
-    run_heroku_command(["run", "python", "utils/init_db_heroku.py"])
+    run_heroku_command(["run", "python", "manage.py", "migrate"])
 
     print_yellow("Now creating a superuser for the Heroku site.")
     print_yellow("You'll need to respond to the prompts:")
