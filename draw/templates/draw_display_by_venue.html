@@ -111,9 +111,9 @@
         <td class="adj-names">
           {% for type, adj in debate.adjudicators %}
             {% if type == 'C' and debate.adjudicators.is_panel %}
-              <span class="adj-chair">{{ adj.name }} Ⓒ</span>
+              <span class="adj-chair">{{ adj.name }} (c)</span>
             {% elif type == 'T' %}
-              <br><span class="adj-trainee">{{ adj.name }} Ⓣ</span>
+              <br><span class="adj-trainee">{{ adj.name }} (t)</span>
             {% else %}
               {% if debate.adjudicators.panel %}<br>{% endif %}
               <span class="adj-normal">{{ adj.name }}</span>

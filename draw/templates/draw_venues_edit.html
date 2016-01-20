@@ -71,7 +71,7 @@
         </td>
         <td>
         {% for type, adj in debate.adjudicators %}
-          {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+          {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} (c){% elif type == 'T' %} (t){% endif %}{% if not forloop.last %},{% endif %}
         {% endfor %}
         </td>
         <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">

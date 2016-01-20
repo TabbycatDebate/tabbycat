@@ -18,7 +18,7 @@
     {% for type, adj in debate.adjudicators %}
       {% if debate.adjudicators.list|length > 1 and forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}
       {{ adj.name }}
-      {% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}
+      {% if type == "C" %} (c){% elif type == "T" %} (t){% endif %}
       {% if adj.pronoun %} ({{ adj.pronoun }}){% endif %}
     {% endfor %}
     {% if debate.adjudicators.list|length == 1 %} was the sole adjudicator{% endif %}
@@ -44,12 +44,12 @@
             {% if target %}
               <th class="text-center h5">
                 {{ target.name }}
-                {% if target_type == "chair" %}Ⓒ{% elif target_type == "trainee" %}Ⓣ{% endif %}
+                {% if target_type == "chair" %}(c){% elif target_type == "trainee" %}(t){% endif %}
               </th>
             {% else %}
               {% for type, adj in debate.adjudicators %}
                 {% if type == 'C' and debate.adjudicators.is_panel %}
-                  <th class="text-center h5">{{ adj.name }} Ⓒ</th>
+                  <th class="text-center h5">{{ adj.name }} (c)</th>
                 {% elif type != 'T' %}
                   <th class="text-center h5">{{ adj.name }}</th>
                 {% endif %}

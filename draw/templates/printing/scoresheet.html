@@ -3,7 +3,7 @@
 <section class="printable-score-sheet">
   <div class="clearfix">
     <span class="h3 pull-left no-vertical-spacing">
-        {{ source.name }}'s {% if source_type == "chair" %}Ⓒ{% elif source_type == "trainee" %}Ⓣ{% endif %} Ballot
+        {{ source.name }}'s {% if source_type == "chair" %}(c){% elif source_type == "trainee" %}(t){% endif %} Ballot
     </span>
     <span class="badge h3 no-vertical-spacing pull-right">
       {{ round.name }}
@@ -18,7 +18,7 @@
     {% for type, adj in debate.adjudicators %}
       {% if debate.adjudicators.list|length > 1 and forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}
       {{ adj.name }}
-      {% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}
+      {% if type == "C" %} (c){% elif type == "T" %} (t){% endif %}
       {% if adj.pronoun %} ({{ adj.pronoun }}){% endif %}
     {% endfor %}
     {% if debate.adjudicators.list|length == 1 %} was the sole adjudicator{% endif %}
