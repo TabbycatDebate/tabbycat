@@ -3,11 +3,11 @@
 Django==1.9.1
 dj-cmd==0.5 # Provides the dj command alias
 django-appconf==1.0.1 # Adds helper class for handling app configs
-django-compressor==1.6 # Compression
+django-compressor==2.0 # Compression
 django-debug-toolbar==1.4.0 # Debug Toolbar
 django-ipware==1.1.3 # IP Address logging
 django-libsass==0.6  # SASS Compilation
-django-suit==0.2.15 # Admin Backend
+django-suit==0.2.16 # Admin Backend
 psycopg2==2.6.1 # For Django to talk to postgres
 libsass==0.10.0 # SASS Compilation Dependency
 six==1.10.0 # Six is a Python 2 and 3 compatibility library.

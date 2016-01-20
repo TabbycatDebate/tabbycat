@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from dynamic_preferences.admin import PerInstancePreferenceAdmin
 
-from options.dynamic_preferences_registry import TournamentPreferenceModel
+from .models import TournamentPreferenceModel
 
 
 # ==============================================================================
