@@ -24,8 +24,13 @@ Short version
   sudo apt-get install postgresql-9.4
   git clone https://github.com/czlee/tabbycat.git
   cd tabbycat
-  sudo -u postgres createuser tabbycatuser --pwprompt      # skip if not first time
-  sudo -u postgres createdb demodb --owner tabbycatuser
+  sudo -u postgres createuser myusername --pwprompt        # skip if not first time
+  sudo -u postgres createdb mydatabasename --owner myusername
+
+Then create local_settings.py as described :ref:`below <local-settings-linux>`, then:
+
+.. code-block:: bash
+
   pyvenv-3.4 venv                                          # or pyvenv-3.5 or virtualenv
   source venv/bin/activate
   pip install --upgrade pip
@@ -132,6 +137,8 @@ Almost there!
 1. Navigate to your Tabbycat directory::
 
     $ cd path/to/my/tabbycat
+
+.. _local-settings-linux:
 
 2. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
 
