@@ -61,9 +61,9 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated and tournament %}
-          <li><a href="{% tournament_url data_index %}">Data Import</a></li>
-          <li><a href="/admin/">Data Admin</a></li>
-          <li><a href="/accounts/logout/" title="Log out of {{ user }}">Logout of {{ user }}</a></li>
+          <li><a class="" href="{% tournament_url data_index %}">Data Import</a></li>
+          <li><a class="" href="/admin/">Data Admin</a></li>
+          <li><a class="" href="/accounts/logout/" title="Log out of {{ user }}">Logout of {{ user }}</a></li>
         {% else %}
           <li><a href="/accounts/login/" title="Log in">Log in</a></li>
         {% endif %}

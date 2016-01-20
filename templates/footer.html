@@ -16,16 +16,6 @@
       <small>
         <a href="/">🏠Home</a>
         <a href="http://tabbycat.readthedocs.org/" target="_blank">❓Documentation</a>
-        {% if user.is_authenticated %}
-          {% if user.is_superuser %}
-            {% if tournament %}
-              <a href="{% tournament_url data_index %}"> 📩Data Import</a>
-              <a href="/admin/"> 📧Data Admin</a>
-            {% endif %}
-          {% endif %}
-        {% else %}
-          <a href="/accounts/login/" title="Log in">🔓Log in</a>
-        {% endif %}
         </small>
     </p>
   </nav>
