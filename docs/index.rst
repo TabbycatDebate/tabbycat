@@ -31,6 +31,9 @@ tournaments.
    :caption: Using Tabbycat
 
    use/importing-data
+   use/starting-a-tournament
+   use/running-a-tournament
+   use/finishing-a-tournament
 
 .. _feature-docs:
 

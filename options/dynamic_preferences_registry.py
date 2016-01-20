@@ -1,10 +1,5 @@
-from .models import TournamentPreferenceModel
-from dynamic_preferences.types import BooleanPreference, StringPreference, IntegerPreference, FloatPreference, Section
-from dynamic_preferences.registries import PreferenceRegistry, PerInstancePreferenceRegistry, preference_models
-
-# Key
-tournament_preferences_registry = PerInstancePreferenceRegistry()
-preference_models.register(TournamentPreferenceModel, tournament_preferences_registry)
+from dynamic_preferences.types import BooleanPreference, ChoicePreference, StringPreference, IntegerPreference, FloatPreference, Section
+from .models import tournament_preferences_registry
 
 # ==============================================================================
 scoring = Section('scoring')
@@ -17,7 +12,6 @@ class MinimumSpeakerScore(FloatPreference):
     name = 'score_min'
     verbose_name = 'Minimum Speaker Score'
     default = 68.0
-
 
 @tournament_preferences_registry.register
 class MaximumSpeakerScore(FloatPreference):
@@ -145,35 +139,59 @@ class TeamHistoryPenalty(IntegerPreference):
     default = 1000
 
 @tournament_preferences_registry.register
-class DrawOddBracket(StringPreference):
-    help_text = "Odd bracket resolution method, see wiki for allowed values"
+class DrawOddBracket(ChoicePreference):
+    help_text = "Odd bracket resolution method, see documentation for allowed values"
     verbose_name = "Draw Odd Bracket"
     section = draw_rules
     name = "draw_odd_bracket"
+    choices = (
+        ('pullup_top', 'Pull up from top'),
+        ('pullup_bottom', 'Pull up from bottom'),
+        ('pullup_random', 'Pull up at random'),
+        ('intermediate', 'Intermediate bubbles'),
+        ('intermediate_bubble_up_down', 'Intermediate with bubble-up-bubble-down'),
+        ('intermediate1', 'Intermediate 1 (pre-allocated sides)'),
+        ('intermediate2', 'Intermediate 2 (pre-allocated sides)'),
+    )
     default = 'intermediate_bubble_up_down'
 
 @tournament_preferences_registry.register
-class DrawSideAllocations(StringPreference):
+class DrawSideAllocations(ChoicePreference):
     help_text = "Side allocations method, see wiki for allowed values"
     verbose_name = "Draw Side Allocations"
     section = draw_rules
     name = "draw_side_allocations"
+    choices = (
+        ('random', 'Random'),
+        ('balance', 'Balance'),
+        ('preallocated', 'Pre-allocated'),
+        ('manual-ballot', 'Manually enter from ballot'),
+    )
     default = 'balance'
 
 @tournament_preferences_registry.register
-class DrawPairingMethod(StringPreference):
+class DrawPairingMethod(ChoicePreference):
     help_text = "Pairing method, see wiki for allowed values"
     verbose_name = "DrawPairingMethod"
     section = draw_rules
     name = "draw_pairing_method"
+    choices = (
+        ('slide', 'Slide'),
+        ('fold', 'Fold'),
+        ('random', 'Random'),
+    )
     default = 'slide'
 
 @tournament_preferences_registry.register
-class DrawAvoidConflicts(StringPreference):
+class DrawAvoidConflicts(ChoicePreference):
     help_text = "Conflict avoidance method, see wiki for allowed values"
     verbose_name = "DrawAvoidConflicts"
     section = draw_rules
     name = "draw_avoid_conflicts"
+    choices = (
+        ('off', 'Off'),
+        ('one_up_one_down', 'One-up-one-down'),
+    )
     default = 'one_up_one_down'
 
 @tournament_preferences_registry.register

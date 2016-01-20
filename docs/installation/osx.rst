@@ -27,7 +27,7 @@ First, you need to install all of the software on which Tabbycat depends, if you
 --------------------------------------------------------------------------------
 As of version 0.8, Tabbycat requires Python 3.4 or later. OS X only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
 
-The executable will probably be called `python3`, rather than `python`. Check::
+The executable will probably be called ``python3``, rather than ``python``. Check::
 
     $ python3 --version
     Python 3.4.4
@@ -38,7 +38,7 @@ The executable will probably be called `python3`, rather than `python`. Check::
 .. admonition:: Advanced users
   :class: tip
 
-  These instructons will use the ``pyvenv`` module. If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
+  These instructions will use the ``pyvenv`` module. If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
 
 1(b). PostgreSQL
 --------------------------------------------------------------------------------

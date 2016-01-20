@@ -6,86 +6,87 @@ The draw generator is quite flexible. You can specify a number of settings to su
 
 
 Options
-================================================================================
+=======
 The options discussed here are set in the **Config** page as described in :ref:`starting a tournament <starting-a-tournament>`.
 
-.. caution:: These settings are **not** checked for validity when you save them. If you use an invalid string, Tabbycat will just crash when you try to generate the draw. This won't corrupt the database, but it might be momentarily frustrating.
+.. caution:: The valid options for intermediate bubbles change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
 
 Summary
 --------------------------------------------------------------------------------
 
-+---------------------------+---------------------+-----------------------------------------+
-|           Option          |     Description     |             Allowable values            |
-+===========================+=====================+=========================================+
-| **Draw odd brackets**     | How to resolve      | - ``pullup_top``                        |
-|                           | odd brackets        | - ``pullup_buttom``                     |
-|                           |                     | - ``pullup_random``                     |
-|                           |                     |                                         |
-|                           |                     | If sides are ``random`` or ``balance``: |
-|                           |                     |                                         |
-|                           |                     | - ``intermediate``                      |
-|                           |                     | - ``intermediate_bubble_up_down``       |
-|                           |                     |                                         |
-|                           |                     | If sides are ``allocated``:             |
-|                           |                     |                                         |
-|                           |                     | - ``intermediate1``                     |
-|                           |                     | - ``intermediate2``                     |
-+---------------------------+---------------------+-----------------------------------------+
-| **Draw side allocations** | How to allocate     | - ``random``                            |
-|                           | aff/neg             | - ``balance``                           |
-|                           |                     | - ``preallocated``                      |
-+---------------------------+---------------------+-----------------------------------------+
-| **Draw pairing method**   | How to pair teams   | - ``slide``                             |
-|                           | within brackets     | - ``fold``                              |
-|                           |                     | - ``random``                            |
-+---------------------------+---------------------+-----------------------------------------+
-| **Draw avoid conflicts**  | How to avoid        | - ``off``                               |
-|                           | history/institution | - ``one_up_one_down``                   |
-|                           | conflicts           |                                         |
-+---------------------------+---------------------+-----------------------------------------+
++---------------------------+---------------------+-------------------------------------------+
+|           Option          |     Description     |              Allowable values             |
++===========================+=====================+===========================================+
+| **Draw odd brackets**     | How to resolve      | - Pull up from top                        |
+|                           | odd brackets        | - Pull up from bottom                     |
+|                           |                     | - Pull up at random                       |
+|                           |                     |                                           |
+|                           |                     | If sides are `Random` or `Balance`:       |
+|                           |                     |                                           |
+|                           |                     | - Intermediate                            |
+|                           |                     | - Intermediate with bubble-up-bubble-down |
+|                           |                     |                                           |
+|                           |                     | If sides are `Pre-allocated`:             |
+|                           |                     |                                           |
+|                           |                     | - Intermediate 1                          |
+|                           |                     | - Intermediate 2                          |
++---------------------------+---------------------+-------------------------------------------+
+| **Draw side allocations** | How to allocate     | - Random                                  |
+|                           | aff/neg             | - Balance                                 |
+|                           |                     | - Pre-allocated                           |
+|                           |                     | - Manual ballot                           |
++---------------------------+---------------------+-------------------------------------------+
+| **Draw pairing method**   | How to pair teams   | - Slide                                   |
+|                           | within brackets     | - Fold                                    |
+|                           |                     | - Random                                  |
++---------------------------+---------------------+-------------------------------------------+
+| **Draw avoid conflicts**  | How to avoid        | - Off                                     |
+|                           | history/institution | - One-up-one-down                         |
+|                           | conflicts           |                                           |
++---------------------------+---------------------+-------------------------------------------+
 
 Odd bracket resolution
---------------------------------------------------------------------------------
+----------------------
 The **draw odd brackets** option specifies what you do when a bracket has an odd number of teams. (Obviously you have to do something, otherwise you can't pair off teams within the bracket.) There are two groups of methods: pull-up and intermediate bubbles.
 
 * **Pull-up methods** take one or more teams from the next bracket down, and move them into the odd bracket to fill the bracket.
 * **Intermediate bubbles** take the excess teams from the odd bracket and move them down into a new bubble, which sits between the odd bracket and the next one down (hence the name "intermediate"). It then takes one or more teams from the next bracket down and moves them to fill the new intermediate bubble.
 
-The exact mechanics depend on how sides are allocated.  Sides are "pre-allocated" if the **draw side allocations** setting is set to ``allocated``, and aren't if it's anything else.
+The exact mechanics depend on whether or not sides are pre-allocated.
 
 When sides are not pre-allocated
-****************************************
+********************************
 
-**Pull-up methods** take a team from the next bracket down, and add them to the odd bracket to form an even bracket. You might pull up the top team from the next bracket, or the bottom team, or a randomly chosen team. These are specified with the strings ``pullup_top``, ``pullup_bottom`` and ``pullup_random`` respectively.
+**Pull-up methods** take a team from the next bracket down, and add them to the odd bracket to form an even bracket. You might pull up the top team from the next bracket, or the bottom team, or a randomly chosen team.
 
-**Intermediate bubbles** take the bottom team from the odd bracket and match them against the top team from the next bracket. An intermediate bubble always has two teams. The string ``intermediate`` specifies this method.
+**Intermediate bubbles** take the bottom team from the odd bracket and match them against the top team from the next bracket. An intermediate bubble always has two teams.
 
-If you're using conflict avoidance and intermediate bubbles, you will probably want to use ``intermediate_bubble_up_down`` instead. This uses the "bubble-up-bubble-down" rule to swap teams out of an intermediate bubble if there is a history or institution conflict. This is defined in the Australs constitution and is analogous to the "one-up-one-down" rule.
+If you're using conflict avoidance and intermediate bubbles, you will probably want to use `Intermediate with bubble-up-bubble-down` instead. This uses the "bubble-up-bubble-down" rule to swap teams out of an intermediate bubble if there is a history or institution conflict. This is defined in the Australs constitution and is analogous to the "one-up-one-down" rule.
 
-.. caution:: Using ``intermediate`` with ``one_up_one_down`` does **not** imply ``intermediate_bubble_up_down``. You must enable ``intermediate_bubble_up_down`` specifically.
+.. caution:: Using `Intermediate` with `One-up-one-down` does **not** imply `Intermediate with bubble-up-bubble-down`. You must enable `Intermediate with bubble-up-bubble-down` specifically.
 
 When sides are pre-allocated
-****************************************
+****************************
 
 When sides are pre-allocated, an "odd bracket" is one that has an uneven number of affirmative and negative teams. (So odd brackets can have an even number of teams, *e.g.* 4 affs and 2 negs.)
 
-**Pull-up methods** take as many teams from the next bracket down as necessary to fill the bracket. If there aren't enough teams in the next bracket down, it will take teams from the bracket after that, and so on, until the (original) odd bracket is filled. Higher brackets are always filled first. You might pull up the top teams from the next bracket, the bottom teams, or a random selection of teams. These are specified with the strings ``pullup_top``, ``pullup_bottom`` and ``pullup_random`` respectively.
+**Pull-up methods** take as many teams from the next bracket down as necessary to fill the bracket. If there aren't enough teams in the next bracket down, it will take teams from the bracket after that, and so on, until the (original) odd bracket is filled. Higher brackets are always filled first. You might pull up the top teams from the next bracket, the bottom teams, or a random selection of teams.
 
 **Intermediate bubbles** take the unpaired teams in a bracket, and move them down to a new intermediate bubble. It then takes the number of teams necessary from the opposite side, from the next bracket down, to fill the next bubble.
 
-``intermediate1`` and ``intermediate2`` differ only in what happens if there aren't enough teams in the next bracket to fill the intermediate bubble. In ``intermediate1``, it will just take teams from the bracket after that, and so on, until the intermediate bubble is filled. In ``intermediate2``, it will split the intermediate bubble: the teams that can be paired with the next bracket form the first intermediate bubble, and then the teams that aren't form a new (unfilled) intermediate bubble, to be filled from teams from the bubble after that. This keeps going, splitting into as many intermediate bubbles as necessary, until all excess teams from the original odd bracket are paired.
+`Intermediate 1` and `Intermediate 2` differ only in what happens if there aren't enough teams in the next bracket to fill the intermediate bubble. In `Intermediate 1`, it will just take teams from the bracket after that, and so on, until the intermediate bubble is filled. In `Intermediate 2`, it will split the intermediate bubble: the teams that can be paired with the next bracket form the first intermediate bubble, and then the teams that aren't form a new (unfilled) intermediate bubble, to be filled from teams from the bubble after that. This keeps going, splitting into as many intermediate bubbles as necessary, until all excess teams from the original odd bracket are paired.
 
 Side allocations
---------------------------------------------------------------------------------
+----------------
 There are four methods:
 
-* ``random`` allocates randomly. Some tournaments might like this, but most will probably want to use ``balance``, because ``random`` doesn't guarantee that a team won't be (say) affirming the entire tournament.
-* ``balance`` assigns the team that has affirmed less so far the affirmative side (and, therefore, the team that has negated less the negative side). If both teams have affirmed the same number of times, it assigns sides randomly.
-* ``preallocated`` is used for pre-allocated sides. If used, you must enter data for pre-allocated sides into the database, as specified below.
-* ``manual-ballot`` is used for tournaments where the sides of the teams involved are not assigned in advance, but are instead determined by the teams themselves
+* `Random` allocates randomly. Some tournaments might like this, but most will probably want to use `balance`, because `Random` doesn't guarantee that a team won't be (say) affirming the entire tournament.
+* `Balance` assigns the team that has affirmed less so far the affirmative side (and, therefore, the team that has negated less the negative side). If both teams have affirmed the same number of times, it assigns sides randomly.
+* `Preallocated` is used for pre-allocated sides. If used, you must enter data for pre-allocated sides into the database, as specified below.
+* `Manually enter from ballot` is used for tournaments where the sides of the teams involved are not assigned in advance, but are instead determined by the teams themselves
 
 Pre-allocated sides
-****************************************
+*******************
 There isn't currently any way to edit side allocations from the front end. To do so from the back end, you need to create one ``TeamPositionAllocation`` entry for each team in each round. All teams must have an allocation for every round. There are a few ways to do this, take your pick:
 
 * If you're using the ``import_tournament`` command, it reads sides from the file sides.csv.
@@ -102,9 +103,9 @@ Pairing method
 --------------------------------------------------------------------------------
 It's easiest to describe these by example, using a ten-team bracket:
 
-* ``fold``: 1 vs 10, 2 vs 9, 3 vs 8, 4 vs 7, 5 vs 6.
-* ``slide``: 1 vs 6, 2 vs 7, 3 vs 8, 4 vs 9, 5 vs 10.
-* ``random``: paired at random within bracket.
+* `Fold`: 1 vs 10, 2 vs 9, 3 vs 8, 4 vs 7, 5 vs 6.
+* `Slide`: 1 vs 6, 2 vs 7, 3 vs 8, 4 vs 9, 5 vs 10.
+* `Random`: paired at random within bracket.
 
 Teams are always paired within their brackets, after resolving odd brackets.
 
@@ -112,9 +113,9 @@ Conflict avoidance method
 --------------------------------------------------------------------------------
 A **conflict** is when two teams would face each other that have seen each other before, or are from the same institutions. Some tournaments have a preference against allowing this if it's avoidable within certain limits. The **draw avoid conflicts** option allows you to specify how.
 
-You can turn this off by using ``off``. Other than this, there is currently one conflict avoidance method implemented.
+You can turn this off by using `Off`. Other than this, there is currently one conflict avoidance method implemented.
 
-The one-up-one-down method, specified with ``one_up_one_down``, is the method specified in the Australs constitution. Broadly speaking, if there is a debate with a conflict:
+The `One-up-one-down method` is the method specified in the Australs constitution. Broadly speaking, if there is a debate with a conflict:
 
 * It tries to swap teams with the debate "one up" from it in the draw.
 * If that doesn't work, it tries to swap teams with the debate "one down" from it in the draw.
@@ -129,25 +130,25 @@ Known tournaments draw options
 ================================================================================
 The settings that should be used for some tournaments are as follows:
 
-+--------------+-----------------+---------------------------------------------------+
-|  Tournament  |     Setting     |                  Suggested value                  |
-+==============+=================+===================================================+
-| Australs     | Odd brackets    | ``intermediate_bubble_up_down`` or ``pullup_top`` |
-+--------------+-----------------+---------------------------------------------------+
-|              | Side resolution | ``balance``                                       |
-+--------------+-----------------+---------------------------------------------------+
-|              | Pairing method  | ``slide``                                         |
-+--------------+-----------------+---------------------------------------------------+
-|              | Avoid conflicts | ``one_up_one_down``                               |
-+--------------+-----------------+---------------------------------------------------+
-| Joynt Scroll | Odd brackets    | ``intermediate1`` or ``intermediate2``            |
-+--------------+-----------------+---------------------------------------------------+
-|              | Side resolution | ``preallocated``                                  |
-+--------------+-----------------+---------------------------------------------------+
-|              | Pairing method  | ``fold``                                          |
-+--------------+-----------------+---------------------------------------------------+
-|              | Avoid conflicts | ``off``                                           |
-+--------------+-----------------+---------------------------------------------------+
++--------------+-----------------+-----------------------------------------------------------------+
+|  Tournament  |     Setting     |                         Suggested value                         |
++==============+=================+=================================================================+
+| Australs     | Odd brackets    | `Intermediate with bubble-up-bubble-down` or `Pull up from top` |
++--------------+-----------------+-----------------------------------------------------------------+
+|              | Side resolution | `Balance`                                                       |
++--------------+-----------------+-----------------------------------------------------------------+
+|              | Pairing method  | `Slide`                                                         |
++--------------+-----------------+-----------------------------------------------------------------+
+|              | Avoid conflicts | `One-up-one-down`                                               |
++--------------+-----------------+-----------------------------------------------------------------+
+| Joynt Scroll | Odd brackets    | `Intermediate 1` or `Intermediate 2`                            |
++--------------+-----------------+-----------------------------------------------------------------+
+|              | Side resolution | `Pre-allocated`                                                 |
++--------------+-----------------+-----------------------------------------------------------------+
+|              | Pairing method  | `Fold`                                                          |
++--------------+-----------------+-----------------------------------------------------------------+
+|              | Avoid conflicts | `Off`                                                           |
++--------------+-----------------+-----------------------------------------------------------------+
 
 What do I do if the draw looks wrong?
 ================================================================================
