@@ -46,6 +46,9 @@
 
       <ul class="nav navbar-nav navbar-left nav-pills">
         {% if user.is_authenticated and tournament %}
+          <li class="round-nav">
+            <a href="{% tournament_url tournament_config_index %}">Config</a>
+          </li>
           {% for r in tournament.round_set.all %}
             <!-- <span class="{% if r.draw_status == r.STATUS_RELEASED %}text-success{% elif r.draw_status == r.STATUS_CONFIRMED %}text-primary{% elif r.draw_status == r.STATUS_DRAFT %}text-warning{% endif %}"> -->
             <li id="round-{{ r.seq }}" class="{% if r.seq == current_round.seq %}active{% endif %} round-nav">
@@ -58,7 +61,6 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated and tournament %}
-          <li><a href="{% tournament_url tournament_config_index %}">Config</a></li>
           <li><a href="{% tournament_url data_index %}">Data Import</a></li>
           <li><a href="/admin/">Data Admin</a></li>
           <li><a href="/accounts/logout/" title="Log out of {{ user }}">Logout of {{ user }}</a></li>
