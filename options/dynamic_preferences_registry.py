@@ -1,10 +1,5 @@
-from .models import TournamentPreferenceModel
 from dynamic_preferences.types import BooleanPreference, StringPreference, IntegerPreference, FloatPreference, Section
-from dynamic_preferences.registries import PreferenceRegistry, PerInstancePreferenceRegistry, preference_models
-
-# Key
-tournament_preferences_registry = PerInstancePreferenceRegistry()
-preference_models.register(TournamentPreferenceModel, tournament_preferences_registry)
+from .models import tournament_preferences_registry
 
 # ==============================================================================
 scoring = Section('scoring')
@@ -17,7 +12,6 @@ class MinimumSpeakerScore(FloatPreference):
     name = 'score_min'
     verbose_name = 'Minimum Speaker Score'
     default = 68.0
-
 
 @tournament_preferences_registry.register
 class MaximumSpeakerScore(FloatPreference):
