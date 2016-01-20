@@ -9,7 +9,7 @@
   text-transform: uppercase;
   text-align: center;
   &[data-toggle="tooltip"] {
-    text-decoration: none; // Remove the underline for hoverables
+    border-bottom: none; // Remove the underline for hoverables
   }
   a {
     min-width: 32px; // So the settings icon isn't smushed
