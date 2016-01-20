@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load debate_tags %}
+
+{% block nav %}{% endblock %}
+
+{% block body-class %}edit-matchups{% endblock %}
+{% block head-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
+{% block page-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
+{% block page-header %}
+  {% include "tables/table_search.html" %}
+  <div id="" class="btn-group pull-left col-sm-1">
+    <a class="btn btn-success form-control" href="" id="save">Save</a>
+  </div>
+  <div id="" class="btn-group pull-left col-sm-1">
+    <a class="btn btn-danger form-control" href="{% round_url draw %}">Quit</a>
+  </div>
+{% endblock %}
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="row">
+
+  <div id="scratch" class="col-xs-2  fixed-right">
+    <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Unused Teams <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    {% for team in round.unused_teams %}
+      <div id="team_{{ team.id }}" class="btn btn-default btn-block team">
+        <span>{{ team.short_name }} {% if team.division %}<em>(Div{{ team.division.name }})</em>{% endif %}</span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div id="main" class="col-xs-10">
+
+    <div id="alerts-holder" class=""></div>
+
+    <table id="dataTable" class="table table-hover extra-line-height" cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+          <th>Aff</th>
+          <th>Neg</th>
+          <th>Adjudicators</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for debate in draw %}
+        <tr id="{{ debate.id }}" class="matchup">
+          <td>
+            {{ debate.venue }}
+          </td>
+          <td class="team-holder btn-holder aff-holder">
+            {% if debate.aff_team %}
+            <div id="team_{{ debate.aff_team.id }}" class="btn btn-block btn-default team">
+              <span>{{ debate.aff_team.short_name }} {% if debate.aff_team.division %}<em>(Div{{ debate.aff_team.division.name }})</em>{% endif %}</span>
+            </div>
+            {% endif %}
+          </td>
+          <td class="team-holder btn-holder neg-holder">
+            {% if debate.neg_team %}
+            <div id="team_{{ debate.neg_team.id }}" class="btn btn-block btn-default team">
+              <span>{{ debate.neg_team.short_name }} {% if debate.neg_team.division %}<em>(Div{{ debate.neg_team.division.name }})</em>{% endif %}</span>
+            </div>
+            {% endif %}
+          </td>
+          <td >
+            {% for type, adj in debate.adjudicators %}
+              {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+      {% endfor %}
+      {% for debate in possible_debates %}
+        <tr id="" class="matchup">
+          <td></td>
+          <td class="team-holder aff-holder btn-holder">
+          </td>
+          <td class="team-holder neg-holder btn-holder">
+          </td>
+          <td></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+</div>
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}
+
+{% block extra-js %}
+<script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery-ui-custom-1.11.4.min.js' %}"></script>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready( function() {
+
+
+    $(".team").draggable( {
+      revert: 'invalid', // revert to initial position if not dropped on a droppable element
+      zIndex: 1000,
+      appendTo: "body",
+      helper: 'clone',
+    });
+
+    $("#scratch").droppable( {
+      accept: '.team',
+      hoverClass: 'bg-success',
+      drop: function(event, ui) {
+        var team = ui.draggable; // the object being dragged
+        var oldHolder = team.parent("td");
+        team.appendTo($(this))
+        team.css({left:'0px', top:'0px'}) // reset position so it sits nicely
+      }
+    });
+
+    // Droppable elements are targets for draggable elements
+    $(".team-holder").droppable({
+
+      accept: '.team',
+      hoverClass: 'bg-success',
+      drop: function(event, ui) {
+        var team = ui.draggable;
+        var oldHolder = team.parent("td");
+
+        var replacing = $(".team", this); // if dragged onto a prexisting spot
+        var newHomeOff;
+        var curOff = team.offset();
+        if (replacing.length == 0) {
+          replacing = $(document.createElement("div"));
+          replacing.addClass("team");
+          replacing[0].style.visibility = "hidden";
+          $(this).append(replacing);
+          newHomeOff = replacing.offset();
+          replacing.remove();
+        } else {
+          newHomeOff = replacing.offset();
+          $("#scratch").append(replacing);
+        }
+
+        $(this).append(team);
+
+        team.css('top', curOff.top - newHomeOff.top);
+        team.css('left', curOff.left - newHomeOff.left);
+        team.animate({'top': '0', 'left': '0'}, 300);
+
+      }
+    });
+
+    $('#save').click( function() {
+
+        var btn = $(this)
+        btn.button('loading')
+        var data = {};
+        var i = 0;
+        $("#dataTable tbody tr").each( function() {
+          if (this.id) {
+            var debateId = this.id;
+            data['debate_' + this.id] = this.id;
+          } else {
+            var debateId = i;
+            data['new_debate_' + i] = true;
+            i += 1
+          }
+          var aff = $(".aff-holder", this);
+          var aff = $(".team", aff)[0];
+          if (typeof aff !== 'undefined') {
+            data['aff_' + debateId] = aff.id
+          } else {
+            data['aff_' + debateId] = '';
+          }
+
+          var neg = $(".neg-holder", this);
+          var neg = $(".team", neg)[0];
+          if (typeof neg !== 'undefined') {
+            data['neg_' + debateId] = neg.id
+          } else {
+            data['neg_' + debateId] = '';
+          }
+
+        });
+
+        $.ajax( {
+          type: "POST",
+          url: "{% round_url save_matchups %}",
+          data: data,
+          success: function(data, status) {
+            btn.button('reset')
+            $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved successfully!</div>');
+          },
+          error: function(xhr, error, ex) {
+            btn.button('reset')
+            $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved failed!</div>');
+          }
+        });
+
+        return false;
+
+    });
+
+    dataTable = $("#dataTable").DataTable( {
+      "bAutoWidth": false,
+      "aoColumns": [
+        { "sWidth": "15%" },
+        { "sWidth": "20%" },
+        { "sWidth": "20%" },
+        { "sWidth": "45%" }
+      ],
+      "aaSorting": [[0, 'desc']],
+    });
+
+
+  });
+
+</script>
+{% endblock extra-js %}

@@ -1,7 +1,9 @@
 """Sandbox for figuring out how to do team standings with more complicated rules."""
 
 import header
-import debate.models as m
+import tournaments.models as m
+from participants.models import Team
+import results.models as m
 from django.db import models
 import random
 
@@ -11,9 +13,9 @@ parser.add_argument("round", type=int, help="Round to look at")
 parser.add_argument("--who-beat-whom", action="store_true", help="Print who-beat-whom results")
 args = parser.parse_args()
 
-round = m.Round.objects.get(seq=args.round)
+round = tm.Round.objects.get(seq=args.round)
 
-teams = m.Team.objects
+teams = Team.objects
 
 teams = teams.filter(
     institution__tournament = round.tournament,
@@ -22,14 +24,14 @@ teams = teams.filter(
 
 EXTRA_QUERY = """
     SELECT DISTINCT SUM({field:s})
-    FROM "debate_teamscore"
-    JOIN "debate_ballotsubmission" ON "debate_teamscore"."ballot_submission_id" = "debate_ballotsubmission"."id"
-    JOIN "debate_debateteam" ON "debate_teamscore"."debate_team_id" = "debate_debateteam"."id"
-    JOIN "debate_debate" ON "debate_debateteam"."debate_id" = "debate_debate"."id"
-    JOIN "debate_round" ON "debate_debate"."round_id" = "debate_round"."id"
-    WHERE "debate_ballotsubmission"."confirmed" = True
-    AND "debate_debateteam"."team_id" = "debate_team"."id"
-    AND "debate_round"."seq" <= {round:d}
+    FROM "results_teamscore"
+    JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
+    JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
+    JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
+    JOIN "tournaments_round" ON "draws_debate"."round_id" = "tournaments_round"."id"
+    WHERE "results_ballotsubmission"."confirmed" = True
+    AND "draws_debateteam"."team_id" = "debate_team"."id"
+    AND "tournaments_round"."seq" <= {round:d}
 """
 teams = teams.extra({
     "points": EXTRA_QUERY.format(field="points", round=round.seq),
@@ -59,7 +61,7 @@ def who_beat_whom(team1, team2):
     or haven't faced each other."""
     # Find all debates between these two teams
     def get_wins(team, other):
-        ts =  m.TeamScore.objects.filter(
+        ts = rm.TeamScore.objects.filter(
             ballot_submission__confirmed=True,
             debate_team__team=team,
             debate_team__debate__debateteam__team=other).aggregate(models.Sum('points'))

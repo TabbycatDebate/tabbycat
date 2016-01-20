@@ -1,0 +1,79 @@
+{% extends "breaking_teams.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}{{ category.name }} Break{% endblock %}
+{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
+{% block body-class %}public-break public-breaking-teams-{{ category }}{% endblock %}
+{% block header %}{% endblock %}
+
+{% block content %}
+  {% if generated %}
+    <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Break</th>
+          {% if pref.show_emoji %}
+            <th class="team-emoji"></th>
+          {% endif %}
+          <th>Team</th>
+          {% if pref.show_institutions %}
+            <th>Inst<span class="hidden-xs">itution</span></th>
+          {% endif %}
+          <th>Wins</th>
+          <th>Total speaker score</th>
+          {% if metrics.draw_strength %}
+            <th>Draw strength</th>
+          {% endif %}
+          {% if metrics.sum_of_margins %}
+            <th>Sum of margins</th>
+          {% endif %}
+          {% if metrics.who_beat_whom %}
+            <th>Who beat whom</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for team in teams %}
+        <tr>
+          <td>{{ team.rank }}</td>
+          <td>{{ team.break_rank|default_if_none:"&ndash;" }}</td>
+          {% if pref.show_emoji %}
+            <td class="team-emoji">{% team_emoji team %}</td>
+          {% endif %}
+          <td>
+            <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
+              {{ team.long_name }}
+              {{ team.categories_for_display }}
+            </span>
+          </td>
+          {% if pref.show_institutions %}
+            <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
+          {% endif %}
+          <td>
+            {{ team.points }}
+          </td>
+          <td>
+            {{ team.speaker_score|stringformat:".2f" }}
+          </td>
+          {% if metrics.draw_strength %}
+            <td>{{ team.draw_strength }}</td>
+          {% endif %}
+          {% if metrics.sum_of_margins %}
+            <td>{{ team.margins|stringformat:".2f" }}</td>
+          {% endif %}
+          {% if metrics.who_beat_whom %}
+            <td>{{ team.who_beat_whom_display }}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  {% else %}
+    <p class="lead">The break has yet to be released.</p>
+
+  {% endif %}
+
+{% endblock %}

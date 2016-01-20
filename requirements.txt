@@ -3,19 +3,19 @@
 
 # Base Heroku Requirements (from the toolbelt)
 dj-database-url==0.3.0
-static3==0.5.1
-wsgiref==0.1.2
+static3==0.6.1
 dj-static==0.0.6
 
 # For Mem-Caching
-pylibmc==1.4.1
-django-pylibmc==0.5.0
-
-# For Session Caching
-django-redis-sessions==0.4.0
+# Must be in requirements.txt for memcachier to work https://www.memcachier.com/documentation#django
+pylibmc==1.5.0
+django-pylibmc==0.6.1
 
 # For web serving
-waitress==0.8.9
+waitress==0.8.10
 
 # For monitoring
 newrelic
+
+# For emailing
+sendgrid>=0.5.0

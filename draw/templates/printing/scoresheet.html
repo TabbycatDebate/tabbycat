@@ -1,0 +1,182 @@
+{% load debate_tags %}
+
+<section class="printable-score-sheet">
+  <div class="clearfix">
+    <span class="h3 pull-left no-vertical-spacing">
+        {{ source.name }}'s {% if source_type == "chair" %}Ⓒ{% elif source_type == "trainee" %}Ⓣ{% endif %} Ballot
+    </span>
+    <span class="badge h3 no-vertical-spacing pull-right">
+      {{ round.name }}
+    </span>
+    <span class="badge h3 no-vertical-spacing pull-right">
+      {% if debate.venue.group %}{{ debate.venue.group.short_name }} {% endif %}{{ debate.venue.name }}
+    </span>
+  </div>
+  <p class="small text-muted">
+
+    {% if debate.adjudicators.list|length > 1 %}The panel was {% endif %}
+    {% for type, adj in debate.adjudicators %}
+      {% if debate.adjudicators.list|length > 1 and forloop.last %} and {% elif forloop.first %}{% else %}, {% endif %}
+      {{ adj.name }}
+      {% if type == "C" %} Ⓒ{% elif type == "T" %} Ⓣ{% endif %}
+      {% if adj.pronoun %} ({{ adj.pronoun }}){% endif %}
+    {% endfor %}
+    {% if debate.adjudicators.list|length == 1 %} was the sole adjudicator{% endif %}
+
+  </p>
+  <br>
+
+  <div class="panel panel-default">
+    <div class="panel-body no-horizontal-spacing no-vertical-spacing">
+      <table class="table">
+        <tbody>
+          <tr>
+            {% if motions.count == 0 %}
+              <td width="20%" style="min-width: 90px;" class="no-horizontal-spacing no-vertical-spacing active no-borders">
+                <div class="panel-heading small no-borders">
+                  <em>What was the motion?</em>
+                </div>
+              </td>
+              <td width="80%" class="no-borders no-horizontal-spacing no-vertical-spacing no-borders">
+                <div class="writeable"></div>
+              </td>
+            {% elif motions.count == 1 %}
+              <td width="20%" style="min-width: 90px;" class="no-borders no-horizontal-spacing no-vertical-spacing active ">
+                <div class="panel-heading small no-borders">
+                  <em>The motion is</em> <strong>{{ motions.0.text }}</strong>
+                </div>
+              </td>
+            {% else %}
+              <td style="min-width: 90px;" class="no-horizontal-spacing no-vertical-spacing active no-borders">
+                <div class="panel-heading small">
+                  <em>Selected motion?</em>
+                </div>
+              </td>
+              {% for motion in motions %}
+                <td class="text-center small no-borders">
+                  <strong>{{ motion.seq }}. {{ motion.text }}</strong>
+                </td>
+              {% endfor %}
+            {% endif %}
+          </tr>
+          {% if pref.motion_vetoes_enabled %}
+          <tr>
+              <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
+                <div class="panel-heading small">
+                  <em>Aff veto?</em>
+                </div>
+              </td>
+              {% for motion in motions %}
+                <td class="text-center small no-borders no-overflow">
+                  {{ motion.seq }}. {{ motion.reference }}
+                </td>
+              {% endfor %}
+          </tr>
+          <tr>
+              <td class="no-horizontal-spacing no-vertical-spacing active no-borders">
+                <div class="panel-heading small">
+                  <em>Neg veto?</em>
+                </div>
+              </td>
+              {% for motion in motions %}
+                <td class="text-center small no-borders no-overflow">
+                  {{ motion.seq }}. {{ motion.reference }}
+                </td>
+              {% endfor %}
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table wrap-table" style="border: none;">
+        <tbody>
+          <tr>
+            <td class="no-borders no-horizontal-spacing">
+              {% with team=debate.aff_team position="Aff" %}
+                {% include "printing/scoresheet_team.html" %}
+              {% endwith %}
+            </td>
+            <td class="no-borders">
+              {% with team=debate.neg_team position="Neg" %}
+                {% include "printing/scoresheet_team.html" %}
+              {% endwith %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table wrap-table" style="border: none;">
+        <tbody>
+          <tr>
+            <td class="no-horizontal-spacing no-vertical-spacing no-borders" width="50%">
+              <div class="panel panel-default">
+                <div class="panel-body no-horizontal-spacing no-vertical-spacing">
+                  <table class="table">
+                    <tbody>
+                      <tr>
+                        <td width="50%" class="no-borders no-horizontal-spacing no-vertical-spacing active">
+                          <div class="panel-heading small" style="padding-top: 13px;">
+                            <em>Which team won the debate?</em>
+                          </div>
+                        </td>
+                        <td width="50%" class="no-borders no-horizontal-spacing no-vertical-spacing">
+                          <div class="writeable"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </td>
+            <td class="no-vertical-spacing no-borders" width="50%">
+              <div class="panel panel-default">
+                <div class="panel-body no-horizontal-spacing no-vertical-spacing">
+                  <table class="table">
+                    <tbody>
+                      <tr>
+                        <td width="50%" class="no-borders no-horizontal-spacing no-vertical-spacing active">
+                          <div class="panel-heading small" style="padding-top: 13px;">
+                            <em>By how many points did they win?</em>
+                          </div>
+                        </td>
+                        <td width="50%" class="no-borders no-horizontal-spacing no-vertical-spacing">
+                          <div class="writeable"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-footer no-borders">
+      <table class="table" cellspacing="10" cellpadding="10">
+        <tbody>
+          <tr>
+            {% if pref.score_return_location|length > 2 %}
+            <td width="30%" class="no-vertical-spacing text-left no-borders"><span class="small"><em>Please return ballots to {{ pref.score_return_location }}</em></span></td>
+            {% endif %}
+            <td width="10%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>For the tab room only:</em></span></td>
+            <td width="30%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Entered By</em></span></td>
+            <td width="50%" class="no-vertical-spacing text-muted text-left no-borders"><span class="small"><em>Checked By</em></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load debate_tags %}
+
+{% block head-title %}
+  Dashboard <small>{{ round.name }} is {{ round.get_draw_status_display.lower }} (this page will refresh its data automatically)</small>
+{% endblock %}
+{% block page-title %}Dashboard{% endblock %}
+{% block body-class %}dash{% endblock %}
+{% block header %}{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-sm-6">
+      <h4 class="text-center">
+        Number of Ballots In
+        (<span class="text-danger">None</span>,
+        <span class="text-info">Draft</span>,
+        <span class="text-success">Confirmed</span>)
+      </h4>
+      <div id="ballots_progress" style="width:100%;height:450px"></div>
+    </div>
+    <div class="col-sm-6">
+      <h4 class="text-center">Latest Actions</h4>
+      <ul class="list-group" id="actions_list"></ul>
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block extra-js %}
+<script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.stack.min.js' %}"></script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready( function() {
+
+  var plotData = [
+    [   [-0.5,{{ stats.0.1 }}], [0,{{ stats.0.1 }}]  ],
+    [   [-0.5,{{ stats.1.1 }}], [0,{{ stats.1.1 }}]  ],
+    [   [-0.5,{{ stats.2.1 }}], [0,{{ stats.2.1 }}]  ]
+  ];
+  var updateInterval = 30000 // 30 second pings
+
+  function updateData() {
+    plot.setData(getLatestData());
+    // Since the axes don't change, we don't need to call plot.setupGrid()
+    plot.draw();
+    setTimeout(updateData, updateInterval);
+  }
+
+  function subtractTime(time_sequence) {
+    for (var i = 0; i < time_sequence.length; i++) {
+      time_sequence[i][0] = time_sequence[i][0] - 0.5
+    }
+    return time_sequence
+  }
+
+  function getLatestData() {
+    $.ajax({
+      type: "GET",
+      url: "{% tournament_url results_status_update %}",
+      success: function(data, status) {
+        plotData[0] = subtractTime(plotData[0]);
+        plotData[1] = subtractTime(plotData[1]);
+        plotData[2] = subtractTime(plotData[2]);
+        plotData[0].push(data[0]);
+        plotData[1].push(data[1]);
+        plotData[2].push(data[2]);
+      },
+    });
+    return plotData
+  }
+
+  function formatter(val, axis) {
+    return val + "m";
+  }
+
+  var plot = $.plot("#ballots_progress", plotData, {
+      series: {
+        stack: true,
+        lines: {
+          show: true,
+          fill: true,
+        },
+      },
+      colors: ['#5cb85c', '#d5e615', '#d9534f'],
+      yaxis: {
+        min: 0,
+        max: {{ total_ballots }},
+        minTickSize: 1,
+        tickDecimals: 0
+      },
+      xaxis: {
+        min: -10,
+        max: 0,
+        tickSize: 1,
+        tickDecimals: 1,
+        tickFormatter: formatter
+      },
+    });
+
+  updateData();
+
+  function updateActions() {
+    plot.setData(getLatestActions());
+    // Since the axes don't change, we don't need to call plot.setupGrid()
+    setTimeout(updateActions, updateInterval);
+  }
+
+  function getLatestActions() {
+    $.ajax({
+      type: "GET",
+      url: "{% tournament_url action_log_update %}",
+      success: function(data, status) {
+        // console.log(data);
+        var new_actions = [];
+        // Build new LI items
+        $.each( data, function(index, object ) {
+          console.log(object);
+          new_actions.push( "\
+            <li class='list-group-item'>" + "\
+            <span class='badge'>" + object["timestamp"] + "</span>" + "\
+            <strong>" + object['user'] + "</strong>" + "\
+            <em>" + object['type'] +
+            ((object['param']) ? (" for " + object['param']) : "") +
+            "</em></li>" );
+        });
+        // Remove existing items and re-add the new ones
+        $("#actions_list li").remove()
+        $("#actions_list").html(new_actions.join( "" ));
+      },
+    });
+    return plotData
+  }
+
+  updateActions();
+
+});
+
+</script>
+{% endblock %}

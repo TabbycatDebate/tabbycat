@@ -1,0 +1,218 @@
+{% extends "draw_rbase.html" %}
+{% load debate_tags %}
+
+{% block head-title %}
+  Draw for {{ round.name }}
+  <small>
+  {% if round.draw_status = round.STATUS_CONFIRMED %}
+    (confirmed, draw not released,
+  {% elif round.draw_status = round.STATUS_RELEASED %}
+    (confirmed, draw released,
+  {% else %}
+    (DRAW STATUS ERROR,
+  {% endif %}
+  motions {{ round.motions_released|yesno:",not" }} released)
+  {% if round.starts_at %}
+    debates start at {{ round.starts_at }}
+  {% endif %}
+  </small>
+{% endblock %}
+{% block page-title %}
+  Draw for {{ round.name }}
+  {% if round.draw_status = round.STATUS_CONFIRMED %}
+    (confirmed)
+  {% elif round.draw_status = round.STATUS_RELEASED %}
+    (released)
+  {% else %}
+    (DRAW STATUS ERROR)
+  {% endif %}
+{% endblock %}
+{% block body-class %}draw{% endblock %}
+
+{% block header %}
+  <div class="btn-group">
+    <a class="btn {% if round.venue_allocation_validity %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_venues_edit %}">Edit Venues</a>
+    <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
+    <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url motions current_round %}">View/Edit Motions</a>
+    <a class="btn btn-default" href="{% round_url draw_matchups_edit round %}">Edit Matchups</a>
+    {% if not pref.enable_venue_times %}
+      <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
+    {% endif %}
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-default form-control" href="{% round_url draw_with_standings %}">View Details</a>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-default form-control" href="{% round_url draw_display_by_venue %}">Show by Venue</a>
+    <a class="btn btn-default form-control" href="{% round_url draw_display_by_team %}">Show by Team</a>
+    {% if round.draw_status = round.STATUS_CONFIRMED %}
+      <button class="btn btn-success form-control" id="release_draw">Release Draw to Public</button>
+    {% elif round.draw_status = round.STATUS_RELEASED %}
+      <button class="btn btn-danger form-control" id="unrelease_draw">Unrelease Draw to Public</button>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block content %}
+  <form id="releaseForm" method="POST" action="{% round_url release_draw %}"></form>
+  <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}"></form>
+  <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}"></form>
+
+  {% if round.motion_set.all.count == 0 %}
+  <div class="alert alert-danger">
+    There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit current_round %}" class="alert-link">Edit the motions.</a>
+  </div>
+  {% endif %}
+
+  {% if not round.venue_allocation_validity %}
+    <div class="alert alert-danger alert-dismissable" id="">
+      One or more debates does not have a venue <a href="{% round_url draw_venues_edit current_round %}" class="alert-link">Edit the venues</a>.
+    </div>
+  {% endif %}
+  {% if active_adjs.count < draw.count %}
+    <div class="alert alert-danger alert-dismissable" id="">
+      There are currently fewer checked-in adjudicators than there are rooms. <a href="{% round_url adjudicator_availability current_round %}" class="alert-link">Check in some more adjudicators</a>.
+    </div>
+  {% else %}
+    {% if round.adjudicators_allocation_validity == 1 or round.adjudicators_allocation_validity == 2 %}
+      <div class="alert alert-warning alert-dismissable" id="">
+        {% if round.adjudicators_allocation_validity == 1 %}
+          One or more debates don't have a chair.
+        {% elif round.adjudicators_allocation_validity == 2 %}
+          One or more debates have panels with an even number of adjudicators.
+        {% endif %}
+        <a class="alert-link" href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
+      </div>
+    {% endif %}
+  {% endif %}
+
+    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                {% if pref.enable_divisions %}
+                    <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip"title="Division">{{ debate.division.name }}</span></th>
+                {% else %}
+                    <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+                {% endif %}
+                {% if pref.enable_venue_groups %}
+                    <th>Venue</th>
+                {% endif %}
+                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Room"></span></th>
+                {% if pref.enable_venue_times %}
+                    <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip"title="Date"></span></th>
+                {% endif %}
+                {% if pref.enable_venue_times %}
+                    <th><span class="glyphicon glyphicon-time" data-toggle="tooltip"title="Time"></span></th>
+                {% endif %}
+                <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 1{% else %}Affirmative{% endif %}</th>
+                <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 2{% else %}Negative{% endif %}</th>
+                <th>Adj<span class="hidden-xs">udicator</span>s</th>
+                <th>Conflict</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for debate in draw %}
+        <tr class="{% if debate.all_conflicts or not debate.adjudicators.valid %}danger{% endif %}">
+          {% if pref.enable_divisions %}
+            <td>{{ debate.division.name }}</td>
+          {% else %}
+            <td>{{ debate.bracket }}</td>
+          {% endif %}
+          {% if pref.enable_venue_groups %}
+            {% if debate.division %}
+              <td>{{ debate.division.venue_group.short_name }}</td>
+            {% else %}
+              <td>{{ debate.venue.group.short_name }}</td>
+            {% endif %}
+          {% endif %}
+          <td>{{ debate.venue.name }}</td>
+          {% if pref.enable_venue_times %}
+          <td>
+              {% if debate.venue.time %}
+                  <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
+                  {{ debate.venue.time|date:"D jS F" }}
+              {% endif %}
+          </td>
+          <td>
+            {% if debate.division %}
+              {{ debate.division.time_slot|time:'h:i A' }}
+            {% else %}
+              {{ debate.venue.time|time:'h:i A' }}
+            {% endif %}
+          </td>
+          {% endif %}
+          <td title="{% if debate.aff_team %}{% aff_count debate.aff_team round.prev %} prior affs{% endif %}">
+            <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
+              {{ debate.aff_team.short_name }}
+            </span>
+          </td>
+          <td title="{% if debate.neg_team %}{% neg_count debate.neg_team round.prev %} prior negs{% endif %}">
+            <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
+              {{ debate.neg_team.short_name }}
+            </span>
+          </td>
+          <td>
+          {% for type, adj in debate.adjudicators %}
+              {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+          {% endfor %}
+          </td>
+          <td class="text-danger">{{ debate.all_conflicts|join:",<br>" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+  <div class="modal fade" id="start-time-form" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Change Start Time</h3>
+      </div>
+      <div class="modal-body">
+        <form id="startTimeForm" method="POST" action="{% round_url set_round_start_time %}" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-4 control-label">
+              Start at
+            </label>
+            <div class="col-sm-6">
+              <input placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time" class="form-control"></input>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 control-label"></label>
+            <div class="col-sm-6">
+              <button type="submit" value="Save" class="form-control btn btn-success submit-disable" data-loading-text="Saving...">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block extra-js %}
+   <script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+      $("#allocateAdj").click( function() {
+        $("#allocateAdjForm").submit();
+        return false;
+      } );
+      var dTable = $('#dataTable').DataTable({
+        'bPaginate': false,
+        "aaSorting": [[ 0, "desc" ], [ 2, "asc" ]],
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
+      $("#release_draw").click( function() {
+        $("#releaseForm").submit();
+        return false;
+      } );
+      $("#unrelease_draw").click( function() {
+        $("#unreleaseForm").submit();
+        return false;
+      } );
+    } );
+  </script>
+{% endblock extra-js %}

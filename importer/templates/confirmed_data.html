@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}✅ {{ confirmed.kind }} Added{% endblock %}
+{% block page-title %}✅ {{ confirmed.kind }} Added{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-success alert-dismissable" id="">
+  <p>{{ confirmed.quantity }} {{ confirmed.kind }} created. <a href="{% tournament_url data_index %}">Add more data.</a></p>
+</div>
+
+{% endblock content %}

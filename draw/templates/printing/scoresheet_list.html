@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}
+  {{ round.abbreviation }} Ballots <br><small>(use CTRL+P to save to PDF for printing, but be sure to set orientation to LANDSCAPE, to turn off headers/footers and turn on background graphics. Works best in Safari or Firefox.)</small>
+{% endblock %}
+{% block page-title %}Printable Scoresheets Forms for {{ round.name }}{% endblock %}
+{% block body-class %}print-scoresheet{% endblock %}
+
+{% block content %}
+
+  {% for debate in draw %}
+
+    {% for type, adj in debate.adjudicators %}
+
+      {% if type == 'C' %}
+        {% with source=adj source_type="chair" %}
+          {% include "printing/scoresheet.html" %}
+        {% endwith %}
+      {% endif %}
+
+      {% if type == 'P' %}
+        {% with source=adj source_type="panelist" %}
+          {% include "printing/scoresheet.html" %}
+        {% endwith %}
+      {% endif %}
+
+    {% endfor %}
+
+  {% endfor %}
+
+{% endblock content %}

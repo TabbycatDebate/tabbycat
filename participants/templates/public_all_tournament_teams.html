@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}All Teams{% endblock %}
+{% block page-title %}All Teams{% endblock %}
+{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
+{% block body-class %}all-teams{% endblock %}
+
+{% block content %}
+  <table id="dataTable" class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>Institution</th>
+        <th>Level</th>
+        <th>Team</th>
+        <th>Venue</th>
+        <th>Division</th>
+        <th>Time Slot</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for team in teams %}
+      <tr>
+        <td>{{ team.institution }}</td>
+        <td>{{ team.tournament.name }}</td>
+        <td>{{ team.reference }}</td>
+        <td>{{ team.division.venue_group.short_name }}</td>
+        <td>{{ team.division.name }}</td>
+        <td>{{ team.division.time_slot|time:'h:i A' }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}
+
+{% block extra-js %}
+   <script type="text/javascript" charset="utf-8">
+    $(document).ready( function() {
+      var dTable = $("#dataTable").DataTable({
+        "aaSorting": [[ 0, "asc" ],[ 1, "asc" ],[ 2, "asc" ]],
+        "aoColumnDefs": [
+          { "bSearchable": false, "aTargets": [2] }, //set column visibility
+        ]
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
+    } );
+  </script>
+{% endblock extra-js %}

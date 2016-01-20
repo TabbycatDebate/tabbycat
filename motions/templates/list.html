@@ -1,0 +1,127 @@
+{% extends "draw_base.html" %}
+{% load debate_tags %}
+
+{% block body-class %}display-motions{% endblock %}
+{% block head-title %}
+  Motions for {{ round.name }}
+  <small>
+  {% if round.motions_released %}(released){% else %}(not released){% endif %}
+  </small>
+{% endblock %}
+{% block page-title %}Motions for {{ round.name }}{% endblock %}
+
+{% block header %}
+  <div class="btn-group">
+  <a href="{% round_url motions_edit %}" class="btn btn-default form-control">
+    Edit Motions for {{ round.name }}
+  </a>
+  {% if pref.enable_division_motions %}
+    <a href="{% round_url motions_assign %}" class="btn btn-default form-control">
+      Assign {{ round.name }} Motions to Divisions
+    </a>
+  {% endif %}
+  {% if round.motions_released %}
+    <button class="btn btn-danger form-control" id="unrelease_motions">Unrelease {{ round.name }} Motions to Public</button>
+  {% else %}
+    <button class="btn btn-success form-control" id="release_motions">Release {{ round.name }} Motions to Public</button>
+  {% endif %}
+  </div>
+  <form id="releaseForm" method="POST" action="{% round_url release_motions %}"></form>
+  <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}"></form>
+{% endblock %}
+
+{% block content %}
+
+  <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
+    <thead>
+    <tr>
+      <th>RSeq</th>
+      <th>Round</th>
+      <th>Order</th>
+      <th>Reference</th>
+      <th>M<span class="hidden-xs">otion</span></th>
+      {% if pref.enable_flagged_motions %}
+        <th>Flagged</th>
+      {% endif %}
+      {% if pref.enable_division_motions %}
+        <th>Divisions</th>
+      {% endif %}
+      <th>Chosen</th>
+      {% if pref.motion_vetoes_enabled %}
+        <th><span title="Aff vetoes" data-toggle="tooltip">AV</th>
+        <th><span title="Neg vetoes" data-toggle="tooltip">NV</th>
+      {% endif %}
+      <th><span title="Aff wins" data-toggle="tooltip">AW</span></th>
+      <th><span title="Neg wins" data-toggle="tooltip">NW</span></th>
+      <th><span title="Observed imbalance (deviation from 50/50 odds) as determined through a chi square test. Higher is more imbalanced." data-toggle="tooltip">Chi2</span></th>
+      <th><span title="Probability of this bias not being due to random variations. Lower is more likely (statistically insignifcant examples muted)." data-toggle="tooltip">P-val.</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for motion in motions %}
+    <tr>
+      <td>{{ motion.round.seq }}</td>
+      <td>{{ motion.round.abbreviation }}</td>
+      <td>{{ motion.seq }}</td>
+      <td>{{ motion.reference }}</td>
+      <td>{{ motion.text }}</td>
+      {% if pref.enable_flagged_motions %}
+      <td>
+        {% if motion.flagged %}
+          Yes
+        {% else %}
+          No
+        {% endif %}
+      </td>
+      {% endif %}
+      {% if pref.enable_division_motions %}
+        <td>
+        {% for division in motion.divisions.all %}
+          {{ division.name }},
+        {% endfor %}
+        </td>
+      {% endif %}
+      <td>{{ motion.chosen_in }}</td>
+      {% if pref.motion_vetoes_enabled %}
+      <td>{{ motion.aff_vetoes }}</td>
+      <td>{{ motion.neg_vetoes }}</td>
+      {% endif %}
+      <td>{{ motion.aff_wins }}</td>
+      <td>{{ motion.neg_wins }}</td>
+      <td class="{% if motion.p_value <= 0.05 %}strong{% elif motion.p_value >= 0.10 %}text-muted{% endif %}">
+        {{ motion.c1|floatformat:1 }}
+      </td>
+      <td class="{% if motion.p_value <= 0.05 %}strong{% elif motion.p_value >= 0.10 %}text-muted{% endif %}">
+        {{ motion.p_value|floatformat:2 }}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock content %}
+
+{% block extra-js %}
+  <script type="text/javascript" charset="utf-8">
+
+    $(document).ready( function() {
+      var table = $("#dataTable").dataTable( {
+        "aaSorting": [[1, 'asc'], [2, 'asc']],
+        "aoColumnDefs": [
+          {"iDataSort": 0, "aTargets": [1] }, //sort based on a hidden column when another column is clicked
+          { "bVisible": false, "aTargets": [0] }, //set column visibility
+        ],
+      });
+      new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+
+      $("#release_motions").click( function() {
+        $("#releaseForm").submit();
+        return false;
+      } );
+      $("#unrelease_motions").click( function() {
+        $("#unreleaseForm").submit();
+        return false;
+      } );
+
+    } );
+
+  </script>
+{% endblock extra-js %}
