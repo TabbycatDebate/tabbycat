@@ -7,7 +7,7 @@ Installing locally on Linux
 Before you start, be sure to read our general information on :ref:`local installations <install-local>` to help you understand what's going on.
 
 Requisite technical background
-================================================================================
+==============================
 
 You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest.
 
@@ -16,8 +16,26 @@ You need to be familiar with command-line interfaces to get through this comfort
 
   Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we might not have tried it.
 
+Short version
+=============
+.. code-block:: bash
+
+  sudo apt-get install python3.4-venv                      # if using Python 3.4 on Ubuntu
+  sudo apt-get install postgresql-9.4
+  git clone https://github.com/czlee/tabbycat.git
+  cd tabbycat
+  sudo -u postgres createuser tabbycatuser --pwprompt      # skip if not first time
+  sudo -u postgres createdb demodb --owner tabbycatuser
+  pyvenv-3.4 venv                                          # or pyvenv-3.5 or virtualenv
+  source venv/bin/activate
+  pip install --upgrade pip
+  pip install -r requirements_common.txt
+  dj migrate
+  dj createsuperuser
+  dj runserver
+
 1. Install dependencies
-================================================================================
+=======================
 First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed.
 
 .. admonition:: Advanced users
@@ -26,7 +44,7 @@ First, you need to install all of the software on which Tabbycat depends, if you
   These instructions are for Ubuntu. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
 1(a). Python
---------------------------------------------------------------------------------
+------------
 As of version 0.8, Tabbycat requires Python 3.4 or later. You probably already
 have this installed, but it'll be called ``python3``. Check::
 
@@ -39,7 +57,7 @@ If it's not installed, run ``sudo apt-get install python3``, or download the lat
   higher.
 
 1(b). Pyvenv
---------------------------------------------------------------------------------
+------------
 **If you installed Python 3.5 or later:** Nothing to do, ``pyvenv-3.5`` (or whatever your version is) should already be working.
 
 **If you are using Python 3.4:** Ubuntu 14.04 had a `broken pyvenv-3.4 package
@@ -54,7 +72,7 @@ so there is a small workaround to get it to work.::
   If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
 
 1(c). PostgreSQL
---------------------------------------------------------------------------------
+----------------
   *PostgreSQL is a database management system.*
 
 As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
@@ -63,12 +81,12 @@ As per the `PostgreSQL installation instructions <http://www.postgresql.org/down
 
 
 2. Get the source code
-================================================================================
+======================
 
 There are two ways to get the source code: by using Git, or by downloading a release zip file. We encourage you to use Git. It'll be easier to keep up to date with Tabbycat and to deploy to a Heroku installation later. However, Git can be confusing for first-timers, so if you just want to get going, the tar.gz file will do fine.
 
 Option 1: Clone the Git repository
---------------------------------------------------------------------------------
+----------------------------------
 ::
 
     $ git clone https://github.com/czlee/tabbycat.git
@@ -79,7 +97,7 @@ If you don't have Git, install it first using ``sudo apt-get install git``.
     first, to give yourself a little more freedom.
 
 Option 2: Download a release package
---------------------------------------------------------------------------------
+------------------------------------
 
 .. I'm not sure how to make this look right
 .. parsed-literal::
@@ -90,7 +108,7 @@ Option 2: Download a release package
 
 
 3. Set up a new database
-================================================================================
+========================
 
 .. hint:: You can skip step 1 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
@@ -108,7 +126,7 @@ Option 2: Download a release package
 
 
 4. Install Tabbycat
-================================================================================
+===================
 Almost there!
 
 1. Navigate to your Tabbycat directory::
@@ -177,7 +195,7 @@ Almost there!
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
 
 Starting up an existing Tabbycat instance
-================================================================================
+=========================================
 To start your Tabbycat instance up again next time you use your computer::
 
     $ cd path/to/my/tabbycat
