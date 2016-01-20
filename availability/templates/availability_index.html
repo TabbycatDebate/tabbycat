@@ -126,11 +126,16 @@
       </div>
     </div>
 
-
-    <button class="btn btn-primary">Checkin All Teams, Venues, & Adjudicators</button>
-    {% if round.prev %}
-    <button class="btn btn-primary">Checkin all Teams, Venues, & Adjudicators from {{ previous_round }}</button>
-    {% endif %}
+    <div class="row">
+      <div class="col-md-6">
+        <button class="btn btn-primary btn-block">Checkin All Teams, Venues, & Adjudicators</button>
+      </div>
+      <div class="col-md-6">
+        {% if round.prev %}
+        <button class="btn btn-primary btn-block">Checkin all Teams, Venues, & Adjudicators from {{ previous_round }}</button>
+        {% endif %}
+      </div>
+    </div>
 
   </div>
 </div>

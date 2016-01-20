@@ -1,7 +1,11 @@
 
 // TOP BAR UI
 
-
+.overall-header {
+  .navbar-right.navbar-nav>li>a {
+    line-height: 25px; // Need to vertically align with the pips
+  }
+}
 
 // TABS UI
 
