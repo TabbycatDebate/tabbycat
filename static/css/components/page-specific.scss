@@ -1,5 +1,11 @@
-@import "../bootstrap/variables";
-@import "../bootstrap/mixins";
+// CHECKINS
+
+.round-progresses .progress {
+  margin-bottom: 0px; // Progress bars have bottom margins; need to offset
+}
+
+
+// OLD: REFACTOR
 
 // Adj Checkins
 #select_breaking {

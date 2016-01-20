@@ -46,20 +46,22 @@
 
       <ul class="nav navbar-nav navbar-left nav-pills">
         {% if user.is_authenticated and tournament %}
-          <li class="round-nav small">
-            <a href="{% tournament_url tournament_config_index %}">Config</a>
+          <li class="round-nav small" data-toggle="tooltip" title="Tournament Settings">
+            <a href="{% tournament_url tournament_config_index %}" >
+              <span class="glyphicon glyphicon-cog"></span>
+            </a>
           </li>
           {% for r in tournament.round_set.all %}
             <!-- <span class="{% if r.draw_status == r.STATUS_RELEASED %}text-success{% elif r.draw_status == r.STATUS_CONFIRMED %}text-primary{% elif r.draw_status == r.STATUS_DRAFT %}text-warning{% endif %}"> -->
-            <li id="round-{{ r.seq }}" class="{% if r.seq == current_round.seq %}active{% endif %} small round-nav">
-              <a href="#" class="dropdown-toggle round-nav {% if r.seq == current_round.seq %}current-round{% endif %}" data-toggle="tooltip" title="{{ r.name }} (Draw is {{ r.draw_status }})">
+            <li id="round-{{ r.seq }}" class="{% if r.seq == current_round.seq %}active{% endif %} small round-nav" data-toggle="tooltip" title="{{ r.name }} (Draw is {{ r.draw_status }})">
+              <a href="#" class="dropdown-toggle round-nav {% if r.seq == current_round.seq %}current-round{% endif %}">
                   {{ r.abbreviation }}
               </a>
             </li>
           {% endfor %}
         {% endif %}
       </ul>
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-right small">
         {% if user.is_authenticated and tournament %}
           <li><a class="" href="{% tournament_url data_index %}">Data Import</a></li>
           <li><a class="" href="/admin/">Data Admin</a></li>

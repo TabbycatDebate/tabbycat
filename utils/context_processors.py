@@ -10,6 +10,12 @@ def debate_context(request):
         }
         if hasattr(request, 'round'):
             d['round'] = request.round
+            if request.round.prev:
+                d['previous_round'] = request.round.prev
+            else:
+                d['previous_round'] = False
+
+
         d['all_tournaments'] = Tournament.objects.filter(active=True)
         return d
 

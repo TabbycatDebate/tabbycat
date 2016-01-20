@@ -1,7 +1,26 @@
 
+// TOP BAR UI
+
+
+
+// TABS UI
 
 .round-nav {
   text-transform: uppercase;
+  text-align: center;
+  &[data-toggle="tooltip"] {
+    text-decoration: none; // Remove the underline for hoverables
+  }
+  a {
+    min-width: 32px; // So the settings icon isn't smushed
+  }
+}
+
+// SUBNAV UI
+
+.subnav .btn {
+  margin-top: 20px; // Give buttons spacing
+  margin-bottom: 20px;
 }
 
 // BELOW: possibly refactor
@@ -73,8 +92,5 @@
     padding: 6px 12px;
 }
 .page-sub-nav .navbar-right {
-    padding-right: 30px; // compensate for the pull-rights negative margin
-}
-.vertical-space {
-    margin-top: 20px; // Give buttons spacing
+    padding-right: 15px; // compensate for the pull-rights negative margin
 }

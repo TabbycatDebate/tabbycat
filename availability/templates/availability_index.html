@@ -7,7 +7,6 @@
   <a class="btn btn-default" href="{% round_url team_availability round %}">Team Checkins</a>
   <a class="btn btn-default" href="{% round_url venue_availability round %}">Venue Checkins</a>
   <a class="btn btn-default" href="{% round_url adjudicator_availability round %}">Adjudicator Checkins</a>
-  <a class="btn btn-default" href="{% round_url people_availability round %}">Participant Checkins</a>
 {% endblock %}
 
 {% block page-subnav-actions %}
@@ -16,6 +15,123 @@
 
 {% block content %}
 
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="badge pull-right">x/y</span>
+        <h3 class="panel-title">Adjudicator Checkins x/y</h3>
+      </div>
+      <div class="panel-body round-progresses">
+        <div class="row">
+
+          <div class="col-md-1">
+            {{ round.name }}
+          </div>
+          <div class="col-md-5">
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                60%
+              </div>
+            </div>
+          </div>
+
+          {% if round.prev %}
+          <div class="col-md-1">
+            {{ round.prev.name %}
+          </div>
+          <div class="col-md-5">
+            <div class="progress">
+              <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                60%
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="badge pull-right">x/y</span>
+        <h3 class="panel-title">Team Checkins x/y</h3>
+      </div>
+      <div class="panel-body round-progresses">
+        <div class="row">
+
+          <div class="col-md-1">
+            {{ round.name }}
+          </div>
+          <div class="col-md-5">
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                60%
+              </div>
+            </div>
+          </div>
+
+          {% if round.prev %}
+          <div class="col-md-1">
+            {{ round.prev.name %}
+          </div>
+          <div class="col-md-5">
+            <div class="progress">
+              <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                60%
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="badge pull-right">x/y</span>
+        <h3 class="panel-title">Venue Checkins x/y</h3>
+      </div>
+      <div class="panel-body round-progresses">
+        <div class="row">
+
+          <div class="col-md-1">
+            {{ round.name }}
+          </div>
+          <div class="col-md-5">
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                60%
+              </div>
+            </div>
+          </div>
+
+          {% if round.prev %}
+          <div class="col-md-1">
+            {{ round.prev.name %}
+          </div>
+          <div class="col-md-5">
+            <div class="progress">
+              <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                60%
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
 
 
+    <button class="btn btn-primary">Checkin All Teams, Venues, & Adjudicators</button>
+    {% if round.prev %}
+    <button class="btn btn-primary">Checkin all Teams, Venues, & Adjudicators from {{ previous_round }}</button>
+    {% endif %}
+
+  </div>
+</div>
 {% endblock content %}
