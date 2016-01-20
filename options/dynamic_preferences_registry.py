@@ -521,7 +521,7 @@ class ShowMotionsInResults(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowEmoji(BooleanPreference):
-    help_text = 'Shows Emoji in the draw UI',
+    help_text = 'Shows Emoji in the draw UI'
     verbose_name = 'Show Emoji'
     section = ui_options
     name = 'show_emoji'
