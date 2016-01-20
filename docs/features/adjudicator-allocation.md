@@ -1,3 +1,0 @@
-# Adjudicator Allocation
-
-TODO:

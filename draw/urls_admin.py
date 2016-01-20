@@ -30,7 +30,8 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/venues/$',              views.draw_venues_edit,     name='draw_venues_edit'),
     url(r'^round/(?P<round_seq>\d+)/venues/save/$',         views.save_venues,          name='save_venues'),
 
-    url(r'^round/(?P<round_seq>\d+)/master_sheets/list/$',  views.master_sheets_list,  name='master_sheets_list'),
+    url(r'^round/(?P<round_seq>\d+)/master_sheets/list/$',  views.master_sheets_list,   name='master_sheets_list'),
     url(r'^round/(?P<round_seq>\d+)/master_sheets/venue_group/(?P<venue_group_id>\d+)/$', views.master_sheets_view, name='master_sheets_view'),
+    url(r'^round/(?P<round_seq>\d+)/confirms/$',            views.confirmations_view,   name='confirmations_view'),
 
 ]
