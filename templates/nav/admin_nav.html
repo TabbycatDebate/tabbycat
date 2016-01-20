@@ -1,12 +1,7 @@
 {% load debate_tags %}
 
-<ul id="" class="nav nav-tabs">
+<ul id="" class="nav nav-tabs h5">
 
-  <li {% if availability_nav %}class="active"{% endif %}>
-    <a href="{% round_url availability_index current_round %}">
-      {{ current_round.abbreviation }} Overview
-    </a>
-  </li>
   <li {% if availability_nav %}class="active"{% endif %}>
     <a href="{% round_url availability_index current_round %}">
       {{ current_round.abbreviation }} Checkins

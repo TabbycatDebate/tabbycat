@@ -3,7 +3,7 @@
 
 <header class="overall-header">
 
-<nav class="navbar navbar-default navbar-transparent" role="navigation">
+<nav class="navbar-default navbar-transparent" role="navigation">
   <div class="container-fluid">
 
     <div class="navbar-header">
@@ -46,12 +46,12 @@
 
       <ul class="nav navbar-nav navbar-left nav-pills">
         {% if user.is_authenticated and tournament %}
-          <li class="round-nav">
+          <li class="round-nav small">
             <a href="{% tournament_url tournament_config_index %}">Config</a>
           </li>
           {% for r in tournament.round_set.all %}
             <!-- <span class="{% if r.draw_status == r.STATUS_RELEASED %}text-success{% elif r.draw_status == r.STATUS_CONFIRMED %}text-primary{% elif r.draw_status == r.STATUS_DRAFT %}text-warning{% endif %}"> -->
-            <li id="round-{{ r.seq }}" class="{% if r.seq == current_round.seq %}active{% endif %} round-nav">
+            <li id="round-{{ r.seq }}" class="{% if r.seq == current_round.seq %}active{% endif %} small round-nav">
               <a href="#" class="dropdown-toggle round-nav {% if r.seq == current_round.seq %}current-round{% endif %}" data-toggle="tooltip" title="{{ r.name }} (Draw is {{ r.draw_status }})">
                   {{ r.abbreviation }}
               </a>

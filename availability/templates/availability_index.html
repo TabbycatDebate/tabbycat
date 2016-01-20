@@ -1,26 +1,21 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block no-head-title %}{% endblock %}
-{% block page-title %}Checkins{% endblock %}
+{% block page-title %}{{ round.name }} Checkins{% endblock %}
 
-{% block page-header %}
-<div class="btn-group">
-  <a class="btn btn-default" href="{% round_url team_availability round %}">Team Checkins</a></li>
-  <a class="btn btn-default" href="{% round_url venue_availability round %}">Venue Checkins</a></li>
-  <a class="btn btn-default" href="{% round_url adjudicator_availability round %}">Adjudicator Checkins</a></li>
-  <a class="btn btn-default" href="{% round_url people_availability round %}">Participant Checkins</a></li>
-</div>
+{% block page-subnav-sections %}
+  <a class="btn btn-default" href="{% round_url team_availability round %}">Team Checkins</a>
+  <a class="btn btn-default" href="{% round_url venue_availability round %}">Venue Checkins</a>
+  <a class="btn btn-default" href="{% round_url adjudicator_availability round %}">Adjudicator Checkins</a>
+  <a class="btn btn-default" href="{% round_url people_availability round %}">Participant Checkins</a>
+{% endblock %}
+
+{% block page-subnav-actions %}
+  <a class="btn btn-success">Generate Draw</a>
 {% endblock %}
 
 {% block content %}
 
-hi
 
-Teams available:
-
-Venues available:
-
-etc
 
 {% endblock content %}
