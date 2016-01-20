@@ -313,7 +313,7 @@ class BallotSetForm(forms.Form):
             try:
                 self.fields[name].widget.attrs['tabindex'] = i
             except KeyError as e:
-                logger.warning(e.message)
+                logger.warning(e)
 
         self.nexttabindex = i + 1 # for other UI elements in the tempate
 
