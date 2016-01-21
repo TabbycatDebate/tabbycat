@@ -22,7 +22,7 @@
         "TAB_PAGES_CACHE_TIMEOUT": {
             "description": "Timeout in seconds for tab page cache",
             "required": false
-        },
+        }
     },
     "success_url": "/",
 }
