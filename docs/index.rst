@@ -18,11 +18,11 @@ tournaments.
    :maxdepth: 1
    :caption: Installation
 
-   installation/heroku
-   installation/local
-   installation/linux
-   installation/osx
-   installation/windows
+   install/heroku
+   install/local
+   install/linux
+   install/osx
+   install/windows
 
 .. _usage-docs:
 

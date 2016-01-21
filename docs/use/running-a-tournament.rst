@@ -1,7 +1,7 @@
 .. _running-a-tournament:
 
 ====================
-Running a tournament
+Running a Tournament
 ====================
 
 Once you've finished the steps in :ref:`starting-a-tournament`, you're ready to go! This page outlines what you would do for each round during the tournament. After the tournament, proceed to :ref:`finishing-a-tournament`.

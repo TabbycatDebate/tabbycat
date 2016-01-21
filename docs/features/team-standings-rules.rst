@@ -1,7 +1,7 @@
 .. _team-standings-rules:
 
 ====================
-Team standings rules
+Team Standings Rules
 ====================
 
 There are currently two sets of rules implemented for ordering teams. You choose which one on the tournament configuration page, using the **Team standings rule** setting. There are two allowed values: ``australs`` and ``nz``. If you use any other values, Tabbycat will crash.

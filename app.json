@@ -1,0 +1,31 @@
+{
+    "name": "Tabbycat",
+    "description": "Debating tournament tabulation software for two-team parliamentary formats",
+    "repository": "https://github.com/czlee/tabbycat",
+    "keywords": ["debate", "debating"],
+    "website": "https://tabbycat.readthedocs.org/",
+    "addons": [
+        "memcachier",
+        "papertrail",
+        "sendgrid:starter",
+        "heroku-postgresql:hobby-dev"
+    ],
+    "env": {
+        "WAITRESS_THREADS": {
+            "description": "Number of Waitress threads to start",
+            "value": "4"
+        },
+        "PUBLIC_PAGE_CACHE_TIMEOUT": {
+            "description": "Timeout in seconds for public page cache",
+            "required": false
+        },
+        "TAB_PAGES_CACHE_TIMEOUT": {
+            "description": "Timeout in seconds for tab page cache",
+            "required": false
+        }
+    },
+    "scripts": {
+        "postdeploy": "python manage.py heroku_postdeploy"
+    },
+    "success_url": "/admin/auth/user/1/password/"
+}

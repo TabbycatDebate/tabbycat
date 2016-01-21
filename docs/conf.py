@@ -64,7 +64,7 @@ release = '0.8.1'
 rst_epilog = """
 .. |vrelease| replace:: v{release}
 
-.. _GitHub repository page: https://github.com/czlee/tabbycat/
+.. _our GitHub repository: https://github.com/czlee/tabbycat/
 .. _contact details on our GitHub repository page: https://github.com/czlee/tabbycat#licensing-development-and-contact
 """.format(release=release)
 
