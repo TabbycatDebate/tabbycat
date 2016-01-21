@@ -87,3 +87,5 @@ class TestBasicStandings(TestCase):
 
     def test_setup(self):
         self.setup_testdata(self.testdata[1])
+
+    # TODO check that the standings actually match the expected result...

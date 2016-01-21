@@ -33,7 +33,7 @@ print("")
 
 for rd in results:
     for debate in rd.values():
-        teamscores = debate.values()
+        teamscores = list(debate.values())
         assert teamscores[0]["score"] != teamscores[1]["score"], "There was a draw, please try again."
         for this, other in ((0, 1), (1, 0)):
             teamscores[this]["margin"] = teamscores[this]["score"] - teamscores[other]["score"]
@@ -57,7 +57,7 @@ for team, teamscores in teamscores_by_team.items():
 # Build up standings metrics that require reference to opponents
 for rd in results:
     for debate in rd.values():
-        teamscores = debate.items()
+        teamscores = list(debate.items())
         for a, b in ((0, 1), (1, 0)):
             team, score = teamscores[a]
             opponent, _ = teamscores[b]
