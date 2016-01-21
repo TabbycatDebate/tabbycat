@@ -21,7 +21,9 @@ That said, our to-do list is long. **We prioritise our work by the features that
 
 ## Installation and User Guide
 
-All installation instructions and user guidelines are on the [wiki for this repository](https://github.com/czlee/tabbycat/wiki/). If you'd like to run a tournament with Tabby Cat but are not able to set it up, get in touch with [Philip](http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=) and he can setup a private online copy of the software for your use.
+Our user guide is at http://tabbycat.readthedocs.org/.
+
+If you'd like to run a tournament with Tabby Cat but are not able to set it up, get in touch with [Philip](http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=) and he can setup a private online copy of the software for your use.
 
 ## License and Development
 
