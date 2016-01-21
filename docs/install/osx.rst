@@ -48,25 +48,16 @@ There are instructions on `this blog post <https://marcinkubala.wordpress.com/20
 2. Get the source code
 ================================================================================
 
-There are two ways to get the source code: by using Git, or by downloading a release zip file. If you can, we encourage you to use Git. It'll be easier to keep up to date with Tabbycat and to deploy to a Heroku installation later. However, Git can be confusing for first-timers, so if you just want to get going, the zip file will do fine.
-
-Option 1: Clone the Git repository
---------------------------------------------------------------------------------
-
-1. If you don't already have Git, follow the `instructions on the GitHub website <https://help.github.com/articles/set-up-git>`_ to set up Git.
-2. Clone the repository::
-
-    $ git clone https://github.com/czlee/tabbycat.git
-
-.. tip:: If you have a GitHub account, you might like to fork the repository first, to give yourself a little more freedom.
-
-
-Option 2: Download a release package
---------------------------------------------------------------------------------
-
-1. `Go to our release packages page <https://github.com/czlee/tabbycat/releases>`_.
-2. Download the latest zip or tar.gz file.
+1. `Go to the page for our latest release <https://github.com/czlee/tabbycat/releases/latest>`_.
+2. Download the zip or tar.gz file.
 3. Extract all files in it to a folder of your choice.
+
+.. admonition:: Advanced users
+  :class: tip
+
+  If you're a Git user, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch.
+
+  Even better, you might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
 
 3. Set up a new database
 ================================================================================

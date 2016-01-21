@@ -1,3 +1,5 @@
+.. _contributing:
+
 ============
 Contributing
 ============
@@ -7,12 +9,12 @@ Contributing
 Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. `Join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_.
 
 How to contribute
-================================================================================
+=================
 
 Bug reports
---------------------------------------------------------------------------------
+-----------
 
-Please report bugs by opening a new issue at https://github.com/czlee/tabbycat/issues.
+Please report bugs by opening a new issue in our `GitHub repository <https://github.com/czlee/tabbycat/issues>`_.
 
 It is most helpful if you can include:
 
@@ -21,30 +23,28 @@ It is most helpful if you can include:
 - Detailed steps for how to reproduce the bug
 
 Bug fixes
---------------------------------------------------------------------------------
+---------
 
 Look through the GitHub issues for bugs. Anything tagged with "bug" is open to whoever wants to implement it.
 
 Feature requests
---------------------------------------------------------------------------------
+----------------
 
-.. todo:: Flesh this out
-
-Start an issue, tag as request.
+.. todo:: We haven't written this section yet.
 
 Feature implementations
---------------------------------------------------------------------------------
+-----------------------
 
 Look through the GitHub issues for features. Anything tagged with "feature"
 is open to whoever wants to implement it.
 
 Documentation
---------------------------------------------------------------------------------
+-------------
 
-.. todo:: Flesh this out
+.. todo:: We haven't written this section yet.
 
 Getting Started
-================================================================================
+===============
 
 - Insert general setup instructions
 - Insert instructions on how to make a feature/bug branch
@@ -52,7 +52,7 @@ Getting Started
 - Insert pull request checklist/guidelines
 
 Semantic versioning convention
-================================================================================
+==============================
 
 We follow `Semantic Versioning <http://semver.org/>`_. That said, since this is end-user software, there aren't any downstream dependencies so the concept of a "public API" isn't quite as obvious for Tabbycat as it is for projects more reliant on semantic versioning to manage dependencies. In complying with Semantic Versioning, we consider the following to be our "public API", along with the following criteria for backwards incompatibility:
 
@@ -70,12 +70,12 @@ We follow `Semantic Versioning <http://semver.org/>`_. That said, since this is 
 Starting from version 0.7.0, we use code names for versions, being breeds of cats in alphabetical order.
 
 Documentation
-================================================================================
+=============
 
 Documentation is created using `Sphinx <http://sphinx-doc.org/>`_ and hosted at `Read The Docs <https://readthedocs.org>`_. Pushes to ``develop`` will update the *latest* documentation set, while pushes to ``master`` will update the *stable* documentation set.
 
 Previewing Locally
---------------------------------------------------------------------------------
+------------------
 
 Install Sphinx, Sphinx autobuild, and then start the server
 
@@ -85,7 +85,7 @@ Install Sphinx, Sphinx autobuild, and then start the server
 You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1:7999>`
 
 Provisional Style Guide
---------------------------------------------------------------------------------
+-----------------------
 
 - All pages should have their title at the top as an ``h1`` in
 - Headings should use Title Case

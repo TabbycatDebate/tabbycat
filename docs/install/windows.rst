@@ -7,7 +7,7 @@ Installing locally on Windows
 Before you start, be sure to read our general information on :ref:`local installations <install-local>` to help you understand what's going on.
 
 Requisite technical background
-================================================================================
+==============================
 
 You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest. You just need to be prepared to bear with us. It'll take a while the first time, but it gets easier after that.
 
@@ -19,14 +19,14 @@ In these instructions, we'll use **Windows PowerShell**, a command-line interfac
   Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we might not have tried it.
 
 1. Install dependencies
-================================================================================
+=======================
 
 First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed.
 
 .. _install-python-windows:
 
 1(a). Python
---------------------------------------------------------------------------------
+------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*
 
 Download and install Python 3.4 from the `Python website <https://www.python.org/downloads/release/python-344/>`_. Take note of the following:
@@ -55,7 +55,7 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 .. note:: The reason we can't use Python 3.5 is because it isn't (as of January 2016) supported by `psycopg2 <http://www.stickpeople.com/projects/python/win-psycopg/>`_, which is a dependency of Tabbycat.
 
 1(b). PostgreSQL
---------------------------------------------------------------------------------
+----------------
   *PostgreSQL is a database management system.*
 
 Go to the `PostgreSQL downloads page <http://www.postgresql.org/download/windows/>`_, then follow the link through to EnterpriseDB to download and install the latest version of PostgreSQL.
@@ -63,37 +63,21 @@ Go to the `PostgreSQL downloads page <http://www.postgresql.org/download/windows
 .. tip:: Once PostgreSQL is installed, the PostgreSQL service will run on your computer whenever you are using it. You might prefer to configure it so that it only runs when you want to run Tabbycat. To do this, open "Services" in your Control Panel on Windows, find the PostgreSQL service, and change its startup type to "Manual". This will tell it not to start whenever you log in. Then, if you want to run the server (so you can use Tabbycat), you can do so from "Services" by selecting the PostgreSQL service and clicking "Start the service".
 
 2. Get the source code
-================================================================================
+======================
 
-There are two ways to get the source code: by using Git, or by downloading a release zip file. If you can, we encourage you to use Git. It'll be easier to keep up to date with Tabbycat and to deploy to a Heroku installation later. However, Git can be confusing for first-timers, so if you just want to get going, the zip file will do fine.
-
-Option 1: Clone the Git repository
---------------------------------------------------------------------------------
-
-  *Git is a revision control system widely used in software development.*
-
-1. If you don't already have Git, follow the `instructions on the GitHub website <https://help.github.com/articles/set-up-git>`_ to set up Git.
-2. `Click here to clone the repository in your GitHub desktop client <github-windows://openRepo/https://github.com/czlee/tabbycat>`_. That link will ask to open an external application, namely GitHub.
-
-.. |github-clone-desktop| image:: images/github-clone-in-desktop.png
-.. note:: The link above is the same one as the button |github-clone-desktop| on the `repository page <https://github.com/czlee/tabbycat/>`_.
-
-.. tip:: If you have a GitHub account, you might like to fork the repository first, to give yourself a little more freedom.
+1. `Go to the page for our latest release <https://github.com/czlee/tabbycat/releases/latest>`_.
+2. Download the zip file.
+3. Extract all files in it to a folder of your choice.
 
 .. admonition:: Advanced users
   :class: tip
 
-  Cloning from the command line works too.
+  If you're a Git user, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch.
 
-Option 2: Download a release package
---------------------------------------------------------------------------------
-
-1. `Go to our release packages page <https://github.com/czlee/tabbycat/releases>`_.
-2. Download the latest zip file (or tar.gz if you prefer).
-3. Extract all files in it to a folder of your choice.
+  Even better, you might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
 
 3. Set up a new database
-================================================================================
+========================
 
 .. hint:: You can skip steps 2 and 3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
@@ -122,7 +106,7 @@ Option 2: Download a release package
    Then click OK. (Remember the database name, you'll need it later.)
 
 4. Install Tabbycat
-================================================================================
+===================
 
 Almost there!
 
@@ -201,7 +185,7 @@ Almost there!
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
 
 Starting up an existing Tabbycat instance
-================================================================================
+=========================================
 
 To start your Tabbycat instance up again next time you use your computer, open a PowerShell and::
 

@@ -18,20 +18,25 @@ You need to be familiar with command-line interfaces to get through this comfort
 
 Short version
 =============
-.. code-block:: bash
+.. parsed-literal::
 
-  sudo apt-get install python3.4-venv                      # if using Python 3.4 on Ubuntu
+  sudo apt-get install python3.4-venv                         # if using Python 3.4 on Ubuntu
   sudo apt-get install postgresql-9.4
-  git clone https://github.com/czlee/tabbycat.git
-  cd tabbycat
-  sudo -u postgres createuser myusername --pwprompt        # skip if not first time
+
+  # either
+  wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
+  tar xf |vrelease|.tar.gz
+  cd tabbycat-|release|
+  # or
+  git clone https\:\/\/github.com/czlee/tabbycat.git
+  git checkout |vrelease|                                         # or master
+
+  sudo -u postgres createuser myusername --pwprompt           # skip if not first time
   sudo -u postgres createdb mydatabasename --owner myusername
 
-Then create local_settings.py as described :ref:`below <local-settings-linux>`, then:
+Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
 
-.. code-block:: bash
-
-  pyvenv-3.4 venv                                          # or pyvenv-3.5 or virtualenv
+  pyvenv-3.4 venv                                             # or pyvenv-3.5 or virtualenv
   source venv/bin/activate
   pip install --upgrade pip
   pip install -r requirements_common.txt
@@ -88,29 +93,22 @@ As per the `PostgreSQL installation instructions <http://www.postgresql.org/down
 2. Get the source code
 ======================
 
-There are two ways to get the source code: by using Git, or by downloading a release zip file. We encourage you to use Git. It'll be easier to keep up to date with Tabbycat and to deploy to a Heroku installation later. However, Git can be confusing for first-timers, so if you just want to get going, the tar.gz file will do fine.
+Download and extract:
 
-Option 1: Clone the Git repository
-----------------------------------
-::
-
-    $ git clone https://github.com/czlee/tabbycat.git
-
-If you don't have Git, install it first using ``sudo apt-get install git``.
-
-.. tip:: If you have a GitHub account, you might like to fork the repository
-    first, to give yourself a little more freedom.
-
-Option 2: Download a release package
-------------------------------------
-
-.. I'm not sure how to make this look right
 .. parsed-literal::
 
     $ wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
     $ tar xf |vrelease|.tar.gz
     $ cd tabbycat-|release|
 
+If you're a Git user, you might prefer to clone `our GitHub repository`_ instead:
+
+.. parsed-literal::
+
+    $ git clone https\:\/\/github.com/czlee/tabbycat.git
+    $ git checkout |vrelease|                              # or master
+
+.. tip:: You might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
 
 3. Set up a new database
 ========================
