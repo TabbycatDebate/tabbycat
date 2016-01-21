@@ -1,7 +1,7 @@
 .. _install-osx:
 
 ==========================
-Installing locally on OS X
+Installing Locally on OS X
 ==========================
 
 Before you start, be sure to read our general information on [[local installations]] to help you understand what's going on.

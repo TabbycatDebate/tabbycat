@@ -1,7 +1,7 @@
 .. _starting-a-tournament:
 
 =====================
-Starting a tournament
+Starting a Tournament
 =====================
 
 This page outlines a few things you should do at the start of a tournament, after you've :ref:`imported the initial data <importing-initial-data>`. Once you've done these, proceed to :ref:`running a tournament <running-a-tournament>`.

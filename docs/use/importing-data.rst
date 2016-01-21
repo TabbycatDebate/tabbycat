@@ -1,7 +1,7 @@
 .. _importing-initial-data:
 
 ======================
-Importing initial data
+Importing Initial Data
 ======================
 
 Once you've got Tabbycat installed, the next step is to import data for the tournament. The initial import requires details of all institutions, teams, speakers and adjudicators, and specifications for how many rounds and their properties. We don't currently have a way of doing this from the web interface. There are a few ways to do it.

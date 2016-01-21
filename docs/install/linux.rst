@@ -1,7 +1,7 @@
 .. _install-linux:
 
 ===========================
-Installing locally on Linux
+Installing Locally on Linux
 ===========================
 
 Before you start, be sure to read our general information on :ref:`local installations <install-local>` to help you understand what's going on.

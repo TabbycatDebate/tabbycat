@@ -1,5 +1,5 @@
 ===============
-Draw generation
+Draw Generation
 ===============
 
 The draw generator is quite flexible. You can specify a number of settings to suit different tournaments' rules.

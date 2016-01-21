@@ -1,5 +1,5 @@
 ==================
-Tournament history
+Tournament History
 ==================
 
 Here is a list of tournaments at which Tabbycat has been used.
