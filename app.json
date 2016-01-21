@@ -4,6 +4,7 @@
     "repository": "https://github.com/czlee/tabbycat",
     "keywords": ["debate", "debating"],
     "website": "https://tabbycat.readthedocs.org/",
+    "postdeploy": "python utils/heroku_postdeploy.py",
     "addons": [
         "memcachier",
         "papertrail",
@@ -24,5 +25,5 @@
             "required": false
         }
     },
-    "success_url": "/"
+    "success_url": "/admin/auth/user/1/password/"
 }
