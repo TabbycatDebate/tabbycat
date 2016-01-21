@@ -4,7 +4,6 @@
     "repository": "https://github.com/czlee/tabbycat",
     "keywords": ["debate", "debating"],
     "website": "https://tabbycat.readthedocs.org/",
-    "postdeploy": "python manage.py heroku_postdeploy",
     "addons": [
         "memcachier",
         "papertrail",
@@ -24,6 +23,9 @@
             "description": "Timeout in seconds for tab page cache",
             "required": false
         }
+    },
+    "scripts": {
+        "postdeploy": "python manage.py heroku_postdeploy"
     },
     "success_url": "/admin/auth/user/1/password/"
 }
