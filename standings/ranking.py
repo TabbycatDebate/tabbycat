@@ -5,6 +5,9 @@ for each team and annotating team standings with them. The most obvious example
 is the basic ranking from first to last (taking into account equal rankings),
 but there are other "types" of ranks, for example, ranks within brackets
 ("subranks") or divisions ("division ranks").
+
+Note: There's a registry at the bottom of the file. If you add a new
+RankAnnotator subclass, be sure to add it to the registry.
 """
 
 from .metrics import metricgetter

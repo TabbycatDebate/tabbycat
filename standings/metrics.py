@@ -3,6 +3,9 @@
 Each metric annotator is responsible for computing a particular metric for each
 team and annotating team standings with them, for example, number of wins
 (points), or draw strength.
+
+Note: There's a registry at the bottom of the file. If you add a new
+MetricAnnotator subclass, be sure to add it to the registry.
 """
 
 from django.db.models import Sum

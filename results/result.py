@@ -409,27 +409,29 @@ class BallotSet(object):
 
         self._decision_calculated = True
 
-    def _requires_decision(func):
-        @wraps(func)
-        def wrapped(self, *args, **kwargs):
-            if not self.is_complete:
-                return []
-            if not self._decision_calculated:
-                self._calc_decision()
-            return func(self, *args, **kwargs)
-        return wrapped
+    def _requires_decision(default):
+        def wrap(func):
+            @wraps(func)
+            def wrapped(self, *args, **kwargs):
+                if not self.is_complete:
+                    return default
+                if not self._decision_calculated:
+                    self._calc_decision()
+                return func(self, *args, **kwargs)
+            return wrapped
+        return wrap
 
     @property
-    @_requires_decision
+    @_requires_decision([])
     def majority_adj(self):
         return self._adjs_by_dt[self._winner]
 
     @property
-    @_requires_decision
+    @_requires_decision(None)
     def winner(self):
         return self._winner.team
 
-    @_requires_decision
+    @_requires_decision(0)
     def num_adjs_for_team(self, team):
         return len(self._adjs_by_dt[self._dt(team)])
 
