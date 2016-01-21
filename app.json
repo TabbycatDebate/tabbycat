@@ -4,7 +4,7 @@
     "repository": "https://github.com/czlee/tabbycat",
     "keywords": ["debate", "debating"],
     "website": "https://tabbycat.readthedocs.org/",
-    "postdeploy": "python utils/heroku_postdeploy.py",
+    "postdeploy": "python manage.py heroku_postdeploy",
     "addons": [
         "memcachier",
         "papertrail",
