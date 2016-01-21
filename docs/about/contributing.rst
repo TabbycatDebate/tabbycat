@@ -77,11 +77,12 @@ Documentation is created using `Sphinx <http://sphinx-doc.org/>`_ and hosted at 
 Previewing Locally
 --------------------------------------------------------------------------------
 
-Install Sphinx if you don't already have it, then ``make html``::
+Install Sphinx, Sphinx autobuild, and then start the server
 
   $ pip install sphinx sphinx-autobuild
-  $ cd docs
-  $ make html
+  $ sphinx-autobuild docs docs/_build/html --port 7999
+
+You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1:7999>`
 
 Provisional Style Guide
 --------------------------------------------------------------------------------
