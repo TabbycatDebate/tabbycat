@@ -65,7 +65,7 @@ class Debate(models.Model):
 
     @property
     def teams(self):
-        return Team.objects.select_related('debate_team').filter(debateteam__debate=self)
+        return Team.objects.filter(debateteam__debate=self)
 
     @cached_property
     def aff_team(self):
