@@ -7,6 +7,12 @@
 
 {% block page-alerts %}
 
+  {% if previous_unconfirmed != 0  %}
+  <div class="alert alert-danger">
+    Note: {{ previous_unconfirmed }} debates from <strong>{{ round.prev.name }} do not have a completed b
+    allot</strong> — this may lead to a draw that fails or is incorrect <em>depending</em> on your draw rules.
+  </div>
+  {% endif %}
   {% if not active_teams.count|divisibleby:2  %}
   <div class="alert alert-danger">
     Note: there is an uneven number of teams checked in for this round.
