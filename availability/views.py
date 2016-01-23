@@ -5,6 +5,17 @@ from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
 
 from utils.views import *
 
+@round_view
+def availability_index(request, round):
+    context = {
+        'teams_in': 10,
+        'teams_total': 14,
+        'teams_percent': 10 / 14 * 100,
+    }
+    return r2r(request, 'availability_index.html', context)
+
+
+
 def _availability(request, round, model, context_name):
 
     items = getattr(round, '%s_availability' % model)()
@@ -15,10 +26,6 @@ def _availability(request, round, model, context_name):
 
     return r2r(request, '%s_availability.html' % model, context)
 
-@round_view
-def availability_index(request, round):
-    context = {}
-    return r2r(request, 'availability_index.html', context)
 
 # public (for barcode checkins)
 @round_view
