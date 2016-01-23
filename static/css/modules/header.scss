@@ -12,9 +12,6 @@
 .round-nav {
   text-transform: uppercase;
   text-align: center;
-  &[data-toggle="tooltip"] {
-    border-bottom: none; // Remove the underline for hoverables
-  }
   a {
     min-width: 32px; // So the settings icon isn't smushed
   }

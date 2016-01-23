@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 
-{% block head-title %}<span class="emoji">👋</span> Welcome! <small>Which tournament are you after?</small>{% endblock %}
-{% block page-title %}Home{% endblock %}
-
+{% block head-title %}
+  <i class="emoji">👋</i> Welcome! <small>Which tournament are you after?</small>
+{% endblock %}
+{% block page-title %}
+  Home
+{% endblock %}
 {% block nav %}{% endblock %}
 
 {% block content %}
@@ -11,11 +14,11 @@
   {% if user.is_authenticated %}
     {% for tournament in tournaments %}
     <li class="list-group-item">
-      <a href="{{ tournament.get_absolute_url }}">🏆{{ tournament.name }} (administrative site)</a>
+      <a href="{{ tournament.get_absolute_url }}"><i class="emoji">🏆</i>{{ tournament.name }} (administrative site)</a>
       <span class="badge">ADMIN</span>
     </li>
     <li class="list-group-item">
-      <a href="{{ tournament.get_public_url }}">🏆{{ tournament.name }}</a>
+      <a href="{{ tournament.get_public_url }}"><i class="emoji">🏆</i>{{ tournament.name }}</a>
       <span class="badge">PUBLIC</span>
     </li>
     {% endfor %}

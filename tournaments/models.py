@@ -620,9 +620,13 @@ class Round(models.Model):
 
     def activate_all(self):
         from venues.models import Venue
-        self.set_available_venues([v.id for v in Venue.objects.all()])
-        self.set_available_adjudicators([a.id for a in Adjudicator.objects.all()])
-        self.set_available_teams([t.id for t in Team.objects.all()])
+        from participants.models import Team, Adjudicator
+        self.set_available_venues(
+            [v.id for v in Venue.objects.filter(tournament=self.tournament)])
+        self.set_available_adjudicators(
+            [a.id for a in Adjudicator.objects.filter(tournament=self.tournament)])
+        self.set_available_teams(
+            [t.id for t in Team.objects.filter(tournament=self.tournament)])
 
     @property
     def prev(self):
