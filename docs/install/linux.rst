@@ -1,75 +1,117 @@
-.. _install-osx:
+.. _install-linux:
 
-==========================
-Installing locally on OS X
-==========================
+===========================
+Installing Locally on Linux
+===========================
 
-Before you start, be sure to read our general information on [[local installations]] to help you understand what's going on.
+Before you start, be sure to read our general information on :ref:`local installations <install-local>` to help you understand what's going on.
 
-Requisite technical knowledge
-================================================================================
+Requisite technical background
+==============================
 
-You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest. You just need to be prepared to bear with us. It'll take a while the first time, but it gets easier after that.
-
-Every line in the instructions that begins with ``$`` is a command that you need to run in a **Terminal**, but without the ``$``: that sign is a convention used in instructions to make it clear that it is a command you need to run.
+You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest.
 
 .. admonition:: Advanced users
   :class: tip
 
   Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we might not have tried it.
 
+Short version
+=============
+.. parsed-literal::
+
+  sudo apt-get install python3.4-venv                         # if using Python 3.4 on Ubuntu
+  sudo apt-get install postgresql-9.4
+
+  # either
+  wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
+  tar xf |vrelease|.tar.gz
+  cd tabbycat-|release|
+  # or
+  git clone https\:\/\/github.com/czlee/tabbycat.git
+  git checkout |vrelease|                                         # or master
+
+  sudo -u postgres createuser myusername --pwprompt           # skip if not first time
+  sudo -u postgres createdb mydatabasename --owner myusername
+
+Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
+
+  pyvenv-3.4 venv                                             # or pyvenv-3.5 or virtualenv
+  source venv/bin/activate
+  pip install --upgrade pip
+  pip install -r requirements_common.txt
+  dj migrate
+  dj createsuperuser
+  dj runserver
+
 1. Install dependencies
-================================================================================
-
+=======================
 First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed.
-
-1(a). Python
---------------------------------------------------------------------------------
-As of version 0.8, Tabbycat requires Python 3.4 or later. OS X only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
-
-The executable will probably be called ``python3``, rather than ``python``. Check::
-
-    $ python3 --version
-    Python 3.4.4
-
-.. warning:: As of version 0.8, Python 2 is not supported. You must use Python 3.4 or
-  higher.
 
 .. admonition:: Advanced users
   :class: tip
 
-  These instructions will use the ``pyvenv`` module. If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
+  These instructions are for Ubuntu. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
-1(b). PostgreSQL
---------------------------------------------------------------------------------
+1(a). Python
+------------
+As of version 0.8, Tabbycat requires Python 3.4 or later. You probably already
+have this installed, but it'll be called ``python3``. Check::
 
-There are instructions on `this blog post <https://marcinkubala.wordpress.com/2013/11/11/postgresql-on-os-x-mavericks/>`_ for installing PostgreSQL on OS X.
+    $ python3 --version
+    Python 3.4.4
+
+If it's not installed, run ``sudo apt-get install python3``, or download the latest version from the `Python website <https://www.python.org/downloads/>`_.
+
+.. warning:: As of version 0.8, Python 2 is not supported. You must use Python 3.4 or
+  higher.
+
+1(b). Pyvenv
+------------
+**If you installed Python 3.5 or later:** Nothing to do, ``pyvenv-3.5`` (or whatever your version is) should already be working.
+
+**If you are using Python 3.4:** Ubuntu 14.04 had a `broken pyvenv-3.4 package
+<https://bugs.launchpad.net/ubuntu/+source/python3.4/+bug/1290847>`_,
+so there is a small workaround to get it to work.::
+
+    $ sudo apt-get install python3.4-venv
+
+.. admonition:: Advanced users
+  :class: tip
+
+  If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
+
+1(c). PostgreSQL
+----------------
+  *PostgreSQL is a database management system.*
+
+As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
+
+    $ sudo apt-get install postgresql-9.4
+
 
 2. Get the source code
-================================================================================
+======================
 
-There are two ways to get the source code: by using Git, or by downloading a release zip file. If you can, we encourage you to use Git. It'll be easier to keep up to date with Tabbycat and to deploy to a Heroku installation later. However, Git can be confusing for first-timers, so if you just want to get going, the zip file will do fine.
+Download and extract:
 
-Option 1: Clone the Git repository
---------------------------------------------------------------------------------
+.. parsed-literal::
 
-1. If you don't already have Git, follow the `instructions on the GitHub website <https://help.github.com/articles/set-up-git>`_ to set up Git.
-2. Clone the repository::
+    $ wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
+    $ tar xf |vrelease|.tar.gz
+    $ cd tabbycat-|release|
 
-    $ git clone https://github.com/czlee/tabbycat.git
+If you're a Git user, you might prefer to clone `our GitHub repository`_ instead:
 
-.. tip:: If you have a GitHub account, you might like to fork the repository first, to give yourself a little more freedom.
+.. parsed-literal::
 
+    $ git clone https\:\/\/github.com/czlee/tabbycat.git
+    $ git checkout |vrelease|                              # or master
 
-Option 2: Download a release package
---------------------------------------------------------------------------------
-
-1. `Go to our release packages page <https://github.com/czlee/tabbycat/releases>`_.
-2. Download the latest zip or tar.gz file.
-3. Extract all files in it to a folder of your choice.
+.. tip:: You might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
 
 3. Set up a new database
-================================================================================
+========================
 
 .. hint:: You can skip step 1 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
@@ -85,13 +127,16 @@ Option 2: Download a release package
 
     $ sudo -u postgres createdb mydatabasename --owner myusername
 
+
 4. Install Tabbycat
-================================================================================
+===================
 Almost there!
 
 1. Navigate to your Tabbycat directory::
 
     $ cd path/to/my/tabbycat
+
+.. _local-settings-linux:
 
 2. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
 
@@ -108,9 +153,15 @@ Almost there!
          }
      }
 
-3. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
+3. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:
 
-    $ pyvenv venv
+  .. code:: bash
+
+    # If you installed Python 3.4
+    $ pyvenv-3.4 venv
+
+    # If you installed Python 3.5
+    $ pyvenv-3.5 venv
 
 4. Run the ``activate`` script. This puts you "into" the virtual environment::
 
@@ -120,10 +171,6 @@ Almost there!
 
     $ pip install --upgrade pip
     $ pip install -r requirements_common.txt
-
-  .. warning:: If on OS X 10.9+ or using XCode 5.1+, installing ``psycopg2`` may fail. In that case, run the following::
-
-      $ ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future pip install -r requirements_common.txt
 
 6. Initialize the database and create a user account for yourself::
 
@@ -147,15 +194,13 @@ Almost there!
 
 8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000/.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
-  .. todo:: Replace this with a screenshot of OS X
-
   .. image:: images/tabbycat-bare-linux.png
       :alt: Bare Tabbycat installation
 
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
 
 Starting up an existing Tabbycat instance
-================================================================================
+=========================================
 To start your Tabbycat instance up again next time you use your computer::
 
     $ cd path/to/my/tabbycat

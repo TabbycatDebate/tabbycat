@@ -1,7 +1,7 @@
 .. _tournament-data-importers:
 
 =========================
-Tournament data importers
+Tournament Data Importers
 =========================
 
 This page describes how to write your own tournament data importer. It is aimed at an audience that is familiar with programming in Python, and may be willing to get their head around the Django model if necessary.

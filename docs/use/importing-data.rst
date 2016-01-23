@@ -1,12 +1,12 @@
 .. _importing-initial-data:
 
 ======================
-Importing initial data
+Importing Initial Data
 ======================
 
 Once you've got Tabbycat installed, the next step is to import data for the tournament. The initial import requires details of all institutions, teams, speakers and adjudicators, and specifications for how many rounds and their properties. We don't currently have a way of doing this from the web interface. There are a few ways to do it.
 
-.. note:: With any method, the objective is to create one ``Tournament`` object, and ``Round``, ``Venue``, ``Institution``, ``Team``, ``Speaker``, ``Adjudicator``, ``AdjudicatorConflict`` and ``AdjudicatorInstitutionConflict`` objects for each round, venue, and so on*
+.. note:: With any method, the objective is to create one ``Tournament`` object, and ``Round``, ``Venue``, ``Institution``, ``Team``, ``Speaker``, ``Adjudicator``, ``AdjudicatorConflict`` and ``AdjudicatorInstitutionConflict`` objects for each round, venue, and so on
 
 .. _import-manual-setup:
 
@@ -15,7 +15,7 @@ Manual setup
 
 For sufficiently small tournaments, you might just choose to edit the database via the Django administrative interface.
 
-.. caution:: The Django administrative interface is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. When you're setting up a tournament for the first time, this is highly unlikely to happen, but it's worth keeping in mind.*
+.. caution:: The Django administrative interface is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. When you're setting up a tournament for the first time, this is highly unlikely to happen, but it's worth keeping in mind.
 
 1. Open up your the admin area of your site by going to the URL with /admin/ on the end, `e.g.` if your URL root is 127.0.0.1:8000, then http://127.0.0.1:8000/admin/.
 2. Then click **Debate** in the sidebar.

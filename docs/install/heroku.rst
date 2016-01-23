@@ -46,8 +46,6 @@ If you want to :ref:`import tournament data <importing-initial-data>` from CSV f
 
 - If you don't already have **Git**, follow the `instructions on the GitHub website <https://help.github.com/articles/set-up-git>`_ to set up Git.
 
-.. note:: To our knowledge, there's no way to install Tabbycat without Heroku Toolbelt, because you need it in order to initialize the database
-
 .. note:: Linux and OS X users probably already have Python installed. There is no need to install Python 3 specifically. Although Tabbycat uses Python 3, installing it on Heroku relies only on the deployment script, which is compatible with both Python 2 and Python 3.
 
 2. Get the source code

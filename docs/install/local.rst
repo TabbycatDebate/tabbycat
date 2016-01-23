@@ -1,7 +1,7 @@
 .. _install-local:
 
 ===================
-Local installations
+Local Installations
 ===================
 
 What is a local installation?

@@ -72,7 +72,7 @@ class Command(BaseCommand):
 
     def _print_stage(self, message):
         if self.verbosity > 0:
-            if self.color: message = "\033[1;36m" + message + "\033[0m\n"
+            if self.color: message = "\033[0;36m" + message + "\033[0m\n"
             self.stdout.write(message)
 
     def _print_result(self, counts, errors):

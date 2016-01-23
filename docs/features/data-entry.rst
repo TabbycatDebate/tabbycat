@@ -1,7 +1,7 @@
 .. _data-entry:
 
 =============================
-Entering ballots and feedback
+Entering Ballots and Feedback
 =============================
 
 Ballot checkin

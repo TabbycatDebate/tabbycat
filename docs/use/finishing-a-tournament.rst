@@ -1,7 +1,7 @@
 .. _finishing-a-tournament:
 
 ======================
-Finishing a tournament
+Finishing a Tournament
 ======================
 
 This page outlines some final steps after the preliminary rounds.
