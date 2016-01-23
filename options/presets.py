@@ -44,7 +44,7 @@ class AustralianEastersPreferences(AustralsPreferences):
         self.scoring__maximum_margin                   = 15.0
         # Debate Rules
         self.debate_rules__reply_scores_enabled        = False
-        self.debate_rules__motion_vetoes_enabled       = False
+        self.debate_rules__motion_vetoes_enabled       = True
         self.data_entry__enable_motions                = False
         # UI Options
         self.ui_options__show_novices                  = True
