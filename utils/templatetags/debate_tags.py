@@ -52,6 +52,9 @@ def team_emoji(team):
             return EMOJI_LIST[team.id]
 register.simple_tag(team_emoji)
 
+def percentage(numberA, numberB):
+    return numberA / numberB * 100
+register.simple_tag(percentage)
 
 def team_status_classes(team):
     classes = list()
@@ -73,14 +76,6 @@ def debate_draw_status_class(debate):
             return "active text-muted"
 
 register.simple_tag(debate_draw_status_class)
-
-
-def feedback_number_step(min_val, max_val, number):
-    step = (max_val - min_val) / 4
-    value = min_val + (number * step)
-    return value
-
-register.simple_tag(feedback_number_step)
 
 class RoundURLNode(template.Node):
     def __init__(self, view_name, round=None):
@@ -152,3 +147,4 @@ def prev_value(value, arg):
 @register.filter(name='times')
 def times(number):
     return list(range(number))
+

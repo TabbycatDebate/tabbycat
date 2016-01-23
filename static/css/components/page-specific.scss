@@ -2,19 +2,14 @@
 
 .round-progresses .progress {
   margin-bottom: 0px; // Progress bars have bottom margins; need to offset
+  .progress-empty span { // If its showing 0/x make the text visible and not flush
+    color: #000;
+    margin-left: 10px;
+  }
 }
 
 
 // OLD: REFACTOR
-
-// Adj Checkins
-#select_breaking {
-  display: none;
-}
-
-.adj-checkins #select_breaking {
-  display: block;
-}
 
 // Ballot Entry
 .speaker-name {

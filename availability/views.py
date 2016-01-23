@@ -7,12 +7,24 @@ from utils.views import *
 
 @round_view
 def availability_index(request, round):
-    context = {
-        'teams_in': 10,
-        'teams_total': 14,
-        'teams_percent': 10 / 14 * 100,
-    }
-    return r2r(request, 'availability_index.html', context)
+    previous_round = round.prev.id
+    context_name = [{
+            'type'      : "Team",
+            'total'     : round.tournament.teams.count(),
+            'in_now'    : ActiveTeam.objects.filter(round=round.id).count(),
+            'in_before' : ActiveTeam.objects.filter(round=previous_round).count(),
+        },{
+            'type'      : "Adjudicator",
+            'total'     : round.tournament.adjudicator_set.count(),
+            'in_now'    : ActiveAdjudicator.objects.filter(round=round.id).count(),
+            'in_before' : ActiveAdjudicator.objects.filter(round=previous_round).count(),
+        },{
+            'type'      : "Venue",
+            'total'     : round.tournament.venue_set.count(),
+            'in_now'    : ActiveVenue.objects.filter(round=round.id).count(),
+            'in_before' : ActiveVenue.objects.filter(round=previous_round).count(),
+    }]
+    return r2r(request, 'availability_index.html', dict(checkin_types=context_name))
 
 
 
