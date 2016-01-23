@@ -239,6 +239,21 @@ if os.environ.get('SENDGRID_USERNAME', ''):
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
 
+# =============
+# = Travis CI =
+# =============
+if os.environ.get('TRAVIS', '') == 'true':
+    DATABASES = {
+        'default': {
+            'ENGINE':   'django.db.backends.postgresql_psycopg2',
+            'NAME':     'travisci',
+            'USER':     'postgres',
+            'PASSWORD': '',
+            'HOST':     'localhost',
+            'PORT':     '',
+        }
+    }
+
 # ===========================
 # = Local Overrides
 # ===========================
