@@ -9,6 +9,6 @@ services:
 install:
   - pip install -r requirements_common.txt
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -c 'create database travisci;' -U postgres
 script:
   - dj test
