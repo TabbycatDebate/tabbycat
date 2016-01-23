@@ -45,7 +45,7 @@ class AustralianEastersPreferences(AustralsPreferences):
         # Debate Rules
         self.debate_rules__reply_scores_enabled        = False
         self.debate_rules__motion_vetoes_enabled       = True
-        self.data_entry__enable_motions                = False
+        self.data_entry__enable_motions                = True
         # UI Options
         self.ui_options__show_novices                  = True
 
