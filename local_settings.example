@@ -67,6 +67,13 @@ CACHES = { # Use a dummy cache in development
    }
 }
 
+# Don't used the cached template loader otherwise template edits are a pain
+TEMPLATES[0]['OPTIONS']['loaders'] = [
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+]
+
+
 # ===========================
 # = Database Settings       =
 # ===========================
