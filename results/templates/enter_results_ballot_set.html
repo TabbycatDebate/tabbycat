@@ -33,6 +33,7 @@
         <p class="col-xs-12 lead h3 page-header">Motion</p>
     </div>
 
+    {% if pref.enable_motions %}
     <div class="form-group">
         <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Chosen</label>
         <div class="col-sm-10">
@@ -40,6 +41,7 @@
             {{ form.motion.errors }}
         </div>
     </div>
+    {% endif %}
     {% if pref.motion_vetoes_enabled %}
         <div class="form-group">
             <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Aff Veto</label>
