@@ -1,9 +1,13 @@
-{% extends "error_page.html" %}
+{% extends "base.html" %}
 
-{% block head-title %}500 - Internal Server Error{% endblock %}
-{% block page-title %}500 - Internal Server Error{% endblock %}
+{% block head-title %}
+  <h2><i class="emoji">🙀</i>Internal Server Error (500)</h2>
+{% endblock %}
+{% block page-title %}
+  500 - Internal Server Error
+{% endblock %}
 
 {% block content %}
-  <p>Something's gone really wrong that should never happen.</p>
-  <p><a href="/">Back to the home page.</a></p>
+  <p>Something's gone really wrong which really shouldn't go wrong. Bother.
+  <a href="/">Go back to the homepage I guess?</a></p>
 {% endblock %}

@@ -17,8 +17,8 @@
 
 {% block page-subnav-actions %}
   {% if can_advance %}
-    <a class="btn btn-success submit-disable">
-      Generate Draw
+    <a class="btn btn-success submit-disable" href="{% round_url draw round %}">
+      Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
     </a>
   {% else %}
     <button type="button" class="btn btn-success disabled" data-toggle="tooltip" title="Check in
