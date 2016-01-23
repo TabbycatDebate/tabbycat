@@ -4,9 +4,9 @@
 {% block page-title %}{{ round.name }} Checkins{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default" href="{% round_url team_availability round %}">Team Checkins</a>
-  <a class="btn btn-default" href="{% round_url venue_availability round %}">Venue Checkins</a>
-  <a class="btn btn-default" href="{% round_url adjudicator_availability round %}">Adjudicator Checkins</a>
+  <a class="btn btn-default" href="{% round_url team_availability round %}">Checkin Teams</a>
+  <a class="btn btn-default" href="{% round_url venue_availability round %}">Checkin Venues</a>
+  <a class="btn btn-default" href="{% round_url adjudicator_availability round %}">Checkin Adjudicators</a>
 {% endblock %}
 
 {% block page-subnav-actions %}
@@ -24,11 +24,11 @@
 
     <div class="row">
       <div class="col-md-6">
-        <button class="btn btn-primary btn-block">Checkin All Teams, Venues, & Adjudicators</button>
+        <button class="btn btn-primary btn-block">Checkin all Teams, Venues, & Adjudicators</button>
       </div>
       <div class="col-md-6">
         {% if round.prev %}
-          <button class="btn btn-primary btn-block">Checkin all Teams, Venues, & Adjudicators from {{ previous_round }}</button>
+          <button class="btn btn-primary btn-block">Checkin all Teams, Venues, & Adjudicators active in {{ previous_round.name }}</button>
         {% endif %}
       </div>
     </div>
