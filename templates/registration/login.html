@@ -6,12 +6,13 @@
 
 {% block nav %}{% endblock %}
 {% block page-alerts %}
+<!--[if lte IE 9]>
 <div class="alert alert-warning">
   Hey it looks like you are running an old version of Internet Explorer. As a
   result some parts of Tabby Cat <strong>may not work properly</strong>. Switch to a newer
   browser if possible!
 </div>
-<!--[if lte IE 9]><![endif]-->
+<![endif]-->
 {% endblock %}
 
 {% block content %}
