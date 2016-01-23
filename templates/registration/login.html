@@ -1,10 +1,18 @@
 {% extends "base.html" %}
 {% load add_field_css %}
 
-{% block head-title %}🔓Login{% endblock %}
+{% block head-title %}<h2><span class="emoji">🔓</span>Login</h2>{% endblock %}
 {% block page-title %}🔓Login{% endblock %}
 
 {% block nav %}{% endblock %}
+{% block page-alerts %}
+<div class="alert alert-warning">
+  Hey it looks like you are running an old version of Internet Explorer. As a
+  result some parts of Tabby Cat <strong>may not work properly</strong>. Switch to a newer
+  browser if possible!
+</div>
+<!--[if lte IE 9]><![endif]-->
+{% endblock %}
 
 {% block content %}
 
