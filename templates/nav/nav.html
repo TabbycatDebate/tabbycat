@@ -1,19 +1,126 @@
 {% load debate_tags %}
-{% load cache %}
 
-<header class="overall-header">
+<nav class="">
 
-<nav class="navbar-default navbar-transparent" role="navigation">
-  <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
 
-    <div class="navbar-header">
+      <ul class="nav nav-pills nav-stacked">
 
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+        <li role="presentation" class="dropdown">
+          <a id="drop5" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            {{ tournament }} <span class="caret pull-right"></span>
+          </a>
+          <ul id="menu2" class="dropdown-menu" aria-labelledby="drop5">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li> <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <ul class="nav nav-pills nav-stacked">
+
+        <h6>Round Status</h6>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+          {% for r in tournament.round_set.all %}
+            {% if r.stage == 'P' %}
+
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="heading{{ r.id }}">
+                <a class="panel-title h4 collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ r.id }}" aria-expanded="false" aria-controls="collapse{{ r.id }}">
+                  {{ r.name }} <span class="caret pull-right"></span>
+                </a>
+              </div>
+              <div id="collapse{{ r.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                <div class="panel-body">
+                  <li {% if availability_nav %}class="active"{% endif %}>
+                    <a href="{% round_url availability_index r %}">
+                      Checkins
+                    </a>
+                  </li>
+                  <li {% if draw_nav %}class="active"{% endif %}>
+                    <a href="{% round_url draw r %}">
+                      Draw
+                    </a>
+                  </li>
+                  <li {% if motions_nav %}class="active"{% endif %}>
+                    <a href="{% round_url motions r %}">
+                      Motions
+                    </a>
+                  </li>
+                  <li {% if ballots_nav %}class="active"{% endif %}>
+                    <a href="{% round_url results r %}">
+                      Results
+                    </a>
+                  </li>
+                </div>
+              </div>
+            </div>
+
+            {% endif %}
+          {% endfor %}
+
+        </div>
+      </ul>
+
+      <ul class="nav nav-pills nav-stacked">
+
+        <h6>Tournament Status</h6>
+        {% if pref.side_allocations_enabled == 'preallocated' %}
+          <li {% if sides_nav %}class="active"{% endif %} class="pull-right">
+            <a href="{% tournament_url side_allocations %}">Sides</a>
+          </li>
+        {% endif %}
+        {% if pref.enable_divisions %}
+          <li class="{% if divisions_nav %}active {% endif %}">
+            <a href="{% tournament_url division_allocations %}">Divisions</a>
+          </li>
+        {% endif %}
+        <li class="{% if feedback_nav %}dropdown active {% endif %}">
+          <a href="{% tournament_url feedback_overview %}" >Feedback</a>
+        </li>
+        <li class="{% if standings_nav %}dropdown active {% endif %}">
+          <a href="{% round_url standings_index current_round %}" >Standings</a>
+        </li>
+        <li class="{% if break_nav %}dropdown active {% endif %}">
+          <a href="{% tournament_url breaking_index %}" >Breaks</a>
+        </li>
+      </ul>
+
+      <ul class="nav nav-pills nav-stacked">
+
+        <h6>Tournament Setup</h6>
+
+        <li>
+          <a href="{% tournament_url tournament_config_index %}">Settings</a>
+        </li>
+        <li>
+          <a class="" href="{% tournament_url data_index %}">Data Import</a>
+        </li>
+        <li>
+          <a class="" href="/admin/">Data Admin</a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+{% comment %}
+
+   <div class="navbar-header">
 
       {% if all_tournaments.count > 1 %}
         <ul id="nav_brand" class="nav navbar-nav navbar-left">
@@ -46,13 +153,8 @@
 
       <ul class="nav navbar-nav navbar-left nav-pills">
         {% if user.is_authenticated and tournament %}
-          <li class="round-nav small" data-toggle="tooltip" title="Tournament Settings">
-            <a href="{% tournament_url tournament_config_index %}" >
-              <span class="glyphicon glyphicon-cog"></span>
-            </a>
-          </li>
           {% for r in tournament.round_set.all %}
-            <!-- <span class="{% if r.draw_status == r.STATUS_RELEASED %}text-success{% elif r.draw_status == r.STATUS_CONFIRMED %}text-primary{% elif r.draw_status == r.STATUS_DRAFT %}text-warning{% endif %}"> -->
+            <span class="{% if r.draw_status == r.STATUS_RELEASED %}text-success{% elif r.draw_status == r.STATUS_CONFIRMED %}text-primary{% elif r.draw_status == r.STATUS_DRAFT %}text-warning{% endif %}">
             <li id="round-{{ r.seq }}" class="{% if r.seq == current_round.seq %}active{% endif %} small round-nav" data-toggle="tooltip" title="{{ r.name }} (Draw is {{ r.draw_status }})">
               <a href="#" class="dropdown-toggle round-nav {% if r.seq == current_round.seq %}current-round{% endif %}">
                   {{ r.abbreviation }}
@@ -90,4 +192,4 @@
   </div>
 </nav>
 
-</header>
+{% endcomment %}

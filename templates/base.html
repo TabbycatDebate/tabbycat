@@ -23,58 +23,64 @@
 <body id="{% block body-id %}{% endblock %}" class="{% block body-class %}{% endblock %}">
 
   <div id="wrap">
+  {% block body %}
 
-    {% block body %}
+    <div class="row">
+      <div class="container-fluid">
 
-    {% block nav %}{% include "nav/nav.html" %}{% endblock nav %}
+        <div id="sidebar-wrap" class="col-md-3">
+          {% block nav %}{% include "nav/nav.html" %}{% endblock nav %}
+        </div><!-- end nav column -->
 
-    <div id="container" class="container-fluid">
+        <div class="col-md-9 col-md-offset-3">
 
-      <div class="row vertical-space subnav">
-        <div class="col-md-12 hidden-print page-sub-nav">
-          <ul class="nav nav-pills navbar-left">
-            {% block page-subnav-sections %}{% endblock %}
-          </ul>
-          <div class="nav btn-group navbar-right">
-            {% block page-subnav-actions %}{% endblock %}
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-            {% block head-title %}{% endblock %}
-          </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-        {% if messages %}
-          <div class="form-inline hidden-print" id="messages">
-            {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                {{ message }}
+          <div class="row vertical-space subnav">
+            <div class="col-md-12 hidden-print page-sub-nav">
+              <ul class="nav nav-pills navbar-left">
+                {% block page-subnav-sections %}{% endblock %}
+              </ul>
+              <div class="nav btn-group navbar-right">
+                {% block page-subnav-actions %}{% endblock %}
               </div>
-            {% endfor %}
+            </div>
           </div>
-        {% endif %}
-        {% block page-alerts %}{% endblock %}
-        </div>
+
+          <div class="row">
+            <div class="col-md-12">
+                {% block head-title %}{% endblock %}
+              </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+            {% if messages %}
+              <div class="form-inline hidden-print" id="messages">
+                {% for message in messages %}
+                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+            {% block page-alerts %}{% endblock %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 alert-warning">
+              {% block page-header %}{% endblock %}
+            </div>
+          </div>
+
+          {% block content %}{% endblock content %}
+
+        </div><!-- end main column -->
+
       </div>
-
-      <div class="row">
-        <div class="col-md-12 alert-warning">
-          {% block page-header %}{% endblock %}
-        </div>
-      </div>
-
-      {% block content %}{% endblock content %}
-
     </div>
 
-    {% endblock body %}
-
+  {% endblock body %}
   </div>
 
   {% block footer %}{% include "footer.html" %}{% endblock footer %}
