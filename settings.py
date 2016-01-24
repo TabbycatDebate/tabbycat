@@ -73,7 +73,7 @@ INSTALLED_APPS = (
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'compressor',
+    'static_precompiler'
     )
 
 
@@ -139,25 +139,17 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # other finders..
-    'compressor.finders.CompressorFinder',
+    'static_precompiler.finders.StaticPrecompilerFinder',
 )
-COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'django_libsass.SassCompiler'), # SASS for stylesheets
-)
-LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
-LIBSASS_SOURCE_COMMENTS = False
 
-COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = True
-COMPRESS_URL = STATIC_URL
-COMPRESS_OFFLINE_MANIFEST = 'manifest.json'
-COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
-COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compression
+STATIC_PRECOMPILER_COMPILERS = (
+    ('static_precompiler.compilers.libsass.SCSS', {"sourcemap_enabled": True, "load_paths": ["/scss"]}),
+)
 
 # ===========
 # = Logging =
 # ===========
+
 if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
 
@@ -253,7 +245,7 @@ if os.environ.get('TRAVIS', '') == 'true':
             'PORT':     '',
         }
     }
-    
+
 # ===========================
 # = Local Overrides
 # ===========================
