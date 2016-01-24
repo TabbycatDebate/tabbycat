@@ -11,10 +11,6 @@
         "heroku-postgresql:hobby-dev"
     ],
     "env": {
-        "WAITRESS_THREADS": {
-            "description": "Number of Waitress threads to start",
-            "value": "4"
-        },
         "PUBLIC_PAGE_CACHE_TIMEOUT": {
             "description": "Timeout in seconds for public page cache",
             "required": false
