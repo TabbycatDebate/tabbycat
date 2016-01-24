@@ -1,2 +1,3 @@
 sphinx
 sphinx-autobuild
+livereload==2.4.0

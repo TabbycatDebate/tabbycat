@@ -43,7 +43,7 @@ The executable will probably be called ``python3``, rather than ``python``. Chec
 1(b). PostgreSQL
 --------------------------------------------------------------------------------
 
-There are instructions on `this blog post <https://marcinkubala.wordpress.com/2013/11/11/postgresql-on-os-x-mavericks/>`_ for installing PostgreSQL on OS X.
+Download `postgres.app <http://postgresapp.com/>`_, move it to your Applications folder, and open it. This should place an icon in your menu bar, showing that the postgres database is running. Whenever you are running Tabbycat you'll need to have this app running.
 
 2. Get the source code
 ================================================================================
@@ -68,13 +68,13 @@ There are instructions on `this blog post <https://marcinkubala.wordpress.com/20
 
   ::
 
-    $ sudo -u postgres createuser myusername --pwprompt
+    $ createuser myusername --pwprompt
 
   .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.4/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the ``pg_hba.conf`` file, or you could define a mapping in ``pg_ident.conf`` and append the ``map=`` option to the ``local all all peer`` line. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
 
 2. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
 
-    $ sudo -u postgres createdb mydatabasename --owner myusername
+    $ createdb mydatabasename --owner myusername
 
 4. Install Tabbycat
 ================================================================================
@@ -112,10 +112,6 @@ Almost there!
     $ pip install --upgrade pip
     $ pip install -r requirements_common.txt
 
-  .. warning:: If on OS X 10.9+ or using XCode 5.1+, installing ``psycopg2`` may fail. In that case, run the following::
-
-      $ ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future pip install -r requirements_common.txt
-
 6. Initialize the database and create a user account for yourself::
 
     $ dj migrate
@@ -138,9 +134,7 @@ Almost there!
 
 8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000/.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
-  .. todo:: Replace this with a screenshot of OS X
-
-  .. image:: images/tabbycat-bare-linux.png
+  .. image:: images/tabbycat-bare-osx.png
       :alt: Bare Tabbycat installation
 
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
