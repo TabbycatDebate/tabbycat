@@ -72,7 +72,6 @@
 @include text-emphasis-variant('.text-warning', $brand-warning);
 @include text-emphasis-variant('.text-danger', $brand-danger);
 
-// General utilities
 .no-vertical-spacing,
 table.table > thead > tr > th.no-vertical-spacing,
 table.table > tbody > tr > td.no-vertical-spacing {
