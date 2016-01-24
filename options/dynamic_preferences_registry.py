@@ -465,7 +465,7 @@ class PublicMotions(BooleanPreference):
     verbose_name = "Public Motions"
     section = public_features
     name = "public_motions"
-    default = True
+    default = False
 
 @tournament_preferences_registry.register
 class PublicTeamStandings(BooleanPreference):

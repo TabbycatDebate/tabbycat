@@ -48,7 +48,7 @@ DEBUG_TOOLBAR_PANELS = (
 
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
-    'JQUERY_URL': '/static/js/vendor/jquery-1.12.0.min.js', # Enables offline work
+    'JQUERY_URL': '/static/js/vendor/jquery-2.2.0.min.js', # Enables offline work
 }
 
 # ===================
@@ -66,6 +66,13 @@ CACHES = { # Use a dummy cache in development
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
    }
 }
+
+# Don't used the cached template loader otherwise template edits are a pain
+TEMPLATES[0]['OPTIONS']['loaders'] = [
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+]
+
 
 # ===========================
 # = Database Settings       =
