@@ -55,7 +55,7 @@ Download `postgres.app <http://postgresapp.com/>`_, move it to your Applications
 .. admonition:: Advanced users
   :class: tip
 
-  If you're a Git user, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch.
+  If you've used Git before, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch.
 
   Even better, you might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
 
