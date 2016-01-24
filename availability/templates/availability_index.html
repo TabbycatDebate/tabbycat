@@ -4,13 +4,28 @@
 {% block page-title %}{{ round.name }} Checkins{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default" href="{% round_url team_availability round %}">Checkin Teams</a>
-  <a class="btn btn-default" href="{% round_url venue_availability round %}">Checkin Venues</a>
-  <a class="btn btn-default" href="{% round_url adjudicator_availability round %}">Checkin Adjudicators</a>
+  <a class="btn btn-default submit-disable" href="{% round_url team_availability round %}">
+    Checkin Teams
+  </a>
+  <a class="btn btn-default submit-disable" href="{% round_url venue_availability round %}">
+    Checkin Venues
+  </a>
+  <a class="btn btn-default submit-disable" href="{% round_url adjudicator_availability round %}">
+    Checkin Adjudicators
+  </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a class="btn btn-success">Generate Draw</a>
+  {% if can_advance %}
+    <a class="btn btn-success submit-disable" href="{% round_url draw round %}">
+      Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+  {% else %}
+    <button type="button" class="btn btn-success disabled" data-toggle="tooltip" title="Check in
+    some adjudicators, teams, and venues before generating the draw">
+      Generate Draw
+    </button>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -24,12 +39,16 @@
 
     <div class="row">
       <div class="col-md-6">
-        <button class="btn btn-primary btn-block">Checkin all Teams, Venues, & Adjudicators</button>
+        <a class="btn btn-primary submit-disable" href="{% round_url update_availability_all round %}">
+          Checkin all Teams, Venues, & Adjudicators
+        </a>
       </div>
       <div class="col-md-6">
-        {% if round.prev %}
-          <button class="btn btn-primary btn-block">Checkin all Teams, Venues, & Adjudicators active in {{ previous_round.name }}</button>
-        {% endif %}
+      {% if round.prev %}
+        <a class="btn btn-primary submit-disable">
+          Checkin all Teams, Venues, & Adjudicators active in {{ previous_round.name }}
+        </a>
+      {% endif %}
       </div>
     </div>
 

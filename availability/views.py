@@ -5,37 +5,53 @@ from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
 
 from utils.views import *
 
+@admin_required
 @round_view
 def availability_index(request, round):
-    previous_round = round.prev.id
-    context_name = [{
-            'type'      : "Team",
-            'total'     : round.tournament.teams.count(),
-            'in_now'    : ActiveTeam.objects.filter(round=round.id).count(),
-            'in_before' : ActiveTeam.objects.filter(round=previous_round).count(),
-        },{
-            'type'      : "Adjudicator",
-            'total'     : round.tournament.adjudicator_set.count(),
-            'in_now'    : ActiveAdjudicator.objects.filter(round=round.id).count(),
-            'in_before' : ActiveAdjudicator.objects.filter(round=previous_round).count(),
-        },{
-            'type'      : "Venue",
-            'total'     : round.tournament.venue_set.count(),
-            'in_now'    : ActiveVenue.objects.filter(round=round.id).count(),
-            'in_before' : ActiveVenue.objects.filter(round=previous_round).count(),
-    }]
-    return r2r(request, 'availability_index.html', dict(checkin_types=context_name))
+    if round.prev:
+        previous_round = round.prev.id
+    else:
+        previous_round = 0
 
+    checks = [{
+        'type'      : "Team",
+        'total'     : round.tournament.teams.count(),
+        'in_now'    : ActiveTeam.objects.filter(round=round.id).count(),
+        'in_before' : ActiveTeam.objects.filter(round=previous_round).count(),
+    },{
+        'type'      : "Adjudicator",
+        'total'     : round.tournament.adjudicator_set.count(),
+        'in_now'    : ActiveAdjudicator.objects.filter(round=round.id).count(),
+        'in_before' : ActiveAdjudicator.objects.filter(round=previous_round).count(),
+    },{
+        'type'      : "Venue",
+        'total'     : round.tournament.venue_set.count(),
+        'in_now'    : ActiveVenue.objects.filter(round=round.id).count(),
+        'in_before' : ActiveVenue.objects.filter(round=previous_round).count(),
+    }]
+
+    # Basic check before enable the button to advance
+    if all([checks[0]['in_now'] > 1, checks[1]['in_now'] > 0, checks[2]['in_now'] > 0]):
+        can_advance = True
+    else:
+        can_advance = False
+
+    return r2r(request, 'availability_index.html', dict(
+        checkin_types=checks, can_advance=can_advance))
+
+
+@admin_required
+@round_view
+def update_availability_all(request, round):
+    round.activate_all()
+    messages.add_message(request, messages.SUCCESS,
+        'Checked in all teams, adjudicators, and venues')
+    return redirect_round('availability_index', round)
 
 
 def _availability(request, round, model, context_name):
-
     items = getattr(round, '%s_availability' % model)()
-
-    context = {
-        context_name: items,
-    }
-
+    context = { context_name: items }
     return r2r(request, '%s_availability.html' % model, context)
 
 

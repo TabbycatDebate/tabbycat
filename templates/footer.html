@@ -3,16 +3,25 @@
 <div id="footer" class="clearfix">
   <nav class="navbar navbar-default" role="navigation">
     <p class="navbar-brand text-muted">
-        {% if tournament and pref.enable_divisions == 0 %}
-          {{ tournament }} runs on <a href="https://github.com/czlee/tabbycat/" target="_new">😸Tabby Cat v0.8.0, </a>
-          as developed by Qi-Shan, <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, & <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
-          Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> (Android) &
-           <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
-        {% endif %}
+    {% if tournament and pref.enable_divisions == 0 %}
+      {{ tournament }} runs on
+      <a href="https://github.com/czlee/tabbycat/" target="_new">
+        <i class="emoji">😸</i>Tabby Cat v0.8.0,
+      </a>
+      as developed by Qi-Shan,
+      <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, &
+      <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
+      Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">
+      Debatekeeper</a> (Android) & <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
+    {% endif %}
     </p>
     <p class="navbar-brand text-muted pull-right">
-        <a href="/">🏠Home</a>
-        <a href="http://tabbycat.readthedocs.org/" target="_blank">❓Documentation</a>
+      <a href="/">
+        <i class="emoji">🏠</i>Home
+      </a>
+      <a href="http://tabbycat.readthedocs.org/" target="_blank">
+        <i class="emoji">❓</i>Documentation
+      </a>
     </p>
   </nav>
 </div>

@@ -10,7 +10,7 @@
       <div class="col-md-1">
         {{ round.name }}
       </div>
-      <div class="col-md-5">
+      <div class="{% if round.prev %}col-md-5{% else %}col-md-11{% endif %}">
         <div class="progress">
           <div class="progress-bar progress-bar-success {% if checkin_type.in_now == 0 %}progress-empty{% endif %}" role="progressbar" aria-valuenow="{{ checkin_type.in_now }}"
           aria-valuemin="0" aria-valuemax="{{ checkin_type.total }}" style="width: {% percentage checkin_type.in_now checkin_type.total %}%;">
