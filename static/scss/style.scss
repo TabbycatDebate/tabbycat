@@ -5,54 +5,54 @@
 @import "partials/variables";
 
 // Core variables and mixins
-@import "bootstrap/mixins";
-@import "bootstrap/variables";
+@import "vendor/bootstrap/mixins";
+@import "vendor/bootstrap/variables";
 
 // Reset
-@import "bootstrap/normalize";
-@import "bootstrap/print";
+@import "vendor/bootstrap/normalize";
+@import "vendor/bootstrap/print";
 
 // Core CSS
-@import "bootstrap/scaffolding";
-@import "bootstrap/type";
-@import "bootstrap/code";
-@import "bootstrap/grid";
-@import "bootstrap/tables";
-@import "bootstrap/forms";
-@import "bootstrap/buttons";
+@import "vendor/bootstrap/scaffolding";
+@import "vendor/bootstrap/type";
+@import "vendor/bootstrap/code";
+@import "vendor/bootstrap/grid";
+@import "vendor/bootstrap/tables";
+@import "vendor/bootstrap/forms";
+@import "vendor/bootstrap/buttons";
 
 // Components
-@import "bootstrap/component-animations";
-@import "bootstrap/glyphicons";
-@import "bootstrap/dropdowns";
-@import "bootstrap/button-groups";
-@import "bootstrap/input-groups";
-@import "bootstrap/navs";
-@import "bootstrap/navbar";
-@import "bootstrap/breadcrumbs";
-@import "bootstrap/pagination";
-@import "bootstrap/pager";
-@import "bootstrap/labels";
-@import "bootstrap/badges";
-@import "bootstrap/jumbotron";
-@import "bootstrap/thumbnails";
-@import "bootstrap/alerts";
-@import "bootstrap/progress-bars";
-@import "bootstrap/media";
-@import "bootstrap/list-group";
-@import "bootstrap/panels";
-@import "bootstrap/wells";
-@import "bootstrap/close";
+@import "vendor/bootstrap/component-animations";
+@import "vendor/bootstrap/glyphicons";
+@import "vendor/bootstrap/dropdowns";
+@import "vendor/bootstrap/button-groups";
+@import "vendor/bootstrap/input-groups";
+@import "vendor/bootstrap/navs";
+@import "vendor/bootstrap/navbar";
+// @import "vendor/bootstrap/breadcrumbs";
+// @import "vendor/bootstrap/pagination";
+@import "vendor/bootstrap/pager";
+@import "vendor/bootstrap/labels";
+@import "vendor/bootstrap/badges";
+@import "vendor/bootstrap/jumbotron";
+@import "vendor/bootstrap/thumbnails";
+@import "vendor/bootstrap/alerts";
+@import "vendor/bootstrap/progress-bars";
+@import "vendor/bootstrap/media";
+@import "vendor/bootstrap/list-group";
+@import "vendor/bootstrap/panels";
+// @import "vendor/bootstrap/wells";
+@import "vendor/bootstrap/close";
 
 // Components w/ JavaScript
-@import "bootstrap/modals";
-@import "bootstrap/tooltip";
-@import "bootstrap/popovers";
-@import "bootstrap/carousel";
+@import "vendor/bootstrap/modals";
+@import "vendor/bootstrap/tooltip";
+@import "vendor/bootstrap/popovers";
+// @import "vendor/bootstrap/carousel";
 
 // Utility classes
-@import "bootstrap/utilities";
-@import "bootstrap/responsive-utilities";
+@import "vendor/bootstrap/utilities";
+@import "vendor/bootstrap/responsive-utilities";
 
 //---------------------------------------------------
 // TABBYCAT
