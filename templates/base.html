@@ -68,15 +68,21 @@
 
   <!-- Load jQuery with fallback -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  <script>if (!window.jQuery) { document.write('<script src="{% static 'js/vendor/jquery-2.2.0.min.js' %}"><\/script>'); }</script>
+  <script>if (window.jQuery === undefined) {
+    document.write('<script src="{% static 'js/vendor/jquery-2.2.0.min.js' %}"><\/script>');
+  }</script>
 
   <!-- Load Bootstrap with fallback -->
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <script>window.jQuery.fn.modal || document.write('<script src=""{% static 'js/vendor/bootstrap.min.js' %}"><\/script>')</script>
+  <script>if (window.jQuery.fn.tooltip === undefined) {
+    document.write('<script src="{% static 'js/vendor/bootstrap.min.js' %}"><\/script>');
+  }</script>
 
   <!-- Load Datatables with fallback -->
   <script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
-  <script>window.jQuery.fn.dataTable || document.write('<script src="{% static 'js/vendor/jquery.dataTables.min.js' %}"><\/script>')</script>
+  <script>if (window.jQuery.fn.dataTable === undefined) {
+    document.write('<script src="{% static 'js/vendor/jquery.dataTables.min.js' %}"><\/script>');
+  }</script>
 
   <!-- Small dependencies and JS for all pages -->
   <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/main.js' %}"></script>
