@@ -1,6 +1,6 @@
 {% load staticfiles %}
-{% load compress %}
 {% load debate_tags %}
+{% load compile_static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,13 +10,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block page-title %}{% endblock %}</title>
   <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjUwOEU5NDc5RDJDMTExRTRCRjQ2OUZDNTgxMzU0NEMzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjUwOEU5NDdBRDJDMTExRTRCRjQ2OUZDNTgxMzU0NEMzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NTA4RTk0NzdEMkMxMTFFNEJGNDY5RkM1ODEzNTQ0QzMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NTA4RTk0NzhEMkMxMTFFNEJGNDY5RkM1ODEzNTQ0QzMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5Pg6RUAAAAnklEQVR42mL8//8/Ay0BI50s6OzspLrR5eXlQJKJgcaABdNOygFyeNDcB0PfAhZcEvv371+zZg0xRujp6aWnp4/AIDIyMlJSUoJznz17tmTJEgjb0dHR1NQULsXBwUGOBfxggFVKWFhYXl5+xCTTUQtGLRi1YFiXpmhAXFy8rKwMwhYQEKC+BcAymfgSdOCCiBbtO5r7gHHIt64BAgwAx6wnJnaZud8AAAAASUVORK5CYII=" />
-  {% compress css %}
-  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/bootstrap.scss' %}">
-  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/style.scss' %}" />
-  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/components/tables.scss' %}" />
-  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/components/page-specific.scss' %}" />
-  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'css/components/print.scss' %}" />
-  {% endcompress %}
+
+  <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="{% static 'scss/style.scss'|compile %}" />
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -70,65 +66,28 @@
 
   {% block footer %}{% include "footer.html" %}{% endblock footer %}
 
-  {% compress js %}
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/jquery-1.12.0.min.js' %}"></script> <!-- 1.12.0 -->
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/bootstrap.min.js' %}"></script> <!-- 3.3.6 -->
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/jquery.dataTables.min.js' %}"></script> <!-- 1.10.0 -->
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/dataTables.bootstrap.js' %}"></script>
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/dataTables.fixedHeader.min.js' %}"></script>
-  {% endcompress %}
-  <script type="text/javascript">
-    $.extend( true, $.fn.dataTable.defaults, {
-      // Default Data Table options
-      "sDom":
-        "<'row'<'col-md-12 table-container'lr"+ // f = the filter
-        "t"+
-        "f<p>",
-      "bPaginate": false,
-      "oLanguage": {
-        "sSearch": "Search: "
-      }
-    });
+  <!-- Load jQuery with fallback -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script>if (window.jQuery === undefined) {
+    document.write('<script src="{% static 'js/vendor/jquery-2.2.0.min.js' %}"><\/script>');
+  }</script>
 
-    $(document).ready(function(){
+  <!-- Load Bootstrap with fallback -->
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script>if (window.jQuery.fn.tooltip === undefined) {
+    document.write('<script src="{% static 'js/vendor/bootstrap.min.js' %}"><\/script>');
+  }</script>
 
-      // Enable hover tooltips for all elements
-      $('[data-toggle=tooltip]').tooltip({
-        'html': true,
-        'placement': 'bottom'
-      });
-      // Disable buttons post submission
-      $('.submit-disable').on('click', function () {
-        var $btn = $(this).button('loading');
-      });
-      // Enable AJAX-based hover tooltips to lookup speaker names
-      $('.team-speakers-hover').tooltip({
-        title: getTeamSpeakers,
-        'html': true,
-        'placement': 'bottom'
-      });
-      // Dynamic lookup speakers on hover
-      var cachedData = Array();
-      function getTeamSpeakers(){
-          var element = $(this);
-          var id = element.attr('id').replace("team_speakers_", "");
-          if(id in cachedData){
-              return cachedData[id];
-          }
-          var localData = "error";
-          $.ajax('{{ tournament.get_public_url  }}participants/team_list/' + id + '/', {
-              async: false,
-              success: function(data){
-                  localData = data[0] + ", " + data[1] + ", " + data[2];
-              }
-          });
-          cachedData[id] = localData;
-          return localData;
-      }
-    });
+  <!-- Load Datatables with fallback -->
+  <script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+  <script>if (window.jQuery.fn.dataTable === undefined) {
+    document.write('<script src="{% static 'js/vendor/jquery.dataTables.min.js' %}"><\/script>');
+  }</script>
 
+  <!-- Small dependencies and JS for all pages -->
+  <script src="{% static 'js/main.js' %}"></script>
 
-  </script>
+  <!-- Page specific JS and dependencies -->
   {% block extra-js %}{% endblock extra-js %}
 
   {% if debug %}
