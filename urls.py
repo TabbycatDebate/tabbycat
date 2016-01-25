@@ -17,17 +17,20 @@ def redirect(view):
 
 urlpatterns = [
 
+    # Indices
     url(r'^$',                                  index),
-
     url(r'^t/(?P<tournament_slug>[-\w_]+)/',    include('tournaments.urls')),
 
+    # Admin area
+    url(r'^jet/',                               include('jet.urls', 'jet')),
     url(r'^admin/',                             include(admin.site.urls)),
 
+    # Accounts
     url(r'^accounts/login/$',                   views.login),
-
     url(r'^accounts/logout/$',                  views.logout,
         {'next_page': '/'}),
 
+    # Static Files
     url(r'^static/(?P<path>.*)$',               serve,
         {'document_root': settings.STATIC_ROOT}),
 ]

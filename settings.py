@@ -63,7 +63,7 @@ TABBYCAT_APPS = (
 )
 
 INSTALLED_APPS = (
-    'suit',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -100,7 +100,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
-                'django.template.context_processors.request',           # For SUIT
+                'django.template.context_processors.request',           # For Jet
                 'utils.context_processors.debate_context',              # For tournament config vars
                 'utils.context_processors.get_menu_highlight',          # For nav highlight
             ],
