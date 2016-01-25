@@ -3,9 +3,6 @@ import os
 import urllib.parse
 
 PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
-STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
-STATIC_ROOT         = 'staticfiles'
-STATIC_URL          = '/static/'
 MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
 SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
@@ -136,6 +133,10 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 # = Pipelines =
 # =============
 
+STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
+STATIC_ROOT         = 'staticfiles'
+STATIC_URL          = '/static/'
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -145,6 +146,8 @@ STATICFILES_FINDERS = (
 STATIC_PRECOMPILER_COMPILERS = (
     ('static_precompiler.compilers.libsass.SCSS', {"sourcemap_enabled": True, "load_paths": ["/scss"]}),
 )
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # ===========
 # = Logging =

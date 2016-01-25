@@ -11,3 +11,4 @@ django-static-precompiler[libsass]==1.2 # For static compilation
 six==1.10.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.1.18
 django-dynamic-preferences==0.7.0
+whitenoise==2.0.6 # Static file serving on heroku
