@@ -158,7 +158,12 @@ if os.environ.get('DEBUG', ''):
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': False,'filters': {
+    'require_debug_false': {
+        # Only send emails to admins when debug is false
+        '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
