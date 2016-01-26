@@ -38,7 +38,7 @@ if settings.DEBUG:
         # Only serve debug toolbar when on DEBUG
         url(r'^__debug__/',                     include(debug_toolbar.urls)),
     ]
-if LOCAL_SETTINGS in settings and settings.DEBUG is False:
+if hasattr(settings, "LOCAL_SETTINGS") and settings.DEBUG is False:
         urlpatterns += [
             url(r'^static/(?P<path>.*)$',           serve,
             {'document_root': settings.STATIC_ROOT}),
