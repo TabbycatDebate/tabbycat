@@ -163,11 +163,23 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
         },
+        'mail_admins': {
+            # Any log item marked ERROR or higher will be sent to admins
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'django.request': {
+            # Pass all ERRORS to mail_admins handler
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
         },
     },
 }
@@ -233,6 +245,8 @@ if os.environ.get('DEBUG', ''):
     TEMPLATE_DEBUG = DEBUG
 
 if os.environ.get('SENDGRID_USERNAME', ''):
+    SERVER_EMAIL = 'tabbycatinstance@sendgrid.com'
+    DEFAULT_FROM_EMAIL = 'tabbycatinstance@sendgrid.com'
     EMAIL_HOST= 'smtp.sendgrid.net'
     EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
     EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
