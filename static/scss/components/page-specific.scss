@@ -178,7 +178,6 @@
     cursor: move;
     border: 1px solid $btn-primary-border;
     @extend .text-primary;
-    @extend .border-primary;
 
     &.is_unaccredited {
       background: $table-bg-active;

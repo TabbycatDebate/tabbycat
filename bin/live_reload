@@ -1,2 +1,2 @@
 # Requires `npm install -g livereload` and the Live Reload browser plugin
-livereload staticfiles
+livereload .

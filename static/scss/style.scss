@@ -1,5 +1,6 @@
 //---------------------------------------------------
 // BOOTSTRAP
+//---------------------------------------------------
 
 // Our overrides
 @import "partials/variables";
@@ -56,6 +57,7 @@
 
 //---------------------------------------------------
 // TABBYCAT
+//---------------------------------------------------
 
 @import "modules/typography";
 @import "modules/print";
@@ -64,6 +66,7 @@
 
 //---------------------------------------------------
 // TO REFACTOR
+//---------------------------------------------------
 
 @import "components/page-specific";
 
@@ -135,70 +138,8 @@ table.table > tbody > tr > td.no-horizontal-spacing {
   }
 }
 
-
-// Sticky Footer
-html,
-body {
-  height: 100%;
-}
-
-#wrap {
-  min-height: 100%;
-  height: auto;
-  margin: 0 auto -100px;
-  padding: 0 0 115px;
-
-  #container {
-    margin-bottom: 20px;
-  }
-}
-
-#footer {
-  height: 115px;
-
-  .navbar {
-    height: 115px;
-    margin-bottom: 0;
-  }
-
-  .navbar {
-    border-radius: 0;
-  }
-
-  .navbar-brand {
-    font-size: 14px;
-    margin-bottom: 0;
-  }
-}
-
-@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-  #wrap {
-    margin: 0 auto -100px;
-    padding: 0 0 100px;
-  }
-
-  #footer {
-    height: 100px;
-
-    .navbar {
-      height: 100px;
-    }
-  }
-}
-
-@media (min-width: $screen-md-min) {
-  #wrap {
-    margin: 0 auto -50px;
-    padding: 0 0 50px;
-  }
-
-  #footer {
-    height: 50px;
-    overflow: hidden;
-  }
-}
-
 // Universal Style overrides
+
 .page-header h1 {
   margin-top: 0; // fixes button alignment easily
 }
@@ -364,11 +305,9 @@ input[type="checkbox"].form-control {
   // Darker than normal link, but not black
   color: #285379;
 }
-
 .feedback-integer-scale-table {
   width: 100%;
 }
-
 .feedback-integer-scale-table td {
   text-align: center;
 }

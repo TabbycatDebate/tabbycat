@@ -22,19 +22,20 @@
 
 <body id="{% block body-id %}{% endblock %}" class="{% block body-class %}{% endblock %}">
 
-  <div id="wrap">
   {% block body %}
 
     <div class="row">
       <div class="container-fluid">
 
-        <div id="sidebar-wrap" class="col-md-3">
-          {% block nav %}{% include "nav/nav.html" %}{% endblock nav %}
-        </div><!-- end nav column -->
+        {% if 'admin' in request.path and user.is_superuser %}
+          {% include "nav/admin_nav.html" %}
+          <div class="col-md-9 col-md-offset-3">
+        {% else %}
+          {% include "nav/top_nav_base.html" %}
+          <div class="col-md-12">
+        {% endif %}
 
-        <div class="col-md-9 col-md-offset-3">
-
-          <div class="row vertical-space subnav">
+          <div class="row  subnav">
             <div class="col-md-12 hidden-print page-sub-nav">
               <ul class="nav nav-pills navbar-left">
                 {% block page-subnav-sections %}{% endblock %}
@@ -75,15 +76,15 @@
 
           {% block content %}{% endblock content %}
 
-        </div><!-- end main column -->
+        </div><!-- /.main-col -->
 
-      </div>
-    </div>
+
+        {% block footer %}{% include "footer.html" %}{% endblock footer %}
+
+      </div><!-- /.container-fluid -->
+    </div><!-- /.row -->
 
   {% endblock body %}
-  </div>
-
-  {% block footer %}{% include "footer.html" %}{% endblock footer %}
 
   <!-- Load jQuery with fallback -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
