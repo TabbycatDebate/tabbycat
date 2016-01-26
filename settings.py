@@ -9,7 +9,7 @@ MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
 # = Overwritten in Local =
 # ========================
 
-ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com')
+ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com'),
 MANAGERS            = ADMINS
 DEBUG               = False
 DEBUG_ASSETS        = DEBUG
@@ -153,21 +153,49 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 # = Logging =
 # ===========
 
+
+if os.environ.get('SENDGRID_USERNAME', ''):
+    SERVER_EMAIL = os.environ['SENDGRID_USERNAME']
+    DEFAULT_FROM_EMAIL = os.environ['SENDGRID_USERNAME']
+    EMAIL_HOST= 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
+    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+
 if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+        # Only send emails to admins when debug is false
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
         },
+        'mail_admins': {
+            # Any log item marked ERROR or higher will be sent to admins
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'django.request': {
+            # Pass all ERRORS to mail_admins handler
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
         },
     },
 }
@@ -232,12 +260,6 @@ if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
     TEMPLATE_DEBUG = DEBUG
 
-if os.environ.get('SENDGRID_USERNAME', ''):
-    EMAIL_HOST= 'smtp.sendgrid.net'
-    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
-    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
 
 # =============
 # = Travis CI =
