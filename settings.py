@@ -155,7 +155,7 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 
 if os.environ.get('SENDGRID_USERNAME', ''):
-    SERVER_EMAIL = 'tabbycatinstance@sendgrid.com'
+    SERVER_EMAIL = os.environ['SENDGRID_USERNAME']
     DEFAULT_FROM_EMAIL = os.environ['SENDGRID_USERNAME']
     EMAIL_HOST= 'smtp.sendgrid.net'
     EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
