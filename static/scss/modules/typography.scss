@@ -1,6 +1,6 @@
 @import "../vendor/bootstrap/variables";
 
-// Web Font
+// WEB FONTS
 
 @font-face {
   font-family: "LatoLatinWeb";
@@ -31,6 +31,9 @@
 .font-size-reset {
   font-size: $font-size-base;
 }
+.text-muted {
+  color: $gray-light;
+}
 
 // EMOJI
 
@@ -39,9 +42,9 @@
   font-style: normal;
 }
 
+// BUTTONS
 
-// Buttons
-.btn, nav { // Actionable elements (buttons, navs) should be distinct
+nav { // Actionable elements (buttons, navs) should be distinct
   font-family: $headings-font-family;
 }
 .nav-pills a {

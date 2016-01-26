@@ -1,54 +1,81 @@
 {% load debate_tags %}
 
-<ul id="" class="nav nav-tabs h5">
+<div class="col-md-2">
 
-  <li {% if availability_nav %}class="active"{% endif %}>
-    <a href="{% round_url availability_index current_round %}">
-      {{ current_round.abbreviation }} Checkins
-    </a>
-  </li>
-  <li {% if draw_nav %}class="active"{% endif %}>
-    <a href="{% round_url draw current_round %}">
-      {{ current_round.abbreviation }} Draw
-    </a>
-  </li>
-  <li {% if motions_nav %}class="active"{% endif %}>
-    <a href="{% round_url motions current_round %}">
-      {{ current_round.abbreviation }} Motions
-    </a>
-  </li>
-  <li {% if ballots_nav %}class="active"{% endif %}>
-    <a href="{% round_url results current_round %}">
-      {{ current_round.abbreviation }} Results
-    </a>
-  </li>
+  <h6 class="text-uppercase text-muted small">Running Rounds</h6>
+  <ul class="nav nav-pills nav-stacked">
 
-  {% if pref.side_allocations_enabled == 'preallocated' %}
-    <li {% if sides_nav %}class="active"{% endif %} class="pull-right">
-      <a href="{% tournament_url side_allocations %}">Sides</a>
+    <li {% if availability_nav %}class="active"{% endif %}>
+      <a href="{% round_url availability_index current_round %}">
+        <span class="circle-icon"><i class="emoji"></i></span>
+        {{ current_round.abbreviation }} Checkins
+      </a>
     </li>
-  {% endif %}
-  {% if pref.enable_divisions %}
-    <li class="{% if divisions_nav %}active {% endif %}pull-right">
-      <a href="{% tournament_url division_allocations %}">Divisions</a>
+    <li {% if draw_nav %}class="active"{% endif %}>
+      <a href="{% round_url draw current_round %}">
+        <span class="circle-icon"><i class="emoji"></i></span>
+        {{ current_round.abbreviation }} Draw
+      </a>
     </li>
-  {% endif %}
-  <li class="{% if standings_nav %}dropdown active {% endif %}pull-right">
-    <a href="{% round_url standings_index current_round %}" >Standings</a>
-  </li>
-  <li class="{% if break_nav %}dropdown active {% endif %}pull-right">
-    <a href="{% tournament_url breaking_index %}" >Breaks</a>
-  </li>
-  <li class="{% if feedback_nav %}dropdown active {% endif %}pull-right">
-    <a href="{% tournament_url feedback_overview %}" >Feedback</a>
-  </li>
-  <li class="pull-right">
-    <a href="{% tournament_url tournament_home %}">
-      Overview
-    </a>
-  </li>
+    <li {% if motions_nav %}class="active"{% endif %}>
+      <a href="{% round_url motions current_round %}">
+        <span class="circle-icon"><i class="emoji"></i></span>
+        {{ current_round.abbreviation }} Motions
+      </a>
+    </li>
+    <li {% if ballots_nav %}class="active"{% endif %}>
+      <a href="{% round_url results current_round %}">
+        <span class="circle-icon"><i class="emoji"></i></span>
+        {{ current_round.abbreviation }} Results
+      </a>
+    </li>
 
-</ul>
+  </ul>
+
+  <h6 class="text-uppercase text-muted small">Name Here</h6>
+  <ul class="nav nav-pills nav-stacked">
+
+    {% if pref.side_allocations_enabled == 'preallocated' %}
+      <li {% if sides_nav %}class="active"{% endif %} >
+        <a href="{% tournament_url side_allocations %}">
+          <i class="emoji"></i>Sides
+        </a>
+      </li>
+    {% endif %}
+    {% if pref.enable_divisions %}
+      <li class="{% if divisions_nav %}active {% endif %}">
+        <a href="{% tournament_url division_allocations %}">
+          <i class="emoji"></i>Divisions
+        </a>
+      </li>
+    {% endif %}
+    <li class="{% if standings_nav %}dropdown active {% endif %}">
+      <a href="{% round_url standings_index current_round %}" >
+        <span class="circle-icon"><i class="emoji">💯</i></span>
+        Standings
+      </a>
+    </li>
+    <li class="{% if break_nav %}dropdown active {% endif %}">
+      <a href="{% tournament_url breaking_index %}" >
+        <span class="circle-icon"><i class="emoji">👑</i></span>
+        Breaks
+      </a>
+    </li>
+    <li class="{% if feedback_nav %}dropdown active {% endif %}">
+      <a href="{% tournament_url feedback_overview %}">
+        <span class="circle-icon"><i class="emoji">🙅</i></span>
+        Feedback
+      </a>
+    </li>
+    <li >
+      <a href="{% tournament_url tournament_home %}">
+        Overview
+      </a>
+    </li>
+
+  </ul>
+
+</div><!-- /.main-col -->
 
 
 

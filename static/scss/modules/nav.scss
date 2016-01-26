@@ -1,23 +1,22 @@
 
 // ADMIN SIDEBAR UI
 
-#sidebar-wrap {
-  z-index: 1000;
-  position: fixed;
-  height: 100%;
-  overflow-y: auto;
+.circle-icon {
+  background: #fff;
+  border: 2px solid #ccc;
+  width: 28px;
+  height: 28px;
+  border-radius: 21.5px;
+  display: inline-block;
+  float: left;
+  margin: -5px 10px -4px -8px;
 
-  nav {
-    max-width: 250px;
-    width: 100%;
-    float: right;
-    // position: relative;
-    // max-height: none;
-    // min-height: 100%;
-    // overflow: hidden;
+  .emoji {
+    padding-left: 8px;
+    line-height: 32px;
   }
-
 }
+
 
 // FOOTER UI
 
@@ -26,22 +25,10 @@ body {
 }
 
 
-// // TABS UI
 
-// .round-nav {
-//   text-transform: uppercase;
-//   text-align: center;
-//   a {
-//     min-width: 32px; // So the settings icon isn't smushed
-//   }
-// }
 
-// // SUBNAV UI
 
-// .subnav .btn {
-//   margin-top: 20px; // Give buttons spacing
-//   margin-bottom: 20px;
-// }
+// TO REFACTOR:
 
 // // BELOW: possibly refactor
 

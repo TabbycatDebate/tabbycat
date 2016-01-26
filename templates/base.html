@@ -29,7 +29,7 @@
 
         {% if 'admin' in request.path and user.is_superuser %}
           {% include "nav/admin_nav.html" %}
-          <div class="col-md-9 col-md-offset-3">
+          <div class="col-md-10">
         {% else %}
           {% include "nav/top_nav_base.html" %}
           <div class="col-md-12">
