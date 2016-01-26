@@ -1,19 +1,24 @@
 
 // ADMIN SIDEBAR UI
 
+.nav-sidebar.nav > li > a {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
 .circle-icon {
   background: #fff;
-  border: 2px solid #ccc;
-  width: 28px;
-  height: 28px;
+  border: 3px solid #ccc;
+  width: 27px;
+  height: 27px;
   border-radius: 21.5px;
   display: inline-block;
   float: left;
-  margin: -5px 10px -4px -8px;
+  margin: -4px 10px -3px -8px;
 
   .emoji {
-    padding-left: 8px;
-    line-height: 32px;
+    padding-left: 4px;
+    line-height: 24px;
   }
 }
 
