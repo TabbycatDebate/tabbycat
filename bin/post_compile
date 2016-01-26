@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+echo "-----> I'm post-compile hook"
+
+# Work around Heroku bug whereby pylibmc isn't available during
+
+if [ -f bin/run_collectstatic ]; then
+    echo "-----> Running run_compilestatic"
+    chmod +x bin/run_compilestatic
+    bin/run_compilestatic
+    echo "-----> Running run_collectstatic"
+    chmod +x bin/run_collectstatic
+    bin/run_collectstatic
+fi
+
+echo "-----> Post-compile done"

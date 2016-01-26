@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+echo "-----> Compiling static files"
+python dj compilestatic
+
+echo
