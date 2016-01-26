@@ -4,7 +4,6 @@ import urllib.parse
 
 PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
-SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # ========================
 # = Overwritten in Local =
@@ -70,7 +69,8 @@ INSTALLED_APPS = (
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'static_precompiler'
+    'static_precompiler',
+    'django_extensions' # For Secret Generation Command
     )
 
 
@@ -182,6 +182,11 @@ for app in TABBYCAT_APPS:
 # ===========
 # = Heroku  =
 # ===========
+
+if os.environ.get('DJANGO_SECRET_KEY', ''):
+    SECRET_KEY          = os.environ['DJANGO_SECRET_KEY']
+else:
+    SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # Parse database configuration from $DATABASE_URL
 try:
