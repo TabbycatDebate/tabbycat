@@ -141,8 +141,7 @@ if args.init_db:
     run_heroku_command(["run", "python", "manage.py", "createsuperuser"])
 
     # Set secret key
-    output = get_output_from_command(["dj", "generate_secret_key"])
-    print_yellow("key output is", output)
+    output = get_output_from_command(["dj", "generate_secret_key"]).strip()
     command = ["config:add", "DJANGO_SECRET_KEY=%s" % output]
     run_heroku_command(command)
 
