@@ -153,15 +153,26 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 # = Logging =
 # ===========
 
+
+if os.environ.get('SENDGRID_USERNAME', ''):
+    SERVER_EMAIL = 'tabbycatinstance@sendgrid.com'
+    DEFAULT_FROM_EMAIL = os.environ['SENDGRID_USERNAME']
+    EMAIL_HOST= 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
+    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+
 if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,'filters': {
-    'require_debug_false': {
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
         # Only send emails to admins when debug is false
-        '()': 'django.utils.log.RequireDebugFalse',
+            '()': 'django.utils.log.RequireDebugFalse',
         }
     },
     'handlers': {
@@ -184,7 +195,7 @@ LOGGING = {
             # Pass all ERRORS to mail_admins handler
             'handlers': ['mail_admins'],
             'level': 'ERROR',
-            'propagate': False,
+            'propagate': True,
         },
     },
 }
@@ -249,14 +260,6 @@ if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
     TEMPLATE_DEBUG = DEBUG
 
-if os.environ.get('SENDGRID_USERNAME', ''):
-    SERVER_EMAIL = 'tabbycatinstance@sendgrid.com'
-    DEFAULT_FROM_EMAIL = 'tabbycatinstance@sendgrid.com'
-    EMAIL_HOST= 'smtp.sendgrid.net'
-    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
-    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
 
 # =============
 # = Travis CI =
