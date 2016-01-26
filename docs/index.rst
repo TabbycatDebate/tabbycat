@@ -7,7 +7,7 @@ tournaments.
 
 .. attention:: This documentation is currently for our development version, which
     (unless you know otherwise) is probably not the version you're using. The
-    next version of Tabbycat, probably 0.8, will be the first to this exciting
+    next version of Tabbycat, probably 0.8, will be the first to use this exciting
     upgraded documentation system. The documentation for our current official
     release (0.7.3) is on the `GitHub Wiki
     <https://github.com/czlee/tabbycat/wiki>`_.

@@ -17,26 +17,32 @@ def redirect(view):
 
 urlpatterns = [
 
+    # Indices
     url(r'^$',                                  index),
-
     url(r'^t/(?P<tournament_slug>[-\w_]+)/',    include('tournaments.urls')),
 
+    # Admin area
+    url(r'^jet/',                               include('jet.urls', 'jet')),
     url(r'^admin/',                             include(admin.site.urls)),
 
+    # Accounts
     url(r'^accounts/login/$',                   views.login),
-
     url(r'^accounts/logout/$',                  views.logout,
         {'next_page': '/'}),
 
-    url(r'^static/(?P<path>.*)$',               serve,
-        {'document_root': settings.STATIC_ROOT}),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [
+        # Only serve debug toolbar when on DEBUG
         url(r'^__debug__/',                     include(debug_toolbar.urls)),
     ]
+if hasattr(settings, "LOCAL_SETTINGS") and settings.DEBUG is False:
+        urlpatterns += [
+            url(r'^static/(?P<path>.*)$',           serve,
+            {'document_root': settings.STATIC_ROOT}),
+        ]
 
 
 # LOGOUT AND LOGIN Confirmations

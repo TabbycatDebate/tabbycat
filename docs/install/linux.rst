@@ -101,7 +101,7 @@ Download and extract:
     $ tar xf |vrelease|.tar.gz
     $ cd tabbycat-|release|
 
-If you're a Git user, you might prefer to clone `our GitHub repository`_ instead:
+If you've used Git before, you might prefer to clone `our GitHub repository`_ instead:
 
 .. parsed-literal::
 
