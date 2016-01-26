@@ -140,6 +140,12 @@ if args.init_db:
     print_yellow("You'll need to respond to the prompts:")
     run_heroku_command(["run", "python", "manage.py", "createsuperuser"])
 
+    # Set secret key
+    output = get_output_from_command(["dj", "generate_secret_key"])
+    print_yellow("key output is", output)
+    command = ["config:add", "DJANGO_SECRET_KEY=%s" % output]
+    run_heroku_command(command)
+
     # Import tournament, if provided
     if args.import_tournament:
         command = ["run", "python", "manage.py", "importtournament", args.import_tournament]
