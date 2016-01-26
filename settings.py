@@ -145,7 +145,7 @@ STATIC_PRECOMPILER_COMPILERS = (
     ('static_precompiler.compilers.libsass.SCSS', {"sourcemap_enabled": False, "load_paths": ["/scss"]}),
 )
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
 
 # ===========
 # = Logging =
