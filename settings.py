@@ -142,9 +142,14 @@ STATICFILES_FINDERS = (
 )
 
 STATIC_PRECOMPILER_COMPILERS = (
-    ('static_precompiler.compilers.libsass.SCSS', {"sourcemap_enabled": False, "load_paths": ["/scss"]}),
+    ('static_precompiler.compilers.libsass.SCSS',
+        {
+            "sourcemap_enabled": False,
+        }
+    ),
 )
 
+# Needs to be off for admin to work
 # STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
 
 # ===========

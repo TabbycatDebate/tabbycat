@@ -12,7 +12,6 @@ MANAGERS            = ADMINS
 DEBUG               = True
 DEBUG_ASSETS        = True
 
-
 # ===========================
 # = Django-specific Modules =
 # ===========================
