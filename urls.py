@@ -30,15 +30,18 @@ urlpatterns = [
     url(r'^accounts/logout/$',                  views.logout,
         {'next_page': '/'}),
 
-    # Static Files
-    url(r'^static/(?P<path>.*)$',               serve,
-        {'document_root': settings.STATIC_ROOT}),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [
+        # Only serve debug toolbar when on DEBUG
         url(r'^__debug__/',                     include(debug_toolbar.urls)),
+    ]
+if settings.LOCAL_SETTINGS:
+    urlpatterns += [
+        url(r'^static/(?P<path>.*)$',           serve,
+        {'document_root': settings.STATIC_ROOT}),
     ]
 
 
