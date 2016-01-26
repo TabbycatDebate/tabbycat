@@ -38,8 +38,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
-
 TABBYCAT_APPS = (
     'actionlog',
     'adjallocation',
@@ -74,15 +72,12 @@ INSTALLED_APPS = (
     )
 
 
+ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
 
-MIGRATION_MODULES = {
-    'blog': 'blog.db_migrations'
-}
-
-# ===========
+# =============
 # = Templates =
-# ===========
+# =============
 
 TEMPLATES = [
     {
@@ -133,26 +128,33 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 # = Pipelines =
 # =============
 
-STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
 STATIC_ROOT         = 'staticfiles'
 STATIC_URL          = '/static/'
+STATICFILES_DIRS    = (
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'),
+)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'static_precompiler.finders.StaticPrecompilerFinder',
+
 )
 
 STATIC_PRECOMPILER_COMPILERS = (
-    ('static_precompiler.compilers.libsass.SCSS', {"sourcemap_enabled": False, "load_paths": ["/scss"]}),
+    ('static_precompiler.compilers.libsass.SCSS',
+        {
+            "sourcemap_enabled": False,
+        }
+    ),
 )
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# Needs to be off for admin to work
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
 
 # ===========
 # = Logging =
 # ===========
-
 
 if os.environ.get('SENDGRID_USERNAME', ''):
     SERVER_EMAIL = os.environ['SENDGRID_USERNAME']
@@ -207,9 +209,9 @@ for app in TABBYCAT_APPS:
     }
 
 
-# ===========
-# = Heroku  =
-# ===========
+# ==========
+# = Heroku =
+# ==========
 
 if os.environ.get('DJANGO_SECRET_KEY', ''):
     SECRET_KEY          = os.environ['DJANGO_SECRET_KEY']
@@ -260,7 +262,6 @@ if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
     TEMPLATE_DEBUG = DEBUG
 
-
 # =============
 # = Travis CI =
 # =============
@@ -276,9 +277,9 @@ if os.environ.get('TRAVIS', '') == 'true':
         }
     }
 
-# ===========================
-# = Local Overrides
-# ===========================
+# ===================
+# = Local Overrides =
+# ===================
 
 try:
     LOCAL_SETTINGS

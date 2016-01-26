@@ -1,17 +1,20 @@
 //---------------------------------------------------
 // BOOTSTRAP
+//---------------------------------------------------
 
 @import "vendor/bootstrap";
 
 //---------------------------------------------------
 // TABBYCAT
+//---------------------------------------------------
 
 @import "components/page-specific";
 @import "components/tables";
 @import "components/print";
 
 //---------------------------------------------------
-// General utilities
+// GENERAL UTILITIES
+//---------------------------------------------------
 
 @include text-emphasis-variant('.text-success', $brand-success);
 @include text-emphasis-variant('.text-info', $brand-info);
@@ -20,7 +23,8 @@
 
 .no-vertical-spacing,
 table.table > thead > tr > th.no-vertical-spacing,
-table.table > tbody > tr > td.no-vertical-spacing {
+table.table > tbody > tr > td.no-vertical-spacing,
+.test2 {
   padding-top: 0;
   padding-bottom: 0;
   margin-top: 0;
