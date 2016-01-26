@@ -35,7 +35,18 @@
           <div class="col-md-12">
         {% endif %}
 
-          <div class="row subnav">
+          <div class="row head-title {% if 'admin' in request.path %}white-bg{% endif %} vertical-spacing">
+            <div class="col-md-12">
+              <h3>
+                {% block head-title %}{% endblock %}
+                <small class="pull-right">
+                  {% block sub-title %}{% endblock %}
+                </small>
+              </h3>
+            </div>
+          </div>
+
+          <div class="row vertical-spacing">
             <div class="col-md-12 hidden-print page-sub-nav">
               <ul class="nav nav-pills navbar-left">
                 {% block page-subnav-sections %}{% endblock %}
@@ -44,12 +55,6 @@
                 {% block page-subnav-actions %}{% endblock %}
               </div>
             </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-12">
-                {% block head-title %}{% endblock %}
-              </div>
           </div>
 
           <div class="row">

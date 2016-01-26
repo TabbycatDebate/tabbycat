@@ -1,0 +1,27 @@
+
+// GENERIC AESTHETICS
+
+body {
+  background: #f3f4f9;
+}
+.white-bg {
+  background: #fff;
+}
+
+// LAYOUT
+
+.vertical-spacing {
+  margin-bottom: $line-height-computed / 2;
+}
+
+// BASE ELEMENTS: HEADER
+
+.head-title {
+  padding: 0px 0 16px 0;
+  small {
+    line-height: $font-size-h3 * $headings-line-height * 1.2;
+  }
+}
+.page-sub-nav .navbar-right {
+    padding-right: 15px; // compensate for the pull-rights negative margin
+}

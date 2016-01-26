@@ -6,11 +6,20 @@
 {% block page-title %}Adjudicator Feedback Summary{% endblock %}
 
 {% block page-subnav-sections %}
-  <li><a href="{% tournament_url adj_latest_feedback %}">Latest Feedback</a></li>
-  <li><a href="{% tournament_url adj_source_feedback %}">Find By Source</a></li>
-  <li><a href="{% tournament_url randomised_urls %}">Randomised URLs</a></li>
-  <li><a href="{% tournament_url feedback_progress %}">Unsubmitted Counts</a></li>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adj_latest_feedback %}">
+    Latest Feedback
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adj_source_feedback %}">
+    Find By Source
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url randomised_urls %}">
+    Randomised URLs
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url feedback_progress %}">
+    Unsubmitted Counts
+  </a>
 {% endblock %}
+
 {% block page-subnav-actions %}
     <a class="btn btn-success" href="{% tournament_url add_feedback %}">Add Feedback</a>
 {% endblock %}

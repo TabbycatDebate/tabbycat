@@ -1,22 +1,20 @@
 {% extends "draw_base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}
-  Motions for {{ round.name }}
-  <small>
-  {% if round.motions_released %}(released){% else %}(not released){% endif %}
-  </small>
-{% endblock %}
 {% block page-title %}Motions for {{ round.name }}{% endblock %}
+{% block head-title %}Motions for {{ round.name }}{% endblock %}
+{% block sub-title %}
+  {% if round.motions_released %}(released){% else %}(not released){% endif %}
+{% endblock %}
 
 {% block page-subnav-sections %}
-  <li><a href="{% round_url motions_edit %}" class="btn btn-default form-control">
+  <a href="{% round_url motions_edit %}" class="btn btn-default submit-disable">
     Edit Motions for {{ round.name }}
-  </a></li>
+  </a>
   {% if pref.enable_division_motions %}
-    <li><a href="{% round_url motions_assign %}" class="btn btn-default form-control">
+    <a href="{% round_url motions_assign %}" class="btn btn-default submit-disable">
       Assign {{ round.name }} Motions to Divisions
-    </a></li>
+    </a>
   {% endif %}
 {% endblock %}
 

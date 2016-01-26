@@ -11,22 +11,27 @@
 {% block page-title %}Motions for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <li><a href="{% round_url motions_edit %}" class="btn btn-default form-control">
+  <a href="{% round_url motions_edit %}" class="btn btn-default submit-disable">
     Edit Motions for {{ round.abbreviation }}
-  </a></li>
+  </a>
   {% if pref.enable_division_motions %}
-  <li><a href="{% round_url motions_assign %}" class="btn btn-default form-control">
+  <a href="{% round_url motions_assign %}" class="btn btn-default submit-disable">
     Assign {{ round.abbreviation }} Motions to Divisions
-  </a></li>
+  </a>
   {% endif %}
   <form id="releaseForm" method="POST" action="{% round_url release_motions %}"></form>
   <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}"></form>
 {% endblock %}
+
 {% block page-subnav-actions %}
   {% if round.motions_released %}
-    <button class="btn btn-danger" id="unrelease_motions">Unrelease {{ round.abbreviation }} Motions to Public</button>
+    <a class="btn btn-danger" id="unrelease_motions">
+      Unrelease {{ round.abbreviation }} Motions to Public
+    </a>
   {% else %}
-    <button class="btn btn-success" id="release_motions">Release {{ round.abbreviation }} Motions to Public</button>
+    <a class="btn btn-success" id="release_motions">
+      Release {{ round.abbreviation }} Motions to Public
+    </a>
   {% endif %}
 {% endblock %}
 

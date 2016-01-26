@@ -6,7 +6,7 @@
     {% if all_tournaments.count > 1 %}
     <ul class="nav nav-pills nav-stacked" role="tablist">
       <li role="presentation" class="dropdown">
-        <a id="tournament_select" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        <a id="tournament_select" href="#" class="white-bg dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
           <h4>
             <i class="emoji">💩</i>{{ tournament }}<span class="caret pull-right"></span>
           </h4>
@@ -29,7 +29,7 @@
     {% else %}
       <ul class="nav nav-pills nav-stacked" role="tablist">
         <li role="presentation" class="">
-          <a id="tournament_select" href="{{ tournament.get_absolute_url }}">
+          <a id="tournament_select" class="white-bg" href="{{ tournament.get_absolute_url }}">
             <h4>
               <i class="emoji">💩</i>{{ tournament }}
             </h4>
@@ -37,8 +37,6 @@
         </li>
       </ul>
     {% endif %}
-
-
 
     <ul class="nav nav-pills nav-stacked">
 
@@ -94,7 +92,8 @@
           Setup<span class="caret pull-right"></span>
         </a>
       </li>
-      <div id="collapse_setup" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapse_setup">
+      <div id="collapse_setup" class="panel-collapse collapse" role="tabpanel"
+        aria-labelledby="collapse_setup">
         <ul class="nav nav-pills nav-stacked">
           <li>
             <a href="{% tournament_url tournament_config_index %}">
@@ -127,7 +126,7 @@
           {% endif %}
           <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ r.id }}" aria-expanded="false" aria-controls="collapse{{ r.id }}">
             <span class="circle-icon
-            {% if r.seq == current_round.seq %}btn-info
+            {% if r == current_round %}btn-info
             {% elif r.seq > current_round.seq %}btn-inactive
             {% elif r.seq < current_round.seq %}btn-success
             {% endif %}">
@@ -135,31 +134,32 @@
             {{ r.name }} <span class="caret pull-right"></span>
           </a>
         </li>
-        <div id="collapse{{ r.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ r.id }}">
+        <div id="collapse{{ r.id }}" class="panel-collapse collapse {% if round == r %}in{% endif %}"
+           role="tabpanel" aria-labelledby="heading{{ r.id }}">
 
           <ul class="nav nav-pills nav-stacked sub-nav">
-            <li {% if availability_nav %}class="active"{% endif %}>
+            <li {% if availability_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url availability_index r %}">
                 <span class="circle-icon small-circle"><i class="emoji"></i></span>
                 Checkins
               </a>
             </li>
-            <li {% if draw_nav %}class="active"{% endif %}>
+            <li {% if draw_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url draw r %}">
                 <span class="circle-icon small-circle"><i class="emoji"></i></span>
                 Draw
               </a>
             </li>
-            <li {% if motions_nav %}class="active"{% endif %}>
+            <li {% if motions_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url motions r %}">
                 <span class="circle-icon small-circle"><i class="emoji"></i></span>
                 Motions
               </a>
             </li>
-            <li {% if ballots_nav %}class="active"{% endif %}>
+            <li {% if ballots_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url results r %}">
                 <span class="circle-icon small-circle"><i class="emoji"></i></span>

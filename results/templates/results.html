@@ -1,19 +1,22 @@
 {% extends "draw_rbase.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Status <small>of {{ round.name }} Results</small>{% endblock %}
-{% block page-title %}Status of {{ round.name }} Results{% endblock %}
+{% block page-title %}Results for {{ round.name }}{% endblock %}
+{% block head-title %}Results{% endblock %}
+{% block sub-title %}{{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <li><a href="{% round_url ballot_checkin current_round %}">Ballot Checkin</a></li>
+  <a class="btn btn-default submit-disable" href="{% round_url ballot_checkin current_round %}">Ballot Checkin</a>
 {% endblock %}
+
 {% block page-subnav-actions %}
   {% if round.seq < tournament.round_set.count and current_round == round %}
-    <a class="btn btn-default btn-success" href="{% round_url round_increment_check %}">
+    <a class="btn btn-success submit-disable" href="{% round_url round_increment_check %}">
       Advance to Next Round
     </a>
   {% endif %}
 {% endblock %}
+
 {% block page-alerts %}
   {% if not has_motions %}
     <div class="alert alert-danger">

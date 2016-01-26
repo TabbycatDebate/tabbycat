@@ -1,9 +1,11 @@
 {% extends "draw_rbase.html" %}
 {% load debate_tags %}
 
+{% block page-title %}Draw for {{ round.name }}{% endblock %}
 {% block head-title %}
-  Draw for {{ round.name }}
-  <small>
+  <i class="emoji"> 👀</i>Draw for {{ round.name }}
+{% endblock %}
+{% block sub-title %}
   {% if round.draw_status = round.STATUS_CONFIRMED %}
     (confirmed, draw not released,
   {% elif round.draw_status = round.STATUS_RELEASED %}
@@ -15,30 +17,29 @@
   {% if round.starts_at %}
     debates start at {{ round.starts_at }}
   {% endif %}
-  </small>
 {% endblock %}
 
-{% block page-title %}
-  Draw for {{ round.name }}
-  {% if round.draw_status = round.STATUS_CONFIRMED %}
-    (confirmed)
-  {% elif round.draw_status = round.STATUS_RELEASED %}
-    (released)
-  {% else %}
-    (DRAW STATUS ERROR)
-  {% endif %}
-{% endblock %}
 {% block body-class %}draw{% endblock %}
 
 {% block page-subnav-sections %}
-<ul class="nav nav-pills navbar-left">
-  <li><a href="{% round_url draw_with_standings %}">Draw Details</a></li>
-  <li><a href="{% round_url draw_display_by_venue %}">Show by Venue</a></li>
-  <li><a href="{% round_url draw_display_by_team %}">Show by Team</a></li>
-  <li><a href="{% round_url draw_print_scoresheets round %}">Print Ballots</a></li>
-  <li><a href="{% round_url draw_print_feedback round %}">Print Feedback Forms</a></li>
-  <li><a href="{% round_url master_sheets_list round %}">Print Mastersheets</a></li>
-</ul>
+  <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
+    Draw Details
+  </a>
+  <a class="btn btn-default submit-disable" href="{% round_url draw_display_by_venue %}">
+    Show by Venue
+  </a>
+  <a class="btn btn-default submit-disable" href="{% round_url draw_display_by_team %}">
+    Show by Team
+  </a>
+  <a class="btn btn-default submit-disable" href="{% round_url draw_print_scoresheets round %}">
+    Print Ballots
+  </a>
+  <a class="btn btn-default submit-disable" href="{% round_url draw_print_feedback round %}">
+    Print Feedback Forms
+  </a>
+  <a class="btn btn-default submit-disable" href="{% round_url master_sheets_list round %}">
+    Print Mastersheets
+  </a>
 {% endblock %}
 
 {% block page-subnav-actions %}

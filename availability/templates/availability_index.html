@@ -2,6 +2,8 @@
 {% load debate_tags %}
 
 {% block page-title %}{{ round.name }} Checkins{% endblock %}
+{% block head-title %}Checkins Overview{% endblock %}
+{% block sub-title %}For {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-default submit-disable" href="{% round_url team_availability round %}">
