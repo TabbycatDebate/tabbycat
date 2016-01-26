@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+MANAGE_FILE=$(find . -maxdepth 3 -type f -name 'manage.py' | head -1)
+MANAGE_FILE=${MANAGE_FILE:2}
+
 echo "-----> Compiling static files"
-python dj compilestatic
+python $MANAGE_FILE compilestatic
 
 echo
