@@ -26,11 +26,24 @@
           <i class="emoji">🏠</i>Home
         </a>
       </li>
-      <li>
-        <a href="http://tabbycat.readthedocs.org/" target="_blank">
-          <i class="emoji">❓</i>Help
-        </a>
-      </li>
+      {% if user.is_authenticated %}
+        <li>
+          <a href="http://tabbycat.readthedocs.org/" target="_blank">
+            <i class="emoji">❓</i>Help
+          </a>
+        </li>
+        <li>
+          <a class="" href="/accounts/logout/">
+            <i class="emoji">🔒</i>Logout of {{ user }}
+          </a>
+        </li>
+      {% else %}
+        <li>
+          <a class="" href="/accounts/login/">
+            <i class="emoji">🔓</i>Login
+          </a>
+        </li>
+      {% endif %}
     </ul>
 
   </div><!-- /.container-fluid -->

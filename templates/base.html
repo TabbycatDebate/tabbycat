@@ -29,13 +29,13 @@
 
         {% if 'admin' in request.path and user.is_superuser %}
           {% include "nav/admin_nav.html" %}
-          <div class="col-md-10">
+          <div class="col-md-12 nav-sidebar-offset">
         {% else %}
           {% include "nav/top_nav_base.html" %}
           <div class="col-md-12">
         {% endif %}
 
-          <div class="row  subnav">
+          <div class="row subnav">
             <div class="col-md-12 hidden-print page-sub-nav">
               <ul class="nav nav-pills navbar-left">
                 {% block page-subnav-sections %}{% endblock %}

@@ -47,22 +47,6 @@
         {% endif %}
       </ul>
 
-      <ul class="nav navbar-nav navbar-right">
-        {% if user.is_authenticated %}
-          <li>
-            <a class="" href="/accounts/logout/">
-              <i class="emoji">🔒</i>Logout of {{ user }}
-            </a>
-          </li>
-        {% else %}
-          <li>
-            <a class="" href="/accounts/login/">
-              <i class="emoji">🔓</i>Login
-            </a>
-          </li>
-        {% endif %}
-      </ul>
-
     </div><!-- /.navbar-collapse -->
 
   </div><!-- /.container-fluid -->

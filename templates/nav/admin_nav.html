@@ -1,111 +1,181 @@
 {% load debate_tags %}
 
-<div class="col-md-2">
+<div class="nav-sidebar">
+  <div class="overflow-scroll-wrapper">
 
-  <h6 class="text-uppercase text-muted small">Running Rounds</h6>
-  <ul class="nav nav-pills nav-stacked nav-sidebar">
+    {% if all_tournaments.count > 1 %}
+    <ul class="nav nav-pills nav-stacked" role="tablist">
+      <li role="presentation" class="dropdown">
+        <a id="tournament_select" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          <h4>
+            <i class="emoji">💩</i>{{ tournament }}<span class="caret pull-right"></span>
+          </h4>
+        </a>
+        <ul id="menu1" class="dropdown-menu" aria-labelledby="tournament_select">
+          {% for t in all_tournaments %}
+            {% if tournament != t %}
+              <li>
+                <a class="" href="{{ tournament.get_absolute_url  }}">
+                  {{ t }}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+          <li role="separator" class="divider"></li>
+          <li><a href="#">Tournaments Overview</a></li>
+        </ul>
+      </li>
+    </ul>
+    {% else %}
+      <ul class="nav nav-pills nav-stacked" role="tablist">
+        <li role="presentation" class="">
+          <a id="tournament_select" href="{{ tournament.get_absolute_url }}">
+            <h4>
+              <i class="emoji">💩</i>{{ tournament }}
+            </h4>
+          </a>
+        </li>
+      </ul>
+    {% endif %}
 
-    <li {% if availability_nav %}class="active"{% endif %}>
-      <a href="{% round_url availability_index current_round %}">
-        <span class="circle-icon"><i class="emoji"></i></span>
-        {{ current_round.abbreviation }} Checkins
-      </a>
-    </li>
-    <li {% if draw_nav %}class="active"{% endif %}>
-      <a href="{% round_url draw current_round %}">
-        <span class="circle-icon"><i class="emoji"></i></span>
-        {{ current_round.abbreviation }} Draw
-      </a>
-    </li>
-    <li {% if motions_nav %}class="active"{% endif %}>
-      <a href="{% round_url motions current_round %}">
-        <span class="circle-icon"><i class="emoji"></i></span>
-        {{ current_round.abbreviation }} Motions
-      </a>
-    </li>
-    <li {% if ballots_nav %}class="active"{% endif %}>
-      <a href="{% round_url results current_round %}">
-        <span class="circle-icon"><i class="emoji"></i></span>
-        {{ current_round.abbreviation }} Results
-      </a>
-    </li>
 
-  </ul>
 
-  <h6 class="text-uppercase text-muted small">Name Here</h6>
-  <ul class="nav nav-pills nav-stacked">
+    <ul class="nav nav-pills nav-stacked">
 
-    {% if pref.side_allocations_enabled == 'preallocated' %}
-      <li {% if sides_nav %}class="active"{% endif %} >
-        <a href="{% tournament_url side_allocations %}">
-          <i class="emoji"></i>Sides
+      {% if pref.side_allocations_enabled == 'preallocated' %}
+        <li {% if sides_nav %}class="active"{% endif %} >
+          <a href="{% tournament_url side_allocations %}">
+            <i class="emoji"></i>Sides
+          </a>
+        </li>
+      {% endif %}
+      {% if pref.enable_divisions %}
+        <li class="{% if divisions_nav %}active {% endif %}">
+          <a href="{% tournament_url division_allocations %}">
+            Divisions
+          </a>
+        </li>
+      {% endif %}
+      <li class="{% if feedback_nav %}dropdown active {% endif %}">
+        <a href="{% tournament_url feedback_overview %}">
+          <span class="circle-icon icon-container">
+            <span class="glyphicon glyphicon-comment"></span>
+          </span>
+          Feedback
         </a>
       </li>
-    {% endif %}
-    {% if pref.enable_divisions %}
-      <li class="{% if divisions_nav %}active {% endif %}">
-        <a href="{% tournament_url division_allocations %}">
-          <i class="emoji"></i>Divisions
+      <li class="{% if standings_nav %}dropdown active {% endif %}">
+        <a href="{% round_url standings_index current_round %}" >
+          <span class="circle-icon icon-container">
+            <span class="glyphicon glyphicon-stats"></span></i>
+          </span>
+          Standings
         </a>
       </li>
-    {% endif %}
-    <li class="{% if standings_nav %}dropdown active {% endif %}">
-      <a href="{% round_url standings_index current_round %}" >
-        <span class="circle-icon"><i class="emoji">💯</i></span>
-        Standings
-      </a>
-    </li>
-    <li class="{% if break_nav %}dropdown active {% endif %}">
-      <a href="{% tournament_url breaking_index %}" >
-        <span class="circle-icon"><i class="emoji">👑</i></span>
-        Breaks
-      </a>
-    </li>
-    <li class="{% if feedback_nav %}dropdown active {% endif %}">
-      <a href="{% tournament_url feedback_overview %}">
-        <span class="circle-icon"><i class="emoji">🙅</i></span>
-        Feedback
-      </a>
-    </li>
-    <li >
-      <a href="{% tournament_url tournament_home %}">
-        Overview
-      </a>
-    </li>
+      <li class="{% if break_nav %}dropdown active {% endif %}">
+        <a href="{% tournament_url breaking_index %}" >
+          <span class="circle-icon icon-container">
+            <span class="glyphicon glyphicon-gift"></span>
+          </span>
+          Breaks
+        </a>
+      </li>
 
-  </ul>
+    </ul>
 
+    <ul class="nav nav-pills nav-stacked" id="accordion" role="tablist" aria-multiselectable="true">
+
+      <li class="" role="tab" id="heading_setup">
+        <div class="progress-line setup-line"></div>
+        <a class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_setup" aria-expanded="false" aria-controls="collapse_setup">
+          <span class="circle-icon icon-container">
+            <span class="glyphicon glyphicon-cog"></span>
+          </span>
+          Setup<span class="caret pull-right"></span>
+        </a>
+      </li>
+      <div id="collapse_setup" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapse_setup">
+        <ul class="nav nav-pills nav-stacked">
+          <li>
+            <a href="{% tournament_url tournament_config_index %}">
+              <span class="circle-icon"><i class="emoji">🔧</i></span>
+              Configuration
+            </a>
+          </li>
+          <li>
+            <a class="" href="{% tournament_url data_index %}">
+              <span class="circle-icon"><i class="emoji">📑</i></span>
+              Import Data
+            </a>
+          </li>
+          <li>
+            <a class="" href="/admin/">
+              <span class="circle-icon"><i class="emoji">✒️</i></span>
+              Edit Data
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      {% for r in tournament.round_set.all %}
+
+        <li class="" role="tab" id="heading{{ r.id }}">
+          {% if not forloop.last %}
+            <div class="progress-line
+              {% if r.seq < current_round.seq %}btn-success{% else %}standard-line{% endif %}">
+            </div>
+          {% endif %}
+          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ r.id }}" aria-expanded="false" aria-controls="collapse{{ r.id }}">
+            <span class="circle-icon
+            {% if r.seq == current_round.seq %}btn-info
+            {% elif r.seq > current_round.seq %}btn-inactive
+            {% elif r.seq < current_round.seq %}btn-success
+            {% endif %}">
+            <i class="emoji"></i></span>
+            {{ r.name }} <span class="caret pull-right"></span>
+          </a>
+        </li>
+        <div id="collapse{{ r.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ r.id }}">
+
+          <ul class="nav nav-pills nav-stacked sub-nav">
+            <li {% if availability_nav %}class="active"{% endif %}>
+              <div class="progress-line standard-line"></div>
+              <a href="{% round_url availability_index r %}">
+                <span class="circle-icon small-circle"><i class="emoji"></i></span>
+                Checkins
+              </a>
+            </li>
+            <li {% if draw_nav %}class="active"{% endif %}>
+              <div class="progress-line standard-line"></div>
+              <a href="{% round_url draw r %}">
+                <span class="circle-icon small-circle"><i class="emoji"></i></span>
+                Draw
+              </a>
+            </li>
+            <li {% if motions_nav %}class="active"{% endif %}>
+              <div class="progress-line standard-line"></div>
+              <a href="{% round_url motions r %}">
+                <span class="circle-icon small-circle"><i class="emoji"></i></span>
+                Motions
+              </a>
+            </li>
+            <li {% if ballots_nav %}class="active"{% endif %}>
+              <div class="progress-line standard-line"></div>
+              <a href="{% round_url results r %}">
+                <span class="circle-icon small-circle"><i class="emoji"></i></span>
+                Results
+              </a>
+            </li>
+          </ul>
+
+        </div>
+
+      {% endfor %}
+
+    </ul>
+
+
+
+  </div>
 </div><!-- /.main-col -->
 
-
-
-<!--
-<li class="dropdown {% if standings_nav %}active{% endif %}">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standings<b class="caret"></b></a>
-  <ul class="dropdown-menu">
-    <li><a href="{% round_url team_standings current_round %}">Teams</a></li>
-    {% if pref.enable_divisions %}
-    <li><a href="{% round_url division_standings current_round %}">Divisions</a></li>
-    {% endif %}
-    <li><a href="{% round_url speaker_standings current_round %}">Speakers</a></li>
-    {% if pref.show_novices %}
-      <li><a href="{% round_url novice_standings current_round %}">Novices</a></li>
-    {% endif %}
-    {% if pref.reply_scores_enabled %}
-      <li><a href="{% round_url reply_standings current_round %}">Replies</a></li>
-    {% endif %}
-    <li><a href="{% tournament_url feedback_progress %}">Feedback</a></li>
-    <li><a href="{% round_url motion_standings current_round %}">Motions</a></li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Break<b class="caret"></b></a>
-  <ul class="dropdown-menu">
-    {% for category in tournament.breakcategory_set.all %}
-      <li><a href="{% tournament_url breaking_teams category.slug %}">{{ category.name }}</a></li>
-    {% endfor %}
-    <li><a href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
-    <li class="divider"></li>
-    <li><a href="{% tournament_url edit_eligibility %}">Edit Eligibility</a></li>
-  </ul>
-</li> -->

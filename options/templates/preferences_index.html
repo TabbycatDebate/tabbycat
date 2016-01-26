@@ -16,7 +16,7 @@
 
 <div class="row">
 
-  <div class="col-md-4">
+  <div class="col-md-6">
     <ul class="list-group">
         <a href="{% tournament_url scoring %}" class="list-group-item">
           <h4 class="list-group-item-heading"><i class="emoji">💯</i>Score Rules</h4>
@@ -40,7 +40,7 @@
         </a>
     </ul>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-6">
     <ul class="list-group">
         <a href="{% tournament_url tab_release %}" class="list-group-item">
           <h4 class="list-group-item-heading"><i class="emoji">🚨</i>Tab Release</h4>
@@ -64,21 +64,22 @@
         </a>
     </ul>
   </div>
-  <div class="col-md-4">
+</div>
+<div class="row">
+  <div class="col-md-12">
     <ul class="list-group">
-        <div class="list-group-item list-group-item-info">
-          <p class="list-group-item-text">Note: these presets only modify common the settings for basic rules, you should also check the other
-          settings and our <a href="https://readthedocs.org">documentation</a> to ensure they are correct and that you do not want additional
-          features/settings enabled. Clicking this link takes you to a page that will present the changes for you to view before they are applied.</p>
-        </div>
-        {% for preset in presets %}
-          <a href="{% tournament_url tournament_preference_confirm preset.slugified_name %}" class="list-group-item">
-            <h4 class="list-group-item-heading">Apply {{ preset.name }} Rules</h4>
-            <p>{{ preset.description }}</p>
-          </a>
-        {% endfor %}
+      <div class="list-group-item list-group-item-info">
+        <p class="list-group-item-text">Note: these presets only modify common the settings for basic rules, you should also check the other
+        settings and our <a href="https://readthedocs.org">documentation</a> to ensure they are correct and that you do not want additional
+        features/settings enabled. Clicking this link takes you to a page that will present the changes for you to view before they are applied.</p>
+      </div>
+      {% for preset in presets %}
+        <a href="{% tournament_url tournament_preference_confirm preset.slugified_name %}" class="list-group-item">
+          <h4 class="list-group-item-heading">Apply {{ preset.name }} Rules</h4>
+          <p>{{ preset.description }}</p>
+        </a>
+      {% endfor %}
     </ul>
   </div>
-
 </div>
 {% endblock content %}
