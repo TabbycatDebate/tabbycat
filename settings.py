@@ -130,7 +130,9 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 STATIC_ROOT         = 'staticfiles'
 STATIC_URL          = '/static/'
-STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
+STATICFILES_DIRS    = (
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'),
+)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
