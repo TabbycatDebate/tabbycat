@@ -80,6 +80,12 @@ def draw_none(request, round):
     active_venues_count = round.active_venues.count()
     active_adjs = round.active_adjudicators.count()
     rooms = float(active_teams.count()) // 2
+    if round.prev:
+        previous_unconfirmed = round.prev.get_draw().filter(
+            result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
+    else:
+        previous_unconfirmed = 0
+
     return r2r(request,
                "draw_none.html",
                dict(active_teams=active_teams,
@@ -87,6 +93,7 @@ def draw_none(request, round):
                     active_adjs=active_adjs,
                     rooms=rooms,
                     round=round,
+                    previous_unconfirmed=previous_unconfirmed,
                     all_teams_count=all_teams_count))
 
 

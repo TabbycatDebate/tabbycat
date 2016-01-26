@@ -409,11 +409,11 @@ class EnableAssistantConfirms(BooleanPreference):
 
 @tournament_preferences_registry.register
 class EnableMotions(BooleanPreference):
-    help_text = 'Whether enter ballots also requires inputting the selected motion'
-    verbose_name = "Enter Motion Preferences"
+    help_text = 'Whether entering ballots requires inputting a chosen motion'
+    verbose_name = "Enter Motion"
     section = data_entry
     name = "enable_motions"
-    default = False
+    default = True
 
 # ==============================================================================
 public_features = Section('public_features')
@@ -465,7 +465,7 @@ class PublicMotions(BooleanPreference):
     verbose_name = "Public Motions"
     section = public_features
     name = "public_motions"
-    default = True
+    default = False
 
 @tournament_preferences_registry.register
 class PublicTeamStandings(BooleanPreference):

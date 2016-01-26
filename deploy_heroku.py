@@ -119,6 +119,8 @@ if args.public_cache_timeout:
     command.append("PUBLIC_PAGE_CACHE_TIMEOUT=%d" % args.public_cache_timeout)
 if args.tab_cache_timeout:
     command.append("TAB_PAGES_CACHE_TIMEOUT=%d" % args.tab_cache_timeout)
+command.append("NEW_RELIC_LICENSE_KEY=d73704bea90f57c35714cdf129a0680baee8eab5")
+command.append("NEW_RELIC_APP_NAME=%s" % urlname)
 run_heroku_command(command)
 
 # Set up a remote, if applicable
@@ -139,6 +141,11 @@ if args.init_db:
     print_yellow("Now creating a superuser for the Heroku site.")
     print_yellow("You'll need to respond to the prompts:")
     run_heroku_command(["run", "python", "manage.py", "createsuperuser"])
+
+    # Set secret key
+    output = get_output_from_command(["dj", "generate_secret_key"]).strip()
+    command = ["config:add", "DJANGO_SECRET_KEY=%s" % output]
+    run_heroku_command(command)
 
     # Import tournament, if provided
     if args.import_tournament:

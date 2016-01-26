@@ -1,5 +1,5 @@
 {% load debate_tags %}
-{% load staticfiles %}
+{% load static %}
 
 // UI BEHAVIOURS
 

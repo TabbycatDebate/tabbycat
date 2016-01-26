@@ -12,7 +12,16 @@ def public_index(request, t):
 
 def index(request):
     tournaments = Tournament.objects.all()
-    return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
+    if tournaments.count() == 1:
+        print('user is ', request.user)
+        if request.user.is_authenticated():
+            print('tournament_home')
+            return redirect_tournament('tournament_home', tournaments.first())
+        else:
+            print('public_index')
+            return redirect_tournament('public_index', tournaments.first())
+    else:
+        return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
 
 @login_required
 @tournament_view

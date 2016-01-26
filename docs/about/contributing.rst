@@ -77,9 +77,12 @@ Documentation is created using `Sphinx <http://sphinx-doc.org/>`_ and hosted at 
 Previewing Locally
 ------------------
 
-Install Sphinx, Sphinx autobuild, and then start the server
+Install the docs-specific requirements (from the base folder):
 
-  $ pip install sphinx sphinx-autobuild
+  $ pip install -r 'docs/requirements.txt'
+
+Start the server:
+
   $ sphinx-autobuild docs docs/_build/html --port 7999
 
 You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1:7999>`
