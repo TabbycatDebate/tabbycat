@@ -91,7 +91,6 @@ class Tournament(models.Model):
         next_round = Round.objects.get(seq=next_round_seq, tournament=self)
         self.current_round = next_round
         self.save()
-        self.unset_current_round_cached()
 
     def pref(self, name):
         return self.preferences.get_by_name(name)
