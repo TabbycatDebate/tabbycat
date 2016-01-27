@@ -60,7 +60,9 @@
         </span>
       </td>
       {% if pref.show_emoji %}
-        <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
+        <td class="team-emoji">
+          <span class="emoji">{{ debate.aff_team.emoji }}</span>
+        </td>
       {% endif %}
       {% if pref.enable_venue_groups %}
         {% if debate.division %}
@@ -114,7 +116,7 @@
         </span>
       </td>
       {% if pref.show_emoji %}
-        <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
+        <td class="team-emoji"><span class="emoji">{{ debate.neg_team.emoji }}</span></td>
       {% endif %}
       <td class="venue-name">
         {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }}{% else %}{{ debate.venue.name }} {% endif %}
