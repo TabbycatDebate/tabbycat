@@ -8,7 +8,7 @@ from .models import Tournament, Division, Round
 # ==============================================================================
 
 class TournamentAdmin(admin.ModelAdmin):
-    list_display = ('seq','emoji','name','short_name','current_round')
+    list_display = ('name','seq','emoji','short_name','current_round')
     ordering = ('seq',)
 
 admin.site.register(Tournament, TournamentAdmin)
