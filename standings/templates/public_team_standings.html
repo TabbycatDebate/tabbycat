@@ -45,7 +45,7 @@
         </span>
       </td>
       {% if pref.show_emoji %}
-        <td class="team-emoji">{% team_emoji team %}</td>
+        <td class="team-emoji">{{ team.emoji }}</td>
       {% endif %}
       {% if pref.show_institutions %}
         <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
@@ -73,7 +73,7 @@
             {% endif %}
                 vs
                 {% if pref.show_emoji %}
-                  <span>{% team_emoji round_results.opposition %}</span>
+                  <span class="emoji">{{ round_results.opposition.emoji }}</span>
                 {% else %}
                   {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
                 {% endif %}

@@ -42,17 +42,6 @@ def neg_count(team, round):
     return team.get_neg_count(round.seq)
 register.simple_tag(neg_count)
 
-def team_emoji(team):
-    if team.emoji_seq:
-        return EMOJI_LIST[team.emoji_seq]
-    else:
-        if team.id > len(EMOJI_LIST):
-            return EMOJI_LIST[(team.id % len(EMOJI_LIST))] # Wrapping around if too high
-        else:
-            return EMOJI_LIST[team.id]
-register.simple_tag(team_emoji)
-
-
 def team_status_classes(team):
     classes = list()
     if team.region is not None:

@@ -47,7 +47,7 @@
           </td>
         {% endif %}
         {% if pref.show_emoji %}
-          <td class="team-emoji">{% team_emoji debate.aff_team %}</td>
+          <td class="team-emoji"><span class="emoji">{{ debate.aff_team.emoji }}</span></td>
         {% endif %}
         <td>
           {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
@@ -60,7 +60,7 @@
           </span>
         </td>
         {% if pref.show_emoji %}
-          <td class="team-emoji">{% team_emoji debate.neg_team %}</td>
+          <td class="team-emoji"><span class="emoji">{{ debate.neg_team.emoji }}</span></td>
         {% endif %}
         <td>
           {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
