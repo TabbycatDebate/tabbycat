@@ -1,5 +1,3 @@
-@import "../bootstrap/variables";
-@import "../bootstrap/mixins";
 
 // Adj Checkins
 #select_breaking {
@@ -75,7 +73,7 @@
     z-index: 10;
 
     &.bg-success {
-      background: $state-success-bg;
+      // background: $state-success-bg;
     }
 
     &.fixed-right {
@@ -175,12 +173,12 @@
   .team.dragging,
   .ui-draggable-dragging {
     cursor: move;
-    border: 1px solid $btn-primary-border;
-    @extend .text-primary;
-    @extend .border-primary;
+    // border: 1px solid $btn-primary-border;
+    // @extend .text-primary;
+    // @extend .border-primary;
 
     &.is_unaccredited {
-      background: $table-bg-active;
+      // background: $table-bg-active;
     }
 
     &.btn-danger,

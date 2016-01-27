@@ -27,6 +27,7 @@ class AustralsPreferences(PreferencesPreset):
         self.debate_rules__substantive_speakers        = 3
         self.debate_rules__reply_scores_enabled        = True
         self.debate_rules__motion_vetoes_enabled       = True
+        self.data_entry__enable_motions                = True
         # Standings Rules
         self.standings__standings_missed_debates       = 2 # TODO= check this
         self.standings__team_standings_rule            = 'australs'
@@ -43,7 +44,8 @@ class AustralianEastersPreferences(AustralsPreferences):
         self.scoring__maximum_margin                   = 15.0
         # Debate Rules
         self.debate_rules__reply_scores_enabled        = False
-        self.debate_rules__motion_vetoes_enabled       = False
+        self.debate_rules__motion_vetoes_enabled       = True
+        self.data_entry__enable_motions                = True
         # UI Options
         self.ui_options__show_novices                  = True
 
@@ -60,6 +62,7 @@ class NZEastersPreferences(AustralsPreferences):
         # Debate Rules
         self.debate_rules__reply_scores_enabled        = True
         self.debate_rules__motion_vetoes_enabled       = True
+        self.data_entry__enable_motions                = True
         self.debate_rules__substantive_speakers        = 2
         # Standings
         self.standings__team_standings_rule            = 'nz'
@@ -87,6 +90,7 @@ class JoyntPreferences(AustralsPreferences):
         # Debate Rules
         self.debate_rules__reply_scores_enabled        = True
         self.debate_rules__motion_vetoes_enabled       = False
+        self.data_entry__enable_motions                = False
         self.debate_rules__substantive_speakers        = 3
         # Draw Rules
         self.draw_rules__draw_side_allocations         = 'preallocated'
@@ -145,8 +149,10 @@ class WADLPreferences(PreferencesPreset):
         self.name                                      = "WADL"
         self.show_in_list                              = True
         # Debate Rules= no replies; singular motions
+        self.debate_rules__substantive_speakers        = 3
         self.debate_rules__reply_scores_enabled        = False
         self.debate_rules__motion_vetoes_enabled       = False
+        self.data_entry__enable_motions                = False
         # Standings Rules
         self.standings__standings_missed_debates       = 0
         self.standings__team_standings_rule            = 'wadl'
@@ -158,10 +164,6 @@ class WADLPreferences(PreferencesPreset):
         self.draw_rules__draw_side_allocations         = 'balance'
         self.draw_rules__draw_pairing_method           = 'slide'
         self.draw_rules__draw_avoid_conflicts          = 'one_up_one_down'
-        # Debate Rules
-        self.debate_rules__substantive_speakers        = 3
-        self.debate_rules__reply_scores_enabled        = True
-        self.debate_rules__motion_vetoes_enabled       = True
         # UI Options
         self.ui_options__show_novices                  = True
         self.ui_options__show_emoji                    = False

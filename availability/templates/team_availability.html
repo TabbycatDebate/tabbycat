@@ -30,7 +30,7 @@
          </span>
       </td>
       {% if pref.show_emoji %}
-        <td class="team-emoji">{% team_emoji team %}</td>
+        <td class="team-emoji">{{ team.emoji }}</td>
       {% endif %}
       {% if pref.enable_divisions %}
         <td>{{ team.division.name }}</td>

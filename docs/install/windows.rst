@@ -50,7 +50,8 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 
   - You must have Python 3.4, not any other version.
   - Your installation directory must not have any spaces in it.
-  - The following must be part of your ``PATH`` environment variable: ``C:\Python34;C:\Python34\Scripts`` (or as appropriate for your installation directory).
+  - If it isn't showing as version 3.4, try restarting your computer.
+  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python34;C:\Python34\Scripts`` (or as appropriate for your installation directory). Following `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
 
 .. note:: The reason we can't use Python 3.5 is because it isn't (as of January 2016) supported by `psycopg2 <http://www.stickpeople.com/projects/python/win-psycopg/>`_, which is a dependency of Tabbycat.
 
@@ -72,7 +73,7 @@ Go to the `PostgreSQL downloads page <http://www.postgresql.org/download/windows
 .. admonition:: Advanced users
   :class: tip
 
-  If you're a Git user, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch.
+  If you've used Git before, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch.
 
   Even better, you might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
 

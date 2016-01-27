@@ -1,54 +1,55 @@
 {% extends "base.html" %}
 {% load add_field_css %}
 
+{% block head-title %}🔓Login{% endblock %}
+{% block page-title %}🔓Login{% endblock %}
 
-{% block head-title %}Login{% endblock %}
-{% block page-title %}Login{% endblock %}
+{% block nav %}{% endblock %}
 
 {% block content %}
 
-<form id="login" action="." method="POST" class="form-horizontal">
+  <form id="login" action="." method="POST" class="form-horizontal">
 
-  {% csrf_token %}
+    {% csrf_token %}
 
-  {% if form.errors %}
-    <div class="alert alert-danger">
-      Your username and password didn't match.
-    </div>
-  {% endif %}
-
-  {% if next %}
-      {% if user.is_authenticated %}
-      <div class="alert alert-warning">Your account doesn't have access to this page. To proceed,
-      please log in with an account that has access.</div>
-      {% else %}
-      <div class="alert alert-warning">Please log in to see this page.</div>
-      {% endif %}
-  {% endif %}
-
-  {% for field in form %}
-  <div class="form-group">
-    <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
-    <div class="col-md-6">
-      {{field|addcss:"form-control"}}
-    </div>
-    {% if field.errors %}
-      {{ field.errors }}
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        Your username and password didn't match.
+      </div>
     {% endif %}
-  </div>
-  {% endfor %}
 
-  <div class="form-group">
-    <div class="col-md-offset-2 col-md-2 col-sm-4">
-      <button type="submit" class="btn btn-success form-control submit-disable" data-loading-text="Logging in...">
-        Login
-      </button>
+    {% if next %}
+        {% if user.is_authenticated %}
+        <div class="alert alert-warning">Your account doesn't have access to this page. To proceed,
+        please log in with an account that has access.</div>
+        {% else %}
+        <div class="alert alert-warning">Please log in to see this page.</div>
+        {% endif %}
+    {% endif %}
+
+    {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
+      <div class="col-md-6">
+        {{field|addcss:"form-control"}}
+      </div>
+      {% if field.errors %}
+        {{ field.errors }}
+      {% endif %}
     </div>
-  </div>
+    {% endfor %}
 
-  <input type="hidden" name="next" value="{{ next }}" />
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-2 col-sm-4">
+        <button type="submit" class="btn btn-success form-control submit-disable" data-loading-text="Logging in...">
+          Login
+        </button>
+      </div>
+    </div>
 
-</form>
+    <input type="hidden" name="next" value="{{ next }}" />
+
+  </form>
 
 {% endblock %}
 
