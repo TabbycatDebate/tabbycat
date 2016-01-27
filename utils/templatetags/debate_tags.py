@@ -2,7 +2,6 @@ from django import template
 from django.utils.encoding import force_text
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from participants.emoji import EMOJI_LIST
 
 import re
 import os

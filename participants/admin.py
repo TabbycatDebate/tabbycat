@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from .models import Region,Institution,Speaker,Adjudicator
+from .models import Region, Institution, Speaker, Adjudicator, Team
 from adjallocation.models import AdjudicatorConflict, AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict
 from adjfeedback.models import AdjudicatorTestScoreHistory
 

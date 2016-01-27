@@ -234,7 +234,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'use_institution_prefix' : int(line[3]) if len(line) > 3 and line[3] else 0,
                     'emoji'                  : self.get_emoji,
                 }
-            counts, errors = self._import(f, _team_line_parser, pm.Team, expect_unique=False, generated_fields=['emoji_seq'])
+            counts, errors = self._import(f, _team_line_parser, pm.Team, expect_unique=False, generated_fields=['emoji'])
         else:
             counts = None
             errors = None
