@@ -12,6 +12,12 @@
 
 {% block content %}
 
+{% if tournaments.all.count == 0 %}
+  <div class="alert alert-info">
+    No tournaments are currently setup.
+  </div>
+{% endif %}
+
 <ul class="list-group">
   {% if user.is_authenticated %}
     {% for tournament in tournaments %}
