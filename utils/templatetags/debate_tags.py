@@ -2,7 +2,6 @@ from django import template
 from django.utils.encoding import force_text
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from participants.emoji import EMOJI_LIST
 
 import re
 import os
@@ -41,17 +40,6 @@ def neg_count(team, round):
         return 0
     return team.get_neg_count(round.seq)
 register.simple_tag(neg_count)
-
-def team_emoji(team):
-    if team.emoji_seq:
-        return EMOJI_LIST[team.emoji_seq]
-    else:
-        if team.id > len(EMOJI_LIST):
-            return EMOJI_LIST[(team.id % len(EMOJI_LIST))] # Wrapping around if too high
-        else:
-            return EMOJI_LIST[team.id]
-register.simple_tag(team_emoji)
-
 
 def team_status_classes(team):
     classes = list()

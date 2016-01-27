@@ -39,7 +39,9 @@
           </td>
         {% endif %}
         {% if pref.show_emoji %}
-          <td class="team-emoji">{% team_emoji person.team %}</td>
+          <td class="team-emoji">
+            <span class="emoji">{{ person.team.emoji }}</span>
+          </td>
         {% endif %}
         <td class="team-name">
           <span class="team-speakers-hover" id="team_speakers_{{ person.team.id }}">

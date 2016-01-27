@@ -6,7 +6,7 @@
       {% if source.name %}
         {{ source.name }}'s Feedback
       {% else %}
-        <span class="team-emoji">{% team_emoji source %} </span>
+        <span class="emoji">{{ source.emoji }}</span>
         {{ source.short_name }}'s Feedback
       {% endif %}
     </span>

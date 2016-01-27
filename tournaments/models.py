@@ -4,6 +4,7 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.functional import cached_property
 
+from participants.emoji import EMOJI_LIST
 from adjallocation.anneal import SAAllocator
 
 import logging
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 class Tournament(models.Model):
     name = models.CharField(max_length=100, help_text="The full name used on the homepage")
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu")
+    emoji = models.CharField(max_length=1, blank=True, null=True, unique=True, choices=EMOJI_LIST)
     seq = models.IntegerField(blank=True, null=True, help_text="The order in which tournaments are displayed")
     slug = models.SlugField(unique=True, help_text="The sub-URL of the tournament; cannot have spaces")
     current_round = models.ForeignKey('Round', null=True, blank=True,
