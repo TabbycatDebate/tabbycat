@@ -1,89 +1,92 @@
 {% extends "base.html" %}
 
 {% block head-title %}
-  <div class="jumbotron">
-    <h2><i class="emoji">👋</i> Welcome! <small>Which tournament are you after?</small></h2>
-  </div>
+
 {% endblock %}
 {% block page-title %}
-  Home
+  Tabbycat Home
 {% endblock %}
-{% block nav %}{% endblock %}
+
+{% block nav %}<div class="col-md-12">{% endblock %}<!-- Hide main nav -->
 
 {% block content %}
 
-{% if tournaments.all.count == 0 %}
-  <div class="alert alert-info">
-    No tournaments are currently setup.
+  <div class="jumbotron">
+    <h2><i class="emoji">👋</i> Welcome! <small>Which tournament are you after?</small></h2>
   </div>
-{% endif %}
 
-<ul class="list-group">
-
-  {% if user.is_authenticated %}
-    {% for tournament in tournaments %}
-      <li class="list-group-item">
-        <a href="{{ tournament.get_absolute_url }}">
-          <span class="emoji">
-            {% if tournament.emoji %}
-              {{tournament.emoji }}
-            {% else %}
-              🏆
-            {% endif %}
-          </span>
-          {{ tournament.name }} (administrative site)
-        </a>
-        <span class="badge">ADMIN</span>
-      </li>
-      <li class="list-group-item">
-        <a href="{{ tournament.get_public_url }}">
-          <span class="emoji">
-            {% if tournament.emoji %}
-              {{tournament.emoji }}
-            {% else %}
-              🏆
-            {% endif %}
-          </span>
-          {{ tournament.name }}
-        </a>
-        <span class="badge">PUBLIC</span>
-      </li>
-    {% endfor %}
-  {% else %}
-    {% for tournament in tournaments %}
-      <li class="list-group-item">
-        <a href="{{ tournament.get_public_url }}">
-          <span class="emoji">
-            {% if tournament.emoji %}
-              {{tournament.emoji }}
-            {% else %}
-              🏆
-            {% endif %}
-          </span>
-          {{ tournament.name }}
-        </a>
-      </li>
-    {% endfor %}
+  {% if tournaments.all.count == 0 %}
+    <div class="alert alert-info">
+      No tournaments are currently setup.
+    </div>
   {% endif %}
 
-  {% if tournaments.all.count > 1 and tournaments.0.pref.public_divisions %}
-    <li class="list-group-item">
-      <a href="{{ tournament.get_absolute_url }}"><i class="emoji">🏆</i>{{ tournament.name }} (administrative site)</a>
-        All Draws by Venue
-      </a>
-    </li>
-    <li class="list-group-item">
-      <a href="{{ tournament.get_public_url }}"><i class="emoji">🏆</i>{{ tournament.name }}</a>
-        All Draws by School
-      </a>
-    </li>
-    <li class="list-group-item">
-      <a href="{{ tournaments.0.get_all_tournaments_all_teams }}">
-        All Teams and Divisions
-      </a>
-    </li>
-  {% endif %}
+  <ul class="list-group">
 
-</ul>
+    {% if user.is_authenticated %}
+      {% for tournament in tournaments %}
+        <li class="list-group-item">
+          <a href="{{ tournament.get_absolute_url }}">
+            <span class="emoji">
+              {% if tournament.emoji %}
+                {{tournament.emoji }}
+              {% else %}
+                🏆
+              {% endif %}
+            </span>
+            {{ tournament.name }} (administrative site)
+          </a>
+          <span class="badge">ADMIN</span>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ tournament.get_public_url }}">
+            <span class="emoji">
+              {% if tournament.emoji %}
+                {{tournament.emoji }}
+              {% else %}
+                🏆
+              {% endif %}
+            </span>
+            {{ tournament.name }}
+          </a>
+          <span class="badge">PUBLIC</span>
+        </li>
+      {% endfor %}
+    {% else %}
+      {% for tournament in tournaments %}
+        <li class="list-group-item">
+          <a href="{{ tournament.get_public_url }}">
+            <span class="emoji">
+              {% if tournament.emoji %}
+                {{tournament.emoji }}
+              {% else %}
+                🏆
+              {% endif %}
+            </span>
+            {{ tournament.name }}
+          </a>
+        </li>
+      {% endfor %}
+    {% endif %}
+
+    {% if tournaments.all.count > 1 and tournaments.0.pref.public_divisions %}
+      <li class="list-group-item">
+        <a href="{{ tournament.get_absolute_url }}"><i class="emoji">🏆</i>{{ tournament.name }} (administrative site)</a>
+          All Draws by Venue
+        </a>
+      </li>
+      <li class="list-group-item">
+        <a href="{{ tournament.get_public_url }}"><i class="emoji">🏆</i>{{ tournament.name }}</a>
+          All Draws by School
+        </a>
+      </li>
+      <li class="list-group-item">
+        <a href="{{ tournaments.0.get_all_tournaments_all_teams }}">
+          All Teams and Divisions
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
 
 {% endblock content %}

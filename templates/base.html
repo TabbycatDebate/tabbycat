@@ -27,13 +27,15 @@
     <div class="row">
       <div class="container-fluid">
 
-        {% if 'admin' in request.path and user.is_superuser %}
-          {% include "nav/admin_nav.html" %}
-          <div class="col-md-12 nav-sidebar-offset">
-        {% else %}
-          {% include "nav/top_nav_base.html" %}
-          <div class="col-md-12">
-        {% endif %}
+        {% block nav %}
+          {% if 'admin' in request.path and user.is_superuser %}
+            {% include "nav/admin_nav.html" %}
+            <div class="col-md-12 nav-sidebar-offset">
+          {% else %}
+              {% include "nav/top_nav_base.html" %}
+            <div class="col-md-12">
+          {% endif %}
+        {% endblock %}
 
           <div class="row head-title {% if 'admin' in request.path %}white-bg{% endif %} vertical-spacing">
             <div class="col-md-12">
