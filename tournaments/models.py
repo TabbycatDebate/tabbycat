@@ -72,8 +72,11 @@ class Tournament(models.Model):
     @cached_property
     def get_current_round_cached(self):
         cached_key = "%s_current_round_object" % self.slug
-        cache.get_or_set(cached_key, self.current_round, None)
-        return cache.get(cached_key)
+        if self.current_round:
+            cache.get_or_set(cached_key, self.current_round, None)
+            return cache.get(cached_key)
+        else:
+            return None;
 
     def prelim_rounds(self, before=None, until=None):
         qs = self.round_set.filter(stage=Round.STAGE_PRELIMINARY)
