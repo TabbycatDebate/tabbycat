@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class Tournament(models.Model):
     name = models.CharField(max_length=100, help_text="The full name used on the homepage")
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu")
-    emoji = models.CharField(max_length=1, blank=True, null=True, unique=True, choices=EMOJI_LIST)
+    emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST)
     seq = models.IntegerField(blank=True, null=True, help_text="The order in which tournaments are displayed")
     slug = models.SlugField(unique=True, help_text="The sub-URL of the tournament; cannot have spaces")
     current_round = models.ForeignKey('Round', null=True, blank=True,
