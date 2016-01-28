@@ -3,17 +3,13 @@ import os
 import urllib.parse
 
 PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
-STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
-STATIC_ROOT         = 'staticfiles'
-STATIC_URL          = '/static/'
 MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
-SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # ========================
 # = Overwritten in Local =
 # ========================
 
-ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com')
+ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com'),
 MANAGERS            = ADMINS
 DEBUG               = False
 DEBUG_ASSETS        = DEBUG
@@ -42,8 +38,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
-
 TABBYCAT_APPS = (
     'actionlog',
     'adjallocation',
@@ -63,7 +57,7 @@ TABBYCAT_APPS = (
 )
 
 INSTALLED_APPS = (
-    'suit',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -73,19 +67,17 @@ INSTALLED_APPS = (
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'compressor',
+    'static_precompiler',
+    'django_extensions' # For Secret Generation Command
     )
 
 
+ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
 
-MIGRATION_MODULES = {
-    'blog': 'blog.db_migrations'
-}
-
-# ===========
+# =============
 # = Templates =
-# ===========
+# =============
 
 TEMPLATES = [
     {
@@ -100,7 +92,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
-                'django.template.context_processors.request',           # For SUIT
+                'django.template.context_processors.request',           # For Jet
                 'utils.context_processors.debate_context',              # For tournament config vars
                 'utils.context_processors.get_menu_highlight',          # For nav highlight
             ],
@@ -136,43 +128,76 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 # = Pipelines =
 # =============
 
+STATIC_ROOT         = 'staticfiles'
+STATIC_URL          = '/static/'
+STATICFILES_DIRS    = (
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'),
+)
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # other finders..
-    'compressor.finders.CompressorFinder',
-)
-COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'django_libsass.SassCompiler'), # SASS for stylesheets
-)
-LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
-LIBSASS_SOURCE_COMMENTS = False
+    'static_precompiler.finders.StaticPrecompilerFinder',
 
-COMPRESS_ENABLED = False # Temporary Disabled
-COMPRESS_OFFLINE = False # Temporary Disabled
-COMPRESS_URL = STATIC_URL
-COMPRESS_OFFLINE_MANIFEST = 'manifest.json'
-COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
-COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compression
+)
+
+STATIC_PRECOMPILER_COMPILERS = (
+    ('static_precompiler.compilers.libsass.SCSS',
+        {
+            "sourcemap_enabled": False,
+        }
+    ),
+)
+
+# Needs to be off for admin to work
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
 
 # ===========
 # = Logging =
 # ===========
+
+if os.environ.get('SENDGRID_USERNAME', ''):
+    SERVER_EMAIL = os.environ['SENDGRID_USERNAME']
+    DEFAULT_FROM_EMAIL = os.environ['SENDGRID_USERNAME']
+    EMAIL_HOST= 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
+    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+
 if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+        # Only send emails to admins when debug is false
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
         },
+        'mail_admins': {
+            # Any log item marked ERROR or higher will be sent to admins
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'django.request': {
+            # Pass all ERRORS to mail_admins handler
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
         },
     },
 }
@@ -184,9 +209,14 @@ for app in TABBYCAT_APPS:
     }
 
 
-# ===========
-# = Heroku  =
-# ===========
+# ==========
+# = Heroku =
+# ==========
+
+if os.environ.get('DJANGO_SECRET_KEY', ''):
+    SECRET_KEY          = os.environ['DJANGO_SECRET_KEY']
+else:
+    SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # Parse database configuration from $DATABASE_URL
 try:
@@ -232,16 +262,24 @@ if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
     TEMPLATE_DEBUG = DEBUG
 
-if os.environ.get('SENDGRID_USERNAME', ''):
-    EMAIL_HOST= 'smtp.sendgrid.net'
-    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
-    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
+# =============
+# = Travis CI =
+# =============
 
-# ===========================
-# = Local Overrides
-# ===========================
+if os.environ.get('TRAVIS', '') == 'true':
+    DATABASES = {
+        'default': {
+            'ENGINE':   'django.db.backends.postgresql_psycopg2',
+            'USER':     'postgres',
+            'PASSWORD': '',
+            'HOST':     'localhost',
+            'PORT':     '',
+        }
+    }
+
+# ===================
+# = Local Overrides =
+# ===================
 
 try:
     LOCAL_SETTINGS

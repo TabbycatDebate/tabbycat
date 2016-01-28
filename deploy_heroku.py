@@ -23,7 +23,7 @@ parser.add_argument("--git-branch", type=str, default=None,
 parser.add_argument("--pg-plan", "--postgresql-plan", type=str, default="hobby-dev",
     help="Heroku Postgres plan (default hobby-dev)")
 parser.add_argument("--import-tournament", type=str, metavar="IMPORT_DIR",
-    help="Also run the import_tournament command, importing from IMPORT_DIR")
+    help="Also run the importtournament command, importing from IMPORT_DIR")
 parser.add_argument("--dry-run", action="store_true", default=False,
     help="Print commands, don't run them.")
 
@@ -35,9 +35,9 @@ config_group.add_argument("--tab-cache-timeout", type=int, default=None, metavar
 config_group.add_argument("--enable-debug", action="store_true", default=False,
     help="Enable Django debug pages")
 
-# Import tournament arguments are copied from import_tournament.py, and should be
-# updated when these options in import_tournament.py change.
-import_tournament_group = parser.add_argument_group("import tournament options", "Passed to the import_tournament command. Ignored unless --import-tournament is used. Provided for convenience; to use other import_tournament options, run the import_tournament command separately instead.")
+# Import tournament arguments are copied from importtournament.py, and should be
+# updated when these options in importtournament.py change.
+import_tournament_group = parser.add_argument_group("import tournament options", "Passed to the importtournament command. Ignored unless --import-tournament is used. Provided for convenience; to use other importtournament options, run the importtournament command separately instead.")
 import_tournament_group.add_argument('-s', '--slug', type=str, action='store', default=None, dest="tournament_slug",
     help='Override tournament slug. (Default: use name of directory.)'),
 import_tournament_group.add_argument('--name', type=str, action='store', default=None, dest="tournament_name",
@@ -119,6 +119,8 @@ if args.public_cache_timeout:
     command.append("PUBLIC_PAGE_CACHE_TIMEOUT=%d" % args.public_cache_timeout)
 if args.tab_cache_timeout:
     command.append("TAB_PAGES_CACHE_TIMEOUT=%d" % args.tab_cache_timeout)
+command.append("NEW_RELIC_LICENSE_KEY=d73704bea90f57c35714cdf129a0680baee8eab5")
+command.append("NEW_RELIC_APP_NAME=%s" % urlname)
 run_heroku_command(command)
 
 # Set up a remote, if applicable
@@ -134,15 +136,20 @@ run_command(["git", "push", remote_name, push_spec])
 
 if args.init_db:
     # Perform initial migrations
-    run_heroku_command(["run", "python", "utils/init_db_heroku.py"])
+    run_heroku_command(["run", "python", "manage.py", "migrate"])
 
     print_yellow("Now creating a superuser for the Heroku site.")
     print_yellow("You'll need to respond to the prompts:")
     run_heroku_command(["run", "python", "manage.py", "createsuperuser"])
 
+    # Set secret key
+    output = get_output_from_command(["dj", "generate_secret_key"]).strip()
+    command = ["config:add", "DJANGO_SECRET_KEY=%s" % output]
+    run_heroku_command(command)
+
     # Import tournament, if provided
     if args.import_tournament:
-        command = ["run", "python", "manage.py", "import_tournament", args.import_tournament]
+        command = ["run", "python", "manage.py", "importtournament", args.import_tournament]
         if args.tournament_slug:
             command += ["--slug", args.tournament_slug]
         if args.tournament_name:

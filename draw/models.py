@@ -3,6 +3,7 @@ from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 
 from tournaments.models import SRManager
+from participants.models import Team
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
 class DebateManager(models.Manager):
@@ -64,8 +65,7 @@ class Debate(models.Model):
 
     @property
     def teams(self):
-        from tournaments.models import Team
-        return Team.objects.select_related('debate_team').filter(debateteam__debate=self)
+        return Team.objects.filter(debateteam__debate=self)
 
     @cached_property
     def aff_team(self):

@@ -1,8 +1,8 @@
 .. _data-entry:
 
-==========
-Data entry
-==========
+=============================
+Entering Ballots and Feedback
+=============================
 
 Ballot checkin
 ==============

@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist, Multiple
 from django.core.cache import cache
 from django.utils.functional import cached_property
 from tournaments.models import Round
+from .emoji import EMOJI_LIST
 
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
@@ -138,9 +139,9 @@ class TeamManager(models.Manager):
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Full name or suffix", help_text="Do not include institution name (see \"uses institutional prefix\" below)")
     short_reference = models.CharField(max_length=35, verbose_name="Short name/suffix", help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
+    emoji = models.CharField(max_length=1, blank=True, null=True, choices=EMOJI_LIST)
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey('tournaments.Tournament')
-    emoji_seq = models.IntegerField(blank=True, null=True, help_text="Emoji number to use for this team")
     division = models.ForeignKey('tournaments.Division', blank=True, null=True, on_delete=models.SET_NULL)
     use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
@@ -164,7 +165,8 @@ class Team(models.Model):
                             default=TYPE_NONE)
 
     class Meta:
-        unique_together = [('reference', 'institution', 'tournament'),('emoji_seq', 'tournament')]
+        unique_together = [('reference', 'institution', 'tournament'),
+                           ('emoji', 'tournament')]
         ordering = ['tournament', 'institution', 'short_reference']
         index_together = ['tournament', 'institution', 'short_reference']
         verbose_name = "👯 Team"

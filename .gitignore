@@ -1,6 +1,7 @@
 local_settings.py
 staticfiles/
 .gitmodules
+.sass-cache
 
 # Data to ignore
 data/*

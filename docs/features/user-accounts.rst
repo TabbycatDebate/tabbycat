@@ -1,7 +1,7 @@
 .. _user-accounts:
 
 =============
-User accounts
+User Accounts
 =============
 
 For obvious reasons, user logins are required to data entry and administrative functions. There are (conceptually) four levels of access:

@@ -1,7 +1,7 @@
 .. _adjudicator-feedback:
 
 ====================
-Adjudicator feedback
+Adjudicator Feedback
 ====================
 
 You can set the questions that are used on adjudicator feedback forms. The only field that is permanently there is the ``score`` field, which is an overall score assessing the adjudicator. All other questions (including a generic comments section) must be defined if you want them to be on the form.

@@ -212,6 +212,8 @@ class BallotSetForm(forms.Form):
         # 3. Motions fields
         if self.using_motions:
             self.fields['motion'] = MotionModelChoiceField(queryset=self.motions, required=True)
+
+        if self.using_vetoes:
             for side in self.SIDES:
                 self.fields[self._fieldname_motion_veto(side)] = MotionModelChoiceField(queryset=self.motions, required=False)
 
@@ -313,7 +315,7 @@ class BallotSetForm(forms.Form):
             try:
                 self.fields[name].widget.attrs['tabindex'] = i
             except KeyError as e:
-                logger.warning(e.message)
+                logger.warning(e)
 
         self.nexttabindex = i + 1 # for other UI elements in the tempate
 

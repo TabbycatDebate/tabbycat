@@ -80,7 +80,9 @@
         {% include "tables/debate_status.html" %}
       {% endif %}
       {% if pref.show_emoji %}
-        <td class="team-emoji"><span>{% team_emoji debate.aff_team %}</span></td>
+        <td class="team-emoji">
+          <span class="emoji">{{ debate.aff_team.emoji }}</span>
+        </td>
       {% endif %}
       <td class="team-name">
         {% if debate.aff_team.type != 'B' %}
@@ -90,7 +92,9 @@
         {% endif %}
       </td>
       {% if pref.show_emoji %}
-        <td class="team-emoji"><span>{% team_emoji debate.neg_team %}</span></td>
+        <td class="team-emoji">
+          <span class="emoji">{{ debate.neg_team.emoji }}</span>
+        </td>
       {% endif %}
       <td class="team-name">
         {% if debate.neg_team.type != 'B'  %}
