@@ -5,11 +5,11 @@
 {% block head-title %}{{ category.name }} Break{% endblock %}
 {% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
 {% block body-class %}public-break public-breaking-teams-{{ category }}{% endblock %}
-{% block header %}{% endblock %}
+
 
 {% block content %}
   {% if generated %}
-    <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
+    <table id="dataTable" class="table table-hover" cellspacing="0" cellpadding="0">
       <thead>
         <tr>
           <th>Rank</th>

@@ -1,37 +1,37 @@
 {% extends "draw_rbase.html" %}
 
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-
-
 {% block page-subnav-sections %}
-    {% if round.seq > 1 %}
-      {% block copy_btn %}
-        <button id="btn_copy" class="btn btn-default" type="button">Copy from Previous</button>
-      {% endblock %}
-    {% endif %}
-    <button id="select_all" class="btn btn-default" href="#all">Select All</button>
-    {% if adjudicators %}
-      <button id="select_breaking" class="btn btn-default" href="#">Select Breaking</button>
-    {% endif %}
-    <button id="select_none" class="btn btn-default" href="#none">Select None</button>
+  {% if round.seq > 1 %}
+    {% block copy_btn %}
+      <button id="btn_copy" class="btn btn-default" type="button">Copy from Previous</button>
+    {% endblock %}
+  {% endif %}
+  <button id="select_all" class="btn btn-default" href="#all">Select All</button>
+  {% if adjudicators %}
+    <button id="select_breaking" class="btn btn-default" href="#">Select Breaking</button>
+  {% endif %}
+  <button id="select_none" class="btn btn-default" href="#none">Select None</button>
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block page-subnav-actions %}
     <button id="submit_availability" class="btn form-control btn-success" >Save Selected</button>
 {% endblock %}
 
-{% block header %}
-
-{% endblock %}
-
 {% block content %}
   <div id="alerts-holder"></div>
   <form id="form">
-    <table id="dataTable" class="table table-hover table-striped" cellpadding="0", cellspacing="0">
-      {% block table-contents %}
-      {% endblock table-contents %}
-    </table>
-    <div class="status"></div>
+    <div class="panel panel-default">
+      <div class="panel-body">
+
+        <table id="dataTable" class="table table-hover" cellpadding="0", cellspacing="0">
+          {% block table-contents %}
+          {% endblock table-contents %}
+        </table>
+        <div class="status"></div>
+
+      </div>
+    </div>
   </form>
 {% endblock content %}
 
@@ -169,7 +169,7 @@
               'Saved successfully! ' +
               '<a href="' +
               draw_url +
-              '" class="alert-link">Return to the draw</a>' +
+              '" class="alert-link">Return to the checkins over</a>' +
               '</div>');
           },
           error: function(req, txtStatus, err) {
