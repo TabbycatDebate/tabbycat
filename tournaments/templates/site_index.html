@@ -19,6 +19,7 @@
 {% endif %}
 
 <ul class="list-group">
+
   {% if user.is_authenticated %}
     {% for tournament in tournaments %}
       <li class="list-group-item">
@@ -82,6 +83,7 @@
       </a>
     </li>
   {% endif %}
+
 </ul>
 
 {% endblock content %}
