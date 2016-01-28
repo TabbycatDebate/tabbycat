@@ -2,8 +2,17 @@
 {% load add_field_css %}
 {% load debate_tags %}
 
-{% block head-title %}{{ debate.matchup }} <small>{{ debate.round.name }} @ {% if debatedivision.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}</small>{% endblock %}
-{% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debatedivision.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}{% endblock %}
+{% block page-title %}{{ debate.matchup }} {{ debate.round.name }}{% endblock %}
+{% block head-title %}{{ debate.matchup }}{% endblock %}
+{% block sub-title %}
+  <small>
+    {{ debate.round.name }} @
+    {% if debatedivision.venue_group %}
+      {{ debate.division.venue_group.short_name }}
+    {% endif %}
+    {{ debate.venue.name }}
+  </small>
+{% endblock %}
 
 {% block header %}
 <div class="btn-group">

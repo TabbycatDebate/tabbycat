@@ -109,7 +109,7 @@
           </li>
           <li>
             <a class="" href="/admin/">
-              <span class="circle-icon"><span class="emoji">✒️</span></span>
+              <span class="circle-icon"><span class="emoji">📝️</span></span>
               Edit Data
             </a>
           </li>
@@ -141,29 +141,38 @@
             <li {% if availability_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url availability_index r %}">
-                <span class="circle-icon small-circle"><span class="emoji"></span></span>
-                Checkins
+                <span class="circle-icon small-circle
+                {% if r == current_round and r.draw_status == r.STATUS_NONE %} btn-info
+                {% elif r.draw_status == r.STATUS_DRAFT %} btn-success
+                {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
+                {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
+                {% else %} btn-inactive{% endif %}
+                ">
+                <span class="emoji"></span></span>Checkins
               </a>
             </li>
             <li {% if draw_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url draw r %}">
-                <span class="circle-icon small-circle"><span class="emoji"></span></span>
-                Draw
+                <span class="circle-icon small-circle
+                {% if r.draw_status == r.STATUS_NONE %} btn-inactive
+                {% else %} btn-info{% endif %}
+                ">
+                <span class="emoji"></span></span>Draw
               </a>
             </li>
             <li {% if motions_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url motions r %}">
-                <span class="circle-icon small-circle"><span class="emoji"></span></span>
-                Motions
+                <span class="circle-icon small-circle btn-inactive">
+                <span class="emoji"></span></span>Motions
               </a>
             </li>
             <li {% if ballots_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url results r %}">
-                <span class="circle-icon small-circle"><span class="emoji"></span></span>
-                Results
+                <span class="circle-icon small-circle btn-inactive">
+                <span class="emoji"></span></span>Results
               </a>
             </li>
           </ul>

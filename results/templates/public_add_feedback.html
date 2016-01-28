@@ -1,8 +1,10 @@
 {% extends "add_feedback.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Who are you?<small>(click your name or your team on this list)</small>{% endblock %}
 {% block page-title %}Add Feedback{% endblock %}
+{% block head-title %}Who are you?{% endblock %}
+{% block sub-title %}(click your name or your team on this list){% endblock %}
+
 {% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
 {% block body-class %}public-add-feedback{% endblock %}
 

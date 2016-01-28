@@ -75,26 +75,7 @@ def assistant_draw(request, round):
 
 
 def draw_none(request, round):
-    all_teams_count = Team.objects.filter(tournament=round.tournament).count()
-    active_teams = round.active_teams.all()
-    active_venues_count = round.active_venues.count()
-    active_adjs = round.active_adjudicators.count()
-    rooms = float(active_teams.count()) // 2
-    if round.prev:
-        previous_unconfirmed = round.prev.get_draw().filter(
-            result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
-    else:
-        previous_unconfirmed = 0
-
-    return r2r(request,
-               "draw_none.html",
-               dict(active_teams=active_teams,
-                    active_venues_count=active_venues_count,
-                    active_adjs=active_adjs,
-                    rooms=rooms,
-                    round=round,
-                    previous_unconfirmed=previous_unconfirmed,
-                    all_teams_count=all_teams_count))
+    return r2r(request, "draw_none.html", dict())
 
 
 def draw_draft(request, round):
@@ -131,18 +112,6 @@ def draw_with_standings(request, round):
 @round_view
 def create_draw(request, round):
     round.draw()
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
-                               user=request.user,
-                               round=round,
-                               tournament=round.tournament)
-    return redirect_round('draw', round)
-
-
-@admin_required
-@expect_post
-@round_view
-def create_with_all(request, round):
-    round.draw(override_team_checkins=True)
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
                                user=request.user,
                                round=round,

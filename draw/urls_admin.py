@@ -15,7 +15,6 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/print/feedback/$',      views.draw_print_feedback,       name='draw_print_feedback'),
 
     url(r'^round/(?P<round_seq>\d+)/create/$',              views.create_draw,          name='create_draw'),
-    url(r'^round/(?P<round_seq>\d+)/create_with_all/$',     views.create_with_all,      name='create_with_all'),
     url(r'^round/(?P<round_seq>\d+)/confirm/$',             views.confirm_draw,         name='confirm_draw'),
     url(r'^round/(?P<round_seq>\d+)/release/$',             views.release_draw,         name='release_draw'),
     url(r'^round/(?P<round_seq>\d+)/unrelease/$',           views.unrelease_draw,       name='unrelease_draw'),

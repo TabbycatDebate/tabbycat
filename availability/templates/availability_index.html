@@ -18,16 +18,73 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-  {% if can_advance %}
-    <a class="btn btn-success submit-disable" href="{% round_url draw round %}">
-      Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
-    </a>
+
+  {% if previous_round and previous_unconfirmed != 0  %}
+    <button class="btn btn-warning" id="createDraw"
+      data-toggle="tooltip" title="{ previous_unconfirmed }} debates from
+      {{ round.prev.name }} do not have a completed ballot —
+      this may lead to a draw that fails or is incorrect">
+  {% elif min_venues < checkin_types.0.in_now %}
+    <button class="btn btn-warning" id="createDraw"
+      data-toggle="tooltip" title="There are too few checked in venues available
+       for the amount of debates — the draw may not generate properly.">
+  {% elif min_adjudicators < checkin_types.0.in_now %}
+    <button class="btn btn-warning" id="createDraw"
+      data-toggle="tooltip" title="There are too few checked in adjudicators
+      available for the amount of debates — the draw may not generate properly">
+  {% elif not checkin_types.0.in_now|divisibleby:2  %}
+    <button class="btn btn-warning" id="createDraw"
+      data-toggle="tooltip" title="There is an uneven number of teams checked in
+       for this round — the draw may not generate properly">
+  {% elif checkin_types.0.in_now == 0 %}
+    <button class="btn btn-danger submit-disable disabled"
+      data-toggle="tooltip" title="The draw cannot be generated until some
+      teams have been checked in">
+  {% elif checkin_types.1.in_now == 0 %}
+    <button class="btn btn-danger submit-disable disabled"
+      data-toggle="tooltip" title="The draw cannot be generated until some
+      adjudicators have been checked in">
+  {% elif checkin_types.2.in_now == 0 %}
+    <button class="btn btn-danger submit-disable disabled"
+      data-toggle="tooltip" title="The draw cannot be generated until some
+      venues have been checked in">
   {% else %}
-    <button type="button" class="btn btn-success disabled" data-toggle="tooltip" title="Check in
-    some adjudicators, teams, and venues before generating the draw">
-      Generate Draw
-    </button>
+    <button class="btn btn-success submit-disable" id="createDraw">
   {% endif %}
+      Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+    </button>
+
+  <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
+
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% if previous_round and previous_unconfirmed != 0  %}
+    <div class="alert alert-danger">
+      Note: {{ previous_unconfirmed }} debates from <strong>{{ round.prev.name }}
+       do not have a completed ballot</strong> — this may lead to a draw that fails or is incorrect <em>depending</em> on your draw rules.
+    </div>
+  {% endif %}
+
+  {% if not checkin_types.0.in_now|divisibleby:2  %}
+    <div class="alert alert-danger">
+      There is an uneven number of teams checked in for this round.
+    </div>
+  {% endif %}
+
+  {% if min_adjudicators < checkin_types.0.in_now %}
+    <div class="alert alert-danger">
+      There are not enough checked in adjudicators for the number of debates.
+    </div>
+  {% endif %}
+
+  {% if min_venues < checkin_types.0.in_now %}
+    <div class="alert alert-danger">
+      There are not enough checked in venues for the number of teams.
+    </div>
+  {% endif %}
+
 {% endblock %}
 
 {% block content %}
@@ -57,3 +114,16 @@
   </div>
 </div>
 {% endblock content %}
+
+{% block extra-js %}
+  <script type="text/javascript" charset="utf-8">
+
+    $(document).ready( function() {
+      $("#createDraw").click( function() {
+        $("#createForm").submit();
+        return false;
+      } );
+    } );
+
+  </script>
+{% endblock extra-js %}

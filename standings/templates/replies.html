@@ -2,8 +2,10 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block head-title %}Reply Standings <small>after {{ round.name }}</small>{% endblock %}
 {% block page-title %}Reply Standings after {{ round.name }}{% endblock %}
+{% block head-title %}Reply Standings{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+
 {% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}

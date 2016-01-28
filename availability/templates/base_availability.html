@@ -24,7 +24,7 @@
     <div class="panel panel-default">
       <div class="panel-body">
 
-        <table id="dataTable" class="table table-hover" cellpadding="0", cellspacing="0">
+        <table id="dataTable" class="table table-hover">
           {% block table-contents %}
           {% endblock table-contents %}
         </table>
@@ -151,6 +151,7 @@
         });
         // Note new method for getting rows
         var sData = $("input", dTable.rows().nodes()).serialize();
+        $("#saved_availability").alert('close'); // hide the previous alert
         $.ajax({
           type: "POST",
           url: update_url,
@@ -162,14 +163,13 @@
             });
             {% block post-success %}{% endblock %}
             var draw_url = '{% block draw-url %}{% endblock %}';
-
             $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id="saved_availability">' +
               '<button type="button" class="close" data-dismiss="alert">' +
               '&times;</button>' +
               'Saved successfully! ' +
               '<a href="' +
               draw_url +
-              '" class="alert-link">Return to the checkins over</a>' +
+              '" class="alert-link">Return to the checkins overview</a>' +
               '</div>');
           },
           error: function(req, txtStatus, err) {

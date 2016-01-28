@@ -10,8 +10,11 @@ from utils.views import *
 def availability_index(request, round):
     if round.prev:
         previous_round = round.prev.id
+        previous_unconfirmed = round.prev.get_draw().filter(
+            result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
     else:
         previous_round = 0
+        previous_unconfirmed = 0
 
     checks = [{
         'type'      : "Team",
@@ -36,8 +39,12 @@ def availability_index(request, round):
     else:
         can_advance = False
 
+    min_adjudicators = int(checks.0.in_now / 2 / checks.1.in_now)
+    min_venues = int(checks.0.in_now / 2 / checks.2.in_now)
+
     return r2r(request, 'availability_index.html', dict(
-        checkin_types=checks, can_advance=can_advance))
+        checkin_types=checks, can_advance=can_advance,
+        min_adjudicators=min_adjudicators, min_venues=min_venues))
 
 
 @admin_required

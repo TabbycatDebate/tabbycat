@@ -4,8 +4,18 @@
 {% load humanize %}
 {% load static %}
 
-{% block head-title %}Enter Results for {{ debate.matchup }} <small>{{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group}} {% endif %}{{ debate.venue.name }}</small>{% endblock %}
 {% block page-title %}Enter Results for {{ debate.matchup }}{% endblock %}
+{% block head-title %}Enter Results for {{ debate.matchup }}{% endblock %}
+{% block sub-title %}
+  <small>
+    {{ debate.round.name }} @
+    {% if debate.division.venue_group %}
+      {{ debate.division.venue_group}}
+    {% endif %}
+    {{ debate.venue.name }}
+  </small>
+{% endblock %}
+
 {% block body-class %}public-enter-result{% endblock %}
 
 {% block content %}

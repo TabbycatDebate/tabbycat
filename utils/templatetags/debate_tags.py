@@ -42,9 +42,6 @@ def neg_count(team, round):
     return team.get_neg_count(round.seq)
 register.simple_tag(neg_count)
 
-def percentage(numberA, numberB):
-    return numberA / numberB * 100
-register.simple_tag(percentage)
 
 def team_status_classes(team):
     classes = list()
@@ -138,3 +135,11 @@ def prev_value(value, arg):
 def times(number):
     return list(range(number))
 
+
+def divide(numberA, numberB):
+    return numberA / numberB
+register.simple_tag(divide)
+
+def percentage(numberA, numberB):
+    return numberA / numberB * 100
+register.simple_tag(percentage)
