@@ -2,8 +2,8 @@
 {% load debate_tags %}
 {% load add_field_css %}
 
-{% block page-title %}<i class="emoji">🔧</i>Tournament Configuration{% endblock %}
-{% block head-title %}<i class="emoji">🔧</i>Tournament Configuration{% endblock %}
+{% block page-title %}🔧Tournament Configuration{% endblock %}
+{% block head-title %}<span class="emoji">🔧</span>Tournament Configuration{% endblock %}
 
 {% block content %}
 
@@ -12,48 +12,88 @@
   <div class="col-md-6">
     <ul class="list-group">
         <a href="{% tournament_url scoring %}" class="list-group-item">
-          <h4 class="list-group-item-heading"><i class="emoji">💯</i>Score Rules</h4>
-          <p class="list-group-item-text">The settings that determine the range of points that can awarded to speeches, replies, and teams.</p>
+          <h4 class="list-group-item-heading">
+            <span class="emoji">💯</span>Score Rules
+          </h4>
+          <p class="list-group-item-text">
+            The settings that determine the range of points that can awarded to speeches, replies, and teams.
+          </p>
         </a>
         <a href="{% tournament_url draw_rules %}" class="list-group-item">
-          <h4 class="list-group-item-heading"><i class="emoji">📏</i>️Draw Rules</h4>
-          <p class="list-group-item-text">The settings that determine how teams are matched together in the draw and how adjudicators are auto-allocated.</p>
+          <h4 class="list-group-item-heading">
+            <span class="emoji">📏</span>️Draw Rules
+          </h4>
+          <p class="list-group-item-text">
+            The settings that determine how teams are matched together in the draw and how adjudicators are auto-allocated.
+          </p>
         </a>
         <a href="{% tournament_url debate_rules %}" class="list-group-item">
-          <h4 class="list-group-item-heading"><i class="emoji">⚖</i>Debate Rules</h4>
-          <p class="list-group-item-text">The settings that determine how many speeches there are per side, how motions are decided, and whether replies are delivered.</p>
+          <h4 class="list-group-item-heading">
+            <span class="emoji">⚖</span>Debate Rules
+          </h4>
+          <p class="list-group-item-text">
+            The settings that determine how many speeches there are per side, how motions are decided, and whether replies are delivered.
+          </p>
         </a>
         <a href="{% tournament_url standings %}" class="list-group-item">
-          <h4 class="list-group-item-heading"><i class="emoji">📊</i>Standings</h4>
-          <p class="list-group-item-text">The settings that determine how teams and speakers are ranked for in the released tabs.</p>
+          <h4 class="list-group-item-heading">
+            <span class="emoji">📊</span>Standings
+          </h4>
+          <p class="list-group-item-text">
+            The settings that determine how teams and speakers are ranked for in the released tabs.
+          </p>
         </a>
         <a href="{% tournament_url feedback %}" class="list-group-item">
-          <h4 class="list-group-item-heading"><i class="emoji">🙅</i>Feedback</h4>
-          <p class="list-group-item-text">The settings that determine how an adj can be scored and who can submit feedback.</p>
+          <h4 class="list-group-item-heading">
+            <span class="emoji">🙅</span>Feedback
+          </h4>
+          <p class="list-group-item-text">
+            The settings that determine how an adj can be scored and who can submit feedback.
+          </p>
         </a>
     </ul>
   </div>
   <div class="col-md-6">
     <ul class="list-group">
         <a href="{% tournament_url tab_release %}" class="list-group-item">
-          <h4 class="list-group-item-heading"><i class="emoji">🚨</i>Tab Release</h4>
-          <p class="list-group-item-text">The settings that determine when to release a public tab is made visible and what data it shows.</p>
+          <h4 class="list-group-item-heading">
+            <span class="emoji">🚨</span>Tab Release
+          </h4>
+          <p class="list-group-item-text">
+            The settings that determine when to release a public tab is made visible and what data it shows.
+          </p>
         </a>
         <a href="{% tournament_url data_entry %}" class="list-group-item">
-          <h4 class="list-group-item-heading"><i class="emoji">📝</i>Data Entry</h4>
-          <p class="list-group-item-text">The settings that determine how ballots and feedback are entered, including online submission options.</p>
+          <h4 class="list-group-item-heading">
+            <span class="emoji">📝</span>Data Entry
+          </h4>
+          <p class="list-group-item-text">
+            The settings that determine how ballots and feedback are entered, including online submission options.
+          </p>
         </a>
         <a href="{% tournament_url public_features %}" class="list-group-item">
-          <h4 class="list-group-item-heading"><i class="emoji">📢</i>Public Features</h4>
-          <p class="list-group-item-text">The settings that determine what information the site displays to the publicly accessible page.</p>
+          <h4 class="list-group-item-heading">
+            <span class="emoji">📢</span>Public Features
+          </h4>
+          <p class="list-group-item-text">
+            The settings that determine what information the site displays to the publicly accessible page.
+          </p>
         </a>
         <a href="{% tournament_url ui_options %}" class="list-group-item">
-          <h4 class="list-group-item-heading"><i class="emoji">💻</i>UI Options</h4>
-          <p class="list-group-item-text">The settings that determine small tweaks in what information is presented by the interface.</p>
+          <h4 class="list-group-item-heading">
+            <span class="emoji">💻</span>UI Options
+          </h4>
+          <p class="list-group-item-text">
+            The settings that determine small tweaks in what information is presented by the interface.
+          </p>
         </a>
         <a href="{% tournament_url league_options %}" class="list-group-item">
-          <h4 class="list-group-item-heading"><i class="emoji">🏫</i>League Options</h4>
-          <p class="list-group-item-text">Special options for running high school debating competitions including division assignment and advanced scheduling.</p>
+          <h4 class="list-group-item-heading">
+            <span class="emoji">🏫</span>League Options
+          </h4>
+          <p class="list-group-item-text">
+            Special options for running high school debating competitions including division assignment and advanced scheduling.
+          </p>
         </a>
     </ul>
   </div>

@@ -71,12 +71,12 @@
 
     {% if tournaments.all.count > 1 and tournaments.0.pref.public_divisions %}
       <li class="list-group-item">
-        <a href="{{ tournament.get_absolute_url }}"><i class="emoji">🏆</i>{{ tournament.name }} (administrative site)</a>
+        <a href="{{ tournament.get_absolute_url }}"><span class="emoji">🏆</span>{{ tournament.name }} (administrative site)</a>
           All Draws by Venue
         </a>
       </li>
       <li class="list-group-item">
-        <a href="{{ tournament.get_public_url }}"><i class="emoji">🏆</i>{{ tournament.name }}</a>
+        <a href="{{ tournament.get_public_url }}"><span class="emoji">🏆</span>{{ tournament.name }}</a>
           All Draws by School
         </a>
       </li>

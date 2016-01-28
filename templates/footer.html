@@ -1,6 +1,5 @@
 {% load debate_tags %}
 
-
 <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
   <div class="container-fluid">
 
@@ -9,7 +8,7 @@
         <span class="navbar-brand font-size-reset small font-weight-reset">
             {{ tournament }} runs on
             <a href="https://github.com/czlee/tabbycat/" target="_new">
-              <i class="emoji">😸</i>Tabby Cat v0.8.0,
+              <span class="emoji">😸</span>Tabby Cat v0.8.0,
             </a>
             as developed by Qi-Shan,
             <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, &
@@ -23,24 +22,24 @@
     <ul class="nav navbar-nav navbar-right font-size-reset small">
       <li>
         <a href="/">
-          <i class="emoji">🏠</i>Home
+          <span class="emoji">🏠</span>Home
         </a>
       </li>
       {% if user.is_authenticated %}
         <li>
           <a href="http://tabbycat.readthedocs.org/" target="_blank">
-            <i class="emoji">❓</i>Help
+            <span class="emoji">❓</span>Help
           </a>
         </li>
         <li>
           <a class="" href="/accounts/logout/">
-            <i class="emoji">🔒</i>Logout of {{ user }}
+            <span class="emoji">🔒</span>Logout of {{ user }}
           </a>
         </li>
       {% else %}
         <li>
           <a class="" href="/accounts/login/">
-            <i class="emoji">🔓</i>Login
+            <span class="emoji">🔓</span>Login
           </a>
         </li>
       {% endif %}

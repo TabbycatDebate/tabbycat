@@ -31,7 +31,7 @@
         <li role="presentation" class="">
           <a id="tournament_select" class="white-bg" href="{{ tournament.get_absolute_url }}">
             <h4>
-              <i class="emoji">💩</i>{{ tournament }}
+              <span class="emoji">💩</span>{{ tournament }}
             </h4>
           </a>
         </li>
@@ -43,7 +43,7 @@
       {% if pref.side_allocations_enabled == 'preallocated' %}
         <li {% if sides_nav %}class="active"{% endif %} >
           <a href="{% tournament_url side_allocations %}">
-            <i class="emoji"></i>Sides
+            <span class="emoji"></span>Sides
           </a>
         </li>
       {% endif %}
@@ -65,7 +65,7 @@
       <li class="{% if standings_nav %}dropdown active {% endif %}">
         <a href="{% round_url standings_index current_round %}" >
           <span class="circle-icon icon-container">
-            <span class="glyphicon glyphicon-stats"></span></i>
+            <span class="glyphicon glyphicon-stats"></span>
           </span>
           Standings
         </a>
@@ -97,19 +97,19 @@
         <ul class="nav nav-pills nav-stacked">
           <li>
             <a href="{% tournament_url tournament_config_index %}">
-              <span class="circle-icon"><i class="emoji">🔧</i></span>
+              <span class="circle-icon"><span class="emoji">🔧</span></span>
               Configuration
             </a>
           </li>
           <li>
             <a class="" href="{% tournament_url data_index %}">
-              <span class="circle-icon"><i class="emoji">📑</i></span>
+              <span class="circle-icon"><span class="emoji">📑</span></span>
               Import Data
             </a>
           </li>
           <li>
             <a class="" href="/admin/">
-              <span class="circle-icon"><i class="emoji">✒️</i></span>
+              <span class="circle-icon"><span class="emoji">✒️</span></span>
               Edit Data
             </a>
           </li>
@@ -130,7 +130,7 @@
             {% elif r.seq > current_round.seq %}btn-inactive
             {% elif r.seq < current_round.seq %}btn-success
             {% endif %}">
-            <i class="emoji"></i></span>
+            <span class="emoji"></span></span>
             {{ r.name }} <span class="caret pull-right"></span>
           </a>
         </li>
@@ -141,28 +141,28 @@
             <li {% if availability_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url availability_index r %}">
-                <span class="circle-icon small-circle"><i class="emoji"></i></span>
+                <span class="circle-icon small-circle"><span class="emoji"></span></span>
                 Checkins
               </a>
             </li>
             <li {% if draw_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url draw r %}">
-                <span class="circle-icon small-circle"><i class="emoji"></i></span>
+                <span class="circle-icon small-circle"><span class="emoji"></span></span>
                 Draw
               </a>
             </li>
             <li {% if motions_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url motions r %}">
-                <span class="circle-icon small-circle"><i class="emoji"></i></span>
+                <span class="circle-icon small-circle"><span class="emoji"></span></span>
                 Motions
               </a>
             </li>
             <li {% if ballots_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url results r %}">
-                <span class="circle-icon small-circle"><i class="emoji"></i></span>
+                <span class="circle-icon small-circle"><span class="emoji"></span></span>
                 Results
               </a>
             </li>
