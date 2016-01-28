@@ -139,7 +139,7 @@ class TeamManager(models.Manager):
 class Team(models.Model):
     reference = models.CharField(max_length=150, verbose_name="Full name or suffix", help_text="Do not include institution name (see \"uses institutional prefix\" below)")
     short_reference = models.CharField(max_length=35, verbose_name="Short name/suffix", help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
-    emoji = models.CharField(max_length=1, blank=True, null=True, choices=EMOJI_LIST)
+    emoji = models.CharField(max_length=2, blank=True, null=True, choices=EMOJI_LIST)
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey('tournaments.Tournament')
     division = models.ForeignKey('tournaments.Division', blank=True, null=True, on_delete=models.SET_NULL)
