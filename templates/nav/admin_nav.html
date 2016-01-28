@@ -156,6 +156,8 @@
               <a href="{% round_url draw r %}">
                 <span class="circle-icon small-circle
                 {% if r.draw_status == r.STATUS_NONE %} btn-inactive
+                {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
+                {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
                 {% else %} btn-info{% endif %}
                 ">
                 <span class="emoji"></span></span>Draw

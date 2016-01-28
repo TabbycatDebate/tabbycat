@@ -57,32 +57,33 @@
       </thead>
       <tbody>
       {% for debate in draw %}
-      <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
-        <td>{{ debate.bracket }}</td>
-        <td>
-          <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
-            {{ debate.aff_team.short_name }}
-          </span>
-        </td>
-        <td>
-          <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
-            {{ debate.neg_team.short_name }}
-          </span>
-        </td>
-        <td>
-        {% for type, adj in debate.adjudicators %}
-          {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+        <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+          <td>{{ debate.bracket }}</td>
+          <td>
+            <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
+              {{ debate.aff_team.short_name }}
+            </span>
+          </td>
+          <td>
+            <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
+              {{ debate.neg_team.short_name }}
+            </span>
+          </td>
+          <td>
+          {% for type, adj in debate.adjudicators %}
+            {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+          {% endfor %}
+          </td>
+          <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
+            {% if debate.venue %}
+            <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
+              <span class="">{{ debate.venue }} {% if debate.venue.time %}<em>{{ debate.venue.time|date:"d/m" }}</em>{% endif %}</span>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
         {% endfor %}
-        </td>
-        <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
-          {% if debate.venue %}
-          <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
-            <span class="">{{ debate.venue }} {% if debate.venue.time %}<em>{{ debate.venue.time|date:"d/m" }}</em>{% endif %}</span>
-          </div>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
+      </tbody>
     </table>
   </div>
 

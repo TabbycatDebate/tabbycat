@@ -515,7 +515,7 @@ EMOJI_LIST = (
     # LAME ("🎡", ""), # Ferris Wheel
     # LAME ("🎢", ""), # Roller Coaster
     # LAME ("💈", ""), # Barber Pole
-    # LAME ("🎪", ""), # Circus Tent
+    # USED BY THE UI ("🎪", ""), # Circus Tent
     # LAME ("🎭", ""), # Performing Arts
     ("🎨", "🎨"), # Artist Palette
     # LAME ("🎰", ""), # Slot Machine

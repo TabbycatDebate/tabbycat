@@ -2,7 +2,7 @@
 {% load debate_tags %}
 
 {% block page-title %}{{ round.name }} Checkins{% endblock %}
-{% block head-title %}Checkins Overview{% endblock %}
+{% block head-title %}<span class="emoji">📍</span>️Checkins Overview{% endblock %}
 {% block sub-title %}For {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
@@ -15,6 +15,16 @@
   <a class="btn btn-default submit-disable" href="{% round_url adjudicator_availability round %}">
     Checkin Adjudicators
   </a>
+
+  <a class="btn btn-default submit-disable" href="{% round_url update_availability_all round %}">
+    Checkin Everything
+  </a>
+  {% if round.prev %}
+    <a class="btn btn-default submit-disablee">
+      Checkin Everything Active in {{ previous_round.name }}
+    </a>
+  {% endif %}
+
 {% endblock %}
 
 {% block page-subnav-actions %}
@@ -95,21 +105,6 @@
     {% for checkin_type in checkin_types %}
       {% include 'checkin_progress.html' %}
     {% endfor %}
-
-    <div class="row">
-      <div class="col-md-6">
-        <a class="btn btn-primary submit-disabl btn-block" href="{% round_url update_availability_all round %}">
-          Checkin all Teams, Venues, & Adjudicators
-        </a>
-      </div>
-      <div class="col-md-6">
-      {% if round.prev %}
-        <a class="btn btn-primary submit-disable btn-block">
-          Checkin all Teams, Venues, & Adjudicators active in {{ previous_round.name }}
-        </a>
-      {% endif %}
-      </div>
-    </div>
 
   </div>
 </div>

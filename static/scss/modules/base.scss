@@ -11,7 +11,7 @@ body {
 // LAYOUT
 
 .vertical-spacing {
-  margin-bottom: $line-height-computed / 2;
+  margin-bottom: $line-height-computed;
 }
 
 // BASE ELEMENTS: HEADER
@@ -22,17 +22,26 @@ body {
     line-height: $font-size-h3 * $headings-line-height * 1.2;
   }
 }
-.page-sub-nav .navbar-right {
+.page-sub-nav {
+
+  .navbar-right {
     padding-right: 15px; // compensate for the pull-rights negative margin
-}
-.btn-group-input {
-  // For the quick search; needs to fit within the header row
-  display: inline-block;
-  max-width: 180px;
-  float: right; // Needed to fix spacing
-  margin-left: 3px; // Isn't receiving the left margin
-  .form-control {
-    height: 41px;
-    border-width: 1px;
   }
+
+  .btn-group-input {  // For the quick search; needs to fit within the row
+    display: inline-block;
+    max-width: 148px;
+    float: right; // Needed to fix spacing
+    margin-left: 3px; // Isn't receiving the left margin
+
+    .form-control {
+      height: 41px;
+      border-width: 1px;
+    }
+  }
+
+  .dropdown {
+    display: inline-block; // Need this to bring their alignment up
+  }
+
 }
