@@ -259,8 +259,8 @@ class BaseTournamentDataImporter(object):
         self.get_emoji()."""
 
         # Get list of all emoji already in use. Teams without emoji are assigned by team ID.
-        assigned_emoji_teams = Team.objects.filter(emoji_seq__isnull=False).values_list('emoji_seq', flat=True)
-        unassigned_emoji_teams = Team.objects.filter(emoji_seq__isnull=True).values_list('id', flat=True)
+        assigned_emoji_teams = Team.objects.filter(emoji__isnull=False).values_list('emoji', flat=True)
+        unassigned_emoji_teams = Team.objects.filter(emoji__isnull=True).values_list('id', flat=True)
 
         # Start with a list of all emoji...
         self.emoji_options = list(range(0, len(EMOJI_LIST) - 1))
@@ -277,6 +277,6 @@ class BaseTournamentDataImporter(object):
             emoji_id = random.choice(self.emoji_options)
         except IndexError:
             self.logger.error("No more choices left for emoji, choosing at random")
-            return random.randint(0, len(EMOJI_LIST) - 1)
+            return EMOJI_LIST[random.randint(0, len(EMOJI_LIST) - 1)][0]
         self.emoji_options.remove(emoji_id)
-        return emoji_id
+        return EMOJI_LIST[emoji_id][0]

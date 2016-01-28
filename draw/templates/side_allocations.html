@@ -27,7 +27,7 @@
     {% for team in teams %}
     <tr>
       {% if pref.show_emoji %}
-        <td class="team-emoji">{% team_emoji team %}</td>
+        <td class="team-emoji">{{ team.emoji }}</td>
       {% endif %}
       <td>
         <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
