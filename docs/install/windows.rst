@@ -138,6 +138,12 @@ Almost there!
 
     > .\venv\Scripts\activate
 
+  .. attention:: If you get an error message saying that the script isn't digitally signed, open a PowerShell with administrator privileges by right-clicking PowerShell in the Start meny and clicking "Run as administrator". Then run this command::
+
+      > Set-ExecutionPolicy RemoteSigned
+
+    Read the warning message, then type ``y`` to confirm. By default, the execution policy on Windows is ``Restricted``, which does not permit scripts like ``activate`` to be run. Changing it to ``RemoteSigned`` relaxes it to allow local scripts to be run without checking the signature.
+
 5. Install Tabbycat's requirements.
 
   If you installed **32-bit Python**::
@@ -152,9 +158,9 @@ Almost there!
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.4-pg9.4.4-release.exe
     > pip install -r requirements_common.txt
 
-.. attention:: Because you're on Windows, the ``psycopg2`` package won't work. There is a good Windows version called `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, which we'll use instead. The purpose of the second line above is to install it, and therefore stop the third line—which installs everything—from trying to install the Unix version.
+  .. attention:: Because you're on Windows, the ``psycopg2`` package won't work. There is a good Windows version called `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, which we'll use instead. The purpose of the second line above is to install it, and therefore stop the third line—which installs everything—from trying to install the Unix version.
 
-.. hint:: You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate.
+  .. hint:: You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate.
 
 6. Initialize the database and create a user account for yourself::
 
