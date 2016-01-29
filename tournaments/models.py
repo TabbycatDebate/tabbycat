@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class Tournament(models.Model):
     name = models.CharField(max_length=100, help_text="The full name used on the homepage")
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu")
-    emoji = models.CharField(max_length=1, blank=True, null=True, unique=True, choices=EMOJI_LIST)
+    emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST)
     seq = models.IntegerField(blank=True, null=True, help_text="The order in which tournaments are displayed")
     slug = models.SlugField(unique=True, help_text="The sub-URL of the tournament; cannot have spaces")
     current_round = models.ForeignKey('Round', null=True, blank=True,
@@ -72,12 +72,11 @@ class Tournament(models.Model):
     @cached_property
     def get_current_round_cached(self):
         cached_key = "%s_current_round_object" % self.slug
-        cached_value = cache.get(cached_key)
-        if cached_value:
+        if self.current_round:
+            cache.get_or_set(cached_key, self.current_round, None)
             return cache.get(cached_key)
         else:
-            cache.set(cached_key, self.current_round, None)
-            return self.current_round
+            return None;
 
     def prelim_rounds(self, before=None, until=None):
         qs = self.round_set.filter(stage=Round.STAGE_PRELIMINARY)

@@ -80,12 +80,12 @@ EMOJI_LIST = (
     # LAME ("㊙️", ""), # Circled Ideograph Secret
     # LAME ("▪️", ""), # Black Small Square
     # LAME ("▫️", ""), # White Small Square
-    #Unicode            Version 3.0
-    ("#⃣️", "#⃣️"), # Keycap Number Sign
-    ("*⃣", "*⃣"), # Keycap Asterisk
-    ("0⃣️", "0⃣️"), # Keycap Digit Zero
-    ("1⃣️", "1⃣️"), # Keycap Digit One
-    ("2⃣️", "2⃣️"), # Keycap Digit Two
+    # Unicode            Version 3.0
+    # ("#⃣️", "#⃣️"), # Keycap Number Sign
+    # ("*⃣", "*⃣"), # Keycap Asterisk
+    # ("0⃣️", "0⃣️"), # Keycap Digit Zero
+    # ("1⃣️", "1⃣️"), # Keycap Digit One
+    # ("2⃣️", "2⃣️"), # Keycap Digit Two
     # LAME ("3⃣️", ""), # Keycap Digit Three
     # LAME ("4⃣️", ""), # Keycap Digit Four
     # LAME ("5⃣️", ""), # Keycap Digit Five
@@ -95,7 +95,7 @@ EMOJI_LIST = (
     # LAME ("9⃣️", ""), # Keycap Digit Nine
     # DOESNT SHOW ("⁉️", "⁉️"), # Exclamation Question Mark
     # LAME ("ℹ️", ""), # Information Source
-    #Unicode     Version 3.2
+    # Unicode     Version 3.2
     # LAME ("⤴️", ""), # Arrow Pointing Rightwards Then Curving Upwards
     # LAME ("⤵️", ""), # Arrow Pointing Rightwards Then Curving Downwards
     # DOESNT SHOW ("♻️", "♻️"), # Black Universal Recycling Symbol
@@ -106,7 +106,7 @@ EMOJI_LIST = (
     # LAME ("◾", ""), # Black Medium Small Square
     #Unicode    Version 4.0
     ("☕", "☕"), # Hot Beverage
-    ("⚠️", "⚠️"), # Warning Sign
+    # DOESN’T SHOW("⚠️", "⚠️"), # Warning Sign
     # DOESN’T SHOW ("☔", ""), # Umbrella With Rain Drops
     # LAME ("⏏", ""), # Eject Symbol
     # LAME ("⬆️", ""), # Upwards Black Arrow
