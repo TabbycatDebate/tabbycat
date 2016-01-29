@@ -25,6 +25,10 @@
     border-radius: 0px;
     text-transform: uppercase;
     color: $headings-color;
+    .emoji {
+      margin-right: 8px; // Align the the other icons
+      margin-left: 1px;
+    }
   }
   .dropdown-menu {
     width: 100%;
@@ -69,10 +73,6 @@
   float: left;
   margin: -4px 10px -3px -8px;
 
-  .emoji {
-    padding-left: 3px;
-    line-height: 24px;
-  }
   &.btn-success {
     background: $btn-success-bg;
   }

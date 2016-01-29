@@ -39,8 +39,8 @@ def availability_index(request, round):
     else:
         can_advance = False
 
-    min_adjudicators = int(checks.0.in_now / 2 / checks.1.in_now)
-    min_venues = int(checks.0.in_now / 2 / checks.2.in_now)
+    min_adjudicators = int(checks[0]['in_now'] / 2 / checks[1]['in_now'])
+    min_venues = int(checks[0]['in_now'] / 2 / checks[2]['in_now'])
 
     return r2r(request, 'availability_index.html', dict(
         checkin_types=checks, can_advance=can_advance,

@@ -142,7 +142,8 @@
               <div class="progress-line standard-line"></div>
               <a href="{% round_url availability_index r %}">
                 <span class="circle-icon small-circle
-                {% if r == current_round and r.draw_status == r.STATUS_NONE %} btn-info
+                {% if r.seq > current_round.seq %} btn-success
+                {% elif r == current_round and r.draw_status == r.STATUS_NONE %} btn-info
                 {% elif r.draw_status == r.STATUS_DRAFT %} btn-success
                 {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
                 {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
@@ -155,7 +156,8 @@
               <div class="progress-line standard-line"></div>
               <a href="{% round_url draw r %}">
                 <span class="circle-icon small-circle
-                {% if r.draw_status == r.STATUS_NONE %} btn-inactive
+                {% if r.seq > current_round.seq %} btn-success
+                {% elif r.draw_status == r.STATUS_NONE %} btn-inactive
                 {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
                 {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
                 {% else %} btn-info{% endif %}
@@ -163,17 +165,15 @@
                 <span class="emoji"></span></span>Draw
               </a>
             </li>
-            <li {% if motions_nav and current_round == r %}class="active"{% endif %}>
-              <div class="progress-line standard-line"></div>
-              <a href="{% round_url motions r %}">
-                <span class="circle-icon small-circle btn-inactive">
-                <span class="emoji"></span></span>Motions
-              </a>
-            </li>
             <li {% if ballots_nav and current_round == r %}class="active"{% endif %}>
               <div class="progress-line standard-line"></div>
               <a href="{% round_url results r %}">
-                <span class="circle-icon small-circle btn-inactive">
+                <span class="circle-icon small-circle
+                {% if r.seq > current_round.seq %} btn-success
+                {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-info
+                {% elif r.draw_status == r.STATUS_RELEASED %} btn-info
+                {% else %} btn-inactive{% endif %}
+                ">
                 <span class="emoji"></span></span>Results
               </a>
             </li>
