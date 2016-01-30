@@ -6,10 +6,14 @@
 {% block head-title %}Reply Standings{% endblock %}
 {% block sub-title %}after {{ round.name }}{% endblock %}
 
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover" cellspacing="0" cellpadding="0">
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="table table-hover" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
         <th class="hidden"></th>
@@ -77,8 +81,10 @@
       {% endwith %}
       {% endwith %}
     {% endfor %}
+    </tbody>
   </table>
-
+  </div>
+</div>
 {% endblock content %}
 
 {% block extra-js %}

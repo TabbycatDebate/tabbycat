@@ -1,7 +1,8 @@
 from participants.models import Team, Speaker
 from tournaments.models import Round
-from results.models import TeamScore, SpeakerScore
+from results.models import TeamScore, SpeakerScore, BallotSubmission
 from motions.models import Motion
+from django.db.models import Count
 
 from utils.views import *
 
@@ -9,50 +10,100 @@ from utils.views import *
 @admin_required
 @round_view
 def standings_index(request, round):
-    return r2r(request, 'standings_index.html', dict())
+    top_speaks = SpeakerScore.objects.filter(
+        ballot_submission__confirmed=True).select_related(
+            'debate_team__debate__round').order_by('-score')[:10]
+    bottom_speaks = SpeakerScore.objects.filter(
+        ballot_submission__confirmed=True).exclude(
+            position=round.tournament.REPLY_POSITION).order_by(
+                'score')[:10].select_related('debate_team__debate__round')
+    top_margins = TeamScore.objects.filter(
+        ballot_submission__confirmed=True).select_related(
+            'debate_team__team', 'debate_team__debate__round',
+            'debate_team__team__institution').order_by('-margin')[:10]
+    bottom_margins = TeamScore.objects.filter(
+        ballot_submission__confirmed=True, margin__gte=0).select_related(
+            'debate_team__team', 'debate_team__debate__round',
+            'debate_team__team__institution').order_by('margin')[:10]
+    top_motions = BallotSubmission.objects.values('motion').filter(
+    confirmed=True).annotate(motion_count=Count('motion')).order_by('-motion_count')[:10]
+    bottom_motions = BallotSubmission.objects.values('motion').filter(
+    confirmed=True).annotate(motion_count=Count('motion')).order_by('motion_count')[:10]
+
+    return r2r(request,
+               'standings_index.html',
+               dict(top_margins=top_margins,
+                    top_speaks=top_speaks,
+                    bottom_margins=bottom_margins,
+                    bottom_speaks=bottom_speaks,
+                    top_motions=top_motions,
+                    bottom_motions=bottom_motions))
 
 
-def get_speaker_standings(rounds, round, results_override=False, only_novices=False, for_replies=False):
+def get_speaker_standings(rounds,
+                          round,
+                          results_override=False,
+                          only_novices=False,
+                          for_replies=False):
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
     reply_position = round.tournament.REPLY_POSITION
-    total_prelim_rounds = Round.objects.filter(stage=Round.STAGE_PRELIMINARY, tournament=round.tournament).count()
+    total_prelim_rounds = Round.objects.filter(
+        stage=Round.STAGE_PRELIMINARY,
+        tournament=round.tournament).count()
     missable_debates = round.tournament.pref('standings_missed_debates')
     minimum_debates_needed = total_prelim_rounds - missable_debates
 
     if for_replies:
         speaker_scores = SpeakerScore.objects.select_related(
-            'speaker','ballot_submission', 'debate_team__debate__round'
-            ).filter(ballot_submission__confirmed=True, position=reply_position)
+            'speaker', 'ballot_submission',
+            'debate_team__debate__round').filter(
+                ballot_submission__confirmed=True,
+                position=reply_position)
     else:
         speaker_scores = SpeakerScore.objects.select_related(
-            'speaker','ballot_submission', 'debate_team__debate__round'
-            ).filter(ballot_submission__confirmed=True, position__lte=last_substantive_position)
+            'speaker', 'ballot_submission',
+            'debate_team__debate__round').filter(
+                ballot_submission__confirmed=True,
+                position__lte=last_substantive_position)
 
     if only_novices is True:
-        speakers = list(Speaker.objects.filter(team__tournament=round.tournament, novice=True).select_related(
-            'team', 'team__institution', 'team__tournament'))
+        speakers = list(Speaker.objects.filter(
+            team__tournament=round.tournament,
+            novice=True).select_related('team', 'team__institution',
+                                        'team__tournament'))
     else:
-        speakers = list(Speaker.objects.filter(team__tournament=round.tournament).select_related(
-            'team', 'team__institution', 'team__tournament'))
+        speakers = list(Speaker.objects.filter(
+            team__tournament=round.tournament).select_related(
+                'team', 'team__institution', 'team__tournament'))
 
     def get_scores(speaker, this_speakers_scores):
         speaker_scores = [None] * len(rounds)
         for r in rounds:
-            finding_score = next((x for x in this_speakers_scores if x.debate_team.debate.round == r), None)
+            finding_score = next(
+                (x
+                 for x in this_speakers_scores
+                 if x.debate_team.debate.round == r), None)
             if finding_score:
                 speaker_scores[r.seq - 1] = finding_score.score
 
         return speaker_scores
 
     for speaker in speakers:
-        this_speakers_scores = [score for score in speaker_scores if score.speaker == speaker]
+        this_speakers_scores = [score
+                                for score in speaker_scores
+                                if score.speaker == speaker]
         speaker.scores = get_scores(speaker, this_speakers_scores)
-        speaker.results_in = speaker.scores[-1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
+        speaker.results_in = speaker.scores[
+            -
+            1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
 
-        if round.seq < total_prelim_rounds or len([_f for _f in speaker.scores if _f]) >= minimum_debates_needed:
+        if round.seq < total_prelim_rounds or len(
+            [_f for _f in speaker.scores if _f]) >= minimum_debates_needed:
             speaker.total = sum([_f for _f in speaker.scores if _f])
             try:
-                speaker.average = sum([_f for _f in speaker.scores if _f]) / len([_f for _f in speaker.scores if _f])
+                speaker.average = sum([_f for _f in speaker.scores if _f
+                                       ]) / len(
+                                           [_f for _f in speaker.scores if _f])
             except ZeroDivisionError:
                 speaker.average = None
         else:
@@ -68,7 +119,8 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
     prev_total = None
     current_rank = 0
 
-    if for_replies or round.tournament.pref('speaker_standings_rule') == 'wadl':
+    if for_replies or round.tournament.pref(
+            'speaker_standings_rule') == 'wadl':
         method = False
         speakers.sort(key=lambda x: x.average, reverse=True)
     else:
@@ -88,10 +140,15 @@ def get_speaker_standings(rounds, round, results_override=False, only_novices=Fa
 
     return speakers
 
+
 def get_round_result(team, team_scores, r):
-    ts = next((x for x in team_scores if x.debate_team.team == team and x.debate_team.debate.round == r), None)
+    ts = next(
+        (x
+         for x in team_scores
+         if x.debate_team.team == team and x.debate_team.debate.round == r),
+        None)
     try:
-        ts.opposition = ts.debate_team.opposition.team # TODO: this slows down the page generation considerably
+        ts.opposition = ts.debate_team.opposition.team  # TODO: this slows down the page generation considerably
     except AttributeError:
         pass
     except Exception as e:
@@ -99,16 +156,21 @@ def get_round_result(team, team_scores, r):
         print(e)
     return ts
 
+
 @admin_required
 @round_view
 def team_standings(request, round):
     teams = Team.objects.ranked_standings(round)
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
+    team_scores = list(TeamScore.objects.select_related(
+        'debate_team__team', 'debate_team__debate__round').filter(
+            ballot_submission__confirmed=True))
 
     for team in teams:
-        team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(team, team_scores, round) is not None
-        team.round_results = [get_round_result(team, team_scores, r) for r in rounds]
+        team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(
+            team, team_scores, round) is not None
+        team.round_results = [get_round_result(team, team_scores, r)
+                              for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
         if round.tournament.pref('show_avg_margin'):
@@ -125,8 +187,12 @@ def team_standings(request, round):
 
     metrics = relevant_team_standings_metrics(round.tournament)
 
-    return r2r(request, 'teams.html', dict(teams=teams, rounds=rounds,
-        show_ballots=False, metrics=metrics))
+    return r2r(request,
+               'teams.html',
+               dict(teams=teams,
+                    rounds=rounds,
+                    show_ballots=False,
+                    metrics=metrics))
 
 
 @admin_required
@@ -136,10 +202,13 @@ def division_standings(request, round):
     teams = Team.objects.division_standings(round)
 
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
+    team_scores = list(TeamScore.objects.select_related(
+        'debate_team__team', 'debate_team__debate__round').filter(
+            ballot_submission__confirmed=True))
 
     for team in teams:
-        team.round_results = [get_round_result(team, team_scores, r) for r in rounds]
+        team.round_results = [get_round_result(team, team_scores, r)
+                              for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
         if round.tournament.pref('show_avg_margin'):
@@ -162,8 +231,10 @@ def division_standings(request, round):
 def speaker_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
-    return r2r(request, 'speakers.html', dict(speakers=speakers,
-                                        rounds=rounds))
+    return r2r(request,
+               'speakers.html',
+               dict(speakers=speakers,
+                    rounds=rounds))
 
 
 @admin_required
@@ -171,8 +242,7 @@ def speaker_standings(request, round):
 def novice_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, only_novices=True)
-    return r2r(request, "novices.html", dict(speakers=speakers,
-                                        rounds=rounds))
+    return r2r(request, "novices.html", dict(speakers=speakers, rounds=rounds))
 
 
 @admin_required
@@ -180,8 +250,8 @@ def novice_standings(request, round):
 def reply_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, for_replies=True)
-    return r2r(request, 'replies.html', dict(speakers=speakers,
-                                        rounds=rounds))
+    return r2r(request, 'replies.html', dict(speakers=speakers, rounds=rounds))
+
 
 @admin_required
 @round_view
@@ -199,9 +269,11 @@ def public_speaker_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
-    return r2r(request, 'public_speaker_tab.html', dict(speakers=speakers,
-            rounds=rounds, round=round))
-
+    return r2r(request,
+               'public_speaker_tab.html',
+               dict(speakers=speakers,
+                    rounds=rounds,
+                    round=round))
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -210,8 +282,11 @@ def public_novices_tab(request, t):
     round = t.current_round
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, only_novices=True)
-    return r2r(request, 'public_novices_tab.html', dict(speakers=speakers,
-            rounds=rounds, round=round))
+    return r2r(request,
+               'public_novices_tab.html',
+               dict(speakers=speakers,
+                    rounds=rounds,
+                    round=round))
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -220,8 +295,11 @@ def public_replies_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, for_replies=True)
-    return r2r(request, 'public_reply_tab.html', dict(speakers=speakers,
-            rounds=rounds, round=round))
+    return r2r(request,
+               'public_reply_tab.html',
+               dict(speakers=speakers,
+                    rounds=rounds,
+                    round=round))
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -231,10 +309,12 @@ def public_team_tab(request, t):
     round = t.current_round
     teams = Team.objects.ranked_standings(round)
     rounds = t.prelim_rounds(until=round).order_by('seq')
-    team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
+    team_scores = list(TeamScore.objects.select_related(
+        'debate_team__team', 'debate_team__debate__round').filter(
+            ballot_submission__confirmed=True))
 
     for team in teams:
-        team.results_in = True # always
+        team.results_in = True  # always
         team.round_results = [get_round_result(team, r) for r in rounds]
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
@@ -253,9 +333,13 @@ def public_team_tab(request, t):
     show_ballots = round.tournament.pref('ballots_released')
     metrics = relevant_team_standings_metrics(round.tournament)
 
-    return r2r(request, 'public_team_tab.html', dict(teams=teams,
-            rounds=rounds, round=round, show_ballots=show_ballots,
-            metrics=metrics))
+    return r2r(request,
+               'public_team_tab.html',
+               dict(teams=teams,
+                    rounds=rounds,
+                    round=round,
+                    show_ballots=show_ballots,
+                    metrics=metrics))
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -281,7 +365,8 @@ def public_team_standings(request, t):
         round = t.current_round.prev
 
     # Find the most recent non-silent preliminary round
-    while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
+    while round is not None and (round.silent or
+                                 round.stage != Round.STAGE_PRELIMINARY):
         round = round.prev
 
     if round is not None and round.silent is False:
@@ -295,15 +380,14 @@ def public_team_standings(request, t):
         # - teams are not supposed to know rankings between teams on the same number
         # of wins.
         teams = Team.objects.order_by('institution__code', 'reference')
-        rounds = t.prelim_rounds(until=round).filter(silent=False).order_by('seq')
+        rounds = t.prelim_rounds(until=round).filter(
+            silent=False).order_by('seq')
 
         def get_round_result(team, r):
             try:
-                ts = TeamScore.objects.get(
-                    ballot_submission__confirmed=True,
-                    debate_team__team=team,
-                    debate_team__debate__round=r,
-                )
+                ts = TeamScore.objects.get(ballot_submission__confirmed=True,
+                                           debate_team__team=team,
+                                           debate_team__debate__round=r, )
                 ts.opposition = ts.debate_team.opposition.team
                 return ts
             except TeamScore.DoesNotExist:
@@ -315,8 +399,10 @@ def public_team_standings(request, t):
             team.wins = [ts.win for ts in team.round_results if ts].count(True)
             team.points = sum([ts.points for ts in team.round_results if ts])
 
-
-        return r2r(request, 'public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
+        return r2r(request,
+                   'public_team_standings.html',
+                   dict(teams=teams,
+                        rounds=rounds,
+                        round=round))
     else:
         return r2r(request, 'index.html')
-
