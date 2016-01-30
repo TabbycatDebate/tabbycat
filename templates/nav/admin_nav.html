@@ -97,19 +97,19 @@
         <ul class="nav nav-pills nav-stacked">
           <li>
             <a href="{% tournament_url tournament_config_index %}">
-              <span class="circle-icon"><span class="emoji">🔧</span></span>
+              <span class="circle-icon icon-container"><span class="emoji">🔧</span></span>
               Configuration
             </a>
           </li>
           <li>
             <a class="" href="{% tournament_url data_index %}">
-              <span class="circle-icon"><span class="emoji">📑</span></span>
+              <span class="circle-icon icon-container"><span class="emoji">📑</span></span>
               Import Data
             </a>
           </li>
           <li>
             <a class="" href="/admin/">
-              <span class="circle-icon"><span class="emoji">📝️</span></span>
+              <span class="circle-icon icon-container"><span class="emoji">📝️</span></span>
               Edit Data
             </a>
           </li>
@@ -142,7 +142,7 @@
               <div class="progress-line standard-line"></div>
               <a href="{% round_url availability_index r %}">
                 <span class="circle-icon small-circle
-                {% if r.seq > current_round.seq %} btn-success
+                {% if r.seq < current_round.seq %} btn-success
                 {% elif r == current_round and r.draw_status == r.STATUS_NONE %} btn-info
                 {% elif r.draw_status == r.STATUS_DRAFT %} btn-success
                 {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
@@ -156,7 +156,7 @@
               <div class="progress-line standard-line"></div>
               <a href="{% round_url draw r %}">
                 <span class="circle-icon small-circle
-                {% if r.seq > current_round.seq %} btn-success
+                {% if r.seq < current_round.seq %} btn-success
                 {% elif r.draw_status == r.STATUS_NONE %} btn-inactive
                 {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
                 {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
@@ -169,7 +169,7 @@
               <div class="progress-line standard-line"></div>
               <a href="{% round_url results r %}">
                 <span class="circle-icon small-circle
-                {% if r.seq > current_round.seq %} btn-success
+                {% if r.seq < current_round.seq %} btn-success
                 {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-info
                 {% elif r.draw_status == r.STATUS_RELEASED %} btn-info
                 {% else %} btn-inactive{% endif %}
@@ -189,4 +189,3 @@
 
   </div>
 </div><!-- /.main-col -->
-
