@@ -1,47 +1,38 @@
 // Basic print styles
 // Printables
-
 .printable-feedback-sheet,
 .printable-score-sheet {
   page-break-after: always;
-
   .badge {
     background: #333;
     color: #fff;
     margin-left: 10px;
   }
-
   .table {
     margin-bottom: 0;
     background: none;
   }
-
   .table-printed-selection th {
     text-align: center;
     border: none;
     border-left: 20px solid #fff;
     border-right: 20px solid #fff;
   }
-
   .writeable {
     border-bottom: 3px solid #ccc !important;
     margin-top: 35px;
   }
-
   hr.writeable {
     margin-top: 45px;
     margin-bottom: 0;
   }
-
   td.writeable {
     height: 53px;
   }
-
   .table > tbody > tr > td.small {
     padding-top: 10px !important; // compensating for small size
   }
 }
-
 @media print {
   .print-feedback,
   .print-scoresheet {
@@ -49,38 +40,30 @@
       display: none !important;
     }
   }
-
   .printable-feedback-sheet,
   .printable-score-sheet {
     font-size: 75%;
   }
-
   // Old
   .fixedHeader {
     display: none;
   }
-
   .page-header {
     .col-md-12 {
       padding-left: 0;
     }
   }
-
   table {
     page-break-inside: avoid; // Don't split a table across multiple pages
-
     tr {
       page-break-inside: avoid;
       page-break-after: auto;
     }
-
   }
-
   table.h4 {
     font-size: 75%;
     font-weight: normal;
   }
-
   #djDebug {
     display: none !important;
   }

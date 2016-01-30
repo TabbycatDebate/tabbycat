@@ -1,51 +1,45 @@
 @import "../vendor/bootstrap/variables";
-
 // WEB FONTS
-
 @font-face {
-  font-family: "LatoLatinWeb";
-    src: url('../../fonts/vendor/lato/LatoLatin-Regular.eot'); /* IE9 Compat Modes */
-    src: url('../../fonts/vendor/lato/LatoLatin-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-         url('../../fonts/vendor/lato/LatoLatin-Regular.woff2') format('woff2'), /* Modern Browsers */
-         url('../../fonts/vendor/lato/LatoLatin-Regular.woff') format('woff'), /* Modern Browsers */
-         url('../../fonts/vendor/lato/LatoLatin-Regular.ttf') format('truetype');
+  font-family: 'LatoLatinWeb';
+  src: url('../../fonts/vendor/lato/LatoLatin-Regular.eot');
+  /* IE9 Compat Modes */
+  src:/* IE6-IE8 */
+  /* Modern Browsers */
+  /* Modern Browsers */
+  url('../../fonts/vendor/lato/LatoLatin-Regular.eot?#iefix') format('embedded-opentype'),url('../../fonts/vendor/lato/LatoLatin-Regular.woff2') format('woff2'),url('../../fonts/vendor/lato/LatoLatin-Regular.woff') format('woff'),url('../../fonts/vendor/lato/LatoLatin-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
-
 @font-face {
-    font-family: 'LatoLatinWebBlack';
-    src: url('../../fonts/vendor/lato/LatoLatin-Black.eot'); /* IE9 Compat Modes */
-    src: url('../../fonts/vendor/lato/LatoLatin-Black.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-         url('../../fonts/vendor/lato/LatoLatin-Black.woff2') format('woff2'), /* Modern Browsers */
-         url('../../fonts/vendor/lato/LatoLatin-Black.woff') format('woff'), /* Modern Browsers */
-         url('../../fonts/vendor/lato/LatoLatin-Black.ttf') format('truetype');
-    font-style: normal;
-    font-weight: normal;
-    text-rendering: optimizeLegibility;
+  font-family: 'LatoLatinWebBlack';
+  src: url('../../fonts/vendor/lato/LatoLatin-Black.eot');
+  /* IE9 Compat Modes */
+  src:/* IE6-IE8 */
+  /* Modern Browsers */
+  /* Modern Browsers */
+  url('../../fonts/vendor/lato/LatoLatin-Black.eot?#iefix') format('embedded-opentype'),url('../../fonts/vendor/lato/LatoLatin-Black.woff2') format('woff2'),url('../../fonts/vendor/lato/LatoLatin-Black.woff') format('woff'),url('../../fonts/vendor/lato/LatoLatin-Black.ttf') format('truetype');
+  font-style: normal;
+  font-weight: normal;
+  text-rendering: optimizeLegibility;
 }
-
 // UTILITIES
-
 .font-size-reset {
   font-size: $font-size-base;
 }
 .text-muted {
   color: $gray-light;
 }
-
 // EMOJI
-
 .emoji {
   font-family: serif; // Need to be a system font or they wont show
   font-style: normal;
   margin-right: 2px;
 }
-
 // BUTTONS
-
-.nav { // Actionable elements (buttons, navs) should be distinct
+.nav {
+  // Actionable elements (buttons, navs) should be distinct
   font-family: $headings-font-family;
 }
 .nav-pills a {

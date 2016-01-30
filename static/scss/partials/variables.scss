@@ -1,20 +1,12 @@
 // Note these take precedences over bootstrap as they are not set as default
-
 // Custom Typography
-
 $font-family-sans-serif: "LatoLatinWeb", Helvetica, Arial, sans-serif;
 $headings-font-family: "LatoLatinWebBlack", serif;
-
 // Custom Colors
-
-$brand-primary:         #3498DB;
-
-$brand-success:         #43ca75;
-$brand-info:            #3b9ad8;
-$brand-warning:         #f0c230;
-$brand-danger:          #e34e42;
-
+$brand-primary: #3498DB;
+$brand-success: #43ca75;
+$brand-info: #3b9ad8;
+$brand-warning: #f0c230;
+$brand-danger: #e34e42;
 // Override Path
-
-$icon-font-path: "../../fonts/vendor/bootstrap/";
-
+$icon-font-path: '../../fonts/vendor/bootstrap/';

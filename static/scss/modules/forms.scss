@@ -1,19 +1,16 @@
-
 // FORM ELEMENTS
-
 // Actionable elements (buttons, navs) should be distinct
 .btn {
   font-family: $headings-font-family;
   padding: 10px 12px;
 }
-
 // Give buttons more padding
-.form-control, .form-control-parent input {
+.form-control,
+.form-control-parent input {
   border-width: 2px;
   border-radius: 6px;
   height: 39px;
 }
-
 // Center number inputs
 input[type=number] {
   text-align: center;
