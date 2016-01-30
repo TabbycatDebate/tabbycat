@@ -8,7 +8,7 @@ from venues.models import VenueGroup
 @cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view
 def public_index(request, t):
-    return r2r(request, 'public_tournament_index.html')
+    return render(request, 'public_tournament_index.html')
 
 def index(request):
     tournaments = Tournament.objects.all()
@@ -21,7 +21,7 @@ def index(request):
             print('public_index')
             return redirect_tournament('public_index', tournaments.first())
     else:
-        return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
+        return render(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
 
 @login_required
 @tournament_view
@@ -44,7 +44,7 @@ def tournament_home(request, t):
     stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
     stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
-    return r2r(request, 'tournament_home.html', dict(stats=stats,
+    return render(request, 'tournament_home.html', dict(stats=stats,
         total_ballots=total_ballots, round=round))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -56,13 +56,13 @@ def public_divisions(request, t):
     for uvg in venue_groups:
         uvg.divisions = [d for d in divisions if d.venue_group == uvg]
 
-    return r2r(request, 'public_divisions.html', dict(venue_groups=venue_groups))
+    return render(request, 'public_divisions.html', dict(venue_groups=venue_groups))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_venues(request, t):
     venues = VenueGroup.objects.all()
-    return r2r(request, 'public_all_tournament_venues.html', dict(venues=venues))
+    return render(request, 'public_all_tournament_venues.html', dict(venues=venues))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
@@ -70,7 +70,7 @@ def all_draws_for_venue(request, t, venue_id):
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
         'round','round__tournament','division')
-    return r2r(request, 'public_all_draws_for_venue.html', dict(
+    return render(request, 'public_all_draws_for_venue.html', dict(
         venue_group=venue_group, debates=debates))
 
 
@@ -82,7 +82,7 @@ def all_draws_for_institution(request, t, institution_id):
         'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')
     debates = [dt.debate for dt in debate_teams]
 
-    return r2r(request, 'public_all_draws_for_institution.html', dict(
+    return render(request, 'public_all_draws_for_institution.html', dict(
         institution=institution, debates=debates))
 
 
@@ -94,7 +94,7 @@ def round_increment_check(request, round):
         raise Http404()
     num_unconfirmed = round.get_draw().filter(result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
     increment_ok = num_unconfirmed == 0
-    return r2r(request, "round_increment_check.html", dict(num_unconfirmed=num_unconfirmed, increment_ok=increment_ok))
+    return render(request, "round_increment_check.html", dict(num_unconfirmed=num_unconfirmed, increment_ok=increment_ok))
 
 @admin_required
 @expect_post
@@ -113,7 +113,7 @@ def division_allocations(request, t):
     divisions = sorted(divisions, key=lambda x: float(x.name))
     venue_groups = VenueGroup.objects.all()
 
-    return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
+    return render(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 
 
 @admin_required
