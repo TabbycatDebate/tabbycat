@@ -1,12 +1,14 @@
 from tournaments.models import Tournament
+from django.conf import settings
+
 
 def debate_context(request):
 
     if hasattr(request, 'tournament'):
         d = {
-            'tournament'              : request.tournament,
-            'pref'                    : request.tournament.preferences.by_name(),
-            'current_round'           : request.tournament.get_current_round_cached,
+            'tournament': request.tournament,
+            'pref': request.tournament.preferences.by_name(),
+            'current_round': request.tournament.get_current_round_cached,
         }
         if hasattr(request, 'round'):
             d['round'] = request.round
@@ -17,9 +19,14 @@ def debate_context(request):
 
 
         d['all_tournaments'] = Tournament.objects.filter(active=True)
+
+        if settings.LIVE_RELOAD:
+            d['live_reload'] = True
+
         return d
 
     return {}
+
 
 def get_menu_highlight(request):
     if "side_allocations" in request.path:
@@ -43,4 +50,4 @@ def get_menu_highlight(request):
     elif "break" in request.path:
         return {'break_nav': True}
     else:
-        return {'no_highlight': True} # Context processors must return a dict
+        return {'no_highlight': True}  # Context processors must return a dict
