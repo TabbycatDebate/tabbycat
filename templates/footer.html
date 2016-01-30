@@ -1,22 +1,24 @@
 {% load debate_tags %}
 
-<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+<nav class="navbar navbar-default {% if not 'admin' in request.path %}navbar-fixed-bottom{% endif %}" role="navigation">
   <div class="container-fluid">
 
     {% if tournament and pref.enable_divisions == 0 %}
-      <div class="navbar-header">
-        <span class="navbar-brand font-size-reset small font-weight-reset">
+    <div class="navbar-header">
+      <span class="navbar-brand font-size-reset small font-weight-reset">
             {{ tournament }} runs on
             <a href="https://github.com/czlee/tabbycat/" target="_new">
               <span class="emoji">😸</span>Tabby Cat v0.8.0,
-            </a>
-            as developed by Qi-Shan,
-            <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, &
-            <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
-            Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">
-            Debatekeeper</a> (Android) & <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
-        </span>
-      </div>
+      </a>
+      as developed by Qi-Shan,
+      <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, &
+      <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
+      {% if not 'admin' in request.path %}
+        Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">
+        </a> (Android) & <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
+      {% endif %}
+      </span>
+    </div>
     {% endif %}
 
     <ul class="nav navbar-nav navbar-right font-size-reset small">
@@ -26,24 +28,26 @@
         </a>
       </li>
       {% if user.is_authenticated %}
-        <li>
-          <a href="http://tabbycat.readthedocs.org/" target="_blank">
-            <span class="emoji">❓</span>Help
-          </a>
-        </li>
-        <li>
-          <a class="" href="/accounts/logout/">
-            <span class="emoji">🔒</span>Logout of {{ user }}
-          </a>
-        </li>
+      <li>
+        <a href="http://tabbycat.readthedocs.org/" target="_blank">
+          <span class="emoji">❓</span>Help
+        </a>
+      </li>
+      <li>
+        <a class="" href="/accounts/logout/">
+          <span class="emoji">🔒</span>Logout of {{ user }}
+        </a>
+      </li>
       {% else %}
-        <li>
-          <a class="" href="/accounts/login/">
-            <span class="emoji">🔓</span>Login
-          </a>
-        </li>
+      <li>
+        <a class="" href="/accounts/login/">
+          <span class="emoji">🔓</span>Login
+        </a>
+      </li>
       {% endif %}
     </ul>
 
-  </div><!-- /.container-fluid -->
-</nav><!-- /.navbar -->
+  </div>
+  <!-- /.container-fluid -->
+</nav>
+<!-- /.navbar -->

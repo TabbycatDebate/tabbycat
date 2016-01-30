@@ -1,28 +1,24 @@
 @import "../vendor/bootstrap/variables";
-
 // ADMIN SIDEBAR STRUCTURE
-
 .nav-sidebar-offset {
   padding-left: 220px;
 }
 .nav-sidebar {
   width: 205px;
-  position:fixed;
-  height:100%;
+  position: fixed;
+  height: 100%;
   z-index: 100;
-  padding-left: 0px;
-  padding-top: 0px; // So the pill hover isn't flush
-
+  padding-left: 0;
+  padding-top: 0; // So the pill hover isn't flush
   .overflow-scroll-wrapper {
     overflow-y: scroll;
     height: 100%;
   }
-
   // Title
   #tournament_select {
     padding: 16px 16px 16px 21px;
-    margin-left: 0px;
-    border-radius: 0px;
+    margin-left: 0;
+    border-radius: 0;
     text-transform: uppercase;
     color: $headings-color;
     .emoji {
@@ -33,7 +29,6 @@
   .dropdown-menu {
     width: 100%;
   }
-
   // Nav Links
   .nav > li > a {
     margin-left: 10px;
@@ -45,12 +40,8 @@
       margin-top: 7px;
     }
   }
-
 }
-
-
 // Elements
-
 .progress-line {
   position: absolute;
   width: 10px;
@@ -72,7 +63,10 @@
   display: inline-block;
   float: left;
   margin: -4px 10px -3px -8px;
-
+  .emoji {
+    margin-left: 3px;
+    margin-top: 3px;
+  }
   &.btn-success {
     background: $btn-success-bg;
   }
@@ -100,31 +94,19 @@
     margin-left: 27px;
   }
 }
-
-
 // FOOTER UI
-
-body {
+body.accommodate-footer {
   padding-bottom: 70px; // To fix to the screen bottom body needs padding
 }
-
-
-
-
-
 // TO REFACTOR:
-
 // // BELOW: possibly refactor
-
 // // Override for topmost bar
 // .overall-header .nav {
-
 //   > li {
 //     > a {
 //       padding: 15px 10px; // Special padding for backgrounds
 //     }
 //   }
-
 //   > li.round-nav {
 //     margin-left: 0px;
 //     background-image: linear-gradient(
@@ -134,7 +116,6 @@ body {
 //         #666 60%,
 //         rgba(255,255,255, 0) 60%
 //       );
-
 //     > a {
 //       padding: 5px 7px;
 //       margin: 10px 10px 10px -1px;
@@ -142,36 +123,26 @@ body {
 //       color: #fff;
 //       border-radius: 15px;
 //       border-color: #666;
-
 //       .caret {
 //         margin-left: -3px;
 //       }
 //     }
-
 //     a.current-round {
 //       font-weight: bold;
 //     }
 //   }
-
 //   > li.round-nav:last-child {
 //     background-image: none; // Don't show a line to nowhere
 //   }
-
 //   > li.round-nav.active {
 //     > a {
 //       background-color: #fff;
 //       color: #000;
 //     }
 //   }
-
-
 // }
-
 // .navbar-transparent {
 //   border: none;
 //   background: none;
 // }
-
 // // For sub nav
-
-

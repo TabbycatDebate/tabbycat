@@ -20,7 +20,7 @@
   <![endif]-->
 </head>
 
-<body id="{% block body-id %}{% endblock %}" class="{% block body-class %}{% endblock %}">
+<body id="{% block body-id %}{% endblock %}" class="{% block body-class %}{% endblock %}{% if not 'admin' in request.path %}accommodate-footer{% endif %}">
 
   {% block body %}
 
@@ -83,10 +83,13 @@
 
           {% block content %}{% endblock content %}
 
-        </div><!-- /.main-col -->
-
-
-        {% block footer %}{% include "footer.html" %}{% endblock footer %}
+          {% if 'admin' in request.path and user.is_superuser %}
+            {% block footer %}{% include "footer.html" %}{% endblock footer %}
+            <div><!-- /.main-col -->
+          {% else %}
+            </div><!-- /.main-col -->
+            {% include "footer.html" %}
+          {% endif %}
 
       </div><!-- /.container-fluid -->
     </div><!-- /.row -->
