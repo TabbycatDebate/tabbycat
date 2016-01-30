@@ -83,14 +83,9 @@
 
           {% block content %}{% endblock content %}
 
-          {% if 'admin' in request.path and user.is_superuser %}
-            {% block footer %}{% include "footer.html" %}{% endblock footer %}
-            <div><!-- /.main-col -->
-          {% else %}
-            </div><!-- /.main-col -->
-            {% include "footer.html" %}
-          {% endif %}
+          {% block footer %}{% include "footer.html" %}{% endblock footer %}
 
+        </div><!-- /.main-col -->
       </div><!-- /.container-fluid -->
     </div><!-- /.row -->
 

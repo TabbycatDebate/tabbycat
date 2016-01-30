@@ -1,6 +1,6 @@
 {% load debate_tags %}
 
-<nav class="navbar navbar-default {% if not 'admin' in request.path %}navbar-fixed-bottom{% endif %}" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
   <div class="container-fluid">
 
     {% if tournament and pref.enable_divisions == 0 %}

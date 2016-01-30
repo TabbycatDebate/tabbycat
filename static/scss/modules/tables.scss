@@ -1,3 +1,57 @@
+// Panel body has its own bottom padding
+.panel-body .table {
+  margin-bottom: 0px;
+}
+// Custom Table States and their keys
+@include table-row-variant('debate-status-in', $state-warning-bg);
+.debate-status-in {
+  @include button-variant(darken($state-warning-bg, 70%), $state-warning-bg, $state-warning-bg);
+  a {
+    color: darken($state-warning-bg, 70%);
+  }
+}
+@include table-row-variant('debate-status-unknown', $state-danger-bg);
+.debate-status-unknown, .debate-status-N {
+  @include button-variant(darken($state-danger-bg, 70%), $state-danger-bg, $state-danger-bg);
+  a {
+    color: darken($state-warning-bg, 70%);
+  }
+}
+@include table-row-variant('debate-status-unconfirmed', lighten($brand-info, 40%));
+.debate-status-unconfirmed, .debate-status-D {
+  @include button-variant(darken($brand-info, 30%), lighten($brand-info, 40%), lighten($brand-info, 40%));
+  a {
+    color: darken($brand-info, 30%);
+  }
+}
+@include table-row-variant('debate-status-confirmed', $state-success-bg);
+.debate-status-confirmed, .debate-status-C {
+  @include button-variant(darken($state-success-bg, 70%),  $state-success-bg, $state-success-bg);
+  a {
+    color: darken($state-success-bg, 70%);
+  }
+}
+@include table-row-variant('debate-status-postponed', $state-info-bg);
+.debate-status-postponed, .debate-status-P {
+  @include button-variant(darken($table-bg-active, 70%), $state-info-bg, $state-info-bg);
+  a {
+    color: darken($table-bg-active, 70%);
+  }
+}
+@include table-row-variant('debate-status-bye', $table-bg-active);
+.debate-status-bye {
+  @include button-variant(#000, $table-bg-active, $table-bg-active);
+  a {
+    color: darken($table-bg-active, 60%);
+  }
+}
+
+
+
+
+
+
+
 // TO REFACTOR:
 // Universal Styles
 // (unfortunately these need to this specific to override bootstrap)
@@ -48,30 +102,7 @@ thead {
     height: 33px;
   }
 }
-// Table State
-@include table-row-variant('debate-status-N', $state-warning-bg);
-.debate-status-N a {
-  color: darken($state-warning-bg, 60%);
-}
-@include table-row-variant('debate-status-D', lighten($brand-info, 40%));
-.debate-status-D a {
-  color: darken($brand-info, 30%);
-}
-@include table-row-variant('debate-status-C', $state-success-bg);
-.debate-status-C a {
-  color: darken($state-success-bg, 60%);
-}
-@include table-row-variant('debate-status-P', $state-info-bg);
-.debate-status-P a {
-  color: darken($table-bg-active, 60%);
-}
-@include table-row-variant('debate-status-B', $table-bg-active);
-.debate-status-B {
-  @extend .text-muted;
-}
-.debate-status-B a {
-  color: darken($table-bg-active, 60%);
-}
+
 // Table Emoji
 .table > thead > tr > th.team-emoji,
 .table > tbody > tr > td.team-emoji {
