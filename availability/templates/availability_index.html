@@ -83,13 +83,13 @@
     </div>
   {% endif %}
 
-  {% if min_adjudicators < checkin_types.0.in_now %}
+  {% if min_adjudicators > checkin_types.0.in_now %}
     <div class="alert alert-danger">
       There are not enough checked in adjudicators for the number of debates.
     </div>
   {% endif %}
 
-  {% if min_venues < checkin_types.0.in_now %}
+  {% if min_venues > checkin_types.0.in_now %}
     <div class="alert alert-danger">
       There are not enough checked in venues for the number of teams.
     </div>
