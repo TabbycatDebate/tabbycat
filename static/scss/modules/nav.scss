@@ -3,6 +3,7 @@
 .nav-sidebar-offset {
   padding-left: 220px; // Offset the sidebar
   min-height: 800px; // Push the footer down
+  padding-bottom: 70px; // Leave room for the footer
   .navbar-fixed-bottom {
     // Don't want the footer stretching into the menu; present it alert style
     margin: 0 20px 20px 220px;

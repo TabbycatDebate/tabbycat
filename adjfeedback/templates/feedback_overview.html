@@ -2,22 +2,31 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block head-title %}{% endblock %}
 {% block page-title %}Adjudicator Feedback Summary{% endblock %}
+{% block head-title %}
+  <span class="emoji">🙅</span>
+  Adjudicator Feedback Summary
+{% endblock %}
+{% block sub-title %}
+  {{ breaking_count }} marked as breaking
+{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-default submit-disable" href="{% tournament_url adj_latest_feedback %}">
-    Latest Feedback
+    View Latest Feedback
   </a>
   <a class="btn btn-default submit-disable" href="{% tournament_url adj_source_feedback %}">
-    Find By Source
+    Find Feedback
   </a>
+  {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
   <a class="btn btn-default submit-disable" href="{% tournament_url randomised_urls %}">
-    Randomised URLs
+    View Randomised URLs
   </a>
+  {% endif %}
   <a class="btn btn-default submit-disable" href="{% tournament_url feedback_progress %}">
-    Unsubmitted Counts
+    Unsubmitted Ballots
   </a>
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block page-subnav-actions %}
@@ -26,20 +35,10 @@
 
 {% block content %}
 
-  <div class="row ">
-
-    <div class="col-md-6">
-      <div class="btn btn-default">
-        <span class="glyphicon glyphicon-star"></span>
-        <span id="breaking_count">{{ breaking_count }}</span> set as breaking
-      </div>
-    </div>
-    {% include "tables/table_search.html" %}
-
-  </div>
-
-  <table id="dataTable" class="table table-hover adj-feedback ">
-    <thead>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <table id="dataTable" class="table table-hover adj-feedback ">
+        <thead>
       <tr>
         <th>Name</th>
         {% if pref.show_institutions %}
@@ -62,7 +61,7 @@
         <th><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Average Score, including replies"></span></th>
       </tr>
     </thead>
-    <tbody>
+      <tbody>
       {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">
           <td class="adj-name">
@@ -133,6 +132,8 @@
     </tbody>
 
   </table>
+    </div>
+  </div>
 
   <div class="modal fade" id="adj-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

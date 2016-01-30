@@ -63,7 +63,7 @@
         </a>
       </li>
       <li class="{% if standings_nav %}dropdown active {% endif %}">
-        <a href="{% round_url standings_index round %}" >
+        <a href="{% round_url standings_index current_round %}" >
           <span class="circle-icon icon-container">
             <span class="glyphicon glyphicon-stats"></span>
           </span>
@@ -85,7 +85,7 @@
 
       <li class="" role="tab" id="heading_setup">
         <div class="progress-line setup-line"></div>
-        <a class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_setup" aria-expanded="false" aria-controls="collapse_setup">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_setup" aria-expanded="false" aria-controls="collapse_setup">
           <span class="circle-icon icon-container">
             <span class="glyphicon glyphicon-cog"></span>
           </span>
