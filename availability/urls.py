@@ -11,6 +11,9 @@ urlpatterns = [
     url(r'all/update/$',            views.update_availability_all,
         name='update_availability_all'),
 
+    url(r'all/update_previous/$',   views.update_availability_previous,
+        name='update_availability_previous'),
+
     url(r'people/$',                views.checkin_results,
         { 'model': 'person', 'context_name': 'people' },
         name='people_availability'),

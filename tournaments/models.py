@@ -10,16 +10,43 @@ from adjallocation.anneal import SAAllocator
 import logging
 logger = logging.getLogger(__name__)
 
+
 class Tournament(models.Model):
-    name = models.CharField(max_length=100, help_text="The full name used on the homepage")
-    short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu")
-    emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST)
-    seq = models.IntegerField(blank=True, null=True, help_text="The order in which tournaments are displayed")
-    slug = models.SlugField(unique=True, help_text="The sub-URL of the tournament; cannot have spaces")
-    current_round = models.ForeignKey('Round', null=True, blank=True,
-                                     related_name='tournament_', help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
-    welcome_msg = models.TextField(blank=True, null=True, default="", help_text="Text/html entered here shows on the homepage")
-    release_all = models.BooleanField(default=False, help_text="This releases all results; do so only after the tournament is finished")
+    name = models.CharField(max_length=100,
+                            help_text="The full name used on the homepage")
+    short_name = models.CharField(max_length=25,
+                                  blank=True,
+                                  null=True,
+                                  default="",
+                                  help_text="The name used in the menu")
+    emoji = models.CharField(max_length=2,
+                             blank=True,
+                             null=True,
+                             unique=True,
+                             choices=EMOJI_LIST)
+    seq = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="The order in which tournaments are displayed")
+    slug = models.SlugField(
+        unique=True,
+        help_text="The sub-URL of the tournament; cannot have spaces")
+    current_round = models.ForeignKey(
+        'Round',
+        null=True,
+        blank=True,
+        related_name='tournament_',
+        help_text=
+        "Must be set for the tournament to start! (Set after rounds are inputted)")
+    welcome_msg = models.TextField(
+        blank=True,
+        null=True,
+        default="",
+        help_text="Text/html entered here shows on the homepage")
+    release_all = models.BooleanField(
+        default=False,
+        help_text=
+        "This releases all results; do so only after the tournament is finished")
     active = models.BooleanField(default=True)
 
     @property
@@ -76,7 +103,7 @@ class Tournament(models.Model):
             cache.get_or_set(cached_key, self.current_round, None)
             return cache.get(cached_key)
         else:
-            return None;
+            return None
 
     def prelim_rounds(self, before=None, until=None):
         qs = self.round_set.filter(stage=Round.STAGE_PRELIMINARY)
@@ -101,7 +128,7 @@ class Tournament(models.Model):
     @cached_property
     def config(self):
         if not hasattr(self, '_config'):
-            from options.options import Config # TODO: improve the semantics here
+            from options.options import Config  # TODO: improve the semantics here
             self._config = Config(self)
         return self._config
 
@@ -110,7 +137,7 @@ class Tournament(models.Model):
         return self.adjudicatorfeedbackquestion_set.order_by("seq")
 
     class Meta:
-        ordering = ['seq',]
+        ordering = ['seq', ]
         verbose_name = "🏆 Tournament"
 
     def __str__(self):
@@ -118,6 +145,7 @@ class Tournament(models.Model):
             return str(self.short_name)
         else:
             return str(self.name)
+
 
 def update_tournament_cache(sender, instance, created, **kwargs):
     cached_key = "%s_%s" % (instance.slug, 'object')
@@ -131,7 +159,10 @@ signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
 class Division(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name or suffix")
-    seq = models.IntegerField(blank=True, null=True, help_text="The order in which divisions are displayed")
+    seq = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="The order in which divisions are displayed")
     tournament = models.ForeignKey(Tournament)
     time_slot = models.TimeField(blank=True, null=True)
     venue_group = models.ForeignKey('venues.VenueGroup', blank=True, null=True)
@@ -142,7 +173,8 @@ class Division(models.Model):
 
     @cached_property
     def teams(self):
-        return self.team_set.all().order_by('institution','reference').select_related('institution')
+        return self.team_set.all().order_by(
+            'institution', 'reference').select_related('institution')
 
     def __str__(self):
         return "%s - %s" % (self.tournament, self.name)
@@ -169,62 +201,82 @@ class RoundManager(models.Manager):
         raise self.model.DoesNotExist("No round matching '%s'" % name)
 
     def get_queryset(self):
-        return super(RoundManager, self).get_queryset().select_related('tournament').order_by('seq')
+        return super(
+            RoundManager,
+            self).get_queryset().select_related('tournament').order_by('seq')
 
 
 class Round(models.Model):
-    DRAW_RANDOM      = 'R'
-    DRAW_MANUAL      = 'M'
-    DRAW_ROUNDROBIN  = 'D'
+    DRAW_RANDOM = 'R'
+    DRAW_MANUAL = 'M'
+    DRAW_ROUNDROBIN = 'D'
     DRAW_POWERPAIRED = 'P'
-    DRAW_FIRSTBREAK  = 'F'
-    DRAW_BREAK       = 'B'
-    DRAW_CHOICES = (
-        (DRAW_RANDOM,      'Random'),
-        (DRAW_MANUAL,      'Manual'),
-        (DRAW_ROUNDROBIN,  'Round-robin'),
-        (DRAW_POWERPAIRED, 'Power-paired'),
-        (DRAW_FIRSTBREAK,  'First elimination'),
-        (DRAW_BREAK,       'Subsequent elimination'),
-    )
+    DRAW_FIRSTBREAK = 'F'
+    DRAW_BREAK = 'B'
+    DRAW_CHOICES = ((DRAW_RANDOM, 'Random'),
+                    (DRAW_MANUAL, 'Manual'),
+                    (DRAW_ROUNDROBIN, 'Round-robin'),
+                    (DRAW_POWERPAIRED, 'Power-paired'),
+                    (DRAW_FIRSTBREAK, 'First elimination'),
+                    (DRAW_BREAK, 'Subsequent elimination'), )
 
     STAGE_PRELIMINARY = 'P'
     STAGE_ELIMINATION = 'E'
-    STAGE_CHOICES = (
-        (STAGE_PRELIMINARY, 'Preliminary'),
-        (STAGE_ELIMINATION, 'Elimination'),
-    )
+    STAGE_CHOICES = ((STAGE_PRELIMINARY, 'Preliminary'),
+                     (STAGE_ELIMINATION, 'Elimination'), )
 
-    STATUS_NONE      = 'N'
-    STATUS_DRAFT     = 'D'
+    STATUS_NONE = 'N'
+    STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
-    STATUS_RELEASED  = 'R'
-    STATUS_CHOICES = (
-        (STATUS_NONE,      'None'),
-        (STATUS_DRAFT,     'Draft'),
-        (STATUS_CONFIRMED, 'Confirmed'),
-        (STATUS_RELEASED,  'Released'),
-    )
+    STATUS_RELEASED = 'R'
+    STATUS_CHOICES = ((STATUS_NONE, 'None'),
+                      (STATUS_DRAFT, 'Draft'),
+                      (STATUS_CONFIRMED, 'Confirmed'),
+                      (STATUS_RELEASED, 'Released'), )
 
     objects = RoundManager()
 
-    tournament     = models.ForeignKey(Tournament)
-    seq            = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
-    name           = models.CharField(max_length=40, help_text="e.g. \"Round 1\"")
-    abbreviation   = models.CharField(max_length=10, help_text="e.g. \"R1\"")
-    draw_type      = models.CharField(max_length=1, choices=DRAW_CHOICES, help_text="Which draw technique to use")
-    stage          = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY, help_text="Preliminary = inrounds, elimination = outrounds")
-    break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True, help_text="If elimination round, which break category")
+    tournament = models.ForeignKey(Tournament)
+    seq = models.IntegerField(
+        help_text=
+        "A number that determines the order of the round, IE 1 for the initial round")
+    name = models.CharField(max_length=40, help_text="e.g. \"Round 1\"")
+    abbreviation = models.CharField(max_length=10, help_text="e.g. \"R1\"")
+    draw_type = models.CharField(max_length=1,
+                                 choices=DRAW_CHOICES,
+                                 help_text="Which draw technique to use")
+    stage = models.CharField(
+        max_length=1,
+        choices=STAGE_CHOICES,
+        default=STAGE_PRELIMINARY,
+        help_text="Preliminary = inrounds, elimination = outrounds")
+    break_category = models.ForeignKey(
+        'breakqual.BreakCategory',
+        blank=True,
+        null=True,
+        help_text="If elimination round, which break category")
 
-    draw_status        = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    venue_status       = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    adjudicator_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
+    draw_status = models.CharField(max_length=1,
+                                   choices=STATUS_CHOICES,
+                                   default=STATUS_NONE)
+    venue_status = models.CharField(max_length=1,
+                                    choices=STATUS_CHOICES,
+                                    default=STATUS_NONE)
+    adjudicator_status = models.CharField(max_length=1,
+                                          choices=STATUS_CHOICES,
+                                          default=STATUS_NONE)
 
-    checkins = models.ManyToManyField('participants.Person', through='availability.Checkin', related_name='checkedin_rounds')
+    checkins = models.ManyToManyField('participants.Person',
+                                      through='availability.Checkin',
+                                      related_name='checkedin_rounds')
 
-    active_venues       = models.ManyToManyField('venues.Venue', through='availability.ActiveVenue')
-    active_adjudicators = models.ManyToManyField('participants.Adjudicator', through='availability.ActiveAdjudicator')
-    active_teams        = models.ManyToManyField('participants.Team', through='availability.ActiveTeam')
+    active_venues = models.ManyToManyField('venues.Venue',
+                                           through='availability.ActiveVenue')
+    active_adjudicators = models.ManyToManyField(
+        'participants.Adjudicator',
+        through='availability.ActiveAdjudicator')
+    active_teams = models.ManyToManyField('participants.Team',
+                                          through='availability.ActiveTeam')
 
     feedback_weight = models.FloatField(default=0)
     silent = models.BooleanField(default=False)
@@ -243,12 +295,16 @@ class Round(models.Model):
     @property
     def rounds(self):
         from warnings import warn
-        warn("Tournament.rounds is deprecated, use Tournament.round_set instead.", DeprecationWarning)
+        warn(
+            "Tournament.rounds is deprecated, use Tournament.round_set instead.",
+            DeprecationWarning)
         return self.round_set
 
     def motions(self):
         from warnings import warn
-        warn("Tournament.motions is deprecated, use Tournament.motion_set instead.", DeprecationWarning)
+        warn(
+            "Tournament.motions is deprecated, use Tournament.motion_set instead.",
+            DeprecationWarning)
         return self.motion_set
 
     def draw(self, override_team_checkins=False):
@@ -257,7 +313,8 @@ class Round(models.Model):
         from participants.models import Team
 
         if self.draw_status != self.STATUS_NONE:
-            raise RuntimeError("Tried to run draw on round that already has a draw")
+            raise RuntimeError(
+                "Tried to run draw on round that already has a draw")
 
         # Delete all existing debates for this round.
         self.debate_set.all().delete()
@@ -265,11 +322,11 @@ class Round(models.Model):
         # There is a bit of logic to go through to figure out what we need to
         # provide to the draw class.
         OPTIONS_TO_CONFIG_MAPPING = {
-            "avoid_institution"  : "draw_rules__avoid_same_institution",
-            "avoid_history"      : "draw_rules__avoid_team_history",
-            "history_penalty"    : "draw_rules__team_history_penalty",
+            "avoid_institution": "draw_rules__avoid_same_institution",
+            "avoid_history": "draw_rules__avoid_team_history",
+            "history_penalty": "draw_rules__team_history_penalty",
             "institution_penalty": "draw_rules__team_institution_penalty",
-            "side_allocations"   : "draw_rules__draw_side_allocations",
+            "side_allocations": "draw_rules__draw_side_allocations",
         }
 
         if override_team_checkins is True:
@@ -282,19 +339,21 @@ class Round(models.Model):
             teams = draw_teams
             draw_type = "random"
             OPTIONS_TO_CONFIG_MAPPING.update({
-                "avoid_conflicts" : "draw_rules__draw_avoid_conflicts",
+                "avoid_conflicts": "draw_rules__draw_avoid_conflicts",
             })
         elif self.draw_type == self.DRAW_MANUAL:
             teams = draw_teams
             draw_type = "manual"
         elif self.draw_type == self.DRAW_POWERPAIRED:
             from standings.standings import annotate_team_standings
-            teams = annotate_team_standings(draw_teams, self.prev, shuffle=True)
+            teams = annotate_team_standings(draw_teams,
+                                            self.prev,
+                                            shuffle=True)
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
-                "avoid_conflicts" : "draw_rules__draw_avoid_conflicts",
-                "odd_bracket"     : "draw_rules__draw_odd_bracket",
-                "pairing_method"  : "draw_rules__draw_pairing_method",
+                "avoid_conflicts": "draw_rules__draw_avoid_conflicts",
+                "odd_bracket": "draw_rules__draw_odd_bracket",
+                "pairing_method": "draw_rules__draw_pairing_method",
             })
         elif self.draw_type == self.DRAW_ROUNDROBIN:
             teams = draw_teams
@@ -313,7 +372,7 @@ class Round(models.Model):
         # Evaluate this query set first to avoid hitting the database inside a loop.
         tpas = dict()
         TPA_MAP = {TeamPositionAllocation.POSITION_AFFIRMATIVE: "aff",
-            TeamPositionAllocation.POSITION_NEGATIVE: "neg"}
+                   TeamPositionAllocation.POSITION_NEGATIVE: "neg"}
         for tpa in self.teampositionallocation_set.all():
             tpas[tpa.team] = TPA_MAP[tpa.position]
         for team in teams:
@@ -335,7 +394,8 @@ class Round(models.Model):
 
     def allocate_adjudicators(self, alloc_class=SAAllocator):
         if self.draw_status != self.STATUS_CONFIRMED:
-            raise RuntimeError("Tried to allocate adjudicators on unconfirmed draw")
+            raise RuntimeError(
+                "Tried to allocate adjudicators on unconfirmed draw")
 
         debates = self.get_draw()
         adjs = list(self.active_adjudicators.accredited())
@@ -370,20 +430,20 @@ class Round(models.Model):
     def get_draw(self):
         if self.tournament.pref('enable_divisions'):
             debates = self.debate_set.order_by('room_rank').select_related(
-                    'venue', 'division', 'division__venue_group')
+                'venue', 'division', 'division__venue_group')
         else:
             debates = self.debate_set.order_by('room_rank').select_related(
-                    'venue')
+                'venue')
 
         return debates
 
     def get_draw_by_room(self):
         if self.tournament.pref('enable_divisions'):
             debates = self.debate_set.order_by('venue__name').select_related(
-                    'venue', 'division', 'division__venue_group')
+                'venue', 'division', 'division__venue_group')
         else:
             debates = self.debate_set.order_by('venue__name').select_related(
-                    'venue')
+                'venue')
 
         return debates
 
@@ -410,10 +470,15 @@ class Round(models.Model):
                         annotated_team = [x for x in standings if x == team]
                         if len(annotated_team) == 1:
                             annotated_team = annotated_team[0]
-                            for attr in ('points', 'speaker_score', 'subrank', 'draw_strength', 'margins', 'who_beat_whom_display'):
-                                setattr(team, attr, getattr(annotated_team, attr, None))
+                            for attr in ('points', 'speaker_score', 'subrank',
+                                         'draw_strength', 'margins',
+                                         'who_beat_whom_display'):
+                                setattr(team, attr, getattr(annotated_team,
+                                                            attr, None))
                             if annotated_team.points:
-                                team.pullup = abs(annotated_team.points - debate.bracket) >= 1 # don't highlight intermediate brackets that look within reason
+                                team.pullup = abs(
+                                    annotated_team.points -
+                                    debate.bracket) >= 1  # don't highlight intermediate brackets that look within reason
             else:
                 standings = list(Team.objects.standings(round.prev))
 
@@ -426,19 +491,24 @@ class Round(models.Model):
         venues = list(self.active_venues.order_by('-priority'))[:len(pairings)]
 
         if len(venues) < len(pairings):
-            raise DrawError("There are %d debates but only %d venues." % (len(pairings), len(venues)))
+            raise DrawError("There are %d debates but only %d venues." %
+                            (len(pairings), len(venues)))
 
         random.shuffle(venues)
-        random.shuffle(pairings) # to avoid IDs indicating room ranks
+        random.shuffle(pairings)  # to avoid IDs indicating room ranks
 
         for pairing in pairings:
             try:
                 if pairing.division:
-                    if (pairing.teams[0].type == "B") or (pairing.teams[1].type == "B"):
+                    if (pairing.teams[0].type == "B") or (
+                            pairing.teams[1].type == "B"):
                         # If the match is a bye then they don't get a venue
                         selected_venue = None
                     else:
-                        selected_venue = next(v for v in venues if v.group == pairing.division.venue_group)
+                        selected_venue = next(
+                            v
+                            for v in venues
+                            if v.group == pairing.division.venue_group)
                         venues.pop(venues.index(selected_venue))
                 else:
                     selected_venue = venues.pop(0)
@@ -449,45 +519,53 @@ class Round(models.Model):
             debate = Debate(round=self, venue=selected_venue)
 
             debate.division = pairing.division
-            debate.bracket   = pairing.bracket
+            debate.bracket = pairing.bracket
             debate.room_rank = pairing.room_rank
-            debate.flags     = ",".join(pairing.flags) # comma-separated list
+            debate.flags = ",".join(pairing.flags)  # comma-separated list
             debate.save()
 
-            aff = DebateTeam(debate=debate, team=pairing.teams[0], position=DebateTeam.POSITION_AFFIRMATIVE)
-            neg = DebateTeam(debate=debate, team=pairing.teams[1], position=DebateTeam.POSITION_NEGATIVE)
+            aff = DebateTeam(debate=debate,
+                             team=pairing.teams[0],
+                             position=DebateTeam.POSITION_AFFIRMATIVE)
+            neg = DebateTeam(debate=debate,
+                             team=pairing.teams[1],
+                             position=DebateTeam.POSITION_NEGATIVE)
 
             aff.save()
             neg.save()
 
     # TODO: all these availability methods should be in the availability app
 
-    def base_availability(self, model, active_table, active_column, model_table,
-                         id_field='id'):
+    def base_availability(self,
+                          model,
+                          active_table,
+                          active_column,
+                          model_table,
+                          id_field='id'):
         d = {
-            'active_table' : active_table,
-            'active_column' : active_column,
+            'active_table': active_table,
+            'active_column': active_column,
             'model_table': model_table,
             'id_field': id_field,
-            'id' : self.id,
+            'id': self.id,
         }
-        return model.objects.all().extra(select={'is_active': """EXISTS (Select 1
+        return model.objects.all().extra(
+            select={'is_active': """EXISTS (Select 1
                                                  from %(active_table)s
                                                  drav where
                                                  drav.%(active_column)s =
                                                  %(model_table)s.%(id_field)s and
-                                                 drav.round_id=%(id)d)""" % d })
+                                                 drav.round_id=%(id)d)""" % d})
 
     def person_availability(self):
         from participants.models import Person
-        return self.base_availability(Person, 'availability_checkin', 'person_id',
-                                      'participants_person')
-
+        return self.base_availability(Person, 'availability_checkin',
+                                      'person_id', 'participants_person')
 
     def venue_availability(self):
         from venues.models import Venue
-        all_venues = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
-                                      'venues_venue')
+        all_venues = self.base_availability(Venue, 'availability_activevenue',
+                                            'venue_id', 'venues_venue')
         all_venues = [v for v in all_venues if v.tournament == self.tournament]
         return all_venues
 
@@ -495,20 +573,25 @@ class Round(models.Model):
         from venues.models import Venue
         # Had to replicate venue_availability via base_availability so extra()
         # could still function on the query set
-        result = self.base_availability(Venue, 'availability_activevenue', 'venue_id',
-                                      'venues_venue').extra(select =
-                                      {'is_used': """EXISTS (SELECT 1
+        result = self.base_availability(
+            Venue, 'availability_activevenue', 'venue_id',
+            'venues_venue').extra(select={'is_used': """EXISTS (SELECT 1
                                       FROM draw_debate da
                                       WHERE da.round_id=%d AND
-                                      da.venue_id = venues_venue.id)""" % self.id},
-        )
-        return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
+                                      da.venue_id = venues_venue.id)""" %
+                                          self.id}, )
+        return [v
+                for v in result
+                if v.is_active and not v.is_used and v.tournament ==
+                self.tournament]
 
     def adjudicator_availability(self):
         from participants.models import Adjudicator
-        all_adjs = self.base_availability(Adjudicator, 'availability_activeadjudicator',
-                                      'adjudicator_id',
-                                      'participants_adjudicator', id_field='person_ptr_id')
+        all_adjs = self.base_availability(Adjudicator,
+                                          'availability_activeadjudicator',
+                                          'adjudicator_id',
+                                          'participants_adjudicator',
+                                          id_field='person_ptr_id')
 
         if not self.tournament.pref('share_adjs'):
             all_adjs = [a for a in all_adjs if a.tournament == self.tournament]
@@ -517,16 +600,18 @@ class Round(models.Model):
 
     def unused_adjudicators(self):
         from participants.models import Adjudicator
-        result = self.base_availability(Adjudicator, 'availability_activeadjudicator',
-                                      'adjudicator_id',
-                                      'participants_adjudicator',
-                                      id_field='person_ptr_id').extra(
-                                        select = {'is_used': """EXISTS (SELECT 1
+        result = self.base_availability(
+            Adjudicator,
+            'availability_activeadjudicator',
+            'adjudicator_id',
+            'participants_adjudicator',
+            id_field='person_ptr_id').extra(
+                select={'is_used': """EXISTS (SELECT 1
                                                   FROM adjallocation_debateadjudicator da
                                                   LEFT JOIN draw_debate d ON da.debate_id = d.id
                                                   WHERE d.round_id = %d AND
-                                                  da.adjudicator_id = participants_adjudicator.person_ptr_id)""" % self.id },
-        )
+                                                  da.adjudicator_id = participants_adjudicator.person_ptr_id)"""
+                        % self.id}, )
         if not self.tournament.pref('draw_skip_adj_checkins'):
             return [a for a in result if a.is_active and not a.is_used]
         else:
@@ -534,9 +619,10 @@ class Round(models.Model):
 
     def team_availability(self):
         from participants.models import Team
-        all_teams = self.base_availability(Team, 'availability_activeteam', 'team_id',
-                                      'participants_team')
-        relevant_teams = [t for t in all_teams if t.tournament == self.tournament]
+        all_teams = self.base_availability(Team, 'availability_activeteam',
+                                           'team_id', 'participants_team')
+        relevant_teams = [t for t in all_teams
+                          if t.tournament == self.tournament]
         return relevant_teams
 
     def unused_teams(self):
@@ -544,13 +630,23 @@ class Round(models.Model):
         all_teams = self.active_teams.all()
         all_teams = [t for t in all_teams if t.tournament == self.tournament]
 
-        debating_teams = [t.team for t in DebateTeam.objects.filter(debate__round=self).select_related('team', 'debate')]
+        debating_teams = [
+            t.team
+            for t in DebateTeam.objects.filter(
+                debate__round=self).select_related('team', 'debate')
+        ]
         unused_teams = [t for t in all_teams if t not in debating_teams]
 
         return unused_teams
 
-    def set_available_base(self, ids, model, active_model, get_active,
-                             id_column, active_id_column, remove=True):
+    def set_available_base(self,
+                           ids,
+                           model,
+                           active_model,
+                           get_active,
+                           id_column,
+                           active_id_column,
+                           remove=True):
         ids = set(ids)
         all_ids = set(a['id'] for a in model.objects.values('id'))
         exclude_ids = all_ids.difference(ids)
@@ -573,9 +669,13 @@ class Round(models.Model):
     def set_available_people(self, ids):
         from availability.models import Checkin
         from participants.models import Person
-        return self.set_available_base(ids, Person, Checkin,
-                                      self.checkins, 'person_id',
-                                      'person__id', remove=False)
+        return self.set_available_base(ids,
+                                       Person,
+                                       Checkin,
+                                       self.checkins,
+                                       'person_id',
+                                       'person__id',
+                                       remove=False)
 
     def set_available_venues(self, ids):
         from availability.models import ActiveVenue
@@ -594,14 +694,14 @@ class Round(models.Model):
     def set_available_teams(self, ids):
         from availability.models import ActiveTeam
         from participants.models import Team
-        return self.set_available_base(ids, Team, ActiveTeam,
-                                       self.active_teams, 'team_id',
-                                      'team__id')
+        return self.set_available_base(
+            ids, Team, ActiveTeam, self.active_teams, 'team_id', 'team__id')
 
     def activate_adjudicator(self, adj, state=True):
         from availability.models import ActiveAdjudicator
         if state:
-            ActiveAdjudicator.objects.get_or_create(round=self, adjudicator=adj)
+            ActiveAdjudicator.objects.get_or_create(round=self,
+                                                    adjudicator=adj)
         else:
             self.activeadjudicator_set.filter(adjudicator=adj).delete()
 
@@ -625,14 +725,27 @@ class Round(models.Model):
         self.set_available_venues(
             [v.id for v in Venue.objects.filter(tournament=self.tournament)])
         self.set_available_adjudicators(
-            [a.id for a in Adjudicator.objects.filter(tournament=self.tournament)])
+            [a.id for a in Adjudicator.objects.filter(tournament=
+                                                      self.tournament)])
         self.set_available_teams(
             [t.id for t in Team.objects.filter(tournament=self.tournament)])
+
+    def activate_previous(self):
+        from availability.models import ActiveTeam, ActiveAdjudicator, ActiveVenue
+
+        self.set_available_venues(
+            [v.venue.id for v in ActiveVenue.objects.filter(round=self.prev)])
+        self.set_available_adjudicators(
+            [a.adjudicator.id
+             for a in ActiveAdjudicator.objects.filter(round=self.prev)])
+        self.set_available_teams(
+            [t.team.id for t in ActiveTeam.objects.filter(round=self.prev)])
 
     @property
     def prev(self):
         try:
-            return Round.objects.get(seq=self.seq-1, tournament=self.tournament)
+            return Round.objects.get(seq=self.seq - 1,
+                                     tournament=self.tournament)
         except Round.DoesNotExist:
             return None
 
@@ -640,8 +753,10 @@ class Round(models.Model):
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
 
+
 def update_round_cache(sender, instance, created, **kwargs):
-    cached_key = "%s_%s_%s" % (instance.tournament.slug, instance.seq, 'object')
+    cached_key = "%s_%s_%s" % (instance.tournament.slug, instance.seq,
+                               'object')
     cache.delete(cached_key)
     logger.debug("Updated cache %s for %s" % (cached_key, instance))
 
@@ -649,10 +764,8 @@ def update_round_cache(sender, instance, created, **kwargs):
 signals.post_save.connect(update_round_cache, sender=Round)
 
 
-
 class SRManager(models.Manager):
     use_for_related_fields = True
+
     def get_queryset(self):
         return super(SRManager, self).get_queryset().select_related('debate')
-
-
