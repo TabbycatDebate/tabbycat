@@ -1,2 +1,0 @@
-
-See /docs/authors.md

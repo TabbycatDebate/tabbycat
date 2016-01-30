@@ -54,9 +54,8 @@ tournaments.
    :maxdepth: 1
    :caption: About
 
+   about/authors
    about/licence
    about/contributing
    about/release-notes
    about/tournament-history
-
-

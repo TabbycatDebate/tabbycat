@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.template import RequestContext
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.cache import cache_page
 
 from ipware.ip import get_real_ip
@@ -70,12 +70,6 @@ def expect_post(view_fn):
             return HttpResponseBadRequest("Expected POST")
         return view_fn(request, *args, **kwargs)
     return foo
-
-def r2r(request, template, extra_context=None):
-    rc = RequestContext(request)
-    if extra_context:
-        rc.update(extra_context)
-    return render_to_response(template, context_instance=rc)
 
 def relevant_team_standings_metrics(tournament):
     rule = tournament.pref('team_standings_rule')

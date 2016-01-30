@@ -82,7 +82,7 @@ def draw_adjudicators_edit(request, round):
     context['break_categories'] = list(zip(
         break_categories, colors + ["black"] * (len(break_categories) - len(colors))))
 
-    return r2r(request, "draw_adjudicators_edit.html", context)
+    return render(request, "draw_adjudicators_edit.html", context)
 
 
 def _json_adj_allocation(debates, unused_adj):
