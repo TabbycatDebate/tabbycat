@@ -1,7 +1,7 @@
 """Unit tests for the Anorak importer."""
 
 from django.test import TestCase
-from unittest import skip
+from unittest import skip, expectedFailure
 import adjallocation.models as am
 import breakqual.models as bm
 import motions.models as mm
@@ -98,6 +98,7 @@ class TestImporterAnorak(TestCase):
         self.assertEqual(counts, {mm.Motion: 18})
         self.assertFalse(errors)
 
+    @expectedFailure
     def test_options(self):
         f = self._open_csv_file(self.TESTDIR_CHOICES, "options")
         counts, errors = self.importer.import_options(f)
