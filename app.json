@@ -11,7 +11,7 @@
         "heroku-postgresql:hobby-dev"
     ],
     "scripts": {
-        "postdeploy": "python manage.py heroku_postdeploy"
+        "postdeploy": "python manage.py migrate"
     },
     "success_url": "/admin/auth/user/1/password/"
 }
