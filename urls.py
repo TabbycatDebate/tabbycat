@@ -2,9 +2,9 @@ from django.conf.urls import *
 from django.conf import settings
 from django.contrib import admin
 
-from django.contrib.auth import views
+import django.contrib.auth.views as auth_views
+import tournaments.views
 from django.views.static import serve
-from tournaments.views import index
 
 admin.autodiscover()
 
@@ -18,16 +18,17 @@ def redirect(view):
 urlpatterns = [
 
     # Indices
-    url(r'^$',                                  index),
+    url(r'^$',                                  tournaments.views.index,      name='tabbycat-index'),
     url(r'^t/(?P<tournament_slug>[-\w_]+)/',    include('tournaments.urls')),
+    url(r'^start/',                             tournaments.views.BlankSiteStartView.as_view(), name='blank-site-start'),
 
     # Admin area
     url(r'^jet/',                               include('jet.urls', 'jet')),
     url(r'^admin/',                             include(admin.site.urls)),
 
     # Accounts
-    url(r'^accounts/login/$',                   views.login),
-    url(r'^accounts/logout/$',                  views.logout,
+    url(r'^accounts/login/$',                   auth_views.login,             name='auth-login'),
+    url(r'^accounts/logout/$',                  auth_views.logout,
         {'next_page': '/'}),
 
 ]

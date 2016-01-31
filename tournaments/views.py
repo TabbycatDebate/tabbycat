@@ -1,5 +1,16 @@
+import logging
+logger = logging.getLogger(__name__)
+from threading import Lock
+
+from django.conf import settings
+from django.views.generic import View
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+import django.contrib.messages as messages
+
 from utils.views import *
 from .models import Tournament, Division
+from utils.forms import SuperuserCreationForm
 from participants.models import Team, Institution
 from draw.models import Debate, DebateTeam
 from draw.models import TeamVenuePreference, InstitutionVenuePreference
@@ -13,15 +24,20 @@ def public_index(request, t):
 def index(request):
     tournaments = Tournament.objects.all()
     if tournaments.count() == 1:
-        print('user is ', request.user)
+        logger.info('One tournament only, user is: %s', request.user)
         if request.user.is_authenticated():
-            print('tournament_home')
+            logger.info('Showing tournament_home')
             return redirect_tournament('tournament_home', tournaments.first())
         else:
-            print('public_index')
+            logger.info('Showing public_index')
             return redirect_tournament('public_index', tournaments.first())
+
+    elif not tournaments.exists() and not User.objects.all().exists():
+        logger.info('No users and no tournaments, showing blank site welcome page')
+        return redirect('blank-site-start')
+
     else:
-        return render(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
+        return render(request, 'site_index.html', dict(tournaments=tournaments))
 
 @login_required
 @tournament_view
@@ -155,3 +171,38 @@ def create_division_allocation(request, t):
     else:
         return HttpResponseBadRequest("Couldn't create divisions")
 
+
+class BlankSiteStartView(View):
+    """This view is presented to the user when there are no tournaments and no
+    user accounts. It prompts the user to create a first superuser. It rejects
+    all requests, GET or POST, if there exists any user account in the
+    system."""
+
+    form_class = SuperuserCreationForm
+    template_name = "blank_site_start.html"
+    lock = Lock()
+
+    def get(self, request):
+        if User.objects.all().exists():
+            logger.error("Tried to get the blank-site-start view when a user account already exists.")
+            return redirect('tabbycat-index')
+
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        with self.lock:
+            if User.objects.all().exists():
+                logger.error("Tried to post the blank-site-start view when a user account already exists.")
+                messages.error("Whoops! It looks like someone's already created the first user account. Please log in.")
+                return redirect('login')
+
+            elif form.is_valid():
+                form.save()
+                user = authenticate(username=request.POST['username'], password=request.POST['password1'])
+                login(request, user)
+                messages.success(request, "Welcome! You've created an account for %s." % user.username)
+                return redirect('tabbycat-index')
+
+        return render(request, self.template_name, {'form': form})
