@@ -10,16 +10,6 @@
         "sendgrid:starter",
         "heroku-postgresql:hobby-dev"
     ],
-    "env": {
-        "PUBLIC_PAGE_CACHE_TIMEOUT": {
-            "description": "Timeout in seconds for public page cache",
-            "required": false
-        },
-        "TAB_PAGES_CACHE_TIMEOUT": {
-            "description": "Timeout in seconds for tab page cache",
-            "required": false
-        }
-    },
     "scripts": {
         "postdeploy": "python manage.py heroku_postdeploy"
     },
