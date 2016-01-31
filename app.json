@@ -19,5 +19,5 @@
     "scripts": {
         "postdeploy": "python manage.py migrate"
     },
-    "success_url": "/admin/auth/user/1/password/"
+    "success_url": "/start/"
 }
