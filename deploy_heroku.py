@@ -113,7 +113,7 @@ urlname = match.group(1)
 heroku_url = match.group(2)
 
 # Set config variables
-command = []
+command = ["config:add"]
 command.append("DEBUG=1" if args.enable_debug else "DEBUG=0")
 if args.public_cache_timeout:
     command.append("PUBLIC_PAGE_CACHE_TIMEOUT=%d" % args.public_cache_timeout)
