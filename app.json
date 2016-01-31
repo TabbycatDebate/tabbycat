@@ -10,6 +10,12 @@
         "sendgrid:starter",
         "heroku-postgresql:hobby-dev"
     ],
+    "env": {
+        "DJANGO_SECRET_KEY": {
+            "description": "A secret key for cryptographic signing of user sessions. Important: Keep this secret.",
+            "generator": "secret"
+        }
+    },
     "scripts": {
         "postdeploy": "python manage.py migrate"
     },
