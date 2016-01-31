@@ -1,2 +1,0 @@
-
-See /docs/contributing.md

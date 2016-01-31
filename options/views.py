@@ -24,7 +24,7 @@ def tournament_config_index(request, t):
                 obj.description = inspect.getdoc(test)
                 preset_options.append(obj)
 
-    return r2r(request, 'preferences_index.html', dict(presets=preset_options))
+    return render(request, 'preferences_index.html', dict(presets=preset_options))
 
 
 from options.dynamic_preferences_registry import tournament_preferences_registry
@@ -82,7 +82,7 @@ def tournament_preference_confirm(request, t, preset_name):
     context['preset_name'] = preset_name
     context['preferences'] = preset_preferences
 
-    return r2r(request, 'preferences_presets_confirm.html', context)
+    return render(request, 'preferences_presets_confirm.html', context)
 
 
 @admin_required
@@ -115,7 +115,7 @@ def tournament_preference_apply(request, t, preset_name):
     context['preferences'] = preset_preferences
 
 
-    return r2r(request, 'preferences_presets_apply.html', context)
+    return render(request, 'preferences_presets_apply.html', context)
 
 
 class TournamentPreferenceApplyView(TemplateView):

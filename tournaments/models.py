@@ -11,11 +11,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=100, help_text="The full name used on the homepage")
-    short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu")
-    emoji = models.CharField(max_length=1, blank=True, null=True, unique=True, choices=EMOJI_LIST)
+    name = models.CharField(max_length=100, help_text="The full name used on the homepage, e.g. \"Australasian Intervarsity Debating Championships 2016\"")
+    short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu, e.g. \"Australs 2016\"")
+    emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST)
     seq = models.IntegerField(blank=True, null=True, help_text="The order in which tournaments are displayed")
-    slug = models.SlugField(unique=True, help_text="The sub-URL of the tournament; cannot have spaces")
+    slug = models.SlugField(unique=True, help_text="The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\"")
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_', help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
     welcome_msg = models.TextField(blank=True, null=True, default="", help_text="Text/html entered here shows on the homepage")
@@ -47,11 +47,11 @@ class Tournament(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('tournament_home', [self.slug])
+        return ('tournament-admin-home', [self.slug])
 
     @models.permalink
     def get_public_url(self):
-        return ('public_index', [self.slug])
+        return ('tournament-public-index', [self.slug])
 
     @models.permalink
     def get_all_tournaments_all_venues(self):
@@ -72,12 +72,11 @@ class Tournament(models.Model):
     @cached_property
     def get_current_round_cached(self):
         cached_key = "%s_current_round_object" % self.slug
-        cached_value = cache.get(cached_key)
-        if cached_value:
+        if self.current_round:
+            cache.get_or_set(cached_key, self.current_round, None)
             return cache.get(cached_key)
         else:
-            cache.set(cached_key, self.current_round, None)
-            return self.current_round
+            return None;
 
     def prelim_rounds(self, before=None, until=None):
         qs = self.round_set.filter(stage=Round.STAGE_PRELIMINARY)

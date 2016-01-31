@@ -2,9 +2,9 @@ from django.conf.urls import *
 from django.conf import settings
 from django.contrib import admin
 
-from django.contrib.auth import views
+import django.contrib.auth.views as auth_views
+import tournaments.views
 from django.views.static import serve
-from tournaments.views import index
 
 admin.autodiscover()
 
@@ -18,16 +18,18 @@ def redirect(view):
 urlpatterns = [
 
     # Indices
-    url(r'^$',                                  index),
+    url(r'^$',                                  tournaments.views.index,      name='tabbycat-index'),
     url(r'^t/(?P<tournament_slug>[-\w_]+)/',    include('tournaments.urls')),
+    url(r'^start/',                             tournaments.views.BlankSiteStartView.as_view(), name='blank-site-start'),
+    url(r'^create_tournament/',                 tournaments.views.CreateTournamentView.as_view(),  name='tournament-create'),
 
     # Admin area
     url(r'^jet/',                               include('jet.urls', 'jet')),
     url(r'^admin/',                             include(admin.site.urls)),
 
     # Accounts
-    url(r'^accounts/login/$',                   views.login),
-    url(r'^accounts/logout/$',                  views.logout,
+    url(r'^accounts/login/$',                   auth_views.login,             name='auth-login'),
+    url(r'^accounts/logout/$',                  auth_views.logout,
         {'next_page': '/'}),
 
 ]
@@ -51,9 +53,9 @@ from django.dispatch import receiver
 from django.contrib import messages
 @receiver(user_logged_out)
 def on_user_logged_out(sender, request, **kwargs):
-    messages.add_message(request, messages.SUCCESS, 'Later ' + kwargs['user'].username +  ' — you were logged out!')
+    messages.success(request, 'Later, ' + kwargs['user'].username +  ' — you were logged out!')
 
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
-    messages.add_message(request, messages.SUCCESS, 'Hi ' + kwargs['user'].username +  ' — you just logged in!')
+    messages.success(request, 'Hi, ' + kwargs['user'].username +  ' — you just logged in!')
 

@@ -1,7 +1,7 @@
 """Unit tests for the Anorak importer."""
 
 from django.test import TestCase
-from unittest import skip
+from unittest import skip, expectedFailure
 import adjallocation.models as am
 import breakqual.models as bm
 import motions.models as mm
@@ -49,6 +49,10 @@ class TestImporterAnorak(TestCase):
         self.assertEqual(counts, {tm.Round: 12})
         self.assertFalse(errors)
 
+    def test_auto_make_rounds(self):
+        self.importer.auto_make_rounds(7)
+        self.assertEqual(self.t.round_set.count(), 7)
+
     def test_venues(self):
         f = self._open_csv_file(self.TESTDIR, "venues")
         counts, errors = self.importer.import_venues(f)
@@ -94,6 +98,7 @@ class TestImporterAnorak(TestCase):
         self.assertEqual(counts, {mm.Motion: 18})
         self.assertFalse(errors)
 
+    @expectedFailure
     def test_options(self):
         f = self._open_csv_file(self.TESTDIR_CHOICES, "options")
         counts, errors = self.importer.import_options(f)

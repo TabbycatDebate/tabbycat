@@ -33,10 +33,10 @@
       <span class="help-block">
         {{ field.help_text }}
       </span>
+      {% if field.errors %}
+        {{ field.errors }}
+      {% endif %}
     </div>
-    {% if field.errors %}
-      {{ field.errors }}
-    {% endif %}
   </div>
   {% endfor %}
   <div class="form-group">

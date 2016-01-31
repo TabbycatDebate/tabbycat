@@ -13,7 +13,7 @@ def _availability(request, round, model, context_name):
         context_name: items,
     }
 
-    return r2r(request, '%s_availability.html' % model, context)
+    return render(request, '%s_availability.html' % model, context)
 
 # public (for barcode checkins)
 @round_view
@@ -33,7 +33,7 @@ def checkin(request, round):
         except (ValueError, Person.DoesNotExist):
             context['unknown_id'] = v
 
-    return r2r(request, 'person_checkin.html', context)
+    return render(request, 'person_checkin.html', context)
 
 # public (for barcode checkins)
 # public

@@ -9,7 +9,7 @@ from draw.models import InstitutionVenuePreference
 @admin_required
 @tournament_view
 def data_index(request, t):
-    return r2r(request, 'data_index.html')
+    return render(request, 'data_index.html')
 
 # INSTITUTIONS
 
@@ -18,7 +18,7 @@ def data_index(request, t):
 def add_institutions(request, t):
     print("adding insts")
     #form = forms.AddInstitutionsForm
-    return r2r(request, 'add_institutions.html')
+    return render(request, 'add_institutions.html')
 
 @admin_required
 @expect_post
@@ -35,7 +35,7 @@ def edit_institutions(request, t):
         except:
             pass # TODO
 
-    return r2r(request, 'edit_institutions.html', dict(institutions=institutions))
+    return render(request, 'edit_institutions.html', dict(institutions=institutions))
 
 
 @admin_required
@@ -55,7 +55,7 @@ def confirm_institutions(request, t):
             pass
 
     confirmed = {"kind": "Institutions", "quantity": len(institution_names) }
-    return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
+    return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
 # VENUES
 
@@ -63,7 +63,7 @@ def confirm_institutions(request, t):
 @tournament_view
 def add_venues(request, t):
     form = forms.AddVenuesForm
-    return r2r(request, 'add_venues.html')
+    return render(request, 'add_venues.html')
 
 @admin_required
 @expect_post
@@ -89,7 +89,7 @@ def edit_venues(request, t):
         except:
             pass # TODO
 
-    return r2r(request, 'edit_venues.html', dict(venues=venues))
+    return render(request, 'edit_venues.html', dict(venues=venues))
 
 @admin_required
 @expect_post
@@ -113,7 +113,7 @@ def confirm_venues(request, t):
             pass
 
     confirmed = {"kind": "Venues", "quantity": len(venue_names) }
-    return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
+    return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
 
 # VENUE PREFERENCES
@@ -122,7 +122,7 @@ def confirm_venues(request, t):
 @tournament_view
 def add_venue_preferences(request, t):
     institutions = Institution.objects.all()
-    return r2r(request, 'add_venue_preferences.html', dict(institutions=institutions))
+    return render(request, 'add_venue_preferences.html', dict(institutions=institutions))
 
 @admin_required
 @expect_post
@@ -135,7 +135,7 @@ def edit_venue_preferences(request, t):
     for institution_id, checked in request.POST.items():
         institutions.append(Institution.objects.get(pk=institution_id))
 
-    return r2r(request, 'edit_venue_preferences.html', dict(institutions=institutions, venue_groups=venue_groups))
+    return render(request, 'edit_venue_preferences.html', dict(institutions=institutions, venue_groups=venue_groups))
 
 @admin_required
 @expect_post
@@ -168,7 +168,7 @@ def confirm_venue_preferences(request, t):
             created_preferences += 1
 
     confirmed = {"kind": "Venue Preferences", "quantity": created_preferences }
-    return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
+    return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
 # TEAMS
 
@@ -177,7 +177,7 @@ def confirm_venue_preferences(request, t):
 def add_teams(request, t):
     institutions = Institution.objects.all()
     form = forms.AddTeamsForm
-    return r2r(request, 'add_teams.html', dict(institutions=institutions))
+    return render(request, 'add_teams.html', dict(institutions=institutions))
 
 
 @admin_required
@@ -213,7 +213,7 @@ def edit_teams(request, t):
             print('____')
             # institutions[name] = list(range(1, int(quantity) + 1)) # Create a placeholder for loop
 
-    return r2r(request, 'edit_teams.html', dict(institutions=institutions_with_team_numbers))
+    return render(request, 'edit_teams.html', dict(institutions=institutions_with_team_numbers))
 
 
 @admin_required
@@ -249,7 +249,7 @@ def confirm_teams(request, t):
                 newspeaker.save()
 
     confirmed = {"kind": "Teams", "quantity": int((len(sorted_post) - 1) / 4) }
-    return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
+    return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
 # ADJUDICATORS
 
@@ -258,7 +258,7 @@ def confirm_teams(request, t):
 def add_adjudicators(request, t):
     institutions = Institution.objects.all()
     form = forms.AddAdjudicatorsForm
-    return r2r(request, 'add_adjudicators.html', dict(institutions=institutions))
+    return render(request, 'add_adjudicators.html', dict(institutions=institutions))
 
 
 @admin_required
@@ -276,7 +276,7 @@ def edit_adjudicators(request, t):
         'score_max'         : t.pref('adj_max_score'),
         'score_avg'         : round((t.pref('adj_max_score') + t.pref('adj_min_score')) / 2, 1),
     }
-    return r2r(request, 'edit_adjudicators.html', context)
+    return render(request, 'edit_adjudicators.html', context)
 
 @admin_required
 @expect_post
@@ -300,4 +300,4 @@ def confirm_adjudicators(request, t):
             newadj.save()
 
     confirmed = {"kind": "Adjudicators", "quantity": int((len(sorted_post) - 1) / 3) }
-    return r2r(request, 'confirmed_data.html', dict(confirmed=confirmed))
+    return render(request, 'confirmed_data.html', dict(confirmed=confirmed))

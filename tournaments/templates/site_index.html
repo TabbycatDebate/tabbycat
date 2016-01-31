@@ -10,34 +10,46 @@
 <ul class="list-group">
 
   {% if user.is_authenticated %}
-    {% for tournament in tournaments %}
+    {% if tournament.all.exists %}
+      {% for tournament in tournaments %}
+        <li class="list-group-item">
+          <a href="{{ tournament.get_absolute_url }}">
+            <span class="emoji">
+              {% if tournament.emoji %}
+                {{tournament.emoji }}
+              {% else %}
+                🏆
+              {% endif %}
+            </span>
+            {{ tournament.name }} (administrative site)
+          </a>
+          <span class="badge">ADMIN</span>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ tournament.get_public_url }}">
+            <span class="emoji">
+              {% if tournament.emoji %}
+                {{tournament.emoji }}
+              {% else %}
+                🏆
+              {% endif %}
+            </span>
+            {{ tournament.name }}
+          </a>
+          <span class="badge">PUBLIC</span>
+        </li>
+      {% endfor %}
       <li class="list-group-item">
-        <a href="{{ tournament.get_absolute_url }}">
-          <span class="emoji">
-            {% if tournament.emoji %}
-              {{tournament.emoji }}
-            {% else %}
-              🏆
-            {% endif %}
-          </span>
-          {{ tournament.name }} (administrative site)
+          <span class="emoji">➕</span>
+          <a href="{% url 'tournament-create' %}">
+          <em>Create new tournament</em>
         </a>
-        <span class="badge">ADMIN</span>
       </li>
-      <li class="list-group-item">
-        <a href="{{ tournament.get_public_url }}">
-          <span class="emoji">
-            {% if tournament.emoji %}
-              {{tournament.emoji }}
-            {% else %}
-              🏆
-            {% endif %}
-          </span>
-          {{ tournament.name }}
-        </a>
-        <span class="badge">PUBLIC</span>
-      </li>
-    {% endfor %}
+    {% else %}
+      <p>
+        It looks like there aren't any tournaments on this site. Would you like to <a href="{% url 'tournament-create' %}">create one</a>?
+      </p>
+    {% endif %}
   {% else %}
     {% for tournament in tournaments %}
       <li class="list-group-item">
