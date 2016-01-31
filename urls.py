@@ -52,9 +52,9 @@ from django.dispatch import receiver
 from django.contrib import messages
 @receiver(user_logged_out)
 def on_user_logged_out(sender, request, **kwargs):
-    messages.add_message(request, messages.SUCCESS, 'Later ' + kwargs['user'].username +  ' — you were logged out!')
+    messages.success(request, 'Later, ' + kwargs['user'].username +  ' — you were logged out!')
 
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
-    messages.add_message(request, messages.SUCCESS, 'Hi ' + kwargs['user'].username +  ' — you just logged in!')
+    messages.success(request, 'Hi, ' + kwargs['user'].username +  ' — you just logged in!')
 
