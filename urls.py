@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^$',                                  tournaments.views.index,      name='tabbycat-index'),
     url(r'^t/(?P<tournament_slug>[-\w_]+)/',    include('tournaments.urls')),
     url(r'^start/',                             tournaments.views.BlankSiteStartView.as_view(), name='blank-site-start'),
+    url(r'^create_tournament/',                 tournaments.views.CreateTournamentView.as_view(),  name='tournament-create'),
 
     # Admin area
     url(r'^jet/',                               include('jet.urls', 'jet')),

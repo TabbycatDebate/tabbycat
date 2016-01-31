@@ -4,6 +4,7 @@ from threading import Lock
 
 from django.conf import settings
 from django.views.generic import View
+from django.views.generic.edit import CreateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 import django.contrib.messages as messages
@@ -26,14 +27,14 @@ def index(request):
     if tournaments.count() == 1:
         logger.info('One tournament only, user is: %s', request.user)
         if request.user.is_authenticated():
-            logger.info('Showing tournament_home')
-            return redirect_tournament('tournament_home', tournaments.first())
+            logger.info('Redirecting to tournament-admin-home')
+            return redirect_tournament('tournament-admin-home', tournaments.first())
         else:
-            logger.info('Showing public_index')
-            return redirect_tournament('public_index', tournaments.first())
+            logger.info('Redirecting to tournament-public-index')
+            return redirect_tournament('tournament-public-index', tournaments.first())
 
     elif not tournaments.exists() and not User.objects.all().exists():
-        logger.info('No users and no tournaments, showing blank site welcome page')
+        logger.info('No users and no tournaments, redirecting to blank-site-start')
         return redirect('blank-site-start')
 
     else:
@@ -206,3 +207,11 @@ class BlankSiteStartView(View):
                 return redirect('tabbycat-index')
 
         return render(request, self.template_name, {'form': form})
+
+
+class CreateTournamentView(SuperuserRequiredMixin, CreateView):
+    """This view allows a logged-in superuser to create a new tournament."""
+
+    model = Tournament
+    fields = ['name', 'short_name', 'slug']
+    template_name = "create_tournament.html"
