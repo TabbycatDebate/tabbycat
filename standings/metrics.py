@@ -38,7 +38,7 @@ class BaseMetricAnnotator:
     """Base class for all metric annotators.
 
     A metric annotator is a class that adds metrics to a TeamStandings object.
-    It has one method that subclasses must implement: `annotate()`.
+    It has one method that subclasses must implement: `annotate_teams()`.
 
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
@@ -46,6 +46,10 @@ class BaseMetricAnnotator:
     adds = NotImplemented
 
     def annotate(self, queryset, standings, round=None):
+        standings.metrics_added.extend(self.adds)
+        self.annotate_teams(queryset, standings, round)
+
+    def annotate_teams(self, queryset, standings, round=None):
         """Annotates the given `standings` by calling `add_metric()` on every
         `TeamStandingInfo` object in `standings`.
 
@@ -54,7 +58,7 @@ class BaseMetricAnnotator:
         `round`, if specified, is a `Round` object that is assumed to be in the
             relevant tournament.
         """
-        raise NotImplementedError("BaseMetricAnnotator subclasses must implement annotate()")
+        raise NotImplementedError("BaseMetricAnnotator subclasses must implement annotate_teams()")
 
 
 class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
@@ -97,9 +101,9 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
         sql = RawSQL(TEAM_SCORE_ANNOTATION_QUERY.format(field=field, function=function), ())
         return queryset.annotate(**{column_name: sql}).distinct()
 
-    def annotate(self, queryset, standings, round=None):
+    def annotate_teams(self, queryset, standings, round=None):
         for team in self.get_annotated_queryset(queryset, self.field, self.function, round):
-            standings.add_metric(team, self.adds[0], team.metric)
+            standings.add_metric_to_team(team, self.adds[0], team.metric)
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -125,7 +129,7 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
     """Metric annotator for draw strength."""
     adds = ["draw_strength"]
 
-    def annotate(self, queryset, standings, round=None):
+    def annotate_teams(self, queryset, standings, round=None):
         full_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
                 queryset[0].tournament.team_set.all(), "points", "SUM", round, "points")
 
@@ -136,7 +140,7 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
                 debateteam_set = debateteam_set.filter(debate__round__seq__lte=round.seq)
             for dt in debateteam_set:
                 draw_strength += full_queryset.get(id=dt.opposition.team_id).points
-            standings.add_metric(team, "draw_strength", draw_strength)
+            standings.add_metric_to_team(team, "draw_strength", draw_strength)
 
 
 class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
@@ -145,7 +149,7 @@ class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
     def __init__(self, adjs_per_debate=3):
         self.adjs_per_debate = 3
 
-    def annotate(self, queryset, standings, round=None):
+    def annotate_teams(self, queryset, standings, round=None):
         raise NotImplementedError("number of adjudicators doesn't work yet")
 
 
@@ -158,27 +162,33 @@ class WhoBeatWhomMetricAnnotator(BaseMetricAnnotator):
         self.keys = keys
         self.metricname = "wbw" + str(self.index)
 
+        if len(self.keys) == 0:
+            raise ValueError("keys must not be empty")
+
     @property
     def adds(self):
         return [self.metricname]
 
-    def annotate(self, queryset, standings, round=None):
+    def annotate_teams(self, queryset, standings, round=None):
         key = metricgetter(*self.keys)
 
         def who_beat_whom(tsi):
-            equal_teams = [x for x in standings if key(x) == key(tsi)]
+            equal_teams = [x for x in standings.infoview() if key(x) == key(tsi)]
             if len(equal_teams) != 2:
                 return "n/a" # fail fast if attempt to compare with an int
             equal_teams.remove(tsi)
+            team = tsi
             other = equal_teams[0]
             ts = TeamScore.objects.filter(
                     ballot_submission__confirmed=True,
-                    debate_team__team=team,
-                    debate_team__debate__debateteam__team=other)
+                    debate_team__team=tsi.team,
+                    debate_team__debate__debateteam__team=other.team)
             if round is not None:
                 ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)
             ts = ts.aggregate(Sum('points'))
-            logger.info("who beat whom, {0} {3} vs {1} {4}: {2}".format(team.short_name, other.short_name, ts["points__sum"], key(team), key(other)))
+            logger.info("who beat whom, {0} {3} vs {1} {4}: {2}".format(
+                    tsi.team.short_name, other.team.short_name,
+                    ts["points__sum"], key(tsi), key(other)))
             return ts["points__sum"] or 0
 
         for tsi in standings.infoview():

@@ -55,7 +55,7 @@ class TeamStandingInfo:
         self.metrics[name] = value
 
     def add_ranking(self, name, value):
-        if name in self.ranking:
+        if name in self.rankings:
             raise KeyError("There is already a ranking {!r} for this team", name)
         self.rankings[name] = value
 
@@ -65,7 +65,7 @@ class TeamStandings:
     by `TeamStandingsGenerator`."""
 
     def __init__(self, teams):
-        self.infos = {team: TeamStandingInfo(team) for team in teams}
+        self.infos = {team: TeamStandingInfo(self, team) for team in teams}
         self.ranked = False
 
         self.metrics_added = list()
@@ -76,6 +76,9 @@ class TeamStandings:
     def standings(self):
         assert self.ranked, "sort() must be called before accessing standings"
         return self._standings
+
+    def __len__(self):
+        return len(self.standings)
 
     def __iter__(self):
         """Returns an iterator that iterates over constituent TeamStandingInfo
@@ -103,11 +106,20 @@ class TeamStandings:
         self._standings = list(self.infos.values())
         if tiebreak_func:
             tiebreak_func(self._standings)
-        self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics))
+        self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics), reverse=True)
         self.ranked = True
 
 
 class TeamStandingsGenerator:
+    """Class for generating standings. An instance is configured with metrics
+    and rankings in the constructor, and an iterable of Team objects is passed
+    to its `generate()` method to generate standings. Example:
+
+        generator = TeamStandingsGenerator(('points', 'speaker_score'), ('rank',))
+        standings = generator.generate(teams)
+
+    The generate() method returns a TeamStandings object.
+    """
 
     DEFAULT_OPTIONS = {
         "tiebreak": "random",
@@ -122,7 +134,7 @@ class TeamStandingsGenerator:
     def __init__(self, metrics, rankings, **options):
 
         # Set up options dictionary
-        self.options = DEFAULT_OPTIONS.copy()
+        self.options = self.DEFAULT_OPTIONS.copy()
         for key in options:
             if key not in self.options:
                 raise ValueError("Unrecognized option: {0}".format(key))
@@ -133,6 +145,28 @@ class TeamStandingsGenerator:
         self._interpret_rankings(rankings)
         self._check_annotators(self.metric_annotators, "metric")
         self._check_annotators(self.ranking_annotators, "ranking")
+
+    def generate(self, queryset, round=None):
+        """Generates standings for the teams in queryset. Returns a
+        TeamStandings object.
+
+        `queryset` can be a QuerySet or Manager object, and should return just
+            those teams of interest for these standings.
+        `round`, if specified, is the round for which to generate the standings.
+            (That is, rounds after `round` are excluded from the standings.)
+        """
+
+        standings = TeamStandings(queryset)
+
+        for annotator in self.metric_annotators:
+            annotator.annotate(queryset, standings, round)
+
+        standings.sort(self.precedence, self._tiebreak_func)
+
+        for annotator in self.ranking_annotators:
+            annotator.annotate(standings)
+
+        return standings
 
     def _interpret_metrics(self, metrics):
         """Given a list of metrics, sets:
@@ -152,7 +186,7 @@ class TeamStandingsGenerator:
 
         for i, metric in enumerate(metrics):
             if metric == "wbw":
-                wbw_keys = tuple(m for m in precedence[0:i] if m != "wbw")
+                wbw_keys = tuple(m for m in self.precedence[0:i] if m != "wbw")
                 args = (index, wbw_keys)
                 index += 1
             else:
@@ -178,31 +212,10 @@ class TeamStandingsGenerator:
         appropriate ranking annotators."""
         self.ranking_annotators = list()
 
-        for ranking in enumerate(rankings):
-            self.ranking_annotators.append(RankAnnotator(ranking))
+        for ranking in rankings:
+            self.ranking_annotators.append(RankAnnotator(ranking, self.precedence))
 
 
     @property
     def _tiebreak_func(self):
         return self.TIEBREAK_FUNCTIONS[self.options["tiebreak"]]
-
-    def generate(self, queryset, round=None):
-        """Generates standings for the teams in queryset.
-
-        `queryset` can be a QuerySet or Manager object, and should return just
-            those teams of interest for these standings.
-        `round`, if specified, is the round for which to generate the standings.
-            (That is, rounds after `round` are excluded from the standings.)
-        """
-
-        standings = TeamStandings(queryset)
-
-        for annotator in self.metric_annotators:
-            annotator(queryset, standings, round)
-
-        standings.sort(self.precedence, self._tiebreak_func)
-
-        for annotator in self.ranking_annotators:
-            annotator(standings)
-
-        return standings

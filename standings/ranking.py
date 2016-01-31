@@ -27,7 +27,7 @@ class BaseRankAnnotator:
     """Base class for all rank annotators.
 
     A rank annotator is a class that adds rankings to a TeamStandings object.
-    It has one method that subclasses must implement: `annotate()`.
+    It has one method that subclasses must implement: `annotate_teams()`.
 
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
@@ -35,6 +35,10 @@ class BaseRankAnnotator:
     adds = NotImplemented
 
     def annotate(self, standings):
+        standings.rankings_added.extend(self.adds)
+        self.annotate_teams(standings)
+
+    def annotate_teams(self, standings):
         """Annotates the given `standings` by calling `add_ranking()` on every
         `TeamStandingInfo` object in `standings`.
 
@@ -50,7 +54,7 @@ class BasicRankAnnotator(BaseRankAnnotator):
     def __init__(self, metrics):
         self.key = metricgetter(*metrics)
 
-    def annotate(self, standings):
+    def annotate_teams(self, standings):
         rank = 1
         for key, group in groupby(standings, key=self.key):
             group = list(group)
@@ -64,11 +68,11 @@ class SubrankAnnotator(BaseRankAnnotator):
 
     adds = ["subrank", "subrank_eq"]
 
-    def __init__(self, rank_metrics, subrank_metrics):
-        self.group_key = metricgetter(*rank_metrics)
-        self.subrank_key = metricgetter(*subrank_metrics)
+    def __init__(self, metrics):
+        self.group_key = metricgetter(metrics[0])
+        self.subrank_key = metricgetter(metrics[1:])
 
-    def annotate(self, standings):
+    def annotate_teams(self, standings):
         for key, group in groupby(standings, key=self.group_key):
             subrank = 1
             for subkey, subgroup in groupby(group, self.subrank_key):
@@ -86,7 +90,7 @@ class DivisionRankAnnotator(BaseRankAnnotator):
     def __init__(self, metrics):
         self.key = metricgetter(*metrics)
 
-    def annotate(self, standings):
+    def annotate_teams(self, standings):
         by_division = sorted(standings, key=attrgetter('division'))
         for division, division_teams in groupby(by_division, key=attrgetter('division')):
             rank = 1
@@ -99,7 +103,7 @@ class DivisionRankAnnotator(BaseRankAnnotator):
 
 
 registry = {
-    "basic"    : BasicRankAnnotator,
+    "rank"     : BasicRankAnnotator,
     "subrank"  : SubrankAnnotator,
     "division" : DivisionRankAnnotator,
 }

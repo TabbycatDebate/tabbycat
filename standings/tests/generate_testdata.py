@@ -3,13 +3,20 @@ and paste into test_result.py."""
 
 import random
 import pprint
+from operator import itemgetter
 
-TEAMS = 'ABCD'
+TEAMS = ['A', 'B', 'C', 'D']
 DRAW_FOR_WHOLE_TOURNAMENT = [['AB', 'CD'], ['AC', 'BD'], ['AB', 'CD']]
 SPEAKERS_PER_TEAM = 3
 ADJS_PER_DEBATE = 3
 TOTAL_SCORE_MEAN  = 75 * 3.5
 TOTAL_SCORE_STDEV = 10
+
+METRICS = [
+    ("points", "speaker_score", "draw_strength", "margin"),
+    # ("points", "wbw", "speaker_score", "wbw"),
+    ("points", "speaker_score"),
+]
 
 teamscores_by_team = {t: [] for t in TEAMS}
 
@@ -19,9 +26,9 @@ results = [{debate: {team: {"score": round(random.normalvariate(75*3.5, 10)*2)/2
         for team in debate} for debate in rd} for rd in DRAW_FOR_WHOLE_TOURNAMENT]
 
 # For example:
-# results = [{'AB': {'A': {'score': 260.5}, 'B': {'score': 254.0}},
-#             'CD': {'C': {'score': 257.0}, 'D': {'score': 260.0}}},
-#            {'AC': {'A': {'score': 256.5}, 'C': {'score': 261.0}},
+# results = [{'AB': {'A': {'score': 269.5}, 'B': {'score': 254.0}},
+#             'CD': {'C': {'score': 262.5}, 'D': {'score': 260.0}}},
+#            {'AC': {'A': {'score': 249.0}, 'C': {'score': 261.0}},
 #             'BD': {'B': {'score': 260.5}, 'D': {'score': 267.0}}},
 #            {'AB': {'A': {'score': 259.5}, 'B': {'score': 271.5}},
 #             'CD': {'C': {'score': 253.0}, 'D': {'score': 265.0}}}]
@@ -47,11 +54,11 @@ for rd in results:
 standings = {}
 for team, teamscores in teamscores_by_team.items():
     standings[team] = {
-        "score": sum(teamscore["score"] for teamscore in teamscores),
+        "speaker_score": sum(teamscore["score"] for teamscore in teamscores),
         "margin": sum(teamscore["margin"] for teamscore in teamscores),
         "points": sum(teamscore["points"] for teamscore in teamscores),
-        "against": dict.fromkeys([t for t in TEAMS if t is not team], "n/a"), # initialize
         "draw_strength": 0, # initialize
+        "against": dict.fromkeys([t for t in TEAMS if t is not team], "n/a"), # initialize
     }
 
 # Build up standings metrics that require reference to opponents
@@ -67,10 +74,17 @@ for rd in results:
                 standings[team]["against"][opponent] += score["points"]
             standings[team]["draw_strength"] += standings[opponent]["points"]
 
+# Generate rankings and who-beat-whom tables
+rankings = dict()
+for metrics in METRICS:
+    ranking = sorted(TEAMS, key=lambda t: itemgetter(*metrics)(standings[t]), reverse=True)
+    rankings[metrics] = ranking
+
 testdata = {
     "teamscores": results,
     "teams": TEAMS,
     "standings": standings,
+    "rankings": rankings,
 }
 
 print("Test data, to be copied to test:")
