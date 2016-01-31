@@ -28,9 +28,9 @@ class TestImporterAnorak(TestCase):
         # create tournament
         self.t = tm.Tournament(slug="import-test")
         self.t.save()
-        logger = logging.getLogger(__name__)
-        logger.setLevel(logging.INFO)
-        self.importer = AnorakTournamentDataImporter(self.t, logger=logger)
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.INFO)
+        self.importer = AnorakTournamentDataImporter(self.t, logger=self.logger)
 
     def _open_csv_file(self, dir, filename):
         path = os.path.join(dir, filename + ".csv")
@@ -114,10 +114,11 @@ class TestImporterAnorak(TestCase):
     def test_invalid_line(self):
         self.test_speakers()
         f = self._open_csv_file(self.TESTDIR_ERRORS, "judges_invalid_line")
-        with self.assertRaises(TournamentDataImporterError) as cm:
+        with self.assertRaises(TournamentDataImporterError) as raisescm, self.assertLogs(self.logger, logging.ERROR) as logscm:
             counts, errors = self.importer.import_adjudicators(f)
-        self.assertEqual(len(cm.exception), 10)
-        self.assertCountEqual([e.lineno for e in cm.exception.entries], (2, 5, 9, 10, 15, 16, 23, 24, 26, 28))
+        self.assertEqual(len(raisescm.exception), 10)
+        self.assertCountEqual([e.lineno for e in raisescm.exception.entries], (2, 5, 9, 10, 15, 16, 23, 24, 26, 28))
+        self.assertEqual(len(logscm.records), 10)
 
     def test_weird_choices_judges(self):
         self.test_speakers()
@@ -133,12 +134,18 @@ class TestImporterAnorak(TestCase):
 
     def test_blank_entry_strict(self):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "venues")
-        self.assertRaises(TournamentDataImporterError, self.importer.import_venues, f)
+        with self.assertRaises(TournamentDataImporterError) as raisescm, self.assertLogs(self.logger, logging.ERROR) as logscm:
+            self.importer.import_venues(f)
+        self.assertEqual(len(raisescm.exception), 3)
+        self.assertCountEqual([e.lineno for e in raisescm.exception.entries], (9, 17, 21))
+        self.assertEqual(len(logscm.records), 3)
 
     def test_blank_entry_not_strict(self):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "venues")
         self.importer.strict = False
-        counts, errors = self.importer.import_venues(f)
+        with self.assertLogs(self.logger, logging.WARNING) as logscm:
+            counts, errors = self.importer.import_venues(f)
         self.assertEqual(counts, {vm.Venue: 20, vm.VenueGroup: 7})
         self.assertEqual(len(errors), 3)
+        self.assertEqual(len(logscm.records), 3)
         self.importer.strict = True
