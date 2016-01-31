@@ -7,6 +7,7 @@ import motions.models as mm
 import options.models as cm
 import participants.models as pm
 import tournaments.models as tm
+import tournaments.utils
 import venues.models as vm
 import csv
 
@@ -441,14 +442,5 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         rest are all power-paired. The last one is silent. This is intended as a
         convenience function. For anything more complicated, the user should use
         import_rounds() instead."""
-        for i in range(1, num_rounds+1):
-            tm.Round(
-                tournament=self.tournament,
-                seq=i,
-                name='Round %d' % i,
-                abbreviation='R%d' % i,
-                draw_type=tm.Round.DRAW_RANDOM if (i == 1) else tm.Round.DRAW_POWERPAIRED,
-                feedback_weight=min((i-1)*0.1, 0.5),
-                silent=(i == num_rounds),
-            ).save()
+        tournaments.utils.auto_make_rounds(self.tournament, num_rounds)
         self.logger.info("Auto-made %d rounds", num_rounds)

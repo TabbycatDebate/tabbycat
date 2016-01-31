@@ -11,6 +11,7 @@ import django.contrib.messages as messages
 
 from utils.views import *
 from .models import Tournament, Division
+from .forms import TournamentForm
 from utils.forms import SuperuserCreationForm
 from participants.models import Team, Institution
 from draw.models import Debate, DebateTeam
@@ -47,7 +48,7 @@ def tournament_home(request, t):
     # This should never happen, but if it does, fail semi-gracefully
     if round is None:
         if request.user.is_superuser:
-            return HttpResponseBadRequest("You need to set the current round. <a href=\"/admin/debate/tournament\">Go to Django admin.</a>")
+            return HttpResponseBadRequest("You need to set the current round. <a href=\"/admin/tournaments/tournament\">Go to Django admin.</a>")
         else:
             raise Http404()
 
@@ -213,5 +214,5 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""
 
     model = Tournament
-    fields = ['name', 'short_name', 'slug']
+    form_class = TournamentForm
     template_name = "create_tournament.html"
