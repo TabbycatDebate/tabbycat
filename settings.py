@@ -137,16 +137,6 @@ STATICFILES_DIRS    = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'static_precompiler.finders.StaticPrecompilerFinder',
-
-)
-
-STATIC_PRECOMPILER_COMPILERS = (
-    ('static_precompiler.compilers.libsass.SCSS',
-        {
-            "sourcemap_enabled": False,
-        }
-    ),
 )
 
 # Needs to be off for admin to work
