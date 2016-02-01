@@ -67,7 +67,6 @@ INSTALLED_APPS = (
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'static_precompiler',
     'django_extensions' # For Secret Generation Command
     )
 
