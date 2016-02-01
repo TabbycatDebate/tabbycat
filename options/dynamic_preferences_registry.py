@@ -85,7 +85,7 @@ class ChairingScore(FloatPreference):
 @tournament_preferences_registry.register
 class VotingScore(FloatPreference):
     help_text = "Minimum adjudicator score required to chair in auto-allocation"
-    verbose_name = 'Maximum Chairing Score'
+    verbose_name = 'Minimum Chairing Score'
     section = draw_rules
     name = 'adj_chair_min_score'
     default = 0.0
@@ -707,5 +707,3 @@ class DuplicateAdjs(BooleanPreference):
     section = league_options
     name = "duplicate_adjs"
     default = False
-
-
