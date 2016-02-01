@@ -9,10 +9,11 @@ MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
 # = Overwritten in Local =
 # ========================
 
-ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com'),
+ADMINS              = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS            = ADMINS
 DEBUG               = False
 DEBUG_ASSETS        = DEBUG
+LIVE_RELOAD         = False
 
 # ===================
 # = Global Settings =
