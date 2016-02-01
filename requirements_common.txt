@@ -1,6 +1,6 @@
 # This file contains the necessary dependencies for a local install
 
-Django==1.9.1
+Django==1.9.2
 dj-cmd==0.5 # Provides the dj command alias
 django-appconf==1.0.1 # Adds helper class for handling app configs
 django-dynamic-preferences==0.7.0
