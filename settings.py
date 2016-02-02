@@ -9,10 +9,11 @@ MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
 # = Overwritten in Local =
 # ========================
 
-ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com'),
+ADMINS              = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS            = ADMINS
 DEBUG               = False
 DEBUG_ASSETS        = DEBUG
+LIVE_RELOAD         = False
 
 # ===================
 # = Global Settings =
@@ -25,6 +26,10 @@ TIME_ZONE           = 'Australia/Melbourne'
 LANGUAGE_CODE       = 'en-us'
 USE_I18N            = True
 TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
+
+TABBYCAT_VERSION    = '0.8.0'
+TABBYCAT_CODENAME   = 'Bengal'
+READTHEDOCS_VERSION = 'latest'
 
 # ===========================
 # = Django-specific Modules =
@@ -67,7 +72,6 @@ INSTALLED_APPS = (
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'static_precompiler',
     'django_extensions' # For Secret Generation Command
     )
 
@@ -137,16 +141,6 @@ STATICFILES_DIRS    = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'static_precompiler.finders.StaticPrecompilerFinder',
-
-)
-
-STATIC_PRECOMPILER_COMPILERS = (
-    ('static_precompiler.compilers.libsass.SCSS',
-        {
-            "sourcemap_enabled": False,
-        }
-    ),
 )
 
 # Needs to be off for admin to work
@@ -180,6 +174,7 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'standard',
         },
         'mail_admins': {
             # Any log item marked ERROR or higher will be sent to admins
@@ -200,6 +195,12 @@ LOGGING = {
             'propagate': True,
         },
     },
+    'formatters': {
+        'standard': {
+            'format': '[%(asctime)s] %(levelname)s %(name)s: %(message)s',
+            'datefmt': '%d/%b/%Y %H:%M:%S'
+        },
+    },
 }
 
 for app in TABBYCAT_APPS:
@@ -213,10 +214,7 @@ for app in TABBYCAT_APPS:
 # = Heroku =
 # ==========
 
-if os.environ.get('DJANGO_SECRET_KEY', ''):
-    SECRET_KEY          = os.environ['DJANGO_SECRET_KEY']
-else:
-    SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc')
 
 # Parse database configuration from $DATABASE_URL
 try:

@@ -8,7 +8,7 @@
 {% block content %}
 
 <div class="alert alert-info alert-dismissable" id="">
-  <p>As per the tournament's configuration, an adjudicator's rating must be between {{ pref.score_min }} and {{ pref.score_max }}.</p>
+  <p>As per the tournament's configuration, an adjudicator's rating must be between {{ pref.adj_min_score }} and {{ pref.adj_max_score }}.</p>
 </div>
 
 <form id="addAdjudicators" action="{% tournament_url confirm_adjudicators %}" method="POST">
@@ -43,7 +43,7 @@
               Rating
             </label>
             <div class="col-sm-10">
-              <input class="form-control" type="number" min="{{ pref.score_min }}" max="{{ pref.score_max}}" step=0.5 value=2.5 name="{{ key }}_{{ adjudicator }}_Rating" />
+              <input class="form-control" type="number" min="{{ pref.adj_min_score }}" max="{{ pref.adj_max_score }}" step="0.5" value="{{ score_avg }}" name="{{ key }}_{{ adjudicator }}_Rating" />
             </div>
           </div>
 

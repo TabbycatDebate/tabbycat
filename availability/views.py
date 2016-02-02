@@ -47,7 +47,7 @@ def availability_index(request, round):
         min_adjudicators = 0
         min_venues = 0
 
-    return r2r(request, 'availability_index.html', dict(
+    return render(request, 'availability_index.html', dict(
         checkin_types=checks, can_advance=can_advance,
         min_adjudicators=min_adjudicators, min_venues=min_venues))
 
@@ -92,7 +92,7 @@ def checkin(request, round):
         except (ValueError, Person.DoesNotExist):
             context['unknown_id'] = v
 
-    return r2r(request, 'person_checkin.html', context)
+    return render(request, 'person_checkin.html', context)
 
 # public (for barcode checkins)
 # public

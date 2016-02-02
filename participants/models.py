@@ -64,7 +64,7 @@ class Person(models.Model):
     barcode_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=40, blank=True, null=True)
-    novice = models.BooleanField(default=False)
+    novice = models.BooleanField(default=False, help_text="Novice status is indicated on the tab, and may have its own Break Category or Top Speakers Tab")
 
     checkin_message = models.TextField(blank=True)
     notes = models.TextField(blank=True, null=True)
@@ -77,8 +77,8 @@ class Person(models.Model):
         (GENDER_FEMALE,   'Female'),
         (GENDER_OTHER,    'Other'),
     )
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
-    pronoun = models.CharField(max_length=10, blank=True, null=True)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True, help_text="Gender is displayed in the adjudicator allocation interface, and nowhere else")
+    pronoun = models.CharField(max_length=10, blank=True, null=True, help_text="If printing ballots using Tabbycat there is the option to pre-print pronouns")
 
     @property
     def has_contact(self):

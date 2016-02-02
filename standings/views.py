@@ -187,8 +187,7 @@ def team_standings(request, round):
 
     metrics = relevant_team_standings_metrics(round.tournament)
 
-    return r2r(request,
-               'teams.html',
+    return render(request, 'teams.html', dict(teams=teams, rounds=rounds,
                dict(teams=teams,
                     rounds=rounds,
                     show_ballots=False,
@@ -223,7 +222,7 @@ def division_standings(request, round):
             except ZeroDivisionError:
                 team.avg_margin = None
 
-    return r2r(request, 'divisions.html', dict(teams=teams))
+    return render(request, 'divisions.html', dict(teams=teams))
 
 
 @admin_required
@@ -231,9 +230,7 @@ def division_standings(request, round):
 def speaker_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
-    return r2r(request,
-               'speakers.html',
-               dict(speakers=speakers,
+    return render(request, 'speakers.html', dict(speakers=speakers,
                     rounds=rounds))
 
 
@@ -242,7 +239,8 @@ def speaker_standings(request, round):
 def novice_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, only_novices=True)
-    return r2r(request, "novices.html", dict(speakers=speakers, rounds=rounds))
+    return render(request, "novices.html", dict(speakers=speakers,
+                                        rounds=rounds))
 
 
 @admin_required
@@ -250,8 +248,8 @@ def novice_standings(request, round):
 def reply_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, for_replies=True)
-    return r2r(request, 'replies.html', dict(speakers=speakers, rounds=rounds))
-
+    return render(request, 'replies.html', dict(speakers=speakers,
+                                        rounds=rounds))
 
 @admin_required
 @round_view
@@ -259,7 +257,7 @@ def motion_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     motions = list()
     motions = Motion.objects.statistics(round=round)
-    return r2r(request, 'motions.html', dict(motions=motions))
+    return render(request, 'motions.html', dict(motions=motions))
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -269,11 +267,9 @@ def public_speaker_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
-    return r2r(request,
-               'public_speaker_tab.html',
-               dict(speakers=speakers,
-                    rounds=rounds,
-                    round=round))
+    return render(request, 'public_speaker_tab.html', dict(speakers=speakers,
+            rounds=rounds, round=round))
+
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -282,11 +278,8 @@ def public_novices_tab(request, t):
     round = t.current_round
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, only_novices=True)
-    return r2r(request,
-               'public_novices_tab.html',
-               dict(speakers=speakers,
-                    rounds=rounds,
-                    round=round))
+    return render(request, 'public_novices_tab.html', dict(speakers=speakers,
+            rounds=rounds, round=round))
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -295,11 +288,8 @@ def public_replies_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, for_replies=True)
-    return r2r(request,
-               'public_reply_tab.html',
-               dict(speakers=speakers,
-                    rounds=rounds,
-                    round=round))
+    return render(request, 'public_reply_tab.html', dict(speakers=speakers,
+            rounds=rounds, round=round))
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -333,11 +323,7 @@ def public_team_tab(request, t):
     show_ballots = round.tournament.pref('ballots_released')
     metrics = relevant_team_standings_metrics(round.tournament)
 
-    return r2r(request,
-               'public_team_tab.html',
-               dict(teams=teams,
-                    rounds=rounds,
-                    round=round,
+    return render(request, 'public_team_tab.html', dict(teams=teams,
                     show_ballots=show_ballots,
                     metrics=metrics))
 
@@ -350,7 +336,7 @@ def public_motions_tab(request, t):
     print(rounds)
     motions = list()
     motions = Motion.objects.statistics(round=round)
-    return r2r(request, 'public_motions_tab.html', dict(motions=motions))
+    return render(request, 'public_motions_tab.html', dict(motions=motions))
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -399,10 +385,7 @@ def public_team_standings(request, t):
             team.wins = [ts.win for ts in team.round_results if ts].count(True)
             team.points = sum([ts.points for ts in team.round_results if ts])
 
-        return r2r(request,
-                   'public_team_standings.html',
-                   dict(teams=teams,
-                        rounds=rounds,
-                        round=round))
+
+        return render(request, 'public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
     else:
-        return r2r(request, 'index.html')
+        return render(request, 'index.html')

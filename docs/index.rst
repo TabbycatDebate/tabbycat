@@ -41,12 +41,14 @@ tournaments.
    :maxdepth: 1
    :caption: Feature notes
 
+   features/printing
    features/data-entry
    features/draw-generation
    features/team-standings-rules
    features/data-importers
    features/user-accounts
    features/adjudicator-feedback
+   features/adjudicator-allocation
 
 .. _about-docs:
 

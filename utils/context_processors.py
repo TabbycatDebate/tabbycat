@@ -9,6 +9,8 @@ def debate_context(request):
             'tournament': request.tournament,
             'pref': request.tournament.preferences.by_name(),
             'current_round': request.tournament.get_current_round_cached,
+            'tabbycat_version': settings.TABBYCAT_VERSION,
+            'tabbycat_codename': settings.TABBYCAT_CODENAME,
         }
         if hasattr(request, 'round'):
             d['round'] = request.round

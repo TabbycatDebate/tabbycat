@@ -15,14 +15,14 @@ import datetime
 @admin_required
 @tournament_view
 def draw_index(request, t):
-    return r2r(request, 'draw_index.html')
+    return render(request, 'draw_index.html')
 
 
 @admin_required
 @round_view
 def draw_display_by_venue(request, round):
     draw = round.get_draw()
-    return r2r(request,
+    return render(request,
                "draw_display_by_venue.html",
                dict(round=round,
                     draw=draw))
@@ -32,7 +32,7 @@ def draw_display_by_venue(request, round):
 @round_view
 def draw_display_by_team(request, round):
     draw = round.get_draw()
-    return r2r(request, "draw_display_by_team.html", dict(draw=draw))
+    return render(request, "draw_display_by_team.html", dict(draw=draw))
 
 # Creating Draw
 
@@ -56,12 +56,12 @@ def draw(request, round):
     else:
         if round.draw_status == round.STATUS_RELEASED:
             draw = round.get_draw()
-            return r2r(request,
+            return render(request,
                        "public_draw_released.html",
                        dict(draw=draw,
                             round=round))
         else:
-            return r2r(request,
+            return render(request,
                        'public_draw_unreleased.html',
                        dict(draw=None,
                             round=round))
@@ -75,13 +75,32 @@ def assistant_draw(request, round):
 
 
 def draw_none(request, round):
-    return r2r(request, "draw_none.html", dict())
+    all_teams_count = Team.objects.filter(tournament=round.tournament).count()
+    active_teams = round.active_teams.all()
+    active_venues_count = round.active_venues.count()
+    active_adjs = round.active_adjudicators.count()
+    rooms = float(active_teams.count()) // 2
+    if round.prev:
+        previous_unconfirmed = round.prev.get_draw().filter(
+            result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
+    else:
+        previous_unconfirmed = 0
+
+    return render(request,
+               "draw_none.html",
+               dict(active_teams=active_teams,
+                    active_venues_count=active_venues_count,
+                    active_adjs=active_adjs,
+                    rooms=rooms,
+                    round=round,
+                    previous_unconfirmed=previous_unconfirmed,
+                    all_teams_count=all_teams_count))
 
 
 def draw_draft(request, round):
     draw = round.get_draw_with_standings(round)
     metrics = relevant_team_standings_metrics(round.tournament)
-    return r2r(request, "draw_draft.html", dict(draw=draw, metrics=metrics))
+    return render(request, "draw_draft.html", dict(draw=draw, metrics=metrics))
 
 
 def draw_confirmed(request, round):
@@ -89,7 +108,7 @@ def draw_confirmed(request, round):
     rooms = float(round.active_teams.count()) // 2
     active_adjs = round.active_adjudicators.all()
 
-    return r2r(request,
+    return render(request,
                "draw_confirmed.html",
                dict(draw=draw,
                     active_adjs=active_adjs,
@@ -101,7 +120,7 @@ def draw_confirmed(request, round):
 def draw_with_standings(request, round):
     draw = round.get_draw_with_standings(round)
     metrics = relevant_team_standings_metrics(round.tournament)
-    return r2r(request,
+    return render(request,
                "draw_with_standings.html",
                dict(draw=draw,
                     metrics=metrics))
@@ -112,6 +131,18 @@ def draw_with_standings(request, round):
 @round_view
 def create_draw(request, round):
     round.draw()
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
+                               user=request.user,
+                               round=round,
+                               tournament=round.tournament)
+    return redirect_round('draw', round)
+
+
+@admin_required
+@expect_post
+@round_view
+def create_with_all(request, round):
+    round.draw(override_team_checkins=True)
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
                                user=request.user,
                                round=round,
@@ -188,7 +219,7 @@ def side_allocations(request, t):
     for team in teams:
         team.side_allocations = [tpas.get(
             (team.id, round.id), "-") for round in rounds]
-    return r2r(request,
+    return render(request,
                "side_allocations.html",
                dict(teams=teams,
                     rounds=rounds))
@@ -226,7 +257,7 @@ def draw_matchups_edit(request, round):
     unused_teams = round.unused_teams()
     possible_debates = len(unused_teams) // 2 + 1  # The blank rows to add
     possible_debates = [None] * possible_debates
-    return r2r(request,
+    return render(request,
                "draw_matchups_edit.html",
                dict(draw=draw,
                     possible_debates=possible_debates,
@@ -301,7 +332,7 @@ def save_matchups(request, round):
 def draw_venues_edit(request, round):
 
     draw = round.get_draw()
-    return r2r(request, "draw_venues_edit.html", dict(draw=draw))
+    return render(request, "draw_venues_edit.html", dict(draw=draw))
 
 
 @admin_required
@@ -343,12 +374,12 @@ def public_draw(request, t):
     r = t.current_round
     if r.draw_status == r.STATUS_RELEASED:
         draw = r.get_draw()
-        return r2r(request,
+        return render(request,
                    "public_draw_released.html",
                    dict(draw=draw,
                         round=r))
     else:
-        return r2r(request,
+        return render(request,
                    'public_draw_unreleased.html',
                    dict(draw=None,
                         round=r))
@@ -359,12 +390,12 @@ def public_draw(request, t):
 def public_draw_by_round(request, round):
     if round.draw_status == round.STATUS_RELEASED:
         draw = round.get_draw()
-        return r2r(request,
+        return render(request,
                    "public_draw_released.html",
                    dict(draw=draw,
                         round=round))
     else:
-        return r2r(request,
+        return render(request,
                    'public_draw_unreleased.html',
                    dict(draw=None,
                         round=round))
@@ -377,7 +408,7 @@ def public_all_draws(request, t):
     for r in all_rounds:
         r.draw = r.get_draw()
 
-    return r2r(request,
+    return render(request,
                'public_draw_display_all.html',
                dict(all_rounds=all_rounds))
 
@@ -398,7 +429,7 @@ def public_side_allocations(request, t):
     for team in teams:
         team.side_allocations = [tpas.get(
             (team.id, round.id), "-") for round in rounds]
-    return r2r(request,
+    return render(request,
                "public_side_allocations.html",
                dict(teams=teams,
                     rounds=rounds))
@@ -410,7 +441,7 @@ def public_side_allocations(request, t):
 @round_view
 def master_sheets_list(request, round):
     venue_groups = VenueGroup.objects.all()
-    return r2r(request,
+    return render(request,
                'master_sheets_list.html',
                dict(venue_groups=venue_groups))
 
@@ -434,7 +465,7 @@ def master_sheets_view(request, round, venue_group_id):
             ).order_by('round', 'division__venue_group__short_name',
                        'division')
 
-    return r2r(request,
+    return render(request,
                'master_sheets_view.html',
                dict(base_venue_group=base_venue_group,
                     active_tournaments=active_tournaments))
@@ -456,7 +487,7 @@ def draw_print_feedback(request, round):
                 int(question.min_value), int(question.max_value + 1), int(
                     step)))
 
-    return r2r(request,
+    return render(request,
                "printing/feedback_list.html",
                dict(draw=draw,
                     preferences=preferences,
@@ -470,7 +501,7 @@ def draw_print_scoresheets(request, round):
     preferences = round.tournament.preferences
     motions = Motion.objects.filter(round=round)
 
-    return r2r(request,
+    return render(request,
                "printing/scoresheet_list.html",
                dict(draw=draw,
                     preferences=preferences,

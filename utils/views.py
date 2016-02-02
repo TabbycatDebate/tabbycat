@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.conf import settings
 from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.template import RequestContext
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.cache import cache_page
 
 from ipware.ip import get_real_ip
@@ -18,6 +19,11 @@ def get_ip_address(request):
 
 def admin_required(view_fn):
     return user_passes_test(lambda u: u.is_superuser)(view_fn)
+
+class SuperuserRequiredMixin(UserPassesTestMixin):
+    """Class-based view mixin, requires user to be a superuser."""
+    def test_func(self):
+        return self.request.user.is_superuser
 
 def tournament_view(view_fn):
     @wraps(view_fn)
@@ -36,7 +42,7 @@ def public_optional_tournament_view(preferences_option):
             if tournament.pref(preferences_option):
                 return view_fn(request, tournament, *args, **kwargs)
             else:
-                return redirect_tournament('public_index', tournament)
+                return redirect_tournament('tournament-public-index', tournament)
         return foo
     return bar
 
@@ -59,7 +65,7 @@ def public_optional_round_view(preference_option):
             if round.tournament.pref(preference_option):
                 return view_fn(request, round, *args, **kwargs)
             else:
-                return redirect_tournament('public_index', round.tournament)
+                return redirect_tournament('tournament-public-index', round.tournament)
         return foo
     return bar
 
@@ -70,12 +76,6 @@ def expect_post(view_fn):
             return HttpResponseBadRequest("Expected POST")
         return view_fn(request, *args, **kwargs)
     return foo
-
-def r2r(request, template, extra_context=None):
-    rc = RequestContext(request)
-    if extra_context:
-        rc.update(extra_context)
-    return render_to_response(template, context_instance=rc)
 
 def relevant_team_standings_metrics(tournament):
     rule = tournament.pref('team_standings_rule')
