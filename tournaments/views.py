@@ -52,18 +52,23 @@ def tournament_home(request, t):
         else:
             raise Http404()
 
-    rounds = t.prelim_rounds(until=round).order_by('seq')
+    context = {}
+
+    context["round"] = t.prelim_rounds(until=round).order_by('seq')
+    context["readthedocs_version"] = settings.READTHEDOCS_VERSION
+
+    # If the tournament is blank, display a message on the page
+    context["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
 
     # Draw Status
     draw = round.get_draw()
-    total_ballots = draw.count()
+    context["total_ballots"] = draw.count()
     stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
     stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
     stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
-    stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
+    context["stats"] = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
-    return render(request, 'tournament_home.html', dict(stats=stats,
-        total_ballots=total_ballots, round=round))
+    return render(request, 'tournament_home.html', context)
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')

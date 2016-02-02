@@ -27,6 +27,8 @@ LANGUAGE_CODE       = 'en-us'
 USE_I18N            = True
 TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
 
+READTHEDOCS_VERSION = 'latest'
+
 # ===========================
 # = Django-specific Modules =
 # ===========================
