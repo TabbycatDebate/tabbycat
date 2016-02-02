@@ -272,8 +272,6 @@ def edit_adjudicators(request, t):
 
     context = {
         'institutions'      : institutions,
-        'score_min'         : t.pref('adj_min_score'),
-        'score_max'         : t.pref('adj_max_score'),
         'score_avg'         : round((t.pref('adj_max_score') + t.pref('adj_min_score')) / 2, 1),
     }
     return render(request, 'edit_adjudicators.html', context)
