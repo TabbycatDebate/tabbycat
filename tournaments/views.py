@@ -54,7 +54,7 @@ def tournament_home(request, t):
 
     context = {}
 
-    context["round"] = t.prelim_rounds(until=round).order_by('seq')
+    context["round"] = round
     context["readthedocs_version"] = settings.READTHEDOCS_VERSION
 
     # If the tournament is blank, display a message on the page
