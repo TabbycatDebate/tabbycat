@@ -188,10 +188,7 @@ def team_standings(request, round):
     metrics = relevant_team_standings_metrics(round.tournament)
 
     return render(request, 'teams.html', dict(teams=teams, rounds=rounds,
-               dict(teams=teams,
-                    rounds=rounds,
-                    show_ballots=False,
-                    metrics=metrics))
+                  show_ballots=False, metrics=metrics))
 
 
 @admin_required
