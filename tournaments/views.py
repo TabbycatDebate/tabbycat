@@ -34,7 +34,7 @@ def index(request):
             logger.info('Redirecting to tournament-public-index')
             return redirect_tournament('tournament-public-index', tournaments.first())
 
-    elif not tournaments.exists() and not User.objects.all().exists():
+    elif not tournaments.exists() and not User.objects.exists():
         logger.info('No users and no tournaments, redirecting to blank-site-start')
         return redirect('blank-site-start')
 
@@ -190,7 +190,7 @@ class BlankSiteStartView(View):
     lock = Lock()
 
     def get(self, request):
-        if User.objects.all().exists():
+        if User.objects.exists():
             logger.error("Tried to get the blank-site-start view when a user account already exists.")
             return redirect('tabbycat-index')
 
@@ -200,7 +200,7 @@ class BlankSiteStartView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         with self.lock:
-            if User.objects.all().exists():
+            if User.objects.exists():
                 logger.error("Tried to post the blank-site-start view when a user account already exists.")
                 messages.error("Whoops! It looks like someone's already created the first user account. Please log in.")
                 return redirect('login')
