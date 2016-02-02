@@ -38,6 +38,7 @@ INSTALLED_APPS += (
 # files aren't found (and static files can't 100% copy admin dependencies)
 # remove this if we ever switch to running waitress locally only
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+SASS_OUTPUT_STYLE = 'expanded'
 
 # ===========
 # = Caching =

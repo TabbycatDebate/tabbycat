@@ -144,7 +144,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-SASS_OUTPUT_STYLE = 'compact'
+SASS_OUTPUT_STYLE = 'compressed'
 SASS_PROCESSOR_ENABLED = True
 # Needs to be off for admin to work
 # STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
