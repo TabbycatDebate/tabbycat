@@ -12,3 +12,5 @@ psycopg2==2.6.1 # For Django to talk to postgres
 six==1.10.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.1.18
 whitenoise==2.0.6 # Static file serving on heroku
+django-sass-processor==0.3.0 # SCCS compilation
+libsass==0.10.1 # SCCS compilation
