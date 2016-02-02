@@ -217,8 +217,6 @@ class Round(models.Model):
     break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True, help_text="If elimination round, which break category")
 
     draw_status        = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE, help_text="The status of this round's draw")
-    venue_status       = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    adjudicator_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
 
     checkins = models.ManyToManyField('participants.Person', through='availability.Checkin', related_name='checkedin_rounds')
 
