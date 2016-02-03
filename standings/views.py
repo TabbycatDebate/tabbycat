@@ -25,12 +25,13 @@ def standings_index(request, round):
         ballot_submission__confirmed=True, margin__gte=0).select_related(
             'debate_team__team', 'debate_team__debate__round',
             'debate_team__team__institution').order_by('margin')[:10]
-    top_motions = BallotSubmission.objects.values('motion').filter(
-    confirmed=True).annotate(motion_count=Count('motion')).order_by('-motion_count')[:10]
-    bottom_motions = BallotSubmission.objects.values('motion').filter(
-    confirmed=True).annotate(motion_count=Count('motion')).order_by('motion_count')[:10]
 
-    return r2r(request,
+    top_motions = Motion.objects.filter(round__seq=round.seq).annotate(
+        Count('ballotsubmission')).order_by('-ballotsubmission__count')[:10]
+    bottom_motions = Motion.objects.filter(round__seq=round.seq).annotate(
+        Count('ballotsubmission')).order_by('ballotsubmission__count')[:10]
+
+    return render(request,
                'standings_index.html',
                dict(top_margins=top_margins,
                     top_speaks=top_speaks,
