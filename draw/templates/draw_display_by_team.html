@@ -2,7 +2,6 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block body-class %}draw-public-display{% endblock %}
 {% block head-title %}
   Draw for {{ round.name }}
   {% if round.starts_at %}
@@ -10,7 +9,7 @@
   {% endif %}
 {% endblock %}
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block header %}
   <div class="btn-group hidden-xs">

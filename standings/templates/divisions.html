@@ -6,8 +6,7 @@
 {% block head-title %}Division Standings{% endblock %}
 {% block sub-title %}after {{ round.name }}{% endblock %}
 
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}team-standings{% endblock %}
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}
   <table id="dataTable" class="team-tab table table-hover" cellspacing="0" cellpadding="0">

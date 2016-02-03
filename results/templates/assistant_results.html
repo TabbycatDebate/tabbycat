@@ -3,8 +3,7 @@
 
 {% block head-title %}Enter Results for {{ current_round.name }}{% endblock %}
 {% block page-title %}Enter Results for {{ current_round.name }}{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}assistant-enter-result{% endblock %}
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block edit-link %}Check{% endblock %}
 

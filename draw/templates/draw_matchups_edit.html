@@ -4,10 +4,9 @@
 
 {% block nav %}{% endblock %}
 
-{% block body-class %}edit-matchups{% endblock %}
 {% block head-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
 {% block page-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
-{% block page-header %}
+{% block page-subnav-sections %}
   {% include "tables/table_search.html" %}
   <div id="" class="btn-group pull-left col-sm-1">
     <a class="btn btn-success form-control" href="" id="save">Save</a>

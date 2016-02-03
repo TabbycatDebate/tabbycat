@@ -9,7 +9,6 @@
 {% endblock %}
 
 {% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}{% endblock %}
-{% block body-class %}enter-result{% endblock %}
 {% block header %}
     {% include "other_ballots_list.html" %}
     {% if not new %}

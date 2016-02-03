@@ -1,7 +1,8 @@
 // Note these take precedences over bootstrap as they are not set as default
 // Custom Typography
 $font-family-sans-serif: "LatoLatinWeb", Helvetica, Arial, sans-serif;
-$headings-font-family: "LatoLatinWebBlack", serif;
+$headings-font-family: Helvetica, Arial, sans-serif;
+$headings-font-weight: bold;
 // Custom Colors
 $brand-primary: #3498DB;
 $brand-success: #43ca75;

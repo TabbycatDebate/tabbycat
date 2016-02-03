@@ -14,20 +14,6 @@
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
-@font-face {
-  font-family: 'LatoLatinWebBlack';
-  src: url(static("fonts/vendor/lato/LatoLatin-Black.eot"));
-  /* Modern Browsers */
-  /* IE6-IE8 */
-  /* IE9 Compat Modes */
-  src:  url(static("fonts/vendor/lato/LatoLatin-Black.eot?#iefix")) format('embedded-opentype'),
-        url(static("fonts/vendor/lato/LatoLatin-Black.woff2")) format('woff2'),
-        url(static("fonts/vendor/lato/LatoLatin-Black.woff")) format('woff'),
-        url(static("fonts/vendor/lato/LatoLatin-Black.ttf")) format('truetype');
-  font-style: normal;
-  font-weight: normal;
-  text-rendering: optimizeLegibility;
-}
 // UTILITIES
 .font-size-reset {
   font-size: $font-size-base;

@@ -24,7 +24,7 @@ def public_breaking_teams(request, t, category):
 @admin_required
 @tournament_view
 def breaking_index(request, t):
-    return r2r(request, 'breaking_index.html')
+    return render(request, 'breaking_index.html')
 
 @admin_required
 @tournament_view
