@@ -59,3 +59,16 @@ Tabbycat allows you to specify two questionnaires: team-on-orallist, and adjudic
 - **chair on panellist**, if checked, includes the question on *all* adjudicator-on-adjudicator forms.
 
 .. note:: The **panellist on panellist** and **panellist on chair** don't currently do anything, and **chair on panellist** is a misnomer, it actually means **adjudicator on adjudicator**. These are all there for future support.
+
+How is an adjudicator's score determined?
+=========================
+
+For the purpose of the automated allocation, an adjudicator's overall score is a function of their test score, the current round's feedback weight, and their average feedback score. This number is calculated as equal to:
+
+``Test Score x (1 - Current Round's Feedback Weight) + (Current Round's Feedback Weight * Average Feedback Score)``
+
+Under this formula, each round's feedback weight can be used to determine the relative influence of the test score vs  feedback in determining the overall score. As an example, say that an adjudicator received 5.0 as their test score, but their average feedback rating has thus far been 2.0. If the current rounds' feedback weight is set to 0.75, then their overall score would be 2.75. If the current round's feedback weight is set to 0.5 their score would be 3.5. If the weight was 0, their score will always be their test score; if the weight was 1 it will always be their average feedback value.
+
+It is common to set rounds with a low feedback weight value early on in the tournament (when feedback is scant) and to increase the feedback weight as the tournament progresses.
+
+.. note:: A participant's test score can, in conjunction with feedback weight, also be used as a manual override for an adjudicator's overall ranking. At several tournaments, adjudication cores have set every round's feedback weight to 0, and manually adjusted an adjudicator's test score in response to feedback they have received and reviewed. In this way complete control over every adjudicator's overall score can be exerted.

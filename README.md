@@ -4,6 +4,8 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was use
 
 Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.herokuapp.com/). It's normally up, but its form will vary from time to time as we set up new feature demos for people. If it's down and you'd like to see it, or if you want to play with it as if you were running a tournament, [contact us](#authors-and-contacts). To see a post-tournament website, have a look at the [Daejeon Australs 2015 tab website](http://tab.australasians2015.org).
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## Features
 
 - Enter data from multiple computers simultaneously

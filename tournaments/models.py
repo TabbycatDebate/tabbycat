@@ -14,12 +14,12 @@ class Tournament(models.Model):
     name = models.CharField(max_length=100, help_text="The full name used on the homepage, e.g. \"Australasian Intervarsity Debating Championships 2016\"")
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu, e.g. \"Australs 2016\"")
     emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST)
-    seq = models.IntegerField(blank=True, null=True, help_text="The order in which tournaments are displayed")
+    seq = models.IntegerField(blank=True, null=True, help_text="A number that determines the relative order in which tournaments are displayed on the homepage.")
     slug = models.SlugField(unique=True, help_text="The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\"")
     current_round = models.ForeignKey('Round', null=True, blank=True,
                                      related_name='tournament_', help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
-    welcome_msg = models.TextField(blank=True, null=True, default="", help_text="Text/html entered here shows on the homepage")
-    release_all = models.BooleanField(default=False, help_text="This releases all results; do so only after the tournament is finished")
+    welcome_msg = models.TextField(blank=True, null=True, default="", help_text="Text/html entered here shows on the homepage for this tournament")
+    release_all = models.BooleanField(default=False, help_text="This releases all results, including silent rounds; do so only after the tournament is finished!")
     active = models.BooleanField(default=True)
 
     @property
@@ -216,9 +216,7 @@ class Round(models.Model):
     stage          = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY, help_text="Preliminary = inrounds, elimination = outrounds")
     break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True, help_text="If elimination round, which break category")
 
-    draw_status        = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    venue_status       = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    adjudicator_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
+    draw_status        = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE, help_text="The status of this round's draw")
 
     checkins = models.ManyToManyField('participants.Person', through='availability.Checkin', related_name='checkedin_rounds')
 
@@ -226,9 +224,9 @@ class Round(models.Model):
     active_adjudicators = models.ManyToManyField('participants.Adjudicator', through='availability.ActiveAdjudicator')
     active_teams        = models.ManyToManyField('participants.Team', through='availability.ActiveTeam')
 
-    feedback_weight = models.FloatField(default=0)
-    silent = models.BooleanField(default=False)
-    motions_released = models.BooleanField(default=False)
+    feedback_weight = models.FloatField(default=0, help_text="The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback.")
+    silent = models.BooleanField(default=False, help_text="If marked silent, information about this round (such as it's results) will not be shown publicly.")
+    motions_released = models.BooleanField(default=False, help_text="Whether motions will appear on the public website, assuming that feature is turned on")
     starts_at = models.TimeField(blank=True, null=True)
 
     class Meta:
@@ -650,5 +648,3 @@ class SRManager(models.Manager):
     use_for_related_fields = True
     def get_queryset(self):
         return super(SRManager, self).get_queryset().select_related('debate')
-
-

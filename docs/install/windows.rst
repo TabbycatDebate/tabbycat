@@ -171,19 +171,13 @@ Almost there!
 
   ::
 
-    > dj runserver
+    > waitress-serve wsgi:application
 
   It should show something like this::
 
-    Performing system checks...
+    serving on http://0.0.0.0:8080
 
-    System check identified no issues (0 silenced).
-    August 17, 2015 - 22:24:43
-    Django version 1.8.2, using settings 'settings'
-    Starting development server at http://127.0.0.1:8000/
-    Quit the server with CTRL-BREAK.
-
-8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000/.) It should look something like this:
+8. Open your browser and go to the URL printed above. (In the above example, it's http://0.0.0.0:8080/.) It should look something like this:
 
   .. image:: images/tabbycat-bare-windows.png
 
@@ -198,4 +192,4 @@ To start your Tabbycat instance up again next time you use your computer, open a
 
     > Set-Location C:\Users\myusername\Documents\GitHub\tabbycat # or wherever your installation is
     > .\venv\Scripts\activate
-    > dj runserver
+    > waitress-serve wsgi:application

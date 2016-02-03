@@ -21,9 +21,10 @@ urlpatterns = [
     url(r'^$',                                  tournaments.views.index,      name='tabbycat-index'),
     url(r'^t/(?P<tournament_slug>[-\w_]+)/',    include('tournaments.urls')),
     url(r'^start/',                             tournaments.views.BlankSiteStartView.as_view(), name='blank-site-start'),
-    url(r'^create_tournament/',                 tournaments.views.CreateTournamentView.as_view(),  name='tournament-create'),
+    url(r'^tournament/create/',                 tournaments.views.CreateTournamentView.as_view(),  name='tournament-create'),
 
     # Admin area
+    url(r'^jet/dashboard/',                     include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
     url(r'^jet/',                               include('jet.urls', 'jet')),
     url(r'^admin/',                             include(admin.site.urls)),
 
@@ -40,12 +41,6 @@ if settings.DEBUG:
         # Only serve debug toolbar when on DEBUG
         url(r'^__debug__/',                     include(debug_toolbar.urls)),
     ]
-if hasattr(settings, "LOCAL_SETTINGS") and settings.DEBUG is False:
-        urlpatterns += [
-            url(r'^static/(?P<path>.*)$',           serve,
-            {'document_root': settings.STATIC_ROOT}),
-        ]
-
 
 # LOGOUT AND LOGIN Confirmations
 from django.contrib.auth.signals import user_logged_out, user_logged_in
@@ -58,4 +53,3 @@ def on_user_logged_out(sender, request, **kwargs):
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
     messages.success(request, 'Hi, ' + kwargs['user'].username +  ' — you just logged in!')
-

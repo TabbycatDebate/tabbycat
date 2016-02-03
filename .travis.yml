@@ -10,4 +10,4 @@ services:
 install:
   - pip install -r requirements_common.txt
 script:
-  - dj test
+  - dj test -v 2

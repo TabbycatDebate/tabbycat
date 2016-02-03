@@ -2,29 +2,32 @@ import sys
 import os
 import urllib.parse
 
-PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
-MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
+BASE_DIR            = os.path.dirname(os.path.abspath(__file__))
+MEDIA_ROOT          = (os.path.join(BASE_DIR, 'media'),)
 
 # ========================
 # = Overwritten in Local =
 # ========================
 
-ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com'),
+ADMINS              = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS            = ADMINS
 DEBUG               = False
 DEBUG_ASSETS        = DEBUG
+LIVE_RELOAD         = False
 
 # ===================
 # = Global Settings =
 # ===================
 
-ADMIN_MEDIA_PREFIX  = '/media/'
 MEDIA_URL           = '/media/'
-STATIC_URL          = '/static/'
 TIME_ZONE           = 'Australia/Melbourne'
 LANGUAGE_CODE       = 'en-us'
 USE_I18N            = True
 TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
+
+TABBYCAT_VERSION    = '0.8.0'
+TABBYCAT_CODENAME   = 'Bengal'
+READTHEDOCS_VERSION = 'latest'
 
 # ===========================
 # = Django-specific Modules =
@@ -67,9 +70,9 @@ INSTALLED_APPS = (
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'static_precompiler',
-    'django_extensions' # For Secret Generation Command
-    )
+    'django_extensions', # For Secret Generation Command
+    'compressor',
+)
 
 
 ROOT_URLCONF = 'urls'
@@ -82,7 +85,7 @@ LOGIN_REDIRECT_URL = '/'
 TEMPLATES = [
     {
         'BACKEND':      'django.template.backends.django.DjangoTemplates',
-        'DIRS':         [os.path.join(PROJECT_PATH, 'templates')],
+        'DIRS':         [os.path.join(BASE_DIR, 'templates')],
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
@@ -124,33 +127,37 @@ CACHES = {
 # Use the cache for sessions rather than the db
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-# =============
-# = Pipelines =
-# =============
+# ================
+# = Static Files =
+# ================
 
-STATIC_ROOT         = 'staticfiles'
+STATIC_ROOT         = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL          = '/static/'
-STATICFILES_DIRS    = (
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'),
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
 )
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'static_precompiler.finders.StaticPrecompilerFinder',
-
+    'compressor.finders.CompressorFinder',
 )
 
-STATIC_PRECOMPILER_COMPILERS = (
-    ('static_precompiler.compilers.libsass.SCSS',
-        {
-            "sourcemap_enabled": False,
-        }
-    ),
+# Whitenoise
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
+
+# =============
+# = Pipelines =
+# =============
+
+# Compression
+COMPRESS_ENABLED = True
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
 )
 
-# Needs to be off for admin to work
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
+LIBSASS_OUTPUT_STYLE = 'compressed'
 
 # ===========
 # = Logging =
