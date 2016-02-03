@@ -121,18 +121,13 @@ Almost there!
 
   ::
 
-    $ dj runserver
+    $ waitress-serve wsgi:application
 
   It should show something like this::
 
-    System check identified no issues (0 silenced).
+    serving on http://0.0.0.0:8080
 
-    January 17, 2016 - 10:12:11
-    Django version 1.9.1, using settings 'settings'
-    Starting development server at http://127.0.0.1:8000/
-    Quit the server with CONTROL-C.
-
-8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000/.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
+8. Open your browser and go to the URL printed above. (In the above example, it's http://0.0.0.0:8080/.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
   .. image:: images/tabbycat-bare-osx.png
       :alt: Bare Tabbycat installation
@@ -145,4 +140,4 @@ To start your Tabbycat instance up again next time you use your computer::
 
     $ cd path/to/my/tabbycat
     $ source venv/bin/activate
-    $ dj runserver
+    $ waitress-serve wsgi:application

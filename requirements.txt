@@ -11,9 +11,6 @@ dj-static==0.0.6
 pylibmc==1.5.0
 django-pylibmc==0.6.1
 
-# For web serving
-waitress==0.8.10
-
 # For monitoring
 newrelic
 
