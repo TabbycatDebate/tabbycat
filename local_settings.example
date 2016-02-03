@@ -34,7 +34,6 @@ INSTALLED_APPS += (
 # = Pipelines =
 # =============
 
-SASS_OUTPUT_STYLE = 'expanded' # Easier debugging
 
 # ===========
 # = Caching =

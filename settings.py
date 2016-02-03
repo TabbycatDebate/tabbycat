@@ -71,7 +71,7 @@ INSTALLED_APPS = (
     + TABBYCAT_APPS + (
     'dynamic_preferences',
     'django_extensions', # For Secret Generation Command
-    'sass_processor',
+    'pipeline',
 )
 
 
@@ -138,13 +138,12 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-STATICFILES_FINDERS = [
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder"
-]
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
 
-SASS_OUTPUT_STYLE = 'compressed'
-SASS_PROCESSOR_ENABLED = True
+# Whitenoise
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
 
 # ===========
