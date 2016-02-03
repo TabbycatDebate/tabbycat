@@ -134,7 +134,7 @@ class Command(BaseCommand):
             return _check_return(arg)
 
         # relative path, look in debate/data
-        base_path = os.path.join(settings.PROJECT_PATH, 'data')
+        base_path = os.path.join(settings.BASE_DIR, 'data')
         data_path = os.path.join(base_path, arg)
         return _check_return(data_path)
 

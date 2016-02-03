@@ -2,10 +2,8 @@ import sys
 import os
 import urllib.parse
 
-PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
-MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
 BASE_DIR            = os.path.dirname(os.path.abspath(__file__))
-
+MEDIA_ROOT          = (os.path.join(BASE_DIR, 'media'),)
 
 # ========================
 # = Overwritten in Local =
@@ -21,7 +19,6 @@ LIVE_RELOAD         = False
 # = Global Settings =
 # ===================
 
-ADMIN_MEDIA_PREFIX  = '/media/'
 MEDIA_URL           = '/media/'
 TIME_ZONE           = 'Australia/Melbourne'
 LANGUAGE_CODE       = 'en-us'
@@ -75,7 +72,7 @@ INSTALLED_APPS = (
     'dynamic_preferences',
     'django_extensions', # For Secret Generation Command
     'sass_processor',
-    )
+)
 
 
 ROOT_URLCONF = 'urls'
@@ -88,7 +85,7 @@ LOGIN_REDIRECT_URL = '/'
 TEMPLATES = [
     {
         'BACKEND':      'django.template.backends.django.DjangoTemplates',
-        'DIRS':         [os.path.join(PROJECT_PATH, 'templates')],
+        'DIRS':         [os.path.join(BASE_DIR, 'templates')],
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
@@ -134,17 +131,17 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 # = Pipelines =
 # =============
 
-STATIC_ROOT         = 'staticfiles'
+STATIC_ROOT         = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL          = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder"
+]
 
 SASS_OUTPUT_STYLE = 'compressed'
 SASS_PROCESSOR_ENABLED = True

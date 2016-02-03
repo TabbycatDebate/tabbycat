@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^tournament/create/',                 tournaments.views.CreateTournamentView.as_view(),  name='tournament-create'),
 
     # Admin area
+    url(r'^jet/dashboard/',                     include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
     url(r'^jet/',                               include('jet.urls', 'jet')),
     url(r'^admin/',                             include(admin.site.urls)),
 
