@@ -4,6 +4,8 @@ import urllib.parse
 
 PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
+BASE_DIR            = os.path.dirname(os.path.abspath(__file__))
+
 
 # ========================
 # = Overwritten in Local =
@@ -21,7 +23,6 @@ LIVE_RELOAD         = False
 
 ADMIN_MEDIA_PREFIX  = '/media/'
 MEDIA_URL           = '/media/'
-STATIC_URL          = '/static/'
 TIME_ZONE           = 'Australia/Melbourne'
 LANGUAGE_CODE       = 'en-us'
 USE_I18N            = True
@@ -134,9 +135,10 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 # =============
 
 STATIC_ROOT         = 'staticfiles'
-STATIC_URL          = '/assets/'
-STATICFILES_DIRS    = (
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'),
+STATIC_URL          = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
 )
 
 STATICFILES_FINDERS = (
