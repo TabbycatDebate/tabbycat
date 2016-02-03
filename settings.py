@@ -71,7 +71,7 @@ INSTALLED_APPS = (
     + TABBYCAT_APPS + (
     'dynamic_preferences',
     'django_extensions', # For Secret Generation Command
-    'pipeline',
+    'compressor',
 )
 
 
@@ -141,10 +141,17 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 # Whitenoise
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
+
+# Compression
+COMPRESS_ENABLED = True
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
 
 # ===========
 # = Logging =
