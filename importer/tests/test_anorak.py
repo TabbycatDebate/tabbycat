@@ -39,14 +39,14 @@ class TestImporterAnorak(TestCase):
     def test_break_categories(self):
         f = self._open_csv_file(self.TESTDIR, "break_categories")
         counts, errors = self.importer.import_break_categories(f)
-        self.assertEqual(counts, {bm.BreakCategory: 4})
+        self.assertEqual(counts, {bm.BreakCategory: 3})
         self.assertFalse(errors)
 
     def test_rounds(self):
         self.test_break_categories()
         f = self._open_csv_file(self.TESTDIR, "rounds")
         counts, errors = self.importer.import_rounds(f)
-        self.assertEqual(counts, {tm.Round: 12})
+        self.assertEqual(counts, {tm.Round: 10})
         self.assertFalse(errors)
 
     def test_auto_make_rounds(self):
