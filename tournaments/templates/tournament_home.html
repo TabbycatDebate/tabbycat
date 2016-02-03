@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load debate_tags %}
+{% load compress %}
 
 {% block page-title %}Dashboard{% endblock %}
 {% block head-title %}
@@ -54,6 +55,7 @@
 {% endblock content %}
 
 {% block extra-js %}
+{% compress js %}
 <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.min.js' %}"></script>
 <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.stack.min.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
@@ -163,4 +165,5 @@ $(document).ready( function() {
 });
 
 </script>
+{% endcompress %}
 {% endblock %}

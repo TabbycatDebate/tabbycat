@@ -4,6 +4,7 @@ staticfiles/
 .gitmodules/
 .sass-cache/
 __pycache__/
+static/css/style.css
 
 # Data to ignore
 data/*

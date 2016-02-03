@@ -5,8 +5,7 @@
 {% block head-title %}Who are you?{% endblock %}
 {% block sub-title %}(click your name or your team on this list){% endblock %}
 
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}public-add-feedback{% endblock %}
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block enter-feedback-adj-link %}
   <a href="{% tournament_url public_enter_feedback_adjudicator adj.id %}">

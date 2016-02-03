@@ -71,7 +71,7 @@ def update_availability_previous(request, round):
 def _availability(request, round, model, context_name):
     items = getattr(round, '%s_availability' % model)()
     context = { context_name: items }
-    return r2r(request, '%s_availability.html' % model, context)
+    return render(request, '%s_availability.html' % model, context)
 
 
 # public (for barcode checkins)

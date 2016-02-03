@@ -2,26 +2,16 @@
 // WEB FONTS
 @font-face {
   font-family: 'LatoLatinWeb';
-  src: url('../../fonts/vendor/lato/LatoLatin-Regular.eot');
+  src: url(static("fonts/vendor/lato/LatoLatin-Regular.eot"));
+  /* Modern Browsers */
+  /* IE6-IE8 */
   /* IE9 Compat Modes */
-  src:/* IE6-IE8 */
-  /* Modern Browsers */
-  /* Modern Browsers */
-  url('../../fonts/vendor/lato/LatoLatin-Regular.eot?#iefix') format('embedded-opentype'),url('../../fonts/vendor/lato/LatoLatin-Regular.woff2') format('woff2'),url('../../fonts/vendor/lato/LatoLatin-Regular.woff') format('woff'),url('../../fonts/vendor/lato/LatoLatin-Regular.ttf') format('truetype');
+  src:  url(static("fonts/vendor/lato/LatoLatin-Regular.eot?#iefix")) format('embedded-opentype'),
+        url(static("fonts/vendor/lato/LatoLatin-Regular.woff2")) format('woff2'),
+        url(static("fonts/vendor/lato/LatoLatin-Regular.woff")) format('woff'),
+        url(static("fonts/vendor/lato/LatoLatin-Regular.ttf")) format('truetype');
   font-weight: normal;
   font-style: normal;
-  text-rendering: optimizeLegibility;
-}
-@font-face {
-  font-family: 'LatoLatinWebBlack';
-  src: url('../../fonts/vendor/lato/LatoLatin-Black.eot');
-  /* IE9 Compat Modes */
-  src:/* IE6-IE8 */
-  /* Modern Browsers */
-  /* Modern Browsers */
-  url('../../fonts/vendor/lato/LatoLatin-Black.eot?#iefix') format('embedded-opentype'),url('../../fonts/vendor/lato/LatoLatin-Black.woff2') format('woff2'),url('../../fonts/vendor/lato/LatoLatin-Black.woff') format('woff'),url('../../fonts/vendor/lato/LatoLatin-Black.ttf') format('truetype');
-  font-style: normal;
-  font-weight: normal;
   text-rendering: optimizeLegibility;
 }
 // UTILITIES

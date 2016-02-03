@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 {% load static %}
+{% load compress %}
 
 {% block page-title %}Adjudicator Feedback Summary{% endblock %}
 {% block head-title %}
@@ -228,6 +229,7 @@
 {% endblock content %}
 
 {% block extra-js %}
+{% compress js %}
 <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.min.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
 
@@ -403,4 +405,5 @@
   });
 
 </script>
+{% endcompress %}
 {% endblock extra-js %}

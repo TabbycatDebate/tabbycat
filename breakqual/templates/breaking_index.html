@@ -2,19 +2,17 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}Breaks{% endblock %}
+{% block head-title %}<span class="emoji">👑</span>Breaks{% endblock %}
 {% block page-title %}{% endblock %}
 
-{% block pagesub-sections %}
-
+{% block page-subnav-sections %}
   {% for category in tournament.breakcategory_set.all %}
-    <li><a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">{{ category.name }}</a></li>
+    <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">{{ category.name }}</a>
   {% endfor %}
-  <li><a class="btn btn-default" href="{% tournament_url breaking_adjs %}">Adjudicators</a></li>
-
-  </ul>
+  <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">Adjudicators</a>
 {% endblock %}
-{% block pagesub-actions %}
+
+{% block page-subnav-actions %}
   <a class="btn btn-success" href="{% tournament_url edit_eligibility %}">Edit Eligibility</a></li>
 {% endblock %}
 

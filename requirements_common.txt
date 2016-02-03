@@ -11,4 +11,7 @@ django-jet==0.1.3 # Admin Backend
 psycopg2==2.6.1 # For Django to talk to postgres
 six==1.10.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.1.18
-whitenoise==2.0.6 # Static file serving on heroku
+whitenoise==2.0.6 # Static file serving
+waitress==0.8.10 # For web serving
+django-compressor==1.6 # Don't update else Windows compatability breaks
+django-libsass==0.6
