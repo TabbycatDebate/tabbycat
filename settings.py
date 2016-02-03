@@ -134,7 +134,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 # =============
 
 STATIC_ROOT         = 'staticfiles'
-STATIC_URL          = '/static/'
+STATIC_URL          = '/assets/'
 STATICFILES_DIRS    = (
     os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'),
 )
@@ -146,8 +146,7 @@ STATICFILES_FINDERS = (
 
 SASS_OUTPUT_STYLE = 'compressed'
 SASS_PROCESSOR_ENABLED = True
-# Needs to be off for admin to work
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
 
 # ===========
 # = Logging =

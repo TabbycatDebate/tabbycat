@@ -14,3 +14,4 @@ sqlparse==0.1.18
 whitenoise==2.0.6 # Static file serving on heroku
 django-sass-processor==0.3.0 # SCCS compilation
 libsass==0.10.1 # SCCS compilation
+waitress==0.8.10 # For web serving

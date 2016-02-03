@@ -40,12 +40,6 @@ if settings.DEBUG:
         # Only serve debug toolbar when on DEBUG
         url(r'^__debug__/',                     include(debug_toolbar.urls)),
     ]
-if hasattr(settings, "LOCAL_SETTINGS") and settings.DEBUG is False:
-        urlpatterns += [
-            url(r'^static/(?P<path>.*)$',           serve,
-            {'document_root': settings.STATIC_ROOT}),
-        ]
-
 
 # LOGOUT AND LOGIN Confirmations
 from django.contrib.auth.signals import user_logged_out, user_logged_in
@@ -58,4 +52,3 @@ def on_user_logged_out(sender, request, **kwargs):
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
     messages.success(request, 'Hi, ' + kwargs['user'].username +  ' — you just logged in!')
-
