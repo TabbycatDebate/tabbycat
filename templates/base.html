@@ -1,8 +1,4 @@
-{% load static %}
-{% load debate_tags %}
-{% load compress %}
-
-<!DOCTYPE html>
+{% load static %}{% load debate_tags %}{% load compress %}<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -89,6 +85,8 @@
 
   {% compress js %}
   <!-- Small dependencies and JS for all pages -->
+  <script src="{% static 'js/vendor/bootstrap-data-tables.js' %}"></script>
+  <script src="{% static 'js/vendor/fixed-header.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
   {% endcompress %}
 

@@ -127,9 +127,9 @@ CACHES = {
 # Use the cache for sessions rather than the db
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-# =============
-# = Pipelines =
-# =============
+# ================
+# = Static Files =
+# ================
 
 STATIC_ROOT         = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL          = '/static/'
@@ -147,11 +147,17 @@ STATICFILES_FINDERS = (
 # Whitenoise
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
 
+# =============
+# = Pipelines =
+# =============
+
 # Compression
 COMPRESS_ENABLED = True
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
 )
+
+LIBSASS_OUTPUT_STYLE = 'compressed'
 
 # ===========
 # = Logging =

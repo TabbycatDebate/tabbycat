@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load debate_tags %}
+{% load compress %}
 
 {% block head-title %}
   Dashboard <small>{{ round.name }} is {{ round.get_draw_status_display.lower }} (this page will refresh its data automatically)</small>
@@ -44,6 +45,7 @@
 {% endblock content %}
 
 {% block extra-js %}
+{% compress js %}
 <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.min.js' %}"></script>
 <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.stack.min.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
@@ -153,4 +155,5 @@ $(document).ready( function() {
 });
 
 </script>
+{% endcompress %}
 {% endblock %}
