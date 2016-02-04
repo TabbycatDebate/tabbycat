@@ -5,23 +5,21 @@
 {% block page-title %}Latest Feedback{% endblock %}
 
 {% block content %}
-
   <div class="row">
-  {% for feedback in feedbacks %}
+    <div class="col-md-12">
 
-    <div class="col-md-3">
+      {% for feedback in feedbacks %}
 
-      {% include 'feedback_card.html' %}
+        <div class="col-md-3">
+
+          {% include 'feedback_card.html' %}
+
+        </div>
+
+        {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
+
+      {% endfor %}
 
     </div>
-
-    {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
-
-  {% endfor %}
   </div>
-
 {% endblock content %}
-
-{% block extra-js %}
-
-{% endblock extra-js %}

@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}{% endblock %}
-{% block header %}
+{% block page-subnav-sections %}
     {% include "other_ballots_list.html" %}
     {% if not new %}
     <a class="btn btn-default" href="{% tournament_url new_ballotset debate.id %}">Create a new ballot set for this debate</a>
