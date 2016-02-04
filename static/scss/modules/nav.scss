@@ -13,6 +13,7 @@
   }
 }
 .nav-sidebar {
+  background: #293541;
   width: 225px;
   position: fixed;
   height: 100%;
@@ -29,7 +30,7 @@
     margin-left: 0;
     border-radius: 0;
     text-transform: uppercase;
-    color: $headings-color;
+    color: #757c82;
     .emoji {
       margin-right: 8px; // Align the the other icons
       margin-left: 1px;
@@ -38,27 +39,63 @@
   .dropdown-menu {
     width: 100%;
   }
-  // Nav Links
-  .nav > li > a {
-    margin-left: 10px;
+
+}
+// Navigation Elements
+.nav-accordion {
+  padding: 5px 10px;
+  font-size: 13px;
+  // MAIN NAVS
+  li.panel {
+    margin-bottom: 0px;
+    background: none;
+    &.active {
+      background: $brand-primary;
+      > a {
+        color: #fff;
+      }
+    }
+    &:hover {
+      background: rgba(117,146,174,0.15);
+    }
   }
-  .nav > li > a {
-    padding-top: 6px; // Tighten up the nav element placement
-    padding-bottom: 6px;
+  li.panel a {
+    padding: 6px 6px 6px 12px;
+    display: block;
+    color: #ADB6BF;
+    text-transform: uppercase;
     .caret {
       margin-top: 7px;
     }
+    &:hover {
+      background: none;
+      color: #fff;
+      text-decoration: none;
+      .circle-icon {
+        border-color: #888;
+      }
+    }
+    &:focus {
+      text-decoration: none;
+    }
+
+  }
+  // SUB PANELS
+  li.panel .nav {
+    background: rgba(117,146,174,0.15);
+    a {
+      text-transform: none;
+    }
   }
 }
+
 // Elements
 .progress-line {
   position: absolute;
-  width: 10px;
+  width: 8px;
   height: 100%;
-  margin: 10px 0 0 25px;
-  &.setup-line {
-    background: $gray-lighter;
-  }
+  margin: 20px 0 0 11px;
+  z-index: -10;
   &.standard-line {
     background: $gray;
   }
@@ -66,12 +103,12 @@
 .circle-icon {
   background: #fff;
   border: 3px solid #444;
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   border-radius: 21.5px;
   display: inline-block;
   float: left;
-  margin: -4px 10px -3px -8px;
+  margin: -1px 10px 0px -8px;
   .emoji {
     margin-left: 3px;
     margin-top: 3px;
@@ -86,16 +123,14 @@
     background: darken($gray-lighter, 3);
   }
   &.icon-container {
-    border-color: #fff;
     color: $gray;
     text-align: center;
   }
 }
 .sub-nav {
-  background-color: lighten($gray-lighter, 2);
   .circle-icon {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     margin: -2px 12px -3px -6px;
   }
   .progress-line {
@@ -107,51 +142,3 @@
 body.accommodate-footer {
   padding-bottom: 70px; // To fix to the screen bottom body needs padding
 }
-// TO REFACTOR:
-// // BELOW: possibly refactor
-// // Override for topmost bar
-// .overall-header .nav {
-//   > li {
-//     > a {
-//       padding: 15px 10px; // Special padding for backgrounds
-//     }
-//   }
-//   > li.round-nav {
-//     margin-left: 0px;
-//     background-image: linear-gradient(
-//         to bottom,
-//         rgba(255,255,255, 0)  40%,
-//         #666 40%,
-//         #666 60%,
-//         rgba(255,255,255, 0) 60%
-//       );
-//     > a {
-//       padding: 5px 7px;
-//       margin: 10px 10px 10px -1px;
-//       background-color: #666;
-//       color: #fff;
-//       border-radius: 15px;
-//       border-color: #666;
-//       .caret {
-//         margin-left: -3px;
-//       }
-//     }
-//     a.current-round {
-//       font-weight: bold;
-//     }
-//   }
-//   > li.round-nav:last-child {
-//     background-image: none; // Don't show a line to nowhere
-//   }
-//   > li.round-nav.active {
-//     > a {
-//       background-color: #fff;
-//       color: #000;
-//     }
-//   }
-// }
-// .navbar-transparent {
-//   border: none;
-//   background: none;
-// }
-// // For sub nav

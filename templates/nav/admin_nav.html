@@ -4,9 +4,9 @@
   <div class="overflow-scroll-wrapper">
 
     {% if all_tournaments.count > 1 %}
-    <ul class="nav nav-pills nav-stacked" role="tablist">
+    <ul class="nav nav-stacked" role="tablist">
       <li role="presentation" class="dropdown">
-        <a id="tournament_select" href="#" class="white-bg dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        <a id="tournament_select" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
           <h4>
             {{ tournament }}<span class="caret pull-right"></span>
           </h4>
@@ -27,9 +27,9 @@
       </li>
     </ul>
     {% else %}
-      <ul class="nav nav-pills nav-stacked" role="tablist">
+      <ul class="nav nav-stacked" role="tablist">
         <li role="presentation" class="">
-          <a id="tournament_select" class="white-bg" href="{{ tournament.get_absolute_url }}">
+          <a id="tournament_select" class="" href="{{ tournament.get_absolute_url }}">
             <h4>
               <span class="emoji">💩</span>{{ tournament }}
             </h4>
@@ -38,7 +38,7 @@
       </ul>
     {% endif %}
 
-    <ul class="nav nav-pills nav-stacked">
+    <ul class="nav nav-stacked nav-accordion" id="accordion" role="tablist" aria-multiselectable="true">
 
       {% if pref.side_allocations_enabled == 'preallocated' %}
         <li {% if sides_nav %}class="active"{% endif %} >
@@ -48,13 +48,13 @@
         </li>
       {% endif %}
       {% if pref.enable_divisions %}
-        <li class="{% if divisions_nav %}active {% endif %}">
+        <li class="panel {% if divisions_nav %}active {% endif %}">
           <a href="{% tournament_url division_allocations %}">
             Divisions
           </a>
         </li>
       {% endif %}
-      <li class="{% if feedback_nav %}dropdown active {% endif %}">
+      <li class="panel {% if feedback_nav %} active {% endif %}">
         <a href="{% tournament_url feedback_overview %}">
           <span class="circle-icon icon-container">
             <span class="glyphicon glyphicon-comment"></span>
@@ -62,7 +62,7 @@
           Feedback
         </a>
       </li>
-      <li class="{% if standings_nav %}dropdown active {% endif %}">
+      <li class="panel {% if standings_nav %} active {% endif %}">
         <a href="{% round_url standings_index current_round %}" >
           <span class="circle-icon icon-container">
             <span class="glyphicon glyphicon-stats"></span>
@@ -70,7 +70,7 @@
           Standings
         </a>
       </li>
-      <li class="{% if break_nav %}dropdown active {% endif %}">
+      <li class="panel {% if break_nav %} active {% endif %}">
         <a href="{% tournament_url breaking_index %}" >
           <span class="circle-icon icon-container">
             <span class="glyphicon glyphicon-gift"></span>
@@ -79,113 +79,98 @@
         </a>
       </li>
 
-    </ul>
-
-    <ul class="nav nav-pills nav-stacked" id="accordion" role="tablist" aria-multiselectable="true">
-
-      <li class="" role="tab" id="heading_setup">
-        <div class="progress-line setup-line"></div>
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_setup" aria-expanded="false" aria-controls="collapse_setup">
-          <span class="circle-icon icon-container">
-            <span class="glyphicon glyphicon-cog"></span>
-          </span>
-          Setup<span class="caret pull-right"></span>
-        </a>
-      </li>
-      <div id="collapse_setup" class="panel-collapse collapse" role="tabpanel"
-        aria-labelledby="collapse_setup">
-        <ul class="nav nav-pills nav-stacked">
-          <li>
-            <a href="{% tournament_url tournament_config_index %}">
-              <span class="circle-icon icon-container"><span class="emoji">🔧</span></span>
-              Configuration
-            </a>
-          </li>
-          <li>
-            <a class="" href="{% tournament_url data_index %}">
-              <span class="circle-icon icon-container"><span class="emoji">📑</span></span>
-              Import Data
-            </a>
-          </li>
-          <li>
-            <a class="" href="/admin/">
-              <span class="circle-icon icon-container"><span class="emoji">📝️</span></span>
-              Edit Data
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      {% for r in tournament.round_set.all %}
-
-        <li class="" role="tab" id="heading{{ r.id }}">
-          {% if not forloop.last %}
-            <div class="progress-line
-              {% if r.seq < current_round.seq %}btn-success{% else %}standard-line{% endif %}">
-            </div>
-          {% endif %}
-          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ r.id }}" aria-expanded="false" aria-controls="collapse{{ r.id }}">
-            <span class="circle-icon
-            {% if r == current_round %}btn-info
-            {% elif r.seq > current_round.seq %}btn-inactive
-            {% elif r.seq < current_round.seq %}btn-success
-            {% endif %}">
-            <span class="emoji"></span></span>
-            {{ r.name }} <span class="caret pull-right"></span>
+      <li class="panel">
+        <div class="progress-line standard-line"></div>
+        <div class="" role="tab" id="headingOne">
+          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+            <span class="circle-icon icon-container">
+              <span class="glyphicon glyphicon-cog"></span>
+            </span>
+            Setup<span class="caret pull-right"></span>
           </a>
-        </li>
-        <div id="collapse{{ r.id }}" class="panel-collapse collapse {% if round == r %}in{% endif %}"
-           role="tabpanel" aria-labelledby="heading{{ r.id }}">
-
-          <ul class="nav nav-pills nav-stacked sub-nav">
-            <li {% if availability_nav and current_round == r %}class="active"{% endif %}>
-              <div class="progress-line standard-line"></div>
-              <a href="{% round_url availability_index r %}">
-                <span class="circle-icon small-circle
-                {% if r.seq < current_round.seq %} btn-success
-                {% elif r == current_round and r.draw_status == r.STATUS_NONE %} btn-info
-                {% elif r.draw_status == r.STATUS_DRAFT %} btn-success
-                {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
-                {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
-                {% else %} btn-inactive{% endif %}
-                ">
-                <span class="emoji"></span></span>Checkins
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <ul class="nav nav-pills nav-stacked">
+            <li>
+              <a href="{% tournament_url tournament_config_index %}">
+                <span class="circle-icon icon-container"><span class="emoji">🔧</span></span>
+                Configuration
               </a>
             </li>
-            <li {% if draw_nav and current_round == r %}class="active"{% endif %}>
-              <div class="progress-line standard-line"></div>
-              <a href="{% round_url draw r %}">
-                <span class="circle-icon small-circle
-                {% if r.seq < current_round.seq %} btn-success
-                {% elif r.draw_status == r.STATUS_NONE %} btn-inactive
-                {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
-                {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
-                {% else %} btn-info{% endif %}
-                ">
-                <span class="emoji"></span></span>Draw
+            <li>
+              <a class="" href="{% tournament_url data_index %}">
+                <span class="circle-icon icon-container"><span class="emoji">📑</span></span>
+                Import Data
               </a>
             </li>
-            <li {% if ballots_nav and current_round == r %}class="active"{% endif %}>
-              <div class="progress-line standard-line"></div>
-              <a href="{% round_url results r %}">
-                <span class="circle-icon small-circle
-                {% if r.seq < current_round.seq %} btn-success
-                {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-info
-                {% elif r.draw_status == r.STATUS_RELEASED %} btn-info
-                {% else %} btn-inactive{% endif %}
-                ">
-                <span class="emoji"></span></span>Results
+            <li>
+              <a class="" href="/admin/">
+                <span class="circle-icon icon-container"><span class="emoji">📝️</span></span>
+                Edit Data
               </a>
             </li>
           </ul>
-
         </div>
+      </li>
+
+      {% for r in tournament.round_set.all %}
+
+        <li class="panel">
+          {% if not forloop.last %}<div class="progress-line standard-line"></div>{% endif %}
+          <div class="" role="tab" id="rh{{ r.id }}">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#rp{{ r.id }}" aria-expanded="{% if r.seq == round.seq %}true{% else %}false{% endif %}" aria-controls="rp{{ r.id }}">
+              <span class="circle-icon {% if r == current_round %}btn-info {% elif r.seq > current_round.seq %}btn-inactive {% elif r.seq < current_round.seq %}btn-success{% endif %}">
+              <span class="emoji"></span></span>{{ r.name }} <span class="caret pull-right"></span>
+            </a>
+          </div>
+          <div id="rp{{ r.id }}" class="panel-collapse collapse {% if r.seq == round.seq %}in active{% endif %}" role="tabpanel" aria-labelledby="rh{{ r.id }}">
+            <ul class="nav nav-stacked">
+              <li {% if availability_nav and round == r %}class="active"{% endif %}>
+                <div class="progress-line standard-line"></div>
+                <a href="{% round_url availability_index r %}">
+                  <span class="circle-icon small-circle
+                  {% if r.seq < current_round.seq %} btn-success
+                  {% elif r == current_round and r.draw_status == r.STATUS_NONE %} btn-info
+                  {% elif r.draw_status == r.STATUS_DRAFT %} btn-success
+                  {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
+                  {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
+                  {% else %} btn-inactive{% endif %}
+                  ">
+                  <span class="emoji"></span></span>Checkins
+                </a>
+              </li>
+              <li {% if draw_nav and round == r %}class="active"{% endif %}>
+                <div class="progress-line standard-line"></div>
+                <a href="{% round_url draw r %}">
+                  <span class="circle-icon small-circle
+                  {% if r.seq < current_round.seq %} btn-success
+                  {% elif r.draw_status == r.STATUS_NONE %} btn-inactive
+                  {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
+                  {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
+                  {% else %} btn-info{% endif %}
+                  ">
+                  <span class="emoji"></span></span>Draw
+                </a>
+              </li>
+              <li {% if ballots_nav and round == r %}class="active"{% endif %}>
+                <div class="progress-line standard-line"></div>
+                <a href="{% round_url results r %}">
+                  <span class="circle-icon small-circle
+                  {% if r.seq < current_round.seq %} btn-success
+                  {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-info
+                  {% elif r.draw_status == r.STATUS_RELEASED %} btn-info
+                  {% else %} btn-inactive{% endif %}
+                  ">
+                  <span class="emoji"></span></span>Results
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
 
       {% endfor %}
 
     </ul>
-
-
 
   </div>
 </div><!-- /.main-col -->
