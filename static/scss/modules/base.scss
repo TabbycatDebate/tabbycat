@@ -31,7 +31,7 @@ body {
       border-width: 1px;
     }
   }
-  .dropdown {
+  .dropdown, form {
     display: inline-block; // Need this to bring their alignment up
   }
 }

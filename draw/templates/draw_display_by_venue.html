@@ -9,7 +9,6 @@
   {% endif %}
 {% endblock %}
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
-{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block page-subnav-sections %}
   <div class="btn-group hidden-xs">
@@ -29,6 +28,7 @@
     <a class="btn btn-default" href="" id="large_text">L Text</a>
     <a class="btn btn-default" href="" id="huge_text">XL Text</a>
   </div>
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block content %}

@@ -4,12 +4,12 @@
 
 {% block head-title %}Breaking Adjudicators{% endblock %}
 {% block page-title %}Breaking Adjudicators{% endblock %}
-{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block page-subnav-sections %}
   {% if adjs.all.count == 0 %}
     <p class="lead">Breaking adjudicators can be set in the <a href="{% tournament_url feedback_overview %}"> Feedback section.</a></p>
   {% endif %}
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block content %}
