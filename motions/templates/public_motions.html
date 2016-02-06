@@ -10,9 +10,11 @@
   {% endif %}
 {% endblock %}
 
-{% block page-subnav-sections %}
+{% block page-alerts %}
   {% if rounds.all.count == 0 %}
-    <p class="lead">No motions have been released yet.</p>
+    <div class="alert alert-info" role="alert">
+      No motions have been released yet.
+    </div>
   {% endif %}
 {% endblock %}
 

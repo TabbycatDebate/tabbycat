@@ -10,7 +10,7 @@
 
 
 {% block page-alerts %}
-  {% if not pref.tab_released and not pref.motion_tab_released and not public_draw and not public_results and not public_divisions and not public_motions and not public_team_standings and not public_breaking_teams and not public_breaking_adjs and not public_participants and not feedback_progress and not public_ballots and not public_feedback and not show_all_draws %}
+  {% if not pref.tab_released and not pref.motion_tab_released and not pref.public_draw and not pref.public_results and not pref.public_divisions and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and not pref.public_ballots and not pref.public_feedback and not pref.show_all_draws %}
     <div class="alert alert-info">
       Current there is no public information available for this tournament
       <span class="emoji">😹</span>
@@ -51,7 +51,7 @@
             <a href="{% tournament_url public_side_allocations %}">Sides</a>
           </li>
         {% endif %}
-        {% if public_draw > 0  and tab_released == 0 and show_all_draws == 0 %}
+        {% if pref.public_draw > 0  and pref.tab_released == 0 and pref.show_all_draws == 0 %}
           <li class="list-group-item"><a class="public-draw-nav" href="{% tournament_url public_draw %}">
             Draw for {{ current_round.name }}
           </a></li>

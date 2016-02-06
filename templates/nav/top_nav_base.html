@@ -18,21 +18,13 @@
             <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament }}<b class="caret"></b></a>
             <ul class="dropdown-menu">
               {% for tournament in all_tournaments %}
-                {% if user.is_authenticated %}
-                  <li><a class="" href="{{ tournament.get_absolute_url  }}">{{ tournament }}</a></li>
-                {% else %}
-                  <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament }}</a></li>
-                {% endif %}
+                <li><a class="" href="{{ tournament.get_public_url  }}">{{ tournament }}</a></li>
               {% endfor %}
             </ul>
           </li>
         </ul>
       {% else %}
-        {% if user.is_authenticated %}
-          <a class="navbar-brand" href="{{ tournament.get_absolute_url  }}">{{ tournament }}</a>
-        {% else %}
-          <a class="navbar-brand" href="{{ tournament.get_public_url  }}">{{ tournament }}</a>
-        {% endif %}
+        <a class="navbar-brand" href="{{ tournament.get_public_url  }}">{{ tournament }}</a>
       {% endif %}
 
     </div><!-- /.navbar-header -->
