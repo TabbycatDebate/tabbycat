@@ -1,20 +1,24 @@
 @import "../vendor/bootstrap/variables";
+//
+// OVERALL LAYOUT
+//
 // ADMIN SIDEBAR STRUCTURE
+
 .nav-sidebar-offset {
-  padding-left: 235px; // Offset the sidebar
+  padding-left: $sidebar-width + 15px; // Offset the sidebar; should be nav-sidebar + 15
   min-height: 800px; // Push the footer down
   padding-bottom: 70px; // Leave room for the footer
   .navbar-fixed-bottom {
     // Don't want the footer stretching into the menu; present it alert style
-    margin: 0 15px 20px 235px;
+    margin: 0 15px 20px $sidebar-width + 15px;
     border-width: 1px;
     border-radius: 4px;
     position: absolute;
   }
 }
 .nav-sidebar {
-  background: #293541;
-  width: 225px;
+  background: $sidebar-bg;
+  width: $sidebar-width;
   position: fixed;
   height: 100%;
   z-index: 100;
@@ -43,48 +47,47 @@
 }
 // Navigation Elements
 .nav-accordion {
-  padding: 5px 10px;
-  font-size: 13px;
-  // MAIN NAVS
-  li.panel {
-    margin-bottom: 0px;
-    background: none;
-    &.active {
-      background: $brand-primary;
-      > a {
+  // Structure and background highlights
+  li.panel, li.standalone {
+    margin: 0px 0 0 0; // override
+    background: none; // override
+    border: 0;
+    box-shadow: none;
+    // All Buttons
+    a {
+      color: $sidebar-muted-text;
+      font-size: $font-size-h6;
+      font-family: $font-family-sans-serif;
+      padding: 6px 16px 6px 19px;
+      display: block;
+      .glyphicon {
+        margin-right: 12px;
+      }
+      &:hover, &.active, &:focus {
+        text-decoration: none;
         color: #fff;
+        background: $sidebar-bg-highlight;
       }
     }
-    &:hover {
-      background: rgba(117,146,174,0.15);
-    }
   }
-  li.panel a {
-    padding: 6px 6px 6px 12px;
-    display: block;
-    color: #ADB6BF;
-    text-transform: uppercase;
+  .panel-collapse {
+    background: $sidebar-bg-highlight;
+  }
+  // Just top level buttons
+  // EXPANDED
+  li.panel div[role="tab"] a[aria-expanded="true"] {
+    background: $sidebar-bg-highlight;
     .caret {
       margin-top: 7px;
+      transform: rotate(0deg);
     }
-    &:hover {
-      background: none;
-      color: #fff;
-      text-decoration: none;
-      .circle-icon {
-        border-color: #888;
-      }
-    }
-    &:focus {
-      text-decoration: none;
-    }
-
   }
-  // SUB PANELS
-  li.panel .nav {
-    background: rgba(117,146,174,0.15);
-    a {
-      text-transform: none;
+  // NOT EXPANDED
+  li.panel div[role="tab"] a[aria-expanded="false"] {
+    .caret {
+      margin-top: 7px;
+      transform: rotate(90deg);
+      transition: 0.3s ease-in-out;
     }
   }
 }
@@ -94,7 +97,7 @@
   position: absolute;
   width: 8px;
   height: 100%;
-  margin: 20px 0 0 11px;
+  margin: 20px 0 0 21px;
   z-index: -10;
   &.standard-line {
     background: $gray;
@@ -108,10 +111,10 @@
   border-radius: 21.5px;
   display: inline-block;
   float: left;
-  margin: -1px 10px 0px -8px;
-  .emoji {
-    margin-left: 3px;
-    margin-top: 3px;
+  margin: -1px 10px 0px -5px;
+
+  .glyphicon {
+    margin-left: 2px;
   }
   &.btn-success {
     background: $btn-success-bg;
@@ -123,8 +126,16 @@
     background: darken($gray-lighter, 3);
   }
   &.icon-container {
-    color: $gray;
-    text-align: center;
+    background: #444;
+  }
+}
+.nav-accordion li.panel a:hover {
+  .circle-icon {
+    border-color: #888;
+  }
+  .icon-container {
+    color: #fff;
+    border-color: #444;
   }
 }
 .sub-nav {

@@ -29,33 +29,33 @@
     Edit Motions
   </a>
 
+  <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
+    Draw Details
+  </a>
+
   {% if not pref.enable_venue_times %}
-    <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">
-      Edit Start Time
+    <a class="btn {% if round.starts_at %}btn-danger{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#start-time-form">
+      {% if round.starts_at %}Edit Start Time{% else %}Add Start Time{% endif %}
     </a>
   {% endif %}
   {% if round.motions_released %}
-    <a class="btn btn-default" id="unrelease_motions">
+    <a class="btn btn-danger" id="unrelease_motions">
       Unrelease Motions
     </a>
   {% else %}
-    <a class="btn btn-default" id="release_motions">
+    <a class="btn btn-primary" id="release_motions">
       Release Motions
     </a>
   {% endif %}
   {% if round.draw_status = round.STATUS_CONFIRMED %}
-    <a class="btn btn-default" id="release_draw">
+    <a class="btn btn-primary" id="release_draw">
       Release Draw
     </a>
   {% elif round.draw_status = round.STATUS_RELEASED %}
-    <a class="btn btn-default" id="unrelease_draw">
+    <a class="btn btn-danger" id="unrelease_draw">
       Unrelease Draw
     </a>
   {% endif %}
-
-  <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
-    Draw Details
-  </a>
 
   <form id="releaseForm" method="POST" action="{% round_url release_motions %}"></form>
   <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}"></form>
@@ -109,12 +109,12 @@
     <div class="panel-heading">
 
       <div class="btn-group">
-        <a target="_blank" class="btn btn-default" href="{% round_url draw_display_by_venue round %}">
+        <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_by_venue round %}">
           <span class="text-primary">
             Display Draw by Venue <span class="glyphicon glyphicon-share"></span>
           </span>
         </a>
-        <a target="_blank" class="btn btn-default" href="{% round_url draw_display_by_team round %}">
+        <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_by_team round %}">
           <span class="text-primary">
             Display Draw by Team <span class="glyphicon glyphicon-share"></span>
           </span>
@@ -122,18 +122,18 @@
       </div>
 
       <div class="btn-group pull-right">
-        <a target="_blank" class="btn btn-default" href="{% round_url draw_print_scoresheets round %}">
+        <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_print_scoresheets round %}">
           <span class="text-primary">
             Print Ballots <span class="glyphicon glyphicon-share"></span>
           </span>
         </a>
-        <a target="_blank" class="btn btn-default" href="{% round_url draw_print_feedback round %}">
+        <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_print_feedback round %}">
           <span class="text-primary">
             Print Feedback Forms <span class="glyphicon glyphicon-share"></span>
           </span>
         </a>
         {% if pref.public_divisions %}
-        <a target="_blank" class="btn btn-default" href="{% round_url master_sheets_list round %}">
+        <a target="_blank" class="btn btn-sm btn-default" href="{% round_url master_sheets_list round %}">
           <span class="text-primary">
             Print Mastersheets <span class="glyphicon glyphicon-share"></span>
           </span>
@@ -143,13 +143,13 @@
     </div>
 
     <div class="panel-body">
-      <table id="dataTable" class="table table-hover table-bordered">
+      <table id="dataTable" class="table">
         <thead>
             <tr>
               {% if pref.enable_divisions %}
                   <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip"title="Division">{{ debate.division.name }}</span></th>
               {% else %}
-                  <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+                  <th><span class="glyphicon glyphicon-tasks" data-toggle="tooltip" title="Bracket"></span></th>
               {% endif %}
               {% if pref.enable_venue_groups %}
                   <th>Venue</th>
