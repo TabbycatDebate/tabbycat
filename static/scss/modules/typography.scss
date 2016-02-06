@@ -32,7 +32,7 @@
   // Actionable elements (buttons, navs) should be distinct
   font-family: $headings-font-family;
 }
-.nav-pills a {
+.nav-pills a.btn-default {
   color: $brand-primary;
 }
 .nav-tabs a {

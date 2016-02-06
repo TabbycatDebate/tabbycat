@@ -3,14 +3,14 @@
 {% block page-subnav-sections %}
   {% if round.seq > 1 %}
     {% block copy_btn %}
-      <button id="btn_copy" class="btn btn-default" type="button">Copy from Previous</button>
+      <button id="btn_copy" class="btn btn-primary" type="button">Copy from Previous</button>
     {% endblock %}
   {% endif %}
-  <button id="select_all" class="btn btn-default" href="#all">Select All</button>
+  <button id="select_all" class="btn btn-primary" href="#all">Select All</button>
   {% if adjudicators %}
-    <button id="select_breaking" class="btn btn-default" href="#">Select Breaking</button>
+    <button id="select_breaking" class="btn btn-primary" href="#">Select Breaking</button>
   {% endif %}
-  <button id="select_none" class="btn btn-default" href="#none">Select None</button>
+  <button id="select_none" class="btn btn-primary" href="#none">Select None</button>
   {% include "tables/table_search.html" %}
 {% endblock %}
 
