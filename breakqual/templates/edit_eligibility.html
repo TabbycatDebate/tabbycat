@@ -3,9 +3,9 @@
 
 {% block head-title %}Break Eligibility{% endblock %}
 {% block page-title %}Break Eligibility{% endblock %}
-{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
-{% block header %}
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
   {% if form.errors %}
     <div class="alert alert-danger alert-dismissable">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -14,11 +14,24 @@
     </div>
   {% endif %}
 {% endblock %}
+{% block page-subnav-actions %}
+<form id="breakEligibilityForm" action="." method="POST" class="form-horizontal">
+  <button type="submit" class="btn btn-success submit-disable" data-loading-text="Saving...">
+    Save team break eligibility
+  </button>
+</form>
+{% endblock %}
 
-{% block content %}
 
+<<<<<<< HEAD
   <form id="breakEligibilityForm" action="." method="POST" class="form-horizontal">
     <table id="dataTable" class="table">
+=======
+{% block content %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="table table-hover">
+>>>>>>> 9d514502db08303811a421eda4f53969ce7558a2
       <thead>
         <tr>
           <th>Team</th>
@@ -57,16 +70,9 @@
         {% endfor %}
       </tbody>
     </table>
-    <div class="form-group">
-      <div class="col-sm-2">
-        <button type="submit" class="btn btn-success submit-disable" data-loading-text="Saving...">
-          Save team break eligibility
-        </button>
-      </div>
-    </div>
-  </form>
+  </div>
+</div>
 {% endblock %}
-
 
 {% block extra-js %}
   <script type="text/javascript" charset="utf-8">

@@ -4,7 +4,7 @@
 {% block head-title %}<span class="emoji">👋</span> Welcome to {{ tournament.name }}{% endblock %}
 {% block page-title %}Welcome to {{ tournament.name }}{% endblock %}
 
-{% block header %}
+{% block page-subnav-sections %}
   {{ tournament.welcome_msg|safe|linebreaks }}
 {% endblock %}
 

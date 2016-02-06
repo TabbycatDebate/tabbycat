@@ -5,8 +5,8 @@
 {% block page-title %}View Feedback by Source{% endblock %}
 
 {% block content %}
-
 <div class="row">
+<<<<<<< HEAD
 
   <div class="col-md-6">
 
@@ -63,8 +63,82 @@
         {% endfor %}
       </tbody>
     </table>
+=======
+  <div class="col-md-6">
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>From Teams</h4>
+        </div>
+        <div class="panel-body">
+          <table id="teamTable" class="table table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Institution</th>
+                <th>Feedback</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for team in teams %}
+              <tr>
+                <td>{{ team.short_name }}</td>
+                <td>{{ team.institution }}</td>
+                <td>
+                {% if team.feedback_tally > 0 %}
+                  <a href="{% tournament_url team_feedback_list team.id %}">
+                    {{ team.feedback_tally }} Feedback{{ team.feedback_tally|pluralize }}
+                  </a>
+                {% else %}
+                  None Yet
+                {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>From Adjudicators</h4>
+        </div>
+        <div class="panel-body">
+          <table id="adjTable" class="table table-hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Institution</th>
+              <th>Feedback</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for adj in adjs %}
+            <tr>
+              <td>{{ adj.name }}</td>
+              <td>{{ adj.institution }}</td>
+              <td>
+              {% if adj.feedback_tally > 0 %}
+                <a href="{% tournament_url adj_feedback_list adj.id %}">
+                  {{ adj.feedback_tally }} Feedback{{ adj.feedback_tally|pluralize }}
+                </a>
+              {% else %}
+                None Yet
+              {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+>>>>>>> 9d514502db08303811a421eda4f53969ce7558a2
 
   </div>
+</div>
 
 {% endblock content %}
 

@@ -3,9 +3,8 @@
 
 {% block head-title %}Who is the feedback from?{% endblock %}
 {% block page-title %}Add Feedback{% endblock %}
-{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
-{% block header %}
+{% block page-subnav-sections %}
   <div class="btn-group" data-toggle="buttons">
     <label class="btn btn-default active" id="toggle-all">
     <input type="radio" name="options">Show All
@@ -22,6 +21,7 @@
     <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">View Latest Feedback</a>
     <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">View Feedback By Source</a>
   </div>
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block content %}

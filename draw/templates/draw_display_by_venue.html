@@ -9,9 +9,8 @@
   {% endif %}
 {% endblock %}
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
-{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
-{% block header %}
+{% block page-subnav-sections %}
   <div class="btn-group hidden-xs">
     <a class="btn btn-default" href="" id="scroll_draw1">Scroll Fast</a>
     <a class="btn btn-default" href="" id="scroll_draw2">Scroll <span class="hidden-xs">Medium</span></a>
@@ -29,6 +28,7 @@
     <a class="btn btn-default" href="" id="large_text">L Text</a>
     <a class="btn btn-default" href="" id="huge_text">XL Text</a>
   </div>
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block content %}

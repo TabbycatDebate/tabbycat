@@ -3,11 +3,10 @@
 
 {% block head-title %}Enter Results for {{ current_round.name }}{% endblock %}
 {% block page-title %}Enter Results for {{ current_round.name }}{% endblock %}
-{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block edit-link %}Check{% endblock %}
 
-{% block header %}
+{% block page-subnav-sections %}
   <div class="btn-group">
     <button class="btn btn-default btn-danger">
       <span class="label none">
@@ -42,4 +41,5 @@
     </button>
     {% endif %}
   </div>
+  {% block page-subnav-sections %}{% endblock %}
 {% endblock %}
