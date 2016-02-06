@@ -3,6 +3,13 @@
 //
 .panel-body .table {
   margin-bottom: 0; // Panel body has its own bottom padding
+  > tbody > tr:nth-of-type(odd) {
+    background-color: $table-bg-accent; // Force .table-striped style
+  }
+  > tbody > tr:hover {
+    background-color: $table-bg-hover;
+    color: #fff;
+  }
 }
 .table-container {
   padding: 0;
@@ -10,9 +17,7 @@
 thead {
   background: #fff; // Fixed header needs a background while scrolling
   text-transform: uppercase;
-  font-family: $headings-font-family;
-  font-size: 11px;
-  font-weight: bold;
+  font-size: $font-size-h6;
 }
 #dataTable_filter {
   display: none; // Hide the default search box
