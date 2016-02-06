@@ -3,8 +3,8 @@ logger = logging.getLogger(__name__)
 from threading import Lock
 
 from django.conf import settings
-from django.views.generic import View
-from django.views.generic.edit import CreateView
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic.edit import FormView, CreateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 import django.contrib.messages as messages
@@ -179,7 +179,7 @@ def create_division_allocation(request, t):
         return HttpResponseBadRequest("Couldn't create divisions")
 
 
-class BlankSiteStartView(View):
+class BlankSiteStartView(FormView):
     """This view is presented to the user when there are no tournaments and no
     user accounts. It prompts the user to create a first superuser. It rejects
     all requests, GET or POST, if there exists any user account in the
@@ -188,32 +188,32 @@ class BlankSiteStartView(View):
     form_class = SuperuserCreationForm
     template_name = "blank_site_start.html"
     lock = Lock()
+    success_url = reverse_lazy('tabbycat-index')
 
     def get(self, request):
         if User.objects.exists():
             logger.error("Tried to get the blank-site-start view when a user account already exists.")
             return redirect('tabbycat-index')
 
-        form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+        return super(BlankSiteStartView, self).get(request)
 
     def post(self, request):
         form = self.form_class(request.POST)
         with self.lock:
             if User.objects.exists():
                 logger.error("Tried to post the blank-site-start view when a user account already exists.")
-                messages.error("Whoops! It looks like someone's already created the first user account. Please log in.")
-                return redirect('login')
+                messages.error(request, "Whoops! It looks like someone's already created the first user account. Please log in.")
+                return redirect('auth-login')
 
-            elif form.is_valid():
-                form.save()
-                user = authenticate(username=request.POST['username'], password=request.POST['password1'])
-                login(request, user)
-                messages.success(request, "Welcome! You've created an account for %s." % user.username)
-                return redirect('tabbycat-index')
+            return super(BlankSiteStartView, self).post(request)
 
-        return render(request, self.template_name, {'form': form})
+    def form_valid(self, form):
+        form.save()
+        user = authenticate(username=self.request.POST['username'], password=self.request.POST['password1'])
+        login(self.request, user)
+        messages.success(self.request, "Welcome! You've created an account for %s." % user.username)
 
+        return super(BlankSiteStartView, self).form_valid(form)
 
 class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""

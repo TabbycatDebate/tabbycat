@@ -222,6 +222,14 @@ for app in TABBYCAT_APPS:
         'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG' if DEBUG else 'INFO'),
     }
 
+# ============
+# = Messages =
+# ============
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
 
 # ==========
 # = Heroku =
