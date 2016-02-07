@@ -17,6 +17,9 @@ body {
   }
 }
 .page-sub-nav {
+  .navbar-left {
+    margin-bottom: $line-height-computed;
+  }
   .navbar-right {
     padding-right: 15px; // compensate for the pull-rights negative margin
   }
