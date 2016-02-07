@@ -1,10 +1,10 @@
 from .allocator import Allocator
 from .stab import StabAllocator
-
 from .munkres import Munkres
-
 from math import exp
 from random import shuffle
+import logging
+logger = logging.getLogger(__name__)
 
 class HungarianAllocator(Allocator):
 
@@ -76,7 +76,7 @@ class HungarianAllocator(Allocator):
         # TODO I think "chairs" actually means "solos", rename variables if correct
         if len(chairs) > 0:
 
-            print("costing chairs")
+            logger.info("costing chairs")
 
             n = len(chairs)
 
@@ -86,7 +86,7 @@ class HungarianAllocator(Allocator):
                 for j, adj in enumerate(chairs):
                     cost_matrix[i][j] = self.calc_cost(debate, adj)
 
-            print("optimizing")
+            logger.info("optimizing")
 
             indexes = m.compute(cost_matrix)
 
@@ -94,17 +94,18 @@ class HungarianAllocator(Allocator):
             for r, c in indexes:
                 total_cost += cost_matrix[r][c]
 
-            print('total cost for solos', total_cost)
-            print('number of solo debates', n)
+            logger.info('total cost for solos %f', total_cost)
+            logger.info('number of solo debates %d', n)
 
             result = ((chair_debates[i], chairs[j]) for i, j in indexes if i <
                       len(chair_debates))
             alloc = [AdjudicatorAllocation(d, c) for d, c in result]
 
-            print([(a.debate, a.chair) for a in alloc])
+            for a in alloc:
+                logger.info("%s %s", a.debate, a.chair)
 
         else:
-            print("No solo adjudicators.")
+            logger.info("No solo adjudicators.")
             alloc = []
 
         # do panels
@@ -113,7 +114,7 @@ class HungarianAllocator(Allocator):
         npan = len(panellists)
 
         if npan:
-            print("costing panellists")
+            logger.info("costing panellists")
 
             # matrix is square, dummy debates have cost 0
             cost_matrix = [[0] * npan for i in range(npan)]
@@ -131,7 +132,7 @@ class HungarianAllocator(Allocator):
                         cost_matrix[3*i+j][k] = self.calc_cost(debate, adj,
                                                                adjustment)
 
-            print("optimizing")
+            logger.info("optimizing")
 
             indexes = m.compute(cost_matrix)
 
@@ -139,7 +140,7 @@ class HungarianAllocator(Allocator):
             for r, c in indexes:
                 cost += cost_matrix[r][c]
 
-            print('total cost for panellists', cost)
+            logger.info('total cost for panellists %f', cost)
 
             # transfer the indices to the debates
             # the debate corresponding to row r is floor(r/3) (i.e. r // 3)
@@ -156,7 +157,8 @@ class HungarianAllocator(Allocator):
                 a.panel = p[i]
                 alloc.append(a)
 
-        print([(a.debate, a.chair, a.panel) for a in alloc[len(chairs):]])
+        for a in alloc[len(chairs):]:
+            logger.info("%s %s %s", a.debate, a.chair, a.panel)
 
         return alloc
 

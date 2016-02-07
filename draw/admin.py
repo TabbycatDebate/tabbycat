@@ -90,18 +90,6 @@ admin.site.register(InstitutionVenuePreference, InstitutionVenuePreferenceAdmin)
 # Debate
 # ==============================================================================
 
-def make_result_status_none(modeladmin, request, queryset):
-    queryset.update(result_status=Debate.STATUS_NONE)
-
-def make_result_status_postponed(modeladmin, request, queryset):
-    queryset.update(result_status=Debate.STATUS_POSTPONED)
-
-def make_result_status_draft(modeladmin, request, queryset):
-    queryset.update(result_status=Debate.STATUS_DRAFT)
-
-def make_result_status_confirmed(modeladmin, request, queryset):
-    queryset.update(result_status=Debate.STATUS_CONFIRMED)
-
 class DebateTeamInline(admin.TabularInline):
     model = DebateTeam
     extra = 1
