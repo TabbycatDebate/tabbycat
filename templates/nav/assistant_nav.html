@@ -1,16 +1,14 @@
 {% load debate_tags %}
 
-<ul id="nav" class="nav navbar-nav navbar-left">
-  <li {% if ballots_nav %}class="active"{% endif %}>
-    <a href="{% round_url results current_round %}">Enter Results</a>
-  </li>
-  <li {% if feedback_nav %}class="active"{% endif %}>
-    <a href="{% tournament_url add_feedback %}">Enter Feedback</a>
-  </li>
-  {% if pref.enable_divisions %}
-    <li><a href="{% round_url master_sheets_list current_round %}">Mastersheets</a></li>
-  {% endif %}
-  <li {% if draw_nav %}class="active"{% endif %}>
-    <a href="{% round_url draw current_round %}">View Draw</a>
-  </li>
-</ul>
+<li {% if ballots_nav %}class="active"{% endif %}>
+  <a href="{% round_url results current_round %}">Enter Results</a>
+</li>
+<li {% if feedback_nav %}class="active"{% endif %}>
+  <a href="{% tournament_url add_feedback %}">Enter Feedback</a>
+</li>
+{% if pref.enable_divisions %}
+  <li><a href="{% round_url master_sheets_list current_round %}">Mastersheets</a></li>
+{% endif %}
+<li {% if draw_nav %}class="active"{% endif %}>
+  <a href="{% round_url draw current_round %}">View Draw</a>
+</li>

@@ -2,13 +2,14 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}Team Standings <small>after {{ round.name }}</small>{% endblock %}
 {% block page-title %}Team Standings after {{ round.name }}{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}public-team-standings{% endblock %}
+{% block head-title %}Team Standings{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
+  <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
         {% if pref.enable_divisions %}

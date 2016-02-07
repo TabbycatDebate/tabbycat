@@ -2,7 +2,7 @@
 jQuery.extend( true, $.fn.dataTable.defaults, {
   // Default Data Table options
   "sDom":
-    "<'row'<'col-md-12 table-container'lr"+ // f = the filter
+    "<'row'<'table-container'lr"+ // f = the filter
     "t"+
     "f<p>",
   "bPaginate": false,
@@ -23,11 +23,11 @@ $(document).ready(function(){
     var $btn = $(this).button('loading');
   });
   // Enable AJAX-based hover tooltips to lookup speaker names
-  $('.team-speakers-hover').tooltip({
-    title: getTeamSpeakers,
-    'html': true,
-    'placement': 'bottom'
-  });
+  // $('.team-speakers-hover').tooltip({
+  //   title: getTeamSpeakers,
+  //   'html': true,
+  //   'placement': 'bottom'
+  // });
   // Dynamic lookup speakers on hover
   var cachedData = Array();
   function getTeamSpeakers(){

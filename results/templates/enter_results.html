@@ -9,8 +9,7 @@
 {% endblock %}
 
 {% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}{% endblock %}
-{% block body-class %}enter-result{% endblock %}
-{% block header %}
+{% block page-subnav-sections %}
     {% include "other_ballots_list.html" %}
     {% if not new %}
     <a class="btn btn-default" href="{% tournament_url new_ballotset debate.id %}">Create a new ballot set for this debate</a>
@@ -56,10 +55,10 @@
                         {{ form.debate_result_status.errors }}
                     </div>
                     <div class="col-sm-2">
-                        <input id="submit" class="save form-control btn btn-success submit-disable" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
+                        <input id="submit" class="save btn btn-success submit-disable" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
                     </div>
                     <div class="col-sm-2">
-                        <a class="form-control btn btn-default btn-danger" href="{% round_url results %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel</a>
+                        <a class="btn btn-default btn-danger" href="{% round_url results %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel</a>
                     </div>
                 </div>
 

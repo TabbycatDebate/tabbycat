@@ -2,6 +2,7 @@ from django import template
 from django.utils.encoding import force_text
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from participants.emoji import EMOJI_LIST
 
 import re
 import os
@@ -41,6 +42,7 @@ def neg_count(team, round):
     return team.get_neg_count(round.seq)
 register.simple_tag(neg_count)
 
+
 def team_status_classes(team):
     classes = list()
     if team.region is not None:
@@ -61,14 +63,6 @@ def debate_draw_status_class(debate):
             return "active text-muted"
 
 register.simple_tag(debate_draw_status_class)
-
-
-def feedback_number_step(min_val, max_val, number):
-    step = (max_val - min_val) / 4
-    value = min_val + (number * step)
-    return value
-
-register.simple_tag(feedback_number_step)
 
 class RoundURLNode(template.Node):
     def __init__(self, view_name, round=None):
@@ -140,3 +134,12 @@ def prev_value(value, arg):
 @register.filter(name='times')
 def times(number):
     return list(range(number))
+
+
+def divide(numberA, numberB):
+    return numberA / numberB
+register.simple_tag(divide)
+
+def percentage(numberA, numberB):
+    return numberA / numberB * 100
+register.simple_tag(percentage)

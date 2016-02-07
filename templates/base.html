@@ -1,15 +1,20 @@
 {% load static %}{% load debate_tags %}{% load compress %}<!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block page-title %}{% endblock %}</title>
   <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjUwOEU5NDc5RDJDMTExRTRCRjQ2OUZDNTgxMzU0NEMzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjUwOEU5NDdBRDJDMTExRTRCRjQ2OUZDNTgxMzU0NEMzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NTA4RTk0NzdEMkMxMTFFNEJGNDY5RkM1ODEzNTQ0QzMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NTA4RTk0NzhEMkMxMTFFNEJGNDY5RkM1ODEzNTQ0QzMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5Pg6RUAAAAnklEQVR42mL8//8/Ay0BI50s6OzspLrR5eXlQJKJgcaABdNOygFyeNDcB0PfAhZcEvv371+zZg0xRujp6aWnp4/AIDIyMlJSUoJznz17tmTJEgjb0dHR1NQULsXBwUGOBfxggFVKWFhYXl5+xCTTUQtGLRi1YFiXpmhAXFy8rKwMwhYQEKC+BcAymfgSdOCCiBbtO5r7gHHIt64BAgwAx6wnJnaZud8AAAAASUVORK5CYII=" />
-
+  {% if live_reload %}
+  <link rel="stylesheet" type="text/scss" charset="utf-8" href="/static/css/styleauto.css" />
+  <link rel="stylesheet" type="text/scss" charset="utf-8" href="/static/css/autofix.css" />
+  {% else %}
   {% compress css %}
   <link rel="stylesheet" type="text/x-scss" charset="utf-8" href="/static/scss/style.scss" />
   {% endcompress %}
+  {% endif %}
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -18,73 +23,73 @@
 
 </head>
 
-<body id="{% block body-id %}{% endblock %}" class="{% block body-class %}{% endblock %}">
+<body id="{% block body-id %}{% endblock %}" class="{% if not 'admin' in request.path %}accommodate-footer{% endif %}">
 
-  <div id="wrap">
+{% block body %}
 
-    {% block body %}
+  {% block nav %}
+    {% if 'admin' in request.path and user.is_superuser %}
+      {% include "nav/admin_nav.html" %}
+  <div class="col-md-12 nav-sidebar-offset">
+    {% else %}
+      {% include "nav/top_nav_base.html" %}
+  <div class="col-md-12">
+    {% endif %}
+  {% endblock %}
 
-    {% block nav %}{% include "nav/nav.html" %}{% endblock nav %}
+    {% block header %}
+    <div class="row head-title {% if 'admin' in request.path %}white-bg{% endif %} vertical-spacing">
+      <div class="col-md-12">
+        <h3>
+          {% block head-title %}{% endblock %}
+          <small class="pull-right">
+            {% block sub-title %}{% endblock %}
+          </small>
+        </h3>
+      </div>
+    </div>
+    {% endblock %}
 
-    <div id="container" class="container-fluid">
-
-      <div class="row page-header">
-        <div class="col-md-12">
-          <h1 class="h2 pull-left">{% block head-title %}{% endblock %}</h1>
-          {% block page-header %}{% endblock %}
+    <div class="row vertical-spacing">
+      <div class="col-md-12 hidden-print page-sub-nav">
+        <ul class="nav nav-pills navbar-left">
+          {% block page-subnav-sections %}{% endblock %}
+        </ul>
+        <div class="nav btn-group navbar-right">
+          {% block page-subnav-actions %}{% endblock %}
         </div>
-       </div>
+      </div>
+    </div>
 
-      {% if messages %}
-        <div class="row">
-          <div class="col-md-12 form-inline hidden-print" id="messages">
+    <div class="row">
+      <div class="col-md-12">
+        {% if messages %}
+          <div class="form-inline hidden-print" id="messages">
             {% for message in messages %}
               <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 {{ message }}
               </div>
             {% endfor %}
-            </div>
-        </div>
-      {% endif %}
-
-      <div class="row">
-        <div class="col-md-12 form-inline hidden-print" id="header-options">
-        {% block header %}{% endblock %}
-        </div>
+          </div>
+        {% endif %}
+        {% block page-alerts %}{% endblock %}
       </div>
-
-      {% block content %}{% endblock content %}
-
     </div>
 
-    {% endblock body %}
+    {% block content %}{% endblock content %}
 
-  </div>
+    {% block footer %}{% include "footer.html" %}{% endblock footer %}
 
-  {% block footer %}{% include "footer.html" %}{% endblock footer %}
+  </div><!-- /.main-col -->
 
-  <!-- Load jQuery with fallback -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  <script>if (window.jQuery === undefined) {
-    document.write('<script src="{% static 'js/vendor/jquery-2.2.0.min.js' %}"><\/script>');
-  }</script>
-
-  <!-- Load Bootstrap with fallback -->
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <script>if (window.jQuery.fn.tooltip === undefined) {
-    document.write('<script src="{% static 'js/vendor/bootstrap.min.js' %}"><\/script>');
-  }</script>
-
-  <!-- Load Datatables with fallback -->
-  <script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
-
-  <script>if (window.jQuery.fn.dataTable === undefined) {
-    document.write('<script src="{% static 'js/vendor/jquery.dataTables.min.js' %}"><\/script>');
-  }</script>
+  {% endblock body %}
 
   {% compress js %}
-  <!-- Small dependencies and JS for all pages -->
+  <!-- Dependencies and JS for all pages -->
+  <script src="{% static 'js/vendor/jquery-2.2.0.min.js' %}"></script>
+  <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/vendor/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/vendor/bootstrap-data-tables.js' %}"></script>
   <script src="{% static 'js/vendor/fixed-header.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>

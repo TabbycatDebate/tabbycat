@@ -4,13 +4,10 @@
 
 {% block head-title %}Participants{% endblock %}
 {% block page-title %}Participants{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}public-participants{% endblock %}
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}
-
-
-  <table id="speakersList" class="table table-hover table-striped">
+  <table id="speakersList" class="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -76,7 +73,7 @@
 </div>
 
 <div class="col-md-12">
-  <table id="adjudicatorsList" class="table table-hover table-striped">
+  <table id="adjudicatorsList" class="table">
     <thead>
       <tr>
         <th>Name</th>

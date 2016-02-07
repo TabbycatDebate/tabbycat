@@ -11,13 +11,6 @@ import datetime
 
 # Viewing Draw
 
-
-@admin_required
-@tournament_view
-def draw_index(request, t):
-    return render(request, 'draw_index.html')
-
-
 @admin_required
 @round_view
 def draw_display_by_venue(request, round):
@@ -35,8 +28,6 @@ def draw_display_by_team(request, round):
     return render(request, "draw_display_by_team.html", dict(draw=draw))
 
 # Creating Draw
-
-
 @login_required
 @round_view
 def draw(request, round):

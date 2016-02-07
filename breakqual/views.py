@@ -23,6 +23,11 @@ def public_breaking_teams(request, t, category):
 
 @admin_required
 @tournament_view
+def breaking_index(request, t):
+    return render(request, 'breaking_index.html')
+
+@admin_required
+@tournament_view
 def breaking_teams(request, t, category):
     bc = get_object_or_404(BreakCategory, slug=category)
 

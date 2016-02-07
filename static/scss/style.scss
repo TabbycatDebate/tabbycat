@@ -1,16 +1,69 @@
 //---------------------------------------------------
 // BOOTSTRAP
 //---------------------------------------------------
-@import "vendor/bootstrap";
+// Our overrides
+@import "partials/variables";
+// Core variables and mixins
+@import "vendor/bootstrap/mixins";
+@import "vendor/bootstrap/variables";
+// Reset
+@import "vendor/bootstrap/normalize";
+@import "vendor/bootstrap/print";
+// Core CSS
+@import "vendor/bootstrap/scaffolding";
+@import "vendor/bootstrap/type";
+@import "vendor/bootstrap/code";
+@import "vendor/bootstrap/grid";
+@import "vendor/bootstrap/tables";
+@import "vendor/bootstrap/forms";
+@import "vendor/bootstrap/buttons";
+// Components
+@import "vendor/bootstrap/component-animations";
+@import "vendor/bootstrap/glyphicons";
+@import "vendor/bootstrap/dropdowns";
+@import "vendor/bootstrap/button-groups";
+@import "vendor/bootstrap/input-groups";
+@import "vendor/bootstrap/navs";
+@import "vendor/bootstrap/navbar";
+// @import "vendor/bootstrap/breadcrumbs";
+// @import "vendor/bootstrap/pagination";
+@import "vendor/bootstrap/pager";
+@import "vendor/bootstrap/labels";
+@import "vendor/bootstrap/badges";
+@import "vendor/bootstrap/jumbotron";
+@import "vendor/bootstrap/thumbnails";
+@import "vendor/bootstrap/alerts";
+@import "vendor/bootstrap/progress-bars";
+@import "vendor/bootstrap/media";
+@import "vendor/bootstrap/list-group";
+@import "vendor/bootstrap/panels";
+// @import "vendor/bootstrap/wells";
+@import "vendor/bootstrap/close";
+// Components w/ JavaScript
+@import "vendor/bootstrap/modals";
+@import "vendor/bootstrap/tooltip";
+@import "vendor/bootstrap/popovers";
+// @import "vendor/bootstrap/carousel";
+// Utility classes
+@import "vendor/bootstrap/utilities";
+@import "vendor/bootstrap/responsive-utilities";
 //---------------------------------------------------
 // TABBYCAT
 //---------------------------------------------------
+@import "modules/typography";
+@import "modules/print";
+@import "modules/nav";
+@import "modules/tables";
+@import "modules/forms";
+@import "modules/base";
+@import "modules/allocation";
+//---------------------------------------------------
+// BASE AESTHETICS
+//---------------------------------------------------
+//---------------------------------------------------
+// TO REFACTOR
+//---------------------------------------------------
 @import "components/page-specific";
-@import "components/tables";
-@import "components/print";
-//---------------------------------------------------
-// GENERAL UTILITIES
-//---------------------------------------------------
 @include text-emphasis-variant('.text-success', $brand-success);
 @include text-emphasis-variant('.text-info', $brand-info);
 @include text-emphasis-variant('.text-warning', $brand-warning);
@@ -66,94 +119,12 @@ table.table > tbody > tr > td.no-horizontal-spacing {
     .dropdown.open .dropdown-menu {}
   }
 }
-// Override
-.nav {
-  > li {
-    > a {
-      padding: 15px 10px;
-    }
-  }
-  > li.round-nav {
-    > a {
-      padding: 15px 5px;
-      .caret {
-        margin-left: -2px;
-      }
-    }
-    a.current-round {
-      font-weight: bold;
-      border-top: 2px solid #999;
-      padding-top: 13px;
-    }
-  }
-}
-.page-header {
-  margin-bottom: 20px;
-}
-#header-options {
-  //min-height: 34px; // Spacer pre-form relocation via JS
-  margin-right: 0;
-  .btn {
-    margin-bottom: 20px;
-  }
-}
-// Sticky Footer
-html,
-body {
-  height: 100%;
-}
-#wrap {
-  min-height: 100%;
-  height: auto;
-  margin: 0 auto -100px;
-  padding: 0 0 115px;
-  #container {
-    margin-bottom: 20px;
-  }
-}
-#footer {
-  height: 115px;
-  .navbar {
-    height: 115px;
-    margin-bottom: 0;
-  }
-  .navbar {
-    border-radius: 0;
-  }
-  .navbar-brand {
-    font-size: 14px;
-    margin-bottom: 0;
-  }
-}
-@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-  #wrap {
-    margin: 0 auto -100px;
-    padding: 0 0 100px;
-  }
-  #footer {
-    height: 100px;
-    .navbar {
-      height: 100px;
-    }
-  }
-}
-@media (min-width: $screen-md-min) {
-  #wrap {
-    margin: 0 auto -50px;
-    padding: 0 0 50px;
-  }
-  #footer {
-    height: 50px;
-    overflow: hidden;
-  }
-}
 // Universal Style overrides
 .page-header h1 {
   margin-top: 0; // fixes button alignment easily
 }
 [data-toggle="tooltip"] {
   cursor: pointer; // for tooltips
-  border-bottom: 2px dotted #ccc;
 }
 .alert-link {
   text-decoration: underline;

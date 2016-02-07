@@ -4,8 +4,6 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^$',                                              views.draw_index,           name='draw_index'),
-
     url(r'^round/(?P<round_seq>\d+)/$',                     views.draw,                 name='draw'),
     url(r'^round/(?P<round_seq>\d+)/details/$',             views.draw_with_standings,  name='draw_with_standings'),
     url(r'^round/(?P<round_seq>\d+)/display_by_venue/$',    views.draw_display_by_venue,name='draw_display_by_venue'),
@@ -15,7 +13,6 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/print/feedback/$',      views.draw_print_feedback,       name='draw_print_feedback'),
 
     url(r'^round/(?P<round_seq>\d+)/create/$',              views.create_draw,          name='create_draw'),
-    url(r'^round/(?P<round_seq>\d+)/create_with_all/$',     views.create_with_all,      name='create_with_all'),
     url(r'^round/(?P<round_seq>\d+)/confirm/$',             views.confirm_draw,         name='confirm_draw'),
     url(r'^round/(?P<round_seq>\d+)/release/$',             views.release_draw,         name='release_draw'),
     url(r'^round/(?P<round_seq>\d+)/unrelease/$',           views.unrelease_draw,       name='unrelease_draw'),

@@ -158,6 +158,8 @@ def adj_latest_feedback(request, t):
     feedbacks = AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
         'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
     feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    if feedbacks.count() == 0:
+        messages.info(request, "No feedback has been submitted yet.")
     return render(request, "feedback_latest.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
 
 @login_required
@@ -513,5 +515,3 @@ def generate_randomised_urls(request, t):
     populate_url_keys(t.adjudicator_set.all())
     populate_url_keys(t.team_set.all())
     return redirect_tournament('randomised_urls', t)
-
-

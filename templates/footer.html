@@ -1,33 +1,53 @@
 {% load debate_tags %}
 
-<div id="footer" class="clearfix">
-  <nav class="navbar navbar-default {% if '/admin/' in request.path %}navbar-inverse{% endif %}" role="navigation">
-    <p class="navbar-brand text-muted">
-      <small>
-        {% if tournament and pref.enable_divisions == 0 %}
-          {{ tournament }} runs on <a href="https://github.com/czlee/tabbycat/" target="_new">😸Tabby Cat {{ tabbycat_version }} ({{ tabbycat_codename }}), </a>
-          as developed by Qi-Shan, <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, & <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
-          Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> (Android) &
-           <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
-        {% endif %}
-      </small>
-    </p>
-    <p class="navbar-brand text-muted pull-right {% if '/admin/' in request.path %}navbar-inverse{% endif %}">
-      <small>
-        <a href="/">🏠Home</a>
-        {% if user.is_authenticated %}
-          {% if user.is_superuser %}
-            {% if tournament %}
-              <a href="{% tournament_url tournament_config_index %}"> 🏆Configuration</a>
-              <a href="{% tournament_url data_index %}"> 📩Data Import</a>
-              <a href="/admin/"> 📧Data Admin</a>
-            {% endif %}
-          {% endif %}
-          <a href="/accounts/logout/" title="Log out of {{ user }}">🔒Logout of {{ user }}</a>
-        {% else %}
-          <a href="/accounts/login/" title="Log in">🔓Log in</a>
-        {% endif %}
-        </small>
-    </p>
-  </nav>
-</div>
+<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+  <div class="container-fluid">
+
+    {% if tournament and pref.enable_divisions == 0 %}
+    <div class="navbar-header">
+      <span class="navbar-brand font-size-reset small font-weight-reset">
+            {{ tournament }} runs on
+            <a href="https://github.com/czlee/tabbycat/" target="_new">
+              <span class="emoji">😸</span>Tabby Cat {{ tabbycat_version }} ({{ tabbycat_codename }}),
+      </a>
+      as developed by Qi-Shan,
+      <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, &
+      <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
+      {% if not 'admin' in request.path %}
+        Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">
+        </a> (Android) & <a href="http://timekept.com" target="_new">Timekept</a> (iOS).
+      {% endif %}
+      </span>
+    </div>
+    {% endif %}
+
+    <ul class="nav navbar-nav navbar-right font-size-reset small">
+      <li>
+        <a href="/">
+          <span class="emoji">🏠</span>Home
+        </a>
+      </li>
+      {% if user.is_authenticated %}
+      <li>
+        <a href="http://tabbycat.readthedocs.org/" target="_blank">
+          <span class="emoji">❓</span>Help
+        </a>
+      </li>
+      <li>
+        <a class="" href="/accounts/logout/">
+          <span class="emoji">🔒</span>Logout of {{ user }}
+        </a>
+      </li>
+      {% else %}
+      <li>
+        <a class="" href="/accounts/login/">
+          <span class="emoji">🔓</span>Login
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+
+  </div>
+  <!-- /.container-fluid -->
+</nav>
+<!-- /.navbar -->

@@ -4,11 +4,10 @@
 
 {% block head-title %}Results for {{ round.name }}{% endblock %}
 {% block page-title %}Results for {{ round.name }}{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}public-results{% endblock %}
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover" cellpadding="0" cellspacing="0">
+  <table id="dataTable" class="table">
     <thead>
       <tr>
         {% if pref.enable_divisions %}

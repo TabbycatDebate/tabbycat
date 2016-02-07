@@ -1,69 +1,87 @@
-{% extends "draw_rbase.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
 
+{% block page-title %}Draw for {{ round.name }}{% endblock %}
 {% block head-title %}
-  Draw for {{ round.name }}
-  <small>
+  <span class="emoji"> 👀</span>Draw for {{ round.name }}
+{% endblock %}
+{% block sub-title %}
   {% if round.draw_status = round.STATUS_CONFIRMED %}
-    (confirmed, draw not released,
+    (draw is confirmed but not released;
   {% elif round.draw_status = round.STATUS_RELEASED %}
-    (confirmed, draw released,
+    (draw is confirmed and released;
   {% else %}
     (DRAW STATUS ERROR,
   {% endif %}
-  motions {{ round.motions_released|yesno:",not" }} released)
+  motions {{ round.motions_released|yesno:",are not" }} released)
   {% if round.starts_at %}
     debates start at {{ round.starts_at }}
   {% endif %}
-  </small>
 {% endblock %}
-{% block page-title %}
-  Draw for {{ round.name }}
-  {% if round.draw_status = round.STATUS_CONFIRMED %}
-    (confirmed)
-  {% elif round.draw_status = round.STATUS_RELEASED %}
-    (released)
-  {% else %}
-    (DRAW STATUS ERROR)
+
+{% block page-subnav-sections %}
+
+  <a class="btn btn-default submit-disable" href="{% round_url draw_adjudicators_edit %}" class="btn btn-default submit-disable">
+    Edit Adjudicators
+  </a>
+
+  <a class="btn btn-default submit-disable" href="{% round_url motions_edit %}" class="btn btn-default submit-disable">
+    Edit Motions
+  </a>
+
+  <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
+    Draw Details
+  </a>
+
+  {% if not pref.enable_venue_times %}
+    <button class="btn {% if round.starts_at %}btn-danger{% else %}btn-primary{% endif %}  submit-disable" data-toggle="modal" data-target="#start-time-form">
+      {% if round.starts_at %}Edit Start Time{% else %}Add Start Time{% endif %}
+    </button>
   {% endif %}
+  {% if round.motions_released %}
+    <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}">
+      <button class="btn btn-danger  submit-disable" type="submit">
+        Unrelease Motions
+      </button>
+    </form>
+  {% else %}
+    <form id="releaseForm" method="POST" action="{% round_url release_motions %}">
+      <button class="btn btn-primary  submit-disable" type="submit">
+        Release Motions
+      </button>
+    </form>
+  {% endif %}
+  {% if round.draw_status = round.STATUS_CONFIRMED %}
+    <form id="releaseForm" method="POST" action="{% round_url release_draw %}">
+    <button class="btn btn-primary  submit-disable" type="submit">
+      Release Draw
+    </button>
+    </form>
+  {% elif round.draw_status = round.STATUS_RELEASED %}
+    <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}">
+    <button class="btn btn-danger  submit-disable" type="submit">
+      Unrelease Draw
+    </button>
+    </form>
+  {% endif %}
+
 {% endblock %}
-{% block body-class %}draw{% endblock %}
 
-{% block header %}
-  <div class="btn-group">
-    <a class="btn {% if round.venue_allocation_validity %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_venues_edit %}">Edit Venues</a>
-    <a class="btn {% if round.adjudicators_allocation_validity != 1 and round.adjudicators_allocation_validity != 2 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url draw_adjudicators_edit %}" href="{% round_url draw_adjudicators_edit %}">Edit Adjs</a>
-    <a class="btn {% if round.motion_set.all.count > 0 %}btn-success{% else %}btn-danger{% endif %}" href="{% round_url motions current_round %}">View/Edit Motions</a>
-    <a class="btn btn-default" href="{% round_url draw_matchups_edit round %}">Edit Matchups</a>
-    {% if not pref.enable_venue_times %}
-      <a class="btn {% if round.starts_at %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#start-time-form">Edit Start Time</a>
-    {% endif %}
-  </div>
-  <div class="btn-group">
-    <a class="btn btn-default form-control" href="{% round_url draw_with_standings %}">View Details</a>
-  </div>
-  <div class="btn-group">
-    <a class="btn btn-default form-control" href="{% round_url draw_display_by_venue %}">Show by Venue</a>
-    <a class="btn btn-default form-control" href="{% round_url draw_display_by_team %}">Show by Team</a>
-    {% if round.draw_status = round.STATUS_CONFIRMED %}
-      <button class="btn btn-success form-control" id="release_draw">Release Draw to Public</button>
-    {% elif round.draw_status = round.STATUS_RELEASED %}
-      <button class="btn btn-danger form-control" id="unrelease_draw">Unrelease Draw to Public</button>
-    {% endif %}
-  </div>
+{% block page-subnav-actions %}
+
+  <a href="{% round_url results %}" class="btn btn-success">
+    Enter Results<span class="glyphicon glyphicon-chevron-right"></span>
+  </a>
+
 {% endblock %}
 
-{% block content %}
-  <form id="releaseForm" method="POST" action="{% round_url release_draw %}"></form>
-  <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}"></form>
-  <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}"></form>
 
+{% block page-alerts %}
   {% if round.motion_set.all.count == 0 %}
   <div class="alert alert-danger">
     There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit current_round %}" class="alert-link">Edit the motions.</a>
   </div>
   {% endif %}
-
   {% if not round.venue_allocation_validity %}
     <div class="alert alert-danger alert-dismissable" id="">
       One or more debates does not have a venue <a href="{% round_url draw_venues_edit current_round %}" class="alert-link">Edit the venues</a>.
@@ -85,29 +103,70 @@
       </div>
     {% endif %}
   {% endif %}
+{% endblock %}
 
-    <table id="dataTable" class="table table-hover table-bordered table-striped" cellpadding="0" cellspacing="0">
+{% block content %}
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+
+      <div class="btn-group">
+        <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_by_venue round %}">
+          <span class="text-primary">
+            Display Draw by Venue <span class="glyphicon glyphicon-share"></span>
+          </span>
+        </a>
+        <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_by_team round %}">
+          <span class="text-primary">
+            Display Draw by Team <span class="glyphicon glyphicon-share"></span>
+          </span>
+        </a>
+      </div>
+
+      <div class="btn-group pull-right">
+        <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_print_scoresheets round %}">
+          <span class="text-primary">
+            Print Ballots <span class="glyphicon glyphicon-share"></span>
+          </span>
+        </a>
+        <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_print_feedback round %}">
+          <span class="text-primary">
+            Print Feedback Forms <span class="glyphicon glyphicon-share"></span>
+          </span>
+        </a>
+        {% if pref.public_divisions %}
+        <a target="_blank" class="btn btn-sm btn-default" href="{% round_url master_sheets_list round %}">
+          <span class="text-primary">
+            Print Mastersheets <span class="glyphicon glyphicon-share"></span>
+          </span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <table id="dataTable" class="table">
         <thead>
             <tr>
-                {% if pref.enable_divisions %}
-                    <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip"title="Division">{{ debate.division.name }}</span></th>
-                {% else %}
-                    <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-                {% endif %}
-                {% if pref.enable_venue_groups %}
-                    <th>Venue</th>
-                {% endif %}
-                <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Room"></span></th>
-                {% if pref.enable_venue_times %}
-                    <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip"title="Date"></span></th>
-                {% endif %}
-                {% if pref.enable_venue_times %}
-                    <th><span class="glyphicon glyphicon-time" data-toggle="tooltip"title="Time"></span></th>
-                {% endif %}
-                <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 1{% else %}Affirmative{% endif %}</th>
-                <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 2{% else %}Negative{% endif %}</th>
-                <th>Adj<span class="hidden-xs">udicator</span>s</th>
-                <th>Conflict</th>
+              {% if pref.enable_divisions %}
+                  <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip"title="Division">{{ debate.division.name }}</span></th>
+              {% else %}
+                  <th><span class="glyphicon glyphicon-tasks" data-toggle="tooltip" title="Bracket"></span></th>
+              {% endif %}
+              {% if pref.enable_venue_groups %}
+                  <th>Venue</th>
+              {% endif %}
+              <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Room"></span></th>
+              {% if pref.enable_venue_times %}
+                  <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip"title="Date"></span></th>
+              {% endif %}
+              {% if pref.enable_venue_times %}
+                  <th><span class="glyphicon glyphicon-time" data-toggle="tooltip"title="Time"></span></th>
+              {% endif %}
+              <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 1{% else %}Affirmative{% endif %}</th>
+              <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 2{% else %}Negative{% endif %}</th>
+              <th>Adj<span class="hidden-xs">udicator</span>s</th>
+              <th>Conflict</th>
             </tr>
         </thead>
         <tbody>
@@ -159,7 +218,11 @@
           <td class="text-danger">{{ debate.all_conflicts|join:",<br>" }}</td>
         </tr>
         {% endfor %}
-    </table>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 
   <div class="modal fade" id="start-time-form" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
@@ -180,7 +243,7 @@
           <div class="form-group">
             <label class="col-sm-4 control-label"></label>
             <div class="col-sm-6">
-              <button type="submit" value="Save" class="form-control btn btn-success submit-disable" data-loading-text="Saving...">Save</button>
+              <button type="submit" value="Save" class="btn btn-success submit-disable" data-loading-text="Saving...">Save</button>
             </div>
           </div>
         </form>
@@ -193,10 +256,6 @@
 {% block extra-js %}
    <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
-      $("#allocateAdj").click( function() {
-        $("#allocateAdjForm").submit();
-        return false;
-      } );
       var dTable = $('#dataTable').DataTable({
         'bPaginate': false,
         "aaSorting": [[ 0, "desc" ], [ 2, "asc" ]],
@@ -205,14 +264,6 @@
       $('#table-search').keyup(function(){
         dTable.search($(this).val()).draw();
       })
-      $("#release_draw").click( function() {
-        $("#releaseForm").submit();
-        return false;
-      } );
-      $("#unrelease_draw").click( function() {
-        $("#unreleaseForm").submit();
-        return false;
-      } );
     } );
   </script>
 {% endblock extra-js %}
