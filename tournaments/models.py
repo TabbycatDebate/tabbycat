@@ -715,6 +715,7 @@ class Round(models.Model):
 
     def activate_all(self):
         from venues.models import Venue
+        from participants.models import Adjudicator, Team
         self.set_available_venues([v.id for v in Venue.objects.all()])
         self.set_available_adjudicators([a.id for a in Adjudicator.objects.all(
         )])
