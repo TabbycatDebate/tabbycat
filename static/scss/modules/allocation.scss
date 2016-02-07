@@ -3,18 +3,18 @@
 // BUTTONS
 //
 .edit-adjs-subnav {
-  margin: 5px -10px -15px -10px;
+  margin: 5px 5px -15px 5px;
 }
 //
 // TO REFACTOR
 //
-
 // General
 #main {
   z-index: 10;
   position: relative;
   padding-right: 5px;
   padding-left: 5px;
+  padding-right: $adj-button-width + 25px;
 }
 .extra-line-height > tbody > tr > td {
   line-height: 26px; // Align text with boxes
@@ -26,6 +26,7 @@
     min-width: 42px;
     padding-left: 4px;
     padding-right: 4px;
+    height: 32px;
   }
 }
 // .page-header {
@@ -47,6 +48,7 @@
   padding-right: 5px;
   margin-top: 55px;
   z-index: 10;
+  width: $adj-button-width + 25px;
   &.bg-success {
     background: $state-success-bg;
   }
@@ -100,11 +102,30 @@
   border: 1px solid #ccc;
   padding: 0;
   text-align: left;
-  max-width: 300px; // Needed
+  max-width: $adj-button-width;
   background: #fff;
+  overflow: hidden;
+  height: 32px;
+  position: relative;
   span {
-    padding: 6px;
-    display: block;
+    float: left;
+    max-width: auto;
+    padding: 6px 0 0 6px;
+    display: inline-block;
+    overflow: hidden;
+  }
+  span.score {
+    width: 25px;
+  }
+  span.name {
+    max-width: $adj-button-width - 70;
+    text-overflow: ellipsis;
+  }
+  span.institution {
+    text-align: right;
+    position: absolute;
+    right: 6px;
+    color: $gray-light;
   }
   &.gender-display.male span a,
   &.gender-display.female span a {
@@ -139,8 +160,6 @@
 .team.dragging,
 .ui-draggable-dragging {
   cursor: move;
-  border: 1px solid $btn-primary-border;
-  @extend .text-primary;
   &.is_unaccredited {
     background: $table-bg-active;
   }
@@ -152,24 +171,36 @@
 .history-conflict {
   background-color: $btn-primary-bg !important;
   color: #fff;
+  a {
+    color: #fff;
+  }
 }
 .institutional-conflict {
   background-color: $btn-warning-bg !important;
   color: #fff;
+  a {
+    color: #fff;
+  }
 }
 .personal-conflict {
   background-color: $btn-danger-bg !important;
   color: #fff;
+  a {
+    color: #fff;
+  }
 }
 .adjudicator-conflict {
   background-color: $btn-danger-bg !important;
   color: #fff;
+  a {
+    color: #fff;
+  }
 }
 .panel-incomplete,
 .chair-incomplete {
   background-color: #a700a5;
   &:hover {
-    background-color: darken(#a700a5, 1);   
+    background-color: darken(#a700a5, 1);
   }
 }
 .bg-info.panel-incomplete,

@@ -82,6 +82,10 @@ table.dataTable thead .sorting_desc_disabled:after {
 .table.lg-row > tbody > tr > td {
   line-height: 35px;
 }
+.table.lg-row.table-condensed > tbody > tr > th,
+.table.lg-row.table-condensed > tbody > tr > td {
+  line-height: 33px;
+}
 //
 // ROW STATES
 //
