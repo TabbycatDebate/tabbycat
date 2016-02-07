@@ -156,3 +156,8 @@
 body.accommodate-footer {
   padding-bottom: 70px; // To fix to the screen bottom body needs padding
 }
+.navbar-fixed-bottom {
+  .navbar-nav > li > a {
+    padding: 15px 10px 15px 0px; // Tighten link spacing so the footer isn't x2 height
+  }
+}
