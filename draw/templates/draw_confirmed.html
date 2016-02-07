@@ -1,4 +1,4 @@
-{% extends "draw_rbase.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
 
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
@@ -21,11 +21,11 @@
 
 {% block page-subnav-sections %}
 
-  <a class="btn btn-default" href="{% round_url draw_adjudicators_edit %}" class="btn btn-default submit-disable">
+  <a class="btn btn-default submit-disable" href="{% round_url draw_adjudicators_edit %}" class="btn btn-default submit-disable">
     Edit Adjudicators
   </a>
 
-  <a class="btn btn-default" href="{% round_url motions_edit %}" class="btn btn-default submit-disable">
+  <a class="btn btn-default submit-disable" href="{% round_url motions_edit %}" class="btn btn-default submit-disable">
     Edit Motions
   </a>
 
@@ -34,34 +34,36 @@
   </a>
 
   {% if not pref.enable_venue_times %}
-    <a class="btn {% if round.starts_at %}btn-danger{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#start-time-form">
+    <button class="btn {% if round.starts_at %}btn-danger{% else %}btn-primary{% endif %}  submit-disable" data-toggle="modal" data-target="#start-time-form">
       {% if round.starts_at %}Edit Start Time{% else %}Add Start Time{% endif %}
-    </a>
+    </button>
   {% endif %}
   {% if round.motions_released %}
-    <a class="btn btn-danger" id="unrelease_motions">
-      Unrelease Motions
-    </a>
+    <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}">
+      <button class="btn btn-danger  submit-disable" type="submit">
+        Unrelease Motions
+      </button>
+    </form>
   {% else %}
-    <a class="btn btn-primary" id="release_motions">
-      Release Motions
-    </a>
+    <form id="releaseForm" method="POST" action="{% round_url release_motions %}">
+      <button class="btn btn-primary  submit-disable" type="submit">
+        Release Motions
+      </button>
+    </form>
   {% endif %}
   {% if round.draw_status = round.STATUS_CONFIRMED %}
-    <a class="btn btn-primary" id="release_draw">
+    <form id="releaseForm" method="POST" action="{% round_url release_draw %}">
+    <button class="btn btn-primary  submit-disable" type="submit">
       Release Draw
-    </a>
+    </button>
+    </form>
   {% elif round.draw_status = round.STATUS_RELEASED %}
-    <a class="btn btn-danger" id="unrelease_draw">
+    <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}">
+    <button class="btn btn-danger  submit-disable" type="submit">
       Unrelease Draw
-    </a>
+    </button>
+    </form>
   {% endif %}
-
-  <form id="releaseForm" method="POST" action="{% round_url release_motions %}"></form>
-  <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}"></form>
-  <form id="releaseForm" method="POST" action="{% round_url release_draw %}"></form>
-  <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}"></form>
-  <form id="allocateAdjForm" method="POST" action="{% round_url create_adj_allocation %}"></form>
 
 {% endblock %}
 
@@ -254,10 +256,6 @@
 {% block extra-js %}
    <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
-      $("#allocateAdj").click( function() {
-        $("#allocateAdjForm").submit();
-        return false;
-      } );
       var dTable = $('#dataTable').DataTable({
         'bPaginate': false,
         "aaSorting": [[ 0, "desc" ], [ 2, "asc" ]],
@@ -266,14 +264,6 @@
       $('#table-search').keyup(function(){
         dTable.search($(this).val()).draw();
       })
-      $("#release_draw").click( function() {
-        $("#releaseForm").submit();
-        return false;
-      } );
-      $("#unrelease_draw").click( function() {
-        $("#unreleaseForm").submit();
-        return false;
-      } );
     } );
   </script>
 {% endblock extra-js %}

@@ -86,7 +86,7 @@ def release_motions(request, round):
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE,
         user=request.user, round=round, tournament=round.tournament)
 
-    return redirect_round('motions', round)
+    return redirect_round('draw', round)
 
 @admin_required
 @expect_post
@@ -97,7 +97,7 @@ def unrelease_motions(request, round):
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE,
         user=request.user, round=round, tournament=round.tournament)
 
-    return redirect_round('motions', round)
+    return redirect_round('draw', round)
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)

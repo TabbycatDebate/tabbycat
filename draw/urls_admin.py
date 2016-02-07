@@ -4,8 +4,6 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^$',                                              views.draw_index,           name='draw_index'),
-
     url(r'^round/(?P<round_seq>\d+)/$',                     views.draw,                 name='draw'),
     url(r'^round/(?P<round_seq>\d+)/details/$',             views.draw_with_standings,  name='draw_with_standings'),
     url(r'^round/(?P<round_seq>\d+)/display_by_venue/$',    views.draw_display_by_venue,name='draw_display_by_venue'),
