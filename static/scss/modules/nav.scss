@@ -36,8 +36,7 @@
     text-transform: uppercase;
     color: $sidebar-muted-text;
     .emoji {
-      margin-right: 8px; // Align the the other icons
-      margin-left: 1px;
+      margin-right: 7px; // Align the the other icons
     }
     &:hover, &.active {
       background: none;
