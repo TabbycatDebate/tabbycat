@@ -13,7 +13,7 @@ TOTAL_SCORE_MEAN  = 75 * 3.5
 TOTAL_SCORE_STDEV = 10
 
 METRICS = [
-    ("points", "speaks_sum", "draw_strength", "margin"),
+    ("points", "speaks_sum", "draw_strength", "margin_sum"),
     # ("points", "wbw", "speaks_sum", "wbw"),
     ("points", "speaks_sum"),
 ]
@@ -55,7 +55,7 @@ standings = {}
 for team, teamscores in teamscores_by_team.items():
     standings[team] = {
         "speaks_sum": sum(teamscore["score"] for teamscore in teamscores),
-        "margin": sum(teamscore["margin"] for teamscore in teamscores),
+        "margin_sum": sum(teamscore["margin"] for teamscore in teamscores),
         "points": sum(teamscore["points"] for teamscore in teamscores),
         "draw_strength": 0, # initialize
         "against": dict.fromkeys([t for t in TEAMS if t is not team], "n/a"), # initialize
