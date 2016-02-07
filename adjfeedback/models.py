@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.functional import cached_property
 
 from results.models import Submission
+from adjallocation.models import DebateAdjudicator
 
 
 class AdjudicatorTestScoreHistory(models.Model):

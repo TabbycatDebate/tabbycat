@@ -9,8 +9,11 @@
   {{ debate.venue.name }}</small>
 {% endblock %}
 
-{% block content %}
+{% block page-alerts %}
   {% include "other_ballots_list.html" %}
+{% endblock %}
+
+{% block content %}
   <form id="resultsForm" action="." method="POST" class="form-horizontal">
     {% include "enter_results_ballot_set.html" %}
     <div class="row">

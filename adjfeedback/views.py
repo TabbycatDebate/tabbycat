@@ -92,20 +92,22 @@ def feedback_overview(request, t):
                 debates = [fb.source_team.debate for fb in adj_round_feedbacks if fb.source_team]
                 debates.extend([fb.source_adjudicator.debate for fb in adj_round_feedbacks if fb.source_adjudicator])
                 adj_da = next((da for da in all_debate_adjudicators if (da.adjudicator == adj and da.debate == debates[0])), None)
+                if adj_da:
+                    if adj_da.type == adj_da.TYPE_CHAIR:
+                        adj_type = "Chair"
+                    elif adj_da.type == adj_da.TYPE_PANEL:
+                        adj_type = "Panellist"
+                    elif adj_da.type == adj_da.TYPE_TRAINEE:
+                        adj_type = "Trainee"
 
-                if adj_da.type == adj_da.TYPE_CHAIR:
-                    adj_type = "Chair"
-                elif adj_da.type == adj_da.TYPE_PANEL:
-                    adj_type = "Panellist"
-                elif adj_da.type == adj_da.TYPE_TRAINEE:
-                    adj_type = "Trainee"
+                    # Average their scores for that round
+                    totals = [f.score for f in adj_round_feedbacks]
+                    average = sum(totals) / len(totals)
 
-                # Average their scores for that round
-                totals = [f.score for f in adj_round_feedbacks]
-                average = sum(totals) / len(totals)
-
-                # Creating the object list for the graph
-                adj.rscores.append([r.seq, average, adj_type])
+                    # Creating the object list for the graph
+                    adj.rscores.append([r.seq, average, adj_type])
+                else:
+                    print('none')
 
     context = {
         'adjudicators'      : adjudicators,
