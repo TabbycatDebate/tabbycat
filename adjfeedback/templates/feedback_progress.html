@@ -5,15 +5,32 @@
 {% block page-title %}Unsubmitted Feedback Ballots{% endblock %}
 
 {% block page-subnav-sections %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url adj_latest_feedback %}">
+    Feedback Overview
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adj_latest_feedback %}">
+    Latest Feedback
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adj_source_feedback %}">
+    Find Feedback
+  </a>
+  {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url randomised_urls %}">
+    Randomised URLs
+  </a>
+  {% endif %}
+  <a class="btn btn-default active" href="{% tournament_url feedback_progress %}">
+    Unsubmitted Ballots
+  </a>
   <div class="btn-group" data-toggle="buttons">
     <label class="btn btn-primary active" id="toggle-all">
-    <input type="radio" name="options">Show All
+      <input type="radio" name="options">Show All
     </label>
     <label class="btn btn-primary" id="toggle-teams">
-    <input type="radio" name="options" >Show Teams
+      <input type="radio" name="options" >Show Teams
     </label>
     <label class="btn btn-primary" id="toggle-adjs">
-    <input type="radio" name="options" >Show Adjudicators<span class="hidden-xs">udicator</span>s
+      <input type="radio" name="options" >Show Adjs
     </label>
   </div>
   {% include "tables/table_search.html" %}

@@ -115,6 +115,7 @@
   display: inline-block;
   float: left;
   margin: -1px 10px 0px -5px;
+  z-index: 10;
 
   .glyphicon {
     margin-left: 2px;
@@ -130,6 +131,16 @@
   }
   &.icon-container {
     background: #444;
+  }
+}
+.nav-stacked .nav-stacked {
+  .progress-line {
+    margin: -3px 0 0 21px;
+    height: 35px;
+    z-index: 10;
+  }
+  a {
+    z-index: 20;
   }
 }
 .nav-accordion li.panel a:hover {
