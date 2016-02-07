@@ -655,7 +655,7 @@ class ForfeitBallotSet(BallotSet):
         # Note: forfeited debates have fake scores/margins, thus the affects_average toggle
         self.ballotsub.teamscore_set.filter(debate_team=dt).delete()
         self.ballotsub.teamscore_set.create(debate_team=dt, points=points,
-                win=win, score=0, margin=0, affects_averages=False)
+                win=win, score=0, margin=0, forfeit=True)
 
     def save(self):
         self.ballotsub.forfeit = self.forfeiter

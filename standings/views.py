@@ -5,10 +5,10 @@ from motions.models import Motion
 from .teams import TeamStandingsGenerator
 
 TEAM_STANDING_METRICS_PRESETS = {
-    "australs": ('points', 'speaker_score'),
-    "nz"      : ('points', 'wbw', 'speaker_score', 'wbw', 'draw_strength', 'wbw'),
-    "wadl"    : ('points', 'wbw', 'margin', 'speaker_score'),
-    "test"    : ('points', 'wbw', 'draw_strength', 'wbw', 'speaker_score', 'wbw', 'margin', 'wbw'),
+    "australs": ('points', 'speaks_sum'),
+    "nz"      : ('points', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw'),
+    "wadl"    : ('points', 'wbw', 'margin_avg', 'speaks_avg'),
+    "test"    : ('points', 'wbw', 'draw_strength', 'wbw', 'speaks_sum', 'wbw', 'margin_sum', 'wbw'),
 }
 
 from utils.views import *
@@ -122,7 +122,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
         teams = Team.objects.teams_for_standings(round)
         metrics = TEAM_STANDING_METRICS_PRESETS[tournament.pref('team_standings_rule')]
         generator = TeamStandingsGenerator(metrics, self.rankings)
-        standings = generator.generate(teams)
+        standings = generator.generate(teams, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
         team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))

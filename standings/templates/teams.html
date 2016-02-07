@@ -110,27 +110,26 @@
                   {% endif %}
                 </span>
             </td>
-          {% else %}
-            <td></td>
-          {% endif %}
-          {% if round_results.win >= 0 %}
-            {% if show_ballots and round_results.debate_team.debate_id %}
+            {% if show_ballots and round_results.debate_team.debate_id and not round_results.forfeit %}
               <td>
                 <a class="team-score" href="{% tournament_url public_ballots_view round_results.debate_team.debate_id %}">
-                  {{ round_results.get_score|floatformat:2 }}
+                  {{ round_results.score|floatformat:2 }}
                 </a>
               </td>
+            {% elif not round_results.forfeit %}
+              <td>{{ round_results.score|floatformat:2 }}</td>
             {% else %}
-              <td>{{ round_results.get_score|floatformat:2 }}</td>
+              </td></td>
             {% endif %}
           {% else %}
+            <td></td>
             <td></td>
           {% endif %}
         {% endfor %}
         <td>{{ tsi.wins }}</td>
         {% for metric in tsi.itermetrics %}
-        {# the metricformat filter is defined in templatetags/metricformat.py #}
-        <td>{{ metric|metricformat }}</td>
+          {# the metricformat filter is defined in templatetags/metricformat.py #}
+          <td>{{ metric|metricformat }}</td>
         {% endfor %}
         {% if pref.show_avg_margin %}
           <td>{{ team.avg_margin|floatformat:2 }}</td>

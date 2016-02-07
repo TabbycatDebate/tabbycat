@@ -91,9 +91,10 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
 
     function = NotImplemented
     field = NotImplemented
+    exclude_forfeits = False
 
-    @staticmethod
-    def get_annotated_queryset(queryset, field, function, round=None, column_name="metric"):
+    @classmethod
+    def get_annotated_queryset(cls, queryset, field, function, round=None, column_name="metric"):
         # This is what might be more concisely expressed, if it were permissible
         # in Django, as:
         # teams = teams.annotate_if(
@@ -117,9 +118,17 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
             AND "tournaments_round"."stage" = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
 
         if round is not None:
-            EXTRA_QUERY += """ AND "tournaments_round"."seq" <= {round:d}""".format(round=round.seq)
+            TEAM_SCORE_ANNOTATION_QUERY += """
+            AND "tournaments_round"."seq" <= {round:d}""".format(round=round.seq)
 
-        sql = RawSQL(TEAM_SCORE_ANNOTATION_QUERY.format(field=field, function=function), ())
+        if cls.exclude_forfeits:
+            TEAM_SCORE_ANNOTATION_QUERY += """
+            AND "results_teamscore"."forfeit" = FALSE"""
+
+        query = TEAM_SCORE_ANNOTATION_QUERY.format(field=field, function=function)
+        logger.info("Running query: " + query)
+
+        sql = RawSQL(query, ())
         return queryset.annotate(**{column_name: sql}).distinct()
 
     def annotate_teams(self, queryset, standings, round=None):
@@ -136,23 +145,47 @@ class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     function = "SUM"
     field = "points"
 
-class SpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+
+class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
-    key = "speaker_score"
-    name = "Speaker score"
+    key = "speaks_sum"
+    name = "Total speaker score"
     abbr = "Spk"
 
     function = "SUM"
     field = "score"
 
-class MarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+
+class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total speaker score."""
+    key = "speaks_avg"
+    name = "Average speaker score"
+    abbr = "ASS"
+    exclude_forfeits = True
+
+    function = "AVG"
+    field = "score"
+
+
+class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for sum of margins."""
-    key = "margin"
+    key = "margin_sum"
     name = "Sum of margins"
     abbr = "Marg"
 
     function = "SUM"
     field = "margin"
+
+
+class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for average margin, excluding forfeit ballots."""
+    key = "margin_avg"
+    name = "Average margin"
+    abbr = "AWM"
+
+    function = "AVG"
+    field = "margin"
+    exclude_forfeits = True
 
 
 class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
@@ -232,9 +265,11 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
 
 registry = {
     "points"        : PointsMetricAnnotator,
-    "margin"        : MarginMetricAnnotator,
+    "speaks_sum"    : TotalSpeakerScoreMetricAnnotator,
+    "speaks_avg"    : AverageSpeakerScoreMetricAnnotator,
     "draw_strength" : DrawStrengthMetricAnnotator,
-    "speaker_score" : SpeakerScoreMetricAnnotator,
+    "margin_sum"    : SumMarginMetricAnnotator,
+    "margin_avg"    : AverageMarginMetricAnnotator,
     "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
     "wbw"           : WhoBeatWhomMetricAnnotator,
 }
