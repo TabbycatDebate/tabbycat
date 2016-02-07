@@ -49,6 +49,7 @@ class BreakingTeamsForm(forms.Form):
         super(BreakingTeamsForm, self).__init__(*args, **kwargs)
         self.category = category
         self._create_and_initialise_fields()
+        self._generate_standings()
 
     @staticmethod
     def _fieldname_remark(team): # Team not BreakingTeam
@@ -66,6 +67,9 @@ class BreakingTeamsForm(forms.Form):
             except BreakingTeam.DoesNotExist:
                 self.initial[self._fieldname_remark(team)] = None
 
+    def _generate_standings(self):
+        self._standings = get_breaking_teams(self.category, include_all=True, include_categories=True)
+
     def save(self):
         for team in self.category.breaking_teams.all():
             try:
@@ -75,7 +79,10 @@ class BreakingTeamsForm(forms.Form):
             bt.remark = self.cleaned_data[self._fieldname_remark(team)]
             bt.save()
 
+    def metrics_info(self):
+        return self._standings.metrics_info()
+
     def team_iter(self):
-        for team in get_breaking_teams(self.category, include_all=True, include_categories=True):
-            yield team, self[self._fieldname_remark(team)]
+        for standing in self._standings:
+            yield standing, self[self._fieldname_remark(standing.team)]
 

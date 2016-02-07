@@ -139,8 +139,19 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total number of points."""
     key = "points"
-    name = "Points"
+    name = "points"
     abbr = "Pts"
+
+    function = "SUM"
+    field = "points"
+
+
+class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total number of points.
+    The difference between this and PointsMetricAnnotator is cosmetic only."""
+    key = "wins"
+    name = "wins"
+    abbr = "Wins"
 
     function = "SUM"
     field = "points"
@@ -149,7 +160,7 @@ class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
     key = "speaks_sum"
-    name = "Total speaker score"
+    name = "total speaker score"
     abbr = "Spk"
 
     function = "SUM"
@@ -159,7 +170,7 @@ class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
     key = "speaks_avg"
-    name = "Average speaker score"
+    name = "average speaker score"
     abbr = "ASS"
     exclude_forfeits = True
 
@@ -170,7 +181,7 @@ class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for sum of margins."""
     key = "margin_sum"
-    name = "Sum of margins"
+    name = "sum of margins"
     abbr = "Marg"
 
     function = "SUM"
@@ -180,7 +191,7 @@ class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for average margin, excluding forfeit ballots."""
     key = "margin_avg"
-    name = "Average margin"
+    name = "average margin"
     abbr = "AWM"
 
     function = "AVG"
@@ -191,7 +202,7 @@ class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
     """Metric annotator for draw strength."""
     key = "draw_strength"
-    name = "Draw strength"
+    name = "draw strength"
     abbr = "DS"
 
     def annotate_teams(self, queryset, standings, round=None):
@@ -212,7 +223,7 @@ class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
     """Metric annotator for number of adjudicators."""
 
     key = "num_adjs"
-    name = "Number of adjudicators"
+    name = "number of adjudicators"
     abbr = "Adjs"
 
     def __init__(self, adjs_per_debate=3):
@@ -265,6 +276,7 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
 
 registry = {
     "points"        : PointsMetricAnnotator,
+    "wins"          : WinsMetricAnnotator,
     "speaks_sum"    : TotalSpeakerScoreMetricAnnotator,
     "speaks_avg"    : AverageSpeakerScoreMetricAnnotator,
     "draw_strength" : DrawStrengthMetricAnnotator,

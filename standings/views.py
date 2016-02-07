@@ -2,14 +2,7 @@ from participants.models import Team, Speaker
 from tournaments.models import Round
 from results.models import TeamScore, SpeakerScore
 from motions.models import Motion
-from .teams import TeamStandingsGenerator
-
-TEAM_STANDING_METRICS_PRESETS = {
-    "australs": ('points', 'speaks_sum'),
-    "nz"      : ('points', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw'),
-    "wadl"    : ('points', 'wbw', 'margin_avg', 'speaks_avg'),
-    "test"    : ('points', 'wbw', 'draw_strength', 'wbw', 'speaks_sum', 'wbw', 'margin_sum', 'wbw'),
-}
+from .teams import TeamStandingsGenerator, TEAM_STANDING_METRICS_PRESETS
 
 from utils.views import *
 
@@ -129,18 +122,6 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
         for tsi in standings:
             tsi.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(tsi.team, team_scores, round) is not None
             tsi.round_results = [get_round_result(tsi.team, team_scores, r) for r in rounds]
-            tsi.wins = [ts.win for ts in tsi.round_results if ts].count(True)
-            if tournament.pref('show_avg_margin'):
-                try:
-                    margins = []
-                    for ts in team.round_results:
-                        if ts:
-                            if ts.get_margin is not None:
-                                margins.append(ts.get_margin)
-
-                    team.avg_margin = sum(margins) / len(margins)
-                except ZeroDivisionError:
-                    team.avg_margin = None
 
         context = self.get_context_data(standings=standings, rounds=rounds)
 

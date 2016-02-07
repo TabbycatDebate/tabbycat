@@ -106,34 +106,9 @@ class TeamManager(models.Manager):
         institution = Institution.objects.lookup(institution_name)
         return self.get(institution=institution, reference=reference, **kwargs)
 
-    def _teams_for_standings(self, round):
+    def teams_for_standings(self, round):
         return self.filter(debateteam__debate__round__seq__lte=round.seq,
-            tournament=round.tournament).select_related('institution')
-
-    def standings(self, round):
-        """Returns a list."""
-        from standings.standings import annotate_team_standings
-        teams = self._teams_for_standings(round)
-        return annotate_team_standings(teams, round)
-
-    def ranked_standings(self, round):
-        """Returns a list."""
-        from standings.standings import annotate_team_standings
-        teams = self._teams_for_standings(round)
-        return annotate_team_standings(teams, round, ranks=True)
-
-    def division_standings(self, round):
-        """Returns a list."""
-        from standings.standings import annotate_team_standings
-        teams = self._teams_for_standings(round)
-        return annotate_team_standings(teams, round, division_ranks=True)
-
-    def subrank_standings(self, round):
-        """Returns a list."""
-        from standings.standings import annotate_team_standings
-        teams = self._teams_for_standings(round)
-        return annotate_team_standings(teams, round, subranks=True)
-
+            tournament=round.tournament).select_related('institution').distinct()
 
 
 class Team(models.Model):

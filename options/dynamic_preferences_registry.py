@@ -580,14 +580,6 @@ class PublicDivisions(BooleanPreference):
     default = False
 
 @tournament_preferences_registry.register
-class ShowAvgMmargin(BooleanPreference):
-    help_text = 'Enables a display of average margins in the team standings'
-    verbose_name = "Show Average Mmargin"
-    section = league_options
-    name = "show_avg_margin"
-    default = False
-
-@tournament_preferences_registry.register
 class TeamPointsRule(StringPreference):
     help_text = '"normal" means 1 win = 1 point, "wadl" uses 2/1/0 for win/loss/forfeit'
     verbose_name = "TeamPointsRule"

@@ -16,9 +16,9 @@
         {% for info in standings.rankings_info %}
           <th>
             {% if info.glyphicon %}
-              <span data-toggle="tooltip" title="{{ info.name }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+              <span data-toggle="tooltip" title="{{ info.name|capfirst }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
             {% else %}
-              <span class="hidden-xs">{{ info.name }}</span>
+              <span class="hidden-xs">{{ info.name|capfirst }}</span>
               <span class="visible-xs">{{ info.abbr }}</span>
             {% endif %}
           </th>
@@ -37,20 +37,16 @@
           <th>{{ round.abbreviation }}</th>
           <th>{{ round.abbreviation }}</th>
         {% endfor %}
-        <th>Wins</th>
         {% for info in standings.metrics_info %}
           <th>
             {% if info.glyphicon %}
-              <span data-toggle="tooltip" title="{{ info.name }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+              <span data-toggle="tooltip" title="{{ info.name|capfirst }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
             {% else %}
-              <span class="hidden-xs">{{ info.name }}</span>
+              <span class="hidden-xs">{{ info.name|capfirst }}</span>
               <span class="visible-xs">{{ info.abbr }}</span>
             {% endif %}
           </th>
         {% endfor %}
-        {% if pref.show_avg_margin %}
-          <th><span data-toggle="tooltip" title="Average winning margin">AWM</span></th>
-        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -126,14 +122,10 @@
             <td></td>
           {% endif %}
         {% endfor %}
-        <td>{{ tsi.wins }}</td>
         {% for metric in tsi.itermetrics %}
           {# the metricformat filter is defined in templatetags/metricformat.py #}
           <td>{{ metric|metricformat }}</td>
         {% endfor %}
-        {% if pref.show_avg_margin %}
-          <td>{{ team.avg_margin|floatformat:2 }}</td>
-        {% endif %}
       </tr>
     {% endfor %}
     </tbody>

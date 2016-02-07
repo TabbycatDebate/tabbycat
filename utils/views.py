@@ -13,7 +13,6 @@ from django.utils.decorators import method_decorator
 
 from ipware.ip import get_real_ip
 from functools import wraps
-from standings.standings import PRECEDENCE_BY_RULE
 
 def get_ip_address(request):
     ip = get_real_ip(request)
@@ -166,12 +165,3 @@ def expect_post(view_fn):
             return HttpResponseBadRequest("Expected POST")
         return view_fn(request, *args, **kwargs)
     return foo
-
-def relevant_team_standings_metrics(tournament):
-    rule = tournament.pref('team_standings_rule')
-    precedence = PRECEDENCE_BY_RULE[rule]
-    metrics = dict()
-    metrics["draw_strength"] = "draw_strength" in precedence
-    metrics["sum_of_margins"] = "margins" in precedence
-    metrics["who_beat_whom"] = "wbw" in precedence
-    return metrics

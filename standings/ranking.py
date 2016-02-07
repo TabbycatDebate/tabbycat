@@ -61,7 +61,7 @@ class BaseRankAnnotator:
 class BasicRankAnnotator(BaseRankAnnotator):
 
     key = "rank"
-    name = "Rank"
+    name = "rank"
     abbr = "Rk"
     glyphicon = "signal"
 
@@ -80,12 +80,12 @@ class BasicRankAnnotator(BaseRankAnnotator):
 class SubrankAnnotator(BaseRankAnnotator):
 
     key = "subrank"
-    name = "Subrank"
+    name = "subrank"
     abbr = "SubR"
 
     def __init__(self, metrics):
         self.group_key = metricgetter(metrics[0])
-        self.subrank_key = metricgetter(metrics[1:])
+        self.subrank_key = metricgetter(*metrics[1:])
 
     def annotate_teams(self, standings):
         for key, group in groupby(standings, key=self.group_key):
@@ -100,7 +100,7 @@ class SubrankAnnotator(BaseRankAnnotator):
 class DivisionRankAnnotator(BaseRankAnnotator):
 
     key = "division_rank"
-    name = "Division rank"
+    name = "division rank"
     abbr = "DivR"
 
     def __init__(self, metrics):

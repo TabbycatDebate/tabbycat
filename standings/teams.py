@@ -11,6 +11,13 @@ import random
 import logging
 logger = logging.getLogger(__name__)
 
+TEAM_STANDING_METRICS_PRESETS = {
+    "australs": ('wins', 'speaks_sum'),
+    "nz"      : ('wins', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw'),
+    "wadl"    : ('points', 'wbw', 'margin_avg', 'speaks_avg'),
+    "test"    : ('wins', 'wbw', 'draw_strength', 'wbw', 'speaks_sum', 'wbw', 'margin_sum', 'wbw'),
+}
+
 class StandingsError(RuntimeError):
     pass
 
@@ -86,12 +93,12 @@ class TeamStandingInfo:
 
     def add_metric(self, name, value):
         if name in self.metrics:
-            raise KeyError("There is already a metric {!r} for this team", name)
+            raise ValueError("There is already a metric {!r} for this team".format(name))
         self.metrics[name] = value
 
     def add_ranking(self, name, value):
         if name in self.rankings:
-            raise KeyError("There is already a ranking {!r} for this team", name)
+            raise ValueError("There is already a ranking {!r} for this team".format(name))
         self.rankings[name] = value
 
     def itermetrics(self):

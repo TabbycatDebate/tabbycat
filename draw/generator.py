@@ -3,7 +3,8 @@ import random
 import math
 import copy
 from .one_up_one_down import OneUpOneDownSwapper
-from warnings import warn
+import logging
+logger = logging.getLogger(__name__)
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
 DRAW_FLAG_DESCRIPTIONS = {
@@ -199,7 +200,7 @@ class BaseDrawGenerator(object):
             raise TypeError("'results' is required for draw of type {0:s}".format(
                     self.__class__.__name__))
         if results is not None and not self.requires_prev_results:
-            warn("'results' not required for draw of type {0:s}, will probably be ignored".format(
+            logger.warning("'results' not required for draw of type {0:s}, will probably be ignored".format(
                     self.__class__.__name__))
         if results is not None:
             self.results = results

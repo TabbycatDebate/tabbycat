@@ -180,7 +180,6 @@ class WADLPreferences(PreferencesPreset):
         self.league_options__share_adjs                = True
         self.league_options__duplicate_adjs            = True
         self.league_options__public_divisions          = True
-        self.league_options__show_avg_margin           = True
         self.league_options__enable_divisions          = True
         self.league_options__enable_postponements      = True
         self.league_options__enable_forfeits           = True

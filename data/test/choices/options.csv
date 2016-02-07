@@ -17,7 +17,6 @@ enable_adj_notes,bool,True
 enable_venue_groups,bool,True
 enable_venue_times,bool,True
 share_adjs,bool,True
-show_avg_margin,bool,True
 team_points_rule,str,wadl
 enable_divisions,bool,True
 enable_division_motions,bool,True
