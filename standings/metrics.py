@@ -8,6 +8,7 @@ Note: There's a registry at the bottom of the file. If you add a new
 MetricAnnotator subclass, be sure to add it to the registry.
 """
 
+from .base import BaseAnnotator
 from django.db.models import Sum
 from django.db.models.expressions import RawSQL
 from participants.models import Round
@@ -34,7 +35,7 @@ def MetricAnnotator(name, *args, **kwargs):
     return klass(*args, **kwargs)
 
 
-class BaseMetricAnnotator:
+class BaseMetricAnnotator(BaseAnnotator):
     """Base class for all metric annotators.
 
     A metric annotator is a class that adds metrics to a TeamStandings object.
@@ -47,16 +48,9 @@ class BaseMetricAnnotator:
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
 
-    key = NotImplemented
-    name = NotImplemented
-    abbr = NotImplemented
-    glyphicon = None
+    record_method = "record_added_metric"
 
-    def annotate(self, queryset, standings, round=None):
-        standings.record_added_metric(self.key, self.name, self.abbr, self.glyphicon)
-        self.annotate_teams(queryset, standings, round)
-
-    def annotate_teams(self, queryset, standings, round=None):
+    def annotate_teams(self, standings, queryset, round=None):
         """Annotates the given `standings` by calling `add_metric()` on every
         `TeamStandingInfo` object in `standings`.
 
@@ -122,7 +116,7 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
         sql = RawSQL(TEAM_SCORE_ANNOTATION_QUERY.format(field=field, function=function), ())
         return queryset.annotate(**{column_name: sql}).distinct()
 
-    def annotate_teams(self, queryset, standings, round=None):
+    def annotate_teams(self, standings, queryset, round=None):
         for team in self.get_annotated_queryset(queryset, self.field, self.function, round):
             standings.add_metric_to_team(team, self.key, team.metric)
 
@@ -141,6 +135,7 @@ class SpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     key = "speaker_score"
     name = "Speaker score"
     abbr = "Spk"
+    format = ".2f"
 
     function = "SUM"
     field = "score"
@@ -150,6 +145,7 @@ class MarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     key = "margin"
     name = "Sum of margins"
     abbr = "Marg"
+    format = ".2f"
 
     function = "SUM"
     field = "margin"
@@ -161,7 +157,7 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
     name = "Draw strength"
     abbr = "DS"
 
-    def annotate_teams(self, queryset, standings, round=None):
+    def annotate_teams(self, standings, queryset, round=None):
         full_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
                 queryset[0].tournament.team_set.all(), "points", "SUM", round, "points")
 
@@ -185,7 +181,7 @@ class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
     def __init__(self, adjs_per_debate=3):
         self.adjs_per_debate = 3
 
-    def annotate_teams(self, queryset, standings, round=None):
+    def annotate_teams(self, standings, queryset, round=None):
         raise NotImplementedError("number of adjudicators doesn't work yet")
 
 
@@ -203,7 +199,7 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
             raise ValueError("keys must not be empty")
         self.keys = keys
 
-    def annotate_teams(self, queryset, standings, round=None):
+    def annotate_teams(self, standings, queryset, round=None):
         key = metricgetter(*self.keys)
 
         def who_beat_whom(tsi):
