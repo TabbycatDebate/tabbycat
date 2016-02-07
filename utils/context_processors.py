@@ -19,7 +19,6 @@ def debate_context(request):
             else:
                 d['previous_round'] = False
 
-
         d['all_tournaments'] = Tournament.objects.filter(active=True)
 
         if settings.LIVE_RELOAD:

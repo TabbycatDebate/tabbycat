@@ -2,6 +2,9 @@ from django.contrib import admin
 
 from .models import DebateAdjudicator
 
+# ==============================================================================
+# Debate Adjudicators 
+# ==============================================================================
 
 class DebateAdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('debate', 'adjudicator', 'type')
