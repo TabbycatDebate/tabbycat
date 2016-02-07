@@ -10,13 +10,13 @@
   <div class="row">
   {% for feedback in feedbacks %}
 
-    <div class="col-md-3">
+    <div class="col-md-4">
 
       {% include 'feedback_card.html' %}
 
     </div>
 
-    {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
+    {% if forloop.counter|divisibleby:3 %}</div></div><div class="row"><div class="col-md-4">{% endif %}
 
   {% endfor %}
   </div>

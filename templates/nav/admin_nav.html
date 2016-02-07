@@ -6,7 +6,7 @@
     {% if all_tournaments.count > 1 %}
     <ul class="nav nav-stacked" role="tablist">
       <li role="presentation" class="dropdown">
-        <a id="tournament_select" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        <a id="tournament_select" href="#" class="dropdown-toggle {% if overview_nav %}active{% endif %}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
           <h4>
             {{ tournament }}<span class="caret pull-right"></span>
           </h4>
@@ -29,7 +29,7 @@
     {% else %}
       <ul class="nav nav-stacked" role="tablist">
         <li role="presentation" class="">
-          <a id="tournament_select" class="" href="{{ tournament.get_absolute_url }}">
+          <a id="tournament_select" class="{% if overview_nav %}active{% endif %}" href="{{ tournament.get_absolute_url }}">
             <h4>
               <span class="emoji">💩</span>{{ tournament }}
             </h4>

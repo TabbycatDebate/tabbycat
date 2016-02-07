@@ -5,14 +5,14 @@
 {% block head-title %}Draw for {{ round.name }} with Details {% endblock %}
 {% block page-title %}Draw for {{ round.name }} with Details{% endblock %}
 
-{% block content %}
-
-{% include "draw_with_standings_content.html" %}
-
-{% endblock content %}
-
 {% block page-subnav-sections %}
   <div class="btn-group">
     <a class="btn btn-default form-control" href="{% round_url draw %}">Return to Round Status</a>
   </div>
 {% endblock %}
+
+{% block content %}
+
+  {% include "draw_with_standings_content.html" %}
+
+{% endblock content %}

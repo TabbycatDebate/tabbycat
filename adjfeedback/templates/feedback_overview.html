@@ -38,7 +38,7 @@
 
   <div class="panel panel-default">
     <div class="panel-body">
-      <table id="dataTable" class="table adj-feedback ">
+      <table id="dataTable" class="table lg-row">
         <thead>
       <tr>
         <th>Name</th>
@@ -237,7 +237,7 @@
 
     var dTable = $('#dataTable').DataTable({
       'bPaginate': false,
-      "aaSorting": [[ 2, "desc" ],[ 0, "asc" ]],
+      "aaSorting": [[ 2, "desc" ]],
     });
     new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
     $('#table-search').keyup(function(){

@@ -51,5 +51,7 @@ def get_menu_highlight(request):
         return {'standings_nav': True}
     elif "break" in request.path:
         return {'break_nav': True}
+    elif "overview" in request.path:
+        return {'overview_nav': True}
     else:
         return {'no_highlight': True}  # Context processors must return a dict

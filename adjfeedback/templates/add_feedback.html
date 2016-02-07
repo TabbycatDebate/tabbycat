@@ -25,7 +25,9 @@
 {% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table">
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -65,6 +67,8 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
+</div>
 {% endblock content %}
 
 {% block extra-js %}

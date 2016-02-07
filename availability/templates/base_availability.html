@@ -45,16 +45,16 @@
     var updateCheckbox = function(cb) {
       var jp = $(cb).parents("tr");
       if (cb.checked) {
-        jp.addClass("active");
-        jp.removeClass("inactive");
+        jp.addClass("success");
+        jp.removeClass("danger");
         if (venueState[cb.value]) {
           jp.removeClass("pendingChange");
         } else {
           jp.addClass("pendingChange");
         }
       } else {
-        jp.addClass("inactive");
-        jp.removeClass("active");
+        jp.addClass("danger");
+        jp.removeClass("success");
         if (venueState[cb.value]) {
           jp.addClass("pendingChange");
         } else {

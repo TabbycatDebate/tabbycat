@@ -7,7 +7,7 @@
 .nav-sidebar-offset {
   padding-left: $sidebar-width + 15px; // Offset the sidebar; should be nav-sidebar + 15
   min-height: 800px; // Push the footer down
-  padding-bottom: 70px; // Leave room for the footer
+  padding-bottom: 130px; // Leave room for the footer
   .navbar-fixed-bottom {
     // Don't want the footer stretching into the menu; present it alert style
     margin: 0 15px 20px $sidebar-width + 15px;
@@ -30,14 +30,18 @@
   }
   // Title
   #tournament_select {
-    padding: 16px 16px 16px 21px;
+    padding: 16px 16px 16px 16px;
     margin-left: 0;
     border-radius: 0;
     text-transform: uppercase;
-    color: #757c82;
+    color: $sidebar-muted-text;
     .emoji {
       margin-right: 8px; // Align the the other icons
       margin-left: 1px;
+    }
+    &:hover, &.active {
+      background: none;
+      color: #fff;
     }
   }
   .dropdown-menu {

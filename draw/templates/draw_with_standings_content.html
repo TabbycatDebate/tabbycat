@@ -1,5 +1,4 @@
 {% load debate_tags %}
-
 <div class="panel panel-default">
   <div class="panel-body">
     <table id="dataTable" class="draw-with-standings table">
@@ -45,7 +44,7 @@
             <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
               {{ debate.aff_team.short_name }}
             </span>
-          </td><
+          </td>
           <td {% if debate.neg_team.pullup %}class="em"{% endif %}>
             <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
               {{ debate.neg_team.short_name }}

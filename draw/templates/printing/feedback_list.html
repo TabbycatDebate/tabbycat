@@ -2,9 +2,17 @@
 {% load static %}
 
 {% block head-title %}
-  {{ round.abbreviation }} Feedback Forms <br><small>(use CTRL+P to save to PDF for printing, but be sure to set orientation to PORTRAIT, to turn off headers/footers and turn on background graphics. Works best in Safari or Firefox.)</small>
+  {{ round.abbreviation }} Feedback Forms <br><small>
 {% endblock %}
 {% block page-title %}Printable Feedback Forms for {{ round.name }}{% endblock %}
+{% block nav %}<div class="col-md-12">{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block page-alerts %}
+  <div class="alert alert-info">
+    (use CTRL+P to save to PDF for printing, but be sure to set orientation to PORTRAIT, to turn off headers/footers and turn on background graphics. Works best in Safari or Firefox.)</small>
+  </div>
+{% endblock %}
 
 {% block content %}
 

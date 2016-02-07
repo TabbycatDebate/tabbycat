@@ -6,16 +6,17 @@
 
 {% block page-subnav-sections %}
   <div class="btn-group" data-toggle="buttons">
-    <label class="btn btn-default active" id="toggle-all">
+    <label class="btn btn-primary active" id="toggle-all">
     <input type="radio" name="options">Show All
     </label>
-    <label class="btn btn-default" id="toggle-teams">
-    <input type="radio" name="options" >Only Teams
+    <label class="btn btn-primary" id="toggle-teams">
+    <input type="radio" name="options" >Show Teams
     </label>
-    <label class="btn btn-default" id="toggle-adjs">
-    <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
+    <label class="btn btn-primary" id="toggle-adjs">
+    <input type="radio" name="options" >Show Adjudicators<span class="hidden-xs">udicator</span>s
     </label>
   </div>
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block content %}

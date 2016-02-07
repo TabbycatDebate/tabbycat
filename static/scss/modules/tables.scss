@@ -6,27 +6,29 @@
   > tbody > tr:nth-of-type(odd) {
     background-color: $table-bg-accent; // Force .table-striped style
   }
-  > tbody > tr:hover {
+  > tbody > tr:hover td {
     background-color: $table-bg-hover;
     color: #fff;
+    a {
+      color: #fff;
+    }
   }
-}
-.table-container {
-  padding: 0;
+  > tbody > tr.clickable:hover {
+    cursor: pointer;
+  }
 }
 thead {
   background: #fff; // Fixed header needs a background while scrolling
   text-transform: uppercase;
   font-size: $font-size-h6;
 }
-#dataTable_filter {
+.dataTables_filter {
   display: none; // Hide the default search box
 }
 //
 // SORTING
 //
 .table > thead > tr > th {
-  opacity: 0.75;
   &.sorting,
   &.sorting_asc,
   &.sorting_desc,
@@ -34,25 +36,25 @@ thead {
   &.sorting_desc_disabled {
     cursor: pointer;
     position: relative;
-    padding-right: 20px; // Leave space for the icon
+    padding-right: 22px; // Leave space for the icon
   }
 }
 .dataTable .sorting {
   &:hover {
-    opacity: 1;
+    color: $brand-primary;
   }
   &:after {
     content: '\e150';
   }
 }
 .dataTable .sorting_asc {
-  opacity: 1;
+  color: $brand-primary;
   &:after {
     content: '\e155';
   }
 }
 .dataTable .sorting_desc {
-  opacity: 1;
+  color: $brand-primary;
   &:after {
     content: '\e156';
   }
@@ -75,6 +77,10 @@ table.dataTable thead .sorting_desc_disabled:after {
 .table > tbody > tr > td {
   border-left: 0;
   border-right: 0;
+}
+.table.lg-row > tbody > tr > th,
+.table.lg-row > tbody > tr > td {
+  line-height: 35px;
 }
 //
 // ROW STATES
@@ -124,6 +130,24 @@ table.dataTable thead .sorting_desc_disabled:after {
   a {
     color: darken($table-bg-active, 60%);
   }
+}
+
+//
+// SPECIFIC DECORATORS
+//
+.draw-with-standings .em {
+  font-weight: bold;
+  color: chocolate;
+  font-style: normal;
+}
+.draw-with-standings .first-in-bracket {
+  border-top: 3px solid chocolate;
+}
+.no-overflow {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 // TO REFACTOR:
 // Universal Styles
@@ -184,12 +208,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 //   text-align: center;
 // }
 // // Table decorators
-// .no-overflow {
-//   max-width: 0;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   white-space: nowrap;
-// }
+
 // // To refactor
 // .col-md-12.table-container {
 //   padding-left: 0;

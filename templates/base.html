@@ -25,61 +25,63 @@
 
 <body id="{% block body-id %}{% endblock %}" class="{% if not 'admin' in request.path %}accommodate-footer{% endif %}">
 
-  {% block body %}
+{% block body %}
 
-    {% block nav %}
-      {% if 'admin' in request.path and user.is_superuser %}
-        {% include "nav/admin_nav.html" %}
-        <div class="col-md-12 nav-sidebar-offset">
-      {% else %}
-          {% include "nav/top_nav_base.html" %}
-        <div class="col-md-12">
-      {% endif %}
+  {% block nav %}
+    {% if 'admin' in request.path and user.is_superuser %}
+      {% include "nav/admin_nav.html" %}
+  <div class="col-md-12 nav-sidebar-offset">
+    {% else %}
+      {% include "nav/top_nav_base.html" %}
+  <div class="col-md-12">
+    {% endif %}
+  {% endblock %}
+
+    {% block header %}
+    <div class="row head-title {% if 'admin' in request.path %}white-bg{% endif %} vertical-spacing">
+      <div class="col-md-12">
+        <h3>
+          {% block head-title %}{% endblock %}
+          <small class="pull-right">
+            {% block sub-title %}{% endblock %}
+          </small>
+        </h3>
+      </div>
+    </div>
     {% endblock %}
 
-      <div class="row head-title {% if 'admin' in request.path %}white-bg{% endif %} vertical-spacing">
-        <div class="col-md-12">
-          <h3>
-            {% block head-title %}{% endblock %}
-            <small class="pull-right">
-              {% block sub-title %}{% endblock %}
-            </small>
-          </h3>
+    <div class="row vertical-spacing">
+      <div class="col-md-12 hidden-print page-sub-nav">
+        <ul class="nav nav-pills navbar-left">
+          {% block page-subnav-sections %}{% endblock %}
+        </ul>
+        <div class="nav btn-group navbar-right">
+          {% block page-subnav-actions %}{% endblock %}
         </div>
       </div>
+    </div>
 
-      <div class="row vertical-spacing">
-        <div class="col-md-12 hidden-print page-sub-nav">
-          <ul class="nav nav-pills navbar-left">
-            {% block page-subnav-sections %}{% endblock %}
-          </ul>
-          <div class="nav btn-group navbar-right">
-            {% block page-subnav-actions %}{% endblock %}
+    <div class="row">
+      <div class="col-md-12">
+        {% if messages %}
+          <div class="form-inline hidden-print" id="messages">
+            {% for message in messages %}
+              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+              </div>
+            {% endfor %}
           </div>
-        </div>
+        {% endif %}
+        {% block page-alerts %}{% endblock %}
       </div>
+    </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          {% if messages %}
-            <div class="form-inline hidden-print" id="messages">
-              {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
-                  <button type="button" class="close" data-dismiss="alert">&times;</button>
-                  {{ message }}
-                </div>
-              {% endfor %}
-            </div>
-          {% endif %}
-          {% block page-alerts %}{% endblock %}
-        </div>
-      </div>
+    {% block content %}{% endblock content %}
 
-      {% block content %}{% endblock content %}
+    {% block footer %}{% include "footer.html" %}{% endblock footer %}
 
-      {% block footer %}{% include "footer.html" %}{% endblock footer %}
-
-    </div><!-- /.main-col -->
+  </div><!-- /.main-col -->
 
   {% endblock body %}
 
