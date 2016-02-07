@@ -95,17 +95,12 @@ class TeamStandingInfo:
         self.rankings[name] = value
 
     def itermetrics(self):
-        for spec in self.standings.metrics_info:
-            if spec['format'] is not None:
-                yield ("{" + spec['format'] + "}").format(self.metrics[spec['key']])
-            else:
-                yield self.metrics[spec['key']]
+        for key in self.standings.metric_keys:
+            yield self.metrics[key]
 
     def iterrankings(self):
-        # TODO can't format this, rankings are always (number, equal)
-        # Refactor to avoid awkwardness
-        for spec in self.standings.rankings_info:
-            yield self.rankings[spec['key']]
+        for key in self.standings.ranking_keys:
+            yield self.rankings[key]
 
 class TeamStandings:
     """Presents all information about the team standings requested. Returned
@@ -135,12 +130,14 @@ class TeamStandings:
     `TeamStandingInfo`.
     """
 
-    _SPEC_FIELDS = ("key", "name", "abbr", "glyphicon", "format")
+    _SPEC_FIELDS = ("key", "name", "abbr", "glyphicon")
 
     def __init__(self, teams):
         self.infos = {team: TeamStandingInfo(self, team) for team in teams}
         self.ranked = False
 
+        self.metric_keys = list()
+        self.ranking_keys = list()
         self._metric_specs = list()
         self._ranking_specs = list()
 
@@ -178,11 +175,13 @@ class TeamStandings:
         except KeyError:
             raise ValueError("The team {!r} isn't in these standings.")
 
-    def record_added_metric(self, key, name, abbr, glyphicon, format):
-        self._metric_specs.append((key, name, abbr, glyphicon, format))
+    def record_added_metric(self, key, name, abbr, glyphicon):
+        self.metric_keys.append(key)
+        self._metric_specs.append((key, name, abbr, glyphicon))
 
-    def record_added_ranking(self, key, name, abbr, glyphicon, format):
-        self._ranking_specs.append((key, name, abbr, glyphicon, format))
+    def record_added_ranking(self, key, name, abbr, glyphicon):
+        self.ranking_keys.append(key)
+        self._ranking_specs.append((key, name, abbr, glyphicon))
 
     def add_metric_to_team(self, team, key, value):
         assert not self.ranked, "Can't add metrics once TeamStandings object is sorted"
@@ -245,7 +244,7 @@ class TeamStandingsGenerator:
         standings = TeamStandings(queryset)
 
         for annotator in self.metric_annotators:
-            annotator.annotate(standings, queryset, round)
+            annotator.annotate(queryset, standings, round)
 
         standings.sort(self.precedence, self._tiebreak_func)
 

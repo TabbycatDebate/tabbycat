@@ -10,7 +10,6 @@ Note: There's a registry at the bottom of the file. If you add a new
 RankAnnotator subclass, be sure to add it to the registry.
 """
 
-from .base import BaseAnnotator
 from .metrics import metricgetter
 from itertools import groupby
 from operator import attrgetter
@@ -24,7 +23,7 @@ def RankAnnotator(name, *args, **kwargs):
     return klass(*args, **kwargs)
 
 
-class BaseRankAnnotator(BaseAnnotator):
+class BaseRankAnnotator:
     """Base class for all rank annotators.
 
     A rank annotator is a class that adds rankings to a TeamStandings object.
@@ -41,7 +40,14 @@ class BaseRankAnnotator(BaseAnnotator):
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
 
-    record_method = "record_added_ranking"
+    key = NotImplemented
+    name = NotImplemented
+    abbr = NotImplemented
+    glyphicon = None
+
+    def annotate(self, standings):
+        standings.record_added_ranking(self.key, self.name, self.abbr, self.glyphicon)
+        self.annotate_teams(standings)
 
     def annotate_teams(self, standings):
         """Annotates the given `standings` by calling `add_ranking()` on every
