@@ -105,7 +105,7 @@ function load_conflict_data() {
 function append_adj_scores() {
   $(".adj").each(function() {
     $(this).prop('title', $(this).children("span").text());
-    $(this).children("span").prepend('<a data-toggle="modal" data-target="#adj-feedback" title="Click to view feedback history" data-toggle="tooltip" class="info">' + formatScore(all_adj_scores[DOMIdtoInt(this)]) + '</a> ');
+    $(this).prepend('<span class="score"><a data-toggle="modal" data-target="#adj-feedback" title="Click to view feedback history" data-toggle="tooltip" class="info">' + formatScore(all_adj_scores[DOMIdtoInt(this)]) + '</a></span>');
     $("a", this).click(function() {
       // Function to handle opening the modal window
       var adj_row = $(this).parent().parent(); // Going back up to the div with the id
@@ -410,7 +410,8 @@ function _make_adj(data) {
     .addClass(gender_class)
     .addClass(data["region"])
     .attr('id', 'adj_' + data.id)
-    .append($('<span></span> ').html(data.name));
+    .append($('<span class="name"></span>').html(data.name))
+    .append($('<span class="institution"></span> ').html(data.institution));
   init_adj(adj);
   return adj;
 }
@@ -481,31 +482,31 @@ var draggingCurrently = false;
 var allocationsTable = $("#allocationsTable").DataTable({
   "bAutoWidth": false,
   "aoColumns": [{
-    "sWidth": "3%"
+    // "sWidth": "2.5%" // Bracket
   }, {
-    "sWidth": "0%"
+    // "sWidth": "0%"
   }, {
-    "sWidth": "3%"
+    // "sWidth": "3%"
   }, {
-    "sWidth": "3%"
+    // "sWidth": "3%"
   }, {
-    "sWidth": "3%"
+    // "sWidth": "3%"
   }, {
-    "sWidth": "3%"
+    // "sWidth": "3%"
   }, {
-    "sWidth": "17%"
+    // "sWidth": "10%" // Team Aff
   }, {
-    "sWidth": "3%"
+    // "sWidth": "3%"
   }, {
-    "sWidth": "3%"
+    // "sWidth": "3%"
   }, {
-    "sWidth": "17%"
+    // "sWidth": "10%" // Team Neg
   }, {
-    "sWidth": "18%"
+    "sWidth": "200px"
   }, {
-    "sWidth": "18%"
+    "sWidth": "200px"
   }, {
-    "sWidth": "18%"
+    "sWidth": "200px"
   }],
   "aaSorting": [
     [1, 'desc']

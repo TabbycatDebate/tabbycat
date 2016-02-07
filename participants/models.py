@@ -7,6 +7,7 @@ from django.utils.functional import cached_property
 from tournaments.models import Round
 from .emoji import EMOJI_LIST
 
+
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
     tournament = models.ForeignKey('tournaments.Tournament')
@@ -17,8 +18,8 @@ class Region(models.Model):
     class Meta:
         verbose_name = "🌏 Region"
 
-class InstitutionManager(models.Manager):
 
+class InstitutionManager(models.Manager):
     def lookup(self, name, **kwargs):
         """Queries for an institution with matching name in any of the three
         name fields."""
@@ -30,10 +31,20 @@ class InstitutionManager(models.Manager):
                 kwargs.pop(field)
         raise self.model.DoesNotExist("No institution matching '%s'" % name)
 
+
 class Institution(models.Model):
-    name = models.CharField(max_length=100, help_text="The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\"")
-    code = models.CharField(max_length=20, help_text="What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\"")
-    abbreviation = models.CharField(max_length=8, default="", help_text="For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\"")
+    name = models.CharField(
+        max_length=100,
+        help_text=
+        "The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\"")
+    code = models.CharField(
+        max_length=20,
+        help_text=
+        "What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\"")
+    abbreviation = models.CharField(
+        max_length=8,
+        default="",
+        help_text="For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\"")
     region = models.ForeignKey(Region, blank=True, null=True)
 
     objects = InstitutionManager()
@@ -58,13 +69,15 @@ class Institution(models.Model):
             return self.code[:5]
 
 
-
 class Person(models.Model):
     name = models.CharField(max_length=40, db_index=True)
     barcode_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=40, blank=True, null=True)
-    novice = models.BooleanField(default=False, help_text="Novice status is indicated on the tab, and may have its own Break Category or Top Speakers Tab")
+    novice = models.BooleanField(
+        default=False,
+        help_text=
+        "Novice status is indicated on the tab, and may have its own Break Category or Top Speakers Tab")
 
     checkin_message = models.TextField(blank=True)
     notes = models.TextField(blank=True, null=True)
@@ -72,13 +85,22 @@ class Person(models.Model):
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
     GENDER_OTHER = 'O'
-    GENDER_CHOICES = (
-        (GENDER_MALE,     'Male'),
-        (GENDER_FEMALE,   'Female'),
-        (GENDER_OTHER,    'Other'),
-    )
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True, help_text="Gender is displayed in the adjudicator allocation interface, and nowhere else")
-    pronoun = models.CharField(max_length=10, blank=True, null=True, help_text="If printing ballots using Tabbycat there is the option to pre-print pronouns")
+    GENDER_CHOICES = ((GENDER_MALE, 'Male'),
+                      (GENDER_FEMALE, 'Female'),
+                      (GENDER_OTHER, 'Other'), )
+    gender = models.CharField(
+        max_length=1,
+        choices=GENDER_CHOICES,
+        blank=True,
+        null=True,
+        help_text=
+        "Gender is displayed in the adjudicator allocation interface, and nowhere else")
+    pronoun = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True,
+        help_text=
+        "If printing ballots using Tabbycat there is the option to pre-print pronouns")
 
     @property
     def has_contact(self):
@@ -88,11 +110,10 @@ class Person(models.Model):
         ordering = ['name']
 
 
-
 class TeamManager(models.Manager):
-
     def get_queryset(self):
-        return super(TeamManager, self).get_queryset().select_related('institution')
+        return super(TeamManager,
+                     self).get_queryset().select_related('institution')
 
     def lookup(self, name, **kwargs):
         """Queries for a team with a matching name."""
@@ -110,17 +131,38 @@ class TeamManager(models.Manager):
         return self.filter(debateteam__debate__round__seq__lte=round.seq,
             tournament=round.tournament).select_related('institution').distinct()
 
-
 class Team(models.Model):
-    reference = models.CharField(max_length=150, verbose_name="Full name or suffix", help_text="Do not include institution name (see \"uses institutional prefix\" below)")
-    short_reference = models.CharField(max_length=35, verbose_name="Short name/suffix", help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
-    emoji = models.CharField(max_length=2, blank=True, null=True, choices=EMOJI_LIST)
+    reference = models.CharField(
+        max_length=150,
+        verbose_name="Full name or suffix",
+        help_text=
+        "Do not include institution name (see \"uses institutional prefix\" below)")
+    short_reference = models.CharField(
+        max_length=35,
+        verbose_name="Short name/suffix",
+        help_text=
+        "The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
+    emoji = models.CharField(max_length=2,
+                             blank=True,
+                             null=True,
+                             choices=EMOJI_LIST)
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey('tournaments.Tournament')
-    division = models.ForeignKey('tournaments.Division', blank=True, null=True, on_delete=models.SET_NULL)
-    use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix", help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
-    break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True)
+    division = models.ForeignKey('tournaments.Division',
+                                 blank=True,
+                                 null=True,
+                                 on_delete=models.SET_NULL)
+    use_institution_prefix = models.BooleanField(
+        default=False,
+        verbose_name="Uses institutional prefix",
+        help_text=
+        "If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
+    url_key = models.SlugField(blank=True,
+                               null=True,
+                               unique=True,
+                               max_length=24)
+    break_categories = models.ManyToManyField('breakqual.BreakCategory',
+                                              blank=True)
 
     @property
     def venue_preferences(self):
@@ -130,13 +172,12 @@ class Team(models.Model):
     TYPE_SWING = 'S'
     TYPE_COMPOSITE = 'C'
     TYPE_BYE = 'B'
-    TYPE_CHOICES = (
-        (TYPE_NONE, 'None'),
-        (TYPE_SWING, 'Swing'),
-        (TYPE_COMPOSITE, 'Composite'),
-        (TYPE_BYE, 'Bye'),
-    )
-    type = models.CharField(max_length=1, choices=TYPE_CHOICES,
+    TYPE_CHOICES = ((TYPE_NONE, 'None'),
+                    (TYPE_SWING, 'Swing'),
+                    (TYPE_COMPOSITE, 'Composite'),
+                    (TYPE_BYE, 'Bye'), )
+    type = models.CharField(max_length=1,
+                            choices=TYPE_CHOICES,
                             default=TYPE_NONE)
 
     class Meta:
@@ -185,7 +226,8 @@ class Team(models.Model):
     @property
     def break_categories_str(self):
         categories = self.break_categories_nongeneral
-        return "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
+        return "(" + ", ".join(c.name
+                               for c in categories) + ")" if categories else ""
 
     def get_aff_count(self, seq=None):
         from draw.models import DebateTeam
@@ -196,13 +238,16 @@ class Team(models.Model):
         return self._get_count(DebateTeam.POSITION_NEGATIVE, seq)
 
     def _get_count(self, position, seq):
-        dts = self.debateteam_set.filter(position=position, debate__round__stage=Round.STAGE_PRELIMINARY)
+        dts = self.debateteam_set.filter(
+            position=position,
+            debate__round__stage=Round.STAGE_PRELIMINARY)
         if seq is not None:
             dts = dts.filter(debate__round__seq__lte=seq)
         return dts.count()
 
     def get_debates(self, before_round):
-        dts = self.debateteam_set.select_related('debate').order_by('debate__round__seq')
+        dts = self.debateteam_set.select_related('debate').order_by(
+            'debate__round__seq')
         if before_round is not None:
             dts = dts.filter(debate__round__seq__lt=before_round)
         return [dt.debate for dt in dts]
@@ -214,7 +259,9 @@ class Team(models.Model):
     @cached_property
     def wins_count(self):
         from results.models import TeamScore
-        wins = TeamScore.objects.filter(ballot_submission__confirmed=True, debate_team__team=self, win=True).count()
+        wins = TeamScore.objects.filter(ballot_submission__confirmed=True,
+                                        debate_team__team=self,
+                                        win=True).count()
         return wins
 
     @cached_property
@@ -233,8 +280,7 @@ class Team(models.Model):
         try:
             return DebateTeam.objects.filter(
                 debate__round__seq__lt=round_seq,
-                team=self,
-            ).order_by('-debate__round__seq')[0].debate
+                team=self, ).order_by('-debate__round__seq')[0].debate
         except IndexError:
             return None
 
@@ -248,6 +294,7 @@ class Team(models.Model):
             cache.set(cached_key, cached_value, None)
             return cached_value
 
+
 def update_team_cache(sender, instance, created, **kwargs):
     cached_key = "%s_%s_%s" % ('teamid', instance.id, '_institution__object')
     cache.delete(cached_key)
@@ -256,6 +303,7 @@ def update_team_cache(sender, instance, created, **kwargs):
 
 # Update the cached tournament object when model is changed)
 signals.post_save.connect(update_team_cache, sender=Team)
+
 
 class Speaker(Person):
     team = models.ForeignKey(Team)
@@ -274,16 +322,29 @@ class AdjudicatorManager(models.Manager):
         return self.filter(novice=False)
 
     def get_queryset(self):
-        return super(AdjudicatorManager, self).get_queryset().select_related('institution')
+        return super(AdjudicatorManager,
+                     self).get_queryset().select_related('institution')
+
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
-    tournament = models.ForeignKey('tournaments.Tournament', blank=True, null=True)
+    tournament = models.ForeignKey('tournaments.Tournament',
+                                   blank=True,
+                                   null=True)
     test_score = models.FloatField(default=0)
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24)
+    url_key = models.SlugField(blank=True,
+                               null=True,
+                               unique=True,
+                               max_length=24)
 
-    institution_conflicts = models.ManyToManyField('Institution', through='adjallocation.AdjudicatorInstitutionConflict', related_name='adj_inst_conflicts')
-    conflicts = models.ManyToManyField('Team', through='adjallocation.AdjudicatorConflict', related_name='adj_adj_conflicts')
+    institution_conflicts = models.ManyToManyField(
+        'Institution',
+        through='adjallocation.AdjudicatorInstitutionConflict',
+        related_name='adj_inst_conflicts')
+    conflicts = models.ManyToManyField(
+        'Team',
+        through='adjallocation.AdjudicatorConflict',
+        related_name='adj_adj_conflicts')
 
     breaking = models.BooleanField(default=False)
     independent = models.BooleanField(default=False, blank=True)
@@ -301,12 +362,14 @@ class Adjudicator(Person):
     def conflict_with(self, team):
         if not hasattr(self, '_conflict_cache'):
             from adjallocation.models import AdjudicatorConflict, AdjudicatorInstitutionConflict
-            self._conflict_cache = set(c['team_id'] for c in
-                AdjudicatorConflict.objects.filter(adjudicator=self).values('team_id')
-            )
-            self._institution_conflict_cache = set(c['institution_id'] for c in
-                AdjudicatorInstitutionConflict.objects.filter(adjudicator=self).values('institution_id')
-            )
+            self._conflict_cache = set(
+                c['team_id']
+                for c in AdjudicatorConflict.objects.filter(
+                    adjudicator=self).values('team_id'))
+            self._institution_conflict_cache = set(
+                c['institution_id']
+                for c in AdjudicatorInstitutionConflict.objects.filter(
+                    adjudicator=self).values('institution_id'))
         return team.id in self._conflict_cache or team.institution_id in self._institution_conflict_cache
 
     @property
@@ -332,11 +395,10 @@ class Adjudicator(Person):
 
         return self.test_score * (1 - weight) + (weight * feedback_score)
 
-
     def _feedback_score(self):
         from adjallocation.models import DebateAdjudicator
         return self.adjudicatorfeedback_set.filter(confirmed=True).exclude(
-                source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
+            source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
                 avg=models.Avg('score'))['avg']
 
     @property
@@ -352,23 +414,17 @@ class Adjudicator(Person):
             self._seen_cache = {}
         if before_round not in self._seen_cache:
             qs = DebateTeam.objects.filter(
-                debate__debateadjudicator__adjudicator=self
-            )
+                debate__debateadjudicator__adjudicator=self)
             if before_round is not None:
-                qs = qs.filter(
-                    debate__round__seq__lt = before_round.seq
-                )
+                qs = qs.filter(debate__round__seq__lt=before_round.seq)
             self._seen_cache[before_round] = set(dt.team.id for dt in qs)
         return team.id in self._seen_cache[before_round]
 
     def seen_adjudicator(self, adj, before_round=None):
         from adjallocation.models import DebateAdjudicator
         d = DebateAdjudicator.objects.filter(
-            adjudicator = self,
-            allocations__debateadjudicator__adjudicator = adj,
-        )
+            adjudicator=self,
+            allocations__debateadjudicator__adjudicator=adj, )
         if before_round is not None:
-            d = d.filter(
-                debate__round__seq__lt = before_round.seq
-            )
+            d = d.filter(debate__round__seq__lt=before_round.seq)
         return d.count()

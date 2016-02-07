@@ -4,33 +4,28 @@
 {% load add_field_css %}
 {% load metricformat %}
 
-{% block head-title %}
-  {{ category.name }} Break
-  <small>({{ pref.public_breaking_teams|yesno:",not "}}publicly visible)</small>
-{% endblock %}
+{% block head-title %}{{ category.name }} Break{% endblock %}
+{% block sub-title %}{{ pref.public_breaking_teams|yesno:",not "}}publicly visible{% endblock %}
 {% block page-title %}{{ category.name }} Break{% endblock %}
-{% block body-class %}breaking-teams-{{ category.slug }}{% endblock %}
 
-{% block header %}
+{% block page-subnav-sections %}
   {% if generated %}
 
-    <div class="btn-group">
-      <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
-        <button class="btn btn-danger form-control" id="generateBreakingTeams" type="submit">
-            Delete and regenerate the break for all categories
-        </button>
-      </form>
-      <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
-        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-          Update the break for all categories
-        </button>
-      </form>
-      <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
-        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-          Update the break for this category ({{ category.name }})
-        </button>
-      </form>
-    </div>
+    <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline" method="POST">
+      <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
+          Delete and regenerate the break for all categories
+      </button>
+    </form>
+    <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline" method="POST">
+      <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
+        Update the break for all categories
+      </button>
+    </form>
+    <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline" method="POST">
+      <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
+        Update the break for this category ({{ category.name }})
+      </button>
+    </form>
 
     <div class="alert alert-warning">
       Please double-check this before announcing the break or releasing it to the
@@ -92,18 +87,20 @@
   {% if generated %}
     <form action="." method="POST">
 
-      <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Break</th>
-            {% if pref.show_emoji %}
-              <th class="team-emoji"></th>
-            {% endif %}
-            <th>Team</th>
-            {% if pref.show_institutions %}
-              <th>Inst<span class="hidden-xs">itution</span></th>
-            {% endif %}
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Break</th>
+                {% if pref.show_emoji %}
+                  <th class="team-emoji"></th>
+                {% endif %}
+                <th>Team</th>
+                {% if pref.show_institutions %}
+                  <th>Inst<span class="hidden-xs">itution</span></th>
+                {% endif %}
             {% for info in form.metrics_info %}
               <th>
                 {% if info.glyphicon %}

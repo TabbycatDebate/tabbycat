@@ -4,18 +4,17 @@
 
 {% block head-title %}Breaking Adjudicators{% endblock %}
 {% block page-title %}Breaking Adjudicators{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}break breaking-adjs{% endblock %}
 
-{% block header %}
+{% block page-subnav-sections %}
   {% if adjs.all.count == 0 %}
     <p class="lead">Breaking adjudicators can be set in the <a href="{% tournament_url feedback_overview %}"> Feedback section.</a></p>
   {% endif %}
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block content %}
   {% if adjs.all.count > 0 %}
-    <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
+    <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
       <thead>
         <tr>
           <th>Name</th>

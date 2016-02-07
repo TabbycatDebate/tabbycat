@@ -7,17 +7,15 @@
 //
 // <a href="#"><span class="glyphicon glyphicon-star"></span> Star</a>
 
-@at-root {
-  // Import the fonts
-  @font-face {
-    font-family: 'Glyphicons Halflings';
-    src: url(if($bootstrap-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font-name}.eot'), '#{$icon-font-path}#{$icon-font-name}.eot'));
-    src: url(if($bootstrap-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font-name}.eot?#iefix'), '#{$icon-font-path}#{$icon-font-name}.eot?#iefix')) format('embedded-opentype'),
-         url(if($bootstrap-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font-name}.woff2'), '#{$icon-font-path}#{$icon-font-name}.woff2')) format('woff2'),
-         url(if($bootstrap-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font-name}.woff'), '#{$icon-font-path}#{$icon-font-name}.woff')) format('woff'),
-         url(if($bootstrap-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font-name}.ttf'), '#{$icon-font-path}#{$icon-font-name}.ttf')) format('truetype'),
-         url(if($bootstrap-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font-name}.svg##{$icon-font-svg-id}'), '#{$icon-font-path}#{$icon-font-name}.svg##{$icon-font-svg-id}')) format('svg');
-  }
+// Import the fonts
+@font-face {
+  font-family: 'Glyphicons Halflings';
+   src: url(static("fonts/vendor/bootstrap/glyphicons-halflings-regular.eot"));
+   src: url(static("fonts/vendor/bootstrap/glyphicons-halflings-regular.eot#iefix")) format("embedded-opentype"),
+        url(static("fonts/vendor/bootstrap/glyphicons-halflings-regular.woff2")) format("woff2"),
+        url(static("fonts/vendor/bootstrap/glyphicons-halflings-regular.woff")) format("woff"),
+        url(static("fonts/vendor/bootstrap/glyphicons-halflings-regular.ttf")) format("truetype"),
+        url(static("fonts/vendor/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular")) format("svg");
 }
 
 // Catchall baseclass

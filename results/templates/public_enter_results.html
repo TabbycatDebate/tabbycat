@@ -4,9 +4,17 @@
 {% load humanize %}
 {% load static %}
 
-{% block head-title %}Enter Results for {{ debate.matchup }} <small>{{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group}} {% endif %}{{ debate.venue.name }}</small>{% endblock %}
 {% block page-title %}Enter Results for {{ debate.matchup }}{% endblock %}
-{% block body-class %}public-enter-result{% endblock %}
+{% block head-title %}Enter Results for {{ debate.matchup }}{% endblock %}
+{% block sub-title %}
+  <small>
+    {{ debate.round.name }} @
+    {% if debate.division.venue_group %}
+      {{ debate.division.venue_group}}
+    {% endif %}
+    {{ debate.venue.name }}
+  </small>
+{% endblock %}
 
 {% block content %}
   <div class="alert alert-info">This page is specific to you, {{ adjudicator.name }}.
@@ -48,7 +56,7 @@
         <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
         <input id="id_discarded" type="hidden" name="discarded" />
         <input id="id_confirmed" type="hidden" name="confirmed" />
-        <input class="form-control save btn-success submit-disable" type="submit" value="Submit ballots" tabindex="100" data-loading-text="Submitting..."/>
+        <input class="save btn-success submit-disable" type="submit" value="Submit ballots" tabindex="100" data-loading-text="Submitting..."/>
       </div>
     </div>
   </form>

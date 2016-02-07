@@ -14,14 +14,18 @@ from django.utils.decorators import method_decorator
 from ipware.ip import get_real_ip
 from functools import wraps
 
+
 def get_ip_address(request):
     ip = get_real_ip(request)
     if ip is None:
         return "0.0.0.0"
     return ip
 
+
+
 class SuperuserRequiredMixin(UserPassesTestMixin):
     """Class-based view mixin. Requires user to be a superuser."""
+
     def test_func(self):
         return self.request.user.is_superuser
 
@@ -118,10 +122,13 @@ def tournament_view(view_fn):
     @wraps(view_fn)
     def foo(request, tournament_slug, *args, **kwargs):
         return view_fn(request, request.tournament, *args, **kwargs)
+
     return foo
+
 
 def redirect_tournament(to, tournament, **kwargs):
     return redirect(to, tournament_slug=tournament.slug, **kwargs)
+
 
 def public_optional_tournament_view(preferences_option):
     def bar(view_fn):
@@ -131,20 +138,29 @@ def public_optional_tournament_view(preferences_option):
             if tournament.pref(preferences_option):
                 return view_fn(request, tournament, *args, **kwargs)
             else:
-                return redirect_tournament('tournament-public-index', tournament)
+                return redirect_tournament('tournament-public-index',
+                                           tournament)
+
         return foo
+
     return bar
+
 
 def round_view(view_fn):
     @wraps(view_fn)
     @tournament_view
     def foo(request, tournament, round_seq, *args, **kwargs):
         return view_fn(request, request.round, *args, **kwargs)
+
     return foo
 
+
 def redirect_round(to, round, **kwargs):
-    return redirect(to, tournament_slug=round.tournament.slug,
-                    round_seq=round.seq, *kwargs)
+    return redirect(to,
+                    tournament_slug=round.tournament.slug,
+                    round_seq=round.seq,
+                    *kwargs)
+
 
 def public_optional_round_view(preference_option):
     def bar(view_fn):
@@ -154,9 +170,13 @@ def public_optional_round_view(preference_option):
             if round.tournament.pref(preference_option):
                 return view_fn(request, round, *args, **kwargs)
             else:
-                return redirect_tournament('tournament-public-index', round.tournament)
+                return redirect_tournament('tournament-public-index',
+                                           round.tournament)
+
         return foo
+
     return bar
+
 
 def expect_post(view_fn):
     @wraps(view_fn)
@@ -164,4 +184,6 @@ def expect_post(view_fn):
         if request.method != "POST":
             return HttpResponseBadRequest("Expected POST")
         return view_fn(request, *args, **kwargs)
+
     return foo
+

@@ -9,6 +9,7 @@ from django.core.wsgi import get_wsgi_application
 from django.conf import settings
 from whitenoise.django import DjangoWhiteNoise
 
+
 # With thanks to https://gist.github.com/Chronial/45ce9f33615a3b24c51f
 class DjangoCompressWhiteNoise(DjangoWhiteNoise):
     def __call__(self, environ, start_response):
@@ -31,6 +32,7 @@ class DjangoCompressWhiteNoise(DjangoWhiteNoise):
             return True
         else:
             return super().is_immutable_file(path, url)
+
 
 application = get_wsgi_application()
 application = DjangoCompressWhiteNoise(application)

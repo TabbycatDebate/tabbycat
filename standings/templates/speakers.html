@@ -1,14 +1,21 @@
-{% extends "draw_rbase.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
 {% load static %}
 
-{% block head-title %}Speaker Standings <small>after {{ round.name }}</small>{% endblock %}
 {% block page-title %}Speaker Standings after {{ round.name }}{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}speaker-standings{% endblock %}
+{% block head-title %}
+  <span class="emoji">💯</span>Speaker Standings
+{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
         <th class="hidden"></th>
@@ -32,47 +39,50 @@
       </tr>
     </thead>
     <tbody>
-    {% for speaker in speakers %}
-      {% with speakers|next_value:forloop.counter0 as next_value %}
-      {% with speakers|prev_value:forloop.counter0 as prev_value %}
-      <tr class="{% if not speaker.results_in %}danger{% endif%}">
-        <td class="hidden">{{ speaker.rank }}</td>
-        <td>
-          <strong>
-            {% if speaker.total %}
-              {{ speaker.rank }}{% if next_value.rank == speaker.rank or prev_value.rank == speaker.rank %}<span class="text-muted">=</span>{% endif %}
-            {% else %}
-              N/A
-            {% endif %}
-          </strong>
-        </td>
-        <td>{{ speaker.name }}</td>
-        {% if pref.show_novices %}
-          <td>{% if speaker.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
-        {% endif %}
-        {% if pref.show_emoji %}
-          <td class="team-emoji">
-            <span class="emoji">{{ speaker.team.emoji }}</span>
+      {% for speaker in speakers %}
+        {% with speakers|next_value:forloop.counter0 as next_value %}
+        {% with speakers|prev_value:forloop.counter0 as prev_value %}
+        <tr class="{% if not speaker.results_in %}danger{% endif%}">
+          <td class="hidden">{{ speaker.rank }}</td>
+          <td>
+            <strong>
+              {% if speaker.total %}
+                {{ speaker.rank }}{% if next_value.rank == speaker.rank or prev_value.rank == speaker.rank %}<span class="text-muted">=</span>{% endif %}
+              {% else %}
+                N/A
+              {% endif %}
+            </strong>
           </td>
-        {% endif %}
-        <td>
-          <span class="team-speakers-hover" id="team_speakers_{{ speaker.team.id }}">
-            {{ speaker.team.short_name }}
-          </span>
-        </td>
-        {% if pref.show_institutions %}
-          <td>{{ speaker.team.institution.code }}</td>
-        {% endif %}
-        {% for score in speaker.scores %}
-          <td>{{ score|stringformat:".2f" }}</td>
-        {% endfor %}
-        <td>{{ speaker.total|stringformat:".2f" }}</td>
-        <td>{{ speaker.average|stringformat:".2f" }}</td>
-      </tr>
-      {% endwith %}
-      {% endwith %}
-    {% endfor %}
+          <td>{{ speaker.name }}</td>
+          {% if pref.show_novices %}
+            <td>{% if speaker.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
+          {% endif %}
+          {% if pref.show_emoji %}
+            <td class="team-emoji">
+              <span class="emoji">{{ speaker.team.emoji }}</span>
+            </td>
+          {% endif %}
+          <td>
+            <span class="team-speakers-hover" id="team_speakers_{{ speaker.team.id }}">
+              {{ speaker.team.short_name }}
+            </span>
+          </td>
+          {% if pref.show_institutions %}
+            <td>{{ speaker.team.institution.code }}</td>
+          {% endif %}
+          {% for score in speaker.scores %}
+            <td>{{ score|stringformat:".2f" }}</td>
+          {% endfor %}
+          <td>{{ speaker.total|stringformat:".2f" }}</td>
+          <td>{{ speaker.average|stringformat:".2f" }}</td>
+        </tr>
+        {% endwith %}
+        {% endwith %}
+      {% endfor %}
+    </tbody>
   </table>
+  </div>
+</div>
 {% endblock content %}
 
 {% block extra-js %}

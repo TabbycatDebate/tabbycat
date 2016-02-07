@@ -1,17 +1,23 @@
-{% extends "draw_rbase.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% load debate_tags %}
 {% load metricformat %}
 
-{% block head-title %}Team Standings <small>after {{ round.name }}</small>{% endblock %}
 {% block page-title %}Team Standings after {{ round.name }}{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}team-standings{% endblock %}
+{% block head-title %}Team Standings{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+
+
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="team-tab table table-hover table-striped" cellspacing="0" cellpadding="0">
-    <thead>
-      <tr>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="team-tab table" cellspacing="0" cellpadding="0">
+      <thead>
+        <tr>
         <th class="hidden">Rk</th>
         {% for info in standings.rankings_info %}
           <th>
@@ -23,20 +29,20 @@
             {% endif %}
           </th>
         {% endfor %}
-        {% if pref.enable_divisions %}
-          <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
-        {% endif %}
-        {% if pref.show_emoji %}
-          <th class="team-emoji"></th>
-        {% endif %}
-        <th>Team</th>
-        {% if pref.show_institutions %}
-          <th>Inst<span class="hidden-xs">itution</span></th>
-        {% endif %}
-        {% for round in rounds %}
-          <th>{{ round.abbreviation }}</th>
-          <th>{{ round.abbreviation }}</th>
-        {% endfor %}
+          {% if pref.enable_divisions %}
+            <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+          {% endif %}
+          {% if pref.show_emoji %}
+            <th class="team-emoji"></th>
+          {% endif %}
+          <th>Team</th>
+          {% if pref.show_institutions %}
+            <th>Inst<span class="hidden-xs">itution</span></th>
+          {% endif %}
+          {% for round in rounds %}
+            <th>{{ round.abbreviation }}</th>
+            <th>{{ round.abbreviation }}</th>
+          {% endfor %}
         {% for info in standings.metrics_info %}
           <th>
             {% if info.glyphicon %}
@@ -47,9 +53,9 @@
             {% endif %}
           </th>
         {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
+        </tr>
+      </thead>
+      <tbody>
     {% for tsi in standings.standings %}
       <tr class="{% if not tsi.results_in %}danger{% endif %}">
         <td class="hidden">
@@ -127,9 +133,11 @@
           <td>{{ metric|metricformat }}</td>
         {% endfor %}
       </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock content %}
 
 {% block extra-js %}

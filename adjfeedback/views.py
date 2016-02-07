@@ -92,20 +92,22 @@ def feedback_overview(request, t):
                 debates = [fb.source_team.debate for fb in adj_round_feedbacks if fb.source_team]
                 debates.extend([fb.source_adjudicator.debate for fb in adj_round_feedbacks if fb.source_adjudicator])
                 adj_da = next((da for da in all_debate_adjudicators if (da.adjudicator == adj and da.debate == debates[0])), None)
+                if adj_da:
+                    if adj_da.type == adj_da.TYPE_CHAIR:
+                        adj_type = "Chair"
+                    elif adj_da.type == adj_da.TYPE_PANEL:
+                        adj_type = "Panellist"
+                    elif adj_da.type == adj_da.TYPE_TRAINEE:
+                        adj_type = "Trainee"
 
-                if adj_da.type == adj_da.TYPE_CHAIR:
-                    adj_type = "Chair"
-                elif adj_da.type == adj_da.TYPE_PANEL:
-                    adj_type = "Panellist"
-                elif adj_da.type == adj_da.TYPE_TRAINEE:
-                    adj_type = "Trainee"
+                    # Average their scores for that round
+                    totals = [f.score for f in adj_round_feedbacks]
+                    average = sum(totals) / len(totals)
 
-                # Average their scores for that round
-                totals = [f.score for f in adj_round_feedbacks]
-                average = sum(totals) / len(totals)
-
-                # Creating the object list for the graph
-                adj.rscores.append([r.seq, average, adj_type])
+                    # Creating the object list for the graph
+                    adj.rscores.append([r.seq, average, adj_type])
+                else:
+                    print('none')
 
     context = {
         'adjudicators'      : adjudicators,
@@ -158,6 +160,8 @@ def adj_latest_feedback(request, t):
     feedbacks = AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
         'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
     feedbacks, score_thresholds = process_feedback(feedbacks, t)
+    if feedbacks.count() == 0:
+        messages.info(request, "No feedback has been submitted yet.")
     return render(request, "feedback_latest.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
 
 @login_required
@@ -513,5 +517,3 @@ def generate_randomised_urls(request, t):
     populate_url_keys(t.adjudicator_set.all())
     populate_url_keys(t.team_set.all())
     return redirect_tournament('randomised_urls', t)
-
-

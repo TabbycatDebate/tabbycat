@@ -1,4 +1,4 @@
-{% extends "draw_base.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
 {% load static %}
 
@@ -6,7 +6,7 @@
 {% block page-title %}Allocate Divisions{% endblock %}
 {% block body-class %}Allocate Divisions{% endblock %}
 
-{% block header %}
+{% block page-subnav-sections %}
   <div id="statusBar" class="btn-group">
     <a class="btn form-control btn-default" href="#auto" id="auto_allocate">Auto Allocate</a>
     <a data-loading-text="Saving..." class="btn form-control btn-success" href="" id="save">Save</a>
@@ -18,16 +18,16 @@
   </div>
   <div id="" class="btn-group">
     <div class="btn btn-default">Preference Allocated:</div>
-    <div class="btn btn-default btn-success" disabled="disabled">1/2</div>
-    <div class="btn btn-default btn-primary" disabled="disabled">3/4</div>
-    <div class="btn btn-default btn-warning" disabled="disabled">5+</div>
-    <div class="btn btn-default btn-danger" disabled="disabled">None</div>
+    <div class="btn btn-success" disabled="disabled">1/2</div>
+    <div class="btn btn-primary" disabled="disabled">3/4</div>
+    <div class="btn btn-warning" disabled="disabled">5+</div>
+    <div class="btn btn-danger" disabled="disabled">None</div>
   </div>
 {% endblock %}
 
 {% block content %}
   <div id="alerts-holder" class=""></div>
-  <table id="dataTable" class="team-tab table table-hover table-striped" cellspacing="0" cellpadding="0">
+  <table id="dataTable" class="team-tab table" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
         <th>Team</th>

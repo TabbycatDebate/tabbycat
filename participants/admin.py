@@ -12,6 +12,7 @@ from adjfeedback.models import AdjudicatorTestScoreHistory
 class RegionAdmin(admin.ModelAdmin):
     pass
 
+
 admin.site.register(Region, RegionAdmin)
 
 # ==============================================================================
@@ -19,9 +20,10 @@ admin.site.register(Region, RegionAdmin)
 # ==============================================================================
 
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ('name','code','abbreviation','region')
-    ordering = ('name',)
-    search_fields = ('name',)
+    list_display = ('name', 'code', 'abbreviation', 'region')
+    ordering = ('name', )
+    search_fields = ('name', )
+
 
 admin.site.register(Institution, InstitutionAdmin)
 
@@ -31,8 +33,9 @@ admin.site.register(Institution, InstitutionAdmin)
 
 class SpeakerAdmin(admin.ModelAdmin):
     list_display = ('name', 'team', 'novice')
-    search_fields = ('name',)
-    raw_id_fields = ('team',)
+    search_fields = ('name', )
+    raw_id_fields = ('team', )
+
 
 admin.site.register(Speaker, SpeakerAdmin)
 
@@ -45,19 +48,23 @@ class AdjudicatorConflictInline(admin.TabularInline):
     extra = 1
     verbose_name_plural = "Adjudicator team conflicts"
 
+
 class AdjudicatorAdjudicatorConflictInline(admin.TabularInline):
     model = AdjudicatorAdjudicatorConflict
     fk_name = "adjudicator"
     extra = 1
-    raw_id_fields = ('conflict_adjudicator',)
+    raw_id_fields = ('conflict_adjudicator', )
+
 
 class AdjudicatorInstitutionConflictInline(admin.TabularInline):
     model = AdjudicatorInstitutionConflict
     extra = 1
 
+
 class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
     model = AdjudicatorTestScoreHistory
     extra = 1
+
 
 class AdjudicatorForm(forms.ModelForm):
     class Meta:
@@ -65,14 +72,22 @@ class AdjudicatorForm(forms.ModelForm):
         fields = '__all__'
 
     def clean_url_key(self):
-        return self.cleaned_data['url_key'] or None # So that the url key can be unique and also set to blank
+        return self.cleaned_data[
+            'url_key'] or None  # So that the url key can be unique and also set to blank
 
 
 class AdjudicatorAdmin(admin.ModelAdmin):
     form = AdjudicatorForm
-    list_display = ('name', 'institution', 'tournament','novice','independent')
-    search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code',)
+    list_display = ('name', 'institution', 'tournament', 'novice',
+                    'independent')
+    search_fields = ('name',
+                     'tournament__name',
+                     'institution__name',
+                     'institution__code', )
     list_filter = ('tournament', 'name')
-    inlines = (AdjudicatorConflictInline,AdjudicatorInstitutionConflictInline, AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
+    inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
+               AdjudicatorAdjudicatorConflictInline,
+               AdjudicatorTestScoreHistoryInline)
+
 
 admin.site.register(Adjudicator, AdjudicatorAdmin)
