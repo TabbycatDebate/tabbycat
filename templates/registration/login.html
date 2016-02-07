@@ -4,11 +4,22 @@
 {% block head-title %}🔓Login{% endblock %}
 {% block page-title %}🔓Login{% endblock %}
 
-{% block nav %}{% endblock %}
+{% block nav %}<div class="col-md-12">{% endblock %}
+{% block page-alerts %}
+<!--[if lte IE 9]>
+<div class="alert alert-warning">
+  Hey it looks like you are running an old version of Internet Explorer. As a
+  result some parts of Tabby Cat <strong>may not work properly</strong>. Switch to a newer
+  browser if possible!
+</div>
+<![endif]-->
+{% endblock %}
 
 {% block content %}
 
-  <form id="login" action="." method="POST" class="form-horizontal">
+<form id="login" action="." method="POST" class="form-horizontal">
+<div class="row">
+  <div class="col-md-12">
 
     {% csrf_token %}
 
@@ -26,7 +37,10 @@
         <div class="alert alert-warning">Please log in to see this page.</div>
         {% endif %}
     {% endif %}
-
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
     {% for field in form %}
     <div class="form-group">
       <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
@@ -41,7 +55,7 @@
 
     <div class="form-group">
       <div class="col-md-offset-2 col-md-2 col-sm-4">
-        <button type="submit" class="btn btn-success form-control submit-disable" data-loading-text="Logging in...">
+        <button type="submit" class="btn btn-success submit-disable" data-loading-text="Logging in...">
           Login
         </button>
       </div>
@@ -49,7 +63,7 @@
 
     <input type="hidden" name="next" value="{{ next }}" />
 
-  </form>
-
+  </div>
+</div>
+</form>
 {% endblock %}
-

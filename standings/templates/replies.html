@@ -1,13 +1,19 @@
-{% extends "draw_rbase.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
 {% load static %}
 
-{% block head-title %}Reply Standings <small>after {{ round.name }}</small>{% endblock %}
 {% block page-title %}Reply Standings after {{ round.name }}{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
+{% block head-title %}Reply Standings{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
         <th class="hidden"></th>
@@ -75,8 +81,10 @@
       {% endwith %}
       {% endwith %}
     {% endfor %}
+    </tbody>
   </table>
-
+  </div>
+</div>
 {% endblock content %}
 
 {% block extra-js %}

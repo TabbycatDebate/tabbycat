@@ -1,14 +1,15 @@
-{% extends "draw_rbase.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}Division Standings <small>after {{ round.name }}</small>{% endblock %}
 {% block page-title %}Division Standings after {{ round.name }}{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}team-standings{% endblock %}
+{% block head-title %}Division Standings{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="team-tab table table-hover table-striped" cellspacing="0" cellpadding="0">
+  <table id="dataTable" class="team-tab table" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
         <th class="hidden"></th>

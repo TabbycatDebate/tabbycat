@@ -1,14 +1,13 @@
-{% extends "draw_base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% load debate_tags %}
 
 {% block head-title %}Side Allocations{% endblock %}
 {% block page-title %}Side Allocations{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}side-allocations{% endblock %}
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="team-tab table table-hover table-striped" cellspacing="0" cellpadding="0">
+  <table id="dataTable" class="team-tab table" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
         {% if pref.show_emoji %}

@@ -4,8 +4,7 @@
 
 {% block head-title %}All Debates for {{ institution.name }} Teams{% endblock %}
 {% block page-title %}All Debates for {{ institution.name }} Teams{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}all-venues{% endblock %}
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}
 
@@ -75,5 +74,3 @@
     });
   </script>
 {% endblock extra-js %}
-
-

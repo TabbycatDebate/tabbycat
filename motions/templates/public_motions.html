@@ -4,23 +4,24 @@
 
 {% block head-title %}Motions{% endblock %}
 {% block page-title %}Motions{% endblock %}
-{% block page-header %}
+{% block page-subnav-sections %}
   {% if pref.enable_divisions and pref.enable_division_motions %}
     {% include "tables/table_search.html" %}
   {% endif %}
 {% endblock %}
-{% block body-class %}public-motions{% endblock %}
 
-{% block header %}
+{% block page-alerts %}
   {% if rounds.all.count == 0 %}
-    <p class="lead">No motions have been released yet.</p>
+    <div class="alert alert-info" role="alert">
+      No motions have been released yet.
+    </div>
   {% endif %}
 {% endblock %}
 
 {% block content %}
   {% if pref.enable_divisions and pref.enable_division_motions %}
     {% if rounds.all.count > 0 %}
-      <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
+      <table id="dataTable" class="table">
         <thead>
           <tr>
             <th>RSeq</th>

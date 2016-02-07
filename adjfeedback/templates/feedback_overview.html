@@ -1,34 +1,45 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 {% load static %}
+{% load compress %}
 
-{% block head-title %}Adjudicator Feedback Summary{% endblock %}
 {% block page-title %}Adjudicator Feedback Summary{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
+{% block head-title %}
+  <span class="emoji">🙅</span>
+  Adjudicator Feedback Summary
+{% endblock %}
+{% block sub-title %}
+  {{ breaking_count }} marked as breaking
+{% endblock %}
 
-{% block header %}
-  <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url add_feedback %}">Add Feedback</a>
-  </div>
-  <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">View Latest Feedback</a>
-    <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">View Feedback By Source</a>
-  </div>
-  <div class="btn-group">
-    <div class="btn btn-default">
-      <span class="glyphicon glyphicon-star"></span>
-      <span id="breaking_count">{{ breaking_count }}</span> set as breaking
-    </div>
-  </div>
-  <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url randomised_urls %}">View Randomised URLs</a>
-  </div>
+{% block page-subnav-sections %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url adj_latest_feedback %}">
+    View Latest Feedback
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adj_source_feedback %}">
+    Find Feedback
+  </a>
+  {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url randomised_urls %}">
+    View Randomised URLs
+  </a>
+  {% endif %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url feedback_progress %}">
+    Unsubmitted Ballots
+  </a>
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+    <a class="btn btn-success" href="{% tournament_url add_feedback %}">Add Feedback</a>
 {% endblock %}
 
 {% block content %}
 
-  <table id="dataTable" class="table table-hover table-striped adj-feedback" cellpadding="0" cellspacing="0">
-    <thead>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <table id="dataTable" class="table">
+        <thead>
       <tr>
         <th>Name</th>
         {% if pref.show_institutions %}
@@ -51,7 +62,7 @@
         <th><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Average Score, including replies"></span></th>
       </tr>
     </thead>
-    <tbody>
+      <tbody>
       {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">
           <td class="adj-name">
@@ -122,6 +133,8 @@
     </tbody>
 
   </table>
+    </div>
+  </div>
 
   <div class="modal fade" id="adj-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -134,7 +147,7 @@
           <thead>
             <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
             <th><span class="glyphicon glyphicon-tag" data-toggle="tooltip" title="Version"></span></th>
-            <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+            <th><span class="glyphicon glyphicon-tasks" data-toggle="tooltip" title="Bracket"></span></th>
             <th>Debate</th>
             <th>Source</th>
             <th>Score</th>
@@ -174,7 +187,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label"></label>
             <div class="col-sm-6">
-              <button type="submit" value="Save" class="form-control btn btn-success submit-disable" data-loading-text="Saving...">
+              <button type="submit" value="Save" class="btn btn-success submit-disable" data-loading-text="Saving...">
                 Save
               </button>
             </div>
@@ -202,7 +215,7 @@
             </div>
             <div class="form-group">
               <div class="col-sm-4">
-                <button type="submit" value="Save" class="form-control btn btn-success submit-disable" data-loading-text="Saving...">
+                <button type="submit" value="Save" class="btn btn-success submit-disable" data-loading-text="Saving...">
                   Save
                 </button>
               </div>
@@ -216,14 +229,15 @@
 {% endblock content %}
 
 {% block extra-js %}
-<script type="text/javascript" language="javascript" src="{% static 'js/jquery.flot.min.js' %}"></script>
+{% compress js %}
+<script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.min.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
 
   $(document).ready( function() {
 
     var dTable = $('#dataTable').DataTable({
       'bPaginate': false,
-      "aaSorting": [[ 2, "desc" ],[ 0, "asc" ]],
+      "aaSorting": [[ 2, "desc" ]],
     });
     new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
     $('#table-search').keyup(function(){
@@ -391,4 +405,5 @@
   });
 
 </script>
+{% endcompress %}
 {% endblock extra-js %}

@@ -27,7 +27,7 @@
       {% for team_number in institution.available_team_numbers %}
         <div class="ballot-checkin-form form-horizontal col-sm-6">
 
-          <h4>Team #{{ team }}</h4>
+          <h4>Team #{{ team_number }}</h4>
 
           <input class="hidden" type="text" name="{{ institution.id }}_{{ team_number }}_Instititution" value="{{ institution.id }}" />
 
@@ -63,7 +63,7 @@
       <div class="form-group row">
         <label class="col-sm-1"></label>
         <div class="col-sm-4">
-          <input class="form-control btn btn-success submit-disable" type="submit" value="Save All" />
+          <input class="btn btn-success submit-disable" type="submit" value="Save All" />
         </div>
       </div>
     </div>

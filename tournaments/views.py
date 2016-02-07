@@ -1,5 +1,18 @@
+import logging
+logger = logging.getLogger(__name__)
+from threading import Lock
+
+from django.conf import settings
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic.edit import FormView, CreateView
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+import django.contrib.messages as messages
+
 from utils.views import *
 from .models import Tournament, Division
+from .forms import TournamentForm
+from utils.forms import SuperuserCreationForm
 from participants.models import Team, Institution
 from draw.models import Debate, DebateTeam
 from draw.models import TeamVenuePreference, InstitutionVenuePreference
@@ -8,20 +21,25 @@ from venues.models import VenueGroup
 @cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view
 def public_index(request, t):
-    return r2r(request, 'public_tournament_index.html')
+    return render(request, 'public_tournament_index.html')
 
 def index(request):
     tournaments = Tournament.objects.all()
     if tournaments.count() == 1:
-        print('user is ', request.user)
+        logger.info('One tournament only, user is: %s', request.user)
         if request.user.is_authenticated():
-            print('tournament_home')
-            return redirect_tournament('tournament_home', tournaments.first())
+            logger.info('Redirecting to tournament-admin-home')
+            return redirect_tournament('tournament-admin-home', tournaments.first())
         else:
-            print('public_index')
-            return redirect_tournament('public_index', tournaments.first())
+            logger.info('Redirecting to tournament-public-index')
+            return redirect_tournament('tournament-public-index', tournaments.first())
+
+    elif not tournaments.exists() and not User.objects.exists():
+        logger.info('No users and no tournaments, redirecting to blank-site-start')
+        return redirect('blank-site-start')
+
     else:
-        return r2r(request, 'site_index.html', dict(tournaments=Tournament.objects.all()))
+        return render(request, 'site_index.html', dict(tournaments=tournaments))
 
 @login_required
 @tournament_view
@@ -30,22 +48,27 @@ def tournament_home(request, t):
     # This should never happen, but if it does, fail semi-gracefully
     if round is None:
         if request.user.is_superuser:
-            return HttpResponseBadRequest("You need to set the current round. <a href=\"/admin/debate/tournament\">Go to Django admin.</a>")
+            return HttpResponseBadRequest("You need to set the current round. <a href=\"/admin/tournaments/tournament\">Go to Django admin.</a>")
         else:
             raise Http404()
 
-    rounds = t.prelim_rounds(until=round).order_by('seq')
+    context = {}
+
+    context["round"] = round
+    context["readthedocs_version"] = settings.READTHEDOCS_VERSION
+
+    # If the tournament is blank, display a message on the page
+    context["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
 
     # Draw Status
     draw = round.get_draw()
-    total_ballots = draw.count()
+    context["total_ballots"] = draw.count()
     stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
     stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
     stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
-    stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
+    context["stats"] = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
-    return r2r(request, 'tournament_home.html', dict(stats=stats,
-        total_ballots=total_ballots, round=round))
+    return render(request, 'tournament_home.html', context)
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')
@@ -56,13 +79,13 @@ def public_divisions(request, t):
     for uvg in venue_groups:
         uvg.divisions = [d for d in divisions if d.venue_group == uvg]
 
-    return r2r(request, 'public_divisions.html', dict(venue_groups=venue_groups))
+    return render(request, 'public_divisions.html', dict(venue_groups=venue_groups))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_venues(request, t):
     venues = VenueGroup.objects.all()
-    return r2r(request, 'public_all_tournament_venues.html', dict(venues=venues))
+    return render(request, 'public_all_tournament_venues.html', dict(venues=venues))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
@@ -70,7 +93,7 @@ def all_draws_for_venue(request, t, venue_id):
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
         'round','round__tournament','division')
-    return r2r(request, 'public_all_draws_for_venue.html', dict(
+    return render(request, 'public_all_draws_for_venue.html', dict(
         venue_group=venue_group, debates=debates))
 
 
@@ -82,7 +105,7 @@ def all_draws_for_institution(request, t, institution_id):
         'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')
     debates = [dt.debate for dt in debate_teams]
 
-    return r2r(request, 'public_all_draws_for_institution.html', dict(
+    return render(request, 'public_all_draws_for_institution.html', dict(
         institution=institution, debates=debates))
 
 
@@ -94,7 +117,7 @@ def round_increment_check(request, round):
         raise Http404()
     num_unconfirmed = round.get_draw().filter(result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
     increment_ok = num_unconfirmed == 0
-    return r2r(request, "round_increment_check.html", dict(num_unconfirmed=num_unconfirmed, increment_ok=increment_ok))
+    return render(request, "round_increment_check.html", dict(num_unconfirmed=num_unconfirmed, increment_ok=increment_ok))
 
 @admin_required
 @expect_post
@@ -113,7 +136,7 @@ def division_allocations(request, t):
     divisions = sorted(divisions, key=lambda x: x.name)
     venue_groups = VenueGroup.objects.all()
 
-    return r2r(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
+    return render(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 
 
 @admin_required
@@ -155,3 +178,46 @@ def create_division_allocation(request, t):
     else:
         return HttpResponseBadRequest("Couldn't create divisions")
 
+
+class BlankSiteStartView(FormView):
+    """This view is presented to the user when there are no tournaments and no
+    user accounts. It prompts the user to create a first superuser. It rejects
+    all requests, GET or POST, if there exists any user account in the
+    system."""
+
+    form_class = SuperuserCreationForm
+    template_name = "blank_site_start.html"
+    lock = Lock()
+    success_url = reverse_lazy('tabbycat-index')
+
+    def get(self, request):
+        if User.objects.exists():
+            logger.error("Tried to get the blank-site-start view when a user account already exists.")
+            return redirect('tabbycat-index')
+
+        return super(BlankSiteStartView, self).get(request)
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        with self.lock:
+            if User.objects.exists():
+                logger.error("Tried to post the blank-site-start view when a user account already exists.")
+                messages.error(request, "Whoops! It looks like someone's already created the first user account. Please log in.")
+                return redirect('auth-login')
+
+            return super(BlankSiteStartView, self).post(request)
+
+    def form_valid(self, form):
+        form.save()
+        user = authenticate(username=self.request.POST['username'], password=self.request.POST['password1'])
+        login(self.request, user)
+        messages.success(self.request, "Welcome! You've created an account for %s." % user.username)
+
+        return super(BlankSiteStartView, self).form_valid(form)
+
+class CreateTournamentView(SuperuserRequiredMixin, CreateView):
+    """This view allows a logged-in superuser to create a new tournament."""
+
+    model = Tournament
+    form_class = TournamentForm
+    template_name = "create_tournament.html"

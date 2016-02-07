@@ -1,35 +1,57 @@
 {% extends "base.html" %}
 {% load static %}
 {% load debate_tags %}
+{% load compress %}
 
-{% block head-title %}
-  Dashboard <small>{{ round.name }} is {{ round.get_draw_status_display.lower }} (this page will refresh its data automatically)</small>
-{% endblock %}
 {% block page-title %}Dashboard{% endblock %}
-{% block body-class %}dash{% endblock %}
-{% block header %}{% endblock %}
+{% block head-title %}
+  Tournament Overview
+{% endblock %}
+
+{% block sub-title %}
+  {{ round.name }} is {{ round.get_draw_status_display.lower }}
+  (this page will refresh its data automatically)
+{% endblock %}
 
 {% block content %}
 
+  {% if blank %}
+  <div class="alert alert-info">
+    <p>
+      <strong>Welcome to your new tournament!</strong> The next step is to
+      import your initial tournament data: the institutions, teams, adjudicators
+      and venues that are in your tournament. There are a number of ways to do
+      this. For small-to-medium tournaments, you can use the visual <a href="
+      {% tournament_url data_index %}"><strong>data importer</strong></a>. (This is also the
+      "Data Import" link at the bottom right of this page).
+    </p>
+    <p>For more information, please consult our <a href="https://tabbycat.readthedocs.org/en/{{ readthedocs_version }}/use/importing-data.html">documentation on importing initial data</a>.</p>
+  </div>
+  {% endif %}
+
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-12">
       <h4 class="text-center">
         Number of Ballots In
         (<span class="text-danger">None</span>,
         <span class="text-info">Draft</span>,
         <span class="text-success">Confirmed</span>)
       </h4>
-      <div id="ballots_progress" style="width:100%;height:450px"></div>
+      <div id="ballots_progress" style="width:100%;height:250px"></div>
     </div>
-    <div class="col-sm-6">
-      <h4 class="text-center">Latest Actions</h4>
-      <ul class="list-group" id="actions_list"></ul>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-12">
+        <h4 class="text-center">Latest Actions</h4>
+        <ul class="list-group" id="actions_list"></ul>
     </div>
   </div>
 
 {% endblock content %}
 
 {% block extra-js %}
+{% compress js %}
 <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.min.js' %}"></script>
 <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.stack.min.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
@@ -139,4 +161,5 @@ $(document).ready( function() {
 });
 
 </script>
+{% endcompress %}
 {% endblock %}

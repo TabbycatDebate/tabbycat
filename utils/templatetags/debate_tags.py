@@ -2,6 +2,7 @@ from django import template
 from django.utils.encoding import force_text
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from participants.emoji import EMOJI_LIST
 
 import re
 import os
@@ -12,34 +13,48 @@ STATIC_PATH = settings.MEDIA_ROOT
 version_cache = {}
 
 rx = re.compile(r'^(.*)\.(.*?)$')
+
+
 def version(path_string, base_url=settings.MEDIA_URL):
 
-    if not hasattr(settings, 'ENABLE_MEDIA_VERSIONING') or not settings.ENABLE_MEDIA_VERSIONING:
+    if not hasattr(
+            settings,
+            'ENABLE_MEDIA_VERSIONING') or not settings.ENABLE_MEDIA_VERSIONING:
         return base_url + path_string
 
     try:
         if path_string in version_cache:
             mtime = version_cache[path_string]
         else:
-            mtime = os.path.getmtime(os.path.join(settings.MEDIA_ROOT, path_string))
+            mtime = os.path.getmtime(os.path.join(settings.MEDIA_ROOT,
+                                                  path_string))
             version_cache[path_string] = mtime
 
         return base_url + rx.sub(r'\1.%d.\2' % mtime, path_string)
     except:
         return base_url + path_string
+
+
 register.simple_tag(version)
+
 
 def aff_count(team, round):
     if round is None:
         return 0
     return team.get_aff_count(round.seq)
+
+
 register.simple_tag(aff_count)
+
 
 def neg_count(team, round):
     if round is None:
         return 0
     return team.get_neg_count(round.seq)
+
+
 register.simple_tag(neg_count)
+
 
 def team_status_classes(team):
     classes = list()
@@ -48,6 +63,8 @@ def team_status_classes(team):
     for category in team.break_categories_nongeneral.order_by('priority'):
         classes.append("breakcategory-" + category.slug)
     return " ".join(classes)
+
+
 register.simple_tag(team_status_classes)
 
 
@@ -60,15 +77,9 @@ def debate_draw_status_class(debate):
         if debate.confirmed_ballot.forfeit:
             return "active text-muted"
 
+
 register.simple_tag(debate_draw_status_class)
 
-
-def feedback_number_step(min_val, max_val, number):
-    step = (max_val - min_val) / 4
-    value = min_val + (number * step)
-    return value
-
-register.simple_tag(feedback_number_step)
 
 class RoundURLNode(template.Node):
     def __init__(self, view_name, round=None):
@@ -80,9 +91,10 @@ class RoundURLNode(template.Node):
             round = self.round.resolve(context)
         else:
             round = context['round']
-        return reverse(self.view_name, args=[round.tournament.slug,
-                                             round.seq],
+        return reverse(self.view_name,
+                       args=[round.tournament.slug, round.seq],
                        current_app=context.current_app)
+
 
 class TournamentURLNode(template.Node):
     def __init__(self, view_name, args):
@@ -90,11 +102,13 @@ class TournamentURLNode(template.Node):
         self.args = args
 
     def render(self, context):
-        args=[context['tournament'].slug]
+        args = [context['tournament'].slug]
         args.extend(a.resolve(context) for a in self.args)
         args = tuple(args)
-        return reverse(self.view_name, args=args,
+        return reverse(self.view_name,
+                       args=args,
                        current_app=context.current_app)
+
 
 class TournamentAbsoluteURLNode(TournamentURLNode):
     def render(self, context):
@@ -111,11 +125,13 @@ def round_url(parser, token):
         round = None
     return RoundURLNode(bits[1], round)
 
+
 @register.tag
 def tournament_url(parser, token):
     bits = token.split_contents()
     args = tuple([parser.compile_filter(b) for b in bits[2:]])
     return TournamentURLNode(bits[1], args)
+
 
 @register.tag
 def tournament_absurl(parser, token):
@@ -123,20 +139,37 @@ def tournament_absurl(parser, token):
     args = tuple([parser.compile_filter(b) for b in bits[2:]])
     return TournamentAbsoluteURLNode(bits[1], args)
 
+
 @register.filter
 def next_value(value, arg):
     try:
-        return value[int(arg)+1]
+        return value[int(arg) + 1]
     except:
         return None
+
 
 @register.filter
 def prev_value(value, arg):
     try:
-        return value[int(arg)-1]
+        return value[int(arg) - 1]
     except:
         return None
+
 
 @register.filter(name='times')
 def times(number):
     return list(range(number))
+
+
+def divide(numberA, numberB):
+    return numberA / numberB
+
+
+register.simple_tag(divide)
+
+
+def percentage(numberA, numberB):
+    return numberA / numberB * 100
+
+
+register.simple_tag(percentage)

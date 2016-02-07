@@ -2,33 +2,28 @@
 {% load static %}
 {% load debate_tags %}
 {% load add_field_css %}
-{% block head-title %}
-  {{ category.name }} Break
-  <small>({{ pref.public_breaking_teams|yesno:",not "}}publicly visible)</small>
-{% endblock %}
+{% block head-title %}{{ category.name }} Break{% endblock %}
+{% block sub-title %}{{ pref.public_breaking_teams|yesno:",not "}}publicly visible{% endblock %}
 {% block page-title %}{{ category.name }} Break{% endblock %}
-{% block body-class %}breaking-teams-{{ category.slug }}{% endblock %}
 
-{% block header %}
+{% block page-subnav-sections %}
   {% if generated %}
 
-    <div class="btn-group">
-      <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
-        <button class="btn btn-danger form-control" id="generateBreakingTeams" type="submit">
-            Delete and regenerate the break for all categories
-        </button>
-      </form>
-      <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
-        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-          Update the break for all categories
-        </button>
-      </form>
-      <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline form-group" method="POST">
-        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-          Update the break for this category ({{ category.name }})
-        </button>
-      </form>
-    </div>
+    <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline" method="POST">
+      <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
+          Delete and regenerate the break for all categories
+      </button>
+    </form>
+    <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline" method="POST">
+      <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
+        Update the break for all categories
+      </button>
+    </form>
+    <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline" method="POST">
+      <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
+        Update the break for this category ({{ category.name }})
+      </button>
+    </form>
 
     <div class="alert alert-warning">
       Please double-check this before announcing the break or releasing it to the
@@ -90,71 +85,75 @@
   {% if generated %}
     <form action="." method="POST">
 
-      <table id="dataTable" class="table table-hover table-striped" cellspacing="0" cellpadding="0">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Break</th>
-            {% if pref.show_emoji %}
-              <th class="team-emoji"></th>
-            {% endif %}
-            <th>Team</th>
-            {% if pref.show_institutions %}
-              <th>Inst<span class="hidden-xs">itution</span></th>
-            {% endif %}
-            <th>Wins</th>
-            <th>Total speaker score</th>
-            {% if metrics.draw_strength %}
-              <th>Draw strength</th>
-            {% endif %}
-            {% if metrics.sum_of_margins %}
-              <th>Sum of margins</th>
-            {% endif %}
-            {% if metrics.who_beat_whom %}
-              <th>Who beat whom</th>
-            {% endif %}
-            <th>Edit remark</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for team, edit_remark in form.team_iter %}
-          <tr>
-            <td>{{ team.rank }}</td>
-            <td>{{ team.break_rank|default_if_none:"&ndash;" }}</td>
-            {% if pref.show_emoji %}
-              <td class="team-emoji">{{ team.emoji }}</td>
-            {% endif %}
-            <td>
-              <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
-                {{ team.long_name }}
-                {{ team.categories_for_display }}
-              </span>
-            </td>
-            {% if pref.show_institutions %}
-              <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
-            {% endif %}
-            <td>
-              {{ team.points }}
-            </td>
-            <td>
-              {{ team.speaker_score|stringformat:".2f" }}
-            </td>
-            {% if metrics.draw_strength %}
-              <td>{{ team.draw_strength }}</td>
-            {% endif %}
-            {% if metrics.sum_of_margins %}
-              <td>{{ team.margins|stringformat:".2f" }}</td>
-            {% endif %}
-            {% if metrics.who_beat_whom %}
-              <td>{{ team.who_beat_whom_display }}</td>
-            {% endif %}
-            <td>
-              {{ edit_remark|addcss:"form-control" }}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-        </table>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Break</th>
+                {% if pref.show_emoji %}
+                  <th class="team-emoji"></th>
+                {% endif %}
+                <th>Team</th>
+                {% if pref.show_institutions %}
+                  <th>Inst<span class="hidden-xs">itution</span></th>
+                {% endif %}
+                <th>Wins</th>
+                <th>Total speaker score</th>
+                {% if metrics.draw_strength %}
+                  <th>Draw strength</th>
+                {% endif %}
+                {% if metrics.sum_of_margins %}
+                  <th>Sum of margins</th>
+                {% endif %}
+                {% if metrics.who_beat_whom %}
+                  <th>Who beat whom</th>
+                {% endif %}
+                <th>Edit remark</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for team, edit_remark in form.team_iter %}
+              <tr>
+                <td>{{ team.rank }}</td>
+                <td>{{ team.break_rank|default_if_none:"&ndash;" }}</td>
+                {% if pref.show_emoji %}
+                  <td class="team-emoji">{{ team.emoji }}</td>
+                {% endif %}
+                <td>
+                  <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
+                    {{ team.long_name }}
+                    {{ team.categories_for_display }}
+                  </span>
+                </td>
+                {% if pref.show_institutions %}
+                  <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
+                {% endif %}
+                <td>
+                  {{ team.points }}
+                </td>
+                <td>
+                  {{ team.speaker_score|stringformat:".2f" }}
+                </td>
+                {% if metrics.draw_strength %}
+                  <td>{{ team.draw_strength }}</td>
+                {% endif %}
+                {% if metrics.sum_of_margins %}
+                  <td>{{ team.margins|stringformat:".2f" }}</td>
+                {% endif %}
+                {% if metrics.who_beat_whom %}
+                  <td>{{ team.who_beat_whom_display }}</td>
+                {% endif %}
+                <td>
+                  {{ edit_remark|addcss:"form-control" }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <div class="row">
         <div class="form-inline col-md-12">

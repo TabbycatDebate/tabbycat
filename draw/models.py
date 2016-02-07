@@ -6,24 +6,24 @@ from tournaments.models import SRManager
 from participants.models import Team
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
+
 class DebateManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super(DebateManager, self).get_queryset().select_related(
-            'round')
+        return super(DebateManager,
+                     self).get_queryset().select_related('round')
+
 
 class Debate(models.Model):
-    STATUS_NONE      = 'N'
+    STATUS_NONE = 'N'
     STATUS_POSTPONED = 'P'
-    STATUS_DRAFT     = 'D'
+    STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
-    STATUS_CHOICES = (
-        (STATUS_NONE,      'None'),
-        (STATUS_POSTPONED, 'Postponed'),
-        (STATUS_DRAFT,     'Draft'),
-        (STATUS_CONFIRMED, 'Confirmed'),
-    )
+    STATUS_CHOICES = ((STATUS_NONE, 'None'),
+                      (STATUS_POSTPONED, 'Postponed'),
+                      (STATUS_DRAFT, 'Draft'),
+                      (STATUS_CONFIRMED, 'Confirmed'), )
 
     objects = DebateManager()
 
@@ -38,8 +38,9 @@ class Debate(models.Model):
     flags = models.CharField(max_length=100, blank=True, null=True)
 
     importance = models.IntegerField(default=2)
-    result_status = models.CharField(max_length=1, choices=STATUS_CHOICES,
-            default=STATUS_NONE)
+    result_status = models.CharField(max_length=1,
+                                     choices=STATUS_CHOICES,
+                                     default=STATUS_NONE)
     ballot_in = models.BooleanField(default=False)
 
     class Meta:
@@ -51,17 +52,12 @@ class Debate(models.Model):
     def __str__(self):
         try:
             return "[{}/{}] {} vs {}".format(
-                self.round.tournament.slug,
-                self.round.abbreviation,
-                self.aff_team.short_name,
-                self.neg_team.short_name
-            )
+                self.round.tournament.slug, self.round.abbreviation,
+                self.aff_team.short_name, self.neg_team.short_name)
         except DebateTeam.DoesNotExist:
             return "[{}/{}] {}".format(
-                self.round.tournament.slug,
-                self.round.abbreviation,
-                ", ".join([x.short_name for x in self.teams])
-            )
+                self.round.tournament.slug, self.round.abbreviation,
+                ", ".join([x.short_name for x in self.teams]))
 
     @property
     def teams(self):
@@ -86,12 +82,18 @@ class Debate(models.Model):
 
     @cached_property
     def aff_dt(self):
-        aff_dt = DebateTeam.objects.select_related('team', 'team__institution').get(debate=self, position=DebateTeam.POSITION_AFFIRMATIVE)
+        aff_dt = DebateTeam.objects.select_related(
+            'team', 'team__institution').get(
+                debate=self,
+                position=DebateTeam.POSITION_AFFIRMATIVE)
         return aff_dt
 
     @cached_property
     def neg_dt(self):
-        neg_dt = DebateTeam.objects.select_related('team', 'team__institution').get(debate=self, position=DebateTeam.POSITION_NEGATIVE)
+        neg_dt = DebateTeam.objects.select_related(
+            'team', 'team__institution').get(
+                debate=self,
+                position=DebateTeam.POSITION_NEGATIVE)
         return neg_dt
 
     def get_side(self, team):
@@ -104,7 +106,8 @@ class Debate(models.Model):
     @cached_property
     def draw_conflicts(self):
         d = []
-        history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
+        history = self.aff_team.seen(self.neg_team,
+                                     before_round=self.round.seq)
         if history:
             d.append("History conflict (%d)" % history)
         if self.aff_team.institution == self.neg_team.institution:
@@ -118,7 +121,7 @@ class Debate(models.Model):
         there is no such ballot submission."""
         try:
             return self.ballotsubmission_set.get(confirmed=True)
-        except ObjectDoesNotExist: # BallotSubmission isn't defined yet, so can't use BallotSubmission.DoesNotExist
+        except ObjectDoesNotExist:  # BallotSubmission isn't defined yet, so can't use BallotSubmission.DoesNotExist
             return None
 
     @property
@@ -127,7 +130,8 @@ class Debate(models.Model):
 
     @property
     def ballotsubmission_set_by_version_except_discarded(self):
-        return self.ballotsubmission_set.filter(discarded=False).order_by('version')
+        return self.ballotsubmission_set.filter(
+            discarded=False).order_by('version')
 
     @property
     def identical_ballotsubs_dict(self):
@@ -139,7 +143,8 @@ class Debate(models.Model):
         for ballotsub1 in ballotsubs:
             # Save a bit of time by avoiding comparisons already done.
             # This relies on ballots being ordered by version.
-            for ballotsub2 in ballotsubs.filter(version__gt=ballotsub1.version):
+            for ballotsub2 in ballotsubs.filter(
+                    version__gt=ballotsub1.version):
                 if ballotsub1.is_identical(ballotsub2):
                     result[ballotsub1].append(ballotsub2.version)
                     result[ballotsub2].append(ballotsub1.version)
@@ -164,6 +169,7 @@ class Debate(models.Model):
             def __init__(self, adj, team):
                 self.adj = adj
                 self.team = team
+
             def __str__(self):
                 return 'Adj %s + %s' % (self.adj, self.team)
 
@@ -180,7 +186,8 @@ class Debate(models.Model):
         from adjallocation.models import DebateAdjudicator, AdjudicatorAllocation
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
-        adjs = DebateAdjudicator.objects.filter(debate=self).select_related('adjudicator')
+        adjs = DebateAdjudicator.objects.filter(
+            debate=self).select_related('adjudicator')
         alloc = AdjudicatorAllocation(self)
         for a in adjs:
             if a.type == a.TYPE_CHAIR:
@@ -200,7 +207,8 @@ class Debate(models.Model):
 
     @property
     def matchup(self):
-        return '%s vs %s' % (self.aff_team.short_name, self.neg_team.short_name)
+        return '%s vs %s' % (self.aff_team.short_name,
+                             self.neg_team.short_name)
 
     @property
     def division_motion(self):
@@ -208,16 +216,13 @@ class Debate(models.Model):
         return Motion.objects.filter(round=self.round, divisions=self.division)
 
 
-
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
     POSITION_NEGATIVE = 'N'
     POSITION_UNALLOCATED = 'u'
-    POSITION_CHOICES = (
-        (POSITION_AFFIRMATIVE, 'Affirmative'),
-        (POSITION_NEGATIVE, 'Negative'),
-        (POSITION_UNALLOCATED, 'Unallocated'),
-    )
+    POSITION_CHOICES = ((POSITION_AFFIRMATIVE, 'Affirmative'),
+                        (POSITION_NEGATIVE, 'Negative'),
+                        (POSITION_UNALLOCATED, 'Unallocated'), )
 
     objects = SRManager()
 
@@ -228,12 +233,15 @@ class DebateTeam(models.Model):
     def __str__(self):
         return '{} in {}'.format(self.team.short_name, self.debate)
 
-    @cached_property # TODO: this slows down the standings pages reasonably heavily
+    @cached_property  # TODO: this slows down the standings pages reasonably heavily
     def opposition(self):
         try:
-            return DebateTeam.objects.exclude(position=self.position).get(debate=self.debate)
+            return DebateTeam.objects.exclude(
+                position=self.position).select_related(
+                    'team', 'team__institution').get(debate=self.debate)
         except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
-            logger.error("Error finding opposition: %s, %s", self.debate, self.position)
+            logger.error("Error finding opposition: %s, %s", self.debate,
+                         self.position)
             return None
 
     @cached_property
@@ -250,6 +258,7 @@ class DebateTeam(models.Model):
 
     class Meta:
         verbose_name = "🙊 Debate Team"
+
 
 class TeamPositionAllocation(models.Model):
     """Model to store team position allocations for tournaments like Joynt
@@ -276,11 +285,12 @@ class TeamVenuePreference(models.Model):
     priority = models.IntegerField()
 
     class Meta:
-        ordering = ['priority',]
+        ordering = ['priority', ]
         verbose_name = "🏩 Team Venue Pref"
 
     def __str__(self):
-        return '%s with priority %s for %s' % (self.team, self.priority, self.venue_group)
+        return '%s with priority %s for %s' % (self.team, self.priority,
+                                               self.venue_group)
 
 
 class InstitutionVenuePreference(models.Model):
@@ -289,8 +299,9 @@ class InstitutionVenuePreference(models.Model):
     priority = models.IntegerField()
 
     class Meta:
-        ordering = ['priority',]
+        ordering = ['priority', ]
         verbose_name = "🏩 Institutional Venue Pref"
 
     def __str__(self):
-        return '%s with priority %s for %s' % (self.institution, self.priority, self.venue_group)
+        return '%s with priority %s for %s' % (self.institution, self.priority,
+                                               self.venue_group)

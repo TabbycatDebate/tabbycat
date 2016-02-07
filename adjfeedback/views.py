@@ -92,20 +92,22 @@ def feedback_overview(request, t):
                 debates = [fb.source_team.debate for fb in adj_round_feedbacks if fb.source_team]
                 debates.extend([fb.source_adjudicator.debate for fb in adj_round_feedbacks if fb.source_adjudicator])
                 adj_da = next((da for da in all_debate_adjudicators if (da.adjudicator == adj and da.debate == debates[0])), None)
+                if adj_da:
+                    if adj_da.type == adj_da.TYPE_CHAIR:
+                        adj_type = "Chair"
+                    elif adj_da.type == adj_da.TYPE_PANEL:
+                        adj_type = "Panellist"
+                    elif adj_da.type == adj_da.TYPE_TRAINEE:
+                        adj_type = "Trainee"
 
-                if adj_da.type == adj_da.TYPE_CHAIR:
-                    adj_type = "Chair"
-                elif adj_da.type == adj_da.TYPE_PANEL:
-                    adj_type = "Panellist"
-                elif adj_da.type == adj_da.TYPE_TRAINEE:
-                    adj_type = "Trainee"
+                    # Average their scores for that round
+                    totals = [f.score for f in adj_round_feedbacks]
+                    average = sum(totals) / len(totals)
 
-                # Average their scores for that round
-                totals = [f.score for f in adj_round_feedbacks]
-                average = sum(totals) / len(totals)
-
-                # Creating the object list for the graph
-                adj.rscores.append([r.seq, average, adj_type])
+                    # Creating the object list for the graph
+                    adj.rscores.append([r.seq, average, adj_type])
+                else:
+                    print('none')
 
     context = {
         'adjudicators'      : adjudicators,
@@ -114,7 +116,7 @@ def feedback_overview(request, t):
         'score_min'         : t.pref('adj_min_score'),
         'score_max'         : t.pref('adj_max_score'),
     }
-    return r2r(request, 'feedback_overview.html', context)
+    return render(request, 'feedback_overview.html', context)
 
 
 @login_required
@@ -131,7 +133,7 @@ def adj_source_feedback(request, t):
         adj.feedback_tally = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
             'source_adjudicator__adjudicator').count()
 
-    return r2r(request, "adjudicator_source_list.html", dict(teams=teams, adjs=adjs))
+    return render(request, "adjudicator_source_list.html", dict(teams=teams, adjs=adjs))
 
 def process_feedback(feedbacks, t):
     questions = t.adj_feedback_questions
@@ -158,7 +160,9 @@ def adj_latest_feedback(request, t):
     feedbacks = AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
         'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
     feedbacks, score_thresholds = process_feedback(feedbacks, t)
-    return r2r(request, "feedback_latest.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
+    if feedbacks.count() == 0:
+        messages.info(request, "No feedback has been submitted yet.")
+    return render(request, "feedback_latest.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
 
 @login_required
 @tournament_view
@@ -167,7 +171,7 @@ def team_feedback_list(request, t, team_id):
     source = team.short_name
     feedbacks = AdjudicatorFeedback.objects.filter(source_team__team=team).order_by('-timestamp')
     feedbacks, score_thresholds = process_feedback(feedbacks, t)
-    return r2r(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
+    return render(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
 
 @login_required
 @tournament_view
@@ -176,7 +180,7 @@ def adj_feedback_list(request, t, adj_id):
     source = adj.name
     feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).order_by('-timestamp')
     feedbacks, score_thresholds = process_feedback(feedbacks, t)
-    return r2r(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
+    return render(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
 
 @login_required
 @tournament_view
@@ -242,12 +246,12 @@ def public_enter_feedback(request, t, source):
             ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_FEEDBACK_SUBMIT,
                     ip_address=ip_address, adjudicator_feedback=adj_feedback,
                     tournament=t)
-            return r2r(request, 'public_success.html', dict(
+            return render(request, 'public_success.html', dict(
                     success_kind="feedback"))
     else:
         form = FormClass()
 
-    return r2r(request, 'public_add_feedback.html', dict(
+    return render(request, 'public_add_feedback.html', dict(
             source_type=source_type, source_name=source_name, form=form))
 
 @login_required
@@ -277,7 +281,7 @@ def enter_feedback(request, t, source_type, source_id):
     else:
         form = FormClass()
 
-    return r2r(request, 'enter_feedback.html', dict(source_type=source_type,
+    return render(request, 'enter_feedback.html', dict(source_type=source_type,
             source_name=source_name, form=form))
 
 
@@ -349,7 +353,7 @@ def add_feedback(request, t):
         template = 'add_feedback.html'
     else:
         template = 'assistant_add_feedback.html'
-    return r2r(request, template, context)
+    return render(request, template, context)
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -357,7 +361,7 @@ def add_feedback(request, t):
 def public_feedback_submit(request, t):
     adjudicators = Adjudicator.objects.all()
     teams = Team.objects.all()
-    return r2r(request, 'public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
+    return render(request, 'public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -405,7 +409,7 @@ def public_feedback_progress(request, t):
         team.owed_ballots = max((current_round - team.submitted_ballots), 0)
         team.coverage = min(calculate_coverage(team.submitted_ballots, current_round), 100)
 
-    return r2r(request, 'feedback_progress.html', dict(teams=teams, adjudicators=adjudicators))
+    return render(request, 'feedback_progress.html', dict(teams=teams, adjudicators=adjudicators))
 
 
 @admin_required
@@ -454,7 +458,7 @@ def feedback_progress(request, t):
         team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
         team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
 
-    return r2r(request, 'feedback_progress.html', dict(teams=teams, adjudicators=adjudicators))
+    return render(request, 'feedback_progress.html', dict(teams=teams, adjudicators=adjudicators))
 
 
 # TODO: move to a different app?
@@ -499,7 +503,7 @@ def randomised_urls(request, t):
     context['ballot_randomised_urls_enabled'] = t.pref('public_ballots_randomised')
     context['feedback_normal_urls_enabled'] = t.pref('public_feedback')
     context['feedback_randomised_urls_enabled'] = t.pref('public_feedback_randomised')
-    return r2r(request, 'randomised_urls.html', context)
+    return render(request, 'randomised_urls.html', context)
 
 @admin_required
 @tournament_view
@@ -513,5 +517,3 @@ def generate_randomised_urls(request, t):
     populate_url_keys(t.adjudicator_set.all())
     populate_url_keys(t.team_set.all())
     return redirect_tournament('randomised_urls', t)
-
-

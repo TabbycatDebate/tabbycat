@@ -11,6 +11,7 @@ ADMINS              = ()
 MANAGERS            = ADMINS
 DEBUG               = True
 DEBUG_ASSETS        = True
+LIVE_RELOAD         = False
 
 # ===========================
 # = Django-specific Modules =
@@ -29,15 +30,6 @@ INSTALLED_APPS += (
     'debug_toolbar',
 )
 
-# =============
-# = Pipelines =
-# =============
-
-# Disable gzipping when running locally and on debug as it throws errors when
-# files aren't found (and static files can't 100% copy admin dependencies)
-# remove this if we ever switch to running waitress locally only
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
 # ===========
 # = Caching =
 # ===========
@@ -45,8 +37,6 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 PUBLIC_PAGE_CACHE_TIMEOUT   = 1
 TAB_PAGES_CACHE_TIMEOUT     = 1
 
-COMPRESS_ENABLED    = False # Output still rendered/converted just not smushed
-COMPRESS_OFFLINE    = True
 
 CACHES = { # Use a dummy cache in development
     'default': {
@@ -59,6 +49,12 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 ]
+
+# =============
+# = Pipelines =
+# =============
+
+LIBSASS_OUTPUT_STYLE = 'nested'
 
 # =================
 # = Debug Toolbar =

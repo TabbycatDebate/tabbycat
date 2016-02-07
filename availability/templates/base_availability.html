@@ -1,33 +1,37 @@
-{% extends "draw_rbase.html" %}
+{% extends "base.html" %}
 
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
+{% block page-subnav-sections %}
+  {% if round.seq > 1 %}
+    {% block copy_btn %}
+      <button id="btn_copy" class="btn btn-primary" type="button">Copy from Previous</button>
+    {% endblock %}
+  {% endif %}
+  <button id="select_all" class="btn btn-primary" href="#all">Select All</button>
+  {% if adjudicators %}
+    <button id="select_breaking" class="btn btn-primary" href="#">Select Breaking</button>
+  {% endif %}
+  <button id="select_none" class="btn btn-primary" href="#none">Select None</button>
+  {% include "tables/table_search.html" %}
+{% endblock %}
 
-{% block header %}
-  <div class="status btn-group">
-    {% if round.seq > 1 %}
-      {% block copy_btn %}
-        <button id="btn_copy" class="btn form-control btn-default" type="button">Copy from Previous</button>
-      {% endblock %}
-    {% endif %}
-  </div>
-  <div class="status btn-group">
-    <button id="select_all" class="btn form-control btn-default" href="#all">Select All</a>
-    <button id="select_breaking" class="btn form-control btn-default" href="#">Select Breaking</a>
-    <button id="select_none" class="btn form-control btn-default" href="#none">Select None</a>
-  </div>
-  <div class="status btn-group">
-    <button id="submit_availability" class="btn form-control btn-success" >Save Selected</button>
-  </div>
+{% block page-subnav-actions %}
+  <button id="submit_availability" class="btn btn-success" >Save Selected</button>
 {% endblock %}
 
 {% block content %}
   <div id="alerts-holder"></div>
   <form id="form">
-    <table id="dataTable" class="table table-hover table-striped" cellpadding="0", cellspacing="0">
-      {% block table-contents %}
-      {% endblock table-contents %}
-    </table>
-    <div class="status"></div>
+    <div class="panel panel-default">
+      <div class="panel-body">
+
+        <table id="dataTable" class="table">
+          {% block table-contents %}
+          {% endblock table-contents %}
+        </table>
+        <div class="status"></div>
+
+      </div>
+    </div>
   </form>
 {% endblock content %}
 
@@ -41,16 +45,16 @@
     var updateCheckbox = function(cb) {
       var jp = $(cb).parents("tr");
       if (cb.checked) {
-        jp.addClass("active");
-        jp.removeClass("inactive");
+        jp.addClass("success");
+        jp.removeClass("danger");
         if (venueState[cb.value]) {
           jp.removeClass("pendingChange");
         } else {
           jp.addClass("pendingChange");
         }
       } else {
-        jp.addClass("inactive");
-        jp.removeClass("active");
+        jp.addClass("danger");
+        jp.removeClass("success");
         if (venueState[cb.value]) {
           jp.addClass("pendingChange");
         } else {
@@ -147,6 +151,7 @@
         });
         // Note new method for getting rows
         var sData = $("input", dTable.rows().nodes()).serialize();
+        $("#saved_availability").alert('close'); // hide the previous alert
         $.ajax({
           type: "POST",
           url: update_url,
@@ -158,14 +163,13 @@
             });
             {% block post-success %}{% endblock %}
             var draw_url = '{% block draw-url %}{% endblock %}';
-
             $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id="saved_availability">' +
               '<button type="button" class="close" data-dismiss="alert">' +
               '&times;</button>' +
               'Saved successfully! ' +
               '<a href="' +
               draw_url +
-              '" class="alert-link">Return to the draw</a>' +
+              '" class="alert-link">Return to the checkins overview</a>' +
               '</div>');
           },
           error: function(req, txtStatus, err) {

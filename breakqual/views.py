@@ -10,7 +10,7 @@ from utils.views import *
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
 def public_break_index(request, t):
-    return r2r(request, "public_break_index.html")
+    return render(request, "public_break_index.html")
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_breaking_teams')
@@ -19,7 +19,12 @@ def public_breaking_teams(request, t, category):
     teams = breaking.get_breaking_teams(bc, include_all=True, include_categories=t.pref('public_break_categories'))
     generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
     metrics = relevant_team_standings_metrics(t)
-    return r2r(request, 'public_breaking_teams.html', dict(teams=teams, category=bc, generated=generated, metrics=metrics))
+    return render(request, 'public_breaking_teams.html', dict(teams=teams, category=bc, generated=generated, metrics=metrics))
+
+@admin_required
+@tournament_view
+def breaking_index(request, t):
+    return render(request, 'breaking_index.html')
 
 @admin_required
 @tournament_view
@@ -39,7 +44,7 @@ def breaking_teams(request, t, category):
 
     generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
     metrics = relevant_team_standings_metrics(t)
-    return r2r(request, 'breaking_teams.html', dict(form=form, category=bc, generated=generated, metrics=metrics))
+    return render(request, 'breaking_teams.html', dict(form=form, category=bc, generated=generated, metrics=metrics))
 
 
 @expect_post
@@ -77,13 +82,13 @@ def update_breaking_teams(request, t, category):
 @public_optional_tournament_view('public_breaking_adjs')
 def public_breaking_adjs(request, t):
     adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
-    return r2r(request, 'public_breaking_adjs.html', dict(adjs=adjs))
+    return render(request, 'public_breaking_adjs.html', dict(adjs=adjs))
 
 @admin_required
 @tournament_view
 def breaking_adjs(request, t):
     adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
-    return r2r(request, 'breaking_adjs.html', dict(adjs=adjs))
+    return render(request, 'breaking_adjs.html', dict(adjs=adjs))
 
 @admin_required
 @tournament_view
@@ -100,4 +105,4 @@ def edit_eligibility(request, t):
         form = forms.BreakEligibilityForm(t)
 
     context['form'] = form
-    return r2r(request, 'edit_eligibility.html', context)
+    return render(request, 'edit_eligibility.html', context)

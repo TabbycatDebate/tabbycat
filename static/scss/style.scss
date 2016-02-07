@@ -1,26 +1,73 @@
 //---------------------------------------------------
 // BOOTSTRAP
 //---------------------------------------------------
-
-@import "vendor/bootstrap";
-
+// Our overrides
+@import "partials/variables";
+// Core variables and mixins
+@import "vendor/bootstrap/mixins";
+@import "vendor/bootstrap/variables";
+// Reset
+@import "vendor/bootstrap/normalize";
+@import "vendor/bootstrap/print";
+// Core CSS
+@import "vendor/bootstrap/scaffolding";
+@import "vendor/bootstrap/type";
+@import "vendor/bootstrap/code";
+@import "vendor/bootstrap/grid";
+@import "vendor/bootstrap/tables";
+@import "vendor/bootstrap/forms";
+@import "vendor/bootstrap/buttons";
+// Components
+@import "vendor/bootstrap/component-animations";
+@import "vendor/bootstrap/glyphicons";
+@import "vendor/bootstrap/dropdowns";
+@import "vendor/bootstrap/button-groups";
+@import "vendor/bootstrap/input-groups";
+@import "vendor/bootstrap/navs";
+@import "vendor/bootstrap/navbar";
+// @import "vendor/bootstrap/breadcrumbs";
+// @import "vendor/bootstrap/pagination";
+@import "vendor/bootstrap/pager";
+@import "vendor/bootstrap/labels";
+@import "vendor/bootstrap/badges";
+@import "vendor/bootstrap/jumbotron";
+@import "vendor/bootstrap/thumbnails";
+@import "vendor/bootstrap/alerts";
+@import "vendor/bootstrap/progress-bars";
+@import "vendor/bootstrap/media";
+@import "vendor/bootstrap/list-group";
+@import "vendor/bootstrap/panels";
+// @import "vendor/bootstrap/wells";
+@import "vendor/bootstrap/close";
+// Components w/ JavaScript
+@import "vendor/bootstrap/modals";
+@import "vendor/bootstrap/tooltip";
+@import "vendor/bootstrap/popovers";
+// @import "vendor/bootstrap/carousel";
+// Utility classes
+@import "vendor/bootstrap/utilities";
+@import "vendor/bootstrap/responsive-utilities";
 //---------------------------------------------------
 // TABBYCAT
 //---------------------------------------------------
-
+@import "modules/typography";
+@import "modules/print";
+@import "modules/nav";
+@import "modules/tables";
+@import "modules/forms";
+@import "modules/base";
+@import "modules/allocation";
+//---------------------------------------------------
+// BASE AESTHETICS
+//---------------------------------------------------
+//---------------------------------------------------
+// TO REFACTOR
+//---------------------------------------------------
 @import "components/page-specific";
-@import "components/tables";
-@import "components/print";
-
-//---------------------------------------------------
-// GENERAL UTILITIES
-//---------------------------------------------------
-
 @include text-emphasis-variant('.text-success', $brand-success);
 @include text-emphasis-variant('.text-info', $brand-info);
 @include text-emphasis-variant('.text-warning', $brand-warning);
 @include text-emphasis-variant('.text-danger', $brand-danger);
-
 .no-vertical-spacing,
 table.table > thead > tr > th.no-vertical-spacing,
 table.table > tbody > tr > td.no-vertical-spacing {
@@ -29,7 +76,6 @@ table.table > tbody > tr > td.no-vertical-spacing {
   margin-top: 0;
   margin-bottom: 0;
 }
-
 .no-horizontal-spacing,
 table.table > thead > tr > th.no-horizontal-spacing,
 table.table > tbody > tr > td.no-horizontal-spacing {
@@ -38,7 +84,6 @@ table.table > tbody > tr > td.no-horizontal-spacing {
   margin-left: 0;
   margin-right: 0;
 }
-
 .no-borders,
 .table > thead > tr > th.no-borders,
 .table > tbody > tr > td.no-borders {
@@ -47,7 +92,6 @@ table.table > tbody > tr > td.no-horizontal-spacing {
   border-left: none;
   border-right: none;
 }
-
 // For the collapsedmdouble menu
 .navbar-nav {
   @media (max-width: $screen-xs-max) {
@@ -55,160 +99,44 @@ table.table > tbody > tr > td.no-horizontal-spacing {
       float: left;
       width: 40%;
     }
-
     &.navbar-right {
       float: right;
       width: 60%;
     }
-
     .dropdown-menu .dropdown.open ul {
       clear: both;
     }
-
     .dropdown.open li {
       display: block;
     }
-
     .dropdown.open li a {
       padding-left: 15px;
       padding-right: 0;
     }
-
     .dropdown.open .divider {
       display: none;
     }
-
-    .dropdown.open .dropdown-menu {
-
-    }
+    .dropdown.open .dropdown-menu {}
   }
 }
-
-// Override
-.nav {
-  > li {
-    > a {
-      padding: 15px 10px;
-    }
-  }
-
-  > li.round-nav {
-    > a {
-      padding: 15px 5px;
-
-      .caret {
-        margin-left: -2px;
-      }
-    }
-
-    a.current-round {
-      font-weight: bold;
-      border-top: 2px solid #999;
-      padding-top: 13px;
-    }
-  }
-}
-
-.page-header {
-  margin-bottom: 20px;
-}
-
-#header-options {
-
-  //min-height: 34px; // Spacer pre-form relocation via JS
-  margin-right: 0;
-
-  .btn {
-    margin-bottom: 20px;
-  }
-}
-
-// Sticky Footer
-html,
-body {
-  height: 100%;
-}
-
-#wrap {
-  min-height: 100%;
-  height: auto;
-  margin: 0 auto -100px;
-  padding: 0 0 115px;
-
-  #container {
-    margin-bottom: 20px;
-  }
-}
-
-#footer {
-  height: 115px;
-
-  .navbar {
-    height: 115px;
-    margin-bottom: 0;
-  }
-
-  .navbar {
-    border-radius: 0;
-  }
-
-  .navbar-brand {
-    font-size: 14px;
-    margin-bottom: 0;
-  }
-}
-
-@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-  #wrap {
-    margin: 0 auto -100px;
-    padding: 0 0 100px;
-  }
-
-  #footer {
-    height: 100px;
-
-    .navbar {
-      height: 100px;
-    }
-  }
-}
-
-@media (min-width: $screen-md-min) {
-  #wrap {
-    margin: 0 auto -50px;
-    padding: 0 0 50px;
-  }
-
-  #footer {
-    height: 50px;
-    overflow: hidden;
-  }
-}
-
 // Universal Style overrides
 .page-header h1 {
   margin-top: 0; // fixes button alignment easily
 }
-
 [data-toggle="tooltip"] {
   cursor: pointer; // for tooltips
-  border-bottom: 2px dotted #ccc;
 }
-
 .alert-link {
   text-decoration: underline;
   font-weight: normal;
 }
-
 .check_target {
   cursor: pointer;
 }
-
 // Forms
 #resultsForm {
   overflow: hidden;
 }
-
 input.error,
 select.error,
 .error input {
@@ -216,78 +144,63 @@ select.error,
   color: $state-danger-text;
   background: $state-danger-bg;
 }
-
 .errorlist {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-
 .error,
 .errorlist li {
   border-color: $state-danger-text;
   color: $state-danger-text;
 }
-
 .form-control-parent input {
   @extend .form-control;
 }
-
 .ballot-errors .errorlist {
   list-style-type: disc;
   margin: 0 2.5em;
   padding: 0;
 }
-
 .forfeits-group ul {
   list-style-type: none;
-
   label {
     width: 200px;
-
     input[type="radio"].form-control {
       margin-right: 6px;
       float: left;
       margin-top: -8px;
     }
   }
-
   li {
     display: inline;
   }
 }
-
 input[type="radio"].form-control,
 input[type="checkbox"].form-control {
   margin-top: 0;
   max-width: 20px;
   display: inline;
 }
-
 // Modals
 .modal-body {
   overflow: auto;
 }
-
 .modal-lg {
   width: 98%;
 }
-
 // Tables - Specific
 .adj-chair {
   text-decoration: underline;
 }
-
 .adj-trainee {
   font-style: italic;
 }
-
 // Ballots
 .scoresheet {
   .score input {
     width: 70px;
   }
-
   .aff_total,
   .neg_total {
     width: 70px;
@@ -295,101 +208,81 @@ input[type="checkbox"].form-control {
     cursor: default;
   }
 }
-
 .edit-ballot-link-discarded,
 .edit-ballot-link-discarded:hover {
   color: #808080;
   text-decoration: line-through;
 }
-
 // Motions
 .assign-motions .list-group-item-text {
   height: 54px;
   overflow: hidden;
 }
-
 // Scoresheets
 .scoresheet-view {
   .control-label {
     text-align: right;
     vertical-align: middle;
   }
-
   .score {
     width: 70px;
     text-align: right;
   }
-
   .total {
     padding-top: 5px;
     padding-bottom: 5px;
   }
-
   .total.score {
     font-weight: bold;
     border-radius: 3px;
   }
-
   .win {
     background-color: #47a447;
     color: white;
     border-color: #398439;
   }
-
   .loss {
     background-color: #d2322d;
     color: white;
     border-color: #ac2925;
   }
-
   .motion-veto {
     text-decoration: line-through;
   }
 }
-
 .team-tab a.team-score {
-
   // Darker than normal link, but not black
   color: #285379;
 }
-
 .feedback-integer-scale-table {
   width: 100%;
 }
-
 .feedback-integer-scale-table td {
   text-align: center;
 }
-
 .feedback-integer-scale-table input[type="radio"].form-control {
   width: 20px;
   margin: 0 auto;
   vertical-align: middle;
   display: block;
 }
-
 .feedback-multiple-select .feedback-option {
   display: inline-block;
 }
-
 .feedback-multiple-select .feedback-option label {
   margin-right: 20pt;
 }
-
 .feedback-multiple-select input[type="checkbox"].form-control {
   vertical-align: middle;
   width: 20px;
 }
-
 .forms-block-inline form {
   display: inline-block;
 }
-
 @media (max-width: $screen-xs-max) {
   .page-header {
     margin-top: 0;
   }
-
   #header-options {
     min-height: 82px;
   }

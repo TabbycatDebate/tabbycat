@@ -2,29 +2,32 @@ import sys
 import os
 import urllib.parse
 
-PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
-MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MEDIA_ROOT = (os.path.join(BASE_DIR, 'media'), )
 
 # ========================
 # = Overwritten in Local =
 # ========================
 
-ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com'),
-MANAGERS            = ADMINS
-DEBUG               = False
-DEBUG_ASSETS        = DEBUG
+ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
+MANAGERS = ADMINS
+DEBUG = False
+DEBUG_ASSETS = DEBUG
+LIVE_RELOAD = False
 
 # ===================
 # = Global Settings =
 # ===================
 
-ADMIN_MEDIA_PREFIX  = '/media/'
-MEDIA_URL           = '/media/'
-STATIC_URL          = '/static/'
-TIME_ZONE           = 'Australia/Melbourne'
-LANGUAGE_CODE       = 'en-us'
-USE_I18N            = True
-TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
+MEDIA_URL = '/media/'
+TIME_ZONE = 'Australia/Melbourne'
+LANGUAGE_CODE = 'en-us'
+USE_I18N = True
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+TABBYCAT_VERSION = '0.8.0'
+TABBYCAT_CODENAME = 'Bengal'
+READTHEDOCS_VERSION = 'latest'
 
 # ===========================
 # = Django-specific Modules =
@@ -35,26 +38,23 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'utils.middleware.DebateMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-)
+    'django.contrib.messages.middleware.MessageMiddleware', )
 
-TABBYCAT_APPS = (
-    'actionlog',
-    'adjallocation',
-    'adjfeedback',
-    'availability',
-    'breakqual',
-    'draw',
-    'motions',
-    'options',
-    'participants',
-    'results',
-    'tournaments',
-    'venues',
-    'utils',
-    'standings',
-    'importer',
-)
+TABBYCAT_APPS = ('actionlog',
+                 'adjallocation',
+                 'adjfeedback',
+                 'availability',
+                 'breakqual',
+                 'draw',
+                 'motions',
+                 'options',
+                 'participants',
+                 'results',
+                 'tournaments',
+                 'venues',
+                 'utils',
+                 'standings',
+                 'importer', )
 
 INSTALLED_APPS = (
     'jet',
@@ -67,10 +67,9 @@ INSTALLED_APPS = (
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'static_precompiler',
-    'django_extensions' # For Secret Generation Command
+    'django_extensions', # For Secret Generation Command
+    'compressor',
     )
-
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
@@ -81,8 +80,8 @@ LOGIN_REDIRECT_URL = '/'
 
 TEMPLATES = [
     {
-        'BACKEND':      'django.template.backends.django.DjangoTemplates',
-        'DIRS':         [os.path.join(PROJECT_PATH, 'templates')],
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
@@ -92,9 +91,9 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
-                'django.template.context_processors.request',           # For Jet
-                'utils.context_processors.debate_context',              # For tournament config vars
-                'utils.context_processors.get_menu_highlight',          # For nav highlight
+                'django.template.context_processors.request',  # For Jet
+                'utils.context_processors.debate_context',  # For tournament config vars
+                'utils.context_processors.get_menu_highlight',  # For nav highlight
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
@@ -110,8 +109,10 @@ TEMPLATES = [
 # = Caching =
 # ===========
 
-PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60 * 1))
-TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120))
+PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60
+                                               * 1))
+TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 *
+                                             120))
 
 # Default non-heroku cache is to use local memory
 CACHES = {
@@ -124,33 +125,32 @@ CACHES = {
 # Use the cache for sessions rather than the db
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-# =============
-# = Pipelines =
-# =============
+# ================
+# = Static Files =
+# ================
 
-STATIC_ROOT         = 'staticfiles'
-STATIC_URL          = '/static/'
-STATICFILES_DIRS    = (
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'),
-)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'static_precompiler.finders.StaticPrecompilerFinder',
+    'compressor.finders.CompressorFinder', )
 
-)
+# Whitenoise
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'  # Gzipping and unique names
 
-STATIC_PRECOMPILER_COMPILERS = (
-    ('static_precompiler.compilers.libsass.SCSS',
-        {
-            "sourcemap_enabled": False,
-        }
-    ),
-)
+# =============
+# = Pipelines =
+# =============
 
-# Needs to be off for admin to work
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # Gzipping and unique names
+# Compression
+COMPRESS_ENABLED = True
+COMPRESS_PRECOMPILERS = (('text/x-scss', 'django_libsass.SassCompiler'), )
+
+LIBSASS_OUTPUT_STYLE = 'compressed'
 
 # ===========
 # = Logging =
@@ -159,7 +159,7 @@ STATIC_PRECOMPILER_COMPILERS = (
 if os.environ.get('SENDGRID_USERNAME', ''):
     SERVER_EMAIL = os.environ['SENDGRID_USERNAME']
     DEFAULT_FROM_EMAIL = os.environ['SENDGRID_USERNAME']
-    EMAIL_HOST= 'smtp.sendgrid.net'
+    EMAIL_HOST = 'smtp.sendgrid.net'
     EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
     EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
     EMAIL_PORT = 587
@@ -173,13 +173,14 @@ LOGGING = {
     'disable_existing_loggers': False,
     'filters': {
         'require_debug_false': {
-        # Only send emails to admins when debug is false
+            # Only send emails to admins when debug is false
             '()': 'django.utils.log.RequireDebugFalse',
         }
     },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'standard',
         },
         'mail_admins': {
             # Any log item marked ERROR or higher will be sent to admins
@@ -200,6 +201,12 @@ LOGGING = {
             'propagate': True,
         },
     },
+    'formatters': {
+        'standard': {
+            'format': '[%(asctime)s] %(levelname)s %(name)s: %(message)s',
+            'datefmt': '%d/%b/%Y %H:%M:%S'
+        },
+    },
 }
 
 for app in TABBYCAT_APPS:
@@ -208,15 +215,19 @@ for app in TABBYCAT_APPS:
         'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG' if DEBUG else 'INFO'),
     }
 
+# ============
+# = Messages =
+# ============
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {messages.ERROR: 'danger', }
 
 # ==========
 # = Heroku =
 # ==========
 
-if os.environ.get('DJANGO_SECRET_KEY', ''):
-    SECRET_KEY          = os.environ['DJANGO_SECRET_KEY']
-else:
-    SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY', '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc')
 
 # Parse database configuration from $DATABASE_URL
 try:
@@ -234,7 +245,8 @@ ALLOWED_HOSTS = ['*']
 
 if os.environ.get('MEMCACHIER_SERVERS', ''):
     try:
-        os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
+        os.environ['MEMCACHE_SERVERS'] = os.environ[
+            'MEMCACHIER_SERVERS'].replace(',', ';')
         os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
         os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
         CACHES = {
@@ -269,11 +281,11 @@ if os.environ.get('DEBUG', ''):
 if os.environ.get('TRAVIS', '') == 'true':
     DATABASES = {
         'default': {
-            'ENGINE':   'django.db.backends.postgresql_psycopg2',
-            'USER':     'postgres',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'USER': 'postgres',
             'PASSWORD': '',
-            'HOST':     'localhost',
-            'PORT':     '',
+            'HOST': 'localhost',
+            'PORT': '',
         }
     }
 

@@ -1,0 +1,40 @@
+// GENERIC AESTHETICS
+body {
+  background: #f3f4f9;
+}
+.white-bg {
+  background: #fff;
+}
+// LAYOUT
+.vertical-spacing {
+  margin-bottom: $line-height-computed;
+}
+// BASE ELEMENTS: HEADER
+.head-title {
+  padding: 0 0 16px 5px;
+  small {
+    line-height: $font-size-h3 * $headings-line-height * 1.2;
+  }
+}
+.page-sub-nav {
+  .navbar-left {
+    margin-bottom: $line-height-computed;
+  }
+  .navbar-right {
+    padding-right: 15px; // compensate for the pull-rights negative margin
+  }
+  .btn-group-input {
+    // For the quick search; needs to fit within the row
+    display: inline-block;
+    max-width: 148px;
+    float: right; // Needed to fix spacing
+    margin-left: 3px; // Isn't receiving the left margin
+    .form-control {
+      height: 41px;
+      border-width: 1px;
+    }
+  }
+  .dropdown, form {
+    display: inline-block; // Need this to bring their alignment up
+  }
+}

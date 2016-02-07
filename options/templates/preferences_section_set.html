@@ -4,9 +4,8 @@
 
 {% block head-title %}Configuration{% endblock %}
 {% block page-title %}Configuration{% endblock %}
-{% block body-class %}config{% endblock %}
 
-{% block header %}
+{% block page-subnav-sections %}
   {% if form.errors %}
     <div class="alert alert-danger alert-dismissable" id="savedVenues">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -33,15 +32,15 @@
       <span class="help-block">
         {{ field.help_text }}
       </span>
+      {% if field.errors %}
+        {{ field.errors }}
+      {% endif %}
     </div>
-    {% if field.errors %}
-      {{ field.errors }}
-    {% endif %}
   </div>
   {% endfor %}
   <div class="form-group">
     <div class="col-sm-offset-3 col-sm-2">
-      <button type="submit" class="btn btn-success form-control submit-disable" data-loading-text="Saving...">
+      <button type="submit" class="btn btn-success submit-disable" data-loading-text="Saving...">
         Save
       </button>
     </div>

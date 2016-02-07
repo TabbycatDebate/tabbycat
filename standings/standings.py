@@ -248,4 +248,3 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False, r
         _add_division_ranks(standings, tournament.division_set.all())
 
     return standings
-

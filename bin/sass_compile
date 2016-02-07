@@ -1,2 +1,0 @@
-# Requires `gem install sass`
-sass --watch static/scss:staticfiles/COMPILED/scss

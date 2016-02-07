@@ -1,7 +1,10 @@
+# Django Related
 local_settings.py
 staticfiles/
-.gitmodules
-.sass-cache
+.gitmodules/
+.sass-cache/
+__pycache__/
+static/css/style.css
 
 # Data to ignore
 data/*
@@ -12,6 +15,12 @@ data/*
 !data/sandbox/
 !data/test/
 !data/presets/
+
+# Docs
+site/
+
+# Tags
+tags
 
 env/
 venv/
@@ -48,10 +57,10 @@ pip-log.txt
 .tox
 nosetests.xml
 
-#Translations
+# Translations
 *.mo
 
-#Mr Developer
+# Mr Developer
 .mr.developer.cfg
 *.log
 *.pot
@@ -59,6 +68,3 @@ nosetests.xml
 
 # Python 2to3 backup files
 *.bak
-
-# Docs
-site/

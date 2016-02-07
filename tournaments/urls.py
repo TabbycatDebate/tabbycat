@@ -5,8 +5,8 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^$',                                  views.public_index,     name='public_index'),
-    url(r'^admin/$',                            views.tournament_home,  name='tournament_home'),
+    url(r'^$',                                          views.public_index,     name='tournament-public-index'),
+    url(r'^admin/overview/$',                           views.tournament_home,  name='tournament-admin-home'),
 
     #url(r'^admin/actions/$', 'action_log', name='action_log'),
 

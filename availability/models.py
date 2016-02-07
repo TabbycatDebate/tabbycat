@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Checkin(models.Model):
     person = models.ForeignKey('participants.Person')
     round = models.ForeignKey('tournaments.Round')
