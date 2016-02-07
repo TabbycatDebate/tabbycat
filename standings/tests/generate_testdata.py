@@ -13,9 +13,9 @@ TOTAL_SCORE_MEAN  = 75 * 3.5
 TOTAL_SCORE_STDEV = 10
 
 METRICS = [
-    ("points", "speaker_score", "draw_strength", "margin"),
-    # ("points", "wbw", "speaker_score", "wbw"),
-    ("points", "speaker_score"),
+    ("points", "speaks_sum", "draw_strength", "margin"),
+    # ("points", "wbw", "speaks_sum", "wbw"),
+    ("points", "speaks_sum"),
 ]
 
 teamscores_by_team = {t: [] for t in TEAMS}
@@ -54,7 +54,7 @@ for rd in results:
 standings = {}
 for team, teamscores in teamscores_by_team.items():
     standings[team] = {
-        "speaker_score": sum(teamscore["score"] for teamscore in teamscores),
+        "speaks_sum": sum(teamscore["score"] for teamscore in teamscores),
         "margin": sum(teamscore["margin"] for teamscore in teamscores),
         "points": sum(teamscore["points"] for teamscore in teamscores),
         "draw_strength": 0, # initialize
