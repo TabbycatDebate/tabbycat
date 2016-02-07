@@ -8,12 +8,47 @@ from participants.models import Team
 from .metrics import MetricAnnotator
 from .ranking import RankAnnotator
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 class StandingsError(RuntimeError):
     pass
 
 class TeamStandingInfo:
-    """Stores standing information for a team."""
+    """Stores standing information for a team.
+
+    This class is designed to be accessed directly by Django templates. Its
+    `metrics` and `rankings` attributes support item lookup, so may be accessed
+    like this:
+
+                  Django template               Python code
+        Points:   {{ tsi.metrics.points }}      tsi.metrics["points"]
+        Rank:     {{ tsi.rankings.rank }}       tsi.rankings["rank"]
+
+    The `itermetrics()` and `iterrankings()` methods return iterators over the
+    values of `metrics` and `rankings` respectively, in the order specified by
+    `standings.metric_keys`. For example:
+
+    Django template:
+
+        {# Assuming the header row was rendered as in TeamStandings: #}
+        {% for tsi in standings.standings %}
+          <tr>
+            {% for metric in tsi.itermetrics %}
+              <td>{{ metric }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+
+    Python code:
+
+        for tsi in standings.standings:
+            for metric, value in zip(standings.metric_info, tsi.itermetrics()):
+                print("{0}: {1}".format(metric["name"], value))
+
+    Note that no order is guaranteed when iterating over `metrics.values()` or
+    `rankings.values()`. Use `itermetrics()` and `iterrankings()` instead.
+    """
 
     def __init__(self, standings, team):
         self.standings = standings
@@ -59,18 +94,52 @@ class TeamStandingInfo:
             raise KeyError("There is already a ranking {!r} for this team", name)
         self.rankings[name] = value
 
+    def itermetrics(self):
+        for key in self.standings.metric_keys:
+            yield self.metrics[key]
+
+    def iterrankings(self):
+        for key in self.standings.ranking_keys:
+            yield self.rankings[key]
 
 class TeamStandings:
     """Presents all information about the team standings requested. Returned
-    by `TeamStandingsGenerator`."""
+    by `TeamStandingsGenerator`.
+
+    This class is designed to be accessed directly by Django templates. The
+    `metrics_info` method returns an iterator yielding dictionaries with keys
+    "key", "name", "abbr" and "glyphicon". For example:
+
+    Django template:
+
+        <tr>
+          {% for metric in standings.metrics_info %}
+            <td>{{ metric.name }}</td>
+          {% endfor %}
+        </tr>
+
+    Python code:
+
+        for metric in standings.metric_info:
+            print("Key is {0}, name is {1}".format(metric["key"], metric["name"]))
+
+    The `rankings_info` attribute behaves similarly.
+
+    The `standings` property returns a list of `TeamStandingInfo` objects. For
+    information on how to iterate over them, see the docstring for
+    `TeamStandingInfo`.
+    """
+
+    _SPEC_FIELDS = ("key", "name", "abbr", "glyphicon")
 
     def __init__(self, teams):
         self.infos = {team: TeamStandingInfo(self, team) for team in teams}
         self.ranked = False
 
-        self.metrics_added = list()
-        self.rankings_added = list()
-        self.general_added = list()
+        self.metric_keys = list()
+        self.ranking_keys = list()
+        self._metric_specs = list()
+        self._ranking_specs = list()
 
     @property
     def standings(self):
@@ -89,6 +158,14 @@ class TeamStandings:
     def infoview(self):
         return self.infos.values()
 
+    def metrics_info(self):
+        for spec in self._metric_specs:
+            yield dict(zip(self._SPEC_FIELDS, spec))
+
+    def rankings_info(self):
+        for spec in self._ranking_specs:
+            yield dict(zip(self._SPEC_FIELDS, spec))
+
     def get_team_list(self):
         return [s.team for s in self.standings]
 
@@ -97,6 +174,14 @@ class TeamStandings:
             return self.infos[team]
         except KeyError:
             raise ValueError("The team {!r} isn't in these standings.")
+
+    def record_added_metric(self, key, name, abbr, glyphicon):
+        self.metric_keys.append(key)
+        self._metric_specs.append((key, name, abbr, glyphicon))
+
+    def record_added_ranking(self, key, name, abbr, glyphicon):
+        self.ranking_keys.append(key)
+        self._ranking_specs.append((key, name, abbr, glyphicon))
 
     def add_metric_to_team(self, team, key, value):
         assert not self.ranked, "Can't add metrics once TeamStandings object is sorted"
@@ -195,7 +280,7 @@ class TeamStandingsGenerator:
 
             annotator = MetricAnnotator(metric, *args)
             self.metric_annotators.append(annotator)
-            self.precedence.extend(annotator.adds)
+            self.precedence.append(annotator.key)
 
     def _check_annotators(self, annotators, type_str):
         """Checks the given list of annotators to ensure there are no conflicts.
@@ -203,7 +288,7 @@ class TeamStandingsGenerator:
         name."""
         names = list()
         for annotator in annotators:
-            names.extend(annotator.adds)
+            names.append(annotator.key)
         if len(names) != len(set(names)):
             raise StandingsError("The same {} would be added twice:\n{!r}".format(type_str, names))
 

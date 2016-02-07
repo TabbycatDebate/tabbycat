@@ -11,14 +11,17 @@
   <table id="dataTable" class="team-tab table table-hover table-striped" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
-        <th class="hidden"></th>
-        <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
-        {% if pref.team_points_rule == 'wadl' %}
-          <th>Points</th>
-        {% endif %}
-        {% if pref.show_avg_margin %}
-          <th><span data-toggle="tooltip" title="Average winning margin">AWM</span></th>
-        {% endif %}
+        <th class="hidden">Rk</th>
+        {% for info in standings.rankings_info %}
+          <th>
+            {% if info.glyphicon %}
+              <span data-toggle="tooltip" title="{{ info.name }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+            {% else %}
+              <span class="hidden-xs">{{ info.name }}</span>
+              <span class="visible-xs">{{ info.abbr }}</span>
+            {% endif %}
+          </th>
+        {% endfor %}
         {% if pref.enable_divisions %}
           <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
         {% endif %}
@@ -29,68 +32,62 @@
         {% if pref.show_institutions %}
           <th>Inst<span class="hidden-xs">itution</span></th>
         {% endif %}
-        <th>Wins</th>
         {% for round in rounds %}
           <th>{{ round.abbreviation }}</th>
           <th>{{ round.abbreviation }}</th>
         {% endfor %}
-          <th>Total</th>
-        {% if metrics.draw_strength %}
-          <th><span data-toggle="tooltip" title="Draw strength">DS</span></th>
-        {% endif %}
-        {% if metrics.sum_of_margins %}
-          <th><span data-toggle="tooltip" title="Sum of margins">SM</span></th>
-        {% endif %}
-        {% if metrics.who_beat_whom %}
-          <th><span data-toggle="tooltip" title="Who beat whom">WBW</span></th>
+        <th>Wins</th>
+        {% for info in standings.metrics_info %}
+          <th>
+            {% if info.glyphicon %}
+              <span data-toggle="tooltip" title="{{ info.name }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+            {% else %}
+              <span class="hidden-xs">{{ info.name }}</span>
+              <span class="visible-xs">{{ info.abbr }}</span>
+            {% endif %}
+          </th>
+        {% endfor %}
+        {% if pref.show_avg_margin %}
+          <th><span data-toggle="tooltip" title="Average winning margin">AWM</span></th>
         {% endif %}
       </tr>
     </thead>
     <tbody>
-    {% for team in teams %}
-      {% with teams|next_value:forloop.counter0 as next_value %}
-      {% with teams|prev_value:forloop.counter0 as prev_value %}
-      <tr class="{% if not team.results_in %}danger{% endif %}">
+    {% for tsi in standings.standings %}
+      <tr class="{% if not tsi.results_in %}danger{% endif %}">
         <td class="hidden">
-          {% if team.rank != 0 %}
-            {{ team.rank }}
+          {% if tsi.rankings.rank.0 != 0 %}
+            {{ tsi.rankings.rank.0 }}
           {% else %}
             <span class="hidden">999</span>
           {% endif %}
         </td>
+        {% for ranking in tsi.iterrankings %}
         <td class="rank">
           <strong>
-            {% if team.rank != 0 %}
-              {{ team.rank }}{% if next_value.rank == team.rank or prev_value.rank == team.rank %}<span class="text-muted">=</span>{% endif %}
-            {% endif %}
+            {{ ranking.0 }}{% if ranking.1 %}<span class="text-muted">=</span>{% endif %}
           </strong>
         </td>
-        {% if pref.team_points_rule == 'wadl' %}
-          <td>{{ team.points }}</td>
-        {% endif %}
-        {% if pref.show_avg_margin %}
-          <td>{{ team.avg_margin|stringformat:".2f" }}</td>
-        {% endif %}
+        {% endfor %}
         {% if pref.enable_divisions %}
-          <td>{{ team.division.name }}</td>
+          <td>{{ tsi.team.division.name }}</td>
         {% endif %}
         {% if pref.show_emoji %}
-          <td class="team-emoji">{{ team.emoji }}</td>
+          <td class="team-emoji">{{ tsi.team.emoji }}</td>
         {% endif %}
         <td>
-          <span class="team team-speakers-hover" id="team_speakers_{{ team.id }}">
-            {{ team.short_name }}
-            {{ team.break_categories_str }}
+          <span class="team team-speakers-hover" id="team_speakers_{{ tsi.team.id }}">
+            {{ tsi.team.short_name }}
+            {{ tsi.team.break_categories_str }}
           </span>
         </td>
         {% if pref.show_institutions %}
           <td>
-            <span class="hidden-xs">{{ team.institution }}</span>
-            <span class="visible-xs">{{ team.institution.code }}</span>
+            <span class="hidden-xs">{{ tsi.team.institution }}</span>
+            <span class="visible-xs">{{ tsi.team.institution.code }}</span>
           </td>
         {% endif %}
-        <td>{{ team.wins }}</td>
-        {% for round_results in team.round_results %}
+        {% for round_results in tsi.round_results %}
           {% if round_results.win >= 0 %}
             <td>
               {% if round_results.score == 0 %}
@@ -129,21 +126,14 @@
             <td></td>
           {% endif %}
         {% endfor %}
-        <td>
-          {{ team.speaker_score|stringformat:".2f" }}
-        </td>
-        {% if metrics.draw_strength %}
-          <td>{{ team.draw_strength }}</td>
-        {% endif %}
-        {% if metrics.sum_of_margins %}
-          <td>{{ team.margins|stringformat:".2f" }}</td>
-        {% endif %}
-        {% if metrics.who_beat_whom %}
-          <td>{{ team.who_beat_whom_display }}</td>
+        <td>{{ tsi.wins }}</td>
+        {% for metric in tsi.itermetrics %}
+        <td>{{ metric }}</td>
+        {% endfor %}
+        {% if pref.show_avg_margin %}
+          <td>{{ team.avg_margin|stringformat:".2f" }}</td>
         {% endif %}
       </tr>
-      {% endwith %}
-      {% endwith %}
     {% endfor %}
     </tbody>
   </table>

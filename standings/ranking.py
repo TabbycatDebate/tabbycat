@@ -27,15 +27,26 @@ class BaseRankAnnotator:
     """Base class for all rank annotators.
 
     A rank annotator is a class that adds rankings to a TeamStandings object.
-    It has one method that subclasses must implement: `annotate_teams()`.
+    Subclasses must implement the method `annotate_teams()`.
+
+    Subclasses must also set the `key`, `name` and `abbr` attributes, either as
+    class attributes or object attributes. The `glyphicon` attribute is
+    optional.
+
+     - `name` is a name for display in the user interface
+     - `abbr` is used instead of `name` when there is not enough space for `name`
+     - `glyphicon`, optional, is the name of a glyphicon to be used if possible
 
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
 
-    adds = NotImplemented
+    key = NotImplemented
+    name = NotImplemented
+    abbr = NotImplemented
+    glyphicon = None
 
     def annotate(self, standings):
-        standings.rankings_added.extend(self.adds)
+        standings.record_added_ranking(self.key, self.name, self.abbr, self.glyphicon)
         self.annotate_teams(standings)
 
     def annotate_teams(self, standings):
@@ -49,24 +60,28 @@ class BaseRankAnnotator:
 
 class BasicRankAnnotator(BaseRankAnnotator):
 
-    adds = ["rank", "rank_eq"]
+    key = "rank"
+    name = "Rank"
+    abbr = "Rk"
+    glyphicon = "signal"
 
     def __init__(self, metrics):
-        self.key = metricgetter(*metrics)
+        self.rank_key = metricgetter(*metrics)
 
     def annotate_teams(self, standings):
         rank = 1
-        for key, group in groupby(standings, key=self.key):
+        for key, group in groupby(standings, key=self.rank_key):
             group = list(group)
             for tsi in group:
-                tsi.add_ranking("rank", rank)
-                tsi.add_ranking("rank_eq", len(group) > 1)
+                tsi.add_ranking("rank", (rank, len(group) > 1))
             rank += len(group)
 
 
 class SubrankAnnotator(BaseRankAnnotator):
 
-    adds = ["subrank", "subrank_eq"]
+    key = "subrank"
+    name = "Subrank"
+    abbr = "SubR"
 
     def __init__(self, metrics):
         self.group_key = metricgetter(metrics[0])
@@ -78,27 +93,28 @@ class SubrankAnnotator(BaseRankAnnotator):
             for subkey, subgroup in groupby(group, self.subrank_key):
                 subgroup = list(subgroup)
                 for tsi in subgroup:
-                    tsi.add_ranking("subrank", subrank)
-                    tsi.add_ranking("subrank_eq", len(subgroup) > 1)
+                    tsi.add_ranking("subrank", (subrank, len(subgroup) > 1))
                 subrank += len(subgroup)
 
 
 class DivisionRankAnnotator(BaseRankAnnotator):
 
-    adds = ["division_rank", "division_rank_eq"]
+    key = "division_rank"
+    name = "Division rank"
+    abbr = "DivR"
 
     def __init__(self, metrics):
-        self.key = metricgetter(*metrics)
+        self.rank_key = metricgetter(*metrics)
 
     def annotate_teams(self, standings):
-        by_division = sorted(standings, key=attrgetter('division'))
-        for division, division_teams in groupby(by_division, key=attrgetter('division')):
+        division_key = lambda x: x.team.division.name
+        by_division = sorted(standings, key=division_key)
+        for division, division_teams in groupby(by_division, key=division_key):
             rank = 1
-            for key, group in groupby(division_teams, self.key):
+            for key, group in groupby(division_teams, self.rank_key):
                 group = list(group)
                 for tsi in group:
-                    tsi.add_ranking("division_rank", rank)
-                    tsi.add_ranking("division_rank_eq", len(group) > 1)
+                    tsi.add_ranking("division_rank", (rank, len(group) > 1))
                 rank += len(group)
 
 

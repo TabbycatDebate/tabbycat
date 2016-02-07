@@ -10,8 +10,11 @@ from adjallocation.models import DebateAdjudicator
 from results.models import BallotSubmission, TeamScore
 
 
-# does it ignore unconfirmed ballot submissions?
-# can it handle uneven numbers of adjudicators?
+# TODO does it ignore unconfirmed ballot submissions?
+# TODO can it handle uneven numbers of adjudicators?
+
+# TODO Have classes to check each metric annotator in isolation
+# TODO Have classes to check each ranking annotator in isolation
 
 class TestBasicStandings(TestCase):
 
@@ -102,7 +105,7 @@ class TestBasicStandings(TestCase):
                     standings = generator.generate(tournament.team_set.all())
 
                     self.assertEqual(len(standings), len(testdata["standings"]))
-                    self.assertEqual(standings.metrics_added, list(metrics))
+                    self.assertEqual(standings.metric_keys, list(metrics))
 
                     for teamname, expected in testdata["standings"].items():
                         team = teams[teamname]
@@ -113,7 +116,6 @@ class TestBasicStandings(TestCase):
                     ranked_teams = [teams[x] for x in testdata["rankings"][metrics]]
                     self.assertEqual(ranked_teams, standings.get_team_list())
 
-    # TODO check that the standings actually match the expected result...
     # TODO check that WBW is correct when not in first metrics
     # TODO check that it doesn't break when not all metrics present
     # TODO check that it works for different rounds
