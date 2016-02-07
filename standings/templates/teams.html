@@ -1,6 +1,7 @@
 {% extends "draw_rbase.html" %}
 {% load static %}
 {% load debate_tags %}
+{% load metricformat %}
 
 {% block head-title %}Team Standings <small>after {{ round.name }}</small>{% endblock %}
 {% block page-title %}Team Standings after {{ round.name }}{% endblock %}
@@ -116,11 +117,11 @@
             {% if show_ballots and round_results.debate_team.debate_id %}
               <td>
                 <a class="team-score" href="{% tournament_url public_ballots_view round_results.debate_team.debate_id %}">
-                  {{ round_results.get_score|stringformat:".2f" }}
+                  {{ round_results.get_score|floatformat:2 }}
                 </a>
               </td>
             {% else %}
-              <td>{{ round_results.get_score|stringformat:".2f" }}</td>
+              <td>{{ round_results.get_score|floatformat:2 }}</td>
             {% endif %}
           {% else %}
             <td></td>
@@ -128,10 +129,11 @@
         {% endfor %}
         <td>{{ tsi.wins }}</td>
         {% for metric in tsi.itermetrics %}
-        <td>{{ metric }}</td>
+        {# the metricformat filter is defined in templatetags/metricformat.py #}
+        <td>{{ metric|metricformat }}</td>
         {% endfor %}
         {% if pref.show_avg_margin %}
-          <td>{{ team.avg_margin|stringformat:".2f" }}</td>
+          <td>{{ team.avg_margin|floatformat:2 }}</td>
         {% endif %}
       </tr>
     {% endfor %}
