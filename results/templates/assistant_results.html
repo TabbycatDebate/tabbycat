@@ -41,5 +41,10 @@
     </button>
     {% endif %}
   </div>
-  {% block page-subnav-sections %}{% endblock %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+{% comment %}
+We don't want assistant users having an advance button
+{% endcomment %}
 {% endblock %}

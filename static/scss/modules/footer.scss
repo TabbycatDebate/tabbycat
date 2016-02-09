@@ -1,0 +1,23 @@
+@import "../vendor/bootstrap/variables";
+//
+// OVERALL LAYOUT
+//
+.accommodate-footer {
+  min-height: 800px; // Push the footer down
+  padding-bottom: 130px; // Leave room for the footer
+}
+.nav-sidebar-offset {
+  .navbar-fixed-bottom {
+    // Don't want the footer stretching into the menu; present it alert style
+    margin: 0 15px 20px $sidebar-width + 15px;
+    border-width: 1px;
+    border-radius: 4px;
+    position: absolute;
+  }
+}
+// FOOTER UI
+.navbar-fixed-bottom {
+  .navbar-nav > li > a {
+    padding: 15px 10px 15px 0px; // Tighten link spacing so the footer isn't x2 height
+  }
+}
