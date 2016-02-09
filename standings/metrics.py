@@ -221,7 +221,9 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
             if round is not None:
                 debateteam_set = debateteam_set.filter(debate__round__seq__lte=round.seq)
             for dt in debateteam_set:
-                draw_strength += full_queryset.get(id=dt.opposition.team_id).points
+                points = full_queryset.get(id=dt.opposition.team_id).points
+                if points is not None: # points is None when no debates have happened
+                    draw_strength += points
             standings.add_metric_to_team(team, self.key, draw_strength)
 
 
