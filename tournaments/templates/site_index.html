@@ -10,7 +10,7 @@
 <ul class="list-group">
 
   {% if user.is_authenticated %}
-    {% if tournament.all.exists %}
+    {% if tournaments.all.exists %}
       {% for tournament in tournaments %}
         <li class="list-group-item">
           <a href="{{ tournament.get_absolute_url }}">
