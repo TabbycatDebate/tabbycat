@@ -25,9 +25,6 @@
         {% if pref.team_points_rule == 'wadl' %}
           <th>Pts</th>
         {% endif %}
-        {% if pref.show_avg_margin %}
-          <th><span data-toggle="tooltip" title="Average Winning Margin">AWM</span></th>
-        {% endif %}
         <th>Wins</th>
         {% for round in rounds %}
           <th>{{ round.abbreviation }}</th>
@@ -53,9 +50,6 @@
       {% endif %}
       {% if pref.team_points_rule == 'wadl' %}
         <td>{{ team.points }}</td>
-      {% endif %}
-      {% if pref.show_avg_margin %}
-        <th>{{ team.avg_margin }}</th>
       {% endif %}
       <td>{{ team.wins }}</td>
       {% for round_results in team.round_results %}
@@ -95,7 +89,7 @@
    <script type="text/javascript" charset="utf-8">
     $(document).ready( function() {
       var dTable = $("#dataTable").DataTable({
-        {% if pref.enable_divisions and pref.team_points_rule == 'wadl' and pref.show_avg_margin %}
+        {% if pref.enable_divisions and pref.team_points_rule == 'wadl' %}
           "aaSorting": [[2, "desc" ], [ 3, "desc" ], [ 4, "desc" ]], // WADL
         {% elif show_emoji and show_institutions %}
           "aaSorting": [[ 3, "desc" ], [ 0, "asc" ]],

@@ -7,6 +7,33 @@
 {% block sub-title %}after {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
+  <a class="btn btn-default" href="{% round_url standings_index current_round %}">
+    Standings Overview
+  </a>
+  <a class="btn btn-default" href="{% round_url team_standings current_round %}">
+    Team Standings
+  </a>
+  {% if pref.enable_divisions %}
+  <a class="btn btn-default" href="{% round_url division_standings current_round %}">
+    Divisions Standings
+  </a>
+  {% endif %}
+  <a class="btn btn-default" href="{% round_url speaker_standings current_round %}">
+    Speaker Standings
+  </a>
+  {% if pref.show_novices %}
+    <a class="btn btn-default" href="{% round_url novice_standings current_round %}">
+      Novices Standings
+    </a>
+  {% endif %}
+  {% if pref.reply_scores_enabled %}
+    <a class="btn btn-default active" href="{% round_url reply_standings current_round %}">
+      Replies Standings
+    </a>
+  {% endif %}
+  <a class="btn btn-default" href="{% round_url motion_standings current_round %}">
+    Motion Balance
+  </a>
   {% include "tables/table_search.html" %}
 {% endblock %}
 

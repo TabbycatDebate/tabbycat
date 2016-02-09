@@ -23,17 +23,17 @@
 
 </head>
 
-<body id="{% block body-id %}{% endblock %}" class="{% if not 'admin' in request.path %}accommodate-footer{% endif %}">
+<body id="{% block body-id %}{% endblock %}" class="">
 
 {% block body %}
 
   {% block nav %}
     {% if 'admin' in request.path and user.is_superuser %}
       {% include "nav/admin_nav.html" %}
-  <div class="col-md-12 nav-sidebar-offset">
+  <div class="col-md-12 accommodate-footer nav-sidebar-offset">
     {% else %}
       {% include "nav/top_nav_base.html" %}
-  <div class="col-md-12">
+  <div class="col-md-12 accommodate-footer">
     {% endif %}
   {% endblock %}
 

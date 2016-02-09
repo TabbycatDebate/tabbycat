@@ -43,14 +43,14 @@
       {% if pref.side_allocations_enabled == 'preallocated' %}
         <li class="standalone">
           <a href="{% tournament_url side_allocations %}" class="{% if sides_nav %}active{% endif %}">
-            <span class="emoji"></span>Sides
+            <span class="glyphicon glyphicon-resize-horizontal"></span> Sides
           </a>
         </li>
       {% endif %}
       {% if pref.enable_divisions %}
         <li class="standalone">
           <a href="{% tournament_url division_allocations %}" class="{% if divisions_nav %}active {% endif %}">
-            Divisions
+            <span class="glyphicon glyphicon-th-list"></span> Divisions
           </a>
         </li>
       {% endif %}

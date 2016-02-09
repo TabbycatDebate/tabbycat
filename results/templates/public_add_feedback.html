@@ -1,11 +1,12 @@
 {% extends "add_feedback.html" %}
-{% load debate_tags %}
 
 {% block page-title %}Add Feedback{% endblock %}
 {% block head-title %}Who are you?{% endblock %}
-{% block sub-title %}(click your name or your team on this list){% endblock %}
+{% block sub-title %}click your name or your team on this list{% endblock %}
 
-{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}
 
 {% block enter-feedback-adj-link %}
   <a href="{% tournament_url public_enter_feedback_adjudicator adj.id %}">
@@ -14,18 +15,4 @@
 {% block enter-feedback-team-link %}
   <a href="{% tournament_url public_enter_feedback_team team.id %}">
   Add feedback from {{ team.long_name }}</a>
-{% endblock %}
-
-{% block page-subnav-sections %}
-  <div class="btn-group" data-toggle="buttons">
-    <label class="btn btn-default active" id="toggle-all">
-    <input type="radio" name="options">Show All
-    </label>
-    <label class="btn btn-default" id="toggle-teams">
-    <input type="radio" name="options" >Only Teams
-    </label>
-    <label class="btn btn-default" id="toggle-adjs">
-    <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
-    </label>
-  </div>
 {% endblock %}

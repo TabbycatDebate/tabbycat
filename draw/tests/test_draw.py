@@ -3,7 +3,7 @@ import unittest
 from collections import OrderedDict
 from .. import DrawGenerator, Pairing, DrawError
 import copy
-from .test_one_up_one_down import TestTeam
+from .utils import TestTeam
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
 

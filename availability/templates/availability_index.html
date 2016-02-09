@@ -61,7 +61,12 @@
   {% else %}
     <button class="btn btn-success submit-disable" id="createDraw">
   {% endif %}
-      Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+      {% if round.draw_status == round.STATUS_CONFIRMED or round.draw_status = round.STATUS_RELEASED %}
+        View Draw
+      {% else %}
+        Generate Draw
+      {% endif %}
+      <span class="glyphicon glyphicon-chevron-right"></span>
     </button>
 
   <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>

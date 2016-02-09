@@ -6,15 +6,6 @@
 
 .nav-sidebar-offset {
   padding-left: $sidebar-width + 15px; // Offset the sidebar; should be nav-sidebar + 15
-  min-height: 800px; // Push the footer down
-  padding-bottom: 130px; // Leave room for the footer
-  .navbar-fixed-bottom {
-    // Don't want the footer stretching into the menu; present it alert style
-    margin: 0 15px 20px $sidebar-width + 15px;
-    border-width: 1px;
-    border-radius: 4px;
-    position: absolute;
-  }
 }
 .nav-sidebar {
   background: $sidebar-bg;
@@ -115,6 +106,7 @@
   display: inline-block;
   float: left;
   margin: -1px 10px 0px -5px;
+  z-index: 10;
 
   .glyphicon {
     margin-left: 2px;
@@ -130,6 +122,16 @@
   }
   &.icon-container {
     background: #444;
+  }
+}
+.nav-stacked .nav-stacked {
+  .progress-line {
+    margin: -3px 0 0 21px;
+    height: 35px;
+    z-index: 10;
+  }
+  a {
+    z-index: 20;
   }
 }
 .nav-accordion li.panel a:hover {
@@ -150,14 +152,5 @@
   .progress-line {
     width: 6px;
     margin-left: 27px;
-  }
-}
-// FOOTER UI
-body.accommodate-footer {
-  padding-bottom: 70px; // To fix to the screen bottom body needs padding
-}
-.navbar-fixed-bottom {
-  .navbar-nav > li > a {
-    padding: 15px 10px 15px 0px; // Tighten link spacing so the footer isn't x2 height
   }
 }

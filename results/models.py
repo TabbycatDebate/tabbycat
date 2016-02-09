@@ -186,9 +186,7 @@ class BallotSubmission(Submission):
 
 
 class SpeakerScoreByAdj(models.Model):
-    """
-    Holds score given by a particular adjudicator in a debate
-    """
+    """Holds score given by a particular adjudicator in a debate."""
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator')
     debate_team = models.ForeignKey('draw.DebateTeam')
@@ -208,35 +206,21 @@ class SpeakerScoreByAdj(models.Model):
 
 
 class TeamScore(models.Model):
-    """
-    Holds a teams total score and points in a debate
-    """
+    """Stores information about a team's result in a debate. This is all
+    redundant information — it can all be derived from indirectly-related
+    SpeakerScore objects. We use a separate model for it for performance
+    reasons."""
+
     ballot_submission = models.ForeignKey(BallotSubmission)
     debate_team = models.ForeignKey('draw.DebateTeam', db_index=True)
+
     points = models.PositiveSmallIntegerField()
     margin = ScoreField()
     win = models.NullBooleanField()
     score = ScoreField()
-    affects_averages = models.BooleanField(
-        default=True,
-        blank=False,
-        null=False,
-        help_text=
-        "Whether to count this when determining average speaker points and/or margins")
 
-    @property  # TODO this should be called something more descriptive, or turned into a method
-    def get_margin(self):
-        if self.affects_averages == True:
-            return self.margin
-        else:
-            return None
-
-    @property  # TODO this should be called something more descriptive, or turned into a method
-    def get_score(self):
-        if self.affects_averages == True:
-            return self.score
-        else:
-            return None
+    forfeit = models.BooleanField(default=False, blank=False, null=False,
+        help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]

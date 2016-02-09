@@ -340,33 +340,45 @@ class Round(models.Model):
         }
 
         if override_team_checkins is True:
-            draw_teams = self.tournament.team_set.all()
+            teams = self.tournament.team_set.all()
         else:
-            draw_teams = self.active_teams.all()
+            teams = self.active_teams.all()
+
+        if self.tournament.pref('team_standings_rule') == "wadl":
+            from participants.models import Team
+            orig_len = len(teams)
+            teams = teams.exclude(type=Team.TYPE_BYE)
+            logger.info("{} total teams, {} teams after cull".format(orig_len, len(teams)))
 
         # Set type-specific options
         if self.draw_type == self.DRAW_RANDOM:
-            teams = draw_teams
             draw_type = "random"
             OPTIONS_TO_CONFIG_MAPPING.update({
                 "avoid_conflicts": "draw_rules__draw_avoid_conflicts",
             })
         elif self.draw_type == self.DRAW_MANUAL:
-            teams = draw_teams
             draw_type = "manual"
+
         elif self.draw_type == self.DRAW_POWERPAIRED:
-            from standings.standings import annotate_team_standings
-            teams = annotate_team_standings(draw_teams,
-                                            self.prev,
-                                            shuffle=True)
+            from participants.models import Team
+            from standings.teams import TeamStandingsGenerator, TEAM_STANDING_METRICS_PRESETS
+            metrics = TEAM_STANDING_METRICS_PRESETS[self.tournament.pref('team_standings_rule')]
+            generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random")
+            standings = generator.generate(teams, round=self.prev)
+            teams = []
+            for standing in standings:
+                team = standing.team
+                team.points = next(standing.itermetrics())
+                teams.append(team)
+
             draw_type = "power_paired"
             OPTIONS_TO_CONFIG_MAPPING.update({
-                "avoid_conflicts": "draw_rules__draw_avoid_conflicts",
-                "odd_bracket": "draw_rules__draw_odd_bracket",
-                "pairing_method": "draw_rules__draw_pairing_method",
+                "avoid_conflicts" : "draw_rules__draw_avoid_conflicts",
+                "odd_bracket"     : "draw_rules__draw_odd_bracket",
+                "pairing_method"  : "draw_rules__draw_pairing_method",
             })
+
         elif self.draw_type == self.DRAW_ROUNDROBIN:
-            teams = draw_teams
             draw_type = "round_robin"
         else:
             raise RuntimeError("Break rounds aren't supported yet.")
@@ -465,34 +477,6 @@ class Round(models.Model):
             draw_by_team.append((debate.neg_team, debate))
         draw_by_team.sort(key=lambda x: str(x[0]))
         return draw_by_team
-
-    def get_draw_with_standings(self, round):
-        from participants.models import Team
-        draw = self.get_draw()
-        if round.prev:
-            if round.tournament.pref('team_points_rule') != "wadl":
-                standings = list(Team.objects.subrank_standings(round.prev))
-                for debate in draw:
-                    for side in ('aff_team', 'neg_team'):
-                        # TODO is there a more efficient way to do this?
-                        team = getattr(debate, side)
-                        setattr(debate, side + "_cached", team)
-                        annotated_team = [x for x in standings if x == team]
-                        if len(annotated_team) == 1:
-                            annotated_team = annotated_team[0]
-                            for attr in ('points', 'speaker_score', 'subrank',
-                                         'draw_strength', 'margins',
-                                         'who_beat_whom_display'):
-                                setattr(team, attr, getattr(annotated_team,
-                                                            attr, None))
-                            if annotated_team.points:
-                                team.pullup = abs(
-                                    annotated_team.points -
-                                    debate.bracket) >= 1  # don't highlight intermediate brackets that look within reason
-            else:
-                standings = list(Team.objects.standings(round.prev))
-
-        return draw
 
     def make_debates(self, pairings):
         from draw.models import Debate, DebateTeam

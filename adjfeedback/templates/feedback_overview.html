@@ -9,19 +9,22 @@
   Adjudicator Feedback Summary
 {% endblock %}
 {% block sub-title %}
-  {{ breaking_count }} marked as breaking
+  <span id="breaking_count">{{ breaking_count }}</span> marked as breaking
 {% endblock %}
 
 {% block page-subnav-sections %}
+  <a class="btn btn-default active" href="{% tournament_url adj_latest_feedback %}">
+    Feedback Overview
+  </a>
   <a class="btn btn-default submit-disable" href="{% tournament_url adj_latest_feedback %}">
-    View Latest Feedback
+    Latest Feedback
   </a>
   <a class="btn btn-default submit-disable" href="{% tournament_url adj_source_feedback %}">
     Find Feedback
   </a>
   {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
   <a class="btn btn-default submit-disable" href="{% tournament_url randomised_urls %}">
-    View Randomised URLs
+    Randomised URLs
   </a>
   {% endif %}
   <a class="btn btn-default submit-disable" href="{% tournament_url feedback_progress %}">
@@ -81,7 +84,7 @@
           </td>
           <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
           <td>
-            <div id="graph_{{ adj.id }}" style="width: 100%; min-width: 100px; height: 60px; margin: -13px;"></div>
+            <div id="graph_{{ adj.id }}" style="width: 100%; min-width: 100px; height: 60px; margin: -10px 0 -10px -20px;"></div>
           </td>
           {% if pref.show_unaccredited %}
             <td>
@@ -229,7 +232,7 @@
 {% endblock content %}
 
 {% block extra-js %}
-{% compress js %}
+
 <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery.flot.min.js' %}"></script>
 <script type="text/javascript" charset="utf-8">
 
@@ -330,55 +333,44 @@
 
     {% for adj in adjudicators %}
 
-      function drawPoints{{ adj.id_record }}(ctx, x, y, radius, shadow) {
+      function drawPoints{{ adj.id }}(ctx, x, y, radius, shadow) {
         ctx.arc(x, y, radius, 0, null ? Math.PI : Math.PI * 2, false);
         ctx.fillStyle = "#000";
         ctx.strokeStyle = "#000";
-        if (adj_{{ adj.id_record }}[drawPoints.calls]) {
-          if (adj_{{ adj.id_record }}[drawPoints.calls][2] == "Chair") {
+        if (adj_{{ adj.id }}[drawPoints.calls]) {
+          if (adj_{{ adj.id }}[drawPoints.calls][2] == "Chair") {
             ctx.fillStyle = "#5cb85c";
             ctx.strokeStyle = "#5cb85c";
-          } else if (adj_{{ adj.id_record }}[drawPoints.calls][2] == "Panellist") {
+          } else if (adj_{{ adj.id }}[drawPoints.calls][2] == "Panellist") {
             ctx.fillStyle = "#f0ad4e";
             ctx.strokeStyle = "#f0ad4e";
-          } else if (adj_{{ adj.id_record }}[drawPoints.calls][2] == "Trainee") {
+          } else if (adj_{{ adj.id }}[drawPoints.calls][2] == "Trainee") {
             ctx.fillStyle = "#d9534f";
             ctx.strokeStyle = "#d9534f";
-          } else if (adj_{{ adj.id_record }}[drawPoints.calls][2] == "Test Score") {
+          } else if (adj_{{ adj.id }}[drawPoints.calls][2] == "Test Score") {
             ctx.fillStyle = "#666";
             ctx.strokeStyle = "#666";
           }
         }
-        drawPoints{{ adj.id_record }}.calls++;
+        drawPoints{{ adj.id }}.calls++;
       }
-      drawPoints{{ adj.id_record }}.calls = 0;
+      drawPoints{{ adj.id }}.calls = 0;
 
-      var adj_{{ adj.id_record }} = [[0,{{ adj.test_score }}, "Test Score"],{% for s in adj.rscores %}{% if s %}[{{ s.0 }},{{ s.1|floatformat:1 }},"{{ s.2 }}"],{% endif %}{% endfor %}]
+      var adj_{{ adj.id }}_data = [[0,{{ adj.test_score }},"Test Score"]{% for s in adj.rscores %}{% if s %},[{{ s.0 }},{{ s.1|floatformat:1 }},"{{ s.2 }}"]{% endif %}{% endfor %}]
 
-      $.plot("#graph_{{ adj.id }}", [ adj_{{ adj.id_record }} ], {
+      $.plot("#graph_{{ adj.id }}", [ adj_{{ adj.id }}_data ], {
         xaxis: {
-          min: 0,
-          max: {{ current_round.seq }},
-          tickSize: 1,
-          tickDecimals: 0,
-          tickFormatter: formatter
+          min: 0, max: {{ current_round.seq }}, tickSize: 1, tickDecimals: 0, tickFormatter: formatter
         },
         yaxis: {
-          min: {{ pref.score_min }},
-          max: {{ pref.score_max }},
-          tickSize: 1,
-          tickDecimals: 0,
-          tickFormatter: formatter
+          min: {{ pref.score_min }}, max: {{ pref.score_max }},
+          tickSize: 1, tickDecimals: 0, tickFormatter: formatter
         },
         grid: {
-          borderWidth: 0,
-          hoverable: true,
+          borderWidth: 0, hoverable: true,
         },
         series: {
-          lines: { show: true },
-          points: { show: true, symbol: drawPoints{{ adj.id_record }} },
-          shadowSize: 0,
-          color: "#428bca"
+          lines: { show: true }, points: { show: true, symbol: drawPoints{{ adj.id }} }, shadowSize: 0, color: "#428bca"
         },
       });
 
@@ -398,12 +390,9 @@
 
       });
 
-
-
     {% endfor %}
 
   });
 
 </script>
-{% endcompress %}
 {% endblock extra-js %}

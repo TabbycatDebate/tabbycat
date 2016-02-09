@@ -2,6 +2,7 @@ from participants.models import Team, Speaker
 from tournaments.models import Round
 from results.models import TeamScore, SpeakerScore, BallotSubmission
 from motions.models import Motion
+from .teams import TeamStandingsGenerator, TEAM_STANDING_METRICS_PRESETS
 from django.db.models import Count
 
 from utils.views import *
@@ -158,69 +159,62 @@ def get_round_result(team, team_scores, r):
     return ts
 
 
-@admin_required
-@round_view
-def team_standings(request, round):
-    teams = Team.objects.ranked_standings(round)
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    team_scores = list(TeamScore.objects.select_related(
-        'debate_team__team', 'debate_team__debate__round').filter(
-            ballot_submission__confirmed=True))
 
-    for team in teams:
-        team.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(
-            team, team_scores, round) is not None
-        team.round_results = [get_round_result(team, team_scores, r)
-                              for r in rounds]
-        team.wins = [ts.win for ts in team.round_results if ts].count(True)
-        team.points = sum([ts.points for ts in team.round_results if ts])
-        if round.tournament.pref('show_avg_margin'):
-            try:
-                margins = []
-                for ts in team.round_results:
-                    if ts:
-                        if ts.get_margin is not None:
-                            margins.append(ts.get_margin)
+class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
 
-                team.avg_margin = sum(margins) / len(margins)
-            except ZeroDivisionError:
-                team.avg_margin = None
+    template_name = 'teams.html'
 
-    metrics = relevant_team_standings_metrics(round.tournament)
+    def get_context_data(self, **kwargs):
+        if 'show_ballots' not in kwargs:
+            kwargs['show_ballots'] = self.show_ballots()
+        if 'round' not in kwargs:
+            kwargs['round'] = self.get_round()
+        return super(BaseTeamStandingsView, self).get_context_data(**kwargs)
 
-    return render(request, 'teams.html', dict(teams=teams, rounds=rounds,
-                  show_ballots=False, metrics=metrics))
+    def show_ballots(self):
+        return False
+
+    def get(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+        round = self.get_round()
+
+        teams = Team.objects.teams_for_standings(round)
+        metrics = TEAM_STANDING_METRICS_PRESETS[tournament.pref('team_standings_rule')]
+        generator = TeamStandingsGenerator(metrics, self.rankings)
+        standings = generator.generate(teams, round=round)
+
+        rounds = tournament.prelim_rounds(until=round).order_by('seq')
+        team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
+        for tsi in standings:
+            tsi.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(tsi.team, team_scores, round) is not None
+            tsi.round_results = [get_round_result(tsi.team, team_scores, r) for r in rounds]
+
+        context = self.get_context_data(standings=standings, rounds=rounds)
+
+        return render(request, self.template_name, context)
 
 
-@admin_required
-@round_view
-def division_standings(request, round):
-    # TODO: this can largely be merged/abstracted with teams
-    teams = Team.objects.division_standings(round)
+class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+    rankings = ('rank',)
 
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    team_scores = list(TeamScore.objects.select_related(
-        'debate_team__team', 'debate_team__debate__round').filter(
-            ballot_submission__confirmed=True))
 
-    for team in teams:
-        team.round_results = [get_round_result(team, team_scores, r)
-                              for r in rounds]
-        team.wins = [ts.win for ts in team.round_results if ts].count(True)
-        team.points = sum([ts.points for ts in team.round_results if ts])
-        if round.tournament.pref('show_avg_margin'):
-            try:
-                margins = []
-                for ts in team.round_results:
-                    if ts:
-                        if ts.get_margin is not None:
-                            margins.append(ts.get_margin)
+class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+    rankings = ('rank', 'division')
 
-                team.avg_margin = sum(margins) / len(margins)
-            except ZeroDivisionError:
-                team.avg_margin = None
 
-    return render(request, 'divisions.html', dict(teams=teams))
+class PublicTabMixin(PublicTournamentPageMixin):
+    pref_name = 'tab_released'
+    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
+
+    def get_round(self):
+        return self.get_tournament().current_round
+
+
+class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
+    rankings = ('rank',)
+
+    def show_ballots(self):
+        return self.get_tournament().pref('ballots_released')
 
 
 @admin_required
@@ -288,43 +282,6 @@ def public_replies_tab(request, t):
     speakers = get_speaker_standings(rounds, round, for_replies=True)
     return render(request, 'public_reply_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
-
-
-@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
-def public_team_tab(request, t):
-    print("Generating public team tab")
-    round = t.current_round
-    teams = Team.objects.ranked_standings(round)
-    rounds = t.prelim_rounds(until=round).order_by('seq')
-    team_scores = list(TeamScore.objects.select_related(
-        'debate_team__team', 'debate_team__debate__round').filter(
-            ballot_submission__confirmed=True))
-
-    for team in teams:
-        team.results_in = True  # always
-        team.round_results = [get_round_result(team, r) for r in rounds]
-        team.wins = [ts.win for ts in team.round_results if ts].count(True)
-        team.points = sum([ts.points for ts in team.round_results if ts])
-        if round.tournament.pref('show_avg_margin'):
-            try:
-                margins = []
-                for ts in team.round_results:
-                    if ts:
-                        if ts.get_margin is not None:
-                            margins.append(ts.get_margin)
-
-                team.avg_margin = sum(margins) / len(margins)
-            except ZeroDivisionError:
-                team.avg_margin = None
-
-    show_ballots = round.tournament.pref('ballots_released')
-    metrics = relevant_team_standings_metrics(round.tournament)
-
-    return render(request, 'public_team_tab.html', dict(teams=teams,
-                    show_ballots=show_ballots,
-                    metrics=metrics))
-
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('motion_tab_released')

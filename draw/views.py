@@ -4,11 +4,13 @@ from tournaments.models import Tournament, Round
 from motions.models import Motion
 from venues.models import Venue, VenueGroup
 from .models import TeamPositionAllocation, Debate, DebateTeam
+from standings.teams import TeamStandingsGenerator, TEAM_STANDING_METRICS_PRESETS
 
 from utils.views import *
 
 import datetime
-
+import logging
+logger = logging.getLogger(__name__)
 # Viewing Draw
 
 @admin_required
@@ -64,6 +66,28 @@ def assistant_draw(request, round):
     if round.draw_status == round.STATUS_RELEASED:
         return draw_confirmed(request, round)
 
+def get_draw_with_standings(round):
+    draw = round.get_draw()
+
+    if round.prev is None:
+        return None, draw
+
+    teams = Team.objects.teams_for_standings(round)
+    metrics = TEAM_STANDING_METRICS_PRESETS[round.tournament.pref('team_standings_rule')]
+    generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
+    standings = generator.generate(teams, round=round.prev)
+
+    for debate in draw:
+        aff_standing = standings.get_team_standing(debate.aff_team)
+        neg_standing = standings.get_team_standing(debate.neg_team)
+        debate.aff_subrank = aff_standing.rankings["subrank"]
+        debate.neg_subrank = neg_standing.rankings["subrank"]
+        debate.metrics = [(a, n) for a, n in zip(aff_standing.itermetrics(), neg_standing.itermetrics())]
+        if "points" in standings.metric_keys:
+            debate.aff_is_pullup = abs(aff_standing.metrics["points"] - debate.bracket) >= 1
+            debate.neg_is_pullup = abs(neg_standing.metrics["points"] - debate.bracket) >= 1
+
+    return standings, draw
 
 def draw_none(request, round):
     all_teams_count = Team.objects.filter(tournament=round.tournament).count()
@@ -89,9 +113,8 @@ def draw_none(request, round):
 
 
 def draw_draft(request, round):
-    draw = round.get_draw_with_standings(round)
-    metrics = relevant_team_standings_metrics(round.tournament)
-    return render(request, "draw_draft.html", dict(draw=draw, metrics=metrics))
+    standings, draw = get_draw_with_standings(round)
+    return render(request, "draw_draft.html", dict(draw=draw, standings=standings))
 
 
 def draw_confirmed(request, round):
@@ -109,12 +132,8 @@ def draw_confirmed(request, round):
 @admin_required
 @round_view
 def draw_with_standings(request, round):
-    draw = round.get_draw_with_standings(round)
-    metrics = relevant_team_standings_metrics(round.tournament)
-    return render(request,
-               "draw_with_standings.html",
-               dict(draw=draw,
-                    metrics=metrics))
+    standings, draw = get_draw_with_standings(round)
+    return render(request, "draw_with_standings.html", dict(draw=draw, standings=standings))
 
 
 @admin_required
@@ -243,14 +262,14 @@ def set_round_start_time(request, round):
 @admin_required
 @round_view
 def draw_matchups_edit(request, round):
-    draw = round.get_draw_with_standings(round)
+    standings, draw = get_draw_with_standings(round)
     debates = len(draw)
     unused_teams = round.unused_teams()
     possible_debates = len(unused_teams) // 2 + 1  # The blank rows to add
     possible_debates = [None] * possible_debates
     return render(request,
                "draw_matchups_edit.html",
-               dict(draw=draw,
+               dict(draw=draw, standings=standings,
                     possible_debates=possible_debates,
                     unused_teams=unused_teams))
 
