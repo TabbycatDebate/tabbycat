@@ -33,7 +33,7 @@
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            Motion
+            <h4>Motion</h4>
           </div>
           <div class="panel-body">
             {% if pref.enable_motions %}
@@ -72,7 +72,7 @@
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            Ballot from
+            <h4>Ballot from
             {% if show_adj_contact and adj.adj.has_contact %}
               <span data-toggle="tooltip" title="{{ adj.adj.phone }} {{ adj.adj.email }}">
               {{ adj.adj }}
@@ -83,6 +83,7 @@
             {% if pref.side_allocations_unknown == 'manual-ballot' %}
               <p class="text-warning col-xs-12">Assign sides before entering scores</p>
             {% endif %}
+            </h4>
           </div>
           <div class="panel-body">
             <div class="clearfix scoresheet row">
