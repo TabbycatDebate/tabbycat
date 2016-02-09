@@ -3,6 +3,7 @@ import datetime
 
 from adjallocation.models import DebateAdjudicator
 from tournaments.models import Round
+from venues.models import Venue
 from participants.models import Adjudicator
 from draw.models import Debate
 from motions.models import Motion

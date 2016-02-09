@@ -92,6 +92,7 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
     function = NotImplemented
     field = NotImplemented
     exclude_forfeits = False
+    where_value = None
 
     @classmethod
     def get_annotated_queryset(cls, queryset, field, function, round=None, column_name="metric"):
@@ -125,6 +126,10 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
             TEAM_SCORE_ANNOTATION_QUERY += """
             AND "results_teamscore"."forfeit" = FALSE"""
 
+        if cls.where_value is not None:
+            TEAM_SCORE_ANNOTATION_QUERY += """
+            AND "{field:s}" = """ + str(cls.where_value)
+
         query = TEAM_SCORE_ANNOTATION_QUERY.format(field=field, function=function)
         logger.info("Running query: " + query)
 
@@ -147,14 +152,14 @@ class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 
 class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
-    """Metric annotator for total number of points.
-    The difference between this and PointsMetricAnnotator is cosmetic only."""
+    """Metric annotator for total number of wins."""
     key = "wins"
     name = "wins"
     abbr = "Wins"
 
-    function = "SUM"
-    field = "points"
+    function = "COUNT"
+    field = "win"
+    where_value = "TRUE"
 
 
 class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -206,6 +211,7 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
     abbr = "DS"
 
     def annotate_teams(self, queryset, standings, round=None):
+        logger.info("Running points query for draw strength:")
         full_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
                 queryset[0].tournament.team_set.all(), "points", "SUM", round, "points")
 
@@ -215,7 +221,9 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
             if round is not None:
                 debateteam_set = debateteam_set.filter(debate__round__seq__lte=round.seq)
             for dt in debateteam_set:
-                draw_strength += full_queryset.get(id=dt.opposition.team_id).points
+                points = full_queryset.get(id=dt.opposition.team_id).points
+                if points is not None: # points is None when no debates have happened
+                    draw_strength += points
             standings.add_metric_to_team(team, self.key, draw_strength)
 
 
