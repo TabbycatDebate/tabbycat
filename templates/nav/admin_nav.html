@@ -7,22 +7,24 @@
     <ul class="nav nav-stacked" role="tablist">
       <li role="presentation" class="dropdown">
         <a id="tournament_select" href="#" class="dropdown-toggle {% if overview_nav %}active{% endif %}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-          <h4>
+          <h5>
             {{ tournament }}<span class="caret pull-right"></span>
-          </h4>
+          </h5>
         </a>
-        <ul id="menu1" class="dropdown-menu" aria-labelledby="tournament_select">
+        <ul id="tournament_select_menu" class="dropdown-menu" aria-labelledby="tournament_select">
           {% for t in all_tournaments %}
             {% if tournament != t %}
               <li>
-                <a class="" href="{{ tournament.get_absolute_url  }}">
+                <a class="small" href="{{ tournament.get_absolute_url  }}">
                   {{ t }}
                 </a>
               </li>
             {% endif %}
           {% endfor %}
           <li role="separator" class="divider"></li>
-          <li><a href="#">Tournaments Overview</a></li>
+          <li>
+            <a class="small" href="#">Overview</a>
+          </li>
         </ul>
       </li>
     </ul>

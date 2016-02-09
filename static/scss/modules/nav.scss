@@ -26,6 +26,9 @@
     border-radius: 0;
     text-transform: uppercase;
     color: $sidebar-muted-text;
+    .caret {
+      margin-top: 5px;
+    }
     .emoji {
       margin-right: 7px; // Align the the other icons
     }
@@ -37,7 +40,13 @@
   .dropdown-menu {
     width: 100%;
   }
-
+}
+// Tournament Nav
+#tournament_select_menu {
+  width: $sidebar-width - 10px;
+  margin-left: 5px;
+  margin-topp: -20px;
+  min-width: auto;
 }
 // Navigation Elements
 .nav-accordion {
