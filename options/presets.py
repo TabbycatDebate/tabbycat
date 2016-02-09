@@ -146,7 +146,7 @@ class UADCPreferences(AustralsPreferences):
 class WADLPreferences(PreferencesPreset):
     """ Example high school league setup """
     def __init__(self):
-        self.name                                      = "WADL Options & Rules"
+        self.name                                      = "WADL Options & "
         self.show_in_list                              = True
         # Debate Rules= no replies; singular motions
         self.debate_rules__substantive_speakers        = 3
@@ -200,13 +200,3 @@ class PublicInformation(PreferencesPreset):
         self.public_features__public_team_standings    = True
         self.public_features__public_breaking_teams    = True
         self.public_features__public_breaking_adjs     = True
-
-
-
-
-
-
-
-
-
-

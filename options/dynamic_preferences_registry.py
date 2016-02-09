@@ -699,3 +699,11 @@ class DuplicateAdjs(BooleanPreference):
     section = league_options
     name = "duplicate_adjs"
     default = False
+
+@tournament_preferences_registry.register
+class AdjAllocationConfirmations(BooleanPreference):
+    help_text ='Allow links to be sent to adjudicators that allow them to confirm shifts'
+    verbose_name = "Adj Allocation Confirmations"
+    section = league_options
+    name = "allocation_confirmations"
+    default = False
