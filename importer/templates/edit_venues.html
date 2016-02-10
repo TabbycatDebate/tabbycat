@@ -2,44 +2,46 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}🎪 Edit Venues{% endblock %}
+{% block head-title %}<span class="emoji">🎪</span> Edit Venues{% endblock %}
 {% block page-title %}🎪 Edit Venues{% endblock %}
 
 {% block content %}
 
 <form id="addVenues" action="{% tournament_url confirm_venues %}" method="POST">
-  {% for venue in venues %}
-    <div class="ballot-checkin-form form-horizontal">
-      <div class="form-group">
+
+  <ul class="list-group">
+    {% for venue in venues %}
+    <li class="list-group-item">
+
+      <div class="row">
         <label class="col-sm-1 control-label">Full Name</label>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <input class="form-control" type="text" name="venue_names" value="{{ venue.name }}" />
         </div>
-      </div>
-      <div class="form-group">
         <label class="col-sm-1 control-label">Code</label>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <input class="form-control" type="text" name="venue_priorities" value="{{ venue.priority }}" />
         </div>
+        {% if venue.group %}
+          <label class="col-sm-1 control-label">Group</label>
+          <div class="col-sm-3">
+            <input class="form-control" type="text" name="venue_groups" value="{{ venue.group }}" />
+          </div>
+        {% else %}
+            <input class="hidden" type="text" name="venue_groups" value="" />
+        {% endif %}
+
       </div>
-      {% if venue.group %}
-      <div class="form-group">
-        <label class="col-sm-1 control-label">Group</label>
-        <div class="col-sm-4">
-          <input class="form-control" type="text" name="venue_groups" value="{{ venue.group }}" />
-        </div>
-      </div>
-      {% else %}
-          <input class="hidden" type="text" name="venue_groups" value="" />
-      {% endif %}
-    </div>
-  {% endfor %}
+    </li>
+    {% endfor %}
+  </ul>
+
   {% csrf_token %}
-  <div class="ballot-checkin-form form-horizontal">
-    <div class="form-group">
-      <div class="col-sm-2 col-sm-offset-1">
-        <input class="btn btn-success submit-disable" type="submit" value="Save All" />
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+
+      <input class="btn btn-success submit-disable btn-block" type="submit" value="Save All Venues" />
+
     </div>
   </div>
 

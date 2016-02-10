@@ -2,8 +2,8 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}📑 Edit Venue Preferences{% endblock %}
-{% block page-title %}📑 Edit Venue Preferences{% endblock %}
+{% block head-title %}<span class="emoji">🏩</span>Edit Venue Preferences{% endblock %}
+{% block page-title %}🏩Edit Venue Preferences{% endblock %}
 
 {% block content %}
 
@@ -23,34 +23,44 @@
   {% for institution in institutions %}
 
     <div class="row">
-      <div class="col-sm-12">
-        <h2>{{ institution.name }}</h2>
+      <div class="col-md-12">
+
+        <div class="panel">
+
+          <div class="panel-heading">
+            <h4>{{ institution.name }}</h4>
+          </div>
+
+          <ul class="list-group">
+            <input class="hidden" type="number" name="institutionIDs" value={{ institution.id }} />
+
+            {% for venue_group in venue_groups %}
+              <li class="list-group-item">
+                <div class="row">
+
+                  <label class="col-sm-6 control-label">Priority for {{ venue_group.name }}</label>
+                  <div class="col-sm-2">
+                    <input class="form-control team-name" type="number" name="{{ institution.id }}_{{ venue_group.id }}" value="" />
+                  </div>
+
+                </div>
+              </li>
+            {% endfor %}
+
+          </ul>
+
+        </div>
       </div>
     </div>
 
     <div class="row">
-
-      <input class="hidden" type="number" name="institutionIDs" value={{ institution.id }} />
-
-      {% for venue_group in venue_groups %}
-        <div class="ballot-checkin-form form-horizontal form-group row">
-
-          <label class="col-sm-4 control-label">Priority for {{ venue_group.name }}</label>
-          <div class="col-sm-1">
-            <input class="form-control team-name" type="number" name="{{ institution.id }}_{{ venue_group.id }}" value="" />
-          </div>
-
-        </div>
-      {% endfor %}
-
     </div>
 
   {% endfor %}
 
   <div class="form-group row">
-    <label class="col-sm-1"></label>
-    <div class="col-sm-4">
-      <button type="submit" class="btn btn-default">Save All</button>
+    <div class="col-md-12">
+      <button type="submit" class="btn btn-success btn-block submit-disable">Save All Venue Preferences</button>
     </div>
   </div>
 
