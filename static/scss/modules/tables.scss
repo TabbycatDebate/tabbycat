@@ -39,31 +39,42 @@ thead {
     padding-right: 22px; // Leave space for the icon
   }
 }
-.dataTable .sorting {
-  &:hover {
-    color: $brand-success;
-  }
+.sorting {
   &:after {
     content: '\e150';
   }
+  &:hover {
+    color: $brand-success;
+  }
 }
-.dataTable .sorting_asc {
+.vue-sortable
+{
+  &:hover {
+    color: $brand-success;
+    cursor: pointer;
+  }
+}
+
+.sorting_asc,
+.sorting_desc,
+.vue-sort-active {
   color: $brand-success;
+}
+.sorting_asc {
   &:after {
     content: '\e155';
   }
 }
-.dataTable .sorting_desc {
-  color: $brand-success;
+.sorting_desc {
   &:after {
     content: '\e156';
   }
 }
-table.dataTable thead .sorting:after,
-table.dataTable thead .sorting_asc:after,
-table.dataTable thead .sorting_desc:after,
-table.dataTable thead .sorting_asc_disabled:after,
-table.dataTable thead .sorting_desc_disabled:after {
+table thead .sorting:after,
+table thead .sorting_asc:after,
+table thead .sorting_desc:after,
+table thead .sorting_asc_disabled:after,
+table thead .sorting_desc_disabled:after {
   position: absolute;
   bottom: 8px;
   right: 8px;
