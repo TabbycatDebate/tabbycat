@@ -9,6 +9,9 @@ body {
 .vertical-spacing {
   margin-bottom: $line-height-computed;
 }
+.no-bottom-padding {
+  padding-bottom: 0px; // Mostly for panel-body elements
+}
 // BASE ELEMENTS: HEADER
 .head-title {
   padding: 0 0 16px 5px;

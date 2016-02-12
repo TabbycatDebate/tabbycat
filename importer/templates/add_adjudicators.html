@@ -2,7 +2,7 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}👂 Bulk Add Adjudicators{% endblock %}
+{% block head-title %}<span class="emoji">👂</span> Bulk Add Adjudicators{% endblock %}
 {% block page-title %}👂 Bulk Add Adjudicators{% endblock %}
 
 {% block content %}
@@ -13,22 +13,30 @@
 
 <form action="{% tournament_url edit_adjudicators %}" method="POST">
 
-  {% for institution in institutions %}
-  <div class="form-group row">
-    <label class="col-sm-4">
-      {{ institution }} ({{ institution.code }})
-    </label>
-    <div class="col-sm-2">
-      <input type="number" class="form-control" name="{{ institution }}" id="" placeholder="0">
-    </div>
-  </div>
-  {% endfor %}
+  <div class="panel panel-default">
 
-  <div class="form-group row">
-    <label class="col-sm-4"></label>
-    <div class="col-sm-2">
-      <button type="submit" class="btn btn-success">Submit</button>
-    </div>
+    <ul class="list-group">
+
+      {% for institution in institutions %}
+      <li class="list-group-item">
+        <div class="row">
+
+          <div class="col-sm-1">
+            <input type="number" class="form-control" name="{{ institution }}" id="" placeholder="0">
+          </div>
+          <label class="col-sm-11">
+            {{ institution }} ({{ institution.code }})
+          </label>
+
+        </div>
+      </li>
+      {% endfor %}
+      <li class="list-group-item">
+        <button type="submit" class="btn btn-primary btn-block submit-disable">Submit Adjudicators LIst</button>
+      </li>
+
+    </ul>
+
   </div>
 
 </form>

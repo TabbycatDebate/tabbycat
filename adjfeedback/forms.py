@@ -80,7 +80,7 @@ class BaseFeedbackForm(forms.Form):
     question fields."""
 
     # parameters set at "compile time" by subclasses
-    tournament = NotImplemented
+    tournament = None # must be set by subclasses
     _use_tournament_password = False
     _confirm_on_submit = False
     _enforce_required = True
