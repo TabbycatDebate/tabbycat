@@ -223,6 +223,9 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
     abbr = "DS"
 
     def annotate_teams(self, queryset, standings, round=None):
+        if not queryset.exists():
+            return
+
         logger.info("Running points query for draw strength:")
         full_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
                 queryset[0].tournament.team_set.all(), "points", "SUM", round, "points")
