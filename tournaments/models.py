@@ -344,11 +344,11 @@ class Round(models.Model):
         else:
             teams = self.active_teams.all()
 
-        if self.tournament.pref('team_standings_rule') == "wadl":
-            from participants.models import Team
-            orig_len = len(teams)
-            teams = teams.exclude(type=Team.TYPE_BYE)
-            logger.info("{} total teams, {} teams after cull".format(orig_len, len(teams)))
+        from participants.models import Team
+        orig_len = len(teams)
+        teams = teams.exclude(type=Team.TYPE_BYE)
+        if orig_len != len(teams):
+            logger.info("Excluded bye teams: {} total, {} teams after cull".format(orig_len, len(teams)))
 
         # Set type-specific options
         if self.draw_type == self.DRAW_RANDOM:
