@@ -11,13 +11,6 @@ import random
 import logging
 logger = logging.getLogger(__name__)
 
-TEAM_STANDING_METRICS_PRESETS = {
-    "australs": ('wins', 'speaks_sum'),
-    "nz"      : ('wins', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw'),
-    "wadl"    : ('points', 'wbw', 'margin_avg', 'speaks_avg'),
-    "test"    : ('wins', 'wbw', 'draw_strength', 'wbw', 'speaks_sum', 'wbw', 'margin_sum', 'wbw'),
-}
-
 class StandingsError(RuntimeError):
     pass
 

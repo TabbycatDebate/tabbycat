@@ -361,8 +361,8 @@ class Round(models.Model):
 
         elif self.draw_type == self.DRAW_POWERPAIRED:
             from participants.models import Team
-            from standings.teams import TeamStandingsGenerator, TEAM_STANDING_METRICS_PRESETS
-            metrics = TEAM_STANDING_METRICS_PRESETS[self.tournament.pref('team_standings_rule')]
+            from standings.teams import TeamStandingsGenerator
+            metrics = tournament.pref('team_standings_precedence')
             generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random")
             standings = generator.generate(teams, round=self.prev)
             teams = []

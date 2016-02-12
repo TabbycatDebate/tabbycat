@@ -27,6 +27,17 @@ def metricgetter(*items):
     """
     return lambda x: itemgetter(*items)(x.metrics)
 
+def get_metric_choices():
+    choices = []
+    for key, annotator in registry.items():
+        if hasattr(annotator, 'choice_name'):
+            choice_name = annotator.choice_name.title()
+        else:
+            choice_name = annotator.name.title()
+        choices.append((key, choice_name))
+    choices.sort(key=lambda x: x[1])
+    return choices
+
 def MetricAnnotator(name, *args, **kwargs):
     """Factory function. Returns an instance of an appropriate subclass of
     BaseMetricAnnotator, with the given arguments passed to the constructor."""
@@ -248,6 +259,7 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     key_prefix = "wbw"
     name_prefix = "WBW"
     abbr_prefix = "WBW"
+    choice_name = "who-beat-whom"
 
     def __init__(self, index, keys):
         super(WhoBeatWhomMetricAnnotator, self).__init__(index)

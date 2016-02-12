@@ -2,7 +2,7 @@ from participants.models import Team, Speaker
 from tournaments.models import Round
 from results.models import TeamScore, SpeakerScore, BallotSubmission
 from motions.models import Motion
-from .teams import TeamStandingsGenerator, TEAM_STANDING_METRICS_PRESETS
+from .teams import TeamStandingsGenerator
 from django.db.models import Count
 
 from utils.views import *
@@ -179,7 +179,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
         round = self.get_round()
 
         teams = Team.objects.teams_for_standings(round)
-        metrics = TEAM_STANDING_METRICS_PRESETS[tournament.pref('team_standings_rule')]
+        metrics = tournament.pref('team_standings_precedence')
         generator = TeamStandingsGenerator(metrics, self.rankings)
         standings = generator.generate(teams, round=round)
 

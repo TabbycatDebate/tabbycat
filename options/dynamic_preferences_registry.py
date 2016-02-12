@@ -1,5 +1,7 @@
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, StringPreference, IntegerPreference, FloatPreference, Section
+from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
+from standings.metrics import get_metric_choices
 
 # ==============================================================================
 scoring = Section('scoring')
@@ -307,14 +309,16 @@ class StandingsMethod(StringPreference):
     name = "speaker_standings_rule"
     default = 'australs'
 
-
 @tournament_preferences_registry.register
-class TeamStandingsRule(StringPreference):
-    help_text = 'Rule for ordering teams, "australs" or "nz" or "wadl" see wiki'
-    verbose_name = "Team Standings Rule"
+class TeamStandingsPrecedence(MultiValueChoicePreference):
+    help_text = 'Metrics to use to rank teams'
+    verbose_name = "Team Standings Precedence"
     section = standings
-    name = "team_standings_rule"
-    default = 'australs'
+    name = "team_standings_precedence"
+    choices = get_metric_choices()
+    nfields = 8
+    allow_empty = True
+    default = ['points', 'speaks_avg']
 
 
 # ==============================================================================
