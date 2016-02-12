@@ -362,7 +362,7 @@ class Round(models.Model):
         elif self.draw_type == self.DRAW_POWERPAIRED:
             from participants.models import Team
             from standings.teams import TeamStandingsGenerator
-            metrics = tournament.pref('team_standings_precedence')
+            metrics = self.tournament.pref('team_standings_precedence')
             generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random")
             standings = generator.generate(teams, round=self.prev)
             teams = []
@@ -720,6 +720,17 @@ class Round(models.Model):
         self.set_available_adjudicators([a.id for a in Adjudicator.objects.all(
         )])
         self.set_available_teams([t.id for t in Team.objects.all()])
+
+    def activate_previous(self):
+        from availability.models import ActiveTeam, ActiveAdjudicator, ActiveVenue
+
+        self.set_available_venues(
+            [v.venue.id for v in ActiveVenue.objects.filter(round=self.prev)])
+        self.set_available_adjudicators(
+            [a.adjudicator.id
+             for a in ActiveAdjudicator.objects.filter(round=self.prev)])
+        self.set_available_teams(
+            [t.team.id for t in ActiveTeam.objects.filter(round=self.prev)])
 
     @property
     def prev(self):
