@@ -178,10 +178,10 @@ class BaseDrawGenerator(object):
         "institution_penalty": 1
     }
 
-    can_be_first_round = NotImplemented
+    can_be_first_round = True
     requires_even_teams = True
     requires_prev_results = False
-    draw_type = NotImplemented
+    draw_type = None # must be set by subclasses
 
     # All subclasses must define this with any options that may exist.
     DEFAULT_OPTIONS = {}

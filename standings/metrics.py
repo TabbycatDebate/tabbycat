@@ -47,9 +47,9 @@ class BaseMetricAnnotator:
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
 
-    key = NotImplemented
-    name = NotImplemented
-    abbr = NotImplemented
+    key = None # must be set by subclasses
+    name = None # must be set by subclasses
+    abbr = None # must be set by subclasses
     glyphicon = None
 
     def annotate(self, queryset, standings, round=None):
@@ -89,8 +89,9 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
     Other annotators can use this class as a mixin, using
     `get_annotated_queryset()` but overriding `annotate()`."""
 
-    function = NotImplemented
-    field = NotImplemented
+    function = None # must be set by subclasses
+    field = None # must be set by subclasses
+
     exclude_forfeits = False
     where_value = None
 
@@ -293,4 +294,3 @@ registry = {
     "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
     "wbw"           : WhoBeatWhomMetricAnnotator,
 }
-
