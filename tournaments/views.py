@@ -2,8 +2,11 @@ import logging
 logger = logging.getLogger(__name__)
 from threading import Lock
 
+
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
+from django.core import serializers
+import json
 from django.views.generic.edit import FormView, CreateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -131,10 +134,21 @@ def round_increment(request, round):
 @admin_required
 @tournament_view
 def division_allocations(request, t):
-    teams = Team.objects.filter(tournament=t).all()
-    divisions = Division.objects.filter(tournament=t).all()
-    divisions = sorted(divisions, key=lambda x: x.name)
-    venue_groups = VenueGroup.objects.all()
+    
+    teams = json.dumps(list(
+        Team.objects.filter(tournament=t, division=None).all().values(
+            'id', 'short_reference', 'use_institution_prefix', 'institution__code')))
+
+    venue_groups = json.dumps(list(
+        VenueGroup.objects.all().values(
+            'id', 'short_name', 'team_capacity')))
+
+    divisions = list(Division.objects.filter(tournament=t).all().values(
+        'id', 'name', 'venue_group'))
+    for d in divisions:
+        d['teams'] = list(Team.objects.filter(division_id=d['id']).values(
+            'id', 'short_reference', 'use_institution_prefix', 'institution__code'))
+    divisions = json.dumps(divisions)
 
     return render(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
 

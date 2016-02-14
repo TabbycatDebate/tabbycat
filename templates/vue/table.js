@@ -26,6 +26,7 @@
   </table>
 
 </script>
+
 <!-- Table Component Behaviour -->
 <script>
   Vue.component('smart-table', {

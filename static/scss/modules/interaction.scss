@@ -1,0 +1,38 @@
+.vue-draggable {
+  // Don't let text selections get in the way of dragging
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 0 6px 0 0;
+  margin: 2px;
+  text-align: left;
+  background: #fff;
+  height: 32px;
+  line-height: 32px;
+  position: relative;
+  span {
+    padding: 6px 0 0 6px;
+  }
+  &:hover {
+    cursor: move;
+  }
+}
+.dragging {
+  opacity: 0.8;
+  color: #6894D1;
+  cursor: move;
+}
+.drag-over {
+  text-decoration: underline;
+}
+.drag-enter {
+  color: #C93742;
+}

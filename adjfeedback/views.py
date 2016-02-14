@@ -1,6 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-
 import json
 
 from adjallocation.models import DebateAdjudicator
