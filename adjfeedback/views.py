@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 
 import json
 
@@ -123,17 +124,32 @@ def feedback_overview(request, t):
 @tournament_view
 def adj_source_feedback(request, t):
     questions = t.adj_feedback_questions
+
+    teams_data = []
     teams = Team.objects.filter(tournament=t)
     for team in teams:
-        team.feedback_tally = AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
+        feedbacks = AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
             'source_team__team').count()
+        teams_data.append({
+            'name': team.short_name,
+            'institution': team.institution.name,
+            'feedbacks': "%s Feedbacks" % feedbacks,
+            'rowLink': reverse('team_feedback_list', args=[t.slug, team.id]),
+        })
 
-    adjs = Adjudicator.objects.filter(tournament=t)
+    adjs_data = []
+    adjs = Adjudicator.objects.filter(tournament=t).order_by('name')
     for adj in adjs:
-        adj.feedback_tally = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
-            'source_adjudicator__adjudicator').count()
+        feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
+        'source_adjudicator__adjudicator').count(),
+        adjs_data.append({
+            'name': adj.name,
+            'institution': adj.institution.name,
+            'feedbacks': "%s Feedbacks" % feedbacks,
+            'rowLink': reverse('adj_feedback_list', args=[t.slug, adj.id]),
+        })
 
-    return render(request, "adjudicator_source_list.html", dict(teams=teams, adjs=adjs))
+    return render(request, "adjudicator_source_list.html", dict(teams=json.dumps(teams_data), adjs=json.dumps(adjs_data)))
 
 def process_feedback(feedbacks, t):
     questions = t.adj_feedback_questions

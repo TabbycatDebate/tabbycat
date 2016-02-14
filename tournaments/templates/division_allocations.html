@@ -28,32 +28,6 @@
 
 {% block content %}
 
-
-    <!-- component template -->
-    <script type="text/x-template" id="grid-template">
-
-      <table class="table">
-        <thead>
-          <tr>
-            <th v-for="key in columns" @click="sortBy(key)" class="vue-sortable" :class="{vue-sort-active: sortKey == key}">
-              [[ key | capitalize ]]
-              <span class="glyphicon vue-sort-key pull-right"
-                :class="sortOrders[key] > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="entry in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]">
-            <td v-for="key in columns">
-              [[ entry[key] ]]
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-    </script>
-
     <div class="panel panel-default">
       <div class="panel-body">
         <!-- demo root element -->
@@ -63,22 +37,6 @@
             <div class="col-md-4">b</div>
             <div class="col-md-4">c</div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <!-- demo root element -->
-        <div id="demo">
-          <form id="search">
-            Search <input name="query" v-model="searchQuery">
-          </form>
-          <demo-grid
-            :data="gridData"
-            :columns="gridColumns"
-            :filter-key="searchQuery">
-          </demo-grid>
         </div>
       </div>
     </div>
@@ -225,46 +183,9 @@
   <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.js' %}"></script>
   <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.drag-and-drop.js' %}"></script>
   <script>
-  Vue.config.delimiters = ["[[", "]]"];
-  Vue.component('demo-grid', {
-    template: '#grid-template',
-    props: {
-      data: Array,
-      columns: Array,
-      filterKey: String
-    },
-    data: function () {
-      var sortOrders = {}
-      this.columns.forEach(function (key) {
-        sortOrders[key] = 1; // Set all to sort none (1 is +asc, -1 is desc)
-      })
-      return {
-        sortKey: '',
-        sortOrders: sortOrders
-      }
-    },
-    methods: {
-      sortBy: function (key) {
-        this.sortKey = key
-        this.sortOrders[key] = this.sortOrders[key] * -1
-      }
-    }
-  })
-  // bootstrap the demo
-  var demo = new Vue({
-    el: '#demo',
-    data: {
-      searchQuery: '',
-      gridColumns: ['name', 'power'],
-      gridData: [
-        { name: 'Chuck Norris', power: Infinity },
-        { name: 'Bruce Lee', power: 9000 },
-        { name: 'Jackie Chan', power: 7000 },
-        { name: 'Jet Li', power: 8000 }
-      ]
-    }
-  })
 
+
+  
   </script>
 
   <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery-ui-custom-1.11.4.min.js' %}"></script>

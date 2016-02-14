@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load debate_tags %}
+{% load static %}
 
 {% block head-title %}View Feedback by Source{% endblock %}
 {% block page-title %}View Feedback by Source{% endblock %}
@@ -31,101 +32,85 @@
 
 {% block content %}
 <div class="row">
+
   <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>From Teams</h4>
+      </div>
+      <div class="panel-body" id="fromTeamsTable">
 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4>From Teams</h4>
-        </div>
-        <div class="panel-body">
-          <table id="teamTable" class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Institution</th>
-                <th>Feedback</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for team in teams %}
-              <tr>
-                <td>{{ team.short_name }}</td>
-                <td>{{ team.institution }}</td>
-                <td>
-                {% if team.feedback_tally > 0 %}
-                  <a href="{% tournament_url team_feedback_list team.id %}">
-                    {{ team.feedback_tally }} Feedback{{ team.feedback_tally|pluralize }}
-                  </a>
-                {% else %}
-                  None Yet
-                {% endif %}
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+        <smart-table
+          :data="gridData"
+          :columns="gridColumns"
+          :filter-key="searchQuery">
+        </smart-table>
+
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4>From Adjudicators</h4>
-        </div>
-        <div class="panel-body">
-          <table id="adjTable" class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Institution</th>
-              <th>Feedback</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for adj in adjs %}
-            <tr>
-              <td>{{ adj.name }}</td>
-              <td>{{ adj.institution }}</td>
-              <td>
-              {% if adj.feedback_tally > 0 %}
-                <a href="{% tournament_url adj_feedback_list adj.id %}">
-                  {{ adj.feedback_tally }} Feedback{{ adj.feedback_tally|pluralize }}
-                </a>
-              {% else %}
-                None Yet
-              {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        </div>
-      </div>
-    </div>
-
   </div>
+
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>From Adjudicators</h4>
+      </div>
+      <div class="panel-body" id="fromAdjsTable">
+
+        <smart-table
+          :data="gridData"
+          :columns="gridColumns"
+          :filter-key="searchQuery">
+        </smart-table>
+
+      </div>
+    </div>
+  </div>
+
 </div>
 
 {% endblock content %}
 
 {% block extra-js %}
 
+  <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.js' %}"></script>
+  {% include "vue/table.js" %}
+  <script>
+    Vue.config.delimiters = ["[[", "]]"];
+    // bootstrap the demo
+    var fromTeamsTable = new Vue({
+      el: '#fromTeamsTable',
+      data: {
+        searchQuery: '',
+        gridColumns: ['name', 'institution', 'feedbacks'],
+        gridData: {{ teams|safe }}
+      },
+      ready: function() {
+        var thisTable = this; // this in the next context is the element
+        $('#table-search').keyup(function(){
+          thisTable.$set('searchQuery', $(this).val());
+        })
+      }
+    })
+    var fromAdjsTable = new Vue({
+      el: '#fromAdjsTable',
+      data: {
+        searchQuery: '',
+        gridColumns: ['name', 'institution', 'feedbacks'],
+        gridData: {{ adjs|safe }}
+      },
+      ready: function() {
+        var thisTable = this; // this in the next context is the element
+        $('#table-search').keyup(function(){
+          thisTable.$set('searchQuery', $(this).val());
+        })
+      }
+    })
+
+  </script>
+
   {{ block.super }}
    <script type="text/javascript" charset="utf-8">
-    $(document).ready( function() {
-      var tTable = $("#teamTable").DataTable({
-          "aaSorting": [[ 1, "asc" ], [ 0, "asc" ]],
-      });
-      new $.fn.dataTable.FixedHeader( tTable, {alwaysCloneTop: true});
-
-      var aTable = $("#adjTable").DataTable({
-          "aaSorting": [[ 1, "asc" ], [ 0, "asc" ]],
-      });
-      new $.fn.dataTable.FixedHeader( aTable, {alwaysCloneTop: true});
-
-      $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
-      })
-    } );
   </script>
+
 {% endblock extra-js %}
