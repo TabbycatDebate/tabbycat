@@ -56,7 +56,7 @@
                   <span class="emoji">{{ debate.aff_team.emoji }}</span>
                 </td>
               {% endif %}
-              <td class="team-name">
+              <td >
                 {% if debate.aff_team.type != 'B' %}
                   <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
                     {{ debate.aff_team.short_name }}
@@ -68,7 +68,7 @@
                   <span class="emoji">{{ debate.neg_team.emoji }}</span>
                 </td>
               {% endif %}
-              <td class="team-name">
+              <td >
                 {% if debate.neg_team.type != 'B'  %}
                   <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
                     {{ debate.neg_team.short_name }}

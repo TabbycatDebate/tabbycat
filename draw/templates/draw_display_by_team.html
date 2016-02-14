@@ -56,12 +56,12 @@
                   {% include "tables/debate_status.html" %}
                 {% endif %}
               {% endif %}
-              <td class="team-name" id="">
+              <td  id="">
                 <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
                   {{ debate.aff_team.short_name }}
                 </span>
               </td>
-              <td class="team-name">
+              <td >
                 <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
                   {{ debate.neg_team.short_name }}
                 </span>
@@ -104,12 +104,12 @@
                   {{ debate.division.time_slot|time:'h:i A' }}
                 </td>
               {% endif %}
-              <td class="team-name">
+              <td >
                 <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
                   {{ debate.aff_team.short_name }}
                 </span>
               </td>
-              <td class="team-name">
+              <td >
                 <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
                   {{ debate.neg_team.short_name }}
                 </span>

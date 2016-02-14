@@ -210,8 +210,7 @@ def edit_teams(request, t):
                 'id': institution.id,
                 'available_team_numbers': available_team_numbers
             });
-            print('____')
-            # institutions[name] = list(range(1, int(quantity) + 1)) # Create a placeholder for loop
+            # print('____')
 
     return render(request, 'edit_teams.html', dict(institutions=institutions_with_team_numbers))
 
@@ -226,10 +225,11 @@ def confirm_teams(request, t):
         instititution_id = sorted_post[i][1]
         team_name = sorted_post[i+1][1]
         use_prefix = False
-        if (sorted_post[i+2][1] == "on"):
+        if (sorted_post[i+2][1] == "yes"):
             use_prefix = True
-        use_prefix = sorted_post[i+2][1]
         speaker_names = sorted_post[i+3][1].split(',')
+
+        print("instid is %s name is %s prefix is %s names are %s" % (instititution_id, team_name, sorted_post[i+2][1], speaker_names));
 
         institution = Institution.objects.get(id=instititution_id)
         if team_name and speaker_names and institution:
