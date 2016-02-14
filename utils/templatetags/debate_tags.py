@@ -169,7 +169,10 @@ register.simple_tag(divide)
 
 
 def percentage(numberA, numberB):
-    return numberA / numberB * 100
+    if numberB > 0:
+        return numberA / numberB * 100
+    else:
+        return 0
 
 
 register.simple_tag(percentage)
