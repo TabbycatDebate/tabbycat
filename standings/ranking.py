@@ -40,9 +40,9 @@ class BaseRankAnnotator:
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
 
-    key = NotImplemented
-    name = NotImplemented
-    abbr = NotImplemented
+    key = None # must be set by subclasses
+    name = None # must be set by subclasses
+    abbr = None # must be set by subclasses
     glyphicon = None
 
     def annotate(self, standings):

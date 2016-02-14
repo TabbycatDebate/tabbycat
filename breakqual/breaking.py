@@ -1,7 +1,7 @@
 """Module to compute the teams breaking in a BreakCategory."""
 
 from collections import Counter
-from standings.teams import TeamStandingsGenerator, TEAM_STANDING_METRICS_PRESETS
+from standings.teams import TeamStandingsGenerator
 
 from .models import BreakingTeam
 
@@ -32,7 +32,7 @@ def get_breaking_teams(category, include_all=False, include_categories=False):
     if not include_all:
         teams = teams.filter(break_rank__isnull=False)
 
-    metrics = TEAM_STANDING_METRICS_PRESETS[category.tournament.pref('team_standings_rule')]
+    metrics = category.tournament.pref('team_standings_precedence')
     generator = TeamStandingsGenerator(metrics, ('rank',))
     standings = generator.generate(teams)
 
@@ -116,7 +116,7 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
     a list of teams in the (actual) break, i.e. excluding teams that are
     ineligible, capped, broke in a different break, and so on."""
 
-    metrics = TEAM_STANDING_METRICS_PRESETS[category.tournament.pref('team_standings_rule')]
+    metrics = category.tournament.pref('team_standings_precedence')
     generator = TeamStandingsGenerator(metrics, ('rank',))
     standings = generator.generate(eligible_teams)
 

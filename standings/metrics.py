@@ -27,6 +27,17 @@ def metricgetter(*items):
     """
     return lambda x: itemgetter(*items)(x.metrics)
 
+def get_metric_choices():
+    choices = []
+    for key, annotator in registry.items():
+        if hasattr(annotator, 'choice_name'):
+            choice_name = annotator.choice_name.title()
+        else:
+            choice_name = annotator.name.title()
+        choices.append((key, choice_name))
+    choices.sort(key=lambda x: x[1])
+    return choices
+
 def MetricAnnotator(name, *args, **kwargs):
     """Factory function. Returns an instance of an appropriate subclass of
     BaseMetricAnnotator, with the given arguments passed to the constructor."""
@@ -47,9 +58,9 @@ class BaseMetricAnnotator:
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
 
-    key = NotImplemented
-    name = NotImplemented
-    abbr = NotImplemented
+    key = None # must be set by subclasses
+    name = None # must be set by subclasses
+    abbr = None # must be set by subclasses
     glyphicon = None
 
     def annotate(self, queryset, standings, round=None):
@@ -89,8 +100,9 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
     Other annotators can use this class as a mixin, using
     `get_annotated_queryset()` but overriding `annotate()`."""
 
-    function = NotImplemented
-    field = NotImplemented
+    function = None # must be set by subclasses
+    field = None # must be set by subclasses
+
     exclude_forfeits = False
     where_value = None
 
@@ -211,6 +223,9 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
     abbr = "DS"
 
     def annotate_teams(self, queryset, standings, round=None):
+        if not queryset.exists():
+            return
+
         logger.info("Running points query for draw strength:")
         full_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
                 queryset[0].tournament.team_set.all(), "points", "SUM", round, "points")
@@ -248,6 +263,7 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     key_prefix = "wbw"
     name_prefix = "WBW"
     abbr_prefix = "WBW"
+    choice_name = "who-beat-whom"
 
     def __init__(self, index, keys):
         super(WhoBeatWhomMetricAnnotator, self).__init__(index)
@@ -293,4 +309,3 @@ registry = {
     "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
     "wbw"           : WhoBeatWhomMetricAnnotator,
 }
-

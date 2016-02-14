@@ -1,5 +1,7 @@
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, StringPreference, IntegerPreference, FloatPreference, Section
+from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
+from standings.metrics import get_metric_choices
 
 # ==============================================================================
 scoring = Section('scoring')
@@ -248,7 +250,7 @@ class FeedbackReturnLocation(StringPreference):
 
 @tournament_preferences_registry.register
 class PanellistFeedbackEnabled(BooleanPreference):
-    help_text = "Allow public feedback to be submitted by panellists"
+    help_text = "Allow feedback to be submitted by panellists"
     verbose_name = "Panellist Feedback Enabled"
     section = feedback
     name = 'panellist_feedback_enabled'
@@ -307,14 +309,16 @@ class StandingsMethod(StringPreference):
     name = "speaker_standings_rule"
     default = 'australs'
 
-
 @tournament_preferences_registry.register
-class TeamStandingsRule(StringPreference):
-    help_text = 'Rule for ordering teams, "australs" or "nz" or "wadl" see wiki'
-    verbose_name = "Team Standings Rule"
+class TeamStandingsPrecedence(MultiValueChoicePreference):
+    help_text = 'Metrics to use to rank teams'
+    verbose_name = "Team Standings Precedence"
     section = standings
-    name = "team_standings_rule"
-    default = 'australs'
+    name = "team_standings_precedence"
+    choices = get_metric_choices()
+    nfields = 8
+    allow_empty = True
+    default = ['points', 'speaks_avg']
 
 
 # ==============================================================================

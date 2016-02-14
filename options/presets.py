@@ -3,6 +3,15 @@ class PreferencesPreset:
     def __init__(self):
         self.show_in_list                             = False
 
+TEAM_STANDING_METRICS_PRESETS = {
+    "australs": ('wins', 'speaks_sum'),
+    "nz"      : ('wins', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw'),
+    "wadl"    : ('points', 'wbw', 'margin_avg', 'speaks_avg'),
+    "test"    : ('wins', 'wbw', 'draw_strength', 'wbw', 'speaks_sum', 'wbw', 'margin_sum', 'wbw'),
+}
+
+
+
 class AustralsPreferences(PreferencesPreset):
     """ 3v3 with replies, chosen motions, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
     def __init__(self):
@@ -30,7 +39,7 @@ class AustralsPreferences(PreferencesPreset):
         self.data_entry__enable_motions                = True
         # Standings Rules
         self.standings__standings_missed_debates       = 2 # TODO= check this
-        self.standings__team_standings_rule            = 'australs'
+        self.standings__team_standings_precedence      = ['wins', 'speaks_sum']
         self.standings__speaker_standings_rule         = 'australs'
 
 
@@ -65,7 +74,7 @@ class NZEastersPreferences(AustralsPreferences):
         self.data_entry__enable_motions                = True
         self.debate_rules__substantive_speakers        = 2
         # Standings
-        self.standings__team_standings_rule            = 'nz'
+        self.standings__team_standings_precedence      = ['wins', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw']
         # Draw Rules
         self.draw_rules__draw_side_allocations         = 'manual-ballot'
         self.draw_rules__draw_odd_bracket              = 'intermediate'
@@ -100,9 +109,9 @@ class JoyntPreferences(AustralsPreferences):
         self.draw_rules__avoid_same_institution        = False
         self.draw_rules__avoid_team_history            = False
         # Standings
-        self.standings__team_standings_rule            = 'nz'
+        self.standings__team_standings_precedence      = ['wins', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw']
         # Public Features
-        self.public_features__public_side_allocations   = True
+        self.public_features__public_side_allocations  = True
         # UI Options
         self.ui_options__show_novices                  = True
 
@@ -134,8 +143,8 @@ class UADCPreferences(AustralsPreferences):
         self.debate_rules__reply_scores_enabled        = True
         self.debate_rules__motion_vetoes_enabled       = True
         # # Standings Rules
-        # self.standings__team_standings_rule            = 'australs' # TODO: need a new standings rule
-        self.standings__speaker_standings_rule         = 'australs'
+        # self.standings__team_standings_precedence     = 'australs' # TODO: need a new standings rule
+        self.standings__team_standings_precedence      = ['wins', 'speaks_sum']
         # Feedback
         self.feedback__adj_min_score                      = 1.0 # Explicit in the rules
         self.feedback__adj_max_score                      = 5.0 # Explicit in the rules
@@ -155,7 +164,7 @@ class WADLPreferences(PreferencesPreset):
         self.data_entry__enable_motions                = False
         # Standings Rules
         self.standings__standings_missed_debates       = 0
-        self.standings__team_standings_rule            = 'wadl'
+        self.standings__team_standings_precedence      = ['points', 'wbw', 'margin_avg', 'speaks_avg']
         self.standings__speaker_standings_rule         = 'wadl'
         # Draws
         self.draw_rules__avoid_same_institution        = False

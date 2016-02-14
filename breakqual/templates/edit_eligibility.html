@@ -15,58 +15,60 @@
   {% endif %}
 {% endblock %}
 {% block page-subnav-actions %}
-<form id="breakEligibilityForm" action="." method="POST" class="form-horizontal">
-  <button type="submit" class="btn btn-success submit-disable" data-loading-text="Saving...">
-    Save team break eligibility
+  <button class="btn btn-success submit-disable" id="submit-nav" data-loading-text="Saving...">
+    Save Team Break Eligibility
   </button>
-</form>
 {% endblock %}
 
-
 {% block content %}
-<div class="panel panel-default">
-  <div class="panel-body">
-    <table id="dataTable" class="table">
-      <thead>
-        <tr>
-          <th>Team</th>
-          {% if pref.show_emoji %}
-            <th class="team-emoji"></th>
-          {% endif %}
-          <th>Institution</th>
-          {% for category in tournament.breakcategory_set.all %}
-            <th>
-              {{ category.name }}
-              (<span id="count_{{ category.id }}"></span>)
-              <span class="small"> select
-                <a class="select-all" href="#" category="{{ category.id }}">all</a> or
-                <a class="select-none" href="#" category="{{ category.id }}">none</a>
-              </span>
-            </th>
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for team, eligibility in form.team_iter %}
-          <tr>
-            <td>
-              <span class="team-speakers-hover" id="team_speakers_{{ team.id }}">
-                {{ team.short_name }}
-              </span>
-            </td>
-            {% if pref.show_emoji %}
-              <td class="team-emoji">{{ team.emoji }}</td>
-            {% endif %}
-            <td>{{ team.institution.name }}</td>
-            {% for checkbox in eligibility %}
-              <td>{{ checkbox.tag }}</td>
+
+  <form id="breakEligibilityForm" action="." method="POST" class="form-horizontal">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <table id="dataTable" class="table">
+          <thead>
+            <tr>
+              <th>Team</th>
+              {% if pref.show_emoji %}
+                <th class="team-emoji"></th>
+              {% endif %}
+              <th>Institution</th>
+              {% for category in tournament.breakcategory_set.all %}
+                <th>
+                  {{ category.name }}
+                  (<span id="count_{{ category.id }}"></span>)<br>
+                  <span class="small"> select
+                    <a class="select-all" href="#" category="{{ category.id }}">all</a> or
+                    <a class="select-none" href="#" category="{{ category.id }}">none</a>
+                  </span>
+                </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for team, eligibility in form.team_iter %}
+              <tr>
+                <td>
+                  <span class="team-speakers-hover" id="team_speakers_{{ team.id }}">
+                    {{ team.short_name }}
+                  </span>
+                </td>
+                {% if pref.show_emoji %}
+                  <td class="team-emoji">{{ team.emoji }}</td>
+                {% endif %}
+                <td>{{ team.institution.name }}</td>
+                {% for checkbox in eligibility %}
+                  <td>{{ checkbox.tag }}</td>
+                {% endfor %}
+              </tr>
             {% endfor %}
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </form>
+
 {% endblock %}
 
 {% block extra-js %}
@@ -80,6 +82,10 @@
       new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
       $('#table-search').keyup(function(){
         dTable.search($(this).val()).draw();
+      });
+
+      $("#submit-nav").click( function() {
+        $("#breakEligibilityForm").submit();
       });
 
       var updateCounts = function (value) {

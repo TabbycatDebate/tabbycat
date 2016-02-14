@@ -4,7 +4,7 @@ from tournaments.models import Tournament, Round
 from motions.models import Motion
 from venues.models import Venue, VenueGroup
 from .models import TeamPositionAllocation, Debate, DebateTeam
-from standings.teams import TeamStandingsGenerator, TEAM_STANDING_METRICS_PRESETS
+from standings.teams import TeamStandingsGenerator
 
 from utils.views import *
 
@@ -73,7 +73,7 @@ def get_draw_with_standings(round):
         return None, draw
 
     teams = Team.objects.teams_for_standings(round)
-    metrics = TEAM_STANDING_METRICS_PRESETS[round.tournament.pref('team_standings_rule')]
+    metrics = round.tournament.pref('team_standings_precedence')
     generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
     standings = generator.generate(teams, round=round.prev)
 

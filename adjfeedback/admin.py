@@ -19,7 +19,7 @@ admin.site.register(AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuestionAdmi
 # ==============================================================================
 
 class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
-    model = NotImplemented
+    model = None # must be set by subclasses
     fields = ('question', 'answer')
     extra = 1
 
