@@ -28,7 +28,6 @@
 
 {% block content %}
 
-  <div class="panel panel-default">
 
     <!-- component template -->
     <script type="text/x-template" id="grid-template">
@@ -55,21 +54,34 @@
 
     </script>
 
-    <div class="panel-body">
-      <!-- demo root element -->
-      <div id="demo">
-        <form id="search">
-          Search <input name="query" v-model="searchQuery">
-        </form>
-        <demo-grid
-          :data="gridData"
-          :columns="gridColumns"
-          :filter-key="searchQuery">
-        </demo-grid>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <!-- demo root element -->
+        <div id="dragdemo">
+          <div class="row">
+            <div class="col-md-4">a</div>
+            <div class="col-md-4">b</div>
+            <div class="col-md-4">c</div>
+          </div>
+        </div>
       </div>
     </div>
 
-  </div>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <!-- demo root element -->
+        <div id="demo">
+          <form id="search">
+            Search <input name="query" v-model="searchQuery">
+          </form>
+          <demo-grid
+            :data="gridData"
+            :columns="gridColumns"
+            :filter-key="searchQuery">
+          </demo-grid>
+        </div>
+      </div>
+    </div>
 
   <div class="panel panel-default">
     <div class="panel-body">
@@ -211,6 +223,7 @@
 
 {% block extra-js %}
   <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.js' %}"></script>
+  <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.drag-and-drop.js' %}"></script>
   <script>
   Vue.config.delimiters = ["[[", "]]"];
   Vue.component('demo-grid', {
