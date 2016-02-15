@@ -174,6 +174,18 @@ def set_division_venue_group(request, t):
     division.save()
     return HttpResponse("ok")
 
+@admin_required
+@expect_post
+@tournament_view
+def set_team_division(request, t):
+    team = Team.objects.get(pk=int(request.POST['team']))
+    if int(request.POST['division']):
+        team.division = Division.objects.get(pk=int(request.POST['division']));
+    else:
+        team.division = None;
+
+    team.save()
+    return HttpResponse("ok")
 
 @admin_required
 @expect_post

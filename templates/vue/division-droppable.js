@@ -19,10 +19,10 @@
 
       </div>
 
-      <div class="panel-body" v-drag-and-drop drop="handleDrop" data-id="[[ division.id ]]">
+      <div class="panel-body" v-drag-and-drop v-drop="receiveTeam" data-id="[[ division.id ]]">
 
         <template v-for="team in division.teams" track-by="id">
-          <team-draggable :team="team"></team-draggable>
+          <team-draggable :team="team" :division="division"></team-draggable>
         </template>
 
       </div>
@@ -53,7 +53,13 @@
               alert('Failed to save a divisions venue group change')
             }
         });
+      },
+      receiveTeam: function(droppedTeam, droppedArea) {
+        // This calls up to the parent component
+        console.log('child component (' + this.division.id + ') received a team');
+        this.$dispatch('assign-team-to-division', this.division);
       }
+
     }
   })
 </script>

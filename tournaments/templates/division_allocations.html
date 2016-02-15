@@ -32,24 +32,26 @@
     <div class="row">
 
       <template v-for="division in divisions" track-by="id">
-        <division-droppable save-vg-at="{% tournament_url set_division_venue_group %}"
+        <division-droppable save-vg-at="{% tournament_url set_division_venue_group %}" save-division-at="{% tournament_url set_division_venue_group %}"
         :division="division" :vgs="venueGroups"></division-droppable>
       </template>
 
     </div>
 
     <div class="row">
-      <div class="col-md-12" v-if="divisions.length > 0" class="row" v-for="division in divisions">
+      <div class="col-md-12" v-if="divisions.length > 0" class="row">
+
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4>Teams</h4>
           </div>
-          <div class="panel-body" v-drag-and-drop drop="handleDrop" data-id=null>
-            <template v-for="team in unallocatedTeams" track-by="id">
-              <team-draggable :team="team"></team-draggable>
+          <div class="panel-body" v-drag-and-drop v-drop="unallocateTeam" data-id=null>
+            <template v-for="team in unallocatedTeams | orderBy 'institution__code'" track-by="id">
+              <team-draggable :team="team" save-division-at="{% tournament_url set_division_venue_group %}"></team-draggable>
             </template>
           </div>
         </div>
+
       </div>
     </div>
 
@@ -58,8 +60,8 @@
 {% endblock content %}
 
 {% block extra-js %}
-  <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.js' %}"></script>
-  <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.drag-and-drop.js' %}"></script>
+  <script src="{% static 'js/vendor/vue.js' %}"></script>
+  <script src="{% static 'js/vendor/vue.drag-and-drop.js' %}"></script>
   {% include "vue/team-draggable.js" %}
   {% include "vue/division-droppable.js" %}
   <script>
@@ -69,39 +71,44 @@
   var App = new Vue({
     el: '#app',
     data: {
-      loggedEvent: '',
+      draggedTeam: null,
       unallocatedTeams: {{ unallocated_teams | safe }},
       divisions: {{ divisions | safe }},
       venueGroups: {{ venue_groups | safe }}
     },
-    ready: function() {
-
-    },
     methods: {
-      handleDragOver: function(elem) {
-        console.log('handleDragOver', elem);
-        this.loggedEvent = 'handleDragOver';
+      unallocateTeam: function(droppedItem, droppedArea) {
+        // If coming from a division component
+        team = this.draggedTeam;
+        if (team.division != undefined ) {
+          team.division.teams = $.grep(team.division.teams, function(e){
+            return e != this.draggedTeam;
+          })[0];
+          this.unallocatedTeams.push(team);
+        }
+      }
+    },
+    events: {
+      // Set a global record of what is being dragged
+      'dragging-team': function (teamID) {
+        //console.log('started dragging team:' + teamID)
+        this.draggedTeam = teamID;
       },
-      handleDragEnter: function(elem) {
-        console.log('handleDragEnter', elem);
-        this.loggedEvent = 'handleDragEnter';
+      'stopped-dragging': function () {
+        //console.log('stopped dragging')
+        this.draggedTeam = null;
       },
-      handleDragLeave: function(elem) {
-        console.log('handleDragLeave', elem);
-        this.loggedEvent = 'handleDragLeave';
-      },
-      handleDrop: function(draggedItem, droppedArea) {
-        console.log('handleDivisionDropArea', draggedItem.getAttribute('data-id'), droppedArea.getAttribute('data-id'));
+      'assign-team-to-division': function (droppedDivision) {
+        team = this.draggedTeam;
+        console.log('team id ' + team.id + ' to divison ' + droppedDivision.id)
 
-        var droppedTeamID = draggedItem.getAttribute('data-id');
-        var droppedTeam = $.grep(this.teams, function(e){ return e.id == droppedTeamID; })[0];
-
-        // Add team to the division
-        this.divisions[0].teams.push(droppedTeam);
-        this.teams = this.teams.filter(function (item) {
-          return item.id != droppedTeamID;
-        });
-
+        // If its coming from another division, remove it from that division
+        if (team.division != undefined ) {
+          team.division.teams = $.grep(team.division.teams, function(e){
+            return e != this.draggedTeam;
+          })[0];
+        }
+        droppedDivision.teams.push(team);
       }
     }
   });
