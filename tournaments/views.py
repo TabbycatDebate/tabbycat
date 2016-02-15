@@ -134,8 +134,8 @@ def round_increment(request, round):
 @admin_required
 @tournament_view
 def division_allocations(request, t):
-    
-    teams = json.dumps(list(
+
+    unallocated_teams = json.dumps(list(
         Team.objects.filter(tournament=t, division=None).all().values(
             'id', 'short_reference', 'use_institution_prefix', 'institution__code')))
 
@@ -145,12 +145,34 @@ def division_allocations(request, t):
 
     divisions = list(Division.objects.filter(tournament=t).all().values(
         'id', 'name', 'venue_group'))
+
     for d in divisions:
         d['teams'] = list(Team.objects.filter(division_id=d['id']).values(
             'id', 'short_reference', 'use_institution_prefix', 'institution__code'))
     divisions = json.dumps(divisions)
 
-    return render(request, "division_allocations.html", dict(teams=teams, divisions=divisions, venue_groups=venue_groups))
+    return render(request, "division_allocations.html", dict(
+        unallocated_teams=unallocated_teams, divisions=divisions,
+        venue_groups=venue_groups))
+
+@admin_required
+@tournament_view
+def create_division(request, t):
+    division = Division.objects.create(name="temporary_name", tournament=t)
+    division.save()
+    division.name = "%s" % division.id
+    division.save()
+
+    return redirect_tournament('division_allocations', t)
+
+@admin_required
+@expect_post
+@tournament_view
+def set_division_venue_group(request, t):
+    division = Division.objects.get(pk=int(request.POST['division']))
+    division.venue_group = VenueGroup.objects.get(pk=int(request.POST['venueGroup']))
+    division.save()
+    return HttpResponse("ok")
 
 
 @admin_required

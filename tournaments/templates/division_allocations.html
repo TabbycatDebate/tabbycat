@@ -8,9 +8,7 @@
 
 {% block page-subnav-sections %}
   <div id="statusBar" class="btn-group">
-    <a class="btn btn-primary" href="#auto" id="auto_allocate">Auto Allocate</a>
-    <a data-loading-text="Saving..." class="btn btn-success" href="" id="save">Save</a>
-    <a data-loading-text="Allocating..." class="btn btn-danger" href="{% round_url draw current_round %}">Quit</a>
+    <a class="btn btn-success submit-disable" href="{% tournament_url create_division %}" >Add New Division</a>
   </div>
   <div id="" class="btn-group">
     <a class="btn btn-default" data-toggle="modal" data-target="#view-venues">View Venue Stats</a>
@@ -32,37 +30,23 @@
   <div id="app">
 
     <div class="row">
-      <div class="col-md-3" v-if="divisions.length > 0" class="row" v-for="division in divisions">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4>[[ division.name ]]</h4>
-            <select name="select" class="form-control">
-              <option v-for="vg in venue_groups" value="[[ vg.id ]]">[[ vg.short_name ]]</option>
-            </select>
-          </div>
-          <div class="panel-body" v-drag-and-drop v-drop="handleDrop">
-            <template v-for="team in division.teams">
-              <team-draggable :id="team.id" :name="team.institution__code + ' ' + team.short_reference"></team-draggable>
-            </template>
-          </div>
-        </div>
-      </div>
-      <div v-if="divisions.length == 0" class="col-md-12">
-        <div class="alert alert-warning">
-          No divisions have been added.
-        </div>
-      </div>
+
+      <template v-for="division in divisions" track-by="id">
+        <division-droppable save-vg-at="{% tournament_url set_division_venue_group %}"
+        :division="division" :vgs="venueGroups"></division-droppable>
+      </template>
+
     </div>
 
     <div class="row">
       <div class="col-md-12" v-if="divisions.length > 0" class="row" v-for="division in divisions">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4>Team</h4>
+            <h4>Teams</h4>
           </div>
-          <div class="panel-body" v-drag-and-drop v-drop="handleDrop">
-            <template v-for="team in teams">
-              <team-draggable :id="team.id" :name="team.institution__code + ' ' + team.short_reference"></team-draggable>
+          <div class="panel-body" v-drag-and-drop drop="handleDrop" data-id=null>
+            <template v-for="team in unallocatedTeams" track-by="id">
+              <team-draggable :team="team"></team-draggable>
             </template>
           </div>
         </div>
@@ -77,6 +61,7 @@
   <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.js' %}"></script>
   <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.drag-and-drop.js' %}"></script>
   {% include "vue/team-draggable.js" %}
+  {% include "vue/division-droppable.js" %}
   <script>
 
   Vue.config.delimiters = ["[[", "]]"];
@@ -85,59 +70,38 @@
     el: '#app',
     data: {
       loggedEvent: '',
-      // images: [{"name":"Image 1","src":"http://placehold.it/100/000000/ffffff"},{"name":"Image 2","src":"http://placehold.it/100/C93742/ffffff"},{"name":"Image 3","src":"http://placehold.it/100/6894D1/ffffff"}],
-      test: [
-        {
-          "name": "ZA",
-          "teams": [
-            { "name": "A" },
-            { "name": "B" },
-            { "name": "C" },
-          ]
-        },
-        {
-          "name": "ZB",
-          "teams": [
-            { "name": "1" },
-            { "name": "2" },
-            { "name": "3" },
-          ]
-        }
-      ],
-      teams: {{ teams | safe }},
+      unallocatedTeams: {{ unallocated_teams | safe }},
       divisions: {{ divisions | safe }},
-      venue_groups: {{ venue_groups | safe }}
+      venueGroups: {{ venue_groups | safe }}
     },
     ready: function() {
-      Array.prototype.slice.call(document.querySelectorAll('.image'), 0).forEach(function(item){
-        item.children[0].src = item.children[0].getAttribute('data-src');
-      });
+
     },
     methods: {
-      handleDragStart: function(elem) {
-        // console.log('handleDragStart', elem);
-        this.loggedEvent = 'handleDragStart';
-      },
       handleDragOver: function(elem) {
-        // console.log('handleDragOver', elem);
+        console.log('handleDragOver', elem);
         this.loggedEvent = 'handleDragOver';
       },
       handleDragEnter: function(elem) {
-        // console.log('handleDragEnter', elem);
+        console.log('handleDragEnter', elem);
         this.loggedEvent = 'handleDragEnter';
       },
       handleDragLeave: function(elem) {
-        // console.log('handleDragLeave', elem);
+        console.log('handleDragLeave', elem);
         this.loggedEvent = 'handleDragLeave';
       },
-      handleDragEnd: function(elem) {
-        // console.log('handleDragEnd', elem);
-        this.loggedEvent = 'handleDragEnd';
-      },
-      handleDivisionDropArea: function(draggedItem, droppedArea) {
-        console.log('handleDivisionDropArea', draggedItem.getAttribute('data-index'), droppedArea.getAttribute('data-index'));
-        this.divisions[0].push(draggedItem);
-        this.divisions[1].$remove(draggedItem);
+      handleDrop: function(draggedItem, droppedArea) {
+        console.log('handleDivisionDropArea', draggedItem.getAttribute('data-id'), droppedArea.getAttribute('data-id'));
+
+        var droppedTeamID = draggedItem.getAttribute('data-id');
+        var droppedTeam = $.grep(this.teams, function(e){ return e.id == droppedTeamID; })[0];
+
+        // Add team to the division
+        this.divisions[0].teams.push(droppedTeam);
+        this.teams = this.teams.filter(function (item) {
+          return item.id != droppedTeamID;
+        });
+
       }
     }
   });
