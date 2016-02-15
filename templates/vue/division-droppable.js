@@ -4,9 +4,9 @@
   <div class="col-md-3">
     <div class="panel panel-default">
 
-      <div class="panel-heading">
+      <div class="panel-heading division-heading">
 
-        <h4>Division [[ division.name ]]</h4>
+        <h4>[[ division.name ]]</h4>
 
         <select name="select" class="form-control" v-model="division.venue_group" v-on:change="saveDivisionVenueGroup">
 

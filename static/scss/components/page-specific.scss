@@ -8,8 +8,17 @@
   }
 }
 // DIVISIONS
-
-
+.division-heading {
+  // Shift up the select to be adjavent to the title
+  h4 {
+    display: inline-block;
+  }
+  .form-control {
+    display: inline-block;
+    width: auto;
+    float: right;
+  }
+}
 
 
 // // OLD: REFACTOR

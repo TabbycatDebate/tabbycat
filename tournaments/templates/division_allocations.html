@@ -102,13 +102,14 @@
         team = this.draggedTeam;
         console.log('team id ' + team.id + ' to divison ' + droppedDivision.id)
 
+        droppedDivision.teams.push(team);
+        
         // If its coming from another division, remove it from that division
         if (team.division != undefined ) {
           team.division.teams = $.grep(team.division.teams, function(e){
             return e != this.draggedTeam;
           })[0];
         }
-        droppedDivision.teams.push(team);
       }
     }
   });
