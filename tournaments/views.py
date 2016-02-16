@@ -135,25 +135,19 @@ def round_increment(request, round):
 @tournament_view
 def division_allocations(request, t):
 
-    unallocated_teams = json.dumps(list(
-        Team.objects.filter(tournament=t, division=None).all().values(
-            'id', 'short_reference', 'use_institution_prefix', 'institution__code')))
+    teams = json.dumps(list(
+        Team.objects.filter(tournament=t).all().values(
+            'id', 'short_reference', 'division', 'use_institution_prefix', 'institution__code')))
 
     venue_groups = json.dumps(list(
         VenueGroup.objects.all().values(
             'id', 'short_name', 'team_capacity')))
 
-    divisions = list(Division.objects.filter(tournament=t).all().values(
-        'id', 'name', 'venue_group'))
-
-    for d in divisions:
-        d['teams'] = list(Team.objects.filter(division_id=d['id']).values(
-            'id', 'short_reference', 'use_institution_prefix', 'institution__code'))
-    divisions = json.dumps(divisions)
+    divisions = json.dumps(list(Division.objects.filter(tournament=t).all().values(
+        'id', 'name', 'venue_group')))
 
     return render(request, "division_allocations.html", dict(
-        unallocated_teams=unallocated_teams, divisions=divisions,
-        venue_groups=venue_groups))
+        teams=teams, divisions=divisions, venue_groups=venue_groups))
 
 @admin_required
 @tournament_view

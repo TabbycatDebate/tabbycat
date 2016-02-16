@@ -19,6 +19,9 @@
     float: right;
   }
 }
+.division-droppable {
+  min-height: 66px; // Don't expand when the first team is added
+}
 
 
 // // OLD: REFACTOR
