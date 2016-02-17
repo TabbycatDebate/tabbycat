@@ -250,7 +250,7 @@ class FeedbackReturnLocation(StringPreference):
 
 @tournament_preferences_registry.register
 class PanellistFeedbackEnabled(BooleanPreference):
-    help_text = "Allow public feedback to be submitted by panellists"
+    help_text = "Allow feedback to be submitted by panellists"
     verbose_name = "Panellist Feedback Enabled"
     section = feedback
     name = 'panellist_feedback_enabled'

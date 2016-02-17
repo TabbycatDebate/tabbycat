@@ -48,6 +48,10 @@ def get_menu_highlight(request):
         return {'divisions_nav': True}
     elif "standings" in request.path:
         return {'standings_nav': True}
+    elif "option" in request.path:
+        return {'options_nav': True}
+    elif "import" in request.path:
+        return {'import_nav': True}
     elif "break" in request.path:
         return {'break_nav': True}
     elif "overview" in request.path:

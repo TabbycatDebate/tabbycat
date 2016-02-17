@@ -7,7 +7,7 @@ from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
 from actionlog.models import ActionLogEntry
 
-from .models import AdjudicatorFeedback
+from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
 
 from utils.urlkeys import populate_url_keys

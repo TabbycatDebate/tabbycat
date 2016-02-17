@@ -33,7 +33,7 @@
         <li role="presentation" class="">
           <a id="tournament_select" class="{% if overview_nav %}active{% endif %}" href="{{ tournament.get_absolute_url }}">
             <h4>
-              <span class="emoji">💩</span>{{ tournament }}
+              <span class="emoji">{{ tournament.emoji }}</span>{{ tournament }}
             </h4>
           </a>
         </li>
@@ -75,27 +75,27 @@
       <li class="panel">
         <div class="progress-line standard-line"></div>
         <div class="" role="tab" id="headingOne">
-          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          <a class="{% if options_nav or import_nav %}active{% else %}collapsed{% endif %}" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="{% if options_nav or import_nav %}true{% else %}false{% endif %}" aria-controls="collapseOne">
             <span class="circle-icon icon-container">
               <span class="glyphicon glyphicon-briefcase"></span>
             </span>
             Setup<span class="caret pull-right"></span>
           </a>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+        <div id="collapseOne" class="panel-collapse collapse {% if options_nav or import_nav %}in{% endif %}" role="tabpanel" aria-labelledby="headingOne">
           <ul class="nav nav-pills nav-stacked">
             <li>
-              <a href="{% tournament_url tournament_config_index %}">
+              <a class="{% if options_nav %}active{% endif %}" href="{% tournament_url tournament_config_index %}">
                 <span class="glyphicon glyphicon-cog"></span>Configuration
               </a>
             </li>
             <li>
-              <a class="" href="{% tournament_url data_index %}">
+              <a class="{% if import_nav %}active{% endif %}" href="{% tournament_url data_index %}">
                 <span class="glyphicon glyphicon-download"></span>Import Data
               </a>
             </li>
             <li>
-              <a class="" href="/admin/">
+              <a class="" href="/admin/" target="_blank">
                 <span class="glyphicon glyphicon-edit">️</span>Edit Data
               </a>
             </li>
