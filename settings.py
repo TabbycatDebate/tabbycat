@@ -148,6 +148,7 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'  # Gzip
 
 # Compression
 COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
 COMPRESS_PRECOMPILERS = (('text/x-scss', 'django_libsass.SassCompiler'), )
 
 LIBSASS_OUTPUT_STYLE = 'compressed'
