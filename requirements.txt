@@ -16,6 +16,3 @@ newrelic
 
 # For emailing
 sendgrid>=0.5.0
-
-# Compressor
-django-compressor==2.0 # Heroku should use latest version of compressor
