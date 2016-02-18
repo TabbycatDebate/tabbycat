@@ -12,7 +12,7 @@ The options discussed here are set in the **Config** page as described in :ref:`
 .. caution:: The valid options for intermediate bubbles change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
 
 Summary
---------------------------------------------------------------------------------
+-------
 
 +---------------------------+---------------------+-------------------------------------------+
 |           Option          |     Description     |              Allowable values             |

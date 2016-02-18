@@ -61,7 +61,7 @@ Tabbycat allows you to specify two questionnaires: team-on-orallist, and adjudic
 .. note:: The **panellist on panellist** and **panellist on chair** don't currently do anything, and **chair on panellist** is a misnomer, it actually means **adjudicator on adjudicator**. These are all there for future support.
 
 How is an adjudicator's score determined?
-=========================
+=========================================
 
 For the purpose of the automated allocation, an adjudicator's overall score is a function of their test score, the current round's feedback weight, and their average feedback score. This number is calculated as equal to:
 

@@ -26,6 +26,7 @@ Adjudicator Feedback > Adj Feedback Questions
 
 Authentication and Authorisation > Users
   - Here you can add new admin users (those with full access) as well as new assistant users those (who can only do common data-entry tasks but not edit or view the full tab interface). See :ref:`user-accounts` for information on how to do this.
+
   .. note:: The people you're adding accounts for should be physically present when you do this, so that they can enter their password.
 
 Participants > Regions
