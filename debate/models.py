@@ -27,7 +27,7 @@ class Tournament(models.Model):
     short_name  = models.CharField(max_length=25, blank=True, null=True, default="", help_text="The name used in the menu")
     seq = models.IntegerField(db_index=True, blank=True, null=True, help_text="The order in which tournaments are displayed")
     slug = models.SlugField(unique=True, db_index=True, help_text="The sub-URL of the tournament; cannot have spaces")
-    current_round = models.ForeignKey('Round', null=True, blank=True,
+    current_round = models.ForeignKey('Round', null=True, blank=True, on_delete=models.SET_NULL,
                                      related_name='tournament_', help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
     welcome_msg = models.TextField(blank=True, null=True, default="", help_text="Text/html entered here shows on the homepage")
     release_all = models.BooleanField(default=False, help_text="This releases all results; do so only after the tournament is finished")
