@@ -155,6 +155,13 @@ def create_draw(request, round, override_team_checkins=False):
 @admin_required
 @expect_post
 @round_view
+def create_with_all(request, round):
+    return create_draw(request, round, override_team_checkins=True)
+
+
+@admin_required
+@expect_post
+@round_view
 def confirm_draw(request, round):
 
     if round.draw_status != round.STATUS_DRAFT:
