@@ -21,12 +21,15 @@
 <script>
   Vue.component('team-draggable', {
     props: {
-      'team': {}, 'save-division-at': {},
-      isDragging: { default: false }, show: { default: false }
+      'team': {},
+      'save-division-at': {},
+      'isDragging': { default: false },
+      'show': { default: false }
     },
     template: '#team-draggable',
-    watch: {
-      'team.division': function (newVal, oldVal) {
+    methods: {
+      saveDivision: function() {
+        console.log('test');
         var team_id = this.team.id;
         var division_id = this.team.division;
         $.ajax({
@@ -44,33 +47,15 @@
             }
         });
       },
-    },
-    methods: {
       showPreferences: function() {
         this.show = !this.show;
-      },
-      saveDivision: function(event) {
-        $.ajax({
-            url: this.saveDivisionAt,
-            type: "POST",
-            data: {
-              'team': this.team.id,
-              'division': this.division.id,
-            },
-            success:function(response){
-              console.log('Saved teams\'s division')
-            },
-            error:function (xhr, textStatus, thrownError){
-              alert('Failed to save a teams division change')
-            }
-        });
       },
       handleDragStart: function(elem) {
         // console.log('handleDragStart', elem);
         this.isDragging = true;
-        this.$dispatch('dragging-team', this.team);
+        this.$dispatch('dragging-team', this);
       },
-      handleDragEnd: function(elem) { 
+      handleDragEnd: function(elem) {
         this.isDragging = false;
         // console.log('handleDragEnd', elem);
         this.$dispatch('stopped-dragging');

@@ -22,9 +22,8 @@
       <div class="panel-body division-droppable" v-on:dragover.prevent v-on:drop="receiveTeam"
         v-on:dragenter="handleDragEnter" v-on:dragleave="handleDragLeave"
         v-bind:class="{ 'vue-is-drag-enter': isDroppable }" data-id="[[ division.id ]]">
-
         <template v-for="team in teams" track-by="id">
-          <team-draggable :team="team"></team-draggable>
+          <team-draggable :team="team" :save-division-at="saveDivisionAt"></team-draggable>
         </template>
 
       </div>
@@ -38,7 +37,12 @@
 <script>
   Vue.component('division-droppable', {
     props: {
-      'division': {}, 'vgs': {}, 'teams': {}, 'save-vg-at': {}, isDroppable: { default: false }
+      'division': {},
+      'vgs': {},
+      'teams': {},
+      'save-vg-at': {},
+      'save-division-at': {},
+      'isDroppable': { default: false }
     },
     template: '#division-droppable',
     watch: {

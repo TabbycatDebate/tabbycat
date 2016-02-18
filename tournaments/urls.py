@@ -35,16 +35,16 @@ urlpatterns = [
     url(r'^admin/divisions/set_team/$',
         views.set_team_division,
         name='set_team_division'),
+    # MANUAL ACTIONS
     url(r'^admin/divisions/create/$',
         views.create_division,
         name='create_division'),
-    # Refactor:
-    url(r'^admin/division_allocations/save/$',
-        views.save_divisions,
-        name='save_divisions'),
-    url(r'^admin/division_allocations/create/$',
+    url(r'^admin/divisions/create_division_allocation/$',
         views.create_division_allocation,
         name='create_division_allocation'),
+    url(r'^admin/divisions/create_byes/$',
+        views.create_byes,
+        name='create_byes'),
 
     # WADL-specific; unclear if draws or participants
     url(r'^all_tournaments_all_venues/$',

@@ -8,6 +8,13 @@
   }
 }
 // DIVISIONS
+.divisions-holder {
+  display: flex;
+  flex-wrap: wrap;
+  .col-md-3 {
+    display: flex;
+  }
+}
 .division-heading {
   // Shift up the select to be adjavent to the title
   h4 {
@@ -21,6 +28,7 @@
 }
 .division-droppable {
   min-height: 66px; // Don't expand when the first team is added
+  padding: 5px;
 }
 
 
