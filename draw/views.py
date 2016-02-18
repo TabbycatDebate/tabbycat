@@ -139,26 +139,16 @@ def draw_with_standings(request, round):
 @admin_required
 @expect_post
 @round_view
-def create_draw(request, round):
+def create_draw(request, round, override_team_checkins=False):
     if round.draw_status == round.STATUS_NONE:
-        round.draw()
+        round.draw(override_team_checkins=override_team_checkins)
         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
                                    user=request.user,
                                    round=round,
                                    tournament=round.tournament)
-                                   
-    return redirect_round('draw', round)
+    else:
+        messages.error(request, "Could not create draw for {}, there was already a draw!".format(round.name))
 
-
-@admin_required
-@expect_post
-@round_view
-def create_with_all(request, round):
-    round.draw(override_team_checkins=True)
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
-                               user=request.user,
-                               round=round,
-                               tournament=round.tournament)
     return redirect_round('draw', round)
 
 
