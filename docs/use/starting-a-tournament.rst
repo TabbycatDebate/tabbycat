@@ -12,20 +12,21 @@ This page outlines a few things you should do at the start of a tournament, afte
 Tournament configuration
 ========================
 
-After importing all your data you can log into the site as an administrator by loading up the homepage and then using the **Login** button in the upper-right. From there you should go to the administration section of your tournament, and then go to the tournament configuration page by clicking **Tournament Config** at the upper right.
+After importing all your data you can log into the site as an administrator by loading up the homepage and then using the **Login** button in the lower-right. From there you should go to the administration section of your tournament, and then go to the tournament configuration page by clicking **Setup** then **Configuration** in the menu.
 
 Here you can adjust the debate rules and interface options to your liking then hit **Save** when finished. We also offer a number of presets that apply particular rule sets (such as the Australs rules) or feature sets (such as displaying information normally released during briefs on the website).
 
 Special data types and options
 ==============================
 
-There are a few optional fields that are not covered in the initial data templates, in the visual importer, or that may only be relevant in particular scenarios. It's worth going over these quickly to see if they are needed for your tournament. You can view and edit these fields in the **Data Admin** area (link in the lower right).
+There are a few optional fields that are not covered in the initial data templates, in the visual importer, or that may only be relevant in particular scenarios. It's worth going over these quickly to see if they are needed for your tournament. You can view and edit these fields in the **Edit Data** area (link is in the menu under **Setup**).
 
 Adjudicator Feedback > Adj Feedback Questions
   - As described in :ref:`adjudicator-feedback`, the types of questions that can be posed for adjudicator feedback are able to be heavily customised. If you are customising your feedback form it should be done here, and before the tournament starts.
 
 Authentication and Authorisation > Users
   - Here you can add new admin users (those with full access) as well as new assistant users those (who can only do common data-entry tasks but not edit or view the full tab interface). See :ref:`user-accounts` for information on how to do this.
+
   .. note:: The people you're adding accounts for should be physically present when you do this, so that they can enter their password.
 
 Participants > Regions

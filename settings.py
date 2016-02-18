@@ -35,6 +35,7 @@ READTHEDOCS_VERSION = 'latest'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'utils.middleware.DebateMiddleware',
@@ -68,8 +69,7 @@ INSTALLED_APPS = (
     + TABBYCAT_APPS + (
     'dynamic_preferences',
     'django_extensions', # For Secret Generation Command
-    'compressor',
-    )
+    'compressor', )
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
@@ -148,6 +148,7 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'  # Gzip
 
 # Compression
 COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
 COMPRESS_PRECOMPILERS = (('text/x-scss', 'django_libsass.SassCompiler'), )
 
 LIBSASS_OUTPUT_STYLE = 'compressed'

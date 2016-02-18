@@ -31,9 +31,9 @@ def get_metric_choices():
     choices = []
     for key, annotator in registry.items():
         if hasattr(annotator, 'choice_name'):
-            choice_name = annotator.choice_name.title()
+            choice_name = annotator.choice_name.capitalize()
         else:
-            choice_name = annotator.name.title()
+            choice_name = annotator.name.capitalize()
         choices.append((key, choice_name))
     choices.sort(key=lambda x: x[1])
     return choices
@@ -48,12 +48,11 @@ def MetricAnnotator(name, *args, **kwargs):
 class BaseMetricAnnotator:
     """Base class for all metric annotators.
 
-    A metric annotator is a class that adds metrics to a TeamStandings object.
-    Subclasses must implement the method `annotate_teams()`.
+    A metric annotator is a class that adds a metric to a TeamStandings object.
+    Subclasses must implement the method `annotate_teams()`. Every annotator
+    must add precisely one metric.
 
-    Subclasses must also set the `adds` attribute, which may be a class or
-    object attribute. `adds` must be a list of 3-tuples (key, name, abbr), where
-    `name` and `abbr` are human-readable names for display to users.
+    Subclasses must set the `key`, `name` and `abbr` attributes.
 
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
@@ -306,6 +305,6 @@ registry = {
     "draw_strength" : DrawStrengthMetricAnnotator,
     "margin_sum"    : SumMarginMetricAnnotator,
     "margin_avg"    : AverageMarginMetricAnnotator,
-    "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
+    # "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
     "wbw"           : WhoBeatWhomMetricAnnotator,
 }

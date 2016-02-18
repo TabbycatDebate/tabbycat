@@ -41,14 +41,14 @@ tournaments.
    :maxdepth: 1
    :caption: Feature notes
 
-   features/printing
-   features/data-entry
-   features/draw-generation
-   features/team-standings-rules
-   features/data-importers
-   features/user-accounts
    features/adjudicator-feedback
    features/adjudicator-allocation
+   features/data-entry
+   features/draw-generation
+   features/data-importers
+   features/printing
+   features/team-standings-rules
+   features/user-accounts
 
 .. _about-docs:
 
@@ -57,7 +57,7 @@ tournaments.
    :caption: About
 
    about/authors
-   about/licence
    about/contributing
+   about/licence
    about/release-notes
    about/tournament-history
