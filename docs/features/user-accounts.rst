@@ -15,7 +15,7 @@ For obvious reasons, user logins are required to data entry and administrative f
 +-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 | Superuser | Adjudication core  | The Tabbycat admin interface.                  | Generating draws, editing ballots, feedback and adjudicator scores, checking in ballots and people. |
 +-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
-| Staff     | Tab director       | The Tabbycat and data admin interfaces.        | Editing the database directly.                                                                      |
+| Staff     | Tab director       | The Tabbycat and edit data interfaces.         | Editing the database directly.                                                                      |
 +-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 
 Account roles
@@ -25,7 +25,7 @@ If the adjudication core and tab directors will be helping with data entry, you 
 
 Specifically, the Tabbycat admin interface should **not**, in general, actually be used for data entry. That interface doesn't include some checks that are important for data integrity assurance. It should be used only to override the normal [data entry](data-entry.md) procedure, for example, to unconfirm a ballot or edit a score.
 
-The data admin interface should certainly not be used except where it is actually necessary. There are a few functions which require this, but as a principle, it shouldn't be used as a matter of course.
+The **Edit Data** interface should certainly not be used except where it is actually necessary. There are a few functions which require this, but as a principle, it shouldn't be used as a matter of course.
 
 Adding accounts
 ===============

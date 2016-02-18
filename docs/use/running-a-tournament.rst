@@ -6,9 +6,7 @@ Running a Tournament
 
 Once you've finished the steps in :ref:`starting-a-tournament`, you're ready to go! This page outlines what you would do for each round during the tournament. After the tournament, proceed to :ref:`finishing-a-tournament`.
 
-The menu is at the top of the page. In the admin interface, tournament-wide pages and frequently-used round-specific pages for the current round are on the left. Round-specific pages for all rounds are on the right.
-
-.. image:: images/tabbycat-admin-menu.png
+The menu is on the side of the page. In the admin interface, tournament-wide pages (feedback, standings, and break) are at the top, while round-specific pages (checkins, draw, and results) are in dropdown's organised by each round;s abbreviation.
 
 The workflow for each round is:
 
@@ -25,17 +23,26 @@ Generating the draw
 
 This is all done from an admin interface (*i.e.*, by the tab director or adjudication core member):
 
-1. **Set availability.** For each round, you need to set the venue, team and adjudicator availability. To do this, click the round on the right of the menu, then click **Venue Checkins**, **Adj Checkins** and **Team Checkins** in turn. On each page, edit the availability and click **Save changes**.
+1. **Set availability.** For each round, you need to set the venue, team and adjudicator availability. To do this, click the round in the menu, then click **Checkins**. Here you can then go to the availability pages for venue, teams, and adjudicators, or checkin everything at once. If going to the team/venues/adjudicators page, you would edit the availability and click **Save changes** then return to the overview page.
 
-  .. note:: You don't need to do Participant Checkins. That feature doesn't factor into the draw. It was implemented to replace the roll call with barcode scanning, which you may or may not like to use.
+  .. image:: images/checkins-page.png
 
-2. **Generate the draw.** Go to the **Draw** page (at the top-left of the page). Follow the instructions to generate the draw.
+2. **Generate the draw.** Hit the **Generate Draw** button on the Checkins page. Follow the instructions to generate the draw.
+
+  .. image:: images/draft-draw.png
+
 
   .. note:: Tabbycat will show you a draft draw before you confirm it. In the draft draw, it'll show you details so that you can understand how it came up with the draw, pointing out pull-ups and conflict swaps and the like. This is for you to double-check. While there are some basic tests on the draw algorithm, it never hurts to sanity-check it again.
 
     If you *do* find something wrong with a draft draw, you can edit the match-ups, but please also let us know what the problem was! You can find our `contact details on our GitHub repository page`_.
 
-3. After the draft draw has been confirmed, it will show the confirmed draw page. Click **Edit adjudicators** and allocate adjudicators. It's a good idea to save periodically, in case something goes wrong or you want to revert.
+3. After the draft draw has been confirmed, it will show the confirmed draw page.
+
+  .. image:: images/draw-without-adjs.png
+
+4. Click **Edit Adjudicators** and allocate adjudicators. It's a good idea to save periodically, in case something goes wrong or you want to revert. See  :ref:`adjudicator allocation <adjudicator-allocation>` for more details about this process.
+
+  .. image:: ../features/images/adj-allocation.png
 
 .. _releasing-the-draw:
 
@@ -44,11 +51,11 @@ Releasing the draw
 
 Once you're happy with your adjudicator allocation, you're ready to start the round.
 
-1. **Release to general assembly.** From the (confirmed) *Draw* page, go to **Show by Venue** or **Show by Team** (whichever you prefer). Then put it up on the projector. There are automatic scroll buttons.
+1. **Release to general assembly.** From the (confirmed) *Draw* page, go to **Show by Venue** or **Show by Team** (whichever you prefer). Then put it up on the projector. There are automatic scroll buttons and buttons for changing text sizing.
+
+  .. image:: images/draw-by-venue.png
 
   .. caution:: The main *Draw* page shows a ranked draw, *i.e.* teams can infer their position on the tab from the version on the admin interface. Unless you want to spare teams the fun of backtabbing, you probably don't want them to see this. So you should turn the projector off before you log in to Tabbycat on the projected computer, and only turn it on once you have the *Show by Venue* or *Show by Team* draw up.
-
-  .. note:: If you find the slowest scroll button too slow, or the fastest one too fast, please let us know.
 
   .. tip:: To avoid the site from being overloaded by anxious refreshers, we recommend not releasing the draw to the public until after it's been seen by general assembly.
 
@@ -56,7 +63,7 @@ Once you're happy with your adjudicator allocation, you're ready to start the ro
 
 3. **Release motions to general assembly.** Release the motions however you would normally release the motions. (Tabbycat won't do this for you.)
 
-4. **Enter and release motions.** Enter the motion(s) for each round on the Motions page, then use the **Release Motions to Public** button to publicly display them.
+4. **Enter and release motions.** Enter the motion(s) for each round using the **Edit Motions** link, then use the **Release Motions to Public** button to publicly display them.
 
   .. note:: Currently, it's mandatory to enter motions into the system. (You don't have to release them, just enter them.) We eventually intend to make it optional, but this is low priority. If you'd like it to be optional, please get in touch with us and we'll accord it higher priority.
 
@@ -66,7 +73,7 @@ Once you're happy with your adjudicator allocation, you're ready to start the ro
 
 7. Both results and feedback entered in the tab room or online need to be confirmed before the results are counted. To confirm a debate ballot and the debate as a whole, the confirmed checkbox under *Ballot Status* should be ticket in addition to the *Debate Status* being set to Confirmed.
 
-You can track data entry from the **Status** page in an admin account.
+You can track data entry from the **Overview** page in an admin account (get there by clicking the tournament's name in the menu).
 
 .. warning:: For major tournaments, we don't recommend entering any data from an admin's account. This is because the admin interface (intentionally) does not enforce the data confirmation procedure.
 
@@ -75,7 +82,9 @@ You can track data entry from the **Status** page in an admin account.
 Advancing to the next round
 ===========================
 
-Once you've got all the results entered and confirmed, you're ready to progress to the next round. This can be done by going to the **Status** area, and then using the **Advance** button.
+Once you've got all the results entered and confirmed, you're ready to progress to the next round. This can be done by going to the **Results** area, and then using the **Advance to Next Round** button.
+
+.. image:: images/results-page.png
 
 .. warning:: When you advance to the next round, if you've enabled public results, the results for the current round (which is now the previous round) will be release to the public **unless** the round is marked as "silent" in the database. So if you're careful about when results should be released, don't change the current round until you're ready to release those results.
 

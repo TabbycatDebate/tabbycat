@@ -33,7 +33,10 @@
         <li role="presentation" class="">
           <a id="tournament_select" class="{% if overview_nav %}active{% endif %}" href="{{ tournament.get_absolute_url }}">
             <h4>
-              <span class="emoji">{{ tournament.emoji }}</span>{{ tournament }}
+              {% if tournament.emoji %}
+                <span class="emoji">{{ tournament.emoji }}</span>
+              {% endif %}
+              {{ tournament }}
             </h4>
           </a>
         </li>

@@ -9,7 +9,7 @@ Ballot checkin
 
 For tournaments that require it, there is a "ballot checkin" page that can be used to record the arrival of ballots to the tab room. When there's a missing ballot, it can help establish whether the ballot never made it to the tab room, or whether it's probably floating around in the room forgotten. Also, it can help enforce early checks that panels return the correct number of ballots to the room.
 
-To get to the ballot checkin, click the relevant round at the top right of the Tabbycat admin interface, and then click "Ballot checkin". This requires superuser privileges.
+To get to the ballot checkin, click the relevant round in the menu of the admin interface, and then click "Results" and then "Ballot checkin". This requires superuser privileges.
 
 There's no adverse effect from not using the ballot checkin. Data enterers will still be able to enter and confirmed ballots, even if not checked in.
 
@@ -21,6 +21,8 @@ There's no adverse effect from not using the ballot checkin. Data enterers will 
 
 Ballot entry
 ============
+
+.. image:: images/ballot-entry.png
 
 Most tab rooms run some sort of check system to ensure data is entered accurately. In Tabbycat, this is built into the system, which also helps speed it up.
 
@@ -37,6 +39,8 @@ As a general principle, Tabbycat requires all ballots to be looked at by two peo
 
 Feedback entry
 ==============
+
+.. image:: images/adding-feedback.png
 
 Feedback doesn't have the same verification process as ballots. Feedback that is entered by the tab room is assumed to be confirmed. If feedback is entered multiple times, all copies are retained but only the last one "counts" (is considered confirmed).
 
