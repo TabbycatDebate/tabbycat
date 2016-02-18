@@ -140,11 +140,13 @@ def draw_with_standings(request, round):
 @expect_post
 @round_view
 def create_draw(request, round):
-    round.draw()
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
-                               user=request.user,
-                               round=round,
-                               tournament=round.tournament)
+    if round.draw_status == round.STATUS_NONE:
+        round.draw()
+        ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
+                                   user=request.user,
+                                   round=round,
+                                   tournament=round.tournament)
+                                   
     return redirect_round('draw', round)
 
 
