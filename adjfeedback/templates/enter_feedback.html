@@ -2,8 +2,13 @@
 
 {% load add_field_css %}
 
-{% block head-title %}Add Feedback from {{ source_name }}{% endblock %}
-{% block page-title %}Add Feedback from {{ source_name }}{% endblock %}
+{% block head-title %}
+  🙅Add Feedback{% endif %}
+{% endblock %}
+{% block page-title %}
+  <span class="emoji">🙅</span>
+  Add Feedback {% if source_name %}from {{ source_name }}{% endif %}
+{% endblock %}
 
 {% block content %}
 

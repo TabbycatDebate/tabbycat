@@ -4,8 +4,11 @@
 {% block submit-button-text %}Submit Feedback{% endblock %}
 
 {% block content %}
-  <div class="alert alert-info">This page is specific to you, {{ source_name }}.
-  The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
+
+  {% if source_name %}
+    <div class="alert alert-info">This page is specific to you, {{ source_name }}.
+    The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
+  {% endif %}
 
   {% if source_type == "team" %}
     <div class="alert alert-warning">
@@ -15,6 +18,7 @@
   {% endif %}
 
   {{ block.super }}
+
 {% endblock %}
 
 {% block extra-js %}{% endblock %}
