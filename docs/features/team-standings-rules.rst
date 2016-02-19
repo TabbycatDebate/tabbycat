@@ -4,41 +4,65 @@
 Team Standings Rules
 ====================
 
-There are currently two sets of rules implemented for ordering teams. You choose which one on the tournament configuration page, using the **Team standings rule** setting. There are two allowed values: ``australs`` and ``nz``. If you use any other values, Tabbycat will crash.
+.. attention:: These changed in version 0.8.
 
-There are plans to make this more configurable than it is currently. If you need any other standings rules, please contact Chuan-Zheng using the `contact details on our GitHub repository page`_.
+In Tabbycat, you can choose how teams are ranked in the team standings. For
+example, at Australs, teams are ranked first on the number of wins, and second
+on their total speaker score. The setting that specifies how teams are ranked is
+called the *team standings precedence*. The team standings precedence is used
 
-Australs rules
-==============
+- when displaying the team tab,
+- whenever a power-paired draw is generated, and
+- when computing which teams are in the break.
 
-Use Australs rules by using ``australs`` in the **Team standings rule** configuration setting.
+When you choose the team standings precedence, you choose from a list of
+*metrics*. Then, in the standings, teams will be sorted first by the first
+metric, then by the second metric, and so on. You must choose at least one
+metric, and you can choose up to eight. Teams tied on all metrics will have the
+same rank.
 
-Australs rules rank teams first by number of wins, then by total speaker score. Teams that are equal on both wins and speaker score are ordered randomly when generating a draw, but will just show as the same rank on the team standings page.
++-------------------------+----------------------------------------------------------+
+|          Metric         |                       Description                        |
++=========================+==========================================================+
+| **Wins**                | How many debates the team has won.                       |
++-------------------------+----------------------------------------------------------+
+| **Points**              | How many points the team has. This differs from          |
+|                         | wins only when other settings make a distinction between |
+|                         | losses and forfeits.                                     |
++-------------------------+----------------------------------------------------------+
+| **Total speaker score** | The sum of all speaker scores attained in all debates.   |
++-------------------------+----------------------------------------------------------+
+| **Average speaker       | The average total speaker score over all debates         |
+| score**                 | the team has had, not counting debates where they or     |
+|                         | their opponents forfeited.                               |
++-------------------------+----------------------------------------------------------+
+| **Sum of margins**      | The sum of all margins. Wins are positive, losses are    |
+|                         | negative.                                                |
++-------------------------+----------------------------------------------------------+
+| **Average margin**      | The average margin over all debates the team has had,    |
+|                         | not counting debates where they or their opponents       |
+|                         | forfeited.                                               |
++-------------------------+----------------------------------------------------------+
+| **Draw strength**       | The sum of the number of wins of every team this team    |
+|                         | has faced so far.                                        |
+|                         |                                                          |
+|                         | This is also known in some circuits as *win points*,     |
+|                         | *opp wins* or *opp strength*.                            |
++-------------------------+----------------------------------------------------------+
+| **Who-beat-whom**       | If there are exactly two teams tied on all metrics       |
+|                         | earlier in the precedence than this one, then check if   |
+|                         | the teams have faced each other. If they have, the team  |
+|                         | that won their encounter is ranked higher. If they have  |
+|                         | seen each other more than once, the team that has won    |
+|                         | more of their encounters is ranked higher.               |
+|                         |                                                          |
+|                         | If there are more than two teams tied, this metric is    |
+|                         | not applied.                                             |
+|                         |                                                          |
+|                         | This metric can be specified multiple times. Each time   |
+|                         | who-beat-whom occurs, it applies to all the metrics      |
+|                         | earlier in the precedence than the occurrence in         |
+|                         | question.                                                |
++-------------------------+----------------------------------------------------------+
 
-New Zealand rules
-=================
-
-Use New Zealand rules by using ``nz`` in the **Team standings rule** configuration setting.
-
-New Zealand rules rank teams using the following priority:
-
-#. Number of wins
-#. Who-beat-whom, if exactly two teams are equal
-#. Total speaker score
-#. Who-beat-whom, if exactly two teams are equal
-#. Draw strength
-#. Who-beat-whom, if exactly two teams are equal
-
-Teams that are equal after all of the above are ordered randomly when generating a draw, but will just show as the same rank on the team standings page.
-
-The **who-beat-whom** rule applies whenever there are exactly two teams left to sort, for example, if there are only two teams in a wins bracket, or if there are exactly two teams that have the same number of wins and total speaker score. In this case, rather than sorting according to the normal key, we first check for any debates between those two teams, and rank the team who has won more of them first. If this doesn't help, then we resume with the next key to sort by.
-
-Who-beat-whom does not apply when there are three or more teams that are otherwise equal.
-
-.. note:: Whenever who-beat-whom is invoked, a message is printed to the logs, which'll look something like this:
-
-  .. code::
-
-    2014-08-17T23:57:43.074923+00:00 app[web.1]: who beat whom, Yale 2 vs Cornell 1: None wins against None
-
-**Draw strength**, also known as **win points**, **opp wins** and **opp strength**, is the sum of the number of wins of every team that the team has faced so far.
+.. note:: Some debugging information is printed to the logs when some of these metrics are invoked.

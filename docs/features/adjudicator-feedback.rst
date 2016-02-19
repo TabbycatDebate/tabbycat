@@ -6,7 +6,7 @@ Adjudicator Feedback
 
 You can set the questions that are used on adjudicator feedback forms. The only field that is permanently there is the ``score`` field, which is an overall score assessing the adjudicator. All other questions (including a generic comments section) must be defined if you want them to be on the form.
 
-The only current method of setting questions is through the :ref:`data admin interface <user-accounts>`. Go to the data admin interface, then click **Change** next to *Adjudicator feedback questions*. You can add questions here.
+The only current method of setting questions is through the :ref:`edit data interface <user-accounts>`. Go to the **Edit Data**, then click **Change** next to *Adjudicator feedback questions*. You can add questions here.
 
 Most of what you need to know is explained in help text on that page. Some more details are here.
 
@@ -61,7 +61,7 @@ Tabbycat allows you to specify two questionnaires: team-on-orallist, and adjudic
 .. note:: The **panellist on panellist** and **panellist on chair** don't currently do anything, and **chair on panellist** is a misnomer, it actually means **adjudicator on adjudicator**. These are all there for future support.
 
 How is an adjudicator's score determined?
-=========================
+=========================================
 
 For the purpose of the automated allocation, an adjudicator's overall score is a function of their test score, the current round's feedback weight, and their average feedback score. This number is calculated as equal to:
 
