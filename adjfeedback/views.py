@@ -216,13 +216,21 @@ def get_adj_feedback(request, t):
     data = [_parse_feedback(f) for f in feedback]
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
-# Don't cache
+# For online submissions from private URL
 @public_optional_tournament_view('public_feedback_randomised')
 def public_enter_feedback_key(request, t, source_type, url_key):
     source = get_object_or_404(source_type, tournament=t, url_key=url_key)
     return public_enter_feedback(request, t, source)
 
-# Don't cache
+# List of possible sources for online submissions from public Form
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('public_feedback')
+def public_feedback_submit(request, t):
+    adjudicators = Adjudicator.objects.all()
+    teams = Team.objects.all()
+    return render(request, 'public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
+
+# For online submissions from public Form
 @public_optional_tournament_view('public_feedback')
 def public_enter_feedback_id(request, t, source_type, source_id):
     source = get_object_or_404(source_type, tournament=t, id=source_id)
@@ -251,7 +259,7 @@ def public_enter_feedback(request, t, source):
     else:
         form = FormClass()
 
-    return render(request, 'public_add_feedback.html', dict(
+    return render(request, 'enter_feedback.html', dict(
             source_type=source_type, source_name=source_name, form=form))
 
 @login_required
@@ -355,13 +363,6 @@ def add_feedback(request, t):
         template = 'assistant_add_feedback.html'
     return render(request, template, context)
 
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_feedback')
-def public_feedback_submit(request, t):
-    adjudicators = Adjudicator.objects.all()
-    teams = Team.objects.all()
-    return render(request, 'public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
