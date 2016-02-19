@@ -7,6 +7,23 @@
     margin-left: 10px;
   }
 }
+// DRAW
+.draw-xs {
+  font-size: $font-size-base * 1.25;
+}
+.draw-s {
+  font-size: $font-size-base * 1.5;
+}
+.draw-m {
+  font-size: $font-size-base * 1.75;
+}
+.draw-l {
+  font-size: $font-size-base * 2.00;
+}
+.draw-xl {
+  font-size: $font-size-base * 2.25;
+}
+
 // // OLD: REFACTOR
 // // Ballot Entry
 // .speaker-name {
