@@ -15,7 +15,7 @@ from results.mixins import TabroomSubmissionFieldsMixin, PublicSubmissionFieldsM
 from results.models import SpeakerScoreByAdj
 from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
 from utils.misc import reverse_tournament
-from utils.mixins import SingleObjectByRandomisedUrlMixin
+from utils.mixins import SingleObjectByRandomisedUrlMixin, PublicCacheMixin
 from utils.urlkeys import populate_url_keys
 from utils.views import *
 
@@ -331,13 +331,17 @@ class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
     public_page_preference = 'public_feedback'
 
 
-# List of possible sources for online submissions from public Form
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_feedback')
-def public_feedback_submit(request, t):
-    adjudicators = Adjudicator.objects.all()
-    teams = Team.objects.all()
-    return render(request, 'public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
+class PublicAddFeedbackIndexView(PublicCacheMixin, PublicTournamentPageMixin, TemplateView):
+    """View for the index page for public users to add feedback. The index page
+    lists all possible sources; public users should then choose themselves."""
+
+    template_name = "public_add_feedback.html"
+    public_page_preference = 'public_feedback'
+
+    def get_context_data(self, **kwargs):
+        kwargs['adjudicators'] = Adjudicator.objects.all()
+        kwargs['teams'] = Team.objects.all()
+        return super().get_context_data(**kwargs)
 
 
 @admin_required
