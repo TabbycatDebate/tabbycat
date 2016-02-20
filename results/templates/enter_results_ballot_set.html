@@ -35,7 +35,7 @@
           <div class="panel-heading">
             <h4>Motion</h4>
           </div>
-          <div class="panel-body">
+          <div class="panel-body form-panel">
             {% if pref.enable_motions %}
             <div class="form-group">
                 <label class="col-sm-2 col-md-2 col-xs-6 control-label" >Chosen</label>
@@ -85,7 +85,7 @@
             {% endif %}
             </h4>
           </div>
-          <div class="panel-body">
+          <div class="panel-body form-panel">
             <div class="clearfix scoresheet row">
               <div class="col-md-6 position position-aff pull-left" {% if forloop.first %}id="team-{{ debate.aff_team.id }}{% endif %}">
                   <div class="form-group">
