@@ -7,6 +7,20 @@
     margin-left: 10px;
   }
 }
+// DIVISIONS
+.division-heading {
+  // Shift up the select to be adjavent to the title
+  h4 {
+    display: inline-block;
+  }
+  .form-control {
+    display: inline-block;
+    width: auto;
+    float: right;
+  }
+.division-droppable {
+  min-height: 66px; // Don't expand when the first team is added
+}
 // DRAW
 .draw-xs {
   font-size: $font-size-base * 1.25;
