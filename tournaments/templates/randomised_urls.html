@@ -14,7 +14,8 @@
     should use them if you have a means of distributing crazy-looking URLs to
     participants, and are too worried about fraud to use a publicly accessible
     page where <em>anyone</em> can enter <em>any</em> submission. The URLs
-    will look something like this: <b>{% tournament_absurl public_enter_feedback_team_key "18" "9dnFlP3Z" %}</b>.
+    will look something like this:
+    <b>{% tournament_absurl adjfeedback-public-add-from-team-randomised "18" "9dnFlP3Z" %}</b>.
   {% endif %}
 </p>
 <p>
@@ -90,7 +91,7 @@
         </td>
         <td>
           {% if team.url_key %}
-            {% tournament_absurl public_enter_feedback_team_key team.id team.url_key %}
+            {% tournament_absurl adjfeedback-public-add-from-team-randomised team.id team.url_key %}
           {% else %}
             no URL
           {% endif %}
@@ -107,7 +108,7 @@
         <td>{{ adj.name }}</td>
           {% if adj.url_key %}
           <td>
-            {% tournament_absurl public_enter_feedback_adjudicator_key adj.id adj.url_key %}
+            {% tournament_absurl adjfeedback-public-add-from-adjudicator-randomised adj.id adj.url_key %}
           </td>
           <td>
             {% tournament_absurl public_new_ballotset_key adj.url_key %}

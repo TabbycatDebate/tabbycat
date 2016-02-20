@@ -35,7 +35,7 @@
           <tr id="team_{{ team.id }}">
             <td>
               {% block enter-feedback-team-link %}
-                <a href="{% tournament_url enter_feedback_team team.id %}">
+                <a href="{% tournament_url adjfeedback-add-from-team team.id %}">
                 {{ team.short_name }}</a>
               {% endblock %}
             </td>
@@ -70,7 +70,7 @@
           <tr id="adj_{{ adj.id }}">
             <td>
               {% block enter-feedback-adj-link %}
-                <a href="{% tournament_url enter_feedback_adjudicator adj.id %}">
+                <a href="{% tournament_url adjfeedback-add-from-adjudicator adj.id %}">
                 {{ adj.name }}</a>
               {% endblock %}
             </td>
