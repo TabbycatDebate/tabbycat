@@ -2,10 +2,12 @@ from django.views.generic import View
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib import messages
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
+
 from actionlog.models import ActionLogEntry
 
 from .misc import get_ip_address, redirect_tournament
@@ -96,6 +98,7 @@ class PublicTournamentPageMixin(TournamentMixin):
         if tournament.pref(self.public_page_preference):
             return super().dispatch(request, *args, **kwargs)
         else:
+            messages.error(self.request, "That page isn't enabled for this tournament.")
             return redirect_tournament('tournament-public-index', tournament)
 
 
