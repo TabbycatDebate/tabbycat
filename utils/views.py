@@ -100,9 +100,7 @@ class PublicCacheMixin:
 
 class PublicTournamentPageMixin(PublicCacheMixin, TournamentMixin):
     """Mixin for public tournament pages that are controlled by a tournament
-    preference.
-
-    Important: This mixin is incompatible with any user authentication mixin."""
+    preference."""
 
     pref_name = None
 
