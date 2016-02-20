@@ -107,10 +107,10 @@ def get_speaker_standings(rounds,
                                        ]) / len(
                                            [_f for _f in speaker.scores if _f])
             except ZeroDivisionError:
-                speaker.average = None
+                speaker.average = 0.0
         else:
-            speaker.total = None
-            speaker.average = None
+            speaker.total = 0.0
+            speaker.average = 0.0
 
         if for_replies:
             speaker.replies_given = len([_f for _f in speaker.scores if _f])
