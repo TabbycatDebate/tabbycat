@@ -19,9 +19,6 @@ urlpatterns = [
     url(r'^scores/get/$',
         views.get_adj_feedback,
         name='get_adj_feedback'),
-    url(r'^scores/add/$',
-        views.add_feedback,
-        name='add_feedback'),
     url(r'^test/set/$',
         views.set_adj_test_score,
         name='set_adj_test_score'),
@@ -47,6 +44,9 @@ urlpatterns = [
         name='adj_feedback_list'),
 
     # Adding
+    url(r'^add/$',
+        views.TabroomAddFeedbackIndexView.as_view(),
+        name='adjfeedback-add-index'),
     url(r'^add/team/(?P<source_id>\d+)/$',
         views.TabroomAddFeedbackView.as_view(model=Team),
         name='adjfeedback-add-from-team'),

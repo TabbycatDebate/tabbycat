@@ -15,7 +15,7 @@ from results.mixins import TabroomSubmissionFieldsMixin, PublicSubmissionFieldsM
 from results.models import SpeakerScoreByAdj
 from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
 from utils.misc import reverse_tournament
-from utils.mixins import SingleObjectByRandomisedUrlMixin, PublicCacheMixin
+from utils.mixins import SingleObjectByRandomisedUrlMixin, PublicCacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin
 from utils.urlkeys import populate_url_keys
 from utils.views import *
 
@@ -241,6 +241,33 @@ def get_adj_feedback(request, t):
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
 
+class BaseAddFeedbackIndexView(TournamentMixin, TemplateView):
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['adjudicators'] = tournament.adjudicator_set.all() if not tournament.pref('share_adjs') \
+                else Adjudicator.objects.all()
+        kwargs['teams'] = tournament.team_set.all()
+        return super().get_context_data(**kwargs)
+
+
+class TabroomAddFeedbackIndexView(SuperuserOrTabroomAssistantTemplateResponseMixin, BaseAddFeedbackIndexView):
+    """View for the index page for tabroom officials to add feedback. The index
+    page lists all possible sources; officials should then choose the author
+    of the feedback."""
+
+    superuser_template_name = 'add_feedback.html'
+    assistant_template_name = 'assistant_add_feedback.html'
+
+
+class PublicAddFeedbackIndexView(PublicCacheMixin, PublicTournamentPageMixin, BaseAddFeedbackIndexView):
+    """View for the index page for public users to add feedback. The index page
+    lists all possible sources; public users should then choose themselves."""
+
+    template_name = 'public_add_feedback.html'
+    public_page_preference = 'public_feedback'
+
+
 class PublicFeedbackSuccessView(TemplateView):
     template_name = "public_success.html"
 
@@ -304,7 +331,7 @@ class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, TournamentMixin, Logi
         return result
 
     def get_success_url(self):
-        return reverse_tournament('add_feedback', self.get_tournament())
+        return reverse_tournament('adjfeedback-add-index', self.get_tournament())
 
 
 class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMixin, BaseAddFeedbackView):
@@ -330,18 +357,6 @@ class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is by object ID."""
     public_page_preference = 'public_feedback'
 
-
-class PublicAddFeedbackIndexView(PublicCacheMixin, PublicTournamentPageMixin, TemplateView):
-    """View for the index page for public users to add feedback. The index page
-    lists all possible sources; public users should then choose themselves."""
-
-    template_name = "public_add_feedback.html"
-    public_page_preference = 'public_feedback'
-
-    def get_context_data(self, **kwargs):
-        kwargs['adjudicators'] = Adjudicator.objects.all()
-        kwargs['teams'] = Team.objects.all()
-        return super().get_context_data(**kwargs)
 
 
 @admin_required
@@ -399,20 +414,6 @@ def set_adj_breaking_status(request, t):
 
     adjudicator.save()
     return HttpResponse("ok")
-
-@login_required
-@tournament_view
-def add_feedback(request, t):
-    context = {
-        'adjudicators' : t.adjudicator_set.all() if not t.pref('share_adjs')
-                         else Adjudicator.objects.all(),
-        'teams'        : t.team_set.all(),
-    }
-    if request.user.is_superuser:
-        template = 'add_feedback.html'
-    else:
-        template = 'assistant_add_feedback.html'
-    return render(request, template, context)
 
 
 def get_feedback_progress(request, t):
