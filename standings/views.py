@@ -1,14 +1,15 @@
-from participants.models import Team, Speaker
-from tournaments.models import Round
-from results.models import TeamScore, SpeakerScore, BallotSubmission
-from motions.models import Motion
-from .teams import TeamStandingsGenerator
 from django.db.models import Count
 from django.views.generic.base import View, ContextMixin
 
+from motions.models import Motion
+from participants.models import Team, Speaker
+from results.models import TeamScore, SpeakerScore, BallotSubmission
+from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
+from tournaments.models import Round
+from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
-from utils.mixins import RoundMixin, SuperuserRequiredMixin, PublicTournamentPageMixin
 
+from .teams import TeamStandingsGenerator
 
 @admin_required
 @round_view

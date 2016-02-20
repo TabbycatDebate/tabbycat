@@ -1,26 +1,26 @@
+import json
 import logging
 logger = logging.getLogger(__name__)
 from threading import Lock
 
-
 from django.conf import settings
-from django.core.urlresolvers import reverse_lazy
-from django.core import serializers
-import json
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 import django.contrib.messages as messages
+from django.core import serializers
+from django.core.urlresolvers import reverse_lazy
 from django.views.generic.edit import FormView, CreateView
 
-from utils.views import *
-from utils.mixins import SuperuserRequiredMixin
-from .models import Tournament, Division
-from .forms import TournamentForm
-from utils.forms import SuperuserCreationForm
-from participants.models import Team, Institution
 from draw.models import Debate, DebateTeam
 from draw.models import TeamVenuePreference, InstitutionVenuePreference
+from participants.models import Team, Institution
+from utils.forms import SuperuserCreationForm
+from utils.mixins import SuperuserRequiredMixin
+from utils.views import *
 from venues.models import VenueGroup
+
+from .forms import TournamentForm
+from .models import Tournament, Division
 
 @cache_page(10) # Set slower to show new indexes so it will show new pages
 @tournament_view

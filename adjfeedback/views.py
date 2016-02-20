@@ -15,9 +15,11 @@ from results.mixins import TabroomSubmissionFieldsMixin, PublicSubmissionFieldsM
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
 
+from actionlog.mixins import LogActionMixin
+from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
 from utils.urlkeys import populate_url_keys
 from utils.views import *
-from utils.mixins import SingleObjectByRandomisedUrlMixin, LogActionMixin, TournamentMixin, PublicTournamentPageMixin
+from utils.mixins import SingleObjectByRandomisedUrlMixin
 from utils.misc import reverse_tournament
 
 @admin_required
