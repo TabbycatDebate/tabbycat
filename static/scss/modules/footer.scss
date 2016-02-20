@@ -6,14 +6,6 @@
   min-height: 800px; // Push the footer down
   padding-bottom: 130px; // Leave room for the footer
 }
-@media (max-width: $screen-sm) {
-  .accommodate-footer {
-    padding-bottom: 0px; // Increase footer padding when its double height
-  }
-  .navbar-fixed-bottom {
-    position: relative;
-  }
-}
 .nav-sidebar-offset {
   .navbar-fixed-bottom {
     // Don't want the footer stretching into the menu; present it alert style
@@ -21,6 +13,24 @@
     border-width: 1px;
     border-radius: 4px;
     position: absolute;
+  }
+}
+@media (max-width: $screen-sm) {
+  .accommodate-footer {
+    padding-bottom: 0px; // Increase footer padding when its double height
+  }
+  .nav-sidebar-offset .navbar-fixed-bottom {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    .navbar-header {
+      min-height: 120px;
+    }
+    .navbar-nav.navbar-right {
+        width: 100%;
+        margin: 0;
+    }
   }
 }
 // FOOTER UI
