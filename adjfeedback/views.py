@@ -260,7 +260,7 @@ def public_enter_feedback(request, t, source):
         'ip_address'    : ip_address
     }
     FormClass = make_feedback_form_class(source, submission_fields,
-            confirm_on_submit=True, enforce_required=True)
+            confirm_on_submit=True, enforce_required=True, include_unreleased_draws=False)
 
     if request.method == "POST":
         form = FormClass(request.POST)
@@ -290,7 +290,7 @@ def enter_feedback(request, t, source_type, source_id):
         'ip_address'    : ip_address
     }
     FormClass = make_feedback_form_class(source, submission_fields,
-            confirm_on_submit=True, enforce_required=False)
+            confirm_on_submit=True, enforce_required=False, include_unreleased_draws=True)
 
     if request.method == "POST":
         form = FormClass(request.POST)

@@ -178,7 +178,8 @@ def make_feedback_form_class(source, *args, **kwargs):
     else:
         raise TypeError('source must be Adjudicator or Team: %r' % source)
 
-def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submit=False, enforce_required=True):
+def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submit=False,
+        enforce_required=True, include_unreleased_draws=False):
     """Constructs a FeedbackForm class specific to the given source adjudicator.
     Parameters are as for make_feedback_form_class."""
 
@@ -188,10 +189,13 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
     def coerce_da(value):
         return DebateAdjudicator.objects.get(id=int(value))
 
-    debate_filter = dict(debateadjudicator__adjudicator=source,
-            round__draw_status=Round.STATUS_RELEASED)
-    if not source.tournament.pref('panellist_feedback_enabled'): # then include only debates for which this adj was the chair
-        debate_filter['debateadjudicator__type'] = DebateAdjudicator.TYPE_CHAIR
+    debate_filter = {'debateadjudicator__adjudicator': source}
+    if not source.tournament.pref('panellist_feedback_enabled'):
+        debate_filter['debateadjudicator__type'] = DebateAdjudicator.TYPE_CHAIR # include only debates for which this adj was the chair
+    if include_unreleased_draws:
+        debate_filter['round__draw_status__in'] = [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]
+    else:
+        debate_filter['round__draw_status'] = Round.STATUS_RELEASED
     debates = Debate.objects.filter(**debate_filter)
 
     choices = [(None, '-- Adjudicators --')]
@@ -221,13 +225,21 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
 
     return FeedbackForm
 
-def make_feedback_form_class_for_team(source, submission_fields, confirm_on_submit=False, enforce_required=True):
+def make_feedback_form_class_for_team(source, submission_fields, confirm_on_submit=False,
+        enforce_required=True, include_unreleased_draws=False):
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
 
     # Only include non-silent rounds for teams.
-    debates = Debate.objects.filter(debateteam__team=source, round__silent=False,
-        round__draw_status=Round.STATUS_RELEASED).order_by('-round__seq')
+    debate_filter = {
+        'debateteam__team': source,
+        'round__silent': False,
+    }
+    if include_unreleased_draws:
+        debate_filter['round__draw_status__in'] = [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]
+    else:
+        debate_filter['round__draw_status'] = Round.STATUS_RELEASED
+    debates = Debate.objects.filter(**debate_filter).order_by('-round__seq')
 
     choices = [(None, '-- Adjudicators --')]
     for debate in debates:
