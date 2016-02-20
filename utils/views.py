@@ -1,6 +1,7 @@
 """NOTE: All of the functions in this module are being phased out. All new views
 should use the Django class-based views framework, and use the mixins in
-mixins.py (in this directory) instead."""
+mixins.py (in this directory) instead.
+"""
 
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib import messages
