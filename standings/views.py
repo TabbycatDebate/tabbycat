@@ -27,9 +27,9 @@ def standings_index(request, round):
             'debate_team__team', 'debate_team__debate__round',
             'debate_team__team__institution').order_by('margin')[:10]
 
-    top_motions = Motion.objects.filter(round__seq=round.seq).annotate(
+    top_motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
         Count('ballotsubmission')).order_by('-ballotsubmission__count')[:10]
-    bottom_motions = Motion.objects.filter(round__seq=round.seq).annotate(
+    bottom_motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
         Count('ballotsubmission')).order_by('ballotsubmission__count')[:10]
 
     return render(request,
