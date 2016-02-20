@@ -8,7 +8,7 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from actionlog.models import ActionLogEntry
 
-from .misc import get_ip_address
+from .misc import get_ip_address, redirect_tournament
 
 class SuperuserRequiredMixin(UserPassesTestMixin):
     """Class-based view mixin. Requires user to be a superuser."""

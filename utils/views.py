@@ -14,6 +14,7 @@ from django.core.cache import cache
 from functools import wraps
 from warnings import warn
 from .misc import get_ip_address as misc_get_ip_address
+from .misc import redirect_tournament as misc_redirect_tournament
 
 def get_ip_address(request):
     warn("utils.views.get_ip_address is deprecated, import from utils.misc instead")
@@ -33,7 +34,8 @@ def tournament_view(view_fn):
 
 
 def redirect_tournament(to, tournament, **kwargs):
-    return redirect(to, tournament_slug=tournament.slug, **kwargs)
+    warn("utils.views.redirect_tournament is deprecated, import from utils.misc instead")
+    return misc_redirect_tournament(to, tournament, **kwargs)
 
 
 def public_optional_tournament_view(preferences_option):
