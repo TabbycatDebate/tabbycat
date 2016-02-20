@@ -6,6 +6,14 @@
   min-height: 800px; // Push the footer down
   padding-bottom: 130px; // Leave room for the footer
 }
+@media (max-width: $screen-sm) {
+  .accommodate-footer {
+    padding-bottom: 0px; // Increase footer padding when its double height
+  }
+  .navbar-fixed-bottom {
+    position: relative;
+  }
+}
 .nav-sidebar-offset {
   .navbar-fixed-bottom {
     // Don't want the footer stretching into the menu; present it alert style
