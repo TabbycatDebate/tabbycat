@@ -5,7 +5,6 @@ from .models import Adjudicator, Speaker, Institution, Team
 from adjallocation.models import DebateAdjudicator
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@tournament_view
 def team_speakers(request, t, team_id):
     team = Team.objects.get(pk=team_id)
     speakers = team.speakers
@@ -60,4 +59,3 @@ def public_confirm_shift_key(request, t, url_key):
 
 
     return r2r(request, 'confirm_shifts.html', dict(formset=formset, adjudicator=adj))
-

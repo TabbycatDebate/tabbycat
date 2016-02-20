@@ -18,16 +18,18 @@ $(document).ready(function(){
     'html': true,
     'placement': 'bottom'
   });
+
   // Disable buttons post submission
   $('.submit-disable').on('click', function () {
     var $btn = $(this).button('loading');
   });
-  // Enable AJAX-based hover tooltips to lookup speaker names
-  // $('.team-speakers-hover').tooltip({
-  //   title: getTeamSpeakers,
-  //   'html': true,
-  //   'placement': 'bottom'
-  // });
+
+  $('[data-toggle="popover"]').popover({
+    trigger: 'hover',
+    container: 'body',
+    content: getTeamSpeakers
+  });
+
   // Dynamic lookup speakers on hover
   var cachedData = Array();
   function getTeamSpeakers(){
@@ -37,7 +39,7 @@ $(document).ready(function(){
           return cachedData[id];
       }
       var localData = "error";
-      $.ajax('{{ tournament.get_public_url  }}participants/team_list/' + id + '/', {
+      $.ajax('/participants/team_list/' + id + '/', {
           async: false,
           success: function(data){
               localData = data[0] + ", " + data[1] + ", " + data[2];
