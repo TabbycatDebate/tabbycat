@@ -117,7 +117,9 @@
       $('[data-toggle="popover"]').popover({
         trigger: 'hover',
         container: 'body',
-        content: getTeamSpeakers
+        content: getTeamSpeakers,
+        html: true,
+        placement: 'bottom'
       });
       // Dynamic lookup speakers on hover
       var cachedData = Array();
@@ -127,7 +129,7 @@
         $.ajax('{{ tournament.get_public_url }}participants/team_list/' + id + '/', {
           async: false,
           success: function(data){
-            localData = data[0] + ", " + data[1] + ", and " + data[2];
+            localData = "<ul>" + data[0] + data[1] + data[2] + "</ul>";
           }
         });
         return localData;
