@@ -160,11 +160,11 @@
   $(document).ready( function() {
 
     var dTableA = $('#dataTableA').DataTable({
-      "aaSorting": [[ 0, "asc" ]],
+      "aaSorting": [[ 0, "asc" ], [ 1, "desc" ]],
     });
     new $.fn.dataTable.FixedHeader( dTableA, {alwaysCloneTop: true});
     var dTableB = $('#dataTableB').DataTable({
-      "aaSorting": [[ 0, "asc" ]],
+      "aaSorting": [[ 0, "asc" ], [ 1, "desc" ]],
     });
     new $.fn.dataTable.FixedHeader( dTableB, {alwaysCloneTop: true});
     $('#table-search').keyup(function(){

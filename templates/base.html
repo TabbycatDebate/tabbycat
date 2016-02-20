@@ -129,7 +129,7 @@
         $.ajax('{{ tournament.get_public_url }}participants/team_list/' + id + '/', {
           async: false,
           success: function(data){
-            localData = "<ul>" + data[0] + data[1] + data[2] + "</ul>";
+            localData = data[0] + data[1] + data[2];
           }
         });
         return localData;
