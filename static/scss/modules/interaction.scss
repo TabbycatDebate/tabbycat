@@ -1,4 +1,9 @@
-// Dragging
+// General hover elements
+[data-toggle="popover"] {
+  border-bottom: 2px dashed #999;
+}
+
+// Dragging for Allocations
 .vue-draggable {
   // Don't let text selections get in the way of dragging
   -moz-user-select: none;
@@ -35,7 +40,7 @@
   // text-decoration: underline;
   background: $state-success-bg;
 }
-// Hovers
+// Hovers for Allocations
 .slideover-info {
   width: auto;
   position: fixed;

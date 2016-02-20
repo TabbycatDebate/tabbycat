@@ -92,6 +92,7 @@
   <script src="{% static 'js/vendor/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/vendor/bootstrap-data-tables.js' %}"></script>
   <script src="{% static 'js/vendor/fixed-header.js' %}"></script>
+  {% endcompress %}
   <script>
     jQuery.extend( true, $.fn.dataTable.defaults, {
       // Default Data Table options
@@ -103,7 +104,6 @@
       }
     });
     $(document).ready(function(){
-
       // Enable hover tooltips for all elements
       $('[data-toggle=tooltip]').tooltip({
         'html': true,
@@ -133,8 +133,7 @@
         return localData;
       }
     });
-  </script>
-  {% endcompress %}
+  </script>f
 
   <!-- Page specific JS and dependencies -->
   {% block extra-js %}{% endblock extra-js %}
