@@ -17,11 +17,11 @@
   </a>
 
   <a class="btn btn-default submit-disable" href="{% round_url update_availability_all round %}">
-    Checkin Everything
+    Checkin All
   </a>
   {% if round.prev %}
     <a class="btn btn-default submit-disable" href="{% round_url update_availability_previous round %}">
-      Checkin Everything Active in {{ round.prev.abbreviation }}
+      Checkin All Active in {{ round.prev.abbreviation }}
     </a>
   {% endif %}
 
