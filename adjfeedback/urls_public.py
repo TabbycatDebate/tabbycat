@@ -19,10 +19,10 @@ urlpatterns = [
         name='public_enter_feedback_adjudicator'),
     # Submission via Private URL
     url(r'^add/adjudicator/(?P<source_id>\d+)/(?P<url_key>\w+)/$',
-        views.PublicAddFeedbackByRandomisedUrlView.as_view(model=Team),
+        views.PublicAddFeedbackByRandomisedUrlView.as_view(model=Adjudicator),
         name='public_enter_feedback_adjudicator_key'),
     url(r'^add/team/(?P<source_id>\d+)/(?P<url_key>\w+)/$',
-        views.PublicAddFeedbackByRandomisedUrlView.as_view(model=Adjudicator),
+        views.PublicAddFeedbackByRandomisedUrlView.as_view(model=Team),
         name='public_enter_feedback_team_key'),
     url(r'^add/success/$',
         views.PublicFeedbackSuccessView.as_view(),

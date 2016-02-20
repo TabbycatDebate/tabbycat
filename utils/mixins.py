@@ -102,7 +102,7 @@ class PublicTournamentPageMixin(TournamentMixin):
 class SingleObjectByRandomisedUrlMixin(SingleObjectMixin):
     """Mixin for URLs that reference teams/adjudicators by randomised URL."""
     slug_field = 'url_key'
-    slug_url_kwargs = 'url_key'
+    slug_url_kwarg = 'url_key'
     query_pk_and_slug = True
 
 
