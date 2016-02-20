@@ -1,24 +1,24 @@
 {% load debate_tags %}
 
 {% if pref.tab_released > 0 %}
-  <li><a href="{% tournament_url public_team_tab %}">
+  <li><a href="{% tournament_url standings-public-tab-team %}">
     Team Tab
   </a></li>
-  <li><a href="{% tournament_url public_speaker_tab %}">
+  <li><a href="{% tournament_url standings-public-tab-speaker %}">
     Speaker Tab
   </a></li>
   {% if pref.show_novices %}
-  <li><a href="{% tournament_url public_novices_tab %}">
+  <li><a href="{% tournament_url standings-public-tab-novices %}">
     Novice Speaker Tab
   </a></li>
   {% endif %}
   {% if pref.reply_scores_enabled %}
-  <li><a href="{% tournament_url public_replies_tab %}">
+  <li><a href="{% tournament_url standings-public-tab-replies %}">
     Replies Tab
   </a></li>
   {% endif %}
   {% if pref.motion_tab_released > 0 %}
-  <li><a class="public-motions-tab-nav" href="{% tournament_url public_motions_tab %}">
+  <li><a class="public-motions-tab-nav" href="{% tournament_url standings-public-tab-motions %}">
     Motions Tab
   </a></li>
   {% endif %}
@@ -71,13 +71,13 @@
     Motions
   </a></li>
 {% endif %}
-{% if pref.public_team_standings %}
+{% if pref.public_side_allocations %}
   <li><a href="{% tournament_url public_side_allocations %}">
     Sides
   </a></li>
 {% endif %}
-{% if public_team_standings > 0 and current_round.prev and pref.tab_released == False %}
-  <li><a href="{% tournament_url public_team_standings %}">
+{% if pref.public_team_standings > 0 and current_round.prev and pref.tab_released == False %}
+  <li><a href="{% tournament_url standings-public-teams-current %}">
     Standings
   </a></li>
 {% endif %}
