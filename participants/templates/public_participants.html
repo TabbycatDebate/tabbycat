@@ -40,10 +40,8 @@
             <span class="emoji">{{ person.team.emoji }}</span>
           </td>
         {% endif %}
-        <td >
-          <span class="team-speakers-hover" id="team_speakers_{{ person.team.id }}">
-            {{ person.team.long_name }}
-          </span>
+        <td>
+          {% include "tables/team.html" with team=person.team %}
         </td>
         {% if pref.public_break_categories %}
           <td>{{ person.team.break_categories_nongeneral|join:", " }}</td>

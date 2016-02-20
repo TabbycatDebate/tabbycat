@@ -131,9 +131,7 @@
                   {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-down text-danger"></span>
                   {% endif %}
-                    <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
-                      {{ debate.aff_team.short_name }}
-                    </span>
+                    {% include "tables/team.html" with team=debate.aff_team %}
                 </td>
                 <td>
                   {% if debate.confirmed_ballot.forfeit %}
@@ -147,9 +145,7 @@
                   {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
                     <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
                   {% endif %}
-                    <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
-                      {{ debate.neg_team.short_name }}
-                    </span>
+                    {% include "tables/team.html" with team=debate.neg_team %}
                 </td>
                 <td>
                   {% if debate.confirmed_ballot %}

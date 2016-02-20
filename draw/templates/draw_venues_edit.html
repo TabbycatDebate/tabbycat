@@ -56,14 +56,10 @@
         <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
           <td>{{ debate.bracket }}</td>
           <td>
-            <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
-              {{ debate.aff_team.short_name }}
-            </span>
+            {% include "tables/team.html" with team=debate.aff_team %}
           </td>
           <td>
-            <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
-              {{ debate.neg_team.short_name }}
-            </span>
+            {% include "tables/team.html" with team=debate.neg_team %}
           </td>
           <td>
           {% for type, adj in debate.adjudicators %}

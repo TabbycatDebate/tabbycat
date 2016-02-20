@@ -85,7 +85,9 @@
     <tbody>
       {% for team in teams %}
       <tr>
-        <td><span class="team-speakers-hover" id="team_speakers_{{ team.id }}">{{ team.short_name }}</span></td>
+        <td>
+          {% include "tables/team.html" with team=team %}
+        </td>
         <td>
           {% if team.url_key %}
             {% tournament_absurl public_enter_feedback_team_key team.url_key %}

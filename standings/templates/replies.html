@@ -86,9 +86,7 @@
           </td>
         {% endif %}
         <td>
-          <span class="team-speakers-hover" id="team_speakers_{{ speaker.team.id }}">
-            {{ speaker.team.short_name }}
-          </span>
+          {% include "tables/team.html" with team=speaker.team %}
         </td>
         {% if pref.show_institutions %}
           <td>{{ speaker.team.institution.code }}</td>

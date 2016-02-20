@@ -49,9 +49,7 @@
             {% for team, eligibility in form.team_iter %}
               <tr>
                 <td>
-                  <span class="team-speakers-hover" id="team_speakers_{{ team.id }}">
-                    {{ team.short_name }}
-                  </span>
+                  {% include "tables/team.html" with team=team %}
                 </td>
                 {% if pref.show_emoji %}
                   <td class="team-emoji">{{ team.emoji }}</td>

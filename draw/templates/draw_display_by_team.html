@@ -27,9 +27,7 @@
           {% for debate in draw %}
             <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
               <td>
-                <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
-                  {{ debate.aff_team.short_name }}
-                </span>
+                {% include "tables/team.html" with team=debate.aff_team %}
               </td>
               {% if pref.show_emoji %}
                 <td class="team-emoji">
@@ -56,15 +54,11 @@
                   {% include "tables/debate_status.html" %}
                 {% endif %}
               {% endif %}
-              <td  id="">
-                <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
-                  {{ debate.aff_team.short_name }}
-                </span>
+              <td>
+                {% include "tables/team.html" with team=debate.aff_team %}
               </td>
-              <td >
-                <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
-                  {{ debate.neg_team.short_name }}
-                </span>
+              <td>
+                {% include "tables/team.html" with team=debate.neg_team %}
               </td>
               <td class="adj-names">
                 {% for type, adj in debate.adjudicators %}
@@ -83,9 +77,7 @@
           {% for debate in draw %}
             <tr>
               <td>
-                <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
-                  {{ debate.neg_team.short_name }}
-                </span>
+                {% include "tables/team.html" with team=debate.neg_team %}
               </td>
               {% if pref.show_emoji %}
                 <td class="team-emoji"><span class="emoji">{{ debate.neg_team.emoji }}</span></td>
@@ -104,15 +96,11 @@
                   {{ debate.division.time_slot|time:'h:i A' }}
                 </td>
               {% endif %}
-              <td >
-                <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
-                  {{ debate.aff_team.short_name }}
-                </span>
+              <td>
+                {% include "tables/team.html" with team=debate.aff_team %}
               </td>
-              <td >
-                <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
-                  {{ debate.neg_team.short_name }}
-                </span>
+              <td>
+                {% include "tables/team.html" with team=debate.neg_team %}
               </td>
               <td class="adj-names">
                 {% for type, adj in debate.adjudicators %}
