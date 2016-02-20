@@ -23,148 +23,237 @@
     <div class="btn btn-warning" disabled="disabled">5+</div>
     <div class="btn btn-danger" disabled="disabled">None</div>
   </div>
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block content %}
-<div class="panel panel-default">
-  <div class="panel-body">
-    <div id="alerts-holder" class=""></div>
-    <table id="dataTable" class="team-tab table" cellspacing="0" cellpadding="0">
-      <thead>
-        <tr>
-          <th>Team</th>
-          <th>Division</th>
-          <th>Switch</th>
-          <th>Venue</th>
-          <th>Time</th>
-          <th>Status</th>
-          <th>Team Preferences</th>
-          <th>Institution Preferences</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for team in teams %}
-      <tr>
-        <td>
-          <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
-            {{ team.short_name }} {{ team.break_categories_str }}
-          </span>
-        </td>
-        <td>{{ team.division.name }}</td>
-        <td id="{{ team.id }}" class="division">
-          <select class="form-control">
-            <option value=""></option>
-            {% for division in divisions %}
-              <option value="{{ d.id }}">
-                {{ division.name }} {% comment %} ({{ d.teams_count }} teams at {{ d.venue_group.short_name }}) {% endcomment %}
-              </option>
-            {% endfor %}
-          </select>
-        </td>
-        <td>{% if team.division.venue_group %}{{ team.division.venue_group.short_name }}{% endif %}</td>
-        <td>{{ team.division.time_slot|time:'h:i A' }}</td>
-        <td>
-          {% if team.division.venue_group %}
-            {% if team.division.venue_group == team.preferences.0.venue_group %}
-              <span class="hidden">1</span><span class="text-success">1st</span>
-            {% elif team.division.venue_group == team.preferences.1.venue_group %}
-              <span class="hidden">2</span><span class="text-success">2nd</span>
-            {% elif team.division.venue_group == team.preferences.2.venue_group %}
-              <span class="hidden">3</span><span class="text-primary">3rd</span>
-            {% elif team.division.venue_group == team.preferences.3.venue_group %}
-              <span class="hidden">3</span><span class="text-primary">4th</span>
-            {% elif team.division.venue_group == team.preferences.4.venue_group %}
-              <span class="hidden">3</span><span class="text-warning">5th</span>
-            {% elif team.division.venue_group == team.preferences.5.venue_group %}
-              <span class="hidden">3</span><span class="text-warning">6th</span>
-            {% elif team.division.venue_group == team.preferences.6.venue_group %}
-              <span class="hidden">3</span><span class="text-warning">6th</span>
-            {% elif team.division.venue_group == team.preferences.7.venue_group %}
-              <span class="hidden">3</span><span class="text-warning">7th</span>
-            {% elif team.division.venue_group == team.preferences.8.venue_group %}
-              <span class="hidden">3</span><span class="text-warning">8th</span>
-            {% elif team.division.venue_group == team.preferences.9.venue_group %}
-              <span class="hidden">3</span><span class="text-warning">9th</span>
-            {% elif team.division.venue_group == team.preferences.10.venue_group %}
-              <span class="hidden">3</span><span class="text-warning">10th</span>
-            {% elif not team.division.venue_group %}
-              <span class="hidden">0</span><span class="text-danger">None</span>
-            {% endif %}
-          {% else %}
-            <span class="hidden">0</span><span class="text-danger">None</span>
-          {% endif %}
-        </td>
-        <td>
-          {% for pref in team.venue_preferences.all %}
-            <span class="small">{{ pref.venue_group.short_name }} ({{ pref.priority }})</span>
-          {% endfor %}
-        </td>
-        <td>
-          {% for pref in team.institution.venue_preferences.all %}
-            <span class="small">{{ pref.venue_group.short_name }} ({{ pref.priority }})</span>
-          {% endfor %}
-        </td>
-      </tr>
-      {% endfor %}
-      </tbody>
-    </table>
 
-    <div class="modal fade" id="view-venues" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-md">
-      <div class="modal-content">
-        <div class="modal-body">
-          <table class="table">
-            <thead>
-              <th>Venue</th>
-              <th>Divisions</th>
-              <th>Team Capacity</th>
-            </thead>
-            <tbody>
-              {% for vg in venue_groups %}
-                <tr>
-                  <td>{{ vg.name }} </td>
-                  <td>{{ vg.divisions_count }}</td>
-                  <td>{{ vg.team_capacity }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <div class="panel panel-default">
+
+    <!-- component template -->
+    <script type="text/x-template" id="grid-template">
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th v-for="key in columns" @click="sortBy(key)" class="vue-sortable" :class="{vue-sort-active: sortKey == key}">
+              [[ key | capitalize ]]
+              <span class="glyphicon vue-sort-key pull-right"
+                :class="sortOrders[key] > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="entry in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]">
+            <td v-for="key in columns">
+              [[ entry[key] ]]
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </script>
+
+    <div class="panel-body">
+      <!-- demo root element -->
+      <div id="demo">
+        <form id="search">
+          Search <input name="query" v-model="searchQuery">
+        </form>
+        <demo-grid
+          :data="gridData"
+          :columns="gridColumns"
+          :filter-key="searchQuery">
+        </demo-grid>
       </div>
     </div>
 
-    <div class="modal fade" id="view-divisions" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-md">
-      <div class="modal-content">
-        <div class="modal-body">
-          <table class="table">
-            <thead>
-              <th>Division</th>
-              <th>Venue</th>
-              <th>Time</th>
-              <th>Teams</th>
-            </thead>
-            <tbody>
-            {% for division in divisions %}
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div id="alerts-holder" class=""></div>
+      <table id="dataTable" class="team-tab table" cellspacing="0" cellpadding="0">
+        <thead>
+          <tr>
+            <th>Team</th>
+            <th>Division</th>
+            <th>Switch</th>
+            <th>Venue</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Team Preferences</th>
+            <th>Institution Preferences</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for team in teams %}
+        <tr>
+          <td>
+            <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
+              {{ team.short_name }} {{ team.break_categories_str }}
+            </span>
+          </td>
+          <td>{{ team.division.name }}</td>
+          <td id="{{ team.id }}" class="division">
+            <select class="form-control">
+              <option value=""></option>
+              {% for division in divisions %}
+                <option value="{{ d.id }}">
+                  {{ division.name }} {% comment %} ({{ d.teams_count }} teams at {{ d.venue_group.short_name }}) {% endcomment %}
+                </option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>{% if team.division.venue_group %}{{ team.division.venue_group.short_name }}{% endif %}</td>
+          <td>{{ team.division.time_slot|time:'h:i A' }}</td>
+          <td>
+            {% if team.division.venue_group %}
+              {% if team.division.venue_group == team.preferences.0.venue_group %}
+                <span class="hidden">1</span><span class="text-success">1st</span>
+              {% elif team.division.venue_group == team.preferences.1.venue_group %}
+                <span class="hidden">2</span><span class="text-success">2nd</span>
+              {% elif team.division.venue_group == team.preferences.2.venue_group %}
+                <span class="hidden">3</span><span class="text-primary">3rd</span>
+              {% elif team.division.venue_group == team.preferences.3.venue_group %}
+                <span class="hidden">3</span><span class="text-primary">4th</span>
+              {% elif team.division.venue_group == team.preferences.4.venue_group %}
+                <span class="hidden">3</span><span class="text-warning">5th</span>
+              {% elif team.division.venue_group == team.preferences.5.venue_group %}
+                <span class="hidden">3</span><span class="text-warning">6th</span>
+              {% elif team.division.venue_group == team.preferences.6.venue_group %}
+                <span class="hidden">3</span><span class="text-warning">6th</span>
+              {% elif team.division.venue_group == team.preferences.7.venue_group %}
+                <span class="hidden">3</span><span class="text-warning">7th</span>
+              {% elif team.division.venue_group == team.preferences.8.venue_group %}
+                <span class="hidden">3</span><span class="text-warning">8th</span>
+              {% elif team.division.venue_group == team.preferences.9.venue_group %}
+                <span class="hidden">3</span><span class="text-warning">9th</span>
+              {% elif team.division.venue_group == team.preferences.10.venue_group %}
+                <span class="hidden">3</span><span class="text-warning">10th</span>
+              {% elif not team.division.venue_group %}
+                <span class="hidden">0</span><span class="text-danger">None</span>
+              {% endif %}
+            {% else %}
+              <span class="hidden">0</span><span class="text-danger">None</span>
+            {% endif %}
+          </td>
+          <td>
+            {% for pref in team.venue_preferences.all %}
+              <span class="small">{{ pref.venue_group.short_name }} ({{ pref.priority }})</span>
+            {% endfor %}
+          </td>
+          <td>
+            {% for pref in team.institution.venue_preferences.all %}
+              <span class="small">{{ pref.venue_group.short_name }} ({{ pref.priority }})</span>
+            {% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <div class="modal fade" id="view-venues" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <th>Venue</th>
+            <th>Divisions</th>
+            <th>Team Capacity</th>
+          </thead>
+          <tbody>
+            {% for vg in venue_groups %}
               <tr>
-                <td>{{ division.name }} </td>
-                <td>{{ division.venue_group.short_name }}</td>
-                <td>{{ division.time_slot|time:'h:i A' }}</td>
-                <td>{{ division.teams_count }}</td>
+                <td>{{ vg.name }} </td>
+                <td>{{ vg.divisions_count }}</td>
+                <td>{{ vg.team_capacity }}</td>
               </tr>
             {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+
+<div class="modal fade" id="view-divisions" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+  <div class="modal-content">
+    <div class="modal-body">
+      <table class="table">
+        <thead>
+          <th>Division</th>
+          <th>Venue</th>
+          <th>Time</th>
+          <th>Teams</th>
+        </thead>
+        <tbody>
+        {% for division in divisions %}
+          <tr>
+            <td>{{ division.name }} </td>
+            <td>{{ division.venue_group.short_name }}</td>
+            <td>{{ division.time_slot|time:'h:i A' }}</td>
+            <td>{{ division.teams_count }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+
 {% endblock content %}
 
 {% block extra-js %}
+  <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.js' %}"></script>
+  <script>
+  Vue.config.delimiters = ["[[", "]]"];
+  Vue.component('demo-grid', {
+    template: '#grid-template',
+    props: {
+      data: Array,
+      columns: Array,
+      filterKey: String
+    },
+    data: function () {
+      var sortOrders = {}
+      this.columns.forEach(function (key) {
+        sortOrders[key] = 1; // Set all to sort none (1 is +asc, -1 is desc)
+      })
+      return {
+        sortKey: '',
+        sortOrders: sortOrders
+      }
+    },
+    methods: {
+      sortBy: function (key) {
+        this.sortKey = key
+        this.sortOrders[key] = this.sortOrders[key] * -1
+      }
+    }
+  })
+  // bootstrap the demo
+  var demo = new Vue({
+    el: '#demo',
+    data: {
+      searchQuery: '',
+      gridColumns: ['name', 'power'],
+      gridData: [
+        { name: 'Chuck Norris', power: Infinity },
+        { name: 'Bruce Lee', power: 9000 },
+        { name: 'Jackie Chan', power: 7000 },
+        { name: 'Jet Li', power: 8000 }
+      ]
+    }
+  })
+
+  </script>
+
   <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery-ui-custom-1.11.4.min.js' %}"></script>
   <script type="text/javascript" charset="utf-8">
 
