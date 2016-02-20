@@ -1,17 +1,24 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import FormView
+from django.views.generic.detail import SingleObjectMixin
 import json
 
 from adjallocation.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
 from actionlog.models import ActionLogEntry
+from results.mixins import TabroomSubmissionFieldsMixin, PublicSubmissionFieldsMixin
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
 
 from utils.urlkeys import populate_url_keys
 from utils.views import *
+from utils.mixins import SingleObjectByRandomisedUrlMixin, LogActionMixin, TournamentMixin, PublicTournamentPageMixin
+from utils.misc import reverse_tournament
 
 @admin_required
 @tournament_view
@@ -231,11 +238,96 @@ def get_adj_feedback(request, t):
     data = [_parse_feedback(f) for f in feedback]
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
-# For online submissions from private URL
-@public_optional_tournament_view('public_feedback_randomised')
-def public_enter_feedback_key(request, t, source_type, url_key):
-    source = get_object_or_404(source_type, tournament=t, url_key=url_key)
-    return public_enter_feedback(request, t, source)
+
+class PublicFeedbackSuccessView(TemplateView):
+    template_name = "public_success.html"
+
+    def get_context_data(self, **kwargs):
+        kwargs['success_kind'] = "feedback"
+        return super().get_context_data(**kwargs)
+
+
+class BaseAddFeedbackView(LogActionMixin, SingleObjectMixin, FormView):
+    """Base class for views that allow users to add feedback.
+    Subclasses must also subclass SingleObjectMixin, directly or indirectly."""
+
+    template_name = "enter_feedback.html"
+    pk_url_kwarg = 'source_id'
+
+    def get_form_class(self):
+        return make_feedback_form_class(self.object, self.get_submitter_fields(),
+                **self.feedback_form_class_kwargs)
+
+    def get_action_log_fields(self, **kwargs):
+        kwargs['adjudicator_feedback'] = self.adj_feedback
+        return super().get_action_log_fields(**kwargs)
+
+    def form_valid(self, form):
+        self.adj_feedback = form.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        source = self.object
+        if isinstance(source, Adjudicator):
+            kwargs['source_type'] = "adj"
+            kwargs['source_name'] = source.name
+        elif isinstance(source, Team):
+            kwargs['source_type'] = "team"
+            kwargs['source_name'] = source.short_name
+        return super().get_context_data(**kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)
+
+
+class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, TournamentMixin, LoginRequiredMixin, BaseAddFeedbackView):
+    """View for tabroom officials to add feedback."""
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SAVE
+    feedback_form_class_kwargs = {
+        'confirm_on_submit': True,
+        'enforce_required': False,
+        'include_unreleased_draws': True,
+    }
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        messages.success(self.request, "Feedback from %s on %s added." % (
+                self.adj_feedback.source, self.adj_feedback.adjudicator))
+        return result
+
+    def get_success_url(self):
+        return reverse_tournament('add_feedback', self.get_tournament())
+
+
+class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMixin, BaseAddFeedbackView):
+    """Base class for views for public users to add feedback."""
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SUBMIT
+    feedback_form_class_kwargs = {
+        'confirm_on_submit': True,
+        'enforce_required': True,
+        'include_unreleased_draws': False,
+    }
+
+    def get_success_url(self):
+        return reverse_tournament('adjfeedback-public-success', self.get_tournament())
+
+
+class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, PublicAddFeedbackView):
+    """View for public users to add feedback, where the URL is a randomised one."""
+    public_page_preference = 'public_feedback_randomised'
+
+
+class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
+    """View for public users to add feedback, where the URL is by object ID."""
+    public_page_preference = 'public_feedback'
+
 
 # List of possible sources for online submissions from public Form
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -244,68 +336,6 @@ def public_feedback_submit(request, t):
     adjudicators = Adjudicator.objects.all()
     teams = Team.objects.all()
     return render(request, 'public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
-
-# For online submissions from public Form
-@public_optional_tournament_view('public_feedback')
-def public_enter_feedback_id(request, t, source_type, source_id):
-    source = get_object_or_404(source_type, tournament=t, id=source_id)
-    return public_enter_feedback(request, t, source)
-
-def public_enter_feedback(request, t, source):
-    ip_address = get_ip_address(request)
-    source_name = source.short_name if isinstance(source, Team) else source.name
-    source_type = "adj" if isinstance(source, Adjudicator) else "team" if isinstance(source, Team) else "TypeError!"
-    submission_fields = {
-        'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
-        'ip_address'    : ip_address
-    }
-    FormClass = make_feedback_form_class(source, submission_fields,
-            confirm_on_submit=True, enforce_required=True, include_unreleased_draws=False)
-
-    if request.method == "POST":
-        form = FormClass(request.POST)
-        if form.is_valid():
-            adj_feedback = form.save()
-            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_FEEDBACK_SUBMIT,
-                    ip_address=ip_address, adjudicator_feedback=adj_feedback,
-                    tournament=t)
-            return render(request, 'public_success.html', dict(
-                    success_kind="feedback"))
-    else:
-        form = FormClass()
-
-    return render(request, 'enter_feedback.html', dict(
-            source_type=source_type, source_name=source_name, form=form))
-
-@login_required
-@tournament_view
-def enter_feedback(request, t, source_type, source_id):
-    source = get_object_or_404(source_type, tournament=t, id=source_id)
-    source_name = source.short_name if isinstance(source, Team) else source.name
-    source_type = "adj" if isinstance(source, Adjudicator) else "team" if isinstance(source, Team) else "TypeError!"
-    ip_address = get_ip_address(request)
-    submission_fields = {
-        'submitter_type': AdjudicatorFeedback.SUBMITTER_TABROOM,
-        'submitter'     : request.user,
-        'ip_address'    : ip_address
-    }
-    FormClass = make_feedback_form_class(source, submission_fields,
-            confirm_on_submit=True, enforce_required=False, include_unreleased_draws=True)
-
-    if request.method == "POST":
-        form = FormClass(request.POST)
-        if form.is_valid():
-            adj_feedback = form.save()
-            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_FEEDBACK_SAVE,
-                    user=request.user, adjudicator_feedback=adj_feedback, tournament=t)
-            messages.success(request, "Feedback from %s on %s added." %
-                    (adj_feedback.source, adj_feedback.adjudicator))
-            return redirect_tournament('add_feedback', t)
-    else:
-        form = FormClass()
-
-    return render(request, 'enter_feedback.html', dict(source_type=source_type,
-            source_name=source_name, form=form))
 
 
 @admin_required

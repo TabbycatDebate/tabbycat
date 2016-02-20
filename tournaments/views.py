@@ -7,12 +7,13 @@ from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.core import serializers
 import json
-from django.views.generic.edit import FormView, CreateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 import django.contrib.messages as messages
+from django.views.generic.edit import FormView, CreateView
 
 from utils.views import *
+from utils.mixins import SuperuserRequiredMixin
 from .models import Tournament, Division
 from .forms import TournamentForm
 from utils.forms import SuperuserCreationForm
@@ -237,17 +238,16 @@ class BlankSiteStartView(FormView):
             logger.error("Tried to get the blank-site-start view when a user account already exists.")
             return redirect('tabbycat-index')
 
-        return super(BlankSiteStartView, self).get(request)
+        return super().get(request)
 
     def post(self, request):
-        form = self.form_class(request.POST)
         with self.lock:
             if User.objects.exists():
                 logger.error("Tried to post the blank-site-start view when a user account already exists.")
                 messages.error(request, "Whoops! It looks like someone's already created the first user account. Please log in.")
                 return redirect('auth-login')
 
-            return super(BlankSiteStartView, self).post(request)
+            return super().post(request)
 
     def form_valid(self, form):
         form.save()
@@ -255,7 +255,7 @@ class BlankSiteStartView(FormView):
         login(self.request, user)
         messages.success(self.request, "Welcome! You've created an account for %s." % user.username)
 
-        return super(BlankSiteStartView, self).form_valid(form)
+        return super().form_valid(form)
 
 class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""

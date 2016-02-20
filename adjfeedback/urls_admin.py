@@ -48,12 +48,10 @@ urlpatterns = [
 
     # Adding
     url(r'^add/team/(?P<source_id>\d+)/$',
-        views.enter_feedback,
-        {'source_type': Team},
+        views.TabroomAddFeedbackView.as_view(model=Team),
         name='enter_feedback_team'),
     url(r'^add/adjudicator/(?P<source_id>\d+)/$',
-        views.enter_feedback,
-        {'source_type': Adjudicator},
+        views.TabroomAddFeedbackView.as_view(model=Adjudicator),
         name='enter_feedback_adjudicator'),
 
     # URLS

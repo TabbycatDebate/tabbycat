@@ -4,8 +4,10 @@ from results.models import TeamScore, SpeakerScore, BallotSubmission
 from motions.models import Motion
 from .teams import TeamStandingsGenerator
 from django.db.models import Count
+from django.views.generic.base import View, ContextMixin
 
 from utils.views import *
+from utils.mixins import RoundMixin, SuperuserRequiredMixin, PublicTournamentPageMixin
 
 
 @admin_required
@@ -161,6 +163,7 @@ def get_round_result(team, team_scores, r):
 
 
 class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
+    """Base class for views that display team standings."""
 
     template_name = 'teams.html'
 
@@ -169,7 +172,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
             kwargs['show_ballots'] = self.show_ballots()
         if 'round' not in kwargs:
             kwargs['round'] = self.get_round()
-        return super(BaseTeamStandingsView, self).get_context_data(**kwargs)
+        return super().get_context_data(**kwargs)
 
     def show_ballots(self):
         return False
@@ -195,15 +198,18 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
 
 
 class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+    """The standard team standings view."""
     rankings = ('rank',)
 
 
 class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+    """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
 
 
 class PublicTabMixin(PublicTournamentPageMixin):
-    pref_name = 'tab_released'
+    """Mixin for views that should only be allowed when the tab is released publicly."""
+    public_page_preference = 'tab_released'
     cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
 
     def get_round(self):
@@ -211,6 +217,11 @@ class PublicTabMixin(PublicTournamentPageMixin):
 
 
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
+    """Public view for the team tab.
+    The team tab is actually what is presented to an admin as "team standings".
+    During the tournament, "public team standings" only shows wins and results.
+    Once the tab is released, to the public the team standings are known as the
+    "team tab"."""
     rankings = ('rank',)
 
     def show_ballots(self):
