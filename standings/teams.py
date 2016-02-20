@@ -191,7 +191,12 @@ class TeamStandings:
         self._standings = list(self.infos.values())
         if tiebreak_func:
             tiebreak_func(self._standings)
-        self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics), reverse=True)
+        try:
+            self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics), reverse=True)
+        except TypeError:
+            for tsi in self.infos:
+                logger.info("{:30} {}".format(tsi.team.short_name, itemgetter(*precedence)(tsi.metrics)))
+            raise
         self.ranked = True
 
 
