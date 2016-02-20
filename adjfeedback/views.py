@@ -1,26 +1,26 @@
+import json
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import FormView
 from django.views.generic.detail import SingleObjectMixin
-import json
+from django.views.generic.edit import FormView
 
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
-from results.models import SpeakerScoreByAdj
-from actionlog.models import ActionLogEntry
 from results.mixins import TabroomSubmissionFieldsMixin, PublicSubmissionFieldsMixin
+from results.models import SpeakerScoreByAdj
+from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
+from utils.misc import reverse_tournament
+from utils.mixins import SingleObjectByRandomisedUrlMixin
+from utils.urlkeys import populate_url_keys
+from utils.views import *
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
-
-from actionlog.mixins import LogActionMixin
-from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
-from utils.urlkeys import populate_url_keys
-from utils.views import *
-from utils.mixins import SingleObjectByRandomisedUrlMixin
-from utils.misc import reverse_tournament
 
 @admin_required
 @tournament_view
