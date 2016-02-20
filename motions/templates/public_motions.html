@@ -19,6 +19,8 @@
 {% endblock %}
 
 {% block content %}
+
+
   {% if pref.enable_divisions and pref.enable_division_motions %}
     {% if rounds.all.count > 0 %}
       <table id="dataTable" class="table">
@@ -67,14 +69,24 @@
     {% endif %}
   {% else %}
     {% for round in rounds %}
-      <h3>{{ round.name }}</h3>
-      <ul class="list-group">
-        {% for motion in round.motions %}
-          <li class="list-group-item">{{ motion.text }}</li>
-        {% endfor %}
-      </ul>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>{{ round.name }}</h4>
+        </div>
+        <ul class="list-group">
+          {% if round.motions %}
+            {% for motion in round.motions %}
+              <li class="list-group-item">{{ motion.text }}</li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item">No motions have been released yet</li>
+          {% endif %}
+        </ul>
+      </div>
     {% endfor %}
   {% endif %}
+
+  </div>
 {% endblock content %}
 
 {% block extra-js %}
