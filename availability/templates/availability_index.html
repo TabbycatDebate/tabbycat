@@ -59,10 +59,10 @@
       data-toggle="tooltip" title="There is an uneven number of teams checked in
        for this round — the draw may not generate properly">
   {% else %}
-    {% if round.draw_status == round.STATUS_CONFIRMED or round.draw_status = round.STATUS_RELEASED %}
+    {% if round.draw_status != round.STATUS_NONE %}
       <a class="btn btn-success submit-disable" href="{% round_url draw round %}">
     {% else %}
-      <button class="btn btn-success submit-disable">
+      <button class="btn btn-success submit-disable" id="createDraw">
     {% endif %}
   {% endif %}
 
@@ -73,8 +73,6 @@
     Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
   </button>
   {% endif %}
-
-
 
   <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
 
