@@ -5,6 +5,7 @@ from .models import Adjudicator, Speaker, Institution, Team
 from adjallocation.models import DebateAdjudicator
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
+@tournament_view
 def team_speakers(request, t, team_id):
     team = Team.objects.get(pk=team_id)
     speakers = team.speakers
