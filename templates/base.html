@@ -92,7 +92,48 @@
   <script src="{% static 'js/vendor/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/vendor/bootstrap-data-tables.js' %}"></script>
   <script src="{% static 'js/vendor/fixed-header.js' %}"></script>
-  <script src="{% static 'js/main.js' %}"></script>
+  <script>
+    jQuery.extend( true, $.fn.dataTable.defaults, {
+      // Default Data Table options
+      "sDom":
+        "<'row'<'table-container'lr" + "t"+ "f<p>",
+      "bPaginate": false,
+      "oLanguage": {
+        "sSearch": "Search: "
+      }
+    });
+    $(document).ready(function(){
+
+      // Enable hover tooltips for all elements
+      $('[data-toggle=tooltip]').tooltip({
+        'html': true,
+        'placement': 'bottom'
+      });
+      // Disable buttons post submission
+      $('.submit-disable').on('click', function () {
+        var $btn = $(this).button('loading');
+      });
+      // Popovers for team names
+      $('[data-toggle="popover"]').popover({
+        trigger: 'hover',
+        container: 'body',
+        content: getTeamSpeakers
+      });
+      // Dynamic lookup speakers on hover
+      var cachedData = Array();
+      function getTeamSpeakers(){
+        var id = $(this).attr('id').replace("team_speakers_", "");
+        var localData = "error";
+        $.ajax('{{ tournament.get_public_url }}participants/team_list/' + id + '/', {
+          async: false,
+          success: function(data){
+            localData = data[0] + ", " + data[1] + ", and " + data[2];
+          }
+        });
+        return localData;
+      }
+    });
+  </script>
   {% endcompress %}
 
   <!-- Page specific JS and dependencies -->

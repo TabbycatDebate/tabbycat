@@ -60,4 +60,3 @@ def public_confirm_shift_key(request, t, url_key):
 
 
     return r2r(request, 'confirm_shifts.html', dict(formset=formset, adjudicator=adj))
-
