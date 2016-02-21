@@ -269,14 +269,6 @@ class PublicAddFeedbackIndexView(PublicCacheMixin, PublicTournamentPageMixin, Ba
     public_page_preference = 'public_feedback'
 
 
-class PublicFeedbackSuccessView(TemplateView):
-    template_name = "public_success.html"
-
-    def get_context_data(self, **kwargs):
-        kwargs['success_kind'] = "feedback"
-        return super().get_context_data(**kwargs)
-
-
 class BaseAddFeedbackView(LogActionMixin, SingleObjectMixin, FormView):
     """Base class for views that allow users to add feedback.
     Subclasses must also subclass SingleObjectMixin, directly or indirectly."""
@@ -300,18 +292,26 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectMixin, FormView):
         source = self.object
         if isinstance(source, Adjudicator):
             kwargs['source_type'] = "adj"
-            kwargs['source_name'] = source.name
         elif isinstance(source, Team):
             kwargs['source_type'] = "team"
-            kwargs['source_name'] = source.short_name
+        kwargs['source_name'] = self.source_name
         return super().get_context_data(**kwargs)
 
+    def _populate_source(self):
+        self.object = self.get_object() # for compatibility with SingleObjectMixin
+        if isinstance(self.object, Adjudicator):
+            self.source_name = self.object.name
+        elif isinstance(self.object, Team):
+            self.source_name = self.object.short_name
+        else:
+            self.source_name = "<ERROR>"
+
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        self._populate_source()
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        self._populate_source()
         return super().post(request, *args, **kwargs)
 
 
@@ -327,8 +327,8 @@ class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, TournamentMixin, Logi
 
     def form_valid(self, form):
         result = super().form_valid(form)
-        messages.success(self.request, "Feedback from %s on %s added." % (
-                self.adj_feedback.source, self.adj_feedback.adjudicator))
+        messages.success(self.request, "Feedback from {} on {} added.".format(
+                self.source_name, self.adj_feedback.adjudicator.name))
         return result
 
     def get_success_url(self):
@@ -345,8 +345,14 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
         'include_unreleased_draws': False,
     }
 
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        messages.success(self.request, "Thanks, {}! Your feedback on {} has been recorded.".format(
+                self.source_name, self.adj_feedback.adjudicator.name))
+        return result
+
     def get_success_url(self):
-        return reverse_tournament('adjfeedback-public-success', self.get_tournament())
+        return reverse_tournament('tournament-public-index', self.get_tournament())
 
 
 class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, PublicAddFeedbackView):

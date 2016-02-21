@@ -26,8 +26,4 @@ urlpatterns = [
     url(r'^add/a(?P<url_key>\w+)/$',
         views.PublicAddFeedbackByRandomisedUrlView.as_view(model=Adjudicator),
         name='adjfeedback-public-add-from-adjudicator-randomised'),
-
-    url(r'^add/success/$',
-        views.PublicFeedbackSuccessView.as_view(),
-        name='adjfeedback-public-success')
 ]
