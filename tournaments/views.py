@@ -17,6 +17,7 @@ from participants.models import Team, Institution
 from utils.forms import SuperuserCreationForm
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
+from utils.misc import redirect_tournament
 from venues.models import VenueGroup
 
 from .forms import TournamentForm
