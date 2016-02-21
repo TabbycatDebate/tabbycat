@@ -6,7 +6,9 @@
 {% block head-title %}Team Standings{% endblock %}
 {% block sub-title %}after {{ round.name }}{% endblock %}
 
-{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}
 
 {% block content %}
   <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
