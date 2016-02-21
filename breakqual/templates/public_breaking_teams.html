@@ -6,6 +6,10 @@
 {% block head-title %}<span class="emoji">👑</span>{{ category.name }} Break{% endblock %}
 {% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
+{% block page-alerts %}
+{# Don't show the break notes to the public #}
+{% endblock %}
+
 {% block content %}
   {% if generated %}
 

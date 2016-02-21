@@ -10,7 +10,6 @@
 
 {% block page-subnav-sections %}
   {% if generated %}
-
     <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline" method="POST">
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
           Delete and regenerate the break for all categories
@@ -26,10 +25,6 @@
         Update the break for this category ({{ category.name }})
       </button>
     </form>
-
-
-
-
   {% else %}
     <div class="forms-block-inline">
       <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
@@ -38,17 +33,13 @@
         </button>
       </form>
     </div>
-
   {% endif %}
-
 {% endblock %}
 
 
 {% block page-alerts %}
-
   {% if generated %}
     <div class="alert alert-warning">
-
         Please double-check this before announcing the break or releasing it to the
         public. The code that generates the break has not been robustly tested for
         corner cases. If there are errors, please take a snapshot of the database
@@ -95,8 +86,6 @@
       </div>
     {% endif %}
   {% endif %}
-
-
 {% endblock %}
 
 
