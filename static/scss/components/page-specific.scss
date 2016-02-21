@@ -9,12 +9,22 @@
 }
 // DIVISIONS
 .divisions-holder {
+  // Align them in equal height rows
   display: flex;
   flex-wrap: wrap;
   .col-md-3 {
     display: flex;
   }
+  // Set the panel body to fill all the available height
+  .panel {
+    display: flex;
+    flex-direction: column;
+    .panel-body {
+      flex: 1;
+    }
+  }
 }
+
 .division-heading {
   // Shift up the select to be adjavent to the title
   h4 {

@@ -250,9 +250,6 @@ def confirm_teams(request, t):
             use_prefix = True
         speaker_names = sorted_post[i + 3][1].split(',')
 
-        print("instid is %s name is %s prefix is %s names are %s" % (
-            instititution_id, team_name, sorted_post[i + 2][1], speaker_names))
-
         institution = Institution.objects.get(id=instititution_id)
         if team_name and speaker_names and institution:
             newteam = Team(institution=institution,

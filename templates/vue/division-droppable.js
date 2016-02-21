@@ -12,7 +12,7 @@
 
           <option value=""></option>
           <option v-for="vg in vgs" value="[[ vg.id ]]" v-bind:value="vg.id">
-            [[ vg.short_name ]] (x/[[ vg.team_capacity ]])
+            [[ vg.short_name ]] x/[[ vg.team_capacity ]]
           </option>
 
         </select>
@@ -21,7 +21,7 @@
 
       <div class="panel-body division-droppable" v-on:dragover.prevent v-on:drop="receiveTeam"
         v-on:dragenter="handleDragEnter" v-on:dragleave="handleDragLeave"
-        v-bind:class="{ 'vue-is-drag-enter': isDroppable }" data-id="[[ division.id ]]">
+        v-bind:class="{ 'vue-is-drag-enter': isDroppable, 'alert-danger': hasEvenNumbers }" data-id="[[ division.id ]]">
         <template v-for="team in teams" track-by="id">
           <team-draggable :team="team" :save-division-at="saveDivisionAt"></team-draggable>
         </template>
@@ -64,6 +64,13 @@
             }
         });
       },
+    },
+    computed: {
+      // a computed getter
+      hasEvenNumbers: function () {
+        // `this` points to the vm instance
+        return (this.teams.length % 2) == 1;
+      }
     },
     methods: {
       handleDragEnter: function(elem) {
