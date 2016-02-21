@@ -90,7 +90,7 @@ Pre-allocated sides
 There isn't currently any way to edit side allocations from the front end. To do so from the back end, you need to create one ``TeamPositionAllocation`` entry for each team in each round. All teams must have an allocation for every round. There are a few ways to do this, take your pick:
 
 * If you're using the ``import_tournament`` command, it reads sides from the file sides.csv.
-* You can do this from the Django admin interface, by going to the relevant team and adding a **team position allocation** entry. That is:
+* You can do this from the Django admin interface (under Setup > Edit Data) by going to the relevant team and adding a **team position allocation** entry. That is:
 
   #. Click **Admin** on the bottom right of any page after logging into an account with :ref:`superuser access <user-accounts>`.
   #. Next to **Teams**, click **Change**.
