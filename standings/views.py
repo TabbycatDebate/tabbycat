@@ -210,7 +210,7 @@ class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
 
 class PublicTabMixin(PublicTournamentPageMixin):
     """Mixin for views that should only be allowed when the tab is released publicly."""
-    public_page_preference = 'tab_released'
+    public_page_preference = 'team_tab_released'
     cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
 
     def get_round(self):
@@ -266,7 +266,7 @@ def motion_standings(request, round):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('speaker_tab_released')
 def public_speaker_tab(request, t):
     print("Generating public speaker tab")
     round = t.current_round
@@ -278,7 +278,7 @@ def public_speaker_tab(request, t):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('novices_tab_released')
 def public_novices_tab(request, t):
     round = t.current_round
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
@@ -288,7 +288,7 @@ def public_novices_tab(request, t):
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('tab_released')
+@public_optional_tournament_view('replies_tab_released')
 def public_replies_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
