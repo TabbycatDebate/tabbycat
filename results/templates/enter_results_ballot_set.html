@@ -4,29 +4,28 @@
 <div id="ballot_set">
 
     {% if form.errors %}
-        <div class="alert alert-danger">
-            <p>There are some problems with this scoresheet. Please review and correct them.</p>
-
-            {% if form.non_field_errors %}
-                <p>General errors:</p>
-                <div class="ballot-errors">{{ form.non_field_errors }}</div>
-            {% endif %}
-        </div>
+      <div class="alert alert-danger">
+        <p>There are some problems with this scoresheet. Please review and correct them.</p>
+        {% if form.non_field_errors %}
+          <p>General errors:</p>
+          <div class="ballot-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+      </div>
     {% endif %}
 
     {% if form.choose_sides %}
-        <div class="form-group">
-            <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Sides</label>
-            <div class="col-sm-10">
-                {{ form.choose_sides|addcss:"form-control choose-sides required" }}
-                {{ form.choose_sides.errors }}
-            </div>
+      <div class="form-group">
+        <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Sides</label>
+        <div class="col-sm-10">
+          {{ form.choose_sides|addcss:"form-control choose-sides required" }}
+          {{ form.choose_sides.errors }}
         </div>
-        <div class="hidden">
-            {% for field in form.fake_speaker_selects %}
-                {{ field }}
-            {% endfor %}
-        </div>
+      </div>
+      <div class="hidden">
+        {% for field in form.fake_speaker_selects %}
+          {{ field }}
+        {% endfor %}
+      </div>
     {% endif %}
 
     <div class="row">

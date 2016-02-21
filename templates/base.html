@@ -38,7 +38,7 @@
   {% endblock %}
 
     {% block header %}
-    <div class="row head-title {% if 'admin' in request.path and user.is_superuser %}white-bg{% endif %} vertical-spacing">
+    <div class="row head-title {% if 'admin' in request.path and user.is_superuser %}white-bg vertical-spacing{% endif %}">
       <div class="col-md-12">
         <h3>
           {% block head-title %}{% endblock %}

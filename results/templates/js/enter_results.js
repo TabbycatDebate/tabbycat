@@ -52,7 +52,6 @@ function update_speakers() {
 
 function update_speaker() {
   // e.g. id_aff_speaker_s1
-  console.log($(this));
   var parts = $(this).attr('id').split('_');
   var side = parts[1]; // e.g. 'aff'
   var pos = parts[3];  // e.g. 's1'
@@ -196,7 +195,6 @@ $('.js-team-speakers select').change(update_speakers).each(update_speaker);
     $(".scoresheet").hide();
   } else {
     $(".adj-ballot .text-warning").hide();
-    console.log('on load selected');
     var selected_option = $("#id_choose_sides").val()
     swap_sides(selected_option)
   }
