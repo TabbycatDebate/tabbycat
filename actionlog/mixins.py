@@ -1,4 +1,5 @@
 from .models import ActionLogEntry
+from utils.misc import get_ip_address
 
 class LogActionMixin:
     """Mixin for views that log an action in the action log when a form is
