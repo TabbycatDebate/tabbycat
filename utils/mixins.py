@@ -1,12 +1,53 @@
+import logging
+logger = logging.getLogger(__name__)
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.generic.base import TemplateResponseMixin
+from django.views.generic.base import View, TemplateResponseMixin
 from django.views.generic.detail import SingleObjectMixin
 
 from .misc import get_ip_address, redirect_tournament
+
+
+class PostOnlyRedirectView(View):
+    """Base class for views that only accept POST requests.
+
+    Current implementation redirects to a specified page (by default the home
+    page) if a client tries to use a GET request, and shows and logs an error
+    message. We might change this in the future just to return HTTP status code
+    405 (HTTP method not allowed).
+
+    Views using this class probably want to override both `post()` and
+    `get_redirect_url()`. It is assumed that the same redirect will be desired
+    the same whether GET or POST is used; it's just that a GET request won't
+    do database edits.
+
+    Note: The `post()` implementation of subclasses should call `super().post()`
+    rather than returning the redirect directly, in case we decide to make
+    `post()` smarter in the future. If there ever arises a need to distinguish
+    between the redirects in the GET and POST cases, new methods should be added
+    for this purpose.
+    """
+
+    redirect_url = reverse_lazy('tabbycat-index')
+    not_post_message = "Whoops! You're not meant to type that URL into your browser."
+
+    def get_redirect_url(self):
+        return self.redirect_url
+
+    def get(self, request, *args, **kwargs):
+        logger.error("Tried to access a POST-only view with a GET request")
+        messages.error(self.request, self.not_post_message)
+        return HttpResponseRedirect(self.get_redirect_url())
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponseRedirect(self.get_redirect_url())
+
 
 class SuperuserRequiredMixin(UserPassesTestMixin):
     """Class-based view mixin. Requires user to be a superuser."""
@@ -54,4 +95,3 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectMixin):
     """
     slug_field = 'url_key'
     slug_url_kwarg = 'url_key'
-    query_pk_and_slug = True

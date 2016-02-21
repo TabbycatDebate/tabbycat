@@ -15,7 +15,7 @@ from results.mixins import TabroomSubmissionFieldsMixin, PublicSubmissionFieldsM
 from results.models import SpeakerScoreByAdj
 from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
 from utils.misc import reverse_tournament
-from utils.mixins import SingleObjectByRandomisedUrlMixin, PublicCacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin
+from utils.mixins import SingleObjectByRandomisedUrlMixin, PublicCacheMixin, SuperuserRequiredMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, PostOnlyRedirectView
 from utils.urlkeys import populate_url_keys
 from utils.views import *
 
@@ -507,30 +507,37 @@ def set_adj_note(request, t):
     return redirect_tournament('feedback_overview', t)
 
 
-@admin_required
-@tournament_view
-def randomised_urls(request, t):
-    context = dict()
-    context['teams'] = t.team_set.all()
-    context['adjs'] = t.adjudicator_set.all()
-    context['exists'] = t.adjudicator_set.filter(url_key__isnull=False).exists() or \
-            t.team_set.filter(url_key__isnull=False).exists()
-    context['tournament_slug'] = t.slug
-    context['ballot_normal_urls_enabled'] = t.pref('public_ballots')
-    context['ballot_randomised_urls_enabled'] = t.pref('public_ballots_randomised')
-    context['feedback_normal_urls_enabled'] = t.pref('public_feedback')
-    context['feedback_randomised_urls_enabled'] = t.pref('public_feedback_randomised')
-    return render(request, 'randomised_urls.html', context)
+class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
 
-@admin_required
-@tournament_view
-@expect_post
-def generate_randomised_urls(request, t):
-    # Only works if there are no randomised URLs now
-    if t.adjudicator_set.filter(url_key__isnull=False).exists() or \
-            t.team_set.filter(url_key__isnull=False).exists():
-        return HttpResponseBadRequest("There are already randomised URLs. You must use the Django management commands to populate or delete randomised URLs.")
+    template_name = 'randomised_urls.html'
 
-    populate_url_keys(t.adjudicator_set.all())
-    populate_url_keys(t.team_set.all())
-    return redirect_tournament('randomised_urls', t)
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['teams'] = tournament.team_set.all()
+        kwargs['adjs'] = tournament.adjudicator_set.all()
+        kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
+                tournament.team_set.filter(url_key__isnull=False).exists()
+        kwargs['tournament_slug'] = tournament.slug
+        return super().get_context_data(**kwargs)
+
+
+class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+
+    def get_redirect_url(self):
+        return reverse_tournament('randomised-urls-view', self.get_tournament())
+
+    def post(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+
+        # Only works if there are no randomised URLs now
+        if tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
+                tournament.team_set.filter(url_key__isnull=False).exists():
+            messages.error(self.request, "There are already randomised URLs. "
+                    "You must use the Django management commands to populate or delete randomised URLs.")
+        else:
+            populate_url_keys(tournament.adjudicator_set.all())
+            populate_url_keys(tournament.team_set.all())
+            messages.success(self.request, "Randomised URLs were generated for all teams and adjudicators.")
+
+        return super().post(request, *args, **kwargs)
+

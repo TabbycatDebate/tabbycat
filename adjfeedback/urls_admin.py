@@ -56,9 +56,9 @@ urlpatterns = [
 
     # URLS
     url(r'^randomised_urls/$',
-        views.randomised_urls,
-        name='randomised_urls'),
+        views.RandomisedUrlsView.as_view(),
+        name='randomised-urls-view'),
     url(r'^randomised_urls/generate/$',
-        views.generate_randomised_urls,
-        name='generate_randomised_urls'),
+        views.GenerateRandomisedUrlsView.as_view(),
+        name='randomised-urls-generate'),
 ]

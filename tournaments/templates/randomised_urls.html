@@ -15,7 +15,7 @@
     participants, and are too worried about fraud to use a publicly accessible
     page where <em>anyone</em> can enter <em>any</em> submission. The URLs
     will look something like this:
-    <b>{% tournament_absurl adjfeedback-public-add-from-team-randomised "18" "9dnFlP3Z" %}</b>.
+    <b>{% tournament_absurl adjfeedback-public-add-from-team-randomised "9dnFlP3Z" %}</b>.
   {% endif %}
 </p>
 <p>
@@ -36,10 +36,10 @@
 {% if exists %}
   <p>
     If you want to delete these, run this command in a shell on your server:
-    <code>python manage.py randomised_urls delete {{ tournament_slug }}</code>.
+    <code>python manage.py randomisedurls delete --tournament {{ tournament_slug }}</code>.
   </p>
 
-  {% if not ballot_randomised_urls_enabled and not feedback_randomised_urls_enabled %}
+  {% if not pref.public_ballots_randomised and not pref.public_feedback_randomised %}
     <div class="alert alert-danger">
       The <strong>public ballots randomised</strong> and <strong>public feedback
       randomised</strong> configuration settings are both disabled. These URLs
@@ -49,7 +49,7 @@
     </div>
   {% endif %}
 
-  {% if ballot_normal_urls_enabled and ballot_randomised_urls_enabled %}
+  {% if pref.public_ballots and pref.public_ballots_randomised %}
     <div class="alert alert-danger">
       The <strong>public ballots</strong> (non-randomised) configuration setting
       is enabled, which means that the <a href="{% tournament_url
@@ -62,7 +62,7 @@
     </div>
   {% endif %}
 
-  {% if feedback_normal_urls_enabled and feedback_randomised_urls_enabled %}
+  {% if pref.public_feedback and pref.public_feedback_randomised %}
     <div class="alert alert-danger">
       The <strong>public feedback</strong> (non-randomised) configuration
       setting is enabled, which means that the <a href="{% tournament_url
@@ -91,7 +91,7 @@
         </td>
         <td>
           {% if team.url_key %}
-            {% tournament_absurl adjfeedback-public-add-from-team-randomised team.id team.url_key %}
+            {% tournament_absurl adjfeedback-public-add-from-team-randomised team.url_key %}
           {% else %}
             no URL
           {% endif %}
@@ -108,7 +108,7 @@
         <td>{{ adj.name }}</td>
           {% if adj.url_key %}
           <td>
-            {% tournament_absurl adjfeedback-public-add-from-adjudicator-randomised adj.id adj.url_key %}
+            {% tournament_absurl adjfeedback-public-add-from-adjudicator-randomised adj.url_key %}
           </td>
           <td>
             {% tournament_absurl public_new_ballotset_key adj.url_key %}
@@ -131,7 +131,7 @@
     Would you like to generate them?
   </p>
   <p>
-    <form action="{% tournament_url generate_randomised_urls %}" method="POST">
+    <form action="{% tournament_url randomised-urls-generate %}" method="POST">
       <button class="btn btn-default" id="generateRandomisedUrls" type="submit">
         Generate randomised URLs for ballot and feedback submission
       </button>

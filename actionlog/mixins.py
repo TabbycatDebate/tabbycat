@@ -1,5 +1,8 @@
+from django.contrib.auth import get_user_model
 from .models import ActionLogEntry
 from utils.misc import get_ip_address
+
+User = get_user_model()
 
 class LogActionMixin:
     """Mixin for views that log an action in the action log when a form is
@@ -41,7 +44,7 @@ class LogActionMixin:
         """
         if hasattr(self, 'get_tournament'):
             kwargs.setdefault('tournament', self.get_tournament())
-        if hasattr(self.request, 'user'):
+        if hasattr(self.request, 'user') and isinstance(self.request.user, User):
             kwargs.setdefault('user', self.request.user)
         return kwargs
 
