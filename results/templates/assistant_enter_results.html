@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "enter_results.html" %}
 {% load static %}
 {% load debate_tags %}
 
@@ -7,10 +7,6 @@
   {{ debate.matchup }} <small>Round {{ debate.round }}
   @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}
   {{ debate.venue.name }}</small>
-{% endblock %}
-
-{% block page-alerts %}
-  {% include "other_ballots_list.html" %}
 {% endblock %}
 
 {% block content %}
@@ -53,10 +49,8 @@
 
 {% block extra-js %}
 {{ block.super }}
-<script src="{% static 'js/vendor/jquery.validate.min.js' %}"</script>
-<script>
+<script type="text/javascript">
   $(document).ready( function() {
-    {% include "js/enter_results.js" %}
     {% if not new %}
       function preSubmit() {
         $('#resultsForm input').removeAttr('readonly');

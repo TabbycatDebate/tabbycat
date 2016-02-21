@@ -1,7 +1,8 @@
 
 // When using anonymous speaker names prepopulate the form to save time
-aff_speakers = $("#id_aff_speaker_1 option").text()
-neg_speakers = $("#id_neg_speaker_1 option").text()
+aff_speakers = $("#id_aff_speaker_1 option").text();
+neg_speakers = $("#id_neg_speaker_1 option").text();
+
 if (aff_speakers.indexOf("1st Speaker") != -1 && neg_speakers.indexOf("1st Speaker") != -1) {
   $("div.aff.s1").find("select :nth-child(2)").prop('selected', true);
   $("div.aff.s2").find("select :nth-child(3)").prop('selected', true);
@@ -34,8 +35,7 @@ function refresh_totals(scoresheet) {
     $aff_total.addClass('btn-danger').removeClass('btn-success');
     $neg_total.addClass('btn-danger').removeClass('btn-success');
   }
-
-};
+}
 
 function sum(elems) {
   var r = 0;
@@ -47,11 +47,12 @@ function sum(elems) {
 }
 
 function update_speakers() {
-  $('#resultsForm .speaker select').each(update_speaker);
+  $('.js-speaker').each(update_speaker);
 }
 
 function update_speaker() {
   // e.g. id_aff_speaker_s1
+  console.log($(this));
   var parts = $(this).attr('id').split('_');
   var side = parts[1]; // e.g. 'aff'
   var pos = parts[3];  // e.g. 's1'
@@ -105,7 +106,7 @@ $('.score input').change(function() {
     refresh_totals($(this).parents('.scoresheet'));
 });
 
-$('.speaker select').change(update_speakers).each(update_speaker);
+$('.js-team-speakers select').change(update_speakers).each(update_speaker);
 
 // Fill in the reply speaker if there is only one option
 {% if form.using_replies and form.LAST_SUBSTANTIVE_POSITION == 2 %}

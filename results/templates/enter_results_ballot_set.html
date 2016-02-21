@@ -92,11 +92,11 @@
                       <label class="h4 col-xs-offset-1 control-label aff-team-name" >{{ debate.aff_team.short_name }}</label>
                   </div>
                   {% for position in adj.position_iter %}
-                      <div class="form-group aff speaker s{{ position.pos }}">
+                      <div class="form-group aff js-team-speakers s{{ position.pos }}">
                           <label class="col-md-2 col-xs-3 control-label speaker-position-label">{{ position }}A</label>
                           <div class="col-md-7 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
                               {% if forloop.parentloop.first %}
-                                  {{ position.aff_speaker|addcss:"form-control speaker required aff-speaker" }}
+                                  {{ position.aff_speaker|addcss:"form-control js-speaker required aff-speaker" }}
                                   {{ position.aff_speaker.errors }}
                               {% else %}
                               <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
@@ -121,11 +121,11 @@
                       <label class="h4 col-xs-offset-1 control-label neg-team-name" >{{ debate.neg_team.short_name }}</label>
                   </div>
                  {% for position in adj.position_iter %}
-                      <div class="form-group neg speaker s{{ position.pos }}">
+                      <div class="form-group neg js-team-speakers s{{ position.pos }}">
                           <label class="col-md-2 col-xs-3 control-label speaker-position-label">{{ position }}N</label>
                           <div class="col-md-7 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
                               {% if forloop.parentloop.first %}
-                                  {{ position.neg_speaker|addcss:"form-control speaker required neg-speaker" }}
+                                  {{ position.neg_speaker|addcss:"form-control js-speaker required neg-speaker" }}
                                   {{ position.neg_speaker.errors }}
                               {% else %}
                               <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
