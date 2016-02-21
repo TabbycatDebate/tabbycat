@@ -121,7 +121,7 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
     standings = generator.generate(eligible_teams)
 
     break_size = category.break_size
-    institution_cap = category.institution_cap
+    institution_cap = category.institution_cap or None
 
     prev_rank_value = tuple([None] * len(standings.metric_keys))
     prev_break_rank_value = tuple([None] * len(standings.metric_keys))
@@ -164,7 +164,7 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
             bt.remark = bt.REMARK_INELIGIBLE
 
         # Check if capped out by institution cap
-        elif institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
+        elif institution_cap is not None and teams_from_institution[team.institution] >= institution_cap:
             bt.remark = bt.REMARK_CAPPED
 
         # Check if already broken to a higher category
