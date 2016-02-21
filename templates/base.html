@@ -39,7 +39,7 @@
   {% endblock %}
 
     {% block header %}
-    <div class="row head-title {% if 'admin' in request.path and user.is_superuser %}white-bg vertical-spacing{% endif %}">
+    <div class="row head-title {% if 'admin/' in request.path and user.is_superuser %}white-bg vertical-spacing{% endif %}">
       <div class="col-md-12">
         <h3>
           {% block head-title %}{% endblock %}
@@ -80,9 +80,15 @@
 
     {% block content %}{% endblock content %}
 
+    {% if 'admin/' not in request.path %}
+      </div><!-- /.main-col -->
+    {% endif %}
+
     {% block footer %}{% include "footer.html" %}{% endblock footer %}
 
-  </div><!-- /.main-col -->
+    {% if 'admin/' in request.path %}
+      </div><!-- /.main-col -->
+    {% endif %}
 
   {% endblock body %}
 

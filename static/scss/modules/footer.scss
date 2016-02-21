@@ -2,40 +2,45 @@
 //
 // OVERALL LAYOUT
 //
-.accommodate-footer {
-  min-height: 800px; // Push the footer down
-  padding-bottom: 130px; // Leave room for the footer
-}
 .nav-sidebar-offset {
   .navbar-fixed-bottom {
-    // Don't want the footer stretching into the menu; present it alert style
-    margin: 0 15px 20px $sidebar-width + 15px;
     border-width: 1px;
     border-radius: 4px;
-    position: absolute;
+    .navbar-nav > li > a {
+      padding: 15px 10px 15px 0px; // Tighten link spacing so the footer isn't x2 height
+    }
   }
 }
-@media (max-width: $screen-sm) {
+// For PCS
+@media (min-width: $screen-sm-min) {
+  .accommodate-footer {
+    min-height: 800px; // Push the footer down
+    padding-bottom: 130px; // Leave room for the footer
+  }
+  .nav-sidebar-offset {
+    .navbar-fixed-bottom {
+      // Don't want the footer stretching into the menu; present it alert style
+      margin: 0 15px 20px $sidebar-width + 15px;
+      position: absolute;
+    }
+  }
+}
+// For Phones
+@media (max-width: $screen-sm-min) {
   .accommodate-footer {
     padding-bottom: 0px; // Increase footer padding when its double height
   }
-  .nav-sidebar-offset .navbar-fixed-bottom {
+  .navbar-fixed-bottom {
     position: relative;
     margin: 0;
     width: 100%;
     text-align: center;
     .navbar-header {
-      min-height: 120px;
+      min-height: 90px;
     }
     .navbar-nav.navbar-right {
         width: 100%;
-        margin: 0;
+        margin: 0 0 10px 0;
     }
-  }
-}
-// FOOTER UI
-.navbar-fixed-bottom {
-  .navbar-nav > li > a {
-    padding: 15px 10px 15px 0px; // Tighten link spacing so the footer isn't x2 height
   }
 }
