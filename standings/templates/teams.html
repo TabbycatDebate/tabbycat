@@ -3,10 +3,9 @@
 {% load debate_tags %}
 {% load metricformat %}
 
-{% block page-title %}Team Standings after {{ round.name }}{% endblock %}
-{% block head-title %}Team Standings{% endblock %}
+{% block page-title %}👯Team Standings after {{ round.name }}{% endblock %}
+{% block head-title %}<span class="emoji">👯</span>Team Standings{% endblock %}
 {% block sub-title %}after {{ round.name }}{% endblock %}
-
 
 {% block page-subnav-sections %}
   <a class="btn btn-default" href="{% round_url standings_index current_round %}">
@@ -106,10 +105,8 @@
           <td class="team-emoji">{{ tsi.team.emoji }}</td>
         {% endif %}
         <td>
-          <span class="team-speakers-hover" id="team_speakers_{{ tsi.team.id }}">
-            {{ tsi.team.short_name }}
-            {{ tsi.team.break_categories_str }}
-          </span>
+          {% include "tables/team.html" with team=tsi.team %}
+          {{ tsi.team.break_categories_str }}
         </td>
         {% if pref.show_institutions %}
           <td>

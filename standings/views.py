@@ -212,6 +212,7 @@ class PublicTabMixin(PublicTournamentPageMixin):
 
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     rankings = ('rank',)
+    template_name = 'public_team_tab.html'
 
     def show_ballots(self):
         return self.get_tournament().pref('ballots_released')

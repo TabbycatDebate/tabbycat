@@ -31,7 +31,7 @@
     {% else %}
       <ul class="nav nav-stacked" role="tablist">
         <li role="presentation" class="">
-          <a id="tournament_select" class="{% if overview_nav %}active{% endif %}" href="{{ tournament.get_absolute_url }}">
+          <a id="tournament_select"template_name href="{{ tournament.get_absolute_url }}">
             <h4>
               {% if tournament.emoji %}
                 <span class="emoji">{{ tournament.emoji }}</span>
