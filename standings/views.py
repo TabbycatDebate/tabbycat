@@ -210,7 +210,7 @@ class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
 
 class PublicTabMixin(PublicTournamentPageMixin):
     """Mixin for views that should only be allowed when the tab is released publicly."""
-    public_page_preference = 'tab_released'
+    public_page_preference = 'team_tab_released'
     cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
 
     def get_round(self):
