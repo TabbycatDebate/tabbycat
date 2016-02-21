@@ -4,8 +4,8 @@ logger = logging.getLogger(__name__)
 from threading import Lock
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, get_user_model
+User = get_user_model()
 import django.contrib.messages as messages
 from django.core import serializers
 from django.core.urlresolvers import reverse_lazy
