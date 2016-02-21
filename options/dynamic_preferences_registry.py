@@ -325,13 +325,36 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
 tab_release = Section('tab_release')
 # ==============================================================================
 
+@tournament_preferences_registry.register
+class TeamTabReleased(BooleanPreference):
+    help_text = 'Displays the team tab PUBLICLY. For AFTER the tournament'
+    verbose_name = "Team Tab Released"
+    section = tab_release
+    name = "team_tab_released"
+    default = False
 
 @tournament_preferences_registry.register
-class TabReleased(BooleanPreference):
-    help_text = 'Displays the tab PUBLICLY. For AFTER the tournament'
-    verbose_name = "Tab Released"
+class SpeakerTabReleased(BooleanPreference):
+    help_text = 'Displays the speaker tab PUBLICLY. For AFTER the tournament'
+    verbose_name = "Speaker Tab Released"
     section = tab_release
-    name = "tab_released"
+    name = "speaker_tab_released"
+    default = False
+
+@tournament_preferences_registry.register
+class NovicesTabReleased(BooleanPreference):
+    help_text = 'Displays the novices speaker tab PUBLICLY. For AFTER the tournament'
+    verbose_name = "Novices Tab Released"
+    section = tab_release
+    name = "novices_tab_released"
+    default = False
+
+@tournament_preferences_registry.register
+class RepliesTabReleased(BooleanPreference):
+    help_text = 'Displays the replies tab PUBLICLY. For AFTER the tournament'
+    verbose_name = "Replies Tab Released"
+    section = tab_release
+    name = "replies_tab_released"
     default = False
 
 @tournament_preferences_registry.register
