@@ -73,7 +73,7 @@
 
 {% block extra-js %}
 
-  <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.js' %}"></script>
+  <script src="{% static 'js/vendor/vue.js' %}"></script>
   {% include "vue/table.js" %}
   <script>
     Vue.config.delimiters = ["[[", "]]"];
@@ -110,7 +110,7 @@
   </script>
 
   {{ block.super }}
-   <script type="text/javascript" charset="utf-8">
+   <script>
   </script>
 
 {% endblock extra-js %}
