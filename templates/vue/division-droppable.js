@@ -42,7 +42,8 @@
       'teams': {},
       'save-vg-at': {},
       'save-division-at': {},
-      'isDroppable': { default: false }
+      'isDroppable': { default: false },
+      'dragCounter': { default: 0 }
     },
     template: '#division-droppable',
     watch: {
@@ -75,16 +76,23 @@
     methods: {
       handleDragEnter: function(elem) {
         // console.log('handleDragStart', elem);
+        this.dragCounter++;
+        console.log(this.dragCounter);
         this.isDroppable = true;
       },
       handleDragLeave: function(elem) {
-        this.isDroppable = false;
+        this.dragCounter--;
+        console.log(this.dragCounter);
+        if (this.dragCounter == 0) {
+          this.isDroppable = false;
+        }
       },
       receiveTeam: function(ev) {
         // This calls up to the parent component
         console.log('child component (' + this.division.id + ') received a team');
         this.$dispatch('assign-team-to-division', this.division);
         this.isDroppable = false;
+        this.dragCounter = 0;
       }
 
     }
