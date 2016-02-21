@@ -4,7 +4,7 @@
   <a href="{% round_url results current_round %}">Enter Results</a>
 </li>
 <li {% if feedback_nav %}class="active"{% endif %}>
-  <a href="{% tournament_url add_feedback %}">Enter Feedback</a>
+  <a href="{% tournament_url adjfeedback-add-index %}">Enter Feedback</a>
 </li>
 {% if pref.enable_divisions %}
   <li><a href="{% round_url master_sheets_list current_round %}">Mastersheets</a></li>

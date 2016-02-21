@@ -1,17 +1,27 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
 import json
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.views.generic.base import TemplateView
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.edit import FormView
+
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
+from results.mixins import TabroomSubmissionFieldsMixin, PublicSubmissionFieldsMixin
 from results.models import SpeakerScoreByAdj
-from actionlog.models import ActionLogEntry
+from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
+from utils.misc import reverse_tournament
+from utils.mixins import SingleObjectByRandomisedUrlMixin, PublicCacheMixin, SuperuserRequiredMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, PostOnlyRedirectView
+from utils.urlkeys import populate_url_keys
+from utils.views import *
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
-
-from utils.urlkeys import populate_url_keys
-from utils.views import *
 
 @admin_required
 @tournament_view
@@ -231,73 +241,129 @@ def get_adj_feedback(request, t):
     data = [_parse_feedback(f) for f in feedback]
     return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
 
-# Don't cache
-@public_optional_tournament_view('public_feedback_randomised')
-def public_enter_feedback_key(request, t, source_type, url_key):
-    source = get_object_or_404(source_type, tournament=t, url_key=url_key)
-    return public_enter_feedback(request, t, source)
 
-# Don't cache
-@public_optional_tournament_view('public_feedback')
-def public_enter_feedback_id(request, t, source_type, source_id):
-    source = get_object_or_404(source_type, tournament=t, id=source_id)
-    return public_enter_feedback(request, t, source)
+class BaseAddFeedbackIndexView(TournamentMixin, TemplateView):
 
-def public_enter_feedback(request, t, source):
-    ip_address = get_ip_address(request)
-    source_name = source.short_name if isinstance(source, Team) else source.name
-    source_type = "adj" if isinstance(source, Adjudicator) else "team" if isinstance(source, Team) else "TypeError!"
-    submission_fields = {
-        'submitter_type': AdjudicatorFeedback.SUBMITTER_PUBLIC,
-        'ip_address'    : ip_address
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['adjudicators'] = tournament.adjudicator_set.all() if not tournament.pref('share_adjs') \
+                else Adjudicator.objects.all()
+        kwargs['teams'] = tournament.team_set.all()
+        return super().get_context_data(**kwargs)
+
+
+class TabroomAddFeedbackIndexView(SuperuserOrTabroomAssistantTemplateResponseMixin, BaseAddFeedbackIndexView):
+    """View for the index page for tabroom officials to add feedback. The index
+    page lists all possible sources; officials should then choose the author
+    of the feedback."""
+
+    superuser_template_name = 'add_feedback.html'
+    assistant_template_name = 'assistant_add_feedback.html'
+
+
+class PublicAddFeedbackIndexView(PublicCacheMixin, PublicTournamentPageMixin, BaseAddFeedbackIndexView):
+    """View for the index page for public users to add feedback. The index page
+    lists all possible sources; public users should then choose themselves."""
+
+    template_name = 'public_add_feedback.html'
+    public_page_preference = 'public_feedback'
+
+
+class BaseAddFeedbackView(LogActionMixin, SingleObjectMixin, FormView):
+    """Base class for views that allow users to add feedback.
+    Subclasses must also subclass SingleObjectMixin, directly or indirectly."""
+
+    template_name = "enter_feedback.html"
+    pk_url_kwarg = 'source_id'
+
+    def get_form_class(self):
+        return make_feedback_form_class(self.object, self.get_submitter_fields(),
+                **self.feedback_form_class_kwargs)
+
+    def get_action_log_fields(self, **kwargs):
+        kwargs['adjudicator_feedback'] = self.adj_feedback
+        return super().get_action_log_fields(**kwargs)
+
+    def form_valid(self, form):
+        self.adj_feedback = form.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        source = self.object
+        if isinstance(source, Adjudicator):
+            kwargs['source_type'] = "adj"
+        elif isinstance(source, Team):
+            kwargs['source_type'] = "team"
+        kwargs['source_name'] = self.source_name
+        return super().get_context_data(**kwargs)
+
+    def _populate_source(self):
+        self.object = self.get_object() # for compatibility with SingleObjectMixin
+        if isinstance(self.object, Adjudicator):
+            self.source_name = self.object.name
+        elif isinstance(self.object, Team):
+            self.source_name = self.object.short_name
+        else:
+            self.source_name = "<ERROR>"
+
+    def get(self, request, *args, **kwargs):
+        self._populate_source()
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self._populate_source()
+        return super().post(request, *args, **kwargs)
+
+
+class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, TournamentMixin, LoginRequiredMixin, BaseAddFeedbackView):
+    """View for tabroom officials to add feedback."""
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SAVE
+    feedback_form_class_kwargs = {
+        'confirm_on_submit': True,
+        'enforce_required': False,
+        'include_unreleased_draws': True,
     }
-    FormClass = make_feedback_form_class(source, submission_fields,
-            confirm_on_submit=True, enforce_required=True)
 
-    if request.method == "POST":
-        form = FormClass(request.POST)
-        if form.is_valid():
-            adj_feedback = form.save()
-            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_FEEDBACK_SUBMIT,
-                    ip_address=ip_address, adjudicator_feedback=adj_feedback,
-                    tournament=t)
-            return render(request, 'public_success.html', dict(
-                    success_kind="feedback"))
-    else:
-        form = FormClass()
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        messages.success(self.request, "Feedback from {} on {} added.".format(
+                self.source_name, self.adj_feedback.adjudicator.name))
+        return result
 
-    return render(request, 'public_add_feedback.html', dict(
-            source_type=source_type, source_name=source_name, form=form))
+    def get_success_url(self):
+        return reverse_tournament('adjfeedback-add-index', self.get_tournament())
 
-@login_required
-@tournament_view
-def enter_feedback(request, t, source_type, source_id):
-    source = get_object_or_404(source_type, tournament=t, id=source_id)
-    source_name = source.short_name if isinstance(source, Team) else source.name
-    source_type = "adj" if isinstance(source, Adjudicator) else "team" if isinstance(source, Team) else "TypeError!"
-    ip_address = get_ip_address(request)
-    submission_fields = {
-        'submitter_type': AdjudicatorFeedback.SUBMITTER_TABROOM,
-        'submitter'     : request.user,
-        'ip_address'    : ip_address
+
+class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMixin, BaseAddFeedbackView):
+    """Base class for views for public users to add feedback."""
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SUBMIT
+    feedback_form_class_kwargs = {
+        'confirm_on_submit': True,
+        'enforce_required': True,
+        'include_unreleased_draws': False,
     }
-    FormClass = make_feedback_form_class(source, submission_fields,
-            confirm_on_submit=True, enforce_required=False)
 
-    if request.method == "POST":
-        form = FormClass(request.POST)
-        if form.is_valid():
-            adj_feedback = form.save()
-            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_FEEDBACK_SAVE,
-                    user=request.user, adjudicator_feedback=adj_feedback, tournament=t)
-            messages.success(request, "Feedback from %s on %s added." %
-                    (adj_feedback.source, adj_feedback.adjudicator))
-            return redirect_tournament('add_feedback', t)
-    else:
-        form = FormClass()
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        messages.success(self.request, "Thanks, {}! Your feedback on {} has been recorded.".format(
+                self.source_name, self.adj_feedback.adjudicator.name))
+        return result
 
-    return render(request, 'enter_feedback.html', dict(source_type=source_type,
-            source_name=source_name, form=form))
+    def get_success_url(self):
+        return reverse_tournament('tournament-public-index', self.get_tournament())
+
+
+class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, PublicAddFeedbackView):
+    """View for public users to add feedback, where the URL is a randomised one."""
+    public_page_preference = 'public_feedback_randomised'
+
+
+class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
+    """View for public users to add feedback, where the URL is by object ID."""
+    public_page_preference = 'public_feedback'
+
 
 
 @admin_required
@@ -356,80 +422,8 @@ def set_adj_breaking_status(request, t):
     adjudicator.save()
     return HttpResponse("ok")
 
-@login_required
-@tournament_view
-def add_feedback(request, t):
-    context = {
-        'adjudicators' : t.adjudicator_set.all() if not t.pref('share_adjs')
-                         else Adjudicator.objects.all(),
-        'teams'        : t.team_set.all(),
-    }
-    if request.user.is_superuser:
-        template = 'add_feedback.html'
-    else:
-        template = 'assistant_add_feedback.html'
-    return render(request, template, context)
 
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_feedback')
-def public_feedback_submit(request, t):
-    adjudicators = Adjudicator.objects.all()
-    teams = Team.objects.all()
-    return render(request, 'public_add_feedback.html', dict(adjudicators=adjudicators, teams=teams))
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('feedback_progress')
-def public_feedback_progress(request, t):
-    # TODO: merge with the admin function below
-    def calculate_coverage(submitted, total):
-        if total == 0:
-            return False # Don't show these ones
-        elif submitted == 0:
-            return 0
-        else:
-            return int(submitted / total * 100)
-
-    feedback = AdjudicatorFeedback.objects.all()
-    adjudicators = Adjudicator.objects.all()
-    teams = Team.objects.all()
-    current_round = request.tournament.current_round.seq
-
-    for adj in adjudicators:
-        adj.total_ballots = 0
-        adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator = adj)
-        adjs_adjudications = [a for a in adjudications if a.adjudicator == adj]
-
-        for item in adjs_adjudications:
-            # Finding out the composition of their panel, tallying owed ballots
-            if item.type == item.TYPE_CHAIR:
-                adj.total_ballots += len(item.debate.adjudicators.trainees)
-                adj.total_ballots += len(item.debate.adjudicators.panel)
-
-            if item.type == item.TYPE_PANEL:
-                # Panelists owe on chairs
-                adj.total_ballots += 1
-
-            if item.type == item.TYPE_TRAINEE:
-                # Trainees owe on chairs
-                adj.total_ballots += 1
-
-        adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
-        adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
-        adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
-
-    for team in teams:
-        team.submitted_ballots = max(feedback.filter(source_team__team = team).count(), 0)
-        team.owed_ballots = max((current_round - team.submitted_ballots), 0)
-        team.coverage = min(calculate_coverage(team.submitted_ballots, current_round), 100)
-
-    return render(request, 'feedback_progress.html', dict(teams=teams, adjudicators=adjudicators))
-
-
-@admin_required
-@tournament_view
-def feedback_progress(request, t):
+def get_feedback_progress(request, t):
     def calculate_coverage(submitted, total):
         if total == 0 or submitted == 0:
             return 0 # avoid divide-by-zero error
@@ -437,13 +431,12 @@ def feedback_progress(request, t):
             return int(submitted / total * 100)
 
     feedback = AdjudicatorFeedback.objects.select_related('source_adjudicator__adjudicator','source_team__team').all()
-    adjudicators = Adjudicator.objects.all()
+    adjudicators = Adjudicator.objects.filter(tournament=t)
     adjudications = list(DebateAdjudicator.objects.select_related('adjudicator','debate').all())
-    teams = Team.objects.all()
+    teams = Team.objects.filter(tournament=t)
 
     # Teams only owe feedback on non silent rounds
-    rounds_owed = request.tournament.round_set.filter(silent=False,
-        draw_status=request.tournament.current_round.STATUS_RELEASED).count()
+    rounds_owed = t.round_set.filter(silent=False,  draw_status=t.current_round.STATUS_RELEASED).count()
 
     for adj in adjudicators:
         adj.total_ballots = 0
@@ -473,7 +466,23 @@ def feedback_progress(request, t):
         team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
         team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
 
-    return render(request, 'feedback_progress.html', dict(teams=teams, adjudicators=adjudicators))
+    return { 'teams': teams, 'adjs': adjudicators }
+
+
+@admin_required
+@tournament_view
+def feedback_progress(request, t):
+    progress = get_feedback_progress(request, t)
+    return render(request, 'feedback_progress.html',
+                  dict(teams=progress['teams'], adjudicators=progress['adjs']))
+
+
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('feedback_progress')
+def public_feedback_progress(request, t):
+    progress = get_feedback_progress(request, t)
+    return render(request, 'public_feedback_progress.html',
+                  dict(teams=progress['teams'], adjudicators=progress['adjs']))
 
 
 # TODO: move to a different app?
@@ -505,30 +514,37 @@ def set_adj_note(request, t):
     return redirect_tournament('feedback_overview', t)
 
 
-@admin_required
-@tournament_view
-def randomised_urls(request, t):
-    context = dict()
-    context['teams'] = t.team_set.all()
-    context['adjs'] = t.adjudicator_set.all()
-    context['exists'] = t.adjudicator_set.filter(url_key__isnull=False).exists() or \
-            t.team_set.filter(url_key__isnull=False).exists()
-    context['tournament_slug'] = t.slug
-    context['ballot_normal_urls_enabled'] = t.pref('public_ballots')
-    context['ballot_randomised_urls_enabled'] = t.pref('public_ballots_randomised')
-    context['feedback_normal_urls_enabled'] = t.pref('public_feedback')
-    context['feedback_randomised_urls_enabled'] = t.pref('public_feedback_randomised')
-    return render(request, 'randomised_urls.html', context)
+class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
 
-@admin_required
-@tournament_view
-@expect_post
-def generate_randomised_urls(request, t):
-    # Only works if there are no randomised URLs now
-    if t.adjudicator_set.filter(url_key__isnull=False).exists() or \
-            t.team_set.filter(url_key__isnull=False).exists():
-        return HttpResponseBadRequest("There are already randomised URLs. You must use the Django management commands to populate or delete randomised URLs.")
+    template_name = 'randomised_urls.html'
 
-    populate_url_keys(t.adjudicator_set.all())
-    populate_url_keys(t.team_set.all())
-    return redirect_tournament('randomised_urls', t)
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['teams'] = tournament.team_set.all()
+        kwargs['adjs'] = tournament.adjudicator_set.all()
+        kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
+                tournament.team_set.filter(url_key__isnull=False).exists()
+        kwargs['tournament_slug'] = tournament.slug
+        return super().get_context_data(**kwargs)
+
+
+class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+
+    def get_redirect_url(self):
+        return reverse_tournament('randomised-urls-view', self.get_tournament())
+
+    def post(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+
+        # Only works if there are no randomised URLs now
+        if tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
+                tournament.team_set.filter(url_key__isnull=False).exists():
+            messages.error(self.request, "There are already randomised URLs. "
+                    "You must use the Django management commands to populate or delete randomised URLs.")
+        else:
+            populate_url_keys(tournament.adjudicator_set.all())
+            populate_url_keys(tournament.team_set.all())
+            messages.success(self.request, "Randomised URLs were generated for all teams and adjudicators.")
+
+        return super().post(request, *args, **kwargs)
+

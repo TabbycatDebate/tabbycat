@@ -4,75 +4,68 @@
 
 {% block head-title %}Participants{% endblock %}
 {% block page-title %}Participants{% endblock %}
-{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}
-  <table id="speakersList" class="table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        {% if pref.show_novices %}
-          <th><span class="glyphicon glyphicon-leaf" data-toggle="tooltip" title="Speaker's Novice Status"></span></th>
-        {% endif %}
-        {% if pref.show_emoji %}
-          <th class="team-emoji"></th>
-        {% endif %}
-        <th>Team</th>
-        {% if pref.public_break_categories %}
-          <th>Eligible for</th>
-        {% endif %}
-        {% if pref.show_institutions %}
-          <th>Institution</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-    {% for person in speakers %}
-      <tr>
-        <td>{{ person.name }}</td>
-        {% if pref.show_novices %}
-          <td>
-            {% if person.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% else %}<span></span>{% endif %}
-          </td>
-        {% endif %}
-        {% if pref.show_emoji %}
-          <td class="team-emoji">
-            <span class="emoji">{{ person.team.emoji }}</span>
-          </td>
-        {% endif %}
-        <td >
-          <span class="team-speakers-hover" id="team_speakers_{{ person.team.id }}">
-            {{ person.team.long_name }}
-          </span>
-        </td>
-        {% if pref.public_break_categories %}
-          <td>{{ person.team.break_categories_nongeneral|join:", " }}</td>
-        {% endif %}
-        {% if pref.show_institutions %}
-          <td>{{ person.team.institution.name }}</td>
-        {% endif %}
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
 
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="speakersList" class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          {% if pref.show_novices %}
+            <th><span class="glyphicon glyphicon-leaf" data-toggle="tooltip" title="Speaker's Novice Status"></span></th>
+          {% endif %}
+          {% if pref.show_emoji %}
+            <th class="team-emoji"></th>
+          {% endif %}
+          <th>Team</th>
+          {% if pref.public_break_categories %}
+            <th>Eligible for</th>
+          {% endif %}
+          {% if pref.show_institutions %}
+            <th>Institution</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for person in speakers %}
+        <tr>
+          <td>{{ person.name }}</td>
+          {% if pref.show_novices %}
+            <td>
+              {% if person.novice %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% else %}<span></span>{% endif %}
+            </td>
+          {% endif %}
+          {% if pref.show_emoji %}
+            <td class="team-emoji">
+              <span class="emoji">{{ person.team.emoji }}</span>
+            </td>
+          {% endif %}
+          <td>
+            {% include "tables/team.html" with team=person.team %}
+          </td>
+          {% if pref.public_break_categories %}
+            <td>{{ person.team.break_categories_nongeneral|join:", " }}</td>
+          {% endif %}
+          {% if pref.show_institutions %}
+            <td>{{ person.team.institution.name }}</td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="row page-header">
   <div class="col-md-12">
     <h1 class="h2 pull-left">Adjudicators</h1>
-    <div id="table-search-group" class="btn-group pull-right col-sm-3">
-    <div class="input-group">
-      <span class="input-group-btn">
-      <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-      </span>
-        <input id="table-search" type="search" class="form-control" aria-controls="dataTable" placeholder="Quick Search">
-      </div>
-    </div>
   </div>
 </div>
 
-<div class="col-md-12">
+<div class="panel panel-default">
+  <div class="panel-body">
   <table id="adjudicatorsList" class="table">
     <thead>
       <tr>
@@ -101,11 +94,13 @@
     {% endfor %}
     </tbody>
   </table>
+  </div>
+</div>
 
 {% endblock content %}
 
 {% block extra-js %}
-   <script type="text/javascript" charset="utf-8">
+   <script>
     $(document).ready( function() {
       var dTable1 = $("#speakersList").DataTable({
         "aaSorting": [[ 0, "asc" ]],

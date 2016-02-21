@@ -29,36 +29,36 @@ $(document).ready( function() {
   $("#tiny_text").click(function(event){
     $(this).siblings().removeClass("active");
     $(this).addClass("active");
-    $("#draw").removeClass( "h1 h2 h3 h3_plus h4 h3_minus h5 h6" ).addClass( "h4" );
-    $(".fixedHeader table").removeClass( "h1 h2 h3 h3_plus h4 h3_minus h5 h6" ).addClass( "h4" );
+    $("#draw").removeClass( "draw-xs draw-s draw-m draw-l draw-xl" ).addClass( "draw-xs" );
+    $(".fixedHeader table").removeClass( "draw-xs draw-s draw-m draw-l draw-xl" ).addClass( "draw-xs" );
     return false;
   });
   $("#small_text").click(function(event){
     $(this).siblings().removeClass("active");
     $(this).addClass("active");
-    $("#draw").removeClass( "h1 h2 h3 h3_plus h4 h3_minus h5 h6" ).addClass( "h3_minus" );
-    $(".fixedHeader table").removeClass( "h1 h2 h3 h3_plus h4 h3_minus h5 h6" ).addClass( "h3_minus" );
+    $("#draw").removeClass( "draw-xs draw-s draw-m draw-l draw-xl" ).addClass( "draw-s" );
+    $(".fixedHeader table").removeClass( "draw-xs draw-s draw-m draw-l draw-xl" ).addClass( "draw-s" );
     return false;
   });
   $("#medium_text").click(function(event){
     $(this).siblings().removeClass("active");
     $(this).addClass("active");
-    $("#draw").removeClass( "h1 h2 h3 h3_plus h4 h3_minus h5 h6" ).addClass( "h3" );
-    $(".fixedHeader table").removeClass( "h1 h2 h3 h3_plus h4 h3_minus h5 h6" ).addClass( "h3" );
+    $("#draw").removeClass( "draw-xs draw-s draw-m draw-l draw-xl" ).addClass( "draw-m" );
+    $(".fixedHeader table").removeClass( "draw-xs draw-s draw-m draw-l draw-xl" ).addClass( "draw-m" );
     return false;
   });
   $("#large_text").click(function(event){
     $(this).siblings().removeClass("active");
     $(this).addClass("active");
-    $("#draw").removeClass( "h1 h2 h3 h3_plus h4 h3_minus h5 h6" ).addClass( "h3_plus" );
-    $(".fixedHeader table").removeClass( "h1 h2 h3 h3_plus h4 h3_minus h5 h6" ).addClass( "h3_plus" );
+    $("#draw").removeClass( "draw-xs draw-s draw-m draw-l draw-xl" ).addClass( "draw-l" );
+    $(".fixedHeader table").removeClass( "draw-xs draw-s draw-m draw-l draw-xl" ).addClass( "draw-l" );
     return false;
   });
   $("#huge_text").click(function(event){
     $(this).siblings().removeClass("active");
     $(this).addClass("active");
-    $("#draw").removeClass( "h1 h2 h3 h3_plus h4 h3_minus h5 h6" ).addClass( "h2" );
-    $(".fixedHeader table").removeClass( "h1 h2 h3 h3_plus h4 h3_minus h5 h6" ).addClass( "h2" );
+    $("#draw").removeClass( "draw-xs draw-s draw-m draw-l draw-xl" ).addClass( "draw-xl" );
+    $(".fixedHeader table").removeClass( "draw-xs draw-s draw-m draw-l draw-xl" ).addClass( "draw-xl" );
     return false;
   });
 });

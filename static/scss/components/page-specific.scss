@@ -30,13 +30,30 @@
   min-height: 66px; // Don't expand when the first team is added
   padding: 5px;
 }
-
+// DRAW
+.draw-xs {
+  font-size: $font-size-base * 1.25;
+}
+.draw-s {
+  font-size: $font-size-base * 1.5;
+}
+.draw-m {
+  font-size: $font-size-base * 1.75;
+}
+.draw-l {
+  font-size: $font-size-base * 2.00;
+}
+.draw-xl {
+  font-size: $font-size-base * 2.25;
+}
+// BALLOT ENTRY
+.speaker-name {
+  text-align: left;
+}
 
 // // OLD: REFACTOR
-// // Ballot Entry
-// .speaker-name {
-//   text-align: left;
-// }
+
+}
 // // Draw Page
 // #draw {
 //   margin-top: 0; // counteracts margin addded from the text size h2/h3/etcs

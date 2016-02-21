@@ -1,5 +1,9 @@
 {% extends "motions.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Motions Tab{% endblock %}
-{% block page-title %}Motions Tab{% endblock %}
+{% block head-title %}<span class="emoji">💭</span>Motions Tab{% endblock %}
+{% block page-title %}💭Motions Tab{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}

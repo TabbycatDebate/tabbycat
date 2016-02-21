@@ -149,6 +149,10 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
 
     def annotate_teams(self, queryset, standings, round=None):
         for team in self.get_annotated_queryset(queryset, self.field, self.function, round):
+            if team.metric is None:
+                logger.warning("Metric {metric!r} for team {team} was None, setting to 0".format(
+                        metric=self.key, team=team.short_name))
+                team.metric = 0
             standings.add_metric_to_team(team, self.key, team.metric)
 
 

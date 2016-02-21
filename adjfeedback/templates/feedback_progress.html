@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Missing Feedback Ballots{% endblock %}
-{% block page-title %}Missing Feedback Ballots{% endblock %}
+{% block head-title %}<span class="emoji">🆘</span>Missing Feedback Ballots{% endblock %}
+{% block page-title %}🆘Missing Feedback Ballots{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-default submit-disable" href="{% tournament_url adj_latest_feedback %}">
@@ -15,7 +15,7 @@
     Find Feedback
   </a>
   {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
-  <a class="btn btn-default submit-disable" href="{% tournament_url randomised_urls %}">
+  <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">
     Randomised URLs
   </a>
   {% endif %}
@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-    <a class="btn btn-success" href="{% tournament_url add_feedback %}">Add Feedback</a>
+    <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
 {% endblock %}
 
 {% block content %}
@@ -64,9 +64,7 @@
                 {{ team.submitted_ballots }}
               </td>
               <td>
-                <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
-                  {{ team.short_name }}
-                </span>
+                {% include "tables/team.html" with team=team %}
               </td>
               {% if pref.show_institutions %}
                 <td class="">
@@ -162,11 +160,11 @@
   $(document).ready( function() {
 
     var dTableA = $('#dataTableA').DataTable({
-      "aaSorting": [[ 0, "asc" ]],
+      "aaSorting": [[ 0, "asc" ], [ 1, "desc" ]],
     });
     new $.fn.dataTable.FixedHeader( dTableA, {alwaysCloneTop: true});
     var dTableB = $('#dataTableB').DataTable({
-      "aaSorting": [[ 0, "asc" ]],
+      "aaSorting": [[ 0, "asc" ], [ 1, "desc" ]],
     });
     new $.fn.dataTable.FixedHeader( dTableB, {alwaysCloneTop: true});
     $('#table-search').keyup(function(){

@@ -4,13 +4,12 @@
 {% load add_field_css %}
 {% load metricformat %}
 
-{% block head-title %}{{ category.name }} Break{% endblock %}
+{% block head-title %}<span class="emoji">👑</span>{{ category.name }} Break{% endblock %}
 {% block sub-title %}{{ pref.public_breaking_teams|yesno:",not "}}publicly visible{% endblock %}
-{% block page-title %}{{ category.name }} Break{% endblock %}
+{% block page-title %}👑{{ category.name }} Break{% endblock %}
 
 {% block page-subnav-sections %}
   {% if generated %}
-
     <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline" method="POST">
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
           Delete and regenerate the break for all categories
@@ -26,30 +25,43 @@
         Update the break for this category ({{ category.name }})
       </button>
     </form>
-
-    <div class="alert alert-warning">
-      Please double-check this before announcing the break or releasing it to the
-      public. The code that generates the break has not been robustly tested for
-      corner cases. If there are errors, please take a snapshot of the database
-      and a screenshot and send it to the developers.
+  {% else %}
+    <div class="forms-block-inline">
+      <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
+        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+            Generate the break for all categories
+        </button>
+      </form>
     </div>
-    <p>
-      <strong>How to edit the break:</strong> You can edit the remarks in the
-      right-hand column. Any team with a remark is considered ineligible for this
-      break. (The algorithm will sometimes insert its own remarks where appropriate,
-      based on the break size, institution cap and break category priorities.) After you do this, you must <strong>save the remarks</strong>
-      before proceeding (otherwise your changes will be not be saved). Then,
-      click the appropriate update button below.
-    </p>
-    <p>
-      The procedure isn't perfect; if you have complicated break category rules
-      (for example, if some teams are allowed to choose their preferred category)
-      then you may have to iterate through remark editing and saving a few times
-      for the algorithm to get what you want. As a last resort, you can edit the
-      breaking teams list directly in the database through the Django Admin.
-    </p>
+  {% endif %}
+{% endblock %}
 
-
+{% block page-alerts %}
+  {% if generated %}
+    <div class="alert alert-warning">
+        Please double-check this before announcing the break or releasing it to the
+        public. The code that generates the break has not been robustly tested for
+        corner cases. If there are errors, please take a snapshot of the database
+        and a screenshot and send it to the developers.
+    </div>
+    <div class="alert alert-info">
+      <p>
+        <strong>How to edit the break:</strong> You can edit the remarks in the
+        right-hand column. Any team with a remark is considered ineligible for this
+        break. (The algorithm will sometimes insert its own remarks where appropriate,
+        based on the break size, institution cap and break category priorities.) After you do this, you must <strong>save the remarks</strong>
+        before proceeding (otherwise your changes will be not be saved). Then,
+        click the appropriate update button below.
+      </p>
+      <p>
+        The procedure isn't perfect; if you have complicated break category rules
+        (for example, if some teams are allowed to choose their preferred category)
+        then you may have to iterate through remark editing and saving a few times
+        for the algorithm to get what you want. As a last resort, you can edit the
+        breaking teams list directly in the database through the
+        Edit Data section (under Setup in the menu).
+      </p>
+    </div>
   {% else %}
     {% if pref.public_breaking_teams %}
       <div class="alert alert-danger">
@@ -62,26 +74,21 @@
         breaks.
       </div>
     {% else %}
-      <p>
-        The break hasn't yet been generated. Would you like to generate
-        the break for all categories?
-      </p>
-      <p>
-        (It's safe to generate the break before all preliminary rounds are
-        complete, if you're curious. You can regenerate it later.)
-      </p>
+      <div class="alert alert-info">
+        <p>
+          The break hasn't yet been generated. Would you like to generate
+          the break for all categories?
+        </p>
+        <p>
+          (It's safe to generate the break before all preliminary rounds are
+          complete, if you're curious. You can regenerate it later.)
+        </p>
+      </div>
     {% endif %}
-    <div class="forms-block-inline">
-      <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
-        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-            Generate the break for all categories
-        </button>
-      </form>
-    </div>
-
   {% endif %}
-
 {% endblock %}
+
+
 
 {% block content %}
   {% if generated %}
@@ -157,7 +164,7 @@
 
 {% block extra-js %}
   {{ block.super }}
-  <script type="text/javascript" charset="utf-8">
+  <script>
     $(document).ready( function() {
       var dTable = $("#dataTable").DataTable({
         "aaSorting": [[ 0, "asc" ]],

@@ -2,8 +2,8 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}Breaking Adjudicators{% endblock %}
-{% block page-title %}Breaking Adjudicators{% endblock %}
+{% block head-title %}<span class="emoji">🎉</span>Breaking Adjudicators{% endblock %}
+{% block page-title %}🎉Breaking Adjudicators{% endblock %}
 
 {% block page-subnav-sections %}
   {% if adjs.all.count == 0 %}
@@ -14,40 +14,44 @@
 
 {% block content %}
   {% if adjs.all.count > 0 %}
-    <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
-      <thead>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
+        <thead>
+          <tr>
+            <th>Name</th>
+            {% if pref.show_institutions %}
+              <th>Institution</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for adj in adjs %}
         <tr>
-          <th>Name</th>
+          <td>{{ adj.name }}</td>
           {% if pref.show_institutions %}
-            <th>Institution</th>
+            <td>
+              {{ adj.institution }}
+              {% if person.independent %}
+                (Independent)
+              {% endif %}
+              {% if person.adj_core %}
+                (Adj Core)
+              {% endif %}
+            </td>
           {% endif %}
         </tr>
-      </thead>
-      <tbody>
-      {% for adj in adjs %}
-      <tr>
-        <td>{{ adj.name }}</td>
-        {% if pref.show_institutions %}
-          <td>
-            {{ adj.institution }}
-            {% if person.independent %}
-              (Independent)
-            {% endif %}
-            {% if person.adj_core %}
-              (Adj Core)
-            {% endif %}
-          </td>
-        {% endif %}
-      </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
   {% endif %}
 {% endblock content %}
 
 {% block extra-js %}
   {{ block.super }}
-  <script type="text/javascript" charset="utf-8">
+  <script>
     $(document).ready( function() {
       var dTable = $("#dataTable").DataTable({
         "aaSorting": [[ 0, "asc" ]],

@@ -10,19 +10,19 @@
 
   <ul class="list-group">
     {% if not_singleton %}
-    <li class="list-group-item list-group-item-warning">
-      <h4 class="list-group-item-heading">
-      {% if not new %}
-        There is more than one ballot set for this debate
-      {% else %}
-        {% if all_ballotsubs.count > 1 %}
-          There are existing ballot sets for this debate
+      <li class="list-group-item list-group-item-warning">
+        <h4 class="list-group-item-heading">
+        {% if not new %}
+          There is more than one ballot set for this debate
         {% else %}
-          There is an existing ballot set for this debate
+          {% if all_ballotsubs.count > 1 %}
+            There are existing ballot sets for this debate
+          {% else %}
+            There is an existing ballot set for this debate
+          {% endif %}
         {% endif %}
-      {% endif %}
-      </h4>
-    </li>
+        </h4>
+      </li>
     {% endif %}
     {% for other_ballotsub in all_ballotsubs %}
       <li class="list-group-item">

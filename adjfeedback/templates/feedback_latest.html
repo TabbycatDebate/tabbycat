@@ -15,7 +15,7 @@
     Find Feedback
   </a>
   {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
-  <a class="btn btn-default submit-disable" href="{% tournament_url randomised_urls %}">
+  <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">
     Randomised URLs
   </a>
   {% endif %}
@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-    <a class="btn btn-success" href="{% tournament_url add_feedback %}">Add Feedback</a>
+    <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
 {% endblock %}
 
 {% block content %}

@@ -4,29 +4,28 @@
 <div id="ballot_set">
 
     {% if form.errors %}
-        <div class="alert alert-danger">
-            <p>There are some problems with this scoresheet. Please review and correct them.</p>
-
-            {% if form.non_field_errors %}
-                <p>General errors:</p>
-                <div class="ballot-errors">{{ form.non_field_errors }}</div>
-            {% endif %}
-        </div>
+      <div class="alert alert-danger">
+        <p>There are some problems with this scoresheet. Please review and correct them.</p>
+        {% if form.non_field_errors %}
+          <p>General errors:</p>
+          <div class="ballot-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+      </div>
     {% endif %}
 
     {% if form.choose_sides %}
-        <div class="form-group">
-            <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Sides</label>
-            <div class="col-sm-10">
-                {{ form.choose_sides|addcss:"form-control choose-sides required" }}
-                {{ form.choose_sides.errors }}
-            </div>
+      <div class="form-group">
+        <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Sides</label>
+        <div class="col-sm-10">
+          {{ form.choose_sides|addcss:"form-control choose-sides required" }}
+          {{ form.choose_sides.errors }}
         </div>
-        <div class="hidden">
-            {% for field in form.fake_speaker_selects %}
-                {{ field }}
-            {% endfor %}
-        </div>
+      </div>
+      <div class="hidden">
+        {% for field in form.fake_speaker_selects %}
+          {{ field }}
+        {% endfor %}
+      </div>
     {% endif %}
 
     <div class="row">
@@ -35,7 +34,7 @@
           <div class="panel-heading">
             <h4>Motion</h4>
           </div>
-          <div class="panel-body">
+          <div class="panel-body form-panel">
             {% if pref.enable_motions %}
             <div class="form-group">
                 <label class="col-sm-2 col-md-2 col-xs-6 control-label" >Chosen</label>
@@ -85,18 +84,18 @@
             {% endif %}
             </h4>
           </div>
-          <div class="panel-body">
+          <div class="panel-body form-panel">
             <div class="clearfix scoresheet row">
               <div class="col-md-6 position position-aff pull-left" {% if forloop.first %}id="team-{{ debate.aff_team.id }}{% endif %}">
                   <div class="form-group">
                       <label class="h4 col-xs-offset-1 control-label aff-team-name" >{{ debate.aff_team.short_name }}</label>
                   </div>
                   {% for position in adj.position_iter %}
-                      <div class="form-group aff speaker s{{ position.pos }}">
+                      <div class="form-group aff js-team-speakers s{{ position.pos }}">
                           <label class="col-md-2 col-xs-3 control-label speaker-position-label">{{ position }}A</label>
                           <div class="col-md-7 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
                               {% if forloop.parentloop.first %}
-                                  {{ position.aff_speaker|addcss:"form-control speaker required aff-speaker" }}
+                                  {{ position.aff_speaker|addcss:"form-control js-speaker required aff-speaker" }}
                                   {{ position.aff_speaker.errors }}
                               {% else %}
                               <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
@@ -121,11 +120,11 @@
                       <label class="h4 col-xs-offset-1 control-label neg-team-name" >{{ debate.neg_team.short_name }}</label>
                   </div>
                  {% for position in adj.position_iter %}
-                      <div class="form-group neg speaker s{{ position.pos }}">
+                      <div class="form-group neg js-team-speakers s{{ position.pos }}">
                           <label class="col-md-2 col-xs-3 control-label speaker-position-label">{{ position }}N</label>
                           <div class="col-md-7 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
                               {% if forloop.parentloop.first %}
-                                  {{ position.neg_speaker|addcss:"form-control speaker required neg-speaker" }}
+                                  {{ position.neg_speaker|addcss:"form-control js-speaker required neg-speaker" }}
                                   {{ position.neg_speaker.errors }}
                               {% else %}
                               <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>

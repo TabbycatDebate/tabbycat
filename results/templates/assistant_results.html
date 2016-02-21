@@ -6,43 +6,6 @@
 
 {% block edit-link %}Check{% endblock %}
 
-{% block page-subnav-sections %}
-  <div class="btn-group">
-    <button class="btn btn-default btn-danger">
-      <span class="label none">
-        {{ stats.none }} No Ballots <span class="glyphicon glyphicon-remove"></span>
-      </span>
-    </button>
-    <button class="btn btn-warning">
-      <span class="label ballotin">
-        {{ stats.ballot_in }} Ballots in <span class="glyphicon glyphicon-inbox"></span>
-      </span>
-    </button>
-    <button class="btn btn-info">
-      <span class="label unconfirmed">
-        {{ stats.draft }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span>
-      </span>
-    </button>
-    <button class="btn btn-success">
-      <span class="label confirmed">
-        {{ stats.confirmed }} Confirmed <span class="glyphicon glyphicon-ok"></span>
-      </span>
-    </button>
-    {% if pref.enable_postponements %}
-    <button class="btn btn-primary">
-      <span class="label confirmed">
-        {{ stats.postponed }} Postponed <span class="glyphicon glyphicon-pause"></span>
-      </span>
-    </button>
-    <button class="btn btn-default active">
-      <span class="label confirmed text-muted">
-        Bye <span class="glyphicon glyphicon-fast-forward"></span>
-      </span>
-    </button>
-    {% endif %}
-  </div>
-{% endblock %}
-
 {% block page-subnav-actions %}
 {% comment %}
 We don't want assistant users having an advance button

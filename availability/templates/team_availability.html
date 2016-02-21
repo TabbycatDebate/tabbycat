@@ -30,9 +30,7 @@
     {% for team in teams %}
     <tr>
       <td>
-        <span class="team-speakers-hover" id="team_speakers_{{ team.id }}">
-           {{ team.long_name }}
-         </span>
+        {% include "tables/team.html" with team=team %}
       </td>
       {% if pref.show_emoji %}
         <td class="team-emoji">{{ team.emoji }}</td>

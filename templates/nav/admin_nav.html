@@ -31,7 +31,7 @@
     {% else %}
       <ul class="nav nav-stacked" role="tablist">
         <li role="presentation" class="">
-          <a id="tournament_select" class="{% if overview_nav %}active{% endif %}" href="{{ tournament.get_absolute_url }}">
+          <a id="tournament_select"template_name href="{{ tournament.get_absolute_url }}">
             <h4>
               {% if tournament.emoji %}
                 <span class="emoji">{{ tournament.emoji }}</span>
@@ -65,7 +65,7 @@
         </a>
       </li>
       <li class="standalone">
-        <a href="{% round_url standings_index current_round %}" class="{% if standings_nav %} active {% endif %}">
+        <a href="{% round_url standings-index current_round %}" class="{% if standings_nav %} active {% endif %}">
           <span class="glyphicon glyphicon-stats"></span> Standings
         </a>
       </li>
@@ -98,8 +98,8 @@
               </a>
             </li>
             <li>
-              <a class="" href="/admin/" target="_blank">
-                <span class="glyphicon glyphicon-edit">️</span>Edit Data
+              <a href="/admin/" target="_blank">
+                <span class="glyphicon glyphicon-edit"></span>Edit Data
               </a>
             </li>
           </ul>

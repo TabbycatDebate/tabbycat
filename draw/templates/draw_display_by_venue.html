@@ -6,7 +6,7 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
-        <table id="draw" class="h3 table">
+        <table id="draw" class="draw-m table">
           <thead>
             <tr>
               {% if pref.enable_divisions %}
@@ -58,9 +58,7 @@
               {% endif %}
               <td >
                 {% if debate.aff_team.type != 'B' %}
-                  <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}"{% endif %}>
-                    {{ debate.aff_team.short_name }}
-                  </span>
+                  {% include "tables/team.html" with team=debate.aff_team %}
                 {% endif %}
               </td>
               {% if pref.show_emoji %}
@@ -70,9 +68,7 @@
               {% endif %}
               <td >
                 {% if debate.neg_team.type != 'B'  %}
-                  <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}"{% endif %}>
-                    {{ debate.neg_team.short_name }}
-                  </span>
+                  {% include "tables/team.html" with team=debate.neg_team %}
                 {% endif %}
               </td>
               {% if pref.enable_division_motions %}

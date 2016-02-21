@@ -20,7 +20,7 @@ body {
   }
 }
 .page-sub-nav {
-  .navbar-left {
+  .navbar-left .btn, .navbar-left .input-group {
     margin-bottom: $line-height-computed;
   }
   .navbar-right {

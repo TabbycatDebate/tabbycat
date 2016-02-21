@@ -16,7 +16,7 @@
     Find Feedback
   </a>
   {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
-  <a class="btn btn-default submit-disable" href="{% tournament_url randomised_urls %}">
+  <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">
     Randomised URLs
   </a>
   {% endif %}
@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-    <a class="btn btn-success" href="{% tournament_url add_feedback %}">Add Feedback</a>
+    <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
 {% endblock %}
 
 {% block content %}
@@ -73,7 +73,7 @@
 
 {% block extra-js %}
 
-  <script type="text/javascript" language="javascript" src="{% static 'js/vendor/vue.js' %}"></script>
+  <script src="{% static 'js/vendor/vue.js' %}"></script>
   {% include "vue/table.js" %}
   <script>
     Vue.config.delimiters = ["[[", "]]"];
@@ -110,7 +110,7 @@
   </script>
 
   {{ block.super }}
-   <script type="text/javascript" charset="utf-8">
+   <script>
   </script>
 
 {% endblock extra-js %}

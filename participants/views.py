@@ -11,7 +11,7 @@ def team_speakers(request, t, team_id):
     speakers = team.speakers
     data = {}
     for i, speaker in enumerate(speakers):
-        data[i] = speaker.name
+        data[i] = "<li>" + speaker.name + "</li>"
 
     return JsonResponse(data, safe=False)
 
@@ -60,4 +60,3 @@ def public_confirm_shift_key(request, t, url_key):
 
 
     return r2r(request, 'confirm_shifts.html', dict(formset=formset, adjudicator=adj))
-

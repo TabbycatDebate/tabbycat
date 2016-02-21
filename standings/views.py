@@ -1,12 +1,15 @@
-from participants.models import Team, Speaker
-from tournaments.models import Round
-from results.models import TeamScore, SpeakerScore, BallotSubmission
-from motions.models import Motion
-from .teams import TeamStandingsGenerator
 from django.db.models import Count
+from django.views.generic.base import View, ContextMixin
 
+from motions.models import Motion
+from participants.models import Team, Speaker
+from results.models import TeamScore, SpeakerScore, BallotSubmission
+from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
+from tournaments.models import Round
+from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
 
+from .teams import TeamStandingsGenerator
 
 @admin_required
 @round_view
@@ -27,9 +30,9 @@ def standings_index(request, round):
             'debate_team__team', 'debate_team__debate__round',
             'debate_team__team__institution').order_by('margin')[:10]
 
-    top_motions = Motion.objects.filter(round__seq=round.seq).annotate(
+    top_motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
         Count('ballotsubmission')).order_by('-ballotsubmission__count')[:10]
-    bottom_motions = Motion.objects.filter(round__seq=round.seq).annotate(
+    bottom_motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
         Count('ballotsubmission')).order_by('ballotsubmission__count')[:10]
 
     return render(request,
@@ -107,10 +110,10 @@ def get_speaker_standings(rounds,
                                        ]) / len(
                                            [_f for _f in speaker.scores if _f])
             except ZeroDivisionError:
-                speaker.average = None
+                speaker.average = 0.0
         else:
-            speaker.total = None
-            speaker.average = None
+            speaker.total = 0.0
+            speaker.average = 0.0
 
         if for_replies:
             speaker.replies_given = len([_f for _f in speaker.scores if _f])
@@ -161,6 +164,7 @@ def get_round_result(team, team_scores, r):
 
 
 class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
+    """Base class for views that display team standings."""
 
     template_name = 'teams.html'
 
@@ -169,7 +173,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
             kwargs['show_ballots'] = self.show_ballots()
         if 'round' not in kwargs:
             kwargs['round'] = self.get_round()
-        return super(BaseTeamStandingsView, self).get_context_data(**kwargs)
+        return super().get_context_data(**kwargs)
 
     def show_ballots(self):
         return False
@@ -195,15 +199,18 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
 
 
 class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+    """The standard team standings view."""
     rankings = ('rank',)
 
 
 class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+    """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
 
 
 class PublicTabMixin(PublicTournamentPageMixin):
-    pref_name = 'tab_released'
+    """Mixin for views that should only be allowed when the tab is released publicly."""
+    public_page_preference = 'tab_released'
     cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
 
     def get_round(self):
@@ -211,7 +218,13 @@ class PublicTabMixin(PublicTournamentPageMixin):
 
 
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
+    """Public view for the team tab.
+    The team tab is actually what is presented to an admin as "team standings".
+    During the tournament, "public team standings" only shows wins and results.
+    Once the tab is released, to the public the team standings are known as the
+    "team tab"."""
     rankings = ('rank',)
+    template_name = 'public_team_tab.html'
 
     def show_ballots(self):
         return self.get_tournament().pref('ballots_released')

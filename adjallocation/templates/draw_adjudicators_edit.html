@@ -129,9 +129,7 @@
                 {{ debate.aff_team.male_adj_percent }}
               </td>
               <td id="team_{{ debate.aff_team.id }}" class="teaminfo {% team_status_classes debate.aff_team %}">
-                <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
-                  {{ debate.aff_team.short_name }}
-                </span>
+                {% include "tables/team.html" with team=debate.aff_team %}
               </td>
               <td>
                 {{ debate.neg_team.wins_count }}
@@ -140,9 +138,7 @@
                 {{ debate.neg_team.male_adj_percent }}
               </td>
               <td id="team_{{ debate.neg_team.id }}" class="teaminfo {% team_status_classes debate.neg_team %}">
-                <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
-                  {{ debate.neg_team.short_name }}
-                </span>
+                {% include "tables/team.html" with team=debate.neg_team %}
               </td>
               <td id="chair_{{ debate.id }}" class="btn-holder adj-holder chair-holder">
               </td>
@@ -231,8 +227,8 @@
 {% endblock content %}
 
 {% block extra-js %}
-  <script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery-ui-custom-1.11.4.min.js' %}"></script>
-  <script type="text/javascript" charset="utf-8">
+  <script src="{% static 'js/vendor/jquery-ui-custom-1.11.4.min.js' %}"></script>
+  <script>
   $(document).ready( function() {
     {% include 'js/draw_adjs_edit_allocation.js' %}
     {% include 'js/draw_adjs_edit_flags.js' %}

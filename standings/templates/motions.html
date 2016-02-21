@@ -5,31 +5,31 @@
 {% block head-title %}Motions Balance{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default" href="{% round_url standings_index current_round %}">
+  <a class="btn btn-default" href="{% round_url standings-index current_round %}">
     Standings Overview
   </a>
-  <a class="btn btn-default" href="{% round_url team_standings current_round %}">
+  <a class="btn btn-default" href="{% round_url standings-team current_round %}">
     Team Standings
   </a>
   {% if pref.enable_divisions %}
-  <a class="btn btn-default" href="{% round_url division_standings current_round %}">
+  <a class="btn btn-default" href="{% round_url standings-division current_round %}">
     Divisions Standings
   </a>
   {% endif %}
-  <a class="btn btn-default" href="{% round_url speaker_standings current_round %}">
+  <a class="btn btn-default" href="{% round_url standings-speaker current_round %}">
     Speaker Standings
   </a>
   {% if pref.show_novices %}
-    <a class="btn btn-default" href="{% round_url novice_standings current_round %}">
+    <a class="btn btn-default" href="{% round_url standings-novice current_round %}">
       Novices Standings
     </a>
   {% endif %}
   {% if pref.reply_scores_enabled %}
-    <a class="btn btn-default" href="{% round_url reply_standings current_round %}">
+    <a class="btn btn-default" href="{% round_url standings-reply current_round %}">
       Replies Standings
     </a>
   {% endif %}
-  <a class="btn btn-default active" href="{% round_url motion_standings current_round %}">
+  <a class="btn btn-default active" href="{% round_url standings-motion current_round %}">
     Motion Balance
   </a>
   {% include "tables/table_search.html" %}
@@ -113,17 +113,20 @@
 {% endblock content %}
 
 {% block extra-js %}
-  <script type="text/javascript" charset="utf-8">
+  <script>
 
     $(document).ready( function() {
-      var table = $("#dataTable").dataTable( {
+      var dTable = $('#dataTable').DataTable({
         "aaSorting": [[1, 'asc'], [2, 'asc']],
         "aoColumnDefs": [
           {"iDataSort": 0, "aTargets": [1] }, //sort based on a hidden column when another column is clicked
           { "bVisible": false, "aTargets": [0] }, //set column visibility
         ],
       });
-      new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
+      var fixedHeader = new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
 
       $("#release_motions").click( function() {
         $("#releaseForm").submit();

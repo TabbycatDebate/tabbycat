@@ -9,31 +9,31 @@
 {% block sub-title %}after {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default" href="{% round_url standings_index current_round %}">
+  <a class="btn btn-default" href="{% round_url standings-index current_round %}">
     Standings Overview
   </a>
-  <a class="btn btn-default" href="{% round_url team_standings current_round %}">
+  <a class="btn btn-default" href="{% round_url standings-team current_round %}">
     Team Standings
   </a>
   {% if pref.enable_divisions %}
-  <a class="btn btn-default" href="{% round_url division_standings current_round %}">
+  <a class="btn btn-default" href="{% round_url standings-division current_round %}">
     Divisions Standings
   </a>
   {% endif %}
-  <a class="btn btn-default active" href="{% round_url speaker_standings current_round %}">
+  <a class="btn btn-default active" href="{% round_url standings-speaker current_round %}">
     Speaker Standings
   </a>
   {% if pref.show_novices %}
-    <a class="btn btn-default" href="{% round_url novice_standings current_round %}">
+    <a class="btn btn-default" href="{% round_url standings-novice current_round %}">
       Novices Standings
     </a>
   {% endif %}
   {% if pref.reply_scores_enabled %}
-    <a class="btn btn-default" href="{% round_url reply_standings current_round %}">
+    <a class="btn btn-default" href="{% round_url standings-reply current_round %}">
       Replies Standings
     </a>
   {% endif %}
-  <a class="btn btn-default" href="{% round_url motion_standings current_round %}">
+  <a class="btn btn-default" href="{% round_url standings-motion current_round %}">
     Motion Balance
   </a>
   {% include "tables/table_search.html" %}
@@ -90,9 +90,7 @@
             </td>
           {% endif %}
           <td>
-            <span class="team-speakers-hover" id="team_speakers_{{ speaker.team.id }}">
-              {{ speaker.team.short_name }}
-            </span>
+            {% include "tables/team.html" with team=speaker.team %}
           </td>
           {% if pref.show_institutions %}
             <td>{{ speaker.team.institution.code }}</td>
@@ -113,7 +111,7 @@
 {% endblock content %}
 
 {% block extra-js %}
-  <script type="text/javascript" charset="utf-8">
+  <script>
     $(document).ready( function() {
       var dTable = $("#dataTable").DataTable({
         "aaSorting": [[1, "asc"]],

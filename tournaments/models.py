@@ -302,21 +302,6 @@ class Round(models.Model):
     def __str__(self):
         return "%s - %s" % (self.tournament, self.name)
 
-    @property
-    def rounds(self):
-        from warnings import warn
-        warn(
-            "Tournament.rounds is deprecated, use Tournament.round_set instead.",
-            DeprecationWarning)
-        return self.round_set
-
-    def motions(self):
-        from warnings import warn
-        warn(
-            "Tournament.motions is deprecated, use Tournament.motion_set instead.",
-            DeprecationWarning)
-        return self.motion_set
-
     def draw(self, override_team_checkins=False):
         from draw.models import Debate, TeamPositionAllocation
         from draw import DrawGenerator

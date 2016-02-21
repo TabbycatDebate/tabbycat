@@ -3,12 +3,22 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-
-    url(r'^current/$',  views.public_team_standings,name='public_team_standings'),
-    url(r'^team/$',     views.PublicTeamTabView.as_view(), name='public_team_tab'),
-    url(r'^speaker/$',  views.public_speaker_tab,   name='public_speaker_tab'),
-    url(r'^novices/$',  views.public_novices_tab,   name='public_novices_tab'),
-    url(r'^replies/$',  views.public_replies_tab,   name='public_replies_tab'),
-    url(r'^motions/$',  views.public_motions_tab,   name='public_motions_tab'),
-
+    url(r'^current_standings/$',
+        views.public_team_standings,
+        name='standings-public-teams-current'),
+    url(r'^team/$',
+        views.PublicTeamTabView.as_view(),
+        name='standings-public-tab-team'),
+    url(r'^speaker/$',
+        views.public_speaker_tab,
+        name='standings-public-tab-speaker'),
+    url(r'^novices/$',
+        views.public_novices_tab,
+        name='standings-public-tab-novices'),
+    url(r'^replies/$',
+        views.public_replies_tab,
+        name='standings-public-tab-replies'),
+    url(r'^motions/$',
+        views.public_motions_tab,
+        name='standings-public-tab-motions'),
 ]
