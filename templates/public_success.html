@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block head-title %}
-  <i clss="emoji">😽</i>Success!
+  <span clss="emoji">😽</span>Success!
 {% endblock %}
 {% block page-title %}
   Success!
@@ -17,7 +17,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <p>Thank you, your {{ success_kind }} has been submitted and recorded.</p>
+    <div class="alert alert-success" role="alert">Thank you, your {{ success_kind }} has been submitted and recorded.</div>
   </div>
 </div>
 
