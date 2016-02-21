@@ -1,6 +1,9 @@
 // General hover elements
 [data-toggle="popover"] {
   border-bottom: 2px dotted #999;
+  &:hover {
+    cursor: help;
+  }
 }
 
 // Dragging for Allocations
