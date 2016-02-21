@@ -11,7 +11,16 @@
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
 {% block sub-title %}ESC stops scroll{% endblock %}
 
-{% block nav %}<div class="col-md-12">{% endblock %}
+
+{% block nav %}
+  {# For admins the draw opens without menu (for displaying publicly)#}
+  {% if 'admin/' in request.path and user.is_superuser %}
+    <div class="col-md-12">
+  {% else %}
+    {{ block.super }}
+  {% endif %}
+{% endblock %}
+
 {% block footer %}{% endblock %}
 
 {% block page-subnav-sections %}
