@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
-from threading import BoundedSemaphore
+from threading import Lock
 from .result import BallotSet
 
 import logging
@@ -44,7 +44,7 @@ class Submission(models.Model):
     confirm_timestamp = models.DateTimeField(blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
-    version_semaphore = BoundedSemaphore()
+    version_lock = Lock()
 
     confirmed = models.BooleanField(default=False)
 
@@ -75,19 +75,18 @@ class Submission(models.Model):
                     current.save()
 
         # Assign the version field to one more than the current maximum version.
-        # Use a semaphore to protect against the possibility that two submissions do this
+        # Use a lock to protect against the possibility that two submissions do this
         # at the same time and get the same version number.
-        self.version_semaphore.acquire()
-        if self.pk is None:
-            existing = self.__class__.objects.filter(**
-                                                     self._unique_filter_args)
-            if existing.exists():
-                self.version = existing.aggregate(models.Max('version'))[
-                    'version__max'] + 1
-            else:
-                self.version = 1
-        super(Submission, self).save(*args, **kwargs)
-        self.version_semaphore.release()
+        with self.version_lock:
+            if self.pk is None:
+                existing = self.__class__.objects.filter(**
+                                                         self._unique_filter_args)
+                if existing.exists():
+                    self.version = existing.aggregate(models.Max('version'))[
+                        'version__max'] + 1
+                else:
+                    self.version = 1
+            super(Submission, self).save(*args, **kwargs)
 
     def clean(self):
         if self.submitter_type == self.SUBMITTER_TABROOM and self.submitter is None:
