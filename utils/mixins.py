@@ -95,4 +95,3 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectMixin):
     """
     slug_field = 'url_key'
     slug_url_kwarg = 'url_key'
-    query_pk_and_slug = True
