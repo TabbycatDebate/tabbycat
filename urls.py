@@ -1,10 +1,11 @@
 from django.conf.urls import *
 from django.conf import settings
 from django.contrib import admin
+from django.views.static import serve
+from django.views.generic.base import RedirectView
 
 import django.contrib.auth.views as auth_views
 import tournaments.views
-from django.views.static import serve
 
 admin.autodiscover()
 
@@ -44,6 +45,9 @@ urlpatterns = [
         auth_views.login,
         name='auth-login'),
     url(r'^accounts/logout/$', auth_views.logout, {'next_page': '/'}),
+
+    # Favicon for old browsers that ignore the head link
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico'))
 ]
 
 if settings.DEBUG:
