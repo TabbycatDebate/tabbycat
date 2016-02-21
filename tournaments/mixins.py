@@ -1,4 +1,10 @@
+import logging
+logger = logging.getLogger(__name__)
+
 from django.core.cache import cache
+from django.contrib import messages
+
+from utils.misc import redirect_tournament
 
 from .models import Tournament, Round
 
@@ -95,6 +101,7 @@ class PublicTournamentPageMixin(TournamentMixin):
         if tournament.pref(self.public_page_preference):
             return super().dispatch(request, *args, **kwargs)
         else:
+            logger.error("Tried to access a disabled public page")
             messages.error(self.request, self.get_disabled_message())
             return redirect_tournament('tournament-public-index', tournament)
 
