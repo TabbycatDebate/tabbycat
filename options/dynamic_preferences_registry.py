@@ -142,8 +142,8 @@ class TeamHistoryPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class DrawOddBracket(ChoicePreference):
-    help_text = "Odd bracket resolution method, see documentation for allowed values"
-    verbose_name = "Draw Odd Bracket"
+    help_text = "How odd brackets are resolved (see documentation for further details)"
+    verbose_name = "Odd bracket resolution method"
     section = draw_rules
     name = "draw_odd_bracket"
     choices = (
@@ -159,8 +159,8 @@ class DrawOddBracket(ChoicePreference):
 
 @tournament_preferences_registry.register
 class DrawSideAllocations(ChoicePreference):
-    help_text = "Side allocations method, see wiki for allowed values"
-    verbose_name = "Draw Side Allocations"
+    help_text = "How affirmative/negative positions are assigned (see documentation for further details)"
+    verbose_name = "Side allocations method"
     section = draw_rules
     name = "draw_side_allocations"
     choices = (
@@ -173,8 +173,8 @@ class DrawSideAllocations(ChoicePreference):
 
 @tournament_preferences_registry.register
 class DrawPairingMethod(ChoicePreference):
-    help_text = "Pairing method, see wiki for allowed values"
-    verbose_name = "DrawPairingMethod"
+    help_text = "Slide: 1 vs 6, 2 vs 7, …. Fold: 1 vs 10, 2 vs 9, …."
+    verbose_name = "Pairing method"
     section = draw_rules
     name = "draw_pairing_method"
     choices = (
@@ -186,8 +186,8 @@ class DrawPairingMethod(ChoicePreference):
 
 @tournament_preferences_registry.register
 class DrawAvoidConflicts(ChoicePreference):
-    help_text = "Conflict avoidance method, see wiki for allowed values"
-    verbose_name = "DrawAvoidConflicts"
+    help_text = "How to avoid teams facing each other multiple times or their own institution (see documentation for further details)"
+    verbose_name = "Conflict avoidance method"
     section = draw_rules
     name = "draw_avoid_conflicts"
     choices = (
@@ -380,47 +380,47 @@ data_entry = Section('data_entry')
 
 @tournament_preferences_registry.register
 class PublicBallots(BooleanPreference):
-    help_text = 'Public interface to add ballots using normal URLs'
-    verbose_name = "Public Ballots"
+    help_text = 'Enables public interface to add ballots using normal URLs'
+    verbose_name = "Enable public ballots with normal URLs"
     section = data_entry
     name = "public_ballots"
     default = False
 
 @tournament_preferences_registry.register
 class PublicBallotsRandomised(BooleanPreference):
-    help_text = 'Public interface to add ballots using randomised URLs'
-    verbose_name = "Public Ballots Randomised"
+    help_text = 'Enables public interface to add ballots using randomised URLs'
+    verbose_name = "Enable public ballots with randomised URLs"
     section = data_entry
     name = "public_ballots_randomised"
     default = False
 
 @tournament_preferences_registry.register
 class PublicFeedback(BooleanPreference):
-    help_text = 'Public interface to add feedback using normal URLs'
-    verbose_name = "PublicFeedback"
+    help_text = 'Enables public interface to add feedback using normal URLs'
+    verbose_name = "Enable public feedback with normal URLs"
     section = data_entry
     name = "public_feedback"
     default = False
 
 @tournament_preferences_registry.register
 class PublicFeedbackRandomised(BooleanPreference):
-    help_text ='Public interface to add feedback using randomised URLs'
-    verbose_name = "PublicFeedbackRandomised"
+    help_text = 'Enables public interface to add feedback using randomised URLs'
+    verbose_name = "Enable public feedback with randomised URLs"
     section = data_entry
     name = "public_feedback_randomised"
     default = False
 
 @tournament_preferences_registry.register
 class PublicUsePassword(BooleanPreference):
-    help_text = 'Require password to submit public feedback and ballots'
-    verbose_name = "PublicUsePassword"
+    help_text = 'If checked, users must enter a password when submitting public feedback and ballots'
+    verbose_name = "Require password for submission"
     section = data_entry
     name = "public_use_password"
     default = False
 
 @tournament_preferences_registry.register
 class PublicPassword(StringPreference):
-    help_text = 'Value of the password for public submissions'
+    help_text = 'Value of the password required for public submissions, if "require public for submission" is enabled'
     verbose_name = "Public Password"
     section = data_entry
     name = "public_password"
@@ -428,7 +428,7 @@ class PublicPassword(StringPreference):
 
 @tournament_preferences_registry.register
 class EnableAssistantConfirms(BooleanPreference):
-    help_text = 'Enables Assistant users to confirm their own ballots'
+    help_text = 'Allows assistant users to confirm their own ballots'
     verbose_name = "Enable Assistant Confirms"
     section = data_entry
     name = "enable_assistant_confirms"
@@ -437,7 +437,7 @@ class EnableAssistantConfirms(BooleanPreference):
 @tournament_preferences_registry.register
 class EnableMotions(BooleanPreference):
     help_text = 'Whether entering ballots requires inputting a chosen motion'
-    verbose_name = "Enter Motion"
+    verbose_name = "Enable Motions"
     section = data_entry
     name = "enable_motions"
     default = True
