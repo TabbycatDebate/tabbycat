@@ -2,7 +2,7 @@
 <script type="text/x-template" id="division-droppable">
 
   <div class="col-md-3">
-    <div class="panel panel-default">
+    <div class="panel panel-default" v-bind:class="{ 'panel-danger': hasEvenNumbers }">
 
       <div class="panel-heading division-heading">
 
@@ -21,9 +21,9 @@
 
       <div class="panel-body division-droppable" v-on:dragover.prevent v-on:drop="receiveTeam"
         v-on:dragenter="handleDragEnter" v-on:dragleave="handleDragLeave"
-        v-bind:class="{ 'vue-is-drag-enter': isDroppable, 'alert-danger': hasEvenNumbers }" data-id="[[ division.id ]]">
+        v-bind:class="{ 'vue-is-drag-enter': isDroppable }" data-id="[[ division.id ]]">
         <template v-for="team in teams" track-by="id">
-          <team-draggable :team="team" :save-division-at="saveDivisionAt"></team-draggable>
+          <team-draggable :team="team" :vg="division.venue_group" :save-division-at="saveDivisionAt"></team-draggable>
         </template>
 
       </div>
