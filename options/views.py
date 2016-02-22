@@ -12,6 +12,7 @@ from actionlog.models import ActionLogEntry
 from tournaments.mixins import TournamentMixin
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
+from utils.misc import reverse_tournament
 
 from . import presets
 from .forms import tournament_preference_form_builder
