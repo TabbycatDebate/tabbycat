@@ -6,9 +6,9 @@
 
 {% block page-subnav-sections %}
   <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url feedback_overview %}">Feedback Summary</a>
-    <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">Latest Feedback</a>
-    <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">Feedback By Source</a>
+    <a class="btn btn-default" href="{% tournament_url adjfeedback-overview %}">Feedback Summary</a>
+    <a class="btn btn-default" href="{% tournament_url adjfeedback-view-latest %}">Latest Feedback</a>
+    <a class="btn btn-default" href="{% tournament_url adjfeedback-view-by-source %}">Feedback By Source</a>
   </div>
   {% include "tables/table_search.html" %}
 {% endblock %}

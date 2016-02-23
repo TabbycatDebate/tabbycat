@@ -7,7 +7,7 @@
 
 {% block page-subnav-sections %}
   {% if adjs.all.count == 0 %}
-    <p class="lead">Breaking adjudicators can be set in the <a href="{% tournament_url feedback_overview %}"> Feedback section.</a></p>
+    <p class="lead">Breaking adjudicators can be set in the <a href="{% tournament_url adjfeedback-overview %}"> Feedback section.</a></p>
   {% endif %}
   {% include "tables/table_search.html" %}
 {% endblock %}

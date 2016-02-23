@@ -5,13 +5,13 @@
 {% block page-title %}Latest Feedback{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% tournament_url adj_latest_feedback %}">
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-overview %}">
     Feedback Overview
   </a>
-  <a class="btn btn-default active " href="{% tournament_url adj_latest_feedback %}">
+  <a class="btn btn-default active " href="{% tournament_url adjfeedback-view-latest %}">
     Latest Feedback
   </a>
-  <a class="btn btn-default submit-disable" href="{% tournament_url adj_source_feedback %}">
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-by-source %}">
     Find Feedback
   </a>
   {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
