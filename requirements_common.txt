@@ -3,7 +3,7 @@
 Django==1.9.2
 dj-cmd==0.5 # Provides the dj command alias
 django-appconf==1.0.1 # Adds helper class for handling app configs
-django-dynamic-preferences==0.7.0
+django-dynamic-preferences==0.7.1
 django-debug-toolbar==1.4.0 # Debug Toolbar
 django-extensions==1.6.1 # For the generate secret command
 django-ipware==1.1.3 # IP Address logging
