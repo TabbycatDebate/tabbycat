@@ -421,12 +421,11 @@ def set_adj_test_score(request, t):
     except (Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
         return HttpResponseBadRequest("Adjudicator probably doesn't exist")
 
-    # CONTINUE HERE CONTINUE HERE WORK IN PROGRESS
     score_text = request.POST["test_score"]
     try:
         score = float(score_text)
     except ValueError as e:
-        print(e)
+        messages.error("Whoops, the value {} isn't a valid test score.".format(score_text))
         return redirect_tournament('adjfeedback-overview', t)
 
     adjudicator.test_score = score
