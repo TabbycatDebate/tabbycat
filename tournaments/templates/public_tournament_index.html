@@ -10,7 +10,7 @@
 
 
 {% block page-alerts %}
-  {% if not pref.tab_released and not pref.motion_tab_released and not pref.public_draw and not pref.public_results and not pref.public_divisions and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and not pref.public_ballots and not pref.public_feedback and not pref.show_all_draws %}
+  {% if not pref.team_tab_released and not pref.motion_tab_released and not pref.public_draw and not pref.public_results and not pref.public_divisions and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and not pref.public_ballots and not pref.public_feedback and not pref.show_all_draws %}
     <div class="alert alert-info">
       Current there is no public information available for this tournament
       <span class="emoji">😹</span>
@@ -23,35 +23,37 @@
   <div class="row">
     <div class="col-md-12">
       <ul class="list-group">
-        {% if pref.tab_released > 0 %}
+        {% if pref.team_tab_released > 0 %}
           <li class="list-group-item">
             <a href="{% tournament_url standings-public-tab-team %}">Team Tab</a>
           </li>
+        {% endif %}
+        {% if pref.speaker_tab_released > 0 %}
           <li class="list-group-item">
             <a href="{% tournament_url standings-public-tab-speaker %}">Speaker Tab</a>
           </li>
-          {% if pref.show_novices %}
+        {% endif %}
+        {% if pref.novices_tab_released > 0 %}
           <li class="list-group-item">
             <a href="{% tournament_url standings-public-tab-novices %}">Novice Speaker Tab</a>
           </li>
-          {% endif %}
-          {% if pref.reply_scores_enabled %}
+        {% endif %}
+        {% if pref.replies_tab_released > 0 %}
           <li class="list-group-item">
             <a href="{% tournament_url standings-public-tab-replies %}">Replies Tab</a>
           </li>
-          {% endif %}
         {% endif %}
         {% if pref.motion_tab_released %}
           <li class="list-group-item">
             <a href="{% tournament_url standings-public-tab-motions %}">Motions Tab</a>
           </li>
         {% endif %}
-        {% if pref.public_draw and pref.tab_released == 0 and pref.show_all_draws == 0 %}
+        {% if pref.public_draw and pref.team_tab_released == 0 and pref.show_all_draws == 0 %}
           <li class="list-group-item">
             <a href="{% tournament_url public_side_allocations %}">Sides</a>
           </li>
         {% endif %}
-        {% if pref.public_draw > 0  and pref.tab_released == 0 and pref.show_all_draws == 0 %}
+        {% if pref.public_draw > 0  and pref.team_tab_released == 0 and pref.show_all_draws == 0 %}
           <li class="list-group-item"><a class="public-draw-nav" href="{% tournament_url public_draw %}">
             Draw for {{ current_round.name }}
           </a></li>
@@ -76,7 +78,7 @@
             <a href="{% tournament_url public_side_allocations %}">Sides</a>
           </li>
         {% endif %}
-        {% if pref.public_team_standings and current_round.prev and pref.tab_released == 0 %}
+        {% if pref.public_team_standings and current_round.prev and pref.team_tab_released == 0 %}
           <li class="list-group-item">
             <a href="{% tournament_url standings-public-teams-current %}">Team Standings</a>
           </li>

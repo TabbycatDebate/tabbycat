@@ -56,7 +56,6 @@ class Command(BaseCommand):
         self.importer = AnorakTournamentDataImporter(self.t, loglevel=loglevel,
                 strict=options['strict'], expect_unique=not options['keep_existing'])
 
-        self._make('options')
         self._make('venue_groups')
         self._make('venues')
         self._make('regions')
