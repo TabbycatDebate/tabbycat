@@ -31,16 +31,16 @@ urlpatterns = [
 
     # Source
     url(r'^source/latest/$',
-        views.adj_latest_feedback,
+        views.LatestFeedbackView.as_view(),
         name='adj_latest_feedback'),
     url(r'^source/list/$',
         views.adj_source_feedback,
         name='adj_source_feedback'),
-    url(r'^source/team/(?P<team_id>\d+)/$',
-        views.team_feedback_list,
+    url(r'^source/team/(?P<pk>\d+)/$',
+        views.FeedbackFromTeamView.as_view(),
         name='team_feedback_list'),
-    url(r'^source/adjudicator(?P<adj_id>\d+)/$',
-        views.adj_feedback_list,
+    url(r'^source/adjudicator/(?P<pk>\d+)/$',
+        views.FeedbackFromAdjudicatorView.as_view(),
         name='adj_feedback_list'),
 
     # Adding

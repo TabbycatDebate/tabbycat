@@ -44,6 +44,9 @@
         </div><div class="row">
       {% endif %}
 
+    {% empty %}
+      <div class="alert alert-info">No feedback has been submitted yet.</div>
+
     {% endfor %}
 
   </div>

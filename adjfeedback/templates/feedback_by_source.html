@@ -16,7 +16,12 @@
 
     </div>
 
-    {% if forloop.counter|divisibleby:3 %}</div></div><div class="row"><div class="col-md-4">{% endif %}
+    {% if forloop.counter|divisibleby:3 %}
+      </div><div class="row">
+    {% endif %}
+
+  {% empty %}
+    <div class="alert alert-info">{{ source_name }} hasn't submitted any feedback yet.</div>
 
   {% endfor %}
   </div>
