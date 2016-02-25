@@ -18,12 +18,13 @@ class MotionManager(models.Manager):
             ballot_submission__debate__round__seq__lte=
             round.seq).select_related('debate_team__position',
                                       'ballot_submission__motion')
+
         wins = dict()
         for pos, _ in DebateTeam.POSITION_CHOICES:
             wins[pos] = dict.fromkeys(motions, 0)
         for winner in winners:
-            wins[winner.debate_team.position][
-                winner.ballot_submission.motion] += 1
+            if winner.ballot_submission.motion:
+                wins[winner.debate_team.position][winner.ballot_submission.motion] += 1
 
         for motion in motions:
             motion.aff_wins = wins[DebateTeam.POSITION_AFFIRMATIVE][motion]
