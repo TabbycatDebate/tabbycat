@@ -6,7 +6,7 @@
 
       <div class="panel-heading division-heading">
 
-        <h4>[[ division.name ]]</h4>
+        <h5>D[[ division.name ]] ([[ teams.length ]])</h5>
 
         <select name="select" class="form-control" v-model="division.venue_group">
 

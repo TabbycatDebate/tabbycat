@@ -4,7 +4,10 @@
   <div class="vue-draggable btn btn-sm" v-bind:class="[preference_allocated, isDragging ? vue-is-dragging : '']"
     draggable=true v-on:dragstart="handleDragStart" v-on:dragend="handleDragEnd" data-id="[[ team.id ]]"
     v-on:mouseenter="show = true" v-on:mouseleave="show = false">
-    <span>[[ team.institution__code ]] [[ team.short_reference ]]</span>
+    <span>
+      <span v-if="team.institution__code != 'Byes'">[[ team.institution__code ]]</span>
+      [[ team.short_reference ]]
+    </span>
   </div>
 
   <div class="panel panel-info slideover-info" v-show="show" transition="expand">

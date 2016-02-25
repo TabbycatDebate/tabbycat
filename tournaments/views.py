@@ -175,6 +175,23 @@ def create_division(request, t):
 @admin_required
 @tournament_view
 def create_byes(request, t):
+    divisions = Division.objects.filter(tournament=t)
+    Team.objects.filter(tournament=t, type=Team.TYPE_BYE).delete()
+    for division in divisions:
+        teams_count = Team.objects.filter(division=division).count()
+        if teams_count % 2 != 0:
+            bye_institution, created = Institution.objects.get_or_create(
+                name="Byes", code="Byes")
+            bye_team = Team(
+                institution=bye_institution,
+                reference="Bye for Division " + division.name,
+                short_reference="Bye",
+                tournament=t,
+                division=division,
+                use_institution_prefix=False,
+                type=Team.TYPE_BYE
+            ).save()
+
     return redirect_tournament('division_allocations', t)
 
 @admin_required

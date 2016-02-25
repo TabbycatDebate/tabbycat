@@ -27,12 +27,13 @@
 
 .division-heading {
   // Shift up the select to be adjavent to the title
-  h4 {
+  padding: 5px 10px;
+  h5 {
     display: inline-block;
   }
   .form-control {
     display: inline-block;
-    width: auto;
+    max-width: 75%;
     float: right;
   }
 }
