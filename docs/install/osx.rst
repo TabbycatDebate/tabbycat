@@ -115,6 +115,7 @@ Almost there!
 6. Initialize the database and create a user account for yourself::
 
     $ dj migrate
+    $ dj compress
     $ dj createsuperuser
 
 7. Start Tabbycat!

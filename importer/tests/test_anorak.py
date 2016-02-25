@@ -1,20 +1,21 @@
 """Unit tests for the Anorak importer."""
 
-from django.test import TestCase
 from unittest import skip, expectedFailure
+import logging
+import os.path
+
+from django.test import TestCase
+
 import adjallocation.models as am
+import adjfeedback.models as fm
 import breakqual.models as bm
 import motions.models as mm
-import options.models as cm
 import participants.models as pm
-import venues.models as vm
-import adjfeedback.models as fm
 import tournaments.models as tm
-import os.path
-import logging
+import venues.models as vm
 
-from importer.anorak import AnorakTournamentDataImporter
-from importer.base import TournamentDataImporterError
+from ..anorak import AnorakTournamentDataImporter
+from ..base import TournamentDataImporterError
 
 class TestImporterAnorak(TestCase):
 
@@ -96,13 +97,6 @@ class TestImporterAnorak(TestCase):
         f = self._open_csv_file(self.TESTDIR, "motions")
         counts, errors = self.importer.import_motions(f)
         self.assertEqual(counts, {mm.Motion: 18})
-        self.assertFalse(errors)
-
-    @expectedFailure
-    def test_options(self):
-        f = self._open_csv_file(self.TESTDIR_CHOICES, "options")
-        counts, errors = self.importer.import_options(f)
-        self.assertEqual(counts, {cm.Option: 25})
         self.assertFalse(errors)
 
     def test_adj_feedback_questions(self):

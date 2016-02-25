@@ -17,6 +17,7 @@ from participants.models import Team, Institution
 from utils.forms import SuperuserCreationForm
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
+from utils.misc import redirect_tournament
 from venues.models import VenueGroup
 
 from .forms import TournamentForm
@@ -30,16 +31,15 @@ def public_index(request, t):
 def index(request):
     tournaments = Tournament.objects.all()
     if tournaments.count() == 1:
-        logger.info('One tournament only, user is: %s', request.user)
         if request.user.is_authenticated():
-            logger.info('Redirecting to tournament-admin-home')
+            logger.debug('One tournament only, user is: %s, redirecting to tournament-admin-home', request.user)
             return redirect_tournament('tournament-admin-home', tournaments.first())
         else:
-            logger.info('Redirecting to tournament-public-index')
+            logger.debug('One tournament only, user is: %s, redirecting to tournament-public-index', request.user)
             return redirect_tournament('tournament-public-index', tournaments.first())
 
     elif not tournaments.exists() and not User.objects.exists():
-        logger.info('No users and no tournaments, redirecting to blank-site-start')
+        logger.debug('No users and no tournaments, redirecting to blank-site-start')
         return redirect('blank-site-start')
 
     else:

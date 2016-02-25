@@ -104,4 +104,3 @@ class PublicTournamentPageMixin(TournamentMixin):
             logger.error("Tried to access a disabled public page")
             messages.error(self.request, self.get_disabled_message())
             return redirect_tournament('tournament-public-index', tournament)
-
