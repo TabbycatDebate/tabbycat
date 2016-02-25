@@ -11,6 +11,8 @@ from django.views.decorators.cache import cache_page
 from django.views.generic.base import View, TemplateResponseMixin
 from django.views.generic.detail import SingleObjectMixin
 
+from tournaments.mixins import TournamentMixin
+
 from .misc import get_ip_address, redirect_tournament
 
 
@@ -31,7 +33,7 @@ class PostOnlyRedirectView(View):
     rather than returning the redirect directly, in case we decide to make
     `post()` smarter in the future. If there ever arises a need to distinguish
     between the redirects in the GET and POST cases, new methods should be added
-    for this purpose.
+    to this base class for this purpose.
     """
 
     redirect_url = reverse_lazy('tabbycat-index')
@@ -83,7 +85,16 @@ class PublicCacheMixin:
         return super().dispatch(*args, **kwargs)
 
 
-class SingleObjectByRandomisedUrlMixin(SingleObjectMixin):
+class SingleObjectFromTournamentMixin(SingleObjectMixin, TournamentMixin):
+    """Mixin for views that relate to a single object that is part of a
+    tournament. Like SingleObjectMixin, but restricts searches to the relevant
+    tournament."""
+
+    def get_queryset(self):
+        return super().get_queryset().filter(tournament=self.get_tournament())
+
+
+class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     """Mixin for views that use URLs referencing objects by a randomised key.
     This is just a `SingleObjectMixin` with some options set.
 

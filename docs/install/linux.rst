@@ -41,6 +41,7 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   pip install --upgrade pip
   pip install -r requirements_common.txt
   dj migrate
+  dj compress
   dj createsuperuser
   waitress-serve wsgi:application
 
@@ -175,6 +176,7 @@ Almost there!
 6. Initialize the database and create a user account for yourself::
 
     $ dj migrate
+    $ dj compress
     $ dj createsuperuser
 
 7. Start Tabbycat!

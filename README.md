@@ -1,10 +1,12 @@
 # Tabbycat
 
+[![Docs](https://readthedocs.org/projects/pip/badge/)](http://tabbycat.readthedocs.org/)  [![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat)
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Auckland Australs 2010, [Victoria Australs 2012](https://www.facebook.com/Australs2012), [Otago Australs 2014](http://australs2014.com), [Daejeon Australs 2015](http://australasians2015.org) and [many other tournaments of all sizes](http://github.com/czlee/tabbycat/blob/master/tournaments.md).
 
 Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.herokuapp.com/). It's normally up, but its form will vary from time to time as we set up new feature demos for people. If it's down and you'd like to see it, or if you want to play with it as if you were running a tournament, [contact us](#authors-and-contacts). To see a post-tournament website, have a look at the [Daejeon Australs 2015 tab website](http://tab.australasians2015.org).
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## Features
 

@@ -7,7 +7,7 @@ urlpatterns = [
     # Overviews
     url(r'^$',
         views.feedback_overview,
-        name='feedback_overview'),
+        name='adjfeedback-overview'),
     url(r'^progress/$',
         views.feedback_progress,
         name='feedback_progress'),
@@ -30,18 +30,18 @@ urlpatterns = [
         name='set_adj_note'),
 
     # Source
-    url(r'^source/latest/$',
-        views.adj_latest_feedback,
-        name='adj_latest_feedback'),
+    url(r'^latest/$',
+        views.LatestFeedbackView.as_view(),
+        name='adjfeedback-view-latest'),
     url(r'^source/list/$',
-        views.adj_source_feedback,
-        name='adj_source_feedback'),
-    url(r'^source/team/(?P<team_id>\d+)/$',
-        views.team_feedback_list,
-        name='team_feedback_list'),
-    url(r'^source/adjudicator(?P<adj_id>\d+)/$',
-        views.adj_feedback_list,
-        name='adj_feedback_list'),
+        views.FeedbackBySourceView.as_view(),
+        name='adjfeedback-view-by-source'),
+    url(r'^source/team/(?P<pk>\d+)/$',
+        views.FeedbackFromTeamView.as_view(),
+        name='adjfeedback-view-from-team'),
+    url(r'^source/adjudicator/(?P<pk>\d+)/$',
+        views.FeedbackFromAdjudicatorView.as_view(),
+        name='adjfeedback-view-from-adjudicator'),
 
     # Adding
     url(r'^add/$',

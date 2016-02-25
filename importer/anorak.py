@@ -384,59 +384,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             }
         return self._import(f, _question_line_parser, fm.AdjudicatorFeedbackQuestion)
 
-    def import_options(self, f):
-        """Imports tournament options from a file.
-        Each line has:
-            key, value_type, value
-        """
-        def _bool(val):
-            if val.lower() in ["true", "1"]:
-                return True
-            elif val.lower() in ["false", "0"]:
-                return False
-            else:
-                raise ValueError("Unrecognized boolean value: %r" % val)
-        coercefuncs = {"string": str, "int": int, "float": float, "bool": _bool,
-            "str": str}
-
-        reader = csv.reader(f)
-        count = 0
-        errors = TournamentDataImporterError()
-        if self.header_row:
-            next(reader)
-
-        for lineno, line in enumerate(reader, start=2 if self.header_row else 1):
-            try:
-                key, value_type, value = line
-            except ValueError as e:
-                errors.add(lineno, cm.Option, "Couldn't parse line: " + str(e))
-                continue
-            if value:
-                try:
-                    coercefunc = coercefuncs[value_type]
-                except KeyError:
-                    errors.add(lineno, cm.Option, "Unrecognized value type: %r" % value_type)
-                    continue
-                try:
-                    value = coercefunc(value)
-                except ValueError as e:
-                    errors.add(lineno, cm.Option, "Invalid value for type %r: %r" % (value_type, value))
-                    continue
-                self.tournament.config.set(key, value)
-                count += 1
-                self.logger.debug("Made config %r = %r" % (key, value))
-
-        if errors:
-            if self.strict:
-                for message in errors.itermessages():
-                    self.logger.error(message)
-                raise errors
-            else:
-                for message in errors.itermessages():
-                    self.logger.warning(message)
-
-        return {cm.Option: count}, errors
-
     def auto_make_rounds(self, num_rounds):
         """Makes the number of rounds specified. The first one is random and the
         rest are all power-paired. The last one is silent. This is intended as a

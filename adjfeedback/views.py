@@ -16,7 +16,7 @@ from results.mixins import TabroomSubmissionFieldsMixin, PublicSubmissionFieldsM
 from results.models import SpeakerScoreByAdj
 from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
 from utils.misc import reverse_tournament
-from utils.mixins import SingleObjectByRandomisedUrlMixin, PublicCacheMixin, SuperuserRequiredMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, PostOnlyRedirectView
+from utils.mixins import SingleObjectFromTournamentMixin, SingleObjectByRandomisedUrlMixin, PublicCacheMixin, SuperuserRequiredMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, PostOnlyRedirectView
 from utils.urlkeys import populate_url_keys
 from utils.views import *
 
@@ -129,83 +129,123 @@ def feedback_overview(request, t):
     return render(request, 'feedback_overview.html', context)
 
 
-@login_required
-@tournament_view
-def adj_source_feedback(request, t):
-    questions = t.adj_feedback_questions
+class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, TemplateView):
 
-    teams_data = []
-    teams = Team.objects.filter(tournament=t)
-    for team in teams:
-        feedbacks = AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
-            'source_team__team').count()
-        teams_data.append({
-            'name': team.short_name,
-            'institution': team.institution.name,
-            'feedbacks': "%s Feedbacks" % feedbacks,
-            'rowLink': reverse('team_feedback_list', args=[t.slug, team.id]),
-        })
+    template_name = "adjudicator_source_list.html"
 
-    adjs_data = []
-    adjs = Adjudicator.objects.filter(tournament=t).order_by('name')
-    for adj in adjs:
-        feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
-        'source_adjudicator__adjudicator').count(),
-        adjs_data.append({
-            'name': adj.name,
-            'institution': adj.institution.name,
-            'feedbacks': "%s Feedbacks" % feedbacks,
-            'rowLink': reverse('adj_feedback_list', args=[t.slug, adj.id]),
-        })
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        teams_data = []
+        for team in Team.objects.filter(tournament=tournament):
+            feedbacks = AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
+                'source_team__team').count()
+            teams_data.append({
+                'name': team.short_name,
+                'institution': team.institution.name,
+                'feedbacks': "%s Feedbacks" % feedbacks,
+                'rowLink': reverse_tournament('adjfeedback-view-from-team', tournament, kwargs={'pk': team.pk}),
+            })
 
-    return render(request, "adjudicator_source_list.html", dict(teams=json.dumps(teams_data), adjs=json.dumps(adjs_data)))
+        adjs_data = []
+        for adj in Adjudicator.objects.filter(tournament=tournament):
+            feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
+            'source_adjudicator__adjudicator').count(),
+            adjs_data.append({
+                'name': adj.name,
+                'institution': adj.institution.name,
+                'feedbacks': "%s Feedbacks" % feedbacks,
+                'rowLink': reverse_tournament('adjfeedback-view-from-adjudicator', tournament, kwargs={'pk': adj.pk}),
+            })
+        kwargs['teams'] = teams_data
+        kwargs['adjs'] = adjs_data
+        return super().get_context_data(**kwargs)
 
-def process_feedback(feedbacks, t):
-    questions = t.adj_feedback_questions
-    score_step = t.pref('adj_max_score') / 10
-    score_thresholds = {
-        'low_score'     : t.pref('adj_min_score') + score_step,
-        'medium_score'  : t.pref('adj_min_score') + score_step + score_step,
-        'high_score'    : t.pref('adj_max_score') - score_step,
-    }
-    for feedback in feedbacks:
-        feedback.items = []
-        for question in questions:
-            try:
-                qa_set = { "question" : question,
-                           "answer"   : question.answer_set.get(feedback=feedback).answer}
-                feedback.items.append(qa_set)
-            except ObjectDoesNotExist:
-                pass
-    return feedbacks, score_thresholds
 
-@login_required
-@tournament_view
-def adj_latest_feedback(request, t):
-    feedbacks = AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
-        'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
-    feedbacks, score_thresholds = process_feedback(feedbacks, t)
-    if feedbacks.count() == 0:
-        messages.info(request, "No feedback has been submitted yet.")
-    return render(request, "feedback_latest.html", dict(feedbacks=feedbacks,  score_thresholds=score_thresholds))
+class FeedbackCardsView(LoginRequiredMixin, TournamentMixin, TemplateView):
+    """Base class for views displaying feedback as cards."""
 
-@login_required
-@tournament_view
-def team_feedback_list(request, t, team_id):
-    team = Team.objects.get(pk=team_id)
-    source = team.short_name
-    feedbacks = AdjudicatorFeedback.objects.filter(source_team__team=team).order_by('-timestamp')
-    feedbacks, score_thresholds = process_feedback(feedbacks, t)
-    return render(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
+    def get_score_thresholds(self):
+        tournament = self.get_tournament()
+        min_score = tournament.pref('adj_min_score')
+        max_score = tournament.pref('adj_max_score')
+        score_range = max_score - min_score
+        return {
+            'low_score'     : min_score + score_range / 10,
+            'medium_score'  : min_score + score_range / 5,
+            'high_score'    : max_score - score_range / 10,
+        }
 
-@login_required
-@tournament_view
-def adj_feedback_list(request, t, adj_id):
-    adj = Adjudicator.objects.get(pk=adj_id)
-    source = adj.name
-    feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).order_by('-timestamp')
-    feedbacks, score_thresholds = process_feedback(feedbacks, t)
-    return render(request, "feedback_by_source.html", dict(source_name=source, feedbacks=feedbacks, score_thresholds=score_thresholds))
+    def get_feedbacks(self):
+        questions = self.get_tournament().adj_feedback_questions
+        feedbacks = self.get_feedback_queryset()
+        for feedback in feedbacks:
+            feedback.items = []
+            for question in questions:
+                try:
+                    answer = question.answer_set.get(feedback=feedback).answer
+                except ObjectDoesNotExist:
+                    continue
+                feedback.items.append({'question': question, 'answer': answer})
+        return feedbacks
+
+    def get_feedback_queryset(self):
+        raise NotImplementedError()
+
+    def get_context_data(self, **kwargs):
+        kwargs['feedbacks'] = self.get_feedbacks()
+        kwargs['score_thresholds'] = self.get_score_thresholds()
+        return super().get_context_data(**kwargs)
+
+
+class LatestFeedbackView(FeedbackCardsView):
+    """View displaying the latest feedback."""
+
+    template_name = "feedback_latest.html"
+
+    def get_feedback_queryset(self):
+        return AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
+                'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+
+
+class FeedbackFromSourceView(SingleObjectMixin, FeedbackCardsView):
+    """Base class for views displaying feedback from a given team or adjudicator."""
+    # SingleObjectFromTournamentMixin doesn't work great here, it induces an MRO
+    # conflict between TournamentMixin and ContextMixin.
+
+    template_name = "feedback_by_source.html"
+    source_name_attr = None
+    adjfeedback_filter_field = None
+
+    def get_context_data(self, **kwargs):
+        kwargs['source_name'] = getattr(self.object, self.source_name_attr, '<ERROR>')
+        return super().get_context_data(**kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        # from SingleObjectFromTournamentMixin
+        return super().get_queryset().filter(tournament=self.get_tournament())
+
+    def get_feedback_queryset(self):
+        kwargs = {self.adjfeedback_filter_field: self.object}
+        return AdjudicatorFeedback.objects.filter(**kwargs).order_by('-timestamp')
+
+
+class FeedbackFromTeamView(FeedbackFromSourceView):
+    """View displaying feedback from a given source."""
+    model = Team
+    source_name_attr = 'short_name'
+    adjfeedback_filter_field = 'source_team__team'
+
+
+class FeedbackFromAdjudicatorView(FeedbackFromSourceView):
+    """View displaying feedback from a given adjudicator."""
+    model = Adjudicator
+    source_name_attr = 'name'
+    adjfeedback_filter_field = 'source_adjudicator__adjudicator'
+
 
 @login_required
 @tournament_view
@@ -269,7 +309,7 @@ class PublicAddFeedbackIndexView(PublicCacheMixin, PublicTournamentPageMixin, Ba
     public_page_preference = 'public_feedback'
 
 
-class BaseAddFeedbackView(LogActionMixin, SingleObjectMixin, FormView):
+class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormView):
     """Base class for views that allow users to add feedback.
     Subclasses must also subclass SingleObjectMixin, directly or indirectly."""
 
@@ -315,7 +355,7 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectMixin, FormView):
         return super().post(request, *args, **kwargs)
 
 
-class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, TournamentMixin, LoginRequiredMixin, BaseAddFeedbackView):
+class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, BaseAddFeedbackView):
     """View for tabroom officials to add feedback."""
 
     action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SAVE
@@ -381,13 +421,12 @@ def set_adj_test_score(request, t):
     except (Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
         return HttpResponseBadRequest("Adjudicator probably doesn't exist")
 
-    # CONTINUE HERE CONTINUE HERE WORK IN PROGRESS
     score_text = request.POST["test_score"]
     try:
         score = float(score_text)
     except ValueError as e:
-        print(e)
-        return redirect_tournament('feedback_overview', t)
+        messages.error("Whoops, the value {} isn't a valid test score.".format(score_text))
+        return redirect_tournament('adjfeedback-overview', t)
 
     adjudicator.test_score = score
     adjudicator.save()
@@ -398,7 +437,7 @@ def set_adj_test_score(request, t):
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT,
         user=request.user, adjudicator_test_score_history=atsh, tournament=t)
 
-    return redirect_tournament('feedback_overview', t)
+    return redirect_tournament('adjfeedback-overview', t)
 
 
 # TODO: move to breaking app?
@@ -506,12 +545,12 @@ def set_adj_note(request, t):
         note = str(note_text)
     except ValueError as e:
         print(e)
-        return redirect_tournament('feedback_overview', t)
+        return redirect_tournament('adjfeedback-overview', t)
 
     adjudicator.notes = note
     adjudicator.save()
 
-    return redirect_tournament('feedback_overview', t)
+    return redirect_tournament('adjfeedback-overview', t)
 
 
 class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
