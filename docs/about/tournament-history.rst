@@ -7,8 +7,11 @@ A list of tournaments (that we know of) which have used Tabbycat.
 2016
 ----
 
+- IIT KGP PD
+- `Mad Mini <http://tabs.monashdebaters.com/t/madmini/>`_
+- Pre SSIDC
 - The National Law School Debate
-- `Mad Mini 2016 <http://tabs.monashdebaters.com/t/madmini/>`_
+- The Khazak National Schools Debating Championship
 
 2015
 ----
