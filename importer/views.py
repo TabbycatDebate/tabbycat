@@ -105,7 +105,8 @@ def confirm_venues(request, t):
     venue_groups = request.POST.getlist('venue_groups')
     for i, key in enumerate(venue_names):
         if venue_groups[i]:
-            venue_group = VenueGroup.objects.get(name=venue_groups[i])
+            venue_group = VenueGroup.objects.get_or_create(
+                name=venue_groups[i], short_name=venue_groups[i][:15])
         else:
             venue_group = None
         try:

@@ -61,7 +61,7 @@ Venues > Venues
   - A venue's priority determines its priority in being allocated. If there are 20 debates, and 30 rooms, the 20 rooms with the highest priorities will be chosen. Furthermore, if particular debates are marked as important during the draw process, those debates will receive the rooms with the highest priorities. In this way you can give close rooms to members of the adj core, or give larger rooms to debates that will draw a large audience.
 
 Venues > Venue Groups
-  - Venue groups are not needed for most kinds of tournaments.
+  - Venue groups are not needed for most kinds of tournaments. Their purpose is to organise tournaments (mostly high school leagues) where debates take place across a number of different locations (ie at different schools).
 
 Information for the briefing
 ============================
