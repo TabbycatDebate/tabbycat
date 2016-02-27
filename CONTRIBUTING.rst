@@ -6,11 +6,8 @@ Contributing
 
 Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. `Join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_.
 
-How to contribute
-=================
-
 Bug reports
------------
+===========
 
 Please report bugs by opening a new issue in our `GitHub repository <https://github.com/czlee/tabbycat/issues>`_.
 
@@ -20,28 +17,7 @@ It is most helpful if you can include:
 - Any details about your tournament and setup that might be helpful in troubleshooting
 - Detailed steps for how to reproduce the bug
 
-Bug fixes
----------
-
-Look through the GitHub issues for bugs. Anything tagged with "bug" is open to whoever wants to implement it.
-
-Feature requests
-----------------
-
-.. todo:: We haven't written this section yet.
-
-Feature implementations
------------------------
-
-Look through the GitHub issues for features. Anything tagged with "feature"
-is open to whoever wants to implement it.
-
-Documentation
--------------
-
-.. todo:: We haven't written this section yet.
-
-Getting Started
+Getting started
 ===============
 
 - Insert general setup instructions
