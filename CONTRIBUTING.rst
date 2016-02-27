@@ -6,11 +6,8 @@ Contributing
 
 Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. `Join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_.
 
-How to contribute
-=================
-
 Bug reports
------------
+===========
 
 Please report bugs by opening a new issue in our `GitHub repository <https://github.com/czlee/tabbycat/issues>`_.
 
@@ -20,28 +17,7 @@ It is most helpful if you can include:
 - Any details about your tournament and setup that might be helpful in troubleshooting
 - Detailed steps for how to reproduce the bug
 
-Bug fixes
----------
-
-Look through the GitHub issues for bugs. Anything tagged with "bug" is open to whoever wants to implement it.
-
-Feature requests
-----------------
-
-.. todo:: We haven't written this section yet.
-
-Feature implementations
------------------------
-
-Look through the GitHub issues for features. Anything tagged with "feature"
-is open to whoever wants to implement it.
-
-Documentation
--------------
-
-.. todo:: We haven't written this section yet.
-
-Getting Started
+Getting started
 ===============
 
 - Insert general setup instructions
@@ -84,18 +60,3 @@ Start the server:
   $ sphinx-autobuild docs docs/_build/html --port 7999
 
 You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1:7999>`
-
-Provisional Style Guide
------------------------
-
-- All pages should have their title at the top as an ``h1`` in
-- Headings should use Title Case
-- All subheadings should be ``h2``
-- Note that any subheadings inside a file will show in the sidebar as a third level of navigation. Best use them sparingly, with lists or bolds taking the place of minor section seperators
-- No inline html
-- Prefer:
-    - `#` over `=` for headings
-    - `-` over `*` for lists
-    - `*` for emphasis and `__` for bold
-- Use `admonitions <http://docutils.sourceforge.net/docs/ref/rst/directives.html#admonitions>`_ for notes, cautions, warnings and so on.
-- Images should be placed in an /images folder within the relevant section
