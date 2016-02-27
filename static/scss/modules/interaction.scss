@@ -16,9 +16,8 @@
   /* Required to make elements draggable in old WebKit */
   -khtml-user-drag: element;
   -webkit-user-drag: element;
-
   display: inline-block;
-  // border: 1px solid #ccc;
+  border: 1px solid #ccc;
   // border-radius: 5px;
   padding: 3px 6px 3px 0;
   margin: 2px;

@@ -56,7 +56,9 @@
         }
       },
       preference_allocated: function() {
-        if (typeof this.team.team_preferences !== 'undefined' && this.team.team_preferences.length > 0) {
+        if (this.vg === null) {
+          return '';
+        } else if (typeof this.team.team_preferences !== 'undefined' && this.team.team_preferences.length > 0) {
           if (typeof this.team.team_preferences[0] !== 'undefined' && this.team.team_preferences[0].venue_group__id == this.vg) {
             return 'btn-success';
           } else if (typeof this.team.team_preferences[1] !== 'undefined' && this.team.team_preferences[1].venue_group__id == this.vg) {
