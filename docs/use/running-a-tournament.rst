@@ -34,7 +34,7 @@ This is all done from an admin interface (*i.e.*, by the tab director or adjudic
 
   .. note:: Tabbycat will show you a draft draw before you confirm it. In the draft draw, it'll show you details so that you can understand how it came up with the draw, pointing out pull-ups and conflict swaps and the like. This is for you to double-check. While there are some basic tests on the draw algorithm, it never hurts to sanity-check it again.
 
-    If you *do* find something wrong with a draft draw, you can edit the match-ups, but please also let us know what the problem was! You can find our `contact details on our GitHub repository page`_.
+    If you *do* find something wrong with a draft draw, you can edit the match-ups, but please also let us know what the problem was! You can find our contact details in the :ref:`authors` section.
 
 3. After the draft draw has been confirmed, it will show the confirmed draw page.
 

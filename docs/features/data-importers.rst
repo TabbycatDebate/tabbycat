@@ -22,4 +22,5 @@ Basic workflow
 2. Write a subclass of ``BaseTournamentDataImporter``.
 3. Write the front-end interface. This will probably be a `Django management command <https://docs.djangoproject.com/en/1.9/howto/custom-management-commands/>`_.
 
-.. todo:: This page is incomplete. If you'd like to write your own tournament data importer, please contact Chuan-Zheng at `contact details on our GitHub repository page`_.
+.. todo:: This page is incomplete. If you'd like to write your own tournament data importer, please contact Chuan-Zheng using the contact details in the :ref:`authors` section.
+ 
