@@ -4,20 +4,20 @@
 Entering Ballots and Feedback
 =============================
 
-Ballot checkin
-==============
+Ballot check-in
+===============
 
-For tournaments that require it, there is a "ballot checkin" page that can be used to record the arrival of ballots to the tab room. When there's a missing ballot, it can help establish whether the ballot never made it to the tab room, or whether it's probably floating around in the room forgotten. Also, it can help enforce early checks that panels return the correct number of ballots to the room.
+For tournaments that require it, there is a "ballot check-in" page that can be used to record the arrival of ballots to the tab room. When there's a missing ballot, it can help establish whether the ballot never made it to the tab room, or whether it's probably floating around in the room forgotten. Also, it can help enforce early checks that panels return the correct number of ballots to the room.
 
-To get to the ballot checkin, click the relevant round in the menu of the admin interface, and then click "Results" and then "Ballot checkin". This requires superuser privileges.
+To get to the ballot check-in, click the relevant round in the menu of the admin interface, and then click "Results" and then "Ballot Check-In". This requires superuser privileges.
 
-There's no adverse effect from not using the ballot checkin. Data enterers will still be able to enter and confirmed ballots, even if not checked in.
+There's no adverse effect from not using the ballot check-in. Data enterers will still be able to enter and confirmed ballots, even if not checked in.
 
 .. tip::
 
-  - Since the ballot checkin tends to require a dedicated computer or two, it can be worth creating a separate superuser account for ballot checkin, so that it doesn't appear on the action logs as being by a particular person.
+  - Since the ballot check-in tends to require a dedicated computer or two, it can be worth creating a separate superuser account for ballot check-in, so that it doesn't appear on the action logs as being by a particular person.
   - Don't forget to provision a computer or two for this if you're planning to use it.
-  - Ballot checkins can be a bottleneck, so you might decide they're not worth using. Alternatively, you might have multiple computers for this purpose, or you might dedicate a tab room helper to driving the process (since this is probably faster than runners doing the typing in turn).
+  - Ballot check-ins can be a bottleneck, so you might decide they're not worth using. Alternatively, you might have multiple computers for this purpose, or you might dedicate a tab room helper to driving the process (since this is probably faster than runners doing the typing in turn).
 
 Ballot entry
 ============
