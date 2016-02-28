@@ -35,7 +35,7 @@ Short version
 
 Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
 
-  pyvenv-3.4 venv                                             # or pyvenv-3.5 or virtualenv
+  pyvenv venv                                                 # or virtualenv
   source venv/bin/activate
   pip install --upgrade pip
   pip install -r requirements_common.txt
@@ -148,11 +148,7 @@ Almost there!
 
   .. code:: bash
 
-    # If you installed Python 3.4
-    $ pyvenv-3.4 venv
-
-    # If you installed Python 3.5
-    $ pyvenv-3.5 venv
+    $ pyvenv venv
 
 4. Run the ``activate`` script. This puts you "into" the virtual environment::
 

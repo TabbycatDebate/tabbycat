@@ -111,7 +111,7 @@ For Australs 2014, we found that the ``hobby-dev`` plan of `Heroku Postgres <htt
 
 If you're not sure, you can always start at ``hobby-dev``—just be prepared to `upgrade <https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups>`_ during the tournament if you run close to capacity.
 
-Custom Domain Names
+Custom domain names
 ===================
 
 Your Heroku app will be available at *yourappname.herokuapp.com*. You may want it to be a subdomain of your tournament's website, like `tab.australasians2015.org <http://tab.australasians2015.org>`_. Instructions for this are `in the Heroku documentation <https://devcenter.heroku.com/articles/custom-domains>`_. Basically there are two things to do:
