@@ -198,7 +198,13 @@ def adj_conflicts(request, round):
     )
 
     for da in history:
-        add('history', da.adjudicator_id, da.debate.aff_team.id)
-        add('history', da.adjudicator_id, da.debate.neg_team.id)
+        try:
+            add('history', da.adjudicator_id, da.debate.aff_team.id)
+        except DebateTeam.DoesNotExist:
+            pass # For when a Debate/DebateTeam may have been deleted 
+        try:
+            add('history', da.adjudicator_id, da.debate.neg_team.id)
+        except DebateTeam.DoesNotExist:
+            pass # For when a Debate/DebateTeam may have been deleted 
 
     return HttpResponse(json.dumps(data), content_type="text/json")
