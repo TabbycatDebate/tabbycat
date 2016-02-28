@@ -53,7 +53,7 @@ def public_confirm_shift_key(request, t, url_key):
         formset = ShiftsFormset(request.POST, request.FILES)
         if formset.is_valid():
             formset.save()
-            messages.success(request, "Your shift checkins have been saved")
+            messages.success(request, "Your shift check-ins have been saved")
     else:
         formset = ShiftsFormset(queryset=adj_debates)
 

@@ -20,8 +20,7 @@ Short version
 =============
 .. parsed-literal::
 
-  sudo apt-get install python3.4-venv                         # if using Python 3.4 on Ubuntu
-  sudo apt-get install postgresql-9.4
+  sudo apt-get install postgresql-9.4 postgresql-server-dev-9.4 python3-dev python3-venv
 
   # either
   wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
@@ -36,7 +35,7 @@ Short version
 
 Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
 
-  pyvenv-3.4 venv                                             # or pyvenv-3.5 or virtualenv
+  pyvenv venv                                                 # or virtualenv
   source venv/bin/activate
   pip install --upgrade pip
   pip install -r requirements_common.txt
@@ -54,41 +53,32 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
   These instructions are for Ubuntu. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
-1(a). Python
-------------
-As of version 0.8, Tabbycat requires Python 3.4 or later. You probably already
-have this installed, but it'll be called ``python3``. Check::
+1(a). Python and Pyvenv
+-----------------------
+As of version 0.8, Tabbycat requires Python 3.4 or later.  You'll need the development package for psycopg2 to install. If you don't already have it::
+
+    $ sudo apt-get install python3-dev python3-venv
+
+Check the version::
 
     $ python3 --version
     Python 3.4.4
 
-If it's not installed, run ``sudo apt-get install python3``, or download the latest version from the `Python website <https://www.python.org/downloads/>`_.
-
 .. warning:: As of version 0.8, Python 2 is not supported. You must use Python 3.4 or
   higher.
-
-1(b). Pyvenv
-------------
-**If you installed Python 3.5 or later:** Nothing to do, ``pyvenv-3.5`` (or whatever your version is) should already be working.
-
-**If you are using Python 3.4:** Ubuntu 14.04 had a `broken pyvenv-3.4 package
-<https://bugs.launchpad.net/ubuntu/+source/python3.4/+bug/1290847>`_,
-so there is a small workaround to get it to work.::
-
-    $ sudo apt-get install python3.4-venv
 
 .. admonition:: Advanced users
   :class: tip
 
   If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
 
-1(c). PostgreSQL
+1(b). PostgreSQL
 ----------------
   *PostgreSQL is a database management system.*
 
-As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
+You'll need the `server-dev` package for psycopg2 to install. As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
 
-    $ sudo apt-get install postgresql-9.4
+    $ sudo apt-get install postgresql-9.4 postgresql-server-dev-9.4
 
 
 2. Get the source code
@@ -158,11 +148,7 @@ Almost there!
 
   .. code:: bash
 
-    # If you installed Python 3.4
-    $ pyvenv-3.4 venv
-
-    # If you installed Python 3.5
-    $ pyvenv-3.5 venv
+    $ pyvenv venv
 
 4. Run the ``activate`` script. This puts you "into" the virtual environment::
 

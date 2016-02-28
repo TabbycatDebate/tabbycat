@@ -3,17 +3,9 @@ class PreferencesPreset:
     def __init__(self):
         self.show_in_list                             = False
 
-TEAM_STANDING_METRICS_PRESETS = {
-    "australs": ('wins', 'speaks_sum'),
-    "nz"      : ('wins', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw'),
-    "wadl"    : ('points', 'wbw', 'margin_avg', 'speaks_avg'),
-    "test"    : ('wins', 'wbw', 'draw_strength', 'wbw', 'speaks_sum', 'wbw', 'margin_sum', 'wbw'),
-}
-
-
 
 class AustralsPreferences(PreferencesPreset):
-    """ 3v3 with replies, chosen motions, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
+    """ 3 vs 3 with replies, chosen motions, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
     def __init__(self):
         self.name                                     = "Australs Rules"
         self.show_in_list                             = True
@@ -40,11 +32,11 @@ class AustralsPreferences(PreferencesPreset):
         # Standings Rules
         self.standings__standings_missed_debates       = 2 # TODO= check this
         self.standings__team_standings_precedence      = ['wins', 'speaks_sum']
-        self.standings__speaker_standings_rule         = 'australs'
+        self.standings__rank_speakers_by               = 'total'
 
 
 class AustralianEastersPreferences(AustralsPreferences):
-    """ 3v3 without replies, with set motions, novices, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
+    """ 3 vs 3 without replies, with set motions, novices, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
     def __init__(self):
         self.name                                      = "Australian Easters Rules"
         self.show_in_list                              = True
@@ -59,7 +51,7 @@ class AustralianEastersPreferences(AustralsPreferences):
         self.ui_options__show_novices                  = True
 
 class NZEastersPreferences(AustralsPreferences):
-    """ 2vs2 with replies, chosen motions, chosen sides, and novice statuses."""
+    """ 2 vs 2 with replies, chosen motions, chosen sides, and novice statuses."""
     def __init__(self):
         self.name                                      = "New Zealand Easters Rules"
         self.show_in_list                              = True
@@ -87,7 +79,7 @@ class NZEastersPreferences(AustralsPreferences):
 
 
 class JoyntPreferences(AustralsPreferences):
-    """ 3vs3 with replies, set sides, publicly displayed sides and motions, and novice statuses"""
+    """ 3 vs 3 with replies, set sides, publicly displayed sides and motions, and novice statuses"""
     def __init__(self):
         self.name                                      = "Joynt Scroll Rules"
         self.show_in_list                              = True
@@ -155,7 +147,7 @@ class UADCPreferences(AustralsPreferences):
 class WADLPreferences(PreferencesPreset):
     """ Example high school league setup """
     def __init__(self):
-        self.name                                      = "WADL Options & "
+        self.name                                      = "WADL Options & Rules"
         self.show_in_list                              = True
         # Debate Rules= no replies; singular motions
         self.debate_rules__substantive_speakers        = 3
@@ -165,7 +157,7 @@ class WADLPreferences(PreferencesPreset):
         # Standings Rules
         self.standings__standings_missed_debates       = 0
         self.standings__team_standings_precedence      = ['points', 'wbw', 'margin_avg', 'speaks_avg']
-        self.standings__speaker_standings_rule         = 'wadl'
+        self.standings__rank_speakers_by               = 'average'
         # Draws
         self.draw_rules__avoid_same_institution        = False
         self.draw_rules__avoid_team_history            = False
@@ -178,7 +170,7 @@ class WADLPreferences(PreferencesPreset):
         self.ui_options__show_emoji                    = False
         self.ui_options__show_institutions             = False
         self.ui_options__show_speakers_in_draw         = False
-        self.ui_options__public_motions_descending     = True
+        self.ui_options__public_motions_order          = 'reverse'
         self.ui_options__show_all_draws                = True
         # League Options
         self.league_options__enable_flagged_motions    = True

@@ -12,8 +12,7 @@ class AdjudicatorTestScoreHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "🚨 Adj Test Score History"
-        verbose_name_plural = "🚨 Adj Test Score Histories"
+        verbose_name_plural = "adjudicator test score histories"
 
 
 class AdjudicatorFeedbackAnswer(models.Model):
@@ -135,7 +134,6 @@ class AdjudicatorFeedbackQuestion(models.Model):
 
     class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
-        verbose_name = "❓ Adj Feedback Question"
 
     def __str__(self):
         return self.reference
@@ -165,7 +163,6 @@ class AdjudicatorFeedback(Submission):
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team',
                             'version')]
-        verbose_name = "🙅 Adj Feedback"
 
     def __str__(self):
         return "Feedback from {source} on {adj} submitted at {time} (version {version})".format(

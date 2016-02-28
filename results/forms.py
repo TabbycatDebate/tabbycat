@@ -444,7 +444,6 @@ class BallotSetForm(forms.Form):
 
         # 5. Save speaker fields
         if not self.forfeit_declared:
-            print("saving speaker fields")
             for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 ballotset.set_speaker(side, pos, speaker)

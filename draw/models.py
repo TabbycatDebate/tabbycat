@@ -43,9 +43,6 @@ class Debate(models.Model):
                                      default=STATUS_NONE)
     ballot_in = models.BooleanField(default=False)
 
-    class Meta:
-        verbose_name = "⚖ Debate"
-
     def __contains__(self, team):
         return team in (self.aff_team, self.neg_team)
 
@@ -256,9 +253,6 @@ class DebateTeam(models.Model):
             return 'lost'
         return 'result unknown'
 
-    class Meta:
-        verbose_name = "🙊 Debate Team"
-
 
 class TeamPositionAllocation(models.Model):
     """Model to store team position allocations for tournaments like Joynt
@@ -286,7 +280,6 @@ class TeamVenuePreference(models.Model):
 
     class Meta:
         ordering = ['priority', ]
-        verbose_name = "🏩 Team Venue Pref"
 
     def __str__(self):
         return '%s with priority %s for %s' % (self.team, self.priority,
@@ -300,7 +293,6 @@ class InstitutionVenuePreference(models.Model):
 
     class Meta:
         ordering = ['priority', ]
-        verbose_name = "🏩 Institutional Venue Pref"
 
     def __str__(self):
         return '%s with priority %s for %s' % (self.institution, self.priority,

@@ -6,7 +6,7 @@ Running a Tournament
 
 Once you've finished the steps in :ref:`starting-a-tournament`, you're ready to go! This page outlines what you would do for each round during the tournament. After the tournament, proceed to :ref:`finishing-a-tournament`.
 
-The menu is on the side of the page. In the admin interface, tournament-wide pages (feedback, standings, and break) are at the top, while round-specific pages (checkins, draw, and results) are in dropdown's organised by each round;s abbreviation.
+The menu is on the side of the page. In the admin interface, tournament-wide pages (feedback, standings, and break) are at the top, while round-specific pages (check-ins, draw, and results) are in dropdown's organised by each round;s abbreviation.
 
 The workflow for each round is:
 
@@ -23,18 +23,18 @@ Generating the draw
 
 This is all done from an admin interface (*i.e.*, by the tab director or adjudication core member):
 
-1. **Set availability.** For each round, you need to set the venue, team and adjudicator availability. To do this, click the round in the menu, then click **Checkins**. Here you can then go to the availability pages for venue, teams, and adjudicators, or checkin everything at once. If going to the team/venues/adjudicators page, you would edit the availability and click **Save changes** then return to the overview page.
+1. **Set availability.** For each round, you need to set the venue, team and adjudicator availability. To do this, click the round in the menu, then click **Check-Ins**. Here you can then go to the availability pages for venue, teams, and adjudicators, or check in everything at once. If going to the team/venues/adjudicators page, you would edit the availability and click **Save changes** then return to the overview page.
 
   .. image:: images/checkins-page.png
 
-2. **Generate the draw.** Hit the **Generate Draw** button on the Checkins page. Follow the instructions to generate the draw.
+2. **Generate the draw.** Hit the **Generate Draw** button on the Check-Ins page. Follow the instructions to generate the draw.
 
   .. image:: images/draft-draw.png
 
 
   .. note:: Tabbycat will show you a draft draw before you confirm it. In the draft draw, it'll show you details so that you can understand how it came up with the draw, pointing out pull-ups and conflict swaps and the like. This is for you to double-check. While there are some basic tests on the draw algorithm, it never hurts to sanity-check it again.
 
-    If you *do* find something wrong with a draft draw, you can edit the match-ups, but please also let us know what the problem was! You can find our `contact details on our GitHub repository page`_.
+    If you *do* find something wrong with a draft draw, you can edit the match-ups, but please also let us know what the problem was! You can find our contact details in the :ref:`authors` section.
 
 3. After the draft draw has been confirmed, it will show the confirmed draw page.
 
