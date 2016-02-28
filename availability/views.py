@@ -22,18 +22,18 @@ def availability_index(request, round):
     checks = [{
         'type'      : "Team",
         'total'     : t.teams.count(),
-        'in_now'    : ActiveTeam.objects.filter(round=round.id).count(),
-        'in_before' : ActiveTeam.objects.filter(round=previous_round).count(),
+        'in_now'    : ActiveTeam.objects.filter(round_id=round.id).count(),
+        'in_before' : ActiveTeam.objects.filter(round_id=previous_round).count(),
     },{
         'type'      : "Adjudicator",
         'total'     : Adjudicator.objects.count() if t.pref('share_adjs') else round.tournament.adjudicator_set.count(),
-        'in_now'    : ActiveAdjudicator.objects.filter(round=round.id).count(),
-        'in_before' : ActiveAdjudicator.objects.filter(round=previous_round).count(),
+        'in_now'    : ActiveAdjudicator.objects.filter(round_id=round.id).count(),
+        'in_before' : ActiveAdjudicator.objects.filter(round_id=previous_round).count(),
     },{
         'type'      : "Venue",
         'total'     : Venue.objects.count() if t.pref('share_venues') else round.tournament.venue_set.count(),
-        'in_now'    : ActiveVenue.objects.filter(round=round.id).count(),
-        'in_before' : ActiveVenue.objects.filter(round=previous_round).count(),
+        'in_now'    : ActiveVenue.objects.filter(round_id=round.id).count(),
+        'in_before' : ActiveVenue.objects.filter(round_id=previous_round).count(),
     }]
 
     # Basic check before enable the button to advance
