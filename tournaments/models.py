@@ -707,7 +707,8 @@ class Round(models.Model):
         self.set_available_venues([v.id for v in Venue.objects.all()])
         self.set_available_adjudicators([a.id for a in Adjudicator.objects.all(
         )])
-        self.set_available_teams([t.id for t in Team.objects.all()])
+        self.set_available_teams([t.id for t in Team.objects.filter(
+            tournament=self.tournament)])
 
     def activate_previous(self):
         from availability.models import ActiveTeam, ActiveAdjudicator, ActiveVenue
