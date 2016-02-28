@@ -59,27 +59,27 @@
               {% if tournament.emoji %}
                 {{tournament.emoji }}
               {% else %}
-                🏆
+                <span class="emoji">🏆</span>
               {% endif %}
             </span>
             {{ tournament.name }}
           </a>
         </li>
       {% endfor %}
-      {% if tournaments.all.count > 1 and tournaments.0.pref.public_divisions %}
+      {% if tournaments.all.count > 1 and tournaments.0.preferences.league_options__public_divisions %}
         <li class="list-group-item">
           <a href="{{ tournaments.0.get_all_tournaments_all_venues }}">
-            All Draws by Venue
+            <span class="emoji">🎪</span>All Draws by Venue
           </a>
         </li>
         <li class="list-group-item">
           <a href="{{ tournaments.0.get_all_tournaments_all_institutions }}">
-            All Draws by School
+            <span class="emoji">🏢</span>All Draws by School
           </a>
         </li>
         <li class="list-group-item">
           <a href="{{ tournaments.0.get_all_tournaments_all_teams }}">
-            All Teams and Divisions
+            <span class="emoji">👯</span>All Teams and Divisions
           </a>
         </li>
       {% endif %}
