@@ -50,6 +50,7 @@ tournaments.
    :caption: About
 
    about/authors
+   about/changelog
    about/contributing
    about/licence
    about/release-notes
