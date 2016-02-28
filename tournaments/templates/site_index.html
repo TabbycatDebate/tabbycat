@@ -51,42 +51,40 @@
       </p>
     {% endif %}
   {% else %}
-    {% if tournaments.all.exists %}
-      {% for tournament in tournaments %}
-        <li class="list-group-item">
-          <a href="{{ tournament.get_public_url }}">
-            <span class="emoji">
-              {% if tournament.emoji %}
-                {{tournament.emoji }}
-              {% else %}
-                🏆
-              {% endif %}
-            </span>
-            {{ tournament.name }}
-          </a>
-        </li>
-      {% endfor %}
-      {% if tournaments.all.count > 1 and tournaments.0.pref.public_divisions %}
-        <li class="list-group-item">
-          <a href="{{ tournaments.0.get_all_tournaments_all_venues }}">
-            All Draws by Venue
-          </a>
-        </li>
-        <li class="list-group-item">
-          <a href="{{ tournaments.0.get_all_tournaments_all_institutions }}">
-            All Draws by School
-          </a>
-        </li>
-        <li class="list-group-item">
-          <a href="{{ tournaments.0.get_all_tournaments_all_teams }}">
-            All Teams and Divisions
-          </a>
-        </li>
-      {% endif %}
-    {% else %}
+    {% for tournament in tournaments %}
+      <li class="list-group-item">
+        <a href="{{ tournament.get_public_url }}">
+          <span class="emoji">
+            {% if tournament.emoji %}
+              {{tournament.emoji }}
+            {% else %}
+              🏆
+            {% endif %}
+          </span>
+          {{ tournament.name }}
+        </a>
+      </li>
+    {% empty %}
       <p>
-        There are no tournaments currently setup.
+        There are currently no tournaments set up on this site.
       </p>
+    {% endfor %}
+    {% if tournaments.all.count > 1 and tournaments.0.pref.public_divisions %}
+      <li class="list-group-item">
+        <a href="{{ tournaments.0.get_all_tournaments_all_venues }}">
+          All Draws by Venue
+        </a>
+      </li>
+      <li class="list-group-item">
+        <a href="{{ tournaments.0.get_all_tournaments_all_institutions }}">
+          All Draws by School
+        </a>
+      </li>
+      <li class="list-group-item">
+        <a href="{{ tournaments.0.get_all_tournaments_all_teams }}">
+          All Teams and Divisions
+        </a>
+      </li>
     {% endif %}
   {% endif %}
 
