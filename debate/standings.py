@@ -246,7 +246,7 @@ def annotate_team_standings(teams, round=None, tournament=None, shuffle=False, r
     if subranks:
         _add_subranks(standings, attrgetter(precedence[0]), attrgetter(*precedence[1:]))
     if division_ranks:
-        _add_division_ranks(standings, tournament.division_set.all())
+        _add_division_ranks(standings, attrgetter(*precedence), tournament.division_set.all())
 
     return standings
 
