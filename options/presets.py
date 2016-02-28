@@ -3,17 +3,9 @@ class PreferencesPreset:
     def __init__(self):
         self.show_in_list                             = False
 
-TEAM_STANDING_METRICS_PRESETS = {
-    "australs": ('wins', 'speaks_sum'),
-    "nz"      : ('wins', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw'),
-    "wadl"    : ('points', 'wbw', 'margin_avg', 'speaks_avg'),
-    "test"    : ('wins', 'wbw', 'draw_strength', 'wbw', 'speaks_sum', 'wbw', 'margin_sum', 'wbw'),
-}
-
-
 
 class AustralsPreferences(PreferencesPreset):
-    """ 3v3 with replies, chosen motions, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
+    """ 3 vs 3 with replies, chosen motions, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
     def __init__(self):
         self.name                                     = "Australs Rules"
         self.show_in_list                             = True
@@ -44,7 +36,7 @@ class AustralsPreferences(PreferencesPreset):
 
 
 class AustralianEastersPreferences(AustralsPreferences):
-    """ 3v3 without replies, with set motions, novices, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
+    """ 3 vs 3 without replies, with set motions, novices, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
     def __init__(self):
         self.name                                      = "Australian Easters Rules"
         self.show_in_list                              = True
@@ -59,7 +51,7 @@ class AustralianEastersPreferences(AustralsPreferences):
         self.ui_options__show_novices                  = True
 
 class NZEastersPreferences(AustralsPreferences):
-    """ 2vs2 with replies, chosen motions, chosen sides, and novice statuses."""
+    """ 2 vs 2 with replies, chosen motions, chosen sides, and novice statuses."""
     def __init__(self):
         self.name                                      = "New Zealand Easters Rules"
         self.show_in_list                              = True
@@ -87,7 +79,7 @@ class NZEastersPreferences(AustralsPreferences):
 
 
 class JoyntPreferences(AustralsPreferences):
-    """ 3vs3 with replies, set sides, publicly displayed sides and motions, and novice statuses"""
+    """ 3 vs 3 with replies, set sides, publicly displayed sides and motions, and novice statuses"""
     def __init__(self):
         self.name                                      = "Joynt Scroll Rules"
         self.show_in_list                              = True
@@ -155,7 +147,7 @@ class UADCPreferences(AustralsPreferences):
 class WADLPreferences(PreferencesPreset):
     """ Example high school league setup """
     def __init__(self):
-        self.name                                      = "WADL Options & "
+        self.name                                      = "WADL Options & Rules"
         self.show_in_list                              = True
         # Debate Rules= no replies; singular motions
         self.debate_rules__substantive_speakers        = 3
