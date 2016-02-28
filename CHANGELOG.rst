@@ -11,6 +11,7 @@ Change Log
 - Migrated documentation to `Read The Docs <http://tabbycat.readthedocs.org>`_
 - New user interface design and workflow
 - Overhauled tournament preferences to use `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_
+- Added new visual data importer
 - Improved flexibility of team standings rules
 - Moved data utility scripts to Django management commands
 - Changed emoji to Unicode characters
