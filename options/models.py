@@ -13,8 +13,7 @@ class TournamentPreferenceModel(PerInstancePreferenceModel):
 
     class Meta(PerInstancePreferenceModel.Meta):
         app_label = "options"
-        verbose_name = "Tournament Preference"
-        verbose_name_plural = "Tournament Preferencess"
+        verbose_name = "tournament preference"
 
 
 preference_models.register(TournamentPreferenceModel,

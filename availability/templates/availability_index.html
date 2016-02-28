@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block page-title %}{{ round.name }} Checkins{% endblock %}
-{% block head-title %}<span class="emoji">📍</span>️Checkins Overview{% endblock %}
+{% block page-title %}{{ round.name }} Check-Ins{% endblock %}
+{% block head-title %}<span class="emoji">📍</span>️Check-Ins Overview{% endblock %}
 {% block sub-title %}For {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-default submit-disable" href="{% round_url team_availability round %}">
-    Checkin Teams
+    Check In Teams
   </a>
   <a class="btn btn-default submit-disable" href="{% round_url venue_availability round %}">
-    Checkin Venues
+    Check In Venues
   </a>
   <a class="btn btn-default submit-disable" href="{% round_url adjudicator_availability round %}">
-    Checkin Adjudicators
+    Check In Adjudicators
   </a>
 
   <a class="btn btn-default submit-disable" href="{% round_url update_availability_all round %}">
-    Checkin All
+    Check In All
   </a>
   {% if round.prev %}
     <a class="btn btn-default submit-disable" href="{% round_url update_availability_previous round %}">
-      Checkin All Active in {{ round.prev.abbreviation }}
+      Check In All Active in {{ round.prev.abbreviation }}
     </a>
   {% endif %}
 

@@ -111,7 +111,6 @@ class BallotSubmission(Submission):
 
     class Meta:
         unique_together = [('debate', 'version')]
-        verbose_name = '📥 Ballot Submission'
 
     def __str__(self):
         return "Ballot for {debate} submitted at {time} (version {version})".format(
@@ -196,8 +195,7 @@ class SpeakerScoreByAdj(models.Model):
         unique_together = [('debate_adjudicator', 'debate_team', 'position',
                             'ballot_submission')]
         index_together = ['ballot_submission', 'debate_adjudicator']
-        verbose_name = '🎼 Speaker Score by Adj'
-        verbose_name_plural = '🎼 Speaker Scores by Adj'
+        verbose_name_plural = 'speaker scores by adj'
 
     @property
     def debate(self):
@@ -223,7 +221,6 @@ class TeamScore(models.Model):
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]
-        verbose_name = '💯 Team Score'
 
 
 class SpeakerScoreManager(models.Manager):
@@ -252,4 +249,3 @@ class SpeakerScore(models.Model):
     class Meta:
         unique_together = [('debate_team', 'speaker', 'position',
                             'ballot_submission')]
-        verbose_name = '💁 Speaker Scores'

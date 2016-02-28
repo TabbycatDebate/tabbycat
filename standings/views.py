@@ -124,8 +124,7 @@ def get_speaker_standings(rounds,
     prev_total = None
     current_rank = 0
 
-    if for_replies or round.tournament.pref(
-            'speaker_standings_rule') == 'wadl':
+    if for_replies or round.tournament.pref('rank_speakers_by') == 'average':
         method = False
         speakers.sort(key=lambda x: x.average, reverse=True)
     else:

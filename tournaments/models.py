@@ -144,7 +144,6 @@ class Tournament(models.Model):
 
     class Meta:
         ordering = ['seq', ]
-        verbose_name = "🏆 Tournament"
 
     def __str__(self):
         if self.short_name:
@@ -189,7 +188,6 @@ class Division(models.Model):
         unique_together = [('tournament', 'name')]
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
-        verbose_name = "➗ Division"
 
 
 class RoundManager(models.Manager):
@@ -297,7 +295,6 @@ class Round(models.Model):
         unique_together = [('tournament', 'seq')]
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
-        verbose_name = "⏰ Round"
 
     def __str__(self):
         return "%s - %s" % (self.tournament, self.name)
@@ -704,7 +701,8 @@ class Round(models.Model):
         self.set_available_venues([v.id for v in Venue.objects.all()])
         self.set_available_adjudicators([a.id for a in Adjudicator.objects.all(
         )])
-        self.set_available_teams([t.id for t in Team.objects.all()])
+        self.set_available_teams([t.id for t in Team.objects.filter(
+            tournament=self.tournament)])
 
     def activate_previous(self):
         from availability.models import ActiveTeam, ActiveAdjudicator, ActiveVenue
