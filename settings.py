@@ -27,7 +27,7 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 TABBYCAT_VERSION = '0.8.0'
 TABBYCAT_CODENAME = 'Bengal'
-READTHEDOCS_VERSION = 'latest'
+READTHEDOCS_VERSION = 'v0.8.0'
 
 # ===========================
 # = Django-specific Modules =
