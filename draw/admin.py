@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from .models import DebateTeam, TeamPositionAllocation, TeamVenuePreference, TeamVenuePreference, InstitutionVenuePreference, Debate
+from .models import Debate, DebateTeam, TeamVenuePreference, InstitutionVenuePreference
 from participants.models import Speaker, Team
 from adjallocation.models import DebateAdjudicator
 
@@ -26,52 +26,6 @@ class DebateTeamAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DebateTeam, DebateTeamAdmin)
-
-# ==============================================================================
-# Team
-# ==============================================================================
-
-class SpeakerInline(admin.TabularInline):
-    model = Speaker
-    fields = ('name', 'novice', 'gender')
-
-
-class TeamPositionAllocationInline(admin.TabularInline):
-    model = TeamPositionAllocation
-
-
-class TeamVenuePreferenceInline(admin.TabularInline):
-    model = TeamVenuePreference
-    extra = 6
-
-
-class TeamForm(forms.ModelForm):
-    class Meta:
-        model = Team
-        fields = '__all__'
-
-    def clean_url_key(self):
-        return self.cleaned_data[
-            'url_key'] or None  # So that the url key can be unique and also set to blank
-
-
-class TeamAdmin(admin.ModelAdmin):
-    form = TeamForm
-    list_display = ('long_name', 'short_reference', 'emoji', 'institution',
-                    'division', 'tournament')
-    search_fields = ('reference', 'short_reference', 'institution__name',
-                     'institution__code', 'tournament__name')
-    list_filter = ('tournament', 'division', 'institution', 'break_categories')
-    inlines = (SpeakerInline, TeamPositionAllocationInline,
-               TeamVenuePreferenceInline)
-    raw_id_fields = ('division', )
-
-    def get_queryset(self, request):
-        return super(TeamAdmin, self).get_queryset(request).prefetch_related(
-            'institution', 'division')
-
-
-admin.site.register(Team, TeamAdmin)
 
 # ==============================================================================
 # TeamVenuePreference
