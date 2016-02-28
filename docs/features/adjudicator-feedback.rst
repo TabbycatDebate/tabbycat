@@ -46,7 +46,7 @@ Options:
 Want another answer type?
 =========================
 
-If the above answer types don't cover your needs, please contact us using the `contact details on our GitHub repository page`_. If it's easy enough to add your requested type and if give us enough notice, we'll gladly add it for you. We should warn you though: we don't intend to develop Tabbycat feedback into a fully-fledged `SurveyMonkey <http://www.surveymonkey.com/>`_ or `Google Forms <https://www.google.com/forms/about/>`_-style system. If your request amounts to this, we suggest using a third-party system.
+If the above answer types don't cover your needs, please contact us using the contact details in the :ref:`authors` section. If it's easy enough to add your requested type and if you give us enough notice, we'll gladly add it for you. We should warn you though: we don't intend to develop Tabbycat feedback into a fully-fledged `SurveyMonkey <http://www.surveymonkey.com/>`_ or `Google Forms <https://www.google.com/forms/about/>`_-style system. If your request amounts to this, we suggest using a third-party system.
 
 As a guide, a type is "easy enough to add" if you can imagine easily how to implement it using standard web page elements, and it requires only basic structure encompassing only a single question.
 

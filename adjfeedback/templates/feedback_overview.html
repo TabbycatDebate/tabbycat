@@ -116,22 +116,6 @@
             {{ adj.avg_score|stringformat:".1f" }}
           </td>
         </tr>
-      {% empty %}
-        <tr id="">
-          <td class="">No Feedback Yet.</td>
-          {% if pref.show_institutions %}
-          <td></td>
-          {% endif %}
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          {% if pref.enable_adj_notes > 0 %}<td></td>{% endif %}
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
       {% endfor %}
     </tbody>
 
@@ -241,6 +225,9 @@
     var dTable = $('#dataTable').DataTable({
       'bPaginate': false,
       "aaSorting": [[ 1, "desc" ]],
+      "language": {
+        "emptyTable": "There aren't any adjudicators in this tournament."
+      }
     });
     new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
     $('#table-search').keyup(function(){

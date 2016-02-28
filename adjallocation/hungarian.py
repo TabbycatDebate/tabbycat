@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 class HungarianAllocator(Allocator):
 
     MAX_SCORE = 5.0
-    CHAIR_CUTOFF = 3.5
     MIN_SCORE = 1.5
 
     DEFAULT_IMPORTANCE = 2
@@ -19,7 +18,6 @@ class HungarianAllocator(Allocator):
         t = self.debates[0].round.tournament
         self.MAX_SCORE = t.pref('adj_max_score')
         self.MIN_SCORE = t.pref('adj_min_voting_score')
-        self.CHAIR_CUTOFF = t.pref('adj_chair_min_score')
 
         self.CONFLICT_PENALTY = t.pref('adj_conflict_penalty')
         self.HISTORY_PENALTY = t.pref('adj_history_penalty')
@@ -61,8 +59,6 @@ class HungarianAllocator(Allocator):
 
         # get adjudicators that can adjudicate solo
         chairs = self.adjudicators_sorted[:n_solos]
-        #chairs = [a for a in self.adjudicators_sorted if a.score >
-        #          self.CHAIR_CUTOFF]
 
         # get debates that will be judged by solo adjudicators
         chair_debates = self.debates_sorted[:len(chairs)]

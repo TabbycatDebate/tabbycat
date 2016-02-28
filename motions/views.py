@@ -25,7 +25,7 @@ def motions(request, round):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_motions')
 def public_motions(request, t):
-    order_by = t.pref('public_motions_descending') and '-seq' or 'seq'
+    order_by = 'seq' if t.pref('public_motions_order') == 'forward' else '-seq'
     rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
     for round in rounds:
         round.motions = round.motion_set.all()
