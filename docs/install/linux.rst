@@ -20,7 +20,7 @@ Short version
 =============
 .. parsed-literal::
 
-  sudo apt-get install postgresql-9.4 postgresql-server-dev-9.4 python3-dev python3-venv
+  sudo apt-get install python3-dev python3-venv postgresql-9.4 postgresql-server-dev-9.4
 
   # either
   wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
@@ -53,9 +53,9 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
   These instructions are for Ubuntu. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
-1(a). Python and Pyvenv
------------------------
-As of version 0.8, Tabbycat requires Python 3.4 or later.  You'll need the development package for psycopg2 to install. If you don't already have it::
+1(a). Python
+------------
+As of version 0.8, Tabbycat requires Python 3.4 or later.  You probably already have Python 3.4, but you'll also need the development package in order to install Psycopg2 later.  The ``pyvenv`` command will come in handy too.  Install::
 
     $ sudo apt-get install python3-dev python3-venv
 
@@ -70,13 +70,13 @@ Check the version::
 .. admonition:: Advanced users
   :class: tip
 
-  If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
+  If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead of Python's built-in ``pyvenv``.
 
 1(b). PostgreSQL
 ----------------
   *PostgreSQL is a database management system.*
 
-You'll need the `server-dev` package for psycopg2 to install. As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
+You'll need the *server-dev* package in order to install Psycopg2 later. As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
 
     $ sudo apt-get install postgresql-9.4 postgresql-server-dev-9.4
 
@@ -112,7 +112,7 @@ If you've used Git before, you might prefer to clone `our GitHub repository`_ in
 
     $ sudo -u postgres createuser myusername --pwprompt
 
-  .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.4/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the ``pg_hba.conf`` file, or you could define a mapping in ``pg_ident.conf`` and append the ``map=`` option to the ``local all all peer`` line. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
+  .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.4/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
 
 2. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
 
