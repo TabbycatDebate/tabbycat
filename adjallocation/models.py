@@ -25,30 +25,26 @@ class DebateAdjudicator(models.Model):
         return '{} in {}'.format(self.adjudicator, self.debate)
 
 
-    class Meta:
-        verbose_name = "🙉 Debate Adjudicator"
-
-
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator')
     team = models.ForeignKey('participants.Team')
 
     class Meta:
-        verbose_name = "❤️ Adj Team Conflict"
+        verbose_name = "adjudicator-team conflict"
 
 class AdjudicatorAdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', related_name="source_adjudicator")
     conflict_adjudicator = models.ForeignKey('participants.Adjudicator', related_name="target_adjudicator", verbose_name="Adjudicator")
 
     class Meta:
-        verbose_name = "💜 Adj Adj Conflict"
+        verbose_name = "adjudicator-adjudicator conflict"
 
 class AdjudicatorInstitutionConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator')
     institution = models.ForeignKey('participants.Institution')
 
     class Meta:
-        verbose_name = "💛 Adj Institution Conflict"
+        verbose_name = "adjudicator-institution conflict"
 
 class AdjudicatorAllocation(object):
     """Not a model, just a container object for the adjudicators on a panel."""

@@ -20,7 +20,6 @@ class VenueGroup(models.Model):
 
     class Meta:
         ordering = ['short_name']
-        verbose_name = "🏢 Venue Group"
 
     def __str__(self):
         if self.short_name:
@@ -44,7 +43,6 @@ class Venue(models.Model):
     class Meta:
         ordering = ['group', 'name']
         index_together = ['group', 'name']
-        verbose_name = "🎪 Venue"
 
     def __str__(self):
         if self.group:
