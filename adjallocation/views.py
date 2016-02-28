@@ -1,6 +1,6 @@
 import json
 from actionlog.models import ActionLogEntry
-from draw.models import Debate
+from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 
 from .models import AdjudicatorConflict, AdjudicatorInstitutionConflict, AdjudicatorAdjudicatorConflict, DebateAdjudicator
@@ -201,10 +201,10 @@ def adj_conflicts(request, round):
         try:
             add('history', da.adjudicator_id, da.debate.aff_team.id)
         except DebateTeam.DoesNotExist:
-            pass # For when a Debate/DebateTeam may have been deleted 
+            pass # For when a Debate/DebateTeam may have been deleted
         try:
             add('history', da.adjudicator_id, da.debate.neg_team.id)
         except DebateTeam.DoesNotExist:
-            pass # For when a Debate/DebateTeam may have been deleted 
+            pass # For when a Debate/DebateTeam may have been deleted
 
     return HttpResponse(json.dumps(data), content_type="text/json")
