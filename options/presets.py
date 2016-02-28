@@ -40,7 +40,7 @@ class AustralsPreferences(PreferencesPreset):
         # Standings Rules
         self.standings__standings_missed_debates       = 2 # TODO= check this
         self.standings__team_standings_precedence      = ['wins', 'speaks_sum']
-        self.standings__speaker_standings_rule         = 'australs'
+        self.standings__rank_speakers_by               = 'total'
 
 
 class AustralianEastersPreferences(AustralsPreferences):
@@ -165,7 +165,7 @@ class WADLPreferences(PreferencesPreset):
         # Standings Rules
         self.standings__standings_missed_debates       = 0
         self.standings__team_standings_precedence      = ['points', 'wbw', 'margin_avg', 'speaks_avg']
-        self.standings__speaker_standings_rule         = 'wadl'
+        self.standings__rank_speakers_by               = 'average'
         # Draws
         self.draw_rules__avoid_same_institution        = False
         self.draw_rules__avoid_team_history            = False
@@ -178,7 +178,7 @@ class WADLPreferences(PreferencesPreset):
         self.ui_options__show_emoji                    = False
         self.ui_options__show_institutions             = False
         self.ui_options__show_speakers_in_draw         = False
-        self.ui_options__public_motions_descending     = True
+        self.ui_options__public_motions_order          = 'reverse'
         self.ui_options__show_all_draws                = True
         # League Options
         self.league_options__enable_flagged_motions    = True

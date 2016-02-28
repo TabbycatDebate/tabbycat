@@ -9,24 +9,24 @@ scoring = Section('scoring')
 
 @tournament_preferences_registry.register
 class MinimumSpeakerScore(FloatPreference):
-    help_text = "Minimum allowed score for subststantive speeches"
+    help_text = "Minimum allowed score for substantive speeches"
     section = scoring
     name = 'score_min'
-    verbose_name = 'Minimum Speaker Score'
+    verbose_name = 'Minimum speaker score'
     default = 68.0
 
 @tournament_preferences_registry.register
 class MaximumSpeakerScore(FloatPreference):
-    verbose_name = 'Maximum Speaker Score'
-    help_text = "Maximum allowed score for subststantive speeches"
+    verbose_name = 'Maximum speaker score'
+    help_text = "Maximum allowed score for substantive speeches"
     section = scoring
     name = 'score_max'
     default = 82.0
 
 @tournament_preferences_registry.register
 class SpeakerScoreStep(FloatPreference):
-    verbose_name = 'Speaker Score Step'
-    help_text = "Score steps allowed for substantive speeches, ie full points (1) or half points (0.5)"
+    verbose_name = 'Speaker score step'
+    help_text = "Score steps allowed for substantive speeches, e.g. full points (1) or half points (0.5)"
     section = scoring
     name = 'score_step'
     default = 1.0
@@ -34,7 +34,7 @@ class SpeakerScoreStep(FloatPreference):
 @tournament_preferences_registry.register
 class MinimumReplyScore(FloatPreference):
     help_text = "Minimum allowed score for reply speeches"
-    verbose_name = 'Minimum Reply Score'
+    verbose_name = 'Minimum reply score'
     section = scoring
     name = 'reply_score_min'
     default = 34.0
@@ -43,31 +43,31 @@ class MinimumReplyScore(FloatPreference):
 @tournament_preferences_registry.register
 class MaximumReplyScore(FloatPreference):
     help_text = "Maximum allowed score for reply speeches"
-    verbose_name = 'Maximum Reply Score'
+    verbose_name = 'Maximum reply score'
     section = scoring
     name = 'reply_score_max'
     default = 41.0
 
 @tournament_preferences_registry.register
 class ReplyScoreStep(FloatPreference):
-    help_text = "Score steps allowed for reply speeches, ie full points (1) or half points (0.5)"
-    verbose_name = 'Reply Score Step'
+    help_text = "Score steps allowed for reply speeches, e.g. full points (1) or half points (0.5)"
+    verbose_name = 'Reply score step'
     section = scoring
     name = 'reply_score_step'
     default = 0.5
 
 @tournament_preferences_registry.register
 class MaximumMargin(FloatPreference):
-    help_text = "The largest amount one team can beat another by (0 means no limit)"
-    verbose_name = 'Maximum Margin'
+    help_text = "The largest amount by which one team can beat another (0 means no limit)"
+    verbose_name = 'Maximum margin'
     section = scoring
     name = 'maximum_margin'
     default = 0.0
 
 @tournament_preferences_registry.register
 class MarginIncludesDissent(BooleanPreference):
-    help_text = "Whether a teams winning margin includes dissenting adj scores"
-    verbose_name = 'Margin Includes Dissent'
+    help_text = "If checked, a team's winning margin includes dissenting adjudicators"
+    verbose_name = 'Margin includes dissenters'
     section = scoring
     name = 'margin_includes_dissenters'
     default = False
@@ -77,65 +77,57 @@ draw_rules = Section('draw_rules')
 # ==============================================================================
 
 @tournament_preferences_registry.register
-class ChairingScore(FloatPreference):
-    help_text = "Minimum adjudicator score required to not trainee in auto-allocation"
-    verbose_name = 'Minimum Chairing Score'
+class VotingScore(FloatPreference):
+    help_text = "The auto-allocator will only take adjudicators at or above this score as voting panellists"
+    verbose_name = 'Minimum adjudicator score to vote'
     section = draw_rules
     name = 'adj_min_voting_score'
-    default = 0.0
-
-@tournament_preferences_registry.register
-class VotingScore(FloatPreference):
-    help_text = "Minimum adjudicator score required to chair in auto-allocation"
-    verbose_name = 'Minimum Chairing Score'
-    section = draw_rules
-    name = 'adj_chair_min_score'
-    default = 0.0
+    default = 1.5
 
 @tournament_preferences_registry.register
 class AdjConflictPenalty(IntegerPreference):
-    help_text = "Penalty for adjudicator-team conflict"
-    verbose_name = "Adj Conflict Penalty"
+    help_text = "Penalty applied by auto-allocator for adjudicator-team conflict"
+    verbose_name = "Adjudicator-team conflict penalty"
     section = draw_rules
     name = "adj_conflict_penalty"
     default = 1000000
 
 @tournament_preferences_registry.register
 class AdjHistoryPenalty(IntegerPreference):
-    help_text = "Penalty for adjudicator-team history"
-    verbose_name = "Adj History Penalty"
+    help_text = "Penalty applied by auto-allocator for adjudicator-team history"
+    verbose_name = "Adjudicator-team history penalty"
     section = draw_rules
     name = "adj_history_penalty"
     default = 10000
 
 @tournament_preferences_registry.register
 class AvoidSameInstitution(BooleanPreference):
-    help_text = "Avoid team-team institution conflicts in draw?"
-    verbose_name = "Avoid Same Institution"
+    help_text = "If checked, the draw will try to avoid pairing teams against their own institution"
+    verbose_name = "Avoid same institution"
     section = draw_rules
     name = "avoid_same_institution"
     default = True
 
 @tournament_preferences_registry.register
 class AvoidTeamHistory(BooleanPreference):
-    help_text = "Avoid team-team history conflicts in draw?"
-    verbose_name = "Avoid Team History"
+    help_text = "If checked, the draw will try to avoid having teams see each other twice"
+    verbose_name = "Avoid team history"
     section = draw_rules
     name = "avoid_team_history"
     default = True
 
 @tournament_preferences_registry.register
 class TeamInstitutionPenalty(IntegerPreference):
-    help_text = "Penalty for team-team institution conflict"
-    verbose_name = "Team Institution Penalty"
+    help_text = "Penalty applied by conflict avoidance method for teams seeing their own institution"
+    verbose_name = "Team institution penalty"
     section = draw_rules
     name = "team_institution_penalty"
     default = 1
 
 @tournament_preferences_registry.register
 class TeamHistoryPenalty(IntegerPreference):
-    help_text = "Penalty for team-team history conflict"
-    verbose_name = "Team History Penalty"
+    help_text = "Penalty applied by conflict avoidance method for teams seeing each other twice or more"
+    verbose_name = "Team history penalty"
     section = draw_rules
     name = "team_history_penalty"
     default = 1000
@@ -186,7 +178,7 @@ class DrawPairingMethod(ChoicePreference):
 
 @tournament_preferences_registry.register
 class DrawAvoidConflicts(ChoicePreference):
-    help_text = "How to avoid teams facing each other multiple times or their own institution (see documentation for further details)"
+    help_text = "Method used to try to avoid teams facing each other multiple times or their own institution (see documentation for further details)"
     verbose_name = "Conflict avoidance method"
     section = draw_rules
     name = "draw_avoid_conflicts"
@@ -199,7 +191,7 @@ class DrawAvoidConflicts(ChoicePreference):
 @tournament_preferences_registry.register
 class SkipAdjCheckins(BooleanPreference):
     help_text = "Automatically make all adjudicators available for all rounds"
-    verbose_name = "Skip Adj Checkins"
+    verbose_name = "Skip adjudicator check-ins"
     section = draw_rules
     name = "draw_skip_adj_checkins"
     default = False
@@ -210,16 +202,16 @@ feedback = Section('feedback')
 
 @tournament_preferences_registry.register
 class MinimumAdjScore(FloatPreference):
-    help_text = "The minmum score an adj can receive"
-    verbose_name = 'Minimum Adj Score'
+    help_text = "Minimum possible adjudicator score"
+    verbose_name = 'Minimum adjudicator score'
     section = feedback
     name = 'adj_min_score'
     default = 0.0
 
 @tournament_preferences_registry.register
 class MaximumAdjScore(FloatPreference):
-    help_text = "The maximum score an adj can receive"
-    verbose_name = 'Maximum Adj Score'
+    help_text = "Maximum possible adjudicator score"
+    verbose_name = 'Maximum adjudicator score'
     section = feedback
     name = 'adj_max_score'
     default = 5.0
@@ -227,23 +219,23 @@ class MaximumAdjScore(FloatPreference):
 @tournament_preferences_registry.register
 class ShowUnaccredited(BooleanPreference):
     help_text = "Show if an adjudicator is a novice (unaccredited)"
-    verbose_name = "Show Unaccredited"
+    verbose_name = "Show unaccredited"
     section = feedback
     name = 'show_unaccredited'
     default = False
 
 @tournament_preferences_registry.register
 class ScoreReturnLocation(StringPreference):
-    help_text = "The location to return scoresheets to (put on preprinted ballot"
-    verbose_name = "Score Return Location"
+    help_text = "The location to return scoresheets to, printed on pre-printed ballots"
+    verbose_name = "Score return location"
     section = feedback
     name = 'score_return_location'
     default = 'TBA'
 
 @tournament_preferences_registry.register
 class FeedbackReturnLocation(StringPreference):
-    help_text = "The location to return feedback to (put on preprinted feedback"
-    verbose_name = "Feedback Return Location"
+    help_text = "The location to return feedback to, printed on pre-printed feedback forms"
+    verbose_name = "Feedback return location"
     section = feedback
     name = 'feedback_return_location'
     default = 'TBA'
@@ -251,7 +243,7 @@ class FeedbackReturnLocation(StringPreference):
 @tournament_preferences_registry.register
 class PanellistFeedbackEnabled(BooleanPreference):
     help_text = "Allow feedback to be submitted by panellists"
-    verbose_name = "Panellist Feedback Enabled"
+    verbose_name = "Panellist feedback enabled"
     section = feedback
     name = 'panellist_feedback_enabled'
     default = True
@@ -264,8 +256,8 @@ debate_rules = Section('debate_rules')
 
 @tournament_preferences_registry.register
 class SubstantiveSpeakers(IntegerPreference):
-    help_text = "How many substantive speakers each team will feature"
-    verbose_name = 'Substantive Speakers'
+    help_text = "How many substantive speakers on a team"
+    verbose_name = 'Substantive speakers'
     section = debate_rules
     name = 'substantive_speakers'
     default = 3
@@ -274,7 +266,7 @@ class SubstantiveSpeakers(IntegerPreference):
 @tournament_preferences_registry.register
 class ReplyScores(BooleanPreference):
     help_text = "Whether this style features reply speeches"
-    verbose_name = 'Reply Scores'
+    verbose_name = 'Reply scores'
     section = debate_rules
     name = 'reply_scores_enabled'
     default = True
@@ -282,8 +274,8 @@ class ReplyScores(BooleanPreference):
 
 @tournament_preferences_registry.register
 class MotionVetoes(BooleanPreference):
-    help_text = "Whether teams rank/veto motions in this style"
-    verbose_name = 'Motion Vetoes'
+    help_text = "Enables the motion veto field on ballots, to track veto statistics"
+    verbose_name = 'Motion vetoes'
     section = debate_rules
     name = 'motion_vetoes_enabled'
     default = True
@@ -295,24 +287,28 @@ standings = Section('standings')
 
 @tournament_preferences_registry.register
 class StandingsMissedDebates(IntegerPreference):
-    help_text = 'The number of debates you can miss and still be on the speaker tab'
-    verbose_name = "Standings Missed Debates"
+    help_text = "The number of debates a speaker can miss and still be on the speaker tab"
+    verbose_name = "Debates missable for standings eligibility"
     section = standings
     name = "standings_missed_debates"
     default = 1
 
 @tournament_preferences_registry.register
-class StandingsMethod(StringPreference):
-    help_text = 'Speaker rankings are by total (Yes) or average score (No)'
-    verbose_name = "Speaker Standings Method"
+class RankSpeakersBy(ChoicePreference):
+    help_text = "How speakers are ranked on the speaker tab"
+    verbose_name = "Rank speakers by"
     section = standings
-    name = "speaker_standings_rule"
-    default = 'australs'
+    name = "rank_speakers_by"
+    choices = (
+        ('average', 'Average'),
+        ('total', 'Total'),
+    )
+    default = 'total'
 
 @tournament_preferences_registry.register
 class TeamStandingsPrecedence(MultiValueChoicePreference):
-    help_text = 'Metrics to use to rank teams'
-    verbose_name = "Team Standings Precedence"
+    help_text = "Metrics to use to rank teams (see documentation for further details)"
+    verbose_name = "Team standings precedence"
     section = standings
     name = "team_standings_precedence"
     choices = get_metric_choices()
@@ -327,48 +323,48 @@ tab_release = Section('tab_release')
 
 @tournament_preferences_registry.register
 class TeamTabReleased(BooleanPreference):
-    help_text = 'Displays the team tab PUBLICLY. For AFTER the tournament'
-    verbose_name = "Team Tab Released"
+    help_text = "Enables public display of the team tab. Intended for use after the tournament."
+    verbose_name = "Release team tab to public"
     section = tab_release
     name = "team_tab_released"
     default = False
 
 @tournament_preferences_registry.register
 class SpeakerTabReleased(BooleanPreference):
-    help_text = 'Displays the speaker tab PUBLICLY. For AFTER the tournament'
-    verbose_name = "Speaker Tab Released"
+    help_text = "Enables public display of the speaker tab. Intended for use after the tournament."
+    verbose_name = "Release speaker tab to public"
     section = tab_release
     name = "speaker_tab_released"
     default = False
 
 @tournament_preferences_registry.register
 class NovicesTabReleased(BooleanPreference):
-    help_text = 'Displays the novices speaker tab PUBLICLY. For AFTER the tournament'
-    verbose_name = "Novices Tab Released"
+    help_text = "Enables public display of the novices tab. Intended for use after the tournament."
+    verbose_name = "Release novices tab to public"
     section = tab_release
     name = "novices_tab_released"
     default = False
 
 @tournament_preferences_registry.register
 class RepliesTabReleased(BooleanPreference):
-    help_text = 'Displays the replies tab PUBLICLY. For AFTER the tournament'
-    verbose_name = "Replies Tab Released"
+    help_text = "Enables public display of the replies tab. Intended for use after the tournament."
+    verbose_name = "Release replies tab to public"
     section = tab_release
     name = "replies_tab_released"
     default = False
 
 @tournament_preferences_registry.register
 class MotionTabReleased(BooleanPreference):
-    help_text = 'Displays the motions tab PUBLICLY. For AFTER the tournament'
-    verbose_name = "Motion Tab Released"
+    help_text = "Enables public display of the motions tab. Intended for use after the tournament."
+    verbose_name = "Release motions tab to public"
     section = tab_release
     name = "motion_tab_released"
     default = False
 
 @tournament_preferences_registry.register
 class BallotsReleased(BooleanPreference):
-    help_text = 'Displays ballots PUBLICLY. For AFTER the tournament'
-    verbose_name = "BallotsReleased"
+    help_text = "Enables public display of every adjudicator's ballot. Intended for use after the tournament."
+    verbose_name = "Release ballots to public"
     section = tab_release
     name = "ballots_released"
     default = False
@@ -380,7 +376,7 @@ data_entry = Section('data_entry')
 
 @tournament_preferences_registry.register
 class PublicBallots(BooleanPreference):
-    help_text = 'Enables public interface to add ballots using normal URLs'
+    help_text = "Enables public interface to add ballots using normal URLs"
     verbose_name = "Enable public ballots with normal URLs"
     section = data_entry
     name = "public_ballots"
@@ -388,7 +384,7 @@ class PublicBallots(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicBallotsRandomised(BooleanPreference):
-    help_text = 'Enables public interface to add ballots using randomised URLs'
+    help_text = "Enables public interface to add ballots using randomised URLs"
     verbose_name = "Enable public ballots with randomised URLs"
     section = data_entry
     name = "public_ballots_randomised"
@@ -396,7 +392,7 @@ class PublicBallotsRandomised(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicFeedback(BooleanPreference):
-    help_text = 'Enables public interface to add feedback using normal URLs'
+    help_text = "Enables public interface to add feedback using normal URLs"
     verbose_name = "Enable public feedback with normal URLs"
     section = data_entry
     name = "public_feedback"
@@ -404,7 +400,7 @@ class PublicFeedback(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicFeedbackRandomised(BooleanPreference):
-    help_text = 'Enables public interface to add feedback using randomised URLs'
+    help_text = "Enables public interface to add feedback using randomised URLs"
     verbose_name = "Enable public feedback with randomised URLs"
     section = data_entry
     name = "public_feedback_randomised"
@@ -412,7 +408,7 @@ class PublicFeedbackRandomised(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicUsePassword(BooleanPreference):
-    help_text = 'If checked, users must enter a password when submitting public feedback and ballots'
+    help_text = "If checked, users must enter a password when submitting public feedback and ballots"
     verbose_name = "Require password for submission"
     section = data_entry
     name = "public_use_password"
@@ -420,24 +416,24 @@ class PublicUsePassword(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicPassword(StringPreference):
-    help_text = 'Value of the password required for public submissions, if "require public for submission" is enabled'
-    verbose_name = "Public Password"
+    help_text = "Value of the password required for public submissions, if passwords are required"
+    verbose_name = "Password for public submission"
     section = data_entry
     name = "public_password"
     default = 'Enter Password'
 
 @tournament_preferences_registry.register
 class EnableAssistantConfirms(BooleanPreference):
-    help_text = 'Allows assistant users to confirm their own ballots'
-    verbose_name = "Enable Assistant Confirms"
+    help_text = "If not checked, tab assistants will be prevents from confirming ballots they entered"
+    verbose_name = "Tab assistants can confirm own ballots"
     section = data_entry
     name = "enable_assistant_confirms"
     default = False
 
 @tournament_preferences_registry.register
 class EnableMotions(BooleanPreference):
-    help_text = 'Whether entering ballots requires inputting a chosen motion'
-    verbose_name = "Enable Motions"
+    help_text = "If checked, ballots require a motion to be entered"
+    verbose_name = "Enable motions"
     section = data_entry
     name = "enable_motions"
     default = True
@@ -448,80 +444,80 @@ public_features = Section('public_features')
 
 @tournament_preferences_registry.register
 class PublicParticipants(BooleanPreference):
-    help_text = 'Public interface to see all participants'
-    verbose_name = "Public Participants"
+    help_text = "Enables the public page listing all participants in the tournament"
+    verbose_name = "Enable public view of participants list"
     section = public_features
     name = "public_participants"
     default = False
 
 @tournament_preferences_registry.register
 class PublicBreakCategories(BooleanPreference):
-    help_text = 'Show break categories on the participants page'
-    verbose_name = "Public Break Categories"
+    help_text = "If the participants list is enabled, displays break category eligibility on that page"
+    verbose_name = "Show break categories on participants page"
     section = public_features
     name = "public_break_categories"
     default = False
 
 @tournament_preferences_registry.register
 class PublicSideAllocations(BooleanPreference):
-    help_text = 'Public interface to see side pre-allocations'
-    verbose_name = "Public Side Allocations"
+    help_text = "Enables the public page listing pre-allocated sides"
+    verbose_name = "Show pre-allocated sides to public"
     section = public_features
     name = "public_side_allocations"
     default = False
 
 @tournament_preferences_registry.register
 class PublicDraw(BooleanPreference):
-    help_text = 'Public interface to see RELEASED draws'
-    verbose_name = "Public Draw"
+    help_text = "Enables the public page showing released draws"
+    verbose_name = "Enable public view of draw"
     section = public_features
     name = "public_draw"
     default = False
 
 @tournament_preferences_registry.register
 class PublicResults(BooleanPreference):
-    help_text = 'Public interface to see results from previous rounds'
-    verbose_name = "Public Results"
+    help_text = "Enables the public page showing results of non-silent rounds"
+    verbose_name = "Enable public view of results"
     section = public_features
     name = "public_results"
     default = False
 
 @tournament_preferences_registry.register
 class PublicMotions(BooleanPreference):
-    help_text = 'Public interface to see RELEASED motions'
-    verbose_name = "Public Motions"
+    help_text = "Enables the public page showing released motions"
+    verbose_name = "Enable public view of motions"
     section = public_features
     name = "public_motions"
     default = False
 
 @tournament_preferences_registry.register
 class PublicTeamStandings(BooleanPreference):
-    help_text = 'Public interface to see team standings DURING tournament'
-    verbose_name = "Public Team Standings"
+    help_text = "Enables the public page showing team standings, showing wins only (not speaker scores or ranking)"
+    verbose_name = "Enable public view of team standings"
     section = public_features
     name = "public_team_standings"
     default = False
 
 @tournament_preferences_registry.register
 class PublicBreakingTeams(BooleanPreference):
-    help_text = 'Public interface to see breaking teams, for AFTER the break announcement'
-    verbose_name = "Public Breaking Teams"
+    help_text = "Enables the public page showing the team breaks. Intended for use after the break announcement."
+    verbose_name = "Release team breaks to public"
     section = public_features
     name = "public_breaking_teams"
     default = False
 
 @tournament_preferences_registry.register
 class PublicBreakingAdjs(BooleanPreference):
-    help_text = 'Public interface to see breaking adjudicators, for AFTER the break announcement'
-    verbose_name = "Public Breaking Adjs"
+    help_text = "Enables the public page showing breaking adjudicators. Intended for use after the break announcement."
+    verbose_name = "Release adjudicators break to public"
     section = public_features
     name = "public_breaking_adjs"
     default = False
 
 @tournament_preferences_registry.register
 class FeedbackProgress(BooleanPreference):
-    help_text = "Public interface to show who has unsubmitted ballots"
-    verbose_name = "Feedback Progress"
+    help_text = "Enables the public page detailing who has unsubmitted feedback"
+    verbose_name = "Enable public view of unsubmitted feedback"
     section = public_features
     name = 'feedback_progress'
     default = False
@@ -532,67 +528,71 @@ ui_options = Section('ui_options')
 
 @tournament_preferences_registry.register
 class ShowSplittingAdjudicators(BooleanPreference):
-    help_text = 'If showing public results, show splitting adjudicators'
-    verbose_name = 'Show Splitting Adjudicators'
+    help_text = "If showing results to public, show splitting adjudicators in them"
+    verbose_name = 'Show splitting adjudicators'
     name = 'show_splitting_adjudicators'
     section = ui_options
     default = False
 
 @tournament_preferences_registry.register
 class ShowMotionsInResults(BooleanPreference):
-    help_text = 'If showing public results, show motions with results'
-    verbose_name = 'Show Motions In Results'
+    help_text = "If showing results to public, show which motions were selected in the summary"
+    verbose_name = 'Show motions in results'
     section = ui_options
     name = 'show_motions_in_results'
     default = False
 
 @tournament_preferences_registry.register
 class ShowEmoji(BooleanPreference):
-    help_text = 'Shows Emoji in the draw UI'
-    verbose_name = 'Show Emoji'
+    help_text = "Enables emoji in the draw"
+    verbose_name = 'Show emoji'
     section = ui_options
     name = 'show_emoji'
     default = True
 
 @tournament_preferences_registry.register
 class ShowInstitutions(BooleanPreference):
-    help_text = 'Shows the institutions column in draw and other UIs'
-    verbose_name = 'Show Institutions'
+    help_text = "Shows the institutions column where appropriate"
+    verbose_name = 'Show institutions'
     section = ui_options
     name = 'show_institutions'
     default = True
 
 @tournament_preferences_registry.register
 class ShowNovices(BooleanPreference):
-    help_text = 'Show if a speaker is a novice'
-    verbose_name = 'Show Novices'
+    help_text = "Indicates next to a speaker's name if they are a novice"
+    verbose_name = 'Show novices'
     section = ui_options
     name = 'show_novices'
     default = False
 
 @tournament_preferences_registry.register
 class ShowSpeakersInDraw(BooleanPreference):
-    help_text = 'Disable/Enable a hover element showing each teams speakers in the UI'
-    verbose_name = 'Show Speakers In Draw'
+    help_text = "Enables a hover element on every team's name showing that team's speakers"
+    verbose_name = 'Show speakers in draw'
     section = ui_options
     name = 'show_speakers_in_draw'
     default = True
 
 @tournament_preferences_registry.register
 class ShowAllDraws(BooleanPreference):
-    help_text = 'If showing public draws, show all (past & future) RELEASED draws'
-    verbose_name = 'Show All Draws'
+    help_text = "If showing draws to public, show all (past and future) released draws"
+    verbose_name = 'Show all draws'
     section = ui_options
     name = 'show_all_draws'
     default = False
 
 @tournament_preferences_registry.register
-class PublicMotionsDescending(BooleanPreference):
-    help_text = 'List motions by round in descending order (as opposed to ascending)'
-    verbose_name = "Public Motions Descending"
+class PublicMotionsDescending(ChoicePreference):
+    help_text = "Order in which are listed by round in the public view"
+    verbose_name = "Order to display motions"
     section = ui_options
-    name = "public_motions_descending"
-    default = True
+    name = "public_motions_order"
+    choices = (
+        ('forward', 'Earliest round first'),
+        ('reverse', 'Latest round first'),
+    )
+    default = 'reverse'
 
 # ==============================================================================
 league_options = Section('league_options')
@@ -600,80 +600,84 @@ league_options = Section('league_options')
 
 @tournament_preferences_registry.register
 class PublicDivisions(BooleanPreference):
-    help_text = 'Public interface to see divisions'
-    verbose_name = "Public Divisions"
+    help_text = "Enables public interface to see divisions"
+    verbose_name = "Show divisions to public"
     section = league_options
     name = "public_divisions"
     default = False
 
 @tournament_preferences_registry.register
-class TeamPointsRule(StringPreference):
-    help_text = '"normal" means 1 win = 1 point, "wadl" uses 2/1/0 for win/loss/forfeit'
-    verbose_name = "TeamPointsRule"
+class TeamPointsRule(ChoicePreference):
+    help_text = "Specifies how team points are allocated"
+    verbose_name = "Team points rule"
     section = league_options
     name = "team_points_rule"
+    choices = (
+        ('normal', '1 for win, 0 for loss'),
+        ('wadl', '2 for win, 1 for loss, 0 for forfeit'),
+    )
     default = 'normal'
 
 @tournament_preferences_registry.register
 class EnableDivisions(BooleanPreference):
-    help_text = 'Enables the sorting and display of teams into divisions'
-    verbose_name = "EnableDivisions"
+    help_text = "Enables the sorting and display of teams into divisions"
+    verbose_name = "Enable divisions"
     section = league_options
     name = "enable_divisions"
     default = False
 
 @tournament_preferences_registry.register
 class EnablePostponements(BooleanPreference):
-    help_text = 'Enables debates to have their status set to postponed'
-    verbose_name = "Enable Postponements"
+    help_text = "Enables debates to have their status set to postponed"
+    verbose_name = "Enable postponements"
     section = league_options
     name = "enable_postponements"
     default = False
 
 @tournament_preferences_registry.register
 class enable_forfeits(BooleanPreference):
-    help_text = 'Enables one side of a debate to be in forfeit'
-    verbose_name = "Enable Forfeits"
+    help_text = "Allows debates to be marked as wins by forfeit"
+    verbose_name = "Enable forfeits"
     section = league_options
     name = "enable_forfeits"
     default = False
 
 @tournament_preferences_registry.register
 class enable_division_motions(BooleanPreference):
-    help_text = 'Enables assigning motions to a division'
-    verbose_name = "Enable Division Motions"
+    help_text = "Enables assigning motions to a division"
+    verbose_name = "Enable division motions"
     section = league_options
     name = "enable_division_motions"
     default = False
 
 @tournament_preferences_registry.register
 class minimum_division_size(IntegerPreference):
-    help_text = 'Smallest allowed size for a division'
-    verbose_name = "Minimum Division Size"
+    help_text = "Smallest allowed size for a division"
+    verbose_name = "Minimum division size"
     section = league_options
     name = "minimum_division_size"
     default = 5
 
 @tournament_preferences_registry.register
 class ideal_division_size(IntegerPreference):
-    help_text = 'Ideal size for a division'
-    verbose_name = "Ideal Division Size"
+    help_text = "Ideal size for a division"
+    verbose_name = "Ideal division size"
     section = league_options
     name = "ideal_division_size"
     default = 6
 
 @tournament_preferences_registry.register
 class MaximumDivisionSize(IntegerPreference):
-    help_text = 'Largest allowed size for a division'
-    verbose_name = "Maximum Division Size"
+    help_text = "Largest allowed size for a division"
+    verbose_name = "Maximum division size"
     section = league_options
     name = "maximum_division_size"
     default = 8
 
 @tournament_preferences_registry.register
 class EnableFlaggedMotions(BooleanPreference):
-    help_text = 'Allow particular motions to be flagged as contentious'
-    verbose_name = "Enable Flagged Motions"
+    help_text = "Allow particular motions to be flagged as contentious"
+    verbose_name = "Enable flagged motions"
     section = league_options
     name = "enable_flagged_motions"
     default = False
@@ -681,48 +685,48 @@ class EnableFlaggedMotions(BooleanPreference):
 
 @tournament_preferences_registry.register
 class EnableAdjNotes(BooleanPreference):
-    help_text = 'Enables a general-purpose notes field for adjudicators'
-    verbose_name = "Enable Adj Notes"
+    help_text = "Enables a general-purpose notes field for adjudicators"
+    verbose_name = "Enable adjudicator notes"
     section = league_options
     name = "enable_adj_notes"
     default = False
 
 @tournament_preferences_registry.register
 class EnableVenueGroups(BooleanPreference):
-    help_text = 'Enables the display of a venues grouping'
-    verbose_name = "Enable Venue Groups"
+    help_text = "Enables the display of venue groups"
+    verbose_name = "Enable venue groups"
     section = league_options
     name = "enable_venue_groups"
     default = False
 
 @tournament_preferences_registry.register
 class EnableVenueTimes(BooleanPreference):
-    help_text = 'Enables dates and times to be set for venues'
-    verbose_name = "Enable Venue Times"
+    help_text = "Enables dates and times to be set for venues"
+    verbose_name = "Enable venue times"
     section = league_options
     name = "enable_venue_times"
     default = False
 
 @tournament_preferences_registry.register
 class EnableVenueOverlaps(BooleanPreference):
-    help_text = 'Allow and automatically debates to be placed in the first room'
-    verbose_name = "Enable Venue Overlaps"
+    help_text = "Allow and automatically debates to be placed in the first room"
+    verbose_name = "Enable venue overlaps"
     section = league_options
     name = "enable_venue_overlaps"
     default = False
 
 @tournament_preferences_registry.register
 class ShareAdjs(BooleanPreference):
-    help_text = 'Display adjudicators from other tournaments'
-    verbose_name = "Share Adjs"
+    help_text = "Display adjudicators from other tournaments"
+    verbose_name = "Share adjudicators"
     section = league_options
     name = "share_adjs"
     default = False
 
 @tournament_preferences_registry.register
 class DuplicateAdjs(BooleanPreference):
-    help_text = 'Allow each adjudicator to be allocated to multiple rooms'
-    verbose_name = "Duplicate Adjs"
+    help_text = "If unchecked, adjudicators can only be given one room per round"
+    verbose_name = "Allow adjudicators to be allocated to multiple rooms"
     section = league_options
     name = "duplicate_adjs"
     default = False
@@ -730,7 +734,7 @@ class DuplicateAdjs(BooleanPreference):
 @tournament_preferences_registry.register
 class AdjAllocationConfirmations(BooleanPreference):
     help_text ='Allow links to be sent to adjudicators that allow them to confirm shifts'
-    verbose_name = "Adj Allocation Confirmations"
+    verbose_name = "Adjudicator allocation confirmations"
     section = league_options
     name = "allocation_confirmations"
     default = False
