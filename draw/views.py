@@ -406,7 +406,8 @@ def public_draw_by_round(request, round):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def public_all_draws(request, t):
-    all_rounds = list(Round.objects.filter(tournament=t))
+    all_rounds = list(Round.objects.filter(
+        tournament=t, draw_status=Round.STATUS_RELEASED))
     for r in all_rounds:
         r.draw = r.get_draw()
 

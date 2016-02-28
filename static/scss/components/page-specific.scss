@@ -24,6 +24,11 @@
     }
   }
 }
+// ASSIGNING MOTIONS TO DIVISIONS
+.assign-motions-lists .list-group-item-text {
+  height: 60px;  // Need to be fixed height so below rows all align
+  overflow: hidden;
+}
 
 .division-heading {
   // Shift up the select to be adjavent to the title

@@ -1091,31 +1091,6 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
         print("------")
 
-        # Assigning bye teams as needed
-        for bracket in brackets.values():
-            if len(bracket) % 2 != 0:
-                from participants.models import Institution, Team
-                bye_tournament = bracket[0].tournament
-                bye_institution, created = Institution.objects.get_or_create(
-                    name="Byes"
-                )
-                bye_reference = "Bye %s" % bracket[0].division
-                bye_division = bracket[0].division
-                bye_team = Team(
-                    institution = bye_institution,
-                    reference = bye_reference,
-                    short_reference = "Bye",
-                    tournament= bye_tournament,
-                    type = "B",
-                    use_institution_prefix = False,
-                    division = bye_division,
-                )
-                bye_team.aff_count = 0
-                bye_team.neg_count = 0
-                bye_team.save()
-                bracket.append(bye_team)
-                print("\t Created a bye team for divison %s" % bracket[0].division)
-
         # Assigning subranks - fixed based on alphabetical
         for bracket in brackets.values():
             bracket.sort(key=lambda x: x.short_name, reverse=False)
