@@ -273,7 +273,13 @@ def apply_schedule(request, round):
             date = request.POST[str(division.venue_group.id)]
             if date:
                 time = "%s %s" % (date, division.time_slot)
-                debate.time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+                try:
+                    debate.time = datetime.datetime.strptime(time,
+                        "%Y-%m-%d %H:%M:%S") # Chrome
+                except:
+                    debate.time = datetime.datetime.strptime(time,
+                        "%d/%m/%Y %H:%M:%S") # Others
+
                 debate.save()
 
     messages.success(request, "Applied schedules to debates")
