@@ -8,18 +8,43 @@
   }
 }
 // DIVISIONS
-.division-heading { // Shift up the select to be adjacent to the title
-  h4 {
+.divisions-holder {
+  // Align them in equal height rows
+  display: flex;
+  flex-wrap: wrap;
+  .col-md-3 {
+    display: flex;
+  }
+  // Set the panel body to fill all the available height
+  .panel {
+    display: flex;
+    flex-direction: column;
+    .panel-body {
+      flex: 1;
+    }
+  }
+}
+// ASSIGNING MOTIONS TO DIVISIONS
+.assign-motions-lists .list-group-item-text {
+  height: 60px;  // Need to be fixed height so below rows all align
+  overflow: hidden;
+}
+
+.division-heading {
+  // Shift up the select to be adjavent to the title
+  padding: 5px 10px;
+  h5 {
     display: inline-block;
   }
   .form-control {
     display: inline-block;
-    width: auto;
+    max-width: 75%;
     float: right;
   }
 }
 .division-droppable {
   min-height: 66px; // Don't expand when the first team is added
+  padding: 5px;
 }
 // DRAW
 .draw-xs {
@@ -41,57 +66,3 @@
 .speaker-name {
   text-align: left;
 }
-
-// // OLD: REFACTOR
-
-
-// // Draw Page
-// #draw {
-//   margin-top: 0; // counteracts margin addded from the text size h2/h3/etcs
-// }
-// .table>tbody>tr>td {
-//   line-height: 1;
-// }
-// @media (max-width: $screen-xs-max) {
-//   #draw tbody,
-//   #draw thead {
-//     font-size: 0.65em;
-//   }
-//   .fixedHeader .table thead {
-//     font-size: 0.65em;
-//   }
-//   #draw.table>thead>tr>th,
-//   #draw.table>tbody>tr>td {
-//     padding: 4px 0 4px 4px;
-//   }
-//   #draw.table>thead>tr>th.team-emoji,
-//   #draw.table>tbody>tr>td.team-emoji {
-//     padding-left: 0;
-//     padding-right: 0;
-//   }
-// }
-// // For the text size buttons
-// .h3_minus,
-// .h3_minus {
-//   @extend .h3;
-// }
-// .h3_minus {
-//   font-size: ceil(($font-size-base * 1.42));
-// }
-// .h3_plus {
-//   font-size: ceil(($font-size-base * 1.92));
-// }
-// #draw.dataTable {
-//   .adj-names {
-//     ul {
-//       padding-left: 0;
-//       margin-left: 0;
-//       list-style-type: none;
-//     }
-//   }
-// }
-
-// .team-speakers-hover {
-//   cursor: pointer;
-//   border-bottom: 2px dotted #ccc;
-// }

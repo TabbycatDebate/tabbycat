@@ -13,7 +13,7 @@
                 <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
               {% endif %}
               <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-              {% if pref.enable_venue_times %}
+              {% if pref.enable_debate_scheduling %}
                 <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
                 <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
               {% endif %}
@@ -48,7 +48,7 @@
               {% else %}
                 <td class="venue-name">{{ debate.venue.name }}</td>
               {% endif %}
-              {% if pref.enable_venue_times %}
+              {% if pref.enable_debate_scheduling %}
                 {% include "tables/debate_status.html" %}
               {% endif %}
               {% if pref.show_emoji %}

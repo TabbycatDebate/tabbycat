@@ -6,9 +6,9 @@
   <small>
   {{ round.name }},
   {% if all_debates.0.venue == 0 %}
-    {{ all_debates.0.venue.time|date:"D jS F" }}
+    {{ all_debates.0.time|date:"D jS F" }}
   {% else %}
-    {{ all_debates.1.venue.time|date:"D jS F" }}
+    {{ all_debates.1.time|date:"D jS F" }}
   {% endif %}
   </small>
 {% endblock %}

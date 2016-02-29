@@ -147,7 +147,7 @@ class UADCPreferences(AustralsPreferences):
 class WADLPreferences(PreferencesPreset):
     """ Example high school league setup """
     def __init__(self):
-        self.name                                      = "WADL Options & Rules"
+        self.name                                      = "WADL Options"
         self.show_in_list                              = True
         # Debate Rules= no replies; singular motions
         self.debate_rules__substantive_speakers        = 3
@@ -172,13 +172,17 @@ class WADLPreferences(PreferencesPreset):
         self.ui_options__show_speakers_in_draw         = False
         self.ui_options__public_motions_order          = 'reverse'
         self.ui_options__show_all_draws                = True
+        self.public_features__public_draw              = True
+        self.public_features__public_results           = True
+        self.public_features__public_motions           = True
         # League Options
         self.league_options__enable_flagged_motions    = True
         self.league_options__enable_adj_notes          = True
         self.league_options__enable_venue_groups       = True
-        self.league_options__enable_venue_times        = True
+        self.league_options__enable_debate_scheduling        = True
         self.league_options__enable_venue_overlaps     = True
         self.league_options__share_adjs                = True
+        self.league_options__share_venues              = True
         self.league_options__duplicate_adjs            = True
         self.league_options__public_divisions          = True
         self.league_options__enable_divisions          = True

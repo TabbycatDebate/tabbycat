@@ -15,7 +15,7 @@
           {% for t in all_tournaments %}
             {% if tournament != t %}
               <li>
-                <a class="small" href="{{ tournament.get_absolute_url  }}">
+                <a class="small" href="{{ t.get_absolute_url  }}">
                   {{ t }}
                 </a>
               </li>

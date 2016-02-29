@@ -8,12 +8,8 @@
   <td></td>
   <td><span class="text-primary">Forfeit</span></td>
 {% else %}
-  <td>{{ debate.venue.time|date:"D jS F" }}</td>
+  <td>{{ debate.time|date:"D jS F" }}</td>
   <td>
-    {% if debate.division %}
-      {{ debate.division.time_slot|time:'h:i A' }}
-    {% else %}
-      {{ debate.venue.time|time:'h:i A' }}s
-    {% endif %}
+    {{ debate.time|time:'h:i A' }}
   </td>
 {% endif %}

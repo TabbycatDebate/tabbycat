@@ -38,7 +38,6 @@ class Venue(models.Model):
                                    blank=True,
                                    null=True,
                                    db_index=True)
-    time = models.DateTimeField(blank=True, null=True, help_text="")
 
     class Meta:
         ordering = ['group', 'name']

@@ -32,7 +32,7 @@
     </table>
     {% for venue in round.unused_venues %}
     <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
-      <span>{{ venue }} {% if venue.time %}<em>{{ venue.time|date:"d/m" }}</em>{% endif %}</span>
+      <span>{{ venue }}</span>
     </div>
     {% endfor %}
   </div>
@@ -69,7 +69,7 @@
           <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
             {% if debate.venue %}
             <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
-              <span class="">{{ debate.venue }} {% if debate.venue.time %}<em>{{ debate.venue.time|date:"d/m" }}</em>{% endif %}</span>
+              <span class="">{{ debate.venue }} {% if debate.time %}<em>{{ debate.time|date:"d/m" }}</em>{% endif %}</span>
             </div>
             {% endif %}
           </td>

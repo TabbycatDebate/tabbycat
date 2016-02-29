@@ -2,17 +2,17 @@
 <script type="text/x-template" id="division-droppable">
 
   <div class="col-md-3">
-    <div class="panel panel-default">
+    <div class="panel panel-default" v-bind:class="{ 'panel-danger': hasEvenNumbers }">
 
       <div class="panel-heading division-heading">
 
-        <h4>[[ division.name ]]</h4>
+        <h5>D[[ division.name ]] ([[ teams.length ]])</h5>
 
         <select name="select" class="form-control" v-model="division.venue_group">
 
           <option value=""></option>
           <option v-for="vg in vgs" value="[[ vg.id ]]" v-bind:value="vg.id">
-            [[ vg.short_name ]] (x/[[ vg.team_capacity ]])
+            [[ vg.short_name ]]
           </option>
 
         </select>
@@ -22,9 +22,8 @@
       <div class="panel-body division-droppable" v-on:dragover.prevent v-on:drop="receiveTeam"
         v-on:dragenter="handleDragEnter" v-on:dragleave="handleDragLeave"
         v-bind:class="{ 'vue-is-drag-enter': isDroppable }" data-id="[[ division.id ]]">
-
         <template v-for="team in teams" track-by="id">
-          <team-draggable :team="team"></team-draggable>
+          <team-draggable :team="team" :vg="division.venue_group" :save-division-at="saveDivisionAt"></team-draggable>
         </template>
 
       </div>
@@ -38,7 +37,13 @@
 <script>
   Vue.component('division-droppable', {
     props: {
-      'division': {}, 'vgs': {}, 'teams': {}, 'save-vg-at': {}, isDroppable: { default: false }
+      'division': {},
+      'vgs': {},
+      'teams': {},
+      'save-vg-at': {},
+      'save-division-at': {},
+      'isDroppable': { default: false },
+      'dragCounter': { default: 0 }
     },
     template: '#division-droppable',
     watch: {
@@ -61,19 +66,33 @@
         });
       },
     },
+    computed: {
+      // a computed getter
+      hasEvenNumbers: function () {
+        // `this` points to the vm instance
+        return (this.teams.length % 2) == 1;
+      }
+    },
     methods: {
       handleDragEnter: function(elem) {
         // console.log('handleDragStart', elem);
+        this.dragCounter++;
+        console.log(this.dragCounter);
         this.isDroppable = true;
       },
       handleDragLeave: function(elem) {
-        this.isDroppable = false;
+        this.dragCounter--;
+        console.log(this.dragCounter);
+        if (this.dragCounter == 0) {
+          this.isDroppable = false;
+        }
       },
       receiveTeam: function(ev) {
         // This calls up to the parent component
         console.log('child component (' + this.division.id + ') received a team');
         this.$dispatch('assign-team-to-division', this.division);
         this.isDroppable = false;
+        this.dragCounter = 0;
       }
 
     }
