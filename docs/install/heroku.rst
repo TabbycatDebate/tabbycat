@@ -6,12 +6,29 @@ Installing on Heroku
 
 When running Tabbycat on the internet, we set it up on `Heroku <http://www.heroku.com/>`_. The project is set up to be good to go on Heroku, and it works well for us, so if you'd like to run it online, we recommend that you do the same. Naturally, this requires you to have a Heroku account.
 
+Installation---the short way
+============================
+Click this button:
+
+.. image:: https://www.herokucdn.com/deploy/button.svg
+  :target: https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/master
+
+If you don't already have a Heroku account, it'll prompt you to create one. Once you're logged in to Heroku, choose a name for your installation, then scroll down and click **Deploy for Free**. Once it's finished, click **View** and follow the prompts.
+
+This is the easiest way to deploy an instance of Tabbycat online. It requires no technical background. You can import data using the data importer in the user interface.
+
+If you have a background in programming, you might prefer the below longer, more traditional method.
+
+Installation---the long way
+===========================
+The long way sets you up with more control over your environment.  Because you'll clone `our GitHub repository`_, it'll be easier for you to pull and contribute updates to the source code.  We recommend it if you have experience with Git.  It's also easier with this method to import CSV files using the command-line importer, so if you have a very large tournament, this might make importing initial data easier.
+
 We've tested these instructions successfully on Windows, Linux and Mac OS.
 
 Requisite technical background
-==============================
+------------------------------
 
-You need to have at least a passing familiarity with command-line interfaces to get through this. We'll talk you through the rest.
+You need to have at least a passing familiarity with command-line interfaces to get through the longer traditional method. We'll talk you through the rest.
 
 When we say "command shell", on Windows we mean **Command Prompt**, and on Linux and OS X we mean **Terminal** (or your favourite command shell).
 
@@ -20,14 +37,12 @@ When we say "command shell", on Windows we mean **Command Prompt**, and on Linux
 
   Tabbycat is a `Django <https://www.djangoproject.com/>`_ project. As such, it can be installed on any web platform that supports Django, using any SQL system that Django supports. Just be aware that we haven't tried any other platform.
 
-Installation
-============
-
 Short version
 -------------
-::
+.. parsed-literal::
 
-  git clone https://github.com/czlee/tabbycat.git
+  git clone https\:\/\/github.com/czlee/tabbycat.git
+  git checkout |vrelease|                               # or master
   cd tabbycat
   python deploy_heroku.py <yourappname>
 
@@ -50,9 +65,13 @@ If you want to :ref:`import tournament data <importing-initial-data>` from CSV f
 
 2. Get the source code
 ----------------------
-Open a command shell. Navigate to an appropriate directory on your computer using ``cd`` (creating directories using ``mkdir`` as appropriate), then run this command::
+Open a command shell. Navigate to an appropriate directory on your computer using ``cd`` (creating directories using ``mkdir`` as appropriate), then run:
 
-  git clone https://github.com/czlee/tabbycat.git
+.. parsed-literal::
+
+  git clone https\:\/\/github.com/czlee/tabbycat.git
+  git checkout |vrelease|                               # or master
+
 
 .. tip:: If this is your second time creating a Tabbycat instance on Heroku from this computer, you don't need to clone the repository a second time. Just run ``git pull`` to update the code to the latest version, and press ahead to step 3: Deploy to Heroku.
 
