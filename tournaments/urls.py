@@ -35,6 +35,9 @@ urlpatterns = [
     url(r'^admin/divisions/set_team/$',
         views.set_team_division,
         name='set_team_division'),
+    url(r'^admin/divisions/set_time/$',
+        views.set_division_time,
+        name='set_division_time'),
     # MANUAL ACTIONS
     url(r'^admin/divisions/create/$',
         views.create_division,

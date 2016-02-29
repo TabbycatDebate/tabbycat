@@ -237,12 +237,23 @@ def set_team_division(request, t):
         team.division = None;
     else:
         team.division = Division.objects.get(pk=int(request.POST['division']));
+        team.save()
+        print("saved divison for ", team.short_name)
 
-    print("saved divison for ", team.short_name)
-    team.save()
     return HttpResponse("ok")
 
+@admin_required
+@expect_post
+@tournament_view
+def set_division_time(request, t):
+    division = Division.objects.get(pk=int(request.POST['division']))
+    if request.POST['division'] == '':
+        division = None;
+    else:
+        division.time_slot=request.POST['time']
+        division.save();
 
+    return HttpResponse("ok")
 
 
 class BlankSiteStartView(FormView):

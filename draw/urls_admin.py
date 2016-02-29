@@ -45,9 +45,6 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/unrelease/$',
         views.unrelease_draw,
         name='unrelease_draw'),
-    url(r'^round/(?P<round_seq>\d+)/start_time/set/$',
-        views.set_round_start_time,
-        name='set_round_start_time'),
 
     # Side Editing
     url(r'^side_allocations/$',
@@ -67,4 +64,15 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/venues/save/$',
         views.save_venues,
         name='save_venues'),
+
+    # Scheduling
+    url(r'^round/(?P<round_seq>\d+)/schedule_debates/$',
+            views.schedule_debates,
+            name='schedule_debates'),
+    url(r'^round/(?P<round_seq>\d+)/schedule_debates/save/$',
+            views.apply_schedule,
+            name='apply_schedule'),
+    url(r'^round/(?P<round_seq>\d+)/start_time/set/$',
+        views.set_round_start_time,
+        name='set_round_start_time'),
 ]

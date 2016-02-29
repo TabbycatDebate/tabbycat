@@ -1,6 +1,6 @@
 from actionlog.models import ActionLogEntry
 from participants.models import Team
-from tournaments.models import Tournament, Round
+from tournaments.models import Tournament, Round, Division
 from motions.models import Motion
 from venues.models import Venue, VenueGroup
 from .models import TeamPositionAllocation, Debate, DebateTeam
@@ -248,6 +248,35 @@ def set_round_start_time(request, round):
         round=round,
         tournament=round.tournament)
 
+    return redirect_round('draw', round)
+
+
+@admin_required
+@round_view
+def schedule_debates(request, round):
+    venue_groups = VenueGroup.objects.all()
+    divisions = Division.objects.filter(tournament=round.tournament).order_by('id')
+    return render(request,
+               "draw_set_debate_times.html",
+               dict(venue_groups=venue_groups, divisions=divisions))
+
+
+@admin_required
+@expect_post
+@round_view
+def apply_schedule(request, round):
+    import datetime
+    debates = Debate.objects.filter(round=round)
+    for debate in debates:
+        division = debate.teams[0].division
+        if division and division.time_slot:
+            date = request.POST[str(division.venue_group.id)]
+            if date:
+                time = "%s %s" % (date, division.time_slot)
+                debate.time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+                debate.save()
+
+    messages.success(request, "Applied schedules to debates")
     return redirect_round('draw', round)
 
 

@@ -21,24 +21,25 @@
   <a class="btn btn-default submit-disable" href="{% round_url draw_adjudicators_edit %}" class="btn btn-default submit-disable">
     Edit Adjudicators
   </a>
-
   <a class="btn btn-default submit-disable" href="{% round_url motions_edit %}" class="btn btn-default submit-disable">
     Edit Motions
+  </a>
+  <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
+    Draw Details
   </a>
   {% if pref.enable_division_motions %}
     <a href="{% round_url motions_assign %}" class="btn btn-default submit-disable">
       Assign Motions to Divisions
     </a>
   {% endif %}
-
-  <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
-    Draw Details
-  </a>
-
   {% if not pref.enable_debate_scheduling %}
     <button class="btn {% if round.starts_at %}btn-success{% else %}btn-primary{% endif %}  submit-disable" data-toggle="modal" data-target="#start-time-form">
       {% if round.starts_at %}Start Time: {{ round.starts_at }}{% else %}Add Start Time{% endif %}
     </button>
+  {% else %}
+    <a href="{% round_url schedule_debates %}" class="btn btn-default submit-disable">
+      Schedule Debates
+    </a>
   {% endif %}
   {% if round.motions_released %}
     <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}">
