@@ -142,7 +142,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         (unless 'auto_create_groups' is False).
 
         Each line has:
-            name, priority, venue_group.name, time
+            name, priority, venue_group.name
         """
 
         if auto_create_groups:
@@ -165,7 +165,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'name'       : line[0],
                 'priority'   : int(line[1]) if len(line) > 1 else 10,
                 'group'      : vm.VenueGroup.objects.get(name=line[2]) if len(line) > 2 and line[2] else None,
-                'time'       : line[3] if len(line) > 3 and line[3] else None,
             }
         counts, errors = self._import(f, _venue_line_parser, vm.Venue, counts=counts, errors=errors)
 
