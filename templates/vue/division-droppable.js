@@ -12,7 +12,7 @@
 
           <option value=""></option>
           <option v-for="vg in vgs" value="[[ vg.id ]]" v-bind:value="vg.id">
-            [[ vg.short_name ]] x/[[ vg.team_capacity ]]
+            [[ vg.short_name ]]
           </option>
 
         </select>

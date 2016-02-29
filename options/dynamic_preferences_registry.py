@@ -701,10 +701,10 @@ class EnableVenueGroups(BooleanPreference):
 
 @tournament_preferences_registry.register
 class EnableVenueTimes(BooleanPreference):
-    help_text = "Enables dates and times to be set for venues"
-    verbose_name = "Enable venue times"
+    help_text = "Enables specific dates and times to be set for debates"
+    verbose_name = "Enable debate scheduling"
     section = league_options
-    name = "enable_venue_times"
+    name = "enable_debate_scheduling"
     default = False
 
 @tournament_preferences_registry.register
