@@ -276,7 +276,7 @@ def apply_schedule(request, round):
                 try:
                     debate.time = datetime.datetime.strptime(time,
                         "%Y-%m-%d %H:%M:%S") # Chrome
-                except:
+                except ValueError:
                     debate.time = datetime.datetime.strptime(time,
                         "%d/%m/%Y %H:%M:%S") # Others
 
