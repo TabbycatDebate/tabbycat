@@ -273,7 +273,7 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
 
 if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
-    TEMPLATE_DEBUG = DEBUG
+    TEMPLATES[0]['OPTIONS']['debug'] = True
 
 # =============
 # = Travis CI =
