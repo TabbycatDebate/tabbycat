@@ -560,7 +560,10 @@ class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
         kwargs['teams'] = tournament.team_set.all()
-        kwargs['adjs'] = tournament.adjudicator_set.all()
+        if not tournament.pref('share_adjs'):
+            kwargs['adjs'] = tournament.adjudicator_set.all()
+        else:
+            kwargs['adjs'] = Adjudicator.objects.all()
         kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
                 tournament.team_set.filter(url_key__isnull=False).exists()
         kwargs['tournament_slug'] = tournament.slug
@@ -586,4 +589,3 @@ class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOn
             messages.success(self.request, "Randomised URLs were generated for all teams and adjudicators.")
 
         return super().post(request, *args, **kwargs)
-
