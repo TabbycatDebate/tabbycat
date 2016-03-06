@@ -326,12 +326,6 @@ class Round(models.Model):
         else:
             teams = self.active_teams.all()
 
-        from participants.models import Team
-        orig_len = len(teams)
-        teams = teams.exclude(type=Team.TYPE_BYE)
-        if orig_len != len(teams):
-            logger.info("Excluded bye teams: {} total, {} teams after cull".format(orig_len, len(teams)))
-
         # Set type-specific options
         if self.draw_type == self.DRAW_RANDOM:
             draw_type = "random"
@@ -390,7 +384,7 @@ class Round(models.Model):
         if options["side_allocations"] == "manual-ballot":
             options["side_allocations"] = "balance"
 
-        drawer = DrawGenerator(draw_type, teams, results=None, **options)
+        drawer = DrawGenerator(draw_type, teams, self, results=None, **options)
         draw = drawer.generate()
         self.make_debates(draw)
         self.draw_status = self.STATUS_DRAFT

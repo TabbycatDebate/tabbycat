@@ -119,7 +119,7 @@ class Pairing(object):
         return self.teams[self._winner_index]
 
 
-def DrawGenerator(draw_type, teams, results=None, **kwargs):
+def DrawGenerator(draw_type, teams, round, results=None, **kwargs):
     """Factory for draw objects.
     Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
     'draw_type' is mandatory and can be any of 'random', 'power_paired',
@@ -147,7 +147,7 @@ def DrawGenerator(draw_type, teams, results=None, **kwargs):
     elif draw_type == "elimination":
         klass = EliminationDrawGenerator
 
-    return klass(teams, results, **kwargs)
+    return klass(teams, round, results, **kwargs)
 
 
 class BaseDrawGenerator(object):
@@ -186,9 +186,10 @@ class BaseDrawGenerator(object):
     # All subclasses must define this with any options that may exist.
     DEFAULT_OPTIONS = {}
 
-    def __init__(self, teams, results=None, **kwargs):
+    def __init__(self, teams, round, results=None, **kwargs):
         self.teams = teams
         self.team_flags = dict()
+        self.round = round
 
         if self.requires_even_teams:
             if not len(self.teams) % 2 == 0:
@@ -1100,26 +1101,11 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
         return brackets
 
-    def determine_effective_round(self, teams_list):
-        # This uses previous matchups to determine the offset
-        # Essentially figures out (ignore draw.seq) what the previous matchups
-        # have been. TODO: This is pretty flawed.
-        effective_round = 1
-        for i in range(1, len(teams_list)):
-            print("\ttesting round %s" % i)
-            right_team_index = -1 * i
-            if teams_list[0].seen(teams_list[right_team_index]):
-                effective_round += 1
-
-        print("effective roud of %s" % effective_round)
-        return effective_round
-
-
     def generate_pairings(self, brackets):
         pairings = OrderedDict()
 
         first_bracket_teams = next(iter(brackets.values()))
-        effective_round = self.determine_effective_round(first_bracket_teams)
+        effective_round = self.round.seq
         print("-------\nTaking as effective round of %s" % effective_round)
 
         for bracket in brackets.items():
