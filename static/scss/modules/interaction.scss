@@ -16,17 +16,16 @@
   /* Required to make elements draggable in old WebKit */
   -khtml-user-drag: element;
   -webkit-user-drag: element;
-
   display: inline-block;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 0 6px 0 0;
+  // border-radius: 5px;
+  padding: 3px 6px 3px 0;
   margin: 2px;
   text-align: left;
-  background: #fff;
-  height: 32px;
-  line-height: 32px;
-  position: relative;
+  // background: #fff;
+  // height: 32px;
+  // line-height: 32px;
+  // position: relative;
   span {
     padding: 6px 0 0 6px;
   }
@@ -35,8 +34,7 @@
   }
 }
 .vue-is-dragging {
-  opacity: 0.8;
-  color: #6894D1;
+  opacity: 0.5 !important;
   cursor: move;
 }
 .vue-is-drag-enter {
@@ -47,7 +45,7 @@
 .slideover-info {
   width: auto;
   position: fixed;
-  height: 100px;
+  height: 75px;
   bottom: 0;
   right: 15px;
   left: 15px;

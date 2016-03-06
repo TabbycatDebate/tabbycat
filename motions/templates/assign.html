@@ -5,8 +5,6 @@
 {% block head-title %}Assign Motions for {{ round.name }}{% endblock %}
 {% block page-title %}Assign Motions for {{ round.name }}{% endblock %}
 
-
-
 {% block content %}
   <form method="post" action="" class="form-horizontal col-md-12">
 
@@ -16,41 +14,29 @@
 
       {% for form in formset %}
         {{ form.id }}
-        <ul class="list-group col-sm-4">
+        <ul class="list-group assign-motions-lists col-sm-3">
           <li class="list-group-item">
             <h4 class="list-group-item-heading">{{ form.instance.reference }}</h4>
             <p class="list-group-item-text">{{ form.instance.text }}</p>
-          </li>
-          <li class="list-group-item">
-            <div class="btn-group">
-              <a class="btn btn-default toggler" id="">W1 Tue</a>
-              <a class="btn btn-default toggler" id="">W1 Wed</a>
-              <a class="btn btn-default toggler" id="">W2 Tue</a>
-              <a class="btn btn-default toggler" id="">W2 Wed</a>
-              <a class="btn btn-default " id="all">All</a>
-            </div>
           </li>
           {% if form.errors %}
             <li class="list-group-item">
               <div class="error">{{ form.errors }}</div>
             </li>
           {% endif %}
-          {% for d in form.divisions %}
-            <li class="list-group-item division">
-              {{ d }}
-            </li>
-          {% endfor %}
+          {% if form.divisions %}
+            {% for d in form.divisions %}
+              <li class="list-group-item division">
+                {{ d }}
+              </li>
+            {% endfor %}
+          {% endif %}
         </ul>
       {% endfor %}
     </div>
 
     <div class="row">
-      <div class="col-sm-2">
-        <input class="btn btn-success submit-disable" type="submit" name="submit" value="Save All" data-loading-text="Saving..." />
-      </div>
-      <div class="col-sm-2">
-        <a class="btn btn-danger form-control" href="{% round_url motions %}">Cancel</a>
-      </div>
+      <input class="btn btn-block btn-success submit-disable" type="submit" name="submit" value="Save Motion Assignments" data-loading-text="Saving..." />
     </div>
 
   </form>
@@ -65,27 +51,8 @@
           e.preventDefault();
           return false;
         }
-      } );
-      $('.toggler').click( function() {
-        var toggled_value = $(this).text();
-        $(this).parent().parent().parent().children(".division").each(function(){
-          var label = $(this).children("label").text();
-          var checkbox = $(this).children("label").children("input:checkbox");
-          checkbox.prop( "checked", false );
-          if (label.indexOf(toggled_value) > -1) {
-            console.log(label);
-            checkbox.prop( "checked", true );
-          }
-        });
       });
-      $('#all').click( function() {
-        $(this).parent().parent().parent().children(".division").each(function(){
-          var checkbox = $(this).children("label").children("input:checkbox");
-          checkbox.prop( "checked", true );
-        });
-      });
-
-    } );
+    });
 
   </script>
 {% endblock extra-js %}

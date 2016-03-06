@@ -64,11 +64,9 @@ def motions_assign(request, round):
 
     class MyModelChoiceField(ModelMultipleChoiceField):
         def label_from_instance(self, obj):
-            return "%s %s - Division %s @ %s" % (
-                obj.venue_group.short_name.split(' ')[2],
-                obj.venue_group.short_name.split(' ')[1],
+            return "D%s @ %s" % (
                 obj.name,
-                obj.venue_group.short_name.split(' ')[0],
+                obj.venue_group.short_name,
             )
 
     class ModelAssignForm(ModelForm):

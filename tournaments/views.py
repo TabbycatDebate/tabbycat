@@ -135,10 +135,23 @@ def round_increment(request, round):
 @admin_required
 @tournament_view
 def division_allocations(request, t):
+    teams = list(Team.objects.filter(tournament=t).all().values(
+            'id', 'short_reference', 'division', 'use_institution_prefix', 'institution__code', 'institution__id'))
 
-    teams = json.dumps(list(
-        Team.objects.filter(tournament=t).all().values(
-            'id', 'short_reference', 'division', 'use_institution_prefix', 'institution__code')))
+    for team in teams:
+        team['institutional_preferences'] = list(
+            InstitutionVenuePreference.objects.filter(
+                institution=team['institution__id']).values(
+                    'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
+        team['team_preferences'] = list(
+            TeamVenuePreference.objects.filter(
+                team=team['id']).values(
+                    'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
+
+        # team['institutional_preferences'] = "test"
+        # team['individual_preferences'] = "test"
+
+    teams = json.dumps(teams)
 
     venue_groups = json.dumps(list(
         VenueGroup.objects.all().values(
@@ -157,51 +170,31 @@ def create_division(request, t):
     division.save()
     division.name = "%s" % division.id
     division.save()
+    return redirect_tournament('division_allocations', t)
+
+@admin_required
+@tournament_view
+def create_byes(request, t):
+    divisions = Division.objects.filter(tournament=t)
+    Team.objects.filter(tournament=t, type=Team.TYPE_BYE).delete()
+    for division in divisions:
+        teams_count = Team.objects.filter(division=division).count()
+        if teams_count % 2 != 0:
+            bye_institution, created = Institution.objects.get_or_create(
+                name="Byes", code="Byes")
+            bye_team = Team(
+                institution=bye_institution,
+                reference="Bye for Division " + division.name,
+                short_reference="Bye",
+                tournament=t,
+                division=division,
+                use_institution_prefix=False,
+                type=Team.TYPE_BYE
+            ).save()
 
     return redirect_tournament('division_allocations', t)
 
 @admin_required
-@expect_post
-@tournament_view
-def set_division_venue_group(request, t):
-    division = Division.objects.get(pk=int(request.POST['division']))
-    division.venue_group = VenueGroup.objects.get(pk=int(request.POST['venueGroup']))
-    division.save()
-    return HttpResponse("ok")
-
-@admin_required
-@expect_post
-@tournament_view
-def set_team_division(request, t):
-    team = Team.objects.get(pk=int(request.POST['team']))
-    if int(request.POST['division']):
-        team.division = Division.objects.get(pk=int(request.POST['division']));
-    else:
-        team.division = None;
-
-    team.save()
-    return HttpResponse("ok")
-
-@admin_required
-@expect_post
-@tournament_view
-def save_divisions(request, t):
-    culled_dict = dict((int(k), int(v)) for k, v in request.POST.items() if v)
-
-    teams = Team.objects.in_bulk([t_id for t_id in list(culled_dict.keys())])
-    divisions = Division.objects.in_bulk([d_id for d_id in list(culled_dict.values())])
-
-    for team_id, division_id in culled_dict.items():
-        teams[team_id].division = divisions[division_id]
-        teams[team_id].save()
-
-    # ActionLog.objects.log(type=ActionLog.ACTION_TYPE_DIVISIONS_SAVE,
-    #     user=request.user, tournament=t)
-
-    return HttpResponse("ok")
-
-@admin_required
-@expect_post
 @tournament_view
 def create_division_allocation(request, t):
     from tournaments.division_allocator import DivisionAllocator
@@ -217,9 +210,50 @@ def create_division_allocation(request, t):
     success = alloc.allocate()
 
     if success:
-        return HttpResponse("ok")
+        return redirect_tournament('division_allocations', t)
     else:
         return HttpResponseBadRequest("Couldn't create divisions")
+
+@admin_required
+@expect_post
+@tournament_view
+def set_division_venue_group(request, t):
+    division = Division.objects.get(pk=int(request.POST['division']))
+    if request.POST['venueGroup'] == '':
+        division.venue_group = None
+    else:
+        division.venue_group = VenueGroup.objects.get(pk=int(request.POST['venueGroup']))
+
+    print("saved venue group for for", division.name)
+    division.save()
+    return HttpResponse("ok")
+
+@admin_required
+@expect_post
+@tournament_view
+def set_team_division(request, t):
+    team = Team.objects.get(pk=int(request.POST['team']))
+    if request.POST['division'] == '':
+        team.division = None;
+    else:
+        team.division = Division.objects.get(pk=int(request.POST['division']));
+        team.save()
+        print("saved divison for ", team.short_name)
+
+    return HttpResponse("ok")
+
+@admin_required
+@expect_post
+@tournament_view
+def set_division_time(request, t):
+    division = Division.objects.get(pk=int(request.POST['division']))
+    if request.POST['division'] == '':
+        division = None;
+    else:
+        division.time_slot=request.POST['time']
+        division.save();
+
+    return HttpResponse("ok")
 
 
 class BlankSiteStartView(FormView):

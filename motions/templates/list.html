@@ -14,9 +14,9 @@
     Edit Motions
   </a>
   {% if pref.enable_division_motions %}
-  <a href="{% round_url motions_assign %}" class="btn btn-default submit-disable">
-    Assign Motions to Divisions
-  </a>
+    <a href="{% round_url motions_assign %}" class="btn btn-default submit-disable">
+      Assign Motions to Divisions
+    </a>
   {% endif %}
   <form id="releaseForm" method="POST" action="{% round_url release_motions %}"></form>
   <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}"></form>

@@ -12,9 +12,9 @@ admin.site.register(VenueGroup, VenueGroupAdmin)
 
 
 class VenueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'priority', 'time', 'tournament')
-    list_filter = ('group', 'priority', 'time', 'tournament')
-    search_fields = ('name', 'time')
+    list_display = ('name', 'group', 'priority', 'tournament')
+    list_filter = ('group', 'priority', 'tournament')
+    search_fields = ('name',)
 
     def get_queryset(self, request):
         return super(VenueAdmin,

@@ -43,7 +43,7 @@ Advanced uses
 Can others access my local install?
 -----------------------------------
 
-Running a local installation doesn't have you mean you don't get the benefits of multi-computer data entry! Your computer is running a web server, and it can serve other computers too. You can do this even if you don't have internet access: all you need is a router that you can use to connect a few computers together. We did this at Victoria Australs 2012.
+Running a local installation doesn't mean you have to miss out on the benefits of multi-computer data entry! Your computer is running a web server, and it can serve other computers too. You can do this even if you don't have internet access: all you need is a router that you can use to connect a few computers together. We did this at Victoria Australs 2012.
 
 We don't provide detailed instructions for this; we leave it for advanced users to set up themselves. As a rough guide:
 
