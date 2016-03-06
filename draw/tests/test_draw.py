@@ -17,13 +17,13 @@ class TestRandomDrawGenerator(unittest.TestCase):
     def test_invalid_option(self):
         teams = [TestTeam(*args, aff_count=0) for args in self.teams]
         def go():
-            self.rd = DrawGenerator("random", teams, random=True)
+            self.rd = DrawGenerator("random", teams, None, random=True)
         self.assertRaises(ValueError, go)
 
     def test_draw(self):
         for i in range(100):
             teams = [TestTeam(*args, aff_count=0) for args in self.teams]
-            self.rd = DrawGenerator("random", teams, avoid_conflicts="on")
+            self.rd = DrawGenerator("random", teams, None, avoid_conflicts="on")
             _draw = self.rd.generate()
             for pairing in _draw:
                 if pairing.aff_team.seen(pairing.neg_team) or \
@@ -48,7 +48,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
 
     def setUp(self):
         self.b2 = copy.deepcopy(self.brackets)
-        self.ppd = DrawGenerator("power_paired", DUMMY_TEAMS)
+        self.ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None)
 
     def tearDown(self):
         del self.b2
@@ -430,7 +430,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
 
     def do_draw(self, standings, options):
         standings = [TestTeam(*args, **kwargs) for args, kwargs in standings]
-        self.ppd = DrawGenerator("power_paired", standings, **options)
+        self.ppd = DrawGenerator("power_paired", standings, None, **options)
         return self.ppd.generate()
 
     def test_draw(self):
@@ -662,7 +662,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
         for method, expected_results in self.expecteds.items():
             for index, expected in expected_results.items():
                 with self.subTest(method=method, index=index):
-                    ppd = DrawGenerator("power_paired", DUMMY_TEAMS, side_allocations="preallocated", odd_bracket=method)
+                    ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket=method)
                     brackets = copy.deepcopy(self.brackets[index])
                     ppd.resolve_odd_brackets(brackets)
                     self.assertDictEqual(brackets, expected)
@@ -670,7 +670,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
     def test_pullup_invalid(self):
         for method in ["pullup_top", "pullup_bottom", "pullup_random", "intermediate1", "intermediate2"]:
             with self.subTest(method=method):
-                ppd = DrawGenerator("power_paired", DUMMY_TEAMS, side_allocations="preallocated", odd_bracket=method)
+                ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket=method)
                 brackets = copy.deepcopy(self.brackets[99])
                 self.assertRaises(DrawError, ppd.resolve_odd_brackets, brackets)
 
@@ -679,7 +679,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             # Just doing the third one because it's hardest, too lazy to write
             # random tests for the others.
             b2 = copy.deepcopy(self.brackets[3])
-            ppd = DrawGenerator("power_paired", DUMMY_TEAMS, side_allocations="preallocated", odd_bracket="pullup_random")
+            ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket="pullup_random")
             ppd.resolve_odd_brackets(b2)
 
             self.assertEqual(b2[5]["aff"], [1, 2])
@@ -703,7 +703,7 @@ class TestPartialEliminationDrawGenerator(unittest.TestCase):
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
     def test_split(self):
-        self.fed = DrawGenerator("first_elimination", DUMMY_TEAMS)
+        self.fed = DrawGenerator("first_elimination", DUMMY_TEAMS, None)
         self.assertEqual(self.fed._bypass_debate_split( 3), ( 1,  2))
         self.assertEqual(self.fed._bypass_debate_split( 5), ( 3,  2))
         self.assertEqual(self.fed._bypass_debate_split( 8), ( 8,  0))
@@ -727,7 +727,7 @@ class TestPartialEliminationDrawGenerator(unittest.TestCase):
 
     def run_draw(self, break_size, expected, exp_bypassing=None):
         teams = [TestTeam(*args) for args in self.teams]
-        self.fed = DrawGenerator("first_elimination", teams, break_size=break_size)
+        self.fed = DrawGenerator("first_elimination", teams, None, break_size=break_size)
         pairings = self.fed.generate()
         self.assertEqual([(p.aff_team.id, p.neg_team.id) for p in pairings], expected)
         if exp_bypassing is not None:
@@ -768,11 +768,11 @@ class TestEliminationDrawGenerator(unittest.TestCase):
     def test_error(self):
         teams = self._teams(9, 11, 12)
         results = self._results(([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
-        self.ed = DrawGenerator("elimination", teams, results)
+        self.ed = DrawGenerator("elimination", teams, None, results)
         self.assertRaises(RuntimeError, self.ed.generate)
 
     def run_draw(self, teams, results, expected):
-        self.ed = DrawGenerator("elimination", teams, results)
+        self.ed = DrawGenerator("elimination", teams, None, results)
         pairings = self.ed.generate()
         self.assertEqual([(p.aff_team.id, p.neg_team.id) for p in pairings], expected)
 
