@@ -553,10 +553,11 @@ class Round(models.Model):
                                       WHERE da.round_id=%d AND
                                       da.venue_id = venues_venue.id)""" %
                                           self.id}, )
-        return [v
-                for v in result
-                if v.is_active and not v.is_used and v.tournament ==
-                self.tournament]
+
+        if not self.tournament.pref('share_venues'):
+            return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
+        else:
+            return [v for v in result if v.is_active and not v.is_used]
 
     def adjudicator_availability(self):
         from participants.models import Adjudicator
