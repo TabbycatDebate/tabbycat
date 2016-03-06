@@ -472,9 +472,20 @@ def public_side_allocations(request, t):
                dict(teams=teams,
                     rounds=rounds))
 
+@login_required
+@round_view
+def confirmations_view(request, round):
+    from participants.models import Adjudicator
+    from adjallocation.models import DebateAdjudicator
+    adjs = Adjudicator.objects.all().order_by('name')
+    for adj in adjs:
+        shifts = DebateAdjudicator.objects.filter(adjudicator=adj, debate__round__tournament__active=True)
+        if len(shifts) > 0:
+            adj.shifts = shifts
+
+    return render(request, 'confirmations_view.html', dict(adjs=adjs))
+
 # Mastersheets
-
-
 @login_required
 @round_view
 def master_sheets_list(request, round):

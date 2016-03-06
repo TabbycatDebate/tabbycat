@@ -78,4 +78,7 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/start_time/set/$',
         views.set_round_start_time,
         name='set_round_start_time'),
+    url(r'^round/(?P<round_seq>\d+)/confirms/$',
+        views.confirmations_view,
+        name='confirmations_view'),
 ]

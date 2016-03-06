@@ -17,7 +17,6 @@
 {% endblock %}
 
 {% block page-subnav-sections %}
-
   <a class="btn btn-default submit-disable" href="{% round_url draw_adjudicators_edit %}" class="btn btn-default submit-disable">
     Edit Adjudicators
   </a>
@@ -30,6 +29,11 @@
   <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
     Draw Details
   </a>
+  {% if pref.allocation_confirmations %}
+    <a href="{% round_url confirmations_view %}" class="btn btn-default submit-disable">
+      Shift Confirms
+    </a>
+  {% endif %}
   {% if pref.enable_division_motions %}
     <a href="{% round_url motions_assign %}" class="btn btn-default submit-disable">
       Assign Motions to Divisions
