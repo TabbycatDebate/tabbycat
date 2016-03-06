@@ -480,7 +480,7 @@ def public_side_allocations(request, t):
 def master_sheets_list(request, round):
     venue_groups = VenueGroup.objects.all()
     return render(request,
-               'master_sheets_list.html',
+               'division_sheets_list.html',
                dict(venue_groups=venue_groups))
 
 
@@ -494,7 +494,7 @@ def master_sheets_view(request, round, venue_group_id):
     for tournament in list(active_tournaments):
         tournament.debates = Debate.objects.select_related(
             'division', 'division__venue_group__short_name', 'round',
-            'round__tournament', 'aff_team', 'neg_team').filter(
+            'round__tournament').filter(
                 # All Debates, with a matching round, at the same venue group name
                 round__seq=round.seq,
                 round__tournament=tournament,
@@ -504,10 +504,29 @@ def master_sheets_view(request, round, venue_group_id):
                        'division')
 
     return render(request,
-               'master_sheets_view.html',
+               'printing/master_sheets_view.html',
                dict(base_venue_group=base_venue_group,
                     active_tournaments=active_tournaments))
 
+
+@login_required
+@round_view
+def room_sheets_view(request, round, venue_group_id):
+    # Temporary - pre unified venue groups
+    base_venue_group = VenueGroup.objects.get(id=venue_group_id)
+    venues = Venue.objects.filter(group=base_venue_group)
+
+    for venue in venues:
+        venue.debates = Debate.objects.filter(
+            # All Debates, with a matching round, at the same venue group name
+            round__seq=round.seq,
+            venue=venue
+        ).select_related('round__tournament__short_name').order_by('round__tournament__seq')
+
+    return render(request,
+               'printing/room_sheets_view.html',
+               dict(base_venue_group=base_venue_group,
+                    venues=venues))
 
 @admin_required
 @round_view

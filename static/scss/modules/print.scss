@@ -41,9 +41,15 @@
       display: none !important;
     }
   }
+  .printable-page-break {
+    page-break-after: always;
+  }
   .printable-feedback-sheet,
   .printable-score-sheet {
     font-size: 75%;
+  }
+  .printable-mastersheet {
+    page-break-inside: avoid;
   }
   // Old
   .fixedHeader {
@@ -53,6 +59,9 @@
     .col-md-12 {
       padding-left: 0;
     }
+  }
+  .print-hide {
+    display: none;
   }
   table {
     page-break-inside: avoid; // Don't split a table across multiple pages

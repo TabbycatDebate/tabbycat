@@ -140,7 +140,7 @@
         {% if pref.public_divisions %}
         <a target="_blank" class="btn btn-sm btn-default" href="{% round_url master_sheets_list round %}">
           <span class="text-primary">
-            Print Mastersheets <span class="glyphicon glyphicon-share"></span>
+            Print Division Sheets<span class="glyphicon glyphicon-share"></span>
           </span>
         </a>
         {% endif %}
@@ -190,10 +190,10 @@
           <td>{{ debate.venue.name }}</td>
           {% if pref.enable_debate_scheduling %}
           <td>
-              {% if debate.time %}
-                  <span class="hidden">{{ debate.time|date:"o m d" }}</span>
-                  {{ debate.time|date:"D jS F" }}
-              {% endif %}
+            {% if debate.time %}
+              <span class="hidden">{{ debate.time|date:"o m d" }}</span>
+              {{ debate.time|date:"D jS F" }}
+            {% endif %}
           </td>
           <td>
             {{ debate.time|time:'h:i A' }}

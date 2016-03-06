@@ -31,6 +31,9 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/master_sheets/venue_group/(?P<venue_group_id>\d+)/$',
         views.master_sheets_view,
         name='master_sheets_view'),
+    url(r'^round/(?P<round_seq>\d+)/room_sheets_view/venue_group/(?P<venue_group_id>\d+)/$',
+        views.room_sheets_view,
+        name='room_sheets_view'),
 
     # Creation/Release
     url(r'^round/(?P<round_seq>\d+)/create/$',
