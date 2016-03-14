@@ -7,7 +7,7 @@
         Your Name:
       </div>
       <div class="db-flex-item db-fill-in">
-        [[ ballot.adjudicator ]]
+
       </div>
     </div>
     <div class="db-item-gutter"></div>

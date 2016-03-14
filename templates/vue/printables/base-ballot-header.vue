@@ -12,17 +12,14 @@
     <div class="db-item-gutter"></div>
 
     <div class="db-flex-item-1 db-flex-row db-padding-horizontal db-flex-row ">
-      <div class="db-align-vertical-end db-flex-item db-flex-static db-vertical-center-text">
-        <h2>Room:</h2>
+      <div class="db-align-vertical-end db-flex-item db-vertical-center-text">
+        <h2></h2>
       </div>
-      <div class="db-flex-item-2 db-fill-in">
-        [[ room ]]
+      <div class="db-align-vertical-end db-flex-item db-vertical-center-text">
+        <h2>[[ room ]]</h2>
       </div>
-      <div class="db-align-vertical-end db-flex-item db-flex-static db-vertical-center-text">
-        <h2>Round:</h2>
-      </div>
-      <div class="db-flex-item-1 db-fill-in">
-        [[ round ]]
+      <div class="db-align-vertical-end db-flex-item db-vertical-center-text">
+        <h2>[[ round ]]</h2>
       </div>
     </div>
 

@@ -27,4 +27,10 @@
     margin-top: 10px;
     padding-top: 10px;
   }
+  .db-safari-info, .db-chrome-info, .db-firefox-info, .chrome .db-notchrome-info {
+    display: none;
+  }
+  .chrome .db-chrome-info, .safari .db-safari-info, .gecko .db-firefox-info {
+    display: inline;
+  }
 }
