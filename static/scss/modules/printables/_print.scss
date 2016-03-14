@@ -1,0 +1,31 @@
+@media print {
+  body, html {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+  html {
+    height: auto;
+  }
+  .db-page-holder {
+    display: block;
+  }
+  .db-page {
+    transform: none;
+    border: none;
+    background: none;
+    box-shadow: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+  .db-page-portrait, .db-page-landscape {
+    width: auto;
+    height: auto;
+  }
+  .db-hide {
+    display: none;
+  }
+}

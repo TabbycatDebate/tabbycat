@@ -1,3 +1,4 @@
+import json
 from actionlog.models import ActionLogEntry
 from participants.models import Team
 from tournaments.models import Tournament, Round, Division
@@ -566,11 +567,23 @@ def draw_print_feedback(request, round):
 @round_view
 def draw_print_scoresheets(request, round):
     draw = round.get_draw_by_room()
-    preferences = round.tournament.preferences
+    ballots = []
+    for debate in draw:
+        scoresheetData = {}
+        scoresheetData['room'] = debate.venue.name
+        scoresheetData['aff'] = debate.aff_team.short_name
+        scoresheetData['affSpeakers'] = [s.name for s in debate.aff_team.speakers]
+        scoresheetData['neg'] = debate.neg_team.short_name
+        scoresheetData['negSpeakers'] = [s.name for s in debate.neg_team.speakers]
+        if debate.adjudicators.list[0] is not None:
+            for adj in debate.adjudicators.list:
+                scoresheetData['adjudicator'] = adj.name
+                ballots.append(scoresheetData)
+        else:
+            ballots.append(scoresheetData)
+
     motions = Motion.objects.filter(round=round)
 
     return render(request,
                "printing/scoresheet_list.html",
-               dict(draw=draw,
-                    preferences=preferences,
-                    motions=motions))
+               dict(ballots=ballots, motions=motions))

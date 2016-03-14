@@ -1,40 +1,92 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 {% load static %}
+{% load compress %}
 
 {% block head-title %}
-  {{ round.abbreviation }} Ballots <br><small>
+  Ballots for {{ round.abbreviation }}
 {% endblock %}
 {% block page-title %}Printable Scoresheets Forms for {{ round.name }}{% endblock %}
 {% block nav %}<div class="col-md-12">{% endblock %}
 {% block footer %}{% endblock %}
 
-{% block page-alerts %}
-  <div class="alert alert-info">
-    (use CTRL+P to save to PDF for printing, but be sure to set orientation to PORTRAIT, to turn off headers/footers and turn on background graphics. Works best in Safari or Firefox.)</small>
-  </div>
-{% endblock %}
-
 {% block content %}
 
-  {% for debate in draw %}
+  <div id="debateballots">
 
-    {% for type, adj in debate.adjudicators %}
+    <printables-sidebar :data="$data"></printables-sidebar>
 
-      {% if type == 'C' %}
-        {% with source=adj source_type="chair" %}
-          {% include "printing/scoresheet.html" %}
-        {% endwith %}
-      {% endif %}
+    <template v-for="ballot in ballots">
+  		<div class="dbui-preview">
+        <div class="db-page-holder">
+  			  <main role="main" class="db-page db-flex-column" v-bind:class="{
+  					'db-page-double': data.doubleUp,
+  					'db-page-single': !data.doubleUp,
+  					'db-page-landscape': data.pageIsLandscape,
+  					'db-page-portrait': !data.pageIsLandscape,
+  				}">
+            <base-ballot :data="$data" :ballot="ballot" :round="round" kind="Scoresheet" ></base-ballot>
+          </main>
+        </div>
+      </div>
+    </template>
 
-      {% if type == 'P' %}
-        {% with source=adj source_type="panelist" %}
-          {% include "printing/scoresheet.html" %}
-        {% endwith %}
-      {% endif %}
-
-    {% endfor %}
-
-  {% endfor %}
+  </div>
 
 {% endblock content %}
+
+{% block extra-css %}
+  {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="/static/scss/printables.scss" />
+  {% endcompress %}
+{% endblock %}
+
+{% block extra-js %}
+
+  <script src="{% static 'js/vendor/vue.js' %}"></script>
+  {% include "vue/printables/printables-sidebar.vue" %}
+  {% include "vue/printables/base-ballot.vue" %}
+  {% include "vue/printables/base-ballot-header.vue" %}
+  {% include "vue/printables/base-ballot-footer.vue" %}
+  {% include "vue/printables/base-scoresheet.vue" %}
+  {% include "vue/printables/team-scores.vue" %}
+  <script>
+    var baseData = {
+      // Type
+      showFeedback: false,
+      // Strings to Fill In
+      tournamentName: "{{ tournament }}",
+      returnLocation: "Tab Room Location",
+      // Rules
+      hasReplies: false,
+      speakersCount: 3,
+      isBP: false,
+      infoText: "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication.",
+      hasMotionSelection: false,
+      // Formatting
+      showTabRoomRow: true,
+      showInfoRow: false,
+      pageIsLandscape: true,
+      showPronouns: true,
+      doubleUp: false,
+      // From Django
+      round: "{{ round.abbreviation }}",
+      ballots: {{ ballots|safe }}
+    }
+
+    Vue.config.delimiters = ["[[", "]]"];
+    new Vue({
+      el: '#debateballots',
+      data: baseData,
+      methods: {
+        setPortrait: function() {
+          this.pageIsLandscape = false;
+        },
+        setLandscape: function() {
+          this.pageIsLandscape = true;
+        },
+      }
+    })
+  </script>
+
+{% endblock extra-js %}

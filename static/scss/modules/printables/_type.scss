@@ -1,0 +1,23 @@
+
+.db-score-sheet {
+  font-family: 'Lato';
+  font-size: 12px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1;
+  h1, h2, h3, h4, h5, h6, strong {
+    margin: 0px;
+    font-weight: 900;
+    font-style: normal;
+  }
+}
+.db-page-double {
+  font-size: 9px;
+}
+.db-right-text {
+  text-align: right;
+  justify-content: flex-end;
+}
+.db-center-text {
+  text-align: center;
+}
