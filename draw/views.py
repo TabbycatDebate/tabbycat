@@ -544,23 +544,30 @@ def room_sheets_view(request, round, venue_group_id):
 @round_view
 def draw_print_feedback(request, round):
     draw = round.get_draw_by_room()
-    preferences = round.tournament.preferences
     questions = round.tournament.adj_feedback_questions
-    for question in questions:
-        if question.choices:
-            question.choice_options = question.choices.split("//")
-        if question.min_value is not None and question.max_value is not None:
-            step = max(
-                (int(question.max_value) - int(question.min_value)) / 10, 1)
-            question.number_options = list(range(
-                int(question.min_value), int(question.max_value + 1), int(
-                    step)))
+    # for question in questions:
+    #     if question.choices:
+    #         question.choice_options = question.choices.split("//")
+    #     if question.min_value is not None and question.max_value is not None:
+    #         step = max(
+    #             (int(question.max_value) - int(question.min_value)) / 10, 1)
+    #         question.number_options = list(range(
+    #             int(question.min_value), int(question.max_value + 1), int(
+    #                 step)))
 
-    return render(request,
-               "printing/feedback_list.html",
-               dict(draw=draw,
-                    preferences=preferences,
-                    questions=questions))
+    ballots = []
+    for debate in draw:
+        scoresheetData = {}
+        scoresheetData['room'] = debate.venue.name
+        if debate.adjudicators.list[0] is not None:
+            for adj in debate.adjudicators.list:
+                scoresheetData['adjudicator'] = adj.name
+                ballots.append(scoresheetData)
+        else:
+            ballots.append(scoresheetData)
+
+    return render(request, "printing/feedback_list.html", dict(
+        ballots=ballots, questions=questions))
 
 
 @admin_required
@@ -584,6 +591,5 @@ def draw_print_scoresheets(request, round):
 
     motions = Motion.objects.filter(round=round)
 
-    return render(request,
-               "printing/scoresheet_list.html",
-               dict(ballots=ballots, motions=motions))
+    return render(request, "printing/scoresheet_list.html", dict(
+        ballots=ballots, motions=motions))
