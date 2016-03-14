@@ -49,6 +49,7 @@ def get_speaker_standings(rounds,
                           round,
                           results_override=False,
                           only_novices=False,
+                          only_pros=False,
                           for_replies=False):
     last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
     reply_position = round.tournament.REPLY_POSITION
@@ -75,6 +76,11 @@ def get_speaker_standings(rounds,
         speakers = list(Speaker.objects.filter(
             team__tournament=round.tournament,
             novice=True).select_related('team', 'team__institution',
+                                        'team__tournament'))
+    elif only_pros is True:
+        speakers = list(Speaker.objects.filter(
+            team__tournament=round.tournament,
+            novice=False).select_related('team', 'team__institution',
                                         'team__tournament'))
     else:
         speakers = list(Speaker.objects.filter(
@@ -275,6 +281,14 @@ def public_speaker_tab(request, t):
             rounds=rounds, round=round))
 
 
+@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
+@public_optional_tournament_view('pros_tab_released')
+def public_pros_tab(request, t):
+    round = t.current_round
+    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
+    speakers = get_speaker_standings(rounds, round, only_novices=True)
+    return render(request, 'public_pros_tab.html', dict(speakers=speakers,
+            rounds=rounds, round=round))
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @public_optional_tournament_view('novices_tab_released')

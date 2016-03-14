@@ -11,9 +11,14 @@
     <a href="{% tournament_url standings-public-tab-speaker %}">Speaker Tab</a>
   </li>
 {% endif %}
+{% if pref.pros_tab_released > 0 %}
+  <li class="{% if tab_pros_nav %}active{% endif %}">
+    <a href="{% tournament_url standings-public-tab-pros %}">Pros Speaker Tab</a>
+  </li>
+{% endif %}
 {% if pref.novices_tab_released > 0 %}
   <li class="{% if tab_novices_nav %}active{% endif %}">
-    <a href="{% tournament_url standings-public-tab-novices %}">Novice Speaker Tab</a>
+    <a href="{% tournament_url standings-public-tab-novices %}">Novices Speaker Tab</a>
   </li>
 {% endif %}
 {% if pref.replies_tab_released > 0 %}

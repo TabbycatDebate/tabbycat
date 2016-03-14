@@ -338,8 +338,16 @@ class SpeakerTabReleased(BooleanPreference):
     default = False
 
 @tournament_preferences_registry.register
+class ProsTabReleased(BooleanPreference):
+    help_text = "Enables public display of a pro-speakers only tab. Intended for use after the tournament."
+    verbose_name = "Release pros tab to public"
+    section = tab_release
+    name = "pros_tab_released"
+    default = False
+
+@tournament_preferences_registry.register
 class NovicesTabReleased(BooleanPreference):
-    help_text = "Enables public display of the novices tab. Intended for use after the tournament."
+    help_text = "Enables public display of a novice-speakers only tab. Intended for use after the tournament."
     verbose_name = "Release novices tab to public"
     section = tab_release
     name = "novices_tab_released"
