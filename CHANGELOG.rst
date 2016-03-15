@@ -5,9 +5,9 @@ Change Log
 0.8.1
 -----
 
-- Fix bug where editing a Team in the admin section could cause an error
+- Fixed a bug where editing a Team in the admin section could cause an error
 - Added instructions on how to account for speakers speaking twice to docs
-- Venues importer wont show VenueGroup imports unless that option is enabled
+- Venues Importer wont show VenueGroup import info unless that option is enabled
 
 
 0.8.0
