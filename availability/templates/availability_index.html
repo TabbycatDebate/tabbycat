@@ -29,7 +29,7 @@
 
 {% block page-subnav-actions %}
 
-  {% if previous_unconfirmed > 0  %}
+  {% if previous_unconfirmed %}
     <button class="btn btn-warning" id="createDraw"
       data-toggle="tooltip" title="{{ previous_unconfirmed }} debates from
       {{ round.prev.name }} do not have a completed ballot —
@@ -94,13 +94,13 @@
   {% endif %}
 
   {% if min_adjudicators > checkin_types.1.in_now %}
-    <div class="alert alert-danger">
+    <div class="alert alert-warning">
       There need to be at least {{ min_adjudicators }} checked in adjudicators given the number of debates.
     </div>
   {% endif %}
 
   {% if min_venues > checkin_types.2.in_now %}
-    <div class="alert alert-danger">
+    <div class="alert alert-warning">
       There need to be at least {{ min_venues }} checked in venues given the number of debates.
     </div>
   {% endif %}
