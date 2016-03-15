@@ -37,6 +37,13 @@ As a general principle, Tabbycat requires all ballots to be looked at by two peo
   - It can be helpful to think about the room layout to maximize efficiency.
   - Some tab rooms like to assign some to data entry and some to verification. This isn't really necessary, since Tabbycat doesn't let the same person enter and verify the same ballot. (This is one of many reasons why every person should have their own account.)
 
+Speakers who speak twice
+========================
+
+Note that the ballot entry interface will not let you have a single person speak in more than one position. If a speaker is 'iron manning' the best approach is to go into the **Edit Data** section (under **Setup** in the admin area's menu) and add a new speaker to that team for this purpose. Once in the Edit Data section, go to **Participants** then **Teams** then the **Speakers** tab. Typically it is best practice to indicate in their name they are delivering a second speech (ie "Jane Smith Repeat") and to assign them the position that received the lower of the two scores.
+
+.. tip:: There is a option under **Standings** in the **Config** section that specifies the number of debates that you can miss before you will not show on the tab. By default it is set to 1, but if need be this can be increased to hide these 'fake' speakers from the final speaker tab.
+
 Feedback entry
 ==============
 
