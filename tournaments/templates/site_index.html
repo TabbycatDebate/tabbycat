@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block head-title %}<span class="emoji">👋</span> Welcome! <small>Which tournament are you after?</small>{% endblock %}
+{% block page-title %}Home{% endblock %}
+
+{% block nav %}<div class="col-md-12">{% endblock %}
+
+{% block content %}
+
+<ul class="list-group">
+
+  {% if user.is_authenticated %}
+    {% if tournaments.all.exists %}
+      {% for tournament in tournaments %}
+        <li class="list-group-item">
+          <a href="{{ tournament.get_absolute_url }}">
+            <span class="emoji">
+              {% if tournament.emoji %}
+                {{tournament.emoji }}
+              {% else %}
+                🏆
+              {% endif %}
+            </span>
+            {{ tournament.name }} (administrative site)
+          </a>
+          <span class="badge">ADMIN</span>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ tournament.get_public_url }}">
+            <span class="emoji">
+              {% if tournament.emoji %}
+                {{tournament.emoji }}
+              {% else %}
+                🏆
+              {% endif %}
+            </span>
+            {{ tournament.name }}
+          </a>
+          <span class="badge">PUBLIC</span>
+        </li>
+      {% endfor %}
+      <li class="list-group-item">
+          <span class="emoji">➕</span>
+          <a href="{% url 'tournament-create' %}">
+          <em>Create new tournament</em>
+        </a>
+      </li>
+    {% else %}
+      <p>
+        It looks like there aren't any tournaments on this site. Would you like to <a href="{% url 'tournament-create' %}">create one</a>?
+      </p>
+    {% endif %}
+  {% else %}
+    {% for tournament in tournaments %}
+      <li class="list-group-item">
+        <a href="{{ tournament.get_public_url }}">
+          <span class="emoji">
+            {% if tournament.emoji %}
+              {{tournament.emoji }}
+            {% else %}
+              🏆
+            {% endif %}
+          </span>
+          {{ tournament.name }}
+        </a>
+      </li>
+    {% empty %}
+      <p>
+        There are currently no tournaments set up on this site.
+      </p>
+    {% endfor %}
+    {% if tournaments.all.count > 1 and tournaments.0.pref.public_divisions %}
+      <li class="list-group-item">
+        <a href="{{ tournaments.0.get_all_tournaments_all_venues }}">
+          All Draws by Venue
+        </a>
+      </li>
+      <li class="list-group-item">
+        <a href="{{ tournaments.0.get_all_tournaments_all_institutions }}">
+          All Draws by School
+        </a>
+      </li>
+      <li class="list-group-item">
+        <a href="{{ tournaments.0.get_all_tournaments_all_teams }}">
+          All Teams and Divisions
+        </a>
+      </li>
+    {% endif %}
+  {% endif %}
+
+
+</ul>
+
+{% endblock content %}

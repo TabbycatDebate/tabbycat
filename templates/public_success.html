@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}
+  <span clss="emoji">😽</span>Success!
+{% endblock %}
+{% block page-title %}
+  Success!
+{% endblock %}
+
+{% block page-subnav-sections %}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="alert alert-success" role="alert">Thank you, your {{ success_kind }} has been submitted and recorded.</div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,41 @@
+@import "../vendor/bootstrap/variables";
+// WEB FONTS
+@font-face {
+  font-family: 'LatoLatinWeb';
+  src: url(static("fonts/vendor/lato/LatoLatin-Regular.eot"));
+  /* Modern Browsers */
+  /* IE6-IE8 */
+  /* IE9 Compat Modes */
+  src:  url(static("fonts/vendor/lato/LatoLatin-Regular.eot?#iefix")) format('embedded-opentype'),
+        url(static("fonts/vendor/lato/LatoLatin-Regular.woff2")) format('woff2'),
+        url(static("fonts/vendor/lato/LatoLatin-Regular.woff")) format('woff'),
+        url(static("fonts/vendor/lato/LatoLatin-Regular.ttf")) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+}
+// UTILITIES
+.font-size-reset {
+  font-size: $font-size-base;
+}
+.text-muted {
+  color: $gray-light;
+}
+// EMOJI
+.emoji {
+  font-family: sans-serif; // Need to be a system font or they wont show
+  font-style: normal;
+  font-weight: normal;
+  margin-right: 2px;
+}
+// BUTTONS
+.nav {
+  // Actionable elements (buttons, navs) should be distinct
+  font-family: $headings-font-family;
+}
+.nav-pills a.btn-default {
+  color: $brand-primary;
+}
+.nav-tabs a {
+  letter-spacing: 0.5px;
+}

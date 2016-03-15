@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block page-title %}Draw for {{ round.name }} (DRAFT){% endblock %}
+{% block head-title %}<span class="emoji"> 👀</span>Draw for {{ round.name }}{% endblock %}
+{% block sub-title %}(DRAFT DRAW){% endblock %}
+
+{% block page-subnav-actions %}
+    <button id="confirmDraw" class="btn btn-success">
+      Confirm Draw  <span class="glyphicon glyphicon-chevron-right"></span>
+    </button>
+    <form id="confirmForm" method="POST" action="{% round_url confirm_draw %}"></form>
+{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block content %}
+  {% include "draw_with_standings_content.html" %}
+{% endblock content %}
+
+{% block extra-js %}
+  <script>
+
+    $(document).ready( function() {
+      $("#confirmDraw").click( function() {
+        $("#confirmForm").submit();
+        return false;
+      } );
+
+      var dTable = $('#dataTable').DataTable({
+        "aaSorting": [[ 0, "desc" ]],
+      });
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
+
+    } );
+
+  </script>
+{% endblock extra-js %}

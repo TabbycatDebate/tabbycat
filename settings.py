@@ -1,36 +1,33 @@
 import sys
 import os
-import urlparse
+import urllib.parse
 
-PROJECT_PATH        = os.path.dirname(os.path.abspath(__file__))
-STATICFILES_DIRS    = (os.path.join(PROJECT_PATH, 'static'),)
-STATIC_ROOT         = 'staticfiles'
-STATIC_URL          = '/static/'
-TEMPLATE_DIRS       = (os.path.join(PROJECT_PATH, 'templates'),)
-MEDIA_ROOT          = (os.path.join(PROJECT_PATH, 'media'),)
-SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MEDIA_ROOT = (os.path.join(BASE_DIR, 'media'), )
 
-# ===================
+# ========================
 # = Overwritten in Local =
-# ===================
+# ========================
 
-ADMINS              = ('Philip and CZ', 'tabbycat@philipbelesky.com')
-MANAGERS            = ADMINS
-DEBUG               = False
-TEMPLATE_DEBUG      = DEBUG
-DEBUG_ASSETS        = DEBUG
+ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
+MANAGERS = ADMINS
+DEBUG = False
+DEBUG_ASSETS = DEBUG
+LIVE_RELOAD = False
 
 # ===================
 # = Global Settings =
 # ===================
 
-ADMIN_MEDIA_PREFIX  = '/media/'
-MEDIA_URL           = '/media/'
-STATIC_URL          = '/static/'
-TIME_ZONE           = 'Australia/Melbourne'
-LANGUAGE_CODE       = 'en-us'
-USE_I18N            = True
-TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
+MEDIA_URL = '/media/'
+TIME_ZONE = 'Australia/Melbourne'
+LANGUAGE_CODE = 'en-us'
+USE_I18N = True
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+TABBYCAT_VERSION = '0.8.0'
+TABBYCAT_CODENAME = 'Bengal'
+READTHEDOCS_VERSION = 'v0.8.0'
 
 # ===========================
 # = Django-specific Modules =
@@ -38,49 +35,84 @@ TEST_RUNNER         = 'django.test.runner.DiscoverRunner'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'debate.middleware.DebateMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-)
+    'utils.middleware.DebateMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware', )
 
-ROOT_URLCONF = 'urls'
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.csrf",
-    "django.core.context_processors.static",
-    "debate.context_processors.debate_context", # For tournament config vars
-    "debate.context_processors.get_menu_highlight", # For nav highlights
-    'django.core.context_processors.request', # For SUIT
-)
+TABBYCAT_APPS = ('actionlog',
+                 'adjallocation',
+                 'adjfeedback',
+                 'availability',
+                 'breakqual',
+                 'draw',
+                 'motions',
+                 'options',
+                 'participants',
+                 'results',
+                 'tournaments',
+                 'venues',
+                 'utils',
+                 'standings',
+                 'importer', )
 
 INSTALLED_APPS = (
-    'suit',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'django.contrib.messages',
-    'debate',
-    'compressor',
-    'cachalot',
-)
+    'django.contrib.messages') \
+    + TABBYCAT_APPS + (
+    'dynamic_preferences',
+    'django_extensions', # For Secret Generation Command
+    'compressor', )
 
+ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
 
-# =========
-# = Caching =
-# =========
+# =============
+# = Templates =
+# =============
 
-PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60 * 1))
-TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120))
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.template.context_processors.request',  # For Jet
+                'utils.context_processors.debate_context',  # For tournament config vars
+                'utils.context_processors.get_menu_highlight',  # For nav highlight
+            ],
+            'loaders': [
+                ('django.template.loaders.cached.Loader', [
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                ]),
+            ]
+        }
+    }
+]
+
+# ===========
+# = Caching =
+# ===========
+
+PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60
+                                               * 1))
+TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 *
+                                             120))
 
 # Default non-heroku cache is to use local memory
 CACHES = {
@@ -90,43 +122,113 @@ CACHES = {
     }
 }
 
-# Caching enabled for templates
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
-
 # Use the cache for sessions rather than the db
-SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-# =========
-# = Pipelines =
-# =========
+# ================
+# = Static Files =
+# ================
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # other finders..
-    'compressor.finders.CompressorFinder',
-)
-COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'django_libsass.SassCompiler'), # SASS for stylesheets
-)
-LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
-LIBSASS_SOURCE_COMMENTS = False
+    'compressor.finders.CompressorFinder', )
 
+# Whitenoise
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'  # Gzipping and unique names
+
+# =============
+# = Pipelines =
+# =============
+
+# Compression
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
-COMPRESS_URL = STATIC_URL
-COMPRESS_OFFLINE_MANIFEST = "manifest.json"
-COMPRESS_ROOT = STATIC_ROOT # Absolute path written to
-COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage' # Gzip compression
+COMPRESS_PRECOMPILERS = (('text/x-scss', 'django_libsass.SassCompiler'), )
 
-# ===========================
-# = Heroku
-# ===========================
+LIBSASS_OUTPUT_STYLE = 'compressed'
+
+# ===========
+# = Logging =
+# ===========
+
+if os.environ.get('SENDGRID_USERNAME', ''):
+    SERVER_EMAIL = os.environ['SENDGRID_USERNAME']
+    DEFAULT_FROM_EMAIL = os.environ['SENDGRID_USERNAME']
+    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
+    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+
+if os.environ.get('DEBUG', ''):
+    DEBUG = bool(int(os.environ['DEBUG']))
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            # Only send emails to admins when debug is false
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+        'mail_admins': {
+            # Any log item marked ERROR or higher will be sent to admins
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'django.request': {
+            # Pass all ERRORS to mail_admins handler
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+    'formatters': {
+        'standard': {
+            'format': '[%(asctime)s] %(levelname)s %(name)s: %(message)s',
+            'datefmt': '%d/%b/%Y %H:%M:%S'
+        },
+    },
+}
+
+for app in TABBYCAT_APPS:
+    LOGGING['loggers'][app] = {
+        'handlers': ['console'],
+        'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG' if DEBUG else 'INFO'),
+    }
+
+# ============
+# = Messages =
+# ============
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {messages.ERROR: 'danger', }
+
+# ==========
+# = Heroku =
+# ==========
+
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY', '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc')
 
 # Parse database configuration from $DATABASE_URL
 try:
@@ -144,7 +246,8 @@ ALLOWED_HOSTS = ['*']
 
 if os.environ.get('MEMCACHIER_SERVERS', ''):
     try:
-        os.environ['MEMCACHE_SERVERS'] = os.environ['MEMCACHIER_SERVERS'].replace(',', ';')
+        os.environ['MEMCACHE_SERVERS'] = os.environ[
+            'MEMCACHIER_SERVERS'].replace(',', ';')
         os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
         os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
         CACHES = {
@@ -172,16 +275,24 @@ if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
     TEMPLATE_DEBUG = DEBUG
 
-if os.environ.get('SENDGRID_USERNAME', ''):
-    EMAIL_HOST= 'smtp.sendgrid.net'
-    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
-    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
+# =============
+# = Travis CI =
+# =============
 
-# ===========================
-# = Local Overrides
-# ===========================
+if os.environ.get('TRAVIS', '') == 'true':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'USER': 'postgres',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '',
+        }
+    }
+
+# ===================
+# = Local Overrides =
+# ===================
 
 try:
     LOCAL_SETTINGS

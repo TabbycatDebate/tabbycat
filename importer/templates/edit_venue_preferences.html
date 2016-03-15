@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">🏩</span>Edit Venue Preferences{% endblock %}
+{% block page-title %}🏩Edit Venue Preferences{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info alert-dismissable" id="">
+  <p>
+    For each institution set a number that represents the priority for each venue (higher = more preferred). Leave as blank if you don't wish to add a priority.
+</div>
+
+<div class="alert alert-danger alert-dismissable" id="">
+  <p>
+    Submitting this form will delete all previous preferences for each instutution, and then add these preferences to all institutions. Note that these preferences apply across all tournaments!
+  </p>
+</div>
+
+<form action="{% tournament_url confirm_venue_preferences %}" method="POST">
+
+  {% for institution in institutions %}
+
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="panel">
+
+          <div class="panel-heading">
+            <h4>{{ institution.name }}</h4>
+          </div>
+
+          <ul class="list-group">
+            <input class="hidden" type="number" name="institutionIDs" value={{ institution.id }} />
+
+            {% for venue_group in venue_groups %}
+              <li class="list-group-item">
+                <div class="row">
+
+                  <label class="col-sm-6 control-label">Priority for {{ venue_group.name }}</label>
+                  <div class="col-sm-2">
+                    <input class="form-control" type="number" name="{{ institution.id }}_{{ venue_group.id }}" value="" />
+                  </div>
+
+                </div>
+              </li>
+            {% endfor %}
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+    </div>
+
+  {% endfor %}
+
+  <div class="form-group row">
+    <div class="col-md-12">
+      <button type="submit" class="btn btn-success btn-block submit-disable">Save All Venue Preferences</button>
+    </div>
+  </div>
+
+</form>
+
+{% endblock content %}

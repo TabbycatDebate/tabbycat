@@ -1,0 +1,39 @@
+{% extends "speakers.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block page-title %}Novice Speaker Standings after {{ round.name }}{% endblock %}
+{% block head-title %}Novice Speaker Standings{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default" href="{% round_url standings-index current_round %}">
+    Standings Overview
+  </a>
+  <a class="btn btn-default" href="{% round_url standings-team current_round %}">
+    Team Standings
+  </a>
+  {% if pref.enable_divisions %}
+  <a class="btn btn-default" href="{% round_url standings-division current_round %}">
+    Divisions Standings
+  </a>
+  {% endif %}
+  <a class="btn btn-default" href="{% round_url standings-speaker current_round %}">
+    Speaker Standings
+  </a>
+  {% if pref.show_novices %}
+    <a class="btn btn-default active" href="{% round_url standings-novice current_round %}">
+      Novices Standings
+    </a>
+  {% endif %}
+  {% if pref.reply_scores_enabled %}
+    <a class="btn btn-default" href="{% round_url standings-reply current_round %}">
+      Replies Standings
+    </a>
+  {% endif %}
+  <a class="btn btn-default" href="{% round_url standings-motion current_round %}">
+    Motion Balance
+  </a>
+  {% include "tables/table_search.html" %}
+{% endblock %}

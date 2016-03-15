@@ -1,0 +1,13 @@
+language: python
+sudo: required
+python:
+  - "3.4"
+  - "3.5"
+addons:
+  postgresql: "9.4"
+services:
+  - postgresql
+install:
+  - pip install -r requirements_common.txt
+script:
+  - dj test -v 2

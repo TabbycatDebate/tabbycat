@@ -1,0 +1,97 @@
+// CHECKINS
+.round-progresses .progress {
+  margin-bottom: 0; // Progress bars have bottom margins; need to offset
+  .progress-empty span {
+    // If its showing 0/x make the text visible and not flush
+    color: #000;
+    margin-left: 10px;
+  }
+}
+// DIVISIONS
+.division-heading { // Shift up the select to be adjacent to the title
+  h4 {
+    display: inline-block;
+  }
+  .form-control {
+    display: inline-block;
+    width: auto;
+    float: right;
+  }
+}
+.division-droppable {
+  min-height: 66px; // Don't expand when the first team is added
+}
+// DRAW
+.draw-xs {
+  font-size: $font-size-base * 1.25;
+}
+.draw-s {
+  font-size: $font-size-base * 1.5;
+}
+.draw-m {
+  font-size: $font-size-base * 1.75;
+}
+.draw-l {
+  font-size: $font-size-base * 2.00;
+}
+.draw-xl {
+  font-size: $font-size-base * 2.25;
+}
+// BALLOT ENTRY
+.speaker-name {
+  text-align: left;
+}
+
+// // OLD: REFACTOR
+
+
+// // Draw Page
+// #draw {
+//   margin-top: 0; // counteracts margin addded from the text size h2/h3/etcs
+// }
+// .table>tbody>tr>td {
+//   line-height: 1;
+// }
+// @media (max-width: $screen-xs-max) {
+//   #draw tbody,
+//   #draw thead {
+//     font-size: 0.65em;
+//   }
+//   .fixedHeader .table thead {
+//     font-size: 0.65em;
+//   }
+//   #draw.table>thead>tr>th,
+//   #draw.table>tbody>tr>td {
+//     padding: 4px 0 4px 4px;
+//   }
+//   #draw.table>thead>tr>th.team-emoji,
+//   #draw.table>tbody>tr>td.team-emoji {
+//     padding-left: 0;
+//     padding-right: 0;
+//   }
+// }
+// // For the text size buttons
+// .h3_minus,
+// .h3_minus {
+//   @extend .h3;
+// }
+// .h3_minus {
+//   font-size: ceil(($font-size-base * 1.42));
+// }
+// .h3_plus {
+//   font-size: ceil(($font-size-base * 1.92));
+// }
+// #draw.dataTable {
+//   .adj-names {
+//     ul {
+//       padding-left: 0;
+//       margin-left: 0;
+//       list-style-type: none;
+//     }
+//   }
+// }
+
+// .team-speakers-hover {
+//   cursor: pointer;
+//   border-bottom: 2px dotted #ccc;
+// }

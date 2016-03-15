@@ -1,0 +1,38 @@
+{% load debate_tags %}
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">{{ checkin_type.type }} Check-Ins</h4>
+  </div>
+  <div class="panel-body round-progresses">
+    <div class="row">
+
+      <div class="col-md-1">
+        {{ round.abbreviation }}
+      </div>
+      <div class="{% if round.prev %}col-md-5{% else %}col-md-11{% endif %}">
+        <div class="progress">
+          <div class="progress-bar progress-bar-success {% if checkin_type.in_now == 0 %}progress-empty{% endif %}" role="progressbar" aria-valuenow="{{ checkin_type.in_now }}"
+          aria-valuemin="0" aria-valuemax="{{ checkin_type.total }}" style="width: {% percentage checkin_type.in_now checkin_type.total %}%;">
+            <span>{{ checkin_type.in_now }}/{{ checkin_type.total }}</span>
+          </div>
+        </div>
+      </div>
+
+      {% if round.prev %}
+      <div class="col-md-1">
+        {{ round.prev.abbreviation }}
+      </div>
+      <div class="col-md-5">
+        <div class="progress">
+          <div class="progress-bar progress-bar-info {% if checkin_type.in_before == 0 %}progress-empty{% endif %}" role="progressbar" aria-valuenow="{{ checkin_type.in_now }}"
+          aria-valuemin="0" aria-valuemax="{{ checkin_type.total }}" style="width: {% percentage checkin_type.in_before checkin_type.total %}%;">
+            <span>{{ checkin_type.in_before }}/{{ checkin_type.total }}</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>

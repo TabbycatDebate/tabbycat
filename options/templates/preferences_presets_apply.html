@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block page-title %}✅{{ preset_title }} Presets Applied{% endblock %}
+{% block head-title %}<span class="emoji">✅</span>{{ preset_title }} Presets Applied{% endblock %}
+
+{% block page-subnav-sections %}
+
+{% endblock %}
+
+{% block content %}
+
+<ul class="list-group">
+{% for preference in preferences %}
+
+  <li class="list-group-item ">
+      <span class="{% if preference.current_value != preference.new_value %}text-success{% else %}text-muted{% endif %}">
+      {{ preference.name }}
+      </span>
+      <span class="pull-right">
+        <span class="label label-danger">{{ preference.current_value }}</span>
+        <span class="label label-default"><span class="glyphicon glyphicon-chevron-right"></span></span>
+        <span class="label label-success">{{ preference.new_value }}</span>
+      </span>
+  </li>
+
+{% endfor %}
+</ul>
+
+{% endblock content %}

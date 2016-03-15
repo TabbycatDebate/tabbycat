@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}Allocate Divisions{% endblock %}
+{% block page-title %}Allocate Divisions{% endblock %}
+{% block body-class %}Allocate Divisions{% endblock %}
+
+{% block page-subnav-sections %}
+  <div id="statusBar" class="btn-group">
+    <a class="btn btn-success submit-disable" href="{% tournament_url create_division %}" >Add New Division</a>
+  </div>
+  <div id="" class="btn-group">
+    <a class="btn btn-default" data-toggle="modal" data-target="#view-venues">View Venue Stats</a>
+    <a class="btn btn-default" data-toggle="modal" data-target="#view-divisions">View Division Stats</a>
+  </div>
+  <div class="btn btn-inactive">Preference Allocated:</div>
+  <div id="" class="btn-group">
+    <div class="btn btn-success" disabled="disabled">1/2</div>
+    <div class="btn btn-primary" disabled="disabled">3/4</div>
+    <div class="btn btn-warning" disabled="disabled">5+</div>
+    <div class="btn btn-danger" disabled="disabled">None</div>
+  </div>
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block content %}
+
+  <!-- demo root element -->
+  <div id="app">
+
+    <div class="row">
+
+      <template v-for="division in divisions" track-by="id">
+        <division-droppable save-vg-at="{% tournament_url set_division_venue_group %}" save-division-at="{% tournament_url set_team_division %}"
+        :division="division" :teams="teams | exactFilterBy division.id in 'division'" :vgs="venueGroups"></division-droppable>
+      </template>
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-12" v-if="divisions.length > 0" class="row">
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Teams</h4>
+          </div>
+          <div class="panel-body" v-on:dragover.prevent v-on:drop="unallocateTeam" data-id=null>
+            <template v-for="team in teams | exactFilterBy null in 'division' | orderBy 'institution__code'" track-by="id">
+              <team-draggable :team="team" save-division-at="{% tournament_url set_team_division %}"></team-draggable>
+            </template>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+{% endblock content %}
+
+{% block extra-js %}
+  <script src="{% static 'js/vendor/vue.js' %}"></script>
+  {% include "vue/team-draggable.js" %}
+  {% include "vue/division-droppable.js" %}
+
+  <script>
+
+  // Normal vue filterBy thinks 1 is in 12
+  Vue.filter('exactFilterBy', function(array, needle, inKeyword, key) {
+    return array.filter(function(item) {
+        return item[key] == needle;
+    });
+  });
+
+  Vue.config.delimiters = ["[[", "]]"];
+  /* globals Vue */
+  var App = new Vue({
+    el: '#app',
+    data: {
+      draggedTeam: null,
+      teams: {{ teams | safe }},
+      divisions: {{ divisions | safe }},
+      venueGroups: {{ venue_groups | safe }}
+    },
+    methods: {
+      unallocateTeam: function(ev) {
+        console.log('unallocate');
+        this.draggedTeam.division = null;
+      }
+    },
+    events: {
+      // Set a global record of what is being dragged
+      'dragging-team': function (teamID) {
+        //console.log('started dragging team:' + teamID)
+        this.draggedTeam = teamID;
+      },
+      'stopped-dragging': function () {
+        //console.log('stopped dragging')
+        this.draggedTeam = null;
+      },
+      'assign-team-to-division': function (droppedDivision) {
+        console.log('team id ' + this.draggedTeam.id + ' to divison ' + droppedDivision.id);
+        this.draggedTeam.division = droppedDivision.id;
+      }
+    }
+  });
+
+  //
+  // $('#save').click( function() {
+  //   var teams = {};
+  //   var btn = $(this)
+  //   btn.button('loading')
+  //   $("#dataTable .division").each( function() {
+  //     var new_division_id = $("select", this).val()
+  //     console.log(new_division_id)
+  //     if (new_division_id != "") {
+  //       teams[$(this).attr("id")] = new_division_id;
+  //     }
+  //   });
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "{% tournament_url save_divisions %}",
+  //     data: teams,
+  //     success: function(data, status) {
+  //       $("#alerts-holder").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Saved successfully!</div>');
+  //       btn.button('reset')
+  //     },
+  //     error: function(xhr, error, ex) {
+  //       console.log(xhr.responseText);
+  //       alert(xhr.responseText); //throw actual error, just for debugging purpose
+  //       $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Save failed!</div>');
+  //       btn.button('reset')
+  //     }
+  //   });
+  //   return false;
+  // });
+  //
+  // $('#auto_allocate').click(function() {
+  //   var btn = $(this)
+  //   btn.button('loading')
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "{% tournament_url create_division_allocation %}",
+  //     success: function(data, status) {
+  //       $("#alerts-holder").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Allocated successfully, please refresh the page to see it!</div>');
+  //       btn.button('reset')
+  //     },
+  //     error: function(xhr, error, ex) {
+  //       $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Auto-allocation failed! '
+  //         + xhr.responseText + ' (' + xhr.status + ')</div>');
+  //       btn.button('reset')
+  //     }
+  //   });
+  //
+  // });
+
+  </script>
+
+
+{% endblock extra-js %}

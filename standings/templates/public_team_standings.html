@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block page-title %}Team Standings after {{ round.name }}{% endblock %}
+{% block head-title %}Team Standings{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
+      <thead>
+        <tr>
+          {% if pref.enable_divisions %}
+            <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+          {% endif %}
+          <th>Team</th>
+          {% if pref.show_emoji %}
+            <th class="team-emoji"></th>
+          {% endif %}
+          {% if pref.show_institutions %}
+            <th>Institution</th>
+          {% endif %}
+          {% if pref.team_points_rule == 'wadl' %}
+            <th>Pts</th>
+          {% endif %}
+          <th>Wins</th>
+          {% for round in rounds %}
+            <th>{{ round.abbreviation }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for team in teams %}
+      <tr>
+        {% if pref.enable_divisions %}
+          <td>{{ team.division.name }}</td>
+        {% endif %}
+        <td>
+          {% include "tables/team.html" with team=team %}
+        </td>
+        {% if pref.show_emoji %}
+          <td class="team-emoji">{{ team.emoji }}</td>
+        {% endif %}
+        {% if pref.show_institutions %}
+          <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
+        {% endif %}
+        {% if pref.team_points_rule == 'wadl' %}
+          <td>{{ team.points }}</td>
+        {% endif %}
+        <td>{{ team.wins }}</td>
+        {% for round_results in team.round_results %}
+          {% if round_results.win >= 0 %}
+            <td>
+              {% if round_results.score == 0 %}
+                {% with status=round_results.win|yesno:"Won (via forfeit),Forfeitted" icon=round_results.win|yesno:"glyphicon-share-alt text-success,glyphicon-eye-close text-danger" %}
+                <span title="{{ status }} against {{ round_results.opposition.short_name }}" data-toggle="tooltip" class="team-emoji">
+                  <span class="glyphicon {{ icon }}"></span>
+                {% endwith %}
+              {% else %}
+                {% with status=round_results.win|yesno:"Won,Lost" icon=round_results.win|yesno:"glyphicon-arrow-up text-success,glyphicon-arrow-down text-danger" %}
+                <span title="{{ status }} against {{ round_results.opposition.short_name }}" data-toggle="tooltip" class="team-emoji">
+                  <span class="glyphicon {{ icon }}"></span>
+                {% endwith %}
+              {% endif %}
+                  vs
+                  {% if pref.show_emoji %}
+                    <span class="emoji">{{ round_results.opposition.emoji }}</span>
+                  {% else %}
+                    {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
+                  {% endif %}
+                </span>
+            </td>
+          {% else %}
+            <td></td>
+          {% endif %}
+        {% endfor %}
+
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra-js %}
+  {{ block.super }}
+   <script>
+    $(document).ready( function() {
+      var dTable = $("#dataTable").DataTable({
+        {% if pref.enable_divisions and pref.team_points_rule == 'wadl' %}
+          "aaSorting": [[2, "desc" ], [ 3, "desc" ], [ 4, "desc" ]], // WADL
+        {% elif show_emoji and show_institutions %}
+          "aaSorting": [[ 3, "desc" ], [ 0, "asc" ]],
+        {% elif show_emoji or show_institutions %}
+          "aaSorting": [[ 2, "desc" ]],
+        {% else %}
+          "aaSorting": [[ 1, "desc" ]],
+        {% endif %}
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
+    } );
+  </script>
+{% endblock extra-js %}

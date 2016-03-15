@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+{% load metricformat %}
+
+{% block page-title %}👯Team Standings after {{ round.name }}{% endblock %}
+{% block head-title %}<span class="emoji">👯</span>Team Standings{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default" href="{% round_url standings-index current_round %}">
+    Standings Overview
+  </a>
+  <a class="btn btn-default active" href="{% round_url standings-team current_round %}">
+    Team Standings
+  </a>
+  {% if pref.enable_divisions %}
+  <a class="btn btn-default" href="{% round_url standings-division current_round %}">
+    Divisions Standings
+  </a>
+  {% endif %}
+  <a class="btn btn-default" href="{% round_url standings-speaker current_round %}">
+    Speaker Standings
+  </a>
+  {% if pref.show_novices %}
+    <a class="btn btn-default" href="{% round_url standings-novice current_round %}">
+      Novices Standings
+    </a>
+  {% endif %}
+  {% if pref.reply_scores_enabled %}
+    <a class="btn btn-default" href="{% round_url standings-reply current_round %}">
+      Replies Standings
+    </a>
+  {% endif %}
+  <a class="btn btn-default" href="{% round_url standings-motion current_round %}">
+    Motion Balance
+  </a>
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="team-tab table" cellspacing="0" cellpadding="0">
+      <thead>
+        <tr>
+        <th class="hidden">Rk</th>
+        {% for info in standings.rankings_info %}
+          <th>
+            {% if info.glyphicon %}
+              <span data-toggle="tooltip" title="{{ info.name|capfirst }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+            {% else %}
+              <span class="hidden-xs">{{ info.name|capfirst }}</span>
+              <span class="visible-xs">{{ info.abbr }}</span>
+            {% endif %}
+          </th>
+        {% endfor %}
+          {% if pref.enable_divisions %}
+            <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+          {% endif %}
+          {% if pref.show_emoji %}
+            <th class="team-emoji"></th>
+          {% endif %}
+          <th>Team</th>
+          {% if pref.show_institutions %}
+            <th>Inst<span class="hidden-xs">itution</span></th>
+          {% endif %}
+          {% for round in rounds %}
+            <th>{{ round.abbreviation }}</th>
+            <th>{{ round.abbreviation }}</th>
+          {% endfor %}
+        {% for info in standings.metrics_info %}
+          <th>
+            {% if info.glyphicon %}
+              <span data-toggle="tooltip" title="{{ info.name|capfirst }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+            {% else %}
+              <span class="hidden-xs">{{ info.name|capfirst }}</span>
+              <span class="visible-xs">{{ info.abbr }}</span>
+            {% endif %}
+          </th>
+        {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+    {% for tsi in standings.standings %}
+      <tr class="{% if not tsi.results_in %}danger{% endif %}">
+        <td class="hidden">
+          {% if tsi.rankings.rank.0 != 0 %}
+            {{ tsi.rankings.rank.0 }}
+          {% else %}
+            <span class="hidden">999</span>
+          {% endif %}
+        </td>
+        {% for ranking in tsi.iterrankings %}
+        <td class="rank">
+          <strong>
+            {{ ranking.0 }}{% if ranking.1 %}<span class="text-muted">=</span>{% endif %}
+          </strong>
+        </td>
+        {% endfor %}
+        {% if pref.enable_divisions %}
+          <td>{{ tsi.team.division.name }}</td>
+        {% endif %}
+        {% if pref.show_emoji %}
+          <td class="team-emoji">{{ tsi.team.emoji }}</td>
+        {% endif %}
+        <td>
+          {% include "tables/team.html" with team=tsi.team %}
+          {{ tsi.team.break_categories_str }}
+        </td>
+        {% if pref.show_institutions %}
+          <td>
+            <span class="hidden-xs">{{ tsi.team.institution }}</span>
+            <span class="visible-xs">{{ tsi.team.institution.code }}</span>
+          </td>
+        {% endif %}
+        {% for round_results in tsi.round_results %}
+          {% if round_results.win >= 0 %}
+            <td>
+              {% if round_results.score == 0 %}
+                {% with status=round_results.win|yesno:"Won (via forfeit),Forfeitted" icon=round_results.win|yesno:"glyphicon-share-alt text-success,glyphicon-eye-close text-danger" %}
+                <span title="{{ status }} against {{ round_results.opposition.short_name }}" data-toggle="tooltip" class="team-emoji">
+                  <span class="glyphicon {{ icon }}"></span>
+                {% endwith %}
+              {% else %}
+                {% with status=round_results.win|yesno:"Won,Lost" icon=round_results.win|yesno:"glyphicon-arrow-up text-success,glyphicon-arrow-down text-danger" %}
+                <span title="{{ status }} against {{ round_results.opposition.short_name }}" data-toggle="tooltip" class="team-emoji">
+                  <span class="glyphicon {{ icon }}"></span>
+                {% endwith %}
+              {% endif %}
+                  vs
+                  {% if pref.show_emoji %}
+                    <span class="emoji">{{ round_results.opposition.emoji }}</span>
+                  {% else %}
+                    {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
+                  {% endif %}
+                </span>
+            </td>
+            {% if show_ballots and round_results.debate_team.debate_id and not round_results.forfeit %}
+              <td>
+                <a class="team-score" href="{% tournament_url public_ballots_view round_results.debate_team.debate_id %}">
+                  {{ round_results.score|floatformat:2 }}
+                </a>
+              </td>
+            {% elif not round_results.forfeit %}
+              <td>{{ round_results.score|floatformat:2 }}</td>
+            {% else %}
+              </td></td>
+            {% endif %}
+          {% else %}
+            <td></td>
+            <td></td>
+          {% endif %}
+        {% endfor %}
+        {% for metric in tsi.itermetrics %}
+          {# the metricformat filter is defined in templatetags/metricformat.py #}
+          <td>{{ metric|metricformat }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra-js %}
+  {{ block.super }}
+   <script>
+    $(document).ready( function() {
+      var dTable = $("#dataTable").DataTable({
+        {% if pref.enable_divisions %}
+          "aaSorting": [[ 1, "asc" ], [ 2, "asc" ]],
+        {% else %}
+          "aaSorting": [[ 1, "asc" ]],
+        {% endif %}
+        "aoColumnDefs": [
+          {"iDataSort": 0, "aTargets": [1] }, //sort based on a hidden column when another column is clicked
+          { "bVisible": false, "aTargets": [0] }, //set column visibility
+        ]
+      });
+      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      $('#table-search').keyup(function(){
+        dTable.search($(this).val()).draw();
+      })
+    } );
+  </script>
+{% endblock extra-js %}

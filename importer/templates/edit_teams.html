@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">👯</span> Edit Teams{% endblock %}
+{% block page-title %}👯 Edit Teams{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info alert-dismissable" id="">
+  <p>When adding speakers use the format:<br><br>
+    <strong>Name of Speaker1, Name of Speaker2, Name of Speaker3</strong>
+    </p>
+</div>
+
+<form id="" action="{% tournament_url confirm_teams %}" method="POST">
+
+  {% for institution in institutions %}
+
+    <div class="row">
+      <div class="col-sm-12">
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h5>{{ institution.name }}'s Teams</h5>
+          </div>
+          <div class="panel-body no-bottom-padding">
+
+            {% for team_number in institution.available_team_numbers %}
+              <div class=" form-horizontal col-sm-6">
+
+                <input class="hidden" type="text" name="{{ institution.id }}_{{ team_number }}_Instititution" value="{{ institution.id }}" />
+
+                <div class="form-group row">
+                  <label class="col-sm-4 control-label">Team #{{ team_number }}'s Name</label>
+                  <div class="col-sm-8">
+                    <input class="form-control" type="text" name="{{ institution.id }}_{{ team_number }}_Name" value="{{ team_number }}" />
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-4 control-label">Uses Institution as Prefix</label>
+                  <div class="col-sm-8">
+                    <select class="form-control" type="checkbox" name="{{ institution.id }}_{{ team_number }}_Prefix">
+                      <option value="yes" selected>Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-4 control-label">Team #{{ team_number }}'s Speakers</label>
+                  <div class="col-sm-8">
+                    <input class="form-control team-speakers" type="text" name="{{ institution.id }}_{{ team_number }}_Speakers" value="Speaker 1, Speaker 2, Speaker 3" />
+                  </div>
+                </div>
+
+                <hr>
+
+              </div>
+            {% endfor %}
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    {% endfor %}
+    {% csrf_token %}
+
+    <div class="row">
+      <div class="col-md-12">
+        <input class="btn btn-success submit-disable btn-block" type="submit" value="Save All Teams" />
+      </div>
+    </div>
+
+</form>
+
+{% endblock content %}

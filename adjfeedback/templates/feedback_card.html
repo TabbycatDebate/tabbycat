@@ -1,0 +1,44 @@
+{% load humanize %}
+
+<ul class="list-group">
+  <li class="list-group-item
+    {% if feedback.score <= score_thresholds.low_score %}list-group-item-danger
+    {% elif feedback.score <= score_thresholds.medium_score %}list-group-item-warning
+    {% elif feedback.score > score_thresholds.high_score %}list-group-item-success
+    {% endif %}">
+      <span class="badge">{{ feedback.score }}</span>
+      <span class="h5">
+        {{ feedback.adjudicator.name }}
+        ({{ feedback.adjudicator.institution.code }}{% if feedback.debate_adjudicator %}, {{ feedback.debate_adjudicator.get_type_display }}{% endif %})
+      </span>
+  </li>
+  {% for item in feedback.items %}
+    <li class="list-group-item">
+      {% if item.question.answer_type == 'bc' or item.question.answer_type == 'bs' %}
+        <span class="glyphicon glyphicon-{{ item.answer|yesno:"ok text-success,remove text-danger,minus" }}"></span>
+        <small><strong title="{{ item.question.text }}" data-toggle="tooltip">{{ item.question.reference }}</strong></small>
+      {% elif item.question.answer_type == 'f' %}
+        {{ item.answer|floatformat:"2" }}
+        <small><strong>{{ item.question.text }}</strong></small>
+      {% elif item.question.answer_type == 'tl' %}
+        {{ item.answer }}
+      {% else %}
+        <small><strong>{{ item.question.text }}</strong></small>
+        {{ item.answer }}
+      {% endif %}
+    </li>
+  {% endfor %}
+  <li class="list-group-item panel-footer">
+    <em><small>{% if feedback.source_adjudicator %}
+      submitted by {{ feedback.source_adjudicator.adjudicator.name }}
+      ({{ feedback.source_adjudicator.adjudicator.institution.code }},
+      {{ feedback.source_adjudicator.get_type_display }}),
+    {% elif feedback.source_team %}
+      submitted by <strong>{{ feedback.source_team.team.long_name }}</strong>
+      ({{ feedback.source_team.result }}),
+    {% else %}
+      submitter unknown
+    {% endif %}
+    {{ feedback.timestamp|naturaltime }}</small></em>
+  </li>
+</ul>

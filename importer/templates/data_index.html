@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">📑</span> Bulk Add Data{% endblock %}
+{% block page-title %}📑 Bulk Add Data{% endblock %}
+
+{% block content %}
+
+
+<div class="alert alert-info alert-dismissable" id="">
+  <p>There are a few ways of getting data in Tabbycat with different levels of convenience depending on the size of the tournament and your technical background.</p>
+  <p>The below tools are good for adding information in bulk, and probably work best for medium sized tournaments. You should <a href="https://tabbycat.readthedocs.org/en/latest/use/importing-data/">check our documentation</a> before deciding on which method is best.</p>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <a href="{% tournament_url add_institutions %}">🏫 Add Institutions</a>
+      </li>
+      <li class="list-group-item">
+        <a href="{% tournament_url add_teams %}">👯 Add Teams</a>
+      </li>
+      <li class="list-group-item">
+        <a href="{% tournament_url add_adjudicators %}">👂 Add Adjudicators</a>
+      </li>
+      <li class="list-group-item">
+        <a href="{% tournament_url add_venues %}">🎪 Add Venues</a>
+      </li>
+      {% if pref.enable_venue_groups %}
+        <li class="list-group-item">
+          <a href="{% tournament_url add_venue_preferences %}">🏩 Add Venue Preferences</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+
+{% endblock content %}

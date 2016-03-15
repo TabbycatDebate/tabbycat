@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+
+{% block head-title %}{{ round.name }} Draw{% endblock %}
+{% block page-title %}{{ round.name }} Draw{% endblock %}
+
+{% block content %}
+  <p class="lead">The draw for {{ round.name }} has yet to be released.</p>
+{% endblock %}

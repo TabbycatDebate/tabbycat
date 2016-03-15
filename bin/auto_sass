@@ -1,0 +1,2 @@
+# Requires 'gem install sass' and the local setting live_reload option on
+sass --watch static/scss/style.scss:staticfiles/css/styleauto.css

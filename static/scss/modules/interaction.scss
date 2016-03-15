@@ -1,0 +1,65 @@
+// General hover elements
+[data-toggle="popover"] {
+  border-bottom: 2px dotted #999;
+  &:hover {
+    cursor: help;
+  }
+}
+
+// Dragging for Allocations
+.vue-draggable {
+  // Don't let text selections get in the way of dragging
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 0 6px 0 0;
+  margin: 2px;
+  text-align: left;
+  background: #fff;
+  height: 32px;
+  line-height: 32px;
+  position: relative;
+  span {
+    padding: 6px 0 0 6px;
+  }
+  &:hover {
+    cursor: move;
+  }
+}
+.vue-is-dragging {
+  opacity: 0.8;
+  color: #6894D1;
+  cursor: move;
+}
+.vue-is-drag-enter {
+  // text-decoration: underline;
+  background: $state-success-bg;
+}
+// Hovers for Allocations
+.slideover-info {
+  width: auto;
+  position: fixed;
+  height: 100px;
+  bottom: 0;
+  right: 15px;
+  left: 15px;
+  z-index: 1040; // See boostrap zindex list; this puts it above the navs
+}
+.expand-transition {
+  transition: all .3s ease;
+  height: default;
+}
+/* .expand-enter defines the starting state for entering */
+/* .expand-leave defines the ending state for leaving */
+.expand-enter, .expand-leave {
+  height: 0;
+  opacity: 0;
+}

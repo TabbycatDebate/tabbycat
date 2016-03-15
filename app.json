@@ -1,0 +1,23 @@
+{
+    "name": "Tabbycat",
+    "description": "Debating tournament tabulation software for two-team parliamentary formats",
+    "repository": "https://github.com/czlee/tabbycat",
+    "keywords": ["debate", "debating"],
+    "website": "https://tabbycat.readthedocs.org/",
+    "addons": [
+        "memcachier",
+        "papertrail",
+        "sendgrid:starter",
+        "heroku-postgresql:hobby-dev"
+    ],
+    "env": {
+        "DJANGO_SECRET_KEY": {
+            "description": "A secret key for cryptographic signing of user sessions.",
+            "generator": "secret"
+        }
+    },
+    "scripts": {
+        "postdeploy": "python manage.py migrate"
+    },
+    "success_url": "/start/"
+}

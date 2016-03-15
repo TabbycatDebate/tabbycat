@@ -1,0 +1,13 @@
+{% extends "results.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Enter Results for {{ current_round.name }}{% endblock %}
+{% block page-title %}Enter Results for {{ current_round.name }}{% endblock %}
+
+{% block edit-link %}Check{% endblock %}
+
+{% block page-subnav-actions %}
+{% comment %}
+We don't want assistant users having an advance button
+{% endcomment %}
+{% endblock %}
