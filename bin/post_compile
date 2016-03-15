@@ -15,10 +15,4 @@ if [ -f bin/run_collectstatic ]; then
     bin/run_collectstatic
 fi
 
-if [ -f bin/run_collectstatic ]; then
-    echo "-----> Running check_preferences"
-    chmod +x bin/check_preferences
-    bin/check_preferences
-fi
-
 echo "-----> Post-compile done"
