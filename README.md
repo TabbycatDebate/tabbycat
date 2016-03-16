@@ -4,9 +4,9 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Auckland Australs 2010, [Victoria Australs 2012](https://www.facebook.com/Australs2012), [Otago Australs 2014](http://australs2014.com), [Daejeon Australs 2015](http://australasians2015.org) and [many other tournaments of all sizes](http://github.com/czlee/tabbycat/blob/master/tournaments.md).
+Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Auckland Australs 2010, [Victoria Australs 2012](https://www.facebook.com/Australs2012), [Otago Australs 2014](http://australs2014.herokuapp.com), [Daejeon Australs 2015](http://australs2015.herokuapp.com) and [many other tournaments of all sizes](http://tabbycat.readthedocs.org/en/stable/about/tournament-history.html).
 
-Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.herokuapp.com/). It's normally up, but its form will vary from time to time as we set up new feature demos for people. If it's down and you'd like to see it, or if you want to play with it as if you were running a tournament, [contact us](#authors-and-contacts). To see a post-tournament website, have a look at the [Daejeon Australs 2015 tab website](http://tab.australasians2015.org).
+Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.herokuapp.com/). It's normally up, but its form will vary from time to time as we set up new feature demos for people. If it's down and you'd like to see it, or if you want to play with it as if you were running a tournament, [contact us](#authors-and-contacts). To see a post-tournament website, have a look at the [Daejeon Australs 2015 tab website](http://australs2015.herokuapp.com).
 
 ## Features
 
@@ -15,8 +15,8 @@ Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.her
 - Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts
 - A drag and drop interface for adjudicator allocation that automatically displays conflicts alongside gender and regional balance
 - A fully responsive design that automatically adapts to suit large screens, laptops, tablets, and phones
-- Configurable [draw generation rules](https://github.com/czlee/tabbycat/wiki/Draw-generation) and support for Australs and NZ [team standings rules](https://github.com/czlee/tabbycat/wiki/Team-standings-rules)
-- Confiugrable [adjudicator feedback questions](https://github.com/czlee/tabbycat/wiki/Adjudicator-feedback) and optional online submission of feedback and scoresheets
+- Configurable [draw generation rules](http://tabbycat.readthedocs.org/en/stable/features/draw-generation.html) and support for Australs and NZ [team standings rules](http://tabbycat.readthedocs.org/en/stable/features/team-standings-rules.html)
+- Confiugrable [adjudicator feedback questions](http://tabbycat.readthedocs.org/en/stable/features/adjudicator-feedback.html) and optional online submission of feedback and scoresheets
 - Optional online post-tournament tab display
 
 Tabbycat is currently optimized for Australs, but we're developing for all two-team formats. So if your tournament has different requirements to what we have (say, different draw rules or number of speakers), odds are we've already thought about it and it's on the [to-do list](https://github.com/czlee/tabbycat/issues).
@@ -45,4 +45,3 @@ Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. The current act
 - Chuan-Zheng Lee ([e-mail](mailto:czlee@stanford.edu))
 
 Please don't hesitate to contact us with any questions, suggestions, expressions of interest or generally anything relating to Tabbycat.
-
