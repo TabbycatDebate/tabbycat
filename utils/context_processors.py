@@ -61,11 +61,15 @@ def get_menu_highlight(request):
             return {'tab_team_nav': True}
         elif "speaker" in request.path:
             return {'tab_speaker_nav': True}
+        elif "pros" in request.path:
+            return {'tab_pros_nav': True}
         elif "novices" in request.path:
             return {'tab_novices_nav': True}
         elif "replies" in request.path:
             return {'tab_replies_nav': True}
         elif "motions" in request.path:
             return {'tab_motions_nav': True}
+        else:
+            return { }  # Context processors must return a dict
     else:
-        return {'no_highlight': True}  # Context processors must return a dict
+        return { }  # Context processors must return a dict

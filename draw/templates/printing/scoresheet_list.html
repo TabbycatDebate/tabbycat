@@ -23,7 +23,7 @@
     <template v-for="ballot in ballots">
       <div class="db-page-holder">
   		  <main role="main" class="db-page db-flex-column db-page-landscape">
-          <base-ballot :data="$data" :ballot="ballot" :round="round" kind="Scoresheet" ></base-ballot>
+          <base-ballot :data="$data" :ballot="ballot"></base-ballot>
         </main>
       </div>
     </template>
@@ -56,6 +56,7 @@
       showTabRoomRow: true,
       showInfoRow: false,
       showPronouns: true,
+      kind: "Scoresheet",
       // From Django
       round: "{{ round.abbreviation }}",
       ballots: {{ ballots|safe }}

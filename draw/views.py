@@ -544,21 +544,31 @@ def room_sheets_view(request, round, venue_group_id):
 @round_view
 def draw_print_feedback(request, round):
     draw = round.get_draw_by_room()
-    questions = round.tournament.adj_feedback_questions
-    # for question in questions:
-    #     if question.choices:
-    #         question.choice_options = question.choices.split("//")
-    #     if question.min_value is not None and question.max_value is not None:
-    #         step = max(
-    #             (int(question.max_value) - int(question.min_value)) / 10, 1)
-    #         question.number_options = list(range(
-    #             int(question.min_value), int(question.max_value + 1), int(
-    #                 step)))
+    questions = []
+    for q in round.tournament.adj_feedback_questions:
+        # Somewhat clunkily create a dictionary for the JSON object
+        question = {
+            'text': q.text,
+            'seq': q.seq,
+            'type': q.answer_type,
+            'required': json.dumps(q.answer_type),
+            'chair_on_panellist': json.dumps(q.chair_on_panellist),
+            'panellist_on_chair': json.dumps(q.panellist_on_chair),
+            'panellist_on_panellist': json.dumps(q.panellist_on_panellist),
+            'team_on_orallist': json.dumps(q.team_on_orallist),
+        }
+        if q.choices:
+            question['choice_options'] = q.choices.split("//")
+        if q.min_value is not None and q.max_value is not None:
+            question['step'] = max(
+                (int(q.max_value) - int(q.min_value)) / 10, 1)
+            question['number_options'] = list(range(int(q.min_value),
+                int(q.max_value + 1), int(question['step'])))
+        questions.append(question)
 
     ballots = []
     for debate in draw:
-        scoresheetData = {}
-        scoresheetData['room'] = debate.venue.name
+        scoresheetData = { 'room': debate.venue.name }
         if debate.adjudicators.list[0] is not None:
             for adj in debate.adjudicators.list:
                 scoresheetData['adjudicator'] = adj.name

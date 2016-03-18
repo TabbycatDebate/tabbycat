@@ -21,8 +21,8 @@
 
     <template v-for="ballot in ballots">
       <div class="db-page-holder">
-        <main role="main" class="db-page db-flex-column db-page-landscape">
-          <base-ballot :data="$data" :ballot="ballot" :round="round" kind="Feedback" ></base-ballot>
+        <main role="main" class="db-page db-flex-column db-page-portrait">
+          <base-ballot :data="$data" :ballot="ballot"></base-ballot>
         </main>
       </div>
     </template>
@@ -50,12 +50,13 @@
       // Strings to Fill In
       tournamentName: "{{ tournament }}",
       returnLocation: "Tab Room Location",
+      kind: "Feedback Form",
       // Formatting
       showTabRoomRow: true,
       // From Django
       round: "{{ round.abbreviation }}",
-      ballots: {{ ballots|safe }}
-      //questions: {{ questions|safe }}
+      ballots: {{ ballots|safe }},
+      questions: {{ questions|safe }}
     }
 
     Vue.config.delimiters = ["[[", "]]"];
