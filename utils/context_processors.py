@@ -60,8 +60,8 @@ def get_menu_highlight(request):
         return {'tab_team_nav': True}
     elif "tab" and "speaker" in request.path:
         return {'tab_speaker_nav': True}
-        elif "pros" in request.path:
-            return {'tab_pros_nav': True}
+    elif "pros" in request.path:
+        return {'tab_pros_nav': True}
     elif "tab" and "novices" in request.path:
         return {'tab_novices_nav': True}
     elif "tab" and "replies" in request.path:
