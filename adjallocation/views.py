@@ -164,12 +164,12 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
             elif key.startswith("trainees_"):
                 alloc.trainees.extend(adjs)
 
-        changed = False
+        changed = 0
         for d_id, debate in debates.items():
             existing = debate.adjudicators
             revised = allocations[d_id]
             if existing != revised:
-                changed = True
+                changed += 1
                 logger.info("Saving adjudicators for debate {}".format(debate))
                 logger.info("{} --> {}".format(existing, revised))
                 existing.delete()
@@ -177,12 +177,13 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
 
         if not changed:
             logger.warning("Didn't save any adjudicator allocations, nothing changed.")
+            return HttpResponse("There aren't any changes to save.")
 
         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE,
                                    user=request.user, round=self.get_round(),
                                    tournament=self.get_tournament())
 
-        return HttpResponse("ok")
+        return HttpResponse("Saved changes for {} debates!".format(changed))
 
 
 @admin_required
