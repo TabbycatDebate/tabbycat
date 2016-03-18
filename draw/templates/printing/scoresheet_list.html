@@ -59,9 +59,8 @@
       kind: "Scoresheet",
       // From Django
       round: "{{ round.abbreviation }}",
-      ballots: {{ ballots|safe }}
+      ballots: {{ ballots|safe }},
     }
-
     Vue.config.delimiters = ["[[", "]]"];
     new Vue({
       el: '#debateballots',
