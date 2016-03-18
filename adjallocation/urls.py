@@ -14,7 +14,7 @@ urlpatterns = [
         views.draw_adjudicators_get,
         name='draw_adjudicators_get'),
     url(r'^save/$',
-        views.save_adjudicators,
+        views.SaveAdjudicatorsView.as_view(),
         name='save_adjudicators'),
     url(r'^_update_importance/$',
         views.update_debate_importance,

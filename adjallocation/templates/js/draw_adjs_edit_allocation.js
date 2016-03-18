@@ -304,7 +304,7 @@ $('#save').click(function() {
     data: data,
     success: function(data, status) {
       btn.button('reset')
-      $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved successfully!</div>');
+      $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>' + data + '</div>');
     },
     error: function(xhr, error, ex) {
       btn.button('reset')

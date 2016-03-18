@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from tournaments.models import Round
 from draw.models import Debate
 from results.models import BallotSubmission
+from adjallocation.models import DebateAdjudicator
 
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {
@@ -73,18 +74,20 @@ class Command(RoundCommand):
 
     def handle_round(self, round, **options):
         if options["clean"]:
-            self.stdout.write(self.style.WARNING("Deleting all ballot sets for round {}...".format(round.name)))
+            self.stdout.write(self.style.WARNING("Deleting all ballot sets for {}...".format(round.name)))
             delete_all_ballotsets_for_round(round)
 
         try:
             if options["num_ballots"] is not None:
-                self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot sets for {:d} randomly-chosen debates in round {}...".format(options["num_ballots"], round.name)))
+                self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot sets for {:d} randomly-chosen debates in {}...".format(options["num_ballots"], round.name)))
                 add_ballotsets_to_round_partial(round, options["num_ballots"], **self.ballotset_kwargs(options))
             else:
-                self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot sets for all debates in round {}...".format(round.name)))
+                self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot sets for all debates in {}...".format(round.name)))
                 add_ballotsets_to_round(round, **self.ballotset_kwargs(options))
         except ValueError as e:
             raise CommandError(e)
+        except DebateAdjudicator.DoesNotExist as e:
+            raise CommandError(str(e) + " (Have you done adjudicator allocations for this round?)")
 
     def handle_debate(self, debate, **options):
         if options["clean"]:
@@ -97,3 +100,5 @@ class Command(RoundCommand):
                 add_ballotset(debate, **self.ballotset_kwargs(options))
         except ValueError as e:
             raise CommandError(e)
+        except DebateAdjudicator.DoesNotExist as e:
+            raise CommandError(str(e) + " (Have you done adjudicator allocations for this debate?)")
