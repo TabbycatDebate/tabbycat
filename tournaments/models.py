@@ -537,10 +537,10 @@ class Round(models.Model):
         all_venues = self.base_availability(Venue, 'availability_activevenue',
                                             'venue_id', 'venues_venue')
 
-        if not self.tournament.pref('share_venues'):
-            all_venues = [v for v in all_venues if v.tournament == self.tournament]
-        else:
+        if  self.tournament.pref('share_venues'):
             return all_venues
+        else:
+            return [v for v in all_venues if v.tournament == self.tournament]
 
     def unused_venues(self):
         from venues.models import Venue
@@ -554,10 +554,10 @@ class Round(models.Model):
                                       da.venue_id = venues_venue.id)""" %
                                           self.id}, )
 
-        if not self.tournament.pref('share_venues'):
-            return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
-        else:
+        if self.tournament.pref('share_venues'):
             return [v for v in result if v.is_active and not v.is_used]
+        else:
+            return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
 
     def adjudicator_availability(self):
         from participants.models import Adjudicator
