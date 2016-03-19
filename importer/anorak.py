@@ -65,9 +65,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         counts, errors = self._import(f, tm.Round, round_interpreter)
 
         # Set the round with the lowest known seqno to be the current round.
-        # TODO (as above)
-        self.tournament.current_round = tm.Round.objects.get(
-                tournament=self.tournament, seq=1)
+        self.tournament.current_round = self.tournament.round_set.order_by('seq').first()
         self.tournament.save()
 
         return counts, errors
