@@ -234,9 +234,8 @@ class BaseTournamentDataImporter(object):
                     else:
                         raise
                 except ValueError as e:
-                    self.logger.error("I was trying to import %s at the time.", model._meta.verbose_name_plural)
-                    self.logger.error("The keyword arguments were: %s", kwargs)
-                    raise
+                    errors.add(lineno, model, e.message)
+                    continue
                 else:
                     skipped_because_existing += 1
                     if expect_unique:

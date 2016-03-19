@@ -110,9 +110,9 @@ class TestImporterAnorak(TestCase):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "judges_invalid_line")
         with self.assertRaises(TournamentDataImporterError) as raisescm, self.assertLogs(self.logger, logging.ERROR) as logscm:
             counts, errors = self.importer.import_adjudicators(f)
-        self.assertEqual(len(raisescm.exception), 10)
-        self.assertCountEqual([e.lineno for e in raisescm.exception.entries], (2, 5, 9, 10, 15, 16, 23, 24, 26, 28))
-        self.assertEqual(len(logscm.records), 10)
+        self.assertCountEqual([e.lineno for e in raisescm.exception.entries], (2, 5, 9, 10, 15, 16, 23, 23, 24, 26, 28))
+        self.assertEqual(len(raisescm.exception), 11)
+        self.assertEqual(len(logscm.records), 11)
 
     def test_weird_choices_judges(self):
         self.test_speakers()

@@ -60,7 +60,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             tournament=self.tournament,
             stage=lambda x: self._lookup(self.ROUND_STAGES, x or "p", "draw stage"),
             draw_type=lambda x: self._lookup(self.ROUND_DRAW_TYPES, x or "r", "draw type"),
-            silent=lambda x: bool(int(x)),
             feedback_weight=lambda x: float(x) if x is not None else 0.7,
             break_category=lambda x: bm.BreakCategory.objects.get(slug=x, tournament=self.tournament)
         )
@@ -157,7 +156,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         break_category_interpreter = self.construct_interpreter(
             tournament=self.tournament,
-            is_general=lambda x: bool(int(x)),
         )
         return self._import(f, bm.BreakCategory, break_category_interpreter)
 
@@ -166,14 +164,13 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         If 'create_dummy_speakers' is True, also creates dummy speakers."""
 
         self.initialise_emoji_options()
+        team_interpreter_part = self.construct_interpreter(
+            tournament=self.tournament,
+            institution=pm.Institution.objects.lookup
+        )
         def team_interpreter(line):
-            line['tournament'] = self.tournament
-            line['institution'] = pm.Institution.objects.lookup(line['institution'])
+            line = team_interpreter_part(line)
             line['short_reference'] = line['reference'][:34]
-            try:
-                line['use_institution_prefix'] = bool(int(line['use_institution_prefix']))
-            except ValueError:
-                line['use_institution_prefix'] = None
             return line
 
         counts, errors = self._import(f, pm.Team, team_interpreter, generated_fields={'emoji': self.get_emoji})
@@ -203,7 +200,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'institution':  pm.Institution.objects.lookup(line['institution']),
                     'reference':  line['team_name'],
                     'short_reference':  line['team_name'][:34],
-                    'use_institution_prefix': bool(int(line['use_institution_prefix'])) if line.get('use_institution_prefix') else None,
+                    'use_institution_prefix': line.get('use_institution_prefix') or None,
                 }
             counts, errors = self._import(f, pm.Team, team_interpreter, expect_unique=False,
                     generated_fields={'emoji': self.get_emoji})
@@ -213,7 +210,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         speaker_interpreter_part = self.construct_interpreter(
             DELETE=['use_institution_prefix', 'institution', 'team_name'],
-            novice=lambda x: bool(int(x)),
             gender=lambda x: self._lookup(self.GENDERS, x, "gender"),
         )
         def speaker_interpreter(line):
@@ -241,8 +237,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             institution=pm.Institution.objects.lookup,
             tournament=self.tournament,
             gender=lambda x: self._lookup(self.GENDERS, x, "gender"),
-            independent=lambda x: bool(int(x)),
-            novice=lambda x: bool(int(x)),
             DELETE=['team_conflicts', 'institution_conflicts']
         )
         counts, errors = self._import(f, pm.Adjudicator, adjudicator_interpreter)
@@ -332,11 +326,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         question_interpreter = self.construct_interpreter(
             tournament=self.tournament,
             answer_type=lambda x: self._lookup(self.FEEDBACK_ANSWER_TYPES, x, "answer type"),
-            required=lambda x: bool(int(x)),
-            team_on_orallist=lambda x: bool(int(x)),
-            chair_on_panellist=lambda x: bool(int(x)),
-            panellist_on_chair=lambda x: bool(int(x)),
-            panellist_on_panellist=lambda x: bool(int(x)),
         )
 
         return self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
