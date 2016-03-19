@@ -8,6 +8,8 @@ This page describes how to write your own tournament data importer. It is aimed 
 
 The **tournament data importer** is the class that imports data from one or more files (usually CSV files) into the database. A base class ``BaseTournamentDataImporter`` is in `importer/base.py <https://github.com/czlee/tabbycat/blob/develop/importer/base.py>`_. An example of a data importer is in `importer/anorak.py <https://github.com/czlee/tabbycat/blob/develop/importer/anorak.py>`_.
 
+.. todo:: This page is incomplete. If you'd like to write your own tournament data importer, please contact Chuan-Zheng using the contact details in the :ref:`authors` section.
+
 Why write your own?
 ===================
 
@@ -22,5 +24,23 @@ Basic workflow
 2. Write a subclass of ``BaseTournamentDataImporter``.
 3. Write the front-end interface. This will probably be a `Django management command <https://docs.djangoproject.com/en/1.9/howto/custom-management-commands/>`_.
 
-.. todo:: This page is incomplete. If you'd like to write your own tournament data importer, please contact Chuan-Zheng using the contact details in the :ref:`authors` section.
- 
+What happens when in ``_import()``
+==================================
+
+.. todo:: This section is incomplete.
+
++-------------------------+--------------+-----------------------------------+
+|      Column in file     | Interpreter  |               Action              |
++=========================+==============+===================================+
+|                         | provided and | populate model field              |
+|                         | not callable | with interpreter value            |
++-------------------------+--------------+-----------------------------------+
+| does not exist or blank | callable or  | do not pass to model constructor  |
+|                         | not provided |                                   |
++-------------------------+--------------+-----------------------------------+
+| exists and not blank    | callable     | call interpreter on column value, |
+|                         |              | pass result to model constructor  |
++-------------------------+--------------+-----------------------------------+
+| exists and not blank    | not provided | pass column value directly        |
+|                         |              | to model constructor              |
++-------------------------+--------------+-----------------------------------+
