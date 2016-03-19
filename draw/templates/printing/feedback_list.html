@@ -58,8 +58,6 @@
       ballots: {{ ballots|safe }},
       questions: {{ questions|safe }},
     }
-
-    Vue.config.delimiters = ["[[", "]]"];
     new Vue({
       el: '#debateballots',
       data: baseData,

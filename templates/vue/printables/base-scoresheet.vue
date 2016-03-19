@@ -17,7 +17,7 @@
     </div>
   </section>
 
-  <section class="db-margins-m db-bordered db-flex-row db-flex-item-1" v-if="data.hasMotions and !data.hasVetoes">
+  <section class="db-margins-m db-bordered db-flex-row db-flex-item-1" v-if="data.hasMotions && !data.hasVetoes">
     <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
       <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
         Motion:
