@@ -305,16 +305,16 @@ class BaseTournamentDataImporter(object):
     def construct_interpreter(DELETE=[], **kwargs):
         """Convenience function for building an interpreter."""
         def interpreter(line):
+            # remove blank and unwanted values
+            line = {fieldname: value for fieldname, value in line.items()
+                    if value != '' and value is not None and fieldname not in DELETE}
+
+            # populate interpreted values
             for fieldname, interpret in kwargs.items():
-                if callable(interpret) and fieldname in line:
-                    if line[fieldname] == '' or line[fieldname] is None:
-                        del line[fieldname]
-                    else:
-                        line[fieldname] = interpret(line[fieldname])
-                else:
+                if not callable(interpret): # if it's a value, always populate
                     line[fieldname] = interpret
-            for fieldname in DELETE:
-                if fieldname in line:
-                    del line[fieldname]
+                elif fieldname in line: # if it's a function, interpret only if already there
+                    line[fieldname] = interpret(line[fieldname])
+
             return line
         return interpreter

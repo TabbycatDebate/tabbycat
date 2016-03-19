@@ -58,7 +58,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
         round_interpreter = self.construct_interpreter(
             tournament=self.tournament,
-            seq=int,
             stage=lambda x: self._lookup(self.ROUND_STAGES, x or "p", "draw stage"),
             draw_type=lambda x: self._lookup(self.ROUND_DRAW_TYPES, x or "r", "draw type"),
             silent=lambda x: bool(int(x)),
@@ -143,7 +142,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         venue_interpreter = self.construct_interpreter(
             tournament=self.tournament,
-            priority=int,
             group=lambda x: vm.VenueGroup.objects.get(name=x),
         )
         counts, errors = self._import(f, vm.Venue, venue_interpreter, counts=counts, errors=errors)
@@ -159,11 +157,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         break_category_interpreter = self.construct_interpreter(
             tournament=self.tournament,
-            seq=int,
-            break_size=int,
             is_general=lambda x: bool(int(x)),
-            priority=int,
-            institution_cap=int,
         )
         return self._import(f, bm.BreakCategory, break_category_interpreter)
 
@@ -246,7 +240,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         adjudicator_interpreter = self.construct_interpreter(
             institution=pm.Institution.objects.lookup,
             tournament=self.tournament,
-            test_score=float,
             gender=lambda x: self._lookup(self.GENDERS, x, "gender"),
             independent=lambda x: bool(int(x)),
             novice=lambda x: bool(int(x)),
@@ -311,7 +304,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
         motions_interpreter = self.construct_interpreter(
             round=lambda x: tm.Round.objects.lookup(x, tournament=self.tournament),
-            seq=int
         )
         return self._import(f, mm.Motion, motions_interpreter)
 
@@ -339,15 +331,12 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
         question_interpreter = self.construct_interpreter(
             tournament=self.tournament,
-            seq=int,
             answer_type=lambda x: self._lookup(self.FEEDBACK_ANSWER_TYPES, x, "answer type"),
             required=lambda x: bool(int(x)),
             team_on_orallist=lambda x: bool(int(x)),
             chair_on_panellist=lambda x: bool(int(x)),
             panellist_on_chair=lambda x: bool(int(x)),
             panellist_on_panellist=lambda x: bool(int(x)),
-            min_value=int,
-            max_value=int
         )
 
         return self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
