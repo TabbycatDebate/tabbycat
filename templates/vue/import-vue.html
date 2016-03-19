@@ -1,0 +1,6 @@
+{% load static %}
+{% if debug %}
+  <script src="{% static 'js/vendor/vue.js' %}"></script>
+{% else %}
+  <script src="{% static 'js/vendor/vue.min.js' %}"></script>  
+{% endif %}

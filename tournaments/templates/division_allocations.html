@@ -57,7 +57,7 @@
 {% endblock content %}
 
 {% block extra-js %}
-  <script src="{% static 'js/vendor/vue.js' %}"></script>
+  {% include "vue/import-vue.html" %}
   {% include "vue/team-draggable.vue" %}
   {% include "vue/division-droppable.vue" %}
 

@@ -40,7 +40,7 @@
 
 {% block extra-js %}
 
-  <script src="{% static 'js/vendor/vue.js' %}"></script>
+  {% include "vue/import-vue.html" %}
   {% include "vue/printables/base-ballot.vue" %}
   <script>
     var baseData = {
