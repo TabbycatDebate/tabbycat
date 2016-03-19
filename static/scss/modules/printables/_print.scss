@@ -8,20 +8,14 @@
     height: auto;
   }
   .db-page-holder {
-    display: block;
     page-break-inside: avoid; // Needed
     page-break-after: always; // Needed
-    width: 100%; // Needed
-    height: 100%; // Needed
   }
   .db-page {
     transform: none;
     border: none;
     background: none;
     box-shadow: none;
-    transform: scale(1) !important;
-  }
-  .db-page-portrait, .db-page-landscape {
     width: 100%;
     height: 100%;
   }
