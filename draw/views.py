@@ -570,8 +570,10 @@ def draw_print_feedback(request, round):
     for debate in draw:
         scoresheetData = { 'room': debate.venue.name }
         if debate.adjudicators.list[0] is not None:
-            for adj in debate.adjudicators.list:
+            for position, adj in debate.adjudicators:
                 scoresheetData['adjudicator'] = adj.name
+                scoresheetData['adjudicatorInstitution'] = adj.institution.code
+                scoresheetData['position'] = position
                 ballots.append(scoresheetData)
         else:
             ballots.append(scoresheetData)
@@ -589,17 +591,25 @@ def draw_print_scoresheets(request, round):
         scoresheetData = {}
         scoresheetData['room'] = debate.venue.name
         scoresheetData['aff'] = debate.aff_team.short_name
+        scoresheetData['affEmoji'] = debate.aff_team.emoji
         scoresheetData['affSpeakers'] = [s.name for s in debate.aff_team.speakers]
         scoresheetData['neg'] = debate.neg_team.short_name
+        scoresheetData['negEmoji'] = debate.neg_team.emoji
         scoresheetData['negSpeakers'] = [s.name for s in debate.neg_team.speakers]
         if debate.adjudicators.list[0] is not None:
-            for adj in debate.adjudicators.list:
+            panel = []
+            for position, adj in debate.adjudicators:
+                panel.append({ 'name': adj.name, 'institution': adj.institution.code, 'position': position})
+            for position, adj in debate.adjudicators:
                 scoresheetData['adjudicator'] = adj.name
+                scoresheetData['adjudicatorInstitution'] = adj.institution.code
+                scoresheetData['position'] = position
+                scoresheetData['panel'] = panel
                 ballots.append(scoresheetData)
         else:
             ballots.append(scoresheetData)
 
-    motions = Motion.objects.filter(round=round)
+    motions = Motion.objects.filter(round=round).values('text').order_by('seq')
 
     return render(request, "printing/scoresheet_list.html", dict(
         ballots=ballots, motions=motions))

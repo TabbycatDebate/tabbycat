@@ -3,9 +3,9 @@
 
   <section class="db-score-sheet db-flex-item db-flex-column">
 
-    <base-ballot-header :kind="data.kind" :tournament-name="data.tournamentName" :room="ballot.room" :round="data.round"></base-ballot-header>
+    <base-ballot-header :data="data" :ballot="ballot"></base-ballot-header>
 
-    <base-scoresheet :data="data" :ballot="ballot" v-if="data.kind === 'Scoresheet'"></base-scoresheet>
+    <base-scoresheet :data="data" :ballot="ballot" :motions="motions" v-if="data.kind === 'Scoresheet'"></base-scoresheet>
 
     <base-feedback :data="data" :ballot="ballot" v-if="data.kind === 'Feedback Form'"></base-feedback>
 
@@ -23,6 +23,6 @@
 <script>
   Vue.component('base-ballot', {
     template: '#base-ballot',
-    props: ['data', 'ballot'],
+    props: ['data', 'ballot', 'motions'],
   })
 </script>

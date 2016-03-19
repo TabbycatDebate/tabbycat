@@ -1,12 +1,16 @@
 <script type="text/x-template" id="team-scores">
 
   <div class="db-flex-item-2 db-flex-row db-bottom-border">
-    <div class="db-padding-horizontal db-flex-item db-align-vertical-center db-flex-static">
-      [[ position ]]:
+    <div class="db-padding-horizontal db-flex-item db-align-vertical-center">
+      <h5><span class="emoji" v-if="emoji">[[ emoji ]]</span>&nbsp;&nbsp;[[ name ]]&nbsp;</h5>
+      <em v-for="(index, speaker) in speakers">
+        <span v-if="index !== 0">, </span>[[ speaker ]]
+      </em>
     </div>
-    <div class="db-flex-item db-align-vertical-center">
-        [[ name ]] (<span v-for="speaker in speakers">[[ speaker ]]</span>)
+    <div class="db-padding-horizontal db-flex-static db-align-vertical-center db-flex-static">
+      [[ position ]]
     </div>
+    <div class="db-padding-horizontal db-flex-static "></div>
   </div>
 
   <div class="db-flex-item-2 db-flex-row db-bottom-border db-dont-fill-in"><!-- Keys -->
@@ -68,6 +72,7 @@
     props: {
       data: Object,
       name: String,
+      emoji: String,
       speakers: Array,
       position: String,
     },
