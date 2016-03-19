@@ -1,4 +1,4 @@
-"seq","reference","name","text","answer_type","required","team_on_orallist","chair_on_panel","panel_on_chair","panel_on_panel","min_value","max_value","choices"
+"seq","reference","name","text","answer_type","required","team_on_orallist","chair_on_panellist","panellist_on_chair","panellist_on_panellist","min_value","max_value","choices"
 10,"agree","Agree","Did you agree with the decision?","yesno",1,1,0,0,0
 11,"concur","Concur","Did this judge's decision concur with yours?","yesno",1,0,1,1,1
 20,"adjustment","Adjustment","What adjustment should be applied to this judge's speaker scores?","float",1,0,1,1,1,-20,20

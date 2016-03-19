@@ -1,4 +1,4 @@
-name,institution,rating,institution_conflicts,team_conflicts,gender,pronoun,independent,trainee,cellphone,email,notes
+name,institution,test_score,institution_conflicts,team_conflicts,gender,pronoun,independent,novice,phone,email,notes
 Levi Flores,Yale University,5,,,male,,TRUE,0,(400) 258-4262,leviflores@gmail.com,
 Boyd Pierce,Stanford University,5,,,M,,1,0,(645) 106-7743,boydpierce@yahoo.com,
 Eunice Mcbride,University of Toronto,5,,,female,,0,0,(549) 309-9187,eunicemcbride@outlook.com,

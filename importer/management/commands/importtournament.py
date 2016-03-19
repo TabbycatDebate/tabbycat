@@ -11,7 +11,7 @@ import participants.models as pm
 import venues.models as vm
 from tournaments.models import Tournament
 from importer.anorak import AnorakTournamentDataImporter
-from importer.base import DUPLICATE_INFO
+from importer.base import DUPLICATE_INFO, TournamentDataImporterFatal
 
 class Command(BaseCommand):
     help = 'Delete all data for a tournament and import from specified directory.'
@@ -80,7 +80,7 @@ class Command(BaseCommand):
                 for message in errors.itermessages():
                     if self.color: message = "\033[1;32m" + message + "\032[0m\n"
                     self.stdout.write(message)
-            count_strs = ("{1:d} {0:s}".format(model._meta.verbose_name_plural.lower(), count) for model, count in counts.items())
+            count_strs = ("{1:d} {0}".format(model._meta.verbose_name_plural, count) for model, count in counts.items())
             message = "Imported " + ", ".join(count_strs) + ", hit {1:d} errors".format(counts, len(errors))
             if self.color: "\033[0;36m" + message + "\033[0m\n"
             self.stdout.write(message)
@@ -102,7 +102,7 @@ class Command(BaseCommand):
         try:
             return open(path, 'r')
         except OSError as e:
-            self._warning("Problem opening '{0:s}': {1:s}".format(filename, e.strerror))
+            self._warning("Skipping '{0:s}': {1:s}".format(filename, e.strerror))
             return None
 
     def _make(self, filename, import_method=None):
@@ -115,7 +115,10 @@ class Command(BaseCommand):
             import_method = getattr(self.importer, 'import_' + filename)
         if f is not None:
             self._print_stage("Importing %s.csv" % filename)
-            counts, errors = import_method(f)
+            try:
+                counts, errors = import_method(f)
+            except TournamentDataImporterFatal as e:
+                raise CommandError(e)
             self._print_result(counts, errors)
 
     def get_data_path(self, arg):
