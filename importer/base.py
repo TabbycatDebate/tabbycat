@@ -16,6 +16,32 @@ NON_FIELD_ERRORS = '__all__'
 DUPLICATE_INFO = 19 # logging level just below INFO
 logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
 
+def make_interpreter(DELETE=[], **kwargs):
+    """Convenience function for building an interpreter."""
+    def interpreter(line):
+        # remove blank and unwanted values
+        line = {fieldname: value for fieldname, value in line.items()
+                if value != '' and value is not None and fieldname not in DELETE}
+
+        # populate interpreted values
+        for fieldname, interpret in kwargs.items():
+            if not callable(interpret): # if it's a value, always populate
+                line[fieldname] = interpret
+            elif fieldname in line: # if it's a function, interpret only if already there
+                line[fieldname] = interpret(line[fieldname])
+
+        return line
+    return interpreter
+
+def make_lookup(name, choices):
+    def lookup(val):
+        for k, v in choices.items():
+            if val.lower().replace("-", " ") in k:
+                return v
+        raise ValueError("Unrecognized value for %s: %s" % (name, val))
+    return staticmethod(lookup)
+
+
 class TournamentDataImporterFatal(Exception):
     pass
 
@@ -108,14 +134,6 @@ class BaseTournamentDataImporter(object):
         if 'loglevel' in kwargs:
             self.logger.setLevel(kwargs['loglevel'])
         self.expect_unique = kwargs.get('expect_unique', True)
-
-    def _lookup(self, d, code, name):
-        if not code:
-            return None
-        for k, v in d.items():
-            if code.lower().replace("-"," ") in k:
-                return v
-        raise ValueError("Unrecognized code for %s: %s" % (name, code))
 
     def _import(self, csvfile, model, interpreter=None, counts=None, errors=None,
                 expect_unique=None, generated_fields={}):
@@ -299,21 +317,3 @@ class BaseTournamentDataImporter(object):
             return EMOJI_LIST[random.randint(0, len(EMOJI_LIST) - 1)][0]
         self.emoji_options.remove(emoji_id)
         return EMOJI_LIST[emoji_id][0]
-
-    @staticmethod
-    def construct_interpreter(DELETE=[], **kwargs):
-        """Convenience function for building an interpreter."""
-        def interpreter(line):
-            # remove blank and unwanted values
-            line = {fieldname: value for fieldname, value in line.items()
-                    if value != '' and value is not None and fieldname not in DELETE}
-
-            # populate interpreted values
-            for fieldname, interpret in kwargs.items():
-                if not callable(interpret): # if it's a value, always populate
-                    line[fieldname] = interpret
-                elif fieldname in line: # if it's a function, interpret only if already there
-                    line[fieldname] = interpret(line[fieldname])
-
-            return line
-        return interpreter

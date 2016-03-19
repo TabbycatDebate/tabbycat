@@ -1,4 +1,4 @@
-from .base import BaseTournamentDataImporter, TournamentDataImporterError
+from .base import BaseTournamentDataImporter, TournamentDataImporterError, make_lookup, make_interpreter
 import adjallocation.models as am
 import breakqual.models as bm
 import draw.models as dm
@@ -14,32 +14,32 @@ import csv
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     """Anorak: The original tournament data format."""
 
-    ROUND_STAGES = {
+    lookup_round_stage = make_lookup("round stage", {
         ("preliminary", "p"): tm.Round.STAGE_PRELIMINARY,
         ("elimination", "break", "e", "b"): tm.Round.STAGE_ELIMINATION,
-    }
+    })
 
-    ROUND_DRAW_TYPES = {
+    lookup_draw_type = make_lookup("draw type", {
         ("random", "r"): tm.Round.DRAW_RANDOM,
         ("manual", "m"): tm.Round.DRAW_MANUAL,
         ("round robin", "d"): tm.Round.DRAW_ROUNDROBIN,
         ("power paired", "p"): tm.Round.DRAW_POWERPAIRED,
         ("first elimination", "1st elimination", "1e", "f"): tm.Round.DRAW_FIRSTBREAK,
         ("subsequent elimination", "2nd elimination", "2e", "b"): tm.Round.DRAW_BREAK,
-    }
+    })
 
-    GENDERS = {
+    lookup_gender = make_lookup("gender", {
         ("male", "m"): pm.Person.GENDER_MALE,
         ("female", "f"): pm.Person.GENDER_FEMALE,
         ("other", "o"): pm.Person.GENDER_OTHER,
-    }
+    })
 
-    TEAM_POSITIONS = {
+    lookup_team_position = make_lookup("team position", {
         ("affirmative", "aff", "a"): dm.TeamPositionAllocation.POSITION_AFFIRMATIVE,
         ("negative", "neg", "n"): dm.TeamPositionAllocation.POSITION_NEGATIVE,
-    }
+    })
 
-    FEEDBACK_ANSWER_TYPES = {
+    lookup_feedback_answer_type = make_lookup("feedback answer type", {
         ("checkbox"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_CHECKBOX,
         ("yes no select", "yesno"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT,
         ("integer textbox", "int", "integer"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_TEXTBOX,
@@ -49,18 +49,17 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         ("textbox", "long text", "longtext"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
         ("select single", "single select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT,
         ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
-    }
+    })
 
     def import_rounds(self, f):
         """Imports rounds from a file.
         Each line has:
             seq, name, abbreviation, stage, draw_type, silent, feedback_weight, break_category
         """
-        round_interpreter = self.construct_interpreter(
+        round_interpreter = make_interpreter(
             tournament=self.tournament,
-            stage=lambda x: self._lookup(self.ROUND_STAGES, x or "p", "draw stage"),
-            draw_type=lambda x: self._lookup(self.ROUND_DRAW_TYPES, x or "r", "draw type"),
-            feedback_weight=lambda x: float(x) if x is not None else 0.7,
+            stage=self.lookup_round_stage,
+            draw_type=self.lookup_draw_type,
             break_category=lambda x: bm.BreakCategory.objects.get(slug=x, tournament=self.tournament)
         )
         counts, errors = self._import(f, tm.Round, round_interpreter)
@@ -78,7 +77,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         Each line has:
             name
         """
-        region_interpreter = self.construct_interpreter(
+        region_interpreter = make_interpreter(
             tournament=self.tournament
         )
         return self._import(f, pm.Region, region_interpreter)
@@ -102,7 +101,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             counts = None
             errors = None
 
-        institution_interpreter = self.construct_interpreter(
+        institution_interpreter = make_interpreter(
             region=lambda x: pm.Region.objects.get(name=x)
         )
 
@@ -139,7 +138,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             counts = None
             errors = None
 
-        venue_interpreter = self.construct_interpreter(
+        venue_interpreter = make_interpreter(
             tournament=self.tournament,
             group=lambda x: vm.VenueGroup.objects.get(name=x),
         )
@@ -154,7 +153,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             name, slug, seq, break_size, is_general, priority, institution_cap
         """
 
-        break_category_interpreter = self.construct_interpreter(
+        break_category_interpreter = make_interpreter(
             tournament=self.tournament,
         )
         return self._import(f, bm.BreakCategory, break_category_interpreter)
@@ -164,7 +163,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         If 'create_dummy_speakers' is True, also creates dummy speakers."""
 
         self.initialise_emoji_options()
-        team_interpreter_part = self.construct_interpreter(
+        team_interpreter_part = make_interpreter(
             tournament=self.tournament,
             institution=pm.Institution.objects.lookup
         )
@@ -208,9 +207,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             counts = None
             errors = None
 
-        speaker_interpreter_part = self.construct_interpreter(
+        speaker_interpreter_part = make_interpreter(
             DELETE=['use_institution_prefix', 'institution', 'team_name'],
-            gender=lambda x: self._lookup(self.GENDERS, x, "gender"),
+            gender=self.lookup_gender,
         )
         def speaker_interpreter(line):
             institution = pm.Institution.objects.lookup(line['institution'])
@@ -233,10 +232,10 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     email, notes, institution_conflicts, team_conflicts
         """
 
-        adjudicator_interpreter = self.construct_interpreter(
+        adjudicator_interpreter = make_interpreter(
             institution=pm.Institution.objects.lookup,
             tournament=self.tournament,
-            gender=lambda x: self._lookup(self.GENDERS, x, "gender"),
+            gender=self.lookup_gender,
             DELETE=['team_conflicts', 'institution_conflicts']
         )
         counts, errors = self._import(f, pm.Adjudicator, adjudicator_interpreter)
@@ -296,7 +295,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         Each line has:
             round, motion_seq, reference, text
         """
-        motions_interpreter = self.construct_interpreter(
+        motions_interpreter = make_interpreter(
             round=lambda x: tm.Round.objects.lookup(x, tournament=self.tournament),
         )
         return self._import(f, mm.Motion, motions_interpreter)
@@ -311,9 +310,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             del line['team_name']
             for round_name, side in line.items():
                 yield {
-                    'round'    : tm.Round.objects.lookup(round_name),
+                    'round'    : tm.Round.objects.lookup(round_name, tournament=self.tournament),
                     'team'     : team,
-                    'position' : self._lookup(self.TEAM_POSITIONS, side, "side"),
+                    'position' : self.lookup_team_position(side),
                 }
         return self._import(f, dm.TeamPositionAllocation, side_interpreter)
 
@@ -323,9 +322,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             seq, reference, name, text, answer_type, required, team_on_orallist,
                 chair_on_panel, panel_on_chair, panel_on_panel, min_value, max_value
         """
-        question_interpreter = self.construct_interpreter(
+        question_interpreter = make_interpreter(
             tournament=self.tournament,
-            answer_type=lambda x: self._lookup(self.FEEDBACK_ANSWER_TYPES, x, "answer type"),
+            answer_type=self.lookup_feedback_answer_type,
         )
 
         return self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
