@@ -100,7 +100,6 @@ class BaseTournamentDataImporter(object):
     def __init__(self, tournament, **kwargs):
         self.tournament = tournament
         self.strict = kwargs.get('strict', True)
-        self.header_row = kwargs.get('header_row', True)
         self.logger = kwargs.get('logger', None) or logging.getLogger(__name__) # don't evaluate default unless necessary
         if 'loglevel' in kwargs:
             self.logger.setLevel(kwargs['loglevel'])
@@ -114,22 +113,24 @@ class BaseTournamentDataImporter(object):
                 return v
         raise ValueError("Unrecognized code for %s: %s" % (name, code))
 
-    def _import(self, csvfile, line_parser, model, counts=None, errors=None,
-                expect_unique=None, generated_fields=[]):
+    def _import(self, csvfile, model, interpreter=None, counts=None, errors=None,
+                fieldnames=None, expect_unique=None, generated_fields={}):
         """Parses the object given in f, using the callable line_parser to parse
         each line, and passing the arguments to the given model's constructor.
-        'csvfile' can be any object that is supported by csv.reader(), which
+        `csvfile` can be any object that is supported by csv.reader(), which
         includes file objects and lists of strings.
 
-        If csvfile supports the seek() method (e.g., file objects),
-        csvfile.seek(0) will be called, to allow this function to be called
+        If `csvfile` supports the seek() method (e.g., file objects),
+        `csvfile.seek(0)` will be called, to allow this function to be called
         multiple times on the same file. This means that csvfile, if a file
         object, must be seekable.
 
-        'line_parser' must take a single argument, a tuple (the CSV line), and
-        return a dict of arguments that can be passed to the model constructor.
-        If 'line_parser' returns None, the line is skipped. 'line_parser' can
-        be a generator; if so, one instance is created for each dict yielded.
+        `line_parser` takes a dict in the form returned by `csv.DictReader`, and
+        must return a dict of arguments that can be passed to the model
+        constructor. If `line_parser(line)` returns None, the line is skipped.
+        `line_parser` can be a generator; if so, one instance is created for
+        each dict yielded. If omitted, the dict returned by `csv.DictReader`
+        will be used directly.
 
         Returns a tuple of two objects. The first is a Counter object (from
         Python's collections module) in which the keys are models (e.g. Round,
@@ -139,28 +140,29 @@ class BaseTournamentDataImporter(object):
         (since otherwise it would have raised it as an exception); otherwise, it
         will contain the errors raised during the import attempt.
 
-        If 'counts' and/or 'errors' are provided, this function adds the counts
+        If `counts` and/or `errors` are provided, this function adds the counts
         and errors from this _import call and returns them instead. This
         modifies the original counts_in and errors_in. This allows easy daisy-
         chaining of successive _import calls. If provided, 'counts_in' should
         behave like a Counter object and 'errors_in' should behave like a
         TournamentDataImporterError object.
 
-        If 'expect_unique' is True, this function checks that there are no
+        If `fieldnames` is given, it is passed to the `csv.DictReader` so that
+        only those fields are extracted.
+
+        If `expect_unique` is True, this function checks that there are no
         duplicate objects before saving any of the objects it creates. If
-        'expect_unique' is False, it will just skip objects that would be
+        `expect_unique` is False, it will just skip objects that would be
         duplicates and log a DUPLICATE_INFO message to say so.
 
-        If 'generated_fields' is given, it must be a callable, and the
-        uniqueness checks will not take into account any of the generated
-        fields. This should be used for fields that are generated with each
-        object, not given in the CSV files.
+        If `generated_fields` is given, it must be a dict, with keys being field
+        names and values being callables. The uniqueness checks will not take
+        into account any of the generated fields. This should be used for fields
+        that are generated with each object, not given in the CSV files.
         """
         if hasattr(csvfile, 'seek') and callable(csvfile.seek):
             csvfile.seek(0)
-        reader = csv.reader(csvfile)
-        if self.header_row:
-            next(reader)
+        reader = csv.DictReader(csvfile, fieldnames=fieldnames)
         kwargs_seen = list()
         insts = list()
         if counts is None:
@@ -171,11 +173,14 @@ class BaseTournamentDataImporter(object):
             expect_unique = self.expect_unique
         skipped_because_existing = 0
 
-        for lineno, line in enumerate(reader, start=2 if self.header_row else 1):
+        for lineno, row in enumerate(reader, start=2):
             try:
-                kwargs_list = line_parser(line)
-                if isinstance(kwargs_list, GeneratorType):
-                    kwargs_list = list(kwargs_list) # force evaluation
+                if interpreter is not None:
+                    kwargs_list = interpreter(row)
+                    if isinstance(kwargs_list, GeneratorType):
+                        kwargs_list = list(kwargs_list) # force evaluation
+                else:
+                    kwargs_list = row # just use dict as-is
             except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
                 message = "Couldn't parse line: " + str(e)
@@ -192,9 +197,6 @@ class BaseTournamentDataImporter(object):
 
                 # Check if it's a duplicate
                 kwargs_expect_unique = kwargs.copy()
-                for key in generated_fields:
-                    if key in kwargs_expect_unique:
-                        del kwargs_expect_unique[key]
                 if kwargs_expect_unique in kwargs_seen:
                     if expect_unique:
                         message = "Duplicate " + description
@@ -205,8 +207,8 @@ class BaseTournamentDataImporter(object):
                 kwargs_seen.append(kwargs_expect_unique)
 
                 # Fill in the generated fields
-                for key in generated_fields:
-                    kwargs[key] = kwargs[key]()
+                for key, generator_fn in generated_fields.items():
+                    kwargs[key] = generator_fn()
 
                 # Retrieve the instance or create it if it doesn't exist
                 try:
@@ -280,3 +282,14 @@ class BaseTournamentDataImporter(object):
             return EMOJI_LIST[random.randint(0, len(EMOJI_LIST) - 1)][0]
         self.emoji_options.remove(emoji_id)
         return EMOJI_LIST[emoji_id][0]
+
+    def construct_interpreter(self, **kwargs):
+        def interpreter(row):
+            for fieldname, interpret in kwargs.items():
+                if callable(interpret):
+                    value = row.get(fieldname)
+                    row[fieldname] = interpret(value) if value else None # also use None for empty strings
+                else:
+                    row[fieldname] = interpret
+            return row
+        return interpreter

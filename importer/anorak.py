@@ -54,21 +54,18 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     def import_rounds(self, f):
         """Imports rounds from a file.
         Each line has:
-            seq, name, abbreviation, stage, draw_type, silent, feedback_weight
+            seq, name, abbreviation, stage, draw_type, silent, feedback_weight, break_category
         """
-        def _round_line_parser(line):
-            return {
-                'tournament'      : self.tournament,
-                'seq'             : int(line[0]),
-                'name'            : line[1],
-                'abbreviation'    : line[2],
-                'stage'           : self._lookup(self.ROUND_STAGES, line[3] or "p", "draw stage"),
-                'draw_type'       : self._lookup(self.ROUND_DRAW_TYPES, line[4] or "r", "draw type"),
-                'silent'          : bool(int(line[5])),
-                'feedback_weight' : float(line[6]) if len(line) > 6 and line[6] else 0.7,
-                'break_category'  : bm.BreakCategory.objects.get(slug=line[7], tournament=self.tournament) if len(line) > 7 and line[7] else None,
-            }
-        counts, errors = self._import(f, _round_line_parser, tm.Round)
+        interpreter = self.construct_interpreter(
+            tournament=self.tournament,
+            seq=int,
+            stage=lambda x: self._lookup(self.ROUND_STAGES, x or "p", "draw stage"),
+            draw_type=lambda x: self._lookup(self.ROUND_DRAW_TYPES, x or "r", "draw type"),
+            silent=lambda x: bool(int(x)),
+            feedback_weight=lambda x: float(x) if x is not None else 0.7,
+            break_category=lambda x: bm.BreakCategory.objects.get(slug=x, tournament=self.tournament)
+        )
+        counts, errors = self._import(f, tm.Round, interpreter)
 
         # Set the round with the lowest known seqno to be the current round.
         # TODO (as above)
@@ -83,13 +80,10 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         Each line has:
             name
         """
-        def _region_line_parser(line):
-            kwargs = {
-                'name'       : line[0],
-                'tournament' : self.tournament,
-            }
-            return kwargs
-        return self._import(f, _region_line_parser, pm.Region)
+        interpreter = self.construct_interpreter(
+            tournament=self.tournament
+        )
+        return self._import(f, pm.Region, interpreter)
 
     def import_institutions(self, f, auto_create_regions=True):
         """Imports institutions from a file, also creating regions as needed
@@ -98,27 +92,23 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             name, code, abbreviation, region
         """
         if auto_create_regions:
-            def _region_line_parser(line):
-                if len(line) < 4 or not line[3]:
+            def _region_interpreter(row):
+                if not row.get('region'):
                     return None
                 return {
-                    'name': line[3],
+                    'name': row['region'],
                     'tournament' : self.tournament,
                 }
-            counts, errors = self._import(f, _region_line_parser,
-                    pm.Region, expect_unique=False)
+            counts, errors = self._import(f, pm.Region, _region_interpreter, expect_unique=False)
         else:
             counts = None
             errors = None
 
-        def _institution_line_parser(line):
-            return {
-                'name'         : line[0],
-                'code'         : line[1],
-                'abbreviation' : line[2],
-                'region'       : pm.Region.objects.get(name=line[3]) if len(line) > 3  and line[3] else None,
-            }
-        counts, errors = self._import(f, _institution_line_parser, pm.Institution, counts=counts, errors=errors)
+        interpreter = self.construct_interpreter(
+            region=lambda x: pm.Region.objects.get(name=x)
+        )
+
+        counts, errors = self._import(f, pm.Institution, interpreter, counts=counts, errors=errors)
 
         return counts, errors
 
@@ -127,15 +117,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         Each line has:
             name, short_name[, team_capacity]
         """
-        def _venue_group_line_parser(line):
-            kwargs = {
-                'name'       : line[0],
-                'short_name' : line[1],
-            }
-            if len(line) > 2:
-                kwargs['team_capacity'] = line[2]
-            return kwargs
-        return self._import(f, _venue_group_line_parser, vm.VenueGroup)
+        return self._import(f, vm.VenueGroup)
 
     def import_venues(self, f, auto_create_groups=True):
         """Imports venues from a file, also creating venue groups as needed
@@ -146,27 +128,25 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
 
         if auto_create_groups:
-            def _venue_group_line_parser(line):
-                if not line[2]:
+            def _venue_group_line_parser(row):
+                if not row.get('group'):
                     return None
                 return {
-                    'name'       : line[2],
-                    'short_name' : line[2][:25],
+                    'name'       : row['group'],
+                    'short_name' : row['group'][:25],
                 }
-            counts, errors = self._import(f, _venue_group_line_parser,
-                    vm.VenueGroup, expect_unique=False)
+            counts, errors = self._import(f, vm.VenueGroup,
+                    _venue_group_line_parser, expect_unique=False)
         else:
             counts = None
             errors = None
 
-        def _venue_line_parser(line):
-            return {
-                'tournament' : self.tournament,
-                'name'       : line[0],
-                'priority'   : int(line[1]) if len(line) > 1 else 10,
-                'group'      : vm.VenueGroup.objects.get(name=line[2]) if len(line) > 2 and line[2] else None,
-            }
-        counts, errors = self._import(f, _venue_line_parser, vm.Venue, counts=counts, errors=errors)
+        interpreter = self.construct_interpreter(
+            tournament=self.tournament,
+            priority=int,
+            group=lambda x: vm.VenueGroup.objects.get(name=x),
+        )
+        counts, errors = self._import(f, vm.Venue, interpreter, counts=counts, errors=errors)
 
         return counts, errors
 
@@ -177,41 +157,39 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             name, slug, seq, break_size, is_general, priority, institution_cap
         """
 
-        def _break_category_line_parser(line):
-            return {
-                'tournament': self.tournament,
-                'name': line[0],
-                'slug': line[1],
-                'seq': int(line[2]),
-                'break_size': int(line[3]),
-                'is_general': bool(int(line[4])),
-                'priority': int(line[5]),
-                'institution_cap': int(line[6]) if len(line) > 6 and line[6] else None,
-            }
-        return self._import(f, _break_category_line_parser, bm.BreakCategory)
+        interpreter = self.construct_interpreter(
+            tournament=self.tournament,
+            seq=int,
+            break_size=int,
+            is_general=lambda x: bool(int(x)),
+            priority=int,
+            institution_cap=int,
+        )
+        return self._import(f, bm.BreakCategory, interpreter)
 
     def import_teams(self, f, create_dummy_speakers=False):
         """Imports teams from a file, assigning emoji as needed.
         If 'create_dummy_speakers' is True, also creates dummy speakers."""
 
         self.initialise_emoji_options()
-        def _team_line_parser(line):
-            return {
-                'tournament'             : self.tournament,
-                'institution'            : pm.Institution.objects.lookup(line[1]),
-                'reference'              : line[0],
-                'short_reference'        : line[0][:34],
-                'use_institution_prefix' : int(line[2]) if len(line) > 2 and line[2] else 0,
-                'emoji'                  : self.get_emoji,
-            }
-        counts, errors = self._import(f, _team_line_parser, pm.Team, generated_fields=['emoji'])
+        def _team_interpreter(row):
+            row['tournament'] = self.tournament
+            row['institution'] = pm.Institution.objects.lookup(row['institution'])
+            row['short_reference'] = row['reference'][:34]
+            try:
+                row['use_institution_prefix'] = bool(int(row['use_institution_prefix']))
+            except ValueError:
+                row['use_institution_prefix'] = None
+            return row
+
+        counts, errors = self._import(f, pm.Team, _team_interpreter, generated_fields={'emoji': self.get_emoji})
 
         if create_dummy_speakers:
-            def _speakers_line_parser(line):
-                team = pm.Teams.objects.get(name=line[0])
+            def _speakers_interpreter(line):
+                team = pm.Teams.objects.get(name=row['reference'], institution=pm.Institution.objects.lookup(row['institution']))
                 for name in ["1st Speaker", "2nd Speaker", "3rd Speaker", "Reply Speaker"]:
                     yield dict(name=name, team=team)
-            counts, errors = self._import(f, _speakers_line_parser, pm.Speaker, counts=counts, errors=errors)
+            counts, errors = self._import(f, pm.Speaker, _speakers_interpreter, counts=counts, errors=errors)
 
     def import_speakers(self, f, auto_create_teams=True):
         """Imports speakers from a file, also creating teams as needed (unless
@@ -225,6 +203,16 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         if auto_create_teams:
             self.initialise_emoji_options()
+            def _team_interpreter(row):
+                row['tournament'] = self.tournament
+                row['institution'] = pm.Institution.objects.lookup(row['institution'])
+                row['reference'] = row['team_name']
+                row['short_reference'] = row['team_name'][:34]
+                try:
+                    row['use_institution_prefix'] = bool(int(row['use_institution_prefix']))
+                except ValueError:
+                    row['use_institution_prefix'] = None
+                return row
             def _team_line_parser(line):
                 return {
                     'tournament'             : self.tournament,
@@ -232,9 +220,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'reference'              : line[2],
                     'short_reference'        : line[2][:35],
                     'use_institution_prefix' : int(line[3]) if len(line) > 3 and line[3] else 0,
-                    'emoji'                  : self.get_emoji,
                 }
-            counts, errors = self._import(f, _team_line_parser, pm.Team, expect_unique=False, generated_fields=['emoji'])
+            counts, errors = self._import(f, _team_line_parser, pm.Team, expect_unique=False, generated_fields={'emoji': self.get_emoji})
         else:
             counts = None
             errors = None
