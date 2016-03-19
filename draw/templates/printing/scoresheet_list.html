@@ -1,20 +1,9 @@
-{% extends "base.html" %}
-{% load debate_tags %}
-{% load static %}
-{% load compress %}
+{% extends "printing/printables_list.html" %}
 
 {% block head-title %}
   Ballots for {{ round.abbreviation }}
 {% endblock %}
 {% block page-title %}Printable Scoresheets Forms for {{ round.name }}{% endblock %}
-{% block nav %}<div class="col-md-12">{% endblock %}
-{% block footer %}{% endblock %}
-
-{% block page-alerts %}
-  <div class="alert alert-info db-hide">
-    (use CTRL+P to save to PDF for printing, but be sure to set orientation to LANDSCAPE, to turn off headers/footers and turn on background graphics. Works best in Chrome)</small>
-  </div>
-{% endblock %}
 
 {% block content %}
 
@@ -31,12 +20,6 @@
   </div>
 
 {% endblock content %}
-
-{% block extra-css %}
-  {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="/static/scss/printables.scss" />
-  {% endcompress %}
-{% endblock %}
 
 {% block extra-js %}
 

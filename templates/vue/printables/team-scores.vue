@@ -13,17 +13,17 @@
     <div class="db-padding-horizontal db-flex-static "></div>
   </div>
 
-  <div class="db-flex-item-2 db-flex-row db-bottom-border db-dont-fill-in"><!-- Keys -->
+  <div class="db-flex-item-2 db-flex-row db-bottom-border"><!-- Keys -->
     <div class="db-align-vertical-center  db-left-text" v-bind:class="{ 'db-flex-item-fws': !data.isBP, 'db-flex-item-fwm': data.isBP }">
     </div>
     <div v-show="data.showPronouns" class="db-align-vertical-center db-align-horizontal-center db-flex-item-fwl">
-      Pronoun
+      <em>Pronoun</em>
     </div>
     <div class="db-align-vertical-center db-padding-horizontal db-align-horizontal-center db-flex-item">
-      Full Name
+      <em>Full Name</em>
     </div>
     <div class="db-align-vertical-center db-flex-item-fwl db-align-horizontal-center">
-      Score
+      <em>Score</em>
     </div>
   </div>
 
