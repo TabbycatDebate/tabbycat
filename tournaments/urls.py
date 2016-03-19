@@ -8,7 +8,7 @@ urlpatterns = [
         views.public_index,
         name='tournament-public-index'),
     url(r'^admin/overview/$',
-        views.tournament_home,
+        views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
 
     #url(r'^admin/actions/$', 'action_log', name='action_log'),

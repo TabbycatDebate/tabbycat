@@ -5,10 +5,12 @@ from threading import Lock
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 User = get_user_model()
 import django.contrib.messages as messages
 from django.core import serializers
 from django.core.urlresolvers import reverse_lazy
+from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView, CreateView
 
 from draw.models import Debate, DebateTeam
@@ -21,6 +23,7 @@ from utils.misc import redirect_tournament
 from venues.models import VenueGroup
 
 from .forms import TournamentForm
+from .mixins import TournamentMixin
 from .models import Tournament, Division
 
 @cache_page(10) # Set slower to show new indexes so it will show new pages
@@ -45,34 +48,40 @@ def index(request):
     else:
         return render(request, 'site_index.html', dict(tournaments=tournaments))
 
-@login_required
-@tournament_view
-def tournament_home(request, t):
-    round = t.current_round
-    # This should never happen, but if it does, fail semi-gracefully
-    if round is None:
-        if request.user.is_superuser:
-            return HttpResponseBadRequest("You need to set the current round. <a href=\"/admin/tournaments/tournament\">Go to Django admin.</a>")
-        else:
-            raise Http404()
+class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView):
 
-    context = {}
+    template_name = "tournament_home.html"
 
-    context["round"] = round
-    context["readthedocs_version"] = settings.READTHEDOCS_VERSION
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        round = tournament.current_round
+        assert(round is not None)
+        kwargs["round"] = round
+        kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
+        kwargs["blank"] = not (tournament.team_set.exists() or tournament.adjudicator_set.exists() or tournament.venue_set.exists())
 
-    # If the tournament is blank, display a message on the page
-    context["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
+        draw = round.get_draw()
+        kwargs["total_ballots"] = draw.count()
+        stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
+        stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
+        stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
+        kwargs["stats"] = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
-    # Draw Status
-    draw = round.get_draw()
-    context["total_ballots"] = draw.count()
-    stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
-    stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
-    stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
-    context["stats"] = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
+        return super().get_context_data(**kwargs)
 
-    return render(request, 'tournament_home.html', context)
+    def get(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+        if tournament.current_round is None:
+            if self.request.user.is_superuser:
+                messages.warning(self.request, "The current round wasn't set, so it's been automatically set to the first round.")
+                tournament.current_round = tournament.round_set.order_by('seq').first()
+                logger.warning("Automatically set current round to {}".format(tournament.current_round))
+                tournament.save()
+                self.request.tournament = tournament # update for context processors
+            else:
+                raise Http404()
+        return super().get(self, request, *args, **kwargs)
+
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_divisions')
