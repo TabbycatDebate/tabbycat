@@ -4,10 +4,9 @@
   {{ ballots|length }} Scoresheets for {{ round.abbreviation }}
 {% endblock %}
 {% block page-title %}Printable Scoresheets Forms for {{ round.name }}{% endblock %}
+{% block body-id %}debateballots{% endblock %}
 
 {% block content %}
-
-  <div id="debateballots">
 
     <template v-for="ballot in ballots">
       <div class="db-page-holder">
@@ -16,8 +15,6 @@
         </main>
       </div>
     </template>
-
-  </div>
 
 {% endblock content %}
 

@@ -4,20 +4,17 @@
   {{ ballots|length }} Feedback Forms for {{ round.abbreviation }}<small>
 {% endblock %}
 {% block page-title %}Printable Feedback Forms for {{ round.name }}{% endblock %}
+{% block body-id %}debateballots{% endblock %}
 
 {% block content %}
 
-  <div id="debateballots">
-
-    <template v-for="ballot in ballots">
-      <div class="db-page-holder">
-        <main role="main" class="db-page db-flex-column db-page-portrait">
-          <base-ballot :data="$data" :ballot="ballot"></base-ballot>
-        </main>
-      </div>
-    </template>
-
-  </div>
+  <template v-for="ballot in ballots">
+    <div class="db-page-holder">
+      <main role="main" class="db-page db-flex-column db-page-portrait">
+        <base-ballot :data="$data" :ballot="ballot"></base-ballot>
+      </main>
+    </div>
+  </template>
 
 {% endblock content %}
 
