@@ -91,6 +91,11 @@ So in very simplified form, ``self._import(f, model, interpreter)`` does this:
 
 (There's a lot more to it than that, but that's the basic idea.)
 
+.. important:: A consequence of relying on column headers to identify fields is
+  that the header names in CSV files must match model field names exactly,
+  unless they are deleted by the interpreter using the ``DELETE`` keyword (see
+  below).
+
 Interpreters
 ============
 The main task of an importer, then, is to provide interpreters so that ``self._import``
