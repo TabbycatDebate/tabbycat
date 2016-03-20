@@ -11,6 +11,7 @@
 {% block sub-title %}
   <span id="breaking_count">{{ breaking_count }}</span> marked as breaking
 {% endblock %}
+{% block body-id %}feedbackOverview{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-default active" href="{% tournament_url adjfeedback-overview %}">
@@ -37,15 +38,8 @@
     <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
 {% endblock %}
 
-{% block body-id %}feedbackOverview{% endblock %}
 
 {% block content %}
-
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <svg id="svgVisualize" width="500" height="500"></svg>
-    </div>
-  </div>
 
   <div class="panel panel-default">
     <div class="panel-body">
@@ -92,7 +86,7 @@
           </td>
           <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
           <td>
-            <feedback-trend></feedback-trend>
+            <feedback-trend :data="$data" :id="{{ adj.id }}"></feedback-trend>
           </td>
           {% if pref.show_unaccredited %}
             <td>
@@ -227,12 +221,37 @@
 
 <script src="{% static 'js/vendor/d3.min.js' %}"></script>
 {% include "vue/import-vue.html" %}
+{% include "vue/feedback-trend.vue" %}
 
 <script>
-
+  var sampleData = [{
+    "x": 0,
+    "y": 5
+  }, {
+    "x": 1,
+    "y": 3
+  }, {
+    "x": 1,
+    "y": 2
+  }, {
+    "x": 2,
+    "y": 1
+  }, {
+    "x": 2,
+    "y": 5
+  }, {
+    "x": 2,
+    "y": 4.5
+  }];
+  var vueData =  {
+    graphData: sampleData,
+    minScore: {{ pref.adj_min_score }},
+    maxScore: {{ pref.adj_max_score }},
+    roundSeq: {{ current_round.seq }}
+  }
   new Vue({
     el: '#feedbackOverview',
-    data: baseData,
+    data: vueData
   })
 
   $(document).ready( function() {
@@ -334,57 +353,7 @@
     }
 
 
-    var sampleData = [{
-      "x": 0,
-      "y": 5
-    }, {
-      "x": 1,
-      "y": 3
-    }, {
-      "x": 1,
-      "y": 2
-    }, {
-      "x": 2,
-      "y": 1
-    }, {
-      "x": 2,
-      "y": 5
-    }, {
-      "x": 2,
-      "y": 4.5
-    }];
-    InitChart();
-    function InitChart(){
-      var vis = d3.select("#svgVisualize");
 
-      // Range is the pixel coordinates; domain is the axes range
-      var xRange = d3.scale.linear()
-        .range([40, 400])
-        .domain([ 0, {{ current_round.seq }} ])
-      var yRange = d3.scale.linear()
-        .range([400, 40])
-        .domain([{{ pref.adj_min_score }},{{ pref.adj_max_score }}])
-
-      // Scale axis to fit the range specified
-      var xAxis = d3.svg.axis()
-        .scale(xRange)
-        .tickValues(d3.range(0, {{ current_round.seq }} + 1, 1)) // Set increments
-        .tickFormat(d3.format("d")); // Format as integers
-      var yAxis = d3.svg.axis()
-        .scale(yRange).orient("left")
-        .tickValues(d3.range({{ pref.adj_min_score }}, {{ pref.adj_max_score }} + 1, 1))
-        .tickFormat(d3.format("d"));
-
-      vis.append("svg:g").call(xAxis).attr("transform", "translate(0,400)");
-      vis.append("svg:g").call(yAxis).attr("transform", "translate(40,0)");
-
-      var circles = vis.selectAll("circle").data(sampleData);
-      circles
-        .enter().append('circle')
-        .attr("cx", function (d) { return xRange (d.x); })
-        .attr("cy", function (d) { return yRange (d.y); })
-        .attr("r", 10) // Size of circle
-    }
 
 
 
