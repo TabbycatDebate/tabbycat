@@ -135,8 +135,9 @@ class BaseTournamentDataImporter(object):
             self.logger.setLevel(kwargs['loglevel'])
         self.expect_unique = kwargs.get('expect_unique', True)
 
-    def _import(self, csvfile, model, interpreter=None, counts=None, errors=None,
-                expect_unique=None, generated_fields={}):
+    def _import(self, csvfile, model, interpreter=make_interpreter(),
+                counts=None, errors=None, expect_unique=None,
+                generated_fields={}):
         """Parses the object given in f, using the callable line_parser to parse
         each line, and passing the arguments to the given model's constructor.
         `csvfile` can be any object that is supported by csv.reader(), which
@@ -194,12 +195,9 @@ class BaseTournamentDataImporter(object):
 
         for lineno, line in enumerate(reader, start=2):
             try:
-                if interpreter is not None:
-                    kwargs_list = interpreter(line)
-                    if isinstance(kwargs_list, GeneratorType):
-                        kwargs_list = list(kwargs_list) # force evaluation
-                else:
-                    kwargs_list = line # just use dict as-is
+                kwargs_list = interpreter(line)
+                if isinstance(kwargs_list, GeneratorType):
+                    kwargs_list = list(kwargs_list) # force evaluation
             except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
                 message = "Couldn't parse line: " + str(e)
