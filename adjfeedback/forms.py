@@ -119,6 +119,8 @@ class BaseFeedbackForm(forms.Form):
         elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
             field = AdjudicatorFeedbackCheckboxSelectMultipleField(choices=question.choices_for_field)
         field.label = question.text
+        if question.required:
+            field.label += "*"
         field.required = self._enforce_required and question.required
         return field
 
