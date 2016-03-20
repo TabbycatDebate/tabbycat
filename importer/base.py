@@ -267,6 +267,7 @@ class BaseTournamentDataImporter(object):
                     errors.update_with_validation_error(lineno, model, e)
                     continue
 
+                self.logger.debug("Listing to create: " + description)
                 insts.append(inst)
 
         if errors:
@@ -279,7 +280,7 @@ class BaseTournamentDataImporter(object):
                     self.logger.warning(message)
 
         for inst in insts:
-            self.logger.debug("Made %s: %s", model._meta.verbose_name, inst)
+            self.logger.debug("Made %s: %r", model._meta.verbose_name, inst)
             inst.save()
 
         self.logger.info("Imported %d %s", len(insts), model._meta.verbose_name_plural)
