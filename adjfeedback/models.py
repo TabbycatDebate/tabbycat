@@ -150,6 +150,12 @@ class AdjudicatorFeedbackQuestion(models.Model):
     def choices_for_field(self):
         return tuple((x, x) for x in self.choices.split(self.CHOICE_SEPARATOR))
 
+    @property
+    def choices_for_number_scale(self):
+        step = max((int(self.max_value) - int(self.min_value)) / 10, 1)
+        options = list(range(int(self.min_value), int(self.max_value + 1), int(step)))
+        return options
+
 
 class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey('participants.Adjudicator', db_index=True)

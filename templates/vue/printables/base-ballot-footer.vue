@@ -1,10 +1,10 @@
 <!-- Base Ballot Footer Template -->
 <script type="text/x-template" id="base-ballot-footer">
 
-  <section class="db-dont-fill-in db-margins-m db-bordered db-flex-row db-flex-item-1">
+  <section class="db-margins-m db-bordered db-flex-row db-flex-item-1">
 
     <div class="db-padding-horizontal db-align-vertical-center db-flex-item-1 db-vertical-center-text">
-      Return Ballots to [[ returnLocation ]].
+      <em><span v-if="returnLocation !== ''">Return Ballots to [[ returnLocation ]]</span></em>
     </div>
 
     <div class="db-item-gutter"></div>
@@ -12,13 +12,13 @@
     <div class="db-flex-item-1 db-flex-row">
 
         <div class="db-flex-item db-flex-static db-align-vertical-center db-right-text db-padding-horizontal">
-          Data Entry:
+          <em>Data Entry:</em>
         </div>
         <div class="db-flex-item db-fill-in ">
         </div>
 
         <div class="db-flex-item db-flex-static db-align-vertical-center db-right-text db-padding-horizontal">
-          Data Check:
+          <em>Data Check:</em>
         </div>
         <div class="db-flex-item db-fill-in ">
         </div>

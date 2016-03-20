@@ -1,20 +1,9 @@
-{% extends "base.html" %}
-{% load debate_tags %}
-{% load static %}
-{% load compress %}
+{% extends "printing/printables_list.html" %}
 
 {% block head-title %}
-  Ballots for {{ round.abbreviation }}
+  {{ ballots|length }} Scoresheets for {{ round.abbreviation }}
 {% endblock %}
 {% block page-title %}Printable Scoresheets Forms for {{ round.name }}{% endblock %}
-{% block nav %}<div class="col-md-12">{% endblock %}
-{% block footer %}{% endblock %}
-
-{% block page-alerts %}
-  <div class="alert alert-info db-hide">
-    (use CTRL+P to save to PDF for printing, but be sure to set orientation to LANDSCAPE, to turn off headers/footers and turn on background graphics. Works best in Safari or Firefox.)</small>
-  </div>
-{% endblock %}
 
 {% block content %}
 
@@ -23,7 +12,7 @@
     <template v-for="ballot in ballots">
       <div class="db-page-holder">
   		  <main role="main" class="db-page db-flex-column db-page-landscape">
-          <base-ballot :data="$data" :ballot="ballot"></base-ballot>
+          <base-ballot :data="$data" :ballot="ballot" :motions="motions"></base-ballot>
         </main>
       </div>
     </template>
@@ -32,26 +21,21 @@
 
 {% endblock content %}
 
-{% block extra-css %}
-  {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="/static/scss/printables.scss" />
-  {% endcompress %}
-{% endblock %}
-
 {% block extra-js %}
 
-  <script src="{% static 'js/vendor/vue.js' %}"></script>
+  {% include "vue/import-vue.html" %}
   {% include "vue/printables/base-ballot.vue" %}
   <script>
     var baseData = {
       // Strings to Fill In
       tournamentName: "{{ tournament }}",
-      returnLocation: "Tab Room Location",
+      returnLocation: "{{ pref.score_return_location }}",
       // Rules
       hasReplies: {% if pref.reply_scores_enabled %}true{% else %}false{% endif %},
       speakersCount: {{ pref.substantive_speakers }},
       infoText: "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication.",
-      hasMotionSelection: {% if pref.enable_motions %}true{% else %}false{% endif %},
+      hasMotions: {% if pref.enable_motions %}true{% else %}false{% endif %},
+      hasVetoes: {% if pref.motion_vetoes_enabled %}true{% else %}false{% endif %},
       // Formatting
       showTabRoomRow: true,
       showInfoRow: false,
@@ -60,8 +44,8 @@
       // From Django
       round: "{{ round.abbreviation }}",
       ballots: {{ ballots|safe }},
+      motions: {{ motions|safe }},
     }
-    Vue.config.delimiters = ["[[", "]]"];
     new Vue({
       el: '#debateballots',
       data: baseData,

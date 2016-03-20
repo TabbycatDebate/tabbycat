@@ -3,24 +3,21 @@
 
   <header class="db-margins-m db-flex-row db-flex-item-1">
 
-    <div class="db-align-vertical-end db-flex-item-1">
+    <div class="db-align-vertical-end db-flex-item-3">
       <h2>
-        [[ tournamentName ]] [[ kind ]]
+        [[ data.tournamentName ]] [[ data.kind ]] from [[ ballot.author ]]
+        <span v-if="ballot.authorPosition === 'C'">(Chair)</span>
+        <span v-if="ballot.authorPosition === 'P'">(Panellist)</span>
+        <span v-if="ballot.authorPosition === 'T'">(Trainee)</span>
+        <span v-if="ballot.target">on [[ ballot.target ]]
+          <span v-if="ballot.targetPosition === 'C'">(Chair)</span>
+          <span v-if="ballot.targetPosition === 'P'">(Panellist)</span>
+          <span v-if="ballot.targetPosition === 'T'">(Trainee)</span>
+        </span>
       </h2>
     </div>
-
-    <div class="db-item-gutter"></div>
-
-    <div class="db-flex-item-1 db-flex-row db-padding-horizontal db-flex-row ">
-      <div class="db-align-vertical-end db-flex-item db-vertical-center-text">
-        <h2></h2>
-      </div>
-      <div class="db-align-vertical-end db-flex-item db-vertical-center-text">
-        <h2>[[ room ]]</h2>
-      </div>
-      <div class="db-align-vertical-end db-flex-item db-vertical-center-text">
-        <h2>[[ round ]]</h2>
-      </div>
+    <div class="db-flex-static db-align-vertical-end">
+      <h2>[[ ballot.room ]] [[ data.round ]]</h2>
     </div>
 
   </header>
@@ -31,6 +28,6 @@
 <script>
   Vue.component('base-ballot-header', {
     template: '#base-ballot-header',
-    props: ['kind', 'tournamentName', 'room', 'round']
+    props: ['data', 'ballot'],
   })
 </script>

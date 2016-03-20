@@ -20,10 +20,10 @@ urlpatterns = [
 
     # Print
     url(r'^round/(?P<round_seq>\d+)/print/scoresheets/$',
-        views.draw_print_scoresheets,
+        views.PrintScoreSheetsView.as_view(),
         name='draw_print_scoresheets'),
     url(r'^round/(?P<round_seq>\d+)/print/feedback/$',
-        views.draw_print_feedback,
+        views.PrintFeedbackFormsView.as_view(),
         name='draw_print_feedback'),
     url(r'^round/(?P<round_seq>\d+)/master_sheets/list/$',
         views.master_sheets_list,

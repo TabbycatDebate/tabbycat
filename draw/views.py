@@ -4,8 +4,13 @@ from participants.models import Team
 from tournaments.models import Tournament, Round, Division
 from motions.models import Motion
 from venues.models import Venue, VenueGroup
+from adjfeedback.models import AdjudicatorFeedbackQuestion
 from .models import TeamPositionAllocation, Debate, DebateTeam
 from standings.teams import TeamStandingsGenerator
+
+from django.views.generic.base import TemplateView
+from tournaments.mixins import RoundMixin
+from utils.mixins import SuperuserRequiredMixin
 
 from utils.views import *
 
@@ -540,66 +545,111 @@ def room_sheets_view(request, round, venue_group_id):
                dict(base_venue_group=base_venue_group,
                     venues=venues))
 
-@admin_required
-@round_view
-def draw_print_feedback(request, round):
-    draw = round.get_draw_by_room()
-    questions = []
-    for q in round.tournament.adj_feedback_questions:
-        # Somewhat clunkily create a dictionary for the JSON object
-        question = {
-            'text': q.text,
-            'seq': q.seq,
-            'type': q.answer_type,
-            'required': json.dumps(q.answer_type),
-            'chair_on_panellist': json.dumps(q.chair_on_panellist),
-            'panellist_on_chair': json.dumps(q.panellist_on_chair),
-            'panellist_on_panellist': json.dumps(q.panellist_on_panellist),
-            'team_on_orallist': json.dumps(q.team_on_orallist),
+
+class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+
+    template_name = 'printing/feedback_list.html'
+
+    def team_on_orallist(self):
+        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, chair_on_panellist=True).exists()
+
+    def chair_on_panellist(self):
+        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, panellist_on_chair=True).exists()
+
+    def panellist_on_panellist(self):
+        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, panellist_on_panellist=True).exists()
+
+    def panellist_on_chair(self):
+        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, team_on_orallist=True).exists()
+
+    def questions_json_dict(self):
+        questions = []
+        for q in self.get_round().tournament.adj_feedback_questions:
+            q_set = {
+                'text': q.text, 'seq': q.seq, 'type': q.answer_type,
+                'required': json.dumps(q.answer_type),
+                'chair_on_panellist': json.dumps(q.chair_on_panellist),
+                'panellist_on_chair': json.dumps(q.panellist_on_chair),
+                'panellist_on_panellist': json.dumps(q.panellist_on_panellist),
+                'team_on_orallist': json.dumps(q.team_on_orallist),
+            }
+            if q.choices:
+                q_set['choice_options'] = q.choices.split("//")
+            elif q.min_value is not None and q.max_value is not None:
+                q_set['choice_options'] = q.choices_for_number_scale
+
+            questions.append(q_set)
+        return questions
+
+    def construct_info(self, venue, source, source_p, target, target_p):
+        source_n = source.name if hasattr(source, 'name') else source.short_name
+        return {
+            'room': venue.name,
+            'authorInstitution': source.institution.code,
+            'author': source_n, 'authorPosition': source_p,
+            'target': target.name, 'targetPosition': target_p
         }
-        if q.choices:
-            question['choice_options'] = q.choices.split("//")
-        if q.min_value is not None and q.max_value is not None:
-            question['step'] = max(
-                (int(q.max_value) - int(q.min_value)) / 10, 1)
-            question['number_options'] = list(range(int(q.min_value),
-                int(q.max_value + 1), int(question['step'])))
-        questions.append(question)
 
-    ballots = []
-    for debate in draw:
-        scoresheetData = { 'room': debate.venue.name }
-        if debate.adjudicators.list[0] is not None:
-            for adj in debate.adjudicators.list:
-                scoresheetData['adjudicator'] = adj.name
-                ballots.append(scoresheetData)
-        else:
-            ballots.append(scoresheetData)
+    def get_context_data(self, **kwargs):
+        kwargs['questions'] = self.questions_json_dict()
+        kwargs['ballots'] = []
 
-    return render(request, "printing/feedback_list.html", dict(
-        ballots=ballots, questions=questions))
+        for debate in self.get_round().get_draw_by_room():
+            chair = debate.adjudicators.chair
+
+            if self.team_on_orallist():
+                for team in debate.teams:
+                    kwargs['ballots'].append(self.construct_info(
+                        debate.venue, team, "Team", chair, "C"))
+
+            if self.chair_on_panellist():
+                for adj in debate.adjudicators.panel:
+                    kwargs['ballots'].append(self.construct_info(
+                        debate.venue, chair, "C", adj, "P"))
+                for adj in debate.adjudicators.trainees:
+                    kwargs['ballots'].append(self.construct_info(
+                        debate.venue, chair, "C", adj, "T"))
+
+            if self.panellist_on_chair():
+                for adj in debate.adjudicators.panel:
+                    kwargs['ballots'].append(self.construct_info(
+                        debate.venue, adj, "P", chair, "C"))
+                for adj in debate.adjudicators.trainees:
+                    kwargs['ballots'].append(self.construct_info(
+                        debate.venue, adj, "T", chair, "C"))
+
+        return super().get_context_data(**kwargs)
 
 
-@admin_required
-@round_view
-def draw_print_scoresheets(request, round):
-    draw = round.get_draw_by_room()
-    ballots = []
-    for debate in draw:
-        scoresheetData = {}
-        scoresheetData['room'] = debate.venue.name
-        scoresheetData['aff'] = debate.aff_team.short_name
-        scoresheetData['affSpeakers'] = [s.name for s in debate.aff_team.speakers]
-        scoresheetData['neg'] = debate.neg_team.short_name
-        scoresheetData['negSpeakers'] = [s.name for s in debate.neg_team.speakers]
-        if debate.adjudicators.list[0] is not None:
-            for adj in debate.adjudicators.list:
-                scoresheetData['adjudicator'] = adj.name
-                ballots.append(scoresheetData)
-        else:
-            ballots.append(scoresheetData)
+class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
-    motions = Motion.objects.filter(round=round)
+    template_name = 'printing/scoresheet_list.html'
 
-    return render(request, "printing/scoresheet_list.html", dict(
-        ballots=ballots, motions=motions))
+    def get_context_data(self, **kwargs):
+        kwargs['motions'] = Motion.objects.filter(round=self.get_round()).values('text').order_by('seq')
+        kwargs['ballots'] = []
+
+        for debate in self.get_round().get_draw_by_room():
+            debateInfo = {
+                'room': debate.venue.name,
+                'aff': debate.aff_team.short_name,
+                'affEmoji': debate.aff_team.emoji,
+                'affSpeakers': [s.name for s in debate.aff_team.speakers],
+                'neg': debate.neg_team.short_name,
+                'negEmoji': debate.neg_team.emoji,
+                'negSpeakers': [s.name for s in debate.neg_team.speakers],
+                'panel': []
+            }
+            for position, adj in debate.adjudicators:
+                debateInfo['panel'].append({ 'name': adj.name, 'institution': adj.institution.code, 'position': position})
+
+            for adj in (a for a in debateInfo['panel'] if a['position'] != "T"):
+                ballotData = {
+                    'author': adj['name'],
+                    'authorInstitution': adj['institution'],
+                    'authorPosition': adj['position'],
+                }
+                ballotData.update(debateInfo) # Extend with debateInfo keys
+                kwargs['ballots'].append(ballotData)
+
+        return super().get_context_data(**kwargs)

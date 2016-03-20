@@ -57,7 +57,7 @@
 {% endblock content %}
 
 {% block extra-js %}
-  <script src="{% static 'js/vendor/vue.js' %}"></script>
+  {% include "vue/import-vue.html" %}
   {% include "vue/team-draggable.vue" %}
   {% include "vue/division-droppable.vue" %}
 
@@ -69,10 +69,6 @@
         return item[key] == needle;
     });
   });
-
-  Vue.config.delimiters = ["[[", "]]"];
-  Vue.config.debug = true
-
   /* globals Vue */
   var App = new Vue({
     el: '#app',
