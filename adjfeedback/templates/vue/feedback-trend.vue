@@ -12,7 +12,7 @@
       data: Object,
       id: Number,
       width: { type: Number, default: 200 },
-      height: { type: Number, default: 100 },
+      height: { type: Number, default: 50 },
       padding: { type: Number, default: 5 },
     },
     computed: {
@@ -23,6 +23,7 @@
     ready: function() {
       var vueContext = this;
       InitChart();
+
       function InitChart(){
         // var vis = d3.select("#" + vueContext.elementID);
 
@@ -53,11 +54,10 @@
           .tickFormat(function (d) { return ''; }) // Hide ticks
           .tickValues(d3.range(vueContext.data.minScore, vueContext.data.maxScore + 0.5, 1))  // Set tick increments
 
-
-        // line between?
-        var line = d3.svg.line()
-            .x(function(d) { return xScale(d.x); })
-            .y(function(d) { return yScale(d.y); });
+        // Define the div for the tooltip
+        var div = d3.select("body").append("div")
+          .attr("class", "d3-tooltip")
+          .style("opacity", 0);
 
         var svg = d3.select("#" + vueContext.elementID).append("svg")
             .attr("width", vueContext.width + vueContext.padding + vueContext.padding)
@@ -74,20 +74,39 @@
             .attr("class", "y axis")
             .call(yAxis)
 
-        // svg.append("path")
-        //     .data([dataset])
-        //     .attr("class", "line")
-        //     .attr("d", line);
+        var circles = svg.selectAll("circle").data(vueData.graphData)
 
-        var circles = svg.selectAll("circle").data(vueData.graphData);
         circles
           .enter().append('circle')
           .attr("cx", function (d) { return xScale (d.x); })
           .attr("cy", function (d) { return yScale (d.y); })
-          .attr("r", 4) // Size of circle
-
+          .attr("r", 5) // Size of circle
+          .attr("fill", function (d) {
+            if (d.status === "C") {
+              return 'green';
+            } else if (d.status === "P") {
+              return 'orange';
+            } else if (d.status === "T") {
+              return 'red';
+            } else {
+              return 'grey'; // Test
+            }
+            return yScale (d.status);
+          })
+          .on("mouseover", function(d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div.html("Received a " + d.y + " as a " + d.status + " in R" + d.x)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+          })
+          .on("mouseout", function(d) {
+            div.transition()
+              .duration(500)
+              .style("opacity", 0);
+          });
       }
-
     },
   })
 </script>
