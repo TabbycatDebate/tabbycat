@@ -1,3 +1,4 @@
+import json
 from actionlog.models import ActionLogEntry
 from participants.models import Team
 from tournaments.models import Tournament, Round, Division
@@ -543,34 +544,62 @@ def room_sheets_view(request, round, venue_group_id):
 @round_view
 def draw_print_feedback(request, round):
     draw = round.get_draw_by_room()
-    preferences = round.tournament.preferences
-    questions = round.tournament.adj_feedback_questions
-    for question in questions:
-        if question.choices:
-            question.choice_options = question.choices.split("//")
-        if question.min_value is not None and question.max_value is not None:
-            step = max(
-                (int(question.max_value) - int(question.min_value)) / 10, 1)
-            question.number_options = list(range(
-                int(question.min_value), int(question.max_value + 1), int(
-                    step)))
+    questions = []
+    for q in round.tournament.adj_feedback_questions:
+        # Somewhat clunkily create a dictionary for the JSON object
+        question = {
+            'text': q.text,
+            'seq': q.seq,
+            'type': q.answer_type,
+            'required': json.dumps(q.answer_type),
+            'chair_on_panellist': json.dumps(q.chair_on_panellist),
+            'panellist_on_chair': json.dumps(q.panellist_on_chair),
+            'panellist_on_panellist': json.dumps(q.panellist_on_panellist),
+            'team_on_orallist': json.dumps(q.team_on_orallist),
+        }
+        if q.choices:
+            question['choice_options'] = q.choices.split("//")
+        if q.min_value is not None and q.max_value is not None:
+            question['step'] = max(
+                (int(q.max_value) - int(q.min_value)) / 10, 1)
+            question['number_options'] = list(range(int(q.min_value),
+                int(q.max_value + 1), int(question['step'])))
+        questions.append(question)
 
-    return render(request,
-               "printing/feedback_list.html",
-               dict(draw=draw,
-                    preferences=preferences,
-                    questions=questions))
+    ballots = []
+    for debate in draw:
+        scoresheetData = { 'room': debate.venue.name }
+        if debate.adjudicators.list[0] is not None:
+            for adj in debate.adjudicators.list:
+                scoresheetData['adjudicator'] = adj.name
+                ballots.append(scoresheetData)
+        else:
+            ballots.append(scoresheetData)
+
+    return render(request, "printing/feedback_list.html", dict(
+        ballots=ballots, questions=questions))
 
 
 @admin_required
 @round_view
 def draw_print_scoresheets(request, round):
     draw = round.get_draw_by_room()
-    preferences = round.tournament.preferences
+    ballots = []
+    for debate in draw:
+        scoresheetData = {}
+        scoresheetData['room'] = debate.venue.name
+        scoresheetData['aff'] = debate.aff_team.short_name
+        scoresheetData['affSpeakers'] = [s.name for s in debate.aff_team.speakers]
+        scoresheetData['neg'] = debate.neg_team.short_name
+        scoresheetData['negSpeakers'] = [s.name for s in debate.neg_team.speakers]
+        if debate.adjudicators.list[0] is not None:
+            for adj in debate.adjudicators.list:
+                scoresheetData['adjudicator'] = adj.name
+                ballots.append(scoresheetData)
+        else:
+            ballots.append(scoresheetData)
+
     motions = Motion.objects.filter(round=round)
 
-    return render(request,
-               "printing/scoresheet_list.html",
-               dict(draw=draw,
-                    preferences=preferences,
-                    motions=motions))
+    return render(request, "printing/scoresheet_list.html", dict(
+        ballots=ballots, motions=motions))
