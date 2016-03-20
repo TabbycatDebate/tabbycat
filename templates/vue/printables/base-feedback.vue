@@ -21,8 +21,20 @@
     </section>
   </template>
 
-  <template v-for="question in data.questions | orderBy 'seq'">
-    <feedback-question :question="question" ></feedback-question>
+  <template v-if="ballot.authorPosition === 'C'">
+    <feedback-question v-for="question in data.questions | filterBy 'true' in 'chair_on_panellist' | orderBy 'seq'" :question="question" ></feedback-question>
+  </template>
+
+  <template v-if="(ballot.authorPosition === 'P' && ballot.targetPosition === 'C') || ballot.authorPosition === 'T'">
+    <feedback-question v-for="question in data.questions | filterBy 'true' in 'panellist_on_chair' | orderBy 'seq'" :question="question" ></feedback-question>
+  </template>
+
+  <template v-if="ballot.authorPosition === 'P' && ballot.targetPosition === 'P'">
+    <feedback-question v-for="question in data.questions | filterBy 'true' in 'panellist_on_panellist' | orderBy 'seq'" :question="question" ></feedback-question>
+  </template>
+
+  <template v-if="ballot.authorPosition === 'Team'">
+    <feedback-question v-for="question in data.questions | filterBy 'true' in 'team_on_orallist' | orderBy 'seq'" :question="question" ></feedback-question>
   </template>
 
 </script>

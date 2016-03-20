@@ -74,12 +74,6 @@
   </section>
 </template>
 
-<!-- [[ question.chair_on_panellist ]]
-[[ question.panellist_on_chair ]]
-[[ question.panellist_on_panellist ]]
-[[ question.team_on_orallist ]]
- -->
-
 </script>
 
 <!-- Register Component Behaviour -->
