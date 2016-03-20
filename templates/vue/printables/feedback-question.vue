@@ -36,36 +36,20 @@
   </section>
 </template>
 
-<template v-if="question.type === 'is'">
+<template v-if="question.type === 'is' || question.type === 'i' || question.type === 'f'">
   <section class="db-margins-m db-bordered db-flex-row db-flex-item-1">
     <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
       <div class="db-align-vertical-center db-padding-horizontal db-flex-item db-flex-static db-vertical-center-text">
         [[ question.text]]</span>:
       </div>
       <div class="db-flex-item db-flex-row">
-        <div v-for="choice in question.number_options" class="db-align-horizontal-center db-align-vertical-center db-flex-item db-center-text db-vertical-center-text">
+        <div v-for="choice in question.choice_options" class="db-align-horizontal-center db-align-vertical-center db-flex-item db-center-text db-vertical-center-text">
           <span class="db-fill-in">[[ choice ]]</span>
         </div>
       </div>
     </div>
   </section>
 </template>
-
-<!-- <section class="db-margins-m db-bordered db-flex-row db-flex-item-1">
-  <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
-    <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
-      [[ question.text ]] ([[ question.type ]])
-    </div>
-
-    <tempate v-if="question.type === 'f'">
-      float area
-    </template>
-    <tempate v-if="question.type === 'i'">
-      integer area
-    </template>
-    
-  </div>
-</section> -->
 
 <template v-if="question.type === 't'">
   <section class="db-margins-m db-bordered db-flex-row db-flex-item-1">

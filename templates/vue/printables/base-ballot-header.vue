@@ -6,9 +6,9 @@
     <div class="db-align-vertical-end db-flex-item-3">
       <h2>
         [[ data.tournamentName ]] [[ data.kind ]] from [[ ballot.author ]]
-        <span v-if="ballot.position === 'C'">(Chair)</span>
-        <span v-if="ballot.position === 'P'">(Panellist)</span>
-        <span v-if="ballot.position === 'T'">(Trainee)</span>
+        <span v-if="ballot.authorPosition === 'C'">(Chair)</span>
+        <span v-if="ballot.authorPosition === 'P'">(Panellist)</span>
+        <span v-if="ballot.authorPosition === 'T'">(Trainee)</span>
         <span v-if="ballot.target">on [[ ballot.target ]]
           <span v-if="ballot.targetPosition === 'C'">(Chair)</span>
           <span v-if="ballot.targetPosition === 'P'">(Panellist)</span>
