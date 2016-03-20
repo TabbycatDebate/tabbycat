@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+0.8.2
+-----
+- Fixed issue where scores from individual ballots would be deleted when any other panel in the round was edited
+- Fixed issue where page crashes for URLs with "tab" in it but that aren't recognized tab pages
+
+
 0.8.1
 -----
 
