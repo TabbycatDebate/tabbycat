@@ -446,14 +446,6 @@ class EnableMotions(BooleanPreference):
     name = "enable_motions"
     default = True
 
-@tournament_preferences_registry.register
-class PublicPassword(StringPreference):
-    help_text = "The location of the tab room to be printed on ballots"
-    verbose_name = "Tab room location"
-    section = data_entry
-    name = "tab_room_location"
-    default = ''
-
 # ==============================================================================
 public_features = Section('public_features')
 # ==============================================================================

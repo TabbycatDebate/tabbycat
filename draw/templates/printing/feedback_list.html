@@ -1,7 +1,7 @@
 {% extends "printing/printables_list.html" %}
 
 {% block head-title %}
-  Feedback Forms for {{ round.abbreviation }}<small>
+  {{ ballots|length }} Feedback Forms for {{ round.abbreviation }}<small>
 {% endblock %}
 {% block page-title %}Printable Feedback Forms for {{ round.name }}{% endblock %}
 
@@ -34,8 +34,8 @@
     var baseData = {
       // Strings to Fill In
       tournamentName: "{{ tournament }}",
-      returnLocation: "{{ pref.tab_room_location }}",
-      kind: "Feedback Form",
+      returnLocation: "{{ pref.feedback_return_location }}",
+      kind: "Feedback",
       // Formatting
       showTabRoomRow: true,
       // From Django

@@ -7,7 +7,7 @@
 
     <base-scoresheet :data="data" :ballot="ballot" :motions="motions" v-if="data.kind === 'Scoresheet'"></base-scoresheet>
 
-    <base-feedback :data="data" :ballot="ballot" v-if="data.kind === 'Feedback Form'"></base-feedback>
+    <base-feedback :data="data" :ballot="ballot" v-if="data.kind === 'Feedback'"></base-feedback>
 
     <base-ballot-footer v-if="data.showTabRoomRow" :return-location="data.returnLocation"></base-ballot-footer>
 

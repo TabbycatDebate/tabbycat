@@ -543,8 +543,19 @@ def room_sheets_view(request, round, venue_group_id):
 @admin_required
 @round_view
 def draw_print_feedback(request, round):
+    from adjfeedback.models import AdjudicatorFeedbackQuestion
+
     draw = round.get_draw_by_room()
     questions = []
+    team_on_orallist = True if AdjudicatorFeedbackQuestion.objects.filter(
+        tournament=round.tournament, chair_on_panellist=True).exists() else False
+    chair_on_panellist = True if AdjudicatorFeedbackQuestion.objects.filter(
+        tournament=round.tournament, panellist_on_chair=True).exists() else False
+    panellist_on_panellist = True if AdjudicatorFeedbackQuestion.objects.filter(
+        tournament=round.tournament, panellist_on_panellist=True).exists() else False
+    panellist_on_chair = True if AdjudicatorFeedbackQuestion.objects.filter(
+        tournament=round.tournament, team_on_orallist=True).exists() else False
+
     for q in round.tournament.adj_feedback_questions:
         # Somewhat clunkily create a dictionary for the JSON object
         question = {
@@ -568,15 +579,57 @@ def draw_print_feedback(request, round):
 
     ballots = []
     for debate in draw:
-        scoresheetData = { 'room': debate.venue.name }
-        if debate.adjudicators.list[0] is not None:
-            for position, adj in debate.adjudicators:
-                scoresheetData['adjudicator'] = adj.name
-                scoresheetData['adjudicatorInstitution'] = adj.institution.code
-                scoresheetData['position'] = position
+        if team_on_orallist:
+            for team in debate.teams:
+                scoresheetData = { 'room': debate.venue.name }
+                scoresheetData['author'] = team.short_name
+                scoresheetData['authorInstitution'] = team.institution.code
+                scoresheetData['position'] = "Team"
+                scoresheetData['target'] = debate.chair.name
+                scoresheetData['targetPosition'] = "C"
                 ballots.append(scoresheetData)
-        else:
-            ballots.append(scoresheetData)
+
+        scoresheetData = { 'room': debate.venue.name }
+        chair = debate.adjudicators.chair
+
+        if chair_on_panellist:
+            scoresheetData['author'] = chair.name
+            scoresheetData['authorInstitution'] = chair.institution.code
+            scoresheetData['position'] = "C"
+            for adj in debate.adjudicators.panel:
+                print('making for chair %s on panellist %s' % (chair.name, adj.name))
+                test = scoresheetData.copy()
+                test['target'] = adj.name
+                test['targetPosition'] = "P"
+                ballots.append(test)
+
+            for adj in debate.adjudicators.trainees:
+                print('making for chair %s on trainee %s' % (chair.name, adj.name))
+                test = scoresheetData.copy()
+                test['target'] = adj.name
+                test['targetPosition'] = "T"
+                ballots.append(test)
+
+
+        if panellist_on_chair:
+            scoresheetData['target'] = chair.name
+            scoresheetData['targetPosition'] = "C"
+            for adj in debate.adjudicators.panel:
+                print('making for panellist %s on chair %s' % (adj.name, chair.name))
+                test = scoresheetData.copy()
+                test['author'] = adj.name
+                test['authorInstitution'] = adj.institution.code
+                test['position'] = "P"
+                ballots.append(test)
+
+            for adj in debate.adjudicators.trainees:
+                print('making for trainee %s on chair %s' % (adj.name, adj.name))
+                test = scoresheetData.copy()
+                test['author'] = adj.name
+                test['authorInstitution'] = adj.institution.code
+                test['position'] = "T"
+                ballots.append(test)
+
 
     return render(request, "printing/feedback_list.html", dict(
         ballots=ballots, questions=questions))
@@ -596,18 +649,18 @@ def draw_print_scoresheets(request, round):
         scoresheetData['neg'] = debate.neg_team.short_name
         scoresheetData['negEmoji'] = debate.neg_team.emoji
         scoresheetData['negSpeakers'] = [s.name for s in debate.neg_team.speakers]
-        if debate.adjudicators.list[0] is not None:
-            panel = []
-            for position, adj in debate.adjudicators:
-                panel.append({ 'name': adj.name, 'institution': adj.institution.code, 'position': position})
-            for position, adj in debate.adjudicators:
-                scoresheetData['adjudicator'] = adj.name
-                scoresheetData['adjudicatorInstitution'] = adj.institution.code
-                scoresheetData['position'] = position
-                scoresheetData['panel'] = panel
-                ballots.append(scoresheetData)
-        else:
-            ballots.append(scoresheetData)
+        all_adjs = []
+        for position, adj in debate.adjudicators:
+            all_adjs.append({ 'name': adj.name, 'institution': adj.institution.code, 'position': position})
+
+        for adj in all_adjs:
+            if adj['position'] is not "T":
+                test = scoresheetData.copy()
+                test['author'] = adj['name']
+                test['authorInstitution'] = adj['institution']
+                test['position'] = adj['position']
+                test['panel'] = all_adjs
+                ballots.append(test)
 
     motions = Motion.objects.filter(round=round).values('text').order_by('seq')
 

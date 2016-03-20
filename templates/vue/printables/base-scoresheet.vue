@@ -6,7 +6,7 @@
       <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
         Your panellists are
         <span v-for="(index, adj) in ballot.panel">
-          <template v-if="adj.name !== ballot.adjudicator">
+          <template v-if="adj.name !== ballot.author">
             &nbsp;<span v-if="index !== 0">&nbsp;and</span>&nbsp;<strong>[[ adj.name ]]</strong>
             <span v-if="adj.position === 'C'">(Chair, [[ adj.institution]])</span>
             <span v-if="adj.position === 'P'">(Panellist, [[ adj.institution]])</span>

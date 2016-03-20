@@ -1,7 +1,7 @@
 {% extends "printing/printables_list.html" %}
 
 {% block head-title %}
-  Ballots for {{ round.abbreviation }}
+  {{ ballots|length }} Scoresheets for {{ round.abbreviation }}
 {% endblock %}
 {% block page-title %}Printable Scoresheets Forms for {{ round.name }}{% endblock %}
 
@@ -29,7 +29,7 @@
     var baseData = {
       // Strings to Fill In
       tournamentName: "{{ tournament }}",
-      returnLocation: "{{ pref.tab_room_location }}",
+      returnLocation: "{{ pref.score_return_location }}",
       // Rules
       hasReplies: {% if pref.reply_scores_enabled %}true{% else %}false{% endif %},
       speakersCount: {{ pref.substantive_speakers }},
