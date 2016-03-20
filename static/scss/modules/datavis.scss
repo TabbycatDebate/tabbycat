@@ -12,19 +12,24 @@
   //   stroke-width: 2px;
   // }
 
+  .d3-hoverable:hover {
+    cursor: pointer;
+    fill: black;
+  }
+
 }
 
 .d3-tooltip {
-  position: absolute;
-  text-align: center;
-  width: 100px;
-  height: 28px;
-  padding: 2px;
-  font: 12px sans-serif;
-  background: rgb(0,0,0);
-  border: 0px;
-  border-radius: 8px;
-  pointer-events: none;
+  // position: absolute;
+  // text-align: center;
+  // width: 100px;
+  // height: 28px;
+  // padding: 2px;
+  // font: 12px sans-serif;
+  // background: rgb(0,0,0);
+  // border: 0px;
+  // border-radius: 8px;
+  // pointer-events: none;
 }
 
 .d3-feedback-trend {
