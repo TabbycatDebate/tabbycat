@@ -8,7 +8,7 @@ This page describes how to write your own tournament data importer. It is aimed 
 
 The **tournament data importer** is the class that imports data from one or more files (usually CSV files) into the database. A base class ``BaseTournamentDataImporter`` is in `importer/base.py <https://github.com/czlee/tabbycat/blob/develop/importer/base.py>`_. An example of a data importer is in `importer/anorak.py <https://github.com/czlee/tabbycat/blob/develop/importer/anorak.py>`_.
 
-.. todo:: This page is incomplete. If you'd like to write your own tournament data importer, please contact Chuan-Zheng using the contact details in the :ref:`authors` section.
+.. todo:: This page is incomplete. If you're finding this information insufficient, please contact Chuan-Zheng using the contact details in the :ref:`authors` section.
 
 Why write your own?
 ===================
@@ -92,7 +92,7 @@ So in very simplified form, ``self._import(f, model, interpreter)`` does this:
 (There's a lot more to it than that, but that's the basic idea.)
 
 Interpreters
-------------
+============
 The main task of an importer, then, is to provide interpreters so that ``self._import``
 knows how to interpret the data in a CSV file. An interpreter takes a dict and
 returns a dict. For example:
@@ -116,11 +116,11 @@ This interpreter does the following:
   to the importer's constructor.
 - Leaves all other entries in the dict unchanged.
 
-This looks simple enough, but it's actually not enough for a robust interpreter
-function. What if a cell in the CSV file is blank, or what if the file omits
-a non-essential column? (For example, some tournaments might not collect
-information about participant gender, so Tabbycat doesn't require it.) We could
-deal with these scenarios on a case-by-case basis, but that's cumbersome.
+This looks simple enough, but it's very robust. What if a cell in the CSV file
+is blank, or what if the file omits a column? (For example, some tournaments
+might not collect information about participant gender, so Tabbycat doesn't
+require it.) We could deal with these scenarios on a case-by-case basis, but
+that's cumbersome.
 
 Instead, we provide a ``make_interpreter`` method that returns an interpreter
 method which, in turn, takes care of all these details. This way, all you have
@@ -138,11 +138,11 @@ equivalent to the above, but better:
 Notice that we provided a callable in two of these keyword arguments, and a
 (non-callable) Tournament object to the third. ``make_interpreter`` is smart
 enough to tell the difference, and treat them differently. What it does with
-each field depends on (a) whether a value exists for it and (b) what
+each field depends on (a) whether a value exists in the CSV file and (b) what
 transformation function was provided, as summarised in the following table:
 
 +-------------------------+----------------+-----------------------------------+
-|      Column in file     | Transformation |               Action              |
+|    Value in CSV file    | Transformation |               Action              |
 +=========================+================+===================================+
 |                         | provided and   | populate model field              |
 |                         | not callable   | with interpreter value            |
@@ -157,21 +157,26 @@ transformation function was provided, as summarised in the following table:
 |                         |                | to model constructor              |
 +-------------------------+----------------+-----------------------------------+
 
-.. tip:: You might be wondering: What if a field actually *is* mandatory? In this
-    case, the model constructor will throw an error, and ``self._import()`` will
-    catch the error and pass a useful message on to the caller.
+.. tip::
 
-.. tip:: You don't need to include interpreter transformations for things like
-    converting strings to integers, floats or booleans. Django has perfectly
-    good built-in methods that will do this for you. So, for example, adding
+  - If a transformation isn't an existing method, you might find
+    `lambda functions <https://docs.python.org/2/tutorial/controlflow.html#lambda-expressions>`_
+    useful. For example: ``lambda x: Speaker.objects.get(name=x)``.
+
+  - You shouldn't check for mandatory fields. If a mandatory field is omitted,
+    the model constructor will throw an error, and ``self._import()`` will catch
+    the error and pass a useful message on to the caller. On the other hand, if
+    it's an optional field in the model, it should optional in the importer,
+    too. Similarly, interpreters generally shouldn't specify defaults; these
+    should be left to model definitions.
+
+  - You don't need to include interpreter transformations for things like
+    converting strings to integers, floats or booleans. Django converts strings
+    to appropriate values when it instantiates models. So, for example, adding
     ``test_score=float`` to the above interpreter would be redundant.
 
-.. tip:: It's not advisable to use interpreters to insert defaults in place of
-    blank values. Information about model field defaults is meant to be kept in
-    the model definitions, not in importers.
-
 More complicated interpreters
-'''''''''''''''''''''''''''''
+-----------------------------
 
 If you have a column in the CSV file that shouldn't be passed to the model
 constructor, you can tell the interpreter to remove it by using the special
@@ -193,3 +198,55 @@ the work).
 On the other hand, if you don't need to do any transformations involving some
 sort of object or constant lookup, then you can just omit the ``interpreter``
 argument of ``self._lookup()``, and it'll just leave the fields as-is.
+
+Lookup functions
+================
+In the above example, we used a function ``self.lookup_gender`` to convert from
+the text in the CSV file to a ``Person.GENDER_*`` constant. To make this easier,
+the importer provides a convenience function to define such lookup functions.
+Let's look at the relevant lines again:
+
+.. code:: python
+
+    lookup_gender = make_lookup("gender", {
+        ("male", "m"): Person.GENDER_MALE,
+        ("female", "f"): Person.GENDER_FEMALE,
+        ("other", "o"): Person.GENDER_OTHER,
+    })
+
+This should be a member of your subclass, in our case,
+``ExampleTournamentDataImporter``. It generates a function that looks something
+like:
+
+.. code:: python
+
+    @staticmethod
+    def lookup_gender(val):
+        if val in ("male", "m"):
+            return Person.GENDER_MALE
+        elif val in ("female", "m"):
+            return Person.GENDER_FEMALE
+        elif val in ("other", "o"):
+            return Person.GENDER_OTHER
+        else:
+            raise ValueError("Unrecognised value for gender: %s" % val)
+
+The ``make_lookup`` function takes two arguments. The first is a text
+description of what it's looking up; this is used for the error message if the
+value in the CSV file isn't recognised. The second is a dict mapping tuples
+of valid strings to constants.
+
+Debugging output
+================
+
+The ``BaseTournamentDataImporter`` constructor accepts a ``loglevel`` argument:
+
+.. code:: python
+
+  importer = MyTournamentDataImporter(tournament, loglevel=logging.DEBUG)
+
+If ``loglevel`` is set to ``logging.DEBUG``, the importer will print information
+about every instance it creates.
+
+You can also pass in a logger for it to use (instead of the default one) with
+the ``logger`` argument.
