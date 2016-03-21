@@ -1,3 +1,4 @@
+from django.template import Template, Context
 import json
 import datetime
 
@@ -235,20 +236,38 @@ def new_ballotset(request, t, debate_id):
 
 @login_required
 @tournament_view
-def results_status_update(request, t):
-
-    # Draw Status
+def ballots_status(request, t):
+    # Draw Status for Tournament Homepage
     draw = t.current_round.get_draw()
-
     stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
     stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
     stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
-
     total = stats_none + stats_draft + stats_confirmed
-
     stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
 
     return HttpResponse(json.dumps(stats), content_type="text/json")
+
+
+@login_required
+@tournament_view
+def latest_results(request, t):
+    # Latest Results for Tournament Homepage
+    results_objects = []
+    ballots = BallotSubmission.objects.filter(confirmed=True).order_by('-timestamp')[:20].select_related('debate')
+
+    timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
+    for b in ballots:
+        test = b.ballot_set._get_margin(#need to put in the winning debate team here)
+        print(test)
+        results_objects.append({
+            'user': b.ballot_set.winner.short_name,
+            'type': " won vs by ",
+            'param': test,
+            'timestamp': timestamp_template.render(Context({'t': b.timestamp})),
+        })
+
+    return HttpResponse(json.dumps(results_objects), content_type="text/json")
+
 
 
 @admin_required
