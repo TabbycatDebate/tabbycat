@@ -55,7 +55,7 @@ class BaseRankAnnotator:
 
         `standings` is a `TeamStandings` object.
         """
-        raise NotImplementedError("BaseMetricAnnotator subclasses must implement annotate()")
+        raise NotImplementedError("BaseRankAnnotator subclasses must implement annotate_teams()")
 
 
 class BasicRankAnnotator(BaseRankAnnotator):
@@ -77,7 +77,21 @@ class BasicRankAnnotator(BaseRankAnnotator):
             rank += len(group)
 
 
-class SubrankAnnotator(BaseRankAnnotator):
+class BaseRankWithinGroupAnnotator(BaseRankAnnotator):
+    """Base class for ranking annotators that rank within groups."""
+
+    def annotate_teams(self, standings):
+        by_group = sorted(standings, key=self.group_key)
+        for key, group in groupby(by_group, key=self.group_key):
+            rank_in_group = 1
+            for _, subgroup in groupby(group, self.rank_key):
+                subgroup = list(subgroup)
+                for tsi in subgroup:
+                    tsi.add_ranking(self.key, (rank_in_group, len(subgroup) > 1))
+                rank_in_group += len(subgroup)
+
+
+class SubrankAnnotator(BaseRankWithinGroupAnnotator):
 
     key = "subrank"
     name = "subrank"
@@ -85,42 +99,35 @@ class SubrankAnnotator(BaseRankAnnotator):
 
     def __init__(self, metrics):
         self.group_key = metricgetter(metrics[0])
-        self.subrank_key = metricgetter(*metrics[1:])
-
-    def annotate_teams(self, standings):
-        for key, group in groupby(standings, key=self.group_key):
-            subrank = 1
-            for subkey, subgroup in groupby(group, self.subrank_key):
-                subgroup = list(subgroup)
-                for tsi in subgroup:
-                    tsi.add_ranking("subrank", (subrank, len(subgroup) > 1))
-                subrank += len(subgroup)
+        self.rank_key = metricgetter(*metrics[1:])
 
 
-class DivisionRankAnnotator(BaseRankAnnotator):
+class DivisionRankAnnotator(BaseRankWithinGroupAnnotator):
 
     key = "division_rank"
     name = "division rank"
     abbr = "DivR"
 
     def __init__(self, metrics):
+        self.group_key = lambda x: x.team.division.id
         self.rank_key = metricgetter(*metrics)
 
-    def annotate_teams(self, standings):
-        division_key = lambda x: x.team.division.name
-        by_division = sorted(standings, key=division_key)
-        for division, division_teams in groupby(by_division, key=division_key):
-            rank = 1
-            for key, group in groupby(division_teams, self.rank_key):
-                group = list(group)
-                for tsi in group:
-                    tsi.add_ranking("division_rank", (rank, len(group) > 1))
-                rank += len(group)
+
+class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
+
+    key = "institution"
+    name = "rank from institution"
+    abbr = "InstR"
+
+    def __init__(self, metrics):
+        self.group_key = lambda x: x.team.institution.id
+        self.rank_key = metricgetter(*metrics)
 
 
 registry = {
-    "rank"     : BasicRankAnnotator,
-    "subrank"  : SubrankAnnotator,
-    "division" : DivisionRankAnnotator,
+    "rank"       : BasicRankAnnotator,
+    "subrank"    : SubrankAnnotator,
+    "division"   : DivisionRankAnnotator,
+    "institution": RankFromInstitutionAnnotator,
 }
 

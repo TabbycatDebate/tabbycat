@@ -78,6 +78,9 @@ class TeamStandingInfo:
                 return [self.metrics[m] for m in metrics]
         self.metric_lists = TeamStandingInfoMetricLists()
 
+    def __repr__(self):
+        return "<TeamStandingInfo for {}>".format(self._team.short_name if self._team else self.team_id)
+
     @property
     def team(self):
         if not self._team:
@@ -101,6 +104,10 @@ class TeamStandingInfo:
     def iterrankings(self):
         for key in self.standings.ranking_keys:
             yield self.rankings[key]
+
+    def get_ranking(self, key):
+        """Returns the numeric rank (without equality information)."""
+        return self.rankings[key][0]
 
 class TeamStandings:
     """Presents all information about the team standings requested. Returned

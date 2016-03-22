@@ -22,6 +22,16 @@ class BreakCategory(models.Model):
         help_text=
         "If a team breaks in multiple categories, lower priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority")
 
+    BREAK_QUALIFICATION_RULE_STANDARD      = 's'
+    BREAK_QUALIFICATION_RULE_AIDA_PRE_2015 = 'a'
+    BREAK_QUALIFICATION_RULE_AIDA_2016     = 'b'
+    BREAK_QUALIFICATION_RULE_CHOICES = (
+        (BREAK_QUALIFICATION_RULE_STANDARD, 'Standard'),
+        (BREAK_QUALIFICATION_RULE_AIDA_PRE_2015, 'AIDA pre-2015'),
+        (BREAK_QUALIFICATION_RULE_AIDA_2016, 'AIDA 2016'),
+    )
+    rule = models.CharField(max_length=1, choices=BREAK_QUALIFICATION_RULE_CHOICES, default=BREAK_QUALIFICATION_RULE_STANDARD)
+
     # Does nothing now, reintroduce later
     # STATUS_NONE      = 'N'
     # STATUS_DRAFT     = 'D'
@@ -46,6 +56,11 @@ class BreakCategory(models.Model):
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
         verbose_name_plural = "break categories"
+
+    def clean(self):
+        if self.rule in [self.BREAK_QUALIFICATION_RULE_AIDA_2016, self.BREAK_QUALIFICATION_RULE_AIDA_PRE_2015] \
+                and not self.institution_cap:
+            raise ValidationError({"institution_cap": "There must be a nonzero institution cap if an AIDA break qualification rule is used"})
 
 
 class BreakingTeam(models.Model):

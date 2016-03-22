@@ -1,6 +1,8 @@
 """Module to compute the teams breaking in a BreakCategory."""
 
 from collections import Counter
+from itertools import groupby
+
 from standings.teams import TeamStandingsGenerator
 
 from .models import BreakingTeam
@@ -112,6 +114,125 @@ def _eligible_team_set(category):
         return category.team_set.all()
 
 def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_priority=set()):
+    if category.rule == category.BREAK_QUALIFICATION_RULE_AIDA_2016:
+        return _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_priority)
+    else:
+        return _generate_breaking_teams_pre_2015(category, eligible_teams, teams_broken_higher_priority)
+
+def _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_priority=set()):
+    """Generates a list of breaking teams for the given category and returns
+    a list of teams in the (actual) break, i.e. excluding teams that are
+    ineligible, capped, broke in a different break, and so on."""
+
+    break_size = category.break_size
+    institution_cap = category.institution_cap
+    assert category.rule == category.BREAK_QUALIFICATION_RULE_AIDA_2016
+
+    # Steps as laid out in proposed AIDA constitutional amendment
+    # i. Generate standings
+    metrics = category.tournament.pref('team_standings_precedence')
+    assert "wins" in metrics, "Teams must be ranked by number of wins to use AIDA 2016 rule"
+    generator = TeamStandingsGenerator(metrics, ('rank', 'institution'))
+    generated = generator.generate(eligible_teams)
+    standings = list(generated) # list of TeamStandingInfo objects
+
+    # Discard ineligible teams
+    existing_remark = []
+    for tsi in standings:
+        try:
+            if BreakingTeam.objects.get(break_category=category, team=tsi.team).remark:
+                existing_remark.append(tsi)
+        except BreakingTeam.DoesNotExist:
+            pass
+    ineligible = [tsi for tsi in standings if not tsi.team.break_categories.filter(pk=category.pk).exists()]
+    different_break = [tsi for tsi in standings if tsi.team in teams_broken_higher_priority]
+    eligible = [tsi for tsi in standings if tsi not in existing_remark + ineligible + different_break]
+
+    # ii. Discard teams with fewer wins than the nth ranked team
+    min_wins = eligible[break_size-1].metrics["wins"]
+    eligible = [tsi for tsi in eligible if tsi.metrics["wins"] >= min_wins]
+
+    # iii. Set aside teams that are capped out
+    capped = []
+    for tsi in eligible:
+        if tsi.get_ranking("institution") > 3:
+            capped.append(tsi)
+        elif tsi.get_ranking("institution") > 1 and tsi.get_ranking("rank") > break_size:
+            capped.append(tsi)
+
+    # iv. Reinsert capped teams if there are too few breaking
+    # `reinsert_correction` is how many teams "too many" we had to reinsert
+    #   (if any), to be separated manually by lots
+    reinsert = []
+    reinsert_correction = 0
+    if len(eligible) - len(capped) < break_size:
+        number_to_reinsert = break_size - len(eligible) + len(capped)
+        for _, group in groupby(eligible, key=lambda tsi: tuple(tsi.itermetrics())):
+            group = list(group)
+            reinsert.extend(group)
+            if len(reinsert) > number_to_reinsert:
+                reinsert_correction = len(reinsert) - number_to_reinsert
+            if len(reinsert) >= number_to_reinsert:
+                break
+
+    filtered = [tsi for tsi in eligible if tsi not in capped or tsi in reinsert]
+    assert len(filtered) >= break_size
+
+    # v. Calculate break ranks
+    break_seq = 0
+    break_rank = 0
+    prev_rank = None
+    prev_break_rank = None
+    breaking_teams = []
+    breaking_teams_to_create = []
+    for tsi in standings:
+
+        team = tsi.team
+        try:
+            bt = BreakingTeam.objects.get(break_category=category, team=team)
+            existing = True
+        except BreakingTeam.DoesNotExist:
+            bt = BreakingTeam(break_category=category, team=team)
+            existing = False # don't want to save (so can't use get_or_create())
+
+        bt.rank = tsi.get_ranking("rank")
+        if bt.rank != prev_rank and len(breaking_teams) >= break_size:
+            break # if we have enough teams, we're done
+        prev_rank = bt.rank
+
+        if tsi in filtered:
+            break_seq += 1
+            if len(reinsert) > 0 and tsi == reinsert[-1]:
+                break_rank -= reinsert_correction
+            if bt.rank != prev_break_rank:
+                break_rank = break_seq
+            prev_break_rank = bt.rank
+            bt.break_rank = break_rank
+            breaking_teams.append(team)
+
+        elif tsi in existing_remark:
+            bt.break_rank = None # scrub break rank
+        elif tsi in capped:
+            bt.remark = bt.REMARK_CAPPED
+        elif tsi in different_break:
+            bt.remark = bt.REMARK_DIFFERENT_BREAK
+        elif tsi in ineligible:
+            bt.remark = bt.REMARK_INELIGIBLE
+
+        bt.full_clean()
+        if existing:
+            bt.save()
+        else:
+            breaking_teams_to_create.append(bt)
+
+    BreakingTeam.objects.bulk_create(breaking_teams_to_create)
+    BreakingTeam.objects.filter(break_category=category, break_rank__isnull=False).exclude(
+        team_id__in=[t.id for t in breaking_teams]).delete()
+
+    return breaking_teams
+
+
+def _generate_breaking_teams_pre_2015(category, eligible_teams, teams_broken_higher_priority=set()):
     """Generates a list of breaking teams for the given category and returns
     a list of teams in the (actual) break, i.e. excluding teams that are
     ineligible, capped, broke in a different break, and so on."""
@@ -121,7 +242,9 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
     standings = generator.generate(eligible_teams)
 
     break_size = category.break_size
-    institution_cap = category.institution_cap or None
+    institution_cap = category.institution_cap if category.rule == category.BREAK_QUALIFICATION_RULE_AIDA_PRE_2015 \
+            else None
+    assert category.rule != category.BREAK_QUALIFICATION_RULE_AIDA_2016
 
     prev_rank_value = tuple([None] * len(standings.metric_keys))
     prev_break_rank_value = tuple([None] * len(standings.metric_keys))
