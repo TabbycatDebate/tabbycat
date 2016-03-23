@@ -237,13 +237,36 @@ def new_ballotset(request, t, debate_id):
 @login_required
 @tournament_view
 def ballots_status(request, t):
+    from datetime import datetime, timedelta
     # Draw Status for Tournament Homepage
-    draw = t.current_round.get_draw()
-    stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
-    stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
-    stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
-    total = stats_none + stats_draft + stats_confirmed
-    stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
+    stats = []
+
+    def minutes_ago(time):
+        time_difference = datetime.now() - time
+        minutes_ago = time_difference.days * 1440 + time_difference.seconds / 60
+        return int(minutes_ago)
+
+    # Filter for ballots submitted in the last ten minutes? Or maybe divide them up after the fact?
+    ballots = list(BallotSubmission.objects.filter(debate__round=t.current_round).order_by('-timestamp'))
+    start_entry = minutes_ago(ballots[0].timestamp)
+    print('start_entry', start_entry)
+    end_entry = minutes_ago(ballots[-1].timestamp)
+    print('end_entry', end_entry)
+    print('delta', end_entry - start_entry)
+    chunks = int((end_entry - start_entry) / 10)
+    print('chunks', chunks)
+
+    for i in range(start_entry, end_entry, chunks):
+        drafts = { 'time': i, 'type': 'Draft', 'count': 0 }
+        confirmeds = { 'time': i, 'type': 'Confirmed', 'count': 0 }
+        for b in ballots:
+            if minutes_ago(b.timestamp) <= i:
+                if b.debate.result_status == Debate.STATUS_DRAFT:
+                    drafts['count'] += 1
+                elif b.debate.result_status == Debate.STATUS_CONFIRMED:
+                    confirmeds['count'] += 1
+
+        stats.extend([drafts, confirmeds])
 
     return HttpResponse(json.dumps(stats), content_type="text/json")
 
@@ -261,8 +284,8 @@ def latest_results(request, t):
             winner = b.ballot_set.debate.aff_team.short_name + " (Aff)"
             looser = b.ballot_set.debate.neg_team.short_name + " (Neg)"
         else:
-            winner = b.ballot_set.debate.aff_team.short_name + " (Aff)"
-            looser = b.ballot_set.debate.neg_team.short_name + " (Neg)"
+            winner = b.ballot_set.debate.neg_team.short_name + " (Neg)"
+            looser = b.ballot_set.debate.aff_team.short_name + " (Aff)"
 
         results_objects.append({
             'user': winner + " won vs " + looser,
