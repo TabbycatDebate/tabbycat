@@ -253,16 +253,19 @@ def ballots_status(request, t):
 def latest_results(request, t):
     # Latest Results for Tournament Homepage
     results_objects = []
-    ballots = BallotSubmission.objects.filter(confirmed=True).order_by('-timestamp')[:20].select_related('debate')
-
+    ballots = BallotSubmission.objects.filter(confirmed=True).order_by(
+        '-timestamp')[:20].select_related('debate')
     timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
     for b in ballots:
-        test = b.ballot_set._get_margin(#need to put in the winning debate team here)
-        print(test)
+        if b.ballot_set.winner == b.ballot_set.debate.aff_team:
+            winner = b.ballot_set.debate.aff_team.short_name + " (Aff)"
+            looser = b.ballot_set.debate.neg_team.short_name + " (Neg)"
+        else:
+            winner = b.ballot_set.debate.aff_team.short_name + " (Aff)"
+            looser = b.ballot_set.debate.neg_team.short_name + " (Neg)"
+
         results_objects.append({
-            'user': b.ballot_set.winner.short_name,
-            'type': " won vs by ",
-            'param': test,
+            'user': winner + " won vs " + looser,
             'timestamp': timestamp_template.render(Context({'t': b.timestamp})),
         })
 
