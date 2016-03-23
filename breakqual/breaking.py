@@ -180,7 +180,7 @@ def _generate_breaking_teams_2016(category, teams, teams_broken_higher_priority=
     reinsert_correction = 0
     if len(eligible) - len(capped) < break_size:
         number_to_reinsert = break_size - len(eligible) + len(capped)
-        for _, group in groupby(eligible, key=lambda tsi: tuple(tsi.itermetrics())):
+        for _, group in groupby(capped, key=lambda tsi: tuple(tsi.itermetrics())):
             group = list(group)
             reinsert.extend(group)
             if len(reinsert) >= number_to_reinsert:
