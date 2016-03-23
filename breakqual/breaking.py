@@ -2,6 +2,8 @@
 
 from collections import Counter
 from itertools import groupby
+import logging
+logger = logging.getLogger(__name__)
 
 from standings.teams import TeamStandingsGenerator
 
@@ -148,6 +150,10 @@ def _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_
     different_break = [tsi for tsi in standings if tsi.team in teams_broken_higher_priority]
     eligible = [tsi for tsi in standings if tsi not in existing_remark + ineligible + different_break]
 
+    logger.info("Has existing remark: %s", existing_remark)
+    logger.info("Ineligible to break: %s", ineligible)
+    logger.info("In different break: %s", different_break)
+
     # ii. Discard teams with fewer wins than the nth ranked team
     # `effective_break_size` is the break size including ineligible teams
     if len(eligible) >= break_size:
@@ -156,6 +162,8 @@ def _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_
         effective_break_size = eligible[break_size-1].get_ranking("rank")
     else:
         effective_break_size = len(eligible)
+
+    logger.info("Effective break size: %s", effective_break_size)
 
     # iii. Set aside teams that are capped out
     capped = []
@@ -176,11 +184,15 @@ def _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_
             group = list(group)
             reinsert.extend(group)
             if len(reinsert) > number_to_reinsert:
-                reinsert_correction = len(reinsert) - number_to_reinsert # how many teams too many we reinserted
+                reinsert_correction = len(reinsert) - number_to_reinsert
             if len(reinsert) >= number_to_reinsert:
                 break
 
+    logger.info("Reinsert correction: %s", reinsert_correction)
+
     filtered = [tsi for tsi in eligible if tsi not in capped or tsi in reinsert]
+
+    logger.info("Filtered list: %s", filtered)
 
     # v. Calculate break ranks
     break_seq = 0
@@ -222,6 +234,8 @@ def _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_
             bt.remark = bt.REMARK_DIFFERENT_BREAK
         elif tsi in ineligible:
             bt.remark = bt.REMARK_INELIGIBLE
+
+        logger.info("Breaking in %s (%s) - %s", bt.break_rank, bt.get_remark_display(), bt.team.short_name)
 
         bt.full_clean()
         if existing:

@@ -1,12 +1,11 @@
 from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
-from utils.misc import get_ip_address
+from utils.views import *
+from utils.misc import get_ip_address, redirect_tournament
 
 from .models import BreakCategory, BreakingTeam
 from . import forms
 from . import breaking
-
-from utils.views import *
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
