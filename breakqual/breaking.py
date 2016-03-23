@@ -83,8 +83,8 @@ def update_all_breaking_teams(tournament):
             teams_broken_cur_priority = set()
             cur_priority = category.priority
 
-        eligible_teams = _eligible_team_set(category)
-        this_break = _generate_breaking_teams(category, eligible_teams, teams_broken_higher_priority)
+        relevant_teams = _relevant_team_set(category)
+        this_break = _generate_breaking_teams(category, relevant_teams, teams_broken_higher_priority)
         teams_broken_cur_priority.update(this_break)
 
 def update_breaking_teams(category):
@@ -106,22 +106,22 @@ def update_breaking_teams(category):
     """
     higher_breakingteams = BreakingTeam.objects.filter(break_category__priority__lt=category.priority, break_rank__isnull=False).select_related('team')
     higher_teams = {bt.team for bt in higher_breakingteams}
-    eligible_teams = _eligible_team_set(category)
-    _generate_breaking_teams(category, eligible_teams, higher_teams)
+    relevant_teams = _relevant_team_set(category)
+    _generate_breaking_teams(category, relevant_teams, higher_teams)
 
-def _eligible_team_set(category):
+def _relevant_team_set(category):
     if category.is_general:
         return category.tournament.team_set.all() # all in tournament
     else:
         return category.team_set.all()
 
-def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_priority=set()):
+def _generate_breaking_teams(category, relevant_teams, teams_broken_higher_priority=set()):
     if category.rule == category.BREAK_QUALIFICATION_RULE_AIDA_2016:
-        return _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_priority)
+        return _generate_breaking_teams_2016(category, relevant_teams, teams_broken_higher_priority)
     else:
-        return _generate_breaking_teams_pre_2015(category, eligible_teams, teams_broken_higher_priority)
+        return _generate_breaking_teams_pre_2015(category, relevant_teams, teams_broken_higher_priority)
 
-def _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_priority=set()):
+def _generate_breaking_teams_2016(category, teams, teams_broken_higher_priority=set()):
     """Generates a list of breaking teams for the given category and returns
     a list of teams in the (actual) break, i.e. excluding teams that are
     ineligible, capped, broke in a different break, and so on."""
@@ -135,7 +135,7 @@ def _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_
     metrics = category.tournament.pref('team_standings_precedence')
     assert "wins" in metrics, "Teams must be ranked by number of wins to use AIDA 2016 rule"
     generator = TeamStandingsGenerator(metrics, ('rank', 'institution'))
-    generated = generator.generate(eligible_teams)
+    generated = generator.generate(teams)
     standings = list(generated) # list of TeamStandingInfo objects
 
     # Discard ineligible teams
@@ -250,14 +250,14 @@ def _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_
     return breaking_teams
 
 
-def _generate_breaking_teams_pre_2015(category, eligible_teams, teams_broken_higher_priority=set()):
+def _generate_breaking_teams_pre_2015(category, teams, teams_broken_higher_priority=set()):
     """Generates a list of breaking teams for the given category and returns
     a list of teams in the (actual) break, i.e. excluding teams that are
     ineligible, capped, broke in a different break, and so on."""
 
     metrics = category.tournament.pref('team_standings_precedence')
     generator = TeamStandingsGenerator(metrics, ('rank',))
-    standings = generator.generate(eligible_teams)
+    standings = generator.generate(teams)
 
     break_size = category.break_size
     institution_cap = category.institution_cap if category.rule == category.BREAK_QUALIFICATION_RULE_AIDA_PRE_2015 \
