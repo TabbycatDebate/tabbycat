@@ -149,15 +149,20 @@ def _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_
     eligible = [tsi for tsi in standings if tsi not in existing_remark + ineligible + different_break]
 
     # ii. Discard teams with fewer wins than the nth ranked team
-    min_wins = eligible[break_size-1].metrics["wins"]
-    eligible = [tsi for tsi in eligible if tsi.metrics["wins"] >= min_wins]
+    # `effective_break_size` is the break size including ineligible teams
+    if len(eligible) >= break_size:
+        min_wins = eligible[break_size-1].metrics["wins"]
+        eligible = [tsi for tsi in eligible if tsi.metrics["wins"] >= min_wins]
+        effective_break_size = eligible[break_size-1].get_ranking("rank")
+    else:
+        effective_break_size = len(eligible)
 
     # iii. Set aside teams that are capped out
     capped = []
     for tsi in eligible:
         if tsi.get_ranking("institution") > 3:
             capped.append(tsi)
-        elif tsi.get_ranking("institution") > 1 and tsi.get_ranking("rank") > break_size:
+        elif tsi.get_ranking("institution") > 1 and tsi.get_ranking("rank") > effective_break_size:
             capped.append(tsi)
 
     # iv. Reinsert capped teams if there are too few breaking
@@ -171,12 +176,11 @@ def _generate_breaking_teams_2016(category, eligible_teams, teams_broken_higher_
             group = list(group)
             reinsert.extend(group)
             if len(reinsert) > number_to_reinsert:
-                reinsert_correction = len(reinsert) - number_to_reinsert
+                reinsert_correction = len(reinsert) - number_to_reinsert # how many teams too many we reinserted
             if len(reinsert) >= number_to_reinsert:
                 break
 
     filtered = [tsi for tsi in eligible if tsi not in capped or tsi in reinsert]
-    assert len(filtered) >= break_size
 
     # v. Calculate break ranks
     break_seq = 0
