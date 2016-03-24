@@ -237,34 +237,29 @@ def new_ballotset(request, t, debate_id):
 @login_required
 @tournament_view
 def ballots_status(request, t):
-    from datetime import datetime, timedelta
     # Draw Status for Tournament Homepage
-    stats = []
+    intervals = 20
 
     def minutes_ago(time):
-        time_difference = datetime.now() - time
+        time_difference = datetime.datetime.now() - time
         minutes_ago = time_difference.days * 1440 + time_difference.seconds / 60
         return int(minutes_ago)
 
-    # Filter for ballots submitted in the last ten minutes? Or maybe divide them up after the fact?
-    ballots = list(BallotSubmission.objects.filter(debate__round=t.current_round).order_by('-timestamp'))
+    ballots = list(BallotSubmission.objects.filter(debate__round=t.current_round).order_by('timestamp'))
     start_entry = minutes_ago(ballots[0].timestamp)
-    print('start_entry', start_entry)
     end_entry = minutes_ago(ballots[-1].timestamp)
-    print('end_entry', end_entry)
-    print('delta', end_entry - start_entry)
-    chunks = int((end_entry - start_entry) / 10)
-    print('chunks', chunks)
+    chunks = int((end_entry - start_entry) / intervals)
 
-    for i in range(start_entry, end_entry, chunks):
-        stat = { 'time': i, 'drafts': 0, 'confirmeds': 0 }
+    stats = []
+    for i in range(intervals):
+        time_period = (i * chunks) + start_entry
+        stat = [time_period, 0, 0, 0]
         for b in ballots:
-            if minutes_ago(b.timestamp) <= i:
+            if minutes_ago(b.timestamp) >= time_period:
                 if b.debate.result_status == Debate.STATUS_DRAFT:
-                    stat['drafts'] += 1
+                    stat[2] += 1
                 elif b.debate.result_status == Debate.STATUS_CONFIRMED:
-                    stat['confirmeds'] += 1
-
+                    stat[3] += 1
         stats.append(stat)
 
     return HttpResponse(json.dumps(stats), content_type="text/json")
@@ -276,7 +271,7 @@ def latest_results(request, t):
     # Latest Results for Tournament Homepage
     results_objects = []
     ballots = BallotSubmission.objects.filter(confirmed=True).order_by(
-        '-timestamp')[:20].select_related('debate')
+        '-timestamp')[:15].select_related('debate')
     timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
     for b in ballots:
         if b.ballot_set.winner == b.ballot_set.debate.aff_team:

@@ -1,16 +1,15 @@
 .d3-graph {
+
+  .axis {
+    font-size: 11px;
+  }
   // General Styles
-  // .axis path,
-  // .axis line {
-  //   fill: none;
-  //   stroke: black;
-  // }
-  //
-  // .line {
-  //   fill: none;
-  //   stroke: blue;
-  //   stroke-width: 2px;
-  // }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #ccc;
+	  shape-rendering: crispEdges;
+  }
 
   .d3-hoverable:hover {
     cursor: pointer;

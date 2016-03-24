@@ -10,41 +10,32 @@
 
   function InitChart(vueContext){
 
-    // Create canvas
+    // Responsive width
+    vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10)
+    console.log(vueContext.width);
+
+    x = d3.scale.ordinal().rangeRoundBands([0, vueContext.width])
+    y = d3.scale.linear().range([vueContext.height, 0])
+    z = d3.scale.ordinal().range(["blue", "green", "gray"])
+
+    // Create Canvas and Scales
     var svg = d3.select("#ballotsStatusGraph").append("svg:svg")
-      .attr("class", "chart")
       .attr("width", vueContext.width)
-      .attr("height", vueContext.height)
-      .append("svg:g")
-      .attr("transform", "translate(10,470)");
+      .attr("height", vueContext.height + vueContext.padding + vueContext.padding)
+      .append("g")
+      .attr("transform", "translate(0," + vueContext.padding + ")");
 
-    x = d3.scale.ordinal().rangeRoundBands([0, vueContext.width - vueContext.padding])
-    y = d3.scale.linear().range([0, vueContext.height - vueContext.padding])
-    z = d3.scale.ordinal().range(["red", "orange", "green"])
-
-    console.log("RAW MATRIX---------------------------");
-    // 4 columns: ID,c1,c2,c3
-    var matrix = [
-      [ 5475,  10, 1, 0],
-      [ 5477, 5, 5, 1],
-      [ 5479, 4, 6, 1],
-      [ 5480,   0,  10, 1],
-      [ 5481,   0,  5, 6],
-      [ 5482,   0,  0, 11]
-    ];
-    console.log(matrix)
-
-    console.log("REMAP---------------------------");
-    var remapped =["c1","c2","c3"].map(function(dat,i){
-      return matrix.map(function(d,ii){
-          return {x: ii, y: d[i+1] };
+    // Data Transforms and Domains
+    var matrix = vueContext.graphData; // 4 columns: time_ID,none,draft,confirmed
+    // console.log(matrix)
+    var remapped =["c1","c2","c3"].map(function(dat, i){
+      return matrix.map(function(d, ii){
+          return {x: d[0], y: d[i+1] };
       })
     });
-    console.log(remapped)
-
-    console.log("LAYOUT---------------------------");
+    // console.log(remapped)
     var stacked = d3.layout.stack()(remapped)
-    console.log(stacked)
+    // console.log(stacked)
 
     x.domain(stacked[0].map(function(d) { return d.x; }));
     y.domain([0, d3.max(stacked[stacked.length - 1], function(d) { return d.y0 + d.y; })]);
@@ -56,38 +47,56 @@
 
     // Add a group for each column.
     var valgroup = svg.selectAll("g.valgroup")
-    .data(stacked)
-    .enter().append("svg:g")
-    .attr("class", "valgroup")
-    .style("fill", function(d, i) { return z(i); })
-    .style("stroke", function(d, i) { return d3.rgb(z(i)).darker(); });
+      .data(stacked)
+      .enter().append("svg:g")
+      .attr("class", "valgroup")
+      .style("fill", function(d, i) { return z(i); })
+      .style("stroke", "rgba(255,255,255,0.25)"); // Vertical Grid lines
 
     // Add a rect for each date.
     var rect = valgroup.selectAll("rect")
-    .data(function(d){return d;})
-    .enter().append("svg:rect")
-    .attr("x", function(d) { return x(d.x); })
-    .attr("y", function(d) { return -y(d.y0) - y(d.y); })
-    .attr("height", function(d) { return y(d.y); })
-    .attr("width", x.rangeBand());
+      .data(function(d){return d;})
+      .enter().append("svg:rect")
+      .attr("x", function(d) {
+        return x(d.x); })
+      .attr("y", function(d) {
+        return y(d.y0) - y(d.y); })
+      .attr("height", function(d) { return y(d.y); })
+      .attr("width", x.rangeBand());
 
     // Add Scales
     var xAxis = d3.svg.axis()
       .scale(x)
       .orient("bottom")
-      .ticks(4);
+      .tickFormat(function(d) { return "-" + d + "m"; }) // Format result
+    var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left")
 
+    svg.append("g").attr("class", "x axis")
+      .attr("transform", "translate(0," + vueContext.height + ")")
+      .call(xAxis)
 
-    svg.append("g")
-      .attr("class", "x axis")
-      .call(xAxis);
-
-    // var yAxis = d3.svg.axis()
-    //   .scale(x)
-    //   .orient("left");
-    // svg.append("g")
-    //   .attr("class", "y axis")
+    // disable y axis for now
+    // svg.append("g").attr("class", "y axis")
     //   .call(yAxis);
+
+    // Horizontal grid
+    // svg.selectAll("line.horizontalGrid").data(y.ticks()).enter()
+    // .append("line")
+    //     .attr({
+    //         "class":"horizontalGrid",
+    //         "x1" : 0,
+    //         "x2" : vueContext.width,
+    //         "y1" : function(d){
+    //           return y(d);},
+    //         "y2" : function(d){
+    //           return y(d);},
+    //         "fill" : "none",
+    //         "shape-rendering" : "crispEdges",
+    //         "stroke" : "white",
+    //         "stroke-width" : "1px"
+    //     });
 
   };
 
@@ -96,12 +105,18 @@
     template: '#ballots-graph',
     props: {
       pollUrl: String,
-      width: { type: Number, default: 900 },
-      height: { type: Number, default: 500 },
-      padding: { type: Number, default: 35 },
+      height: { type: Number, default: 200 },
+      padding: { type: Number, default: 30 },
     },
-    ready: function () {
-      InitChart(this); // Only init if we have some info
+    ready: function() {
+      var xhr = new XMLHttpRequest()
+      var self = this
+      xhr.open('GET', this.pollUrl)
+      xhr.onload = function () {
+        self.graphData = JSON.parse(xhr.responseText)
+        InitChart(self); // Only init if we have some info
+      }
+      xhr.send()
     },
   })
 </script>

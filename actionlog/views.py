@@ -10,7 +10,7 @@ import datetime
 def latest_actions(request, t):
     action_objects = []
     actions = ActionLogEntry.objects.filter(tournament=t).order_by(
-        '-timestamp')[:20].select_related('user', 'debate', 'ballot_submission')
+        '-timestamp')[:15].select_related('user', 'debate', 'ballot_submission')
 
     timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
     for a in actions:
