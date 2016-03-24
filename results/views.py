@@ -257,16 +257,15 @@ def ballots_status(request, t):
     print('chunks', chunks)
 
     for i in range(start_entry, end_entry, chunks):
-        drafts = { 'time': i, 'type': 'Draft', 'count': 0 }
-        confirmeds = { 'time': i, 'type': 'Confirmed', 'count': 0 }
+        stat = { 'time': i, 'drafts': 0, 'confirmeds': 0 }
         for b in ballots:
             if minutes_ago(b.timestamp) <= i:
                 if b.debate.result_status == Debate.STATUS_DRAFT:
-                    drafts['count'] += 1
+                    stat['drafts'] += 1
                 elif b.debate.result_status == Debate.STATUS_CONFIRMED:
-                    confirmeds['count'] += 1
+                    stat['confirmeds'] += 1
 
-        stats.extend([drafts, confirmeds])
+        stats.append(stat)
 
     return HttpResponse(json.dumps(stats), content_type="text/json")
 

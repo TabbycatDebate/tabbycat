@@ -2,7 +2,7 @@
 <!-- Streaming Item Updates for TournamentOverview -->
 <script type="text/x-template" id="ballots-graph">
 
-  <div id="ballotsStatusGraph" class="d3-graph"></div>
+  <div id="ballotsStatusGraph" class="d3-graph" style="text-align: center;"></div>
 
 </script>
 
@@ -10,84 +10,98 @@
 
   function InitChart(vueContext){
 
-    var dataSize = vueContext.graphData.length
+    // Create canvas
+    var svg = d3.select("#ballotsStatusGraph").append("svg:svg")
+      .attr("class", "chart")
+      .attr("width", vueContext.width)
+      .attr("height", vueContext.height)
+      .append("svg:g")
+      .attr("transform", "translate(10,470)");
 
-    var xScale = d3.scale.linear()
-      .range([0, vueContext.width])
-      .domain([vueContext.graphData[0].time, vueContext.graphData[dataSize - 1].time])
+    x = d3.scale.ordinal().rangeRoundBands([0, vueContext.width - vueContext.padding])
+    y = d3.scale.linear().range([0, vueContext.height - vueContext.padding])
+    z = d3.scale.ordinal().range(["red", "orange", "green"])
 
-    var yScale = d3.scale.linear()
-      .range([vueContext.height, 0])
-      .domain([0, (vueContext.graphData[dataSize - 1].count + vueContext.graphData[dataSize - 2].count)])
+    console.log("RAW MATRIX---------------------------");
+    // 4 columns: ID,c1,c2,c3
+    var matrix = [
+      [ 5475,  10, 1, 0],
+      [ 5477, 5, 5, 1],
+      [ 5479, 4, 6, 1],
+      [ 5480,   0,  10, 1],
+      [ 5481,   0,  5, 6],
+      [ 5482,   0,  0, 11]
+    ];
+    console.log(matrix)
 
-    var x = d3.scale.ordinal()
-        .rangeRoundBands([0, vueContext.width], 10);
+    console.log("REMAP---------------------------");
+    var remapped =["c1","c2","c3"].map(function(dat,i){
+      return matrix.map(function(d,ii){
+          return {x: ii, y: d[i+1] };
+      })
+    });
+    console.log(remapped)
 
-    var y = d3.scale.linear()
-        .rangeRound([vueContext.height, 0]);
+    console.log("LAYOUT---------------------------");
+    var stacked = d3.layout.stack()(remapped)
+    console.log(stacked)
 
-    var color = d3.scale.ordinal()
-      .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+    x.domain(stacked[0].map(function(d) { return d.x; }));
+    y.domain([0, d3.max(stacked[stacked.length - 1], function(d) { return d.y0 + d.y; })]);
 
+    // show the domains of the scales
+    console.log("x.domain(): " + x.domain())
+    console.log("y.domain(): " + y.domain())
+    console.log("------------------------------------------------------------------");
+
+    // Add a group for each column.
+    var valgroup = svg.selectAll("g.valgroup")
+    .data(stacked)
+    .enter().append("svg:g")
+    .attr("class", "valgroup")
+    .style("fill", function(d, i) { return z(i); })
+    .style("stroke", function(d, i) { return d3.rgb(z(i)).darker(); });
+
+    // Add a rect for each date.
+    var rect = valgroup.selectAll("rect")
+    .data(function(d){return d;})
+    .enter().append("svg:rect")
+    .attr("x", function(d) { return x(d.x); })
+    .attr("y", function(d) { return -y(d.y0) - y(d.y); })
+    .attr("height", function(d) { return y(d.y); })
+    .attr("width", x.rangeBand());
+
+    // Add Scales
     var xAxis = d3.svg.axis()
       .scale(x)
-      .orient("bottom");
+      .orient("bottom")
+      .ticks(4);
 
-    var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left")
-
-    var svg = d3.select("#ballotsStatusGraph").append("svg")
-      .attr("width", vueContext.width + vueContext.padding + vueContext.padding)
-      .attr("height", vueContext.height + vueContext.padding + vueContext.padding)
-      .append("g")
-      .attr("transform", "translate(" + vueContext.padding + "," + vueContext.padding + ")");
-
-    var xLabels = vueContext.graphData.map(function (d) { return d.time; })
-    var xSeries = d3.range(1, xLabels.length + 1);
-		var ySeries = vueContext.graphData.map(function(d) { return parseFloat(d.count); });
-
-    var circles = svg.selectAll("circle").data(vueContext.graphData)
-    circles
-      .enter().append('circle')
-      .attr("cx", function (d) { return xScale (d.time); })
-      .attr("cy", function (d) { return yScale (d.count); })
-      .attr("r", 5) // Size of circle
 
     svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + vueContext.height + ")")
       .call(xAxis);
 
-    svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis);
+    // var yAxis = d3.svg.axis()
+    //   .scale(x)
+    //   .orient("left");
+    // svg.append("g")
+    //   .attr("class", "y axis")
+    //   .call(yAxis);
 
-  }
+  };
+
 
   Vue.component('ballots-graph', {
     template: '#ballots-graph',
     props: {
       pollUrl: String,
       width: { type: Number, default: 900 },
-      height: { type: Number, default: 250 },
+      height: { type: Number, default: 500 },
       padding: { type: Number, default: 35 },
     },
     ready: function () {
-      this.fetchData(this.pollUrl, 'actions');
-    },
-    methods: {
-      fetchData: function (apiURL, resource) {
-        var xhr = new XMLHttpRequest()
-        var self = this
-        xhr.open('GET', apiURL)
-        xhr.onload = function () {
-          self.graphData = JSON.parse(xhr.responseText)
-          console.log(JSON.parse(xhr.responseText))
-          InitChart(self); // Only init if we have some info
-        }
-        xhr.send()
-      }
+      InitChart(this); // Only init if we have some info
     },
   })
 </script>
