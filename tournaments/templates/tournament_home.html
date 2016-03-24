@@ -76,26 +76,36 @@
 {% include "vue/ballots-graph.vue" %}
 
 <script>
-  new Vue({
+
+  var latests = new Vue({
     el: '#tournamentOverview',
     data: {
       latestActions: '',
       latestResults: '',
+      pollFrequency: 30000, // 30 seconds
     },
     created: function () {
-      this.fetchData('{% tournament_url latest_actions %}', 'actions')
-      this.fetchData('{% tournament_url latest_results %}', 'results')
+      this.updateActions();
+      this.updateResults();
     },
     methods: {
+      updateActions: function() {
+        this.fetchData('{% tournament_url latest_actions %}', 'actions')
+      },
+      updateResults: function() {
+        this.fetchData('{% tournament_url latest_results %}', 'results')
+      },
       fetchData: function (apiURL, resource) {
         var xhr = new XMLHttpRequest()
         var self = this
         xhr.open('GET', apiURL)
         xhr.onload = function () {
           if (resource === 'actions') {
-            self.latestActions = JSON.parse(xhr.responseText)
+            self.latestActions = JSON.parse(xhr.responseText);
+            setTimeout(self.updateActions, self.pollFrequency);
           } else {
-            self.latestResults = JSON.parse(xhr.responseText)
+            self.latestResults = JSON.parse(xhr.responseText);
+            setTimeout(self.updateResults, self.pollFrequency);
           }
         }
         xhr.send()
