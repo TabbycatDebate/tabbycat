@@ -168,9 +168,12 @@ def _generate_breaking_teams_2016(category, teams, teams_broken_higher_priority=
     # iii. Set aside teams that are capped out
     capped = []
     for tsi in eligible:
-        if tsi.get_ranking("institution") > category.institution_cap:
+        rank_in_institution = tsi.get_ranking("institution")
+        if rank_in_institution > 1 and tsi.get_ranking("rank") > effective_break_size:
+            logger.info("Capped out post-cutoff, institution rank %d: %s", rank_in_institution, tsi.team)
             capped.append(tsi)
-        elif tsi.get_ranking("institution") > 1 and tsi.get_ranking("rank") > effective_break_size:
+        elif rank_in_institution > category.institution_cap:
+            logger.info("Capped out pre-cutoff, institution rank %d, cap %d: %s", rank_in_institution, category.institution_cap, tsi.team)
             capped.append(tsi)
 
     # iv. Reinsert capped teams if there are too few breaking
