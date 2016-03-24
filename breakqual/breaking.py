@@ -186,6 +186,7 @@ def _generate_breaking_teams_2016(category, teams, teams_broken_higher_priority=
         for _, group in groupby(capped, key=lambda tsi: tuple(tsi.itermetrics())):
             group = list(group)
             reinsert.extend(group)
+            logger.info("Reinserting: %s", group)
             if len(reinsert) >= number_to_reinsert:
                 reinsert_correction = len(reinsert) - number_to_reinsert
                 break
