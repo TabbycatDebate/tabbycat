@@ -7,9 +7,14 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/$',
         views.results,
         name='results'),
-    url(r'^status/$',
-        views.results_status_update,
-        name='results_status_update'),
+
+    # JSON updates
+    url(r'^ballots_status/$',
+        views.ballots_status,
+        name='ballots_status'),
+    url(r'^latest_results/$',
+        views.latest_results,
+        name='latest_results'),
 
     # Inline Actions
     url(r'^toggle_postponed/$',

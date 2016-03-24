@@ -1,3 +1,4 @@
+from django.template import Template, Context
 import json
 import datetime
 
@@ -235,20 +236,58 @@ def new_ballotset(request, t, debate_id):
 
 @login_required
 @tournament_view
-def results_status_update(request, t):
+def ballots_status(request, t):
+    # Draw Status for Tournament Homepage
+    intervals = 20
 
-    # Draw Status
-    draw = t.current_round.get_draw()
+    def minutes_ago(time):
+        time_difference = datetime.datetime.now() - time
+        minutes_ago = time_difference.days * 1440 + time_difference.seconds / 60
+        return int(minutes_ago)
 
-    stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
-    stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
-    stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
+    ballots = list(BallotSubmission.objects.filter(debate__round=t.current_round).order_by('timestamp'))
+    start_entry = minutes_ago(ballots[0].timestamp)
+    end_entry = minutes_ago(ballots[-1].timestamp)
+    chunks = int((end_entry - start_entry) / intervals)
 
-    total = stats_none + stats_draft + stats_confirmed
-
-    stats = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
+    stats = []
+    for i in range(intervals):
+        time_period = (i * chunks) + start_entry
+        stat = [time_period, 0, 0, 0]
+        for b in ballots:
+            if minutes_ago(b.timestamp) >= time_period:
+                if b.debate.result_status == Debate.STATUS_DRAFT:
+                    stat[2] += 1
+                elif b.debate.result_status == Debate.STATUS_CONFIRMED:
+                    stat[3] += 1
+        stats.append(stat)
 
     return HttpResponse(json.dumps(stats), content_type="text/json")
+
+
+@login_required
+@tournament_view
+def latest_results(request, t):
+    # Latest Results for Tournament Homepage
+    results_objects = []
+    ballots = BallotSubmission.objects.filter(confirmed=True).order_by(
+        '-timestamp')[:15].select_related('debate')
+    timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
+    for b in ballots:
+        if b.ballot_set.winner == b.ballot_set.debate.aff_team:
+            winner = b.ballot_set.debate.aff_team.short_name + " (Aff)"
+            looser = b.ballot_set.debate.neg_team.short_name + " (Neg)"
+        else:
+            winner = b.ballot_set.debate.neg_team.short_name + " (Neg)"
+            looser = b.ballot_set.debate.aff_team.short_name + " (Aff)"
+
+        results_objects.append({
+            'user': winner + " won vs " + looser,
+            'timestamp': timestamp_template.render(Context({'t': b.timestamp})),
+        })
+
+    return HttpResponse(json.dumps(results_objects), content_type="text/json")
+
 
 
 @admin_required
