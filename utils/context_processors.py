@@ -40,6 +40,8 @@ def get_menu_highlight(request):
         return {'ballots_nav': True}
     elif "draw" in request.path:
         return {'draw_nav': True}
+    elif "participants" in request.path:
+        return {'participants_nav': True}
     elif "feedback" in request.path:
         return {'feedback_nav': True}
     elif "availability" in request.path:
