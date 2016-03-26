@@ -2,7 +2,7 @@
 <!-- Streaming Item Updates for TournamentOverview -->
 <script type="text/x-template" id="ballots-graph">
 
-  <svg id="ballotsStatusGraph" class="d3-graph" width="100%"></svg>
+  <svg id="ballotsStatusGraph" class="d3-graph" style="margin-top: -15px; margin-bottom: -15px;" width="100%"></svg>
   <div v-if="graphData.length === 0" class="text-center">No ballots in for this round yet</div>
 
 </script>
@@ -15,8 +15,8 @@
     vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10)
 
     x = d3.scale.ordinal().rangeRoundBands([0, vueContext.width])
-    y = d3.scale.linear().range([vueContext.height, 0])
-    z = d3.scale.ordinal().range(["#e34e42", "#43ca75", "#f0c230"]) // red-orange-green
+    y = d3.scale.linear().range([0, vueContext.height])
+    z = d3.scale.ordinal().range(["#e34e42", "#f0c230", "#43ca75"]) // red-orange-green
 
     d3.selectAll("svg > *").remove(); // Remove prior graph
 
@@ -25,24 +25,19 @@
       .attr("width", vueContext.width)
       .attr("height", vueContext.height + vueContext.padding + vueContext.padding)
       .append("g")
-      .attr("transform", "translate(0," + vueContext.padding + ")");
+      .attr("transform", "translate(0," + (vueContext.height + vueContext.padding) + ")");
 
     // Data Transforms and Domains
     var matrix = vueContext.graphData; // 4 columns: time_ID,none,draft,confirmed
-    var remapped =["c1","c2","c3"].map(function(dat, i){
-      return matrix.map(function(d, ii){
-          return {x: d[0], y: d[i+1] };
-      })
+    var remapped =["c1","c2","c3"].map(function(dat,i){
+        return matrix.map(function(d,ii){
+            return {x: d[0], y: d[i+1] };
+        })
     });
     var stacked = d3.layout.stack()(remapped)
 
     x.domain(stacked[0].map(function(d) { return d.x; }));
     y.domain([0, d3.max(stacked[stacked.length - 1], function(d) { return d.y0 + d.y; })]);
-
-
-
-
-
 
     // Add a group for each column.
     var valgroup = svg.selectAll("g.valgroup")
@@ -56,10 +51,8 @@
     var rect = valgroup.selectAll("rect")
       .data(function(d){return d;})
       .enter().append("svg:rect")
-      .attr("x", function(d) {
-        return x(d.x); })
-      .attr("y", function(d) {
-        return y(d.y0) - y(d.y); })
+      .attr("x", function(d) { return x(d.x); })
+      .attr("y", function(d) { return -y(d.y0) - y(d.y); })
       .attr("height", function(d) { return y(d.y); })
       .attr("width", x.rangeBand());
 
@@ -68,15 +61,15 @@
       .scale(x)
       .orient("bottom")
       .tickFormat(function(d) { return "-" + d + "m"; }) // Format result
-    var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left")
+
 
     svg.append("g").attr("class", "x axis")
-      .attr("transform", "translate(0," + vueContext.height + ")")
       .call(xAxis)
 
     // disable y axis for now
+    // var yAxis = d3.svg.axis()
+    //   .scale(y)
+    //   .orient("left")
     // svg.append("g").attr("class", "y axis")
     //   .call(yAxis);
 

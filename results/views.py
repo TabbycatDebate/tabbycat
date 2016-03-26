@@ -243,26 +243,29 @@ def ballots_status(request, t):
     def minutes_ago(time):
         time_difference = datetime.datetime.now() - time
         minutes_ago = time_difference.days * 1440 + time_difference.seconds / 60
-        return int(minutes_ago)
+        return minutes_ago
 
     ballots = list(BallotSubmission.objects.filter(debate__round=t.current_round).order_by('timestamp'))
+    debates = Debate.objects.filter(round=t.current_round).count()
     if len(ballots) is 0:
         return HttpResponse(json.dumps([]), content_type="text/json")
 
     start_entry = minutes_ago(ballots[0].timestamp)
     end_entry = minutes_ago(ballots[-1].timestamp)
-    chunks = int((end_entry - start_entry) / intervals)
+    chunks = (end_entry - start_entry) / intervals
 
     stats = []
-    for i in range(intervals):
+    for i in range(intervals + 1):
         time_period = (i * chunks) + start_entry
-        stat = [time_period, 0, 0, 0]
+        stat = [int(time_period), debates, 0, 0]
         for b in ballots:
             if minutes_ago(b.timestamp) >= time_period:
                 if b.debate.result_status == Debate.STATUS_DRAFT:
                     stat[2] += 1
+                    stat[1] -= 1
                 elif b.debate.result_status == Debate.STATUS_CONFIRMED:
                     stat[3] += 1
+                    stat[1] -= 1
         stats.append(stat)
 
     return HttpResponse(json.dumps(stats), content_type="text/json")
