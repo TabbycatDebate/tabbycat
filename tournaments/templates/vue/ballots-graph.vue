@@ -2,8 +2,8 @@
 <!-- Streaming Item Updates for TournamentOverview -->
 <script type="text/x-template" id="ballots-graph">
 
-  <svg id="ballotsStatusGraph" class="d3-graph" width="100%" v-if="graphData"></svg>
-  <div v-else class="text-center">No ballots in for this round</div>
+  <svg id="ballotsStatusGraph" class="d3-graph" width="100%"></svg>
+  <div v-if="graphData.length === 0" class="text-center">No ballots in for this round yet</div>
 
 </script>
 
@@ -107,6 +107,7 @@
       height: { type: Number, default: 200 },
       padding: { type: Number, default: 30 },
       pollFrequency: { type: Number, default: 30000 }, // 30s
+      graphData: { type: Number, default: [] }
     },
     methods: {
       fetchData: function () {
@@ -116,7 +117,7 @@
         xhr.onload = function () {
           self.graphData = JSON.parse(xhr.responseText)
           if (self.graphData.length > 0) {
-            initChart(self); // Don't init if no data is present          
+            initChart(self); // Don't init if no data is present
           }
           setTimeout(self.fetchData, self.pollFrequency);
         }
