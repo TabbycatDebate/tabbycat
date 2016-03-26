@@ -567,10 +567,10 @@ class Round(models.Model):
                                           'participants_adjudicator',
                                           id_field='person_ptr_id')
 
-        if not self.tournament.pref('share_adjs'):
-            all_adjs = [a for a in all_adjs if a.tournament == self.tournament]
-        else:
+        if self.tournament.pref('share_adjs'):
             return all_adjs
+        else:
+            return [a for a in all_adjs if a.tournament == self.tournament]
 
     def unused_adjudicators(self):
         from participants.models import Adjudicator
