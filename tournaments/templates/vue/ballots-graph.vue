@@ -115,7 +115,9 @@
         xhr.open('GET', self.pollUrl)
         xhr.onload = function () {
           self.graphData = JSON.parse(xhr.responseText)
-          initChart(self);
+          if (self.graphData.length > 0) {
+            initChart(self); // Don't init if no data is present          
+          }
           setTimeout(self.fetchData, self.pollFrequency);
         }
         xhr.send()

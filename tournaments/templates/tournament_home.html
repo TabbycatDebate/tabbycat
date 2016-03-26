@@ -44,24 +44,22 @@
   <div class="row">
     <div class="col-md-6">
         <h4 class="text-center">Latest Actions</h4>
-        <ul class="list-group" v-if="latestActions.length > 0">
+        <ul class="list-group">
           <updates-list v-for="action in latestActions"
           :timestamp="action.timestamp" :user="action.user" :type="action.type"
           :param="action.param"></updates-list>
-        </ul>
-        <ul class="list-group" v-else>
-          <li class="list-group-item">Loading...</li>
+          <li class="list-group-item" v-if="latestActions.length === 0">No Actions In</li>
+          <li class="list-group-item" v-if="latestActions === 'loading'">Loading...</li>
         </ul>
     </div>
     <div class="col-md-6">
         <h4 class="text-center">Latest Results</h4>
-        <ul class="list-group" v-if="latestResults.length > 0">
+        <ul class="list-group">
           <updates-list  v-for="result in latestResults"
           :timestamp="result.timestamp" :user="result.user" :type="result.type"
           :param="result.param"></updates-list>
-        </ul>
-        <ul class="list-group" v-else>
-          <li class="list-group-item" v-else>Loading...</li>
+          <li class="list-group-item" v-if="latestActions.length === 0">No Results In</li>
+          <li class="list-group-item" v-if="latestResults === 'loading'">Loading...</li>
         </ul>
     </div>
   </div>
@@ -80,8 +78,8 @@
   var latests = new Vue({
     el: '#tournamentOverview',
     data: {
-      latestActions: '',
-      latestResults: '',
+      latestActions: 'loading',
+      latestResults: 'loading',
       pollFrequency: 30000, // 30 seconds
     },
     created: function () {
