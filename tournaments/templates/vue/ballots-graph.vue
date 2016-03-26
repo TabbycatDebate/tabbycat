@@ -2,7 +2,8 @@
 <!-- Streaming Item Updates for TournamentOverview -->
 <script type="text/x-template" id="ballots-graph">
 
-  <div id="ballotsStatusGraph" class="d3-graph" style="text-align: center;"></div>
+  <div id="ballotsStatusGraph" class="d3-graph text-center" v-if="graphData"></div>
+  <div v-else class="text-center">No ballots in for this round</div>
 
 </script>
 

@@ -246,6 +246,9 @@ def ballots_status(request, t):
         return int(minutes_ago)
 
     ballots = list(BallotSubmission.objects.filter(debate__round=t.current_round).order_by('timestamp'))
+    if len(ballots) is 0:
+        return HttpResponse(json.dumps([]), content_type="text/json")
+
     start_entry = minutes_ago(ballots[0].timestamp)
     end_entry = minutes_ago(ballots[-1].timestamp)
     chunks = int((end_entry - start_entry) / intervals)
