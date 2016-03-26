@@ -14,10 +14,9 @@
 {% endblock %}
 
 {% block content %}
-  {% if generated %}
-
-  <div class="panel panel-default">
-    <div class="panel-body">
+<div class="panel panel-default">
+  <div class="panel-body">
+    {% if generated %}
       <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
         <thead>
           <tr>
@@ -66,12 +65,9 @@
           {% endfor %}
         </tbody>
       </table>
-    </div>
+    {% else %}
+      <p class="lead">The break has yet to be released.</p>
+    {% endif %}
   </div>
-
-  {% else %}
-    <p class="lead">The break has yet to be released.</p>
-
-  {% endif %}
-
+</div>
 {% endblock %}

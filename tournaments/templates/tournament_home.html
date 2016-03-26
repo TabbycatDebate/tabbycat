@@ -58,7 +58,7 @@
           <updates-list  v-for="result in latestResults"
           :timestamp="result.timestamp" :user="result.user" :type="result.type"
           :param="result.param"></updates-list>
-          <li class="list-group-item" v-if="latestActions.length === 0">No Results In</li>
+          <li class="list-group-item" v-if="latestResults.length === 0">No Results In</li>
           <li class="list-group-item" v-if="latestResults === 'loading'">Loading...</li>
         </ul>
     </div>
