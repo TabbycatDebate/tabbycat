@@ -2,25 +2,26 @@
 <!-- Streaming Item Updates for TournamentOverview -->
 <script type="text/x-template" id="ballots-graph">
 
-  <div id="ballotsStatusGraph" class="d3-graph text-center" v-if="graphData"></div>
+  <svg id="ballotsStatusGraph" class="d3-graph" width="100%" v-if="graphData"></svg>
   <div v-else class="text-center">No ballots in for this round</div>
 
 </script>
 
 <script>
 
-  function InitChart(vueContext){
+  function initChart(vueContext){
 
     // Responsive width
     vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10)
-    console.log(vueContext.width);
 
     x = d3.scale.ordinal().rangeRoundBands([0, vueContext.width])
     y = d3.scale.linear().range([vueContext.height, 0])
-    z = d3.scale.ordinal().range(["blue", "green", "gray"])
+    z = d3.scale.ordinal().range(["#e34e42", "#43ca75", "#f0c230"]) // red-orange-green
+
+    d3.selectAll("svg > *").remove(); // Remove prior graph
 
     // Create Canvas and Scales
-    var svg = d3.select("#ballotsStatusGraph").append("svg:svg")
+    var svg = d3.select("#ballotsStatusGraph")
       .attr("width", vueContext.width)
       .attr("height", vueContext.height + vueContext.padding + vueContext.padding)
       .append("g")
@@ -28,23 +29,20 @@
 
     // Data Transforms and Domains
     var matrix = vueContext.graphData; // 4 columns: time_ID,none,draft,confirmed
-    // console.log(matrix)
     var remapped =["c1","c2","c3"].map(function(dat, i){
       return matrix.map(function(d, ii){
           return {x: d[0], y: d[i+1] };
       })
     });
-    // console.log(remapped)
     var stacked = d3.layout.stack()(remapped)
-    // console.log(stacked)
 
     x.domain(stacked[0].map(function(d) { return d.x; }));
     y.domain([0, d3.max(stacked[stacked.length - 1], function(d) { return d.y0 + d.y; })]);
 
-    // show the domains of the scales
-    console.log("x.domain(): " + x.domain())
-    console.log("y.domain(): " + y.domain())
-    console.log("------------------------------------------------------------------");
+
+
+
+
 
     // Add a group for each column.
     var valgroup = svg.selectAll("g.valgroup")
@@ -108,16 +106,23 @@
       pollUrl: String,
       height: { type: Number, default: 200 },
       padding: { type: Number, default: 30 },
+      pollFrequency: { type: Number, default: 30000 }, // 30s
     },
-    ready: function() {
-      var xhr = new XMLHttpRequest()
-      var self = this
-      xhr.open('GET', this.pollUrl)
-      xhr.onload = function () {
-        self.graphData = JSON.parse(xhr.responseText)
-        InitChart(self); // Only init if we have some info
+    methods: {
+      fetchData: function () {
+        var xhr = new XMLHttpRequest()
+        var self = this
+        xhr.open('GET', self.pollUrl)
+        xhr.onload = function () {
+          self.graphData = JSON.parse(xhr.responseText)
+          initChart(self);
+          setTimeout(self.fetchData, self.pollFrequency);
+        }
+        xhr.send()
       }
-      xhr.send()
+    },
+    created: function() {
+      this.fetchData();
     },
   })
 </script>
