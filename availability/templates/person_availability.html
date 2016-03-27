@@ -2,7 +2,7 @@
 {% load debate_tags %}
 
 {% block update-url %}{% round_url update_people_availability  %}{% endblock %}
-{% block draw-url %}{% round_url draw round %}{% endblock %}
+{% block draw-url %}{% round_url availability_index %}{% endblock %}
 {% block post-success %}location.reload();{% endblock %}
 
 {% block head-title %}Personal Checkins for {{ round.name }}{% endblock %}
@@ -31,4 +31,3 @@
   </tbody>
 
 {% endblock table-contents %}
-
