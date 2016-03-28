@@ -25,6 +25,7 @@
 
   <div class="panel panel-default">
     <div class="panel-body">
+      {% if pref.score_scale_explanation %}<p>{{ pref.score_scale_explanation|safe }}</p>{% endif %}
       <form id="feedbackForm" action="" method="POST" class="form-horizontal">
         {% for field in form %}
         <div class="form-group">
