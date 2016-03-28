@@ -112,11 +112,11 @@
       .attr("class", "d3-hoverable")
       .attr("fill", function (d) {
         if (d.position === "Chair") {
-          return 'green';
+          return '#3700A8'; // Dark purple
         } else if (d.position === "Panellist") {
-          return 'orange';
+          return '#007FFF'; // Royal blue
         } else if (d.position === "Trainee") {
-          return 'red';
+          return '#A0E6E5'; // Light teal
         } else {
           return 'grey'; // Test
         }
@@ -146,8 +146,8 @@
       maxScore: Number,
       roundSeq: Number,
       graphData: Array,
-      width: { type: Number, default: 200 },
-      height: { type: Number, default: 50 },
+      width: { type: Number, default: 300 },
+      height: { type: Number, default: 42 },
       padding: { type: Number, default: 5 },
     },
     computed: {

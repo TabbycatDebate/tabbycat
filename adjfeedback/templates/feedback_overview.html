@@ -47,13 +47,10 @@
         <thead>
       <tr>
         <th>Name</th>
-        {% if pref.show_institutions %}
-          <th>Institution</th>
-        {% endif %}
         <th><span data-toggle="tooltip" title="Overall Score">Score</span></th>
         <th><span data-toggle="tooltip" title="Test Score; click to edit">Test</span></th>
         <th>Feedback</th>
-        <th>Trend</th>
+        <th>Trend (<span style="color: #3700A8">Chair</span>, <span style="color: #007FFF">Panellist</span>, <span style="color: #A0E6E5">Trainee</span>)</th>
         {% if pref.show_unaccredited %}
           <th><span class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" title="If the Adj is a Trainee" ></span></th>
         {% endif %}
@@ -71,13 +68,9 @@
       {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">
           <td class="adj-name">
-              <span>{{ adj.name }}</span>
+              <span>{{ adj.name }}</span><br>
+              <em>{{ adj.institution.code }}</em>
           </td>
-          {% if pref.show_institutions %}
-            <td>
-              {{ adj.institution.code }}
-            </td>
-          {% endif %}
           <td>
             {{ adj.score|stringformat:".2f" }}
           </td>
@@ -85,7 +78,7 @@
             <a data-toggle="modal" data-target="#edit-test-score" class="edit-test-score">{{ adj.test_score }}</a>
           </td>
           <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
-          <td>
+          <td style="padding: 4px 0px 0px 0px;">
             <feedback-trend :min-score="minScore" :max-score="maxScore"
                             :round-seq="roundSeq"
                             :graph-data="graphData[{{ adj.id }}]"
@@ -99,7 +92,7 @@
             </td>
           {% endif %}
           <td>
-            <a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View Feedback</a>
+            <a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View<br>Feedback</a>
           </td>
           {% if pref.enable_adj_notes > 0 %}
             <td>
