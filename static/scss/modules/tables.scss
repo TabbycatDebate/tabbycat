@@ -8,10 +8,6 @@
   }
   > tbody > tr:hover td {
     background-color: $table-bg-hover;
-    color: #fff;
-    a {
-      color: #fff;
-    }
   }
   > tbody > tr.clickable:hover {
     cursor: pointer;
