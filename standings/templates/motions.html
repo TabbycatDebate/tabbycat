@@ -72,7 +72,10 @@
               <td>{{ motion.round.abbreviation }}</td>
               <td>{{ motion.seq }}</td>
               <td>{{ motion.reference }}</td>
-              <td>{{ motion.text }}</td>
+              <td>
+                <a data-toggle="collapse" data-target="#motion{{ motion.id }}">Show full text</a>
+                <span class="collapse" id="motion{{ motion.id }}">{{ motion.text }}</span>
+              </td>
               {% if pref.enable_flagged_motions %}
               <td>
                 {% if motion.flagged %}
