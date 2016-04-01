@@ -255,6 +255,14 @@ def novice_standings(request, round):
 
 @admin_required
 @round_view
+def pro_standings(request, round):
+    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
+    speakers = get_speaker_standings(rounds, round, only_pros=True)
+    return render(request, "novices.html", dict(speakers=speakers,
+                                        rounds=rounds))
+
+@admin_required
+@round_view
 def reply_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, for_replies=True)

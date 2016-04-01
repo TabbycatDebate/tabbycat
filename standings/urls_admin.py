@@ -9,6 +9,7 @@ urlpatterns = [
 
     url(r'^speaker/$',  views.speaker_standings,               name='standings-speaker'),
     url(r'^novices/$',  views.novice_standings,                name='standings-novice'),
+    url(r'^novices/$',  views.pro_standings,                   name='standings-pro'),
     url(r'^reply/$',    views.reply_standings,                 name='standings-reply'),
     url(r'^motions/$',  views.motion_standings,                name='standings-motion'),
 
