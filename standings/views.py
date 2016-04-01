@@ -286,7 +286,7 @@ def public_speaker_tab(request, t):
 def public_pros_tab(request, t):
     round = t.current_round
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = get_speaker_standings(rounds, round, only_novices=True)
+    speakers = get_speaker_standings(rounds, round, only_pros=True)
     return render(request, 'public_pros_tab.html', dict(speakers=speakers,
             rounds=rounds, round=round))
 
