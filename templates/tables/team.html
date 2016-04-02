@@ -1,3 +1,4 @@
+<span class="hidden">{{ team.short_name }}</span><!-- for sorting -->
 <span {% if pref.show_speakers_in_draw or 'admin/' in request.path %}
   title="{% if team.emoji %}<span class='emoji'>{{ team.emoji }}</span>{% endif %}{{ team.long_name }}"
   data-toggle="popover"

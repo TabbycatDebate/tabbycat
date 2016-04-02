@@ -5,13 +5,11 @@
     <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
       <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
         Your panellists are
-        <span v-for="(index, adj) in ballot.panel">
-          <template v-if="adj.name !== ballot.author">
-            &nbsp;<span v-if="index !== 0">&nbsp;and</span>&nbsp;<strong>[[ adj.name ]]</strong>
-            <span v-if="adj.position === 'C'">(Chair, [[ adj.institution]])</span>
-            <span v-if="adj.position === 'P'">(Panellist, [[ adj.institution]])</span>
-            <span v-if="adj.position === 'T'">(Trainee, [[ adj.institution]])</span>
-          </template>
+        <span v-for="(i, adj) in ballotsExcludingSelf">
+          <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>[[ adj.name ]]</strong>
+          <span v-if="adj.position === 'C'">(Chair, [[ adj.institution]])</span>
+          <span v-if="adj.position === 'P'">(Panellist, [[ adj.institution]])</span>
+          <span v-if="adj.position === 'T'">(Trainee, [[ adj.institution]])</span>
         </span>
       </div>
     </div>
@@ -32,7 +30,7 @@
 
     <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
       <div class="db-align-vertical-center db-flex-static">
-        Chosen Motion:
+        Chosen <br>Motion:
       </div>
       <div class="db-flex-item-1 db-flex-row">
         <div v-for="(index, item) in motions" class="db-align-horizontal-center db-align-vertical-center db-align-horizontal-center db-flex-item-1 db-center-text db-vertical-center-text">
@@ -41,7 +39,7 @@
       </div>
       <div class="db-item-gutter"></div>
       <div class="db-align-vertical-center db-flex-static">
-        Aff Veto:
+        Aff <br>Veto:
       </div>
       <div class="db-flex-item-1 db-flex-row">
         <div v-for="(index, item) in motions" class="db-align-horizontal-center db-align-vertical-center db-align-horizontal-center db-flex-item-1 db-center-text db-vertical-center-text">
@@ -50,7 +48,7 @@
       </div>
       <div class="db-item-gutter"></div>
       <div class="db-align-vertical-center db-flex-static">
-        Neg Veto:
+        Neg <br>Veto:
       </div>
       <div class="db-flex-item-1 db-flex-row">
         <div v-for="(index, item) in motions" class="db-align-horizontal-center db-align-vertical-center db-align-horizontal-center db-flex-item-1 db-center-text db-vertical-center-text">
@@ -59,7 +57,7 @@
       </div>
     </div>
     <div class="db-item-gutter"></div>
-    <div class="db-flex-item-1 db-flex-row db-align-vertical-center">
+    <div class="db-flex-item-2 db-flex-row db-align-vertical-center">
       <template v-for="(index, item) in motions">
         [[ index + 1]]: [[ item.text ]]<br>
       </template>
@@ -69,11 +67,11 @@
 
   <section class="db-flex-row db-flex-item-7 db-margins-m">
     <div class="db-flex-column db-bordered db-flex-item-half">
-      <team-scores position="Affirmative" :speakers="ballot.affSpeakers" :name="ballot.aff" :emoji="ballot.affEmoji" :data="data"></team-scores>
+      <team-scores position="Aff" :speakers="ballot.affSpeakers" :name="ballot.aff" :emoji="ballot.affEmoji" :data="data"></team-scores>
     </div>
     <div class="db-item-gutter"></div>
     <div class="db-flex-column db-bordered db-flex-item-half">
-      <team-scores position="Negative" :speakers="ballot.negSpeakers" :name="ballot.neg" :emoji="ballot.negEmoji" :data="data"></team-scores>
+      <team-scores position="Neg" :speakers="ballot.negSpeakers" :name="ballot.neg" :emoji="ballot.negEmoji" :data="data"></team-scores>
     </div>
   </section>
 
@@ -110,6 +108,16 @@
   Vue.component('base-scoresheet', {
     template: '#base-scoresheet',
     props: ['data', 'ballot', 'motions'],
+    computed: {
+      ballotsExcludingSelf: function() {
+        var authorIndex = this.ballot.panel.indexOf(this.ballot.author);
+        if (authorIndex > -1) {
+          return this.ballot.panel.splice(authorIndex, 1);
+        } else {
+          return this.ballot.panel
+        }
+      }
+    }
 
   })
 </script>

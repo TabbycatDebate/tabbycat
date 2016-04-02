@@ -53,7 +53,7 @@
             <a href="{% tournament_url standings-public-tab-motions %}">Motions Tab</a>
           </li>
         {% endif %}
-        {% if pref.public_draw and pref.team_tab_released == 0 and pref.show_all_draws == 0 %}
+        {% if public_side_allocations %}
           <li class="list-group-item">
             <a href="{% tournament_url public_side_allocations %}">Sides</a>
           </li>

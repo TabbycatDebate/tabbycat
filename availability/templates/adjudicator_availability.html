@@ -2,7 +2,7 @@
 {% load debate_tags %}
 
 {% block update-url %}{% round_url update_adjudicator_availability %}{% endblock %}
-{% block draw-url %}{% round_url draw round %}{% endblock %}
+{% block draw-url %}{% round_url availability_index %}{% endblock %}
 
 {% block page-title %}Adjudicator Availability for {{ round.name }}{% endblock %}
 {% block head-title %}

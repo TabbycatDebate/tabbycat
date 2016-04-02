@@ -8,8 +8,10 @@ A list of tournaments (that we know of) which have used Tabbycat.
 ----
 
 - ACT Debating Union Grades
+- Australian Easters <http://easters2016.herokuapp.com>`_
 - IIT KGP PD
 - `Mad Mini <http://tabs.monashdebaters.com/t/madmini/>`_
+- New Zealand Easters <http://nzeasters2016.herokuapp.com>`_
 - Pre SSIDC
 - The National Law School Debate
 - The Khazak National Schools Debating Championship

@@ -35,7 +35,7 @@
 <!-- DRAW RELEASES -->
 {% if pref.public_draw and pref.team_tab_released == 0  %}
   {% if pref.show_all_draws == 0 %}
-  <li>
+  <li class="{% if draw_nav %}active{% endif %}">
     <a href="{% tournament_url public_draw %}">
       Draw for {{ current_round.name }}
     </a>
@@ -113,7 +113,7 @@
   </li>
 {% endif %}
 {% if pref.public_participants %}
-  <li>
+  <li class="{% if participants_nav %}active{% endif %}">
     <a href="{% tournament_url public_participants %}">Participants</a>
   </li>
 {% endif %}
