@@ -239,7 +239,8 @@ class BallotSetForm(forms.Form):
             for side, pos in self.SIDES_AND_POSITIONS:
                 self.fields[self._fieldname_score(adj, side, pos)].required = False
                 self.fields[self._fieldname_speaker(side, pos)].required = False
-            self.fields['motion'].required = False
+            if self.using_motions:
+                self.fields['motion'].required = False
             CHOICES = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
             self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=False)
 
