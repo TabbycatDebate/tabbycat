@@ -222,7 +222,7 @@ EMOJI_LIST = (
     ("💂", "💂"), # Guardsman
     ("🎅", "🎅"), # Father Christmas
     ("👼", "👼"), # Baby Angel
-    # USED BY UI ("👯", ""), # Woman With Bunny Ears
+    # USED BY UI ("👯", ""), # Woman With Bunny Ears // for bulk adding teams and team tab/standings
     # LAME ("💆", ""), # Face Massage
     # LAME ("💇", ""), # Haircut
     ("👰", "👰"), # Bride With Veil
@@ -230,7 +230,7 @@ EMOJI_LIST = (
     # LAME ("🙎", ""), # Person With Pouting Face
     ("🙅", "🙅"), # Face With No Good Gesture
     ("🙆", "🙆"), # Face With OK Gesture
-    # USED BY UI ("💁", ""), # Information Desk Person
+    # USED BY UI ("💁", ""), # Information Desk Person // for reply standings
     ("🙋", "🙋"), # Happy Person Raising One Hand
     ("🙇", "🙇"), # Person Bowing Deeply
     ("🙌", "🙌"), # Person Raising Both Hands in Celebration
@@ -257,12 +257,12 @@ EMOJI_LIST = (
     ("👌", "👌"), # OK Hand Sign
     ("👍", "👍"), # Thumbs Up Sign
     ("👎", "👎"), # Thumbs Down Sign
-    # USED BY UI ("👋", "👋"), # Waving Hand Sign
+    # USED BY UI ("👋", "👋"), # Waving Hand Sign // for the welcome pages
     # LAME ("👏", ""), # Clapping Hands Sign
     ("👐", "👐"), # Open Hands Sign
     ("💅", "💅"), # Nail Polish
     # LAME ("👣", ""), # Footprints
-    # USED BY UI ("👀", ""), # Eyes
+    # USED BY UI ("👀", ""), # Eyes // for the draw pages
     ("👂", "👂"), # Ear
     ("👃", "👃"), # Nose
     ("👅", "👅"), # Tongue
@@ -309,7 +309,7 @@ EMOJI_LIST = (
     ("👠", "👠"), # High-Heeled Shoe
     # LAME ("👡", ""), # Womans Sandal
     # LAME ("👢", ""), # Womans Boots
-    # USED BY UI ("👑", ""), # Crown
+    # USED BY UI ("👑", ""), # Crown // for the break pages
     ("👒", "👒"), # Womans Hat
     ("🎩", "🎩"), # Top Hat
     ("💄", "💄"), # Lipstick
@@ -322,25 +322,25 @@ EMOJI_LIST = (
     ("👽", "👽"), # Extraterrestrial Alien
     ("👾", "👾"), # Alien Monster
     ("💩", "💩"), # Pile of Poo
-    # USED BY UI ("🐵", ""), # Monkey Face
-    # USED BY UI ("🙈", ""), # See-No-Evil Monkey
-    # USED BY UI ("🙉", ""), # Hear-No-Evil Monkey
-    # USED BY UI ("🙊", ""), # Speak-No-Evil Monkey
+    ("🐵", ""), # Monkey Face
+    ("🙈", ""), # See-No-Evil Monkey
+    ("🙉", ""), # Hear-No-Evil Monkey
+    ("🙊", ""), # Speak-No-Evil Monkey
     # OFFENSIVE("🐒", ""), # Monkey
     ("🐶", "🐶"), # Dog Face
     # TOO SIMILAR ("🐕", ""), # Dog
-    # TOO SIMILAR ("🐩", ""), # Poodle
+    ("🐩", ""), # Poodle
     # TOO SIMILAR ("🐺", ""), # Wolf Face
-    # USED BY UI ("🐱", ""), # Cat Face
-    # USED BY UI ("😸", ""), # Grinning Cat Face With Smiling Eyes
-    # USED BY UI ("😹", ""), # Cat Face With Tears of Joy
-    # USED BY UI ("😺", ""), # Smiling Cat Face With Open Mouth
-    # USED BY UI ("😻", ""), # Smiling Cat Face With Heart-Shaped Eyes
-    # USED BY UI ("😼", ""), # Cat Face With Wry Smile
-    # USED BY UI ("😽", ""), # Kissing Cat Face With Closed Eyes
-    # USED BY UI ("😾", ""), # Pouting Cat Face
-    # USED BY UI ("😿", ""), # Crying Cat Face
-    # USED BY UI ("🙀", ""), # Weary Cat Face
+    # ("🐱", ""), # Cat Face // USED BY UI
+    # ("😸", ""), # Grinning Cat Face With Smiling Eyes // USED BY UI
+    # ("😹", ""), # Cat Face With Tears of Joy // USED BY UI
+    # ("😺", ""), # Smiling Cat Face With Open Mouth // USED BY UI
+    # ("😻", ""), # Smiling Cat Face With Heart-Shaped Eyes // USED BY UI
+    # ("😼", ""), # Cat Face With Wry Smile // USED BY UI
+    # ("😽", ""), # Kissing Cat Face With Closed Eyes // USED BY UI
+    # ("😾", ""), # Pouting Cat Face // USED BY UI
+    # ("😿", ""), # Crying Cat Face // USED BY UI
+    # ("🙀", ""), # Weary Cat Face // USED BY UI
     # LAME ("🐈", ""), # Cat
     ("🐯", "🐯"), # Tiger Face
     # LAME ("🐅", ""), # Tiger
@@ -405,14 +405,14 @@ EMOJI_LIST = (
     ("🌻", "🌻"), # Sunflower
     # LAME ("🌼", ""), # Blossom
     ("🌷", "🌷"), # Tulip
-    # LAME ("🌱", ""), # Seedling
+    ("🌱", ""), # Seedling
     # LAME ("🌲", ""), # Evergreen Tree
     # LAME ("🌳", ""), # Deciduous Tree
     # LAME ("🌴", ""), # Palm Tree
     ("🌵", "🌵"), # Cactus
     # LAME ("🌾", ""), # Ear of Rice
     # LAME ("🌿", ""), # Herb
-    # LAME ("🍀", ""), # Four Leaf Clover
+    ("🍀", ""), # Four Leaf Clover
     ("🍁", "🍁"), # Maple Leaf
     # LAME ("🍂", ""), # Fallen Leaf
     # LAME ("🍃", ""), # Leaf Fluttering in Wind
@@ -443,7 +443,7 @@ EMOJI_LIST = (
     # LAME ("🍲", ""), # Pot of Food
     # LAME ("🍱", ""), # Bento Box
     # LAME ("🍘", ""), # Rice Cracker
-    # LAME ("🍙", ""), # Rice Ball
+    ("🍙", ""), # Rice Ball
     # LAME ("🍚", ""), # Cooked Rice
     # LAME ("🍛", ""), # Curry and Rice
     # LAME ("🍜", ""), # Steaming Bowl
@@ -515,7 +515,7 @@ EMOJI_LIST = (
     # LAME ("🎡", ""), # Ferris Wheel
     # LAME ("🎢", ""), # Roller Coaster
     # LAME ("💈", ""), # Barber Pole
-    # USED BY THE UI ("🎪", ""), # Circus Tent
+    # USED BY THE UI ("🎪", ""), # Circus Tent // venue checkins/adding
     # LAME ("🎭", ""), # Performing Arts
     ("🎨", "🎨"), # Artist Palette
     # LAME ("🎰", ""), # Slot Machine
@@ -672,7 +672,7 @@ EMOJI_LIST = (
     # LAME ("🏊", ""), # Swimmer
     # LAME ("🚴", ""), # Bicyclist
     # LAME ("🚵", ""), # Mountain Bicyclist
-    # USED BY UI ("🏆", ""), # Trophy
+    # USED BY UI ("🏆", ""), # Trophy // for adding new tournament/list of tournaments
     ("🎮", "🎮"), # Video Game
     ("🎲", "🎲"), # Game Die
     # LAME ("🃏", ""), # Playing Card Black Joker
@@ -680,11 +680,11 @@ EMOJI_LIST = (
     # LAME ("🔈", ""), # Speaker
     # LAME ("🔉", ""), # Speaker With One Sound Wave
     # LAME ("🔊", ""), # Speaker With Three Sound Waves
-    # USED BY UI ("📢", ""), # Public Address Loudspeaker
+    # USED BY UI ("📢", ""), # Public Address Loudspeaker // for public config settings
     ("📣", "📣"), # Cheering Megaphone
-    # USED BY UI ("📯", ""), # Postal Horn
+    ("📯", ""), # Postal Horn
     ("🔔", "🔔"), # Bell
-    # USED BY UI ("🔕", ""), # Bell With Cancellation Stroke
+    # ("🔕", ""), # Bell With Cancellation Stroke
     # LAME ("🔀", ""), # Twisted Rightwards Arrows
     # LAME ("🔁", ""), # Clockwise Rightwards and Leftwards Open Circle Arrows
     # LAME ("🔂", ""), # Clockwise Rightwards and Leftwards Open Circle Arrows With Circled One Overlay
@@ -772,7 +772,7 @@ EMOJI_LIST = (
     # LAME ("📩", ""), # Envelope With Downwards Arrow Above
     # LAME ("📤", ""), # Outbox Tray
     # LAME ("📥", ""), # Inbox Tray
-    # USED BY UI ("📦", ""), # Package
+    ("📦", ""), # Package
     ("📫", "📫"), # Closed Mailbox With Raised Flag
     # LAME ("📪", ""), # Closed Mailbox With Lowered Flag
     # LAME ("📬", ""), # Open Mailbox With Raised Flag
@@ -795,22 +795,22 @@ EMOJI_LIST = (
     ("📏", "📏"), # Straight Ruler
     ("📐", "📐"), # Triangular Ruler
     # LAME ("📛", ""), # Name Badge
-    # USED BY UI ("🔒", ""), # Lock
-    # USED BY UI ("🔓", ""), # Open Lock
-    # USED BY UI ("🔏", ""), # Lock With Ink Pen
-    # USED BY UI ("🔐", ""), # Closed Lock With Key
+    # USED BY UI ("🔒", ""), # Lock // Logout page
+    # USED BY UI ("🔓", ""), # Open Lock // Login page
+    # ("🔏", ""), # Lock With Ink Pen
+    # ("🔐", ""), # Closed Lock With Key
     ("🔑", "🔑"), # Key
     # LAME ("🔨", ""), # Hammer
-    # USED BY UI ("🔧", ""), # Wrench
+    # USED BY UI ("🔧", ""), # Wrench // for tournament config link
     ("🔩", "🔩"), # Nut and Bolt
-    # USED BY UI ("🔗", ""), # Link Symbol
-    # USED BY UI ("💉", ""), # Syringe
-    # USED BY UI ("💊", ""), # Pill
+    # LAME ("🔗", ""), # Link Symbol
+    # OFFENSIVE ("💉", ""), # Syringe
+    ("💊", ""), # Pill
     ("🔪", "🔪"), # Hocho
     ("🔫", "🔫"), # Pistol
     ("🚬", "🚬"), # Smoking Symbol
-    # USED BY UI ("🏁", ""), # Chequered Flag
-    # USED BY UI ("🚩", ""), # Triangular Flag on Post
+    ("🏁", ""), # Chequered Flag
+    # LAME ("🚩", ""), # Triangular Flag on Post
     # LAME ("🇦🇫", ""), # Flag for Afghanistan
     # LAME ("🇦🇽", ""), # Flag for Åland Islands
     # LAME ("🇦🇱", ""), # Flag for Albania
@@ -1089,7 +1089,7 @@ EMOJI_LIST = (
     ("❓", "❓"), # Black Question Mark Ornament
     # TOO SIMILAR ("❔", ""), # White Question Mark Ornament
     # TOO SIMILAR ("❕", ""), # White Exclamation Mark Ornament
-    # USED BY UI ("💯", ""), # Hundred Points Symbol
+    # USED BY UI ("💯", ""), # Hundred Points Symbol // Speaker tab
     ("🔞", "🔞"), # No One Under Eighteen Symbol
     # LAME ("🔠", ""), # Input Symbol for Latin Capital Letters
     # LAME ("🔡", ""), # Input Symbol for Latin Small Letters
