@@ -15,6 +15,7 @@ from participants.models import Adjudicator, Team
 from results.mixins import TabroomSubmissionFieldsMixin, PublicSubmissionFieldsMixin
 from results.models import SpeakerScoreByAdj
 from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
+from tournaments.models import Round
 from utils.misc import reverse_tournament
 from utils.mixins import SingleObjectFromTournamentMixin, SingleObjectByRandomisedUrlMixin, PublicCacheMixin, SuperuserRequiredMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, PostOnlyRedirectView
 from utils.urlkeys import populate_url_keys
@@ -413,13 +414,15 @@ def get_feedback_progress(request, t):
         else:
             return int(submitted / total * 100)
 
-    feedback = AdjudicatorFeedback.objects.select_related('source_adjudicator__adjudicator','source_team__team').all()
+    feedback = AdjudicatorFeedback.objects.select_related(
+        'source_adjudicator__adjudicator','source_team__team').all()
     adjudicators = Adjudicator.objects.filter(tournament=t)
-    adjudications = list(DebateAdjudicator.objects.select_related('adjudicator','debate').all())
+    adjudications = list(DebateAdjudicator.objects.select_related('adjudicator','debate').filter(
+        debate__round__stage=Round.STAGE_PRELIMINARY))
     teams = Team.objects.filter(tournament=t)
 
     # Teams only owe feedback on non silent rounds
-    rounds_owed = t.round_set.filter(silent=False,  draw_status=t.current_round.STATUS_RELEASED).count()
+    rounds_owed = t.round_set.filter(silent=False, stage=Round.STAGE_PRELIMINARY, draw_status=t.current_round.STATUS_RELEASED).count()
 
     for adj in adjudicators:
         adj.total_ballots = 0
