@@ -217,14 +217,6 @@ class MaximumAdjScore(FloatPreference):
     default = 5.0
 
 @tournament_preferences_registry.register
-class ScoreScaleExplanation(StringPreference):
-    help_text = "Text that shows above the rating box to explain the scale"
-    verbose_name = "Score scale explanation"
-    section = feedback
-    name = 'score_scale_explanation'
-    default = ''
-
-@tournament_preferences_registry.register
 class ShowUnaccredited(BooleanPreference):
     help_text = "Show if an adjudicator is a novice (unaccredited)"
     verbose_name = "Show unaccredited"
