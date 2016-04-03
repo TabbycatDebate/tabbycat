@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+0.8.3
+-----
+- Restored and reworking printing functionality for scoresheets/feedback
+- Restored Edit Venues and Edit Matchups on the draw pages
+- Improved Dashboard and Feedback graphs
+- Add seperate Pro-speakers tab
+- Various bug fixes, optimistions, and documentation edits
+
+
 0.8.2
 -----
 - Fixed issue where scores from individual ballots would be deleted when any other panel in the round was edited

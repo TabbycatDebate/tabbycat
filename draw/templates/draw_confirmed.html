@@ -23,8 +23,11 @@
   <a class="btn btn-default submit-disable" href="{% round_url motions_edit %}" class="btn btn-default submit-disable">
     Edit Motions
   </a>
-  <a href="{% round_url draw_venues_edit current_round %}" class="btn btn-default submit-disable">
+  <a href="{% round_url draw_venues_edit round %}" class="btn btn-default submit-disable">
     Edit Venues
+  </a>
+  <a href="{% round_url draw_matchups_edit round %}" class="btn btn-default submit-disable">
+    Edit Matchups
   </a>
   <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
     Draw Details
@@ -89,17 +92,17 @@
 {% block page-alerts %}
   {% if round.motion_set.all.count == 0 %}
   <div class="alert alert-danger">
-    There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit current_round %}" class="alert-link">Edit the motions.</a>
+    There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit round %}" class="alert-link">Edit the motions.</a>
   </div>
   {% endif %}
   {% if not round.venue_allocation_validity %}
     <div class="alert alert-danger alert-dismissable" id="">
-      One or more debates does not have a venue <a href="{% round_url draw_venues_edit current_round %}" class="alert-link">Edit the venues</a>.
+      One or more debates does not have a venue <a href="{% round_url draw_venues_edit round %}" class="alert-link">Edit the venues</a>.
     </div>
   {% endif %}
   {% if active_adjs.count < draw.count %}
     <div class="alert alert-danger alert-dismissable" id="">
-      There are currently fewer checked-in adjudicators than there are rooms. <a href="{% round_url adjudicator_availability current_round %}" class="alert-link">Check in some more adjudicators</a>.
+      There are currently fewer checked-in adjudicators than there are rooms. <a href="{% round_url adjudicator_availability round %}" class="alert-link">Check in some more adjudicators</a>.
     </div>
   {% else %}
     {% if round.adjudicators_allocation_validity == 1 or round.adjudicators_allocation_validity == 2 %}
