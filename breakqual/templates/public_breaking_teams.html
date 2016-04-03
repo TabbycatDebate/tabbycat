@@ -50,10 +50,8 @@
               <td class="team-emoji">{{ standing.team.emoji }}</td>
             {% endif %}
             <td>
-              <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ standing.team.id }}"{% endif %}>
-                {{ standing.team.long_name }}
-                {{ standing.team.categories_for_display }}
-              </span>
+              {% include "tables/team.html" with team=standing.team %}
+              {{ standing.team.categories_for_display }}
             </td>
             {% if pref.show_institutions %}
               <td><span class="hidden-xs">{{ standing.team.institution }}</span><span class="visible-xs">{{ standing.team.institution.code }}</span></td>
