@@ -29,9 +29,6 @@
   <a href="{% round_url draw_matchups_edit round %}" class="btn btn-default submit-disable">
     Edit Matchups
   </a>
-  <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
-    Draw Details
-  </a>
   {% if pref.allocation_confirmations %}
     <a href="{% round_url confirmations_view %}" class="btn btn-default submit-disable">
       Shift Confirms
@@ -44,7 +41,7 @@
   {% endif %}
   {% if not pref.enable_debate_scheduling %}
     <button class="btn {% if round.starts_at %}btn-success{% else %}btn-primary{% endif %}  submit-disable" data-toggle="modal" data-target="#start-time-form">
-      {% if round.starts_at %}Start Time: {{ round.starts_at }}{% else %}Add Start Time{% endif %}
+      {% if round.starts_at %}Starts at {{ round.starts_at }}{% else %}Add Start Time{% endif %}
     </button>
   {% else %}
     <a href="{% round_url schedule_debates %}" class="btn btn-default submit-disable">
@@ -136,7 +133,7 @@
         </a>
       </div>
 
-      <div class="btn-group pull-right">
+      <div class="btn-group">
         <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_print_scoresheets round %}">
           <span class="text-primary">
             Print Ballots <span class="glyphicon glyphicon-share"></span>
@@ -155,6 +152,13 @@
         </a>
         {% endif %}
       </div>
+
+      <div class="btn-group  pull-right">
+        <a class="btn btn-sm btn-default submit-disable" href="{% round_url draw_with_standings %}">
+          View Draw Details
+        </a>
+      </div>
+
     </div>
 
     <div class="panel-body">

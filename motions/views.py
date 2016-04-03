@@ -51,7 +51,7 @@ def motions_edit(request, round):
             for motions in formset.deleted_objects:
                 motions.delete()
             if 'submit' in request.POST:
-                return redirect_round('motions', round)
+                return redirect_round('draw', round)
     else:
         formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
