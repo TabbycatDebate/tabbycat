@@ -1,6 +1,6 @@
 # This file contains the necessary dependencies for a local install
 
-Django==1.9.2
+Django==1.9.5
 dj-cmd==0.5 # Provides the dj command alias
 django-appconf==1.0.1 # Adds helper class for handling app configs
 django-dynamic-preferences==0.8.1
@@ -11,7 +11,7 @@ django-jet==0.1.4 # Admin Backend
 psycopg2==2.6.1 # For Django to talk to postgres
 six==1.10.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.1.18
-whitenoise==2.0.6 # Static file serving
+whitenoise==3.0.0 # Static file serving
 waitress==0.8.10 # For web serving
 django-compressor==2.0 # Don't update else Windows compatability breaks
 django-libsass==0.6

@@ -34,11 +34,16 @@ READTHEDOCS_VERSION = 'v0.8.3'
 # ===========================
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'utils.middleware.DebateMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware', )
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'utils.middleware.DebateMiddleware' )
 
 TABBYCAT_APPS = ('actionlog',
                  'adjallocation',
@@ -138,8 +143,8 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder', )
 
-# Whitenoise
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'  # Gzipping and unique names
+# Whitenoise Gzipping and unique names
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # =============
 # = Pipelines =
