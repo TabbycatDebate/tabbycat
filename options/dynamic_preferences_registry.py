@@ -431,11 +431,11 @@ class PublicPassword(StringPreference):
     default = 'Enter Password'
 
 @tournament_preferences_registry.register
-class EnableAssistantConfirms(BooleanPreference):
-    help_text = "If not checked, tab assistants will be prevents from confirming ballots they entered"
-    verbose_name = "Tab assistants can confirm own ballots"
+class DisableBallotConfirmation(BooleanPreference):
+    help_text = "Bypasses double checking by setting ballots to be automatically confirmed"
+    verbose_name = "Bypass double checking"
     section = data_entry
-    name = "enable_assistant_confirms"
+    name = "disable_ballot_confirms"
     default = False
 
 @tournament_preferences_registry.register
@@ -601,6 +601,23 @@ class PublicMotionsDescending(ChoicePreference):
         ('reverse', 'Latest round first'),
     )
     default = 'reverse'
+
+@tournament_preferences_registry.register
+class HidePanellists(BooleanPreference):
+    help_text = "If showing draws to public, show all (past and future) released draws"
+    verbose_name = 'Hide Panellists'
+    section = ui_options
+    name = 'show_all_draws'
+    default = False
+
+
+@tournament_preferences_registry.register
+class HideTrainees(BooleanPreference):
+    help_text = "If showing draws to public, show all (past and future) released draws"
+    verbose_name = 'Hide Trainees'
+    section = ui_options
+    name = 'show_all_draws'
+    default = False
 
 # ==============================================================================
 league_options = Section('league_options')
