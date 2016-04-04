@@ -50,12 +50,14 @@
   {% endif %}
   {% if round.motions_released %}
     <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}">
+      {% csrf_token %}
       <button class="btn btn-danger  submit-disable" type="submit">
         Unrelease Motions
       </button>
     </form>
   {% else %}
     <form id="releaseForm" method="POST" action="{% round_url release_motions %}">
+      {% csrf_token %}
       <button class="btn btn-primary  submit-disable" type="submit">
         Release Motions
       </button>
@@ -63,28 +65,27 @@
   {% endif %}
   {% if round.draw_status = round.STATUS_CONFIRMED %}
     <form id="releaseForm" method="POST" action="{% round_url release_draw %}">
-    <button class="btn btn-primary  submit-disable" type="submit">
-      Release Draw
-    </button>
+      {% csrf_token %}
+      <button class="btn btn-primary  submit-disable" type="submit">
+        Release Draw
+      </button>
     </form>
   {% elif round.draw_status = round.STATUS_RELEASED %}
     <form id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}">
-    <button class="btn btn-danger  submit-disable" type="submit">
-      Unrelease Draw
-    </button>
+      {% csrf_token %}
+      <button class="btn btn-danger  submit-disable" type="submit">
+        Unrelease Draw
+      </button>
     </form>
   {% endif %}
 
 {% endblock %}
 
 {% block page-subnav-actions %}
-
   <a href="{% round_url results %}" class="btn btn-success">
     Enter Results<span class="glyphicon glyphicon-chevron-right"></span>
   </a>
-
 {% endblock %}
-
 
 {% block page-alerts %}
   {% if round.motion_set.all.count == 0 %}

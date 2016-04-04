@@ -74,7 +74,9 @@
   </button>
   {% endif %}
 
-  <form id="createForm" action="{% round_url create_draw %}" method="POST"></form>
+  <form id="createForm" action="{% round_url create_draw %}" method="POST">
+    {% csrf_token %}
+  </form>
 
 {% endblock %}
 

@@ -12,7 +12,7 @@
 </div>
 
 <form action="{% tournament_url edit_teams %}" method="POST">
-
+  {% csrf_token %}
   <div class="panel panel-default">
 
     <ul class="list-group">

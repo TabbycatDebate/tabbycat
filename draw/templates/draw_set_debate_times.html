@@ -25,7 +25,8 @@
       <div class="panel-heading">
         <h4>Assign Dates to Venue Groups</h4>
       </div>
-      <form id="assignForm" method="post" action="{% round_url apply_schedule %}">
+      <form id="assignForm" method="POST" action="{% round_url apply_schedule %}">
+        {% csrf_token %}
         <ul class="list-group">
           {% for vg in venue_groups %}
             <li class="list-group-item">

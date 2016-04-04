@@ -15,7 +15,7 @@
 </div>
 
 <form action="{% tournament_url edit_venue_preferences %}" method="POST">
-
+  {% csrf_token %}
   <div class="row">
     <div class="col-md-12">
       <div class="panel">

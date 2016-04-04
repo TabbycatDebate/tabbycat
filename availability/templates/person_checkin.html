@@ -24,6 +24,7 @@
     {% endif %}
 
     <form method="POST" action=".">
+      {% csrf_token %}
       <input id="barcode_id" type="text" name="barcode_id" />
       <input id="checkin_btn" type="submit" name="submit" value="checkin" />
     </form>

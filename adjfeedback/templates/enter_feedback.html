@@ -26,6 +26,7 @@
   <div class="panel panel-default">
     <div class="panel-body">
       <form id="feedbackForm" action="" method="POST" class="form-horizontal">
+        {% csrf_token %}
         {% for field in form %}
         <div class="form-group">
           <label for="{{ field.id_for_label }}" class="col-md-3 col-sm-11 control-label">

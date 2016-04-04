@@ -20,72 +20,72 @@
 {% endblock %}
 
 {% block content %}
-    <form id="resultsForm" class="form-horizontal" action="." method="POST">
-        {% include "enter_results_ballot_set.html" %}
-        <div class="row">
-            <div class="col-sm-12">
+  <form id="resultsForm" class="form-horizontal" action="." method="POST">
+    {% csrf_token %}
+    {% include "enter_results_ballot_set.html" %}
+    <div class="row">
+        <div class="col-sm-12">
 
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4>Ballot Status</h4>
-                </div>
-                <div class="panel-body form-panel">
-                  <div class="form-group col-md-6">
-                    <div class="row">
-                      <label class="col-sm-6 col-xs-9 control-label" for="{{ form.discarded.auto_id }}">
-                          This ballot is discarded
-                      </label>
-                      <div class="col-sm-6 col-xs-3">
-                          {{ form.discarded|addcss:"form-control" }}
-                          {{ form.discarded.errors }}
-                      </div>
-                    </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>Ballot Status</h4>
+            </div>
+            <div class="panel-body form-panel">
+              <div class="form-group col-md-6">
+                <div class="row">
+                  <label class="col-sm-6 col-xs-9 control-label" for="{{ form.discarded.auto_id }}">
+                      This ballot is discarded
+                  </label>
+                  <div class="col-sm-6 col-xs-3">
+                      {{ form.discarded|addcss:"form-control" }}
+                      {{ form.discarded.errors }}
                   </div>
-                  <div class="form-group col-md-6">
-                    <div class="row">
-                      <label class="col-sm-6 col-xs-9 control-label" for="{{ form.confirmed.auto_id }}">
-                          This is the confirmed ballot
-                      </label>
-                      <div class="col-sm-6 col-xs-3">
-                          {{ form.confirmed|addcss:"form-control" }}
-                          {{ form.confirmed.errors }}
-                      </div>
-                    </div>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <div class="row">
+                  <label class="col-sm-6 col-xs-9 control-label" for="{{ form.confirmed.auto_id }}">
+                      This is the confirmed ballot
+                  </label>
+                  <div class="col-sm-6 col-xs-3">
+                      {{ form.confirmed|addcss:"form-control" }}
+                      {{ form.confirmed.errors }}
                   </div>
                 </div>
               </div>
             </div>
+          </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4>Debate Status <small>(for the debate itself, not just this particular ballot set)</small></h4>
-                </div>
-                <div class="panel-body form-panel">
-                  <div class="form-group">
-                      <div class="col-sm-2">
-                          {{ form.debate_result_status|addcss:"form-control" }}
-                          {{ form.debate_result_status.errors }}
-                      </div>
-                      <div class="col-sm-10">
-                          <input id="submit" class="save btn btn-success submit-disable" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
-                          <a class="btn btn-default btn-danger" href="{% round_url results %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel</a>
-                      </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>Debate Status <small>(for the debate itself, not just this particular ballot set)</small></h4>
+            </div>
+            <div class="panel-body form-panel">
+              <div class="form-group">
+                  <div class="col-sm-2">
+                      {{ form.debate_result_status|addcss:"form-control" }}
+                      {{ form.debate_result_status.errors }}
                   </div>
-                </div>
+                  <div class="col-sm-10">
+                      <input id="submit" class="save btn btn-success submit-disable" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
+                      <a class="btn btn-default btn-danger" href="{% round_url results %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel</a>
+                  </div>
               </div>
             </div>
+          </div>
         </div>
-
-    </form>
+    </div>
+  </form>
 {% endblock content %}
 
 {% block extra-js %}
-<script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
-<script>
-  $(document).ready( function() {
-    {% include "js/enter_results.js" %}
-  });
-</script>
+  <script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
+  <script>
+    $(document).ready( function() {
+      {% include "js/enter_results.js" %}
+    });
+  </script>
 {% endblock %}

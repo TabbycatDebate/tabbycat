@@ -19,7 +19,7 @@
 </div>
 
 <form action="{% tournament_url confirm_venue_preferences %}" method="POST">
-
+  {% csrf_token %}
   {% for institution in institutions %}
 
     <div class="row">

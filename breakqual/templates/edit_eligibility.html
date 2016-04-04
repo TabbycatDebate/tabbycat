@@ -23,6 +23,7 @@
 {% block content %}
 
   <form id="breakEligibilityForm" action="." method="POST" class="form-horizontal">
+    {% csrf_token %}
     <div class="panel panel-default">
       <div class="panel-body">
         <table id="dataTable" class="table">
