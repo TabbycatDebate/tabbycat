@@ -12,7 +12,7 @@
 </div>
 
 <form id="addAdjudicators" action="{% tournament_url confirm_adjudicators %}" method="POST">
-
+  {% csrf_token %}
   {% for key, values in institutions.items %}
 
     <div class="row">

@@ -33,7 +33,7 @@
   {% endif %}
 
   <form id="resultsForm" action="." method="POST" class="form-horizontal">
-
+    {% csrf_token %}
     {% include "enter_results_ballot_set.html" %}
 
     <div class="row">

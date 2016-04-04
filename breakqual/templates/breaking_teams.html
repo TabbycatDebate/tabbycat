@@ -11,16 +11,19 @@
 {% block page-subnav-sections %}
   {% if generated %}
     <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline" method="POST">
+      {% csrf_token %}
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
-          Delete and regenerate the break for all categories
+        Delete and regenerate the break for all categories
       </button>
     </form>
     <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline" method="POST">
+      {% csrf_token %}
       <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
         Update the break for all categories
       </button>
     </form>
     <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline" method="POST">
+      {% csrf_token %}
       <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
         Update the break for this category ({{ category.name }})
       </button>
@@ -28,8 +31,9 @@
   {% else %}
     <div class="forms-block-inline">
       <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
+        {% csrf_token %}
         <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-            Generate the break for all categories
+          Generate the break for all categories
         </button>
       </form>
     </div>
@@ -91,7 +95,7 @@
 {% block content %}
   {% if generated %}
     <form action="." method="POST">
-
+      {% csrf_token %}
       <div class="panel panel-default">
         <div class="panel-body">
 

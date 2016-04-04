@@ -18,8 +18,12 @@
       Assign Motions to Divisions
     </a>
   {% endif %}
-  <form id="releaseForm" method="POST" action="{% round_url release_motions %}"></form>
-  <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}"></form>
+  <form id="releaseForm" method="POST" action="{% round_url release_motions %}">
+    {% csrf_token %}
+  </form>
+  <form id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}">
+    {% csrf_token %}
+  </form>
 {% endblock %}
 
 {% block page-subnav-actions %}

@@ -17,9 +17,7 @@
 {% block content %}
 
 <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
-
   {% csrf_token %}
-
   {% for field in form %}
   <div class="form-group">
     <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">

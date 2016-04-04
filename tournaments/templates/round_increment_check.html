@@ -10,6 +10,7 @@
 {% block page-subnav-actions %}
 
   <form action="{% round_url round_increment %}" method="POST">
+    {% csrf_token %}
     <button class="btn submit-disable {{increment_ok|yesno:"btn-success,btn-warning"}}" id="createDraw" type="submit" data-loading-text="Advancing...">
       {% if increment_ok %}
         Advance to Next Round

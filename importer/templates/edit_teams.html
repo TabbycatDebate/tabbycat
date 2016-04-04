@@ -14,7 +14,7 @@
 </div>
 
 <form id="" action="{% tournament_url confirm_teams %}" method="POST">
-
+  {% csrf_token %}
   {% for institution in institutions %}
 
     <div class="row">

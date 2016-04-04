@@ -157,6 +157,7 @@
       </div>
       <div class="modal-body">
         <form id="startTimeForm" method="POST" action="{% tournament_url set_adj_test_score  %}" class="form-horizontal">
+          {% csrf_token %}
           <input id="id_adj_test_id" name="adj_test_id" type="hidden" value="" />
           <div class="form-group">
             <label class="col-sm-3 control-label">
@@ -192,6 +193,7 @@
         </div>
         <div class="modal-body">
           <form id="startTimeForm" method="POST" action="{% tournament_url set_adj_note  %}" class="form-horizontal">
+            {% csrf_token %}
             <input id="id_adj_test_id_note" name="adj_test_id" type="hidden" value="" />
             <div class="form-group">
               <div class="col-sm-12">

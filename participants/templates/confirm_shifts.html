@@ -7,8 +7,8 @@
 
 {% block content %}
 
-  <form method="post" action="">
-
+  <form method="POST" action="">
+    {% csrf_token %}
     {{ formset.management_form }}
 
     <div class="row">

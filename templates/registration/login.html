@@ -18,52 +18,53 @@
 {% block content %}
 
 <form id="login" action="." method="POST" class="form-horizontal">
-<div class="row">
-  <div class="col-md-12">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-md-12">
 
-    {% csrf_token %}
+      {% csrf_token %}
 
-    {% if form.errors %}
-      <div class="alert alert-danger">
-        Your username and password didn't match.
-      </div>
-    {% endif %}
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          Your username and password didn't match.
+        </div>
+      {% endif %}
 
-    {% if next %}
-        {% if user.is_authenticated %}
-        <div class="alert alert-warning">Your account doesn't have access to this page. To proceed,
-        please log in with an account that has access.</div>
-        {% else %}
-        <div class="alert alert-warning">Please log in to see this page.</div>
-        {% endif %}
-    {% endif %}
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    {% for field in form %}
-    <div class="form-group">
-      <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
-      <div class="col-md-6">
-        {{field|addcss:"form-control"}}
-      </div>
-      {% if field.errors %}
-        {{ field.errors }}
+      {% if next %}
+          {% if user.is_authenticated %}
+          <div class="alert alert-warning">Your account doesn't have access to this page. To proceed,
+          please log in with an account that has access.</div>
+          {% else %}
+          <div class="alert alert-warning">Please log in to see this page.</div>
+          {% endif %}
       {% endif %}
     </div>
-    {% endfor %}
-
-    <div class="form-group">
-      <div class="col-md-offset-2 col-md-2 col-sm-4">
-        <button type="submit" class="btn btn-success submit-disable" data-loading-text="Logging in...">
-          Login
-        </button>
-      </div>
-    </div>
-
-    <input type="hidden" name="next" value="{{ next }}" />
-
   </div>
-</div>
+  <div class="row">
+    <div class="col-md-12">
+      {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
+        <div class="col-md-6">
+          {{field|addcss:"form-control"}}
+        </div>
+        {% if field.errors %}
+          {{ field.errors }}
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <div class="form-group">
+        <div class="col-md-offset-2 col-md-2 col-sm-4">
+          <button type="submit" class="btn btn-success submit-disable" data-loading-text="Logging in...">
+            Login
+          </button>
+        </div>
+      </div>
+
+      <input type="hidden" name="next" value="{{ next }}" />
+
+    </div>
+  </div>
 </form>
 {% endblock %}

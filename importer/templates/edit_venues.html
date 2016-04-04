@@ -8,7 +8,7 @@
 {% block content %}
 
 <form id="addVenues" action="{% tournament_url confirm_venues %}" method="POST">
-
+  {% csrf_token %}
   <ul class="list-group">
     {% for venue in venues %}
     <li class="list-group-item">

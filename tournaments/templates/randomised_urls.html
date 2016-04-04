@@ -167,6 +167,7 @@
   </p>
   <p>
     <form action="{% tournament_url randomised-urls-generate %}" method="POST">
+      {% csrf_token %}
       <button class="btn btn-default" id="generateRandomisedUrls" type="submit">
         Generate randomised URLs for ballot and feedback submission
       </button>

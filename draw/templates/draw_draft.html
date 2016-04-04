@@ -9,7 +9,9 @@
     <button id="confirmDraw" class="btn btn-success">
       Confirm Draw  <span class="glyphicon glyphicon-chevron-right"></span>
     </button>
-    <form id="confirmForm" method="POST" action="{% round_url confirm_draw %}"></form>
+    <form id="confirmForm" method="POST" action="{% round_url confirm_draw %}">
+      {% csrf_token %}
+    </form>
 {% endblock %}
 
 {% block page-subnav-sections %}
