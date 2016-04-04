@@ -43,7 +43,7 @@ def all_tournaments_all_teams(request, t):
 
 @public_optional_tournament_view('allocation_confirmations')
 def public_confirm_shift_key(request, t, url_key):
-    adj = get_object_or_404(Adjudicator, tournament=t, url_key=url_key)
+    adj = get_object_or_404(Adjudicator, url_key=url_key)
     adj_debates = DebateAdjudicator.objects.filter(adjudicator=adj)
 
     ShiftsFormset = modelformset_factory(DebateAdjudicator,
@@ -57,6 +57,4 @@ def public_confirm_shift_key(request, t, url_key):
     else:
         formset = ShiftsFormset(queryset=adj_debates)
 
-
-
-    return r2r(request, 'confirm_shifts.html', dict(formset=formset, adjudicator=adj))
+    return render(request, 'confirm_shifts.html', dict(formset=formset, adjudicator=adj))

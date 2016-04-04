@@ -76,6 +76,10 @@ Download `postgres.app <http://postgresapp.com/>`_, move it to your Applications
 
     $ createdb mydatabasename --owner myusername
 
+3. In terminal type in::
+
+    $ PATH="/Applications/Postgres.app/Contents/Versions/9.5/bin:$PATH"
+
 4. Install Tabbycat
 ================================================================================
 Almost there!

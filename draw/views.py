@@ -1,10 +1,16 @@
+import json
 from actionlog.models import ActionLogEntry
 from participants.models import Team
-from tournaments.models import Tournament, Round
+from tournaments.models import Tournament, Round, Division
 from motions.models import Motion
 from venues.models import Venue, VenueGroup
+from adjfeedback.models import AdjudicatorFeedbackQuestion
 from .models import TeamPositionAllocation, Debate, DebateTeam
 from standings.teams import TeamStandingsGenerator
+
+from django.views.generic.base import TemplateView
+from tournaments.mixins import RoundMixin
+from utils.mixins import SuperuserRequiredMixin
 
 from utils.views import *
 
@@ -253,6 +259,41 @@ def set_round_start_time(request, round):
 
 @admin_required
 @round_view
+def schedule_debates(request, round):
+    venue_groups = VenueGroup.objects.all()
+    divisions = Division.objects.filter(tournament=round.tournament).order_by('id')
+    return render(request,
+               "draw_set_debate_times.html",
+               dict(venue_groups=venue_groups, divisions=divisions))
+
+
+@admin_required
+@expect_post
+@round_view
+def apply_schedule(request, round):
+    import datetime
+    debates = Debate.objects.filter(round=round)
+    for debate in debates:
+        division = debate.teams[0].division
+        if division and division.time_slot:
+            date = request.POST[str(division.venue_group.id)]
+            if date:
+                time = "%s %s" % (date, division.time_slot)
+                try:
+                    debate.time = datetime.datetime.strptime(time,
+                        "%Y-%m-%d %H:%M:%S") # Chrome
+                except ValueError:
+                    debate.time = datetime.datetime.strptime(time,
+                        "%d/%m/%Y %H:%M:%S") # Others
+
+                debate.save()
+
+    messages.success(request, "Applied schedules to debates")
+    return redirect_round('draw', round)
+
+
+@admin_required
+@round_view
 def draw_matchups_edit(request, round):
     standings, draw = get_draw_with_standings(round)
     debates = len(draw)
@@ -406,7 +447,8 @@ def public_draw_by_round(request, round):
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def public_all_draws(request, t):
-    all_rounds = list(Round.objects.filter(tournament=t))
+    all_rounds = list(Round.objects.filter(
+        tournament=t, draw_status=Round.STATUS_RELEASED))
     for r in all_rounds:
         r.draw = r.get_draw()
 
@@ -436,15 +478,26 @@ def public_side_allocations(request, t):
                dict(teams=teams,
                     rounds=rounds))
 
+@login_required
+@round_view
+def confirmations_view(request, round):
+    from participants.models import Adjudicator
+    from adjallocation.models import DebateAdjudicator
+    adjs = Adjudicator.objects.all().order_by('name')
+    for adj in adjs:
+        shifts = DebateAdjudicator.objects.filter(adjudicator=adj, debate__round__tournament__active=True)
+        if len(shifts) > 0:
+            adj.shifts = shifts
+
+    return render(request, 'confirmations_view.html', dict(adjs=adjs))
+
 # Mastersheets
-
-
 @login_required
 @round_view
 def master_sheets_list(request, round):
     venue_groups = VenueGroup.objects.all()
     return render(request,
-               'master_sheets_list.html',
+               'division_sheets_list.html',
                dict(venue_groups=venue_groups))
 
 
@@ -458,7 +511,7 @@ def master_sheets_view(request, round, venue_group_id):
     for tournament in list(active_tournaments):
         tournament.debates = Debate.objects.select_related(
             'division', 'division__venue_group__short_name', 'round',
-            'round__tournament', 'aff_team', 'neg_team').filter(
+            'round__tournament').filter(
                 # All Debates, with a matching round, at the same venue group name
                 round__seq=round.seq,
                 round__tournament=tournament,
@@ -468,43 +521,135 @@ def master_sheets_view(request, round, venue_group_id):
                        'division')
 
     return render(request,
-               'master_sheets_view.html',
+               'printing/master_sheets_view.html',
                dict(base_venue_group=base_venue_group,
                     active_tournaments=active_tournaments))
 
 
-@admin_required
+@login_required
 @round_view
-def draw_print_feedback(request, round):
-    draw = round.get_draw_by_room()
-    preferences = round.tournament.preferences
-    questions = round.tournament.adj_feedback_questions
-    for question in questions:
-        if question.choices:
-            question.choice_options = question.choices.split("//")
-        if question.min_value is not None and question.max_value is not None:
-            step = max(
-                (int(question.max_value) - int(question.min_value)) / 10, 1)
-            question.number_options = list(range(
-                int(question.min_value), int(question.max_value + 1), int(
-                    step)))
+def room_sheets_view(request, round, venue_group_id):
+    # Temporary - pre unified venue groups
+    base_venue_group = VenueGroup.objects.get(id=venue_group_id)
+    venues = Venue.objects.filter(group=base_venue_group)
+
+    for venue in venues:
+        venue.debates = Debate.objects.filter(
+            # All Debates, with a matching round, at the same venue group name
+            round__seq=round.seq,
+            venue=venue
+        ).select_related('round__tournament__short_name').order_by('round__tournament__seq')
 
     return render(request,
-               "printing/feedback_list.html",
-               dict(draw=draw,
-                    preferences=preferences,
-                    questions=questions))
+               'printing/room_sheets_view.html',
+               dict(base_venue_group=base_venue_group,
+                    venues=venues))
 
 
-@admin_required
-@round_view
-def draw_print_scoresheets(request, round):
-    draw = round.get_draw_by_room()
-    preferences = round.tournament.preferences
-    motions = Motion.objects.filter(round=round)
+class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
-    return render(request,
-               "printing/scoresheet_list.html",
-               dict(draw=draw,
-                    preferences=preferences,
-                    motions=motions))
+    template_name = 'printing/feedback_list.html'
+
+    def team_on_orallist(self):
+        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, chair_on_panellist=True).exists()
+
+    def chair_on_panellist(self):
+        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, panellist_on_chair=True).exists()
+
+    def panellist_on_panellist(self):
+        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, panellist_on_panellist=True).exists()
+
+    def panellist_on_chair(self):
+        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, team_on_orallist=True).exists()
+
+    def questions_json_dict(self):
+        questions = []
+        for q in self.get_round().tournament.adj_feedback_questions:
+            q_set = {
+                'text': q.text, 'seq': q.seq, 'type': q.answer_type,
+                'required': json.dumps(q.answer_type),
+                'chair_on_panellist': json.dumps(q.chair_on_panellist),
+                'panellist_on_chair': json.dumps(q.panellist_on_chair),
+                'panellist_on_panellist': json.dumps(q.panellist_on_panellist),
+                'team_on_orallist': json.dumps(q.team_on_orallist),
+            }
+            if q.choices:
+                q_set['choice_options'] = q.choices.split("//")
+            elif q.min_value is not None and q.max_value is not None:
+                q_set['choice_options'] = q.choices_for_number_scale
+
+            questions.append(q_set)
+        return questions
+
+    def construct_info(self, venue, source, source_p, target, target_p):
+        source_n = source.name if hasattr(source, 'name') else source.short_name
+        return {
+            'room': venue.name,
+            'authorInstitution': source.institution.code,
+            'author': source_n, 'authorPosition': source_p,
+            'target': target.name, 'targetPosition': target_p
+        }
+
+    def get_context_data(self, **kwargs):
+        kwargs['questions'] = self.questions_json_dict()
+        kwargs['ballots'] = []
+
+        for debate in self.get_round().get_draw_by_room():
+            chair = debate.adjudicators.chair
+
+            if self.team_on_orallist():
+                for team in debate.teams:
+                    kwargs['ballots'].append(self.construct_info(
+                        debate.venue, team, "Team", chair, "C"))
+
+            if self.chair_on_panellist():
+                for adj in debate.adjudicators.panel:
+                    kwargs['ballots'].append(self.construct_info(
+                        debate.venue, chair, "C", adj, "P"))
+                for adj in debate.adjudicators.trainees:
+                    kwargs['ballots'].append(self.construct_info(
+                        debate.venue, chair, "C", adj, "T"))
+
+            if self.panellist_on_chair():
+                for adj in debate.adjudicators.panel:
+                    kwargs['ballots'].append(self.construct_info(
+                        debate.venue, adj, "P", chair, "C"))
+                for adj in debate.adjudicators.trainees:
+                    kwargs['ballots'].append(self.construct_info(
+                        debate.venue, adj, "T", chair, "C"))
+
+        return super().get_context_data(**kwargs)
+
+
+class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+
+    template_name = 'printing/scoresheet_list.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['motions'] = Motion.objects.filter(round=self.get_round()).values('text').order_by('seq')
+        kwargs['ballots'] = []
+
+        for debate in self.get_round().get_draw_by_room():
+            debateInfo = {
+                'room': debate.venue.name,
+                'aff': debate.aff_team.short_name,
+                'affEmoji': debate.aff_team.emoji,
+                'affSpeakers': [s.name for s in debate.aff_team.speakers],
+                'neg': debate.neg_team.short_name,
+                'negEmoji': debate.neg_team.emoji,
+                'negSpeakers': [s.name for s in debate.neg_team.speakers],
+                'panel': []
+            }
+            for position, adj in debate.adjudicators:
+                debateInfo['panel'].append({ 'name': adj.name, 'institution': adj.institution.code, 'position': position})
+
+            for adj in (a for a in debateInfo['panel'] if a['position'] != "T"):
+                ballotData = {
+                    'author': adj['name'],
+                    'authorInstitution': adj['institution'],
+                    'authorPosition': adj['position'],
+                }
+                ballotData.update(debateInfo) # Extend with debateInfo keys
+                kwargs['ballots'].append(ballotData)
+
+        return super().get_context_data(**kwargs)

@@ -326,12 +326,6 @@ class Round(models.Model):
         else:
             teams = self.active_teams.all()
 
-        from participants.models import Team
-        orig_len = len(teams)
-        teams = teams.exclude(type=Team.TYPE_BYE)
-        if orig_len != len(teams):
-            logger.info("Excluded bye teams: {} total, {} teams after cull".format(orig_len, len(teams)))
-
         # Set type-specific options
         if self.draw_type == self.DRAW_RANDOM:
             draw_type = "random"
@@ -390,7 +384,7 @@ class Round(models.Model):
         if options["side_allocations"] == "manual-ballot":
             options["side_allocations"] = "balance"
 
-        drawer = DrawGenerator(draw_type, teams, results=None, **options)
+        drawer = DrawGenerator(draw_type, teams, self, results=None, **options)
         draw = drawer.generate()
         self.make_debates(draw)
         self.draw_status = self.STATUS_DRAFT
@@ -542,8 +536,11 @@ class Round(models.Model):
         from venues.models import Venue
         all_venues = self.base_availability(Venue, 'availability_activevenue',
                                             'venue_id', 'venues_venue')
-        all_venues = [v for v in all_venues if v.tournament == self.tournament]
-        return all_venues
+
+        if  self.tournament.pref('share_venues'):
+            return all_venues
+        else:
+            return [v for v in all_venues if v.tournament == self.tournament]
 
     def unused_venues(self):
         from venues.models import Venue
@@ -556,10 +553,11 @@ class Round(models.Model):
                                       WHERE da.round_id=%d AND
                                       da.venue_id = venues_venue.id)""" %
                                           self.id}, )
-        return [v
-                for v in result
-                if v.is_active and not v.is_used and v.tournament ==
-                self.tournament]
+
+        if self.tournament.pref('share_venues'):
+            return [v for v in result if v.is_active and not v.is_used]
+        else:
+            return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
 
     def adjudicator_availability(self):
         from participants.models import Adjudicator
@@ -569,10 +567,10 @@ class Round(models.Model):
                                           'participants_adjudicator',
                                           id_field='person_ptr_id')
 
-        if not self.tournament.pref('share_adjs'):
-            all_adjs = [a for a in all_adjs if a.tournament == self.tournament]
-
-        return all_adjs
+        if self.tournament.pref('share_adjs'):
+            return all_adjs
+        else:
+            return [a for a in all_adjs if a.tournament == self.tournament]
 
     def unused_adjudicators(self):
         from participants.models import Adjudicator

@@ -1,4 +1,4 @@
-name,institution,team_name,use_team_name_as_prefix,gender,pronoun,novice_status
+name,institution,team_name,use_institution_prefix,gender,pronoun,novice
 Georgia Crawford,California Institute of Technology,1,1,F,she,0
 Wanda Griffin,California Institute of Technology,1,1,F,she,1
 Helen Keller,California Institute of Technology,1,1,F,she,0

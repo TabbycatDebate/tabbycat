@@ -144,7 +144,7 @@ if args.init_db:
 
     # Set secret key
     secret_key = get_output_from_command(["heroku", "run", "python", "manage.py", "generate_secret_key"])
-    secret_key = secret_key.decode().strip()
+    secret_key = secret_key.decode().strip().split()[-1]
     command = ["config:add", "DJANGO_SECRET_KEY=%s" % secret_key]
     run_heroku_command(command)
 
@@ -154,9 +154,9 @@ if args.init_db:
         if args.tournament_slug:
             command += ["--slug", args.tournament_slug]
         if args.tournament_name:
-            command += ["--name", "\"" + args.tournament_name + "\""]
+            command += ["--name", args.tournament_name]
         if args.tournament_short_name:
-            command += ["--short-name", "\"" + args.tournament_short_name + "\""]
+            command += ["--short-name", args.tournament_short_name]
         run_heroku_command(command)
 
     # Open in browser

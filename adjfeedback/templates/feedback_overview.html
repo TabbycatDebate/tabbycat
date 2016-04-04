@@ -11,6 +11,7 @@
 {% block sub-title %}
   <span id="breaking_count">{{ breaking_count }}</span> marked as breaking
 {% endblock %}
+{% block body-id %}feedbackOverview{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-default active" href="{% tournament_url adjfeedback-overview %}">
@@ -22,7 +23,7 @@
   <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-by-source %}">
     Find Feedback
   </a>
-  {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
+  {% if pref.public_ballots_randomised or pref.public_feedback_randomised or pref.allocation_confirmations %}
   <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">
     Randomised URLs
   </a>
@@ -37,6 +38,7 @@
     <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
 {% endblock %}
 
+
 {% block content %}
 
   <div class="panel panel-default">
@@ -45,13 +47,10 @@
         <thead>
       <tr>
         <th>Name</th>
-        {% if pref.show_institutions %}
-          <th>Institution</th>
-        {% endif %}
         <th><span data-toggle="tooltip" title="Overall Score">Score</span></th>
         <th><span data-toggle="tooltip" title="Test Score; click to edit">Test</span></th>
         <th>Feedback</th>
-        <th>Trend</th>
+        <th>Trend (<span style="color: #3700A8">Chair</span>, <span style="color: #007FFF">Panellist</span>, <span style="color: #A0E6E5">Trainee</span>)</th>
         {% if pref.show_unaccredited %}
           <th><span class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" title="If the Adj is a Trainee" ></span></th>
         {% endif %}
@@ -69,13 +68,9 @@
       {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">
           <td class="adj-name">
-              <span>{{ adj.name }}</span>
+              <span>{{ adj.name }}</span><br>
+              <em>{{ adj.institution.code }}</em>
           </td>
-          {% if pref.show_institutions %}
-            <td>
-              {{ adj.institution.code }}
-            </td>
-          {% endif %}
           <td>
             {{ adj.score|stringformat:".2f" }}
           </td>
@@ -83,8 +78,11 @@
             <a data-toggle="modal" data-target="#edit-test-score" class="edit-test-score">{{ adj.test_score }}</a>
           </td>
           <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
-          <td>
-            <div id="graph_{{ adj.id }}" style="width: 100%; min-width: 100px; height: 60px; margin: -10px 0 -10px -20px;"></div>
+          <td style="padding: 4px 0px 0px 0px;">
+            <feedback-trend :min-score="minScore" :max-score="maxScore"
+                            :round-seq="roundSeq"
+                            :graph-data="graphData[{{ adj.id }}]"
+                            :id="{{ adj.id }}"></feedback-trend>
           </td>
           {% if pref.show_unaccredited %}
             <td>
@@ -94,7 +92,7 @@
             </td>
           {% endif %}
           <td>
-            <a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View Feedback</a>
+            <a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View<br>Feedback</a>
           </td>
           {% if pref.enable_adj_notes > 0 %}
             <td>
@@ -217,8 +215,21 @@
 
 {% block extra-js %}
 
-<script src="{% static 'js/vendor/jquery.flot.min.js' %}"></script>
+<script src="{% static 'js/vendor/d3.min.js' %}"></script>
+{% include "vue/import-vue.html" %}
+{% include "vue/feedback-trend.vue" %}
+
 <script>
+  var vueData =  {
+    graphData: {{ feedback_data|safe }},
+    minScore: {{ pref.adj_min_score }},
+    maxScore: {{ pref.adj_max_score }},
+    roundSeq: {{ current_round.seq }}
+  }
+  new Vue({
+    el: '#feedbackOverview',
+    data: vueData
+  })
 
   $(document).ready( function() {
 
@@ -303,81 +314,6 @@
         return false;
       });
     });
-
-    $("<div id='tooltip'></div>").css({
-      position: "absolute",
-      display: "none",
-      border: "1px solid #fdd",
-      padding: "4px 8px 4px 16px",
-      color: "#FFF",
-      "background-color": "#000",
-      opacity: 0.80
-    }).appendTo("body");
-
-    function formatter(val, axis) {
-      return "";
-    }
-
-    {% for adj in adjudicators %}
-
-      function drawPoints{{ adj.id }}(ctx, x, y, radius, shadow) {
-        ctx.arc(x, y, radius, 0, null ? Math.PI : Math.PI * 2, false);
-        ctx.fillStyle = "#000";
-        ctx.strokeStyle = "#000";
-        if (adj_{{ adj.id }}[drawPoints.calls]) {
-          if (adj_{{ adj.id }}[drawPoints.calls][2] == "Chair") {
-            ctx.fillStyle = "#5cb85c";
-            ctx.strokeStyle = "#5cb85c";
-          } else if (adj_{{ adj.id }}[drawPoints.calls][2] == "Panellist") {
-            ctx.fillStyle = "#f0ad4e";
-            ctx.strokeStyle = "#f0ad4e";
-          } else if (adj_{{ adj.id }}[drawPoints.calls][2] == "Trainee") {
-            ctx.fillStyle = "#d9534f";
-            ctx.strokeStyle = "#d9534f";
-          } else if (adj_{{ adj.id }}[drawPoints.calls][2] == "Test Score") {
-            ctx.fillStyle = "#666";
-            ctx.strokeStyle = "#666";
-          }
-        }
-        drawPoints{{ adj.id }}.calls++;
-      }
-      drawPoints{{ adj.id }}.calls = 0;
-
-      var adj_{{ adj.id }}_data = [[0,{{ adj.test_score }},"Test Score"]{% for s in adj.rscores %}{% if s %},[{{ s.0 }},{{ s.1|floatformat:1 }},"{{ s.2 }}"]{% endif %}{% endfor %}]
-
-      $.plot("#graph_{{ adj.id }}", [ adj_{{ adj.id }}_data ], {
-        xaxis: {
-          min: 0, max: {{ current_round.seq }}, tickSize: 1, tickDecimals: 0, tickFormatter: formatter
-        },
-        yaxis: {
-          min: {{ pref.score_min }}, max: {{ pref.score_max }},
-          tickSize: 1, tickDecimals: 0, tickFormatter: formatter
-        },
-        grid: {
-          borderWidth: 0, hoverable: true,
-        },
-        series: {
-          lines: { show: true }, points: { show: true, symbol: drawPoints{{ adj.id }} }, shadowSize: 0, color: "#428bca"
-        },
-      });
-
-      $("#graph_{{ adj.id }}").bind("plothover", function (event, pos, item) {
-
-        if (item) {
-          var round = item.datapoint[0].toFixed(2),
-              score = item.datapoint[1].toFixed(2),
-              type = item.series.data[item.dataIndex][2];
-
-          $("#tooltip").html("R" + parseInt(round) + " received " + score + " as " + type)
-            .css({top: item.pageY+5, left: item.pageX+5})
-            .fadeIn(100);
-        } else {
-          $("#tooltip").hide();
-        }
-
-      });
-
-    {% endfor %}
 
   });
 

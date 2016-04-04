@@ -34,6 +34,9 @@ class Debate(models.Model):
     bracket = models.FloatField(default=0)
     room_rank = models.IntegerField(default=0)
 
+    time = models.DateTimeField(blank=True, null=True,
+        help_text="The time/date of a debate if it is specifically scheduled")
+
     # comma-separated list of strings
     flags = models.CharField(max_length=100, blank=True, null=True)
 

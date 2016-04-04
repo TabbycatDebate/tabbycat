@@ -136,6 +136,9 @@
     opacity: 0.5; // Dull the 'shadow' left behind while dragging
   }
 }
+.venue {
+  max-width: 235px;
+}
 .panel-body .table > tbody > tr:hover td {
   .venue span, .adj span, .team  span{
     color: #000;

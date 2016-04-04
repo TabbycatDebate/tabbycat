@@ -222,7 +222,7 @@ EMOJI_LIST = (
     ("💂", "💂"), # Guardsman
     ("🎅", "🎅"), # Father Christmas
     ("👼", "👼"), # Baby Angel
-    # USED BY UI ("👯", ""), # Woman With Bunny Ears
+    # USED BY UI ("👯", ""), # Woman With Bunny Ears // for bulk adding teams and team tab/standings
     # LAME ("💆", ""), # Face Massage
     # LAME ("💇", ""), # Haircut
     ("👰", "👰"), # Bride With Veil
@@ -230,7 +230,7 @@ EMOJI_LIST = (
     # LAME ("🙎", ""), # Person With Pouting Face
     ("🙅", "🙅"), # Face With No Good Gesture
     ("🙆", "🙆"), # Face With OK Gesture
-    # USED BY UI ("💁", ""), # Information Desk Person
+    # USED BY UI ("💁", ""), # Information Desk Person // for reply standings
     ("🙋", "🙋"), # Happy Person Raising One Hand
     ("🙇", "🙇"), # Person Bowing Deeply
     ("🙌", "🙌"), # Person Raising Both Hands in Celebration
@@ -257,12 +257,12 @@ EMOJI_LIST = (
     ("👌", "👌"), # OK Hand Sign
     ("👍", "👍"), # Thumbs Up Sign
     ("👎", "👎"), # Thumbs Down Sign
-    # USED BY UI ("👋", "👋"), # Waving Hand Sign
+    # USED BY UI ("👋", "👋"), # Waving Hand Sign // for the welcome pages
     # LAME ("👏", ""), # Clapping Hands Sign
     ("👐", "👐"), # Open Hands Sign
     ("💅", "💅"), # Nail Polish
     # LAME ("👣", ""), # Footprints
-    # USED BY UI ("👀", ""), # Eyes
+    # USED BY UI ("👀", ""), # Eyes // for the draw pages
     ("👂", "👂"), # Ear
     ("👃", "👃"), # Nose
     ("👅", "👅"), # Tongue
@@ -309,7 +309,7 @@ EMOJI_LIST = (
     ("👠", "👠"), # High-Heeled Shoe
     # LAME ("👡", ""), # Womans Sandal
     # LAME ("👢", ""), # Womans Boots
-    # USED BY UI ("👑", ""), # Crown
+    # USED BY UI ("👑", ""), # Crown // for the break pages
     ("👒", "👒"), # Womans Hat
     ("🎩", "🎩"), # Top Hat
     ("💄", "💄"), # Lipstick
@@ -322,25 +322,25 @@ EMOJI_LIST = (
     ("👽", "👽"), # Extraterrestrial Alien
     ("👾", "👾"), # Alien Monster
     ("💩", "💩"), # Pile of Poo
-    # USED BY UI ("🐵", ""), # Monkey Face
-    # USED BY UI ("🙈", ""), # See-No-Evil Monkey
-    # USED BY UI ("🙉", ""), # Hear-No-Evil Monkey
-    # USED BY UI ("🙊", ""), # Speak-No-Evil Monkey
+    ("🐵", ""), # Monkey Face
+    ("🙈", ""), # See-No-Evil Monkey
+    ("🙉", ""), # Hear-No-Evil Monkey
+    ("🙊", ""), # Speak-No-Evil Monkey
     # OFFENSIVE("🐒", ""), # Monkey
     ("🐶", "🐶"), # Dog Face
     # TOO SIMILAR ("🐕", ""), # Dog
-    # TOO SIMILAR ("🐩", ""), # Poodle
+    ("🐩", ""), # Poodle
     # TOO SIMILAR ("🐺", ""), # Wolf Face
-    # USED BY UI ("🐱", ""), # Cat Face
-    # USED BY UI ("😸", ""), # Grinning Cat Face With Smiling Eyes
-    # USED BY UI ("😹", ""), # Cat Face With Tears of Joy
-    # USED BY UI ("😺", ""), # Smiling Cat Face With Open Mouth
-    # USED BY UI ("😻", ""), # Smiling Cat Face With Heart-Shaped Eyes
-    # USED BY UI ("😼", ""), # Cat Face With Wry Smile
-    # USED BY UI ("😽", ""), # Kissing Cat Face With Closed Eyes
-    # USED BY UI ("😾", ""), # Pouting Cat Face
-    # USED BY UI ("😿", ""), # Crying Cat Face
-    # USED BY UI ("🙀", ""), # Weary Cat Face
+    # ("🐱", ""), # Cat Face // USED BY UI
+    # ("😸", ""), # Grinning Cat Face With Smiling Eyes // USED BY UI
+    # ("😹", ""), # Cat Face With Tears of Joy // USED BY UI
+    # ("😺", ""), # Smiling Cat Face With Open Mouth // USED BY UI
+    # ("😻", ""), # Smiling Cat Face With Heart-Shaped Eyes // USED BY UI
+    # ("😼", ""), # Cat Face With Wry Smile // USED BY UI
+    # ("😽", ""), # Kissing Cat Face With Closed Eyes // USED BY UI
+    # ("😾", ""), # Pouting Cat Face // USED BY UI
+    # ("😿", ""), # Crying Cat Face // USED BY UI
+    # ("🙀", ""), # Weary Cat Face // USED BY UI
     # LAME ("🐈", ""), # Cat
     ("🐯", "🐯"), # Tiger Face
     # LAME ("🐅", ""), # Tiger
@@ -405,14 +405,14 @@ EMOJI_LIST = (
     ("🌻", "🌻"), # Sunflower
     # LAME ("🌼", ""), # Blossom
     ("🌷", "🌷"), # Tulip
-    # LAME ("🌱", ""), # Seedling
+    ("🌱", ""), # Seedling
     # LAME ("🌲", ""), # Evergreen Tree
     # LAME ("🌳", ""), # Deciduous Tree
     # LAME ("🌴", ""), # Palm Tree
     ("🌵", "🌵"), # Cactus
     # LAME ("🌾", ""), # Ear of Rice
     # LAME ("🌿", ""), # Herb
-    # LAME ("🍀", ""), # Four Leaf Clover
+    ("🍀", ""), # Four Leaf Clover
     ("🍁", "🍁"), # Maple Leaf
     # LAME ("🍂", ""), # Fallen Leaf
     # LAME ("🍃", ""), # Leaf Fluttering in Wind
@@ -443,7 +443,7 @@ EMOJI_LIST = (
     # LAME ("🍲", ""), # Pot of Food
     # LAME ("🍱", ""), # Bento Box
     # LAME ("🍘", ""), # Rice Cracker
-    # LAME ("🍙", ""), # Rice Ball
+    ("🍙", ""), # Rice Ball
     # LAME ("🍚", ""), # Cooked Rice
     # LAME ("🍛", ""), # Curry and Rice
     # LAME ("🍜", ""), # Steaming Bowl
@@ -515,7 +515,7 @@ EMOJI_LIST = (
     # LAME ("🎡", ""), # Ferris Wheel
     # LAME ("🎢", ""), # Roller Coaster
     # LAME ("💈", ""), # Barber Pole
-    # USED BY THE UI ("🎪", ""), # Circus Tent
+    # USED BY THE UI ("🎪", ""), # Circus Tent // venue checkins/adding
     # LAME ("🎭", ""), # Performing Arts
     ("🎨", "🎨"), # Artist Palette
     # LAME ("🎰", ""), # Slot Machine
@@ -672,7 +672,7 @@ EMOJI_LIST = (
     # LAME ("🏊", ""), # Swimmer
     # LAME ("🚴", ""), # Bicyclist
     # LAME ("🚵", ""), # Mountain Bicyclist
-    # USED BY UI ("🏆", ""), # Trophy
+    # USED BY UI ("🏆", ""), # Trophy // for adding new tournament/list of tournaments
     ("🎮", "🎮"), # Video Game
     ("🎲", "🎲"), # Game Die
     # LAME ("🃏", ""), # Playing Card Black Joker
@@ -680,11 +680,11 @@ EMOJI_LIST = (
     # LAME ("🔈", ""), # Speaker
     # LAME ("🔉", ""), # Speaker With One Sound Wave
     # LAME ("🔊", ""), # Speaker With Three Sound Waves
-    # USED BY UI ("📢", ""), # Public Address Loudspeaker
+    # USED BY UI ("📢", ""), # Public Address Loudspeaker // for public config settings
     ("📣", "📣"), # Cheering Megaphone
-    # USED BY UI ("📯", ""), # Postal Horn
+    ("📯", ""), # Postal Horn
     ("🔔", "🔔"), # Bell
-    # USED BY UI ("🔕", ""), # Bell With Cancellation Stroke
+    # ("🔕", ""), # Bell With Cancellation Stroke
     # LAME ("🔀", ""), # Twisted Rightwards Arrows
     # LAME ("🔁", ""), # Clockwise Rightwards and Leftwards Open Circle Arrows
     # LAME ("🔂", ""), # Clockwise Rightwards and Leftwards Open Circle Arrows With Circled One Overlay
@@ -772,7 +772,7 @@ EMOJI_LIST = (
     # LAME ("📩", ""), # Envelope With Downwards Arrow Above
     # LAME ("📤", ""), # Outbox Tray
     # LAME ("📥", ""), # Inbox Tray
-    # USED BY UI ("📦", ""), # Package
+    ("📦", ""), # Package
     ("📫", "📫"), # Closed Mailbox With Raised Flag
     # LAME ("📪", ""), # Closed Mailbox With Lowered Flag
     # LAME ("📬", ""), # Open Mailbox With Raised Flag
@@ -795,22 +795,22 @@ EMOJI_LIST = (
     ("📏", "📏"), # Straight Ruler
     ("📐", "📐"), # Triangular Ruler
     # LAME ("📛", ""), # Name Badge
-    # USED BY UI ("🔒", ""), # Lock
-    # USED BY UI ("🔓", ""), # Open Lock
-    # USED BY UI ("🔏", ""), # Lock With Ink Pen
-    # USED BY UI ("🔐", ""), # Closed Lock With Key
+    # USED BY UI ("🔒", ""), # Lock // Logout page
+    # USED BY UI ("🔓", ""), # Open Lock // Login page
+    # ("🔏", ""), # Lock With Ink Pen
+    # ("🔐", ""), # Closed Lock With Key
     ("🔑", "🔑"), # Key
     # LAME ("🔨", ""), # Hammer
-    # USED BY UI ("🔧", ""), # Wrench
+    # USED BY UI ("🔧", ""), # Wrench // for tournament config link
     ("🔩", "🔩"), # Nut and Bolt
-    # USED BY UI ("🔗", ""), # Link Symbol
-    # USED BY UI ("💉", ""), # Syringe
-    # USED BY UI ("💊", ""), # Pill
+    # LAME ("🔗", ""), # Link Symbol
+    # OFFENSIVE ("💉", ""), # Syringe
+    ("💊", ""), # Pill
     ("🔪", "🔪"), # Hocho
     ("🔫", "🔫"), # Pistol
     ("🚬", "🚬"), # Smoking Symbol
-    # USED BY UI ("🏁", ""), # Chequered Flag
-    # USED BY UI ("🚩", ""), # Triangular Flag on Post
+    ("🏁", ""), # Chequered Flag
+    # LAME ("🚩", ""), # Triangular Flag on Post
     # LAME ("🇦🇫", ""), # Flag for Afghanistan
     # LAME ("🇦🇽", ""), # Flag for Åland Islands
     # LAME ("🇦🇱", ""), # Flag for Albania
@@ -819,14 +819,14 @@ EMOJI_LIST = (
     # LAME ("🇦🇩", ""), # Flag for Andorra
     # LAME ("🇦🇴", ""), # Flag for Angola
     # LAME ("🇦🇮", ""), # Flag for Anguilla
-    ("🇦🇶", "🇦🇶"), # Flag for Antarctica
+    # ("🇦🇶", "🇦🇶"), # Flag for Antarctica
     # LAME ("🇦🇬", ""), # Flag for Antigua & Barbuda
     # LAME ("🇦🇷", ""), # Flag for Argentina
     # LAME ("🇦🇲", ""), # Flag for Armenia
     # LAME ("🇦🇼", ""), # Flag for Aruba
     # LAME ("🇦🇨", ""), # Flag for Ascension Island
-    ("🇦🇺", "🇦🇺"), # Flag for Australia
-    ("🇦🇹", "🇦🇹"), # Flag for Austria
+    # ("🇦🇺", "🇦🇺"), # Flag for Australia
+    # ("🇦🇹", "🇦🇹"), # Flag for Austria
     # LAME ("🇦🇿", ""), # Flag for Azerbaijan
     # LAME ("🇧🇸", ""), # Flag for Bahamas
     # LAME ("🇧🇭", ""), # Flag for Bahrain
@@ -842,7 +842,7 @@ EMOJI_LIST = (
     # LAME ("🇧🇦", ""), # Flag for Bosnia & Herzegovina
     # LAME ("🇧🇼", ""), # Flag for Botswana
     # LAME ("🇧🇻", ""), # Flag for Bouvet Island
-    ("🇧🇷", "🇧🇷"), # Flag for Brazil
+    # ("🇧🇷", "🇧🇷"), # Flag for Brazil
     # LAME ("🇮🇴", ""), # Flag for British Indian Ocean Territory
     # LAME ("🇻🇬", ""), # Flag for British Virgin Islands
     # LAME ("🇧🇳", ""), # Flag for Brunei
@@ -851,7 +851,7 @@ EMOJI_LIST = (
     # LAME ("🇧🇮", ""), # Flag for Burundi
     # LAME ("🇰🇭", ""), # Flag for Cambodia
     # LAME ("🇨🇲", ""), # Flag for Cameroon
-    ("🇨🇦", "🇨🇦"), # Flag for Canada
+    # ("🇨🇦", "🇨🇦"), # Flag for Canada
     # LAME ("🇮🇨", ""), # Flag for Canary Islands
     # LAME ("🇨🇻", ""), # Flag for Cape Verde
     # LAME ("🇧🇶", ""), # Flag for Caribbean Netherlands
@@ -859,8 +859,8 @@ EMOJI_LIST = (
     # LAME ("🇨🇫", ""), # Flag for Central African Republic
     # LAME ("🇪🇦", ""), # Flag for Ceuta & Melilla
     # LAME ("🇹🇩", ""), # Flag for Chad
-    ("🇨🇱", "🇨🇱"), # Flag for Chile
-    ("🇨🇳", "🇨🇳"), # Flag for China
+    # ("🇨🇱", "🇨🇱"), # Flag for Chile
+    # ("🇨🇳", "🇨🇳"), # Flag for China
     # LAME ("🇨🇽", ""), # Flag for Christmas Island
     # LAME ("🇨🇵", ""), # Flag for Clipperton Island
     # LAME ("🇨🇨", ""), # Flag for Cocos Islands
@@ -875,35 +875,35 @@ EMOJI_LIST = (
     # LAME ("🇨🇺", ""), # Flag for Cuba
     # LAME ("🇨🇼", ""), # Flag for Curaçao
     # LAME ("🇨🇾", ""), # Flag for Cyprus
-    ("🇨🇿", "🇨🇿"), # Flag for Czech Republic
-    ("🇩🇰", "🇩🇰"), # Flag for Denmark
+    # ("🇨🇿", "🇨🇿"), # Flag for Czech Republic
+    # ("🇩🇰", "🇩🇰"), # Flag for Denmark
     # LAME ("🇩🇬", ""), # Flag for Diego Garcia
     # LAME ("🇩🇯", ""), # Flag for Djibouti
     # LAME ("🇩🇲", ""), # Flag for Dominica
     # LAME ("🇩🇴", ""), # Flag for Dominican Republic
     # LAME ("🇪🇨", ""), # Flag for Ecuador
-    ("🇪🇬", "🇪🇬"), # Flag for Egypt
+    # ("🇪🇬", "🇪🇬"), # Flag for Egypt
     # LAME ("🇸🇻", ""), # Flag for El Salvador
     # LAME ("🇬🇶", ""), # Flag for Equatorial Guinea
     # LAME ("🇪🇷", ""), # Flag for Eritrea
     # LAME ("🇪🇪", ""), # Flag for Estonia
     # LAME ("🇪🇹", ""), # Flag for Ethiopia
-    ("🇪🇺", "🇪🇺"), # Flag for European Union
+    # ("🇪🇺", "🇪🇺"), # Flag for European Union
     # LAME ("🇫🇰", ""), # Flag for Falkland Islands
     # LAME ("🇫🇴", ""), # Flag for Faroe Islands
     # LAME ("🇫🇯", ""), # Flag for Fiji
     # LAME ("🇫🇮", ""), # Flag for Finland
-    ("🇫🇷", "🇫🇷"), # Flag for France
+    # ("🇫🇷", "🇫🇷"), # Flag for France
     # LAME ("🇬🇫", ""), # Flag for French Guiana
     # LAME ("🇵🇫", ""), # Flag for French Polynesia
     # LAME ("🇹🇫", ""), # Flag for French Southern Territories
     # LAME ("🇬🇦", ""), # Flag for Gabon
     # LAME ("🇬🇲", ""), # Flag for Gambia
     # LAME ("🇬🇪", ""), # Flag for Georgia
-    ("🇩🇪", "🇩🇪"), # Flag for Germany
+    # ("🇩🇪", "🇩🇪"), # Flag for Germany
     # LAME ("🇬🇭", ""), # Flag for Ghana
     # LAME ("🇬🇮", ""), # Flag for Gibraltar
-    ("🇬🇷", "🇬🇷"), # Flag for Greece
+    # ("🇬🇷", "🇬🇷"), # Flag for Greece
     # LAME ("🇬🇱", ""), # Flag for Greenland
     # LAME ("🇬🇩", ""), # Flag for Grenada
     # LAME ("🇬🇵", ""), # Flag for Guadeloupe
@@ -919,16 +919,16 @@ EMOJI_LIST = (
     # LAME ("🇭🇰", ""), # Flag for Hong Kong
     # LAME ("🇭🇺", ""), # Flag for Hungary
     # LAME ("🇮🇸", ""), # Flag for Iceland
-    ("🇮🇳", "🇮🇳"), # Flag for India
-    ("🇮🇩", "🇮🇩"), # Flag for Indonesia
-    ("🇮🇷", "🇮🇷"), # Flag for Iran
-    ("🇮🇶", "🇮🇶"), # Flag for Iraq
-    ("🇮🇪", "🇮🇪"), # Flag for Ireland
+    # ("🇮🇳", "🇮🇳"), # Flag for India
+    # ("🇮🇩", "🇮🇩"), # Flag for Indonesia
+    # ("🇮🇷", "🇮🇷"), # Flag for Iran
+    # ("🇮🇶", "🇮🇶"), # Flag for Iraq
+    # ("🇮🇪", "🇮🇪"), # Flag for Ireland
     # LAME ("🇮🇲", ""), # Flag for Isle of Man
     # LAME ("🇮🇱", ""), # Flag for Israel
-    ("🇮🇹", "🇮🇹"), # Flag for Italy
+    # ("🇮🇹", "🇮🇹"), # Flag for Italy
     # LAME ("🇯🇲", ""), # Flag for Jamaica
-    ("🇯🇵", "🇯🇵"), # Flag for Japan
+    # ("🇯🇵", "🇯🇵"), # Flag for Japan
     # LAME ("🇯🇪", ""), # Flag for Jersey
     # LAME ("🇯🇴", ""), # Flag for Jordan
     # LAME ("🇰🇿", ""), # Flag for Kazakhstan
@@ -959,7 +959,7 @@ EMOJI_LIST = (
     # LAME ("🇲🇷", ""), # Flag for Mauritania
     # LAME ("🇲🇺", ""), # Flag for Mauritius
     # LAME ("🇾🇹", ""), # Flag for Mayotte
-    ("🇲🇽", "🇲🇽"), # Flag for Mexico
+    # ("🇲🇽", "🇲🇽"), # Flag for Mexico
     # LAME ("🇫🇲", ""), # Flag for Micronesia
     # LAME ("🇲🇩", ""), # Flag for Moldova
     # LAME ("🇲🇨", ""), # Flag for Monaco
@@ -974,7 +974,7 @@ EMOJI_LIST = (
     # LAME ("🇳🇵", ""), # Flag for Nepal
     # LAME ("🇳🇱", ""), # Flag for Netherlands
     # LAME ("🇳🇨", ""), # Flag for New Caledonia
-    ("🇳🇿", "🇳🇿"), # Flag for New Zealand
+    # ("🇳🇿", "🇳🇿"), # Flag for New Zealand
     # LAME ("🇳🇮", ""), # Flag for Nicaragua
     # LAME ("🇳🇪", ""), # Flag for Niger
     # LAME ("🇳🇬", ""), # Flag for Nigeria
@@ -982,15 +982,15 @@ EMOJI_LIST = (
     # LAME ("🇳🇫", ""), # Flag for Norfolk Island
     # LAME ("🇲🇵", ""), # Flag for Northern Mariana Islands
     # LAME ("🇰🇵", ""), # Flag for North Korea
-    ("🇳🇴", "🇳🇴"), # Flag for Norway
+    # ("🇳🇴", "🇳🇴"), # Flag for Norway
     # LAME ("🇴🇲", ""), # Flag for Oman
     # LAME ("🇵🇰", ""), # Flag for Pakistan
     # LAME ("🇵🇼", ""), # Flag for Palau
-    ("🇵🇸", "🇵🇸"), # Flag for Palestinian Territories
+    # ("🇵🇸", "🇵🇸"), # Flag for Palestinian Territories
     # LAME ("🇵🇦", ""), # Flag for Panama
     # LAME ("🇵🇬", ""), # Flag for Papua New Guinea
     # LAME ("🇵🇾", ""), # Flag for Paraguay
-    ("🇵🇪", "🇵🇪"), # Flag for Peru
+    # ("🇵🇪", "🇵🇪"), # Flag for Peru
     # LAME ("🇵🇭", ""), # Flag for Philippines
     # LAME ("🇵🇳", ""), # Flag for Pitcairn Islands
     # LAME ("🇵🇱", ""), # Flag for Poland
@@ -999,7 +999,7 @@ EMOJI_LIST = (
     # LAME ("🇶🇦", ""), # Flag for Qatar
     # LAME ("🇷🇪", ""), # Flag for Réunion
     # LAME ("🇷🇴", ""), # Flag for Romania
-    ("🇷🇺", "🇷🇺"), # Flag for Russia
+    # ("🇷🇺", "🇷🇺"), # Flag for Russia
     # LAME ("🇷🇼", ""), # Flag for Rwanda
     # LAME ("🇼🇸", ""), # Flag for Samoa
     # LAME ("🇸🇲", ""), # Flag for San Marino
@@ -1015,11 +1015,11 @@ EMOJI_LIST = (
     # LAME ("🇸🇮", ""), # Flag for Slovenia
     # LAME ("🇸🇧", ""), # Flag for Solomon Islands
     # LAME ("🇸🇴", ""), # Flag for Somalia
-    ("🇿🇦", "🇿🇦"), # Flag for South Africa
+    # ("🇿🇦", "🇿🇦"), # Flag for South Africa
     # LAME ("🇬🇸", ""), # Flag for South Georgia & South Sandwich Islands
-    ("🇰🇷", "🇰🇷"), # Flag for South Korea
+    # ("🇰🇷", "🇰🇷"), # Flag for South Korea
     # LAME ("🇸🇸", ""), # Flag for South Sudan
-    ("🇪🇸", "🇪🇸"), # Flag for Spain
+    # ("🇪🇸", "🇪🇸"), # Flag for Spain
     # LAME ("🇱🇰", ""), # Flag for Sri Lanka
     # LAME ("🇧🇱", ""), # Flag for St. Barthélemy
     # LAME ("🇸🇭", ""), # Flag for St. Helena
@@ -1032,8 +1032,8 @@ EMOJI_LIST = (
     # LAME ("🇸🇷", ""), # Flag for Suriname
     # LAME ("🇸🇯", ""), # Flag for Svalbard & Jan Mayen
     # LAME ("🇸🇿", ""), # Flag for Swaziland
-    ("🇸🇪", "🇸🇪"), # Flag for Sweden
-    ("🇨🇭", "🇨🇭"), # Flag for Switzerland
+    # ("🇸🇪", "🇸🇪"), # Flag for Sweden
+    # ("🇨🇭", "🇨🇭"), # Flag for Switzerland
     # LAME ("🇸🇾", ""), # Flag for Syria
     # LAME ("🇹🇼", ""), # Flag for Taiwan
     # LAME ("🇹🇯", ""), # Flag for Tajikistan
@@ -1046,23 +1046,23 @@ EMOJI_LIST = (
     # LAME ("🇹🇹", ""), # Flag for Trinidad & Tobago
     # LAME ("🇹🇦", ""), # Flag for Tristan Da Cunha
     # LAME ("🇹🇳", ""), # Flag for Tunisia
-    ("🇹🇷", "🇹🇷"), # Flag for Turkey
+    # ("🇹🇷", "🇹🇷"), # Flag for Turkey
     # LAME ("🇹🇲", ""), # Flag for Turkmenistan
     # LAME ("🇹🇨", ""), # Flag for Turks & Caicos Islands
     # LAME ("🇹🇻", ""), # Flag for Tuvalu
     # LAME ("🇺🇬", ""), # Flag for Uganda
     # LAME ("🇺🇦", ""), # Flag for Ukraine
     # LAME ("🇦🇪", ""), # Flag for United Arab Emirates
-    ("🇬🇧", "🇬🇧"), # Flag for United Kingdom
-    ("🇺🇸", "🇺🇸"), # Flag for United States
+    # ("🇬🇧", "🇬🇧"), # Flag for United Kingdom
+    # ("🇺🇸", "🇺🇸"), # Flag for United States
     # LAME ("🇺🇾", ""), # Flag for Uruguay
     # LAME ("🇺🇲", ""), # Flag for U.S. Outlying Islands
     # LAME ("🇻🇮", ""), # Flag for U.S. Virgin Islands
     # LAME ("🇺🇿", ""), # Flag for Uzbekistan
     # LAME ("🇻🇺", ""), # Flag for Vanuatu
-    ("🇻🇦", "🇻🇦"), # Flag for Vatican City
+    # ("🇻🇦", "🇻🇦"), # Flag for Vatican City
     # LAME ("🇻🇪", ""), # Flag for Venezuela
-    ("🇻🇳", "🇻🇳"), # Flag for Vietnam
+    # ("🇻🇳", "🇻🇳"), # Flag for Vietnam
     # LAME ("🇼🇫", ""), # Flag for Wallis & Futuna
     # LAME ("🇪🇭", ""), # Flag for Western Sahara
     # LAME ("🇾🇪", ""), # Flag for Yemen
@@ -1089,7 +1089,7 @@ EMOJI_LIST = (
     ("❓", "❓"), # Black Question Mark Ornament
     # TOO SIMILAR ("❔", ""), # White Question Mark Ornament
     # TOO SIMILAR ("❕", ""), # White Exclamation Mark Ornament
-    # USED BY UI ("💯", ""), # Hundred Points Symbol
+    # USED BY UI ("💯", ""), # Hundred Points Symbol // Speaker tab
     ("🔞", "🔞"), # No One Under Eighteen Symbol
     # LAME ("🔠", ""), # Input Symbol for Latin Capital Letters
     # LAME ("🔡", ""), # Input Symbol for Latin Small Letters

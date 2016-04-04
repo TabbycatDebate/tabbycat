@@ -11,9 +11,14 @@
     <a href="{% tournament_url standings-public-tab-speaker %}">Speaker Tab</a>
   </li>
 {% endif %}
+{% if pref.pros_tab_released > 0 %}
+  <li class="{% if tab_pros_nav %}active{% endif %}">
+    <a href="{% tournament_url standings-public-tab-pros %}">Pros Speaker Tab</a>
+  </li>
+{% endif %}
 {% if pref.novices_tab_released > 0 %}
   <li class="{% if tab_novices_nav %}active{% endif %}">
-    <a href="{% tournament_url standings-public-tab-novices %}">Novice Speaker Tab</a>
+    <a href="{% tournament_url standings-public-tab-novices %}">Novices Speaker Tab</a>
   </li>
 {% endif %}
 {% if pref.replies_tab_released > 0 %}
@@ -30,7 +35,7 @@
 <!-- DRAW RELEASES -->
 {% if pref.public_draw and pref.team_tab_released == 0  %}
   {% if pref.show_all_draws == 0 %}
-  <li>
+  <li class="{% if draw_nav %}active{% endif %}">
     <a href="{% tournament_url public_draw %}">
       Draw for {{ current_round.name }}
     </a>
@@ -108,7 +113,7 @@
   </li>
 {% endif %}
 {% if pref.public_participants %}
-  <li>
+  <li class="{% if participants_nav %}active{% endif %}">
     <a href="{% tournament_url public_participants %}">Participants</a>
   </li>
 {% endif %}

@@ -20,17 +20,17 @@
       </div>
 
       {% if round.prev %}
-      <div class="col-md-1">
-        {{ round.prev.abbreviation }}
-      </div>
-      <div class="col-md-5">
-        <div class="progress">
-          <div class="progress-bar progress-bar-info {% if checkin_type.in_before == 0 %}progress-empty{% endif %}" role="progressbar" aria-valuenow="{{ checkin_type.in_now }}"
-          aria-valuemin="0" aria-valuemax="{{ checkin_type.total }}" style="width: {% percentage checkin_type.in_before checkin_type.total %}%;">
-            <span>{{ checkin_type.in_before }}/{{ checkin_type.total }}</span>
+        <div class="col-md-1">
+          {{ round.prev.abbreviation }}
+        </div>
+        <div class="col-md-5">
+          <div class="progress">
+            <div class="progress-bar progress-bar-info {% if checkin_type.in_before == 0 %}progress-empty{% endif %}" role="progressbar" aria-valuenow="{{ checkin_type.in_now }}"
+            aria-valuemin="0" aria-valuemax="{{ checkin_type.total }}" style="width: {% percentage checkin_type.in_before checkin_type.total %}%;">
+              <span>{{ checkin_type.in_before }}/{{ checkin_type.total }}</span>
+            </div>
           </div>
         </div>
-      </div>
       {% endif %}
 
     </div>

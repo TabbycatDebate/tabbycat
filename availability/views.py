@@ -1,5 +1,6 @@
 from tournaments.models import Round
-from participants.models import Person
+from participants.models import Person, Adjudicator
+from venues.models import Venue
 from actionlog.models import ActionLogEntry
 from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
 
@@ -10,28 +11,27 @@ from utils.views import *
 def availability_index(request, round):
     from draw.models import Debate
     if round.prev:
-        previous_round = round.prev.id
         previous_unconfirmed = round.prev.get_draw().filter(
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
     else:
-        previous_round = 0
-        previous_unconfirmed = 0
+        previous_unconfirmed = None
 
+    t = round.tournament
     checks = [{
         'type'      : "Team",
-        'total'     : round.tournament.teams.count(),
-        'in_now'    : ActiveTeam.objects.filter(round=round.id).count(),
-        'in_before' : ActiveTeam.objects.filter(round=previous_round).count(),
+        'total'     : t.teams.count(),
+        'in_now'    : ActiveTeam.objects.filter(round=round).count(),
+        'in_before' : ActiveTeam.objects.filter(round=round.prev).count() if round.prev else None,
     },{
         'type'      : "Adjudicator",
-        'total'     : round.tournament.adjudicator_set.count(),
-        'in_now'    : ActiveAdjudicator.objects.filter(round=round.id).count(),
-        'in_before' : ActiveAdjudicator.objects.filter(round=previous_round).count(),
+        'total'     : Adjudicator.objects.count() if t.pref('share_adjs') else round.tournament.adjudicator_set.count(),
+        'in_now'    : ActiveAdjudicator.objects.filter(round=round).count(),
+        'in_before' : ActiveAdjudicator.objects.filter(round=round.prev).count() if round.prev else None,
     },{
         'type'      : "Venue",
-        'total'     : round.tournament.venue_set.count(),
-        'in_now'    : ActiveVenue.objects.filter(round=round.id).count(),
-        'in_before' : ActiveVenue.objects.filter(round=previous_round).count(),
+        'total'     : Venue.objects.count() if t.pref('share_venues') else round.tournament.venue_set.count(),
+        'in_now'    : ActiveVenue.objects.filter(round=round).count(),
+        'in_before' : ActiveVenue.objects.filter(round=round.prev).count() if round.prev else None,
     }]
 
     # Basic check before enable the button to advance
@@ -44,7 +44,7 @@ def availability_index(request, round):
     min_venues = int(checks[0]['in_now'] / 2)
 
     return render(request, 'availability_index.html', dict(
-        checkin_types=checks, can_advance=can_advance,
+        checkin_types=checks, can_advance=can_advance, previous_unconfirmed=previous_unconfirmed,
         min_adjudicators=min_adjudicators, min_venues=min_venues))
 
 

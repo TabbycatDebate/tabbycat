@@ -8,12 +8,8 @@
 {% block page-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
 {% block page-subnav-sections %}
   {% include "tables/table_search.html" %}
-  <div id="" class="btn-group pull-left col-sm-1">
-    <a class="btn btn-success form-control" href="" id="save">Save</a>
-  </div>
-  <div id="" class="btn-group pull-left col-sm-1">
-    <a class="btn btn-danger form-control" href="{% round_url draw %}">Quit</a>
-  </div>
+  <a class="btn btn-success" href="" id="save">Save</a>
+  <a class="btn btn-danger" href="{% round_url draw %}">Quit</a>
 {% endblock %}
 
 
@@ -37,60 +33,64 @@
     {% endfor %}
   </div>
 
-  <div id="main" class="col-xs-10">
-
+  <div id="" class="col-xs-10">
     <div id="alerts-holder" class=""></div>
+    <div class="panel panel-default">
+      <div class="panel-body">
 
-    <table id="dataTable" class="table">
-      <thead>
-        <tr>
-          <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-          <th>Aff</th>
-          <th>Neg</th>
-          <th>Adjudicators</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for debate in draw %}
-        <tr id="{{ debate.id }}" class="matchup">
-          <td>
-            {{ debate.venue }}
-          </td>
-          <td class="team-holder btn-holder aff-holder">
-            {% if debate.aff_team %}
-            <div id="team_{{ debate.aff_team.id }}" class="btn btn-block btn-default team">
-              <span>{{ debate.aff_team.short_name }} {% if debate.aff_team.division %}<em>(Div{{ debate.aff_team.division.name }})</em>{% endif %}</span>
-            </div>
-            {% endif %}
-          </td>
-          <td class="team-holder btn-holder neg-holder">
-            {% if debate.neg_team %}
-            <div id="team_{{ debate.neg_team.id }}" class="btn btn-block btn-default team">
-              <span>{{ debate.neg_team.short_name }} {% if debate.neg_team.division %}<em>(Div{{ debate.neg_team.division.name }})</em>{% endif %}</span>
-            </div>
-            {% endif %}
-          </td>
-          <td >
-            {% for type, adj in debate.adjudicators %}
-              {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
-            {% endfor %}
-          </td>
-        </tr>
-      {% endfor %}
-      {% for debate in possible_debates %}
-        <tr id="" class="matchup">
-          <td></td>
-          <td class="team-holder aff-holder btn-holder">
-          </td>
-          <td class="team-holder neg-holder btn-holder">
-          </td>
-          <td></td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+        <table id="dataTable" class="table">
+          <thead>
+            <tr>
+              <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+              <th>Aff</th>
+              <th>Neg</th>
+              <th>Adjudicators</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for debate in draw %}
+            <tr id="{{ debate.id }}" class="matchup">
+              <td>
+                {{ debate.venue }}
+              </td>
+              <td class="team-holder btn-holder aff-holder">
+                {% if debate.aff_team %}
+                <div id="team_{{ debate.aff_team.id }}" class="btn btn-block btn-default team">
+                  <span>{{ debate.aff_team.short_name }} {% if debate.aff_team.division %}<em>(Div{{ debate.aff_team.division.name }})</em>{% endif %}</span>
+                </div>
+                {% endif %}
+              </td>
+              <td class="team-holder btn-holder neg-holder">
+                {% if debate.neg_team %}
+                <div id="team_{{ debate.neg_team.id }}" class="btn btn-block btn-default team">
+                  <span>{{ debate.neg_team.short_name }} {% if debate.neg_team.division %}<em>(Div{{ debate.neg_team.division.name }})</em>{% endif %}</span>
+                </div>
+                {% endif %}
+              </td>
+              <td >
+                {% for type, adj in debate.adjudicators %}
+                  {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
+          {% for debate in possible_debates %}
+            <tr id="" class="matchup">
+              <td></td>
+              <td class="team-holder aff-holder btn-holder">
+              </td>
+              <td class="team-holder neg-holder btn-holder">
+              </td>
+              <td></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
   </div>
-
 </div>
 {% endblock content %}
 

@@ -73,11 +73,9 @@
 
 {% block extra-js %}
 
-  <script src="{% static 'js/vendor/vue.js' %}"></script>
-  {% include "vue/table.js" %}
+  {% include "vue/import-vue.html" %}
+  {% include "vue/table.vue" %}
   <script>
-    Vue.config.delimiters = ["[[", "]]"];
-    // bootstrap the demo
     var fromTeamsTable = new Vue({
       el: '#fromTeamsTable',
       data: {
@@ -106,11 +104,8 @@
         })
       }
     })
-
   </script>
 
   {{ block.super }}
-   <script>
-  </script>
 
 {% endblock extra-js %}

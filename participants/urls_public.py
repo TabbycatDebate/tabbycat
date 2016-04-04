@@ -15,4 +15,8 @@ urlpatterns = [
     url(r'^all_tournaments_all_institutions/$',
         views.all_tournaments_all_institutions,
         name='all_tournaments_all_institutions'),
+
+    url(r'^shifts/a(?P<url_key>\w+)/$',
+        views.public_confirm_shift_key,
+        name='public_confirm_shift_key'),
 ]

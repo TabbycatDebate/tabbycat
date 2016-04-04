@@ -20,6 +20,9 @@
     Speaker Standings
   </a>
   {% if pref.show_novices %}
+    <a class="btn btn-default" href="{% round_url standings-pro current_round %}">
+      Pros Standings
+    </a>
     <a class="btn btn-default" href="{% round_url standings-novice current_round %}">
       Novices Standings
     </a>
@@ -72,7 +75,10 @@
               <td>{{ motion.round.abbreviation }}</td>
               <td>{{ motion.seq }}</td>
               <td>{{ motion.reference }}</td>
-              <td>{{ motion.text }}</td>
+              <td>
+                <a data-toggle="collapse" data-target="#motion{{ motion.id }}">Show full text</a>
+                <span class="collapse" id="motion{{ motion.id }}">{{ motion.text }}</span>
+              </td>
               {% if pref.enable_flagged_motions %}
               <td>
                 {% if motion.flagged %}

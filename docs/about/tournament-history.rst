@@ -7,15 +7,21 @@ A list of tournaments (that we know of) which have used Tabbycat.
 2016
 ----
 
+- ACT Debating Union Grades
+- Australian Easters <http://easters2016.herokuapp.com>`_
 - IIT KGP PD
 - `Mad Mini <http://tabs.monashdebaters.com/t/madmini/>`_
+- New Zealand Easters <http://nzeasters2016.herokuapp.com>`_
 - Pre SSIDC
 - The National Law School Debate
 - The Khazak National Schools Debating Championship
+- `The Western Australian Debating League <http://draw.wadl.org>`_
+- `USU Grand Slam <http://usutabs.herokuapp.com/t/grandslam2016/>'_'
 
 2015
 ----
 
+- ACT Debating Union Grades
 - `Another Day at Melbourne <http://mudstab.herokuapp.com>`_
 - `ANU Pre-Australs <http://anupreaust2015.herokuapp.com>`_
 - ALSA E-Comp

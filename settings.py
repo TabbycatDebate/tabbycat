@@ -25,9 +25,9 @@ LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-TABBYCAT_VERSION = '0.8.2'
+TABBYCAT_VERSION = '0.8.3'
 TABBYCAT_CODENAME = 'Bengal'
-READTHEDOCS_VERSION = 'v0.8.2'
+READTHEDOCS_VERSION = 'v0.8.3'
 
 # ===========================
 # = Django-specific Modules =
@@ -35,7 +35,6 @@ READTHEDOCS_VERSION = 'v0.8.2'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'utils.middleware.DebateMiddleware',
@@ -273,7 +272,7 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
 
 if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
-    TEMPLATE_DEBUG = DEBUG
+    TEMPLATES[0]['OPTIONS']['debug'] = True
 
 # =============
 # = Travis CI =

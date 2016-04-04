@@ -20,10 +20,10 @@ urlpatterns = [
 
     # Print
     url(r'^round/(?P<round_seq>\d+)/print/scoresheets/$',
-        views.draw_print_scoresheets,
+        views.PrintScoreSheetsView.as_view(),
         name='draw_print_scoresheets'),
     url(r'^round/(?P<round_seq>\d+)/print/feedback/$',
-        views.draw_print_feedback,
+        views.PrintFeedbackFormsView.as_view(),
         name='draw_print_feedback'),
     url(r'^round/(?P<round_seq>\d+)/master_sheets/list/$',
         views.master_sheets_list,
@@ -31,6 +31,9 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/master_sheets/venue_group/(?P<venue_group_id>\d+)/$',
         views.master_sheets_view,
         name='master_sheets_view'),
+    url(r'^round/(?P<round_seq>\d+)/room_sheets_view/venue_group/(?P<venue_group_id>\d+)/$',
+        views.room_sheets_view,
+        name='room_sheets_view'),
 
     # Creation/Release
     url(r'^round/(?P<round_seq>\d+)/create/$',
@@ -45,9 +48,6 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/unrelease/$',
         views.unrelease_draw,
         name='unrelease_draw'),
-    url(r'^round/(?P<round_seq>\d+)/start_time/set/$',
-        views.set_round_start_time,
-        name='set_round_start_time'),
 
     # Side Editing
     url(r'^side_allocations/$',
@@ -67,4 +67,18 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/venues/save/$',
         views.save_venues,
         name='save_venues'),
+
+    # Scheduling
+    url(r'^round/(?P<round_seq>\d+)/schedule_debates/$',
+            views.schedule_debates,
+            name='schedule_debates'),
+    url(r'^round/(?P<round_seq>\d+)/schedule_debates/save/$',
+            views.apply_schedule,
+            name='apply_schedule'),
+    url(r'^round/(?P<round_seq>\d+)/start_time/set/$',
+        views.set_round_start_time,
+        name='set_round_start_time'),
+    url(r'^round/(?P<round_seq>\d+)/confirms/$',
+        views.confirmations_view,
+        name='confirmations_view'),
 ]

@@ -105,15 +105,20 @@ def confirm_venues(request, t):
     venue_groups = request.POST.getlist('venue_groups')
     for i, key in enumerate(venue_names):
         if venue_groups[i]:
-            venue_group = VenueGroup.objects.get_or_create(
-                name=venue_groups[i], short_name=venue_groups[i][:15])
+            try:
+                venue_group = VenueGroup.objects.get(short_name=venue_groups[i])
+            except VenueGroup.DoesNotExist:
+                try:
+                    venue_group = VenueGroup.objects.get(name=venue_groups[i])
+                except VenueGroup.DoesNotExist:
+                    venue_group = VenueGroup(name=venue_groups[i],
+                        short_name=venue_groups[i][:15]).save()
         else:
             venue_group = None
         try:
-            venue = Venue(name=venue_names[i],
-                          priority=venue_priorities[i],
-                          group=venue_group,
-                          tournament=t)
+            venue = Venue(name=venue_names[i], priority=venue_priorities[i],
+                          group=venue_group, 
+                          tournament=None if t.pref('share_venues') else t)
             venue.save()
         except:
             pass
@@ -251,9 +256,6 @@ def confirm_teams(request, t):
             use_prefix = True
         speaker_names = sorted_post[i + 3][1].split(',')
 
-        print("instid is %s name is %s prefix is %s names are %s" % (
-            instititution_id, team_name, sorted_post[i + 2][1], speaker_names))
-
         institution = Institution.objects.get(id=instititution_id)
         if team_name and speaker_names and institution:
             newteam = Team(institution=institution,
@@ -289,8 +291,8 @@ def edit_adjudicators(request, t):
     institutions = {}
     for name, quantity in request.POST.items():
         if quantity:
-            institutions[name] = list(range(1, int(quantity) + 1)
-                                      )  # Create a placeholder for loop
+            # Create a placeholder for loop
+            institutions[name] = list(range(1, int(quantity) + 1))
 
     context = {
         'institutions': institutions,
@@ -316,7 +318,7 @@ def confirm_adjudicators(request, t):
         if adj_name and adj_rating and institution:
             newadj = Adjudicator(institution=institution,
                                  name=adj_name,
-                                 tournament=t,
+                                 tournament=None if t.pref('share_adjs') else t,
                                  test_score=adj_rating, )
             newadj.save()
 

@@ -4,121 +4,119 @@
 
 {% block content %}
 
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <table id="draw" class="draw-m table">
-          <thead>
-            <tr>
-              <th>Team</th>
-              {% if pref.show_emoji %}
-                <th class="th-emoji"></th>
-              {% endif %}
-              <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-              {% if pref.enable_venue_times %}
-                <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
-                <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
-              {% endif %}
-              <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 1{% else %}Aff{% endif %}</th>
-              <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 2{% else %}Neg{% endif %}</th>
-              <th>Adj<span class="hidden-xs">udicator</span>s</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for debate in draw %}
-            <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
-              <td>
-                {% include "tables/team.html" with team=debate.aff_team %}
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <table id="draw" class="draw-m table">
+        <thead>
+          <tr>
+            <th>Team</th>
+            {% if pref.show_emoji %}
+              <th class="th-emoji"></th>
+            {% endif %}
+            <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+            {% if pref.enable_debate_scheduling %}
+              <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
+              <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
+            {% endif %}
+            <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 1{% else %}Aff{% endif %}</th>
+            <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 2{% else %}Neg{% endif %}</th>
+            <th>Adj<span class="hidden-xs">udicator</span>s</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for debate in draw %}
+          <tr class="{{ debate.all_conflicts|yesno:'conflict,' }}">
+            <td>
+              {% include "tables/team.html" with team=debate.aff_team %}
+            </td>
+            {% if pref.show_emoji %}
+              <td class="team-emoji">
+                <span class="emoji">{{ debate.aff_team.emoji }}</span>
               </td>
-              {% if pref.show_emoji %}
-                <td class="team-emoji">
-                  <span class="emoji">{{ debate.aff_team.emoji }}</span>
-                </td>
-              {% endif %}
-              {% if pref.enable_venue_groups %}
-                {% if debate.division %}
-                  <td class="venue-name">{{ debate.division.venue_group.short_name }}</td>
-                {% else %}
-                  <td class="venue-name">{{ debate.venue.group.short_name }} {{ debate.venue.name }}</td>
-                {% endif %}
+            {% endif %}
+            {% if pref.enable_venue_groups %}
+              {% if debate.division %}
+                <td class="venue-name">{{ debate.division.venue_group.short_name }}</td>
               {% else %}
-                <td class="venue-name">{{ debate.venue.name }}</td>
+                <td class="venue-name">{{ debate.venue.group.short_name }} {{ debate.venue.name }}</td>
               {% endif %}
-              {% if pref.enable_venue_times %}
-                <td>
-                  {% if debate.venue.time %}
-                    <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
-                    {{ debate.venue.time|date:"D jS F" }}
-                  {% endif %}
-                </td>
-                {% if pref.enable_venue_times %}
-                  {% include "tables/debate_status.html" %}
+            {% else %}
+              <td class="venue-name">{{ debate.venue.name }}</td>
+            {% endif %}
+            {% if pref.enable_debate_scheduling %}
+              <td>
+                {% if debate.time %}
+                  <span class="hidden">{{ debate.time|date:"o m d" }}</span>
+                  {{ debate.time|date:"D jS F" }}
                 {% endif %}
+              </td>
+              {% if pref.enable_debate_scheduling %}
+                {% include "tables/debate_status.html" %}
               {% endif %}
+            {% endif %}
+            <td>
+              {% include "tables/team.html" with team=debate.aff_team %}
+            </td>
+            <td>
+              {% include "tables/team.html" with team=debate.neg_team %}
+            </td>
+            <td class="adj-names">
+              {% for type, adj in debate.adjudicators %}
+                {% if type == 'C' and debate.adjudicators.is_panel %}
+                  <span class="adj-chair">{{ adj.name }}</span> Ⓒ
+                {% elif type == 'T' %}
+                  <br><span class="adj-trainee">{{ adj.name }}</span> Ⓣ
+                {% else %}
+                  {% if debate.adjudicators.panel %}<br>{% endif %}
+                  <span class="adj-normal">{{ adj.name }}</span>
+                {% endif %}
+                {% if debate.adjudicators.panel %}</li>{% endif %}
+              {% endfor %}
+            </td>
+        {% endfor %}
+        {% for debate in draw %}
+          <tr>
+            <td>
+              {% include "tables/team.html" with team=debate.neg_team %}
+            </td>
+            {% if pref.show_emoji %}
+              <td class="team-emoji"><span class="emoji">{{ debate.neg_team.emoji }}</span></td>
+            {% endif %}
+            <td class="venue-name">
+              {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }}{% else %}{{ debate.venue.name }} {% endif %}
+            </td>
+            {% if pref.enable_debate_scheduling %}
               <td>
-                {% include "tables/team.html" with team=debate.aff_team %}
-              </td>
-              <td>
-                {% include "tables/team.html" with team=debate.neg_team %}
-              </td>
-              <td class="adj-names">
-                {% for type, adj in debate.adjudicators %}
-                  {% if type == 'C' and debate.adjudicators.is_panel %}
-                    <span class="adj-chair">{{ adj.name }}</span> Ⓒ
-                  {% elif type == 'T' %}
-                    <br><span class="adj-trainee">{{ adj.name }}</span> Ⓣ
-                  {% else %}
-                    {% if debate.adjudicators.panel %}<br>{% endif %}
-                    <span class="adj-normal">{{ adj.name }}</span>
-                  {% endif %}
-                  {% if debate.adjudicators.panel %}</li>{% endif %}
-                {% endfor %}
-              </td>
-          {% endfor %}
-          {% for debate in draw %}
-            <tr>
-              <td>
-                {% include "tables/team.html" with team=debate.neg_team %}
-              </td>
-              {% if pref.show_emoji %}
-                <td class="team-emoji"><span class="emoji">{{ debate.neg_team.emoji }}</span></td>
-              {% endif %}
-              <td class="venue-name">
-                {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }}{% else %}{{ debate.venue.name }} {% endif %}
-              </td>
-              {% if pref.enable_venue_times %}
-                <td>
-                  {% if debate.venue.time %}
-                    <span class="hidden">{{ debate.venue.time|date:"o m d" }}</span>
-                    {{ debate.venue.time|date:"D jS F" }}
-                  {% endif %}
-                </td>
-                <td>
-                  {{ debate.division.time_slot|time:'h:i A' }}
-                </td>
-              {% endif %}
-              <td>
-                {% include "tables/team.html" with team=debate.aff_team %}
+                <span class="hidden">{{ debate.time|date:"o m d" }}</span>
+                {{ debate.time|date:"D jS F" }}
               </td>
               <td>
-                {% include "tables/team.html" with team=debate.neg_team %}
+                {{ debate.time|time:'h:i A' }}
               </td>
-              <td class="adj-names">
-                {% for type, adj in debate.adjudicators %}
-                  {% if type == 'C' and debate.adjudicators.is_panel %}
-                    <span class="adj-chair">{{ adj.name }} Ⓒ</span>
-                  {% elif type == 'T' %}
-                    <br><span class="adj-trainee">{{ adj.name }} Ⓣ</span>
-                  {% else %}
-                    {% if debate.adjudicators.panel %}<br>{% endif %}
-                    <span class="adj-normal">{{ adj.name }}</span>
-                  {% endif %}
-                  {% if debate.adjudicators.panel %}</li>{% endif %}
-                {% endfor %}
-              </td>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
+            {% endif %}
+            <td>
+              {% include "tables/team.html" with team=debate.aff_team %}
+            </td>
+            <td>
+              {% include "tables/team.html" with team=debate.neg_team %}
+            </td>
+            <td class="adj-names">
+              {% for type, adj in debate.adjudicators %}
+                {% if type == 'C' and debate.adjudicators.is_panel %}
+                  <span class="adj-chair">{{ adj.name }} Ⓒ</span>
+                {% elif type == 'T' %}
+                  <br><span class="adj-trainee">{{ adj.name }} Ⓣ</span>
+                {% else %}
+                  {% if debate.adjudicators.panel %}<br>{% endif %}
+                  <span class="adj-normal">{{ adj.name }}</span>
+                {% endif %}
+                {% if debate.adjudicators.panel %}</li>{% endif %}
+              {% endfor %}
+            </td>
+        {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
 
 {% endblock content %}

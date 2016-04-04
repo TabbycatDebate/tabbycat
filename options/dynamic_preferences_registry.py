@@ -338,8 +338,16 @@ class SpeakerTabReleased(BooleanPreference):
     default = False
 
 @tournament_preferences_registry.register
+class ProsTabReleased(BooleanPreference):
+    help_text = "Enables public display of a pro-speakers only tab. Intended for use after the tournament."
+    verbose_name = "Release pros tab to public"
+    section = tab_release
+    name = "pros_tab_released"
+    default = False
+
+@tournament_preferences_registry.register
 class NovicesTabReleased(BooleanPreference):
-    help_text = "Enables public display of the novices tab. Intended for use after the tournament."
+    help_text = "Enables public display of a novice-speakers only tab. Intended for use after the tournament."
     verbose_name = "Release novices tab to public"
     section = tab_release
     name = "novices_tab_released"
@@ -701,10 +709,10 @@ class EnableVenueGroups(BooleanPreference):
 
 @tournament_preferences_registry.register
 class EnableVenueTimes(BooleanPreference):
-    help_text = "Enables dates and times to be set for venues"
-    verbose_name = "Enable venue times"
+    help_text = "Enables specific dates and times to be set for debates"
+    verbose_name = "Enable debate scheduling"
     section = league_options
-    name = "enable_venue_times"
+    name = "enable_debate_scheduling"
     default = False
 
 @tournament_preferences_registry.register
@@ -717,10 +725,18 @@ class EnableVenueOverlaps(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShareAdjs(BooleanPreference):
-    help_text = "Display adjudicators from other tournaments"
-    verbose_name = "Share adjudicators"
+    help_text = 'Display adjudicators from other tournaments and those without a tournament'
+    verbose_name = "Share Adjs"
     section = league_options
     name = "share_adjs"
+    default = False
+
+@tournament_preferences_registry.register
+class ShareAdjs(BooleanPreference):
+    help_text = 'Display venues from other tournaments and those without a tournament'
+    verbose_name = "Share Venues"
+    section = league_options
+    name = "share_venues"
     default = False
 
 @tournament_preferences_registry.register

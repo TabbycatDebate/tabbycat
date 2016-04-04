@@ -51,7 +51,7 @@ def motions_edit(request, round):
             for motions in formset.deleted_objects:
                 motions.delete()
             if 'submit' in request.POST:
-                return redirect_round('motions', round)
+                return redirect_round('draw', round)
     else:
         formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
@@ -64,11 +64,9 @@ def motions_assign(request, round):
 
     class MyModelChoiceField(ModelMultipleChoiceField):
         def label_from_instance(self, obj):
-            return "%s %s - Division %s @ %s" % (
-                obj.venue_group.short_name.split(' ')[2],
-                obj.venue_group.short_name.split(' ')[1],
+            return "D%s @ %s" % (
                 obj.name,
-                obj.venue_group.short_name.split(' ')[0],
+                obj.venue_group.short_name,
             )
 
     class ModelAssignForm(ModelForm):

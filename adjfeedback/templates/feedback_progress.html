@@ -92,10 +92,8 @@
               <th><span class="glyphicon glyphicon-eye-open" data-toggle="tooltip" title="Percentage Returned"></span></th>
               <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Unsubmitted Feedbacks"></span></th>
               <th><span class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Submitted Feedbacks"></span></th>
-              <th>Team</th>
-              {% if pref.show_institutions %}
-                <th>Adjudicator</th>
-              {% endif %}
+              <th>Adjudicator</th>
+              <th>Instititution</th>
             </tr>
           </thead>
           <tbody>
@@ -114,11 +112,9 @@
                 <td class="entity-name">
                   {{ entity.name }}
                 </td>
-                {% if pref.show_institutions %}
                 <td class="">
                   {{ entity.institution.name }} {{ entity.test }}
                 </td>
-                {% endif %}
               </tr>
               {% endif %}
             {% endfor %}
