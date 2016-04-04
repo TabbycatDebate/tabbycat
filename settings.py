@@ -25,9 +25,9 @@ LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-TABBYCAT_VERSION = '0.8.2'
+TABBYCAT_VERSION = '0.8.3'
 TABBYCAT_CODENAME = 'Bengal'
-READTHEDOCS_VERSION = 'v0.8.2'
+READTHEDOCS_VERSION = 'v0.8.3'
 
 # ===========================
 # = Django-specific Modules =
