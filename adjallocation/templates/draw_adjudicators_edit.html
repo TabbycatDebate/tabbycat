@@ -87,8 +87,8 @@
               <th><span class="glyphicon glyphicon-off " data-toggle="tooltip" title="Neg's % of Previous Male Adjudicators"></span></th>
               <th>Neg<span class="hidden-xs">ative</span></th>
               <th>Chair</th>
-              <th>Panel</th>
-              <th>Trainee</th>
+              <th class="{% if pref.no_panellist_position %}hidden{% endif %}">Panellists</th>
+              <th class="{% if pref.no_trainee_position %}hidden{% endif %}">Trainees</th>
             </tr>
           </thead>
           <tbody>
@@ -142,9 +142,9 @@
               </td>
               <td id="chair_{{ debate.id }}" class="btn-holder adj-holder chair-holder">
               </td>
-              <td id="panel_{{ debate.id }}" class="btn-holder adj-holder panel-holder">
+              <td id="panel_{{ debate.id }}" class="btn-holder adj-holder panel-holder {% if pref.no_panellist_position %}hidden{% endif %}">
               </td>
-              <td id="trainees_{{ debate.id }}" class="btn-holder adj-holder trainee-holder">
+              <td id="trainees_{{ debate.id }}" class="btn-holder adj-holder trainee-holder {% if pref.no_trainee_position %}hidden{% endif %}">
               </td>
             </tr>
             {% endfor %}

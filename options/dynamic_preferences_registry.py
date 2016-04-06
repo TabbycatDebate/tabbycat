@@ -196,6 +196,22 @@ class SkipAdjCheckins(BooleanPreference):
     name = "draw_skip_adj_checkins"
     default = False
 
+@tournament_preferences_registry.register
+class HidePanellistPosition(BooleanPreference):
+    help_text = "Hide panellist positions in the UI (and don't allocate them)"
+    verbose_name = "No panellist adjudicators"
+    section = draw_rules
+    name = "no_panellist_position"
+    default = False
+
+@tournament_preferences_registry.register
+class HideTraineePosition(BooleanPreference):
+    help_text = "Hide trainee positions in the UI (and don't allocate them)"
+    verbose_name = "No trainee adjudicators"
+    section = draw_rules
+    name = "no_trainee_position"
+    default = False
+
 # ==============================================================================
 feedback = Section('feedback')
 # ==============================================================================
