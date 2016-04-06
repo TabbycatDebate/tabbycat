@@ -376,8 +376,7 @@ class Adjudicator(Person):
         if self.tournament:
             weight = self.tournament.current_round.feedback_weight
         else:
-            # For shared ajudicators
-            weight = 1
+            weight = 1 # For shared ajudicators
 
         feedback_score = self._feedback_score()
         if feedback_score is None:

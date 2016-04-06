@@ -759,7 +759,7 @@ class EnableVenueOverlaps(BooleanPreference):
 @tournament_preferences_registry.register
 class ShareAdjs(BooleanPreference):
     help_text = 'Display adjudicators from other tournaments and those without a tournament'
-    verbose_name = "Share Adjs"
+    verbose_name = "Share adjudicators"
     section = league_options
     name = "share_adjs"
     default = False
@@ -767,7 +767,7 @@ class ShareAdjs(BooleanPreference):
 @tournament_preferences_registry.register
 class ShareAdjs(BooleanPreference):
     help_text = 'Display venues from other tournaments and those without a tournament'
-    verbose_name = "Share Venues"
+    verbose_name = "Share venues"
     section = league_options
     name = "share_venues"
     default = False
