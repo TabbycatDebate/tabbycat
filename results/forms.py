@@ -135,6 +135,7 @@ class BallotSetForm(forms.Form):
         self.using_forfeits = self.tournament.pref('enable_forfeits')
         self.using_replies = self.tournament.pref('reply_scores_enabled')
         self.choosing_sides = self.tournament.pref('draw_side_allocations') == 'manual-ballot'
+        self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
 
         self.forfeit_declared = False
 
@@ -250,6 +251,13 @@ class BallotSetForm(forms.Form):
         ballotset = BallotSet(self.ballotsub)
         initial = {'debate_result_status': self.debate.result_status,
                 'confirmed': ballotset.confirmed, 'discarded': ballotset.discarded}
+
+        # When bypassing confirmations we just pre-check
+        if self.bypassing_checks:
+            initial['confirmed'] = True
+            # For new ballots default to confirmed status
+            if self.debate.result_status == Debate.STATUS_NONE:
+                initial['debate_result_status'] = Debate.STATUS_CONFIRMED
 
         # HACK: Check here to see if self.ballotsub has been saved -- if it's not,
         # then it's a new ballot set, and choose_sides should not be populated

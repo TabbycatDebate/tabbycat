@@ -137,7 +137,7 @@ def edit_ballotset(request, t, ballotsub_id):
         'ballotsub'        : ballotsub,
         'debate'           : debate,
         'all_ballotsubs'   : all_ballotsubs,
-        'disable_confirm'  : request.user == ballotsub.submitter and not t.pref('enable_assistant_confirms') and not request.user.is_superuser,
+        'disable_confirm'  : request.user == ballotsub.submitter and not t.pref('disable_ballot_confirms') and not request.user.is_superuser,
         'round'            : debate.round,
         'not_singleton'    : all_ballotsubs.exclude(id=ballotsub_id).exists(),
         'new'              : False,
