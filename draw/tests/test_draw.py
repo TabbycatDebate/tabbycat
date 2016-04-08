@@ -249,6 +249,10 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (1, 4), (2, 5), (3, 6), (7, 9), (8, 10), (11, 13), (12, 14), (15, 16)
         ))
 
+    def test_pairings_adjacent(self):
+        self.pairings("adjacent", (
+            (1, 2), (3, 4), (5, 6), (7, 8), (9, 10), (11, 12), (13, 14), (15, 16)
+        ))
 
     def one_up_one_down(self, data, expected, **options):
         for option, value in options.items():
