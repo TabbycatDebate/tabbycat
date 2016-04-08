@@ -604,40 +604,48 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
             pairings[points] = bracket
         return pairings
 
+    @staticmethod
+    def _subpool_slide(teams):
+        num_debates = len(teams) // 2
+        top = teams[:num_debates]
+        bottom = teams[num_debates:]
+        return top, bottom
+
+    @staticmethod
+    def _subpool_fold(teams):
+        num_debates = len(teams) // 2
+        top = teams[:num_debates]
+        bottom = teams[num_debates:]
+        bottom.reverse()
+        return top, bottom
+
+    @staticmethod
+    def _subpool_shuffle(teams):
+        num_debates = len(teams) // 2
+        random.shuffle(teams)
+        top = teams[:num_debates]
+        bottom = teams[num_debates:]
+        return top, bottom
+
+    @staticmethod
+    def _subpool_adjacent(teams):
+        return teams[0::2], teams[1::2]
+
     @classmethod
     def _pairings_slide(cls, brackets):
-        def slide(teams):
-            num_debates = len(teams) // 2
-            top = teams[:num_debates]
-            bottom = teams[num_debates:]
-            return top, bottom
-        return cls._pairings(brackets, slide)
+        return cls._pairings(brackets, cls._subpool_slide)
 
     @classmethod
     def _pairings_fold(cls, brackets):
-        def fold(teams):
-            num_debates = len(teams) // 2
-            top = teams[:num_debates]
-            bottom = teams[num_debates:]
-            bottom.reverse()
-            return top, bottom
-        return cls._pairings(brackets, fold)
+        return cls._pairings(brackets, cls._subpool_fold)
 
     @classmethod
     def _pairings_random(cls, brackets):
-        def shuffle(teams):
-            num_debates = len(teams) // 2
-            random.shuffle(teams)
-            top = teams[:num_debates]
-            bottom = teams[num_debates:]
-            return top, bottom
-        return cls._pairings(brackets, shuffle)
+        return cls._pairings(brackets, cls._subpool_shuffle)
 
     @classmethod
     def _pairings_adjacent(cls, brackets):
-        def adjacent(teams):
-            return teams[0::2], teams[1::2]
-        return cls._pairings(brackets, adjacent)
+        return cls._pairings(brackets, cls._subpool_adjacent)
 
     ## Conflict avoidance
 
