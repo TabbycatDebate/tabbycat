@@ -578,9 +578,10 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     ## Pairings generation
 
     PAIRING_FUNCTIONS = {
-        "fold"  : "_pairings_fold",
-        "slide" : "_pairings_slide",
-        "random": "_pairings_random"
+        "fold"                  : "_pairings_fold",
+        "slide"                 : "_pairings_slide",
+        "random"                : "_pairings_random",
+        "adjacent"              : "_pairings_adjacent",
     }
 
     def generate_pairings(self, brackets):
@@ -631,6 +632,12 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
             bottom = teams[num_debates:]
             return top, bottom
         return cls._pairings(brackets, shuffle)
+
+    @classmethod
+    def _pairings_adjacent(cls, brackets):
+        def adjacent(teams):
+            return teams[0::2], teams[1::2]
+        return cls._pairings(brackets, adjacent)
 
     ## Conflict avoidance
 
