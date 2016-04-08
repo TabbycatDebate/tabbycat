@@ -174,6 +174,7 @@ class DrawPairingMethod(ChoicePreference):
         ('fold', 'Fold'),
         ('random', 'Random'),
         ('adjacent', 'Adjacent'),
+        ('fold_top_adjacent_rest', 'Fold top, adjacent rest'),
     )
     default = 'slide'
 
