@@ -620,23 +620,6 @@ class PublicMotionsDescending(ChoicePreference):
     )
     default = 'reverse'
 
-@tournament_preferences_registry.register
-class HidePanellists(BooleanPreference):
-    help_text = "If showing draws to public, show all (past and future) released draws"
-    verbose_name = 'Hide Panellists'
-    section = ui_options
-    name = 'show_all_draws'
-    default = False
-
-
-@tournament_preferences_registry.register
-class HideTrainees(BooleanPreference):
-    help_text = "If showing draws to public, show all (past and future) released draws"
-    verbose_name = 'Hide Trainees'
-    section = ui_options
-    name = 'show_all_draws'
-    default = False
-
 # ==============================================================================
 league_options = Section('league_options')
 # ==============================================================================
