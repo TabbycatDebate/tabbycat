@@ -254,6 +254,11 @@ class DiversityStandingsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['bspeakers_o'] = Speaker.objects.filter(team__breakingteam__isnull=False, gender=Person.GENDER_OTHER).count()
         kwargs['bspeakers_u'] = Speaker.objects.filter(team__breakingteam__isnull=False, gender=None).count()
 
+        kwargs['pspeakers_m'] = Speaker.objects.filter(novice=False, gender=Person.GENDER_MALE).count()
+        kwargs['pspeakers_f'] = Speaker.objects.filter(novice=False, gender=Person.GENDER_FEMALE).count()
+        kwargs['pspeakers_o'] = Speaker.objects.filter(novice=False, gender=Person.GENDER_OTHER).count()
+        kwargs['pspeakers_u'] = Speaker.objects.filter(novice=False, gender=None).count()
+
         kwargs['nspeakers_m'] = Speaker.objects.filter(novice=True, gender=Person.GENDER_MALE).count()
         kwargs['nspeakers_f'] = Speaker.objects.filter(novice=True, gender=Person.GENDER_FEMALE).count()
         kwargs['nspeakers_o'] = Speaker.objects.filter(novice=True, gender=Person.GENDER_OTHER).count()

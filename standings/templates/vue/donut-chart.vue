@@ -1,5 +1,5 @@
 <!-- Pie Graphs for Diversity Reports -->
-<script type="text/x-template" id="pie-graph">
+<script type="text/x-template" id="donut-chart">
 
   <div id="[[ elementID ]]" class="d3-graph"></div>
 
@@ -11,8 +11,8 @@
 
   }
 
-  Vue.component('pie-graph', {
-    template: '#pie-graph',
+  Vue.component('donut-chart', {
+    template: '#donut-chart',
     props: {
       graphData: Array,
       width: { type: Number, default: 300 },

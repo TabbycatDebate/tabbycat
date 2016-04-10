@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% load debate_tags %}
+{% load static %}
 
-{% block page-title %}Diversity Information{% endblock %}
-{% block head-title %}Diversity Information{% endblock %}
+{% block page-title %}🗃Diversity Information{% endblock %}
+{% block head-title %}<span class="emoji">🗃</span>Diversity Information{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-default" href="{% round_url standings-index current_round %}">
@@ -58,6 +59,11 @@
         <li>f: {{ bspeakers_f }}</li>
         <li>o: {{ bspeakers_o }}</li>
         <li>u: {{ bspeakers_u }}</li>
+        Pro Speakers
+        <li>m: {{ pspeakers_m }}</li>
+        <li>f: {{ pspeakers_f }}</li>
+        <li>o: {{ pspeakers_o }}</li>
+        <li>u: {{ pspeakers_u }}</li>
         Novice Speakers
         <li>m: {{ nspeakers_m }}</li>
         <li>f: {{ nspeakers_f }}</li>
@@ -116,6 +122,7 @@
 {% endblock content %}
 
 {% block extra-js %}
+
   <script src="{% static 'js/vendor/d3.min.js' %}"></script>
   {% include "vue/import-vue.html" %}
   <script>
