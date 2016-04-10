@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block page-title %}Diversity Information{% endblock %}
+{% block head-title %}Diversity Information{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default" href="{% round_url standings-index current_round %}">
+    Standings Overview
+  </a>
+  <a class="btn btn-default" href="{% round_url standings-team current_round %}">
+    Team Standings
+  </a>
+  {% if pref.enable_divisions %}
+  <a class="btn btn-default" href="{% round_url standings-division current_round %}">
+    Divisions Standings
+  </a>
+  {% endif %}
+  <a class="btn btn-default" href="{% round_url standings-speaker current_round %}">
+    Speaker Standings
+  </a>
+  {% if pref.show_novices %}
+    <a class="btn btn-default" href="{% round_url standings-pro current_round %}">
+      Pros Standings
+    </a>
+    <a class="btn btn-default" href="{% round_url standings-novice current_round %}">
+      Novices Standings
+    </a>
+  {% endif %}
+  {% if pref.reply_scores_enabled %}
+    <a class="btn btn-default" href="{% round_url standings-reply current_round %}">
+      Replies Standings
+    </a>
+  {% endif %}
+  <a class="btn btn-default active" href="{% round_url standings-motion current_round %}">
+    Motion Balance
+  </a>
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Speakers
+      </div>
+      <div class="panel-body">
+        All Speakers
+        <li>m: {{ speakers_m }}</li>
+        <li>f: {{ speakers_f }}</li>
+        <li>o: {{ speakers_o }}</li>
+        <li>u: {{ speakers_u }}</li>
+        Breaking Speakers
+        <li>m: {{ bspeakers_m }}</li>
+        <li>f: {{ bspeakers_f }}</li>
+        <li>o: {{ bspeakers_o }}</li>
+        <li>u: {{ bspeakers_u }}</li>
+        Novice Speakers
+        <li>m: {{ nspeakers_m }}</li>
+        <li>f: {{ nspeakers_f }}</li>
+        <li>o: {{ nspeakers_o }}</li>
+        <li>u: {{ nspeakers_u }}</li>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Adjudicators
+      </div>
+      <div class="panel-body">
+        All Adjudicators
+        <li>m: {{ adjs_m }}</li>
+        <li>f: {{ adjs_f }}</li>
+        <li>o: {{ adjs_o }}</li>
+        <li>u: {{ adjs_u }}</li>
+        Breaking Adjudicators
+        <li>m: {{ badjs_m }}</li>
+        <li>f: {{ badjs_f }}</li>
+        <li>o: {{ badjs_o }}</li>
+        <li>u: {{ badjs_u }}</li>
+        Independent Adjudicators
+        <li>m: {{ iadjs_m }}</li>
+        <li>f: {{ iadjs_f }}</li>
+        <li>o: {{ iadjs_o }}</li>
+        <li>u: {{ iadjs_u }}</li>
+        Adjudication Core
+        <li>m: {{ aadjs_m }}</li>
+        <li>f: {{ aadjs_f }}</li>
+        <li>o: {{ aadjs_o }}</li>
+        <li>u: {{ aadjs_u }}</li>
+        Chairs
+        <li>m: {{ chair_adjs_m }}</li>
+        <li>f: {{ chair_adjs_f }}</li>
+        <li>o: {{ chair_adjs_o }}</li>
+        <li>u: {{ chair_adjs_u }}</li>
+        Panellists
+        <li>m: {{ panel_adjs_m }}</li>
+        <li>f: {{ panel_adjs_f }}</li>
+        <li>o: {{ panel_adjs_o }}</li>
+        <li>u: {{ panel_adjs_u }}</li>
+        Trainees
+        <li>m: {{ trainee_adjs_m }}</li>
+        <li>f: {{ trainee_adjs_f }}</li>
+        <li>o: {{ trainee_adjs_o }}</li>
+        <li>u: {{ trainee_adjs_u }}</li>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}
+
+{% block extra-js %}
+  <script src="{% static 'js/vendor/d3.min.js' %}"></script>
+  {% include "vue/import-vue.html" %}
+  <script>
+
+  </script>
+{% endblock extra-js %}

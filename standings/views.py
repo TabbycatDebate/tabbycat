@@ -1,5 +1,5 @@
 from django.db.models import Count
-from django.views.generic.base import View, ContextMixin
+from django.views.generic.base import View, ContextMixin, TemplateView
 
 from motions.models import Motion
 from participants.models import Team, Speaker
@@ -233,6 +233,70 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 
     def show_ballots(self):
         return self.get_tournament().pref('ballots_released')
+
+
+class DiversityStandingsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+
+
+    template_name = 'diversity.html'
+
+    def get_context_data(self, **kwargs):
+        from adjallocation.models import DebateAdjudicator
+        from participants.models import Adjudicator, Person
+
+        kwargs['speakers_m'] = Speaker.objects.filter(gender=Person.GENDER_MALE).count()
+        kwargs['speakers_f'] = Speaker.objects.filter(gender=Person.GENDER_FEMALE).count()
+        kwargs['speakers_o'] = Speaker.objects.filter(gender=Person.GENDER_OTHER).count()
+        kwargs['speakers_u'] = Speaker.objects.filter(gender=None).count()
+
+        kwargs['bspeakers_m'] = Speaker.objects.filter(team__breakingteam__isnull=False, gender=Person.GENDER_MALE).count()
+        kwargs['bspeakers_f'] = Speaker.objects.filter(team__breakingteam__isnull=False, gender=Person.GENDER_FEMALE).count()
+        kwargs['bspeakers_o'] = Speaker.objects.filter(team__breakingteam__isnull=False, gender=Person.GENDER_OTHER).count()
+        kwargs['bspeakers_u'] = Speaker.objects.filter(team__breakingteam__isnull=False, gender=None).count()
+
+        kwargs['nspeakers_m'] = Speaker.objects.filter(novice=True, gender=Person.GENDER_MALE).count()
+        kwargs['nspeakers_f'] = Speaker.objects.filter(novice=True, gender=Person.GENDER_FEMALE).count()
+        kwargs['nspeakers_o'] = Speaker.objects.filter(novice=True, gender=Person.GENDER_OTHER).count()
+        kwargs['nspeakers_u'] = Speaker.objects.filter(novice=True, gender=None).count()
+
+        kwargs['adjs_m'] = Adjudicator.objects.filter(gender=Person.GENDER_MALE).count()
+        kwargs['adjs_f'] = Adjudicator.objects.filter(gender=Person.GENDER_FEMALE).count()
+        kwargs['adjs_o'] = Adjudicator.objects.filter(gender=Person.GENDER_OTHER).count()
+        kwargs['adjs_u'] = Adjudicator.objects.filter(gender=None).count()
+
+        kwargs['badjs_m'] = Adjudicator.objects.filter(gender=Person.GENDER_MALE, breaking=True).count()
+        kwargs['badjs_f'] = Adjudicator.objects.filter(gender=Person.GENDER_FEMALE, breaking=True).count()
+        kwargs['badjs_o'] = Adjudicator.objects.filter(gender=Person.GENDER_OTHER, breaking=True).count()
+        kwargs['badjs_u'] = Adjudicator.objects.filter(gender=None, breaking=True).count()
+
+        kwargs['iadjs_m'] = Adjudicator.objects.filter(gender=Person.GENDER_MALE, independent=True).count()
+        kwargs['iadjs_f'] = Adjudicator.objects.filter(gender=Person.GENDER_FEMALE, independent=True).count()
+        kwargs['iadjs_o'] = Adjudicator.objects.filter(gender=Person.GENDER_OTHER, independent=True).count()
+        kwargs['iadjs_u'] = Adjudicator.objects.filter(gender=None, independent=True).count()
+
+        kwargs['aadjs_m'] = Adjudicator.objects.filter(gender=Person.GENDER_MALE, adj_core=True).count()
+        kwargs['aadjs_f'] = Adjudicator.objects.filter(gender=Person.GENDER_FEMALE, adj_core=True).count()
+        kwargs['aadjs_o'] = Adjudicator.objects.filter(gender=Person.GENDER_OTHER, adj_core=True).count()
+        kwargs['aadjs_u'] = Adjudicator.objects.filter(gender=None, adj_core=True).count()
+
+
+        kwargs['chair_adjs_m'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_CHAIR).count()
+        kwargs['chair_adjs_f'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_CHAIR).count()
+        kwargs['chair_adjs_o'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_CHAIR).count()
+        kwargs['chair_adjs_u'] = DebateAdjudicator.objects.filter(adjudicator__gender=None, type=DebateAdjudicator.TYPE_CHAIR).count()
+
+        kwargs['panel_adjs_m'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_PANEL).count()
+        kwargs['panel_adjs_f'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_PANEL).count()
+        kwargs['panel_adjs_o'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_PANEL).count()
+        kwargs['panel_adjs_u'] = DebateAdjudicator.objects.filter(adjudicator__gender=None, type=DebateAdjudicator.TYPE_PANEL).count()
+
+        kwargs['trainee_adjs_m'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_TRAINEE).count()
+        kwargs['trainee_adjs_f'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_TRAINEE).count()
+        kwargs['trainee_adjs_o'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_TRAINEE).count()
+        kwargs['trainee_adjs_u'] = DebateAdjudicator.objects.filter(adjudicator__gender=None, type=DebateAdjudicator.TYPE_TRAINEE).count()
+
+        return super().get_context_data(**kwargs)
+
 
 
 @admin_required

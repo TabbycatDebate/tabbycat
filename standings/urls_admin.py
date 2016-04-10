@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^novices/$',  views.novice_standings,                name='standings-novice'),
     url(r'^pros/$',     views.pro_standings,                   name='standings-pro'),
     url(r'^reply/$',    views.reply_standings,                 name='standings-reply'),
+
     url(r'^motions/$',  views.motion_standings,                name='standings-motion'),
+    url(r'^diversity/$',views.DiversityStandingsView.as_view(),name='standings-diversity'),
 
 ]
