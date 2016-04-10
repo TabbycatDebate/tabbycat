@@ -165,7 +165,7 @@ class DrawSideAllocations(ChoicePreference):
 
 @tournament_preferences_registry.register
 class DrawPairingMethod(ChoicePreference):
-    help_text = "Slide: 1 vs 6, 2 vs 7, …. Fold: 1 vs 10, 2 vs 9, …."
+    help_text = "Slide: 1 vs 6, 2 vs 7, …. Fold: 1 vs 10, 2 vs 9, …. Adjacent: 1 vs 2, 3 vs 4, …."
     verbose_name = "Pairing method"
     section = draw_rules
     name = "draw_pairing_method"
@@ -173,6 +173,7 @@ class DrawPairingMethod(ChoicePreference):
         ('slide', 'Slide'),
         ('fold', 'Fold'),
         ('random', 'Random'),
+        ('adjacent', 'Adjacent'),
     )
     default = 'slide'
 
