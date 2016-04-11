@@ -205,7 +205,7 @@ def edit_teams(request, t):
     # Set default speaker text to match tournament setup
     default_speakers = ""
     for i in range(1, t.pref('substantive_speakers') + 1):
-        if i > 1: default_speakers += ", "
+        if i > 1: default_speakers += ","
         default_speakers += "Speaker %s" % i
 
     for name, quantity in request.POST.items():

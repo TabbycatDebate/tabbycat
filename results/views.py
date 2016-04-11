@@ -141,7 +141,6 @@ def edit_ballotset(request, t, ballotsub_id):
         'round'            : debate.round,
         'not_singleton'    : all_ballotsubs.exclude(id=ballotsub_id).exists(),
         'new'              : False,
-        'show_adj_contact' : True,
     }
     return render(request, template, context)
 
@@ -191,7 +190,6 @@ def public_new_ballotset(request, t, adjudicator):
         'ballotsub'           : ballotsub,
         'adjudicator'         : adjudicator,
         'existing_ballotsubs' : da.debate.ballotsubmission_set.exclude(discarded=True).count(),
-        'show_adj_contact'    : False,
     }
     return render(request, 'public_enter_results.html', context)
 
@@ -229,7 +227,6 @@ def new_ballotset(request, t, debate_id):
         'all_ballotsubs'   : all_ballotsubs,
         'not_singleton'    : all_ballotsubs.exists(),
         'new'              : True,
-        'show_adj_contact' : True,
     }
     return render(request, template, context)
 

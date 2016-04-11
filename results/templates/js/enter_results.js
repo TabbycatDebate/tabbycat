@@ -1,9 +1,8 @@
 
 // When using anonymous speaker names prepopulate the form to save time
-aff_speakers = $("#id_aff_speaker_1 option").text();
-neg_speakers = $("#id_neg_speaker_1 option").text();
-
-if (aff_speakers.indexOf("1st Speaker") != -1 && neg_speakers.indexOf("1st Speaker") != -1) {
+aff_speakers = $("#id_aff_speaker_s1 option").text();
+neg_speakers = $("#id_neg_speaker_s1 option").text();
+if (aff_speakers.indexOf("Speaker 1") != -1 && neg_speakers.indexOf("Speaker 1") != -1) {
   $("div.aff.s1").find("select :nth-child(2)").prop('selected', true);
   $("div.aff.s2").find("select :nth-child(3)").prop('selected', true);
   $("div.aff.s3").find("select :nth-child(4)").prop('selected', true);
@@ -11,7 +10,7 @@ if (aff_speakers.indexOf("1st Speaker") != -1 && neg_speakers.indexOf("1st Speak
   $("div.neg.s1").find("select :nth-child(2)").prop('selected', true);
   $("div.neg.s2").find("select :nth-child(3)").prop('selected', true);
   $("div.neg.s3").find("select :nth-child(4)").prop('selected', true);
-  $("div.aff.s4").find("select :nth-child(5)").prop('selected', true);
+  $("div.neg.s4").find("select :nth-child(5)").prop('selected', true);
   $("select.required.error").removeClass("error");
 }
 
