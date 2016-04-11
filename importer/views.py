@@ -201,9 +201,15 @@ def add_teams(request, t):
 @tournament_view
 def edit_teams(request, t):
     institutions_with_team_numbers = []
+
+    # Set default speaker text to match tournament setup
+    default_speakers = ""
+    for i in range(1, t.pref('substantive_speakers') + 1):
+        if i > 1: default_speakers += ", "
+        default_speakers += "Speaker %s" % i
+
     for name, quantity in request.POST.items():
         if quantity:
-            print(quantity)
             desired_teams_count = int(quantity) + 1  # +1 as we dont want teams named 0
             institution = Institution.objects.get(name=name)
             team_names = Team.objects.filter(
@@ -232,9 +238,9 @@ def edit_teams(request, t):
             })
             # print('____')
 
-    return render(request,
-                  'edit_teams.html',
-                  dict(institutions=institutions_with_team_numbers))
+    return render(request, 'edit_teams.html',
+                  dict(institutions=institutions_with_team_numbers,
+                       default_speakers=default_speakers))
 
 
 @admin_required
