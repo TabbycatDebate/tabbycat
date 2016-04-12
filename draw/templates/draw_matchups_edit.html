@@ -1,28 +1,23 @@
 {% extends "base.html" %}
-{% load staticfiles %}
+{% load static %}
 {% load debate_tags %}
 
-{% block nav %}{% endblock %}
+{% block nav %}<div class="col-md-12">{% endblock %}
 
-{% block body-class %}edit-matchups{% endblock %}
 {% block head-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
 {% block page-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
-{% block page-header %}
+{% block page-subnav-sections %}
   {% include "tables/table_search.html" %}
-  <div id="" class="btn-group pull-left col-sm-1">
-    <a class="btn btn-success form-control" href="" id="save">Save</a>
-  </div>
-  <div id="" class="btn-group pull-left col-sm-1">
-    <a class="btn btn-danger form-control" href="{% round_url draw %}">Quit</a>
-  </div>
+  <a class="btn btn-success" href="" id="save">Save</a>
+  <a class="btn btn-danger" href="{% round_url draw %}">Quit</a>
 {% endblock %}
-{% block header %}{% endblock %}
+
 
 {% block content %}
 <div class="row">
 
   <div id="scratch" class="col-xs-2  fixed-right">
-    <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
+    <table id="unusedTable" class="table">
       <thead>
         <tr>
           <th>Unused Teams <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>
@@ -38,67 +33,72 @@
     {% endfor %}
   </div>
 
-  <div id="main" class="col-xs-10">
-
+  <div id="" class="col-xs-10">
     <div id="alerts-holder" class=""></div>
+    <div class="panel panel-default">
+      <div class="panel-body">
 
-    <table id="dataTable" class="table table-hover extra-line-height" cellpadding="0" cellspacing="0">
-      <thead>
-        <tr>
-          <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-          <th>Aff</th>
-          <th>Neg</th>
-          <th>Adjudicators</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for debate in draw %}
-        <tr id="{{ debate.id }}" class="matchup">
-          <td>
-            {{ debate.venue }}
-          </td>
-          <td class="team-holder btn-holder aff-holder">
-            {% if debate.aff_team %}
-            <div id="team_{{ debate.aff_team.id }}" class="btn btn-block btn-default team">
-              <span>{{ debate.aff_team.short_name }} {% if debate.aff_team.division %}<em>(Div{{ debate.aff_team.division.name }})</em>{% endif %}</span>
-            </div>
-            {% endif %}
-          </td>
-          <td class="team-holder btn-holder neg-holder">
-            {% if debate.neg_team %}
-            <div id="team_{{ debate.neg_team.id }}" class="btn btn-block btn-default team">
-              <span>{{ debate.neg_team.short_name }} {% if debate.neg_team.division %}<em>(Div{{ debate.neg_team.division.name }})</em>{% endif %}</span>
-            </div>
-            {% endif %}
-          </td>
-          <td >
-            {% for type, adj in debate.adjudicators %}
-              {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} (c){% elif type == 'T' %} (t){% endif %}{% if not forloop.last %},{% endif %}
-            {% endfor %}
-          </td>
-        </tr>
-      {% endfor %}
-      {% for debate in possible_debates %}
-        <tr id="" class="matchup">
-          <td></td>
-          <td class="team-holder aff-holder btn-holder">
-          </td>
-          <td class="team-holder neg-holder btn-holder">
-          </td>
-          <td></td>
-        </tr>
-      {% endfor %}
-    </table>
+        <table id="dataTable" class="table">
+          <thead>
+            <tr>
+              <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+              <th>Aff</th>
+              <th>Neg</th>
+              <th>Adjudicators</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for debate in draw %}
+            <tr id="{{ debate.id }}" class="matchup">
+              <td>
+                {{ debate.venue }}
+              </td>
+              <td class="team-holder btn-holder aff-holder">
+                {% if debate.aff_team %}
+                <div id="team_{{ debate.aff_team.id }}" class="btn btn-block btn-default team">
+                  <span>{{ debate.aff_team.short_name }} {% if debate.aff_team.division %}<em>(Div{{ debate.aff_team.division.name }})</em>{% endif %}</span>
+                </div>
+                {% endif %}
+              </td>
+              <td class="team-holder btn-holder neg-holder">
+                {% if debate.neg_team %}
+                <div id="team_{{ debate.neg_team.id }}" class="btn btn-block btn-default team">
+                  <span>{{ debate.neg_team.short_name }} {% if debate.neg_team.division %}<em>(Div{{ debate.neg_team.division.name }})</em>{% endif %}</span>
+                </div>
+                {% endif %}
+              </td>
+              <td >
+                {% for type, adj in debate.adjudicators %}
+                  {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
+          {% for debate in possible_debates %}
+            <tr id="" class="matchup">
+              <td></td>
+              <td class="team-holder aff-holder btn-holder">
+              </td>
+              <td class="team-holder neg-holder btn-holder">
+              </td>
+              <td></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
   </div>
-
 </div>
 {% endblock content %}
 
 {% block footer %}{% endblock footer %}
 
 {% block extra-js %}
-<script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery-ui-custom-1.11.4.min.js' %}"></script>
-<script type="text/javascript" charset="utf-8">
+<script src="{% static 'js/vendor/jquery-ui-custom-1.11.4.min.js' %}"></script>
+<script>
   $(document).ready( function() {
 
 

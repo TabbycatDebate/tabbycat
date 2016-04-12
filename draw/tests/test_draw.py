@@ -3,7 +3,7 @@ import unittest
 from collections import OrderedDict
 from .. import DrawGenerator, Pairing, DrawError
 import copy
-from .test_one_up_one_down import TestTeam
+from .utils import TestTeam
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
 
@@ -17,13 +17,13 @@ class TestRandomDrawGenerator(unittest.TestCase):
     def test_invalid_option(self):
         teams = [TestTeam(*args, aff_count=0) for args in self.teams]
         def go():
-            self.rd = DrawGenerator("random", teams, random=True)
+            self.rd = DrawGenerator("random", teams, None, random=True)
         self.assertRaises(ValueError, go)
 
     def test_draw(self):
         for i in range(100):
             teams = [TestTeam(*args, aff_count=0) for args in self.teams]
-            self.rd = DrawGenerator("random", teams, avoid_conflicts="on")
+            self.rd = DrawGenerator("random", teams, None, avoid_conflicts="on")
             _draw = self.rd.generate()
             for pairing in _draw:
                 if pairing.aff_team.seen(pairing.neg_team) or \
@@ -48,7 +48,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
 
     def setUp(self):
         self.b2 = copy.deepcopy(self.brackets)
-        self.ppd = DrawGenerator("power_paired", DUMMY_TEAMS)
+        self.ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None)
 
     def tearDown(self):
         del self.b2
@@ -66,10 +66,11 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (2, [9, 10, 11, 12, 13]),
             (1, [14, 15])
         ])
-        for name in ["pullup_top", "pullup_bottom", "pullup_random", "intermediate"]:
-            b2 = copy.deepcopy(brackets)
-            self.ppd.options["odd_bracket"] = name
-            self.assertRaises(DrawError, self.ppd.resolve_odd_brackets, b2)
+        for method in ["pullup_top", "pullup_bottom", "pullup_random", "intermediate"]:
+            with self.subTest(method=method):
+                b2 = copy.deepcopy(brackets)
+                self.ppd.options["odd_bracket"] = method
+                self.assertRaises(DrawError, self.ppd.resolve_odd_brackets, b2)
 
     def test_pullup_top(self):
         self.bracket_resolve_odd("pullup_top", OrderedDict([
@@ -248,6 +249,10 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (1, 4), (2, 5), (3, 6), (7, 9), (8, 10), (11, 13), (12, 14), (15, 16)
         ))
 
+    def test_pairings_adjacent(self):
+        self.pairings("adjacent", (
+            (1, 2), (3, 4), (5, 6), (7, 8), (9, 10), (11, 12), (13, 14), (15, 16)
+        ))
 
     def one_up_one_down(self, data, expected, **options):
         for option, value in options.items():
@@ -425,38 +430,34 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     (20, 19, [], False),
                     (21, 13, [], False)]]
 
+    combinations = [(1, 1), (1, 2), (1, 3), (1, 4)]
+
     def do_draw(self, standings, options):
         standings = [TestTeam(*args, **kwargs) for args, kwargs in standings]
-        self.ppd = DrawGenerator("power_paired", standings, **options)
+        self.ppd = DrawGenerator("power_paired", standings, None, **options)
         return self.ppd.generate()
 
-    def draw_test(self, standings_key, expected_key):
-        standings = self.standings[standings_key]
-        kwargs, expected = self.expected[expected_key]
-        draw = self.do_draw(standings, kwargs)
-        for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, expected):
-            actual_teams = (actual.aff_team.id, actual.neg_team.id)
-            expected_teams = (exp_aff, exp_neg)
-            if same_affs:
-                self.assertCountEqual(actual_teams, expected_teams)
-            else:
-                self.assertEqual(actual_teams, expected_teams)
-            self.assertEqual(actual.flags, exp_flags)
-
-    def test_1_1(self):
-        self.draw_test(1, 1)
-    def test_1_2(self):
-        self.draw_test(1, 2)
-    def test_1_3(self):
-        self.draw_test(1, 3)
-    def test_1_4(self):
-        self.draw_test(1, 4)
+    def test_draw(self):
+        for standings_key, expected_key in self.combinations:
+            with self.subTest(standings=standings_key, expected=expected_key):
+                standings = self.standings[standings_key]
+                kwargs, expected = self.expected[expected_key]
+                draw = self.do_draw(standings, kwargs)
+                for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, expected):
+                    actual_teams = (actual.aff_team.id, actual.neg_team.id)
+                    expected_teams = (exp_aff, exp_neg)
+                    if same_affs:
+                        self.assertCountEqual(actual_teams, expected_teams)
+                    else:
+                        self.assertEqual(actual_teams, expected_teams)
+                    self.assertEqual(actual.flags, exp_flags)
 
 
 class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.TestCase):
     """Basic unit test for core functionality of power-paired draws with allocated
     sides. Not comprehensive."""
 
+    # Input dictionaries, groups that may have odd brackets.
     brackets = dict()
     brackets[1] = OrderedDict([
         (5, {"aff": [1], "neg": [14]}),
@@ -497,202 +498,193 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
         (0, {"aff": [12, 13], "neg": []}),
     ])
 
-    def setUp(self):
-        self.ppd = DrawGenerator("power_paired", DUMMY_TEAMS, side_allocations="preallocated")
+    # Expected outputs, groups whose odd brackets should be resolved.
+    # The first key is the method, the second key corresponds to the index of
+    # the brackets dict above.
+    expecteds = dict()
+    expecteds["pullup_top"] = dict()
+    expecteds["pullup_top"][1] = OrderedDict([
+        (5, {"aff": [1], "neg": [14]}),
+        (4, {"aff": [2, 3], "neg": [15, 16]}),
+        (3, {"aff": [4, 5, 6, 7, 8], "neg": [17, 18, 19, 20, 21]}),
+        (2, {"aff": [9, 10], "neg": [22, 23]}),
+        (1, {"aff": [11, 12], "neg": [24, 25]}),
+        (0, {"aff": [13], "neg": [26]}),
+    ])
+    expecteds["pullup_top"][2] = OrderedDict([
+        (5, {"aff": [1, 2], "neg": [16, 17]}),
+        (4, {"aff": [3, 4, 5, 6], "neg": [18, 19, 20, 21]}),
+        (3, {"aff": [7, 8], "neg": [22, 23]}),
+        (2, {"aff": [9, 10], "neg": [24, 25]}),
+        (1, {"aff": [11, 12, 13, 14], "neg": [26, 27, 28, 29]}),
+        (0, {"aff": [15], "neg": [30]}),
+    ])
+    expecteds["pullup_top"][3] = OrderedDict([
+        (5, {"aff": [1, 2], "neg": [13, 14]}),
+        (4, {"aff": [3, 4], "neg": [15, 16]}),
+        (3, {"aff": [5, 6, 7, 8, 9], "neg": [17, 18, 19, 20, 21]}),
+        (2, {"aff": [], "neg": []}),
+        (1, {"aff": [10, 11, 12], "neg": [22, 23, 24]}),
+        (0, {"aff": [], "neg": []}),
+    ])
+    expecteds["pullup_top"][4] = OrderedDict([
+        (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
+        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Caltech 3", "Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),
+        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Princeton 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
+        (0, {"aff": [], "neg": []}),
+    ])
 
-    def tearDown(self):
-        del self.ppd
+    expecteds["pullup_bottom"] = dict()
+    expecteds["pullup_bottom"][1] = OrderedDict([
+        (5, {"aff": [1], "neg": [14]}),
+        (4, {"aff": [2, 3], "neg": [15, 18]}),
+        (3, {"aff": [4, 5, 6, 7, 8], "neg": [16, 17, 19, 20, 21]}),
+        (2, {"aff": [9, 10], "neg": [24, 25]}),
+        (1, {"aff": [11, 12], "neg": [22, 23]}),
+        (0, {"aff": [13], "neg": [26]}),
+    ])
+    expecteds["pullup_bottom"][2] = OrderedDict([
+        (5, {"aff": [3, 4], "neg": [16, 17]}),
+        (4, {"aff": [1, 2, 6, 7], "neg": [18, 19, 20, 21]}),
+        (3, {"aff": [5, 10], "neg": [22, 23]}),
+        (2, {"aff": [8, 9], "neg": [26, 27]}),
+        (1, {"aff": [11, 12, 13, 14], "neg": [24, 25, 29, 30]}),
+        (0, {"aff": [15], "neg": [28]}),
+    ])
+    expecteds["pullup_bottom"][3] = OrderedDict([
+        (5, {"aff": [1, 2], "neg": [13, 16]}),
+        (4, {"aff": [3, 4], "neg": [14, 15]}),
+        (3, {"aff": [5, 6, 7, 8, 9], "neg": [17, 18, 19, 23, 24]}),
+        (2, {"aff": [], "neg": []}),
+        (1, {"aff": [10, 11, 12], "neg": [20, 21, 22]}),
+        (0, {"aff": [], "neg": []}),
+    ])
+    expecteds["pullup_bottom"][4] = OrderedDict([
+        (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["Columbia 1", "Caltech 1", "Caltech 3"]}),
+        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),
+        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
+        (0, {"aff": [], "neg": []}),
+    ])
 
-    def bracket_resolve_odd(self, name, expecteds):
-        self.ppd.options["odd_bracket"] = name
-        for index, expected in expecteds.items():
-            self.b2 = copy.deepcopy(self.brackets[index])
-            self.ppd.resolve_odd_brackets(self.b2)
-            self.assertDictEqual(self.b2, expected)
-            del self.b2
+    expecteds["intermediate1"] = dict()
+    expecteds["intermediate1"][1] = OrderedDict([
+        (5,   {"aff": [1], "neg": [14]}),
+        (4,   {"aff": [2], "neg": [15]}),
+        (3.5, {"aff": [3], "neg": [16]}),
+        (3,   {"aff": [4, 5], "neg": [17, 18]}),
+        (2.5, {"aff": [6, 7, 8], "neg": [19, 20, 21]}),
+        (2,   {"aff": [], "neg": []}),
+        (1.5, {"aff": [9, 10], "neg": [22, 23]}),
+        (1,   {"aff": [11, 12], "neg": [24, 25]}),
+        (0,   {"aff": [13], "neg": [26]}),
+    ])
+    expecteds["intermediate1"][2] = OrderedDict([
+        (5,   {"aff": [], "neg": []}),
+        (4.5, {"aff": [1, 2], "neg": [16, 17]}),
+        (4,   {"aff": [3, 4], "neg": [18, 19]}),
+        (3.5, {"aff": [5, 6], "neg": [20, 21]}),
+        (3,   {"aff": [7], "neg": [22]}),
+        (2.5, {"aff": [8], "neg": [23]}),
+        (2,   {"aff": [], "neg": []}),
+        (1.5, {"aff": [9, 10], "neg": [24, 25]}),
+        (1,   {"aff": [11, 12], "neg": [26, 27]}),
+        (0.5, {"aff": [13, 14], "neg": [28, 29]}),
+        (0,   {"aff": [15], "neg": [30]}),
+    ])
+    expecteds["intermediate1"][3] = OrderedDict([
+        (5,   {"aff": [], "neg": []}),
+        (4.5, {"aff": [1, 2], "neg": [13, 14]}),
+        (4,   {"aff": [], "neg": []}),
+        (3.5, {"aff": [3, 4], "neg": [15, 16]}),
+        (3,   {"aff": [], "neg": []}),
+        (2.5, {"aff": [5, 6, 7, 8, 9], "neg":[17, 18, 19, 20, 21]}),
+        (2,   {"aff": [], "neg": []}),
+        (1,   {"aff": [10, 11], "neg": [22, 23]}),
+        (0.5, {"aff": [12], "neg": [24]}),
+        (0,   {"aff": [], "neg": []}),
+    ])
+    expecteds["intermediate1"][4] = OrderedDict([
+        (3,   {"aff": [], "neg": []}),
+        (2.5, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
+        (2,   {"aff": ["John Hopkins 1"], "neg": ["Caltech 3"]}),
+        (1.5, {"aff": ["Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),
+        (1,   {"aff": ["Caltech 2"], "neg": ["Princeton 2"]}),
+        (0.5, {"aff": ["Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
+        (0,   {"aff": [], "neg": []}),
+    ])
+
+    expecteds["intermediate2"] = dict()
+    expecteds["intermediate2"][1] = OrderedDict([
+        (5,   {"aff": [1], "neg": [14]}),
+        (4,   {"aff": [2], "neg": [15]}),
+        (3.5, {"aff": [3], "neg": [16]}),
+        (3,   {"aff": [4, 5], "neg": [17, 18]}),
+        (2.5, {"aff": [6, 7, 8], "neg": [19, 20, 21]}),
+        (2,   {"aff": [], "neg": []}),
+        (1.5, {"aff": [9, 10], "neg": [22, 23]}),
+        (1,   {"aff": [11, 12], "neg": [24, 25]}),
+        (0,   {"aff": [13], "neg": [26]}),
+    ])
+    expecteds["intermediate2"][2] = OrderedDict([
+        (5,   {"aff": [], "neg": []}),
+        (4.5, {"aff": [1, 2], "neg": [16, 17]}),
+        (4,   {"aff": [3, 4], "neg": [18, 19]}),
+        (3.5, {"aff": [5, 6], "neg": [20, 21]}),
+        (3,   {"aff": [7], "neg": [22]}),
+        (2.5, {"aff": [8], "neg": [23]}),
+        (2,   {"aff": [], "neg": []}),
+        (1.5, {"aff": [9, 10], "neg": [24, 25]}),
+        (1,   {"aff": [11, 12], "neg": [26, 27]}),
+        (0.5, {"aff": [13, 14], "neg": [28, 29]}),
+        (0,   {"aff": [15], "neg": [30]}),
+    ])
+    expecteds["intermediate2"][3] = OrderedDict([
+        (5,      {"aff": [], "neg": []}),
+        (4+2./3, {"aff": [1], "neg": [13]}),
+        (4+1./3, {"aff": [2], "neg": [14]}),
+        (4,      {"aff": [], "neg": []}),
+        (3.5,    {"aff": [3, 4], "neg": [15, 16]}),
+        (3,      {"aff": [], "neg": []}),
+        (2+2./3, {"aff": [5, 6, 7], "neg":[17, 18, 19]}),
+        (2+1./3, {"aff": [8, 9], "neg": [20, 21]}),
+        (2,      {"aff": [], "neg": []}),
+        (1,      {"aff": [10, 11], "neg": [22, 23]}),
+        (0.5,    {"aff": [12], "neg": [24]}),
+        (0,      {"aff": [], "neg": []}),
+    ])
+    expecteds["intermediate2"][4] = OrderedDict([
+        (3,   {"aff": [], "neg": []}),
+        (2.5, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
+        (2,   {"aff": ["John Hopkins 1"], "neg": ["Caltech 3"]}),
+        (1.5, {"aff": ["Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),
+        (1,   {"aff": ["Caltech 2"], "neg": ["Princeton 2"]}),
+        (0.5, {"aff": ["Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
+        (0,   {"aff": [], "neg": []}),
+    ])
+
+    def test_odd_bracket_resolution(self):
+        for method, expected_results in self.expecteds.items():
+            for index, expected in expected_results.items():
+                with self.subTest(method=method, index=index):
+                    ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket=method)
+                    brackets = copy.deepcopy(self.brackets[index])
+                    ppd.resolve_odd_brackets(brackets)
+                    self.assertDictEqual(brackets, expected)
 
     def test_pullup_invalid(self):
-        for name in ["pullup_top", "pullup_bottom", "pullup_random", "intermediate1", "intermediate2"]:
-            self.ppd.options["odd_bracket"] = name
-            self.b2 = copy.deepcopy(self.brackets[99])
-            self.assertRaises(DrawError, self.ppd.resolve_odd_brackets, self.b2)
-
-    def test_pullup_top(self):
-        expecteds = dict()
-        expecteds[1] = OrderedDict([
-            (5, {"aff": [1], "neg": [14]}),
-            (4, {"aff": [2, 3], "neg": [15, 16]}),
-            (3, {"aff": [4, 5, 6, 7, 8], "neg": [17, 18, 19, 20, 21]}),
-            (2, {"aff": [9, 10], "neg": [22, 23]}),
-            (1, {"aff": [11, 12], "neg": [24, 25]}),
-            (0, {"aff": [13], "neg": [26]}),
-        ])
-        expecteds[2] = OrderedDict([
-            (5, {"aff": [1, 2], "neg": [16, 17]}),
-            (4, {"aff": [3, 4, 5, 6], "neg": [18, 19, 20, 21]}),
-            (3, {"aff": [7, 8], "neg": [22, 23]}),
-            (2, {"aff": [9, 10], "neg": [24, 25]}),
-            (1, {"aff": [11, 12, 13, 14], "neg": [26, 27, 28, 29]}),
-            (0, {"aff": [15], "neg": [30]}),
-        ])
-        expecteds[3] = OrderedDict([
-            (5, {"aff": [1, 2], "neg": [13, 14]}),
-            (4, {"aff": [3, 4], "neg": [15, 16]}),
-            (3, {"aff": [5, 6, 7, 8, 9], "neg": [17, 18, 19, 20, 21]}),
-            (2, {"aff": [], "neg": []}),
-            (1, {"aff": [10, 11, 12], "neg": [22, 23, 24]}),
-            (0, {"aff": [], "neg": []}),
-        ])
-        expecteds[4] = OrderedDict([
-            (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
-            (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Caltech 3", "Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),
-            (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Princeton 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
-            (0, {"aff": [], "neg": []}),
-        ])
-        self.bracket_resolve_odd("pullup_top", expecteds)
-
-    def test_pullup_bottom(self):
-        expecteds = dict()
-        expecteds[1] = OrderedDict([
-            (5, {"aff": [1], "neg": [14]}),
-            (4, {"aff": [2, 3], "neg": [15, 18]}),
-            (3, {"aff": [4, 5, 6, 7, 8], "neg": [16, 17, 19, 20, 21]}),
-            (2, {"aff": [9, 10], "neg": [24, 25]}),
-            (1, {"aff": [11, 12], "neg": [22, 23]}),
-            (0, {"aff": [13], "neg": [26]}),
-        ])
-        expecteds[2] = OrderedDict([
-            (5, {"aff": [3, 4], "neg": [16, 17]}),
-            (4, {"aff": [1, 2, 6, 7], "neg": [18, 19, 20, 21]}),
-            (3, {"aff": [5, 10], "neg": [22, 23]}),
-            (2, {"aff": [8, 9], "neg": [26, 27]}),
-            (1, {"aff": [11, 12, 13, 14], "neg": [24, 25, 29, 30]}),
-            (0, {"aff": [15], "neg": [28]}),
-        ])
-        expecteds[3] = OrderedDict([
-            (5, {"aff": [1, 2], "neg": [13, 16]}),
-            (4, {"aff": [3, 4], "neg": [14, 15]}),
-            (3, {"aff": [5, 6, 7, 8, 9], "neg": [17, 18, 19, 23, 24]}),
-            (2, {"aff": [], "neg": []}),
-            (1, {"aff": [10, 11, 12], "neg": [20, 21, 22]}),
-            (0, {"aff": [], "neg": []}),
-        ])
-        expecteds[4] = OrderedDict([
-            (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["Columbia 1", "Caltech 1", "Caltech 3"]}),
-            (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),
-            (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
-            (0, {"aff": [], "neg": []}),
-        ])
-        self.bracket_resolve_odd("pullup_bottom", expecteds)
-
-    def test_intermediate_brackets_1(self):
-        expecteds = dict()
-        expecteds[1] = OrderedDict([
-            (5,   {"aff": [1], "neg": [14]}),
-            (4,   {"aff": [2], "neg": [15]}),
-            (3.5, {"aff": [3], "neg": [16]}),
-            (3,   {"aff": [4, 5], "neg": [17, 18]}),
-            (2.5, {"aff": [6, 7, 8], "neg": [19, 20, 21]}),
-            (2,   {"aff": [], "neg": []}),
-            (1.5, {"aff": [9, 10], "neg": [22, 23]}),
-            (1,   {"aff": [11, 12], "neg": [24, 25]}),
-            (0,   {"aff": [13], "neg": [26]}),
-        ])
-        expecteds[2] = OrderedDict([
-            (5,   {"aff": [], "neg": []}),
-            (4.5, {"aff": [1, 2], "neg": [16, 17]}),
-            (4,   {"aff": [3, 4], "neg": [18, 19]}),
-            (3.5, {"aff": [5, 6], "neg": [20, 21]}),
-            (3,   {"aff": [7], "neg": [22]}),
-            (2.5, {"aff": [8], "neg": [23]}),
-            (2,   {"aff": [], "neg": []}),
-            (1.5, {"aff": [9, 10], "neg": [24, 25]}),
-            (1,   {"aff": [11, 12], "neg": [26, 27]}),
-            (0.5, {"aff": [13, 14], "neg": [28, 29]}),
-            (0,   {"aff": [15], "neg": [30]}),
-        ])
-        expecteds[3] = OrderedDict([
-            (5,   {"aff": [], "neg": []}),
-            (4.5, {"aff": [1, 2], "neg": [13, 14]}),
-            (4,   {"aff": [], "neg": []}),
-            (3.5, {"aff": [3, 4], "neg": [15, 16]}),
-            (3,   {"aff": [], "neg": []}),
-            (2.5, {"aff": [5, 6, 7, 8, 9], "neg":[17, 18, 19, 20, 21]}),
-            (2,   {"aff": [], "neg": []}),
-            (1,   {"aff": [10, 11], "neg": [22, 23]}),
-            (0.5, {"aff": [12], "neg": [24]}),
-            (0,   {"aff": [], "neg": []}),
-        ])
-        expecteds[4] = OrderedDict([
-            (3,   {"aff": [], "neg": []}),
-            (2.5, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
-            (2,   {"aff": ["John Hopkins 1"], "neg": ["Caltech 3"]}),
-            (1.5, {"aff": ["Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),
-            (1,   {"aff": ["Caltech 2"], "neg": ["Princeton 2"]}),
-            (0.5, {"aff": ["Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
-            (0,   {"aff": [], "neg": []}),
-        ])
-        self.bracket_resolve_odd("intermediate1", expecteds)
-
-    def test_intermediate_brackets_2(self):
-        expecteds = dict()
-        expecteds[1] = OrderedDict([
-            (5,   {"aff": [1], "neg": [14]}),
-            (4,   {"aff": [2], "neg": [15]}),
-            (3.5, {"aff": [3], "neg": [16]}),
-            (3,   {"aff": [4, 5], "neg": [17, 18]}),
-            (2.5, {"aff": [6, 7, 8], "neg": [19, 20, 21]}),
-            (2,   {"aff": [], "neg": []}),
-            (1.5, {"aff": [9, 10], "neg": [22, 23]}),
-            (1,   {"aff": [11, 12], "neg": [24, 25]}),
-            (0,   {"aff": [13], "neg": [26]}),
-        ])
-        expecteds[2] = OrderedDict([
-            (5,   {"aff": [], "neg": []}),
-            (4.5, {"aff": [1, 2], "neg": [16, 17]}),
-            (4,   {"aff": [3, 4], "neg": [18, 19]}),
-            (3.5, {"aff": [5, 6], "neg": [20, 21]}),
-            (3,   {"aff": [7], "neg": [22]}),
-            (2.5, {"aff": [8], "neg": [23]}),
-            (2,   {"aff": [], "neg": []}),
-            (1.5, {"aff": [9, 10], "neg": [24, 25]}),
-            (1,   {"aff": [11, 12], "neg": [26, 27]}),
-            (0.5, {"aff": [13, 14], "neg": [28, 29]}),
-            (0,   {"aff": [15], "neg": [30]}),
-        ])
-        expecteds[3] = OrderedDict([
-            (5,      {"aff": [], "neg": []}),
-            (4+2./3, {"aff": [1], "neg": [13]}),
-            (4+1./3, {"aff": [2], "neg": [14]}),
-            (4,      {"aff": [], "neg": []}),
-            (3.5,    {"aff": [3, 4], "neg": [15, 16]}),
-            (3,      {"aff": [], "neg": []}),
-            (2+2./3, {"aff": [5, 6, 7], "neg":[17, 18, 19]}),
-            (2+1./3, {"aff": [8, 9], "neg": [20, 21]}),
-            (2,      {"aff": [], "neg": []}),
-            (1,      {"aff": [10, 11], "neg": [22, 23]}),
-            (0.5,    {"aff": [12], "neg": [24]}),
-            (0,      {"aff": [], "neg": []}),
-        ])
-        expecteds[4] = OrderedDict([
-            (3,   {"aff": [], "neg": []}),
-            (2.5, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
-            (2,   {"aff": ["John Hopkins 1"], "neg": ["Caltech 3"]}),
-            (1.5, {"aff": ["Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),
-            (1,   {"aff": ["Caltech 2"], "neg": ["Princeton 2"]}),
-            (0.5, {"aff": ["Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
-            (0,   {"aff": [], "neg": []}),
-        ])
-        self.maxDiff = None
-        self.bracket_resolve_odd("intermediate2", expecteds)
+        for method in ["pullup_top", "pullup_bottom", "pullup_random", "intermediate1", "intermediate2"]:
+            with self.subTest(method=method):
+                ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket=method)
+                brackets = copy.deepcopy(self.brackets[99])
+                self.assertRaises(DrawError, ppd.resolve_odd_brackets, brackets)
 
     def test_pullup_random(self):
         for j in range(10):
             # Just doing the third one because it's hardest, too lazy to write
             # random tests for the others.
             b2 = copy.deepcopy(self.brackets[3])
-            self.ppd.options["odd_bracket"] = "pullup_random"
-            self.ppd.resolve_odd_brackets(b2)
+            ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket="pullup_random")
+            ppd.resolve_odd_brackets(b2)
 
             self.assertEqual(b2[5]["aff"], [1, 2])
             self.assertIn(13, b2[5]["neg"])
@@ -715,7 +707,7 @@ class TestPartialEliminationDrawGenerator(unittest.TestCase):
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
     def test_split(self):
-        self.fed = DrawGenerator("first_elimination", DUMMY_TEAMS)
+        self.fed = DrawGenerator("first_elimination", DUMMY_TEAMS, None)
         self.assertEqual(self.fed._bypass_debate_split( 3), ( 1,  2))
         self.assertEqual(self.fed._bypass_debate_split( 5), ( 3,  2))
         self.assertEqual(self.fed._bypass_debate_split( 8), ( 8,  0))
@@ -739,7 +731,7 @@ class TestPartialEliminationDrawGenerator(unittest.TestCase):
 
     def run_draw(self, break_size, expected, exp_bypassing=None):
         teams = [TestTeam(*args) for args in self.teams]
-        self.fed = DrawGenerator("first_elimination", teams, break_size=break_size)
+        self.fed = DrawGenerator("first_elimination", teams, None, break_size=break_size)
         pairings = self.fed.generate()
         self.assertEqual([(p.aff_team.id, p.neg_team.id) for p in pairings], expected)
         if exp_bypassing is not None:
@@ -780,11 +772,11 @@ class TestEliminationDrawGenerator(unittest.TestCase):
     def test_error(self):
         teams = self._teams(9, 11, 12)
         results = self._results(([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
-        self.ed = DrawGenerator("elimination", teams, results)
+        self.ed = DrawGenerator("elimination", teams, None, results)
         self.assertRaises(RuntimeError, self.ed.generate)
 
     def run_draw(self, teams, results, expected):
-        self.ed = DrawGenerator("elimination", teams, results)
+        self.ed = DrawGenerator("elimination", teams, None, results)
         pairings = self.ed.generate()
         self.assertEqual([(p.aff_team.id, p.neg_team.id) for p in pairings], expected)
 

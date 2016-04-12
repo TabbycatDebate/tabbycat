@@ -1,33 +1,52 @@
-{% extends "base.html" %}
-{% load debate_tags %}
-{% load static %}
+{% extends "printing/printables_list.html" %}
 
 {% block head-title %}
-  {{ round.abbreviation }} Ballots <br><small>(use CTRL+P to save to PDF for printing, but be sure to set orientation to LANDSCAPE, to turn off headers/footers and turn on background graphics. Works best in Safari or Firefox.)</small>
+  {{ ballots|length }} Scoresheets for {{ round.abbreviation }}
 {% endblock %}
 {% block page-title %}Printable Scoresheets Forms for {{ round.name }}{% endblock %}
-{% block body-class %}print-scoresheet{% endblock %}
+{% block body-id %}debateballots{% endblock %}
 
 {% block content %}
 
-  {% for debate in draw %}
-
-    {% for type, adj in debate.adjudicators %}
-
-      {% if type == 'C' %}
-        {% with source=adj source_type="chair" %}
-          {% include "printing/scoresheet.html" %}
-        {% endwith %}
-      {% endif %}
-
-      {% if type == 'P' %}
-        {% with source=adj source_type="panelist" %}
-          {% include "printing/scoresheet.html" %}
-        {% endwith %}
-      {% endif %}
-
-    {% endfor %}
-
-  {% endfor %}
+    <template v-for="ballot in ballots">
+      <div class="db-page-holder">
+  		  <main role="main" class="db-page db-flex-column db-page-landscape">
+          <base-ballot :data="$data" :ballot="ballot" :motions="motions"></base-ballot>
+        </main>
+      </div>
+    </template>
 
 {% endblock content %}
+
+{% block extra-js %}
+
+  {% include "vue/import-vue.html" %}
+  {% include "vue/printables/base-ballot.vue" %}
+  <script>
+    var baseData = {
+      // Strings to Fill In
+      tournamentName: "{{ tournament }}",
+      returnLocation: "{{ pref.score_return_location }}",
+      // Rules
+      hasReplies: {% if pref.reply_scores_enabled %}true{% else %}false{% endif %},
+      speakersCount: {{ pref.substantive_speakers }},
+      infoText: "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication.",
+      hasMotions: {% if pref.enable_motions %}true{% else %}false{% endif %},
+      hasVetoes: {% if pref.motion_vetoes_enabled %}true{% else %}false{% endif %},
+      // Formatting
+      showTabRoomRow: true,
+      showInfoRow: false,
+      showPronouns: true,
+      kind: "Scoresheet",
+      // From Django
+      round: "{{ round.abbreviation }}",
+      ballots: {{ ballots|safe }},
+      motions: {{ motions|safe }},
+    }
+    new Vue({
+      el: '#debateballots',
+      data: baseData,
+    })
+  </script>
+
+{% endblock extra-js %}

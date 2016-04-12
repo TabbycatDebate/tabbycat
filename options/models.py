@@ -5,6 +5,7 @@ from dynamic_preferences.registries import PerInstancePreferenceRegistry, prefer
 
 tournament_preferences_registry = PerInstancePreferenceRegistry()
 
+
 class TournamentPreferenceModel(PerInstancePreferenceModel):
 
     instance = models.ForeignKey(Tournament, related_name="preferences")
@@ -12,8 +13,8 @@ class TournamentPreferenceModel(PerInstancePreferenceModel):
 
     class Meta(PerInstancePreferenceModel.Meta):
         app_label = "options"
-        verbose_name = "Tournament Preference"
-        verbose_name_plural = "Tournament Preferencess"
+        verbose_name = "tournament preference"
 
 
-preference_models.register(TournamentPreferenceModel, tournament_preferences_registry)
+preference_models.register(TournamentPreferenceModel,
+                           tournament_preferences_registry)

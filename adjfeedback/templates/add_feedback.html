@@ -3,96 +3,108 @@
 
 {% block head-title %}Who is the feedback from?{% endblock %}
 {% block page-title %}Add Feedback{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}add-feedback{% endblock %}
 
-{% block header %}
-  <div class="btn-group" data-toggle="buttons">
-    <label class="btn btn-default active" id="toggle-all">
-    <input type="radio" name="options">Show All
-    </label>
-    <label class="btn btn-default" id="toggle-teams">
-    <input type="radio" name="options" >Only Teams
-    </label>
-    <label class="btn btn-default" id="toggle-adjs">
-    <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
-    </label>
-  </div>
+{% block page-subnav-sections %}
   <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url feedback_overview %}">View Feedback Summary</a>
-    <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">View Latest Feedback</a>
-    <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">View Feedback By Source</a>
+    <a class="btn btn-default" href="{% tournament_url adjfeedback-overview %}">Feedback Summary</a>
+    <a class="btn btn-default" href="{% tournament_url adjfeedback-view-latest %}">Latest Feedback</a>
+    <a class="btn btn-default" href="{% tournament_url adjfeedback-view-by-source %}">Feedback By Source</a>
   </div>
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
-    <thead>
-      <tr>
-        <th>Name</th>
-        {% if pref.show_institutions %}
-        <th>Institution</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for adj in adjudicators %}
-      <tr id="adj_{{ adj.id }}" class="adj-row">
-        <td>
-          {% block enter-feedback-adj-link %}
-            <a href="{% tournament_url enter_feedback_adjudicator adj.id %}">
-            {{ adj.name }}</a>
-          {% endblock %}
-        </td>
-        {% if pref.show_institutions %}
-        <td>
-          {{ adj.institution.name }}
-        </td>
-        {% endif %}
-      </tr>
-      {% endfor %}
-      {% for team in teams %}
-      <tr id="team_{{ team.id }}" class="team-row">
-        <td>
-          {% block enter-feedback-team-link %}
-            <a href="{% tournament_url enter_feedback_team team.id %}">
-            {{ team.short_name }}</a>
-          {% endblock %}
-        </td>
-        {% if pref.show_institutions %}
-          <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
-        {% endif %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>From a Team</h4>
+      </div>
+      <div class="panel-body">
+        <table id="dataTableA" class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            {% if pref.show_institutions %}
+            <th>Institution</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for team in teams %}
+          <tr id="team_{{ team.id }}">
+            <td>
+              {% block enter-feedback-team-link %}
+                <a href="{% tournament_url adjfeedback-add-from-team team.id %}">
+                {{ team.short_name }}</a>
+              {% endblock %}
+            </td>
+            {% if pref.show_institutions %}
+              <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>From an Adjudicator</h4>
+      </div>
+      <div class="panel-body">
+        <table id="dataTableB" class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            {% if pref.show_institutions %}
+            <th>Institution</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for adj in adjudicators %}
+          <tr id="adj_{{ adj.id }}">
+            <td>
+              {% block enter-feedback-adj-link %}
+                <a href="{% tournament_url adjfeedback-add-from-adjudicator adj.id %}">
+                {{ adj.name }}</a>
+              {% endblock %}
+            </td>
+            {% if pref.show_institutions %}
+            <td>
+              {{ adj.institution.name }}
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}
 
 {% block extra-js %}
   {{ block.super }}
-  <script type="text/javascript" charset="utf-8">
+  <script>
     $(document).ready( function() {
-      var dTable = $('#dataTable').DataTable({
+      var dTableA = $('#dataTableA').DataTable({
         "aaSorting": [[ 0, "asc" ]],
       });
-      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+      var dTableB = $('#dataTableB').DataTable({
+        "aaSorting": [[ 0, "asc" ]],
+      });
+      new $.fn.dataTable.FixedHeader( dTableA, {alwaysCloneTop: true});
+      new $.fn.dataTable.FixedHeader( dTableB, {alwaysCloneTop: true});
       $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
+        dTableA.search($(this).val()).draw();
+        dTableB.search($(this).val()).draw();
       })
-
-      $('#toggle-all').click(function () {
-        $('.adj-row').show();
-        $('.team-row').show();
-      });
-      $('#toggle-teams').click(function () {
-        $('.adj-row').hide();
-        $('.team-row').show();
-      });
-      $('#toggle-adjs').click(function () {
-        $('.adj-row').show();
-        $('.team-row').hide();
-      });
-
     } );
   </script>
 {% endblock extra-js %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load add_field_css %}
+
+{% block head-title %}Shift Check-In for {{ adjudicator.name }}{% endblock %}
+{% block page-title %}Shift Check-In for {{ adjudicator.name }}{% endblock %}
+
+{% block content %}
+
+  <form method="POST" action="">
+    {% csrf_token %}
+    {{ formset.management_form }}
+
+    <div class="row">
+    {% for form in formset %}
+
+      <div class="col-md-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>
+              {{ form.instance.debate.round.abbreviation }}:
+              {{ form.instance.debate.division.venue_group }} @
+              {{ form.instance.debate.division.time_slot }}
+            </h4>
+          </div>
+          <div class="panel-body">
+            <div class="input-group">
+              {{ form }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    {% endfor %}
+    </div>
+
+    <div class="col-md-4">
+      <button type="submit" name="submit" class="btn btn-success form-control submit-disable" data-loading-text="Saving...">
+        Save Availability
+      </button>
+    </div>
+
+  </form>
+
+{% endblock content %}

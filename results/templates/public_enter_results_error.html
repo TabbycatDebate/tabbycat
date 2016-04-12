@@ -1,8 +1,8 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block head-title %}No Result to Enter{% endblock %}
 {% block page-title %}No Result to Enter{% endblock %}
-{% block body-class %}public-enter-result{% endblock %}
 
 {% block content %}
   <div class="alert alert-info">This page is specific to you, {{ adjudicator.name }}.
@@ -15,8 +15,8 @@
 
 {% block extra-js %}
   {{ block.super }}
-  <script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
-  <script type="text/javascript" charset="utf-8">
+  <script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
+  <script>
     $(document).ready( function() {
       {% include "js/enter_results.js" %}
     });

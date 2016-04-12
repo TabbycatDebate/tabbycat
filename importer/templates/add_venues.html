@@ -2,30 +2,21 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}🎪 Bulk Add Venues{% endblock %}
+{% block head-title %}<span class="emoji">🎪</span> Bulk Add Venues{% endblock %}
 {% block page-title %}🎪 Bulk Add Venues{% endblock %}
 
 {% block content %}
 
 <div class="alert alert-info alert-dismissable" id="">
   <p>
-    Copy+paste in a venues list, with one venue per line, using the format of:<br><br>
-    <strong>Name, Priority, Group</strong><br><br>For example:<br><br>
+    Copy and paste in a venues list, with one venue per line, using the format of:
+    <strong>Name, Priority{% if pref.enable_venue_groups %}, Venue Group{% endif %}
+    </strong>.For example:<br>
   </p>
   <p>
-    <em>Green 140, 200, Group 1<br>
-    Red 2.9.0, 100, Group 1<br>
-    Black 11G, 50, Group 2</em>
-  </p>
-  <br>
-  <p>
-  Note that most tournaments dont need venue groups, so you can just leave that line blank, like so:
-  </p>
-  <br>
-  <p>
-    <em>Green 140, 200<br>
-    Red 2.9.0, 100<br>
-    Black 11G, 50</em>
+    <em>Green 140, 200{% if pref.enable_venue_groups %},Block A{% endif %}<br>
+    Red 2.9.0, 100{% if pref.enable_venue_groups %},Big Hall{% endif %}<br>
+    Black 11G, 50{% if pref.enable_venue_groups %},Block A{% endif %}</em>
   </p>
 </div>
 
@@ -34,7 +25,7 @@
   <div class="form-group">
     <textarea class="form-control" name="venues_raw" rows="20"></textarea>
   </div>
-  <button type="submit" class="btn btn-default">Submit</button>
+  <button type="submit" class="btn btn-primary btn-block submit-disable">Submit Venues List</button>
 
 </form>
 

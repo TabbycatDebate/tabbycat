@@ -3,26 +3,51 @@
 
 {% block head-title %}Latest Feedback{% endblock %}
 {% block page-title %}Latest Feedback{% endblock %}
-{% block page-header %}{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-overview %}">
+    Feedback Overview
+  </a>
+  <a class="btn btn-default active " href="{% tournament_url adjfeedback-view-latest %}">
+    Latest Feedback
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-by-source %}">
+    Find Feedback
+  </a>
+  {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">
+    Randomised URLs
+  </a>
+  {% endif %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url feedback_progress %}">
+    Unsubmitted Ballots
+  </a>
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+    <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
+{% endblock %}
 
 {% block content %}
-
   <div class="row">
-  {% for feedback in feedbacks %}
 
-    <div class="col-md-3">
+    {% for feedback in feedbacks %}
 
-      {% include 'feedback_card.html' %}
+      <div class="col-md-4">
 
-    </div>
+        {% include 'feedback_card.html' %}
 
-    {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
+      </div>
 
-  {% endfor %}
+      {% if forloop.counter|divisibleby:3 %}
+        </div><div class="row">
+      {% endif %}
+
+    {% empty %}
+      <div class="alert alert-info">No feedback has been submitted yet.</div>
+
+    {% endfor %}
+
   </div>
-
 {% endblock content %}
-
-{% block extra-js %}
-
-{% endblock extra-js %}

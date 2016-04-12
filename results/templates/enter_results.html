@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load add_field_css %}
 {% load debate_tags %}
-{% load staticfiles %}
+{% load static %}
 
 {% block head-title %}
     {% if new %}New Ballot Set for{% else %}Edit Ballot Set for{% endif %}
@@ -9,71 +9,85 @@
 {% endblock %}
 
 {% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}{% endblock %}
-{% block body-class %}enter-result{% endblock %}
-{% block header %}
-    {% include "other_ballots_list.html" %}
-    {% if not new %}
+{% block page-subnav-sections %}
+  {% if not new %}
     <a class="btn btn-default" href="{% tournament_url new_ballotset debate.id %}">Create a new ballot set for this debate</a>
-    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block page-alerts %}
+  {% include "other_ballots_list.html" %}
 {% endblock %}
 
 {% block content %}
-    <form id="resultsForm" class="form-horizontal" action="." method="POST">
-        {% include "enter_results_ballot_set.html" %}
-        <div class="row">
-            <h3 class="col-sm-12 page-header lead">Ballot Status</h3>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-3 col-xs-9 control-label" for="{{ form.discarded.auto_id }}">
-                        This ballot is discarded
-                    </label>
-                    <div class="col-sm-1 col-xs-3">
-                        {{ form.discarded|addcss:"form-control" }}
-                        {{ form.discarded.errors }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 col-xs-9 control-label" for="{{ form.confirmed.auto_id }}">
-                        This is the confirmed ballot
-                    </label>
-                    <div class="col-sm-1 col-xs-3">
-                        {{ form.confirmed|addcss:"form-control" }}
-                        {{ form.confirmed.errors }}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <h3 class="col-sm-12 page-header lead">Debate Status <small>(for the debate itself, not just this particular ballot set)</small></h3>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <div class="col-sm-2">
-                        {{ form.debate_result_status|addcss:"form-control" }}
-                        {{ form.debate_result_status.errors }}
-                    </div>
-                    <div class="col-sm-2">
-                        <input id="submit" class="save form-control btn btn-success submit-disable" type="submit" value="Save" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
-                    </div>
-                    <div class="col-sm-2">
-                        <a class="form-control btn btn-default btn-danger" href="{% round_url results %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel</a>
-                    </div>
-                </div>
+  <form id="resultsForm" class="form-horizontal" action="." method="POST">
+    {% csrf_token %}
+    {% include "enter_results_ballot_set.html" %}
+    <div class="row">
+        <div class="col-sm-12">
 
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>Ballot Status</h4>
             </div>
+            <div class="panel-body form-panel">
+              <div class="form-group col-md-6">
+                <div class="row">
+                  <label class="col-sm-6 col-xs-9 control-label" for="{{ form.discarded.auto_id }}">
+                      This ballot is discarded
+                  </label>
+                  <div class="col-sm-6 col-xs-3">
+                      {{ form.discarded|addcss:"form-control" }}
+                      {{ form.discarded.errors }}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <div class="row">
+                  <label class="col-sm-6 col-xs-9 control-label" for="{{ form.confirmed.auto_id }}">
+                      This is the confirmed ballot
+                  </label>
+                  <div class="col-sm-6 col-xs-3">
+                      {{ form.confirmed|addcss:"form-control" }}
+                      {{ form.confirmed.errors }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-    </form>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>Debate Status <small>(for the debate itself, not just this particular ballot set)</small></h4>
+            </div>
+            <div class="panel-body form-panel">
+              <div class="form-group">
+                <div class="col-sm-4">
+                  {{ form.debate_result_status|addcss:"form-control" }}
+                  {{ form.debate_result_status.errors }}
+                </div>
+                <div class="col-sm-4">
+                  <input id="submit" class="save btn btn-success btn-block submit-disable" type="submit" value="Save Ballot" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
+                </div>
+                <div class="col-sm-4">
+                  <a class="btn btn-default btn-block btn-danger" href="{% round_url results %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel Entry</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </form>
 {% endblock content %}
 
 {% block extra-js %}
-<script type="text/javascript" language="javascript" charset="utf-8" src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
-<script type="text/javascript" charset="utf-8">
-  $(document).ready( function() {
-    {% include "js/enter_results.js" %}
-  });
-</script>
+  <script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
+  <script>
+    $(document).ready( function() {
+      {% include "js/enter_results.js" %}
+    });
+  </script>
 {% endblock %}

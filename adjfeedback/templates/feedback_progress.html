@@ -1,87 +1,132 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Unsubmitted Feedback Ballots{% endblock %}
-{% block page-title %}Unsubmitted Feedback Ballots{% endblock %}
-{% block body-class %}public-feedback{% endblock %}
+{% block head-title %}<span class="emoji">🆘</span>Missing Feedback Ballots{% endblock %}
+{% block page-title %}🆘Missing Feedback Ballots{% endblock %}
 
-{% block header %}
-  <div class="btn-group" data-toggle="buttons">
-    <label class="btn btn-default active" id="toggle-all">
-    <input type="radio" name="options">Show All
-    </label>
-    <label class="btn btn-default" id="toggle-teams">
-    <input type="radio" name="options" >Only Teams
-    </label>
-    <label class="btn btn-default" id="toggle-adjs">
-    <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
-    </label>
-  </div>
+{% block page-subnav-sections %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-overview %}">
+    Feedback Overview
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-latest %}">
+    Latest Feedback
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-by-source %}">
+    Find Feedback
+  </a>
+  {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">
+    Randomised URLs
+  </a>
+  {% endif %}
+  <a class="btn btn-default active" href="{% tournament_url feedback_progress %}">
+    Unsubmitted Ballots
+  </a>
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+    <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
 {% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover table-striped">
-    <thead>
-      <tr>
-        <th><span class="glyphicon glyphicon-eye-open" data-toggle="tooltip" title="Percentage Returned"></span></th>
-        <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Unsubmitted Feedbacks"></span></th>
-        <th><span class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Submitted Feedbacks"></span></th>
-        <th><span class="glyphicon glyphicon-user" data-toggle="tooltip" title="Adjudicator or Team"></span></th>
-        {% if pref.show_institutions %}
-          <th>Institution</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
+<div class="row">
 
-    {% for entity in adjudicators %}
-    {% if entity.total_ballots > 0 %}
-    <tr id="adj_{{ entity.id }}" class="adj-row">
-      <td class="">
-        {{ entity.coverage }}<span class="visible-xs"> </span>%
-      </td>
-      <td class="">
-        {{ entity.owed_ballots }}
-      </td>
-      <td class="">
-        {{ entity.submitted_ballots }}
-      </td>
-      <td class="entity-name">
-        {{ entity.name }}
-      </td>
-      {% if pref.show_institutions %}
-      <td class="">
-        {{ entity.institution.name }} {{ entity.test }}
-      </td>
-      {% endif %}
-    </tr>
-    {% endif %}
-    {% endfor %}
-    {% for team in teams %}
-    <tr id="team_{{ team.id }}" class="team-row">
-      <td class="">
-        {{ team.coverage }}<span class="visible-xs"> </span>%
-      </td>
-      <td class="">
-        {{ team.owed_ballots }}
-      </td>
-      <td class="">
-        {{ team.submitted_ballots }}
-      </td>
-      <td>
-        <span {% if pref.show_speakers_in_draw %}class="team-speakers-hover" id="team_speakers_{{ team.id }}"{% endif %}>
-          {{ team.short_name }}
-        </span>
-      </td>
-      {% if pref.show_institutions %}
-        <td class="">
-          <span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span>
-        </td>
-      {% endif %}
-    </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>From Teams</h4>
+      </div>
+      <div class="panel-body">
+
+        <table id="dataTableA" class="table">
+          <thead>
+            <tr>
+              <th><span class="glyphicon glyphicon-eye-open" data-toggle="tooltip" title="Percentage Returned"></span></th>
+              <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Unsubmitted Feedbacks"></span></th>
+              <th><span class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Submitted Feedbacks"></span></th>
+              <th>Team</th>
+              {% if pref.show_institutions %}
+                <th>Institution</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for team in teams %}
+            <tr id="team_{{ team.id }}">
+              <td class="">
+                {{ team.coverage }}<span class="visible-xs"> </span>%
+              </td>
+              <td class="">
+                {{ team.owed_ballots }}
+              </td>
+              <td class="">
+                {{ team.submitted_ballots }}
+              </td>
+              <td>
+                {% include "tables/team.html" with team=team %}
+              </td>
+              {% if pref.show_institutions %}
+                <td class="">
+                  <span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span>
+                </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>From Adjudicators</h4>
+      </div>
+      <div class="panel-body">
+        <table id="dataTableB" class="table">
+          <thead>
+            <tr>
+              <th><span class="glyphicon glyphicon-eye-open" data-toggle="tooltip" title="Percentage Returned"></span></th>
+              <th><span class="glyphicon glyphicon-remove" data-toggle="tooltip" title="Unsubmitted Feedbacks"></span></th>
+              <th><span class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Submitted Feedbacks"></span></th>
+              <th>Adjudicator</th>
+              <th>Instititution</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entity in adjudicators %}
+              {% if entity.total_ballots > 0 %}
+              <tr id="adj_{{ entity.id }}">
+                <td class="">
+                  {{ entity.coverage }}<span class="visible-xs"> </span>%
+                </td>
+                <td class="">
+                  {{ entity.owed_ballots }}
+                </td>
+                <td class="">
+                  {{ entity.submitted_ballots }}
+                </td>
+                <td class="entity-name">
+                  {{ entity.name }}
+                </td>
+                <td class="">
+                  {{ entity.institution.name }} {{ entity.test }}
+                </td>
+              </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
 
   <div class="modal fade" id="adj-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -102,6 +147,7 @@
     </div>
     </div>
   </div>
+
 {% endblock content %}
 
 {% block extra-js %}
@@ -109,29 +155,22 @@
 
   $(document).ready( function() {
 
-    var dTable = $('#dataTable').DataTable({
-      "aaSorting": [[ 0, "asc" ]],
+    var dTableA = $('#dataTableA').DataTable({
+      "aaSorting": [[ 0, "asc" ], [ 1, "desc" ]],
     });
-    new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+    new $.fn.dataTable.FixedHeader( dTableA, {alwaysCloneTop: true});
+    var dTableB = $('#dataTableB').DataTable({
+      "aaSorting": [[ 0, "asc" ], [ 1, "desc" ]],
+    });
+    new $.fn.dataTable.FixedHeader( dTableB, {alwaysCloneTop: true});
     $('#table-search').keyup(function(){
-      dTable.search($(this).val()).draw();
+      dTableA.search($(this).val()).draw();
+      dTableB.search($(this).val()).draw();
     })
 
-    $('#toggle-all').click(function () {
-      $('.adj-row').show();
-      $('.team-row').show();
-    });
-    $('#toggle-teams').click(function () {
-      $('.adj-row').hide();
-      $('.team-row').show();
-    });
-    $('#toggle-adjs').click(function () {
-      $('.adj-row').show();
-      $('.team-row').hide();
-    });
 
     // the standard header to be re-added to the modal
-    var tableHead = '<table id="modal-adj-table" class="table"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
+    var tableHead = '<table id="modal-adj-table" class="table"><thead><th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th><th><span class="glyphicon glyphicon-tasks" data-toggle="tooltip" title="Bracket"></span></th><th>Debate</th><th>Source</th><th>Score</th><th>Comments</th></tr><thead><tbody><tbody><table>'
 
     $(".view-missing-adjs").each(function() {
       $(this).click( function() {

@@ -2,9 +2,13 @@
 {% load debate_tags %}
 
 {% block update-url %}{% round_url update_venue_availability %}{% endblock %}
-{% block draw-url %}{% round_url draw round %}{% endblock %}
-{% block head-title %}Venue Availability <small>for {{ round.name }}</small>{% endblock %}
-{% block page-title %}Venue Availability for {{ round.name }}{% endblock %}
+{% block draw-url %}{% round_url availability_index %}{% endblock %}
+
+{% block page-title %}Venue Checkins for {{ round.name }}{% endblock %}
+{% block head-title %}
+  <span class="emoji">🎪</span>Venue Checkins
+{% endblock %}
+{% block sub-title %}for {{ round.name }}{% endblock %}
 
 {% block table-contents %}
   <thead>
@@ -14,9 +18,6 @@
       {% endif %}
       <th>Name</th>
       <th>Priority</th>
-      {% if pref.enable_venue_times %}
-      <th>Time</th>
-      {% endif %}
       <th>Active</th>
     </tr>
   </thead>
@@ -30,14 +31,6 @@
       {% endif %}
       <td>{{ venue.name }}</td>
       <td>{{ venue.priority }}</td>
-      {% if pref.enable_venue_times %}
-      <td>
-        {% if venue.time %}
-        <span class="hidden">{{ venue.time|date:"o m d" }}</span>
-        {{ venue.time|date:"D jS F h:iA" }}
-        {% endif %}
-      </td>
-      {% endif %}
       <td class="check_target">
         <input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="check_{{ venue.id }}" value="{{ venue.id }}" />
       </td>

@@ -19,13 +19,10 @@ class DebateAdjudicator(models.Model):
     debate = models.ForeignKey('draw.Debate')
     adjudicator = models.ForeignKey('participants.Adjudicator')
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
+    timing_confirmed = models.NullBooleanField(verbose_name="Available? ")
 
     def __str__(self):
         return '{} in {}'.format(self.adjudicator, self.debate)
-
-
-    class Meta:
-        verbose_name = "🙉 Debate Adjudicator"
 
 
 class AdjudicatorConflict(models.Model):
@@ -33,24 +30,25 @@ class AdjudicatorConflict(models.Model):
     team = models.ForeignKey('participants.Team')
 
     class Meta:
-        verbose_name = "❤️ Adj Team Conflict"
+        verbose_name = "adjudicator-team conflict"
 
 class AdjudicatorAdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', related_name="source_adjudicator")
     conflict_adjudicator = models.ForeignKey('participants.Adjudicator', related_name="target_adjudicator", verbose_name="Adjudicator")
 
     class Meta:
-        verbose_name = "💜 Adj Adj Conflict"
+        verbose_name = "adjudicator-adjudicator conflict"
 
 class AdjudicatorInstitutionConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator')
     institution = models.ForeignKey('participants.Institution')
 
     class Meta:
-        verbose_name = "💛 Adj Institution Conflict"
+        verbose_name = "adjudicator-institution conflict"
 
 class AdjudicatorAllocation(object):
     """Not a model, just a container object for the adjudicators on a panel."""
+
     def __init__(self, debate, chair=None, panel=None):
         self.debate = debate
         self.chair = chair
@@ -65,7 +63,8 @@ class AdjudicatorAllocation(object):
         return a
 
     def __str__(self):
-        return ", ".join([(x is not None) and x.name or "<None>" for x in self.list])
+        items = [str(getattr(x, "name", x)) for x in self.list]
+        return ", ".join(items)
 
     def __iter__(self):
         """Iterates through all, including trainees."""
@@ -78,6 +77,10 @@ class AdjudicatorAllocation(object):
 
     def __contains__(self, item):
         return item == self.chair or item in self.panel or item in self.trainees
+
+    def __eq__(self, other):
+        return self.debate == other.debate and self.chair == other.chair and \
+                set(self.panel) == set(other.panel) and set(self.trainees) == set(other.trainees)
 
     def delete(self):
         """Delete existing, current allocation"""
@@ -101,7 +104,5 @@ class AdjudicatorAllocation(object):
     def save(self):
         self.debate.debateadjudicator_set.all().delete()
         for t, adj in self:
-            if isinstance(adj, Adjudicator):
-                adj = adj.id
             if adj:
-                DebateAdjudicator(debate=self.debate, adjudicator_id=adj, type=t).save()
+                DebateAdjudicator(debate=self.debate, adjudicator=adj, type=t).save()

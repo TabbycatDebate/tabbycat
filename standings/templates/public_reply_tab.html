@@ -3,4 +3,7 @@
 
 {% block head-title %}Replies Tab{% endblock %}
 {% block page-title %}Replies Tab{% endblock %}
-{% block body-class %}public-replies-tab{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}

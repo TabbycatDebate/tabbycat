@@ -1,9 +1,17 @@
 import json
+import logging
+logger = logging.getLogger(__name__)
+
+from django.views.generic.base import View
 from actionlog.models import ActionLogEntry
-from draw.models import Debate
+from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 
-from .models import AdjudicatorConflict, AdjudicatorInstitutionConflict, AdjudicatorAdjudicatorConflict, DebateAdjudicator
+from tournaments.mixins import RoundMixin
+from utils.mixins import SuperuserRequiredMixin
+
+
+from .models import AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, AdjudicatorAdjudicatorConflict, DebateAdjudicator
 
 from utils.views import *
 
@@ -82,7 +90,7 @@ def draw_adjudicators_edit(request, round):
     context['break_categories'] = list(zip(
         break_categories, colors + ["black"] * (len(break_categories) - len(colors))))
 
-    return r2r(request, "draw_adjudicators_edit.html", context)
+    return render(request, "draw_adjudicators_edit.html", context)
 
 
 def _json_adj_allocation(debates, unused_adj):
@@ -98,7 +106,8 @@ def _json_adj_allocation(debates, unused_adj):
 
         return {
             'id': a.id,
-            'name': a.name + " (" + a.institution.short_code + ")",
+            'name': a.name,
+            'institution': a.institution.short_code,
             'is_unaccredited': a.is_unaccredited,
             'gender': a.gender,
             'region': region_name
@@ -126,44 +135,55 @@ def draw_adjudicators_get(request, round):
     return _json_adj_allocation(draw, round.unused_adjudicators())
 
 
-@admin_required
-@round_view
-def save_adjudicators(request, round):
-    if request.method != "POST":
-        return HttpResponseBadRequest("Expected POST")
+class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
 
-    def id(s):
-        s = s.replace('[]', '')
-        return int(s.split('_')[1])
+    def post(self, request, *args, **kwargs):
 
-    debate_ids = set(id(a) for a in request.POST)
-    debates = Debate.objects.in_bulk(list(debate_ids))
-    debate_adjudicators = {}
-    for d_id, debate in list(debates.items()):
-        a = debate.adjudicators
-        a.delete()
-        debate_adjudicators[d_id] = a
+        # Example request.POST:
+        # {'debate_6': ['true'], 'chair_7': ['79'], 'panel_1[]': ['89', '94']}
 
-    for key, vals in request.POST.lists():
-        if key.startswith("chair_"):
-            debate_adjudicators[id(key)].chair = vals[0]
-        if key.startswith("panel_"):
-            for val in vals:
-                debate_adjudicators[id(key)].panel.append(val)
-        if key.startswith("trainees_"):
-            for val in vals:
-                debate_adjudicators[id(key)].trainees.append(val)
+        def _extract_id(s):
+            return int(s.replace('[]', '').split('_')[1])
 
-    # We don't do any validity checking here, so that the adjudication
-    # core can save a work in progress.
+        debate_ids = [_extract_id(key) for key in request.POST if key.startswith("debate_")]
+        debates = Debate.objects.in_bulk(debate_ids)
+        allocations = {d_id: AdjudicatorAllocation(debate) for d_id, debate in debates.items()}
 
-    for d_id, alloc in list(debate_adjudicators.items()):
-        alloc.save()
+        for key, values in request.POST.lists():
+            if key.startswith("debate_"):
+                continue
 
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE,
-                               user=request.user, round=round, tournament=round.tournament)
+            alloc = allocations[_extract_id(key)]
+            adjs = [Adjudicator.objects.get(id=int(x)) for x in values]
+            if key.startswith("chair_"):
+                if len(adjs) > 1:
+                    logger.warning("There was more than one chair for debate {}, only saving the first".format(allocation.debate))
+                alloc.chair = adjs[0]
+            elif key.startswith("panel_"):
+                alloc.panel.extend(adjs)
+            elif key.startswith("trainees_"):
+                alloc.trainees.extend(adjs)
 
-    return HttpResponse("ok")
+        changed = 0
+        for d_id, debate in debates.items():
+            existing = debate.adjudicators
+            revised = allocations[d_id]
+            if existing != revised:
+                changed += 1
+                logger.info("Saving adjudicators for debate {}".format(debate))
+                logger.info("{} --> {}".format(existing, revised))
+                existing.delete()
+                revised.save()
+
+        if not changed:
+            logger.warning("Didn't save any adjudicator allocations, nothing changed.")
+            return HttpResponse("There aren't any changes to save.")
+
+        ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE,
+                                   user=request.user, round=self.get_round(),
+                                   tournament=self.get_tournament())
+
+        return HttpResponse("Saved changes for {} debates!".format(changed))
 
 
 @admin_required
@@ -197,7 +217,13 @@ def adj_conflicts(request, round):
     )
 
     for da in history:
-        add('history', da.adjudicator_id, da.debate.aff_team.id)
-        add('history', da.adjudicator_id, da.debate.neg_team.id)
+        try:
+            add('history', da.adjudicator_id, da.debate.aff_team.id)
+        except DebateTeam.DoesNotExist:
+            pass # For when a Debate/DebateTeam may have been deleted
+        try:
+            add('history', da.adjudicator_id, da.debate.neg_team.id)
+        except DebateTeam.DoesNotExist:
+            pass # For when a Debate/DebateTeam may have been deleted
 
     return HttpResponse(json.dumps(data), content_type="text/json")

@@ -1,7 +1,7 @@
 """Module to compute the teams breaking in a BreakCategory."""
 
 from collections import Counter
-from standings.standings import annotate_team_standings
+from standings.teams import TeamStandingsGenerator
 
 from .models import BreakingTeam
 
@@ -31,25 +31,30 @@ def get_breaking_teams(category, include_all=False, include_categories=False):
     teams = category.breaking_teams.all()
     if not include_all:
         teams = teams.filter(break_rank__isnull=False)
-    teams = annotate_team_standings(teams, tournament=category.tournament)
-    for team in teams:
-        bt = team.breakingteam_set.get(break_category=category)
-        team.rank = bt.rank
+
+    metrics = category.tournament.pref('team_standings_precedence')
+    generator = TeamStandingsGenerator(metrics, ('rank',))
+    standings = generator.generate(teams)
+
+    for standing in standings:
+
+        bt = standing.team.breakingteam_set.get(break_category=category)
+        standing.rank = bt.rank
         if bt.break_rank is None:
             if bt.remark:
-                team.break_rank = "(" + bt.get_remark_display().lower() + ")"
+                standing.break_rank = "(" + bt.get_remark_display().lower() + ")"
             else:
-                team.break_rank = "<error>"
+                standing.break_rank = "<error>"
         else:
-            team.break_rank = bt.break_rank
+            standing.break_rank = bt.break_rank
 
         if include_categories:
-            categories = team.break_categories_nongeneral.exclude(id=category.id).exclude(priority__lt=category.priority)
-            team.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
+            categories = standing.team.break_categories_nongeneral.exclude(id=category.id).exclude(priority__lt=category.priority)
+            standing.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
         else:
-            team.categories_for_display = ""
+            standing.categories_for_display = ""
 
-    return teams
+    return standings
 
 def generate_all_breaking_teams(tournament):
     """Deletes all breaking teams information, then generates breaking teams
@@ -102,22 +107,24 @@ def update_breaking_teams(category):
 
 def _eligible_team_set(category):
     if category.is_general:
-        return category.tournament.team_set # all in tournament
+        return category.tournament.team_set.all() # all in tournament
     else:
-        return category.team_set
+        return category.team_set.all()
 
 def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_priority=set()):
     """Generates a list of breaking teams for the given category and returns
     a list of teams in the (actual) break, i.e. excluding teams that are
     ineligible, capped, broke in a different break, and so on."""
 
-    eligible_teams = annotate_team_standings(eligible_teams, tournament=category.tournament)
+    metrics = category.tournament.pref('team_standings_precedence')
+    generator = TeamStandingsGenerator(metrics, ('rank',))
+    standings = generator.generate(eligible_teams)
 
     break_size = category.break_size
-    institution_cap = category.institution_cap
+    institution_cap = category.institution_cap or None
 
-    prev_rank_value = (None, None) # (points, speaks)
-    prev_break_rank_value = (None, None)
+    prev_rank_value = tuple([None] * len(standings.metric_keys))
+    prev_break_rank_value = tuple([None] * len(standings.metric_keys))
     cur_rank = 0
     breaking_teams = list()
     breaking_teams_to_create = list()
@@ -127,7 +134,9 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
     cur_break_seq = 0  # sequential count of breaking teams
     teams_from_institution = Counter()
 
-    for i, team in enumerate(eligible_teams, start=1):
+    for i, standing in enumerate(standings, start=1):
+
+        team = standing.team
 
         try:
             bt = BreakingTeam.objects.get(break_category=category, team=team)
@@ -137,7 +146,7 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
             existing = False
 
         # Compute overall rank
-        rank_value = (team.points, team.speaker_score)
+        rank_value = tuple(standing.itermetrics())
         if rank_value != prev_rank_value:
             # if we have enough teams, we're done
             if len(breaking_teams) >= break_size:
@@ -155,7 +164,7 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
             bt.remark = bt.REMARK_INELIGIBLE
 
         # Check if capped out by institution cap
-        elif institution_cap > 0 and teams_from_institution[team.institution] >= institution_cap:
+        elif institution_cap is not None and teams_from_institution[team.institution] >= institution_cap:
             bt.remark = bt.REMARK_CAPPED
 
         # Check if already broken to a higher category

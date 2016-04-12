@@ -1,31 +1,23 @@
 {% extends "base.html" %}
-{% load staticfiles %}
+{% load static %}
 {% load debate_tags %}
 
-{% block nav %}{% endblock %}
+{% block nav %}<div class="col-md-12">{% endblock %}
 {% block footer %}{% endblock %}
 
-{% block body-class %}edit-venues{% endblock %}
 {% block head-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
 {% block page-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
-{% block page-header %}
+{% block page-subnav-sections %}
   {% include "tables/table_search.html" %}
-  <div id="" class="btn-group pull-left col-sm-1">
-    <a class="btn btn-success form-control" href="" id="save">Save</a>
-  </div>
-  <div id="" class="btn-group pull-left col-sm-1">
-    <a class="btn btn-danger form-control" href="{% round_url draw %}">Quit</a>
-  </div>
-{% endblock %}
-
-{% block header %}
+  <a class="btn btn-success" href="" id="save">Save</a>
+  <a class="btn btn-danger" href="{% round_url draw %}">Quit</a>
 {% endblock %}
 
 {% block content %}
 <div class="row">
 
-  <div id="scratch" class="col-xs-2  fixed-right">
-    <table id="unusedTable" class="table" cellpadding="0" cellspacing="0">
+  <div id="scratch" class="col-md-3 fixed-right" style="width: 25%">
+    <table id="unusedTable" class="table">
       <thead>
         <tr>
           <th>Unused Venues <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>
@@ -35,63 +27,75 @@
       </tbody>
     </table>
     {% for venue in round.unused_venues %}
-    <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
-      <span>{{ venue }} {% if venue.time %}<em>{{ venue.time|date:"d/m" }}</em>{% endif %}</span>
-    </div>
+      <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
+        <span>{{ venue }}</span>
+      </div>
     {% endfor %}
   </div>
 
-  <div id="main" class="col-xs-10">
+  <div id="" class="col-md-9">
 
     <div id="alerts-holder" class=""></div>
 
-    <table id="dataTable" class="table table-hover extra-line-height" cellpadding="0" cellspacing="0">
-      <thead>
-        <tr>
-          <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-          <th>Aff</th>
-          <th>Neg</th>
-          <th>Adjs</th>
-          <th>Venue</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for debate in draw %}
-      <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
-        <td>{{ debate.bracket }}</td>
-        <td>
-          <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
-            {{ debate.aff_team.short_name }}
-          </span>
-        </td>
-        <td>
-          <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
-            {{ debate.neg_team.short_name }}
-          </span>
-        </td>
-        <td>
-        {% for type, adj in debate.adjudicators %}
-          {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} (c){% elif type == 'T' %} (t){% endif %}{% if not forloop.last %},{% endif %}
-        {% endfor %}
-        </td>
-        <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
-          {% if debate.venue %}
-          <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
-            <span class="">{{ debate.venue }} {% if debate.venue.time %}<em>{{ debate.venue.time|date:"d/m" }}</em>{% endif %}</span>
-          </div>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <table id="dataTable" class="table">
+          <thead>
+            <tr>
+              <th><span class="glyphicon glyphicon-tasks" data-toggle="tooltip" title="Bracket"></span></th>
+              {% if pref.enable_debate_scheduling %}
+                <th>Time</th>
+              {% endif %}
+              <th>Aff</th>
+              <th>Neg</th>
+              <th>Adjs</th>
+              <th>Venue</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for debate in draw %}
+            <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+              <td>{{ debate.bracket }}</td>
+              {% if pref.enable_debate_scheduling %}
+                <td>
+                  {% if debate.time %}
+                    <span class="hidden">{{ debate.time|date:"o m d" }}</span>
+                    {{ debate.time|time:'h:i A' }}<br>{{ debate.time|date:"D jS F" }}
+                  {% endif %}
+                </td>
+              {% endif %}
+              <td>
+                {% include "tables/team.html" with team=debate.aff_team %}
+              </td>
+              <td>
+                {% include "tables/team.html" with team=debate.neg_team %}
+              </td>
+              <td>
+              {% for type, adj in debate.adjudicators %}
+                {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+              {% endfor %}
+              </td>
+              <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
+                {% if debate.venue %}
+                <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
+                  <span class="">{{ debate.venue }}</span>
+                </div>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
 </div>
 {% endblock content %}
 
 {% block extra-js %}
-<script type="text/javascript" language="javascript" src="{% static 'js/vendor/jquery-ui-custom-1.11.4.min.js' %}"></script>
-<script type="text/javascript" charset="utf-8">
+<script src="{% static 'js/vendor/jquery-ui-custom-1.11.4.min.js' %}"></script>
+<script>
   $(document).ready( function() {
 
     var debates = {};

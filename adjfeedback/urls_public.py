@@ -3,17 +3,27 @@ from participants.models import Team, Adjudicator
 from . import views
 
 urlpatterns = [
+    # Overviews
+    url(r'^feedback_progress/$',
+        views.public_feedback_progress,
+        name='public_feedback_progress'),
 
-    url(r'^add/$',                                  views.public_feedback_submit,                                       name='public_feedback_submit'),
+    # Submission via Public Form
+    url(r'^add/$',
+        views.PublicAddFeedbackIndexView.as_view(),
+        name='adjfeedback-public-add-index'),
+    url(r'^add/team/(?P<source_id>\d+)/$',
+        views.PublicAddFeedbackByIdUrlView.as_view(model=Team),
+        name='adjfeedback-public-add-from-team-pk'),
+    url(r'^add/adjudicator/(?P<source_id>\d+)/$',
+        views.PublicAddFeedbackByIdUrlView.as_view(model=Adjudicator),
+        name='adjfeedback-public-add-from-adjudicator-pk'),
 
-    url(r'^add/team/(?P<source_id>\d+)/$',          views.public_enter_feedback_id,     {'source_type': Team},          name='public_enter_feedback_team'),
-
-    url(r'^add/team/h/(?P<url_key>\w+)/$',          views.public_enter_feedback_key,    {'source_type': Team},          name='public_enter_feedback_team_key'),
-
-    url(r'^add/adjudicator/(?P<source_id>\d+)/$',   views.public_enter_feedback_id,     {'source_type': Adjudicator},   name='public_enter_feedback_adjudicator'),
-
-    url(r'^add/adjudicator/h/(?P<url_key>\w+)/$',   views.public_enter_feedback_key,    {'source_type': Adjudicator},   name='public_enter_feedback_adjudicator_key'),
-
-    url(r'^feedback_progress/$',                    views.public_feedback_progress,                                     name='public_feedback_progress'),
-
+    # Submission via Private URL
+    url(r'^add/t(?P<url_key>\w+)/$',
+        views.PublicAddFeedbackByRandomisedUrlView.as_view(model=Team),
+        name='adjfeedback-public-add-from-team-randomised'),
+    url(r'^add/a(?P<url_key>\w+)/$',
+        views.PublicAddFeedbackByRandomisedUrlView.as_view(model=Adjudicator),
+        name='adjfeedback-public-add-from-adjudicator-randomised'),
 ]

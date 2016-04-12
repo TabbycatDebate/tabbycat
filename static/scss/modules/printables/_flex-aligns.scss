@@ -1,0 +1,26 @@
+.db-align-vertical-center {
+  display: flex;
+  align-items: center;
+}
+.db-align-vertical-end {
+  display: flex;
+  align-items: flex-end;
+}
+.db-align-horizontal-end {
+  display: flex;
+  justify-content: flex-end;
+}
+.db-align-horizontal-center {
+  display: flex;
+  justify-content: center;
+}
+.db-flex-column {
+  display: flex;
+	flex-direction: column;
+  // border: 1px solid red;
+}
+.db-flex-row {
+  display: flex;
+	flex-direction: row;
+  // border: 1px solid blue;
+}

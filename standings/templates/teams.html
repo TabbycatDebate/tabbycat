@@ -1,96 +1,123 @@
-{% extends "draw_rbase.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% load debate_tags %}
+{% load metricformat %}
 
-{% block head-title %}Team Standings <small>after {{ round.name }}</small>{% endblock %}
-{% block page-title %}Team Standings after {{ round.name }}{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}team-standings{% endblock %}
+{% block page-title %}👯Team Standings after {{ round.name }}{% endblock %}
+{% block head-title %}<span class="emoji">👯</span>Team Standings{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default" href="{% round_url standings-index current_round %}">
+    Standings Overview
+  </a>
+  <a class="btn btn-default active" href="{% round_url standings-team current_round %}">
+    Team Standings
+  </a>
+  {% if pref.enable_divisions %}
+  <a class="btn btn-default" href="{% round_url standings-division current_round %}">
+    Divisions Standings
+  </a>
+  {% endif %}
+  <a class="btn btn-default" href="{% round_url standings-speaker current_round %}">
+    Speaker Standings
+  </a>
+  {% if pref.show_novices %}
+    <a class="btn btn-default" href="{% round_url standings-pro current_round %}">
+      Pros Standings
+    </a>
+    <a class="btn btn-default" href="{% round_url standings-novice current_round %}">
+      Novices Standings
+    </a>
+  {% endif %}
+  {% if pref.reply_scores_enabled %}
+    <a class="btn btn-default" href="{% round_url standings-reply current_round %}">
+      Replies Standings
+    </a>
+  {% endif %}
+  <a class="btn btn-default" href="{% round_url standings-motion current_round %}">
+    Motion Balance
+  </a>
+  {% include "tables/table_search.html" %}
+{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="team-tab table table-hover table-striped" cellspacing="0" cellpadding="0">
-    <thead>
-      <tr>
-        <th class="hidden"></th>
-        <th><span data-toggle="tooltip" title="Ranking" class="glyphicon glyphicon-signal"></span></th>
-        {% if pref.team_points_rule == 'wadl' %}
-          <th>Points</th>
-        {% endif %}
-        {% if pref.show_avg_margin %}
-          <th><span data-toggle="tooltip" title="Average winning margin">AWM</span></th>
-        {% endif %}
-        {% if pref.enable_divisions %}
-          <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
-        {% endif %}
-        {% if pref.show_emoji %}
-          <th class="team-emoji"></th>
-        {% endif %}
-        <th>Team</th>
-        {% if pref.show_institutions %}
-          <th>Inst<span class="hidden-xs">itution</span></th>
-        {% endif %}
-        <th>Wins</th>
-        {% for round in rounds %}
-          <th>{{ round.abbreviation }}</th>
-          <th>{{ round.abbreviation }}</th>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="team-tab table" cellspacing="0" cellpadding="0">
+      <thead>
+        <tr>
+        <th class="hidden">Rk</th>
+        {% for info in standings.rankings_info %}
+          <th>
+            {% if info.glyphicon %}
+              <span data-toggle="tooltip" title="{{ info.name|capfirst }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+            {% else %}
+              <span class="hidden-xs">{{ info.name|capfirst }}</span>
+              <span class="visible-xs">{{ info.abbr }}</span>
+            {% endif %}
+          </th>
         {% endfor %}
-          <th>Total</th>
-        {% if metrics.draw_strength %}
-          <th><span data-toggle="tooltip" title="Draw strength">DS</span></th>
-        {% endif %}
-        {% if metrics.sum_of_margins %}
-          <th><span data-toggle="tooltip" title="Sum of margins">SM</span></th>
-        {% endif %}
-        {% if metrics.who_beat_whom %}
-          <th><span data-toggle="tooltip" title="Who beat whom">WBW</span></th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-    {% for team in teams %}
-      {% with teams|next_value:forloop.counter0 as next_value %}
-      {% with teams|prev_value:forloop.counter0 as prev_value %}
-      <tr class="{% if not team.results_in %}danger{% endif %}">
+          {% if pref.enable_divisions %}
+            <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+          {% endif %}
+          {% if pref.show_emoji %}
+            <th class="team-emoji"></th>
+          {% endif %}
+          <th>Team</th>
+          {% if pref.show_institutions %}
+            <th>Inst<span class="hidden-xs">itution</span></th>
+          {% endif %}
+          {% for round in rounds %}
+            <th>{{ round.abbreviation }}</th>
+            <th>{{ round.abbreviation }}</th>
+          {% endfor %}
+        {% for info in standings.metrics_info %}
+          <th>
+            {% if info.glyphicon %}
+              <span data-toggle="tooltip" title="{{ info.name|capfirst }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+            {% else %}
+              <span class="hidden-xs">{{ info.name|capfirst }}</span>
+              <span class="visible-xs">{{ info.abbr }}</span>
+            {% endif %}
+          </th>
+        {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+    {% for tsi in standings.standings %}
+      <tr class="{% if not tsi.results_in %}danger{% endif %}">
         <td class="hidden">
-          {% if team.rank != 0 %}
-            {{ team.rank }}
+          {% if tsi.rankings.rank.0 != 0 %}
+            {{ tsi.rankings.rank.0 }}
           {% else %}
             <span class="hidden">999</span>
           {% endif %}
         </td>
+        {% for ranking in tsi.iterrankings %}
         <td class="rank">
           <strong>
-            {% if team.rank != 0 %}
-              {{ team.rank }}{% if next_value.rank == team.rank or prev_value.rank == team.rank %}<span class="text-muted">=</span>{% endif %}
-            {% endif %}
+            {{ ranking.0 }}{% if ranking.1 %}<span class="text-muted">=</span>{% endif %}
           </strong>
         </td>
-        {% if pref.team_points_rule == 'wadl' %}
-          <td>{{ team.points }}</td>
-        {% endif %}
-        {% if pref.show_avg_margin %}
-          <td>{{ team.avg_margin|stringformat:".2f" }}</td>
-        {% endif %}
+        {% endfor %}
         {% if pref.enable_divisions %}
-          <td>{{ team.division.name }}</td>
+          <td>{{ tsi.team.division.name }}</td>
         {% endif %}
         {% if pref.show_emoji %}
-          <td class="team-emoji">{% team_emoji team %}</td>
+          <td class="team-emoji">{{ tsi.team.emoji }}</td>
         {% endif %}
         <td>
-          <span class="team team-speakers-hover" id="team_speakers_{{ team.id }}">
-            {{ team.short_name }}
-            {{ team.break_categories_str }}
-          </span>
+          {% include "tables/team.html" with team=tsi.team %}
+          {{ tsi.team.break_categories_str }}
         </td>
         {% if pref.show_institutions %}
           <td>
-            <span class="hidden-xs">{{ team.institution }}</span>
-            <span class="visible-xs">{{ team.institution.code }}</span>
+            <span class="hidden-xs">{{ tsi.team.institution }}</span>
+            <span class="visible-xs">{{ tsi.team.institution.code }}</span>
           </td>
         {% endif %}
-        <td>{{ team.wins }}</td>
-        {% for round_results in team.round_results %}
+        {% for round_results in tsi.round_results %}
           {% if round_results.win >= 0 %}
             <td>
               {% if round_results.score == 0 %}
@@ -106,52 +133,43 @@
               {% endif %}
                   vs
                   {% if pref.show_emoji %}
-                    <span>{% team_emoji round_results.opposition %}</span>
+                    <span class="emoji">{{ round_results.opposition.emoji }}</span>
                   {% else %}
                     {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
                   {% endif %}
                 </span>
             </td>
-          {% else %}
-            <td></td>
-          {% endif %}
-          {% if round_results.win >= 0 %}
-            {% if show_ballots and round_results.debate_team.debate_id %}
+            {% if show_ballots and round_results.debate_team.debate_id and not round_results.forfeit %}
               <td>
                 <a class="team-score" href="{% tournament_url public_ballots_view round_results.debate_team.debate_id %}">
-                  {{ round_results.get_score|stringformat:".2f" }}
+                  {{ round_results.score|floatformat:2 }}
                 </a>
               </td>
+            {% elif not round_results.forfeit %}
+              <td>{{ round_results.score|floatformat:2 }}</td>
             {% else %}
-              <td>{{ round_results.get_score|stringformat:".2f" }}</td>
+              </td></td>
             {% endif %}
           {% else %}
             <td></td>
+            <td></td>
           {% endif %}
         {% endfor %}
-        <td>
-          {{ team.speaker_score|stringformat:".2f" }}
-        </td>
-        {% if metrics.draw_strength %}
-          <td>{{ team.draw_strength }}</td>
-        {% endif %}
-        {% if metrics.sum_of_margins %}
-          <td>{{ team.margins|stringformat:".2f" }}</td>
-        {% endif %}
-        {% if metrics.who_beat_whom %}
-          <td>{{ team.who_beat_whom_display }}</td>
-        {% endif %}
+        {% for metric in tsi.itermetrics %}
+          {# the metricformat filter is defined in templatetags/metricformat.py #}
+          <td>{{ metric|metricformat }}</td>
+        {% endfor %}
       </tr>
-      {% endwith %}
-      {% endwith %}
-    {% endfor %}
-    </tbody>
-  </table>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock content %}
 
 {% block extra-js %}
   {{ block.super }}
-   <script type="text/javascript" charset="utf-8">
+   <script>
     $(document).ready( function() {
       var dTable = $("#dataTable").DataTable({
         {% if pref.enable_divisions %}

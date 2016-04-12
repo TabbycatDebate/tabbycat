@@ -3,7 +3,8 @@ import random
 import math
 import copy
 from .one_up_one_down import OneUpOneDownSwapper
-from warnings import warn
+import logging
+logger = logging.getLogger(__name__)
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
 DRAW_FLAG_DESCRIPTIONS = {
@@ -118,7 +119,7 @@ class Pairing(object):
         return self.teams[self._winner_index]
 
 
-def DrawGenerator(draw_type, teams, results=None, **kwargs):
+def DrawGenerator(draw_type, teams, round, results=None, **kwargs):
     """Factory for draw objects.
     Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
     'draw_type' is mandatory and can be any of 'random', 'power_paired',
@@ -146,7 +147,7 @@ def DrawGenerator(draw_type, teams, results=None, **kwargs):
     elif draw_type == "elimination":
         klass = EliminationDrawGenerator
 
-    return klass(teams, results, **kwargs)
+    return klass(teams, round, results, **kwargs)
 
 
 class BaseDrawGenerator(object):
@@ -177,17 +178,18 @@ class BaseDrawGenerator(object):
         "institution_penalty": 1
     }
 
-    can_be_first_round = NotImplemented
+    can_be_first_round = True
     requires_even_teams = True
     requires_prev_results = False
-    draw_type = NotImplemented
+    draw_type = None # must be set by subclasses
 
     # All subclasses must define this with any options that may exist.
     DEFAULT_OPTIONS = {}
 
-    def __init__(self, teams, results=None, **kwargs):
+    def __init__(self, teams, round, results=None, **kwargs):
         self.teams = teams
         self.team_flags = dict()
+        self.round = round
 
         if self.requires_even_teams:
             if not len(self.teams) % 2 == 0:
@@ -199,7 +201,7 @@ class BaseDrawGenerator(object):
             raise TypeError("'results' is required for draw of type {0:s}".format(
                     self.__class__.__name__))
         if results is not None and not self.requires_prev_results:
-            warn("'results' not required for draw of type {0:s}, will probably be ignored".format(
+            logger.warning("'results' not required for draw of type {0:s}, will probably be ignored".format(
                     self.__class__.__name__))
         if results is not None:
             self.results = results
@@ -576,9 +578,11 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     ## Pairings generation
 
     PAIRING_FUNCTIONS = {
-        "fold"  : "_pairings_fold",
-        "slide" : "_pairings_slide",
-        "random": "_pairings_random"
+        "fold"                  : "_pairings_fold",
+        "slide"                 : "_pairings_slide",
+        "random"                : "_pairings_random",
+        "adjacent"              : "_pairings_adjacent",
+        "fold_top_adjacent_rest": "_pairings_fold_top_adjacent_rest",
     }
 
     def generate_pairings(self, brackets):
@@ -601,34 +605,67 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
             pairings[points] = bracket
         return pairings
 
+    @staticmethod
+    def _pairings_top_special(brackets, top_subpool_func, rest_subpool_func):
+        pairings = OrderedDict()
+        i = 1
+        subpool_funcs = [top_subpool_func] + [rest_subpool_func] * (len(brackets) - 1)
+        for (points, teams), subpool_func in zip(brackets.items(), subpool_funcs):
+            bracket = list()
+            top, bottom = subpool_func(teams)
+            for teams in zip(top, bottom):
+                pairing = Pairing(teams=teams, bracket=points, room_rank=i)
+                bracket.append(pairing)
+                i = i + 1
+            pairings[points] = bracket
+        return pairings
+
+    @staticmethod
+    def _subpool_slide(teams):
+        num_debates = len(teams) // 2
+        top = teams[:num_debates]
+        bottom = teams[num_debates:]
+        return top, bottom
+
+    @staticmethod
+    def _subpool_fold(teams):
+        num_debates = len(teams) // 2
+        top = teams[:num_debates]
+        bottom = teams[num_debates:]
+        bottom.reverse()
+        return top, bottom
+
+    @staticmethod
+    def _subpool_shuffle(teams):
+        num_debates = len(teams) // 2
+        random.shuffle(teams)
+        top = teams[:num_debates]
+        bottom = teams[num_debates:]
+        return top, bottom
+
+    @staticmethod
+    def _subpool_adjacent(teams):
+        return teams[0::2], teams[1::2]
+
     @classmethod
     def _pairings_slide(cls, brackets):
-        def slide(teams):
-            num_debates = len(teams) // 2
-            top = teams[:num_debates]
-            bottom = teams[num_debates:]
-            return top, bottom
-        return cls._pairings(brackets, slide)
+        return cls._pairings(brackets, cls._subpool_slide)
 
     @classmethod
     def _pairings_fold(cls, brackets):
-        def fold(teams):
-            num_debates = len(teams) // 2
-            top = teams[:num_debates]
-            bottom = teams[num_debates:]
-            bottom.reverse()
-            return top, bottom
-        return cls._pairings(brackets, fold)
+        return cls._pairings(brackets, cls._subpool_fold)
 
     @classmethod
     def _pairings_random(cls, brackets):
-        def shuffle(teams):
-            num_debates = len(teams) // 2
-            random.shuffle(teams)
-            top = teams[:num_debates]
-            bottom = teams[num_debates:]
-            return top, bottom
-        return cls._pairings(brackets, shuffle)
+        return cls._pairings(brackets, cls._subpool_shuffle)
+
+    @classmethod
+    def _pairings_adjacent(cls, brackets):
+        return cls._pairings(brackets, cls._subpool_adjacent)
+
+    @classmethod
+    def _pairings_fold_top_adjacent_rest(cls, brackets):
+        return cls._pairings_top_special(brackets, cls._subpool_fold, cls._subpool_adjacent)
 
     ## Conflict avoidance
 
@@ -1090,31 +1127,6 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
         print("------")
 
-        # Assigning bye teams as needed
-        for bracket in brackets.values():
-            if len(bracket) % 2 != 0:
-                from participants.models import Institution, Team
-                bye_tournament = bracket[0].tournament
-                bye_institution, created = Institution.objects.get_or_create(
-                    name="Byes"
-                )
-                bye_reference = "Bye %s" % bracket[0].division
-                bye_division = bracket[0].division
-                bye_team = Team(
-                    institution = bye_institution,
-                    reference = bye_reference,
-                    short_reference = "Bye",
-                    tournament= bye_tournament,
-                    type = "B",
-                    use_institution_prefix = False,
-                    division = bye_division,
-                )
-                bye_team.aff_count = 0
-                bye_team.neg_count = 0
-                bye_team.save()
-                bracket.append(bye_team)
-                print("\t Created a bye team for divison %s" % bracket[0].division)
-
         # Assigning subranks - fixed based on alphabetical
         for bracket in brackets.values():
             bracket.sort(key=lambda x: x.short_name, reverse=False)
@@ -1124,26 +1136,11 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
         return brackets
 
-    def determine_effective_round(self, teams_list):
-        # This uses previous matchups to determine the offset
-        # Essentially figures out (ignore draw.seq) what the previous matchups
-        # have been. TODO: This is pretty flawed.
-        effective_round = 1
-        for i in range(1, len(teams_list)):
-            print("\ttesting round %s" % i)
-            right_team_index = -1 * i
-            if teams_list[0].seen(teams_list[right_team_index]):
-                effective_round += 1
-
-        print("effective roud of %s" % effective_round)
-        return effective_round
-
-
     def generate_pairings(self, brackets):
         pairings = OrderedDict()
 
         first_bracket_teams = next(iter(brackets.values()))
-        effective_round = self.determine_effective_round(first_bracket_teams)
+        effective_round = self.round.seq
         print("-------\nTaking as effective round of %s" % effective_round)
 
         for bracket in brackets.items():

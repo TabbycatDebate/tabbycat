@@ -3,6 +3,10 @@ import django.contrib.messages as messages
 
 from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 
+# ==============================================================================
+# Adjudicator Feedback Questions
+# ==============================================================================
+
 class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type', 'required', 'chair_on_panellist', 'panellist_on_chair', 'panellist_on_panellist', 'team_on_orallist')
     list_filter = ('tournament',)
@@ -10,9 +14,12 @@ class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
 
 admin.site.register(AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuestionAdmin)
 
+# ==============================================================================
+# Adjudicator Feedback Answers
+# ==============================================================================
 
 class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
-    model = NotImplemented
+    model = None # must be set by subclasses
     fields = ('question', 'answer')
     extra = 1
 
@@ -34,6 +41,9 @@ class RoundListFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         return queryset.filter(source_team__debate__round_id=self.value()) | queryset.filter(source_adjudicator__debate__round_id=self.value())
 
+# ==============================================================================
+# Adjudicator Feedbacks
+# ==============================================================================
 
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'source_adjudicator', 'source_team', 'confirmed', 'score', 'version')

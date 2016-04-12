@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from .models import BallotSubmission, TeamScore, SpeakerScore, SpeakerScore, SpeakerScoreByAdj
 from participants.models import Team, Speaker, Adjudicator
 from tournaments.models import Round
@@ -76,5 +75,3 @@ class SpeakerScoreByAdjAdmin(admin.ModelAdmin):
     raw_id_fields = ('debate_team','ballot_submission')
 
 admin.site.register(SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)
-
-

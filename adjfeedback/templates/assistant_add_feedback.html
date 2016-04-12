@@ -1,20 +1,8 @@
 {% extends "add_feedback.html" %}
-{% load debate_tags %}
 
 {% block head-title %}Who is the feedback from?{% endblock %}
 {% block page-title %}Enter Feedback{% endblock %}
-{% block body-class %}assistant-enter-feedback{% endblock %}
 
-{% block header %}
-  <div class="btn-group" data-toggle="buttons">
-    <label class="btn btn-default active" id="toggle-all">
-    <input type="radio" name="options">Show All
-    </label>
-    <label class="btn btn-default" id="toggle-teams">
-    <input type="radio" name="options" >Only Teams
-    </label>
-    <label class="btn btn-default" id="toggle-adjs">
-    <input type="radio" name="options" >Only Adj<span class="hidden-xs">udicator</span>s
-    </label>
-  </div>
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
 {% endblock %}

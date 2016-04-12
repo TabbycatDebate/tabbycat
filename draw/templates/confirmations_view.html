@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Shift Confirmations{% endblock %}
+{% block page-title %}Shift Confirmations{% endblock %}
+
+{% block content %}
+
+  {% for adj in adjs %}
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+        <h3 class="panel-title">{{ adj }}</h3>
+        </div>
+        <!-- List group -->
+        <ul class="list-group">
+          {% for shift in adj.shifts %}
+            <li class="list-group-item {% if shift.timing_confirmed == True %}list-group-item-success{% elif shift.timing_confirmed == False %}list-group-item-danger{% endif %}">
+              {{ shift.debate.round.tournament.short_name }}
+              {{ shift.debate.round.abbreviation }} —  
+              {{ shift.debate.division.venue_group }} @
+              {{ shift.debate.time.time|time:'h:i' }}
+              {% if shift.timing_confirmed == True %}
+                <span class="glyphicon glyphicon-ok pull-right"></span>
+              {% elif shift.timing_confirmed == False %}
+                <span class="glyphicon glyphicon-remove pull-right"></span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+
+{% endblock content %}

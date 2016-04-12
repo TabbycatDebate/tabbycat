@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Who are you?<small>(click your name on this list)</small>{% endblock %}
 {% block page-title %}Add Ballot{% endblock %}
-{% block body-class %}public-add-ballot{% endblock %}
+{% block head-title %}Who are you?{% endblock %}
+{% block sub-title %}(click your name on this list){% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
+  <table id="dataTable" class="table">
     <thead>
       <tr>
         <th>Adj<span class="hidden-xs">udicator</span></th>
@@ -25,14 +25,10 @@
       </td>
       <td>{% if da.debate.venue.group %}{{ venue.group.name }} {% endif %}{{ da.debate.venue.name }}</td>
       <td>
-        <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
-          {{ da.debate.aff_team.short_name }}
-        <span>
+        {% include "tables/team.html" with team=da.debate.aff_team %}
       </td>
       <td>
-        <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
-          {{ da.debate.neg_team.short_name }}
-        </span>
+        {% include "tables/team.html" with team=da.debate.neg_team %}
       </td>
     </tr>
     {% endfor %}
@@ -41,7 +37,7 @@
 
 {% block extra-js %}
   {{ block.super }}
-  <script type="text/javascript" charset="utf-8">
+  <script>
     $(document).ready( function() {
       var table = $("#dataTable").dataTable( {
         "aaSorting": [[ 0, "asc" ]],

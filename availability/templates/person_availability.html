@@ -2,10 +2,13 @@
 {% load debate_tags %}
 
 {% block update-url %}{% round_url update_people_availability  %}{% endblock %}
-{% block draw-url %}{% round_url draw round %}{% endblock %}
+{% block draw-url %}{% round_url availability_index %}{% endblock %}
 {% block post-success %}location.reload();{% endblock %}
-{% block head-title %}Checkins for {{ round.name }}{% endblock %}
-{% block page-title %}Checkins for {{ round.name }}{% endblock %}
+
+{% block head-title %}Personal Checkins for {{ round.name }}{% endblock %}
+{% block page-title %}Personal Checkins{% endblock %}
+{% block sub-title %}for {{ round.name }}{% endblock %}
+
 {% block copy_btn %}{% endblock %}
 {% block table-contents %}
 
@@ -28,4 +31,3 @@
   </tbody>
 
 {% endblock table-contents %}
-

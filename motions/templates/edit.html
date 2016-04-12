@@ -1,4 +1,4 @@
-{% extends "draw_rbase.html" %}
+{% extends "base.html" %}
 {% load add_field_css %}
 {% load debate_tags %}
 
@@ -7,11 +7,13 @@
 
 {% block content %}
 
-  <form method="post" action="" class="form-horizontal">
-
+  <form method="POST" action="" class="form-horizontal">
+    {% csrf_token %}
     <div class="panel panel-default">
 
-      <div class="panel-heading">Motion Options</div>
+      <div class="panel-heading">
+        <h4>Motion Options</h4>
+      </div>
       <ul class="list-group">
 
         {{ formset.management_form }}
@@ -75,21 +77,17 @@
 
     </div>
 
-    <div class="col-sm-2 col-sm-offset-1">
-      <input class="btn btn-success form-control submit-disable" type="submit" name="submit" value="Save All" data-loading-text="Saving..." />
-    </div>
-    <div class="col-sm-2">
-      <input class="btn btn-success form-control submit-disable" type="submit" name="submit_add_more" value="Save & Add More" data-loading-text="Saving..." />
-    </div>
-    <div class="col-sm-2">
-      <a class="btn btn-danger form-control" href="{% round_url motions %}">Cancel</a>
+    <div class="col-sm-11 col-sm-offset-1">
+      <input class="btn btn-success submit-disable" type="submit" name="submit" value="Save All" data-loading-text="Saving..." />
+      <input class="btn btn-success submit-disable" type="submit" name="submit_add_more" value="Save & Add More" data-loading-text="Saving..." />
+      <a class="btn btn-danger" href="{% round_url motions %}">Cancel</a>
     </div>
 
   </form>
 {% endblock content %}
 
 {% block extra-js %}
-  <script type="text/javascript" charset="utf-8">
+  <script>
 
     $(document).ready( function() {
       $(window).keydown( function(e){

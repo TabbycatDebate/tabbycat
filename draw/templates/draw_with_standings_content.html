@@ -1,81 +1,75 @@
 {% load debate_tags %}
+{% load metricformat %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="draw-with-standings table">
+      <thead>
+        <tr>
+          {% if pref.enable_divisions %}
+            <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+          {% else %}
+            <th><span class="glyphicon glyphicon-tasks" data-toggle="tooltip" title="Bracket"></span></th>
+          {% endif %}
+          <th>Aff<span class="hidden-xs">irmative</span></th>
+          <th>Neg<span class="hidden-xs">ative</span></th>
 
-<table id="dataTable" class="draw-with-standings table table-hover table-striped" cellpadding="0" cellspacing="0">
-  <thead>
-    <tr>
-      {% if pref.enable_divisions %}
-        <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
-      {% else %}
-        <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
-      {% endif %}
-      <th>Aff<span class="hidden-xs">irmative</span></th>
-      <th>Neg<span class="hidden-xs">ative</span></th>
-      <th><span data-toggle="tooltip" title="Wins (aff)">AW</span></th>
-      <th><span data-toggle="tooltip" title="Wins (neg)">NW</span></th>
-      <th><span data-toggle="tooltip" title="Subrank (rank within bracket) (aff)">ASR</span></th>
-      <th><span data-toggle="tooltip" title="Subrank (rank within bracket) (neg)">NSR</span></th>
-      <th><span data-toggle="tooltip" title="Total speaker score (aff)">ATS</span></th>
-      <th><span data-toggle="tooltip" title="Total speaker score (neg)">NTS</span></th>
-      {% if metrics.draw_strength %}
-        <th><span data-toggle="tooltip" title="Draw strength (aff)">ADS</span></th>
-        <th><span data-toggle="tooltip" title="Draw strength (neg)">NDS</span></th>
-      {% endif %}
-      {% if metrics.sum_of_margins %}
-        <th><span data-toggle="tooltip" title="Sum of margins (aff)">ASM</span></th>
-        <th><span data-toggle="tooltip" title="Sum of margins (neg)">NSM</span></th>
-      {% endif %}
-      {% if metrics.who_beat_whom %}
-        <th><span data-toggle="tooltip" title="Who beat whom (aff)">AWBW</span></th>
-        <th><span data-toggle="tooltip" title="Who beat whom (neg)">NWBW</span></th>
-      {% endif %}
-      <th><span data-toggle="tooltip" title="Debates on aff before this round (aff)">AAffs</span></th>
-      <th><span data-toggle="tooltip" title="Debates on aff before this round (neg)">NAffs</span></th>
-      <th>Conflicts/Flags</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for debate in draw %}
-  <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }} {% ifchanged debate.bracket %}first-in-bracket{% endifchanged %}">
-    <td>{{ debate.bracket }}</td>
-    <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
-      <span class="team-speakers-hover" id="team_speakers_{{ debate.aff_team.id }}">
-        {{ debate.aff_team.short_name }}
-      </span>
-    </td>
-    <td{% if debate.neg_team.pullup %} class="em"{% endif %}>
-      <span class="team-speakers-hover" id="team_speakers_{{ debate.neg_team.id }}">
-        {{ debate.neg_team.short_name }}
-      </span>
-    </td>
-    <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
-      {{ debate.aff_team_cached.points }}
-    </td>
-    <td{% if debate.neg_team.pullup %} class="em"{% endif %}>
-      {{ debate.neg_team_cached.points }}
-    </td>
-    <td{% if debate.aff_team.pullup %} class="em"{% endif %}>
-      {{ debate.aff_team_cached.subrank }}
-    </td>
-    <td{% if debate.neg_team.pullup %} class="em"{% endif %}>
-      {{ debate.neg_team_cached.subrank }}
-    </td>
-    <td>{{ debate.aff_team_cached.speaker_score|stringformat:".2f" }}</td>
-    <td>{{ debate.neg_team_cached.speaker_score|stringformat:".2f" }}</td>
-    {% if metrics.draw_strength %}
-      <td>{{ debate.aff_team_cached.draw_strength }}</td>
-      <td>{{ debate.neg_team_cached.draw_strength }}</td>
-    {% endif %}
-    {% if metrics.sum_of_margins %}
-      <td>{{ debate.aff_team_cached.margins|stringformat:".2f" }}</td>
-      <td>{{ debate.neg_team_cached.margins|stringformat:".2f" }}</td>
-    {% endif %}
-    {% if metrics.who_beat_whom %}
-      <td>{{ debate.aff_team_cached.who_beat_whom_display }}</td>
-      <td>{{ debate.neg_team_cached.who_beat_whom_display }}</td>
-    {% endif %}
-    <td>{% aff_count debate.aff_team debate.round.prev %}</td>
-    <td>{% aff_count debate.neg_team debate.round.prev %}</td>
-    <td>{{ debate.draw_conflicts|add:debate.flags_all|join:", " }}</td>
-  </tr>
-  {% endfor %}
-</table>
+      <th><span data-toggle="tooltip" title="Aff subrank">ASR</span></th>
+      <th><span data-toggle="tooltip" title="Neg subrank">NSR</span></th>
+
+      {% for info in standings.metrics_info %}
+        <th>
+          {% if info.glyphicon %}
+            A<span data-toggle="tooltip" title="Aff {{ info.name }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+          {% else %}
+            <span data-toggle="tooltip" title="Aff {{ info.name }}">A{{ info.abbr }}</span>
+          {% endif %}
+        </th>
+        <th>
+          {% if info.glyphicon %}
+            N<span data-toggle="tooltip" title="Neg {{ info.name }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+          {% else %}
+            <span data-toggle="tooltip" title="Neg {{ info.name }}">N{{ info.abbr }}</span>
+          {% endif %}
+        </th>
+      {% endfor %}
+
+          <th><span data-toggle="tooltip" title="Debates on aff before this round (aff)">AAffs</span></th>
+          <th><span data-toggle="tooltip" title="Debates on aff before this round (neg)">NAffs</span></th>
+          <th>Conflicts/Flags</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for debate in draw %}
+        <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }} {% ifchanged debate.bracket %}first-in-bracket{% endifchanged %}">
+          <td>
+            {{ debate.bracket }}
+          </td>
+          <td {% if debate.aff_team.pullup %}class="em"{% endif %}>
+            {% include "tables/team.html" with team=debate.aff_team %}
+          </td>
+          <td {% if debate.neg_team.pullup %}class="em"{% endif %}>
+            {% include "tables/team.html" with team=debate.neg_team %}
+          </td>
+
+    <td>{{ debate.aff_subrank.0 }}{% if debate.aff_subrank.1 %}={% endif %}</td>
+    <td>{{ debate.neg_subrank.0 }}{% if debate.neg_subrank.1 %}={% endif %}</td>
+    {% for metric in debate.metrics %}
+      <td>{{ metric.0|metricformat }}</td>
+      <td>{{ metric.1|metricformat }}</td>
+    {% endfor %}
+
+          <td>
+            {% aff_count debate.aff_team debate.round.prev %}
+          </td>
+          <td>
+            {% aff_count debate.neg_team debate.round.prev %}
+          </td>
+          <td>
+            {{ debate.draw_conflicts|add:debate.flags_all|join:", " }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

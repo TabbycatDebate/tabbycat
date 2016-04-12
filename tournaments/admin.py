@@ -8,8 +8,9 @@ from .models import Tournament, Division, Round
 # ==============================================================================
 
 class TournamentAdmin(admin.ModelAdmin):
-    list_display = ('name','short_name','current_round')
-    ordering = ('name',)
+    list_display = ('name', 'seq', 'emoji', 'short_name', 'current_round')
+    ordering = ('seq', )
+
 
 admin.site.register(Tournament, TournamentAdmin)
 
@@ -18,10 +19,11 @@ admin.site.register(Tournament, TournamentAdmin)
 # ==============================================================================
 
 class DivisionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'tournament', 'venue_group','time_slot')
+    list_display = ('name', 'tournament', 'venue_group', 'time_slot')
     list_filter = ('tournament', 'venue_group')
-    search_fields = ('name',)
-    ordering = ('tournament', 'name',)
+    search_fields = ('name', )
+    ordering = ('tournament', 'name', )
+
 
 admin.site.register(Division, DivisionAdmin)
 
@@ -30,9 +32,12 @@ admin.site.register(Division, DivisionAdmin)
 # ==============================================================================
 
 class RoundAdmin(admin.ModelAdmin):
-    list_display = ('name', 'tournament', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status', 'feedback_weight', 'silent', 'motions_released', 'starts_at')
-    list_filter = ('tournament',)
-    search_fields = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status')
+    list_display = ('name', 'tournament', 'seq', 'abbreviation', 'stage',
+                    'draw_type', 'draw_status', 'feedback_weight', 'silent',
+                    'motions_released', 'starts_at')
+    list_filter = ('tournament', )
+    search_fields = ('name', 'seq', 'abbreviation', 'stage', 'draw_type',
+                     'draw_status')
+
 
 admin.site.register(Round, RoundAdmin)
-

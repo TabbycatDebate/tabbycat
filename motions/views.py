@@ -19,7 +19,19 @@ def motions(request, round):
     if len(motions) > 0:
         motions = [m for m in motions if m.round == round]
 
-    return r2r(request, "list.html", dict(motions=motions))
+    return render(request, "list.html", dict(motions=motions))
+
+
+@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
+@public_optional_tournament_view('public_motions')
+def public_motions(request, t):
+    order_by = 'seq' if t.pref('public_motions_order') == 'forward' else '-seq'
+    rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
+    for round in rounds:
+        round.motions = round.motion_set.all()
+
+    return render(request, 'public_motions.html', dict(rounds=rounds))
+
 
 @admin_required
 @round_view
@@ -39,11 +51,11 @@ def motions_edit(request, round):
             for motions in formset.deleted_objects:
                 motions.delete()
             if 'submit' in request.POST:
-                return redirect_round('motions', round)
+                return redirect_round('draw', round)
     else:
         formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
 
-    return r2r(request, "edit.html", dict(formset=formset))
+    return render(request, "edit.html", dict(formset=formset))
 
 
 @admin_required
@@ -52,11 +64,9 @@ def motions_assign(request, round):
 
     class MyModelChoiceField(ModelMultipleChoiceField):
         def label_from_instance(self, obj):
-            return "%s %s - Division %s @ %s" % (
-                obj.venue_group.short_name.split(' ')[2],
-                obj.venue_group.short_name.split(' ')[1],
+            return "D%s @ %s" % (
                 obj.name,
-                obj.venue_group.short_name.split(' ')[0],
+                obj.venue_group.short_name,
             )
 
     class ModelAssignForm(ModelForm):
@@ -74,7 +84,7 @@ def motions_assign(request, round):
             return redirect_round('motions', round)
 
     formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
-    return r2r(request, "assign.html", dict(formset=formset))
+    return render(request, "assign.html", dict(formset=formset))
 
 
 @admin_required
@@ -86,7 +96,7 @@ def release_motions(request, round):
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE,
         user=request.user, round=round, tournament=round.tournament)
 
-    return redirect_round('motions', round)
+    return redirect_round('draw', round)
 
 @admin_required
 @expect_post
@@ -97,12 +107,4 @@ def unrelease_motions(request, round):
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE,
         user=request.user, round=round, tournament=round.tournament)
 
-    return redirect_round('motions', round)
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_motions')
-def public_motions(request, t):
-    order_by = t.pref('public_motions_descending') and '-seq' or 'seq'
-    rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
-    return r2r(request, 'public_motions.html', dict(rounds=rounds))
+    return redirect_round('draw', round)

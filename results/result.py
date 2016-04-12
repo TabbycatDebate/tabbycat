@@ -1,5 +1,6 @@
+from functools import wraps
+from statistics import mean
 from django.core.exceptions import ObjectDoesNotExist
-
 from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
 
@@ -191,16 +192,16 @@ class BallotSet(object):
         self.SIDES = (DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE)
         self.POSITIONS = self.debate.round.tournament.POSITIONS
 
-        self.loaded_sheets = False
+        self._sheets_created = False
+        self._decision_calculated = False
         self._adjudicator_sheets = None
 
         self.speakers = {dt: {} for dt in self.dts}
         self.motion_veto = dict.fromkeys(self.dts, None)
 
-        self.points_from_db      = dict.fromkeys(self.dts, None)
-        self.total_score_from_db = dict.fromkeys(self.dts, None)
-        self.wins_from_db        = dict.fromkeys(self.dts, None)
-        self.margins_from_db     = dict.fromkeys(self.dts, None)
+        # Values from the database are returned if requested before
+        # self.adjudicator_sheets is called, for efficiency.
+        self.teamscore_objects = dict.fromkeys(self.dts, None)
 
         self._other = {self.dts[0]: self.dts[1], self.dts[1]: self.dts[0]}
 
@@ -223,10 +224,10 @@ class BallotSet(object):
 
     @property
     def adjudicator_sheets(self):
-        if not self._adjudicator_sheets:
+        if self._adjudicator_sheets is None:
             self._adjudicator_sheets = {a: Scoresheet(self.ballotsub, a)
                     for a in self.adjudicators}
-            self.loaded_sheets = True
+            self._sheets_created = True
         return self._adjudicator_sheets
 
     @property
@@ -252,16 +253,9 @@ class BallotSet(object):
             # ignore the speaker score itself, just look at SpeakerScoreByAdjs
 
         try:
-            ts = self.ballotsub.teamscore_set.get(debate_team=dt)
-            self.points_from_db[dt] = ts.points
-            self.total_score_from_db[dt] = ts.score
-            self.wins_from_db[dt] = ts.win
-            self.margins_from_db[dt] = ts.margin
+            self.teamscore_objects[dt] = self.ballotsub.teamscore_set.get(debate_team=dt)
         except ObjectDoesNotExist:
-            self.points_from_db[dt] = None
-            self.total_score_from_db[dt] = None
-            self.wins_from_db[dt] = None
-            self.margins_from_db[dt] = None
+            self.teamscore_objects[dt] = None
 
         try:
             dtmp = self.ballotsub.debateteammotionpreference_set.get(
@@ -341,8 +335,7 @@ class BallotSet(object):
     def _get_avg_score(self, dt, position):
         if not self.is_complete:
             return None
-        return sum(self.adjudicator_sheets[adj]._get_score(dt, position)
-                   for adj in self.majority_adj) / len(self.majority_adj)
+        return mean(self.adjudicator_sheets[adj]._get_score(dt, position) for adj in self.majority_adj)
 
     def _set_speaker(self, dt, position, speaker):
         if speaker not in dt.team.speakers:
@@ -391,71 +384,75 @@ class BallotSet(object):
     # --------------------------------------------------------------------------
 
     def _calc_decision(self):
-        """Calculates the majority decision and puts the majority adjudicators
-        in self._majority_adj and the winning DebateTeam in self._winner. Raises
-        AssertionError if scores are incomplete. Raises ResultError there is a
-        draw somewhere among the adjudicators, or overall."""
+        """Calculates the majority decision and puts the adjudicators for each
+        team in self._adjs_by_dt and the winning DebateTeam in self._winner.
+        Raises AssertionError if scores are incomplete. Raises ResultError there
+        is a draw somewhere among the adjudicators, or overall."""
         assert self.is_complete, "Tried to calculate decision on an incomplete ballot set."
 
-        adjs_by_dt = {dt: [] for dt in self.dts} # group adjs by vote
+        self._adjs_by_dt = {dt: [] for dt in self.dts} # group adjs by vote
         for adj, sheet in self.adjudicator_sheets.items():
             winner = sheet._get_winner()
             if winner is None:
                 raise ResultError("The scoresheet for %s does not have a winner." % adj.name)
-            adjs_by_dt[winner].append(adj)
+            self._adjs_by_dt[winner].append(adj)
 
-        counts = {dt: len(adjs) for dt, adjs in adjs_by_dt.items()}
+        counts = {dt: len(adjs) for dt, adjs in self._adjs_by_dt.items()}
         max_count = max(counts.values()) # check that we have a majority
         if max_count < len(self.adjudicators) // 2 + 1:
             raise ResultError("No team had a majority in %s." % self.debate.matchup)
 
-        for dt, count in counts.items(): # set self._majority_adj
+        for dt, count in counts.items(): # set self._winner
             if count == max_count:
-                self._majority_adj = adjs_by_dt[dt]
                 self._winner = dt
                 break
 
-    @property
-    def majority_adj(self):
-        if not self.is_complete:
-            return []
-        try:
-            return self._majority_adj
-        except AttributeError:
-            self._calc_decision()
-            return self._majority_adj
+        self._decision_calculated = True
+
+    def _requires_decision(default):
+        def wrap(func):
+            @wraps(func)
+            def wrapped(self, *args, **kwargs):
+                if not self.is_complete:
+                    return default
+                if not self._decision_calculated:
+                    self._calc_decision()
+                return func(self, *args, **kwargs)
+            return wrapped
+        return wrap
 
     @property
+    @_requires_decision([])
+    def majority_adj(self):
+        return self._adjs_by_dt[self._winner]
+
+    @property
+    @_requires_decision(None)
     def winner(self):
-        """Returns the winner of the debate as a Team object."""
-        if not self.is_complete:
-            return None
-        try:
-            return self._winner.team
-        except AttributeError:
-            self._calc_decision()
-            return self._winner.team
+        return self._winner.team
+
+    @_requires_decision(0)
+    def num_adjs_for_team(self, team):
+        return len(self._adjs_by_dt[self._dt(team)])
 
     def get_avg_total(self, team):
         return self._get_avg_total(self._dt(team))
 
     def _get_avg_total(self, dt):
-        if not self.loaded_sheets:
-            return self.total_score_from_db[dt]
-        return sum(self.adjudicator_sheets[adj]._get_total(dt) for adj in
-                   self.majority_adj) / len(self.majority_adj)
+        if not self._sheets_created:
+            return self.teamscore_objects[dt].score
+        return mean(self.adjudicator_sheets[adj]._get_total(dt) for adj in self.majority_adj)
 
     def _dissenting_inclusive_score(self, dt):
-        dissenting_score = sum(self.adjudicator_sheets[adj]._get_total(dt) for adj in
-                   self.adjudicators) / len(self.adjudicators)
-        return dissenting_score
+        return mean(self.adjudicator_sheets[adj]._get_total(dt) for adj in self.adjudicators)
+
 
     # Abstracted to not be tied to wins
     def _get_points(self, dt):
-        if not self.loaded_sheets:
-            return self.points_from_db[dt]
+        if not self._sheets_created:
+            return self.teamscore_objects[dt].points
 
-        if self._get_avg_total(dt):
+        if self._get_avg_total(dt) is not None:
             if self._get_avg_total(dt) > self._get_avg_total(self._other[dt]):
                 return 1
             return 0
@@ -464,8 +461,8 @@ class BallotSet(object):
 
     # Supplants _points; ie its a count of the number of wins
     def _get_win(self, dt):
-        if not self.loaded_sheets:
-            return self.wins_from_db[dt]
+        if not self._sheets_created:
+            return self.teamscore_objects[dt].wins
 
         if self._get_avg_total(dt):
             if self._get_avg_total(dt) > self._get_avg_total(self._other[dt]):
@@ -475,16 +472,18 @@ class BallotSet(object):
         return None
 
     def _get_margin(self, dt):
-        if not self.loaded_sheets:
-            return self.margins_from_db[dt]
+        if not self._sheets_created:
+            return self.teamscore_objects[dt].margin
 
         if self.debate.round.tournament.pref('margin_includes_dissenters') is False:
-            if self._get_avg_total(dt) and self._get_avg_total(self._other[dt]):
-                return self._get_avg_total(dt) - self._get_avg_total(self._other[dt])
+            this_total = self._get_avg_total(dt)
+            other_total = self._get_avg_total(self._other[dt])
         else:
-            if self._dissenting_inclusive_score(dt) and self._dissenting_inclusive_score(self._other[dt]):
-                dissenting_inclusive_margin = self._dissenting_inclusive_score(dt) - self._dissenting_inclusive_score(self._other[dt])
-                return dissenting_inclusive_margin
+            this_total = self._dissenting_inclusive_score(dt)
+            other_total = self._dissenting_inclusive_score(self._other[dt])
+
+        if this_total is not None and other_total is not None:
+            return this_total - other_total
 
         return None
 
@@ -656,7 +655,7 @@ class ForfeitBallotSet(BallotSet):
         # Note: forfeited debates have fake scores/margins, thus the affects_average toggle
         self.ballotsub.teamscore_set.filter(debate_team=dt).delete()
         self.ballotsub.teamscore_set.create(debate_team=dt, points=points,
-                win=win, score=0, margin=0, affects_averages=False)
+                win=win, score=0, margin=0, forfeit=True)
 
     def save(self):
         self.ballotsub.forfeit = self.forfeiter

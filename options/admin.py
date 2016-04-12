@@ -4,13 +4,13 @@ from dynamic_preferences.admin import PerInstancePreferenceAdmin
 
 from .models import TournamentPreferenceModel
 
-
 # ==============================================================================
 # Preferences
 # ==============================================================================
 
 class TournamentPreferenceAdmin(PerInstancePreferenceAdmin):
-  pass
+    pass
+
 
 admin.site.register(TournamentPreferenceModel, TournamentPreferenceAdmin)
 

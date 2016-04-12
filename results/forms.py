@@ -135,6 +135,7 @@ class BallotSetForm(forms.Form):
         self.using_forfeits = self.tournament.pref('enable_forfeits')
         self.using_replies = self.tournament.pref('reply_scores_enabled')
         self.choosing_sides = self.tournament.pref('draw_side_allocations') == 'manual-ballot'
+        self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
 
         self.forfeit_declared = False
 
@@ -212,6 +213,8 @@ class BallotSetForm(forms.Form):
         # 3. Motions fields
         if self.using_motions:
             self.fields['motion'] = MotionModelChoiceField(queryset=self.motions, required=True)
+
+        if self.using_vetoes:
             for side in self.SIDES:
                 self.fields[self._fieldname_motion_veto(side)] = MotionModelChoiceField(queryset=self.motions, required=False)
 
@@ -237,7 +240,8 @@ class BallotSetForm(forms.Form):
             for side, pos in self.SIDES_AND_POSITIONS:
                 self.fields[self._fieldname_score(adj, side, pos)].required = False
                 self.fields[self._fieldname_speaker(side, pos)].required = False
-            self.fields['motion'].required = False
+            if self.using_motions:
+                self.fields['motion'].required = False
             CHOICES = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
             self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=False)
 
@@ -247,6 +251,13 @@ class BallotSetForm(forms.Form):
         ballotset = BallotSet(self.ballotsub)
         initial = {'debate_result_status': self.debate.result_status,
                 'confirmed': ballotset.confirmed, 'discarded': ballotset.discarded}
+
+        # When bypassing confirmations we just pre-check
+        if self.bypassing_checks:
+            initial['confirmed'] = True
+            # For new ballots default to confirmed status
+            if self.debate.result_status == Debate.STATUS_NONE:
+                initial['debate_result_status'] = Debate.STATUS_CONFIRMED
 
         # HACK: Check here to see if self.ballotsub has been saved -- if it's not,
         # then it's a new ballot set, and choose_sides should not be populated
@@ -442,7 +453,6 @@ class BallotSetForm(forms.Form):
 
         # 5. Save speaker fields
         if not self.forfeit_declared:
-            print("saving speaker fields")
             for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 ballotset.set_speaker(side, pos, speaker)

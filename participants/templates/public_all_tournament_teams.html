@@ -4,38 +4,41 @@
 
 {% block head-title %}All Teams{% endblock %}
 {% block page-title %}All Teams{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-{% block body-class %}all-teams{% endblock %}
+{% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table table-hover table-striped">
-    <thead>
-      <tr>
-        <th>Institution</th>
-        <th>Level</th>
-        <th>Team</th>
-        <th>Venue</th>
-        <th>Division</th>
-        <th>Time Slot</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for team in teams %}
-      <tr>
-        <td>{{ team.institution }}</td>
-        <td>{{ team.tournament.name }}</td>
-        <td>{{ team.reference }}</td>
-        <td>{{ team.division.venue_group.short_name }}</td>
-        <td>{{ team.division.name }}</td>
-        <td>{{ team.division.time_slot|time:'h:i A' }}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table id="dataTable" class="table">
+      <thead>
+        <tr>
+          <th>Institution</th>
+          <th>Level</th>
+          <th>Team</th>
+          <th>Venue</th>
+          <th>Division</th>
+          <th>Time Slot</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for team in teams %}
+        <tr>
+          <td>{{ team.institution }}</td>
+          <td>{{ team.tournament.name }}</td>
+          <td>{{ team.reference }}</td>
+          <td>{{ team.division.venue_group.short_name }}</td>
+          <td>{{ team.division.name }}</td>
+          <td>{{ team.division.time_slot|time:'h:i A' }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock content %}
 
 {% block extra-js %}
-   <script type="text/javascript" charset="utf-8">
+   <script>
     $(document).ready( function() {
       var dTable = $("#dataTable").DataTable({
         "aaSorting": [[ 0, "asc" ],[ 1, "asc" ],[ 2, "asc" ]],

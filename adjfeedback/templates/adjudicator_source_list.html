@@ -1,92 +1,111 @@
 {% extends "base.html" %}
 {% load debate_tags %}
+{% load static %}
 
 {% block head-title %}View Feedback by Source{% endblock %}
 {% block page-title %}View Feedback by Source{% endblock %}
-{% block page-header %}{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-overview %}">
+    Feedback Overview
+  </a>
+  <a class="btn btn-default submit-disable " href="{% tournament_url adjfeedback-view-latest %}">
+    Latest Feedback
+  </a>
+  <a class="btn btn-default active" href="{% tournament_url adjfeedback-view-by-source %}">
+    Find Feedback
+  </a>
+  {% if pref.public_ballots_randomised or pref.public_feedback_randomised %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">
+    Randomised URLs
+  </a>
+  {% endif %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url feedback_progress %}">
+    Unsubmitted Ballots
+  </a>
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+    <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
+{% endblock %}
 
 {% block content %}
-
 <div class="row">
 
   <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>From Teams</h4>
+      </div>
+      <div class="panel-body" id="fromTeamsTable">
 
-    <table id="teamTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Institution</th>
-          <th>Feedbacks</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for team in teams %}
-        <tr>
-          <td>{{ team.short_name }}</td>
-          <td>{{ team.institution }}</td>
-          <td>
-          {% if team.feedback_tally > 0 %}
-            <a href="{% tournament_url team_feedback_list team.id %}">
-              {{ team.feedback_tally }} Feedback{{ team.feedback_tally|pluralize }}
-            </a>
-          {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        <smart-table
+          :data="gridData"
+          :columns="gridColumns"
+          :filter-key="searchQuery">
+        </smart-table>
 
+      </div>
+    </div>
   </div>
 
   <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>From Adjudicators</h4>
+      </div>
+      <div class="panel-body" id="fromAdjsTable">
 
-    <table id="adjTable" class="table table-hover table-striped" cellpadding="0" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Institution</th>
-          <th>Feedbacks</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for adj in adjs %}
-        <tr>
-          <td>{{ adj.name }}</td>
-          <td>{{ adj.institution }}</td>
-          <td>
-          {% if adj.feedback_tally > 0 %}
-            <a href="{% tournament_url adj_feedback_list adj.id %}">
-              {{ adj.feedback_tally }} Feedback{{ adj.feedback_tally|pluralize }}
-            </a>
-          {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        <smart-table
+          :data="gridData"
+          :columns="gridColumns"
+          :filter-key="searchQuery">
+        </smart-table>
 
+      </div>
+    </div>
   </div>
+
+</div>
 
 {% endblock content %}
 
 {% block extra-js %}
 
-  {{ block.super }}
-   <script type="text/javascript" charset="utf-8">
-    $(document).ready( function() {
-      var tTable = $("#teamTable").DataTable({
-          "aaSorting": [[ 1, "asc" ], [ 0, "asc" ]],
-      });
-      new $.fn.dataTable.FixedHeader( tTable, {alwaysCloneTop: true});
-
-      var aTable = $("#adjTable").DataTable({
-          "aaSorting": [[ 0, "asc" ]],
-      });
-      new $.fn.dataTable.FixedHeader( aTable, {alwaysCloneTop: true});
-
-      $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
-      })
-    } );
+  {% include "vue/import-vue.html" %}
+  {% include "vue/table.vue" %}
+  <script>
+    var fromTeamsTable = new Vue({
+      el: '#fromTeamsTable',
+      data: {
+        searchQuery: '',
+        gridColumns: ['name', 'institution', 'feedbacks'],
+        gridData: {{ teams|safe }}
+      },
+      ready: function() {
+        var thisTable = this; // this in the next context is the element
+        $('#table-search').keyup(function(){
+          thisTable.$set('searchQuery', $(this).val());
+        })
+      }
+    })
+    var fromAdjsTable = new Vue({
+      el: '#fromAdjsTable',
+      data: {
+        searchQuery: '',
+        gridColumns: ['name', 'institution', 'feedbacks'],
+        gridData: {{ adjs|safe }}
+      },
+      ready: function() {
+        var thisTable = this; // this in the next context is the element
+        $('#table-search').keyup(function(){
+          thisTable.$set('searchQuery', $(this).val());
+        })
+      }
+    })
   </script>
+
+  {{ block.super }}
+
 {% endblock extra-js %}

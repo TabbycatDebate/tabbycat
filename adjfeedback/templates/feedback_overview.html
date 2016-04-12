@@ -1,43 +1,56 @@
 {% extends "base.html" %}
 {% load debate_tags %}
-{% load staticfiles %}
+{% load static %}
+{% load compress %}
 
-{% block head-title %}Adjudicator Feedback Summary{% endblock %}
 {% block page-title %}Adjudicator Feedback Summary{% endblock %}
-{% block page-header %}{% include "tables/table_search.html" %}{% endblock %}
-
-{% block header %}
-  <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url add_feedback %}">Add Feedback</a>
-  </div>
-  <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url adj_latest_feedback %}">View Latest Feedback</a>
-    <a class="btn btn-default" href="{% tournament_url adj_source_feedback %}">View Feedback By Source</a>
-  </div>
-  <div class="btn-group">
-    <div class="btn btn-default">
-      <span class="glyphicon glyphicon-star"></span>
-      <span id="breaking_count">{{ breaking_count }}</span> set as breaking
-    </div>
-  </div>
-  <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url randomised_urls %}">View Randomised URLs</a>
-  </div>
+{% block head-title %}
+  <span class="emoji">🙅</span>
+  Adjudicator Feedback Summary
 {% endblock %}
+{% block sub-title %}
+  <span id="breaking_count">{{ breaking_count }}</span> marked as breaking
+{% endblock %}
+{% block body-id %}feedbackOverview{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default active" href="{% tournament_url adjfeedback-overview %}">
+    Feedback Overview
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-latest %}">
+    Latest Feedback
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-by-source %}">
+    Find Feedback
+  </a>
+  {% if pref.public_ballots_randomised or pref.public_feedback_randomised or pref.allocation_confirmations %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">
+    Randomised URLs
+  </a>
+  {% endif %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url feedback_progress %}">
+    Unsubmitted Ballots
+  </a>
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+    <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
+{% endblock %}
+
 
 {% block content %}
 
-  <table id="dataTable" class="table table-hover table-striped adj-feedback" cellpadding="0" cellspacing="0">
-    <thead>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <table id="dataTable" class="table">
+        <thead>
       <tr>
         <th>Name</th>
-        {% if pref.show_institutions %}
-          <th>Institution</th>
-        {% endif %}
         <th><span data-toggle="tooltip" title="Overall Score">Score</span></th>
         <th><span data-toggle="tooltip" title="Test Score; click to edit">Test</span></th>
         <th>Feedback</th>
-        <th>Trend</th>
+        <th>Trend (<span style="color: #3700A8">Chair</span>, <span style="color: #007FFF">Panellist</span>, <span style="color: #A0E6E5">Trainee</span>)</th>
         {% if pref.show_unaccredited %}
           <th><span class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" title="If the Adj is a Trainee" ></span></th>
         {% endif %}
@@ -51,17 +64,13 @@
         <th><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Average Score, including replies"></span></th>
       </tr>
     </thead>
-    <tbody>
+      <tbody>
       {% for adj in adjudicators %}
         <tr id="adj_{{ adj.id }}">
           <td class="adj-name">
-              <span>{{ adj.name }}</span>
+              <span>{{ adj.name }}</span><br>
+              <em>{{ adj.institution.code }}</em>
           </td>
-          {% if pref.show_institutions %}
-            <td>
-              {{ adj.institution.code }}
-            </td>
-          {% endif %}
           <td>
             {{ adj.score|stringformat:".2f" }}
           </td>
@@ -69,8 +78,11 @@
             <a data-toggle="modal" data-target="#edit-test-score" class="edit-test-score">{{ adj.test_score }}</a>
           </td>
           <td>{{ adj.feedback_score|stringformat:".2f" }}</td>
-          <td>
-            <div id="graph_{{ adj.id }}" style="width: 100%; min-width: 100px; height: 60px; margin: -13px;"></div>
+          <td style="padding: 4px 0px 0px 0px;">
+            <feedback-trend :min-score="minScore" :max-score="maxScore"
+                            :round-seq="roundSeq"
+                            :graph-data="graphData[{{ adj.id }}]"
+                            :id="{{ adj.id }}"></feedback-trend>
           </td>
           {% if pref.show_unaccredited %}
             <td>
@@ -80,7 +92,7 @@
             </td>
           {% endif %}
           <td>
-            <a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View Feedback</a>
+            <a data-toggle="modal" data-target="#adj-feedback" class="view-feedback">View<br>Feedback</a>
           </td>
           {% if pref.enable_adj_notes > 0 %}
             <td>
@@ -102,26 +114,12 @@
             {{ adj.avg_score|stringformat:".1f" }}
           </td>
         </tr>
-      {% empty %}
-        <tr id="">
-          <td class="">No Feedback Yet.</td>
-          {% if pref.show_institutions %}
-          <td></td>
-          {% endif %}
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          {% if pref.enable_adj_notes > 0 %}<td></td>{% endif %}
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
       {% endfor %}
     </tbody>
 
   </table>
+    </div>
+  </div>
 
   <div class="modal fade" id="adj-feedback" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -134,7 +132,7 @@
           <thead>
             <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Round"></span></th>
             <th><span class="glyphicon glyphicon-tag" data-toggle="tooltip" title="Version"></span></th>
-            <th><span class="glyphicon glyphicon-sort" data-toggle="tooltip" title="Bracket"></span></th>
+            <th><span class="glyphicon glyphicon-tasks" data-toggle="tooltip" title="Bracket"></span></th>
             <th>Debate</th>
             <th>Source</th>
             <th>Score</th>
@@ -159,6 +157,7 @@
       </div>
       <div class="modal-body">
         <form id="startTimeForm" method="POST" action="{% tournament_url set_adj_test_score  %}" class="form-horizontal">
+          {% csrf_token %}
           <input id="id_adj_test_id" name="adj_test_id" type="hidden" value="" />
           <div class="form-group">
             <label class="col-sm-3 control-label">
@@ -174,8 +173,8 @@
           <div class="form-group">
             <label class="col-sm-3 control-label"></label>
             <div class="col-sm-6">
-              <button type="submit" value="Save" class="form-control btn btn-success submit-disable" data-loading-text="Saving...">
-                Save
+              <button type="submit" value="Save" class="btn btn-success btn-block submit-disable" data-loading-text="Saving...">
+                Save Test Score
               </button>
             </div>
           </div>
@@ -194,6 +193,7 @@
         </div>
         <div class="modal-body">
           <form id="startTimeForm" method="POST" action="{% tournament_url set_adj_note  %}" class="form-horizontal">
+            {% csrf_token %}
             <input id="id_adj_test_id_note" name="adj_test_id" type="hidden" value="" />
             <div class="form-group">
               <div class="col-sm-12">
@@ -202,7 +202,7 @@
             </div>
             <div class="form-group">
               <div class="col-sm-4">
-                <button type="submit" value="Save" class="form-control btn btn-success submit-disable" data-loading-text="Saving...">
+                <button type="submit" value="Save" class="btn btn-success submit-disable" data-loading-text="Saving...">
                   Save
                 </button>
               </div>
@@ -216,14 +216,31 @@
 {% endblock content %}
 
 {% block extra-js %}
-<script type="text/javascript" language="javascript" src="{% static 'js/jquery.flot.min.js' %}"></script>
-<script type="text/javascript" charset="utf-8">
+
+<script src="{% static 'js/vendor/d3.min.js' %}"></script>
+{% include "vue/import-vue.html" %}
+{% include "vue/feedback-trend.vue" %}
+
+<script>
+  var vueData =  {
+    graphData: {{ feedback_data|safe }},
+    minScore: {{ pref.adj_min_score }},
+    maxScore: {{ pref.adj_max_score }},
+    roundSeq: {{ current_round.seq }}
+  }
+  new Vue({
+    el: '#feedbackOverview',
+    data: vueData
+  })
 
   $(document).ready( function() {
 
     var dTable = $('#dataTable').DataTable({
       'bPaginate': false,
-      "aaSorting": [[ 2, "desc" ],[ 0, "asc" ]],
+      "aaSorting": [[ 1, "desc" ]],
+      "language": {
+        "emptyTable": "There aren't any adjudicators in this tournament."
+      }
     });
     new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
     $('#table-search').keyup(function(){
@@ -299,94 +316,6 @@
         return false;
       });
     });
-
-    $("<div id='tooltip'></div>").css({
-      position: "absolute",
-      display: "none",
-      border: "1px solid #fdd",
-      padding: "4px 8px 4px 16px",
-      color: "#FFF",
-      "background-color": "#000",
-      opacity: 0.80
-    }).appendTo("body");
-
-    function formatter(val, axis) {
-      return "";
-    }
-
-    {% for adj in adjudicators %}
-
-      function drawPoints{{ adj.id_record }}(ctx, x, y, radius, shadow) {
-        ctx.arc(x, y, radius, 0, null ? Math.PI : Math.PI * 2, false);
-        ctx.fillStyle = "#000";
-        ctx.strokeStyle = "#000";
-        if (adj_{{ adj.id_record }}[drawPoints.calls]) {
-          if (adj_{{ adj.id_record }}[drawPoints.calls][2] == "Chair") {
-            ctx.fillStyle = "#5cb85c";
-            ctx.strokeStyle = "#5cb85c";
-          } else if (adj_{{ adj.id_record }}[drawPoints.calls][2] == "Panellist") {
-            ctx.fillStyle = "#f0ad4e";
-            ctx.strokeStyle = "#f0ad4e";
-          } else if (adj_{{ adj.id_record }}[drawPoints.calls][2] == "Trainee") {
-            ctx.fillStyle = "#d9534f";
-            ctx.strokeStyle = "#d9534f";
-          } else if (adj_{{ adj.id_record }}[drawPoints.calls][2] == "Test Score") {
-            ctx.fillStyle = "#666";
-            ctx.strokeStyle = "#666";
-          }
-        }
-        drawPoints{{ adj.id_record }}.calls++;
-      }
-      drawPoints{{ adj.id_record }}.calls = 0;
-
-      var adj_{{ adj.id_record }} = [[0,{{ adj.test_score }}, "Test Score"],{% for s in adj.rscores %}{% if s %}[{{ s.0 }},{{ s.1|floatformat:1 }},"{{ s.2 }}"],{% endif %}{% endfor %}]
-
-      $.plot("#graph_{{ adj.id }}", [ adj_{{ adj.id_record }} ], {
-        xaxis: {
-          min: 0,
-          max: {{ current_round.seq }},
-          tickSize: 1,
-          tickDecimals: 0,
-          tickFormatter: formatter
-        },
-        yaxis: {
-          min: {{ pref.score_min }},
-          max: {{ pref.score_max }},
-          tickSize: 1,
-          tickDecimals: 0,
-          tickFormatter: formatter
-        },
-        grid: {
-          borderWidth: 0,
-          hoverable: true,
-        },
-        series: {
-          lines: { show: true },
-          points: { show: true, symbol: drawPoints{{ adj.id_record }} },
-          shadowSize: 0,
-          color: "#428bca"
-        },
-      });
-
-      $("#graph_{{ adj.id }}").bind("plothover", function (event, pos, item) {
-
-        if (item) {
-          var round = item.datapoint[0].toFixed(2),
-              score = item.datapoint[1].toFixed(2),
-              type = item.series.data[item.dataIndex][2];
-
-          $("#tooltip").html("R" + parseInt(round) + " received " + score + " as " + type)
-            .css({top: item.pageY+5, left: item.pageX+5})
-            .fadeIn(100);
-        } else {
-          $("#tooltip").hide();
-        }
-
-      });
-
-
-
-    {% endfor %}
 
   });
 

@@ -1,21 +1,20 @@
-{% extends "enter_feedback.html" %}
-{% load add_field_css %}
+{% extends "add_feedback.html" %}
+{% load debate_tags %}
 
-{% block body-class %}public-enter-feedback{% endblock %}
-{% block submit-button-text %}Submit Feedback{% endblock %}
+{% block head-title %}Who are you?{% endblock %}
+{% block sub-title %}click your name or your team on this list{% endblock %}
 
-{% block content %}
-  <div class="alert alert-info">This page is specific to you, {{ source_name }}.
-  The URL doesn't change, so if you bookmark it, you can easily return here after each debate.</div>
-
-  {% if source_type == "team" %}
-    <div class="alert alert-warning">
-      Remember, if you had a panel, you give feedback <strong>only</strong> on
-      the adjudicator who <strong>gave the oral adjudication</strong>.
-    </div>
-  {% endif %}
-
-  {{ block.super }}
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
 {% endblock %}
 
-{% block extra-js %}{% endblock %}
+{% block page-alerts %}{% endblock %}
+
+{% block enter-feedback-adj-link %}
+  <a href="{% tournament_url adjfeedback-public-add-from-adjudicator-pk adj.id %}">
+  Add feedback from {{ adj.name }}</a>
+{% endblock %}
+{% block enter-feedback-team-link %}
+  <a href="{% tournament_url adjfeedback-public-add-from-team-pk team.id %}">
+  Add feedback from {{ team.long_name }}</a>
+{% endblock %}

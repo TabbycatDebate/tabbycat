@@ -1,19 +1,74 @@
 from tournaments.models import Round
-from participants.models import Person
+from participants.models import Person, Adjudicator
+from venues.models import Venue
 from actionlog.models import ActionLogEntry
 from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
 
 from utils.views import *
 
+@admin_required
+@round_view
+def availability_index(request, round):
+    from draw.models import Debate
+    if round.prev:
+        previous_unconfirmed = round.prev.get_draw().filter(
+            result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
+    else:
+        previous_unconfirmed = None
+
+    t = round.tournament
+    checks = [{
+        'type'      : "Team",
+        'total'     : t.teams.count(),
+        'in_now'    : ActiveTeam.objects.filter(round=round).count(),
+        'in_before' : ActiveTeam.objects.filter(round=round.prev).count() if round.prev else None,
+    },{
+        'type'      : "Adjudicator",
+        'total'     : Adjudicator.objects.count() if t.pref('share_adjs') else round.tournament.adjudicator_set.count(),
+        'in_now'    : ActiveAdjudicator.objects.filter(round=round).count(),
+        'in_before' : ActiveAdjudicator.objects.filter(round=round.prev).count() if round.prev else None,
+    },{
+        'type'      : "Venue",
+        'total'     : Venue.objects.count() if t.pref('share_venues') else round.tournament.venue_set.count(),
+        'in_now'    : ActiveVenue.objects.filter(round=round).count(),
+        'in_before' : ActiveVenue.objects.filter(round=round.prev).count() if round.prev else None,
+    }]
+
+    # Basic check before enable the button to advance
+    if all([checks[0]['in_now'] > 1, checks[1]['in_now'] > 0, checks[2]['in_now'] > 0]):
+        can_advance = True
+    else:
+        can_advance = False
+
+    min_adjudicators = int(checks[0]['in_now'] / 2)
+    min_venues = int(checks[0]['in_now'] / 2)
+
+    return render(request, 'availability_index.html', dict(
+        checkin_types=checks, can_advance=can_advance, previous_unconfirmed=previous_unconfirmed,
+        min_adjudicators=min_adjudicators, min_venues=min_venues))
+
+
+@admin_required
+@round_view
+def update_availability_all(request, round):
+    round.activate_all()
+    messages.add_message(request, messages.SUCCESS,
+        'Checked in all teams, adjudicators, and venues')
+    return redirect_round('availability_index', round)
+
+@admin_required
+@round_view
+def update_availability_previous(request, round):
+    round.activate_previous()
+    messages.add_message(request, messages.SUCCESS,
+                         'Checked in all teams, adjudicators, and venues from previous round')
+    return redirect_round('availability_index', round)
+
 def _availability(request, round, model, context_name):
-
     items = getattr(round, '%s_availability' % model)()
+    context = { context_name: items }
+    return render(request, '%s_availability.html' % model, context)
 
-    context = {
-        context_name: items,
-    }
-
-    return r2r(request, '%s_availability.html' % model, context)
 
 # public (for barcode checkins)
 @round_view
@@ -33,7 +88,7 @@ def checkin(request, round):
         except (ValueError, Person.DoesNotExist):
             context['unknown_id'] = v
 
-    return r2r(request, 'person_checkin.html', context)
+    return render(request, 'person_checkin.html', context)
 
 # public (for barcode checkins)
 # public

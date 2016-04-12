@@ -2,9 +2,14 @@
 {% load debate_tags %}
 
 {% block update-url %}{% round_url update_team_availability %}{% endblock %}
-{% block draw-url %}{% round_url draw round %}{% endblock %}
-{% block page-title %}Team Availability for {{ round.name }}{% endblock %}
-{% block head-title %}Team Availability <small>for {{ round.name }}</small>{% endblock %}
+{% block draw-url %}{% round_url availability_index %}{% endblock %}
+
+{% block page-title %}Team Checkins for {{ round.name }}{% endblock %}
+{% block head-title %}
+  <span class="emoji">📍</span>Team Checkins
+{% endblock %}
+{% block sub-title %}for {{ round.name }}{% endblock %}
+
 {% block table-contents %}
   <thead>
     <tr>
@@ -25,12 +30,10 @@
     {% for team in teams %}
     <tr>
       <td>
-        <span class="team-speakers-hover" id="team_speakers_{{ team.id }}">
-           {{ team.long_name }}
-         </span>
+        {% include "tables/team.html" with team=team %}
       </td>
       {% if pref.show_emoji %}
-        <td class="team-emoji">{% team_emoji team %}</td>
+        <td class="team-emoji">{{ team.emoji }}</td>
       {% endif %}
       {% if pref.enable_divisions %}
         <td>{{ team.division.name }}</td>

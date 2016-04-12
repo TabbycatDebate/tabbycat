@@ -1,4 +1,4 @@
-name,institution,team_name,use_team_name_as_prefix,gender,pronoun,novice_status
+name,institution,team_name,use_institution_prefix,gender,pronoun,novice
 Georgia Crawford,California Institute of Technology,1,1,F,she,0
 Wanda Griffin,California Institute of Technology,1,1,F,she,1
 Helen Keller,California Institute of Technology,1,1,F,she,0
@@ -14,9 +14,9 @@ Robin Roberson,Columbia University,1,1,M,he,1
 Gwen Newman,Cornell University,1,1,F,she,1
 Robyn Caldwell,Cornell University,1,1,F,,0
 Angie Holt,Cornell University,1,1,F,she,1
-Melvin Jordan,Harvard University,1,,M,he,
-Gladys Burke,Harvard University,1,,F,,
-Patty Saunders,Harvard University,1,,M,he,
+Melvin Jordan,Harvard University,1,1,M,he,
+Gladys Burke,Harvard University,1,1,F,,
+Patty Saunders,Harvard University,1,1,M,he,
 Thomas Pierce,Harvard University,2,1,M,he,1
 Stella Lindsey,Harvard University,2,1,F,she,1
 Adrian May,Harvard University,2,1,M,he,1
