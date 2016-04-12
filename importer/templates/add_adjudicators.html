@@ -2,7 +2,7 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">👂</span> Bulk Add Adjudicators{% endblock %}
+{% block head-title %}<span class="emoji">👂</span>Bulk Add Adjudicators{% endblock %}
 {% block page-title %}👂 Bulk Add Adjudicators{% endblock %}
 
 {% block content %}
@@ -12,7 +12,7 @@
 </div>
 
 <form action="{% tournament_url edit_adjudicators %}" method="POST">
-  {% csrf_token %}
+
   <div class="panel panel-default">
     <ul class="list-group">
       {% for institution in institutions %}
@@ -33,6 +33,7 @@
       </li>
     </ul>
   </div>
+
 </form>
 
 {% endblock content %}

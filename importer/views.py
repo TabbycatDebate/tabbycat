@@ -12,14 +12,13 @@ from draw.models import InstitutionVenuePreference
 def data_index(request, t):
     return render(request, 'data_index.html')
 
-# INSTITUTIONS
 
+# INSTITUTIONS
 
 @admin_required
 @tournament_view
 def add_institutions(request, t):
-    print("adding insts")
-    #form = forms.AddInstitutionsForm
+    form = forms.AddInstitutionsForm
     return render(request, 'add_institutions.html')
 
 
@@ -64,13 +63,11 @@ def confirm_institutions(request, t):
 
 # VENUES
 
-
 @admin_required
 @tournament_view
 def add_venues(request, t):
     form = forms.AddVenuesForm
     return render(request, 'add_venues.html')
-
 
 @admin_required
 @expect_post
@@ -117,7 +114,7 @@ def confirm_venues(request, t):
             venue_group = None
         try:
             venue = Venue(name=venue_names[i], priority=venue_priorities[i],
-                          group=venue_group, 
+                          group=venue_group,
                           tournament=None if t.pref('share_venues') else t)
             venue.save()
         except:
@@ -127,7 +124,6 @@ def confirm_venues(request, t):
     return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
 # VENUE PREFERENCES
-
 
 @admin_required
 @tournament_view
@@ -205,10 +201,16 @@ def add_teams(request, t):
 @tournament_view
 def edit_teams(request, t):
     institutions_with_team_numbers = []
+
+    # Set default speaker text to match tournament setup
+    default_speakers = ""
+    for i in range(1, t.pref('substantive_speakers') + 1):
+        if i > 1: default_speakers += ","
+        default_speakers += "Speaker %s" % i
+
     for name, quantity in request.POST.items():
         if quantity:
-            desired_teams_count = int(
-                quantity) + 1  # +1 as we dont want teams named 0
+            desired_teams_count = int(quantity) + 1  # +1 as we dont want teams named 0
             institution = Institution.objects.get(name=name)
             team_names = Team.objects.filter(
                 institution=institution,
@@ -236,9 +238,9 @@ def edit_teams(request, t):
             })
             # print('____')
 
-    return render(request,
-                  'edit_teams.html',
-                  dict(institutions=institutions_with_team_numbers))
+    return render(request, 'edit_teams.html',
+                  dict(institutions=institutions_with_team_numbers,
+                       default_speakers=default_speakers))
 
 
 @admin_required

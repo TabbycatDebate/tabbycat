@@ -2,7 +2,7 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">🎪</span> Bulk Add Venues{% endblock %}
+{% block head-title %}<span class="emoji">🎪</span>Bulk Add Venues{% endblock %}
 {% block page-title %}🎪 Bulk Add Venues{% endblock %}
 
 {% block content %}
@@ -21,7 +21,7 @@
 </div>
 
 <form action="{% tournament_url edit_venues %}" method="POST">
-  {% csrf_token %}
+
   <div class="form-group">
     <textarea class="form-control" name="venues_raw" rows="20"></textarea>
   </div>

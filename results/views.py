@@ -137,11 +137,10 @@ def edit_ballotset(request, t, ballotsub_id):
         'ballotsub'        : ballotsub,
         'debate'           : debate,
         'all_ballotsubs'   : all_ballotsubs,
-        'disable_confirm'  : request.user == ballotsub.submitter and not t.pref('enable_assistant_confirms') and not request.user.is_superuser,
+        'disable_confirm'  : request.user == ballotsub.submitter and not t.pref('disable_ballot_confirms') and not request.user.is_superuser,
         'round'            : debate.round,
         'not_singleton'    : all_ballotsubs.exclude(id=ballotsub_id).exists(),
         'new'              : False,
-        'show_adj_contact' : True,
     }
     return render(request, template, context)
 
@@ -191,7 +190,6 @@ def public_new_ballotset(request, t, adjudicator):
         'ballotsub'           : ballotsub,
         'adjudicator'         : adjudicator,
         'existing_ballotsubs' : da.debate.ballotsubmission_set.exclude(discarded=True).count(),
-        'show_adj_contact'    : False,
     }
     return render(request, 'public_enter_results.html', context)
 
@@ -229,7 +227,6 @@ def new_ballotset(request, t, debate_id):
         'all_ballotsubs'   : all_ballotsubs,
         'not_singleton'    : all_ballotsubs.exists(),
         'new'              : True,
-        'show_adj_contact' : True,
     }
     return render(request, template, context)
 

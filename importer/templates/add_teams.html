@@ -2,7 +2,7 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">👯</span> Bulk Add Teams{% endblock %}
+{% block head-title %}<span class="emoji">👯</span>Bulk Add Teams{% endblock %}
 {% block page-title %}👯 Bulk Add Teams{% endblock %}
 
 {% block content %}
@@ -12,7 +12,7 @@
 </div>
 
 <form action="{% tournament_url edit_teams %}" method="POST">
-  {% csrf_token %}
+
   <div class="panel panel-default">
 
     <ul class="list-group">

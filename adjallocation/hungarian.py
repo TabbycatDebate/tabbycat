@@ -22,6 +22,8 @@ class HungarianAllocator(Allocator):
         self.CONFLICT_PENALTY = t.pref('adj_conflict_penalty')
         self.HISTORY_PENALTY = t.pref('adj_history_penalty')
 
+        self.NO_PANELLISTS = t.pref('no_panellist_position')
+
     def calc_cost(self, debate, adj, adjustment=0):
         cost = 0
 
@@ -55,7 +57,11 @@ class HungarianAllocator(Allocator):
         n_adjudicators = len(self.adjudicators)
         n_debates = len(self.debates)
 
-        n_solos = n_debates - (n_adjudicators - n_debates)//2
+        # If not setting panellists allocate all debates a solo chair
+        if self.NO_PANELLISTS:
+            n_solos = n_debates
+        else:
+            n_solos = n_debates - (n_adjudicators - n_debates)//2
 
         # get adjudicators that can adjudicate solo
         chairs = self.adjudicators_sorted[:n_solos]
@@ -65,7 +71,6 @@ class HungarianAllocator(Allocator):
 
         panel_debates = self.debates_sorted[len(chairs):]
         panellists = [a for a in self.adjudicators_sorted if a not in chairs]
-
         assert len(panel_debates) * 3 <= len(panellists)
 
         m = Munkres()
@@ -104,10 +109,12 @@ class HungarianAllocator(Allocator):
             logger.info("No solo adjudicators.")
             alloc = []
 
-        # do panels
-        n = len(panel_debates)
-
-        npan = len(panellists)
+        # Skip the next step if there is the panellist position is disabled 
+        if self.NO_PANELLISTS:
+            npan = False
+        else:
+            n = len(panel_debates)
+            npan = len(panellists)
 
         if npan:
             logger.info("costing panellists")

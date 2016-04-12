@@ -174,6 +174,7 @@ class DrawPairingMethod(ChoicePreference):
         ('fold', 'Fold'),
         ('random', 'Random'),
         ('adjacent', 'Adjacent'),
+        ('fold_top_adjacent_rest', 'Fold top, adjacent rest'),
     )
     default = 'slide'
 
@@ -195,6 +196,22 @@ class SkipAdjCheckins(BooleanPreference):
     verbose_name = "Skip adjudicator check-ins"
     section = draw_rules
     name = "draw_skip_adj_checkins"
+    default = False
+
+@tournament_preferences_registry.register
+class HidePanellistPosition(BooleanPreference):
+    help_text = "Hide panellist positions in the UI (and don't allocate them)"
+    verbose_name = "No panellist adjudicators"
+    section = draw_rules
+    name = "no_panellist_position"
+    default = False
+
+@tournament_preferences_registry.register
+class HideTraineePosition(BooleanPreference):
+    help_text = "Hide trainee positions in the UI (and don't allocate them)"
+    verbose_name = "No trainee adjudicators"
+    section = draw_rules
+    name = "no_trainee_position"
     default = False
 
 # ==============================================================================
@@ -432,11 +449,11 @@ class PublicPassword(StringPreference):
     default = 'Enter Password'
 
 @tournament_preferences_registry.register
-class EnableAssistantConfirms(BooleanPreference):
-    help_text = "If not checked, tab assistants will be prevents from confirming ballots they entered"
-    verbose_name = "Tab assistants can confirm own ballots"
+class DisableBallotConfirmation(BooleanPreference):
+    help_text = "Bypasses double checking by setting ballots to be automatically confirmed"
+    verbose_name = "Bypass double checking"
     section = data_entry
-    name = "enable_assistant_confirms"
+    name = "disable_ballot_confirms"
     default = False
 
 @tournament_preferences_registry.register
@@ -727,7 +744,7 @@ class EnableVenueOverlaps(BooleanPreference):
 @tournament_preferences_registry.register
 class ShareAdjs(BooleanPreference):
     help_text = 'Display adjudicators from other tournaments and those without a tournament'
-    verbose_name = "Share Adjs"
+    verbose_name = "Share adjudicators"
     section = league_options
     name = "share_adjs"
     default = False
@@ -735,7 +752,7 @@ class ShareAdjs(BooleanPreference):
 @tournament_preferences_registry.register
 class ShareAdjs(BooleanPreference):
     help_text = 'Display venues from other tournaments and those without a tournament'
-    verbose_name = "Share Venues"
+    verbose_name = "Share venues"
     section = league_options
     name = "share_venues"
     default = False

@@ -582,6 +582,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         "slide"                 : "_pairings_slide",
         "random"                : "_pairings_random",
         "adjacent"              : "_pairings_adjacent",
+        "fold_top_adjacent_rest": "_pairings_fold_top_adjacent_rest",
     }
 
     def generate_pairings(self, brackets):
@@ -595,6 +596,21 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         pairings = OrderedDict()
         i = 1
         for points, teams in brackets.items():
+            bracket = list()
+            top, bottom = subpool_func(teams)
+            for teams in zip(top, bottom):
+                pairing = Pairing(teams=teams, bracket=points, room_rank=i)
+                bracket.append(pairing)
+                i = i + 1
+            pairings[points] = bracket
+        return pairings
+
+    @staticmethod
+    def _pairings_top_special(brackets, top_subpool_func, rest_subpool_func):
+        pairings = OrderedDict()
+        i = 1
+        subpool_funcs = [top_subpool_func] + [rest_subpool_func] * (len(brackets) - 1)
+        for (points, teams), subpool_func in zip(brackets.items(), subpool_funcs):
             bracket = list()
             top, bottom = subpool_func(teams)
             for teams in zip(top, bottom):
@@ -646,6 +662,10 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     @classmethod
     def _pairings_adjacent(cls, brackets):
         return cls._pairings(brackets, cls._subpool_adjacent)
+
+    @classmethod
+    def _pairings_fold_top_adjacent_rest(cls, brackets):
+        return cls._pairings_top_special(brackets, cls._subpool_fold, cls._subpool_adjacent)
 
     ## Conflict avoidance
 
