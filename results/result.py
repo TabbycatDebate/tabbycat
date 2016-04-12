@@ -649,7 +649,7 @@ class ForfeitBallotSet(BallotSet):
             points = 0
             win = False
         else:
-            points = 2
+            points = 1
             win = True
 
         # Note: forfeited debates have fake scores/margins, thus the affects_average toggle
@@ -662,5 +662,3 @@ class ForfeitBallotSet(BallotSet):
         self.ballotsub.save()
         for dt in self.dts:
             self._save_team(dt)
-
-
