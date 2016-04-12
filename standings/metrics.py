@@ -166,6 +166,15 @@ class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     field = "points"
 
 
+class WADLPointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total number of points using a modifid scale."""
+    key = "points_wadl"
+    name = "points_wadl"
+    abbr = "Pts"
+
+    function = "SUM"
+    field = "points"
+
 class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total number of wins."""
     key = "wins"
@@ -311,4 +320,5 @@ registry = {
     "margin_avg"    : AverageMarginMetricAnnotator,
     # "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
     "wbw"           : WhoBeatWhomMetricAnnotator,
+    "points_wadl"   : WADLPointsMetricAnnotator,
 }

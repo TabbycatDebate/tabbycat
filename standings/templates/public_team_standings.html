@@ -26,7 +26,7 @@
           {% if pref.show_institutions %}
             <th>Institution</th>
           {% endif %}
-          {% if pref.team_points_rule == 'wadl' %}
+          {% if pref.enable_divisions %}
             <th>Pts</th>
           {% endif %}
           <th>Wins</th>
@@ -50,7 +50,7 @@
         {% if pref.show_institutions %}
           <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
         {% endif %}
-        {% if pref.team_points_rule == 'wadl' %}
+        {% if pref.enable_divisions %}
           <td>{{ team.points }}</td>
         {% endif %}
         <td>{{ team.wins }}</td>
@@ -93,9 +93,7 @@
    <script>
     $(document).ready( function() {
       var dTable = $("#dataTable").DataTable({
-        {% if pref.enable_divisions and pref.team_points_rule == 'wadl' %}
-          "aaSorting": [[2, "desc" ], [ 3, "desc" ], [ 4, "desc" ]], // WADL
-        {% elif show_emoji and show_institutions %}
+        {% if show_emoji and show_institutions %}
           "aaSorting": [[ 3, "desc" ], [ 0, "asc" ]],
         {% elif show_emoji or show_institutions %}
           "aaSorting": [[ 2, "desc" ]],
