@@ -26,10 +26,7 @@
         </li>
       {% endfor %}
       <li class="list-group-item">
-          <span class="emoji">➕</span>
-          <a href="{% url 'tournament-create' %}">
-          <em>Create new tournament</em>
-        </a>
+        <span class="emoji">➕</span><a href="{% url 'tournament-create' %}"><em>Create new tournament</em></a>
       </li>
     {% else %}
       <p>
