@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block head-title %}<span class="emoji">👋</span> Welcome! <small>Which tournament are you after?</small>{% endblock %}
+{% block head-title %}<span class="emoji">👋</span>Welcome! <small>Which tournament are you after?</small>{% endblock %}
 {% block page-title %}Home{% endblock %}
 
 {% block nav %}<div class="col-md-12">{% endblock %}
@@ -14,27 +14,13 @@
       {% for tournament in tournaments %}
         <li class="list-group-item">
           <a href="{{ tournament.get_absolute_url }}">
-            <span class="emoji">
-              {% if tournament.emoji %}
-                {{tournament.emoji }}
-              {% else %}
-                🏆
-              {% endif %}
-            </span>
-            {{ tournament.name }} (administrative site)
+            <span class="emoji">{% if tournament.emoji %}{{tournament.emoji }}{% else %}🏆{% endif %}</span>{{ tournament.name }} (administrative site)
           </a>
           <span class="badge">ADMIN</span>
         </li>
         <li class="list-group-item">
           <a href="{{ tournament.get_public_url }}">
-            <span class="emoji">
-              {% if tournament.emoji %}
-                {{tournament.emoji }}
-              {% else %}
-                🏆
-              {% endif %}
-            </span>
-            {{ tournament.name }}
+            <span class="emoji">{% if tournament.emoji %}{{tournament.emoji }}{% else %}🏆{% endif %}</span>{{ tournament.name }}
           </a>
           <span class="badge">PUBLIC</span>
         </li>
@@ -54,19 +40,12 @@
     {% for tournament in tournaments %}
       <li class="list-group-item">
         <a href="{{ tournament.get_public_url }}">
-          <span class="emoji">
-            {% if tournament.emoji %}
-              {{tournament.emoji }}
-            {% else %}
-              🏆
-            {% endif %}
-          </span>
-          {{ tournament.name }}
+          <span class="emoji">{% if tournament.emoji %}{{tournament.emoji }}{% else %}🏆{% endif %}</span>{{ tournament.name }}
         </a>
       </li>
       {% empty %}
         <p>
-            There are currently no tournaments set up on this site.
+          There are currently no tournaments set up on this site.
         </p>
       {% endfor %}
     {% endif %}
