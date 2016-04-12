@@ -6,7 +6,7 @@ import logging
 
 from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
-from .result import BallotSet
+from .result import BallotSet, ForfeitBallotSet
 
 
 logger = logging.getLogger(__name__)
