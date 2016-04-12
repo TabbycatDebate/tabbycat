@@ -243,6 +243,8 @@ class DiversityStandingsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         from adjallocation.models import DebateAdjudicator
         from participants.models import Adjudicator, Person
+        from adjfeedback.models import AdjudicatorFeedback
+        from django.db.models import Avg
 
         kwargs['speakers_m'] = Speaker.objects.filter(gender=Person.GENDER_MALE).count()
         kwargs['speakers_f'] = Speaker.objects.filter(gender=Person.GENDER_FEMALE).count()
@@ -284,7 +286,6 @@ class DiversityStandingsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['aadjs_o'] = Adjudicator.objects.filter(gender=Person.GENDER_OTHER, adj_core=True).count()
         kwargs['aadjs_u'] = Adjudicator.objects.filter(gender=None, adj_core=True).count()
 
-
         kwargs['chair_adjs_m'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_CHAIR).count()
         kwargs['chair_adjs_f'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_CHAIR).count()
         kwargs['chair_adjs_o'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_CHAIR).count()
@@ -299,6 +300,22 @@ class DiversityStandingsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['trainee_adjs_f'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_TRAINEE).count()
         kwargs['trainee_adjs_o'] = DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_TRAINEE).count()
         kwargs['trainee_adjs_u'] = DebateAdjudicator.objects.filter(adjudicator__gender=None, type=DebateAdjudicator.TYPE_TRAINEE).count()
+
+        kwargs['m_avg_speak'] = SpeakerScore.objects.filter(speaker__gender=Person.GENDER_MALE).aggregate(Avg('score'))
+        kwargs['f_avg_speak'] = SpeakerScore.objects.filter(speaker__gender=Person.GENDER_FEMALE).aggregate(Avg('score'))
+
+        kwargs['m_avg_rating'] = AdjudicatorFeedback.objects.filter(adjudicator__gender=Person.GENDER_MALE).aggregate(Avg('score'))
+        kwargs['f_avg_rating'] = AdjudicatorFeedback.objects.filter(adjudicator__gender=Person.GENDER_FEMALE).aggregate(Avg('score'))
+
+        def median_value(queryset, term):
+            count = queryset.count()
+            return queryset.values_list(term, flat=True).order_by(term)[int(round(count/2))]
+
+        kwargs['m_median_speak'] = median_value(SpeakerScore.objects.filter(speaker__gender=Person.GENDER_MALE), 'score')
+        kwargs['f_median_speak'] = median_value(SpeakerScore.objects.filter(speaker__gender=Person.GENDER_FEMALE), 'score')
+
+        kwargs['m_median_rating'] = median_value(AdjudicatorFeedback.objects.filter(adjudicator__gender=Person.GENDER_MALE), 'score')
+        kwargs['f_median_rating'] = median_value(AdjudicatorFeedback.objects.filter(adjudicator__gender=Person.GENDER_FEMALE), 'score')
 
         return super().get_context_data(**kwargs)
 

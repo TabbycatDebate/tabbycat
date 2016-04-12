@@ -118,6 +118,22 @@
     </div>
   </div>
 
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <li>M AVG Speak: {{ m_avg_speak.score__avg|floatformat:"-2" }}</li>
+          <li>F AVG Speak: {{ f_avg_speak.score__avg|floatformat:"-2" }}</li>
+          <li>M AVG Adj Rating: {{ m_avg_rating.score__avg|floatformat:"-2" }}</li>
+          <li>F AVG Adj Rating: {{ f_avg_rating.score__avg|floatformat:"-2" }}</li>
+          <br>
+          <li>M Median Speak: {{ m_median_speak }}</li>
+          <li>F Median Speak: {{ f_median_speak }}</li>
+          <li>M Median Adj Rating: {{ m_median_rating }}</li>
+          <li>F Median Adj Rating: {{ f_median_rating }}</li>
+        </div>
+      </div>
+    </div>
+
 </div>
 {% endblock content %}
 
