@@ -156,7 +156,7 @@ class WADLPreferences(PreferencesPreset):
         self.data_entry__enable_motions                = False
         # Standings Rules
         self.standings__standings_missed_debates       = 0
-        self.standings__team_standings_precedence      = ['points', 'wbw', 'margin_avg', 'speaks_avg']
+        self.standings__team_standings_precedence      = ['points210', 'wbw', 'margin_avg', 'speaks_avg']
         self.standings__rank_speakers_by               = 'average'
         # Draws
         self.draw_rules__avoid_same_institution        = False
@@ -189,7 +189,6 @@ class WADLPreferences(PreferencesPreset):
         self.league_options__enable_postponements      = True
         self.league_options__enable_forfeits           = True
         self.league_options__enable_division_motions   = True
-        self.league_options__team_points_rule          = 'wadl'
         self.league_options__allocation_confirmations  = True
 
 

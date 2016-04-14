@@ -212,6 +212,7 @@ class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
 
+    template_name = 'divisions.html'
 
 class PublicTabMixin(PublicTournamentPageMixin):
     """Mixin for views that should only be allowed when the tab is released publicly."""

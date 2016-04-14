@@ -633,18 +633,6 @@ class PublicDivisions(BooleanPreference):
     default = False
 
 @tournament_preferences_registry.register
-class TeamPointsRule(ChoicePreference):
-    help_text = "Specifies how team points are allocated"
-    verbose_name = "Team points rule"
-    section = league_options
-    name = "team_points_rule"
-    choices = (
-        ('normal', '1 for win, 0 for loss'),
-        ('wadl', '2 for win, 1 for loss, 0 for forfeit'),
-    )
-    default = 'normal'
-
-@tournament_preferences_registry.register
 class EnableDivisions(BooleanPreference):
     help_text = "Enables the sorting and display of teams into divisions"
     verbose_name = "Enable divisions"

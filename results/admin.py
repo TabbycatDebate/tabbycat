@@ -8,10 +8,14 @@ from results.models import SpeakerScore
 # BallotSubmission
 # ==============================================================================
 
+_bs_round = lambda o: o.debate.round.seq
+_bs_round.short_description = 'Round'
+
 class BallotSubmissionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'debate', 'timestamp', 'submitter_type', 'submitter', 'confirmer')
+    list_display = ('id', 'debate', _bs_round, 'timestamp', 'submitter_type', 'submitter', 'confirmer')
     search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__code')
     raw_id_fields = ('debate','motion')
+    list_filter = ('debate__round', 'submitter', 'confirmer')
     # This incurs a massive performance hit
     #inlines = (SpeakerScoreByAdjInline, SpeakerScoreInline, TeamScoreInline)
 
@@ -25,6 +29,7 @@ _ts_round = lambda o: o.debate_team.debate.round.seq
 _ts_round.short_description = 'Round'
 _ts_team = lambda o: o.debate_team.team
 _ts_team.short_description = 'Team'
+
 class TeamScoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ts_team, 'score')
     search_fields = ('debate_team__debate__round__seq',
@@ -45,7 +50,7 @@ class SpeakerScoreAdmin(admin.ModelAdmin):
     search_fields = ('debate_team__debate__round__abbreviation',
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'speaker__name')
-    list_filter = ('score','debate_team__debate__round__abbreviation')
+    list_filter = ('score', 'debate_team__debate__round')
     raw_id_fields = ('debate_team','ballot_submission')
 
     def get_queryset(self, request):
@@ -66,12 +71,12 @@ _ssba_adj = lambda o: o.debate_adjudicator.adjudicator.name
 _ssba_adj.short_description = 'Adjudicator'
 
 class SpeakerScoreByAdjAdmin(admin.ModelAdmin):
-    list_display = ('id', 'ballot_submission', _ts_round, _ssba_adj, _ts_team, 'position', _ssba_speaker, 'score')
+    list_display = ('id', 'ballot_submission', _ts_round, _ssba_adj, _ts_team, _ssba_speaker, 'position', 'score')
     search_fields = ('debate_team__debate__round__seq',
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'debate_adjudicator__adjudicator__name')
-    # TODO: re-enable
-    #list_filter = ('debate_team__debate__round__seq', 'debate_team__team__institution__code')
+
+    list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name')
     raw_id_fields = ('debate_team','ballot_submission')
 
 admin.site.register(SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)

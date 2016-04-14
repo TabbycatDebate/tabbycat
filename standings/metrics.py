@@ -105,8 +105,10 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
     exclude_forfeits = False
     where_value = None
 
-    @classmethod
-    def get_annotated_queryset(cls, queryset, field, function, round=None, column_name="metric"):
+    @staticmethod
+    def get_annotation_metric_query_str(field, function, round=None,
+            exclude_forfeits=False, where_value=None):
+        """Returns a string, being an SQL query that can be passed into RawSQL()."""
         # This is what might be more concisely expressed, if it were permissible
         # in Django, as:
         # teams = teams.annotate_if(
@@ -133,27 +135,57 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
             TEAM_SCORE_ANNOTATION_QUERY += """
             AND "tournaments_round"."seq" <= {round:d}""".format(round=round.seq)
 
-        if cls.exclude_forfeits:
+        if exclude_forfeits:
             TEAM_SCORE_ANNOTATION_QUERY += """
             AND "results_teamscore"."forfeit" = FALSE"""
 
-        if cls.where_value is not None:
+        if where_value is not None:
             TEAM_SCORE_ANNOTATION_QUERY += """
-            AND "{field:s}" = """ + str(cls.where_value)
+            AND "{field:s}" = """ + str(where_value)
 
-        query = TEAM_SCORE_ANNOTATION_QUERY.format(field=field, function=function)
+        return TEAM_SCORE_ANNOTATION_QUERY.format(field=field, function=function)
+
+    @classmethod
+    def get_annotated_queryset(cls, queryset, column_name, *args, **kwargs):
+        """Returns a QuerySet annotated with the metric given. All positional
+        arguments from the third onwards, and all keyword arguments, are passed
+        to get_annotation_metric_query_str()."""
+        query = cls.get_annotation_metric_query_str(*args, **kwargs)
         logger.info("Running query: " + query)
-
         sql = RawSQL(query, ())
         return queryset.annotate(**{column_name: sql}).distinct()
 
-    def annotate_teams(self, queryset, standings, round=None):
-        for team in self.get_annotated_queryset(queryset, self.field, self.function, round):
+    def annotate_teams_with_queryset(self, queryset, standings, round=None):
+        """Annotates teams with the given QuerySet, using the "metric" field."""
+        for team in queryset:
             if team.metric is None:
                 logger.warning("Metric {metric!r} for team {team} was None, setting to 0".format(
                         metric=self.key, team=team.short_name))
                 team.metric = 0
             standings.add_metric_to_team(team, self.key, team.metric)
+
+    def annotate_teams(self, queryset, standings, round=None):
+        queryset = self.get_annotated_queryset(queryset, "metric", self.field,
+                self.function, round, self.exclude_forfeits, self.where_value)
+        self.annotate_teams_with_queryset(queryset, standings, round)
+
+
+class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for team points using win = 2, loss = 1, loss by forfeit = 0."""
+    key = "points210"
+    name = "points"
+    abbr = "Pts"
+
+    choice_name = "Points (2/1/0)"
+
+    def annotate_teams(self, queryset, standings, round=None):
+        wins_query = self.get_annotation_metric_query_str("win", "COUNT", round, False, "TRUE") # includes forfeits
+        losses_query = self.get_annotation_metric_query_str("win", "COUNT", round, True, "FALSE") # excludes forfeits
+        query = "({wins}) * 2 + ({losses})".format(wins=wins_query, losses=losses_query)
+        sql = RawSQL(query, ())
+        logger.info("Running query: " + query)
+        queryset = queryset.annotate(metric=sql).distinct()
+        self.annotate_teams_with_queryset(queryset, standings, round)
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -231,7 +263,7 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
 
         logger.info("Running points query for draw strength:")
         full_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
-                queryset[0].tournament.team_set.all(), "points", "SUM", round, "points")
+                queryset[0].tournament.team_set.all(), "points", "points", "SUM", round)
 
         for team in queryset:
             draw_strength = 0
@@ -303,6 +335,7 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
 
 registry = {
     "points"        : PointsMetricAnnotator,
+    "points210"     : Points210MetricAnnotator,
     "wins"          : WinsMetricAnnotator,
     "speaks_sum"    : TotalSpeakerScoreMetricAnnotator,
     "speaks_avg"    : AverageSpeakerScoreMetricAnnotator,

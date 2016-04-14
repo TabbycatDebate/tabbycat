@@ -144,15 +144,19 @@
     {% endfor %}
 
     {% if pref.enable_forfeits %}
-        <div class="row">
-            <p class="col-xs-12 lead h3 page-header">Forfeits</p>
-        </div>
-        <div class="row">
-            <div class="form-group forfeits-group">
-                {{ form.forfeits|addcss:"form-control" }}
-                {{ form.forfeits.errors }}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>Forfeits</h4>
             </div>
+            <div class="panel-body form-panel forfeits-group">
+              {{ form.forfeits|addcss:"form-control" }}
+              {{ form.forfeits.errors }}
+            </div>
+          </div>
         </div>
+      </div>
     {% endif %}
 
 </div>
