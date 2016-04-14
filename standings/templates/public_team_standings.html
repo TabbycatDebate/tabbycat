@@ -68,11 +68,8 @@
                   <span class="glyphicon {{ icon }}"></span>
                 {% endwith %}
               {% endif %}
-                  vs
                   {% if pref.show_emoji %}
-                    <span class="emoji">{{ round_results.opposition.emoji }}</span>
-                  {% else %}
-                    {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
+                    vs <span class="emoji">{{ round_results.opposition.emoji }}</span>
                   {% endif %}
                 </span>
             </td>

@@ -6,7 +6,6 @@
 {% block page-title %}👯Team Standings after {{ round.name }}{% endblock %}
 {% block head-title %}<span class="emoji">👯</span>Team Standings{% endblock %}
 {% block sub-title %}after {{ round.name }}{% endblock %}
-{% block team_active %}active{% endblock %}
 
 {% block content %}
 <div class="panel panel-default">
@@ -98,13 +97,10 @@
                       <span class="glyphicon {{ icon }}"></span>
                     {% endwith %}
                   {% endif %}
-                      vs
-                      {% if pref.show_emoji %}
-                        <span class="emoji">{{ round_results.opposition.emoji }}</span>
-                      {% else %}
-                        {{ round_results.opposition.short_reference|slice:"5"}}&hellip;
-                      {% endif %}
-                    </span>
+                    {% if pref.show_emoji %}
+                      vs <span class="emoji">{{ round_results.opposition.emoji }}</span>
+                    {% endif %}
+                  </span>
                 </td>
                 {% if show_ballots and round_results.debate_team.debate_id and not round_results.forfeit %}
                   <td>
