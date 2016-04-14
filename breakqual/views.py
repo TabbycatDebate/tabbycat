@@ -100,6 +100,7 @@ def edit_eligibility(request, t):
             ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT,
                     user=request.user, tournament=t, ip_address=get_ip_address(request))
             messages.success(request, "Break eligibility saved.")
+            return redirect_tournament('breaking_index', t)
     else:
         form = forms.BreakEligibilityForm(t)
 

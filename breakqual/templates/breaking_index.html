@@ -7,7 +7,7 @@
 
 {% block page-subnav-sections %}
   {% for category in tournament.breakcategory_set.all %}
-    <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">{{ category.name }}</a>
+    <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">{{ category.name }} Break</a>
   {% endfor %}
   <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">Adjudicators</a>
 {% endblock %}
@@ -17,5 +17,32 @@
 {% endblock %}
 
 {% block content %}
+
+  {% for category in tournament.breakcategory_set.all %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">Teams Eligible for the {{ category }} Break</h4>
+          </div>
+          <div class="panel-body round-progresses">
+            <div class="progress">
+              {% if category.is_general %}
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow=""
+                aria-valuemin="0" aria-valuemax="{{ tournament.teams.count }}" style="width: {% percentage tournament.teams.count tournament.teams.count %}%;">
+                  <span>{{ tournament.teams.count }}/{{ tournament.teams.count }}</span>
+                </div>
+              {% else %}
+                <div class="progress-bar progress-bar-success {% if category.team_set.count == 0 %}progress-empty{% endif %}" role="progressbar" aria-valuenow=""
+                aria-valuemin="0" aria-valuemax="{{ tournament.teams.count }}" style="width: {% percentage category.team_set.count tournament.teams.count %}%;">
+                  <span>{{ category.team_set.count }}/{{ tournament.teams.count }}</span>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
 
 {% endblock content %}

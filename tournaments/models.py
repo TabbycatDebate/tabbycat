@@ -98,7 +98,7 @@ class Tournament(models.Model):
     def get_all_tournaments_all_teams(self):
         return ('all_tournaments_all_teams', [self.slug])
 
-    @property
+    @cached_property
     def teams(self):
         return self.team_set
 
