@@ -121,7 +121,7 @@
 
                 <td>
                    {% if debate.confirmed_ballot.forfeit %}
-                    {% if debate.confirmed_ballot.forfeit == debate.aff_team %}
+                    {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
                       <span class="glyphicon glyphicon-eye-close text-danger"></span>
                     {% else %}
                       <span class="glyphicon glyphicon-share-alt text-success"></span>
@@ -131,11 +131,11 @@
                   {% elif debate.confirmed_ballot.ballot_set.neg_win == 1 %}
                     <span class="glyphicon glyphicon-arrow-down text-danger"></span>
                   {% endif %}
-                    {% include "tables/team.html" with team=debate.aff_team %}
+                  {% include "tables/team.html" with team=debate.aff_team %}
                 </td>
                 <td>
                   {% if debate.confirmed_ballot.forfeit %}
-                    {% if debate.confirmed_ballot.forfeit == debate.neg_team %}
+                    {% if debate.confirmed_ballot.ballot_set.aff_win == 1 %}
                       <span class="glyphicon glyphicon-eye-close text-danger"></span>
                     {% else %}
                       <span class="glyphicon glyphicon-share-alt text-success"></span>
@@ -145,7 +145,7 @@
                   {% elif debate.confirmed_ballot.ballot_set.aff_win == 1 %}
                     <span class="glyphicon glyphicon glyphicon-arrow-down text-danger"></span>
                   {% endif %}
-                    {% include "tables/team.html" with team=debate.neg_team %}
+                  {% include "tables/team.html" with team=debate.neg_team %}
                 </td>
                 <td>
                   {% if debate.confirmed_ballot %}
