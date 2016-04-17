@@ -16,6 +16,7 @@ A list of tournaments (that we know of) which have used Tabbycat.
 - The National Law School Debate
 - The Khazak National Schools Debating Championship
 - `The Western Australian Debating League <http://draw.wadl.org>`_
+- The Western Sydney Open
 - `USU Grand Slam <http://usutabs.herokuapp.com/t/grandslam2016/>'_'
 
 2015
