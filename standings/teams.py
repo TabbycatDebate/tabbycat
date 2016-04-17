@@ -280,7 +280,6 @@ class TeamStandingsGenerator:
                 args = (index, wbw_keys)
                 index += 1
             else:
-                self.precedence.append(metric)
                 args = ()
 
             annotator = MetricAnnotator(metric, *args)
