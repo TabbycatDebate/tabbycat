@@ -90,9 +90,9 @@
    <script>
     $(document).ready( function() {
       var dTable = $("#dataTable").DataTable({
-        {% if show_emoji and show_institutions %}
+        {% if pref.show_emoji and pref.show_institutions %}
           "aaSorting": [[ 3, "desc" ], [ 0, "asc" ]],
-        {% elif show_emoji or show_institutions %}
+        {% elif pref.show_emoji or pref.show_institutions %}
           "aaSorting": [[ 2, "desc" ]],
         {% else %}
           "aaSorting": [[ 1, "desc" ]],
