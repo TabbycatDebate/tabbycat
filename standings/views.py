@@ -10,7 +10,7 @@ from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
 
 from .teams import TeamStandingsGenerator
-from .round_results import add_team_round_results
+from .round_results import add_team_round_results, add_team_round_results_public
 
 @admin_required
 @round_view
@@ -179,7 +179,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
         standings = generator.generate(teams, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
-        add_team_round_results(standings, rounds, (lambda standings, x: standings.get_standing(x)))
+        add_team_round_results(standings, rounds)
 
         context = self.get_context_data(standings=standings, rounds=rounds)
 
@@ -340,12 +340,7 @@ def public_team_standings(request, t):
         teams = Team.objects.order_by('institution__code', 'reference')
         rounds = t.prelim_rounds(until=round).filter(silent=False).order_by('seq')
 
-        add_team_round_results(teams, rounds, (lambda teams, x: [t for t in teams if t == x][0]))
-
-        # Do this manually, in case there are silent rounds
-        for team in teams:
-            team.wins = [ts.win for ts in team.round_results if ts].count(True)
-            team.points = sum([ts.points for ts in team.round_results if ts])
+        add_team_round_results_public(teams, rounds)
 
         return render(request, 'public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
     else:
