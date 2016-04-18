@@ -1,7 +1,7 @@
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, StringPreference, IntegerPreference, FloatPreference, Section
 from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
-from standings.metrics import get_metric_choices
+from standings.teams import TeamStandingsGenerator
 
 # ==============================================================================
 scoring = Section('scoring')
@@ -329,7 +329,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
     verbose_name = "Team standings precedence"
     section = standings
     name = "team_standings_precedence"
-    choices = get_metric_choices()
+    choices = TeamStandingsGenerator.get_metric_choices()
     nfields = 8
     allow_empty = True
     default = ['points', 'speaks_avg']

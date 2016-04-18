@@ -2,8 +2,6 @@
 
 from collections import OrderedDict
 from operator import itemgetter
-from .metrics import MetricAnnotator
-from .ranking import RankAnnotator
 import random
 import logging
 logger = logging.getLogger(__name__)
@@ -198,6 +196,9 @@ class BaseStandingsGenerator:
         "random"     : random.shuffle,
     }
 
+    metric_annotator_classes = {}
+    ranking_annotator_classes = {}
+
     def __init__(self, metrics, rankings, **options):
 
         # Set up options dictionary
@@ -226,12 +227,12 @@ class BaseStandingsGenerator:
         standings = Standings(queryset)
 
         for annotator in self.metric_annotators:
-            annotator.annotate(queryset, standings, round)
+            annotator.run(queryset, standings, round)
 
         standings.sort(self.precedence, self._tiebreak_func)
 
         for annotator in self.ranking_annotators:
-            annotator.annotate(standings)
+            annotator.run(standings)
 
         return standings
 
@@ -252,7 +253,8 @@ class BaseStandingsGenerator:
         self.metric_annotators = list()
 
         for metric in metrics:
-            annotator = MetricAnnotator(metric)
+            klass = self.metric_annotator_classes[metric]
+            annotator = klass()
             self.metric_annotators.append(annotator)
             self.precedence.append(annotator.key)
 
@@ -262,8 +264,22 @@ class BaseStandingsGenerator:
         self.ranking_annotators = list()
 
         for ranking in rankings:
-            self.ranking_annotators.append(RankAnnotator(ranking, self.precedence))
+            klass = self.ranking_annotator_classes[ranking]
+            annotator = klass(self.precedence)
+            self.ranking_annotators.append(annotator)
 
     @property
     def _tiebreak_func(self):
         return self.TIEBREAK_FUNCTIONS[self.options["tiebreak"]]
+
+    @classmethod
+    def get_metric_choices(cls):
+        choices = []
+        for key, annotator in cls.metric_annotator_classes.items():
+            if hasattr(annotator, 'choice_name'):
+                choice_name = annotator.choice_name.capitalize()
+            else:
+                choice_name = annotator.name.capitalize()
+            choices.append((key, choice_name))
+        choices.sort(key=lambda x: x[1])
+        return choices
