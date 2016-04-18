@@ -97,6 +97,9 @@
         {% else %}
           "aaSorting": [[ 1, "desc" ]],
         {% endif %}
+        "language": {
+          "emptyTable": "There aren't any results available."
+        },
       });
       new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
       $('#table-search').keyup(function(){

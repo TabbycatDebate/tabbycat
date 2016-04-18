@@ -1,5 +1,5 @@
 from django.db.models import Count
-from django.views.generic.base import View, ContextMixin
+from django.views.generic.base import View, ContextMixin, TemplateView
 
 from motions.models import Motion
 from participants.models import Team, Speaker
@@ -312,36 +312,30 @@ def public_motions_tab(request, t):
     return render(request, 'public_motions_tab.html', dict(motions=motions))
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_team_standings')
-def public_team_standings(request, t):
-    print("Generating public team standings")
-    if t.release_all:
-        # Assume that the time "release all" is used, the current round
-        # is the last round.
-        round = t.current_round
-    else:
-        round = t.current_round.prev
+class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, TemplateView):
+    public_page_preference = 'public_team_standings'
+    template_name = 'public_team_standings.html'
 
-    # Find the most recent non-silent preliminary round
-    while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
-        round = round.prev
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
 
-    if round is not None and round.silent is False:
+        # Find the most recent non-silent preliminary round
+        round = tournament.current_round if tournament.release_all else tournament.current_round.prev
+        while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
+            round = round.prev
 
-        from results.models import TeamScore
+        if round is not None and round.silent is False:
+            teams = Team.objects.order_by('institution__code', 'reference') # obscure true rankings, in case client disabled JavaScript
+            rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
+            add_team_round_results_public(teams, rounds)
 
-        # Ranking by institution__name and reference isn't the same as ordering by
-        # short_name, which is what we really want. But we can't rank by short_name,
-        # because it's not a field (it's a property). So we'll do this in JavaScript.
-        # The real purpose of this ordering is to obscure the *true* ranking of teams
-        # - teams are not supposed to know rankings between teams on the same number
-        # of wins.
-        teams = Team.objects.order_by('institution__code', 'reference')
-        rounds = t.prelim_rounds(until=round).filter(silent=False).order_by('seq')
+            kwargs["teams"] = teams
+            kwargs["rounds"] = rounds
+            kwargs["round"] = round
 
-        add_team_round_results_public(teams, rounds)
+        else:
+            kwargs["teams"] = []
+            kwargs["rounds"] = []
+            kwargs["round"] = None
 
-        return render(request, 'public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
-    else:
-        return render(request, 'index.html')
+        return super().get_context_data(**kwargs)
