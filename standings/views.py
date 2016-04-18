@@ -10,7 +10,7 @@ from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
 
 from .teams import TeamStandingsGenerator
-from .round_results import add_team_round_results_0, add_team_round_results_1, add_team_round_results_2
+from .round_results import add_team_round_results
 
 @admin_required
 @round_view
@@ -179,21 +179,8 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
         standings = generator.generate(teams, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
+        add_team_round_results(standings, rounds, (lambda standings, x: standings.get_standing(x)))
 
-        for i in range(5):
-            import time
-            start = time.time()
-            add_team_round_results_0(standings, rounds)
-            time0 = time.time() - start
-            start = time.time()
-            add_team_round_results_1(standings, rounds)
-            time1 = time.time() - start
-            start = time.time()
-            add_team_round_results_2(standings, rounds)
-            time2 = time.time() - start
-            print("time0: {}, time1: {}, time2: {}".format(time0, time1, time2))
-
-        add_team_round_results_2(standings, rounds)
         context = self.get_context_data(standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
@@ -337,8 +324,7 @@ def public_team_standings(request, t):
         round = t.current_round.prev
 
     # Find the most recent non-silent preliminary round
-    while round is not None and (round.silent or
-                                 round.stage != Round.STAGE_PRELIMINARY):
+    while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
         round = round.prev
 
     if round is not None and round.silent is False:
@@ -352,25 +338,14 @@ def public_team_standings(request, t):
         # - teams are not supposed to know rankings between teams on the same number
         # of wins.
         teams = Team.objects.order_by('institution__code', 'reference')
-        rounds = t.prelim_rounds(until=round).filter(
-            silent=False).order_by('seq')
+        rounds = t.prelim_rounds(until=round).filter(silent=False).order_by('seq')
 
-        def get_round_result(team, r):
-            try:
-                ts = TeamScore.objects.get(ballot_submission__confirmed=True,
-                                           debate_team__team=team,
-                                           debate_team__debate__round=r, )
-                ts.opposition = ts.debate_team.opposition.team
-                return ts
-            except TeamScore.DoesNotExist:
-                return None
+        add_team_round_results(teams, rounds, (lambda teams, x: [t for t in teams if t == x][0]))
 
+        # Do this manually, in case there are silent rounds
         for team in teams:
-            team.round_results = [get_round_result(team, r) for r in rounds]
-            # Do this manually, in case there are silent rounds
             team.wins = [ts.win for ts in team.round_results if ts].count(True)
             team.points = sum([ts.points for ts in team.round_results if ts])
-
 
         return render(request, 'public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
     else:
