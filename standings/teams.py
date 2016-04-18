@@ -50,26 +50,26 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
 
         TEAM_SCORE_ANNOTATION_QUERY = """
             SELECT DISTINCT {function}({field:s})
-            FROM "results_teamscore"
-            JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
-            JOIN "draw_debateteam" ON "results_teamscore"."debate_team_id" = "draw_debateteam"."id"
-            JOIN "draw_debate" ON "draw_debateteam"."debate_id" = "draw_debate"."id"
-            JOIN "tournaments_round" ON "draw_debate"."round_id" = "tournaments_round"."id"
-            WHERE "results_ballotsubmission"."confirmed" = True
-            AND "draw_debateteam"."team_id" = "participants_team"."id"
-            AND "tournaments_round"."stage" = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
+            FROM results_teamscore
+            JOIN results_ballotsubmission ON results_teamscore.ballot_submission_id = results_ballotsubmission.id
+            JOIN draw_debateteam ON results_teamscore.debate_team_id = draw_debateteam.id
+            JOIN draw_debate ON draw_debateteam.debate_id = draw_debate.id
+            JOIN tournaments_round ON draw_debate.round_id = tournaments_round.id
+            WHERE results_ballotsubmission.confirmed = TRUE
+            AND draw_debateteam.team_id = participants_team.id
+            AND tournaments_round.stage = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
 
         if round is not None:
             TEAM_SCORE_ANNOTATION_QUERY += """
-            AND "tournaments_round"."seq" <= {round:d}""".format(round=round.seq)
+            AND tournaments_round.seq <= {round:d}""".format(round=round.seq)
 
         if exclude_forfeits:
             TEAM_SCORE_ANNOTATION_QUERY += """
-            AND "results_teamscore"."forfeit" = FALSE"""
+            AND results_teamscore.forfeit = FALSE"""
 
         if where_value is not None:
             TEAM_SCORE_ANNOTATION_QUERY += """
-            AND "{field:s}" = """ + str(where_value)
+            AND {field:s} = """ + str(where_value)
 
         return TEAM_SCORE_ANNOTATION_QUERY.format(field=field, function=function)
 

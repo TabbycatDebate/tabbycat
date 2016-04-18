@@ -10,6 +10,7 @@ from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
 
 from .teams import TeamStandingsGenerator
+from .round_results import add_team_round_results_0, add_team_round_results_1, add_team_round_results_2
 
 @admin_required
 @round_view
@@ -151,21 +152,6 @@ def get_speaker_standings(rounds,
     return speakers
 
 
-def get_round_result(team, team_scores, r):
-    ts = next(
-        (x
-         for x in team_scores
-         if x.debate_team.team == team and x.debate_team.debate.round == r),
-        None)
-    try:
-        ts.opposition = ts.debate_team.opposition.team  # TODO: this slows down the page generation considerably
-    except AttributeError:
-        pass
-    except Exception as e:
-        print("Unexpected exception in view.teams.get_round_result")
-        print(e)
-    return ts
-
 
 
 class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
@@ -193,11 +179,21 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
         standings = generator.generate(teams, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
-        team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
-        for tsi in standings:
-            tsi.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(tsi.team, team_scores, round) is not None
-            tsi.round_results = [get_round_result(tsi.team, team_scores, r) for r in rounds]
 
+        for i in range(5):
+            import time
+            start = time.time()
+            add_team_round_results_0(standings, rounds)
+            time0 = time.time() - start
+            start = time.time()
+            add_team_round_results_1(standings, rounds)
+            time1 = time.time() - start
+            start = time.time()
+            add_team_round_results_2(standings, rounds)
+            time2 = time.time() - start
+            print("time0: {}, time1: {}, time2: {}".format(time0, time1, time2))
+
+        add_team_round_results_2(standings, rounds)
         context = self.get_context_data(standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
