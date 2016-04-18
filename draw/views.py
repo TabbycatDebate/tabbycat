@@ -84,8 +84,8 @@ def get_draw_with_standings(round):
     standings = generator.generate(teams, round=round.prev)
 
     for debate in draw:
-        aff_standing = standings.get_team_standing(debate.aff_team)
-        neg_standing = standings.get_team_standing(debate.neg_team)
+        aff_standing = standings.get_standing(debate.aff_team)
+        neg_standing = standings.get_standing(debate.neg_team)
         debate.aff_subrank = aff_standing.rankings["subrank"]
         debate.neg_subrank = neg_standing.rankings["subrank"]
         debate.metrics = [(a, n) for a, n in zip(aff_standing.itermetrics(), neg_standing.itermetrics())]

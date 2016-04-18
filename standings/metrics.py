@@ -162,7 +162,7 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
                 logger.warning("Metric {metric!r} for team {team} was None, setting to 0".format(
                         metric=self.key, team=team.short_name))
                 team.metric = 0
-            standings.add_metric_to_team(team, self.key, team.metric)
+            standings.add_metric(team, self.key, team.metric)
 
     def annotate_teams(self, queryset, standings, round=None):
         queryset = self.get_annotated_queryset(queryset, "metric", self.field,
@@ -274,7 +274,7 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
                 points = full_queryset.get(id=dt.opposition.team_id).points
                 if points is not None: # points is None when no debates have happened
                     draw_strength += points
-            standings.add_metric_to_team(team, self.key, draw_strength)
+            standings.add_metric(team, self.key, draw_strength)
 
 
 class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
