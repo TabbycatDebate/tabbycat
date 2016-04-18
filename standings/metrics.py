@@ -62,9 +62,10 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
     class attributes, and use the `key` attribute when adding metrics in
     implementing `annotate()`."""
 
-    def __init__(self, index):
+    def __init__(self, index, keys):
         self.index = index
         self.key = self.key_prefix + str(index)
         self.name = self.name_prefix + " " + str(index)
         self.abbr = self.abbr_prefix + str(index)
+        self.keys = keys
 

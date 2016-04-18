@@ -1,11 +1,8 @@
-"""Standings generator for teams.
-
-The main engine for generating team standings."""
+"""Standings generator for teams."""
 
 import random
 import logging
 logger = logging.getLogger(__name__)
-from collections import OrderedDict
 from itertools import groupby
 
 from django.db.models import Sum
@@ -232,10 +229,9 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     choice_name = "who-beat-whom"
 
     def __init__(self, index, keys):
-        super(WhoBeatWhomMetricAnnotator, self).__init__(index)
         if len(keys) == 0:
             raise ValueError("keys must not be empty")
-        self.keys = keys
+        super(WhoBeatWhomMetricAnnotator, self).__init__(index, keys)
 
     def annotate(self, queryset, standings, round=None):
         key = metricgetter(*self.keys)
@@ -326,35 +322,3 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "subrank"  : SubrankAnnotator,
         "division" : DivisionRankAnnotator,
     }
-
-    def _interpret_metrics(self, metrics):
-        """Overrides the BaseStandingsGenerator implementation to construct
-        who-beat-whom with appropriate information.
-
-        Given a list of metrics, sets:
-            - `self.precedence` to a copy of `metrics` with who-beat-whoms numbered
-            - `self.metric_annotators` to the appropriate metric annotators
-        For example:
-            ('points', 'wbw', 'speaks', 'wbw', 'margins')
-        sets:
-        ```
-            self.precedence = ['points', 'wbw1', 'speaks', 'wbw2', 'margins']
-            self.metric_annotators = [PointsMetricAnnotator(), WhoBeatWhomMetricAnnotator(1, ('points',)) ...]
-        ```
-        """
-        self.precedence = list()
-        self.metric_annotators = list()
-        index = 1
-
-        for i, metric in enumerate(metrics):
-            if metric == "wbw":
-                wbw_keys = tuple(m for m in self.precedence[0:i] if m != "wbw")
-                args = (index, wbw_keys)
-                index += 1
-            else:
-                args = ()
-
-            klass = self.metric_annotator_classes[metric]
-            annotator = klass(*args)
-            self.metric_annotators.append(annotator)
-            self.precedence.append(annotator.key)

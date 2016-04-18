@@ -1,10 +1,11 @@
 """Base class for standings generators."""
 
-from collections import OrderedDict
 from operator import itemgetter
 import random
 import logging
 logger = logging.getLogger(__name__)
+
+from .metrics import RepeatedMetricAnnotator
 
 class StandingsError(RuntimeError):
     pass
@@ -249,14 +250,33 @@ class BaseStandingsGenerator:
             raise StandingsError("The same {} would be added twice:\n{!r}".format(type_str, names))
 
     def _interpret_metrics(self, metrics):
-        """Given a list of metrics, sets `self.metric_annotators` to the
-        appropriate metric annotators."""
+        """Given a list of metrics, sets:
+            - `self.precedence` to a copy of `metrics` with repeated metric annotators numbered
+            - `self.metric_annotators` to the appropriate metric annotators
+        For example:
+            ('points', 'wbw', 'speaks', 'wbw', 'margins')
+        sets:
+        ```
+            self.precedence = ['points', 'wbw1', 'speaks', 'wbw2', 'margins']
+            self.metric_annotators = [PointsMetricAnnotator(), WhoBeatWhomMetricAnnotator(1, ('points',)) ...]
+        ```
+        """
         self.precedence = list()
         self.metric_annotators = list()
+        repeated_metric_indices = {}
 
-        for metric in metrics:
+        for i, metric in enumerate(metrics):
             klass = self.metric_annotator_classes[metric]
-            annotator = klass()
+
+            if issubclass(klass, RepeatedMetricAnnotator):
+                earlier_keys = tuple(m for m in self.precedence[0:i] if m != metric)
+                index = repeated_metric_indices.setdefault(metric, 1)
+                args = (index, earlier_keys)
+                repeated_metric_indices[metric] += 1
+            else:
+                args = ()
+
+            annotator = klass(*args)
             self.metric_annotators.append(annotator)
             self.precedence.append(annotator.key)
 
