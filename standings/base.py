@@ -57,8 +57,10 @@ class StandingInfo:
         else:
             raise TypeError("'instance' should be a instance with 'id' attribute or an integer")
 
-        setattr(self, self.instance.__class__.__name__.lower(), self.instance)
         self.model_verbose_name = self.instance.__class__._meta.verbose_name.lower()
+
+        # set more naturally-named attribute for instance, e.g., `self.team` if it is a Team
+        setattr(self, self.instance.__class__.__name__.lower(), self.instance)
 
         self.metrics = dict()
         self.rankings = dict()
