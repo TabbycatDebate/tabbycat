@@ -13,19 +13,16 @@ from participants.models import Team
 from results.models import TeamScore
 
 from .base import BaseStandingsGenerator, StandingsError
-from .metrics import BaseMetricAnnotator, RepeatedMetricAnnotator, metricgetter
+from .metrics import BaseMetricAnnotator, RepeatedMetricAnnotator, QuerySetMetricAnnotator, metricgetter
 from .ranking import BaseRankAnnotator, BasicRankAnnotator, SubrankAnnotator
 
 # ==============================================================================
 # Metric annotators
 # ==============================================================================
 
-class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
+class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations
-    of TeamScore instances.
-
-    Other annotators can use this class as a mixin, using
-    `get_annotated_queryset()` but overriding `annotate()`."""
+    of TeamScore instances."""
 
     function = None # must be set by subclasses
     field = None # must be set by subclasses
@@ -40,15 +37,16 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
         # This is what might be more concisely expressed, if it were permissible
         # in Django, as:
         # teams = teams.annotate_if(
-        #     models.Count('debateteam__teamscore__{field:s}'),
-        #     condition={"debateteam__teamscore__ballot_submission__confirmed": True}
+        #     models.Sum('debateteam__teamscore__{field:s}'),
+        #     condition={"debateteam__teamscore__ballot_submission__confirmed": True,
+        #         "debateteam__debate__round__stage": Round.STAGE_PRELIMINARY}
         # )
         #
         # That is, it adds up the relevant field on *confirmed* ballots for each
         # team and adds them as columns to the table it returns. The standings
         # include only preliminary rounds.
 
-        TEAM_SCORE_ANNOTATION_QUERY = """
+        query = """
             SELECT DISTINCT {function}({field:s})
             FROM results_teamscore
             JOIN results_ballotsubmission ON results_teamscore.ballot_submission_id = results_ballotsubmission.id
@@ -60,42 +58,21 @@ class TeamScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
             AND tournaments_round.stage = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
 
         if round is not None:
-            TEAM_SCORE_ANNOTATION_QUERY += """
+            query += """
             AND tournaments_round.seq <= {round:d}""".format(round=round.seq)
 
         if exclude_forfeits:
-            TEAM_SCORE_ANNOTATION_QUERY += """
+            query += """
             AND results_teamscore.forfeit = FALSE"""
 
         if where_value is not None:
-            TEAM_SCORE_ANNOTATION_QUERY += """
+            query += """
             AND {field:s} = """ + str(where_value)
 
-        return TEAM_SCORE_ANNOTATION_QUERY.format(field=field, function=function)
+        return query.format(field=field, function=function)
 
-    @classmethod
-    def get_annotated_queryset(cls, queryset, column_name, *args, **kwargs):
-        """Returns a QuerySet annotated with the metric given. All positional
-        arguments from the third onwards, and all keyword arguments, are passed
-        to get_annotation_metric_query_str()."""
-        query = cls.get_annotation_metric_query_str(*args, **kwargs)
-        logger.info("Running query: " + query)
-        sql = RawSQL(query, ())
-        return queryset.annotate(**{column_name: sql}).distinct()
-
-    def annotate_with_queryset(self, queryset, standings, round=None):
-        """Annotates teams with the given QuerySet, using the "metric" field."""
-        for team in queryset:
-            if team.metric is None:
-                logger.warning("Metric {metric!r} for team {team} was None, setting to 0".format(
-                        metric=self.key, team=team.short_name))
-                team.metric = 0
-            standings.add_metric(team, self.key, team.metric)
-
-    def annotate(self, queryset, standings, round=None):
-        queryset = self.get_annotated_queryset(queryset, "metric", self.field,
-                self.function, round, self.exclude_forfeits, self.where_value)
-        self.annotate_with_queryset(queryset, standings, round)
+    def get_annotation_metric_query_args(self, round):
+        return (self.field, self.function, round, self.exclude_forfeits, self.where_value)
 
 
 class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):

@@ -105,17 +105,13 @@ def get_speaker_standings(rounds,
                                 for score in speaker_scores
                                 if score.speaker == speaker]
         speaker.scores = get_scores(speaker, this_speakers_scores)
-        speaker.results_in = speaker.scores[
-            -
-            1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
+        speaker.results_in = speaker.scores[-1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
 
         if round.seq < total_prelim_rounds or len(
             [_f for _f in speaker.scores if _f]) >= minimum_debates_needed:
             speaker.total = sum([_f for _f in speaker.scores if _f])
             try:
-                speaker.average = sum([_f for _f in speaker.scores if _f
-                                       ]) / len(
-                                           [_f for _f in speaker.scores if _f])
+                speaker.average = sum([_f for _f in speaker.scores if _f]) / len([_f for _f in speaker.scores if _f])
             except ZeroDivisionError:
                 speaker.average = 0.0
         else:
