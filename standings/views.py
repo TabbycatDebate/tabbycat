@@ -171,7 +171,8 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
 
         teams = Team.objects.teams_for_standings(round)
         metrics = tournament.pref('team_standings_precedence')
-        generator = TeamStandingsGenerator(metrics, self.rankings)
+        extra_metrics = tournament.pref('team_standings_extra_metrics')
+        generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)
         standings = generator.generate(teams, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
