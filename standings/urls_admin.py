@@ -12,9 +12,4 @@ urlpatterns = [
     url(r'^pros/$',     views.ProStandingsView.as_view(),      name='standings-pro'),
     url(r'^reply/$',    views.ReplyStandingsView.as_view(),    name='standings-reply'),
     url(r'^motions/$',  views.motion_standings,                name='standings-motion'),
-
-    url(r'^speaker-old/$',  views.speaker_standings,               name='standings-speaker-old'),
-    url(r'^novices-old/$',  views.novice_standings,                name='standings-novice-old'),
-    url(r'^pros-old/$',     views.pro_standings,                   name='standings-pro-old'),
-    url(r'^reply-old/$',    views.reply_standings,                 name='standings-reply-old'),
 ]
