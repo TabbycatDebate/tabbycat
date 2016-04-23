@@ -13,38 +13,32 @@ from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
 from .round_results import add_team_round_results, add_team_round_results_public, add_speaker_round_results
 
-@admin_required
-@round_view
-def standings_index(request, round):
-    top_speaks = SpeakerScore.objects.filter(
-        ballot_submission__confirmed=True).select_related(
-            'debate_team__debate__round').order_by('-score')[:10]
-    bottom_speaks = SpeakerScore.objects.filter(
-        ballot_submission__confirmed=True).exclude(
-            position=round.tournament.REPLY_POSITION).order_by(
-                'score')[:10].select_related('debate_team__debate__round')
-    top_margins = TeamScore.objects.filter(
-        ballot_submission__confirmed=True).select_related(
-            'debate_team__team', 'debate_team__debate__round',
-            'debate_team__team__institution').order_by('-margin')[:10]
-    bottom_margins = TeamScore.objects.filter(
-        ballot_submission__confirmed=True, margin__gte=0).select_related(
-            'debate_team__team', 'debate_team__debate__round',
-            'debate_team__team__institution').order_by('margin')[:10]
 
-    top_motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
-        Count('ballotsubmission')).order_by('-ballotsubmission__count')[:10]
-    bottom_motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
-        Count('ballotsubmission')).order_by('ballotsubmission__count')[:10]
+class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
-    return render(request,
-               'standings_index.html',
-               dict(top_margins=top_margins,
-                    top_speaks=top_speaks,
-                    bottom_margins=bottom_margins,
-                    bottom_speaks=bottom_speaks,
-                    top_motions=top_motions,
-                    bottom_motions=bottom_motions))
+    template_name = 'standings_index.html'
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+
+        speaks = SpeakerScore.objects.filter(ballot_submission__confirmed=True).exclude(
+                position=round.tournament.REPLY_POSITION).select_related('debate_team__debate__round')
+        kwargs["top_speaks"] = speaks.order_by('-score')[:10]
+        kwargs["bottom_speaks"] = speaks.order_by('score')[:10]
+
+        margins = TeamScore.objects.filter(ballot_submission__confirmed=True,
+                margin__gte=0).select_related(
+                'debate_team__team', 'debate_team__debate__round',
+                'debate_team__team__institution')
+        kwargs["top_margins"] = margins.order_by('-margin')[:10]
+        kwargs["bottom_margins"] = margins.order_by('margin')[:10]
+
+        motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
+                Count('ballotsubmission'))
+        kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:10]
+        kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:10]
+
+        return super().get_context_data(**kwargs)
 
 
 class PublicTabMixin(PublicTournamentPageMixin):
@@ -58,6 +52,10 @@ class PublicTabMixin(PublicTournamentPageMixin):
         for info in standings:
             info.results_in = True
 
+
+# ==============================================================================
+# Speaker standings
+# ==============================================================================
 
 class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
     """Base class for views that display speaker standings."""
@@ -189,6 +187,9 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
     template_name = 'public_reply_tab.html'
 
 
+# ==============================================================================
+# Team standings
+# ==============================================================================
 
 class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
     """Base class for views that display team standings."""
@@ -251,25 +252,29 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     def show_ballots(self):
         return self.get_tournament().pref('ballots_released')
 
+# ==============================================================================
+# Motion standings
+# ==============================================================================
 
-@admin_required
-@round_view
-def motion_standings(request, round):
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    motions = list()
-    motions = Motion.objects.statistics(round=round)
-    return render(request, 'motions.html', dict(motions=motions))
+class BaseMotionStandingsView(RoundMixin, TemplateView):
+
+    def get_context_data(self, **kwargs):
+        kwargs["motions"] = Motion.objects.statistics(round=self.get_round())
+        return super().get_context_data(**kwargs)
 
 
-@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('motion_tab_released')
-def public_motions_tab(request, t):
-    round = t.current_round
-    rounds = t.prelim_rounds(until=round).order_by('seq')
-    motions = list()
-    motions = Motion.objects.statistics(round=round)
-    return render(request, 'public_motions_tab.html', dict(motions=motions))
+class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
+    template_name = 'motions.html'
 
+
+class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
+    public_page_preference = 'motion_tab_released'
+    template_name = 'public_motions_tab.html'
+
+
+# ==============================================================================
+# Current team standings (win-loss records only)
+# ==============================================================================
 
 class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_team_standings'

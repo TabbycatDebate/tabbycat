@@ -22,6 +22,6 @@ urlpatterns = [
         views.PublicReplyTabView.as_view(),
         name='standings-public-tab-replies'),
     url(r'^motions/$',
-        views.public_motions_tab,
+        views.PublicMotionsTabView.as_view(),
         name='standings-public-tab-motions'),
 ]
