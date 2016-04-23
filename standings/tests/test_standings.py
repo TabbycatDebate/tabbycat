@@ -109,12 +109,12 @@ class TestBasicStandings(TestCase):
 
                     for teamname, expected in testdata["standings"].items():
                         team = teams[teamname]
-                        standing = standings.get_team_standing(team)
+                        standing = standings.get_standing(team)
                         for metric in metrics:
                             self.assertEqual(standing.metrics[metric], expected[metric])
 
                     ranked_teams = [teams[x] for x in testdata["rankings"][metrics]]
-                    self.assertEqual(ranked_teams, standings.get_team_list())
+                    self.assertEqual(ranked_teams, standings.get_instance_list())
 
     # TODO check that WBW is correct when not in first metrics
     # TODO check that it doesn't break when not all metrics present

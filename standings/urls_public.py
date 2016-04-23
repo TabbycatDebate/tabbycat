@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     url(r'^current_standings/$',
-        views.public_team_standings,
+        views.PublicCurrentTeamStandingsView.as_view(),
         name='standings-public-teams-current'),
     url(r'^team/$',
         views.PublicTeamTabView.as_view(),

@@ -1,5 +1,5 @@
 from django.db.models import Count
-from django.views.generic.base import View, ContextMixin
+from django.views.generic.base import View, ContextMixin, TemplateView
 
 from motions.models import Motion
 from participants.models import Team, Speaker
@@ -10,6 +10,7 @@ from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
 
 from .teams import TeamStandingsGenerator
+from .round_results import add_team_round_results, add_team_round_results_public
 
 @admin_required
 @round_view
@@ -104,17 +105,13 @@ def get_speaker_standings(rounds,
                                 for score in speaker_scores
                                 if score.speaker == speaker]
         speaker.scores = get_scores(speaker, this_speakers_scores)
-        speaker.results_in = speaker.scores[
-            -
-            1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
+        speaker.results_in = speaker.scores[-1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
 
         if round.seq < total_prelim_rounds or len(
             [_f for _f in speaker.scores if _f]) >= minimum_debates_needed:
             speaker.total = sum([_f for _f in speaker.scores if _f])
             try:
-                speaker.average = sum([_f for _f in speaker.scores if _f
-                                       ]) / len(
-                                           [_f for _f in speaker.scores if _f])
+                speaker.average = sum([_f for _f in speaker.scores if _f]) / len([_f for _f in speaker.scores if _f])
             except ZeroDivisionError:
                 speaker.average = 0.0
         else:
@@ -151,21 +148,6 @@ def get_speaker_standings(rounds,
     return speakers
 
 
-def get_round_result(team, team_scores, r):
-    ts = next(
-        (x
-         for x in team_scores
-         if x.debate_team.team == team and x.debate_team.debate.round == r),
-        None)
-    try:
-        ts.opposition = ts.debate_team.opposition.team  # TODO: this slows down the page generation considerably
-    except AttributeError:
-        pass
-    except Exception as e:
-        print("Unexpected exception in view.teams.get_round_result")
-        print(e)
-    return ts
-
 
 
 class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
@@ -193,10 +175,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
         standings = generator.generate(teams, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
-        team_scores = list(TeamScore.objects.select_related('debate_team__team', 'debate_team__debate__round').filter(ballot_submission__confirmed=True))
-        for tsi in standings:
-            tsi.results_in = round.stage != Round.STAGE_PRELIMINARY or get_round_result(tsi.team, team_scores, round) is not None
-            tsi.round_results = [get_round_result(tsi.team, team_scores, r) for r in rounds]
+        add_team_round_results(standings, rounds)
 
         context = self.get_context_data(standings=standings, rounds=rounds)
 
@@ -329,53 +308,30 @@ def public_motions_tab(request, t):
     return render(request, 'public_motions_tab.html', dict(motions=motions))
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_team_standings')
-def public_team_standings(request, t):
-    print("Generating public team standings")
-    if t.release_all:
-        # Assume that the time "release all" is used, the current round
-        # is the last round.
-        round = t.current_round
-    else:
-        round = t.current_round.prev
+class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, TemplateView):
+    public_page_preference = 'public_team_standings'
+    template_name = 'public_team_standings.html'
 
-    # Find the most recent non-silent preliminary round
-    while round is not None and (round.silent or
-                                 round.stage != Round.STAGE_PRELIMINARY):
-        round = round.prev
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
 
-    if round is not None and round.silent is False:
+        # Find the most recent non-silent preliminary round
+        round = tournament.current_round if tournament.release_all else tournament.current_round.prev
+        while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
+            round = round.prev
 
-        from results.models import TeamScore
+        if round is not None and round.silent is False:
+            teams = Team.objects.order_by('institution__code', 'reference') # obscure true rankings, in case client disabled JavaScript
+            rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
+            add_team_round_results_public(teams, rounds)
 
-        # Ranking by institution__name and reference isn't the same as ordering by
-        # short_name, which is what we really want. But we can't rank by short_name,
-        # because it's not a field (it's a property). So we'll do this in JavaScript.
-        # The real purpose of this ordering is to obscure the *true* ranking of teams
-        # - teams are not supposed to know rankings between teams on the same number
-        # of wins.
-        teams = Team.objects.order_by('institution__code', 'reference')
-        rounds = t.prelim_rounds(until=round).filter(
-            silent=False).order_by('seq')
+            kwargs["teams"] = teams
+            kwargs["rounds"] = rounds
+            kwargs["round"] = round
 
-        def get_round_result(team, r):
-            try:
-                ts = TeamScore.objects.get(ballot_submission__confirmed=True,
-                                           debate_team__team=team,
-                                           debate_team__debate__round=r, )
-                ts.opposition = ts.debate_team.opposition.team
-                return ts
-            except TeamScore.DoesNotExist:
-                return None
+        else:
+            kwargs["teams"] = []
+            kwargs["rounds"] = []
+            kwargs["round"] = None
 
-        for team in teams:
-            team.round_results = [get_round_result(team, r) for r in rounds]
-            # Do this manually, in case there are silent rounds
-            team.wins = [ts.win for ts in team.round_results if ts].count(True)
-            team.points = sum([ts.points for ts in team.round_results if ts])
-
-
-        return render(request, 'public_team_standings.html', dict(teams=teams, rounds=rounds, round=round))
-    else:
-        return render(request, 'index.html')
+        return super().get_context_data(**kwargs)
