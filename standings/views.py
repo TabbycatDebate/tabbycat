@@ -3,7 +3,7 @@ from django.views.generic.base import View, ContextMixin, TemplateView
 from django.conf import settings
 from django.shortcuts import render
 
-from motions.models import Motion
+import motions.statistics as motion_statistics
 from participants.models import Team, Speaker
 from results.models import TeamScore, SpeakerScore, BallotSubmission
 from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
@@ -47,10 +47,12 @@ class PublicTabMixin(PublicTournamentPageMixin):
     cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
 
     def get_round(self):
+        # Always show tabs with respect to current round on public tab pages
         return self.get_tournament().current_round
 
     def populate_result_missing(self, standings):
-        pass # do nothing
+        # Never highlight missing results on public tab pages
+        pass
 
 
 # ==============================================================================
@@ -263,7 +265,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 class BaseMotionStandingsView(RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
-        kwargs["motions"] = Motion.objects.statistics(round=self.get_round())
+        kwargs["motions"] = motion_statistics.statistics(round=self.get_round())
         return super().get_context_data(**kwargs)
 
 
