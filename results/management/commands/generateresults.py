@@ -14,20 +14,14 @@ SUBMITTER_TYPE_MAP = {
 }
 User = get_user_model()
 
-class Command(RoundCommand):
-
-    help = "Adds randomly-generated results to the database"
-    rounds_required = False
+class GenerateResultsCommandMixin:
 
     def add_arguments(self, parser):
-        super(Command, self).add_arguments(parser)
-        parser.add_argument("--debates", type=int, nargs="+", help="IDs of specific debates to add feedback to. Done in addition to rounds, if any.", default=[])
+        super(GenerateResultsCommandMixin, self).add_arguments(parser)
         parser.add_argument("-T", "--submitter-type", type=str, help="Submitter type, either 'tabroom' or 'public'", choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
         parser.add_argument("-u", "--user", type=str, help="Username of submitter", default="random")
 
-        parser.add_argument("--clean", help="Remove all associated ballot sets first", action="store_true")
         parser.add_argument("--create-user", help="Create user if it doesn't exist", action="store_true")
-        parser.add_argument("-n", "--num-ballots", type=int, help="Number of ballot sets to add per round (default all) or debate (default 1)", default=None)
 
         status = parser.add_mutually_exclusive_group(required=True)
         status.add_argument("-D", "--discarded", action="store_true", help="Make added ballot sets discarded")
@@ -57,6 +51,18 @@ class Command(RoundCommand):
             "min_score"     : options["min_score"],
             "max_score"     : options["max_score"],
         }
+
+
+class Command(GenerateResultsCommandMixin, RoundCommand):
+
+    help = "Adds randomly-generated results to the database"
+    rounds_required = False
+
+    def add_arguments(self, parser):
+        super(Command, self).add_arguments(parser)
+        parser.add_argument("--debates", type=int, nargs="+", help="IDs of specific debates to add feedback to. Done in addition to rounds, if any.", default=[])
+        parser.add_argument("--clean", help="Remove all associated ballot sets first", action="store_true")
+        parser.add_argument("-n", "--num-ballots", type=int, help="Number of ballot sets to add per round (default all) or debate (default 1)", default=None)
 
     def handle(self, *args, **options):
         if not self.get_rounds(options) and not options["debates"]:

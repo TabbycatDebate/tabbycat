@@ -15,6 +15,8 @@ class MultiValueSerializer(BaseSerializer):
 
     @classmethod
     def to_python(cls, value, **kwargs):
+        if value == "":
+            return []
         try:
             return value.split(cls.separator)
         except AttributeError:

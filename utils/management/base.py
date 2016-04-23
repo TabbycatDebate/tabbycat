@@ -173,11 +173,8 @@ class RoundCommand(TournamentCommand):
         try:
             return tournament.round_set.get(**{spectype: specifier})
         except Round.DoesNotExist:
-            raise CommandError(
-                "The tournament {tournament!r} has no round with {type} {spec!r}".format(
-                    tournament=tournament.slug,
-                    type=spectype,
-                    spec=specifier))
+            raise CommandError("The tournament {tournament!r} has no round with {type} {spec!r}".format(
+                    tournament=tournament.slug, type=spectype, spec=specifier))
 
     def get_rounds(self, options):
         """Returns a list of rounds implied by command-line arguments.
@@ -189,8 +186,7 @@ class RoundCommand(TournamentCommand):
 
         rounds = list()
         for tournament in self.get_tournaments(options):
-            rounds.extend(self._get_round(tournament, spec)
-                          for spec in options["round_selection"])
+            rounds.extend(self._get_round(tournament, spec) for spec in options["round_selection"])
             if options.get("all_rounds", False):
                 rounds.extend(tournament.round_set.all())
             if options.get("prelim_rounds", False):
@@ -198,8 +194,7 @@ class RoundCommand(TournamentCommand):
             if options.get("break_rounds", False):
                 rounds.extend(tournament.break_rounds.all())
         if not rounds and self.rounds_required:
-            raise CommandError(
-                "No rounds were given. (Use --help for more info.)")
+            raise CommandError("No rounds were given. (Use --help for more info.)")
 
         options["__rounds__"] = rounds
         return rounds
@@ -207,19 +202,17 @@ class RoundCommand(TournamentCommand):
     def _confirm_rounds(self, rounds, **options):
         if not options["confirm"]:
             self.stdout.write(self.style.WARNING(
-                "WARNING! You are about to {} from the following rounds:".format(
+                    "WARNING! You are about to {} from the following rounds:".format(
                     self.confirm_round_destruction)))
             for r in rounds:
-                self.stdout.write(self.style.WARNING(
-                    "  [{t}]: {r}".format(t=r.tournament.name,
-                                          r=r.name)))
+                self.stdout.write(self.style.WARNING("  [{t}]: {r}".format(
+                        t=r.tournament.name, r=r.name)))
             response = input("Are you sure? ")
             if response != "yes":
                 raise CommandError("Cancelled by user.")
 
         elif options["confirm"] != options["round_selection"]:
-            raise CommandError(
-                "The --confirm arguments did not match the positional arguments.")
+            raise CommandError("The --confirm arguments did not match the positional arguments.")
 
     def handle(self, *args, **options):
         self._set_log_level(**options)

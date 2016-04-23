@@ -38,7 +38,7 @@ class BaseRankAnnotator:
 
     def run(self, standings):
         standings.record_added_ranking(self.key, self.name, self.abbr, self.glyphicon)
-        self.annotate(standings)
+        self.annotate(standings.rank_eligible)
 
     def annotate(self, standings):
         """Annotates the given `standings` by calling `add_ranking()` on every
@@ -63,8 +63,8 @@ class BasicRankAnnotator(BaseRankAnnotator):
         rank = 1
         for key, group in groupby(standings, key=self.rank_key):
             group = list(group)
-            for tsi in group:
-                tsi.add_ranking("rank", (rank, len(group) > 1))
+            for info in group:
+                info.add_ranking("rank", (rank, len(group) > 1))
             rank += len(group)
 
 
@@ -83,7 +83,7 @@ class SubrankAnnotator(BaseRankAnnotator):
             subrank = 1
             for subkey, subgroup in groupby(group, self.subrank_key):
                 subgroup = list(subgroup)
-                for tsi in subgroup:
-                    tsi.add_ranking("subrank", (subrank, len(subgroup) > 1))
+                for info in subgroup:
+                    info.add_ranking("subrank", (subrank, len(subgroup) > 1))
                 subrank += len(subgroup)
 

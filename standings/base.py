@@ -44,6 +44,12 @@ class StandingInfo:
 
     Note that no order is guaranteed when iterating over `metrics.values()` or
     `rankings.values()`. Use `itermetrics()` and `iterrankings()` instead.
+
+    Note that a ranking is not guaranteed to exist, and won't exist when the
+    instance is ineligible for a rank. In this case, `info.rankings[key]` will
+    results in a KeyError, and `iterrankings()` will return `(None, False)`.
+    Python code should be prepared to handle this scenario. Django templates
+    should use {{ ranking|default:"n/a" }} to handle the `None`.
     """
 
     def __init__(self, standings, instance):
@@ -88,7 +94,10 @@ class StandingInfo:
 
     def iterrankings(self):
         for key in self.standings.ranking_keys:
-            yield self.rankings[key]
+            try:
+                yield self.rankings[key]
+            except KeyError:
+                yield (None, False)
 
 
 class Standings:
@@ -121,9 +130,10 @@ class Standings:
 
     _SPEC_FIELDS = ("key", "name", "abbr", "glyphicon")
 
-    def __init__(self, instances):
+    def __init__(self, instances, rank_filter=None):
         self.infos = {instance: StandingInfo(self, instance) for instance in instances}
         self.ranked = False
+        self.rank_filter = rank_filter
 
         self.metric_keys = list()
         self.ranking_keys = list()
@@ -134,6 +144,14 @@ class Standings:
     def standings(self):
         assert self.ranked, "sort() must be called before accessing standings"
         return self._standings
+
+    @property
+    def rank_eligible(self):
+        assert self.ranked, "sort() must be called before accessing standings"
+        if self.rank_filter:
+            return filter(self.rank_filter, self._standings)
+        else:
+            return self._standings
 
     def __len__(self):
         return len(self.standings)
@@ -178,21 +196,32 @@ class Standings:
 
     def sort(self, precedence, tiebreak_func=None):
         self._standings = list(self.infos.values())
+
         if tiebreak_func:
             tiebreak_func(self._standings)
+
         try:
             self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics), reverse=True)
         except TypeError:
             for info in self.infos:
                 logger.info("{:30} {}".format(info.instance, itemgetter(*precedence)(info.metrics)))
             raise
+
+        if self.rank_filter:
+            self._standings.sort(key=self.rank_filter, reverse=True)
+
         self.ranked = True
+
+    def filter(self, include_filter):
+        self.infos = {instance: info for instance, info in self.infos.items() if include_filter(info)}
 
 
 class BaseStandingsGenerator:
 
     DEFAULT_OPTIONS = {
         "tiebreak": "random",
+        "rank_filter": None,
+        "include_filter": None,
     }
 
     TIEBREAK_FUNCTIONS = {
@@ -202,7 +231,7 @@ class BaseStandingsGenerator:
     metric_annotator_classes = {}
     ranking_annotator_classes = {}
 
-    def __init__(self, metrics, rankings, **options):
+    def __init__(self, metrics, rankings, extra_metrics=(), **options):
 
         # Set up options dictionary
         self.options = self.DEFAULT_OPTIONS.copy()
@@ -212,7 +241,7 @@ class BaseStandingsGenerator:
         self.options.update(options)
 
         # Set up annotators
-        self._interpret_metrics(metrics)
+        self._interpret_metrics(metrics, extra_metrics)
         self._interpret_rankings(rankings)
         self._check_annotators(self.metric_annotators, "metric")
         self._check_annotators(self.ranking_annotators, "ranking")
@@ -227,10 +256,13 @@ class BaseStandingsGenerator:
             (That is, rounds after `round` are excluded from the standings.)
         """
 
-        standings = Standings(queryset)
+        standings = Standings(queryset, rank_filter=self.options["rank_filter"])
 
         for annotator in self.metric_annotators:
             annotator.run(queryset, standings, round)
+
+        if self.options["include_filter"]:
+            standings.filter(self.options["include_filter"])
 
         standings.sort(self.precedence, self._tiebreak_func)
 
@@ -249,7 +281,7 @@ class BaseStandingsGenerator:
         if len(names) != len(set(names)):
             raise StandingsError("The same {} would be added twice:\n{!r}".format(type_str, names))
 
-    def _interpret_metrics(self, metrics):
+    def _interpret_metrics(self, metrics, extra_metrics):
         """Given a list of metrics, sets:
             - `self.precedence` to a copy of `metrics` with repeated metric annotators numbered
             - `self.metric_annotators` to the appropriate metric annotators
@@ -265,7 +297,9 @@ class BaseStandingsGenerator:
         self.metric_annotators = list()
         repeated_metric_indices = {}
 
-        for i, metric in enumerate(metrics):
+        all_metrics = [(m, True) for m in metrics] + [(m, False) for m in extra_metrics]
+
+        for i, (metric, ranked) in enumerate(all_metrics):
             klass = self.metric_annotator_classes[metric]
 
             if issubclass(klass, RepeatedMetricAnnotator):
@@ -278,7 +312,9 @@ class BaseStandingsGenerator:
 
             annotator = klass(*args)
             self.metric_annotators.append(annotator)
-            self.precedence.append(annotator.key)
+
+            if ranked:
+                self.precedence.append(annotator.key)
 
     def _interpret_rankings(self, rankings):
         """Given a list of rankings, sets `self.ranking_annotators` to the
@@ -295,9 +331,11 @@ class BaseStandingsGenerator:
         return self.TIEBREAK_FUNCTIONS[self.options["tiebreak"]]
 
     @classmethod
-    def get_metric_choices(cls):
+    def get_metric_choices(cls, ranked_only=True):
         choices = []
         for key, annotator in cls.metric_annotator_classes.items():
+            if not ranked_only and annotator.ranked_only:
+                continue
             if hasattr(annotator, 'choice_name'):
                 choice_name = annotator.choice_name.capitalize()
             else:

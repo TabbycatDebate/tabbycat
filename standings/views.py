@@ -10,150 +10,189 @@ from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
 
 from .teams import TeamStandingsGenerator
-from .round_results import add_team_round_results, add_team_round_results_public
-
-@admin_required
-@round_view
-def standings_index(request, round):
-    top_speaks = SpeakerScore.objects.filter(
-        ballot_submission__confirmed=True).select_related(
-            'debate_team__debate__round').order_by('-score')[:10]
-    bottom_speaks = SpeakerScore.objects.filter(
-        ballot_submission__confirmed=True).exclude(
-            position=round.tournament.REPLY_POSITION).order_by(
-                'score')[:10].select_related('debate_team__debate__round')
-    top_margins = TeamScore.objects.filter(
-        ballot_submission__confirmed=True).select_related(
-            'debate_team__team', 'debate_team__debate__round',
-            'debate_team__team__institution').order_by('-margin')[:10]
-    bottom_margins = TeamScore.objects.filter(
-        ballot_submission__confirmed=True, margin__gte=0).select_related(
-            'debate_team__team', 'debate_team__debate__round',
-            'debate_team__team__institution').order_by('margin')[:10]
-
-    top_motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
-        Count('ballotsubmission')).order_by('-ballotsubmission__count')[:10]
-    bottom_motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
-        Count('ballotsubmission')).order_by('ballotsubmission__count')[:10]
-
-    return render(request,
-               'standings_index.html',
-               dict(top_margins=top_margins,
-                    top_speaks=top_speaks,
-                    bottom_margins=bottom_margins,
-                    bottom_speaks=bottom_speaks,
-                    top_motions=top_motions,
-                    bottom_motions=bottom_motions))
+from .speakers import SpeakerStandingsGenerator
+from .round_results import add_team_round_results, add_team_round_results_public, add_speaker_round_results
 
 
-def get_speaker_standings(rounds,
-                          round,
-                          results_override=False,
-                          only_novices=False,
-                          only_pros=False,
-                          for_replies=False):
-    last_substantive_position = round.tournament.LAST_SUBSTANTIVE_POSITION
-    reply_position = round.tournament.REPLY_POSITION
-    total_prelim_rounds = Round.objects.filter(
-        stage=Round.STAGE_PRELIMINARY,
-        tournament=round.tournament).count()
-    missable_debates = round.tournament.pref('standings_missed_debates')
-    minimum_debates_needed = total_prelim_rounds - missable_debates
+class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
-    if for_replies:
-        speaker_scores = SpeakerScore.objects.select_related(
-            'speaker', 'ballot_submission',
-            'debate_team__debate__round').filter(
-                ballot_submission__confirmed=True,
-                position=reply_position)
-    else:
-        speaker_scores = SpeakerScore.objects.select_related(
-            'speaker', 'ballot_submission',
-            'debate_team__debate__round').filter(
-                ballot_submission__confirmed=True,
-                position__lte=last_substantive_position)
+    template_name = 'standings_index.html'
 
-    if only_novices is True:
-        speakers = list(Speaker.objects.filter(
-            team__tournament=round.tournament,
-            novice=True).select_related('team', 'team__institution',
-                                        'team__tournament'))
-    elif only_pros is True:
-        speakers = list(Speaker.objects.filter(
-            team__tournament=round.tournament,
-            novice=False).select_related('team', 'team__institution',
-                                        'team__tournament'))
-    else:
-        speakers = list(Speaker.objects.filter(
-            team__tournament=round.tournament).select_related(
-                'team', 'team__institution', 'team__tournament'))
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
 
-    def get_scores(speaker, this_speakers_scores):
-        speaker_scores = [None] * len(rounds)
-        for r in rounds:
-            finding_score = next(
-                (x
-                 for x in this_speakers_scores
-                 if x.debate_team.debate.round == r), None)
-            if finding_score:
-                speaker_scores[r.seq - 1] = finding_score.score
+        speaks = SpeakerScore.objects.filter(ballot_submission__confirmed=True).exclude(
+                position=round.tournament.REPLY_POSITION).select_related('debate_team__debate__round')
+        kwargs["top_speaks"] = speaks.order_by('-score')[:10]
+        kwargs["bottom_speaks"] = speaks.order_by('score')[:10]
 
-        return speaker_scores
+        margins = TeamScore.objects.filter(ballot_submission__confirmed=True,
+                margin__gte=0).select_related(
+                'debate_team__team', 'debate_team__debate__round',
+                'debate_team__team__institution')
+        kwargs["top_margins"] = margins.order_by('-margin')[:10]
+        kwargs["bottom_margins"] = margins.order_by('margin')[:10]
 
-    for speaker in speakers:
-        this_speakers_scores = [score
-                                for score in speaker_scores
-                                if score.speaker == speaker]
-        speaker.scores = get_scores(speaker, this_speakers_scores)
-        speaker.results_in = speaker.scores[-1] is not None or round.stage != Round.STAGE_PRELIMINARY or results_override
+        motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
+                Count('ballotsubmission'))
+        kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:10]
+        kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:10]
 
-        if round.seq < total_prelim_rounds or len(
-            [_f for _f in speaker.scores if _f]) >= minimum_debates_needed:
-            speaker.total = sum([_f for _f in speaker.scores if _f])
-            try:
-                speaker.average = sum([_f for _f in speaker.scores if _f]) / len([_f for _f in speaker.scores if _f])
-            except ZeroDivisionError:
-                speaker.average = 0.0
+        return super().get_context_data(**kwargs)
+
+
+class PublicTabMixin(PublicTournamentPageMixin):
+    """Mixin for views that should only be allowed when the tab is released publicly."""
+    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
+
+    def get_round(self):
+        return self.get_tournament().current_round
+
+    def populate_results_in(self, standings):
+        for info in standings:
+            info.results_in = True
+
+
+# ==============================================================================
+# Speaker standings
+# ==============================================================================
+
+class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
+    """Base class for views that display speaker standings."""
+
+    rankings = ('rank',)
+
+    def get(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+        round = self.get_round()
+
+        speakers = self.get_speakers()
+        metrics, extra_metrics = self.get_metrics()
+        rank_filter = self.get_rank_filter()
+        include_filter = self.get_include_filter()
+        generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics,
+                rank_filter=rank_filter, include_filter=include_filter)
+        standings = generator.generate(speakers, round=round)
+
+        rounds = tournament.prelim_rounds(until=round).order_by('seq')
+        self.add_round_results(standings, rounds)
+        self.populate_results_in(standings)
+        context = self.get_context_data(standings=standings, rounds=rounds)
+
+        return render(request, self.template_name, context)
+
+    def get_rank_filter(self):
+        return None
+
+    def get_include_filter(self):
+        return None
+
+    def populate_results_in(self, standings):
+        for info in standings:
+            info.results_in = len(info.scores) < 1 or info.scores[-1] is not None
+
+
+class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
+    """The standard speaker standings view."""
+
+    def get_speakers(self):
+        return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
+                        'team', 'team__institution', 'team__tournament')
+
+    def get_metrics(self):
+        method = self.get_tournament().pref('rank_speakers_by')
+        if method == 'average':
+            return ('speaks_avg',), ('speaks_sum', 'speaks_stddev', 'speeches_count')
         else:
-            speaker.total = 0.0
-            speaker.average = 0.0
+            return ('speaks_sum',), ('speaks_avg', 'speaks_stddev', 'speeches_count')
 
-        if for_replies:
-            speaker.replies_given = len([_f for _f in speaker.scores if _f])
+    def get_rank_filter(self):
+        tournament = self.get_tournament()
+        total_prelim_rounds = tournament.round_set.filter(
+                stage=Round.STAGE_PRELIMINARY, seq__lte=self.get_round().seq).count()
+        missable_debates = tournament.pref('standings_missed_debates')
+        minimum_debates_needed = total_prelim_rounds - missable_debates
+        return lambda info: info.metrics["speeches_count"] >= minimum_debates_needed
 
-    if for_replies:
-        speakers = [s for s in speakers if s.replies_given > 0]
-
-    prev_total = None
-    current_rank = 0
-
-    if for_replies or round.tournament.pref('rank_speakers_by') == 'average':
-        method = False
-        speakers.sort(key=lambda x: x.average, reverse=True)
-    else:
-        method = True
-        speakers.sort(key=lambda x: x.total, reverse=True)
-
-    for i, speaker in enumerate(speakers, start=1):
-        if method:
-            comparison = speaker.total
-        else:
-            comparison = speaker.average
-
-        if comparison != prev_total:
-            current_rank = i
-            prev_total = comparison
-        speaker.rank = current_rank
-
-    return speakers
+    def add_round_results(self, standings, rounds):
+        add_speaker_round_results(standings, rounds, self.get_tournament())
 
 
+class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsView):
+    template_name = 'speakers.html'
 
+
+class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
+    public_page_preference = 'speaker_tab_released'
+    template_name = 'public_speaker_tab.html'
+
+
+class BaseNoviceStandingsView(BaseStandardSpeakerStandingsView):
+    """Speaker standings view for novices."""
+
+    template_name = 'novices.html'
+
+    def get_speakers(self):
+        return super().get_speakers().filter(novice=True)
+
+
+class NoviceStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
+    template_name = 'novices.html'
+
+
+class PublicNoviceTabView(PublicTabMixin, BaseNoviceStandingsView):
+    public_page_preference = 'novices_tab_released'
+    template_name = 'public_novices_tab.html'
+
+
+class BaseProStandingsView(BaseStandardSpeakerStandingsView):
+    """Speaker standings view for non-novices (pro, varsity)."""
+
+    def get_speakers(self):
+        return super().get_speakers().filter(novice=False)
+
+
+class ProStandingsView(SuperuserRequiredMixin, BaseProStandingsView):
+    template_name = 'speakers.html'
+
+
+class PublicProTabView(PublicTabMixin, BaseProStandingsView):
+    public_page_preference = 'pros_tab_released'
+    template_name = 'public_pros_tab.html'
+
+
+class BaseReplyStandingsView(BaseSpeakerStandingsView):
+    """Speaker standings view for replies."""
+
+    def get_speakers(self):
+        return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
+                        'team', 'team__institution', 'team__tournament')
+
+    def get_metrics(self):
+        return ('replies_avg',), ('replies_stddev', 'replies_count')
+
+    def add_round_results(self, standings, rounds):
+        add_speaker_round_results(standings, rounds, self.get_tournament(), replies=True)
+
+    def get_include_filter(self):
+        return lambda info: info.metrics['replies_count'] > 0
+
+
+class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
+    template_name = 'replies.html'
+
+
+class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
+    public_page_preference = 'replies_tab_released'
+    template_name = 'public_reply_tab.html'
+
+
+# ==============================================================================
+# Team standings
+# ==============================================================================
 
 class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
     """Base class for views that display team standings."""
-
-    template_name = 'teams.html'
 
     def get_context_data(self, **kwargs):
         if 'show_ballots' not in kwargs:
@@ -171,35 +210,33 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
 
         teams = Team.objects.teams_for_standings(round)
         metrics = tournament.pref('team_standings_precedence')
-        generator = TeamStandingsGenerator(metrics, self.rankings)
+        extra_metrics = tournament.pref('team_standings_extra_metrics')
+        generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)
         standings = generator.generate(teams, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
         add_team_round_results(standings, rounds)
+        self.populate_results_in(standings)
 
         context = self.get_context_data(standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
 
+    def populate_results_in(self, standings):
+        for info in standings:
+            info.results_in = len(info.scores) < 1 or info.round_results[-1] is not None
+
 
 class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     """The standard team standings view."""
     rankings = ('rank',)
+    template_name = 'teams.html'
 
 
 class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
-
     template_name = 'divisions.html'
-
-class PublicTabMixin(PublicTournamentPageMixin):
-    """Mixin for views that should only be allowed when the tab is released publicly."""
-    public_page_preference = 'team_tab_released'
-    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
-
-    def get_round(self):
-        return self.get_tournament().current_round
 
 
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
@@ -208,105 +245,36 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     During the tournament, "public team standings" only shows wins and results.
     Once the tab is released, to the public the team standings are known as the
     "team tab"."""
+    public_page_preference = 'team_tab_released'
     rankings = ('rank',)
     template_name = 'public_team_tab.html'
 
     def show_ballots(self):
         return self.get_tournament().pref('ballots_released')
 
+# ==============================================================================
+# Motion standings
+# ==============================================================================
 
-@admin_required
-@round_view
-def speaker_standings(request, round):
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = get_speaker_standings(rounds, round)
-    return render(request, 'speakers.html', dict(speakers=speakers,
-                    rounds=rounds))
+class BaseMotionStandingsView(RoundMixin, TemplateView):
 
-
-@admin_required
-@round_view
-def novice_standings(request, round):
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = get_speaker_standings(rounds, round, only_novices=True)
-    return render(request, "novices.html", dict(speakers=speakers,
-                                        rounds=rounds))
+    def get_context_data(self, **kwargs):
+        kwargs["motions"] = Motion.objects.statistics(round=self.get_round())
+        return super().get_context_data(**kwargs)
 
 
-@admin_required
-@round_view
-def pro_standings(request, round):
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = get_speaker_standings(rounds, round, only_pros=True)
-    return render(request, "novices.html", dict(speakers=speakers,
-                                        rounds=rounds))
-
-@admin_required
-@round_view
-def reply_standings(request, round):
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = get_speaker_standings(rounds, round, for_replies=True)
-    return render(request, 'replies.html', dict(speakers=speakers,
-                                        rounds=rounds))
-
-@admin_required
-@round_view
-def motion_standings(request, round):
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    motions = list()
-    motions = Motion.objects.statistics(round=round)
-    return render(request, 'motions.html', dict(motions=motions))
+class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
+    template_name = 'motions.html'
 
 
-@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('speaker_tab_released')
-def public_speaker_tab(request, t):
-    print("Generating public speaker tab")
-    round = t.current_round
-    rounds = t.prelim_rounds(until=round).order_by('seq')
-    speakers = get_speaker_standings(rounds, round)
-    return render(request, 'public_speaker_tab.html', dict(speakers=speakers,
-            rounds=rounds, round=round))
+class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
+    public_page_preference = 'motion_tab_released'
+    template_name = 'public_motions_tab.html'
 
 
-@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('pros_tab_released')
-def public_pros_tab(request, t):
-    round = t.current_round
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = get_speaker_standings(rounds, round, only_pros=True)
-    return render(request, 'public_pros_tab.html', dict(speakers=speakers,
-            rounds=rounds, round=round))
-
-@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('novices_tab_released')
-def public_novices_tab(request, t):
-    round = t.current_round
-    rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
-    speakers = get_speaker_standings(rounds, round, only_novices=True)
-    return render(request, 'public_novices_tab.html', dict(speakers=speakers,
-            rounds=rounds, round=round))
-
-
-@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('replies_tab_released')
-def public_replies_tab(request, t):
-    round = t.current_round
-    rounds = t.prelim_rounds(until=round).order_by('seq')
-    speakers = get_speaker_standings(rounds, round, for_replies=True)
-    return render(request, 'public_reply_tab.html', dict(speakers=speakers,
-            rounds=rounds, round=round))
-
-@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@public_optional_tournament_view('motion_tab_released')
-def public_motions_tab(request, t):
-    round = t.current_round
-    rounds = t.prelim_rounds(until=round).order_by('seq')
-    print(rounds)
-    motions = list()
-    motions = Motion.objects.statistics(round=round)
-    return render(request, 'public_motions_tab.html', dict(motions=motions))
-
+# ==============================================================================
+# Current team standings (win-loss records only)
+# ==============================================================================
 
 class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_team_standings'

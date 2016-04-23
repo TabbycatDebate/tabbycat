@@ -334,6 +334,16 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
     allow_empty = True
     default = ['points', 'speaks_avg']
 
+@tournament_preferences_registry.register
+class TeamStandingsExtraMetrics(MultiValueChoicePreference):
+    help_text = "Metrics not used to rank teams"
+    verbose_name = "Team standings extra metrics"
+    section = standings
+    name = "team_standings_extra_metrics"
+    choices = TeamStandingsGenerator.get_metric_choices(ranked_only=False)
+    nfields = 5
+    allow_empty = True
+    default = []
 
 # ==============================================================================
 tab_release = Section('tab_release')

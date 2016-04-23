@@ -4,7 +4,7 @@ logger = logging.getLogger(__name__)
 
 from django.db.models.expressions import RawSQL
 
-from results.models import TeamScore
+from results.models import TeamScore, SpeakerScore
 from participants.models import Team
 from tournaments.models import Round
 
@@ -42,3 +42,24 @@ def add_team_round_results_public(teams, rounds):
     for team in teams:
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
+
+
+def add_speaker_round_results(standings, rounds, tournament, replies=False):
+    speaker_ids = [info.instance_id for info in standings]
+    speaker_scores = SpeakerScore.objects.select_related('speaker',
+            'ballot_submission', 'debate_team__debate__round').filter(
+            ballot_submission__confirmed=True, debate_team__debate__round__in=rounds,
+            speaker_id__in=speaker_ids)
+
+    if replies:
+        speaker_scores = speaker_scores.filter(position=tournament.REPLY_POSITION)
+    else:
+        speaker_scores = speaker_scores.filter(position__lte=tournament.LAST_SUBSTANTIVE_POSITION)
+
+    for info in standings:
+        info.scores = [None] * len(rounds)
+
+    round_lookup = {r: i for i, r in enumerate(rounds)}
+    for ss in speaker_scores:
+        info = standings.get_standing(ss.speaker)
+        info.scores[round_lookup[ss.debate_team.debate.round]] = ss.score
