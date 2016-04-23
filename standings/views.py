@@ -14,8 +14,7 @@ from utils.views import *
 
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
-from .round_results import add_team_round_results, add_team_round_results_public, \
-    add_speaker_round_results_1, add_speaker_round_results_2
+from .round_results import add_team_round_results, add_team_round_results_public, add_speaker_round_results
 
 @admin_required
 @round_view
@@ -168,18 +167,7 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
         standings = generator.generate(speakers, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
-        import time
-
-        start2 = time.time()
-        add_speaker_round_results_2(standings, rounds, tournament)
-        time2 = time.time() - start2
-
-        start1 = time.time()
-        add_speaker_round_results_1(standings, rounds, tournament)
-        time1 = time.time() - start1
-
-        logger.info("time1: %f, time2: %f", time1, time2)
-
+        add_speaker_round_results(standings, rounds, tournament)
         context = self.get_context_data(standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
