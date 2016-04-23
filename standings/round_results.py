@@ -34,9 +34,6 @@ def add_team_round_results(standings, rounds, lookup=None):
         info = lookup(standings, ts.debate_team.team)
         info.round_results[round_lookup[ts.debate_team.debate.round]] = ts
 
-    for info in standings:
-        info.results_in = info.round_results[-1] is not None
-
 def add_team_round_results_public(teams, rounds):
     add_team_round_results(teams, rounds, (lambda teams, x: [t for t in teams if t == x][0]))
     for team in teams:

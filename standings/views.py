@@ -49,9 +49,8 @@ class PublicTabMixin(PublicTournamentPageMixin):
     def get_round(self):
         return self.get_tournament().current_round
 
-    def populate_results_in(self, standings):
-        for info in standings:
-            info.results_in = True
+    def populate_result_missing(self, standings):
+        pass # do nothing
 
 
 # ==============================================================================
@@ -76,7 +75,7 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
         self.add_round_results(standings, rounds)
-        self.populate_results_in(standings)
+        self.populate_result_missing(standings)
         context = self.get_context_data(standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
@@ -84,9 +83,9 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
     def get_rank_filter(self):
         return None
 
-    def populate_results_in(self, standings):
+    def populate_result_missing(self, standings):
         for info in standings:
-            info.results_in = len(info.scores) < 1 or info.scores[-1] is not None
+            info.result_missing = len(info.scores) > 1 and info.scores[-1] is None
 
 
 class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
@@ -173,6 +172,15 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.get_tournament(), replies=True)
 
+    def populate_result_missing(self, standings):
+        teams_seen = set()
+        for info in standings:
+            if len(info.scores) > 1 and info.scores[-1] is not None:
+                teams_seen.add(info.speaker.team)
+
+        for info in standings:
+            info.result_missing = info.speaker.team not in teams_seen
+
 
 class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
     template_name = 'replies.html'
@@ -212,15 +220,15 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
         add_team_round_results(standings, rounds)
-        self.populate_results_in(standings)
+        self.populate_result_missing(standings)
 
         context = self.get_context_data(standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
 
-    def populate_results_in(self, standings):
+    def populate_result_missing(self, standings):
         for info in standings:
-            info.results_in = len(info.round_results) < 1 or info.round_results[-1] is not None
+            info.result_missing = len(info.round_results) > 1 and info.round_results[-1] is None
 
 
 class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):

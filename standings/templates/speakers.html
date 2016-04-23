@@ -55,7 +55,7 @@
     </thead>
     <tbody>
       {% for info in standings.standings %}
-        <tr class="{% if not info.results_in %}danger{% endif%}">
+        <tr class="{% if info.result_missing %}danger{% endif%}">
           <td class="hidden">
             {{ info.rankings.rank.0|default:99999 }}
           </td>
