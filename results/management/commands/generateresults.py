@@ -30,6 +30,7 @@ class GenerateResultsCommandMixin:
 
         parser.add_argument("-m", "--min-score", type=float, help="Minimum speaker score (for substantive)", default=72)
         parser.add_argument("-M", "--max-score", type=float, help="Maximum speaker score (for substantive)", default=78)
+        parser.add_argument("--reply-random", action="store_true", help="Choose reply speaker at random (rather than always use first speaker", default=False)
 
     @staticmethod
     def _get_user(options):
@@ -50,6 +51,7 @@ class GenerateResultsCommandMixin:
             "confirmed"     : options["confirmed"],
             "min_score"     : options["min_score"],
             "max_score"     : options["max_score"],
+            "reply_random"  : options["reply_random"],
         }
 
 
@@ -90,6 +92,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
             else:
                 self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot sets for all debates in {}...".format(round.name)))
                 add_ballotsets_to_round(round, **self.ballotset_kwargs(options))
+
         except ValueError as e:
             raise CommandError(e)
         except DebateAdjudicator.DoesNotExist as e:

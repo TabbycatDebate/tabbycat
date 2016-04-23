@@ -32,7 +32,8 @@ def delete_ballotset(debate):
     """Deletes all ballot sets from the given debate."""
     debate.ballotsubmission_set.all().delete()
 
-def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False, min_score=72, max_score=78):
+def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False,
+        min_score=72, max_score=78, reply_random=False):
     """Adds a ballot set to a debate.
 
     ``debate`` is the Debate to which the ballot set should be added.
@@ -45,6 +46,9 @@ def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False
     if discarded and confirmed:
         raise ValueError("Ballot can't be both discarded and confirmed!")
 
+    LAST_SUBSTANTIVE_POSITION = debate.round.tournament.LAST_SUBSTANTIVE_POSITION
+    REPLY_POSITION = debate.round.tournament.REPLY_POSITION
+
     # Create a new BallotSubmission
     bsub = BallotSubmission(submitter_type=submitter_type, debate=debate)
     if submitter_type == BallotSubmission.SUBMITTER_TABROOM:
@@ -54,7 +58,7 @@ def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False
     def gen_results():
         r = {'aff': (0,), 'neg': (0,)}
         def do():
-            s = [random.randint(min_score, max_score) for i in range(debate.round.tournament.LAST_SUBSTANTIVE_POSITION)]
+            s = [random.randint(min_score, max_score) for i in range(LAST_SUBSTANTIVE_POSITION)]
             s.append(random.randint(min_score, max_score)/2)
             return s
         while sum(r['aff']) == sum(r['neg']):
@@ -71,10 +75,11 @@ def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False
 
     for side in ('aff', 'neg'):
         speakers = getattr(debate, '%s_team' % side).speakers
-        for i in range(1, debate.round.tournament.LAST_SUBSTANTIVE_POSITION+1):
+        for i in range(1, LAST_SUBSTANTIVE_POSITION+1):
             bset.set_speaker(team=side, position=i, speaker=speakers[i - 1])
 
-        bset.set_speaker(team=side, position=debate.round.tournament.REPLY_POSITION, speaker=speakers[0])
+        reply_speaker = random.randint(0, LAST_SUBSTANTIVE_POSITION-1) if reply_random else 0
+        bset.set_speaker(team=side, position=REPLY_POSITION, speaker=speakers[reply_speaker])
 
         for adj in debate.adjudicators.list:
             for pos in debate.round.tournament.POSITIONS:
