@@ -44,6 +44,12 @@ class StandingInfo:
 
     Note that no order is guaranteed when iterating over `metrics.values()` or
     `rankings.values()`. Use `itermetrics()` and `iterrankings()` instead.
+
+    Note that a ranking is not guaranteed to exist, and won't exist when the
+    instance is ineligible for a rank. In this case, `info.rankings[key]` will
+    results in a KeyError, and `iterrankings()` will return `(None, False)`.
+    Python code should be prepared to handle this scenario. Django templates
+    should use {{ ranking|default:"n/a" }} to handle the `None`.
     """
 
     def __init__(self, standings, instance):
@@ -88,7 +94,10 @@ class StandingInfo:
 
     def iterrankings(self):
         for key in self.standings.ranking_keys:
-            yield self.rankings[key]
+            try:
+                yield self.rankings[key]
+            except KeyError:
+                yield (None, False)
 
 
 class Standings:
@@ -121,9 +130,10 @@ class Standings:
 
     _SPEC_FIELDS = ("key", "name", "abbr", "glyphicon")
 
-    def __init__(self, instances):
+    def __init__(self, instances, eligibility_filter=None):
         self.infos = {instance: StandingInfo(self, instance) for instance in instances}
         self.ranked = False
+        self.eligibility_filter = eligibility_filter
 
         self.metric_keys = list()
         self.ranking_keys = list()
@@ -136,9 +146,12 @@ class Standings:
         return self._standings
 
     @property
-    def rank_eligible_standings(self):
+    def rank_eligible(self):
         assert self.ranked, "sort() must be called before accessing standings"
-        return self._rank_eligible_standings
+        if self.eligibility_filter:
+            return filter(self.eligibility_filter, self._standings)
+        else:
+            return self._standings
 
     def __len__(self):
         return len(self.standings)
@@ -181,7 +194,7 @@ class Standings:
         assert not self.ranked, "Can't add metrics once standings object is sorted"
         self.get_standing(instance).add_metric(key, value)
 
-    def sort(self, precedence, tiebreak_func=None, eligibility_filter=None):
+    def sort(self, precedence, tiebreak_func=None):
         self._standings = list(self.infos.values())
 
         if tiebreak_func:
@@ -194,11 +207,8 @@ class Standings:
                 logger.info("{:30} {}".format(info.instance, itemgetter(*precedence)(info.metrics)))
             raise
 
-        if eligibility_filter:
-            self._rank_eligible_standings = filter(eligibility_filter, self._standings)
-            self._standings.sort(key=eligibility_filter)
-        else:
-            self._rank_eligible_standings = self._standings
+        if self.eligibility_filter:
+            self._standings.sort(key=self.eligibility_filter, reverse=True)
 
         self.ranked = True
 
@@ -242,12 +252,12 @@ class BaseStandingsGenerator:
             (That is, rounds after `round` are excluded from the standings.)
         """
 
-        standings = Standings(queryset)
+        standings = Standings(queryset, eligibility_filter=self.eligibility_filter)
 
         for annotator in self.metric_annotators:
             annotator.run(queryset, standings, round)
 
-        standings.sort(self.precedence, self._tiebreak_func, self.eligibility_filter)
+        standings.sort(self.precedence, self._tiebreak_func)
 
         for annotator in self.ranking_annotators:
             annotator.run(standings)

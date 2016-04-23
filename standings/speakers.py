@@ -96,6 +96,7 @@ class TotalReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     name = "total"
     abbr = "Total"
     function = "SUM"
+    replies = True
 
 
 class AverageReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -104,6 +105,7 @@ class AverageReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     name = "average"
     abbr = "Avg"
     function = "AVG"
+    replies = True
 
 
 class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -112,6 +114,7 @@ class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnot
     name = "standard deviation"
     abbr = "Stdev"
     function = "STDDEV_SAMP"
+    replies = True
 
 
 class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -120,6 +123,7 @@ class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     name = "replies given"
     abbr = "Num"
     function = "COUNT"
+    replies = True
 
 
 # ==============================================================================

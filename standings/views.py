@@ -1,6 +1,3 @@
-import logging
-logger = logging.getLogger(__name__)
-
 from django.db.models import Count
 from django.views.generic.base import View, ContextMixin, TemplateView
 
@@ -88,7 +85,8 @@ def get_speaker_standings(rounds,
             novice=False).select_related('team', 'team__institution',
                                         'team__tournament'))
     else:
-        speakers = list()
+        speakers = list(Speaker.objects.filter(team__tournament=round.tournament).select_related(
+                        'team', 'team__institution', 'team__tournament'))
 
     def get_scores(speaker, this_speakers_scores):
         speaker_scores = [None] * len(rounds)
@@ -167,7 +165,7 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
         standings = generator.generate(speakers, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
-        add_speaker_round_results(standings, rounds, tournament)
+        self.add_round_results(standings, rounds)
         context = self.get_context_data(standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
@@ -186,7 +184,54 @@ class SpeakerStandingsView(SuperuserRequiredMixin, BaseSpeakerStandingsView):
                         'team', 'team__institution', 'team__tournament')
 
     def get_metrics(self):
-        return ('speaks_sum',), ('speaks_avg', 'speaks_stddev', 'speeches_count')
+        method = self.get_tournament().pref('rank_speakers_by')
+        if method == 'average':
+            return ('speaks_avg',), ('speaks_sum', 'speaks_stddev', 'speeches_count')
+        else:
+            return ('speaks_sum',), ('speaks_avg', 'speaks_stddev', 'speeches_count')
+
+    def get_eligibility_filter(self):
+        tournament = self.get_tournament()
+        total_prelim_rounds = Round.objects.filter(stage=Round.STAGE_PRELIMINARY,
+                tournament=tournament).count()
+        missable_debates = tournament.pref('standings_missed_debates')
+        minimum_debates_needed = total_prelim_rounds - missable_debates
+        return lambda info: info.metrics["speeches_count"] >= minimum_debates_needed
+
+    def add_round_results(self, standings, rounds):
+        add_speaker_round_results(standings, rounds, self.get_tournament())
+
+
+class NoviceStandingsView(SpeakerStandingsView):
+    """Speaker standings view for novices."""
+
+    template_name = 'novices.html'
+
+    def get_speakers(self):
+        return super().get_speakers().filter(novice=True)
+
+
+class ProStandingsView(SpeakerStandingsView):
+    """Speaker standings view for non-novices (pro, varsity)."""
+
+    def get_speakers(self):
+        return super().get_speakers().filter(novice=False)
+
+
+class ReplyStandingsView(SuperuserRequiredMixin, BaseSpeakerStandingsView):
+    """Speaker standings view for replies."""
+
+    template_name = 'replies.html'
+
+    def get_speakers(self):
+        return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
+                        'team', 'team__institution', 'team__tournament')
+
+    def get_metrics(self):
+        return ('replies_avg',), ('replies_stddev', 'replies_count')
+
+    def add_round_results(self, standings, rounds):
+        add_speaker_round_results(standings, rounds, self.get_tournament(), replies=True)
 
 
 class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
@@ -285,7 +330,7 @@ def pro_standings(request, round):
 def reply_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, for_replies=True)
-    return render(request, 'replies.html', dict(speakers=speakers,
+    return render(request, 'replies-old.html', dict(speakers=speakers,
                                         rounds=rounds))
 
 @admin_required
@@ -341,7 +386,6 @@ def public_replies_tab(request, t):
 def public_motions_tab(request, t):
     round = t.current_round
     rounds = t.prelim_rounds(until=round).order_by('seq')
-    print(rounds)
     motions = list()
     motions = Motion.objects.statistics(round=round)
     return render(request, 'public_motions_tab.html', dict(motions=motions))

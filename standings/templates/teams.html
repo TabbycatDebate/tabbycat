@@ -54,16 +54,12 @@
         {% for info in standings.standings %}
           <tr class="{% if not info.results_in %}danger{% endif %}">
             <td class="hidden">
-              {% if info.rankings.rank.0 != 0 %}
-                {{ info.rankings.rank.0 }}
-              {% else %}
-                <span class="hidden">999</span>
-              {% endif %}
+                {{ info.rankings.rank.0|default:99999 }}
             </td>
             {% for ranking in info.iterrankings %}
               <td class="rank">
                 <strong>
-                  {{ ranking.0 }}{% if ranking.1 %}<span class="text-muted">=</span>{% endif %}
+                  {{ ranking.0|default:"n/a" }}{% if ranking.1 %}<span class="text-muted">=</span>{% endif %}
                 </strong>
               </td>
             {% endfor %}
