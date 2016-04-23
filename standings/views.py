@@ -4,6 +4,7 @@ from django.conf import settings
 from django.shortcuts import render
 
 import motions.statistics as motion_statistics
+from motions.models import Motion
 from participants.models import Team, Speaker
 from results.models import TeamScore, SpeakerScore
 from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
