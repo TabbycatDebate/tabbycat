@@ -110,7 +110,8 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
 
     def get_rank_filter(self):
         tournament = self.get_tournament()
-        total_prelim_rounds = tournament.round_set.filter(stage=Round.STAGE_PRELIMINARY).count()
+        total_prelim_rounds = tournament.round_set.filter(
+                stage=Round.STAGE_PRELIMINARY, seq__lte=self.get_round().seq).count()
         missable_debates = tournament.pref('standings_missed_debates')
         minimum_debates_needed = total_prelim_rounds - missable_debates
         return lambda info: info.metrics["speeches_count"] >= minimum_debates_needed
