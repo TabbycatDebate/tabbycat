@@ -1,5 +1,7 @@
 from django.db.models import Count
 from django.views.generic.base import View, ContextMixin, TemplateView
+from django.conf import settings
+from django.shortcuts import render
 
 from motions.models import Motion
 from participants.models import Team, Speaker
@@ -7,7 +9,6 @@ from results.models import TeamScore, SpeakerScore, BallotSubmission
 from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
 from tournaments.models import Round
 from utils.mixins import SuperuserRequiredMixin
-from utils.views import *
 
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
@@ -69,9 +70,8 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
         speakers = self.get_speakers()
         metrics, extra_metrics = self.get_metrics()
         rank_filter = self.get_rank_filter()
-        include_filter = self.get_include_filter()
         generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics,
-                rank_filter=rank_filter, include_filter=include_filter)
+                rank_filter=rank_filter)
         standings = generator.generate(speakers, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
@@ -82,9 +82,6 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
         return render(request, self.template_name, context)
 
     def get_rank_filter(self):
-        return None
-
-    def get_include_filter(self):
         return None
 
     def populate_results_in(self, standings):
@@ -165,17 +162,16 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
     """Speaker standings view for replies."""
 
     def get_speakers(self):
-        return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
-                        'team', 'team__institution', 'team__tournament')
+        tournament = self.get_tournament()
+        return Speaker.objects.filter(team__tournament=tournament,
+                speakerscore__position=tournament.REPLY_POSITION).select_related(
+                'team', 'team__institution', 'team__tournament').distinct()
 
     def get_metrics(self):
         return ('replies_avg',), ('replies_stddev', 'replies_count')
 
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.get_tournament(), replies=True)
-
-    def get_include_filter(self):
-        return lambda info: info.metrics['replies_count'] > 0
 
 
 class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
@@ -224,7 +220,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
 
     def populate_results_in(self, standings):
         for info in standings:
-            info.results_in = len(info.scores) < 1 or info.round_results[-1] is not None
+            info.results_in = len(info.round_results) < 1 or info.round_results[-1] is not None
 
 
 class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):

@@ -221,7 +221,7 @@ class BaseStandingsGenerator:
     DEFAULT_OPTIONS = {
         "tiebreak": "random",
         "rank_filter": None,
-        "include_filter": None,
+        "include_filter": None, # not currently used by other code
     }
 
     TIEBREAK_FUNCTIONS = {
