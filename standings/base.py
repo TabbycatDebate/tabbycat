@@ -135,6 +135,11 @@ class Standings:
         assert self.ranked, "sort() must be called before accessing standings"
         return self._standings
 
+    @property
+    def rank_eligible_standings(self):
+        assert self.ranked, "sort() must be called before accessing standings"
+        return self._rank_eligible_standings
+
     def __len__(self):
         return len(self.standings)
 
@@ -176,16 +181,25 @@ class Standings:
         assert not self.ranked, "Can't add metrics once standings object is sorted"
         self.get_standing(instance).add_metric(key, value)
 
-    def sort(self, precedence, tiebreak_func=None):
+    def sort(self, precedence, tiebreak_func=None, eligibility_filter=None):
         self._standings = list(self.infos.values())
+
         if tiebreak_func:
             tiebreak_func(self._standings)
+
         try:
             self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics), reverse=True)
         except TypeError:
             for info in self.infos:
                 logger.info("{:30} {}".format(info.instance, itemgetter(*precedence)(info.metrics)))
             raise
+
+        if eligibility_filter:
+            self._rank_eligible_standings = filter(eligibility_filter, self._standings)
+            self._standings.sort(key=eligibility_filter)
+        else:
+            self._rank_eligible_standings = self._standings
+
         self.ranked = True
 
 
@@ -202,7 +216,7 @@ class BaseStandingsGenerator:
     metric_annotator_classes = {}
     ranking_annotator_classes = {}
 
-    def __init__(self, metrics, rankings, extra_metrics=(), **options):
+    def __init__(self, metrics, rankings, extra_metrics=(), eligibility_filter=None, **options):
 
         # Set up options dictionary
         self.options = self.DEFAULT_OPTIONS.copy()
@@ -210,6 +224,7 @@ class BaseStandingsGenerator:
             if key not in self.options:
                 raise ValueError("Unrecognized option: {0}".format(key))
         self.options.update(options)
+        self.eligibility_filter = eligibility_filter
 
         # Set up annotators
         self._interpret_metrics(metrics, extra_metrics)
@@ -232,7 +247,7 @@ class BaseStandingsGenerator:
         for annotator in self.metric_annotators:
             annotator.run(queryset, standings, round)
 
-        standings.sort(self.precedence, self._tiebreak_func)
+        standings.sort(self.precedence, self._tiebreak_func, self.eligibility_filter)
 
         for annotator in self.ranking_annotators:
             annotator.run(standings)

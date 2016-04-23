@@ -4,7 +4,7 @@ logger = logging.getLogger(__name__)
 
 from django.db.models.expressions import RawSQL
 
-from results.models import TeamScore
+from results.models import TeamScore, SpeakerScore
 from participants.models import Team
 from tournaments.models import Round
 
@@ -42,3 +42,56 @@ def add_team_round_results_public(teams, rounds):
     for team in teams:
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
+
+
+def get_scores(speaker, this_speakers_scores, rounds):
+    speaker_scores = [None] * len(rounds)
+    for r in rounds:
+        finding_score = next(
+            (x
+             for x in this_speakers_scores
+             if x.debate_team.debate.round == r), None)
+        if finding_score:
+            speaker_scores[r.seq - 1] = finding_score.score
+
+    return speaker_scores
+
+
+def add_speaker_round_results_1(standings, rounds, tournament, replies=False):
+    speaker_scores = SpeakerScore.objects.select_related(
+        'speaker', 'ballot_submission',
+        'debate_team__debate__round').filter(
+            ballot_submission__confirmed=True)
+    if replies:
+        speaker_scores = speaker_scores.filter(position=tournament.REPLY_POSITION)
+    else:
+        speaker_scores = speaker_scores.filter(position__lte=tournament.LAST_SUBSTANTIVE_POSITION)
+
+    for info in standings:
+        speaker = info.speaker
+        this_speakers_scores = [score
+                                for score in speaker_scores
+                                if score.speaker == speaker]
+        info.scores = get_scores(speaker, this_speakers_scores, rounds)
+        info.results_in = info.scores[-1] is not None
+
+def add_speaker_round_results_2(standings, rounds, tournament, replies=False):
+    speaker_scores = SpeakerScore.objects.select_related(
+            'speaker', 'ballot_submission', 'debate_team__debate__round').filter(
+            ballot_submission__confirmed=True)
+
+    if replies:
+        speaker_scores = speaker_scores.filter(position=tournament.REPLY_POSITION)
+    else:
+        speaker_scores = speaker_scores.filter(position__lte=tournament.LAST_SUBSTANTIVE_POSITION)
+
+    for info in standings:
+        info.scores = [None] * len(rounds)
+
+    round_lookup = {r: i for i, r in enumerate(rounds)}
+    for ss in speaker_scores:
+        info = standings.get_standing(ss.speaker)
+        info.scores[round_lookup[ss.debate_team.debate.round]] = ss.score
+
+    for info in standings:
+        info.results_in = info.scores[-1] is not None

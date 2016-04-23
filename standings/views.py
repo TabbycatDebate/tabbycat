@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 from django.db.models import Count
 from django.views.generic.base import View, ContextMixin, TemplateView
 
@@ -10,7 +13,9 @@ from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
 
 from .teams import TeamStandingsGenerator
-from .round_results import add_team_round_results, add_team_round_results_public
+from .speakers import SpeakerStandingsGenerator
+from .round_results import add_team_round_results, add_team_round_results_public, \
+    add_speaker_round_results_1, add_speaker_round_results_2
 
 @admin_required
 @round_view
@@ -84,9 +89,7 @@ def get_speaker_standings(rounds,
             novice=False).select_related('team', 'team__institution',
                                         'team__tournament'))
     else:
-        speakers = list(Speaker.objects.filter(
-            team__tournament=round.tournament).select_related(
-                'team', 'team__institution', 'team__tournament'))
+        speakers = list()
 
     def get_scores(speaker, this_speakers_scores):
         speaker_scores = [None] * len(rounds)
@@ -148,12 +151,58 @@ def get_speaker_standings(rounds,
     return speakers
 
 
+class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
+    """Base class for views that display speaker standings."""
+
+    rankings = ('rank',)
+
+    def get(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+        round = self.get_round()
+
+        speakers = self.get_speakers()
+        metrics, extra_metrics = self.get_metrics()
+        eligibility_filter = self.get_eligibility_filter()
+        generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics,
+                eligibility_filter=eligibility_filter)
+        standings = generator.generate(speakers, round=round)
+
+        rounds = tournament.prelim_rounds(until=round).order_by('seq')
+        import time
+
+        start2 = time.time()
+        add_speaker_round_results_2(standings, rounds, tournament)
+        time2 = time.time() - start2
+
+        start1 = time.time()
+        add_speaker_round_results_1(standings, rounds, tournament)
+        time1 = time.time() - start1
+
+        logger.info("time1: %f, time2: %f", time1, time2)
+
+        context = self.get_context_data(standings=standings, rounds=rounds)
+
+        return render(request, self.template_name, context)
+
+    def get_eligibility_filter(self):
+        return None
+
+
+class SpeakerStandingsView(SuperuserRequiredMixin, BaseSpeakerStandingsView):
+    """The standard speaker standings view."""
+
+    template_name = 'speakers.html'
+
+    def get_speakers(self):
+        return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
+                        'team', 'team__institution', 'team__tournament')
+
+    def get_metrics(self):
+        return ('speaks_sum',), ('speaks_avg', 'speaks_stddev', 'speeches_count')
 
 
 class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
     """Base class for views that display team standings."""
-
-    template_name = 'teams.html'
 
     def get_context_data(self, **kwargs):
         if 'show_ballots' not in kwargs:
@@ -186,13 +235,14 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
 class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     """The standard team standings view."""
     rankings = ('rank',)
+    template_name = 'teams.html'
 
 
 class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
-
     template_name = 'divisions.html'
+
 
 class PublicTabMixin(PublicTournamentPageMixin):
     """Mixin for views that should only be allowed when the tab is released publicly."""
@@ -221,7 +271,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 def speaker_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round)
-    return render(request, 'speakers.html', dict(speakers=speakers,
+    return render(request, 'speakers-old.html', dict(speakers=speakers,
                     rounds=rounds))
 
 

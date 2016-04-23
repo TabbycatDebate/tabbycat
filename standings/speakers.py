@@ -1,14 +1,16 @@
 """Standings generator for speakers."""
 
+from participants.models import Round
+
 from .base import BaseStandingsGenerator, StandingsError
-from .metrics import BaseMetricAnnotator, metricgetter
+from .metrics import QuerySetMetricAnnotator, metricgetter
 from .ranking import BasicRankAnnotator
 
 # ==============================================================================
 # Metric annotators
 # ==============================================================================
 
-class SpeakerScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
+class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     """Base class for annotators for metrics based on conditional aggregations
     of SpeakerScore instances."""
 
@@ -39,9 +41,9 @@ class SpeakerScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
             JOIN draw_debate ON draw_debateteam.debate_id = draw_debate.id
             JOIN tournaments_round ON draw_debate.round_id = tournaments_round.id
             WHERE results_ballotsubmission.confirmed = TRUE
-            AND results_speakerscore.speaker_id = participants_speaker.id
-            AND tournaments_round.stage = '{stage:s}'
-            AND tournaments_round.seq <= {round:d}""".format(stage=Round.STAGE_PRELIMINARY, round=round.seq)
+            AND results_speakerscore.speaker_id = participants_speaker.person_ptr_id
+            AND tournaments_round.stage = '""" + str(Round.STAGE_PRELIMINARY) + """'
+            AND tournaments_round.seq <= {round:d}"""
 
         if replies:
             query += """
@@ -50,56 +52,72 @@ class SpeakerScoreQuerySetMetricAnnotator(BaseMetricAnnotator):
             query += """
             AND results_speakerscore.position <= {position:d}""".format(position=round.tournament.LAST_SUBSTANTIVE_POSITION)
 
-        return query.format(field=field, function=function)
+        return query.format(function=function, round=round.seq)
 
     def get_annotation_metric_query_args(self, round):
         return (self.function, round, self.replies)
 
 
-class TotalSpeakerScoreMetricAnnotator(BaseMetricAnnotator):
+class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
     key = "speaks_sum"
-    name = "total speaker score"
+    name = "total"
     abbr = "Total"
     function = "SUM"
 
 
-class AverageSpeakerScoreMetricAnnotator(BaseMetricAnnotator):
+class AverageSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for average speaker score."""
     key = "speaks_avg"
-    name = "average speaker score"
+    name = "average"
     abbr = "Avg"
     function = "AVG"
 
 
-class NumberOfSpeechesMetricAnnotator(BaseMetricAnnotator):
+class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
+    """Metric annotator for standard deviation of speaker score."""
+    key = "speaks_stddev"
+    name = "standard deviation"
+    abbr = "Stdev"
+    function = "STDDEV_SAMP"
+
+
+class NumberOfSpeechesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for number of speeches given."""
-    key = "speaks_avg"
-    name = "number of speeches"
+    key = "speeches_count"
+    name = "speeches given"
     abbr = "Num"
     function = "COUNT"
 
 
-class TotalReplyScoreMetricAnnotator(BaseMetricAnnotator):
+class TotalReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for total reply score."""
     key = "replies_sum"
-    name = "total reply score"
+    name = "total"
     abbr = "Total"
     function = "SUM"
 
 
-class AverageReplyScoreMetricAnnotator(BaseMetricAnnotator):
+class AverageReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for average reply score."""
     key = "replies_avg"
-    name = "average reply score"
+    name = "average"
     abbr = "Avg"
     function = "AVG"
 
 
-class NumberOfRepliesMetricAnnotator(BaseMetricAnnotator):
+class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
+    """Metric annotator for standard deviation of reply score."""
+    key = "replies_stddev"
+    name = "standard deviation"
+    abbr = "Stdev"
+    function = "STDDEV_SAMP"
+
+
+class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for number of replies given."""
     key = "replies_count"
-    name = "number of replies"
+    name = "replies given"
     abbr = "Num"
     function = "COUNT"
 
@@ -126,9 +144,11 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
     metric_annotator_classes = {
         "speaks_sum"    : TotalSpeakerScoreMetricAnnotator,
         "speaks_avg"    : AverageSpeakerScoreMetricAnnotator,
+        "speaks_stddev" : StandardDeviationSpeakerScoreMetricAnnotator,
         "speeches_count": NumberOfSpeechesMetricAnnotator,
         "replies_sum"   : TotalReplyScoreMetricAnnotator,
         "replies_avg"   : AverageReplyScoreMetricAnnotator,
+        "replies_stddev": StandardDeviationReplyScoreMetricAnnotator,
         "replies_count" : NumberOfRepliesMetricAnnotator,
     }
 
