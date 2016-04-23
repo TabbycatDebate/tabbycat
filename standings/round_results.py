@@ -63,6 +63,3 @@ def add_speaker_round_results(standings, rounds, tournament, replies=False):
     for ss in speaker_scores:
         info = standings.get_standing(ss.speaker)
         info.scores[round_lookup[ss.debate_team.debate.round]] = ss.score
-
-    for info in standings:
-        info.results_in = info.scores[-1] is not None

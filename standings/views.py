@@ -148,6 +148,18 @@ def get_speaker_standings(rounds,
     return speakers
 
 
+class PublicTabMixin(PublicTournamentPageMixin):
+    """Mixin for views that should only be allowed when the tab is released publicly."""
+    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
+
+    def get_round(self):
+        return self.get_tournament().current_round
+
+    def populate_results_in(self, standings):
+        for info in standings:
+            info.results_in = True
+
+
 class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
     """Base class for views that display speaker standings."""
 
@@ -167,6 +179,7 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
         self.add_round_results(standings, rounds)
+        self.populate_results_in(standings)
         context = self.get_context_data(standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
@@ -177,11 +190,13 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
     def get_include_filter(self):
         return None
 
+    def populate_results_in(self, standings):
+        for info in standings:
+            info.results_in = len(info.scores) < 1 or info.scores[-1] is not None
 
-class SpeakerStandingsView(SuperuserRequiredMixin, BaseSpeakerStandingsView):
+
+class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
     """The standard speaker standings view."""
-
-    template_name = 'speakers.html'
 
     def get_speakers(self):
         return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
@@ -205,7 +220,16 @@ class SpeakerStandingsView(SuperuserRequiredMixin, BaseSpeakerStandingsView):
         add_speaker_round_results(standings, rounds, self.get_tournament())
 
 
-class NoviceStandingsView(SpeakerStandingsView):
+class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsView):
+    template_name = 'speakers.html'
+
+
+class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
+    public_page_preference = 'speaker_tab_released'
+    template_name = 'public_speaker_tab.html'
+
+
+class BaseNoviceStandingsView(BaseStandardSpeakerStandingsView):
     """Speaker standings view for novices."""
 
     template_name = 'novices.html'
@@ -214,17 +238,33 @@ class NoviceStandingsView(SpeakerStandingsView):
         return super().get_speakers().filter(novice=True)
 
 
-class ProStandingsView(SpeakerStandingsView):
+class NoviceStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
+    template_name = 'novices.html'
+
+
+class PublicNoviceTabView(PublicTabMixin, BaseNoviceStandingsView):
+    public_page_preference = 'novices_tab_released'
+    template_name = 'public_novices_tab.html'
+
+
+class BaseProStandingsView(BaseStandardSpeakerStandingsView):
     """Speaker standings view for non-novices (pro, varsity)."""
 
     def get_speakers(self):
         return super().get_speakers().filter(novice=False)
 
 
-class ReplyStandingsView(SuperuserRequiredMixin, BaseSpeakerStandingsView):
-    """Speaker standings view for replies."""
+class ProStandingsView(SuperuserRequiredMixin, BaseProStandingsView):
+    template_name = 'speakers.html'
 
-    template_name = 'replies.html'
+
+class PublicProTabView(PublicTabMixin, BaseProStandingsView):
+    public_page_preference = 'pros_tab_released'
+    template_name = 'public_pros_tab.html'
+
+
+class BaseReplyStandingsView(BaseSpeakerStandingsView):
+    """Speaker standings view for replies."""
 
     def get_speakers(self):
         return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
@@ -238,6 +278,16 @@ class ReplyStandingsView(SuperuserRequiredMixin, BaseSpeakerStandingsView):
 
     def get_include_filter(self):
         return lambda info: info.metrics['replies_count'] > 0
+
+
+class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
+    template_name = 'replies.html'
+
+
+class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
+    public_page_preference = 'replies_tab_released'
+    template_name = 'public_reply_tab.html'
+
 
 
 class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
@@ -265,10 +315,15 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
         add_team_round_results(standings, rounds)
+        self.populate_results_in(standings)
 
         context = self.get_context_data(standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
+
+    def populate_results_in(self, standings):
+        for info in standings:
+            info.results_in = len(info.scores) < 1 or info.round_results[-1] is not None
 
 
 class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
@@ -283,21 +338,13 @@ class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     template_name = 'divisions.html'
 
 
-class PublicTabMixin(PublicTournamentPageMixin):
-    """Mixin for views that should only be allowed when the tab is released publicly."""
-    public_page_preference = 'team_tab_released'
-    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
-
-    def get_round(self):
-        return self.get_tournament().current_round
-
-
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     """Public view for the team tab.
     The team tab is actually what is presented to an admin as "team standings".
     During the tournament, "public team standings" only shows wins and results.
     Once the tab is released, to the public the team standings are known as the
     "team tab"."""
+    public_page_preference = 'team_tab_released'
     rankings = ('rank',)
     template_name = 'public_team_tab.html'
 
