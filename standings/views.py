@@ -159,9 +159,10 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
 
         speakers = self.get_speakers()
         metrics, extra_metrics = self.get_metrics()
-        eligibility_filter = self.get_eligibility_filter()
+        rank_filter = self.get_rank_filter()
+        include_filter = self.get_include_filter()
         generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics,
-                eligibility_filter=eligibility_filter)
+                rank_filter=rank_filter, include_filter=include_filter)
         standings = generator.generate(speakers, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
@@ -170,7 +171,10 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
 
         return render(request, self.template_name, context)
 
-    def get_eligibility_filter(self):
+    def get_rank_filter(self):
+        return None
+
+    def get_include_filter(self):
         return None
 
 
@@ -190,10 +194,9 @@ class SpeakerStandingsView(SuperuserRequiredMixin, BaseSpeakerStandingsView):
         else:
             return ('speaks_sum',), ('speaks_avg', 'speaks_stddev', 'speeches_count')
 
-    def get_eligibility_filter(self):
+    def get_rank_filter(self):
         tournament = self.get_tournament()
-        total_prelim_rounds = Round.objects.filter(stage=Round.STAGE_PRELIMINARY,
-                tournament=tournament).count()
+        total_prelim_rounds = tournament.round_set.filter(stage=Round.STAGE_PRELIMINARY).count()
         missable_debates = tournament.pref('standings_missed_debates')
         minimum_debates_needed = total_prelim_rounds - missable_debates
         return lambda info: info.metrics["speeches_count"] >= minimum_debates_needed
@@ -232,6 +235,9 @@ class ReplyStandingsView(SuperuserRequiredMixin, BaseSpeakerStandingsView):
 
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.get_tournament(), replies=True)
+
+    def get_include_filter(self):
+        return lambda info: info.metrics['replies_count'] > 0
 
 
 class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
@@ -313,7 +319,7 @@ def speaker_standings(request, round):
 def novice_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, only_novices=True)
-    return render(request, "novices.html", dict(speakers=speakers,
+    return render(request, "speakers-old.html", dict(speakers=speakers,
                                         rounds=rounds))
 
 
@@ -322,7 +328,7 @@ def novice_standings(request, round):
 def pro_standings(request, round):
     rounds = round.tournament.prelim_rounds(until=round).order_by('seq')
     speakers = get_speaker_standings(rounds, round, only_pros=True)
-    return render(request, "novices.html", dict(speakers=speakers,
+    return render(request, "speakers-old.html", dict(speakers=speakers,
                                         rounds=rounds))
 
 @admin_required

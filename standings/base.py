@@ -130,10 +130,10 @@ class Standings:
 
     _SPEC_FIELDS = ("key", "name", "abbr", "glyphicon")
 
-    def __init__(self, instances, eligibility_filter=None):
+    def __init__(self, instances, rank_filter=None):
         self.infos = {instance: StandingInfo(self, instance) for instance in instances}
         self.ranked = False
-        self.eligibility_filter = eligibility_filter
+        self.rank_filter = rank_filter
 
         self.metric_keys = list()
         self.ranking_keys = list()
@@ -148,8 +148,8 @@ class Standings:
     @property
     def rank_eligible(self):
         assert self.ranked, "sort() must be called before accessing standings"
-        if self.eligibility_filter:
-            return filter(self.eligibility_filter, self._standings)
+        if self.rank_filter:
+            return filter(self.rank_filter, self._standings)
         else:
             return self._standings
 
@@ -207,16 +207,21 @@ class Standings:
                 logger.info("{:30} {}".format(info.instance, itemgetter(*precedence)(info.metrics)))
             raise
 
-        if self.eligibility_filter:
-            self._standings.sort(key=self.eligibility_filter, reverse=True)
+        if self.rank_filter:
+            self._standings.sort(key=self.rank_filter, reverse=True)
 
         self.ranked = True
+
+    def filter(self, include_filter):
+        self.infos = {instance: info for instance, info in self.infos.items() if include_filter(info)}
 
 
 class BaseStandingsGenerator:
 
     DEFAULT_OPTIONS = {
         "tiebreak": "random",
+        "rank_filter": None,
+        "include_filter": None,
     }
 
     TIEBREAK_FUNCTIONS = {
@@ -226,7 +231,7 @@ class BaseStandingsGenerator:
     metric_annotator_classes = {}
     ranking_annotator_classes = {}
 
-    def __init__(self, metrics, rankings, extra_metrics=(), eligibility_filter=None, **options):
+    def __init__(self, metrics, rankings, extra_metrics=(), **options):
 
         # Set up options dictionary
         self.options = self.DEFAULT_OPTIONS.copy()
@@ -234,7 +239,6 @@ class BaseStandingsGenerator:
             if key not in self.options:
                 raise ValueError("Unrecognized option: {0}".format(key))
         self.options.update(options)
-        self.eligibility_filter = eligibility_filter
 
         # Set up annotators
         self._interpret_metrics(metrics, extra_metrics)
@@ -252,10 +256,13 @@ class BaseStandingsGenerator:
             (That is, rounds after `round` are excluded from the standings.)
         """
 
-        standings = Standings(queryset, eligibility_filter=self.eligibility_filter)
+        standings = Standings(queryset, rank_filter=self.options["rank_filter"])
 
         for annotator in self.metric_annotators:
             annotator.run(queryset, standings, round)
+
+        if self.options["include_filter"]:
+            standings.filter(self.options["include_filter"])
 
         standings.sort(self.precedence, self._tiebreak_func)
 
