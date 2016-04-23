@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 import motions.statistics as motion_statistics
 from participants.models import Team, Speaker
-from results.models import TeamScore, SpeakerScore, BallotSubmission
+from results.models import TeamScore, SpeakerScore
 from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
 from tournaments.models import Round
 from utils.mixins import SuperuserRequiredMixin
