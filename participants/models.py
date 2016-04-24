@@ -322,7 +322,8 @@ class Adjudicator(Person):
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey('tournaments.Tournament',
                                    blank=True,
-                                   null=True)
+                                   null=True,
+                                   help_text="Adjudicators not assigned to any tournament can be shared between tournaments")
     test_score = models.FloatField(default=0)
     url_key = models.SlugField(blank=True,
                                null=True,

@@ -42,11 +42,13 @@ def adj_scores(request, t):
 def feedback_overview(request, t):
     breaking_count = 0
 
+
     if t.pref('share_adjs'):
-        adjudicators = Adjudicator.objects.all()
+        adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
+            'tournament','tournament__current_round') | Adjudicator.objects.filter(tournament=None)
     else:
         adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
-        'tournament','tournament__current_round')
+            'tournament','tournament__current_round')
 
     all_debate_adjudicators = list(DebateAdjudicator.objects.select_related('adjudicator').all())
     all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(

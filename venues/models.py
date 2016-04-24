@@ -37,7 +37,8 @@ class Venue(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament',
                                    blank=True,
                                    null=True,
-                                   db_index=True)
+                                   db_index=True,
+                                   help_text="Venues not assigned to any tournament can be shared between tournaments")
 
     class Meta:
         ordering = ['group', 'name']

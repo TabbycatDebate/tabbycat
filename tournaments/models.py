@@ -536,8 +536,8 @@ class Round(models.Model):
         all_venues = self.base_availability(Venue, 'availability_activevenue',
                                             'venue_id', 'venues_venue')
 
-        if  self.tournament.pref('share_venues'):
-            return all_venues
+        if self.tournament.pref('share_venues'):
+            return [v for v in all_venues if v.tournament == self.tournament or v.tournament is None]
         else:
             return [v for v in all_venues if v.tournament == self.tournament]
 
@@ -554,7 +554,7 @@ class Round(models.Model):
                                           self.id}, )
 
         if self.tournament.pref('share_venues'):
-            return [v for v in result if v.is_active and not v.is_used]
+            return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament or v.tournament == None]
         else:
             return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
 
@@ -567,7 +567,7 @@ class Round(models.Model):
                                           id_field='person_ptr_id')
 
         if self.tournament.pref('share_adjs'):
-            return all_adjs
+            return [a for a in all_adjs if a.tournament == self.tournament or a.tournament == None]
         else:
             return [a for a in all_adjs if a.tournament == self.tournament]
 

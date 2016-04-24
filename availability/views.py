@@ -24,12 +24,12 @@ def availability_index(request, round):
         'in_before' : ActiveTeam.objects.filter(round=round.prev).count() if round.prev else None,
     },{
         'type'      : "Adjudicator",
-        'total'     : Adjudicator.objects.count() if t.pref('share_adjs') else round.tournament.adjudicator_set.count(),
+        'total'     : round.tournament.adjudicator_set.count(),
         'in_now'    : ActiveAdjudicator.objects.filter(round=round).count(),
         'in_before' : ActiveAdjudicator.objects.filter(round=round.prev).count() if round.prev else None,
     },{
         'type'      : "Venue",
-        'total'     : Venue.objects.count() if t.pref('share_venues') else round.tournament.venue_set.count(),
+        'total'     : round.tournament.venue_set.count(),
         'in_now'    : ActiveVenue.objects.filter(round=round).count(),
         'in_before' : ActiveVenue.objects.filter(round=round.prev).count() if round.prev else None,
     }]

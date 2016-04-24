@@ -17,6 +17,9 @@
       <th>Group</th>
       {% endif %}
       <th>Name</th>
+      {% if pref.share_venues %}
+        <th>Shared</th>
+      {% endif %}
       <th>Priority</th>
       <th>Active</th>
     </tr>
@@ -30,6 +33,13 @@
       </td>
       {% endif %}
       <td>{{ venue.name }}</td>
+      {% if pref.share_venues %}
+        <td>
+          {% if not venue.tournament %}
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+          {% endif %}
+        </td>
+      {% endif %}
       <td>{{ venue.priority }}</td>
       <td class="check_target">
         <input type="checkbox" {{ venue.is_active|yesno:'checked="yes",'  }} name="check_{{ venue.id }}" value="{{ venue.id }}" />

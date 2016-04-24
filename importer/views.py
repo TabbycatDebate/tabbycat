@@ -97,9 +97,11 @@ def edit_venues(request, t):
 @expect_post
 @tournament_view
 def confirm_venues(request, t):
+    print(request.POST)
     venue_names = request.POST.getlist('venue_names')
     venue_priorities = request.POST.getlist('venue_priorities')
     venue_groups = request.POST.getlist('venue_groups')
+    venue_shares = request.POST.getlist('venue_shares')
     for i, key in enumerate(venue_names):
         if venue_groups[i]:
             try:
@@ -112,13 +114,15 @@ def confirm_venues(request, t):
                         short_name=venue_groups[i][:15]).save()
         else:
             venue_group = None
-        try:
-            venue = Venue(name=venue_names[i], priority=venue_priorities[i],
-                          group=venue_group,
-                          tournament=None if t.pref('share_venues') else t)
-            venue.save()
-        except:
-            pass
+
+        if venue_shares[i] == "yes":
+            venue_tournament = None
+        else:
+            venue_tournament = t
+
+        venue = Venue(name=venue_names[i], priority=venue_priorities[i],
+                      group=venue_group, tournament=venue_tournament)
+        venue.save()
 
     confirmed = {"kind": "Venues", "quantity": len(venue_names)}
     return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
@@ -310,18 +314,22 @@ def edit_adjudicators(request, t):
 def confirm_adjudicators(request, t):
     sorted_post = sorted(request.POST.items())
 
-    for i in range(0, len(sorted_post) - 1,
-                   3):  # Sort through the items advancing 3 at a time
-        institution_name = sorted_post[i][1]
+    for i in range(0, len(sorted_post), 4):
+        # Sort through the items advancing 4 at a time
+        adj_institution = Institution.objects.get(name=sorted_post[i][1])
         adj_name = sorted_post[i + 1][1]
         adj_rating = sorted_post[i + 2][1]
+        adj_shared = sorted_post[i + 3][1]
 
-        institution = Institution.objects.get(name=institution_name)
-        if adj_name and adj_rating and institution:
-            newadj = Adjudicator(institution=institution,
-                                 name=adj_name,
-                                 tournament=None if t.pref('share_adjs') else t,
-                                 test_score=adj_rating, )
+        if adj_shared == "yes":
+            adj_t = None
+        else:
+            adj_t = t
+
+        if adj_name and adj_rating and adj_institution:
+            newadj = Adjudicator(institution=adj_institution,
+                                 name=adj_name, tournament=adj_t,
+                                 test_score=adj_rating)
             newadj.save()
 
     confirmed = {"kind": "Adjudicators",
