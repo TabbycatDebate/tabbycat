@@ -273,7 +273,8 @@ def ballots_status(request, t):
 def latest_results(request, t):
     # Latest Results for Tournament Homepage
     results_objects = []
-    ballots = BallotSubmission.objects.filter(confirmed=True).order_by(
+    ballots = BallotSubmission.objects.filter(
+        debate__round__tournament=t, confirmed=True).order_by(
         '-timestamp')[:15].select_related('debate')
     timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
     for b in ballots:
