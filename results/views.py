@@ -220,7 +220,8 @@ def new_ballotset(request, t, debate_id):
             submitter_type=BallotSubmission.SUBMITTER_TABROOM, ip_address=ip_address)
 
     if not debate.adjudicators.has_chair:
-        return HttpResponseBadRequest("Whoops! This debate doesn't have a chair, so you can't enter results for it.")
+        messages.error(request, "Whoops! The debate %s doesn't have a chair, so you can't enter results for it." % debate.matchup)
+        return redirect_round('results', debate.round)
 
     if request.method == 'POST':
         form = BallotSetForm(ballotsub, request.POST)
