@@ -13,8 +13,8 @@ class LogActionMixin:
     `get_action_log_fields()` that calls its `super()`. The mixin will add an
     `ActionLogEntry` instance when the form is successfully submitted.
 
-    This mixin only makes sense when used with views that also derive from
-    `FormMixin` somehow.
+    This mixin is best used with views that also derive from `FormMixin`
+    somehow. For forms that don't, they can call `self.log_action()` explicitly.
     """
 
     action_log_type = None
@@ -44,12 +44,17 @@ class LogActionMixin:
         """
         if hasattr(self, 'get_tournament'):
             kwargs.setdefault('tournament', self.get_tournament())
+        if hasattr(self, 'get_round'):
+            kwargs.setdefault('round', self.get_round())
         if hasattr(self.request, 'user') and isinstance(self.request.user, User):
             kwargs.setdefault('user', self.request.user)
         return kwargs
 
-    def form_valid(self, form):
+    def log_action(self):
         ip_address = get_ip_address(self.request)
         ActionLogEntry.objects.log(type=self.get_action_log_type(),
                 ip_address=ip_address, **self.get_action_log_fields())
+
+    def form_valid(self, form):
+        self.log_action()
         return super().form_valid(form)

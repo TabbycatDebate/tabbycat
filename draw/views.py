@@ -1,22 +1,24 @@
-import json
-from actionlog.models import ActionLogEntry
-from participants.models import Team
-from tournaments.models import Tournament, Round, Division
-from motions.models import Motion
-from venues.models import Venue, VenueGroup
-from adjfeedback.models import AdjudicatorFeedbackQuestion
-from .models import TeamPositionAllocation, Debate, DebateTeam
-from standings.teams import TeamStandingsGenerator
-
-from django.views.generic.base import TemplateView
-from tournaments.mixins import RoundMixin
-from utils.mixins import SuperuserRequiredMixin
-
-from utils.views import *
-
 import datetime
+import json
 import logging
 logger = logging.getLogger(__name__)
+
+from django.views.generic.base import TemplateView
+
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
+from adjfeedback.models import AdjudicatorFeedbackQuestion
+from motions.models import Motion
+from participants.models import Team
+from standings.teams import TeamStandingsGenerator
+from tournaments.mixins import RoundMixin
+from tournaments.models import Tournament, Round, Division
+from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView
+from utils.misc import reverse_round
+from utils.views import *
+from venues.models import Venue, VenueGroup
+
+from .models import TeamPositionAllocation, Debate, DebateTeam
 # Viewing Draw
 
 @admin_required
@@ -233,28 +235,28 @@ def side_allocations(request, t):
                     rounds=rounds))
 
 
-@admin_required
-@expect_post
-@round_view
-def set_round_start_time(request, round):
+class SetRoundStartTimeView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
 
-    time_text = request.POST["start_time"]
-    try:
-        time = datetime.datetime.strptime(time_text, "%H:%M").time()
-    except ValueError as e:
-        print(e)
-        return redirect_round('draw', round)
+    action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_START_TIME_SET
 
-    round.starts_at = time
-    round.save()
+    def get_redirect_url(self):
+        return reverse_round('draw', self.get_round())
 
-    ActionLogEntry.objects.log(
-        type=ActionLogEntry.ACTION_TYPE_ROUND_START_TIME_SET,
-        user=request.user,
-        round=round,
-        tournament=round.tournament)
+    def post(self, request, *args, **kwargs):
+        time_text = request.POST["start_time"]
+        try:
+            time = datetime.datetime.strptime(time_text, "%H:%M").time()
+        except ValueError as e:
+            messages.error(request, "Sorry, \"{}\" isn't a valid time. It must be in 24-hour format, with a colon, for example: \"13:57\".".format(time_text))
+            return super().post(request, *args, **kwargs)
 
-    return redirect_round('draw', round)
+        round = self.get_round()
+        round.starts_at = time
+        round.save()
+
+        self.log_action() # need to call explicitly, since this isn't a form view
+
+        return super().post(request, *args, **kwargs)
 
 
 @admin_required

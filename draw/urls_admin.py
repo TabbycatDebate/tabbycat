@@ -76,7 +76,7 @@ urlpatterns = [
             views.apply_schedule,
             name='apply_schedule'),
     url(r'^round/(?P<round_seq>\d+)/start_time/set/$',
-        views.set_round_start_time,
+        views.SetRoundStartTimeView.as_view(),
         name='set_round_start_time'),
     url(r'^round/(?P<round_seq>\d+)/confirms/$',
         views.confirmations_view,
