@@ -352,7 +352,6 @@ class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
     public_page_preference = 'public_feedback'
 
 
-
 class SetAdjudicatorTestScoreView(SuperuserRequiredMixin, LogActionMixin, TournamentMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT
@@ -390,40 +389,6 @@ class SetAdjudicatorTestScoreView(SuperuserRequiredMixin, LogActionMixin, Tourna
         self.log_action() # need to call explicitly, since this isn't a form view
 
         return super().post(request, *args, **kwargs)
-
-
-@admin_required
-@expect_post
-@tournament_view
-def set_adj_test_score(request, t):
-
-    try:
-        adj_id = int(request.POST["adj_test_id"])
-    except ValueError:
-        return HttpResponseBadRequest("Score value is not legit")
-
-    try:
-        adjudicator = Adjudicator.objects.get(id=adj_id)
-    except (Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
-        return HttpResponseBadRequest("Adjudicator probably doesn't exist")
-
-    score_text = request.POST["test_score"]
-    try:
-        score = float(score_text)
-    except ValueError as e:
-        messages.error("Whoops, the value {} isn't a valid test score.".format(score_text))
-        return redirect_tournament('adjfeedback-overview', t)
-
-    adjudicator.test_score = score
-    adjudicator.save()
-
-    atsh = AdjudicatorTestScoreHistory(adjudicator=adjudicator,
-        round=t.current_round, score=score)
-    atsh.save()
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT,
-        user=request.user, adjudicator_test_score_history=atsh, tournament=t)
-
-    return redirect_tournament('adjfeedback-overview', t)
 
 
 # TODO: move to breaking app?
