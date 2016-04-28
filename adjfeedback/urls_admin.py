@@ -20,7 +20,7 @@ urlpatterns = [
         views.get_adj_feedback,
         name='get_adj_feedback'),
     url(r'^test/set/$',
-        views.set_adj_test_score,
+        views.SetAdjudicatorTestScoreView.as_view(),
         name='set_adj_test_score'),
     url(r'^breaking/set/$',
         views.set_adj_breaking_status,

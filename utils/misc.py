@@ -16,3 +16,11 @@ def reverse_tournament(to, tournament, **kwargs):
     kwargs['kwargs']['tournament_slug'] = tournament.slug
     return reverse(to, **kwargs)
 
+def redirect_round(to, round, **kwargs):
+    return redirect(to, tournament_slug=round.tournament.slug, round_seq=round.seq, **kwargs)
+
+def reverse_round(to, round, **kwargs):
+    kwargs.setdefault('kwargs', {})
+    kwargs['kwargs']['tournament_slug'] = round.tournament.slug
+    kwargs['kwargs']['round_seq'] = round.seq
+    return reverse(to, **kwargs)

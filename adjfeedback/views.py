@@ -352,39 +352,43 @@ class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
     public_page_preference = 'public_feedback'
 
 
+class SetAdjudicatorTestScoreView(SuperuserRequiredMixin, LogActionMixin, TournamentMixin, PostOnlyRedirectView):
 
-@admin_required
-@expect_post
-@tournament_view
-def set_adj_test_score(request, t):
+    action_log_type = ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT
 
-    try:
-        adj_id = int(request.POST["adj_test_id"])
-    except ValueError:
-        return HttpResponseBadRequest("Score value is not legit")
+    def get_redirect_url(self):
+        return reverse_tournament('adjfeedback-overview', self.get_tournament())
 
-    try:
-        adjudicator = Adjudicator.objects.get(id=adj_id)
-    except (Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
-        return HttpResponseBadRequest("Adjudicator probably doesn't exist")
+    def get_action_log_fields(self, **kwargs):
+        kwargs['adjudicator_test_score_history'] = self.atsh
+        return super().get_action_log_fields(**kwargs)
 
-    score_text = request.POST["test_score"]
-    try:
-        score = float(score_text)
-    except ValueError as e:
-        messages.error("Whoops, the value {} isn't a valid test score.".format(score_text))
-        return redirect_tournament('adjfeedback-overview', t)
+    def post(self, request, *args, **kwargs):
+        try:
+            adj_id = int(request.POST["adj_test_id"])
+            adjudicator = Adjudicator.objects.get(id=adj_id)
+        except (ValueError, Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
+            messages.error("Whoops! I didn't recognise that adjudicator: {}".format(adj_id))
+            return super().post(request, *args, **kwargs)
 
-    adjudicator.test_score = score
-    adjudicator.save()
+        score_text = request.POST["test_score"]
+        try:
+            score = float(score_text)
+        except ValueError as e:
+            messages.error(request, "Whoops! The value \"{}\" isn't a valid test score.".format(score_text))
+            return super().post(request, *args, **kwargs)
 
-    atsh = AdjudicatorTestScoreHistory(adjudicator=adjudicator,
-        round=t.current_round, score=score)
-    atsh.save()
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT,
-        user=request.user, adjudicator_test_score_history=atsh, tournament=t)
+        adjudicator.test_score = score
+        adjudicator.save()
 
-    return redirect_tournament('adjfeedback-overview', t)
+        atsh = AdjudicatorTestScoreHistory(adjudicator=adjudicator,
+            round=self.get_tournament().current_round, score=score)
+        atsh.save()
+        self.atsh = atsh
+
+        self.log_action() # need to call explicitly, since this isn't a form view
+
+        return super().post(request, *args, **kwargs)
 
 
 # TODO: move to breaking app?

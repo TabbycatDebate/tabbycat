@@ -296,7 +296,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, TemplateView):
             round = round.prev
 
         if round is not None and round.silent is False:
-            teams = Team.objects.order_by('institution__code', 'reference') # obscure true rankings, in case client disabled JavaScript
+            teams = tournament.team_set.order_by('institution__code', 'reference') # obscure true rankings, in case client disabled JavaScript
             rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
             add_team_round_results_public(teams, rounds)
 

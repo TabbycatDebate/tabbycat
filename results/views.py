@@ -1,8 +1,14 @@
+import logging
+logger = logging.getLogger(__name__)
+
 from django.template import Template, Context
+from django.views.generic.base import TemplateView
+
 import json
 import datetime
 
 from adjallocation.models import DebateAdjudicator
+from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
 from tournaments.models import Round
 from venues.models import Venue
 from participants.models import Adjudicator
@@ -65,29 +71,40 @@ def results(request, round):
     )
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_round_view('public_results')
-def public_results(request, round):
-    # Can't see results for current round or later
-    if (round.seq >= round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
-        print("Result page denied: round %d, current round %d, release all %s, silent %s" % (round.seq, round.tournament.current_round.seq, round.tournament.release_all, round.silent))
-        raise Http404()
-    draw = round.get_draw()
-    show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.pref('show_motions_in_results')
-    show_splits = round.tournament.pref('show_splitting_adjudicators')
-    show_ballots = round.tournament.pref('ballots_released')
-    return render(request, "public_results_for_round.html", dict(
-            draw=draw, show_motions_column=show_motions_column, show_splits=show_splits,
-            show_ballots=show_ballots))
+class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, TemplateView):
+
+    template_name = 'public_results_for_round.html'
+    public_page_preference = 'public_results'
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+        tournament = self.get_tournament()
+        kwargs["draw"] = round.get_draw()
+        kwargs["show_motions_column"] = round.motion_set.count() > 1 and tournament.pref('show_motions_in_results')
+        return super().get_context_data(**kwargs)
+
+    def get(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+        round = self.get_round()
+        if round.silent:
+            logger.info("Refused results for %s: silent", round.name)
+            return render(request, 'public_results_silent.html')
+        if round.seq >= tournament.current_round.seq and not tournament.release_all:
+            logger.info("Refused results for %s: not yet available", round.name)
+            return render(request, 'public_results_not_available.html')
+        return super().get(request, *args, **kwargs)
 
 
+class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_results')
-def public_results_index(request, tournament):
-    rounds = Round.objects.filter(tournament=tournament,
-        seq__lt=tournament.current_round.seq, silent=False).order_by('seq')
-    return render(request, "public_results_index.html", dict(rounds=rounds))
+    template_name = 'public_results_index.html'
+    public_page_preference = 'public_results'
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs["rounds"] = tournament.round_set.filter(seq__lt=tournament.current_round.seq,
+                silent=False).order_by('seq')
+        return super().get_context_data(**kwargs)
 
 
 @login_required
@@ -203,7 +220,8 @@ def new_ballotset(request, t, debate_id):
             submitter_type=BallotSubmission.SUBMITTER_TABROOM, ip_address=ip_address)
 
     if not debate.adjudicators.has_chair:
-        return HttpResponseBadRequest("Whoops! This debate doesn't have a chair, so you can't enter results for it.")
+        messages.error(request, "Whoops! The debate %s doesn't have a chair, so you can't enter results for it." % debate.matchup)
+        return redirect_round('results', debate.round)
 
     if request.method == 'POST':
         form = BallotSetForm(ballotsub, request.POST)
