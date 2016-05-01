@@ -695,9 +695,18 @@ class Round(models.Model):
     def activate_all(self):
         from venues.models import Venue
         from participants.models import Adjudicator, Team
-        self.set_available_venues([v.id for v in Venue.objects.all()])
-        self.set_available_adjudicators([a.id for a in Adjudicator.objects.all()])
-        self.set_available_teams([t.id for t in Team.objects.filter(tournament=self.tournament)])
+        all_teams = Team.objects.filter(tournament=self.tournament)
+        all_venues = Venue.objects.filter(tournament=self.tournament)
+        all_adjs = Adjudicator.objects.filter(tournament=self.tournament)
+
+        if self.tournament.pref('share_adjs'):
+            all_adjs = all_adjs | Adjudicator.objects.filter(tournament=None)
+        if self.tournament.pref('share_venues'):
+            all_venues = all_venues | Venue.objects.filter(tournament=None)
+
+        self.set_available_teams([t.id for t in all_teams])
+        self.set_available_venues([v.id for v in all_venues])
+        self.set_available_adjudicators([a.id for a in all_adjs])
 
     def activate_previous(self):
         from availability.models import ActiveTeam, ActiveAdjudicator, ActiveVenue
