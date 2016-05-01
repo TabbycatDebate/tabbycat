@@ -13,17 +13,20 @@
         </a>
         <ul id="tournament_select_menu" class="dropdown-menu" aria-labelledby="tournament_select">
           {% for t in all_tournaments %}
-            {% if tournament != t %}
-              <li>
-                <a class="small" href="{{ t.get_absolute_url  }}">
-                  {{ t }}
-                </a>
-              </li>
-            {% endif %}
+            <li>
+              <a class="small" href="{{ t.get_absolute_url  }}">
+                {{ t }} <span class="badge small pull-right">Admin</span>
+              </a>
+            </li>
+            <li>
+              <a class="small" href="{{ t.get_public_url  }}">
+                {{ t }} <span class="badge small pull-right">Public</span>
+              </a>
+            </li>
+            <li role="separator" class="divider"></li>
           {% endfor %}
-          <li role="separator" class="divider"></li>
           <li>
-            <a class="small" href="#">Overview</a>
+            <a class="small" href="{% url 'tournament-create' %}">New Tournament</a>
           </li>
         </ul>
       </li>

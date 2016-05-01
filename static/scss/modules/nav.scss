@@ -43,10 +43,16 @@
 }
 // Tournament Nav
 #tournament_select_menu {
-  width: $sidebar-width - 10px;
-  margin-left: 5px;
-  margin-topp: -20px;
+  width: $sidebar-width - 7px;
+  margin-left: 3px;
+  margin-top: 3px;
   min-width: auto;
+  > li > a {
+    padding: 3px 5px 3px 8px;
+    .badge {
+      font-size: 10px;
+    }
+  }
 }
 // Navigation Elements
 .nav-accordion {
