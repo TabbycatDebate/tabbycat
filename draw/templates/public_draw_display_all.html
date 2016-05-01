@@ -39,7 +39,9 @@
               <td>
                 <span title="{{ debate.round.name }}" data-toggle="tooltip">{{ debate.round.abbreviation }}</span>
               </td>
-              <td>{{ debate.division.name }}</td>
+              {% if pref.enable_divisions %}
+                <td>{{ debate.division.name }}</td>
+              {% endif %}
               {% if debate.division %}
                 <td>{{ debate.division.venue_group.short_name }}</td>
               {% else %}
@@ -54,12 +56,17 @@
               <td >
                 {{ debate.neg_team.short_name }}
               </td>
-              <td>
-                {% for motion in debate.division_motion %}
-                  <span>{{ motion.reference }}</span>
-                  <small title="{{ motion.text }}" data-toggle="tooltip">(view)</small>
-                {% endfor %}
-              </td>
+              {% if pref.enable_division_motions %}
+                <td>
+                  {% for motion in debate.division_motion %}
+                    <span>{{ motion.reference }}</span>
+                    <small title="{{ motion.text }}" data-toggle="tooltip">(view)</small>
+                  {% endfor %}
+                </td>
+              {% endif %}
+              {% if not pref.enable_divisions %}
+                {% include "tables/debate_adjudicators.html" %}                
+              {% endif %}
             </tr>
           {% endfor %}
         {% endfor %}

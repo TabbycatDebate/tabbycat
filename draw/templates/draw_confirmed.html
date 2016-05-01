@@ -220,11 +220,7 @@
           <td title="{% if debate.neg_team %}{% neg_count debate.neg_team round.prev %} prior negs{% endif %}">
             {% include "tables/team.html" with team=debate.neg_team %}
           </td>
-          <td>
-          {% for type, adj in debate.adjudicators %}
-              {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} (c){% elif type == 'T' %} (t){% endif %}{% if not forloop.last %},{% endif %}
-          {% endfor %}
-          </td>
+          {% include "tables/debate_adjudicators_compact.html" %}  
           <td class="text-danger">{{ debate.all_conflicts|join:",<br>" }}</td>
         </tr>
         {% endfor %}

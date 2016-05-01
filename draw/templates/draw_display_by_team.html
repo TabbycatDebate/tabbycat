@@ -60,19 +60,7 @@
             <td>
               {% include "tables/team.html" with team=debate.neg_team %}
             </td>
-            <td class="adj-names">
-              {% for type, adj in debate.adjudicators %}
-                {% if type == 'C' and debate.adjudicators.is_panel %}
-                  <span class="adj-chair">{{ adj.name }}</span> Ⓒ
-                {% elif type == 'T' %}
-                  <br><span class="adj-trainee">{{ adj.name }}</span> Ⓣ
-                {% else %}
-                  {% if debate.adjudicators.panel %}<br>{% endif %}
-                  <span class="adj-normal">{{ adj.name }}</span>
-                {% endif %}
-                {% if debate.adjudicators.panel %}</li>{% endif %}
-              {% endfor %}
-            </td>
+            {% include "tables/debate_adjudicators.html" %}
         {% endfor %}
         {% for debate in draw %}
           <tr>
@@ -100,19 +88,7 @@
             <td>
               {% include "tables/team.html" with team=debate.neg_team %}
             </td>
-            <td class="adj-names">
-              {% for type, adj in debate.adjudicators %}
-                {% if type == 'C' and debate.adjudicators.is_panel %}
-                  <span class="adj-chair">{{ adj.name }} Ⓒ</span>
-                {% elif type == 'T' %}
-                  <br><span class="adj-trainee">{{ adj.name }} Ⓣ</span>
-                {% else %}
-                  {% if debate.adjudicators.panel %}<br>{% endif %}
-                  <span class="adj-normal">{{ adj.name }}</span>
-                {% endif %}
-                {% if debate.adjudicators.panel %}</li>{% endif %}
-              {% endfor %}
-            </td>
+            {% include "tables/debate_adjudicators.html" %}
         {% endfor %}
         </tbody>
       </table>

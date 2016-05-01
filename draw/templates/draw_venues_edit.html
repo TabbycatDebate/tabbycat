@@ -70,11 +70,7 @@
               <td>
                 {% include "tables/team.html" with team=debate.neg_team %}
               </td>
-              <td>
-              {% for type, adj in debate.adjudicators %}
-                {{ adj.name }}{% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ{% elif type == 'T' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
-              {% endfor %}
-              </td>
+              {% include "tables/debate_adjudicators_compact.html" %}  
               <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
                 {% if debate.venue %}
                 <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
