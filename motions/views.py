@@ -15,7 +15,6 @@ from utils.views import *
 @round_view
 def motions(request, round):
     motions = list()
-    motions = Motion.objects.statistics(round=round)
     if len(motions) > 0:
         motions = [m for m in motions if m.round == round]
 
