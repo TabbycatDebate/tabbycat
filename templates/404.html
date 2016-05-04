@@ -5,7 +5,15 @@
   <h2><span class="emoji">🙀</span>Page Not Found (404)</h2>
 {% endblock %}
 
+{% block nav %}<div class="col-md-12 accommodate-footer">{% endblock %}
+
 {% block content %}
-  <p class="lead">Sorry, there doesn't appear to be a page at this URL. Awkward.
-  <a href="/">Go back to the homepage I guess?</a></p>
+
+  <div class="panel panel-default">
+    <div class="panel-body h4">
+      Sorry, there doesn't appear to be a page at this URL.
+      <a href="/">Go back to the homepage?</a>
+    </div>
+  </div>
+
 {% endblock %}
