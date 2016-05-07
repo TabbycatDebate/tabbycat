@@ -67,9 +67,11 @@ def run_command(command):
     if not args.dry_run:
         subprocess.check_call(command, **subprocess_kwargs)
 
+def make_heroku_command(command):
+    return ["heroku"] + command + ["--app", urlname]
+
 def run_heroku_command(command):
-    command.insert(0, "heroku")
-    command.extend(["--app", urlname])
+    command = make_heroku_command(command)
     run_command(command)
 
 def get_output_from_command(command):
@@ -139,17 +141,13 @@ push_spec = get_git_push_spec()
 run_command(["git", "push", remote_name, push_spec])
 
 if args.init_db:
-    # Perform initial migrations
-    run_heroku_command(["run", "python", "manage.py", "migrate"])
-
     print_yellow("Now creating a superuser for the Heroku site.")
     print_yellow("You'll need to respond to the prompts:")
     run_heroku_command(["run", "python", "manage.py", "createsuperuser"])
 
-    # Set secret key — not using run_heroku_command as it doesn't play nicely with get_output_from_command
-    secret_key = get_output_from_command(["heroku", "run", "python", "manage.py", "generate_secret_key", "--app", urlname])
-    # Turn command output into string of just the key
-    secret_key = secret_key.strip().split()[0]
+    command = make_heroku_command(["run", "python", "manage.py", "generate_secret_key"])
+    secret_key = get_output_from_command(command)
+    secret_key = secret_key.strip().split()[0].strip() # turn command output into string of just the key
     print_yellow("Made secret key: \"%s\"" % secret_key)
     command = ["config:add", "DJANGO_SECRET_KEY=%s" % secret_key]
     run_heroku_command(command)
