@@ -155,9 +155,9 @@
         <h3>Change Test Score of <span id="modal-test-name"></span></h3>
       </div>
       <div class="modal-body">
-        <form id="startTimeForm" method="POST" action="{% tournament_url set_adj_test_score  %}" class="form-horizontal">
+        <form id="testScoreForm" method="POST" action="{% tournament_url adjfeedback-set-adj-test-score  %}" class="form-horizontal">
           {% csrf_token %}
-          <input id="id_adj_test_id" name="adj_test_id" type="hidden" value="" />
+          <input id="id_adj_id" name="adj_id" type="hidden" value="" />
           <div class="form-group">
             <label class="col-sm-3 control-label">
               Test score
@@ -191,9 +191,9 @@
           <h3>Edit Note of <span id="modal-note-name"></span></h3>
         </div>
         <div class="modal-body">
-          <form id="startTimeForm" method="POST" action="{% tournament_url set_adj_note  %}" class="form-horizontal">
+          <form id="adjNoteForm" method="POST" action="{% tournament_url adjfeedback-set-adj-note  %}" class="form-horizontal">
             {% csrf_token %}
-            <input id="id_adj_test_id_note" name="adj_test_id" type="hidden" value="" />
+            <input id="id_adj_id_note" name="adj_id" type="hidden" value="" />
             <div class="form-group">
               <div class="col-sm-12">
                 <textarea id="id_note" name="note" placeholder="" rows="20" class="form-control"></textarea>
@@ -280,7 +280,7 @@
       $(this).click( function() {
         var adj_info = get_adj_information(this);
         $("#modal-test-name").text(adj_info.adj_name); // Updating header of the modal
-        $("#id_adj_test_id").val(adj_info.adj_id); // Updating header of the modal
+        $("#id_adj_id").val(adj_info.adj_id); // Updating header of the modal
         $("#id_test_score").prop('placeholder', adj_info.adj_score); // updating the form table
       });
     });
@@ -289,7 +289,7 @@
       $(this).click( function() {
         var adj_info = get_adj_information(this);
         $("#modal-note-name").text(adj_info.adj_name); // Updating header of the modal
-        $("#id_adj_test_id_note").val(adj_info.adj_id); // Updating header of the modal
+        $("#id_adj_id_note").val(adj_info.adj_id); // Updating header of the modal
         $("#id_note").val(adj_info.adj_note); // updating the form with the note
       });
     });
@@ -306,7 +306,7 @@
         }
         $.ajax({
           type: "POST",
-          url: "{% tournament_url set_adj_breaking_status %}",
+          url: "{% tournament_url adjfeedback-set-adj-breaking-status %}",
           data: {adj_id: adj_info.adj_id, adj_breaking_status: breaking_status},
           error: function(xhr, error, ex) {
             alert("error setting adj status");
