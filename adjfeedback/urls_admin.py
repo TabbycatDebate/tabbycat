@@ -21,13 +21,13 @@ urlpatterns = [
         name='get_adj_feedback'),
     url(r'^test/set/$',
         views.SetAdjudicatorTestScoreView.as_view(),
-        name='set_adj_test_score'),
+        name='adjfeedback-set-adj-test-score'),
     url(r'^breaking/set/$',
-        views.set_adj_breaking_status,
-        name='set_adj_breaking_status'),
+        views.SetAdjudicatorBreakingStatusView.as_view(),
+        name='adjfeedback-set-adj-breaking-status'),
     url(r'^notes/test/set/$',
-        views.set_adj_note,
-        name='set_adj_note'),
+        views.SetAdjudicatorNoteView.as_view(),
+        name='adjfeedback-set-adj-note'),
 
     # Source
     url(r'^latest/$',
