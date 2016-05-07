@@ -16,8 +16,5 @@
             "generator": "secret"
         }
     },
-    "scripts": {
-        "postdeploy": "python manage.py migrate"
-    },
     "success_url": "/start/"
 }
