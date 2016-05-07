@@ -120,7 +120,7 @@ $('.js-team-speakers select').change(update_speakers).each(update_speaker);
 
 {% endif %}
 
-{% if enable_forfeits %}
+{% if pref.enable_forfeits %}
 
   function disable_required() {
     $("#ballot_set").find(".form-control").removeClass("required").removeClass("error");
