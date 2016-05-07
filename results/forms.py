@@ -242,8 +242,19 @@ class BallotSetForm(forms.Form):
                 self.fields[self._fieldname_speaker(side, pos)].required = False
             if self.using_motions:
                 self.fields['motion'].required = False
+            if self.ballotsub.forfeit is not None:
+                self.forfeit_declared = True
+                if self.ballotsub.forfeit == self.debate.aff_dt:
+                    forfeiter = "aff_forfeit"
+                elif self.ballotsub.forfeit == self.debate.neg_dt:
+                    forfeiter = "neg_forfeit"
+                else:
+                    raise ValueError('Forfeit was declared but was neither set as the aff or neg team')
+            else:
+                forfeiter = None
+
             CHOICES = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
-            self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=False)
+            self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, initial=forfeiter, required=False)
 
     def _initial_data(self):
         """Generates dictionary of initial form data."""
