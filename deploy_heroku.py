@@ -145,7 +145,7 @@ if args.init_db:
     # Set secret key — not using run_heroku_command as it doesn't play nicely with get_output_from_command
     secret_key = get_output_from_command(["heroku", "run", "python", "manage.py", "generate_secret_key", "--app", urlname])
     # Turn command output into string of just the key
-    secret_key = secret_key.strip().split()[-1]
+    secret_key = secret_key.strip().split()[0]
     print_yellow("Made secret key: \"%s\"" % secret_key)
     command = ["config:add", "DJANGO_SECRET_KEY=%s" % secret_key]
     run_heroku_command(command)
