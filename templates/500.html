@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
-{% block page-title %}🙀 Internal Server Error (500){% endblock %}
+{% block page-title %}🙀Internal Server Error (500){% endblock %}
 {% block head-title %}
   <h2><span class="emoji">🙀</span>Internal Server Error (500)</h2>
 {% endblock %}
 
+{% block nav %}<div class="col-md-12 accommodate-footer">{% endblock %}
+
 {% block content %}
-  <p>Something's gone really wrong which really shouldn't go wrong. Bother.
-  <a href="/">Go back to the homepage I guess?</a></p>
+  <div class="panel panel-default">
+    <div class="panel-body h4">
+      <p>Something's gone really wrong which really shouldn't go wrong. Bother.
+      <a href="/">Go back to the homepage I guess?</a></p>
+    </div>
+  </div>
 {% endblock %}
