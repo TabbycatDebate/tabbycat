@@ -142,10 +142,11 @@ if args.init_db:
     print_yellow("You'll need to respond to the prompts:")
     run_heroku_command(["run", "python", "manage.py", "createsuperuser"])
 
-    # Set secret key
-    secret_key = get_output_from_command(run_heroku_command(["heroku", "run", "python", "manage.py", "generate_secret_key"]))
-    secret_key = secret_key.decode().strip().split()[-1]
-    print_yellow("Made secret key: %s" % secret_key)
+    # Set secret key — not using run_heroku_command as it doesn't play nicely with get_output_from_command
+    secret_key = get_output_from_command(["heroku", "run", "python", "manage.py", "generate_secret_key", "--app", urlname])
+    # Turn command output into string of just the key
+    secret_key = secret_key.strip().split()[-1]
+    print_yellow("Made secret key: \"%s\"" % secret_key)
     command = ["config:add", "DJANGO_SECRET_KEY=%s" % secret_key]
     run_heroku_command(command)
 

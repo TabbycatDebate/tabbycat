@@ -230,6 +230,7 @@ MESSAGE_TAGS = {messages.ERROR: 'danger', }
 # = Heroku =
 # ==========
 
+# Get key from heroku config env else use a fall back
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY', '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc')
 
