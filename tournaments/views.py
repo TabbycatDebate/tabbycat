@@ -69,15 +69,13 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         tournament = self.get_tournament()
         if tournament.current_round is None:
             if self.request.user.is_superuser:
-                if tournament.round_set.order_by('seq').first() is None:
-                    # Returning a non-500 response as it's a user-caused exception
-                    return HttpResponse('<p>Server Error: This tournament has no Rounds; you\'ll need to add some in the <a href="/admin/">Edit Data</a> area.</p>')
-                else:
-                    messages.warning(self.request, "The current round wasn't set, so it's been automatically set to the first round.")
-                    tournament.current_round = tournament.round_set.order_by('seq').first()
-                    logger.warning("Automatically set current round to {}".format(tournament.current_round))
-                    tournament.save()
-                    self.request.tournament = tournament # update for context processors
+                tournament.current_round = tournament.round_set.order_by('seq').first()
+                if tournament.current_round is None:
+                    return HttpResponse('<p>Error: This tournament has no rounds; you\'ll need to add some in the <a href="/admin/">Edit Data</a> area.</p>')
+                messages.warning(self.request, "The current round wasn't set, so it's been automatically set to the first round.")
+                logger.warning("Automatically set current round to {}".format(tournament.current_round))
+                tournament.save()
+                self.request.tournament = tournament # update for context processors
             else:
                 raise Http404()
         return super().get(self, request, *args, **kwargs)

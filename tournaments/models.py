@@ -12,47 +12,21 @@ logger = logging.getLogger(__name__)
 
 
 class Tournament(models.Model):
-    name = models.CharField(
-        max_length=100,
-        help_text=
-        "The full name used on the homepage, e.g. \"Australasian Intervarsity Debating Championships 2016\"")
-    short_name = models.CharField(
-        max_length=25,
-        blank=True,
-        null=True,
-        default="",
+    name = models.CharField(max_length=100,
+        help_text="The full name used on the homepage, e.g. \"Australasian Intervarsity Debating Championships 2016\"")
+    short_name = models.CharField(max_length=25, blank=True, null=True, default="",
         help_text="The name used in the menu, e.g. \"Australs 2016\"")
-    emoji = models.CharField(max_length=2,
-                             blank=True,
-                             null=True,
-                             unique=True,
-                             choices=EMOJI_LIST)
-    seq = models.IntegerField(
-        blank=True,
-        null=True,
-        help_text=
-        "A number that determines the relative order in which tournaments are displayed on the homepage.")
-    slug = models.SlugField(
-        unique=True,
-        help_text=
-        "The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\"")
-    current_round = models.ForeignKey(
-        'Round',
-        null=True,
-        blank=True,
-        related_name='tournament_',
-        help_text=
-        "Must be set for the tournament to start! (Set after rounds are inputted)")
-    welcome_msg = models.TextField(
-        blank=True,
-        null=True,
-        default="",
-        help_text=
-        "Text/html entered here shows on the homepage for this tournament")
-    release_all = models.BooleanField(
-        default=False,
-        help_text=
-        "This releases all results, including silent rounds; do so only after the tournament is finished!")
+    emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST)
+    seq = models.IntegerField(blank=True, null=True,
+        help_text="A number that determines the relative order in which tournaments are displayed on the homepage.")
+    slug = models.SlugField(unique=True,
+        help_text="The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\"")
+    current_round = models.ForeignKey('Round', null=True, blank=True, related_name='tournament_',
+        help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
+    welcome_msg = models.TextField(blank=True, null=True, default="",
+        help_text="Text/html entered here shows on the homepage for this tournament")
+    release_all = models.BooleanField(default=False,
+        help_text="This releases all results, including silent rounds; do so only after the tournament is finished!")
     active = models.BooleanField(default=True)
 
     @property
@@ -164,9 +138,7 @@ signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
 class Division(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name or suffix")
-    seq = models.IntegerField(
-        blank=True,
-        null=True,
+    seq = models.IntegerField(blank=True, null=True,
         help_text="The order in which divisions are displayed")
     tournament = models.ForeignKey(Tournament)
     time_slot = models.TimeField(blank=True, null=True)
@@ -241,54 +213,30 @@ class Round(models.Model):
     objects = RoundManager()
 
     tournament = models.ForeignKey(Tournament)
-    seq = models.IntegerField(
-        help_text=
-        "A number that determines the order of the round, IE 1 for the initial round")
+    seq = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
     name = models.CharField(max_length=40, help_text="e.g. \"Round 1\"")
     abbreviation = models.CharField(max_length=10, help_text="e.g. \"R1\"")
-    draw_type = models.CharField(max_length=1,
-                                 choices=DRAW_CHOICES,
-                                 help_text="Which draw technique to use")
-    stage = models.CharField(
-        max_length=1,
-        choices=STAGE_CHOICES,
-        default=STAGE_PRELIMINARY,
+    draw_type = models.CharField(max_length=1, choices=DRAW_CHOICES,
+        help_text="Which draw technique to use")
+    stage = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY,
         help_text="Preliminary = inrounds, elimination = outrounds")
-    break_category = models.ForeignKey(
-        'breakqual.BreakCategory',
-        blank=True,
-        null=True,
+    break_category = models.ForeignKey( 'breakqual.BreakCategory', blank=True, null=True,
         help_text="If elimination round, which break category")
 
-    draw_status = models.CharField(max_length=1,
-                                   choices=STATUS_CHOICES,
-                                   default=STATUS_NONE,
-                                   help_text="The status of this round's draw")
+    draw_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
+       help_text="The status of this round's draw")
 
-    checkins = models.ManyToManyField('participants.Person',
-                                      through='availability.Checkin',
-                                      related_name='checkedin_rounds')
+    checkins = models.ManyToManyField('participants.Person', through='availability.Checkin', related_name='checkedin_rounds')
+    active_venues = models.ManyToManyField('venues.Venue', through='availability.ActiveVenue')
+    active_adjudicators = models.ManyToManyField('participants.Adjudicator', through='availability.ActiveAdjudicator')
+    active_teams = models.ManyToManyField('participants.Team', through='availability.ActiveTeam')
 
-    active_venues = models.ManyToManyField('venues.Venue',
-                                           through='availability.ActiveVenue')
-    active_adjudicators = models.ManyToManyField(
-        'participants.Adjudicator',
-        through='availability.ActiveAdjudicator')
-    active_teams = models.ManyToManyField('participants.Team',
-                                          through='availability.ActiveTeam')
-
-    feedback_weight = models.FloatField(
-        default=0,
-        help_text=
-        "The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback.")
-    silent = models.BooleanField(
-        default=False,
-        help_text=
-        "If marked silent, information about this round (such as it's results) will not be shown publicly.")
-    motions_released = models.BooleanField(
-        default=False,
-        help_text=
-        "Whether motions will appear on the public website, assuming that feature is turned on")
+    feedback_weight = models.FloatField(default=0,
+        help_text="The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback.")
+    silent = models.BooleanField(default=False,
+        help_text="If marked silent, information about this round (such as it's results) will not be shown publicly.")
+    motions_released = models.BooleanField(default=False,
+        help_text="Whether motions will appear on the public website, assuming that feature is turned on")
     starts_at = models.TimeField(blank=True, null=True)
 
     class Meta:
@@ -302,7 +250,6 @@ class Round(models.Model):
     def draw(self, override_team_checkins=False):
         from draw.models import Debate, TeamPositionAllocation
         from draw import DrawGenerator
-        from participants.models import Team
 
         if self.draw_status != self.STATUS_NONE:
             raise RuntimeError(
@@ -336,7 +283,6 @@ class Round(models.Model):
             draw_type = "manual"
 
         elif self.draw_type == self.DRAW_POWERPAIRED:
-            from participants.models import Team
             from standings.teams import TeamStandingsGenerator
             metrics = self.tournament.pref('team_standings_precedence')
             generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random")
