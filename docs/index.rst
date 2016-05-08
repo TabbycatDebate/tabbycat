@@ -36,6 +36,7 @@ tournaments.
 
    features/adjudicator-feedback
    features/adjudicator-allocation
+   features/breaks
    features/data-entry
    features/draw-generation
    features/data-importers
