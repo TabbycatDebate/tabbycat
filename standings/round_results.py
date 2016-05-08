@@ -13,9 +13,13 @@ def add_team_round_results(standings, rounds, lookup=None):
     if lookup is None:
         lookup = lambda standings, x: standings.get_standing(x)
 
+    teams = [info.instance_id for info in standings]
     teamscores = TeamScore.objects.select_related(
             'debate_team__team', 'debate_team__debate__round').filter(
-            ballot_submission__confirmed=True, debate_team__debate__round__in=rounds)
+            ballot_submission__confirmed=True,
+            debate_team__debate__round__in=rounds,
+            debate_team__team_id__in=teams
+        )
     teamscores = teamscores.annotate(opposition_id=RawSQL("""
         SELECT opposition.team_id
         FROM draw_debateteam AS opposition
