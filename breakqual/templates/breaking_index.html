@@ -28,17 +28,10 @@
           </div>
           <div class="panel-body round-progresses">
             <div class="progress">
-              {% if category.is_general %}
-                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow=""
-                aria-valuemin="0" aria-valuemax="{{ tournament.teams.count }}" style="width: {% percentage tournament.teams.count tournament.teams.count %}%;">
-                  <span>{{ tournament.teams.count }}/{{ tournament.teams.count }}</span>
-                </div>
-              {% else %}
-                <div class="progress-bar progress-bar-success {% if category.team_set.count == 0 %}progress-empty{% endif %}" role="progressbar" aria-valuenow=""
-                aria-valuemin="0" aria-valuemax="{{ tournament.teams.count }}" style="width: {% percentage category.team_set.count tournament.teams.count %}%;">
-                  <span>{{ category.team_set.count }}/{{ tournament.teams.count }}</span>
-                </div>
-              {% endif %}
+              <div class="progress-bar progress-bar-success {% if category.team_set.count == 0 %}progress-empty{% endif %}" role="progressbar" aria-valuenow=""
+              aria-valuemin="0" aria-valuemax="{{ tournament.teams.count }}" style="width: {% percentage category.team_set.count tournament.teams.count %}%;">
+                <span>{{ category.team_set.count }}/{{ tournament.teams.count }}</span>
+              </div>
             </div>
           </div>
         </div>

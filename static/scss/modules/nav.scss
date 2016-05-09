@@ -70,7 +70,7 @@
       padding: 6px 16px 6px 19px;
       display: block;
       .glyphicon {
-        margin-right: 12px;
+        margin-right: 12px; // Top categories for left hand menu
       }
       &:hover, &.active, &:focus {
         text-decoration: none;
@@ -78,6 +78,9 @@
         background: $sidebar-bg-highlight;
       }
     }
+  }
+  li.panel li a .glyphicon {
+    margin-right: 15px; // For the options in the Setup sub menu  
   }
   .panel-collapse {
     background: $sidebar-bg-highlight;
