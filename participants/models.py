@@ -125,7 +125,7 @@ class TeamManager(models.Manager):
 
     def teams_for_standings(self, round):
         return self.filter(debateteam__debate__round__seq__lte=round.seq,
-            tournament=round.tournament).select_related('institution').distinct()
+            tournament=round.tournament).exclude(type=Team.TYPE_BYE).select_related('institution').distinct()
 
 class Team(models.Model):
     reference = models.CharField(

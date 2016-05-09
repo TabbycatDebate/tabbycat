@@ -203,7 +203,7 @@ class Standings:
         try:
             self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics), reverse=True)
         except TypeError:
-            for info in self.infos:
+            for info in self.infos.values():
                 logger.info("{:30} {}".format(info.instance, itemgetter(*precedence)(info.metrics)))
             raise
 

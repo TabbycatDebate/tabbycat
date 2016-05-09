@@ -210,6 +210,23 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
             raise ValueError("keys must not be empty")
         super(WhoBeatWhomMetricAnnotator, self).__init__(index, keys)
 
+    def get_team_scores(self, key, equal_teams, tsi, round):
+        equal_teams.remove(tsi)
+        other = equal_teams[0]
+        ts = TeamScore.objects.filter(
+                ballot_submission__confirmed=True,
+                debate_team__team=tsi.team,
+                debate_team__debate__debateteam__team=other.team)
+
+        if round is not None:
+            ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)
+
+        ts = ts.aggregate(Sum('points'))
+        logger.info("who beat whom, {0} {3} vs {1} {4}: {2}".format(
+                tsi.team.short_name, other.team.short_name,
+                ts["points__sum"], key(tsi), key(other)))
+        return ts
+
     def annotate(self, queryset, standings, round=None):
         key = metricgetter(*self.keys)
 
@@ -217,25 +234,39 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
             equal_teams = [x for x in standings.infoview() if key(x) == key(tsi)]
             if len(equal_teams) != 2:
                 return "n/a" # fail fast if attempt to compare with an int
-            equal_teams.remove(tsi)
-            team = tsi
-            other = equal_teams[0]
-            ts = TeamScore.objects.filter(
-                    ballot_submission__confirmed=True,
-                    debate_team__team=tsi.team,
-                    debate_team__debate__debateteam__team=other.team)
-            if round is not None:
-                ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)
-            ts = ts.aggregate(Sum('points'))
-            logger.info("who beat whom, {0} {3} vs {1} {4}: {2}".format(
-                    tsi.team.short_name, other.team.short_name,
-                    ts["points__sum"], key(tsi), key(other)))
+
+            ts = self.get_team_scores(key, equal_teams, tsi, round)
             return ts["points__sum"] or 0
 
         for tsi in standings.infoview():
             wbw = who_beat_whom(tsi)
             tsi.add_metric(self.key, wbw)
 
+
+class DivisionsWhoBeatWhomMetricAnnotator(WhoBeatWhomMetricAnnotator):
+    """Metric annotator for who-beat-whom within divisions. Use once for
+    every who-beat-whom in the precedence."""
+
+    key_prefix = "wbwd"
+    name_prefix = "WBWD"
+    abbr_prefix = "WBWD"
+    choice_name = "who-beat-whom (in divisions)"
+
+    def annotate(self, queryset, standings, round=None):
+        key = metricgetter(*self.keys)
+
+        def who_beat_whom_divisions(tsi):
+            equal_teams = [x for x in standings.infoview() if key(x) == key(tsi)
+                and x.team.division == tsi.team.division]
+            if len(equal_teams) != 2:
+                return 0 # fail fast if attempt to compare with an int
+
+            ts = self.get_team_scores(key, equal_teams, tsi, round)
+            return ts["points__sum"] or 0
+
+        for tsi in standings.infoview():
+            wbwd = who_beat_whom_divisions(tsi)
+            tsi.add_metric(self.key, wbwd)
 
 # ==============================================================================
 # Ranking annotators
@@ -292,6 +323,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "margin_avg"    : AverageMarginMetricAnnotator,
         # "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
         "wbw"           : WhoBeatWhomMetricAnnotator,
+        "wbwd"          : DivisionsWhoBeatWhomMetricAnnotator,
     }
 
     ranking_annotator_classes = {
