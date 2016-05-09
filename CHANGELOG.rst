@@ -2,13 +2,22 @@
 Change Log
 ==========
 
+?.?.?
+-----
+- Added a button to regenerate draws
+- Refactored team and speaker standings implementation
+- New standings metrics, draw methods, and interface settings for running small tournaments and division-based tournaments
+- Improved support for multiple tournaments
+- Various bug fixes, optimisations, and documentation edits
+
+
 0.8.3
 -----
 - Restored and reworking printing functionality for scoresheets/feedback
 - Restored Edit Venues and Edit Matchups on the draw pages
 - Improved Dashboard and Feedback graphs
 - Add seperate Pro-speakers tab
-- Various bug fixes, optimistions, and documentation edits
+- Various bug fixes, optimisations, and documentation edits
 
 
 0.8.2
