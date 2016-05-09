@@ -177,6 +177,24 @@ def confirm_draw(request, round):
 
     return redirect_round('draw', round)
 
+@admin_required
+@round_view
+def draw_confirm_regenerate(request, round):
+    return render(request, "draw_confirm_regeneration.html", dict())
+
+
+@admin_required
+@expect_post
+@round_view
+def draw_regenerate(request, round):
+    from .dbutils import delete_round_draw
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_REGENERATE,
+                               user=request.user,
+                               round=round,
+                               tournament=round.tournament)
+    delete_round_draw(round)
+    return redirect_round('draw', round)
+
 
 @admin_required
 @expect_post

@@ -26,6 +26,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_ADJUDICATOR_NOTE_SET    = 'aj.note'
     ACTION_TYPE_DRAW_CREATE             = 'dr.crea'
     ACTION_TYPE_DRAW_CONFIRM            = 'dr.conf'
+    ACTION_TYPE_DRAW_REGENERATE         = 'dr.rege'
     ACTION_TYPE_ADJUDICATORS_SAVE       = 'aa.save'
     ACTION_TYPE_VENUES_SAVE             = 've.save'
     ACTION_TYPE_DRAW_RELEASE            = 'dr.rele'
@@ -62,6 +63,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_VENUES_SAVE             , 'Saved venues'),
         (ACTION_TYPE_DRAW_CREATE             , 'Created draw'),
         (ACTION_TYPE_DRAW_CONFIRM            , 'Confirmed draw'),
+        (ACTION_TYPE_DRAW_REGENERATE         , 'Regenerated draw'),
         (ACTION_TYPE_DRAW_RELEASE            , 'Released draw'),
         (ACTION_TYPE_DRAW_UNRELEASE          , 'Unreleased draw'),
         (ACTION_TYPE_DRAW_UNRELEASE          , 'Saved divisions'),
@@ -97,6 +99,7 @@ class ActionLogEntry(models.Model):
         ACTION_TYPE_VENUES_SAVE             : ('round', ),
         ACTION_TYPE_DRAW_CREATE             : ('round', ),
         ACTION_TYPE_DRAW_CONFIRM            : ('round', ),
+        ACTION_TYPE_DRAW_REGENERATE         : ('round', ),
         ACTION_TYPE_DRAW_RELEASE            : ('round', ),
         ACTION_TYPE_DRAW_UNRELEASE          : ('round', ),
         ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  : ('debate', ),
