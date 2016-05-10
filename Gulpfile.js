@@ -7,6 +7,16 @@ var rename = require('gulp-rename');
 // Compression
 var minifyCSS = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
+var gzip = require('gulp-gzip');
+var gzip_options = {
+    threshold: '1kb',
+    gzipOptions: {
+        level: 9
+    }
+};
+
+// Local Dev
+// var livereload = require('gulp-livereload'); TODO see http://www.revsys.com/blog/2014/oct/21/ultimate-front-end-development-setup/
 
 // Creates task for compiling SCSS
 gulp.task('styles-compile', function() {

@@ -65,13 +65,14 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django_gulp', # Asset compilation; must be before staticfiles
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
     'django_extensions', # For Secret Generation Command
-    'compressor', )
+    )
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
@@ -139,21 +140,10 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder', )
+)
 
 # Whitenoise Gzipping and unique names
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# =============
-# = Pipelines =
-# =============
-
-# Compression
-COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = True
-COMPRESS_PRECOMPILERS = (('text/x-scss', 'django_libsass.SassCompiler'), )
-
-LIBSASS_OUTPUT_STYLE = 'compressed'
 
 # ===========
 # = Logging =
