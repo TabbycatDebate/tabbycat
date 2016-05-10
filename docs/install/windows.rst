@@ -63,6 +63,12 @@ Go to the `PostgreSQL downloads page <http://www.postgresql.org/download/windows
 
 .. tip:: Once PostgreSQL is installed, the PostgreSQL service will run on your computer whenever you are using it. You might prefer to configure it so that it only runs when you want to run Tabbycat. To do this, open "Services" in your Control Panel on Windows, find the PostgreSQL service, and change its startup type to "Manual". This will tell it not to start whenever you log in. Then, if you want to run the server (so you can use Tabbycat), you can do so from "Services" by selecting the PostgreSQL service and clicking "Start the service".
 
+1(c). Node.js/NPM
+----------------
+  *Node.js is a JavaScript runtime.*
+
+Download and run the `node.js Windows Installer (.msi) <https://nodejs.org/en/download/>`_
+
 2. Get the source code
 ======================
 
@@ -150,15 +156,17 @@ Almost there!
 
     > python -m pip install --upgrade pip
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.4-pg9.4.4-release.exe
-    > pip install rcssmin==1.0.6 rjsmin==1.0.12 --install-option="--without-c-extensions"
     > pip install -r requirements_common.txt
+    > npm install
+    > bower install
 
   If you installed **64-bit Python**::
 
     > python -m pip install --upgrade pip
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.4-pg9.4.4-release.exe
-    > pip install rcssmin==1.0.6 rjsmin==1.0.12 --install-option="--without-c-extensions"
     > pip install -r requirements_common.txt
+    > npm install
+    > bower install
 
   .. attention:: In the above lines are a couple of extra steps we need to do for Windows. The first is to use the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_. The second is to install ``rcssmin`` and ``rjsmin`` without the C extensions, because these require Visual C++ 10.0 to compile. If you have Visual C++ 10.0, you can skip the ``rcssmin``/``rjsmin`` line; the ``requirements_common.txt`` line will install them with C extensions.
 
@@ -167,6 +175,7 @@ Almost there!
 6. Initialize the database and create a user account for yourself::
 
     > dj migrate
+    > dj collectstatic
     > dj createsuperuser
 
 7. Start Tabbycat!

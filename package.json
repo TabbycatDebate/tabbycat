@@ -1,11 +1,7 @@
 {
   "name": "tabby-cat",
-  "version": "0.9.0",
-  "description": "[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)  [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/) [![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat)",
+  "description": "Debating tabulation software for two-team parliamentary formats",
   "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
   "dependencies": {
     "bower": "^1.7.9",
     "gulp": "^3.9.1",
@@ -20,6 +16,6 @@
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install"
   },
-  "author": "",
-  "license": "ISC"
+  "repository": "https://github.com/czlee/tabbycat",
+  "license": "UNLICENSED"
 }

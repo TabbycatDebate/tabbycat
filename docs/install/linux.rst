@@ -81,6 +81,17 @@ You'll need the *server-dev* package in order to install Psycopg2 later. As per 
     $ sudo apt-get install postgresql-9.4 postgresql-server-dev-9.4
 
 
+1(c). Node.js/NPM
+----------------
+  *Node.js is a JavaScript runtime.*
+
+Tabbycat requires Node and its package manager to compile front-end dependencies. Install using:
+
+.. parsed-literal::
+
+  $ curl -sL https://deb.nodesource.com/setup_4.x | bash -
+  $ sudo apt-get install -y nodejs
+
 2. Get the source code
 ======================
 
@@ -158,10 +169,13 @@ Almost there!
 
     $ pip install --upgrade pip
     $ pip install -r requirements_common.txt
+    $ npm install
+    $ bower install
 
-6. Initialize the database and create a user account for yourself::
+6. Initialize the database, compile the assets, and create a user account for yourself::
 
     $ dj migrate
+    $ dj collectstatic
     $ dj createsuperuser
 
 7. Start Tabbycat!

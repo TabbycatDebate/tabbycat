@@ -1,6 +1,6 @@
 {
   "name": "tabby-cat",
-  "description": "[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)  [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/) [![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat)",
+  "description": "Debating tabulation software for two-team parliamentary formats",
   "main": "index.js",
   "private": true,
   "ignore": [
