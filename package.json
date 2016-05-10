@@ -9,15 +9,16 @@
   "dependencies": {
     "bower": "^1.7.9",
     "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-gzip": "^1.2.0",
+    "gulp-livereload": "^3.8.1",
     "gulp-minify-css": "^1.2.4",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.1",
-    "gulp-uglify": "^1.5.3",
-    "gulp-gzip": "^1.2.0",
-    "gulp-livereload": "^3.8.1"
+    "gulp-uglify": "^1.5.3"
   },
   "scripts": {
-      "postinstall": "./node_modules/bower/bin/bower install"
+    "postinstall": "./node_modules/bower/bin/bower install"
   },
   "author": "",
   "license": "ISC"

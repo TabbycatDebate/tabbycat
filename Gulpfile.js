@@ -3,6 +3,7 @@ var gulp = require('gulp');
 // Compilation
 var sass = require('gulp-sass');
 var rename = require('gulp-rename');
+var concat = require('gulp-concat');
 
 // Compression
 var minifyCSS = require('gulp-minify-css');
@@ -16,18 +17,13 @@ var gzip_options = {
 };
 
 gulp.task('styles-compile', function() {
-  gulp.src('static/scss/*.scss')
+  gulp.src(['templates/scss/printables.scss', 'templates/scss/style.scss'])
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('staticfiles/css/'));
-});
-
-gulp.task('styles-compress', ['styles-compile'], function() {
-  return gulp.src('staticfiles/css/*.css')
-  .pipe(minifyCSS())
-  .pipe(rename(function (path) {
-    path.basename += ".min";
-  }))
-  .pipe(gulp.dest('staticfiles/css/'));
+    .pipe(minifyCSS())
+    .pipe(rename(function (path) {
+      path.basename += ".min";
+    }))
+    .pipe(gulp.dest('static/css/'));
 });
 
 gulp.task('fonts-compile', function() {
@@ -39,39 +35,59 @@ gulp.task('fonts-compile', function() {
       'bower_components/**/*.woff2',
     ])
     .pipe(rename({dirname: ''})) // Remove folder structure
-    .pipe(gulp.dest('staticfiles/fonts/vendor/'));
+    .pipe(gulp.dest('static/fonts/vendor/'));
 });
+
 
 // Creates task for collecting dependencies
 gulp.task('js-compile', function() {
-  gulp.src(['bower_components/**/dist/**/*.js',
-            'bower_components/boostrap-sass/assets/javascripts/*.js',
-            'bower_components/datatables.net/js/*.js',
-            'bower_components/datatables-fixedheader/js/*.js',
-            'bower_components/d3/*.js',
-            'bower_components/jquery-ui/*.js',
-          ])
-    .pipe(rename({dirname: ''})) // Remove folder structure
-    .pipe(gulp.dest('staticfiles/js/vendor/'));
+  gulp.src(['templates/js/*.js'])
+  .pipe(uglify())
+  .pipe(rename(function (path) {
+    path.basename += ".min";
+  }))
+  .pipe(rename({dirname: ''})) // Remove folder structure
+  .pipe(gulp.dest('static/js/'));
 });
 
-gulp.task('js-compress', ['js-compile'], function() {
-  return gulp.src('static/js/*.js')
-    .pipe(uglify())
-    .pipe(rename(function (path) {
-      path.basename += ".min";
-    }))
-    .pipe(gulp.dest('staticfiles/js/'));
+// Creates task for collecting dependencies
+gulp.task('js-main-vendor-compile', function() {
+  gulp.src(['bower_components/jquery/dist/jquery.js',
+            'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
+            'bower_components/datatables.net/js/jquery.dataTables.js',
+            'templates/js/vendor/fixed-header.js',
+          ])
+  .pipe(concat('vendor.js'))
+  .pipe(uglify())
+  .pipe(rename(function (path) {
+    path.basename += ".min";
+  }))
+  .pipe(rename({dirname: ''})) // Remove folder structure
+  .pipe(gulp.dest('static/js/vendor/'));
 });
+
+// Creates task for collecting dependencies
+gulp.task('js-alt-vendor-compile', function() {
+  gulp.src(['bower_components/jquery/dist/jquery.min.js', // Redundant but needed for debug toolbar
+            'bower_components/d3/*.js',
+            'bower_components/jquery-ui/*.js',
+            'bower_components/jquery-validation/*.js',
+            'bower_components/vue/dist/*.js',
+          ])
+  .pipe(uglify())
+  .pipe(rename({dirname: ''})) // Remove folder structure
+  .pipe(gulp.dest('static/js/vendor/'));
+});
+
 
 // TODO: concatenate JS before compressing
 // TODO: gzip things
 
 // Automatically build and watch the CSS folder for when a file changes
 gulp.task('default', ['build'], function() {
-  gulp.watch('static/scss/**/*.scss', ['styles-compile', 'styles-compress']);
-  gulp.watch('static/js/**/*.js', ['js-compress']);
+  gulp.watch('templates/scss/**/*.scss', ['styles-compile']);
+  gulp.watch('templates/js/**/*.js', ['js-compress']);
 });
 
 // Build task for production
-gulp.task('build', ['styles-compile', 'styles-compress', 'fonts-compile', 'js-compile', 'js-compress', ]);
+gulp.task('build', ['styles-compile', 'fonts-compile', 'js-compile', 'js-main-vendor-compile', 'js-alt-vendor-compile' ]);
