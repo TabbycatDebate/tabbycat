@@ -15,10 +15,6 @@ var gzip_options = {
     }
 };
 
-// Local Dev
-// var livereload = require('gulp-livereload'); TODO see http://www.revsys.com/blog/2014/oct/21/ultimate-front-end-development-setup/
-
-// Creates task for compiling SCSS
 gulp.task('styles-compile', function() {
   gulp.src('static/scss/*.scss')
     .pipe(sass().on('error', sass.logError))
@@ -34,7 +30,6 @@ gulp.task('styles-compress', ['styles-compile'], function() {
   .pipe(gulp.dest('staticfiles/css/'));
 });
 
-// Creates task for compiling fonts
 gulp.task('fonts-compile', function() {
   gulp.src([
       'bower_components/**/*.eot',
@@ -48,7 +43,7 @@ gulp.task('fonts-compile', function() {
 });
 
 // Creates task for collecting dependencies
-gulp.task('js-dependencies', function() {
+gulp.task('js-compile', function() {
   gulp.src(['bower_components/**/dist/**/*.js',
             'bower_components/boostrap-sass/assets/javascripts/*.js',
             'bower_components/datatables.net/js/*.js',
@@ -60,9 +55,7 @@ gulp.task('js-dependencies', function() {
     .pipe(gulp.dest('staticfiles/js/vendor/'));
 });
 
-// TODO: concatenate JS before compressing
-
-gulp.task('js-compress', ['js-dependencies'], function() {
+gulp.task('js-compress', ['js-compile'], function() {
   return gulp.src('static/js/*.js')
     .pipe(uglify())
     .pipe(rename(function (path) {
@@ -71,7 +64,14 @@ gulp.task('js-compress', ['js-dependencies'], function() {
     .pipe(gulp.dest('staticfiles/js/'));
 });
 
-// Automatically trigger the styles task when a file changes when `gulp` is running
-gulp.task('default',function() {
-    gulp.watch('static/scss/**/*.scss', ['styles-compile', 'styles-compress']);
+// TODO: concatenate JS before compressing
+// TODO: gzip things
+
+// Automatically build and watch the CSS folder for when a file changes
+gulp.task('default', ['build'], function() {
+  gulp.watch('static/scss/**/*.scss', ['styles-compile', 'styles-compress']);
+  gulp.watch('static/js/**/*.js', ['js-compress']);
 });
+
+// Build task for production
+gulp.task('build', ['styles-compile', 'styles-compress', 'fonts-compile', 'js-compile', 'js-compress', ]);

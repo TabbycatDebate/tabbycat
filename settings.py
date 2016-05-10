@@ -145,6 +145,15 @@ STATICFILES_FINDERS = (
 # Whitenoise Gzipping and unique names
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# ===============
+# = Compilation =
+# ===============
+
+# Run with collectstatic with DEBUG as False
+GULP_PRODUCTION_COMMAND = "gulp build --production"
+# Run with collectstatic with DEBUG as True
+GULP_DEVELOP_COMMAND = "gulp"
+
 # ===========
 # = Logging =
 # ===========
