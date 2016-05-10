@@ -68,3 +68,5 @@ nosetests.xml
 
 # Python 2to3 backup files
 *.bak
+node_modules
+bower_components

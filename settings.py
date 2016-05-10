@@ -13,7 +13,6 @@ ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS = ADMINS
 DEBUG = False
 DEBUG_ASSETS = DEBUG
-LIVE_RELOAD = False
 
 # ===================
 # = Global Settings =

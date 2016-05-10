@@ -1,4 +1,4 @@
-{% load static %}{% load debate_tags %}{% load compress %}<!DOCTYPE html>
+{% load static %}{% load debate_tags %}<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -8,14 +8,7 @@
   <title>{% block page-title %}{% endblock %}</title>
   <link rel="icon" type="image/png" href="/static/favicon.ico" />
   <!--[if IE]><link rel="shortcut icon" href="{% static 'favicon.ico' %}"/><![endif]-->
-  {% if live_reload %}
-  <link rel="stylesheet" type="text/scss" href="/static/css/styleauto.css" />
-  <link rel="stylesheet" type="text/scss" href="/static/css/autofix.css" />
-  {% else %}
-  {% compress css %}
-  <link rel="stylesheet" type="text/x-scss" href="/static/scss/style.scss" />
-  {% endcompress %}
-  {% endif %}
+  <link rel="stylesheet" type="text/css" href="/static/css/style.min.css" />
   {% block extra-css %}{% endblock %}
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
@@ -93,14 +86,12 @@
 
   {% endblock body %}
 
-  {% compress js %}
   <!-- Dependencies and JS for all pages -->
-  <script src="{% static 'js/vendor/jquery-2.2.0.min.js' %}"></script>
+  <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
   <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/vendor/jquery.dataTables.min.js' %}"></script>
-  <script src="{% static 'js/vendor/bootstrap-data-tables.js' %}"></script>
-  <script src="{% static 'js/vendor/fixed-header.js' %}"></script>
-  {% endcompress %}
+  <script src="{% static 'js/vendor/dataTables.fixedHeader.js' %}"></script>
+
   <script>
     jQuery.extend( true, $.fn.dataTable.defaults, {
       // Default Data Table options
@@ -147,14 +138,6 @@
 
   <!-- Page specific JS and dependencies -->
   {% block extra-js %}{% endblock extra-js %}
-
-  <!-- Auto live reload -->
-  {% if live_reload %}
-    <script>
-      document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +
-      ':35729/livereload.js?snipver=1"></' + 'script>')
-    </script>
-  {% endif %}
 
   <!-- Analytics -->
   {% if not debug %}

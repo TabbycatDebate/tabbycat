@@ -1,15 +1,16 @@
-@import "../vendor/bootstrap/variables";
+@import "../partials/variables";
+
 // WEB FONTS
 @font-face {
   font-family: 'LatoLatinWeb';
-  src: url(static("fonts/vendor/lato/LatoLatin-Regular.eot"));
+  src: url("static/fonts/vendor/LatoLatin-Regular.eot");
   /* Modern Browsers */
   /* IE6-IE8 */
   /* IE9 Compat Modes */
-  src:  url(static("fonts/vendor/lato/LatoLatin-Regular.eot?#iefix")) format('embedded-opentype'),
-        url(static("fonts/vendor/lato/LatoLatin-Regular.woff2")) format('woff2'),
-        url(static("fonts/vendor/lato/LatoLatin-Regular.woff")) format('woff'),
-        url(static("fonts/vendor/lato/LatoLatin-Regular.ttf")) format('truetype');
+  src:  url("/static/fonts/vendor/lato-regular.eot?#iefix") format('embedded-opentype'),
+        url("/static/fonts/vendor/lato-regular.woff2") format('woff2'),
+        url("/static/fonts/vendor/lato-regular.woff") format('woff'),
+        url("/static/fonts/vendor/lato-regular.ttf") format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;

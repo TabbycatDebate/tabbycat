@@ -1,0 +1,23 @@
+{
+  "name": "tabby-cat",
+  "description": "[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)  [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/) [![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat)",
+  "main": "index.js",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "d3": "^3.5.17",
+    "vue": "^1.0.22",
+    "datatables.net": "^1.10.11",
+    "jquery-validation": "^1.15.0",
+    "jquery-ui": "^1.11.4",
+    "lato": "^0.3.0",
+    "bootstrap-sass": "^3.3.6"
+  }
+}

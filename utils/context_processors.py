@@ -21,9 +21,6 @@ def debate_context(request):
 
         d['all_tournaments'] = Tournament.objects.filter(active=True)
 
-        if settings.LIVE_RELOAD:
-            d['live_reload'] = True
-
         return d
 
     return {}

@@ -9,12 +9,6 @@ python manage.py migrate
 echo "-----> Running dynamic preferences checks"
 python manage.py checkpreferences
 
-if [ -f bin/run_compress ]; then
-    echo "-----> Running run_compress"
-    chmod +x bin/run_compress
-    bin/run_compress
-fi
-
 if [ -f bin/run_collectstatic ]; then
     echo "-----> Running run_collectstatic"
     chmod +x bin/run_collectstatic
