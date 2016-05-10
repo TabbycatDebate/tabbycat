@@ -1,10 +1,17 @@
 # Django Related
 local_settings.py
-staticfiles/
 .gitmodules/
-.sass-cache/
 __pycache__/
-static/css/style.css
+
+# Compilation
+staticfiles/
+static/css/
+static/js/
+static/fonts/
+
+# Dependencies
+node_modules
+bower_components
 
 # Data to ignore
 data/*
@@ -68,5 +75,3 @@ nosetests.xml
 
 # Python 2to3 backup files
 *.bak
-node_modules
-bower_components
