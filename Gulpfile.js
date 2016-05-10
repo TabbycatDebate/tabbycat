@@ -8,23 +8,7 @@ var concat = require('gulp-concat');
 // Compression
 var minifyCSS = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
-var gzip = require('gulp-gzip');
-var gzip_options = {
-    threshold: '1kb',
-    gzipOptions: {
-        level: 9
-    }
-};
 
-gulp.task('styles-compile', function() {
-  gulp.src(['templates/scss/printables.scss', 'templates/scss/style.scss'])
-    .pipe(sass().on('error', sass.logError))
-    .pipe(minifyCSS())
-    .pipe(rename(function (path) {
-      path.basename += ".min";
-    }))
-    .pipe(gulp.dest('static/css/'));
-});
 
 gulp.task('fonts-compile', function() {
   gulp.src([
@@ -38,6 +22,15 @@ gulp.task('fonts-compile', function() {
     .pipe(gulp.dest('static/fonts/vendor/'));
 });
 
+gulp.task('styles-compile', function() {
+  gulp.src(['templates/scss/printables.scss', 'templates/scss/style.scss'])
+    .pipe(sass().on('error', sass.logError))
+    .pipe(minifyCSS())
+    .pipe(rename(function (path) {
+      path.basename += ".min";
+    }))
+    .pipe(gulp.dest('static/css/'));
+});
 
 // Creates task for collecting dependencies
 gulp.task('js-compile', function() {
@@ -79,10 +72,6 @@ gulp.task('js-alt-vendor-compile', function() {
   .pipe(gulp.dest('static/js/vendor/'));
 });
 
-
-// TODO: concatenate JS before compressing
-// TODO: gzip things
-
 // Automatically build and watch the CSS folder for when a file changes
 gulp.task('default', ['build'], function() {
   gulp.watch('templates/scss/**/*.scss', ['styles-compile']);
@@ -90,4 +79,4 @@ gulp.task('default', ['build'], function() {
 });
 
 // Build task for production
-gulp.task('build', ['styles-compile', 'fonts-compile', 'js-compile', 'js-main-vendor-compile', 'js-alt-vendor-compile' ]);
+gulp.task('build', ['fonts-compile', 'styles-compile', 'js-compile', 'js-main-vendor-compile', 'js-alt-vendor-compile' ]);
