@@ -8,6 +8,7 @@ Change Log
 - Refactored team and speaker standings implementation
 - New standings metrics, draw methods, and interface settings for running small tournaments and division-based tournaments
 - Improved support for multiple tournaments
+- Improved user-facing error messages in some scenarios
 - Various bug fixes, optimisations, and documentation edits
 
 
