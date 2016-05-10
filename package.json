@@ -17,7 +17,7 @@
     "gulp-livereload": "^3.8.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+      "postinstall": "./node_modules/bower/bin/bower install"
   },
   "author": "",
   "license": "ISC"
