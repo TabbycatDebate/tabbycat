@@ -112,6 +112,10 @@ match = re.search("https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku
 urlname = match.group(1)
 heroku_url = match.group(2)
 
+# Set build packs
+run_heroku_command(["buildpacks:set", "heroku/python"])
+run_heroku_command(["buildpacks:add", "--index", "1", "heroku/nodejs"])
+
 # Set config variables
 command = ["config:add"]
 command.append("DEBUG=1" if args.enable_debug else "DEBUG=0")
