@@ -14,7 +14,8 @@
     "gulp-uglify": "^1.5.3"
   },
   "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install"
+    "postinstall": "./node_modules/bower/bin/bower install",
+    "gulp": "gulp"
   },
   "repository": "https://github.com/czlee/tabbycat",
   "license": "UNLICENSED"
