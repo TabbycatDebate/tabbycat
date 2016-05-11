@@ -158,6 +158,8 @@ Almost there!
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.4-pg9.4.4-release.exe
     > pip install -r requirements_common.txt
     > npm install
+    > npm install -g gulp
+    > npm install -g bower
     > bower install
 
   If you installed **64-bit Python**::
@@ -166,6 +168,8 @@ Almost there!
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.4-pg9.4.4-release.exe
     > pip install -r requirements_common.txt
     > npm install
+    > npm install -g gulp
+    > npm install -g bower
     > bower install
 
   .. attention:: In the above lines are a couple of extra steps we need to do for Windows. The first is to use the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_. The second is to install ``rcssmin`` and ``rjsmin`` without the C extensions, because these require Visual C++ 10.0 to compile. If you have Visual C++ 10.0, you can skip the ``rcssmin``/``rjsmin`` line; the ``requirements_common.txt`` line will install them with C extensions.
