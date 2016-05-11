@@ -47,7 +47,7 @@ gulp.task('js-compile', function() {
 gulp.task('js-main-vendor-compile', function() {
   gulp.src(['bower_components/jquery/dist/jquery.js',
             'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-            'bower_components/datatables.net/js/jquery.dataTables.js',
+            'templates/js/vendor/jquery.dataTables.min.js',
             'templates/js/vendor/fixed-header.js',
           ])
   .pipe(concat('vendor.js'))
