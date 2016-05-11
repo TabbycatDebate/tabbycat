@@ -33,13 +33,9 @@ def public_index(request, t):
 
 def index(request):
     tournaments = Tournament.objects.all()
-    if tournaments.count() == 1:
-        if request.user.is_authenticated():
-            logger.debug('One tournament only, user is: %s, redirecting to tournament-admin-home', request.user)
-            return redirect_tournament('tournament-admin-home', tournaments.first())
-        else:
-            logger.debug('One tournament only, user is: %s, redirecting to tournament-public-index', request.user)
-            return redirect_tournament('tournament-public-index', tournaments.first())
+    if tournaments.count() == 1 and not request.user.is_authenticated():
+        logger.debug('One tournament only, user is: %s, redirecting to tournament-public-index', request.user)
+        return redirect_tournament('tournament-public-index', tournaments.first())
 
     elif not tournaments.exists() and not User.objects.exists():
         logger.debug('No users and no tournaments, redirecting to blank-site-start')
