@@ -150,9 +150,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # ===============
 
 # Run with collectstatic with DEBUG as False
-GULP_PRODUCTION_COMMAND = "gulp build --production"
+GULP_PRODUCTION_COMMAND = "npm run gulp build --production"
 # Run with collectstatic with DEBUG as True
-GULP_DEVELOP_COMMAND = "gulp"
+GULP_DEVELOP_COMMAND = "npm run gulp"
 
 # ===========
 # = Logging =
