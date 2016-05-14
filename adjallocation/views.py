@@ -10,7 +10,7 @@ from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
 from utils.mixins import SuperuserRequiredMixin
 
-
+from .allocator import allocate_adjudicators
 from .models import AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, AdjudicatorAdjudicatorConflict, DebateAdjudicator
 
 from utils.views import *
@@ -27,7 +27,7 @@ def create_adj_allocation(request, round):
         return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
 
     from adjallocation.hungarian import HungarianAllocator
-    round.allocate_adjudicators(HungarianAllocator)
+    allocate_adjudicators(round, HungarianAllocator)
 
     return _json_adj_allocation(round.get_draw(), round.unused_adjudicators())
 

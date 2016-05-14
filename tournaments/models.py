@@ -247,21 +247,6 @@ class Round(models.Model):
     def __str__(self):
         return "[%s] %s" % (self.tournament, self.name)
 
-    def allocate_adjudicators(self, alloc_class=SAAllocator):
-        if self.draw_status != self.STATUS_CONFIRMED:
-            raise RuntimeError(
-                "Tried to allocate adjudicators on unconfirmed draw")
-
-        debates = self.get_draw()
-        adjs = list(self.active_adjudicators.accredited())
-        allocator = alloc_class(debates, adjs)
-
-        for alloc in allocator.allocate():
-            alloc.save()
-
-        self.adjudicator_status = self.STATUS_DRAFT
-        self.save()
-
     @property
     def adjudicators_allocation_validity(self):
         debates = self.cached_draw

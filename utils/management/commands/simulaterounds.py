@@ -1,4 +1,5 @@
 from adjallocation.hungarian import HungarianAllocator
+from adjallocation.allocator import allocate_adjudicators
 from draw.models import Debate
 from draw.manager import DrawManager
 from utils.management.base import RoundCommand, CommandError
@@ -30,7 +31,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         round.save()
 
         self.stdout.write("Auto-allocating adjudicators for round '{}'...".format(round.name))
-        round.allocate_adjudicators(HungarianAllocator)
+        allocate_adjudicators(round, HungarianAllocator)
 
         self.stdout.write("Generating results for round '{}'...".format(round.name))
         add_ballotsets_to_round(round, **self.ballotset_kwargs(options))
