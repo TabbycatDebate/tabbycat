@@ -64,7 +64,7 @@ Go to the `PostgreSQL downloads page <http://www.postgresql.org/download/windows
 .. tip:: Once PostgreSQL is installed, the PostgreSQL service will run on your computer whenever you are using it. You might prefer to configure it so that it only runs when you want to run Tabbycat. To do this, open "Services" in your Control Panel on Windows, find the PostgreSQL service, and change its startup type to "Manual". This will tell it not to start whenever you log in. Then, if you want to run the server (so you can use Tabbycat), you can do so from "Services" by selecting the PostgreSQL service and clicking "Start the service".
 
 1(c). Node.js/NPM
-----------------
+-----------------
   *Node.js is a JavaScript runtime.*
 
 Download and run the `node.js Windows Installer (.msi) <https://nodejs.org/en/download/>`_
