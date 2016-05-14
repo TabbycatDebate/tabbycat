@@ -20,7 +20,8 @@ Short version
 =============
 .. parsed-literal::
 
-  sudo apt-get install python3-dev python3-venv postgresql-9.4 postgresql-server-dev-9.4
+  curl -sL https\:\/\/deb.nodesource.com/setup_5.x | sudo -E bash -    # add Node.js source repository
+  sudo apt-get install python3-dev python3-venv postgresql-9.4 postgresql-server-dev-9.4 nodejs
 
   # either
   wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
@@ -39,8 +40,10 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   source venv/bin/activate
   pip install --upgrade pip
   pip install -r requirements_common.txt
+  npm install
+  bower install
   dj migrate
-  dj compress
+  dj collectstatic
   dj createsuperuser
   waitress-serve wsgi:application
 
