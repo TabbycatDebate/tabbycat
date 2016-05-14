@@ -80,7 +80,6 @@
               <tr class="debate-status-{% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' %}bye{% else %}{{debate.result_status}}{% endif %}">
                 {% include 'tables/debate_icon.html' %}
                 <td class="ballot_links">
-                  <!-- TODO clean this CSS stuff up -->
                   {% for ballotset in debate.ballotsubmission_set_by_version %}
                     <a href="{% tournament_url edit_ballotset ballotset.id %}" title="Edit Ballot" class="
                       {% if ballotset.confirmed %}edit-ballot-link-confirmed{% endif %}
@@ -98,11 +97,8 @@
                     <br>
                   {% endfor %}
                   {% if not debate.ballotsubmission_set_by_version_except_discarded.exists %}
-                    {% if debate.aff_team.type != 'B' and debate.neg_team.type != 'B' %}
-                      <a href="{% tournament_url new_ballotset debate.id %}" title="Create New Ballot">Enter</a>
-                    {% endif %}
+                    <a href="{% tournament_url new_ballotset debate.id %}" title="Create New Ballot">Enter</a>
                   {% endif %}
-                  <!-- end TODO -->
                 </td>
 
                 {% if pref.enable_postponements %}
