@@ -1,5 +1,4 @@
 {% load debate_tags %}
-{% load static %}
 
 // UTILITY FUNCTIONS
 
@@ -256,7 +255,7 @@ $('#allocationsTable .importance select').on('change', function() {
 
 $('#auto_allocate').click(function() {
   var btn = $(this)
-  btn.button('loading')
+  btn.attr("disabled", true);
 
   $.ajax({
     type: "POST",
@@ -267,19 +266,19 @@ $('#auto_allocate').click(function() {
       update_all_conflicts();
       append_adj_scores();
       $('#loading').hide();
-      btn.button('reset')
+      btn.attr("disabled", false);
     },
     error: function(xhr, error, ex) {
       $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Auto-allocation failed! ' + xhr.responseText + ' (' + xhr.status + ')</div>');
       $(this).button('reset');
-      btn.button('reset')
+      btn.attr("disabled", false);
     }
   });
 });
 
-$('#save').click(function() {
+$('#save_allocation').click(function() {
   var btn = $(this)
-  btn.button('loading')
+  btn.attr("disabled", true);
   var data = {};
 
   $("#allocationsTable tbody tr").each(function() {
@@ -303,11 +302,11 @@ $('#save').click(function() {
     url: "{% round_url save_adjudicators %}",
     data: data,
     success: function(data, status) {
-      btn.button('reset')
+      btn.attr("disabled", false);
       $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>' + data + '</div>');
     },
     error: function(xhr, error, ex) {
-      btn.button('reset')
+      btn.attr("disabled", false);
       $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved failed!</div>');
     }
   });
