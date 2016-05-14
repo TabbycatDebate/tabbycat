@@ -66,6 +66,9 @@
 //---------------------------------------------------
 // TO REFACTOR
 //---------------------------------------------------
+.ui-helper-hidden-accessible {
+  display: none; // Remove when jquery UI is removed
+}
 @import "components/page-specific";
 @include text-emphasis-variant('.text-success', $brand-success);
 @include text-emphasis-variant('.text-info', $brand-info);

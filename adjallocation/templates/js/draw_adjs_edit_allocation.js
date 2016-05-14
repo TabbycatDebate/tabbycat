@@ -79,7 +79,8 @@ function load_allocation(callback) {
 }
 
 function load_conflict_data() {
-  $.getJSON("{% round_url adj_conflicts %}", function(data) {
+  $.getJSON("{% round_url adj_conflicts %}")
+  .done(function( data ) {
     all_adj_conflicts = data;
     $(".adj").each(function() {
       // insert blank entries for adjs who aren't there (those without conflicts)
@@ -98,7 +99,13 @@ function load_conflict_data() {
       }
     });
     update_all_conflicts();
+  })
+  .fail(function( jqxhr, textStatus, error ) {
+    var err = textStatus + ", " + error;
+    console.log( "Conflicts loading request Failed: " + err );
+    alert("Conflicts failed to load; you may want to reload the page to try again");
   });
+
 }
 
 function append_adj_scores() {
@@ -121,33 +128,35 @@ function append_adj_scores() {
 
 // Read the dicitionary and check if the adj has any conflicts
 function eachConflictingTeam(adj_id, fn) {
-  if (all_adj_conflicts['personal'][adj_id].length > 0) {
-    $.each(all_adj_conflicts['personal'][adj_id], function(i, n) {
-      $("#team_" + n).each(function() {
-        fn('personal', this);
+  if (all_adj_conflicts !== undefined) {
+    if (all_adj_conflicts['personal'][adj_id].length > 0) {
+      $.each(all_adj_conflicts['personal'][adj_id], function(i, n) {
+        $("#team_" + n).each(function() {
+          fn('personal', this);
+        });
       });
-    });
-  }
-  if (all_adj_conflicts['history'][adj_id].length > 0) {
-    $.each(all_adj_conflicts['history'][adj_id], function(i, n) {
-      $("#team_" + n).each(function() {
-        fn('history', this);
+    }
+    if (all_adj_conflicts['history'][adj_id].length > 0) {
+      $.each(all_adj_conflicts['history'][adj_id], function(i, n) {
+        $("#team_" + n).each(function() {
+          fn('history', this);
+        });
       });
-    });
-  }
-  if (all_adj_conflicts['institutional'][adj_id].length > 0) {
-    $.each(all_adj_conflicts['institutional'][adj_id], function(i, n) {
-      $("#team_" + n).each(function() {
-        fn('institutional', this);
+    }
+    if (all_adj_conflicts['institutional'][adj_id].length > 0) {
+      $.each(all_adj_conflicts['institutional'][adj_id], function(i, n) {
+        $("#team_" + n).each(function() {
+          fn('institutional', this);
+        });
       });
-    });
-  }
-  if (all_adj_conflicts['adjudicator'][adj_id].length > 0) {
-    $.each(all_adj_conflicts['adjudicator'][adj_id], function(i, n) {
-      $("#adj_" + n).each(function() {
-        fn('adjudicator', this);
+    }
+    if (all_adj_conflicts['adjudicator'][adj_id].length > 0) {
+      $.each(all_adj_conflicts['adjudicator'][adj_id], function(i, n) {
+        $("#adj_" + n).each(function() {
+          fn('adjudicator', this);
+        });
       });
-    });
+    }
   }
 }
 
@@ -186,37 +195,40 @@ function update_all_conflicts() {
 
 // Checks an individual debate for circumstances of conflict on each row
 function updateConflicts(debate_tr) {
-  $(".adj", debate_tr).each(function() {
-    var adj = this;
-    var adj_id = DOMIdtoInt(this);
 
-    // Check each team within each debate
-    $("td.teaminfo", debate_tr).each(function() {
-      if ($.inArray(DOMIdtoInt(this), all_adj_conflicts['personal'][adj_id]) != -1) {
-        $(this).addClass("personal-conflict");
-        $(adj).addClass("personal-conflict");
-      } else if ($.inArray(DOMIdtoInt(this), all_adj_conflicts['institutional'][adj_id]) != -1) {
-        $(this).addClass("institutional-conflict");
-        $(adj).addClass("institutional-conflict");
-      } else if ($.inArray(DOMIdtoInt(this), all_adj_conflicts['history'][adj_id]) != -1) {
-        $(this).addClass("history-conflict");
-        $(adj).addClass("history-conflict");
-      }
-    });
-
-    // Check each panelist within each debate
+  if (all_adj_conflicts !== undefined) {
     $(".adj", debate_tr).each(function() {
-      //console.log(this);
-      var adj_adj_conflict_ids = all_adj_conflicts['adjudicator'][adj_id];
-      if ($.inArray(DOMIdtoInt(this), adj_adj_conflict_ids) != -1) {
-        if (DOMIdtoInt(this) != adj_id) { // Can't conflict self
-          // Check if any of the panelists are conflicted with each other
-          $(this).addClass("adjudicator-conflict");
-          $(adj).addClass("adjudicator-conflict");
+      var adj = this;
+      var adj_id = DOMIdtoInt(this);
+
+      // Check each team within each debate
+      $("td.teaminfo", debate_tr).each(function() {
+        if ($.inArray(DOMIdtoInt(this), all_adj_conflicts['personal'][adj_id]) != -1) {
+          $(this).addClass("personal-conflict");
+          $(adj).addClass("personal-conflict");
+        } else if ($.inArray(DOMIdtoInt(this), all_adj_conflicts['institutional'][adj_id]) != -1) {
+          $(this).addClass("institutional-conflict");
+          $(adj).addClass("institutional-conflict");
+        } else if ($.inArray(DOMIdtoInt(this), all_adj_conflicts['history'][adj_id]) != -1) {
+          $(this).addClass("history-conflict");
+          $(adj).addClass("history-conflict");
         }
-      }
+      });
+
+      // Check each panelist within each debate
+      $(".adj", debate_tr).each(function() {
+        //console.log(this);
+        var adj_adj_conflict_ids = all_adj_conflicts['adjudicator'][adj_id];
+        if ($.inArray(DOMIdtoInt(this), adj_adj_conflict_ids) != -1) {
+          if (DOMIdtoInt(this) != adj_id) { // Can't conflict self
+            // Check if any of the panelists are conflicted with each other
+            $(this).addClass("adjudicator-conflict");
+            $(adj).addClass("adjudicator-conflict");
+          }
+        }
+      });
     });
-  });
+  }
 
   // Check for incomplete panels
   if ($(".panel-holder .adj", debate_tr).length % 2 != 0) {
