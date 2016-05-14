@@ -3,16 +3,7 @@ set -eo pipefail
 
 echo "-----> I'm post-compile hook"
 
-# echo "-----> Running Django's migration"
-# python manage.py migrate
-
 echo "-----> Running dynamic preferences checks"
 python manage.py checkpreferences
-
-# if [ -f bin/run_collectstatic ]; then
-#     echo "-----> Running run_collectstatic"
-#     chmod +x bin/run_collectstatic
-#     bin/run_collectstatic
-# fi
 
 echo "-----> Post-compile done"
