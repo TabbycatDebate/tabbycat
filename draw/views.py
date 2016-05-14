@@ -438,14 +438,15 @@ def public_draw(request, t):
     if r.draw_status == r.STATUS_RELEASED:
         draw = r.get_draw()
         draw_data = []
+        from collections import OrderedDict
         for d in draw:
-            draw_data.append({
-                'venue': d.venue.id,
-                'aff': d.aff_team.short_name,
-                'aff emoji': d.aff_team.emoji,
-                'neg': d.neg_team.short_name,
-                'neg emoji': d.neg_team.emoji,
-            })
+            draw_data.append(OrderedDict((
+                ('venue', d.venue.id ),
+                ('aff', d.aff_team.short_name ),
+                ('aff emoji', d.aff_team.emoji ),
+                ('neg', d.neg_team.short_name ),
+                ('neg emoji', d.neg_team.emoji )
+            )))
         return render(request, "public_draw_released.html",
             dict(tableData=json.dumps(draw_data), round=r))
     else:

@@ -50,7 +50,6 @@
       el: '#tableContainer',
       data: {
         searchQuery: '',
-        gridColumns: this.getHeaders,
         gridData: {{ tableData|safe }}
       },
       ready: function() {
@@ -60,9 +59,11 @@
         })
       },
       computed: {
-        getHeaders: function () {
-          var firstRow = this.gridData[0]
-          return Object.keys(firstRow)
+        gridColumns: function () {
+          var firstRow = this.gridData[0];
+          var columns = Object.keys(firstRow);
+          console.log(columns);
+          return columns
         },
       }
 
