@@ -437,10 +437,17 @@ def public_draw(request, t):
     r = t.current_round
     if r.draw_status == r.STATUS_RELEASED:
         draw = r.get_draw()
-        return render(request,
-                   "public_draw_released.html",
-                   dict(draw=draw,
-                        round=r))
+        draw_data = []
+        for d in draw:
+            draw_data.append({
+                'venue': d.venue.id,
+                'aff': d.aff_team.short_name,
+                'aff emoji': d.aff_team.emoji,
+                'neg': d.neg_team.short_name,
+                'neg emoji': d.neg_team.emoji,
+            })
+        return render(request, "public_draw_released.html",
+            dict(tableData=json.dumps(draw_data), round=r))
     else:
         return render(request,
                    'public_draw_unreleased.html',

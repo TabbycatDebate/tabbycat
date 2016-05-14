@@ -4,89 +4,99 @@
 
 {% block content %}
 
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <table id="draw" class="draw-m table">
-          <thead>
-            <tr>
-              {% if pref.enable_divisions %}
-                <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
-              {% endif %}
-              <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-              {% if pref.enable_debate_scheduling %}
-                <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
-                <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
-              {% endif %}
-              {% if pref.show_emoji %}
-                <th class="th-emoji"/></th>
-              {% endif %}
-              <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 1{% else %}Aff{% endif %}</th>
-              {% if pref.show_emoji %}
-                <th class="th-emoji"/></th>
-              {% endif %}
-              <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 2{% else %}Neg{% endif %}</th>
-              {% if pref.enable_division_motions %}
-                <th>Motion</th>
-              {% endif %}
-              {% if not pref.enable_divisions %}
-                <th>Adj<span class="hidden-xs">udicator</span>s</th>
-              {% endif %}
-            </tr>
-          </thead>
-          <tbody>
-          {% for debate in draw %}
-            <tr {% if pref.enable_divisions %}class="{% debate_draw_status_class debate %}"{% endif %}>
-              {% if pref.enable_divisions %}
-                <td>{{ debate.division.name }}</td>
-              {% endif %}
-              {% if pref.enable_venue_groups %}
-                {% if debate.division %}
-                  <td class="venue-name">{{ debate.division.venue_group.short_name }}</td>
-                {% else %}
-                  <td class="venue-name">{{ debate.venue.group.short_name }} {{ debate.venue.name }}</td>
-                {% endif %}
-              {% else %}
-                <td class="venue-name">{{ debate.venue.name }}</td>
-              {% endif %}
-              {% if pref.enable_debate_scheduling %}
-                {% include "tables/debate_status.html" %}
-              {% endif %}
-              {% if pref.show_emoji %}
-                <td class="team-emoji">
-                  <span class="emoji">{{ debate.aff_team.emoji }}</span>
-                </td>
-              {% endif %}
-              <td >
-                {% if debate.aff_team.type != 'B' %}
-                  {% include "tables/team.html" with team=debate.aff_team %}
-                {% endif %}
-              </td>
-              {% if pref.show_emoji %}
-                <td class="team-emoji">
-                  <span class="emoji">{{ debate.neg_team.emoji }}</span>
-                </td>
-              {% endif %}
-              <td >
-                {% if debate.neg_team.type != 'B'  %}
-                  {% include "tables/team.html" with team=debate.neg_team %}
-                {% endif %}
-              </td>
-              {% if pref.enable_division_motions %}
-                <td style="max-width: 10%">
-                  {% for motion in debate.division_motion %}
-                    <span>{{ motion.reference }}</span>
-                    <small title="{{ motion.text }}" data-toggle="tooltip">(view)</small>
-                  {% endfor %}
-                </td>
-              {% endif %}
-              {% if not pref.enable_divisions %}
-                {% include "tables/debate_adjudicators.html" %}
-              {% endif %}
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
+  <div class="panel panel-default">
+    <div class="panel-body" id="tableContainer">
+      <smart-table
+        :data="gridData"
+        :columns="gridColumns"
+        :filter-key="searchQuery">
+      </smart-table>
     </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <table id="draw" class="draw-m table">
+        <thead>
+          <tr>
+            {% if pref.enable_divisions %}
+              <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+            {% endif %}
+            <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+            {% if pref.enable_debate_scheduling %}
+              <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
+              <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
+            {% endif %}
+            {% if pref.show_emoji %}
+              <th class="th-emoji"/></th>
+            {% endif %}
+            <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 1{% else %}Aff{% endif %}</th>
+            {% if pref.show_emoji %}
+              <th class="th-emoji"/></th>
+            {% endif %}
+            <th>{% if pref.side_allocations_unknown == 'manual-ballot' %}Team 2{% else %}Neg{% endif %}</th>
+            {% if pref.enable_division_motions %}
+              <th>Motion</th>
+            {% endif %}
+            {% if not pref.enable_divisions %}
+              <th>Adj<span class="hidden-xs">udicator</span>s</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for debate in draw %}
+          <tr {% if pref.enable_divisions %}class="{% debate_draw_status_class debate %}"{% endif %}>
+            {% if pref.enable_divisions %}
+              <td>{{ debate.division.name }}</td>
+            {% endif %}
+            {% if pref.enable_venue_groups %}
+              {% if debate.division %}
+                <td class="venue-name">{{ debate.division.venue_group.short_name }}</td>
+              {% else %}
+                <td class="venue-name">{{ debate.venue.group.short_name }} {{ debate.venue.name }}</td>
+              {% endif %}
+            {% else %}
+              <td class="venue-name">{{ debate.venue.name }}</td>
+            {% endif %}
+            {% if pref.enable_debate_scheduling %}
+              {% include "tables/debate_status.html" %}
+            {% endif %}
+            {% if pref.show_emoji %}
+              <td class="team-emoji">
+                <span class="emoji">{{ debate.aff_team.emoji }}</span>
+              </td>
+            {% endif %}
+            <td >
+              {% if debate.aff_team.type != 'B' %}
+                {% include "tables/team.html" with team=debate.aff_team %}
+              {% endif %}
+            </td>
+            {% if pref.show_emoji %}
+              <td class="team-emoji">
+                <span class="emoji">{{ debate.neg_team.emoji }}</span>
+              </td>
+            {% endif %}
+            <td >
+              {% if debate.neg_team.type != 'B'  %}
+                {% include "tables/team.html" with team=debate.neg_team %}
+              {% endif %}
+            </td>
+            {% if pref.enable_division_motions %}
+              <td style="max-width: 10%">
+                {% for motion in debate.division_motion %}
+                  <span>{{ motion.reference }}</span>
+                  <small title="{{ motion.text }}" data-toggle="tooltip">(view)</small>
+                {% endfor %}
+              </td>
+            {% endif %}
+            {% if not pref.enable_divisions %}
+              {% include "tables/debate_adjudicators.html" %}
+            {% endif %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 {% endblock content %}
