@@ -11,6 +11,7 @@ ADMINS              = ()
 MANAGERS            = ADMINS
 DEBUG               = True
 DEBUG_ASSETS        = True
+TIME_ZONE           = 'Australia/Melbourne'
 
 # ===========================
 # = Django-specific Modules =
