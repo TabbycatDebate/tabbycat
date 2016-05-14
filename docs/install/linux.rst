@@ -41,7 +41,6 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   pip install --upgrade pip
   pip install -r requirements_common.txt
   npm install
-  bower install
   dj migrate
   dj collectstatic
   dj createsuperuser
@@ -176,7 +175,6 @@ Almost there!
     $ pip install --upgrade pip
     $ pip install -r requirements_common.txt
     $ npm install
-    $ bower install
 
 6. Initialize the database, compile the assets, and create a user account for yourself::
 
