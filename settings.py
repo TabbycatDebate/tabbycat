@@ -13,7 +13,6 @@ ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS = ADMINS
 DEBUG = False
 DEBUG_ASSETS = DEBUG
-LIVE_RELOAD = False
 
 # ===================
 # = Global Settings =
@@ -66,13 +65,14 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django_gulp', # Asset compilation; must be before staticfiles
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
     'django_extensions', # For Secret Generation Command
-    'compressor', )
+    )
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
@@ -140,21 +140,19 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder', )
+)
 
 # Whitenoise Gzipping and unique names
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# =============
-# = Pipelines =
-# =============
+# ===============
+# = Compilation =
+# ===============
 
-# Compression
-COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = True
-COMPRESS_PRECOMPILERS = (('text/x-scss', 'django_libsass.SassCompiler'), )
-
-LIBSASS_OUTPUT_STYLE = 'compressed'
+# Run with collectstatic with DEBUG as False
+GULP_PRODUCTION_COMMAND = "npm run gulp build --production"
+# Run with collectstatic with DEBUG as True
+GULP_DEVELOP_COMMAND = "npm run gulp"
 
 # ===========
 # = Logging =
