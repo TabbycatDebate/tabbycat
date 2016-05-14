@@ -37,7 +37,7 @@ urlpatterns = [
 
     # Creation/Release
     url(r'^round/(?P<round_seq>\d+)/create/$',
-        views.create_draw,
+        views.CreateDrawView.as_view(),
         name='create_draw'),
     url(r'^round/(?P<round_seq>\d+)/confirm/$',
         views.confirm_draw,

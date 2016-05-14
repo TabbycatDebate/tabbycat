@@ -22,10 +22,7 @@ class VenueGroup(models.Model):
         ordering = ['short_name']
 
     def __str__(self):
-        if self.short_name:
-            return "%s" % (self.short_name)
-        else:
-            return "%s" % (self.name)
+        return self.short_name or self.name
 
 
 class Venue(models.Model):
@@ -46,6 +43,9 @@ class Venue(models.Model):
 
     def __str__(self):
         if self.group:
-            return '%s - %s' % (self.group, self.name)
+            return '%s – %s' % (self.group, self.name)
         else:
             return '%s' % (self.name)
+
+    def __repr__(self):
+        return "<Venue: %s (%s) [%s]>" % (str(self), self.priority, self.id)

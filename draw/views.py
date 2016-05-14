@@ -14,10 +14,11 @@ from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import RoundMixin
 from tournaments.models import Tournament, Round, Division
 from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView
-from utils.misc import reverse_round
+from utils.misc import reverse_round, redirect_round
 from utils.views import *
 from venues.models import Venue, VenueGroup
 
+from .manager import DrawManager
 from .models import TeamPositionAllocation, Debate, DebateTeam
 # Viewing Draw
 
@@ -144,20 +145,39 @@ def draw_with_standings(request, round):
     return render(request, "draw_with_standings.html", dict(draw=draw, standings=standings))
 
 
-@admin_required
-@expect_post
-@round_view
-def create_draw(request, round, override_team_checkins=False):
-    if round.draw_status == round.STATUS_NONE:
-        round.draw(override_team_checkins=override_team_checkins)
-        ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
-                                   user=request.user,
-                                   round=round,
-                                   tournament=round.tournament)
-    else:
-        messages.error(request, "Could not create draw for {}, there was already a draw!".format(round.name))
+class CreateDrawView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
 
-    return redirect_round('draw', round)
+    action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_CREATE
+
+    def get_redirect_url(self):
+        return reverse_round('draw', self.get_round())
+
+    def post(self, request, *args, **kwargs):
+        round = self.get_round()
+
+        if round.draw_status != round.STATUS_NONE:
+            messages.error(request, "Could not create draw for {}, there was already a draw!".format(round.name))
+            return super().post(request, *args, **kwargs)
+
+        manager = DrawManager(round)
+        manager.create()
+        self.log_action()
+        return super().post(request, *args, **kwargs)
+
+# @admin_required
+# @expect_post
+# @round_view
+# def create_draw(request, round, override_team_checkins=False):
+#     if round.draw_status == round.STATUS_NONE:
+#         round.draw(override_team_checkins=override_team_checkins)
+#         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
+#                                    user=request.user,
+#                                    round=round,
+#                                    tournament=round.tournament)
+#     else:
+#         messages.error(request, "Could not create draw for {}, there was already a draw!".format(round.name))
+
+#     return redirect_round('draw', round)
 
 
 @admin_required

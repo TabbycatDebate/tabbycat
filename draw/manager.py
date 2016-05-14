@@ -1,7 +1,12 @@
-from tournament.models import Round
+from collections import defaultdict, Counter
+from itertools import chain
+import random
+
+from participants.models import Team
+from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
-from .models import Debate, TeamPositionAllocation
+from .models import Debate, DebateTeam, TeamPositionAllocation
 from .generator import DrawGenerator
 
 OPTIONS_TO_CONFIG_MAPPING = {
@@ -18,8 +23,10 @@ OPTIONS_TO_CONFIG_MAPPING = {
 TPA_MAP = {TeamPositionAllocation.POSITION_AFFIRMATIVE: "aff",
            TeamPositionAllocation.POSITION_NEGATIVE: "neg"}
 
+
 def DrawManager(round, active_only=True):
-    if round.draw_type == Round.DRAW_RANDOM:
+    klass = DRAW_MANAGER_CLASSES[round.draw_type]
+    return klass(round, active_only)
 
 
 class BaseDrawManager:
@@ -53,33 +60,98 @@ class BaseDrawManager:
                 team.allocated_side = tpas[team]
 
     def _assign_venues(self, pairings):
-        venues = list(self.active_venues.order_by('-priority')[:len(pairings)])
-        if len(venues) < len(pairings):
-            raise RuntimeError("There are %d debates but only %d venues." % (len(pairings), len(venues)))
+        """Returns a dict whose keys are elements of `pairings` and whose values
+        are the venues that should be assigned to each pairing. For those
+        pairings that have associated venue groups, the venue is guaranteed to
+        be in that group. If no suitable venue can be found for a pairing, no
+        venue will be assigned to it, and that pairing will not be in the
+        returned dict.
 
-        random.shuffle(venues)
-        random.shuffle(pairings)  # to avoid IDs indicating room ranks
+        The algorithm used for venue assignment is designed to achieve two
+        objectives:
+          - Pairings with associated venue groups must be assigned venues in
+            those groups, and
+          - Subject to that constrain, all venue assignments must be random.
 
-        # CONTINUE HERE - assign venues by division
+        In particular, this means that pairings with associated venue groups
+        should not always get high-priority rooms as a side effect of the
+        algorithm.
+
+        The algorithm is as follows:
+         1. Figure out how many pairings are associated with each venue group,
+            and how many pairings do not have venue constraints ("unconstrained
+            pairings").
+         2. Form a list of venues that will be used, by:
+             a. first, for each venue group, taking as many venues as there are
+                associated pairings, highest priority first,
+             b. then, from all remaining venues, taking as many venues as there
+                are unconstrained pairings, highest priority first. Note that
+                venues added here may be in venue groups that were considered in
+                (a), but weren't of sufficiently high priority during step (a).
+         3. Group the list of venues by venue group, regardless of whether they
+            were added in step (a) or (b).
+         4. For each venue group, generate a list of venues that will be used
+            for the associated pairings, by choosing at random the appropriate
+            number of venues from the grouped venues list. Note that these will
+            not necessarily be the same rooms taken in step 2(a): this is by
+            design, so that unconstrained pairings don't all end up with the
+            low-priority rooms chosen in 2(b). Assign a venue to each pairing.
+         5. Gather the leftover venues, and assign one to each unconstrained
+            pairing.
+        """
+
+        def groupdict(iterable, key): # helper function, like groupby() by does not require pre-sorting
+            results = defaultdict(list)
+            for item in iterable:
+                results[key(item)].append(item)
+            return results
+
+        # Step 1
+        pairings = [p for p in pairings if Team.TYPE_BYE not in [t.type for t in p.teams]] # filter out byes
+        constrained_pairings = groupdict(pairings, lambda p: p.venue_group)
+        unconstrained_pairings = constrained_pairings[None]
+        del constrained_pairings[None]
+        pairing_counts = Counter([p.venue_group for p in constrained_pairings])
+
+        # Step 2(a)
+        venues_by_group = groupdict(self.round.active_venues.order_by('-priority'), lambda v: v.group)
+        venues_for_use = list()
+        for vg, count in pairing_counts.items():
+            venues_in_group = venues_by_group.get(vg, [])
+            venues_for_use.extend(venues_in_group[:count])
+            venues_in_group[:count] = [] # remove from bank
+
+        # Step 2(b)
+        leftover_venues = sorted(chain(*venues_by_group.values()), key=lambda v: -v.priority)
+        unconstrained_count = len(unconstrained_pairings)
+        venues_for_use.extend(leftover_venues[:unconstrained_count])
+
+        # Step 3
+        random.shuffle(venues_for_use)
+        venues_by_group = groupdict(venues_for_use, lambda v: v.group)
+        assignments = dict()
+
+        # Step 4
+        for vg, pairings_group in constrained_pairings:
+            venues_in_group = venues_by_group.get(vg, [])
+            group_assignments = dict(zip(pairings_group, venues_in_group))
+            assignments.update(group_assignments)
+            venues_in_group[:len(group_assignments)] = [] # remove from bank
+
+        # Step 5
+        leftover_venues = list(chain(*venues_by_group.values()))
+        random.shuffle(leftover_venues)
+        assignments.update(dict(zip(unconstrained_pairings, leftover_venues)))
+
+        return assignments
 
     def _make_debates(self, pairings):
+        random.shuffle(pairings)  # to avoid IDs indicating room ranks
+        venues = self._assign_venues(pairings)
 
         for pairing in pairings:
-            try:
-                if pairing.division:
-                    if (pairing.teams[0].type == Team.TYPE_BYE) or (pairing.teams[1].type == Team.TYPE_BYE):
-                        selected_venue = None
-                    else:
-                        selected_venue = next(v for v in venues
-                                if v.group == pairing.division.venue_group)
-                        venues.pop(venues.index(selected_venue))
-                else:
-                    selected_venue = venues.pop(0)
-            except:
-                print("Error assigning venues")
-                selected_venue = None
-
-            debate = Debate(round=self, venue=selected_venue)
+            debate = Debate(round=self.round)
+            debate.venue = venues.get(pairing, None)
             debate.division = pairing.division
             debate.bracket = pairing.bracket
             debate.room_rank = pairing.room_rank
@@ -95,7 +167,7 @@ class BaseDrawManager:
     def create(self):
         """Generates a draw and populates the database with it."""
 
-        if self.round.draw_status == Round.STATUS_NONE:
+        if self.round.draw_status != Round.STATUS_NONE:
             raise RuntimeError("Tried to create a draw on round that already has a draw")
 
         self.delete()
@@ -113,7 +185,7 @@ class BaseDrawManager:
         drawer = DrawGenerator(self.draw_type, teams, self.round, results=None, **options)
         pairings = drawer.generate()
         self._make_debates(pairings)
-        self.round.draw_status = self.STATUS_DRAFT
+        self.round.draw_status = Round.STATUS_DRAFT
         self.round.save()
 
 
@@ -137,7 +209,7 @@ class PowerPairedDrawManager(BaseDrawManager):
 
         ranked = []
         for standing in standings:
-            team = standings.team
+            team = standing.team
             team.points = next(standing.itermetrics())
             ranked.append(team)
 
@@ -146,3 +218,11 @@ class PowerPairedDrawManager(BaseDrawManager):
 
 class RoundRobinDrawManager(BaseDrawManager):
     draw_type = "round_robin"
+
+
+DRAW_MANAGER_CLASSES = {
+    Round.DRAW_RANDOM: RandomDrawManager,
+    Round.DRAW_POWERPAIRED: PowerPairedDrawManager,
+    Round.DRAW_ROUNDROBIN: RoundRobinDrawManager,
+    Round.DRAW_MANUAL: ManualDrawManager,
+}

@@ -1,5 +1,6 @@
 from adjallocation.hungarian import HungarianAllocator
 from draw.models import Debate
+from draw.manager import DrawManager
 from utils.management.base import RoundCommand, CommandError
 from results.dbutils import add_ballotsets_to_round
 from results.management.commands.generateresults import GenerateResultsCommandMixin, SUBMITTER_TYPE_MAP
@@ -24,7 +25,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         round.activate_all()
 
         self.stdout.write("Generating a draw for round '{}'...".format(round.name))
-        round.draw()
+        DrawManager(round).create()
         round.draw_status = Round.STATUS_CONFIRMED
         round.save()
 

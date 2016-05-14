@@ -87,7 +87,7 @@ class RandomDrawTests(BaseDebateTestCase):
         self.activate_venues(self.round)
 
     def test_std(self):
-        self.round.draw()
+        DrawManager(round).create()
 
         self.failUnlessEqual(6, Debate.objects.count())
         self.failUnlessEqual(12, DebateTeam.objects.count())
