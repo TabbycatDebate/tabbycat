@@ -267,34 +267,20 @@ class Round(models.Model):
     def cached_draw(self):
         return self.get_draw()
 
-    def get_draw(self):
+    def _get_draw(self, *ordering):
+        related = ('venue',)
         if self.tournament.pref('enable_divisions'):
-            debates = self.debate_set.order_by('room_rank').select_related(
-                'venue', 'division', 'division__venue_group')
-        else:
-            debates = self.debate_set.order_by('room_rank').select_related(
-                'venue')
+            related += ('division', 'division__venue_group')
+        return self.debate_set.order_by(*ordering).select_related(*related)
 
-        return debates
+    def get_draw(self):
+        return self._get_draw('room_rank')
 
     def get_draw_by_room(self):
-        if self.tournament.pref('enable_divisions'):
-            debates = self.debate_set.order_by('venue__name').select_related(
-                'venue', 'division', 'division__venue_group')
-        else:
-            debates = self.debate_set.order_by('venue__name').select_related(
-                'venue')
-
-        return debates
+        return self._get_draw('venue__name')
 
     def get_draw_by_team(self):
-        # TODO is there a more efficient way to do this?
-        draw_by_team = list()
-        for debate in self.debate_set.all():
-            draw_by_team.append((debate.aff_team, debate))
-            draw_by_team.append((debate.neg_team, debate))
-        draw_by_team.sort(key=lambda x: str(x[0]))
-        return draw_by_team
+        return self._get_draw('debateteam__team')
 
     # TODO: all these availability methods should be in the availability app
 
