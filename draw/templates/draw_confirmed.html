@@ -61,7 +61,7 @@
     There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit round %}" class="alert-link">Edit the motions.</a>
   </div>
   {% endif %}
-  {% if not round.venue_allocation_validity %}
+  {% if not round.venue_allocation_valid %}
     <div class="alert alert-danger" id="">
       One or more debates does not have a venue <a href="{% round_url draw_venues_edit round %}" class="alert-link">Edit the venues</a>.
     </div>
@@ -71,7 +71,7 @@
       There are currently fewer checked-in adjudicators than there are rooms. <a href="{% round_url adjudicator_availability round %}" class="alert-link">Check in some more adjudicators</a>.
     </div>
   {% else %}
-    {% if round.adjudicators_allocation_validity == 1 or round.adjudicators_allocation_validity == 2 %}
+    {% if round.adjudicators_allocation_validity > 0 %}
       <div class="alert alert-warning">
         {% if round.adjudicators_allocation_validity == 1 %}
           One or more debates don't have a chair.

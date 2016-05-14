@@ -127,7 +127,7 @@ def draw_draft(request, round):
 
 
 def draw_confirmed(request, round):
-    draw = round.get_cached_draw
+    draw = round.cached_draw
     rooms = float(round.active_teams.count()) // 2
     active_adjs = round.active_adjudicators.all()
 

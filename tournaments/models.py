@@ -264,22 +264,22 @@ class Round(models.Model):
 
     @property
     def adjudicators_allocation_validity(self):
-        debates = self.get_cached_draw
+        debates = self.cached_draw
         if not all(debate.adjudicators.has_chair for debate in debates):
             return 1
         if not all(debate.adjudicators.valid for debate in debates):
             return 2
         return 0
 
-    def venue_allocation_validity(self):
-        debates = self.get_cached_draw
+    def venue_allocation_valid(self):
+        debates = self.cached_draw
         if all(debate.venue for debate in debates):
             return True
         else:
             return False
 
     @cached_property
-    def get_cached_draw(self):
+    def cached_draw(self):
         return self.get_draw()
 
     def get_draw(self):
