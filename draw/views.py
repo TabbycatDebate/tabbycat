@@ -164,21 +164,6 @@ class CreateDrawView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnl
         self.log_action()
         return super().post(request, *args, **kwargs)
 
-# @admin_required
-# @expect_post
-# @round_view
-# def create_draw(request, round, override_team_checkins=False):
-#     if round.draw_status == round.STATUS_NONE:
-#         round.draw(override_team_checkins=override_team_checkins)
-#         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
-#                                    user=request.user,
-#                                    round=round,
-#                                    tournament=round.tournament)
-#     else:
-#         messages.error(request, "Could not create draw for {}, there was already a draw!".format(round.name))
-
-#     return redirect_round('draw', round)
-
 
 @admin_required
 @expect_post
