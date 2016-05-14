@@ -65,7 +65,7 @@
                 </td>
               {% endif %}
               {% if not pref.enable_divisions %}
-                {% include "tables/debate_adjudicators.html" %}                
+                {% include "tables/debate_adjudicators.html" %}
               {% endif %}
             </tr>
           {% endfor %}
@@ -91,5 +91,5 @@
       })
     });
   </script>
-  <script src="{% static 'js/scroller.js' %}"></script>
+  <script src="{% static 'js/scroller.min.js' %}"></script>
 {% endblock extra-js %}
