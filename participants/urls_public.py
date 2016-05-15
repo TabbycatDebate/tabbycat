@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     url(r'^list/$',
-        views.public_participants,
+        views.PublicDrawForRound.as_view(),
         name='public_participants'),
     url(r'^team_list/(?P<team_id>\d+)/$',
         views.team_speakers,

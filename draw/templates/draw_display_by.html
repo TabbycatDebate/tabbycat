@@ -48,7 +48,6 @@
     <div class="panel-body" id="tableContainer">
       <smart-table
         :data="gridData"
-        :columns="gridColumns"
         :filter-key="searchQuery">
       </smart-table>
     </div>
@@ -67,18 +66,10 @@
       },
       ready: function() {
         var thisTable = this; // this in the next context is the element
-        $('#table-search').keyup(function(){
-          thisTable.$set('searchQuery', $(this).val());
-        })
+        document.getElementById('table-search').onkeyup = function (e) {
+          thisTable.$set('searchQuery', this.value);
+        }
       },
-      computed: {
-        gridColumns: function () {
-          var firstRow = this.gridData[0];
-          var columns = Object.keys(firstRow);
-          console.log(columns);
-          return columns
-        },
-      }
     });
   </script>
   <script src="{% static 'js/vendor/jquery.min.js' %}"></script>

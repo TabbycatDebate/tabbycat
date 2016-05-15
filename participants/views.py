@@ -1,8 +1,16 @@
+import json
+from collections import OrderedDict
+
 from django.http import JsonResponse
 from django.forms.models import modelformset_factory
-from utils.views import *
+from django.views.generic.base import TemplateView
+
 from .models import Adjudicator, Speaker, Institution, Team
 from adjallocation.models import DebateAdjudicator
+
+from utils.views import *
+from utils.mixins import PublicCacheMixin
+from tournaments.mixins import PublicTournamentPageMixin
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @tournament_view
@@ -15,12 +23,49 @@ def team_speakers(request, t, team_id):
 
     return JsonResponse(data, safe=False)
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_participants')
-def public_participants(request, t):
-    adjs = Adjudicator.objects.all()
-    speakers = Speaker.objects.all().select_related('team','team__institution')
-    return render(request, "public_participants.html", dict(adjs=adjs, speakers=speakers))
+
+class PublicDrawForRound(PublicTournamentPageMixin, PublicCacheMixin, TemplateView):
+
+    public_page_preference = 'public_participants'
+    template_name = 'public_participants.html'
+
+    def get_context_data(self, **kwargs):
+        t = self.get_tournament()
+
+        adjs_data = []
+        adjs = Adjudicator.objects.filter(tournament=t).select_related('institution')
+        for a in adjs:
+            ddict = [('Name', a.name )]
+            if a.adj_core:
+                institution = "Independent / " + a.institution.name
+            elif a.independent:
+                institution = "Independent / " + a.institution.name
+            else:
+                institution = a.institution.name
+
+            ddict.append(('Institution', institution ))
+            adjs_data.append(OrderedDict(ddict))
+
+        kwargs["adjsTableData"] = json.dumps(adjs_data)
+
+        speakers_data = []
+        speakers = Speaker.objects.filter(team__tournament=t).select_related('team','team__institution')
+        for s in speakers:
+            ddict = [('Name', s.name )]
+            if t.pref('show_novices'):
+                ddict.append(('Novice', s.novice ))
+            if t.pref('show_emoji'):
+                ddict.append(('Emoji', s.team.emoji ))
+            ddict.append(('Team', s.team.short_name ))
+            # if t.pref('public_break_categories'):
+            #     ddict.append(('Break Categories', s.team.break_categories_nongeneral ))
+            if t.pref('show_institutions'):
+                ddict.append(('Institution', s.team.institution.name ))
+            speakers_data.append(OrderedDict(ddict))
+
+        kwargs["speakersTableData"] = json.dumps(speakers_data)
+
+        return super().get_context_data(**kwargs)
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
