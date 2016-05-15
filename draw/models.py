@@ -2,10 +2,10 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 
+from adjallocation.models import DebateAdjudicator, AdjudicatorAllocation
 from tournaments.models import SRManager
 from participants.models import Team
 from .generator import DRAW_FLAG_DESCRIPTIONS
-
 
 class DebateManager(models.Manager):
     use_for_related_fields = True
@@ -183,7 +183,6 @@ class Debate(models.Model):
 
     @cached_property
     def adjudicators(self):
-        from adjallocation.models import DebateAdjudicator, AdjudicatorAllocation
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
         adjs = DebateAdjudicator.objects.filter(
@@ -197,6 +196,18 @@ class Debate(models.Model):
             if a.type == a.TYPE_TRAINEE:
                 alloc.trainees.append(a.adjudicator)
         return alloc
+
+    @cached_property
+    def adjudicators_for_draw(self):
+        adjs = ""
+        for type, adj in self.adjudicators:
+            if type == DebateAdjudicator.TYPE_CHAIR:
+                adjs += adj.name + " Ⓒ, "
+            elif type == DebateAdjudicator.TYPE_PANEL:
+                adjs += adj.name + " Ⓣ, "
+            else:
+                adjs += adj.name + ", "
+        return adjs[:-2] # Remove trailing comma on return
 
     @property
     def chair(self):

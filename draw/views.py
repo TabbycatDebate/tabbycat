@@ -4,6 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 from django.views.generic.base import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -11,31 +12,46 @@ from adjfeedback.models import AdjudicatorFeedbackQuestion
 from motions.models import Motion
 from participants.models import Team
 from standings.teams import TeamStandingsGenerator
-from tournaments.mixins import RoundMixin
+from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
 from tournaments.models import Tournament, Round, Division
-from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView
+from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView, PublicCacheMixin
 from utils.misc import reverse_round
 from utils.views import *
 from venues.models import Venue, VenueGroup
 
 from .models import TeamPositionAllocation, Debate, DebateTeam
-# Viewing Draw
+from .mixins import DrawTablePage
 
-@admin_required
-@round_view
-def draw_display_by_venue(request, round):
-    draw = round.get_draw()
-    return render(request,
-               "draw_display_by_venue.html",
-               dict(round=round,
-                    draw=draw))
+# Viewing Draws
+class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, PublicCacheMixin):
+
+    public_page_preference = 'public_draw'
+    sorting = 'venue'
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+        if round.draw_status != round.STATUS_RELEASED:
+            self.template = "public_draw_unreleased.html"
+            return
+        else:
+            return super().get_context_data(**kwargs)
 
 
-@admin_required
-@round_view
-def draw_display_by_team(request, round):
-    draw = round.get_draw()
-    return render(request, "draw_display_by_team.html", dict(draw=draw))
+class AdminDrawForRoundByVenue(DrawTablePage, LoginRequiredMixin):
+    sorting = 'venue'
+
+
+class AdminDrawForRoundByTeam(DrawTablePage, LoginRequiredMixin):
+    sorting = 'team'
+
+
+
+
+
+
+
+
+
 
 # Creating Draw
 @login_required
@@ -428,48 +444,7 @@ def save_venues(request, round):
 
     return HttpResponse("ok")
 
-# Public
 
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_draw')
-def public_draw(request, t):
-    r = t.current_round
-    if r.draw_status == r.STATUS_RELEASED:
-        draw = r.get_draw()
-        draw_data = []
-        from collections import OrderedDict
-        for d in draw:
-            draw_data.append(OrderedDict((
-                ('venue', d.venue.id ),
-                ('aff', d.aff_team.short_name ),
-                ('aff emoji', d.aff_team.emoji ),
-                ('neg', d.neg_team.short_name ),
-                ('neg emoji', d.neg_team.emoji )
-            )))
-        return render(request, "public_draw_released.html",
-            dict(tableData=json.dumps(draw_data), round=r))
-    else:
-        return render(request,
-                   'public_draw_unreleased.html',
-                   dict(draw=None,
-                        round=r))
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_round_view('show_all_draws')
-def public_draw_by_round(request, round):
-    if round.draw_status == round.STATUS_RELEASED:
-        draw = round.get_draw()
-        return render(request,
-                   "public_draw_released.html",
-                   dict(draw=draw,
-                        round=round))
-    else:
-        return render(request,
-                   'public_draw_unreleased.html',
-                   dict(draw=None,
-                        round=round))
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
