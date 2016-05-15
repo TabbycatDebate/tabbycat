@@ -19,25 +19,7 @@
 
       <tr v-for="entry in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]" >
         <td v-for="key in gridColumns">
-        
-          <template v-if="entry['rowLink']">
-            <a v-bind:href="entry['rowLink']">[[ entry[key] ]]</a>
-          </template>
-          <template v-else="entry['rowLink']">
-
-            <template v-if="entry[key] === true || entry[key] === false">
-              <template v-if="entry[key] === true">
-                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-              </template>
-              <template v-else>
-                <span class="glyphicon glyphicon-remove" aria-hidden="false"></span>
-              </template>
-            </template>
-            <template v-else>
-              [[ entry[key] ]]
-            </template>
-
-          </template>
+          <span v-html="getPrintKey(entry[key])"></span>
         </td>
       </tr>
 
@@ -74,6 +56,21 @@
       sortBy: function (key) {
         this.sortKey = key
         this.sortOrders[key] = this.sortOrders[key] * -1
+      },
+      getPrintKey: function(key) {
+        if (key === true) {
+          return '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>';
+        } else if (key === false) {
+          return '<span class="glyphicon glyphicon-remove" aria-hidden="false"></span>';
+        } else if (key === "Won") {
+          return '<span class="glyphicon glyphicon-arrow-up text-success"></span>';
+        } else if (key === "Lost") {
+          return '<span class="glyphicon glyphicon-arrow-down text-danger"></span>';
+        } else if (key[0] === "/") {
+          return '<a href="' + key + '">View</a>'
+        } else {
+          return key;
+        }
       }
     },
     computed: {

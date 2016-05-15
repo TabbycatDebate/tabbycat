@@ -1,11 +1,11 @@
 import logging
-logger = logging.getLogger(__name__)
-
-from django.template import Template, Context
-from django.views.generic.base import TemplateView
-
 import json
 import datetime
+logger = logging.getLogger(__name__)
+
+from collections import OrderedDict
+from django.template import Template, Context
+from django.views.generic.base import TemplateView
 
 from adjallocation.models import DebateAdjudicator
 from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
@@ -20,7 +20,7 @@ from .result import BallotSet
 from .forms import BallotSetForm
 
 from utils.views import *
-from utils.misc import get_ip_address
+from utils.misc import get_ip_address, reverse_tournament
 from .models import BallotSubmission
 
 
@@ -78,9 +78,47 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, TemplateV
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
-        tournament = self.get_tournament()
-        kwargs["draw"] = round.get_draw()
-        kwargs["show_motions_column"] = round.motion_set.count() > 1 and tournament.pref('show_motions_in_results')
+        t = self.get_tournament()
+        draw = round.get_draw()
+
+        draw_data = []
+        for d in draw:
+            ddict = []
+            if t.pref('enable_divisions'):
+                ddict.append(('Division', d.division.name ))
+            ddict.append(('Venue', d.venue.name ))
+            if t.pref('ballots_released'):
+                if d.confirmed_ballot:
+                    ddict.append(('Ballot', reverse_tournament('public_ballots_view', t, kwargs={'debate_id': d.id }) ))
+                else:
+                    ddict.append(('Ballot', "" ))
+            if t.pref('show_emoji'):
+                ddict.append(('AE', d.aff_team.emoji ))
+            if d.confirmed_ballot.ballot_set.aff_win:
+                ddict.append(('AR', "Won" ))
+            else:
+                ddict.append(('AR', "Lost" ))
+            ddict.append(('aff', d.aff_team.short_name))
+            if t.pref('show_emoji'):
+                ddict.append(('NE', d.neg_team.emoji ))
+            if d.confirmed_ballot.ballot_set.neg_win:
+                ddict.append(('NR', "Won" ))
+            else:
+                ddict.append(('NR', "Lost" ))
+            ddict.append(('neg', d.neg_team.short_name))
+            # Adjudicators with splits
+            if d.confirmed_ballot and t.pref('show_splitting_adjudicators'):
+                pass # TIDI
+            else:
+                ddict.append(('adjudicators', d.adjudicators_for_draw ))
+            if t.pref('show_motions_in_results'):
+                ddict.append(('Motion', d.confirmed_ballot.motion.reference ))
+
+            draw_data.append(OrderedDict(ddict))
+
+        kwargs["draw"] = draw # To deprecate
+        kwargs["resultsTableData"] = json.dumps(draw_data)
+
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):

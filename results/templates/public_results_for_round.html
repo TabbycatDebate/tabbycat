@@ -7,6 +7,13 @@
 {% block page-subnav-sections %}{% include "tables/table_search.html" %}{% endblock %}
 
 {% block content %}
+
+<div class="panel panel-default">
+  <div class="panel-body" id="resultsTableContainer">
+    <smart-table :data="gridData" :filter-key="searchQuery"></smart-table>
+  </div>
+</div>
+
 <div class="panel panel-default">
   <div class="panel-body">
     <table id="dataTable" class="table">
@@ -41,7 +48,7 @@
         {% if pref.ballots_released %}
           <td>
             {% if debate.confirmed_ballot %}
-              <a href="{% tournament_url public_ballots_view debate.id %}">View ballots</a>
+              <a href="{% tournament_url public_ballots_view debate.id %}">View Ballots</a>
             {% else %}
               No result
             {% endif %}
@@ -101,15 +108,14 @@
 
 {% block extra-js %}
   {{ block.super }}
+  {% include "vue/table.vue" %}
   <script>
-    $(document).ready( function() {
-      var dTable = $("#dataTable").DataTable({
-        "aaSorting": [[ 0, "asc" ]],
-      });
-      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
-      $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
-      })
-    } );
+    var resultsTable = new Vue({
+      el: '#resultsTableContainer',
+      data: {
+        searchQuery: '',
+        gridData: {{ resultsTableData|safe }},
+      },
+    });
   </script>
 {% endblock extra-js %}
