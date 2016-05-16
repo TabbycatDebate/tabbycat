@@ -100,7 +100,7 @@
       height: { type: Number, default: 200 },
       padding: { type: Number, default: 30 },
       pollFrequency: { type: Number, default: 30000 }, // 30s
-      graphData: { type: Number, default: [] }
+      graphData: { type: Number,  default: function () { return [] } }
     },
     methods: {
       fetchData: function () {
