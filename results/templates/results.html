@@ -111,17 +111,15 @@
                   </td>
                 {% endif %}
                 <td>{{ debate.bracket }}</td>
-                <td>
-                  {% if pref.enable_venue_groups %}
-                    {% if debate.division %}
-                      <td class="venue-name">{{ debate.division.venue_group.short_name }}</td>
-                    {% else %}
-                      <td class="venue-name">{{ debate.venue.group.short_name }} {{ debate.venue.name }}</td>
-                    {% endif %}
+                {% if pref.enable_venue_groups %}
+                  {% if debate.division %}
+                    <td class="venue-name">{{ debate.division.venue_group.short_name }}</td>
                   {% else %}
-                    <td class="venue-name">{{ debate.venue.name }}</td>
+                    <td class="venue-name">{{ debate.venue.group.short_name }} {{ debate.venue.name }}</td>
                   {% endif %}
-                </td>
+                {% else %}
+                  <td class="venue-name">{{ debate.venue.name }}</td>
+                {% endif %}
                 <td>
                    {% if debate.confirmed_ballot.forfeit %}
                     {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
