@@ -125,12 +125,6 @@ class VueTableMixin:
     """Mixing that provides shortcuts for adding data when building arrays that
     will end up as rows within a Vue table."""
 
-    def format_cell_number(self, value):
-        if isinstance(value, float):
-            return "{0:.2f}".format(value)
-        else:
-            return value
-
     def adj_cells(self, adjudicator, tournament):
         adj_info = [('Name', adjudicator.name )]
         if tournament.pref('show_institutions'):
@@ -187,3 +181,28 @@ class VueTableMixin:
                 venue_info.append(('status', debate.time.strftime('h:i A' )))
 
         return venue_info
+
+    def format_cell_number(self, value):
+        if isinstance(value, float):
+            return "{0:.2f}".format(value)
+        else:
+            return value
+
+    def ranking_cells(self, standing):
+        ddict = []
+        for key, value in standing.rankings.items():
+            if value[1]:
+                ddict.append((key, value[0] + '='))
+            else:
+                ddict.append((key, value[0]))
+        if hasattr(standing, 'break_rank'):
+            ddict.append(('Break', standing.break_rank))
+
+        return ddict
+
+    def metric_cells(self, metrics):
+        ddict = []
+        for key, value in metrics.items():
+            ddict.append((key, self.format_cell_number(value)))
+
+        return ddict

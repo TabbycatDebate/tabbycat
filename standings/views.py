@@ -231,12 +231,8 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, VueTableMixin, View):
         table_data = []
         for info in standings.standings:
             ddict = []
-            for key, value in info.rankings.items():
-                if value[1]:
-                    ddict.append((key, value[0] + '='))
-                else:
-                    ddict.append((key, value[0]))
 
+            ddict.extend(self.ranking_cells(info))
             ddict.extend(self.team_cells(info.team, tournament,
                 break_categories=info.team.break_categories_str))
 
@@ -244,8 +240,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, VueTableMixin, View):
                 ddict.append((round.abbreviation, result.win))
                 ddict.append((round.abbreviation, self.format_cell_number(result.score)))
 
-            for key, value in info.metrics.items():
-                ddict.append((key, self.format_cell_number(value)))
+            ddict.extend(self.metric_cells(info.metrics))
 
             table_data.append(OrderedDict(ddict))
 
