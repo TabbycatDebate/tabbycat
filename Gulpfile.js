@@ -46,7 +46,7 @@ gulp.task('js-compile', function() {
 gulp.task('js-admin-vendor-compile', function() {
   gulp.src(['bower_components/jquery/dist/jquery.js',
             'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-            'templates/js/vendor/jquery.dataTables.min.js',
+            'templates/js/vendor/jquery.dataTables.js',
             'templates/js/vendor/fixed-header.js',
             'bower_components/vue/dist/vue.js'
           ])
@@ -60,7 +60,8 @@ gulp.task('js-admin-vendor-compile', function() {
 });
 
 gulp.task('js-public-vendor-compile', function() {
-  gulp.src(['bower_components/vue/dist/vue.min.js'])
+  gulp.src(['bower_components/vue/dist/vue.js',
+            'bower_components/vue-strap/dist/vue-strap.js',])
   .pipe(concat('vendor-public.js'))
   .pipe(uglify())
   .pipe(rename(function (path) {
