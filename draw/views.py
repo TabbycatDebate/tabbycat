@@ -506,7 +506,7 @@ def public_side_allocations(request, t):
         team.side_allocations = [tpas.get(
             (team.id, round.id), "-") for round in rounds]
     return render(request,
-               "public_side_allocations.html",
+               "side_allocations.html",
                dict(teams=teams,
                     rounds=rounds))
 
