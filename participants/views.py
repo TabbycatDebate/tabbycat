@@ -34,17 +34,9 @@ class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMi
         t = self.get_tournament()
 
         adjs_data = []
-        adjs = Adjudicator.objects.filter(tournament=t).select_related('institution')
-        for a in adjs:
-            ddict = [('Name', a.name )]
-            if a.adj_core:
-                institution = "Independent / " + a.institution.name
-            elif a.independent:
-                institution = "Independent / " + a.institution.name
-            else:
-                institution = a.institution.name
-
-            ddict.append(('Institution', institution ))
+        adjudicators = Adjudicator.objects.filter(tournament=t).select_related('institution')
+        for adjudicator in adjudicators:
+            ddict = self.adj_cells(adjudicator, t)
             adjs_data.append(OrderedDict(ddict))
 
         kwargs["table_a_title"] = "Adjudicators"

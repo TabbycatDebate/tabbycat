@@ -62,7 +62,7 @@ gulp.task('js-admin-vendor-compile', function() {
 gulp.task('js-public-vendor-compile', function() {
   gulp.src(['bower_components/jquery/dist/jquery.js', // deprecate?
             'bower_components/vue/dist/vue.js',
-            'bower_components/vue-strap/dist/vue-strap.js',])
+          ])
   .pipe(concat('vendor-public.js'))
   .pipe(uglify())
   .pipe(rename(function (path) {

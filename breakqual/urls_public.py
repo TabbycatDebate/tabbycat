@@ -10,6 +10,6 @@ urlpatterns = [
         views.public_breaking_teams,
         name='public_breaking_teams'),
     url(r'^adjudicators/$',
-        views.public_breaking_adjs,
+        views.PublicBreakingAdjudicators.as_view(),
         name='public_breaking_adjs'),
 ]

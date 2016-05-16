@@ -1,12 +1,19 @@
+import json
+from collections import OrderedDict
+
 from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
 from utils.misc import get_ip_address
-
 from .models import BreakCategory, BreakingTeam
+
 from . import forms
 from . import breaking
 
-from utils.views import *
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from utils.views import * # To deprecate
+from utils.mixins import *
+from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_results')
@@ -77,17 +84,36 @@ def update_breaking_teams(request, t, category):
     messages.success(request, "Teams break updated for break category %s." % bc.name)
     return redirect_tournament('breaking_teams', t, category=category)
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_breaking_adjs')
-def public_breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
-    return render(request, 'public_breaking_adjs.html', dict(adjs=adjs))
 
-@admin_required
-@tournament_view
-def breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
-    return render(request, 'breaking_adjs.html', dict(adjs=adjs))
+
+# BREAKING ADJUDICATORS
+
+class BreakingAdjudicators(TournamentMixin, VueTableMixin, HeadlessTemplateView):
+
+    template_name = 'base_vue_table.html'
+    page_title = 'Breaking Adjudicators'
+    page_emoji = '🎉'
+
+    def get_context_data(self, **kwargs):
+        t = self.get_tournament()
+
+        adjs_data = []
+        for adj in Adjudicator.objects.filter(breaking=True, tournament=t):
+            adjs_data.append(OrderedDict(self.adj_cells(adj, t)))
+
+        kwargs["tableData"] = json.dumps(adjs_data)
+        return super().get_context_data(**kwargs)
+
+
+class AdminBreakingAdjudicators(LoginRequiredMixin, BreakingAdjudicators):
+
+    def get(self, request, *args, **kwargs):
+        messages.info(self.request, "Adjudicators can be marked as breaking in the Feedback section.")
+        return super().get(self, request, *args, **kwargs)
+
+class PublicBreakingAdjudicators(PublicTournamentPageMixin, PublicCacheMixin, BreakingAdjudicators):
+
+    public_page_preference = 'public_breaking_adjs'
 
 @admin_required
 @tournament_view

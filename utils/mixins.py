@@ -131,6 +131,17 @@ class VueTableMixin:
         else:
             return value
 
+    def adj_cells(self, adjudicator, tournament):
+        adj_info = [('Name', adjudicator.name )]
+        if tournament.pref('show_institutions'):
+            if adjudicator.adj_core:
+                adj_info.append(('Institution', "Adj Core / " + adjudicator.institution.name))
+            elif adjudicator.independent:
+                adj_info.append(('Institution', "Independent / " + adjudicator.institution.name))
+            else:
+                adj_info.append(('Institution', adjudicator.institution.name))
+        return adj_info
+
     def team_cells(self, team, tournament, break_categories=None):
         team_info = []
         if tournament.pref('show_emoji'):
