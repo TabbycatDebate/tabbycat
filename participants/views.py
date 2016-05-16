@@ -9,7 +9,7 @@ from .models import Adjudicator, Speaker, Institution, Team
 from adjallocation.models import DebateAdjudicator
 
 from utils.views import *
-from utils.mixins import PublicCacheMixin
+from utils.mixins import PublicCacheMixin, VueTableMixin
 from tournaments.mixins import PublicTournamentPageMixin
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -24,7 +24,7 @@ def team_speakers(request, t, team_id):
     return JsonResponse(data, safe=False)
 
 
-class PublicDrawForRound(PublicTournamentPageMixin, PublicCacheMixin, TemplateView):
+class PublicDrawForRound(PublicTournamentPageMixin, VueTableMixin, PublicCacheMixin, TemplateView):
 
     public_page_preference = 'public_participants'
     template_name = 'public_participants.html'
@@ -50,17 +50,11 @@ class PublicDrawForRound(PublicTournamentPageMixin, PublicCacheMixin, TemplateVi
 
         speakers_data = []
         speakers = Speaker.objects.filter(team__tournament=t).select_related('team','team__institution')
-        for s in speakers:
-            ddict = [('Name', s.name )]
-            if t.pref('show_novices'):
-                ddict.append(('Novice', s.novice ))
-            if t.pref('show_emoji'):
-                ddict.append(('Emoji', s.team.emoji ))
-            ddict.append(('Team', s.team.short_name ))
+        for speaker in speakers:
+            ddict.extend(self.speaker_cells(speaker, t))
+            ddict.extend(self.team_cells(speaker.team, t))
             # if t.pref('public_break_categories'):
             #     ddict.append(('Break Categories', s.team.break_categories_nongeneral ))
-            if t.pref('show_institutions'):
-                ddict.append(('Institution', s.team.institution.name ))
             speakers_data.append(OrderedDict(ddict))
 
         kwargs["speakersTableData"] = json.dumps(speakers_data)

@@ -60,7 +60,8 @@ gulp.task('js-admin-vendor-compile', function() {
 });
 
 gulp.task('js-public-vendor-compile', function() {
-  gulp.src(['bower_components/vue/dist/vue.js',
+  gulp.src(['bower_components/jquery/dist/jquery.js', // deprecate?
+            'bower_components/vue/dist/vue.js',
             'bower_components/vue-strap/dist/vue-strap.js',])
   .pipe(concat('vendor-public.js'))
   .pipe(uglify())
@@ -78,7 +79,6 @@ gulp.task('js-optional-vendor-compile', function() {
             'bower_components/jquery-ui/jquery-ui.min.js',
             'bower_components/jquery-validation/dist/jquery.validate.min.js',
           ])
-  .pipe(uglify())
   .pipe(rename({dirname: ''})) // Remove folder structure
   .pipe(gulp.dest('static/js/vendor/'));
 });

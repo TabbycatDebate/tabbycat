@@ -3,6 +3,7 @@ import json
 import logging
 logger = logging.getLogger(__name__)
 
+from collections import OrderedDict
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -14,15 +15,52 @@ from participants.models import Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
 from tournaments.models import Tournament, Round, Division
-from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView, PublicCacheMixin
+from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView, PublicCacheMixin, VueTableMixin
 from utils.misc import reverse_round
 from utils.views import *
 from venues.models import Venue, VenueGroup
 
 from .models import TeamPositionAllocation, Debate, DebateTeam
-from .mixins import DrawTablePage
 
 # Viewing Draws
+class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
+
+    template_name = 'draw_display_by.html'
+
+    def create_row(self, d, t, sort_key=None, sort_value=None):
+        ddict = []
+        if sort_key and sort_value:
+            ddict.append((sort_key, sort_value))
+
+        ddict.extend(self.venue_cells(d, t, with_times=True))
+        ddict.extend(self.team_cells(d.aff_team, t))
+        ddict.extend(self.team_cells(d.neg_team, t))
+
+        if t.pref('enable_division_motions'):
+            ddict.append(('motion', [m.reference for m in d.division_motions]))
+        if not t.pref('enable_divisions'):
+            ddict.append(('adjudicators', d.adjudicators_for_draw ))
+
+        return OrderedDict(ddict)
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+        draw = round.get_draw()
+        t = self.get_tournament()
+        if self.sorting is "team":
+            draw_data = []
+            for d in draw:
+                aff_row = self.create_row(d, t, 'Team', d.aff_team.short_name)
+                neg_row = self.create_row(d, t, 'Team', d.neg_team.short_name)
+                draw_data.extend([aff_row, neg_row])
+        else:
+            draw_data = [self.create_row(debate, t) for debate in draw]
+
+        kwargs["tableData"] = json.dumps(draw_data)
+        kwargs["round"] = self.get_round()
+        return super().get_context_data(**kwargs)
+
+
 class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, PublicCacheMixin):
 
     public_page_preference = 'public_draw'
@@ -43,15 +81,6 @@ class AdminDrawForRoundByVenue(DrawTablePage, LoginRequiredMixin):
 
 class AdminDrawForRoundByTeam(DrawTablePage, LoginRequiredMixin):
     sorting = 'team'
-
-
-
-
-
-
-
-
-
 
 # Creating Draw
 @login_required

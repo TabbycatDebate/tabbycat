@@ -1,3 +1,6 @@
+import json
+from collections import OrderedDict
+
 from django.db.models import Count
 from django.views.generic.base import View, ContextMixin, TemplateView
 from django.conf import settings
@@ -9,7 +12,7 @@ from participants.models import Team, Speaker
 from results.models import TeamScore, SpeakerScore
 from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
 from tournaments.models import Round
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableMixin
 
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
@@ -198,7 +201,7 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
 # Team standings
 # ==============================================================================
 
-class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
+class BaseTeamStandingsView(RoundMixin, ContextMixin, VueTableMixin, View):
     """Base class for views that display team standings."""
 
     def get_context_data(self, **kwargs):
@@ -225,7 +228,28 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
         add_team_round_results(standings, rounds)
         self.populate_result_missing(standings)
 
-        context = self.get_context_data(standings=standings, rounds=rounds)
+        table_data = []
+        for info in standings.standings:
+            ddict = []
+            for key, value in info.rankings.items():
+                if value[1]:
+                    ddict.append((key, value[0] + '='))
+                else:
+                    ddict.append((key, value[0]))
+
+            ddict.extend(self.team_cells(info.team, tournament,
+                break_categories=info.team.break_categories_str))
+
+            for round, result in zip(rounds, info.round_results):
+                ddict.append((round.abbreviation, result.win))
+                ddict.append((round.abbreviation, self.format_cell_number(result.score)))
+
+            for key, value in info.metrics.items():
+                ddict.append((key, self.format_cell_number(value)))
+
+            table_data.append(OrderedDict(ddict))
+
+        context = self.get_context_data(table_data=json.dumps(table_data), standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
 
