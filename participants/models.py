@@ -224,6 +224,11 @@ class Team(models.Model):
         return "(" + ", ".join(c.name
                                for c in categories) + ")" if categories else ""
 
+    def break_rank_for_category(self, category):
+        from breakqual.models import BreakingTeam
+        bt = BreakingTeam.objects.get(break_category=category, team=self)
+        return bt.break_rank
+
     def get_aff_count(self, seq=None):
         from draw.models import DebateTeam
         return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)

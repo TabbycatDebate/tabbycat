@@ -3,7 +3,7 @@ import unittest
 from collections import OrderedDict
 from .. import DrawGenerator, Pairing, DrawError
 import copy
-from .utils import TestTeam
+from .utils import TestTeam, TestRound
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
 
@@ -703,8 +703,9 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
 
 class TestPartialEliminationDrawGenerator(unittest.TestCase):
 
-    teams = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
-             (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
+    # (Team Name, Team Institution)
+    teams = [(1, 'A', 1), (2, 'B', 2), (3, 'A', 3), (4, 'B', 4), (5, 'C', 5), (6, 'D', 6),
+             (7, 'E', 7), (8, 'A', 8), (9, 'D', 9), (10, 'E', 10), (11, 'D', 11), (12, 'A', 12)]
 
     def test_split(self):
         self.fed = DrawGenerator("first_elimination", DUMMY_TEAMS, None)
@@ -719,6 +720,7 @@ class TestPartialEliminationDrawGenerator(unittest.TestCase):
         del self.fed
 
     def test_even_numbers(self):
+        # Run a draw with break size of 2; expect the each team's ID to be paired up as follows
         self.run_draw(2, [(1, 2)])
         self.run_draw(4, [(1, 4), (2, 3)])
         self.run_draw(8, [(1, 8), (2, 7), (3, 6), (4, 5)])
@@ -730,9 +732,17 @@ class TestPartialEliminationDrawGenerator(unittest.TestCase):
         self.run_draw(12, [(5, 12), (6, 11), (7, 10), (8, 9)], [1, 2, 3, 4])
 
     def run_draw(self, break_size, expected, exp_bypassing=None):
-        teams = [TestTeam(*args) for args in self.teams]
-        self.fed = DrawGenerator("first_elimination", teams, None, break_size=break_size)
+        # Detemine how many teams should be put in from the base set
+        teams_to_pass_in = len(expected) * 2
+        if exp_bypassing is not None:
+            teams_to_pass_in += len(exp_bypassing)
+
+        # Make the test team objects and generate their pairings
+        teams = [TestTeam(*args) for args in self.teams][:teams_to_pass_in]
+        self.fed = DrawGenerator("first_elimination", teams, TestRound(break_size))
         pairings = self.fed.generate()
+
+        # Assert pairings as expected
         self.assertEqual([(p.aff_team.id, p.neg_team.id) for p in pairings], expected)
         if exp_bypassing is not None:
             bypassing = [t.id for t in self.fed.get_bypassing_teams()]
@@ -740,8 +750,8 @@ class TestPartialEliminationDrawGenerator(unittest.TestCase):
 
 class TestEliminationDrawGenerator(unittest.TestCase):
 
-    team_data = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
-                 (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
+    team_data = [(1, 'A', 1), (2, 'B', 2), (3, 'A', 3), (4, 'B', 4), (5, 'C', 5), (6, 'D', 6),
+             (7, 'E', 7), (8, 'A', 8), (9, 'D', 9), (10, 'E', 10), (11, 'D', 11), (12, 'A', 12)]
 
     def setUp(self):
         self.teams = [TestTeam(*args) for args in self.team_data]
@@ -762,21 +772,23 @@ class TestEliminationDrawGenerator(unittest.TestCase):
     def test_no_bypass(self):
         teams = list()
         results = self._results(([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
-        self.run_draw(teams, results, [(1, 8), (7, 3)])
+        self.run_draw(teams, TestRound(4), results, [(1, 8), (7, 3)])
 
     def test_bypass(self):
+        # Test when a series of teams (9-12) have had a partial elimination round
         teams = self._teams(9, 11, 10, 12)
         results = self._results(([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
-        self.run_draw(teams, results, [(9, 8), (11, 3), (10, 7), (12, 1)])
+        self.run_draw(teams, TestRound(8), results, [(9, 8), (11, 3), (10, 7), (12, 1)])
 
     def test_error(self):
-        teams = self._teams(9, 11, 12)
+        # Test when number of teams is not a power of two
+        teams = self._teams(1, 7, 3, 8, 9, 11)
         results = self._results(([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
-        self.ed = DrawGenerator("elimination", teams, None, results)
-        self.assertRaises(RuntimeError, self.ed.generate)
+        self.ed = DrawGenerator("elimination", teams, TestRound(6), results)
+        self.assertRaises(DrawError, self.ed.generate)
 
-    def run_draw(self, teams, results, expected):
-        self.ed = DrawGenerator("elimination", teams, None, results)
+    def run_draw(self, teams, test_round, results, expected):
+        self.ed = DrawGenerator("elimination", teams, test_round, results)
         pairings = self.ed.generate()
         self.assertEqual([(p.aff_team.id, p.neg_team.id) for p in pairings], expected)
 

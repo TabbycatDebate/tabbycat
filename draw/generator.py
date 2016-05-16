@@ -119,7 +119,7 @@ class Pairing(object):
         return self.teams[self._winner_index]
 
 
-def DrawGenerator(draw_type, teams, round, results=None, **kwargs):
+def DrawGenerator(draw_type, teams, round=None, results=None, **kwargs):
     """Factory for draw objects.
     Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
     'draw_type' is mandatory and can be any of 'random', 'power_paired',
@@ -186,10 +186,11 @@ class BaseDrawGenerator(object):
     # All subclasses must define this with any options that may exist.
     DEFAULT_OPTIONS = {}
 
-    def __init__(self, teams, round, results=None, **kwargs):
+    def __init__(self, teams, round=None, results=None, **kwargs):
         self.teams = teams
         self.team_flags = dict()
         self.round = round
+        self.results = results
 
         if self.requires_even_teams:
             if not len(self.teams) % 2 == 0:
@@ -1013,23 +1014,26 @@ class FirstEliminationDrawGenerator(BaseDrawGenerator):
     a number of teams breaking that is not a power of two."""
 
     can_be_first_round = False
-    requires_even_teams = True
+    requires_even_teams = False
     requires_prev_results = False
     draw_type = "elimination"
 
-    DEFAULT_OPTIONS = {
-        "break_size": 8,
-    }
-
     def generate(self):
-        # Determine who breaks
-        break_size = self.options["break_size"]
-        breaking_teams = self.teams[:break_size]
+        # Sort by break rank
+        for team in self.teams:
+            team.break_rank = team.break_rank_for_category(self.round.break_category)
+
+        self.teams = sorted(self.teams, key=lambda x: x.break_rank)
+        break_size = self.round.break_size
+
         # Determine who debates
         bypassing, debating = self._bypass_debate_split(break_size)
-        assert(bypassing + debating == break_size)
-        self._bypassing_teams = breaking_teams[:bypassing]
-        debating_teams = breaking_teams[-debating:]
+        if bypassing + debating != break_size:
+            raise DrawError("The number of debating (%s) and bypassing (%s) teams in this round is not equal to the break size (%s)" % (debating, bypassing, break_size))
+
+        self._bypassing_teams = self.teams[:bypassing]
+        debating_teams = self.teams[-debating:]
+
         # Pair the debating teams
         debates = len(debating_teams) // 2
         top = debating_teams[:debates]
@@ -1039,6 +1043,7 @@ class FirstEliminationDrawGenerator(BaseDrawGenerator):
         for i, teams in enumerate(zip(top, bottom), start=bypassing+1):
             pairing = Pairing(teams, bracket=0, room_rank=i)
             pairings.append(pairing)
+
         return pairings
 
     @staticmethod
@@ -1062,18 +1067,28 @@ class EliminationDrawGenerator(BaseDrawGenerator):
     'results' should be a list of Pairings with winners indicated."""
 
     can_be_first_round = False
-    requires_even_teams = False
-    requires_prev_results = True
+    requires_even_teams = False # It does but enabling trips it at init rather than the DrawError() below
+    requires_prev_results = False
     draw_type = "elimination"
 
     def generate(self):
+        category = self.round.break_category
+
+        # Sort by break rank
+        for team in self.teams:
+            team.break_rank = team.break_rank_for_category(self.round.break_category)
+
+        teams = sorted(self.teams, key=lambda x: x.break_rank)
+
         # Check for argument sanity.
         num_teams = len(self.teams) + len(self.results)
         if num_teams != 1 << (num_teams.bit_length() - 1):
-            raise RuntimeError("The number of teams in this round is not a power of two")
+            raise DrawError("The number of teams (%s) in this round is not a power of two" % num_teams)
+
         self.results.sort(key=lambda x: x.room_rank)
         teams = list(self.teams)
         teams.extend([p.winner for p in self.results])
+
         debates = len(teams) // 2
         top = teams[:debates]
         bottom = teams[debates:]

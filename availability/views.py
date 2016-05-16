@@ -64,11 +64,37 @@ def update_availability_previous(request, round):
                          'Checked in all teams, adjudicators, and venues from previous round')
     return redirect_round('availability_index', round)
 
+
+@admin_required
+@round_view
+def update_availability_breaking_adjs(request, round):
+    round.activate_all_breaking_adjs()
+    messages.add_message(request, messages.SUCCESS,
+        'Checked in all breaking adjudicators')
+    return redirect_round('availability_index', round)
+
+
+@admin_required
+@round_view
+def update_availability_breaking_teams(request, round):
+    round.activate_all_breaking_teams()
+    messages.add_message(request, messages.SUCCESS,
+        'Checked in all breaking teams')
+    return redirect_round('availability_index', round)
+
+
+@admin_required
+@round_view
+def update_availability_advancing_teams(request, round):
+    round.activate_all_advancing_teams()
+    messages.add_message(request, messages.SUCCESS,
+        'Checked in all advancing teams')
+    return redirect_round('availability_index', round)
+
 def _availability(request, round, model, context_name):
     items = getattr(round, '%s_availability' % model)()
     context = { context_name: items }
     return render(request, '%s_availability.html' % model, context)
-
 
 # public (for barcode checkins)
 @round_view
