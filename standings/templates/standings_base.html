@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_vue_table.html" %}
 {% load debate_tags %}
 
 {% block page-subnav-sections %}
@@ -33,5 +33,6 @@
   <a class="btn btn-default {% block motion_active %}{% endblock %}" href="{% round_url standings-motion current_round %}">
     Motion Balance
   </a>
+  {% include "tables/table_search.html" %}
 
 {% endblock %}

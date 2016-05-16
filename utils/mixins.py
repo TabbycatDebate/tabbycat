@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.generic.base import View, TemplateResponseMixin
+from django.views.generic.base import View, TemplateView, TemplateResponseMixin
 from django.views.generic.detail import SingleObjectMixin
 
 from tournaments.mixins import TournamentMixin
@@ -107,7 +107,23 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     slug_field = 'url_key'
     slug_url_kwarg = 'url_key'
 
+
+class HeadlessTemplateView(TemplateView):
+    """Mixin for views that sets context data for the page and html header
+    directly into the base template, obviating the need for page templates in
+    many instances"""
+
+    def get_context_data(self, **kwargs):
+
+        kwargs["page_title"] = self.page_title
+        kwargs["page_emoji"] = self.page_emoji
+
+        return super().get_context_data(**kwargs)
+
+
 class VueTableMixin:
+    """Mixing that provides shortcuts for adding data when building arrays that
+    will end up as rows within a Vue table."""
 
     def format_cell_number(self, value):
         if isinstance(value, float):

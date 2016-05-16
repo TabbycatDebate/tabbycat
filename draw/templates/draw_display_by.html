@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_vue_table.html" %}
 {% load debate_tags %}
 {% load static %}
 
@@ -42,36 +42,8 @@
   {% include "tables/table_search.html" %}
 {% endblock %}
 
-{% block content %}
-
-  <div class="panel panel-default">
-    <div class="panel-body" id="tableContainer">
-      <smart-table
-        :data="gridData"
-        :filter-key="searchQuery">
-      </smart-table>
-    </div>
-  </div>
-
-{% endblock content %}
-
 {% block extra-js %}
-  {% include "vue/table.vue" %}
-  <script>
-    var fromTeamsTable = new Vue({
-      el: '#tableContainer',
-      data: {
-        searchQuery: '',
-        gridData: {{ tableData|safe }},
-      },
-      ready: function() {
-        var thisTable = this; // this in the next context is the element
-        document.getElementById('table-search').onkeyup = function (e) {
-          thisTable.$set('searchQuery', this.value);
-        }
-      },
-    });
-  </script>
+  {{ block.super }}
   <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
   <script src="{% static 'js/scroller.min.js' %}"></script>
 {% endblock extra-js %}

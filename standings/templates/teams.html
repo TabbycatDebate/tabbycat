@@ -6,29 +6,3 @@
 {% block page-title %}👯Team Standings after {{ round.name }}{% endblock %}
 {% block head-title %}<span class="emoji">👯</span>Team Standings{% endblock %}
 {% block sub-title %}after {{ round.name }}{% endblock %}
-
-{% block content %}
-
-  <div class="panel panel-default">
-    <div class="panel-body" id="teamTabTableContainer">
-      <smart-table :data="gridData" :filter-key="searchQuery"></smart-table>
-    </div>
-  </div>
-
-{% endblock content %}
-
-{% block extra-js %}
-  {{ block.super }}
-
-  {% include "vue/table.vue" %}
-  <script>
-    var teamTabTable = new Vue({
-      el: '#teamTabTableContainer',
-      data: {
-        searchQuery: '',
-        gridData: {{ table_data|safe }},
-      },
-    });
-  </script>
-
-{% endblock extra-js %}

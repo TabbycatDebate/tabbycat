@@ -249,7 +249,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, VueTableMixin, View):
 
             table_data.append(OrderedDict(ddict))
 
-        context = self.get_context_data(table_data=json.dumps(table_data), standings=standings, rounds=rounds)
+        context = self.get_context_data(tableData=json.dumps(table_data), standings=standings, rounds=rounds)
 
         return render(request, self.template_name, context)
 
@@ -278,7 +278,9 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     "team tab"."""
     public_page_preference = 'team_tab_released'
     rankings = ('rank',)
-    template_name = 'public_team_tab.html'
+    template_name = 'base_vue_table.html'
+    page_title = 'Team Tab'
+    page_emoji = '👯'
 
     def show_ballots(self):
         return self.get_tournament().pref('ballots_released')

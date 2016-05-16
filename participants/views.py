@@ -3,13 +3,12 @@ from collections import OrderedDict
 
 from django.http import JsonResponse
 from django.forms.models import modelformset_factory
-from django.views.generic.base import TemplateView
 
 from .models import Adjudicator, Speaker, Institution, Team
 from adjallocation.models import DebateAdjudicator
 
 from utils.views import *
-from utils.mixins import PublicCacheMixin, VueTableMixin
+from utils.mixins import PublicCacheMixin, VueTableMixin, HeadlessTemplateView
 from tournaments.mixins import PublicTournamentPageMixin
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
@@ -24,10 +23,12 @@ def team_speakers(request, t, team_id):
     return JsonResponse(data, safe=False)
 
 
-class PublicDrawForRound(PublicTournamentPageMixin, VueTableMixin, PublicCacheMixin, TemplateView):
+class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMixin, HeadlessTemplateView):
 
     public_page_preference = 'public_participants'
-    template_name = 'public_participants.html'
+    template_name = 'base_double_vue_table.html'
+    page_title = 'Participants'
+    page_emoji = '🚌'
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
@@ -46,7 +47,8 @@ class PublicDrawForRound(PublicTournamentPageMixin, VueTableMixin, PublicCacheMi
             ddict.append(('Institution', institution ))
             adjs_data.append(OrderedDict(ddict))
 
-        kwargs["adjsTableData"] = json.dumps(adjs_data)
+        kwargs["table_a_title"] = "Adjudicators"
+        kwargs["tableDataA"] = json.dumps(adjs_data)
 
         speakers_data = []
         speakers = Speaker.objects.filter(team__tournament=t).select_related('team','team__institution')
@@ -57,7 +59,8 @@ class PublicDrawForRound(PublicTournamentPageMixin, VueTableMixin, PublicCacheMi
             #     ddict.append(('Break Categories', s.team.break_categories_nongeneral ))
             speakers_data.append(OrderedDict(ddict))
 
-        kwargs["speakersTableData"] = json.dumps(speakers_data)
+        kwargs["table_b_title"] = "Speakers"
+        kwargs["tableDataB"] = json.dumps(speakers_data)
 
         return super().get_context_data(**kwargs)
 

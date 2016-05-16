@@ -21,7 +21,7 @@ from .forms import BallotSetForm
 
 from utils.views import *
 from utils.misc import get_ip_address, reverse_tournament
-from utils.mixins import VueTableMixin
+from utils.mixins import VueTableMixin, HeadlessTemplateView
 from .models import BallotSubmission
 
 
@@ -72,10 +72,12 @@ def results(request, round):
     )
 
 
-class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin, TemplateView):
+class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin, HeadlessTemplateView):
 
-    template_name = 'public_results_for_round.html'
+    template_name = 'base_vue_table.html'
     public_page_preference = 'public_results'
+    page_title = 'Results'
+    page_emoji = '💥'
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
@@ -120,7 +122,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
             draw_data.append(OrderedDict(ddict))
 
         kwargs["draw"] = draw # To deprecate
-        kwargs["resultsTableData"] = json.dumps(draw_data)
+        kwargs["tableData"] = json.dumps(draw_data)
 
         return super().get_context_data(**kwargs)
 
