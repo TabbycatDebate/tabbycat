@@ -278,8 +278,10 @@ if os.environ.get('DEBUG', ''):
     TEMPLATES[0]['OPTIONS']['debug'] = True
 
 # =============
-# = Travis CI =
+# = Travis CI and Testing =
 # =============
+
+FIXTURE_DIRS = (os.path.join(BASE_DIR, 'data', 'fixtures'), )
 
 if os.environ.get('TRAVIS', '') == 'true':
     DATABASES = {
