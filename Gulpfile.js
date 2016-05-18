@@ -62,10 +62,10 @@ gulp.task('js-main-vendor-compile', function() {
 // Creates task for collecting dependencies
 gulp.task('js-alt-vendor-compile', function() {
   gulp.src(['bower_components/jquery/dist/jquery.min.js', // Redundant but needed for debug toolbar
-            'bower_components/d3/*.js',
-            'bower_components/jquery-ui/*.js',
-            'bower_components/jquery-validation/*.js',
-            'bower_components/vue/dist/*.js',
+            'bower_components/d3/d3.min.js',
+            'bower_components/jquery-ui/jquery-ui.min.js',
+            'bower_components/jquery-validation/dist/jquery.validate.min.js',
+            'bower_components/vue/dist/vue.min.js',
           ])
   .pipe(uglify())
   .pipe(rename({dirname: ''})) // Remove folder structure

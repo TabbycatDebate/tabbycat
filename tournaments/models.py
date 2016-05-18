@@ -264,7 +264,21 @@ class Round(models.Model):
             return False
 
     @cached_property
-    def cached_draw(self):
+    def is_break_round(self):
+        if self.stage is self.STAGE_ELIMINATION:
+            return True
+        else:
+            return False
+
+    @cached_property
+    def break_size(self):
+        if self.break_category:
+            return self.break_category.break_size
+        else:
+            return False
+
+    @cached_property
+    def get_cached_draw(self):
         return self.get_draw()
 
     def _get_draw(self, *ordering):
@@ -470,6 +484,29 @@ class Round(models.Model):
             ActiveTeam.objects.get_or_create(round=self, team=team)
         else:
             self.activeteam_set.filter(team=team).delete()
+
+    def activate_all_breaking_adjs(self):
+        from participants.models import Adjudicator
+        self.set_available_adjudicators(
+            [a.id for a in Adjudicator.objects.filter(breaking=True)])
+
+    def activate_all_breaking_teams(self):
+        from breakqual.models import BreakingTeam
+        breaking_teams = BreakingTeam.objects.filter(
+            break_category=self.break_category, remark=None,
+            team__tournament=self.tournament)
+        self.set_available_teams([bt.team.id for bt in breaking_teams])
+
+    def activate_all_advancing_teams(self):
+        from results.models import TeamScore
+        prior_break_round = Round.objects.filter(
+            break_category=self.break_category, seq__lte=self.seq).exclude(
+            id=self.id).order_by('-seq').first()
+        prior_results = TeamScore.objects.filter(
+            win=True, ballot_submission__confirmed=True,
+            ballot_submission__debate__round = prior_break_round)
+        self.set_available_teams([r.debate_team.team.id for r in prior_results])
+
 
     def activate_all(self):
         from venues.models import Venue

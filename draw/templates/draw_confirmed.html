@@ -240,9 +240,15 @@
           {% endif %}
           <td title="{% if debate.aff_team %}{% aff_count debate.aff_team round.prev %} prior affs{% endif %}">
             {% include "tables/team.html" with team=debate.aff_team %}
+            {% if round.is_break_round %}
+              {% break_rank debate.aff_team round %}
+            {% endif %}
           </td>
           <td title="{% if debate.neg_team %}{% neg_count debate.neg_team round.prev %} prior negs{% endif %}">
             {% include "tables/team.html" with team=debate.neg_team %}
+            {% if round.is_break_round %}
+              {% break_rank debate.neg_team round %}
+            {% endif %}
           </td>
           {% include "tables/debate_adjudicators_compact.html" %}
           <td class="text-danger">{{ debate.all_conflicts|join:",<br>" }}</td>

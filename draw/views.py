@@ -8,6 +8,7 @@ from django.views.generic.base import TemplateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjfeedback.models import AdjudicatorFeedbackQuestion
+from breakqual.models import BreakingTeam
 from motions.models import Motion
 from participants.models import Team
 from standings.teams import TeamStandingsGenerator
@@ -81,7 +82,7 @@ def get_draw_with_standings(round):
     if round.prev is None:
         return None, draw
 
-    teams = Team.objects.teams_for_standings(round)
+    teams = round.tournament.team_set.select_related('institution')
     metrics = round.tournament.pref('team_standings_precedence')
     generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
     standings = generator.generate(teams, round=round.prev)
@@ -89,12 +90,20 @@ def get_draw_with_standings(round):
     for debate in draw:
         aff_standing = standings.get_standing(debate.aff_team)
         neg_standing = standings.get_standing(debate.neg_team)
-        debate.aff_subrank = aff_standing.rankings["subrank"]
-        debate.neg_subrank = neg_standing.rankings["subrank"]
         debate.metrics = [(a, n) for a, n in zip(aff_standing.itermetrics(), neg_standing.itermetrics())]
-        if "points" in standings.metric_keys:
-            debate.aff_is_pullup = abs(aff_standing.metrics["points"] - debate.bracket) >= 1
-            debate.neg_is_pullup = abs(neg_standing.metrics["points"] - debate.bracket) >= 1
+        if round.is_break_round:
+            debate.aff_breakrank = BreakingTeam.objects.get(
+                    break_category=round.break_category,
+                    team=debate.aff_team.id).break_rank
+            debate.neg_breakrank = BreakingTeam.objects.get(
+                    break_category=round.break_category,
+                    team=debate.neg_team.id).break_rank
+        else:
+            if "points" in standings.metric_keys:
+                debate.aff_is_pullup = abs(aff_standing.metrics["points"] - debate.bracket) >= 1
+                debate.neg_is_pullup = abs(neg_standing.metrics["points"] - debate.bracket) >= 1
+            debate.aff_subrank = aff_standing.rankings["subrank"]
+            debate.neg_subrank = neg_standing.rankings["subrank"]
 
     return standings, draw
 
@@ -169,7 +178,6 @@ class CreateDrawView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnl
 @expect_post
 @round_view
 def confirm_draw(request, round):
-
     if round.draw_status != round.STATUS_DRAFT:
         return HttpResponseBadRequest("Draw status is not DRAFT")
 
@@ -182,7 +190,6 @@ def confirm_draw(request, round):
 
     return redirect_round('draw', round)
 
-@admin_required
 @round_view
 def draw_confirm_regenerate(request, round):
     return render(request, "draw_confirm_regeneration.html", dict())
@@ -499,7 +506,7 @@ def public_side_allocations(request, t):
         team.side_allocations = [tpas.get(
             (team.id, round.id), "-") for round in rounds]
     return render(request,
-               "public_side_allocations.html",
+               "side_allocations.html",
                dict(teams=teams,
                     rounds=rounds))
 

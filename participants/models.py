@@ -123,9 +123,6 @@ class TeamManager(models.Manager):
         institution = Institution.objects.lookup(institution_name)
         return self.get(institution=institution, reference=reference, **kwargs)
 
-    def teams_for_standings(self, round):
-        return self.filter(debateteam__debate__round__seq__lte=round.seq,
-            tournament=round.tournament).exclude(type=Team.TYPE_BYE).select_related('institution').distinct()
 
 class Team(models.Model):
     reference = models.CharField(
@@ -223,6 +220,11 @@ class Team(models.Model):
         categories = self.break_categories_nongeneral
         return "(" + ", ".join(c.name
                                for c in categories) + ")" if categories else ""
+
+    def break_rank_for_category(self, category):
+        from breakqual.models import BreakingTeam
+        bt = BreakingTeam.objects.get(break_category=category, team=self)
+        return bt.break_rank
 
     def get_aff_count(self, seq=None):
         from draw.models import DebateTeam
