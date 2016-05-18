@@ -1,14 +1,10 @@
-// Edit Adjs and Edit Venues Page
-//
-// BUTTONS
-//
+//------------------------------------------------------------------------------
+// Edit Adjs, Matchups, and Venues Pages
+//------------------------------------------------------------------------------
+
 .edit-adjs-subnav {
   margin: 5px 5px -15px 5px;
 }
-//
-// TO REFACTOR
-//
-// General
 #main {
   z-index: 10;
   position: relative;
@@ -240,9 +236,11 @@
     border-radius: 3px;
   }
 }
-//
+
+//------------------------------------------------------------------------------
 // Gender Colors
-//
+//------------------------------------------------------------------------------
+
 .gender-display.gender-parity-3 {
   background-color: lighten(#0000FF, 45%);
 }

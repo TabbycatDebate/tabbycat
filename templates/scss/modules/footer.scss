@@ -1,23 +1,22 @@
-@import "partials/variables";
+@import 'partials/variables';
 
-//
-// OVERALL LAYOUT
-//
 .nav-sidebar-offset {
   .navbar-fixed-bottom {
-    border-width: 1px;
     border-radius: 4px;
+    border-width: 1px;
     .navbar-nav > li > a {
-      padding: 15px 10px 15px 0px; // Tighten link spacing so the footer isn't x2 height
+      padding: 15px 10px 15px 0; // Tighten link spacing so the footer isn't x2 height
     }
   }
 }
+
 // For PCS
 @media (min-width: $screen-sm-min) {
   .accommodate-footer {
     min-height: 800px; // Push the footer down
     padding-bottom: 130px; // Leave room for the footer
   }
+
   .nav-sidebar-offset {
     .navbar-fixed-bottom {
       // Don't want the footer stretching into the menu; present it alert style
@@ -26,22 +25,26 @@
     }
   }
 }
+
 // For Phones
 @media (max-width: $screen-sm-min) {
   .accommodate-footer {
-    padding-bottom: 0px; // Increase footer padding when its double height
+    padding-bottom: 0; // Increase footer padding when its double height
   }
+
   .navbar-fixed-bottom {
-    position: relative;
     margin: 0;
-    width: 100%;
+    position: relative;
     text-align: center;
+    width: 100%;
+
     .navbar-header {
       min-height: 90px;
     }
+
     .navbar-nav.navbar-right {
-        width: 100%;
-        margin: 0 0 10px 0;
+      margin: 0 0 10px 0;
+      width: 100%;
     }
   }
 }
