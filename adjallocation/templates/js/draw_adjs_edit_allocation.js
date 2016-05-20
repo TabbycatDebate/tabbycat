@@ -399,8 +399,8 @@ $("#allocationsTable .adj-holder").droppable({
       // If duplicate adjs is on we make a duplicate and append to unused
       {% if duplicate_adjs %}
       var adj_copy = adj.clone()
-      moveToUnused(adj_copy);
-      init_adj($(adj_copy)); // Need to enable all events
+        moveToUnused(adj_copy);
+        init_adj($(adj_copy)); // Need to enable all events
       {% endif %}
     }
   }
@@ -462,10 +462,11 @@ function moveToUnused(adj) {
   });
   var moving_adj_id = DOMIdtoInt(adj);
 
-  if (unusedIDs.indexOf(moving_adj_id) == -1) {
-    // If the adj isn't already in the table
-    var new_row = unusedAdjTable.row.add(["", formatScore(all_adj_scores[moving_adj_id])]).draw(); // Adds a new row
-    var first_cell = $("td:first", new_row.node()).append(adj); // Append the adj element
+  var new_row = unusedAdjTable.row.add(["", formatScore(all_adj_scores[moving_adj_id])]).draw(); // Adds a new row
+  var first_cell = $("td:first", new_row.node()).append(adj); // Append the adj element
+  if (unusedIDs.indexOf(moving_adj_id) != -1) {
+    // If the adj is already in the unused area (ie duplicate adj allocations are allowed)
+    removeUnusedRow(first_cell);
   }
 
 }
