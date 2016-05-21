@@ -10,7 +10,7 @@ client = Client()
 
 class PublicParticipantsViewTestCase(TestCase):
 
-    fixtures = ['completed_demo.json',]
+    fixtures = ['completed_demo.json']
 
     def setUp(self):
         self.t = Tournament.objects.first()
