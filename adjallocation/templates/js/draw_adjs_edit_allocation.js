@@ -319,7 +319,7 @@ $('#save_allocation').click(function() {
     },
     error: function(xhr, error, ex) {
       btn.attr("disabled", false);
-      $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved failed!</div>');
+      $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved failed! ' + xhr.responseText + '</div>');
     }
   });
 

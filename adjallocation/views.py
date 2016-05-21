@@ -1,20 +1,19 @@
 import json
 import logging
-logger = logging.getLogger(__name__)
 
 from django.views.generic.base import View
+from django.db.utils import IntegrityError
+
 from actionlog.models import ActionLogEntry
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
-
 from tournaments.mixins import RoundMixin
 from utils.mixins import SuperuserRequiredMixin
-
+from utils.views import *
 
 from .models import AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, AdjudicatorAdjudicatorConflict, DebateAdjudicator
 
-from utils.views import *
-
+logger = logging.getLogger(__name__)
 
 @admin_required
 @expect_post
@@ -173,7 +172,12 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
                 logger.info("Saving adjudicators for debate {}".format(debate))
                 logger.info("{} --> {}".format(existing, revised))
                 existing.delete()
-                revised.save()
+                try:
+                    revised.save()
+                except IntegrityError:
+                    return HttpResponseBadRequest("""An adjudicator
+                        was allocated to the same debate multiple times. Please
+                        remove them and re-save.""")
 
         if not changed:
             logger.warning("Didn't save any adjudicator allocations, nothing changed.")
