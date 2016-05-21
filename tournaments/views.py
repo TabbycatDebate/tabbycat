@@ -14,13 +14,12 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView, CreateView
 
 from draw.models import Debate, DebateTeam
-from draw.models import TeamVenuePreference, InstitutionVenuePreference
 from participants.models import Team, Institution
 from utils.forms import SuperuserCreationForm
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
 from utils.misc import redirect_tournament
-from venues.models import VenueGroup
+from venues.models import VenueGroup, TeamVenueConstraint, InstitutionVenueConstraint
 
 from .forms import TournamentForm
 from .mixins import TournamentMixin
@@ -147,11 +146,11 @@ def division_allocations(request, t):
 
     for team in teams:
         team['institutional_preferences'] = list(
-            InstitutionVenuePreference.objects.filter(
+            InstitutionVenueConstraint.objects.filter(
                 institution=team['institution__id']).values(
                     'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
         team['team_preferences'] = list(
-            TeamVenuePreference.objects.filter(
+            TeamVenueConstraint.objects.filter(
                 team=team['id']).values(
                     'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
 

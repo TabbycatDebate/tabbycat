@@ -274,29 +274,3 @@ class TeamPositionAllocation(models.Model):
 
     class Meta:
         unique_together = [('round', 'team')]
-
-
-class TeamVenuePreference(models.Model):
-    team = models.ForeignKey('participants.Team', db_index=True)
-    venue_group = models.ForeignKey('venues.VenueGroup')
-    priority = models.IntegerField()
-
-    class Meta:
-        ordering = ['priority', ]
-
-    def __str__(self):
-        return '%s with priority %s for %s' % (self.team, self.priority,
-                                               self.venue_group)
-
-
-class InstitutionVenuePreference(models.Model):
-    institution = models.ForeignKey('participants.Institution', db_index=True)
-    venue_group = models.ForeignKey('venues.VenueGroup')
-    priority = models.IntegerField()
-
-    class Meta:
-        ordering = ['priority', ]
-
-    def __str__(self):
-        return '%s with priority %s for %s' % (self.institution, self.priority,
-                                               self.venue_group)

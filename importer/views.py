@@ -3,8 +3,7 @@ from utils.views import *
 from . import forms
 
 from participants.models import Adjudicator, Institution, Team, Speaker
-from venues.models import Venue, VenueGroup
-from draw.models import InstitutionVenuePreference
+from venues.models import Venue, VenueGroup, InstitutionVenueConstraint
 
 
 @admin_required
@@ -163,7 +162,7 @@ def confirm_venue_preferences(request, t):
     institutions = []
     for institution_id in request.POST.getlist('institutionIDs'):
         institution = Institution.objects.get(pk=institution_id)
-        InstitutionVenuePreference.objects.filter(
+        InstitutionVenueConstraint.objects.filter(
             institution=institution).delete()
 
     venue_priorities = request.POST.dict()
@@ -179,7 +178,7 @@ def confirm_venue_preferences(request, t):
             # print('making a pref')
             institution = Institution.objects.get(pk=int(institution_id))
             venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
-            venue_preference = InstitutionVenuePreference(
+            venue_preference = InstitutionVenueConstraint(
                 institution=institution,
                 priority=priority,
                 venue_group=venue_group)

@@ -2,9 +2,10 @@ from django.contrib import admin
 from django import forms
 
 from .models import Region, Institution, Speaker, Adjudicator, Team
-from draw.models import TeamPositionAllocation, TeamVenuePreference
+from draw.models import TeamPositionAllocation
 from adjallocation.models import AdjudicatorConflict, AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict
 from adjfeedback.models import AdjudicatorTestScoreHistory
+from venues.models import TeamVenueConstraint
 
 # ==============================================================================
 # Region
@@ -54,8 +55,8 @@ class TeamPositionAllocationInline(admin.TabularInline):
     model = TeamPositionAllocation
 
 
-class TeamVenuePreferenceInline(admin.TabularInline):
-    model = TeamVenuePreference
+class TeamVenueConstraintInline(admin.TabularInline):
+    model = TeamVenueConstraint
     extra = 6
 
 
@@ -77,7 +78,7 @@ class TeamAdmin(admin.ModelAdmin):
                      'institution__code', 'tournament__name')
     list_filter = ('tournament', 'division', 'institution', 'break_categories')
     inlines = (SpeakerInline, TeamPositionAllocationInline,
-               TeamVenuePreferenceInline)
+               TeamVenueConstraintInline)
     raw_id_fields = ('division', )
 
     def get_queryset(self, request):

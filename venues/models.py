@@ -49,3 +49,39 @@ class Venue(models.Model):
 
     def __repr__(self):
         return "<Venue: %s (%s) [%s]>" % (str(self), self.priority, self.id)
+
+
+class BaseVenueConstraint(models.Model):
+    venue_group = models.ForeignKey(VenueGroup)
+    priority = models.IntegerField()
+
+    class Meta:
+        abstract = True
+
+
+class TeamVenueConstraint(BaseVenueConstraint):
+    team = models.ForeignKey('participants.Team')
+
+    def __str__(self):
+        return "<TeamVenueConstraint: %s for %s [%s]>" % (self.team, self.venue_group, self.priority)
+
+
+class AdjudicatorVenueConstraint(BaseVenueConstraint):
+    adjudicator = models.ForeignKey('participants.Adjudicator')
+
+    def __str__(self):
+        return "<AdjudicatorVenueConstraint: %s for %s [%s]>" % (self.adjudicator.name, self.venue_group, self.priority)
+
+
+class InstitutionVenueConstraint(BaseVenueConstraint):
+    institution = models.ForeignKey('participants.Institution')
+
+    def __str__(self):
+        return "<AdjudicatorVenueConstraint: %s for %s [%s]>" % (self.institution.short_name, self.venue_group, self.priority)
+
+
+class DivisionVenueConstraint(BaseVenueConstraint):
+    division = models.ForeignKey('tournaments.Division')
+
+    def __str__(self):
+        return "<DivisionVenueConstraint: %s for %s [%s]>" % (self.division.name, self.venue_group, self.priority)
