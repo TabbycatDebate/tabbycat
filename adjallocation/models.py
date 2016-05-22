@@ -24,6 +24,9 @@ class DebateAdjudicator(models.Model):
     def __str__(self):
         return '{} in {}'.format(self.adjudicator, self.debate)
 
+    class Meta:
+        unique_together = ('debate', 'adjudicator')
+
 
 class AdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator')

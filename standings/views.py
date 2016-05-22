@@ -218,7 +218,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, VueTableMixin, View):
         tournament = self.get_tournament()
         round = self.get_round()
 
-        teams = Team.objects.teams_for_standings(round)
+        teams = tournament.team_set.exclude(type=Team.TYPE_BYE).select_related('institution')
         metrics = tournament.pref('team_standings_precedence')
         extra_metrics = tournament.pref('team_standings_extra_metrics')
         generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)

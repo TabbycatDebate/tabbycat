@@ -299,7 +299,7 @@ class Round(models.Model):
     def __str__(self):
         return "%s - %s" % (self.tournament, self.name)
 
-    def draw(self, override_team_checkins=False):
+    def draw(self):
         from draw.models import Debate, TeamPositionAllocation
         from draw import DrawGenerator
         from participants.models import Team
@@ -321,10 +321,7 @@ class Round(models.Model):
             "side_allocations": "draw_rules__draw_side_allocations",
         }
 
-        if override_team_checkins is True:
-            teams = self.tournament.team_set.all()
-        else:
-            teams = self.active_teams.all()
+        teams = self.active_teams.all()
 
         # Set type-specific options
         if self.draw_type == self.DRAW_RANDOM:
@@ -356,8 +353,16 @@ class Round(models.Model):
 
         elif self.draw_type == self.DRAW_ROUNDROBIN:
             draw_type = "round_robin"
+            draw_round = self.round # Needs to know true round sequence
+
+        elif self.draw_type == self.DRAW_FIRSTBREAK:
+            draw_type = "first_elimination"
+
+        elif self.draw_type == self.DRAW_BREAK:
+            draw_type = "elimination"
+
         else:
-            raise RuntimeError("Break rounds aren't supported yet.")
+            raise RuntimeError("Unsupported draw type.")
 
         # Annotate attributes as required by DrawGenerator.
         if self.prev:
@@ -384,7 +389,7 @@ class Round(models.Model):
         if options["side_allocations"] == "manual-ballot":
             options["side_allocations"] = "balance"
 
-        drawer = DrawGenerator(draw_type, teams, self, results=None, **options)
+        drawer = DrawGenerator(draw_type, teams, round=self, results=None, **options)
         draw = drawer.generate()
         self.make_debates(draw)
         self.draw_status = self.STATUS_DRAFT
@@ -418,6 +423,20 @@ class Round(models.Model):
         debates = self.get_cached_draw
         if all(debate.venue for debate in debates):
             return True
+        else:
+            return False
+
+    @cached_property
+    def is_break_round(self):
+        if self.stage is self.STAGE_ELIMINATION:
+            return True
+        else:
+            return False
+
+    @cached_property
+    def break_size(self):
+        if self.break_category:
+            return self.break_category.break_size
         else:
             return False
 
@@ -691,6 +710,29 @@ class Round(models.Model):
             ActiveTeam.objects.get_or_create(round=self, team=team)
         else:
             self.activeteam_set.filter(team=team).delete()
+
+    def activate_all_breaking_adjs(self):
+        from participants.models import Adjudicator
+        self.set_available_adjudicators(
+            [a.id for a in Adjudicator.objects.filter(breaking=True)])
+
+    def activate_all_breaking_teams(self):
+        from breakqual.models import BreakingTeam
+        breaking_teams = BreakingTeam.objects.filter(
+            break_category=self.break_category, remark=None,
+            team__tournament=self.tournament)
+        self.set_available_teams([bt.team.id for bt in breaking_teams])
+
+    def activate_all_advancing_teams(self):
+        from results.models import TeamScore
+        prior_break_round = Round.objects.filter(
+            break_category=self.break_category, seq__lte=self.seq).exclude(
+            id=self.id).order_by('-seq').first()
+        prior_results = TeamScore.objects.filter(
+            win=True, ballot_submission__confirmed=True,
+            ballot_submission__debate__round = prior_break_round)
+        self.set_available_teams([r.debate_team.team.id for r in prior_results])
+
 
     def activate_all(self):
         from venues.models import Venue

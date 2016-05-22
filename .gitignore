@@ -22,7 +22,7 @@ data/*
 !data/sandbox/
 !data/test/
 !data/presets/
-!data/fixtures/
+!data/fixtues/
 
 # Docs
 site/

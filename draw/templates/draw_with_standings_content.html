@@ -12,27 +12,29 @@
           {% endif %}
           <th>Aff<span class="hidden-xs">irmative</span></th>
           <th>Neg<span class="hidden-xs">ative</span></th>
-
-      <th><span data-toggle="tooltip" title="Aff subrank">ASR</span></th>
-      <th><span data-toggle="tooltip" title="Neg subrank">NSR</span></th>
-
-      {% for info in standings.metrics_info %}
-        <th>
-          {% if info.glyphicon %}
-            A<span data-toggle="tooltip" title="Aff {{ info.name }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+          {% if round.is_break_round %}
+            <th><span>Aff Break Rank</span></th>
+            <th><span>Neg Break Rank</span></th>
           {% else %}
-            <span data-toggle="tooltip" title="Aff {{ info.name }}">A{{ info.abbr }}</span>
+            <th><span data-toggle="tooltip" title="Aff subrank">ASR</span></th>
+            <th><span data-toggle="tooltip" title="Neg subrank">NSR</span></th>
           {% endif %}
-        </th>
-        <th>
-          {% if info.glyphicon %}
-            N<span data-toggle="tooltip" title="Neg {{ info.name }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
-          {% else %}
-            <span data-toggle="tooltip" title="Neg {{ info.name }}">N{{ info.abbr }}</span>
-          {% endif %}
-        </th>
-      {% endfor %}
-
+          {% for info in standings.metrics_info %}
+            <th>
+              {% if info.glyphicon %}
+                A<span data-toggle="tooltip" title="Aff {{ info.name }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+              {% else %}
+                <span data-toggle="tooltip" title="Aff {{ info.name }}">A{{ info.abbr }}</span>
+              {% endif %}
+            </th>
+            <th>
+              {% if info.glyphicon %}
+                N<span data-toggle="tooltip" title="Neg {{ info.name }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+              {% else %}
+                <span data-toggle="tooltip" title="Neg {{ info.name }}">N{{ info.abbr }}</span>
+              {% endif %}
+            </th>
+          {% endfor %}
           <th><span data-toggle="tooltip" title="Debates on aff before this round (aff)">AAffs</span></th>
           <th><span data-toggle="tooltip" title="Debates on aff before this round (neg)">NAffs</span></th>
           <th>Conflicts/Flags</th>
@@ -50,14 +52,17 @@
           <td {% if debate.neg_team.pullup %}class="em"{% endif %}>
             {% include "tables/team.html" with team=debate.neg_team %}
           </td>
-
-    <td>{{ debate.aff_subrank.0 }}{% if debate.aff_subrank.1 %}={% endif %}</td>
-    <td>{{ debate.neg_subrank.0 }}{% if debate.neg_subrank.1 %}={% endif %}</td>
-    {% for metric in debate.metrics %}
-      <td>{{ metric.0|metricformat }}</td>
-      <td>{{ metric.1|metricformat }}</td>
-    {% endfor %}
-
+          {% if round.is_break_round %}
+            <td>{{ debate.aff_breakrank }}</td>
+            <td>{{ debate.neg_breakrank }}</td>
+          {% else %}
+            <td>{{ debate.aff_subrank.0 }}{% if debate.aff_subrank.1 %}={% endif %}</td>
+            <td>{{ debate.neg_subrank.0 }}{% if debate.neg_subrank.1 %}={% endif %}</td>
+          {% endif %}
+          {% for metric in debate.metrics %}
+            <td>{{ metric.0|metricformat }}</td>
+            <td>{{ metric.1|metricformat }}</td>
+          {% endfor %}
           <td>
             {% aff_count debate.aff_team debate.round.prev %}
           </td>

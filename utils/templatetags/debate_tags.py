@@ -43,7 +43,6 @@ def aff_count(team, round):
         return 0
     return team.get_aff_count(round.seq)
 
-
 register.simple_tag(aff_count)
 
 
@@ -52,9 +51,19 @@ def neg_count(team, round):
         return 0
     return team.get_neg_count(round.seq)
 
-
 register.simple_tag(neg_count)
 
+
+
+@register.filter
+def break_rank(team, round):
+    rank = team.break_rank_for_category(round.break_category)
+    if rank:
+        return "(Broke %s)" % rank
+    else:
+        return None
+
+register.simple_tag(break_rank)
 
 def team_status_classes(team):
     classes = list()

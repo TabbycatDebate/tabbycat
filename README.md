@@ -16,7 +16,7 @@ Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.her
 - A drag and drop interface for adjudicator allocation that automatically displays conflicts alongside gender and regional balance
 - A fully responsive design that automatically adapts to suit large screens, laptops, tablets, and phones
 - Configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/team-standings-rules.html)
-- Confiugrable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html) and optional online submission of feedback and scoresheets
+- Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html) and optional online submission of feedback and scoresheets
 - Optional online post-tournament tab display
 
 Tabbycat is currently optimized for Australs, but we're developing for all two-team formats. So if your tournament has different requirements to what we have (say, different draw rules or number of speakers), odds are we've already thought about it and it's on the [to-do list](https://github.com/czlee/tabbycat/issues).

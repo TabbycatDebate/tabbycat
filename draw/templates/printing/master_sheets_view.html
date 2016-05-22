@@ -27,9 +27,9 @@
           <thead>
             <tr class="h5 table-division">
               <col style="width:3%">
-              <col style="width:6%">
-              <col style="width:17%">
-              <col style="width:17%">
+              <col style="width:10%">
+              <col style="width:16%">
+              <col style="width:16%">
               <col style="width:20%">
               <col style="width:20%">
               <col style="width:8%">
@@ -60,6 +60,12 @@
                     Bye
                   {% elif debate.result_status == "P" %}
                     Postponed
+                  {% elif debate.confirmed_ballot.forfeit %}
+                    {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
+                      Forfeit by Aff
+                    {% else %}
+                      Forfeit by Neg
+                    {% endif %}
                   {% endif %}
                 </td>
                 <td></td>

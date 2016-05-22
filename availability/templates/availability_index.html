@@ -6,23 +6,38 @@
 {% block sub-title %}For {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
+
   <a class="btn btn-default submit-disable" href="{% round_url team_availability round %}">
     Check In Teams
   </a>
+  {% if round.draw_type == "F" %}
+    <a class="btn btn-success submit-disable" href="{% round_url update_availability_breaking_teams round %}">
+      Check In All Breaking Teams
+    </a>
+  {% elif round.draw_type == "B" %}
+    <a class="btn btn-success submit-disable" href="{% round_url update_availability_advancing_teams round %}">
+      Check In All Advancing Teams
+    </a>
+  {% endif %}
   <a class="btn btn-default submit-disable" href="{% round_url venue_availability round %}">
     Check In Venues
   </a>
   <a class="btn btn-default submit-disable" href="{% round_url adjudicator_availability round %}">
     Check In Adjudicators
   </a>
-
-  <a class="btn btn-default submit-disable" href="{% round_url update_availability_all round %}">
-    Check In All
-  </a>
-  {% if round.prev %}
-    <a class="btn btn-default submit-disable" href="{% round_url update_availability_previous round %}">
-      Check In All Active in {{ round.prev.abbreviation }}
+  {% if round.is_break_round %}
+    <a class="btn btn-success submit-disable" href="{% round_url update_availability_breaking_adjs round %}">
+      Check In All Breaking Adjudicators
     </a>
+  {% else %}
+    <a class="btn btn-default submit-disable" href="{% round_url update_availability_all round %}">
+      Check In All
+    </a>
+    {% if round.prev %}
+      <a class="btn btn-default submit-disable" href="{% round_url update_availability_previous round %}">
+        Check In All Active in {{ round.prev.abbreviation }}
+      </a>
+    {% endif %}
   {% endif %}
 
 {% endblock %}
@@ -34,7 +49,7 @@
       View Draw <span class="glyphicon glyphicon-chevron-right"></span>
     </a>
   {% else %}
-    {% if previous_unconfirmed %}
+    {% if previous_unconfirmed and not round.is_break_round %}
       <button class="btn btn-warning" id="createDraw"
         data-toggle="tooltip" title="{{ previous_unconfirmed }} debates from
         {{ round.prev.name }} do not have a completed ballot —
@@ -88,7 +103,7 @@
 
 {% block page-alerts %}
 
-  {% if previous_unconfirmed > 0  %}
+  {% if previous_unconfirmed > 0 and not round.is_break_round %}
     <div class="alert alert-danger">
       Note: {{ previous_unconfirmed }} debates from <strong>{{ round.prev.name }}
        do not have a completed ballot</strong> — this may lead to a draw that fails or is incorrect <em>depending</em> on your draw rules.
