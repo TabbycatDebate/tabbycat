@@ -7,7 +7,8 @@ from tournaments.models import Tournament
 
 class BaseTableViewTest():
     """Base class for testing table views; provides a default fixture and
-    methods for setting tournament/clients and validating data"""
+    methods for setting tournament/clients and validating data. If inheriting
+    classes are validating data they should overwrite table_data methods"""
 
     fixtures = ['completed_demo.json']
     view_name = None
@@ -26,20 +27,27 @@ class BaseTableViewTest():
                 'tournament_slug': self.t.slug}))
 
     def validate_table_data(self, r):
-        # TODO: this isn't actually checking if the method or context data is present
 
-        if hasattr(r.context, 'tableData') and hasattr(self, 'table_data'):
-            print('validating single table data')
+        if 'tableData' in r.context and self.table_data():
             data = len(json.loads(r.context['tableData']))
-            self.assertEqual(self.validate_table_data, data)
-        if hasattr(r.context, 'tableDataA') and hasattr(self, 'table_data_a'):
-            print('validating double table data')
+            self.assertEqual(self.table_data(), data)
+
+        if 'tableDataA' in r.context and self.table_data_a():
             data_a = len(json.loads(r.context['tableDataA']))
-            self.assertEqual(self.validate_table_data_a(), data_a)
+            self.assertEqual(self.table_data_a(), data_a)
+
+        if 'tableDataB' in r.context and self.table_data_b():
             data_b = len(json.loads(r.context['tableDataB']))
-            self.assertEqual(self.validate_table_data_b(), data_b)
-            print(self.validate_table_data_a(), data_a)
-            print(self.validate_table_data_b(), data_b)
+            self.assertEqual(self.table_data_b(), data_b)
+
+    def table_data(self):
+        return False
+
+    def table_data_a(self):
+        return False
+
+    def table_data_b(self):
+        return False
 
 
 class TableViewTest(BaseTableViewTest):
