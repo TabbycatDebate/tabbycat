@@ -32,11 +32,10 @@ First, you need to install all of the software on which Tabbycat depends, if you
 Download and install Python 3.4 from the `Python website <https://www.python.org/downloads/release/python-344/>`_. Take note of the following:
 
 - Which link should I click?
-    - If you have 32-bit Windows, choose the "Windows x86 MSI installer".
-    - If you have 64-bit Windows (and not an Itanium processor), it's better to choose the "Windows x86-64 MSI installer".
+    - If you have 32-bit Windows, choose the "Windows x86 executable installer".
+    - If you have 64-bit Windows (and not an Itanium processor), it's better to choose the "Windows x86-64 executable installer".
     - If you're not sure whether you have 32-bit or 64-bit Windows, consult "About your PC" or "System Properties" in your Start Menu.
-- The default install directory is ``C:\Python34``; we recommend that you keep it there.
-- **Important!** When you get to the Customize screen, **change "Add python.exe to Path" to "Will be installed on local hard drive"**:
+- **Important!** Just after you open the installer, **check the "Add Python 3.5 to PATH" box**:
 
 .. image:: images/python-windows-path.png
 
@@ -48,12 +47,9 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 
 .. note:: **If you already have Python**, great! Some things to double-check:
 
-  - You must have Python 3.4, not any other version.
+  - You must have Python 3.4, though we (strongly) recommend Python 3.5.
   - Your installation directory must not have any spaces in it.
-  - If it isn't showing as version 3.4, try restarting your computer.
-  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python34;C:\Python34\Scripts`` (or as appropriate for your installation directory). Following `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
-
-.. note:: The reason we can't use Python 3.5 is because it isn't (as of January 2016) supported by `psycopg2 <http://www.stickpeople.com/projects/python/win-psycopg/>`_, which is a dependency of Tabbycat.
+  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python35;C:\Python35\Scripts`` (or as appropriate for your installation directory). Following `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
 
 1(b). PostgreSQL
 ----------------
@@ -155,7 +151,7 @@ Almost there!
   If you installed **32-bit Python**::
 
     > python -m pip install --upgrade pip
-    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.4-pg9.4.4-release.exe
+    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.5.exe
     > pip install -r requirements_common.txt
     > npm install
     > npm install -g gulp
@@ -165,7 +161,7 @@ Almost there!
   If you installed **64-bit Python**::
 
     > python -m pip install --upgrade pip
-    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.4-pg9.4.4-release.exe
+    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.5.exe
     > pip install -r requirements_common.txt
     > npm install
     > npm install -g gulp
