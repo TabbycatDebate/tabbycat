@@ -1,4 +1,4 @@
-from utils.views_tests import ConditionalTableViewTest, TestCase
+from utils.tests import ConditionalTableViewTest, TestCase
 
 from tournaments.models import Round
 
