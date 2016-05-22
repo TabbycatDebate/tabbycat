@@ -168,7 +168,7 @@ Almost there!
     > npm install -g bower
     > bower install
 
-  .. attention:: In the above lines are a couple of extra steps we need to do for Windows. The first is to use the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_. The second is to install ``rcssmin`` and ``rjsmin`` without the C extensions, because these require Visual C++ 10.0 to compile. If you have Visual C++ 10.0, you can skip the ``rcssmin``/``rjsmin`` line; the ``requirements_common.txt`` line will install them with C extensions.
+  .. attention:: The second line above is an extra step just for Windows. It installs the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, and must be done before ``pip install -r requirements_common.txt`` so that the latter doesn't try to install the Unix version.
 
   .. hint:: You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate.
 
