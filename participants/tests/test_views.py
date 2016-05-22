@@ -1,11 +1,11 @@
-from utils.views_tests import PublicTableViewTest
+from utils.views_tests import ConditionalTableViewTest, TestCase
 from participants.models import Speaker, Adjudicator
 
 
-class PublicParticipantsViewTestCase(PublicTableViewTest):
+class PublicParticipantsViewTestCase(ConditionalTableViewTest, TestCase):
 
     view_toggle = 'public_features__public_participants'
-    public_view_name = 'public_participants'
+    view_name = 'public_participants'
 
     def validate_table_data_a(self):
         # Check number of adjs matches

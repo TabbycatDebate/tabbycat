@@ -1,7 +1,7 @@
-from utils.views_tests import PublicTableViewTest
+from utils.views_tests import ConditionalTableViewTest, TestCase
 
-
-class PublicResultsForRoundViewTestCase(PublicTableViewTest):
+class PublicResultsForRoundViewTestCase(ConditionalTableViewTest, TestCase):
 
     view_toggle = 'public_features__public_results'
-    public_view_name = 'public_results'
+    view_name = 'public_results'
+    round_seq = 3
