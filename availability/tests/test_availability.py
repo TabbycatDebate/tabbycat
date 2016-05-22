@@ -1,40 +1,13 @@
-"""Some very basic tests to check model creation and a few basic functions."""
+from utils.tests import BaseDebateTestCase
 
-from django.test import TestCase
-from tournaments.models import Tournament, Round
-from participants.models import Institution, Team, Speaker, Adjudicator
+from tournaments.models import Round
 from draw.manager import DrawManager
 from draw.models import Debate, DebateTeam
+from participants.models import Team, Adjudicator
 from venues.models import Venue
 
-class BaseDebateTestCase(TestCase):
-    def setUp(self):
-        super(BaseDebateTestCase, self).setUp()
-        # add test models
-        self.t = Tournament(slug="tournament")
-        self.t.save()
-        for i in range(4):
-            ins = Institution(code="INS%s"%i, name="Institution %s"%i)
-            ins.save()
-            for j in range(3):
-                team = Team(tournament=self.t, institution=ins, reference="Team%s%s" % (i,j))
-                team.save()
-                for k in range(2):
-                    speaker = Speaker(team=team, name="Speaker%s%s%s" % (i,j,k))
-                    speaker.save()
-            for j in range(2):
-                adj = Adjudicator(tournament=self.t, institution=ins, name="Adjudicator%s%s" %
-                                  (i,j), test_score=0)
-                adj.save()
 
-        for i in range(8):
-            venue = Venue(name="Venue %s" % i)
-            venue.priority = i
-            venue.save()
-
-            venue = Venue(name="IVenue %s" % i)
-            venue.priority = i
-            venue.save()
+class TestAvailabilities(BaseDebateTestCase):
 
     def activate_all_adj(self, r):
         for adj in Adjudicator.objects.all():
@@ -53,15 +26,8 @@ class BaseDebateTestCase(TestCase):
             if venue.name.startswith("Venue"):
                 r.activate_venue(venue, True)
 
-class TestInstitution(BaseDebateTestCase):
-    def test_objects(self):
-        self.failUnlessEqual(4, Institution.objects.count())
 
-class TestAdjudicator(BaseDebateTestCase):
-    def test_objects(self):
-        self.failUnlessEqual(8, Adjudicator.objects.count())
-
-class TestAdjudicatorDisable(BaseDebateTestCase):
+class TestAdjudicatorDisable(TestAvailabilities):
     def setUp(self):
         super(TestAdjudicatorDisable, self).setUp()
         self.round = Round(tournament=self.t, seq=1)
@@ -77,7 +43,8 @@ class TestAdjudicatorDisable(BaseDebateTestCase):
     def test_active(self):
         self.failUnlessEqual(7, self.round.active_adjudicators.count())
 
-class RandomDrawTests(BaseDebateTestCase):
+
+class RandomDrawTests(TestAvailabilities):
 
     def setUp(self):
         super(RandomDrawTests, self).setUp()
@@ -95,5 +62,3 @@ class RandomDrawTests(BaseDebateTestCase):
 
         for team in Team.objects.all():
             self.failUnlessEqual(1, DebateTeam.objects.filter(team=team).count())
-
-
