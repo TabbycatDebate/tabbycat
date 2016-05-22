@@ -11,7 +11,7 @@ dj-static==0.0.6
 pylibmc==1.5.0
 django-pylibmc==0.6.1
 
-# For monitoring
+# For monitoring (required add-on is not added by default)
 newrelic
 
 # For emailing
