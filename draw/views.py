@@ -18,6 +18,7 @@ from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView
 from utils.misc import reverse_round, redirect_round
 from utils.views import *
 from venues.models import Venue, VenueGroup
+from venues.allocator import allocate_venues
 
 from .manager import DrawManager
 from .models import TeamPositionAllocation, Debate, DebateTeam
@@ -170,6 +171,12 @@ class CreateDrawView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnl
 
         manager = DrawManager(round)
         manager.create()
+
+        unfulfilled_constraints = allocate_venues(round)
+        if len(unfulfilled_constraints) > 0:
+            messages.warning(request, "The following venue constraints could not be fulfilled: "
+                    + ", ".join(map(str, unfulfilled_constraints)))
+
         self.log_action()
         return super().post(request, *args, **kwargs)
 

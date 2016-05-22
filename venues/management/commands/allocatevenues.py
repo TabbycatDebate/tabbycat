@@ -1,5 +1,5 @@
 from utils.management.base import RoundCommand, CommandError
-from ...allocator import VenueAllocator
+from ...allocator import allocate_venues
 
 class Command(RoundCommand):
 
@@ -7,6 +7,4 @@ class Command(RoundCommand):
 
     def handle_round(self, round, **options):
         self.stdout.write("Assigning venues for all debates in round '{}'...".format(round.name))
-        draw = round.get_draw()
-        allocator = VenueAllocator()
-        allocator.allocate(round, draw)
+        allocate_venues(round)

@@ -278,7 +278,7 @@ class Round(models.Model):
             return False
 
     @cached_property
-    def get_cached_draw(self):
+    def cached_draw(self):
         return self.get_draw()
 
     def _get_draw(self, *ordering):

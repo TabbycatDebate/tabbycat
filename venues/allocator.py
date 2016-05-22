@@ -4,6 +4,10 @@ logger = logging.getLogger(__name__)
 
 from .models import TeamVenueConstraint, AdjudicatorVenueConstraint, InstitutionVenueConstraint
 
+def allocate_venues(round, debates=None):
+    allocator = VenueAllocator()
+    allocator.allocate(round, debates)
+    return allocator.unfulfilled_constraints()
 
 class VenueAllocator:
     """Allocates venues in a draw to satisfy, as best it can, applicable venue
@@ -16,7 +20,12 @@ class VenueAllocator:
     by a picky low-priority room.
     """
 
-    def allocate(self, round, debates):
+    def unfulfilled_constraints(self):
+        return self._unfulfilled_constraints
+
+    def allocate(self, round, debates=None):
+        if debates is None:
+            debates = round.get_draw()
         self._all_venues = list(round.active_venues.order_by('-priority'))
         self._preferred_venues = self._all_venues[:len(debates)]
         self._unfulfilled_constraints = []

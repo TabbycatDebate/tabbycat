@@ -3,6 +3,7 @@ from adjallocation.allocator import allocate_adjudicators
 from draw.models import Debate
 from draw.manager import DrawManager
 from utils.management.base import RoundCommand, CommandError
+from venues.allocator import allocate_venues
 from results.dbutils import add_ballotsets_to_round
 from results.management.commands.generateresults import GenerateResultsCommandMixin, SUBMITTER_TYPE_MAP
 from tournaments.models import Round
@@ -27,6 +28,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
 
         self.stdout.write("Generating a draw for round '{}'...".format(round.name))
         DrawManager(round).create()
+        allocate_venues(round)
         round.draw_status = Round.STATUS_CONFIRMED
         round.save()
 
