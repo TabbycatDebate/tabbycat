@@ -13,12 +13,12 @@
 {% endif %}
 {% if pref.pros_tab_released > 0 %}
   <li class="{% if tab_pros_nav %}active{% endif %}">
-    <a href="{% tournament_url standings-public-tab-pros %}">Pros Speaker Tab</a>
+    <a href="{% tournament_url standings-public-tab-pros %}">Pros Tab</a>
   </li>
 {% endif %}
 {% if pref.novices_tab_released > 0 %}
   <li class="{% if tab_novices_nav %}active{% endif %}">
-    <a href="{% tournament_url standings-public-tab-novices %}">Novices Speaker Tab</a>
+    <a href="{% tournament_url standings-public-tab-novices %}">Novices Tab</a>
   </li>
 {% endif %}
 {% if pref.replies_tab_released > 0 %}
@@ -27,7 +27,7 @@
   </li>
 {% endif %}
 {% if pref.motion_tab_released > 0 %}
-  <li class="{% if tab_motions_nav %}active{% endif %}">
+  <li class="{% if motions_nav %}active{% endif %}">
     <a href="{% tournament_url standings-public-tab-motions %}">Motions Tab</a>
   </li>
 {% endif %}
@@ -61,7 +61,8 @@
 
 <!-- RESULTS RELEASES -->
 {% if pref.public_results and current_round.prev %}
-  <li><a href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
+  <li class="{% if results_nav %}active{% endif %}">
+    <a href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
     <ul class="dropdown-menu">
       {% for r in tournament.round_set.all %}
         {% if not r.silent %}
@@ -76,7 +77,7 @@
 
 <!-- BREAK RELEASES -->
 {% if pref.public_breaking_teams > 0 or pref.public_breaking_adjs > 0 %}
-  <li class="dropdown">
+  <li class="{% if break_nav %}active{% endif %}">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Break<b class="caret"></b></a>
     <ul class="dropdown-menu">
       {% if pref.public_breaking_teams %}
@@ -98,17 +99,17 @@
   </li>
 {% endif %}
 {% if pref.public_motions and pref.motion_tab_released == False %}
-  <li>
+  <li class="{% if motions_nav %}active{% endif %}">
     <a href="{% tournament_url public_motions %}">Motions</a>
   </li>
 {% endif %}
 {% if pref.public_side_allocations %}
-  <li>
+  <li class="{% if sides_nav %}active{% endif %}">
     <a href="{% tournament_url public_side_allocations %}">Sides</a>
   </li>
 {% endif %}
 {% if pref.public_team_standings > 0 and current_round.prev and pref.team_tab_released == 0 %}
-  <li>
+  <li class="{% if participants_nav %}active{% endif %}">
     <a href="{% tournament_url standings-public-teams-current %}">Standings</a>
   </li>
 {% endif %}
@@ -118,7 +119,7 @@
   </li>
 {% endif %}
 {% if pref.feedback_progress > 0 %}
-  <li>
+  <li class="{% if feedback_progress_nav %}active{% endif %}">
     <a href="{% tournament_url public_feedback_progress %}">Feedback Progress</a>
   </li>
 {% endif %}
