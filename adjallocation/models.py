@@ -46,7 +46,7 @@ class AdjudicatorInstitutionConflict(models.Model):
     class Meta:
         verbose_name = "adjudicator-institution conflict"
 
-class AdjudicatorAllocation(object):
+class AdjudicatorAllocation:
     """Not a model, just a container object for the adjudicators on a panel."""
 
     def __init__(self, debate, chair=None, panel=None):
