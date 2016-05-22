@@ -1,5 +1,4 @@
 import logging
-logger = logging.getLogger(__name__)
 
 from django.conf import settings
 from django.contrib import messages
@@ -15,6 +14,7 @@ from tournaments.mixins import TournamentMixin
 
 from .misc import get_ip_address, redirect_tournament
 
+logger = logging.getLogger(__name__)
 
 class PostOnlyRedirectView(View):
     """Base class for views that only accept POST requests.
