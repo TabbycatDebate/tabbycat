@@ -58,30 +58,44 @@ class BaseVenueConstraint(models.Model):
     class Meta:
         abstract = True
 
+    def __str__(self):
+        return "%s for %s [%s]" % (self.subject, self.venue_group, self.priority)
+
+    @property
+    def subject(self):
+        """Subclasses must override to return something that can be compared
+        so that if two constraints (a, b) relate to the same requestor,
+        a.subject == b.subject."""
+        raise NotImplementedError("Subclasses must implement subject()")
+
 
 class TeamVenueConstraint(BaseVenueConstraint):
     team = models.ForeignKey('participants.Team')
 
-    def __str__(self):
-        return "<TeamVenueConstraint: %s for %s [%s]>" % (self.team, self.venue_group, self.priority)
+    @property
+    def subject(self):
+        return self.team
 
 
 class AdjudicatorVenueConstraint(BaseVenueConstraint):
     adjudicator = models.ForeignKey('participants.Adjudicator')
 
-    def __str__(self):
-        return "<AdjudicatorVenueConstraint: %s for %s [%s]>" % (self.adjudicator.name, self.venue_group, self.priority)
+    @property
+    def subject(self):
+        return self.adjudicator
 
 
 class InstitutionVenueConstraint(BaseVenueConstraint):
     institution = models.ForeignKey('participants.Institution')
 
-    def __str__(self):
-        return "<AdjudicatorVenueConstraint: %s for %s [%s]>" % (self.institution.short_name, self.venue_group, self.priority)
+    @property
+    def subject(self):
+        return self.institution
 
 
 class DivisionVenueConstraint(BaseVenueConstraint):
     division = models.ForeignKey('tournaments.Division')
 
-    def __str__(self):
-        return "<DivisionVenueConstraint: %s for %s [%s]>" % (self.division.name, self.venue_group, self.priority)
+    @property
+    def subject(self):
+        return self.division
