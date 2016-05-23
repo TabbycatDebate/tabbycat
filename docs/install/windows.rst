@@ -59,7 +59,15 @@ Go to the `PostgreSQL downloads page <http://www.postgresql.org/download/windows
 
 .. tip:: Once PostgreSQL is installed, the PostgreSQL service will run on your computer whenever you are using it. You might prefer to configure it so that it only runs when you want to run Tabbycat. To do this, open "Services" in your Control Panel on Windows, find the PostgreSQL service, and change its startup type to "Manual". This will tell it not to start whenever you log in. Then, if you want to run the server (so you can use Tabbycat), you can do so from "Services" by selecting the PostgreSQL service and clicking "Start the service".
 
-1(c). Node.js/NPM
+1(c). Git
+---------
+  *Git is a version control system.*
+
+We won't use Git directly, but Node.js (which we install in the next step)
+requires Git to work. So, install the latest version for Windows from the
+`Git website <https://git-scm.com/downloads>`_.
+
+1(d). Node.js/NPM
 -----------------
   *Node.js is a JavaScript runtime.*
 
@@ -154,8 +162,6 @@ Almost there!
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.5.exe
     > pip install -r requirements_common.txt
     > npm install
-    > npm install -g gulp
-    > npm install -g bower
     > bower install
 
   If you installed **64-bit Python**::
@@ -164,8 +170,6 @@ Almost there!
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.5.exe
     > pip install -r requirements_common.txt
     > npm install
-    > npm install -g gulp
-    > npm install -g bower
     > bower install
 
   .. attention:: The second line above is an extra step just for Windows. It installs the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, and must be done before ``pip install -r requirements_common.txt`` so that the latter doesn't try to install the Unix version.
