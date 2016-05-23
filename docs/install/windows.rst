@@ -29,15 +29,19 @@ First, you need to install all of the software on which Tabbycat depends, if you
 ------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*
 
-Download and install Python 3.4 from the `Python website <https://www.python.org/downloads/release/python-344/>`_. Take note of the following:
+Download and install Python 3.5 (or later) from the `Python website <https://www.python.org/>`_.
+In the installer, check the box to add Python to your PATH (see box below).
 
-- Which link should I click?
+.. hint:: Which file should I download?
+
     - If you have 32-bit Windows, choose the "Windows x86 executable installer".
     - If you have 64-bit Windows (and not an Itanium processor), it's better to choose the "Windows x86-64 executable installer".
     - If you're not sure whether you have 32-bit or 64-bit Windows, consult "About your PC" or "System Properties" in your Start Menu.
-- **Important!** Just after you open the installer, **check the "Add Python 3.5 to PATH" box**:
 
-.. image:: images/python-windows-path.png
+.. attention:: **Please take note:** Just after you open the installer,
+  **check the "Add Python 3.5 to PATH" box**:
+
+  .. image:: images/python-windows-path.png
 
 To check that Python is installed correctly, open Windows PowerShell, type ``python`` and press Enter. It should look something like this. If you installed the 32-bit version, it will say ``32 bit`` instead of ``64 bit``.
 
@@ -47,9 +51,9 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 
 .. note:: **If you already have Python**, great! Some things to double-check:
 
-  - You must have Python 3.4, though we (strongly) recommend Python 3.5.
+  - You must have at least Python 3.4, though we recommend Python 3.5.
   - Your installation directory must not have any spaces in it.
-  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python35;C:\Python35\Scripts`` (or as appropriate for your installation directory). Following `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
+  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python35;C:\Python35\Scripts`` (or as appropriate for your installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
 
 1(b). PostgreSQL
 ----------------
@@ -66,6 +70,16 @@ Go to the `PostgreSQL downloads page <http://www.postgresql.org/download/windows
 We won't use Git directly, but Node.js (which we install in the next step)
 requires Git to work. So, install the latest version for Windows from the
 `Git website <https://git-scm.com/downloads>`_.
+
+.. admonition:: Advanced users
+  :class: tip
+
+  If you already have `GitHub Desktop <https://desktop.github.com/>`_ installed,
+  you might think that this would be good enough. Unfortunately, it's
+  not---GitHub Desktop installs a portable version of Git. Node.js, on the other
+  hand, requires the ``git`` to be in the ``PATH``, so it can call it directly.
+  The easiest (but not only) way to do this is just to install Git from the link
+  above.
 
 1(d). Node.js/NPM
 -----------------
@@ -162,7 +176,6 @@ Almost there!
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.5.exe
     > pip install -r requirements_common.txt
     > npm install
-    > bower install
 
   If you installed **64-bit Python**::
 
@@ -170,9 +183,12 @@ Almost there!
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.5.exe
     > pip install -r requirements_common.txt
     > npm install
-    > bower install
 
-  .. attention:: The second line above is an extra step just for Windows. It installs the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, and must be done before ``pip install -r requirements_common.txt`` so that the latter doesn't try to install the Unix version.
+  If you're using a version of **Python other than 3.5**, replace the URL in the
+  second line with the appropriate link from the
+  `win-psycopg page <http://www.stickpeople.com/projects/python/win-psycopg/>`_.
+
+  .. note:: The second line above is an extra step just for Windows. It installs the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, and must be done before ``pip install -r requirements_common.txt`` so that the latter doesn't try to install the Unix version.
 
   .. hint:: You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate.
 
