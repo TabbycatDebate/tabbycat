@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+echo "-----> I'm post-compile hook"
+
+echo "-----> Running dynamic preferences checks"
+python manage.py checkpreferences
+
+echo "-----> Post-compile done"
