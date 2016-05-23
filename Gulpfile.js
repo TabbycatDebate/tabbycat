@@ -66,6 +66,7 @@ gulp.task('js-alt-vendor-compile', function() {
             'bower_components/jquery-ui/jquery-ui.min.js',
             'bower_components/jquery-validation/dist/jquery.validate.min.js',
             'bower_components/vue/dist/vue.min.js',
+            'bower_components/vue/dist/vue.js', // For when debug is on
           ])
   .pipe(uglify())
   .pipe(rename({dirname: ''})) // Remove folder structure
