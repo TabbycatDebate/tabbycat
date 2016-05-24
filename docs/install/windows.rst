@@ -52,7 +52,7 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 .. note:: **If you already have Python**, great! Some things to double-check:
 
   - You must have at least Python 3.4, though we recommend Python 3.5.
-  - Your installation directory must not have any spaces in it.
+  - Your installation path must not have any spaces in it.
   - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python35;C:\Python35\Scripts`` (or as appropriate for your installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
 
 1(b). PostgreSQL
