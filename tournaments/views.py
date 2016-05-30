@@ -46,7 +46,7 @@ def index(request):
 
 class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView):
 
-    template_name = "tournament_home.html"
+    template_name = "tournament_index.html"
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()

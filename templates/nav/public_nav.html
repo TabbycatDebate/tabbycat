@@ -27,7 +27,7 @@
   </li>
 {% endif %}
 {% if pref.motion_tab_released > 0 %}
-  <li class="{% if motions_nav %}active{% endif %}">
+  <li class="{% if tab_motions_nav %}active{% endif %}">
     <a href="{% tournament_url standings-public-tab-motions %}">Motions Tab</a>
   </li>
 {% endif %}
@@ -109,7 +109,7 @@
   </li>
 {% endif %}
 {% if pref.public_team_standings > 0 and current_round.prev and pref.team_tab_released == 0 %}
-  <li class="{% if participants_nav %}active{% endif %}">
+  <li>
     <a href="{% tournament_url standings-public-teams-current %}">Standings</a>
   </li>
 {% endif %}
@@ -118,17 +118,17 @@
     <a href="{% tournament_url public_participants %}">Participants</a>
   </li>
 {% endif %}
-{% if pref.feedback_progress > 0 %}
+{% if pref.feedback_progress %}
   <li class="{% if feedback_progress_nav %}active{% endif %}">
     <a href="{% tournament_url public_feedback_progress %}">Feedback Progress</a>
   </li>
 {% endif %}
-{% if pref.public_ballots > 0 %}
+{% if pref.public_ballots %}
   <li>
     <a href="{% tournament_url public_ballot_submit %}">Enter Ballot</a>
   </li>
 {% endif %}
-{% if pref.public_feedback > 0 %}
+{% if pref.public_feedback %}
   <li>
     <a href="{% tournament_url adjfeedback-public-add-index %}">Enter Feedback</a>
   </li>
