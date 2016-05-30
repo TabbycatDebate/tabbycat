@@ -42,7 +42,7 @@
   </li>
   {% endif %}
   {% if pref.show_all_draws > 0 %}
-    <li><a href="#" data-toggle="dropdown">Draws<b class="caret"></b></a>
+    <li class="{% if draw_nav %}active{% endif %}"><a href="#" data-toggle="dropdown">Draws<b class="caret"></b></a>
       <ul class="dropdown-menu">
         {% for r in tournament.round_set.all %}
           {% if r.draw_status == r.STATUS_RELEASED %}
@@ -124,12 +124,12 @@
   </li>
 {% endif %}
 {% if pref.public_ballots %}
-  <li>
+  <li class="{% if enter_ballots_nav %}active{% endif %}">
     <a href="{% tournament_url public_ballot_submit %}">Enter Ballot</a>
   </li>
 {% endif %}
 {% if pref.public_feedback %}
-  <li>
+  <li class="{% if enter_feedback_nav %}active{% endif %}">
     <a href="{% tournament_url adjfeedback-public-add-index %}">Enter Feedback</a>
   </li>
 {% endif %}

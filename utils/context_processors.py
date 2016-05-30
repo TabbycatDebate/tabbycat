@@ -37,8 +37,10 @@ def get_menu_highlight(request):
         return {'break_nav': True}
     elif "division_allocations" in request.path:
         return {'divisions_nav': True}
-    elif "draw" in request.path and "admin" in request.path:
+    elif "draw" in request.path:
         return {'draw_nav': True}
+    elif "feedback" in request.path and "add" in request.path:
+        return {'enter_feedback_nav': True}
     elif "feedback_progress" in request.path:
         return {'feedback_progress_nav': True}
     elif "feedback" in request.path:
@@ -53,6 +55,8 @@ def get_menu_highlight(request):
         return {'overview_nav': True}
     elif "participants" in request.path:
         return {'participants_nav': True}
+    elif "results" in request.path and "add" in request.path:
+        return {'enter_ballots_nav': True}
     elif "results" in request.path and "admin" in request.path:
         return {'ballots_nav': True}
     elif "results" in request.path:
