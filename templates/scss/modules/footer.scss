@@ -1,5 +1,18 @@
 @import 'partials/variables';
 
+.navbar-text {
+  // Doubles up with container-fluid
+  margin-left: 0px;
+  // Fix link text in the footer descriptions
+  a {
+    text-decoration: underline;
+    color: $navbar-default-link-color;
+    &:hover {
+      color: $navbar-default-link-hover-color;
+    }
+  }
+}
+
 .nav-sidebar-offset {
   .navbar-fixed-bottom {
     border-radius: 4px;
@@ -10,7 +23,7 @@
   }
 }
 
-// For PCS
+// For Big Screens
 @media (min-width: $screen-sm-min) {
   .accommodate-footer {
     min-height: 800px; // Push the footer down
@@ -43,7 +56,7 @@
     }
 
     .navbar-nav.navbar-right {
-      margin: 0 0 10px 0;
+      margin: 0 0 10px;
       width: 100%;
     }
   }

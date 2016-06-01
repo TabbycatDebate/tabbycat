@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.functional import cached_property
-from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from tournaments.models import SRManager
 from participants.models import Team

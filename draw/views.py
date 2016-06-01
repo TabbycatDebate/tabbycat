@@ -670,7 +670,7 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
         for debate in self.get_round().get_draw_by_room():
             debateInfo = {
-                'room': debate.venue.name,
+                'room': debate.venue.name if debate.venue else 'TBA',
                 'aff': debate.aff_team.short_name,
                 'affEmoji': debate.aff_team.emoji,
                 'affSpeakers': [s.name for s in debate.aff_team.speakers],
@@ -680,15 +680,28 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                 'panel': []
             }
             for position, adj in debate.adjudicators:
-                debateInfo['panel'].append({ 'name': adj.name, 'institution': adj.institution.code, 'position': position})
+                debateInfo['panel'].append({
+                    'name': adj.name,
+                    'institution': adj.institution.code,
+                    'position': position
+                })
 
-            for adj in (a for a in debateInfo['panel'] if a['position'] != "T"):
+            if len(debateInfo['panel']) is 0:
                 ballotData = {
-                    'author': adj['name'],
-                    'authorInstitution': adj['institution'],
-                    'authorPosition': adj['position'],
+                    'author': "_______________________________________________",
+                    'authorInstitution': "",
+                    'authorPosition': "",
                 }
                 ballotData.update(debateInfo) # Extend with debateInfo keys
                 kwargs['ballots'].append(ballotData)
+            else:
+                for adj in (a for a in debateInfo['panel'] if a['position'] != "T"):
+                    ballotData = {
+                        'author': adj['name'],
+                        'authorInstitution': adj['institution'],
+                        'authorPosition': adj['position'],
+                    }
+                    ballotData.update(debateInfo) # Extend with debateInfo keys
+                    kwargs['ballots'].append(ballotData)
 
         return super().get_context_data(**kwargs)
