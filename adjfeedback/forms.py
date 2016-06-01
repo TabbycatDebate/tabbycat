@@ -1,3 +1,5 @@
+import logging
+
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
@@ -8,6 +10,9 @@ from participants.models import Adjudicator, Team
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from utils.forms import OptionalChoiceField
+from results.forms import TournamentPasswordField
+
+logger = logging.getLogger(__name__)
 
 # General, but only used here
 

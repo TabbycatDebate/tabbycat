@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.functional import cached_property
 from django.db.models import signals
-from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 from django.utils.functional import cached_property
 from tournaments.models import Round
