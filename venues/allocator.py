@@ -7,7 +7,6 @@ from .models import TeamVenueConstraint, AdjudicatorVenueConstraint, Institution
 def allocate_venues(round, debates=None):
     allocator = VenueAllocator()
     allocator.allocate(round, debates)
-    return allocator.unfulfilled_constraints()
 
 class VenueAllocator:
     """Allocates venues in a draw to satisfy, as best it can, applicable venue
@@ -20,15 +19,11 @@ class VenueAllocator:
     by a picky low-priority room.
     """
 
-    def unfulfilled_constraints(self):
-        return self._unfulfilled_constraints
-
     def allocate(self, round, debates=None):
         if debates is None:
             debates = round.get_draw()
         self._all_venues = list(round.active_venues.order_by('-priority'))
         self._preferred_venues = self._all_venues[:len(debates)]
-        self._unfulfilled_constraints = []
 
         debate_constraints = self.collect_constraints(debates)
         debate_venues = self.allocate_constrained_venues(debate_constraints)
@@ -95,7 +90,6 @@ class VenueAllocator:
 
             # If we can't fulfil the highest constraint, bump it down the list.
             if len(eligible_venues) == 0:
-                self._unfulfilled_constraints.append(highest_constraint)
                 logger.debug("Unfilfilled (highest): {}".format(highest_constraint))
                 if len(constraints) == 0:
                     logger.debug("{} is now unconstrained".format(debate))
@@ -116,7 +110,6 @@ class VenueAllocator:
                     continue # skip if we've already done a constraint for this team/adj/inst/div
                 constraint_venues = set(constraint.venue_group.venues)
                 if eligible_venues.isdisjoint(constraint_venues):
-                    self._unfulfilled_constraints.append(constraint)
                     logger.debug("Unfilfilled: {}".format(constraint))
                 else:
                     eligible_venues &= constraint_venues
