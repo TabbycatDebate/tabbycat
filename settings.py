@@ -1,6 +1,6 @@
-import sys
 import os
-import urllib.parse
+
+from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT = (os.path.join(BASE_DIR, 'media'), )
@@ -34,14 +34,14 @@ READTHEDOCS_VERSION = 'v0.8.3'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # For Static Files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'utils.middleware.DebateMiddleware' )
+    'utils.middleware.DebateMiddleware')
 
 TABBYCAT_APPS = ('actionlog',
                  'adjallocation',
@@ -65,14 +65,13 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django_gulp', # Asset compilation; must be before staticfiles
+    'django_gulp',  # Asset compilation; must be before staticfiles
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'django_extensions', # For Secret Generation Command
-    )
+    'django_extensions')  # For Secret Generation Command
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
@@ -94,9 +93,12 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
-                'django.template.context_processors.request',  # For Jet
-                'utils.context_processors.debate_context',  # For tournament config vars
-                'utils.context_processors.get_menu_highlight',  # For nav highlight
+                # For Jet
+                'django.template.context_processors.request',
+                # For tournament config vars
+                'utils.context_processors.debate_context',
+                # For nav highlights
+                'utils.context_processors.get_menu_highlight',
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
@@ -221,7 +223,6 @@ for app in TABBYCAT_APPS:
 # Messages
 # ==============================================================================
 
-from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {messages.ERROR: 'danger', }
 
 # ==============================================================================

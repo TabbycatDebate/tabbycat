@@ -15,6 +15,7 @@ from .models import AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInsti
 
 logger = logging.getLogger(__name__)
 
+
 @admin_required
 @expect_post
 @round_view
@@ -84,10 +85,11 @@ def draw_adjudicators_edit(request, round):
         'seq').exclude(is_general=True)
     colors = ["#C70062", "#00C79B", "#B1E001", "#476C5E",
               "#777", "#FF2983", "#6A268C", "#00C0CF", "#0051CF"]
-    context['regions'] = list(zip(regions, colors + ["black"]
-                             * (len(regions) - len(colors))))
+    context['regions'] = list(zip(regions, colors + ["black"] * (len(regions) -
+                                                                 len(colors))))
     context['break_categories'] = list(zip(
-        break_categories, colors + ["black"] * (len(break_categories) - len(colors))))
+        break_categories, colors + ["black"] * (len(break_categories) -
+                                                len(colors))))
 
     return render(request, "draw_adjudicators_edit.html", context)
 
@@ -224,10 +226,10 @@ def adj_conflicts(request, round):
         try:
             add('history', da.adjudicator_id, da.debate.aff_team.id)
         except DebateTeam.DoesNotExist:
-            pass # For when a Debate/DebateTeam may have been deleted
+            pass  # For when a Debate/DebateTeam may have been deleted
         try:
             add('history', da.adjudicator_id, da.debate.neg_team.id)
         except DebateTeam.DoesNotExist:
-            pass # For when a Debate/DebateTeam may have been deleted
+            pass  # For when a Debate/DebateTeam may have been deleted
 
     return HttpResponse(json.dumps(data), content_type="text/json")

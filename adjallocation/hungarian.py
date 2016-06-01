@@ -1,10 +1,12 @@
-from .allocator import Allocator
-from .stab import StabAllocator
-from .munkres import Munkres
+import logging
 from math import exp
 from random import shuffle
-import logging
+
+from .allocator import Allocator
+from .munkres import Munkres
+
 logger = logging.getLogger(__name__)
+
 
 class HungarianAllocator(Allocator):
 

@@ -4,6 +4,7 @@ from utils.misc import get_ip_address
 
 User = get_user_model()
 
+
 class LogActionMixin:
     """Mixin for views that log an action in the action log when a form is
     successfully submitted.

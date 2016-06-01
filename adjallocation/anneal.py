@@ -72,7 +72,7 @@ class SAAllocator(Allocator):
 
         for i in range(steps):
 
-            temp = max_temp * math.exp( tf * i/steps )
+            temp = max_temp * math.exp(tf * i/steps)
 
             diff, swap = self.candidate_swap()
             if diff < 0 or math.exp(-diff / temp) > random.random():
@@ -85,7 +85,8 @@ class SAAllocator(Allocator):
 
                     if self.energy < self.best_energy:
                         self.save_best()
-                        if self.energy == 0: break
+                        if self.energy == 0:
+                            break
 
         print("accepts", accepts, "improves", improves)
         print("end energy", self.best_energy)
@@ -94,7 +95,6 @@ class SAAllocator(Allocator):
 
     def calc_energy(self, state):
         return sum(self.score(debate, panel) for debate, panel in list(state.items()))
-
 
     def candidate_swap(self):
         meth = random.choice((self.panel_swap, self.member_swap))
@@ -174,7 +174,6 @@ class SAAllocator(Allocator):
 
         return score
 
-
     def score_adj_adj_history(self, debate, panel):
         score = 0
 
@@ -184,12 +183,12 @@ class SAAllocator(Allocator):
 
         return score
 
-
     def score_target_panel_strength(self, debate, panel):
         avg = sum(p.score for p in panel) / len(panel)
         diff = abs(debate.target_panel - avg)
 
         return self.SCORE_TARGET_PANEL * diff * debate.target_panel * avg
+
 
 def test():
     from tournaments.models import Round
@@ -205,4 +204,3 @@ def test():
 
 if __name__ == '__main__':
     test()
-

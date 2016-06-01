@@ -59,6 +59,7 @@ if settings.DEBUG:
 # Logout/Login Confirmations
 # ==============================================================================
 
+
 @receiver(user_logged_out)
 def on_user_logged_out(sender, request, **kwargs):
     messages.success(
@@ -74,6 +75,7 @@ def on_user_logged_in(sender, request, **kwargs):
 # ==============================================================================
 # Redirect Method
 # ==============================================================================
+
 
 def redirect(view):
     from django.http import HttpResponseRedirect

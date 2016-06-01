@@ -3,7 +3,7 @@ import json
 
 from .models import ActionLogEntry
 from utils.views import *
-import datetime
+
 
 @login_required
 @tournament_view

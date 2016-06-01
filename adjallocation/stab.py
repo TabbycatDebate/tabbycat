@@ -1,5 +1,6 @@
 from .allocator import Allocator
 
+
 class PanelMaker(object):
     RANK_A = 0
     RANK_B = 1

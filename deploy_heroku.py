@@ -56,23 +56,28 @@ else:
 
 # Helper functions
 
+
 def print_command(command):
     message = "$ " + " ".join(command)
     if use_color:
         message = "\033[1;36m" + message + "\033[0m"
     print(message)
 
+
 def run_command(command):
     print_command(command)
     if not args.dry_run:
         subprocess.check_call(command, **subprocess_kwargs)
 
+
 def make_heroku_command(command):
     return ["heroku"] + command + ["--app", urlname]
+
 
 def run_heroku_command(command):
     command = make_heroku_command(command)
     run_command(command)
+
 
 def get_output_from_command(command):
     print_command(command)
@@ -82,10 +87,12 @@ def get_output_from_command(command):
     sys.stdout.flush()
     return output
 
+
 def print_yellow(message):
     if use_color:
         message = "\033[1;33m" + message + "\033[0m"
     print(message)
+
 
 def get_git_push_spec():
     if args.git_branch:
