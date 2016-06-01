@@ -406,43 +406,6 @@ def save_matchups(request, round):
     return HttpResponse("ok")
 
 
-@admin_required
-@round_view
-def draw_venues_edit(request, round):
-
-    draw = round.get_draw()
-    return render(request, "draw_venues_edit.html", dict(draw=draw))
-
-
-@admin_required
-@expect_post
-@round_view
-def save_venues(request, round):
-    # TODO: move to draws app
-    def v_id(a):
-        try:
-            return int(request.POST[a].split('_')[1])
-        except IndexError:
-            return None
-
-    data = [(int(a.split('_')[1]), v_id(a)) for a in list(request.POST.keys())]
-
-    debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
-    venues = Venue.objects.in_bulk([v_id for _, v_id in data])
-    for debate_id, venue_id in data:
-        if venue_id == None:
-            debates[debate_id].venue = None
-        else:
-            debates[debate_id].venue = venues[venue_id]
-
-        debates[debate_id].save()
-
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_VENUES_SAVE,
-                               user=request.user,
-                               round=round,
-                               tournament=round.tournament)
-
-    return HttpResponse("ok")
 
 # Public
 

@@ -66,14 +66,6 @@ urlpatterns = [
         views.save_matchups,
         name='save_matchups'),
 
-    # Venue Editing
-    url(r'^round/(?P<round_seq>\d+)/venues/$',
-        views.draw_venues_edit,
-        name='draw_venues_edit'),
-    url(r'^round/(?P<round_seq>\d+)/venues/save/$',
-        views.save_venues,
-        name='save_venues'),
-
     # Scheduling
     url(r'^round/(?P<round_seq>\d+)/schedule_debates/$',
             views.schedule_debates,
