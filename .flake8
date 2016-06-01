@@ -1,0 +1,16 @@
+[flake8]
+# Idea is to remove these over time
+# E203 = whitespace before ':'
+# E221 = multiple spaces before operator
+# E231 = missing whitespace after ','
+# E241 = multiple spaces after ','
+# E261 = at least two spaces before inline comment
+# E265 = block comment should start with '# '
+# F403 = 'import *' used; unable to detect undefined names
+# E501 = line too long
+
+ignore = E501,F403,E221,E226,E261,E203,E231,E265,E241
+
+exclude = migrations/*
+
+max-complexity = 12
