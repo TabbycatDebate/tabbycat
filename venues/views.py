@@ -22,11 +22,14 @@ class EditVenuesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
 class AutoAllocateVenuesView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
 
+    action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE
+
     def get_redirect_url(self):
         return reverse_round('venues-edit', self.get_round())
 
     def post(self, request, *args, **kwargs):
         allocate_venues(self.get_round())
+        self.log_action()
         return super().post(request, *args, **kwargs)
 
 
