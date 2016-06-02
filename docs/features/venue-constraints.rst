@@ -14,9 +14,16 @@ include:
 - Placing adjudication core and tab team members close to the tab room
 - Keeping all debates in a division in one location
 
-.. important:: Constraints apply to **venue groups**, not individual venues. That is, you specify that (say) a team should be given a venue from a particular *list* of venues. Of course, it's permissible for a venue group to have only one venue in it.
+Constraints apply to **venue groups**, not individual venues. That is, you
+specify that (say) a team should be given a venue from a particular *list* of
+venues. Of course, it's permissible for a venue group to have only one venue in
+it.
 
 The algorithm used to satisfy venue constraints is not guaranteed to be optimal.
+In some rare cases, it may propose an allocation that fails some constraints,
+even though some other allocation would have satisfied all (or more)
+constraints. In almost all practical circumstances, however, it should work, and
+save human effort (and time) in specially allocating rooms.
 
 Adding venue constraints
 ========================
