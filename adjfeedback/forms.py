@@ -3,6 +3,7 @@ import logging
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
+from django.utils.translation import ugettext as _
 
 from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from tournaments.models import Round

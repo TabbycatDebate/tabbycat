@@ -15,10 +15,12 @@ from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import RoundMixin
 from tournaments.models import Tournament, Round, Division
 from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView
-from utils.misc import reverse_round
+from utils.misc import reverse_round, redirect_round
 from utils.views import *
 from venues.models import Venue, VenueGroup
+from venues.allocator import allocate_venues
 
+from .manager import DrawManager
 from .models import TeamPositionAllocation, Debate, DebateTeam
 # Viewing Draw
 
@@ -135,7 +137,7 @@ def draw_draft(request, round):
 
 
 def draw_confirmed(request, round):
-    draw = round.get_cached_draw
+    draw = round.cached_draw
     rooms = float(round.active_teams.count()) // 2
     active_adjs = round.active_adjudicators.all()
 
@@ -153,20 +155,27 @@ def draw_with_standings(request, round):
     return render(request, "draw_with_standings.html", dict(draw=draw, standings=standings))
 
 
-@admin_required
-@expect_post
-@round_view
-def create_draw(request, round):
-    if round.draw_status == round.STATUS_NONE:
-        round.draw()
-        ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
-                                   user=request.user,
-                                   round=round,
-                                   tournament=round.tournament)
-    else:
-        messages.error(request, "Could not create draw for {}, there was already a draw!".format(round.name))
+class CreateDrawView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
 
-    return redirect_round('draw', round)
+    action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_CREATE
+
+    def get_redirect_url(self):
+        return reverse_round('draw', self.get_round())
+
+    def post(self, request, *args, **kwargs):
+        round = self.get_round()
+
+        if round.draw_status != round.STATUS_NONE:
+            messages.error(request, "Could not create draw for {}, there was already a draw!".format(round.name))
+            return super().post(request, *args, **kwargs)
+
+        manager = DrawManager(round)
+        manager.create()
+
+        allocate_venues(round)
+
+        self.log_action()
+        return super().post(request, *args, **kwargs)
 
 
 @admin_required
@@ -397,43 +406,6 @@ def save_matchups(request, round):
     return HttpResponse("ok")
 
 
-@admin_required
-@round_view
-def draw_venues_edit(request, round):
-
-    draw = round.get_draw()
-    return render(request, "draw_venues_edit.html", dict(draw=draw))
-
-
-@admin_required
-@expect_post
-@round_view
-def save_venues(request, round):
-    # TODO: move to draws app
-    def v_id(a):
-        try:
-            return int(request.POST[a].split('_')[1])
-        except IndexError:
-            return None
-
-    data = [(int(a.split('_')[1]), v_id(a)) for a in list(request.POST.keys())]
-
-    debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
-    venues = Venue.objects.in_bulk([v_id for _, v_id in data])
-    for debate_id, venue_id in data:
-        if venue_id == None:
-            debates[debate_id].venue = None
-        else:
-            debates[debate_id].venue = venues[venue_id]
-
-        debates[debate_id].save()
-
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_VENUES_SAVE,
-                               user=request.user,
-                               round=round,
-                               tournament=round.tournament)
-
-    return HttpResponse("ok")
 
 # Public
 

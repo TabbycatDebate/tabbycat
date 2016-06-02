@@ -14,13 +14,12 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView, CreateView
 
 from draw.models import Debate, DebateTeam
-from draw.models import TeamVenuePreference, InstitutionVenuePreference
 from participants.models import Team, Institution
 from utils.forms import SuperuserCreationForm
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
 from utils.misc import redirect_tournament
-from venues.models import VenueGroup
+from venues.models import VenueGroup, TeamVenueConstraint, InstitutionVenueConstraint
 
 from .forms import TournamentForm
 from .mixins import TournamentMixin
@@ -69,15 +68,13 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         tournament = self.get_tournament()
         if tournament.current_round is None:
             if self.request.user.is_superuser:
-                if tournament.round_set.order_by('seq').first() is None:
-                    # Returning a non-500 response as it's a user-caused exception
-                    return HttpResponse('<p>Server Error: This tournament has no Rounds; you\'ll need to add some in the <a href="/admin/">Edit Data</a> area.</p>')
-                else:
-                    messages.warning(self.request, "The current round wasn't set, so it's been automatically set to the first round.")
-                    tournament.current_round = tournament.round_set.order_by('seq').first()
-                    logger.warning("Automatically set current round to {}".format(tournament.current_round))
-                    tournament.save()
-                    self.request.tournament = tournament # update for context processors
+                tournament.current_round = tournament.round_set.order_by('seq').first()
+                if tournament.current_round is None:
+                    return HttpResponse('<p>Error: This tournament has no rounds; you\'ll need to add some in the <a href="/admin/">Edit Data</a> area.</p>')
+                messages.warning(self.request, "The current round wasn't set, so it's been automatically set to the first round.")
+                logger.warning("Automatically set current round to {}".format(tournament.current_round))
+                tournament.save()
+                self.request.tournament = tournament # update for context processors
             else:
                 raise Http404()
         return super().get(self, request, *args, **kwargs)
@@ -149,11 +146,11 @@ def division_allocations(request, t):
 
     for team in teams:
         team['institutional_preferences'] = list(
-            InstitutionVenuePreference.objects.filter(
+            InstitutionVenueConstraint.objects.filter(
                 institution=team['institution__id']).values(
                     'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
         team['team_preferences'] = list(
-            TeamVenuePreference.objects.filter(
+            TeamVenueConstraint.objects.filter(
                 team=team['id']).values(
                     'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
 

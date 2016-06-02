@@ -1,6 +1,7 @@
 from utils.tests import BaseDebateTestCase
 
 from tournaments.models import Round
+from draw.manager import DrawManager
 from draw.models import Debate, DebateTeam
 from participants.models import Team, Adjudicator
 from venues.models import Venue
@@ -54,7 +55,7 @@ class RandomDrawTests(TestAvailabilities):
         self.activate_venues(self.round)
 
     def test_std(self):
-        self.round.draw()
+        DrawManager(self.round).create()
 
         self.failUnlessEqual(6, Debate.objects.count())
         self.failUnlessEqual(12, DebateTeam.objects.count())

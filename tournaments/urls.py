@@ -106,4 +106,7 @@ urlpatterns = [
     url(r'^tab/', include('standings.urls_public')),
     url(r'^admin/standings/round/(?P<round_seq>\d+)/',
         include('standings.urls_admin')),
+
+    # Venues App
+    url(r'^admin/venues/', include('venues.urls_admin')),
 ]

@@ -29,6 +29,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_DRAW_REGENERATE         = 'dr.rege'
     ACTION_TYPE_ADJUDICATORS_SAVE       = 'aa.save'
     ACTION_TYPE_VENUES_SAVE             = 've.save'
+    ACTION_TYPE_VENUES_AUTOALLOCATE     = 've.auto'
     ACTION_TYPE_DRAW_RELEASE            = 'dr.rele'
     ACTION_TYPE_DRAW_UNRELEASE          = 'dr.unre'
     ACTION_TYPE_DIVISIONS_SAVE          = 'dv.save'
@@ -61,6 +62,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_ADJUDICATOR_NOTE_SET    , 'Set adjudicator note'),
         (ACTION_TYPE_ADJUDICATORS_SAVE       , 'Saved adjudicator allocation'),
         (ACTION_TYPE_VENUES_SAVE             , 'Saved venues'),
+        (ACTION_TYPE_VENUES_AUTOALLOCATE     , 'Auto-allocated venues'),
         (ACTION_TYPE_DRAW_CREATE             , 'Created draw'),
         (ACTION_TYPE_DRAW_CONFIRM            , 'Confirmed draw'),
         (ACTION_TYPE_DRAW_REGENERATE         , 'Regenerated draw'),
@@ -97,6 +99,7 @@ class ActionLogEntry(models.Model):
         ACTION_TYPE_ADJUDICATOR_NOTE_SET    : ('adjudicator', ),
         ACTION_TYPE_ADJUDICATORS_SAVE       : ('round', ),
         ACTION_TYPE_VENUES_SAVE             : ('round', ),
+        ACTION_TYPE_VENUES_AUTOALLOCATE     : ('round', ),
         ACTION_TYPE_DRAW_CREATE             : ('round', ),
         ACTION_TYPE_DRAW_CONFIRM            : ('round', ),
         ACTION_TYPE_DRAW_REGENERATE         : ('round', ),
