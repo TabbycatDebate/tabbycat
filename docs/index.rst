@@ -43,6 +43,7 @@ tournaments.
    features/printing
    features/team-standings-rules
    features/user-accounts
+   features/venue-constraints
 
 .. _about-docs:
 
