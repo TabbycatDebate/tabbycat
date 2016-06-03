@@ -3,18 +3,15 @@ from django.contrib import admin
 from .models import Debate, DebateTeam
 from adjallocation.models import DebateAdjudicator
 
+from utils.admin import BaseModelAdmin
+
+
 # ==============================================================================
 # DebateTeam
 # ==============================================================================
 
-_dt_round = lambda o: o.debate.round.abbreviation
-_dt_round.short_description = 'Round'
-_dt_tournament = lambda o: o.debate.round.tournament
-_dt_tournament.short_description = 'Tournament'
-
-
-class DebateTeamAdmin(admin.ModelAdmin):
-    list_display = ('team', _dt_tournament, _dt_round, 'position')
+class DebateTeamAdmin(admin.ModelAdmin, BaseModelAdmin):
+    list_display = ('team', 'get_tournament', 'get_round', 'position')
     search_fields = ('team', )
     raw_id_fields = ('debate', 'team', )
 

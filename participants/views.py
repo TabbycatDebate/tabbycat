@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.http import JsonResponse
 from django.forms.models import modelformset_factory
+from django.views.decorators.cache import cache_page
 
 from adjallocation.models import DebateAdjudicator
 from utils.views import *

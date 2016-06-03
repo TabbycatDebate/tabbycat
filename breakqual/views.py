@@ -1,3 +1,6 @@
+from django.views.decorators.cache import cache_page
+from django.conf import settings
+
 from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
 from utils.misc import get_ip_address

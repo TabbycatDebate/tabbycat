@@ -8,9 +8,11 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy
+from django.views.decorators.cache import cache_page
+from django.shortcuts import render
+
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView, CreateView
-
 from draw.models import Debate, DebateTeam
 from participants.models import Team, Institution
 from utils.forms import SuperuserCreationForm

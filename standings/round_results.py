@@ -27,7 +27,7 @@ def add_team_round_results(standings, rounds, lookup=None):
     """
 
     if lookup is None:
-        lookup = lambda standings, x: standings.get_standing(x)
+        lookup = lambda standings, x: standings.get_standing(x)  # flake8: noqa
 
     teams = [info.instance_id for info in standings]
     teamscores = TeamScore.objects.select_related(

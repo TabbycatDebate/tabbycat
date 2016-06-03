@@ -283,7 +283,7 @@ class DivisionRankAnnotator(BaseRankAnnotator):
         self.rank_key = metricgetter(*metrics)
 
     def annotate(self, standings):
-        division_key = lambda x: x.team.division.name
+        division_key = lambda x: x.team.division.name  # flake8: noqa
         by_division = sorted(standings, key=division_key)
         for division, division_teams in groupby(by_division, key=division_key):
             rank = 1

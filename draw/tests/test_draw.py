@@ -760,9 +760,17 @@ class TestEliminationDrawGenerator(unittest.TestCase):
     def setUp(self):
         self.teams = [TestTeam(*args) for args in self.team_data]
 
+    def t(teams):
+        return lambda id: teams[id-1]
+
+    def p(t):
+        return lambda ids: list(map(t, ids))
+
     def _results(self, *args):
-        _t = lambda id: self.teams[id-1]
-        _p = lambda ids: list(map(_t, ids))
+
+        _t = self.t(self.teams)
+        _p = self.p(_t)
+
         pairings = list()
         for i, (teams, winner) in enumerate(args):
             pairing = Pairing(_p(teams), 0, i, winner=_t(winner))
@@ -770,7 +778,7 @@ class TestEliminationDrawGenerator(unittest.TestCase):
         return pairings
 
     def _teams(self, *args):
-        _t = lambda id: self.teams[id-1]
+        _t = self.t(self.teams)
         return list(map(_t, args))
 
     def test_no_bypass(self):

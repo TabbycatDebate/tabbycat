@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.conf import settings
+from django.views.decorators.cache import cache_page
 
 from .models import Motion
 from actionlog.models import ActionLogEntry

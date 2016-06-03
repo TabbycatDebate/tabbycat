@@ -1,5 +1,7 @@
-from django.template import Template, Context
 import json
+
+from django.template import Template, Context
+from django.contrib.auth.decorators import login_required
 
 from .models import ActionLogEntry
 from utils.views import *

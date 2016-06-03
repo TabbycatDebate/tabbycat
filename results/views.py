@@ -2,8 +2,11 @@ import json
 import datetime
 import logging
 
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.template import Template, Context
 from django.views.generic.base import TemplateView
+from django.views.decorators.cache import cache_page
 
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator

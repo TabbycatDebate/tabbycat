@@ -3,6 +3,9 @@ import json
 import logging
 
 from django.views.generic.base import TemplateView
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.views.decorators.cache import cache_page
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
