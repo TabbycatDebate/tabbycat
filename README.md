@@ -16,12 +16,13 @@ Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.her
 - A drag and drop interface for adjudicator allocation that automatically displays conflicts alongside gender and regional balance
 - A fully responsive design that automatically adapts to suit large screens, laptops, tablets, and phones
 - Configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/team-standings-rules.html)
-- Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html) and optional online submission of feedback and scoresheets
+- Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html)
+- Optional online submission of feedback and scoresheets
 - Optional online post-tournament tab display
 
-Tabbycat is currently optimized for Australs, but we're developing for all two-team formats. So if your tournament has different requirements to what we have (say, different draw rules or number of speakers), odds are we've already thought about it and it's on the [to-do list](https://github.com/czlee/tabbycat/issues).
+Tabbycat started as Australs tab software and has since evolved to support most two-team parliamentary formats. It is a goal of Tabbycat to be flexible, to meet the needes of different tournaments. There are many configurable features, and they're best explored by launching your own copy using the "Deploy to Heroku" button above.
 
-That said, our to-do list is long. **We prioritise our work by the features that will be used first.** So if you're planning to use it for a tournament but need some changes, please don't be shy—[get in touch with us](#authors-and-contacts) and we'll be more than happy to help. Please don't just wait for us to implement your requirement: we'd rather have the real-time feedback about which features are most useful!
+If your tournament has requirements that we don't currently support, please [get in touch with us](#authors-and-contacts). In many cases, we might have already put the idea on our [to-do list](https://github.com/czlee/tabbycat/issues). But we have many more ideas than we are able to implement. We prioritise our work by the features that will be used at upcoming tournaments, so if you need some changes, even if they're already on our list, please do contact us early rather than waiting for us to implement your requirement.
 
 ## Installation and User Guide
 
