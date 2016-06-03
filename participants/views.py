@@ -1,10 +1,12 @@
 from django.conf import settings
+from django.contrib import messages
 from django.http import JsonResponse
 from django.forms.models import modelformset_factory
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import cache_page
 
 from adjallocation.models import DebateAdjudicator
-from utils.views import *
+from utils.views import public_optional_tournament_view, tournament_view
 
 from .models import Adjudicator, Institution, Speaker, Team
 

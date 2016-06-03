@@ -1,6 +1,6 @@
 from django.contrib.auth import views as auth_views
 from django.conf import settings
-from django.conf.urls import *
+from django.conf.urls import include, url
 from django.contrib import admin, messages
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver

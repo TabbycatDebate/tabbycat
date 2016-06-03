@@ -1,6 +1,7 @@
-from utils.views import *
+from django.shortcuts import render
 
 from participants.models import Adjudicator, Institution, Speaker, Team
+from utils.views import admin_required, expect_post, tournament_view
 from venues.models import InstitutionVenueConstraint, Venue, VenueGroup
 
 

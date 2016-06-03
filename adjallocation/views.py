@@ -3,13 +3,15 @@ import logging
 
 from django.db.utils import IntegrityError
 from django.views.generic.base import View
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render
 
 from actionlog.models import ActionLogEntry
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
 from utils.mixins import SuperuserRequiredMixin
-from utils.views import *
+from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
@@ -159,7 +161,7 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
             adjs = [Adjudicator.objects.get(id=int(x)) for x in values]
             if key.startswith("chair_"):
                 if len(adjs) > 1:
-                    logger.warning("There was more than one chair for debate {}, only saving the first".format(allocation.debate))
+                    logger.warning("There was more than one chair for debate {}, only saving the first".format(alloc.debate))
                 alloc.chair = adjs[0]
             elif key.startswith("panel_"):
                 alloc.panel.extend(adjs)

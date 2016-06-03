@@ -4,8 +4,11 @@ import logging
 
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.conf import settings
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.cache import cache_page
+from django.shortcuts import render
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -18,7 +21,7 @@ from tournaments.mixins import RoundMixin
 from tournaments.models import Division, Round, Tournament
 from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.misc import redirect_round, reverse_round
-from utils.views import *
+from utils.views import admin_required, expect_post, public_optional_round_view, public_optional_tournament_view, round_view, tournament_view
 from venues.models import Venue, VenueGroup
 from venues.allocator import allocate_venues
 
@@ -633,7 +636,7 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                     'position': position
                 })
 
-            if len(debateInfo['panel']) is 0:
+            if len(debate_info['panel']) is 0:
                 ballot_data = {
                     'author': "_______________________________________________",
                     'authorInstitution': "",
@@ -642,13 +645,13 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                 ballot_data.update(debate_info)  # Extend with debateInfo keys
                 kwargs['ballots'].append(ballot_data)
             else:
-                for adj in (a for a in debateInfo['panel'] if a['position'] != "T"):
+                for adj in (a for a in debate_info['panel'] if a['position'] != "T"):
                     ballot_data = {
                         'author': adj['name'],
                         'authorInstitution': adj['institution'],
                         'authorPosition': adj['position'],
                     }
-                    ballot_data.update(debateInfo)  # Extend with debateInfo keys
-                    kwargs['ballots'].append(ballotData)
+                    ballot_data.update(debate_info)  # Extend with debateInfo keys
+                    kwargs['ballots'].append(ballot_data)
 
         return super().get_context_data(**kwargs)

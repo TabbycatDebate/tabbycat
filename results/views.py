@@ -4,7 +4,10 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import Http404, HttpResponse
 from django.template import Context, Template
+from django.shortcuts import get_object_or_404, render
 from django.views.generic.base import TemplateView
 from django.views.decorators.cache import cache_page
 
@@ -15,7 +18,7 @@ from participants.models import Adjudicator
 from motions.models import Motion
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
-from utils.views import *
+from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view, tournament_view
 from utils.misc import get_ip_address
 from venues.models import Venue
 

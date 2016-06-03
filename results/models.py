@@ -180,9 +180,9 @@ class BallotSubmission(Submission):
         return True
 
     # For further discussion
-    #submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
-    #submitter_email = models.EmailField(max_length=254, blank=True, null=True) # only relevant for public submissions
-    #submitter_phone = models.CharField(max_length=40, blank=True, null=True)   # only relevant for public submissions
+    # submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
+    # submitter_email = models.EmailField(max_length=254, blank=True, null=True) # only relevant for public submissions
+    # submitter_phone = models.CharField(max_length=40, blank=True, null=True)   # only relevant for public submissions
 
 
 class SpeakerScoreByAdj(models.Model):

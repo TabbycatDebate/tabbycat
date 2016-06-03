@@ -104,7 +104,7 @@ EMOJI_LIST = (
     # LAME ("◼️", ""), # Black Medium Square
     # LAME ("◽", ""), # White Medium Small Square
     # LAME ("◾", ""), # Black Medium Small Square
-    #Unicode    Version 4.0
+    # Unicode    Version 4.0
     ("☕", "☕"), # Hot Beverage
     # DOESN’T SHOW("⚠️", "⚠️"), # Warning Sign
     # DOESN’T SHOW ("☔", ""), # Umbrella With Rain Drops
@@ -113,7 +113,7 @@ EMOJI_LIST = (
     # LAME ("⬇️", ""), # Downwards Black Arrow
     # LAME ("⬅️", ""), # Leftwards Black Arrow
     # DOESN’T SHOW ("⚡", ""), # High Voltage Sign
-    #Unicode Version 4.1
+    # Unicode Version 4.1
     # DOESN’T SHOW ("☘", ""), # Shamrock
     # DOESN’T SHOW ("⚓", ""), # Anchor
     # DOESN’T SHOW ("♿", ""), # Wheelchair Symbol

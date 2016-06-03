@@ -1,15 +1,16 @@
 from django.views.decorators.cache import cache_page
 from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, render
 
 from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
 from utils.misc import get_ip_address
+from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_tournament, tournament_view
 
 from .models import BreakCategory, BreakingTeam
 from . import forms
 from . import breaking
-
-from utils.views import *
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)

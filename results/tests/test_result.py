@@ -132,7 +132,7 @@ class BaseTestResult(TestCase):
 
 class CommonTests(object):
 
-    def on_all_datasets(test_fn):
+    def on_all_datasets(self, test_fn):
         """Decorator.
         Tests should be written to take three arguments: self, ballotset and
         testdata. 'ballotset' is a BallotSet object. 'testdata' is a value of

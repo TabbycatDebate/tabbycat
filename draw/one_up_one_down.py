@@ -61,10 +61,10 @@ class OneUpOneDownSwapper(object):
 
         j = n
         l = []
-        #while j >= 0:
+        # while j >= 0:
         #    L.insert(0, j)
         #    j -= (action[j] + 1)
-        #return state[n], L
+        # return state[n], L
 
         # Now go back through the list starting at the end (since a 1 nullifies
         # the 1 immediately preceding, assuming the former is not itself

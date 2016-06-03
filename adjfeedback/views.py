@@ -5,6 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import SingleObjectMixin
@@ -22,7 +24,7 @@ from utils.misc import reverse_tournament
 from utils.mixins import PublicCacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
 from utils.mixins import PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin
 from utils.urlkeys import populate_url_keys
-from utils.views import *
+from utils.views import admin_required, public_optional_tournament_view, tournament_view
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
@@ -406,13 +408,13 @@ class SetAdjudicatorTestScoreView(BaseAdjudicatorActionView):
         try:
             score = float(request.POST["test_score"])
         except ValueError:
-            raise AdjudicatorActionError("Whoops! The value \"{}\" isn't a valid test score.".format(score_text))
+            raise AdjudicatorActionError("Whoops! The value isn't a valid test score.")
 
         adjudicator.test_score = score
         adjudicator.save()
 
         atsh = AdjudicatorTestScoreHistory(adjudicator=adjudicator,
-                round=self.get_tournament().current_round, score=score)
+            round=self.get_tournament().current_round, score=score)
         atsh.save()
         self.atsh = atsh
 

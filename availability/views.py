@@ -3,7 +3,7 @@ from participants.models import Person
 from actionlog.models import ActionLogEntry
 from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
 
-from utils.views import *
+from utils.views import admin_required, expect_post, round_view, redirect_round, public_optional_round_view, public_optional_tournament_view, tournament_view
 
 
 @admin_required

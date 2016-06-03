@@ -760,10 +760,10 @@ class TestEliminationDrawGenerator(unittest.TestCase):
     def setUp(self):
         self.teams = [TestTeam(*args) for args in self.team_data]
 
-    def t(teams):
+    def t(self, teams):
         return lambda id: teams[id-1]
 
-    def p(t):
+    def p(self, t):
         return lambda ids: list(map(t, ids))
 
     def _results(self, *args):

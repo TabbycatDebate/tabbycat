@@ -8,7 +8,7 @@ from django.forms.models import ModelMultipleChoiceField
 
 from actionlog.models import ActionLogEntry
 from tournaments.models import Division, Round
-from utils.views import *
+from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view
 
 from .models import Motion
 

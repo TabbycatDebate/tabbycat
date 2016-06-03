@@ -41,8 +41,8 @@ class SAAllocator(Allocator):
 
         self.anneal(800, 1, 1e4, self.state)
 
-        #i = 0
-        #while self.best_energy > 0 and i < self.MAX_TRIES:
+        # i = 0
+        # while self.best_energy > 0 and i < self.MAX_TRIES:
         #    self.anneal(100, 1, 1e3, self.best_state)
         #    i += 1
 

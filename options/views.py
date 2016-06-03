@@ -1,15 +1,17 @@
 import inspect
 
+from django.contrib import messages
 from django.http import Http404
 from django.utils.text import slugify
 from django.views.generic import TemplateView
+from django.shortcuts import render
 from dynamic_preferences.views import PreferenceFormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import TournamentMixin
 from utils.mixins import SuperuserRequiredMixin
-from utils.views import *
+from utils.views import admin_required, tournament_view
 from utils.misc import reverse_tournament
 
 from . import presets

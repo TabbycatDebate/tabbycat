@@ -2,8 +2,9 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.template import Context, Template
+from django.http import HttpResponse
 
-from utils.views import *
+from utils.views import tournament_view
 
 from .models import ActionLogEntry
 
