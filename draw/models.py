@@ -1,11 +1,15 @@
+import logging
+
 from django.db import models
 from django.utils.functional import cached_property
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 
 from tournaments.models import SRManager
 from participants.models import Team
 from venues.conflicts import venue_conflicts
 from .generator import DRAW_FLAG_DESCRIPTIONS
+
+logger = logging.getLogger(__name__)
 
 
 class DebateManager(models.Manager):
@@ -35,7 +39,8 @@ class Debate(models.Model):
     bracket = models.FloatField(default=0)
     room_rank = models.IntegerField(default=0)
 
-    time = models.DateTimeField(blank=True, null=True,
+    time = models.DateTimeField(
+        blank=True, null=True,
         help_text="The time/date of a debate if it is specifically scheduled")
 
     # comma-separated list of strings

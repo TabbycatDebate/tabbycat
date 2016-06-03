@@ -3,6 +3,7 @@ from ...models import TeamPositionAllocation
 from random import shuffle
 from operator import attrgetter
 
+
 class Command(RoundCommand):
 
     help = "Adds randomly generated side allocations to teams for all preliminary rounds."

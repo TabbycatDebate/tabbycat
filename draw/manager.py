@@ -1,8 +1,5 @@
-from collections import defaultdict, Counter
-from itertools import chain
 import random
 
-from participants.models import Team
 from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
@@ -10,14 +7,14 @@ from .models import Debate, DebateTeam, TeamPositionAllocation
 from .generator import DrawGenerator
 
 OPTIONS_TO_CONFIG_MAPPING = {
-    "avoid_institution": "draw_rules__avoid_same_institution",
-    "avoid_history": "draw_rules__avoid_team_history",
-    "history_penalty": "draw_rules__team_history_penalty",
-    "institution_penalty": "draw_rules__team_institution_penalty",
-    "side_allocations": "draw_rules__draw_side_allocations",
-    "avoid_conflicts": "draw_rules__draw_avoid_conflicts",
-    "odd_bracket"     : "draw_rules__draw_odd_bracket",
-    "pairing_method"  : "draw_rules__draw_pairing_method",
+    "avoid_institution"     : "draw_rules__avoid_same_institution",
+    "avoid_history"         : "draw_rules__avoid_team_history",
+    "history_penalty"       : "draw_rules__team_history_penalty",
+    "institution_penalty"   : "draw_rules__team_institution_penalty",
+    "side_allocations"      : "draw_rules__draw_side_allocations",
+    "avoid_conflicts"       : "draw_rules__draw_avoid_conflicts",
+    "odd_bracket"           : "draw_rules__draw_odd_bracket",
+    "pairing_method"        : "draw_rules__draw_pairing_method",
 }
 
 TPA_MAP = {TeamPositionAllocation.POSITION_AFFIRMATIVE: "aff",

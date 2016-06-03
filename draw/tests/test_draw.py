@@ -1,11 +1,13 @@
-import os.path, sys
 import unittest
-from collections import OrderedDict
-from .. import DrawGenerator, Pairing, DrawError
 import copy
+
+from collections import OrderedDict
+
+from .. import DrawGenerator, Pairing, DrawError
 from .utils import TestTeam, TestRound
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
+
 
 class TestRandomDrawGenerator(unittest.TestCase):
     """Basic unit test for random draws.
@@ -16,6 +18,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
 
     def test_invalid_option(self):
         teams = [TestTeam(*args, aff_count=0) for args in self.teams]
+
         def go():
             self.rd = DrawGenerator("random", teams, None, random=True)
         self.assertRaises(ValueError, go)
@@ -151,9 +154,9 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         ])
         expected = OrderedDict([
             (4, [1, 2, 3, 5]),
-            (3.5, [4, 6]), # bubble-up (institution)
+            (3.5, [4, 6]),  # Bubble-up (institution)
             (3, [7, 8]),
-            (2.5, [9, 11]), # bubble-down (history, history)
+            (2.5, [9, 11]),  # Bubble-down (history, history)
             (2, [10, 12, 13, 14]),
             (1, [15, 16])
         ])
@@ -168,9 +171,9 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         ])
         expected = OrderedDict([
             (4, [1, 2, 3, 5]),
-            (3.5, [4, 6]), # bubble-up (institution)
+            (3.5, [4, 6]),  # Bubble-up (institution)
             (3, [7, 9]),
-            (2.5, [8, 10]), # bubble-up (history)
+            (2.5, [8, 10]),  # Bubble-up (history)
             (2, [11, 12, 13, 14]),
             (1, [15, 16])
         ])
@@ -185,9 +188,9 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         ])
         expected = OrderedDict([
             (4, [1, 2, 3, 5]),
-            (3.5, [4, 6]), # bubble-up (institution)
+            (3.5, [4, 6]),  # bubble-up (institution)
             (3, [7, 8]),
-            (2.5, [9, 11]), # bubble-down (history, institution)
+            (2.5, [9, 11]),  # bubble-down (history, institution)
             (2, [10, 12, 13, 14]),
             (1, [15, 16])
         ])
@@ -219,9 +222,9 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         ])
         expected = OrderedDict([
             (4, [1, 2, 3, 5]),
-            (3.5, [4, 6]), # bubble-up (institution)
+            (3.5, [4, 6]),  # Bubble-up (institution)
             (3, [7, 8]),
-            (2.5, [9, 10]), # no bubble (exhausted)
+            (2.5, [9, 10]),  # No bubble (exhausted)
             (2, [11, 12, 13, 14]),
             (1, [15, 16])
         ])
@@ -340,95 +343,93 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
     # result.
     standings = dict()
     standings[1] = [((12, 'B', 4, [26, 11, 15, 14]), {"aff_count": 2, "allocated_side": "aff"}),
-                    (( 2, 'D', 3, [22, 16, 20, 10]), {"aff_count": 2, "allocated_side": "aff"}),
-                    (( 3, 'E', 3, [23, 20, 25,  4]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((11, 'B', 3, [ 1, 12, 23, 22]), {"aff_count": 2, "allocated_side": "neg"}),
-                    (( 6, 'E', 3, [19, 15, 18,  9]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((2,  'D', 3, [22, 16, 20, 10]), {"aff_count": 2, "allocated_side": "aff"}),
+                    ((3,  'E', 3, [23, 20, 25,  4]), {"aff_count": 2, "allocated_side": "aff"}),
+                    ((11, 'B', 3, [1,  12, 23, 22]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((6,  'E', 3, [19, 15, 18,  9]), {"aff_count": 2, "allocated_side": "neg"}),
                     ((17, 'E', 3, [21, 14,  7, 25]), {"aff_count": 2, "allocated_side": "neg"}),
-                    (( 4, 'B', 3, [18, 25,  5,  3]), {"aff_count": 3, "allocated_side": "aff"}),
+                    ((4,  'B', 3, [18, 25,  5,  3]), {"aff_count": 3, "allocated_side": "aff"}),
                     ((14, 'A', 3, [24, 17,  9, 12]), {"aff_count": 2, "allocated_side": "aff"}),
-                    (( 8, 'A', 3, [15, 24,  1, 15]), {"aff_count": 2, "allocated_side": "neg"}),
-                    (( 7, 'D', 2, [16,  9, 17, 16]), {"aff_count": 2, "allocated_side": "aff"}),
-                    (( 9, 'D', 2, [ 5,  7, 14,  6]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((15, 'B', 2, [ 8,  6, 12,  8]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((18, 'B', 2, [ 4, 21,  6, 21]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((22, 'A', 2, [ 2, 10, 16, 11]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((23, 'A', 2, [ 3, 19, 11,  5]), {"aff_count": 2, "allocated_side": "aff"}),
+                    ((8,  'A', 3, [15, 24,  1, 15]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((7,  'D', 2, [16,  9, 17, 16]), {"aff_count": 2, "allocated_side": "aff"}),
+                    ((9,  'D', 2, [5,   7, 14,  6]), {"aff_count": 2, "allocated_side": "aff"}),
+                    ((15, 'B', 2, [8,   6, 12,  8]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((18, 'B', 2, [4,  21,  6, 21]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((22, 'A', 2, [2,  10, 16, 11]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((23, 'A', 2, [3,  19, 11,  5]), {"aff_count": 2, "allocated_side": "aff"}),
                     ((24, 'B', 2, [14,  8, 19, 20]), {"aff_count": 3, "allocated_side": "aff"}),
                     ((25, 'A', 2, [10,  4,  3, 17]), {"aff_count": 3, "allocated_side": "aff"}),
-                    (( 1, 'C', 1, [11, 26,  8, 19]), {"aff_count": 2, "allocated_side": "neg"}),
-                    (( 5, 'C', 1, [ 9, 13,  4, 23]), {"aff_count": 1, "allocated_side": "neg"}),
+                    ((1,  'C', 1, [11, 26,  8, 19]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((5,  'C', 1, [9,  13,  4, 23]), {"aff_count": 1, "allocated_side": "neg"}),
                     ((10, 'B', 1, [25, 22, 13,  2]), {"aff_count": 1, "allocated_side": "aff"}),
-                    ((16, 'D', 1, [ 7,  2, 22,  7]), {"aff_count": 2, "allocated_side": "neg"}),
+                    ((16, 'D', 1, [7,   2, 22,  7]), {"aff_count": 2, "allocated_side": "neg"}),
                     ((20, 'E', 1, [13,  3,  2, 24]), {"aff_count": 2, "allocated_side": "aff"}),
                     ((21, 'A', 1, [17, 18, 26, 18]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((19, 'B', 1, [ 6, 23, 24,  1]), {"aff_count": 1, "allocated_side": "neg"}),
+                    ((19, 'B', 1, [6,  23, 24,  1]), {"aff_count": 1, "allocated_side": "neg"}),
                     ((26, 'B', 1, [12,  1, 21, 13]), {"aff_count": 2, "allocated_side": "neg"}),
                     ((13, 'C', 0, [20,  5, 10, 26]), {"aff_count": 2, "allocated_side": "neg"})]
 
     expected = dict()
-    expected[1] = [dict(odd_bracket="pullup_top", pairing_method="slide",
-                        avoid_conflicts="one_up_one_down", side_allocations="balance"), [
-                    (12,  2, ["pullup"], True),
-                    ( 3, 14, ["1u1d_hist"], True),
-                    (11,  4, ["1u1d_other"], False),
-                    ( 6,  7, ["1u1d_other", "pullup"], True),
-                    (17,  8, ["1u1d_hist"], True),
-                    ( 9, 24, ["1u1d_other"], False),
-                    (15, 23, ["1u1d_inst"], True),
-                    (18, 25, [], False),
-                    (22,  1, ["pullup"], True),
-                    ( 5, 19, ["1u1d_other"], True),
-                    (10, 21, ["1u1d_inst"], False),
-                    (16, 13, ["1u1d_other", "pullup"], True),
-                    (20, 26, ["1u1d_hist"], True)]]
-    expected[2] = [dict(odd_bracket="intermediate_bubble_up_down",
-                        pairing_method="slide", avoid_conflicts="one_up_one_down",
-                        side_allocations="balance"), [
-                    (12, 2, [], True),
-                    (3, 17, [], True), # institution conflict, but swapping
-                                       # would give history conflict
-                    (11, 14, ["1u1d_inst"], True),
-                    (6, 4, ["1u1d_other"], False),
-                    (8, 7, [], True),
-                    (9, 22, [], True),
-                    (15, 23, [], True),
-                    (18, 24, [], False),
-                    (1, 25, [], False),
-                    (5, 20, [], False),
-                    (10, 21, [], False),
-                    (16, 26, ["bub_up_hist"], True),
-                    (19, 13, ["bub_up_accom"], False)]]
-    expected[3] = [dict(odd_bracket="intermediate1", pairing_method="fold",
-                        avoid_conflicts="off", side_allocations="preallocated"), [
-                    (12, 11, [], False),
-                    ( 2,  8, [], False),
-                    ( 3, 17, [], False),
-                    ( 4,  6, [], False),
-                    (14, 15, [], False),
-                    ( 7, 22, [], False),
-                    ( 9, 18, [], False),
-                    (23, 16, [], False),
-                    (24,  5, [], False),
-                    (25,  1, [], False),
-                    (10, 26, [], False),
-                    (20, 19, [], False),
-                    (21, 13, [], False)]]
-    expected[4] = [dict(odd_bracket="intermediate2", pairing_method="fold",
-                        avoid_conflicts="off", side_allocations="preallocated"), [
-                    (12, 11, [], False),
-                    ( 2,  8, [], False),
-                    ( 3, 17, [], False),
-                    ( 4,  6, [], False),
-                    (14, 15, [], False),
-                    ( 7, 22, [], False),
-                    ( 9, 18, [], False),
-                    (23, 16, [], False),
-                    (24,  5, [], False),
-                    (25,  1, [], False),
-                    (10, 26, [], False),
-                    (20, 19, [], False),
-                    (21, 13, [], False)]]
+    expected[1] = [dict(odd_bracket="pullup_top", pairing_method="slide", avoid_conflicts="one_up_one_down", side_allocations="balance"),
+        [(12,  2, ["pullup"], True),
+         (3,  14, ["1u1d_hist"], True),
+         (11,  4, ["1u1d_other"], False),
+         (6,   7, ["1u1d_other", "pullup"], True),
+         (17,  8, ["1u1d_hist"], True),
+         (9,  24, ["1u1d_other"], False),
+         (15, 23, ["1u1d_inst"], True),
+         (18, 25, [], False),
+         (22,  1, ["pullup"], True),
+         (5,  19, ["1u1d_other"], True),
+         (10, 21, ["1u1d_inst"], False),
+         (16, 13, ["1u1d_other", "pullup"], True),
+         (20, 26, ["1u1d_hist"], True)]]
+
+    expected[2] = [dict(odd_bracket="intermediate_bubble_up_down", pairing_method="slide", avoid_conflicts="one_up_one_down", side_allocations="balance"),
+        [(12, 2, [], True),
+         (3, 17, [], True),  # institution conflict, but swapping
+                             # would give history conflict
+         (11, 14, ["1u1d_inst"], True),
+         (6, 4, ["1u1d_other"], False),
+         (8, 7, [], True),
+         (9, 22, [], True),
+         (15, 23, [], True),
+         (18, 24, [], False),
+         (1, 25, [], False),
+         (5, 20, [], False),
+         (10, 21, [], False),
+         (16, 26, ["bub_up_hist"], True),
+         (19, 13, ["bub_up_accom"], False)]]
+
+    expected[3] = [dict(odd_bracket="intermediate1", pairing_method="fold", avoid_conflicts="off", side_allocations="preallocated"),
+        [(12, 11, [], False),
+         (2,   8, [], False),
+         (3,  17, [], False),
+         (4,   6, [], False),
+         (14, 15, [], False),
+         (7,  22, [], False),
+         (9,  18, [], False),
+         (23, 16, [], False),
+         (24,  5, [], False),
+         (25,  1, [], False),
+         (10, 26, [], False),
+         (20, 19, [], False),
+         (21, 13, [], False)]]
+
+    expected[4] = [dict(odd_bracket="intermediate2", pairing_method="fold", avoid_conflicts="off", side_allocations="preallocated"),
+        [(12, 11, [], False),
+         (2,   8, [], False),
+         (3,  17, [], False),
+         (4,   6, [], False),
+         (14, 15, [], False),
+         (7,  22, [], False),
+         (9,  18, [], False),
+         (23, 16, [], False),
+         (24,  5, [], False),
+         (25,  1, [], False),
+         (10, 26, [], False),
+         (20, 19, [], False),
+         (21, 13, [], False)]]
 
     combinations = [(1, 1), (1, 2), (1, 3), (1, 4)]
 
@@ -709,14 +710,14 @@ class TestPartialEliminationDrawGenerator(unittest.TestCase):
 
     def test_split(self):
         self.fed = DrawGenerator("first_elimination", DUMMY_TEAMS, None)
-        self.assertEqual(self.fed._bypass_debate_split( 3), ( 1,  2))
-        self.assertEqual(self.fed._bypass_debate_split( 5), ( 3,  2))
-        self.assertEqual(self.fed._bypass_debate_split( 8), ( 8,  0))
-        self.assertEqual(self.fed._bypass_debate_split(11), ( 5,  6))
+        self.assertEqual(self.fed._bypass_debate_split(3),  (1,  2))
+        self.assertEqual(self.fed._bypass_debate_split(5),  (3,  2))
+        self.assertEqual(self.fed._bypass_debate_split(8),  (8,  0))
+        self.assertEqual(self.fed._bypass_debate_split(11), (5,  6))
         self.assertEqual(self.fed._bypass_debate_split(21), (11, 10))
-        self.assertEqual(self.fed._bypass_debate_split(24), ( 8, 16))
-        self.assertEqual(self.fed._bypass_debate_split(31), ( 1, 30))
-        self.assertEqual(self.fed._bypass_debate_split(32), (32,  0))
+        self.assertEqual(self.fed._bypass_debate_split(24), (8,  16))
+        self.assertEqual(self.fed._bypass_debate_split(31), (1,  30))
+        self.assertEqual(self.fed._bypass_debate_split(32), (32, 0))
         del self.fed
 
     def test_even_numbers(self):
@@ -748,10 +749,13 @@ class TestPartialEliminationDrawGenerator(unittest.TestCase):
             bypassing = [t.id for t in self.fed.get_bypassing_teams()]
             self.assertEqual(bypassing, exp_bypassing)
 
+
 class TestEliminationDrawGenerator(unittest.TestCase):
 
-    team_data = [(1, 'A', 1), (2, 'B', 2), (3, 'A', 3), (4, 'B', 4), (5, 'C', 5), (6, 'D', 6),
-             (7, 'E', 7), (8, 'A', 8), (9, 'D', 9), (10, 'E', 10), (11, 'D', 11), (12, 'A', 12)]
+    team_data = [
+        (1, 'A', 1), (2, 'B', 2), (3, 'A', 3), (4, 'B', 4), (5, 'C', 5), (6, 'D', 6),
+        (7, 'E', 7), (8, 'A', 8), (9, 'D', 9), (10, 'E', 10), (11, 'D', 11), (12, 'A', 12)
+    ]
 
     def setUp(self):
         self.teams = [TestTeam(*args) for args in self.team_data]

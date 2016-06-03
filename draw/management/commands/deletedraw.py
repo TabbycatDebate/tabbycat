@@ -1,7 +1,6 @@
-from utils.management.base import RoundCommand, CommandError
-from ...models import Debate
-from tournaments.models import Round
+from utils.management.base import RoundCommand
 from ...dbutils import delete_round_draw
+
 
 class Command(RoundCommand):
 
@@ -11,4 +10,3 @@ class Command(RoundCommand):
     def handle_round(self, round, **options):
         self.stdout.write("Deleting all debates in round '{}'...".format(round.name))
         delete_round_draw(round)
-

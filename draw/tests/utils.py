@@ -1,5 +1,6 @@
 """Utilities for draw tests."""
 
+
 class TestTeam(object):
     """Basic implementation of team interface"""
 
@@ -15,8 +16,7 @@ class TestTeam(object):
             setattr(self, key, value)
 
     def __repr__(self):
-        return "<Team {0} of {1} ({2:#x})>".format(self.id, self.institution,
-            hash(self))
+        return "<Team {0} of {1} ({2:#x})>".format(self.id, self.institution, hash(self))
 
     def break_rank_for_category(self, category):
         return self.points

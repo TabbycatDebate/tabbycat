@@ -99,7 +99,7 @@ class OneUpOneDownSwapper(object):
 
         def badness(i, h):
             return i.count(True) * self.institution_penalty + sum(h) \
-                    * self.history_penalty
+                * self.history_penalty
 
         # Discount by 1e-3 so that, if there are two otherwise-equivalent
         # swap combinations, fewer swaps is preferred to more swaps

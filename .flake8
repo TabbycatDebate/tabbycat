@@ -12,4 +12,4 @@
 
 ignore = E501,F403,E128,E221,E226,E261,E203,E231,E265,E241
 
-exclude = migrations/*,*/__init__.py
+exclude = docs/*,migrations/*,*/__init__.py

@@ -1,7 +1,8 @@
-import os.path, sys
 import unittest
+
 from .utils import TestTeam
 from ..one_up_one_down import OneUpOneDownSwapper
+
 
 class TestOneUpOneDown(unittest.TestCase):
 
