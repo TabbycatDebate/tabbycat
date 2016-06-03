@@ -3,7 +3,7 @@
 def gather_adj_feedback(adj, all_rounds, adj_feedbacks, all_debate_adjudicators):
 
     # Start off with their test scores
-    feedback_data = [{ 'x': 0, 'y': adj.test_score, 'position': "Test Score"}]
+    feedback_data = [{'x': 0, 'y': adj.test_score, 'position': "Test Score"}]
 
     for r in all_rounds:
         # Filter all the feedback to focus on this particular rouond

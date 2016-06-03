@@ -11,16 +11,13 @@ class BreakCategory(models.Model):
     break_size = models.IntegerField(
         help_text="Number of breaking teams in this category")
     is_general = models.BooleanField(
-        help_text=
-        "True if most teams eligible for this category, e.g. Open, False otherwise")
+        help_text="True if most teams eligible for this category, e.g. Open, False otherwise")
     institution_cap = models.IntegerField(
         blank=True,
         null=True,
-        help_text=
-        "Maximum number of teams from a single institution in this category; leave blank if not applicable")
+        help_text="Maximum number of teams from a single institution in this category; leave blank if not applicable")
     priority = models.IntegerField(
-        help_text=
-        "If a team breaks in multiple categories, lower priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority")
+        help_text="If a team breaks in multiple categories, lower priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority")
 
     # Does nothing now, reintroduce later
     # STATUS_NONE      = 'N'
@@ -71,8 +68,7 @@ class BreakingTeam(models.Model):
         choices=REMARK_CHOICES,
         blank=True,
         null=True,
-        help_text=
-        "Used to explain why an otherwise-qualified team didn't break")
+        help_text="Used to explain why an otherwise-qualified team didn't break")
 
     class Meta:
         unique_together = [('break_category', 'team')]

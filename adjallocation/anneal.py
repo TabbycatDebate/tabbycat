@@ -3,6 +3,7 @@ from .stab import StabAllocator
 import random
 import math
 
+
 class SAAllocator(Allocator):
     SCORE_ADJ_TEAM_CONFLICT = 10000
     SCORE_TARGET_PANEL = 800
@@ -150,7 +151,6 @@ class SAAllocator(Allocator):
     def apply_swap(self, swap):
         for debate, panel in swap:
             self.state[debate] = panel
-
 
     def score(self, debate, panel):
         score = sum(getattr(self, f)(debate, panel) for f in dir(self) if f.startswith('score_'))

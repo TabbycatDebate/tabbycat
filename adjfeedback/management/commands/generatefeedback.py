@@ -2,7 +2,7 @@ from utils.management.base import RoundCommand, CommandError
 from ...dbutils import add_feedback, add_feedback_to_round, delete_all_feedback_for_round, delete_feedback
 
 from django.contrib.auth import get_user_model
-from tournaments.models import Round
+
 from draw.models import Debate
 from adjfeedback.models import AdjudicatorFeedback
 
@@ -12,6 +12,7 @@ SUBMITTER_TYPE_MAP = {
     'public':  AdjudicatorFeedback.SUBMITTER_PUBLIC
 }
 User = get_user_model()
+
 
 class Command(RoundCommand):
 
@@ -58,7 +59,7 @@ class Command(RoundCommand):
         if not self.get_rounds(options) and not options["debates"]:
             raise CommandError("No rounds or debates were given. (Use --help for more info.)")
 
-        super(Command, self).handle(*args, **options) # handles rounds
+        super(Command, self).handle(*args, **options)  # Handles rounds
 
         for tournament in self.get_tournaments(options):
             for debate_id in options["debates"]:
@@ -89,4 +90,3 @@ class Command(RoundCommand):
             add_feedback(debate, **self.feedback_kwargs(options))
         except ValueError as e:
             raise CommandError(e)
-

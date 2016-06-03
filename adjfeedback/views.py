@@ -3,7 +3,6 @@ import json
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormView
@@ -25,12 +24,12 @@ from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
 from .utils import gather_adj_feedback, gather_adj_scores
 
+
 @admin_required
 @tournament_view
 def adj_scores(request, t):
     data = {}
-
-    #TODO: make round-dependent
+    # TODO: make round-dependent
     for adj in Adjudicator.objects.all().select_related('tournament','tournament__current_round'):
         data[adj.id] = adj.score
 
@@ -42,24 +41,28 @@ def adj_scores(request, t):
 def feedback_overview(request, t):
     breaking_count = 0
 
-
     if t.pref('share_adjs'):
         adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
-            'tournament','tournament__current_round') | Adjudicator.objects.filter(tournament=None)
+            'tournament', 'tournament__current_round') | Adjudicator.objects.filter(tournament=None)
     else:
         adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
-            'tournament','tournament__current_round')
+            'tournament', 'tournament__current_round')
 
     all_debate_adjudicators = list(DebateAdjudicator.objects.select_related('adjudicator').all())
-    all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(
-            confirmed=True).exclude(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).select_related(
-        'adjudicator', 'source_adjudicator__debate__round', 'source_team__debate__round'))
-    all_adj_scores = list(SpeakerScoreByAdj.objects.select_related('debate_adjudicator','ballot_submission').filter(
-        ballot_submission__confirmed=True))
+
+    all_adj_feedbacks = list(
+        AdjudicatorFeedback.objects.filter(confirmed=True).exclude(
+            source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).select_related(
+                'adjudicator', 'source_adjudicator__debate__round', 'source_team__debate__round'))
+
+    all_adj_scores = list(
+        SpeakerScoreByAdj.objects.select_related('debate_adjudicator', 'ballot_submission').filter(
+            ballot_submission__confirmed=True))
 
     feedback_data = {}
     for adj in adjudicators:
-        if adj.breaking: breaking_count += 1
+        if adj.breaking:
+            breaking_count += 1
         # Gather feedback scores for graphs
         adj_feedbacks = [f for f in all_adj_feedbacks if f.adjudicator == adj]
         feedback_data[adj.id] = gather_adj_feedback(adj, t.prelim_rounds(until=t.current_round), adj_feedbacks, all_debate_adjudicators)
@@ -96,8 +99,9 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, TemplateView):
 
         adjs_data = []
         for adj in Adjudicator.objects.filter(tournament=tournament):
-            feedbacks = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=adj).select_related(
-            'source_adjudicator__adjudicator').count(),
+            feedbacks = AdjudicatorFeedback.objects.filter(
+                source_adjudicator__adjudicator=adj).select_related(
+                'source_adjudicator__adjudicator').count(),
             adjs_data.append({
                 'name': adj.name,
                 'institution': adj.institution.name,
@@ -152,7 +156,7 @@ class LatestFeedbackView(FeedbackCardsView):
 
     def get_feedback_queryset(self):
         return AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
-                'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+            'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
 
 
 class FeedbackFromSourceView(SingleObjectMixin, FeedbackCardsView):
@@ -202,6 +206,7 @@ def get_adj_feedback(request, t):
     adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
     feedback = adj.get_feedback().filter(confirmed=True)
     questions = t.adj_feedback_questions
+
     def _parse_feedback(f):
 
         if f.source_team:
@@ -235,7 +240,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, TemplateView):
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
         kwargs['adjudicators'] = tournament.adjudicator_set.all() if not tournament.pref('share_adjs') \
-                else Adjudicator.objects.all()
+            else Adjudicator.objects.all()
         kwargs['teams'] = tournament.team_set.all()
         return super().get_context_data(**kwargs)
 
@@ -265,8 +270,8 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
     pk_url_kwarg = 'source_id'
 
     def get_form_class(self):
-        return make_feedback_form_class(self.object, self.get_submitter_fields(),
-                **self.feedback_form_class_kwargs)
+        return make_feedback_form_class(
+            self.object, self.get_submitter_fields(), **self.feedback_form_class_kwargs)
 
     def get_action_log_fields(self, **kwargs):
         kwargs['adjudicator_feedback'] = self.adj_feedback
@@ -286,7 +291,7 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
         return super().get_context_data(**kwargs)
 
     def _populate_source(self):
-        self.object = self.get_object() # for compatibility with SingleObjectMixin
+        self.object = self.get_object()  # For compatibility with SingleObjectMixin
         if isinstance(self.object, Adjudicator):
             self.source_name = self.object.name
         elif isinstance(self.object, Team):
@@ -316,7 +321,7 @@ class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, B
     def form_valid(self, form):
         result = super().form_valid(form)
         messages.success(self.request, "Feedback from {} on {} added.".format(
-                self.source_name, self.adj_feedback.adjudicator.name))
+            self.source_name, self.adj_feedback.adjudicator.name))
         return result
 
     def get_success_url(self):
@@ -377,7 +382,7 @@ class BaseAdjudicatorActionView(LogActionMixin, SuperuserRequiredMixin, Tourname
         try:
             self.adjudicator = self.get_adjudicator(request)
             self.modify_adjudicator(request, self.adjudicator)
-            self.log_action() # need to call explicitly, since this isn't a form view
+            self.log_action()  # Need to call explicitly, since this isn't a form view
         except AdjudicatorActionError as e:
             messages.error(request, str(e))
 
@@ -390,12 +395,13 @@ class SetAdjudicatorTestScoreView(BaseAdjudicatorActionView):
 
     def get_action_log_fields(self, **kwargs):
         kwargs['adjudicator_test_score_history'] = self.atsh
-        return super(BaseAdjudicatorActionView, self).get_action_log_fields(**kwargs) # skip BaseAdjudicatorActionView
+        # Skip BaseAdjudicatorActionView
+        return super(BaseAdjudicatorActionView, self).get_action_log_fields(**kwargs)
 
     def modify_adjudicator(self, request, adjudicator):
         try:
             score = float(request.POST["test_score"])
-        except ValueError as e:
+        except ValueError:
             raise AdjudicatorActionError("Whoops! The value \"{}\" isn't a valid test score.".format(score_text))
 
         adjudicator.test_score = score
@@ -416,7 +422,7 @@ class SetAdjudicatorBreakingStatusView(BaseAdjudicatorActionView):
         adjudicator.save()
 
     def post(self, request, *args, **kwargs):
-        super().post(request, *args, **kwargs) # discard redirect
+        super().post(request, *args, **kwargs)  # Discard redirect
         return HttpResponse("ok")
 
 
@@ -437,23 +443,25 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
 def get_feedback_progress(request, t):
     def calculate_coverage(submitted, total):
         if total == 0 or submitted == 0:
-            return 0 # avoid divide-by-zero error
+            return 0  # Avoid divide-by-zero error
         else:
             return int(submitted / total * 100)
 
     feedback = AdjudicatorFeedback.objects.select_related(
-        'source_adjudicator__adjudicator','source_team__team').all()
+        'source_adjudicator__adjudicator', 'source_team__team').all()
     adjudicators = Adjudicator.objects.filter(tournament=t)
-    adjudications = list(DebateAdjudicator.objects.select_related('adjudicator','debate').filter(
-        debate__round__stage=Round.STAGE_PRELIMINARY))
+    adjudications = list(
+        DebateAdjudicator.objects.select_related('adjudicator', 'debate').filter(
+            debate__round__stage=Round.STAGE_PRELIMINARY))
     teams = Team.objects.filter(tournament=t)
 
     # Teams only owe feedback on non silent rounds
-    rounds_owed = t.round_set.filter(silent=False, stage=Round.STAGE_PRELIMINARY, draw_status=t.current_round.STATUS_RELEASED).count()
+    rounds_owed = t.round_set.filter(
+        silent=False, stage=Round.STAGE_PRELIMINARY, draw_status=t.current_round.STATUS_RELEASED).count()
 
     for adj in adjudicators:
         adj.total_ballots = 0
-        adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator = adj)
+        adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator=adj)
         adjs_adjudications = [a for a in adjudications if a.adjudicator == adj]
 
         for item in adjs_adjudications:
@@ -475,11 +483,11 @@ def get_feedback_progress(request, t):
         adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
 
     for team in teams:
-        team.submitted_ballots = max(feedback.filter(source_team__team = team).count(), 0)
+        team.submitted_ballots = max(feedback.filter(source_team__team=team).count(), 0)
         team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
         team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
 
-    return { 'teams': teams, 'adjs': adjudicators }
+    return {'teams': teams, 'adjs': adjudicators}
 
 
 @admin_required
@@ -498,7 +506,6 @@ def public_feedback_progress(request, t):
                   dict(teams=progress['teams'], adjudicators=progress['adjs']))
 
 
-
 class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
 
     template_name = 'randomised_urls.html'
@@ -511,7 +518,7 @@ class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
         else:
             kwargs['adjs'] = Adjudicator.objects.all()
         kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
-                tournament.team_set.filter(url_key__isnull=False).exists()
+            tournament.team_set.filter(url_key__isnull=False).exists()
         kwargs['tournament_slug'] = tournament.slug
         return super().get_context_data(**kwargs)
 
@@ -527,8 +534,8 @@ class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOn
         # Only works if there are no randomised URLs now
         if tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
                 tournament.team_set.filter(url_key__isnull=False).exists():
-            messages.error(self.request, "There are already randomised URLs. "
-                    "You must use the Django management commands to populate or delete randomised URLs.")
+            messages.error(self.request, "There are already randomised URLs. " +
+                "You must use the Django management commands to populate or delete randomised URLs.")
         else:
             populate_url_keys(tournament.adjudicator_set.all())
             populate_url_keys(tournament.team_set.all())

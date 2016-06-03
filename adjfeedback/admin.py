@@ -7,6 +7,7 @@ from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 # Adjudicator Feedback Questions
 # ==============================================================================
 
+
 class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type', 'required', 'chair_on_panellist', 'panellist_on_chair', 'panellist_on_panellist', 'team_on_orallist')
     list_filter = ('tournament',)
@@ -18,8 +19,9 @@ admin.site.register(AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuestionAdmi
 # Adjudicator Feedback Answers
 # ==============================================================================
 
+
 class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
-    model = None # must be set by subclasses
+    model = None  # Must be set by subclasses
     fields = ('question', 'answer')
     extra = 1
 
@@ -45,6 +47,7 @@ class RoundListFilter(admin.SimpleListFilter):
 # Adjudicator Feedbacks
 # ==============================================================================
 
+
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'source_adjudicator', 'source_team', 'confirmed', 'score', 'version')
     search_fields = ('source_adjudicator__adjudicator__name', 'source_team__team__institution__code', 'source_team__team__reference', 'adjudicator__name', 'adjudicator__institution__code',)
@@ -69,16 +72,19 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
             fb.confirmed = True
             fb.save()
         final_count = queryset.filter(confirmed=True).count()
-        self._construct_message_for_user(request, final_count, "marked as confirmed. " \
-            "Note that this may have caused other feedback to be marked as unconfirmed.")
+        self._construct_message_for_user(
+            request, final_count, "marked as confirmed. Note that this may " +
+            "have caused other feedback to be marked as unconfirmed.")
         difference = original_count - final_count
         if difference > 0:
-            self._construct_message_for_user(request, difference, "did not end up as confirmed, " \
-                "probably because other feedback that conflicts with it was also marked as confirmed.",
-                level=messages.WARNING)
+            self._construct_message_for_user(
+                request, difference, "did not end up as confirmed, probably " +
+                "because other feedback that conflicts with it was also " +
+                "marked as confirmed.", level=messages.WARNING)
 
     def mark_as_unconfirmed(self, request, queryset):
         count = queryset.update(confirmed=False)
-        self._construct_message_for_user(request, count, "marked as unconfirmed.")
+        self._construct_message_for_user(request, count,
+                                         "marked as unconfirmed.")
 
 admin.site.register(AdjudicatorFeedback, AdjudicatorFeedbackAdmin)

@@ -37,7 +37,7 @@ class HungarianAllocator(Allocator):
         cost += self.HISTORY_PENALTY * adj.seen_team(debate.neg_team, debate.round)
 
         impt = (debate.importance or self.DEFAULT_IMPORTANCE) + adjustment
-        diff = 5+ impt - adj.score
+        diff = 5 + impt - adj.score
         if diff > 0.25:
             cost += 100000 * exp(diff - 0.25)
 
@@ -138,7 +138,7 @@ class HungarianAllocator(Allocator):
 
                     # for the top half of these debates, the final panellist
                     # can be of lower quality than the other 2
-                    if i < npan/2 and j==2:
+                    if i < npan/2 and j == 2:
                         adjustment = -1.0
                     else:
                         adjustment = 0
@@ -176,6 +176,7 @@ class HungarianAllocator(Allocator):
             logger.info("%s %s %s", a.debate, a.chair, a.panel)
 
         return alloc
+
 
 def test():
     from tournaments.models import Round

@@ -26,9 +26,8 @@ TEAM_SCORE_QUERY = """
     AND "draws_debateteam"."position" = '{pos:s}'
 """
 
-
-
-motions = motions.extra({"chosen_in": """
+motions = motions.extra({
+    "chosen_in": """
         SELECT COUNT (*)
         FROM "results_ballotsubmission"
         WHERE "results_ballotsubmission"."confirmed" = True

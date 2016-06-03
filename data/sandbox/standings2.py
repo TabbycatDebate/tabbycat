@@ -18,8 +18,8 @@ round = tm.Round.objects.get(seq=args.round)
 teams = Team.objects
 
 teams = teams.filter(
-    institution__tournament = round.tournament,
-    debateteam__debate__round__seq__lte = round.seq,
+    institution__tournament=round.tournament,
+    debateteam__debate__round__seq__lte=round.seq,
 )
 
 EXTRA_QUERY = """
@@ -55,6 +55,7 @@ for team in teams:
 
 print "=" * 50
 
+
 def who_beat_whom(team1, team2):
     """Returns a positive value if team1 won more debates, a negative value
     if team2 won more, 0 if the teams won the same number against each other
@@ -72,6 +73,7 @@ def who_beat_whom(team1, team2):
     print "who beat whom, {0} vs {1}: {2} wins against {3}".format(team1, team2, wins1, wins2)
     return cmp(wins1, wins2)
 
+
 def cmp_teams(team1, team2):
     """Returns 1 if team1 ranks ahead of team2, -1 if team2 ranks ahead of team1,
     and 0 if they rank the same. Requires access to teams, so that it knows whether
@@ -83,7 +85,7 @@ def cmp_teams(team1, team2):
     if two_teams_left(lambda x: x.points) or two_teams_left(lambda x: (x.points, x.speaker_score)) \
             or two_teams_left(lambda x: (x.points, x.speaker_score, x.draw_strength)):
         winner = who_beat_whom(team1, team2)
-        if winner != 0: # if this doesn't help, keep going
+        if winner != 0:  # If this doesn't help, keep going
             return winner
     key = lambda x: (x.points, x.speaker_score, x.draw_strength)
     return cmp(key(team1), key(team2))
@@ -102,7 +104,7 @@ if args.who_beat_whom:
     print "=" * 50
 
 sorted_teams = list(teams)
-random.shuffle(sorted_teams) # shuffle first, so that if teams are truly equal, they'll be in random order
+random.shuffle(sorted_teams)  # Shuffle first, so that if teams are truly equal, they'll be in random order
 sorted_teams.sort(cmp=cmp_teams, reverse=True)
 
 for team in sorted_teams:

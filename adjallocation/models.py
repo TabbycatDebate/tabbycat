@@ -86,7 +86,8 @@ class AdjudicatorAllocation:
 
     def __eq__(self, other):
         return self.debate == other.debate and self.chair == other.chair and \
-                set(self.panel) == set(other.panel) and set(self.trainees) == set(other.trainees)
+            set(self.panel) == set(other.panel) and \
+            set(self.trainees) == set(other.trainees)
 
     def delete(self):
         """Delete existing, current allocation"""

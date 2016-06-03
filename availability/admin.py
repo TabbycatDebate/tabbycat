@@ -1,11 +1,11 @@
 from django.contrib import admin
-from django import forms
 
 from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
 
 # ==============================================================================
 # ActiveVenue
 # ==============================================================================
+
 
 class ActiveVenueAdmin(admin.ModelAdmin):
     list_display = ('venue', 'round')
@@ -18,6 +18,7 @@ admin.site.register(ActiveVenue, ActiveVenueAdmin)
 # ActiveTeam
 # ==============================================================================
 
+
 class ActiveTeamAdmin(admin.ModelAdmin):
     list_display = ('team', 'round')
     search_fields = ('team', )
@@ -28,6 +29,7 @@ admin.site.register(ActiveTeam, ActiveTeamAdmin)
 # ==============================================================================
 # ActiveAdjudicator
 # ==============================================================================
+
 
 class ActiveAdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'round')

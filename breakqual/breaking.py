@@ -5,6 +5,7 @@ from standings.teams import TeamStandingsGenerator
 
 from .models import BreakingTeam
 
+
 def get_breaking_teams(category, include_all=False, include_categories=False):
     """Returns a list of Teams, with additional attributes. For each Team t in
     the returned list:
@@ -56,12 +57,14 @@ def get_breaking_teams(category, include_all=False, include_categories=False):
 
     return standings
 
+
 def generate_all_breaking_teams(tournament):
     """Deletes all breaking teams information, then generates breaking teams
     from scratch according to update_breaking_teams()."""
     for category in tournament.breakcategory_set.all():
         category.breakingteam_set.all().delete()
     update_all_breaking_teams(tournament)
+
 
 def update_all_breaking_teams(tournament):
     """Runs update_breaking_teams for all categories, taking taking break
@@ -82,6 +85,7 @@ def update_all_breaking_teams(tournament):
         eligible_teams = _eligible_team_set(category)
         this_break = _generate_breaking_teams(category, eligible_teams, teams_broken_higher_priority)
         teams_broken_cur_priority.update(this_break)
+
 
 def update_breaking_teams(category):
     """Computes the breaking teams and stores them in the database as
@@ -105,11 +109,13 @@ def update_breaking_teams(category):
     eligible_teams = _eligible_team_set(category)
     _generate_breaking_teams(category, eligible_teams, higher_teams)
 
+
 def _eligible_team_set(category):
     if category.is_general:
         return category.tournament.team_set.all() # all in tournament
     else:
         return category.team_set.all()
+
 
 def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_priority=set()):
     """Generates a list of breaking teams for the given category and returns
@@ -130,7 +136,7 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
     breaking_teams_to_create = list()
 
     # Variables for institutional caps and non-breaking teams
-    cur_break_rank = 0 # actual break rank
+    cur_break_rank = 0  # actual break rank
     cur_break_seq = 0  # sequential count of breaking teams
     teams_from_institution = Counter()
 
@@ -194,6 +200,5 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
     BreakingTeam.objects.bulk_create(breaking_teams_to_create)
     BreakingTeam.objects.filter(break_category=category, break_rank__isnull=False).exclude(
         team_id__in=[t.id for t in breaking_teams]).delete()
-
 
     return breaking_teams

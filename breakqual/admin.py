@@ -6,6 +6,7 @@ from .models import BreakCategory, BreakingTeam
 # Break Catergories
 # ==============================================================================
 
+
 class BreakCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'seq', 'tournament', 'break_size',
                     'priority', 'is_general', 'institution_cap')
@@ -18,6 +19,7 @@ admin.site.register(BreakCategory, BreakCategoryAdmin)
 # ==============================================================================
 # Breaking Teams
 # ==============================================================================
+
 
 class BreakingTeamAdmin(admin.ModelAdmin):
     list_display = ('break_category', 'team', 'rank', 'break_rank', 'remark')

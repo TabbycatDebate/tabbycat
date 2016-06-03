@@ -5,10 +5,9 @@ These are mainly used in management commands, but in principle could be used
 by a front-end interface as well."""
 
 from . import models as fm
-from draw.models import Debate, DebateTeam
+from draw.models import DebateTeam
 from participants.models import Team, Adjudicator
 from django.contrib.auth import get_user_model
-from results.result import BallotSet
 from adjallocation.models import DebateAdjudicator
 
 import random
@@ -33,20 +32,24 @@ COMMENTS = {
     1: ["It's as if (s)he was listening to a different debate.", "Worst adjudication I've ever seen.", "Give his/her own analysis to rebut our arguments.", "Should not be adjudicating at this tournament."]
 }
 
+
 def add_feedback_to_round(round, **kwargs):
     """Calls add_feedback() for every debate in the given round."""
     for debate in round.get_draw():
         add_feedback(debate, **kwargs)
+
 
 def delete_all_feedback_for_round(round):
     """Deletes all feedback for the given round."""
     fm.AdjudicatorFeedback.objects.filter(source_adjudicator__debate__round=round).delete()
     fm.AdjudicatorFeedback.objects.filter(source_team__debate__round=round).delete()
 
+
 def delete_feedback(debate):
     """Deletes all feedback for the given debate."""
     fm.AdjudicatorFeedback.objects.filter(source_adjudicator__debate=debate).delete()
     fm.AdjudicatorFeedback.objects.filter(source_team__debate=debate).delete()
+
 
 def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False, confirmed=False):
     """Adds feedback to a debate.
@@ -58,9 +61,8 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
     ``user`` is a User object.
     ``probability``, a float between 0.0 and 1.0, is the probability with which
         feedback is generated.
-    ``discarded`` and ``confirmed`` are whether the feedback should be discarded or
-        confirmed, respectively."""
-
+    ``discarded`` and ``confirmed`` are whether the feedback should be
+        discarded or confirmed, respectively."""
 
     if discarded and confirmed:
         raise ValueError("Feedback can't be both discarded and confirmed!")
@@ -73,7 +75,7 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
         (debate.neg_team, debate.adjudicators.chair),
     ]
     sources_and_subjects.extend(itertools.permutations(
-            (adj for type, adj in debate.adjudicators), 2))
+        (adj for type, adj in debate.adjudicators), 2))
 
     fbs = list()
 
@@ -90,10 +92,10 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
         fb.adjudicator = adj
         if isinstance(source, Adjudicator):
             fb.source_adjudicator = DebateAdjudicator.objects.get(
-                    debate=debate, adjudicator=source)
+                debate=debate, adjudicator=source)
         elif isinstance(source, Team):
             fb.source_team = DebateTeam.objects.get(
-                    debate=debate, team=source)
+                debate=debate, team=source)
         else:
             raise TypeError("source must be an Adjudicator or a Team")
 
