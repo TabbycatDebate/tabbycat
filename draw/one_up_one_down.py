@@ -35,7 +35,7 @@ class OneUpOneDownSwapper(object):
         of indices of the optimal swap combinations. The first item is the
         maximum possible sum so obtained."""
 
-        N = len(data) + 1
+        n = len(data) + 1
 
         # 'state' is the cumulative sum of the relevant elements.
         # 'action' elements are 1 if this integer should be included, and 0 if
@@ -43,15 +43,15 @@ class OneUpOneDownSwapper(object):
         # it is included (i.e. a non-nullified 1).  We keep nullified 1s in the
         # list because they might become non-nullified again if another 1 is
         # added to the end of a number of consecutive 1s.
-        state = [0] * (N + 1)
-        action = [0] * (N + 1)
+        state = [0] * (n + 1)
+        action = [0] * (n + 1)
 
         # If we "activate" this element, then we must consequentially exclude the
         # previous element.  Given that, we would improve the cumulative sum if,
         # and only if, adding this element to the cumulative sum as of *two*
         # elements ago (to form the potential cumulative sum of this element)
         # would beat the cumulative sum as of last element.
-        for i in range(2, N+1):
+        for i in range(2, n+1):
             if (state[i-2] + data[i-2]) > state[i-1]:
                 action[i] = 1
                 state[i] = state[i-2] + data[i-2]
@@ -59,21 +59,21 @@ class OneUpOneDownSwapper(object):
                 action[i] = 0
                 state[i] = state[i-1]
 
-        j = N
-        L = []
+        j = n
+        l = []
         #while j >= 0:
         #    L.insert(0, j)
         #    j -= (action[j] + 1)
-        #return state[N], L
+        #return state[n], L
 
         # Now go back through the list starting at the end (since a 1 nullifies
         # the 1 immediately preceding, assuming the former is not itself
         # nullified).
         while j >= 2:
             if action[j]:
-                L.insert(0, j-2) # insert index corresponding to start of swap
+                l.insert(0, j-2) # insert index corresponding to start of swap
             j -= (action[j] + 1)
-        return state[N], L
+        return state[n], l
 
     def score_swap(self, debate1, debate2):
         """Returns an integer representing the improvement from swapping the

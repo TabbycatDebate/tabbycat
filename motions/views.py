@@ -38,11 +38,11 @@ def public_motions(request, t):
 @admin_required
 @round_view
 def motions_edit(request, round):
-    MotionFormSet = modelformset_factory(
+    motion_form_set = modelformset_factory(
         Motion, can_delete=True, extra=3, exclude=['round'])
 
     if request.method == 'POST':
-        formset = MotionFormSet(request.POST, request.FILES)
+        formset = motion_form_set(request.POST, request.FILES)
         if formset.is_valid():
             motions = formset.save(commit=False)
             for motion in motions:
@@ -56,7 +56,7 @@ def motions_edit(request, round):
             if 'submit' in request.POST:
                 return redirect_round('draw', round)
     else:
-        formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
+        formset = motion_form_set(queryset=Motion.objects.filter(round=round))
 
     return render(request, "edit.html", dict(formset=formset))
 
@@ -81,15 +81,15 @@ def motions_assign(request, round):
             model = Motion
             fields = ("divisions",)
 
-    MotionFormSet = modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
+    motion_form_set = modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
 
     if request.method == 'POST':
-        formset = MotionFormSet(request.POST)
+        formset = motion_form_set(request.POST)
         formset.save()  # Should be checking for validity but on a deadline and was buggy
         if 'submit' in request.POST:
             return redirect_round('motions', round)
 
-    formset = MotionFormSet(queryset=Motion.objects.filter(round=round))
+    formset = motion_form_set(queryset=Motion.objects.filter(round=round))
     return render(request, "assign.html", dict(formset=formset))
 
 

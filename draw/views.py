@@ -27,6 +27,12 @@ from .models import TeamPositionAllocation, Debate, DebateTeam
 
 logger = logging.getLogger(__name__)
 
+TPA_MAP = {
+    TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
+    TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
+    None: "-"
+}
+
 
 # ==============================================================================
 # Viewing Draw
@@ -260,11 +266,6 @@ def side_allocations(request, t):
     teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
-    TPA_MAP = {
-        TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
-        TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
-        None: "-"
-    }
     for tpa in TeamPositionAllocation.objects.all():
         tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
     for team in teams:
@@ -455,10 +456,6 @@ def public_side_allocations(request, t):
     teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
-    TPA_MAP = {
-        TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
-        TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
-    }
     for tpa in TeamPositionAllocation.objects.all():
         tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
     for team in teams:
@@ -619,7 +616,7 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['ballots'] = []
 
         for debate in self.get_round().get_draw_by_room():
-            debateInfo = {
+            debate_info = {
                 'room': debate.venue.name if debate.venue else 'TBA',
                 'aff': debate.aff_team.short_name,
                 'affEmoji': debate.aff_team.emoji,
@@ -630,28 +627,28 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                 'panel': []
             }
             for position, adj in debate.adjudicators:
-                debateInfo['panel'].append({
+                debate_info['panel'].append({
                     'name': adj.name,
                     'institution': adj.institution.code,
                     'position': position
                 })
 
             if len(debateInfo['panel']) is 0:
-                ballotData = {
+                ballot_data = {
                     'author': "_______________________________________________",
                     'authorInstitution': "",
                     'authorPosition': "",
                 }
-                ballotData.update(debateInfo)  # Extend with debateInfo keys
-                kwargs['ballots'].append(ballotData)
+                ballot_data.update(debate_info)  # Extend with debateInfo keys
+                kwargs['ballots'].append(ballot_data)
             else:
                 for adj in (a for a in debateInfo['panel'] if a['position'] != "T"):
-                    ballotData = {
+                    ballot_data = {
                         'author': adj['name'],
                         'authorInstitution': adj['institution'],
                         'authorPosition': adj['position'],
                     }
-                    ballotData.update(debateInfo)  # Extend with debateInfo keys
+                    ballot_data.update(debateInfo)  # Extend with debateInfo keys
                     kwargs['ballots'].append(ballotData)
 
         return super().get_context_data(**kwargs)

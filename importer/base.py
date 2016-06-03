@@ -17,7 +17,7 @@ DUPLICATE_INFO = 19  # Logging level just below INFO
 logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
 
 
-def make_interpreter(DELETE=[], **kwargs):
+def make_interpreter(DELETE=[], **kwargs):  # flake8: noqa
     """Convenience function for building an interpreter."""
     def interpreter(line):
         # remove blank and unwanted values

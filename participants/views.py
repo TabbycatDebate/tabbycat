@@ -52,15 +52,15 @@ def public_confirm_shift_key(request, t, url_key):
     adj = get_object_or_404(Adjudicator, url_key=url_key)
     adj_debates = DebateAdjudicator.objects.filter(adjudicator=adj)
 
-    ShiftsFormset = modelformset_factory(DebateAdjudicator,
+    shifts_formset = modelformset_factory(DebateAdjudicator,
         can_delete=False, extra=0, fields=['timing_confirmed'])
 
     if request.method == 'POST':
-        formset = ShiftsFormset(request.POST, request.FILES)
+        formset = shifts_formset(request.POST, request.FILES)
         if formset.is_valid():
             formset.save()
             messages.success(request, "Your shift check-ins have been saved")
     else:
-        formset = ShiftsFormset(queryset=adj_debates)
+        formset = shifts_formset(queryset=adj_debates)
 
     return render(request, 'confirm_shifts.html', dict(formset=formset, adjudicator=adj))

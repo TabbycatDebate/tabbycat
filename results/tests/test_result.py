@@ -217,14 +217,14 @@ class CommonTests(object):
 
     @on_all_datasets
     def test_sheet_iter(self, ballotset, testdata):
-        NAMES = ["1", "2", "3", "Reply"]
+        names = ["1", "2", "3", "Reply"]
         for sheet, adj, scores, total, winner in zip(ballotset.sheet_iter, self.adjs, testdata['scores'], testdata['totals_by_adj'], testdata['winner_by_adj']):
             self.assertEqual(sheet.adjudicator, adj)
-            for pos, name, speaker, score in zip(sheet.affs, NAMES, self._get_team('aff').speaker_set.all(), scores[0]):
+            for pos, name, speaker, score in zip(sheet.affs, names, self._get_team('aff').speaker_set.all(), scores[0]):
                 self.assertEqual(pos.name, name)
                 self.assertEqual(pos.speaker, speaker)
                 self.assertEqual(pos.score, score)
-            for pos, name, speaker, score in zip(sheet.negs, NAMES, self._get_team('neg').speaker_set.all(), scores[1]):
+            for pos, name, speaker, score in zip(sheet.negs, names, self._get_team('neg').speaker_set.all(), scores[1]):
                 self.assertEqual(pos.name, name)
                 self.assertEqual(pos.speaker, speaker)
                 self.assertEqual(pos.score, score)

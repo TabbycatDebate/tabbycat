@@ -570,8 +570,8 @@ class BallotSet(object):
                 print pos.name, pos.speaker, pos.score
             print sheet.neg_score, sheet.neg_win
         """
-        REPLY_POSITION = self.debate.round.tournament.REPLY_POSITION
-        POSITIONS = self.debate.round.tournament.POSITIONS
+        reply_position = self.debate.round.tournament.REPLY_POSITION
+        positions = self.debate.round.tournament.POSITIONS
         ballotset = self # provide access in inner classes
 
         class Position(object):
@@ -583,7 +583,7 @@ class BallotSet(object):
 
             @property
             def name(self):
-                return "Reply" if (self.pos == REPLY_POSITION) else str(self.pos)
+                return "Reply" if (self.pos == reply_position) else str(self.pos)
 
             @property
             def speaker(self):
@@ -600,7 +600,7 @@ class BallotSet(object):
                 self.adjudicator = adj
 
             def position_iter(self, side):
-                for pos in POSITIONS:
+                for pos in positions:
                     yield Position(self.sheet, side, pos)
 
             @property

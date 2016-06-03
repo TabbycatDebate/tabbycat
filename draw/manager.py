@@ -21,7 +21,7 @@ TPA_MAP = {TeamPositionAllocation.POSITION_AFFIRMATIVE: "aff",
            TeamPositionAllocation.POSITION_NEGATIVE: "neg"}
 
 
-def DrawManager(round, active_only=True):
+def DrawManager(round, active_only=True):  # flake8: noqa
     klass = DRAW_MANAGER_CLASSES[round.draw_type]
     return klass(round, active_only)
 

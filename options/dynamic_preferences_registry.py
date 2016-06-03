@@ -727,7 +727,7 @@ class EnablePostponements(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class enable_forfeits(BooleanPreference):
+class EnableForfeits(BooleanPreference):
     help_text = "Allows debates to be marked as wins by forfeit"
     verbose_name = "Enable forfeits"
     section = league_options
@@ -736,7 +736,7 @@ class enable_forfeits(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class enable_division_motions(BooleanPreference):
+class EnableDivisionMotions(BooleanPreference):
     help_text = "Enables assigning motions to a division"
     verbose_name = "Enable division motions"
     section = league_options
@@ -745,7 +745,7 @@ class enable_division_motions(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class minimum_division_size(IntegerPreference):
+class MinimumDivisionSize(IntegerPreference):
     help_text = "Smallest allowed size for a division"
     verbose_name = "Minimum division size"
     section = league_options
@@ -754,7 +754,7 @@ class minimum_division_size(IntegerPreference):
 
 
 @tournament_preferences_registry.register
-class ideal_division_size(IntegerPreference):
+class IdealDivisionSize(IntegerPreference):
     help_text = "Ideal size for a division"
     verbose_name = "Ideal division size"
     section = league_options

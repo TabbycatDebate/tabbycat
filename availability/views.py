@@ -176,7 +176,7 @@ def _update_availability(request, round, update_method, active_model, active_att
         ActiveAdjudicator: ActionLogEntry.ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE,
     }
     if active_model in ACTION_TYPES:
-        ActionLogEntry.objects.log(type=ACTION_TYPES[active_model],
+        ActionLogEntry.objects.log(type=ACTION_TYPES[active_model],  # flake8: noqa
             user=request.user, round=round, tournament=round.tournament)
 
     return HttpResponse("ok")

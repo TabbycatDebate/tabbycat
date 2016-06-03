@@ -166,16 +166,16 @@ def times(number):
     return list(range(number))
 
 
-def divide(numberA, numberB):
-    return numberA / numberB
+def divide(number_a, number_b):
+    return number_a / number_b
 
 
 register.simple_tag(divide)
 
 
-def percentage(numberA, numberB):
-    if numberB > 0:
-        return numberA / numberB * 100
+def percentage(number_a, number_b):
+    if number_b > 0:
+        return number_a / number_b * 100
     else:
         return 0
 

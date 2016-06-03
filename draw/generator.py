@@ -701,7 +701,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
             OPTIONS = [
                 "avoid_history", "avoid_institution", "history_penalty",
                 "institution_penalty"]
-            options = dict((key, self.options[key]) for key in OPTIONS)
+            options = dict((key, self.options[key]) for key in OPTIONS)  # flake8: noqa
             swapper = OneUpOneDownSwapper(**options)
             pairs_new = swapper.run(pairs)
             swaps = swapper.swaps

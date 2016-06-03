@@ -159,7 +159,7 @@ class BallotSetForm(forms.Form):
         self.initial = self._initial_data()
 
     @property
-    def SIDES_AND_POSITIONS(self):
+    def SIDES_AND_POSITIONS(self):  # flake8: noqa
         return itertools.product(self.SIDES, self.POSITIONS)
 
     # --------------------------------------------------------------------------
@@ -236,9 +236,9 @@ class BallotSetForm(forms.Form):
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(queryset=queryset)
 
             # 4(b). Speaker scores
-            ScoreField = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
+            scorefield = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
             for adj in self.adjudicators:
-                self.fields[self._fieldname_score(adj, side, pos)] = ScoreField(
+                self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
                     widget=forms.NumberInput(attrs={'class': 'required number'}),
                     tournament_preferences=self.tournament.preferences)
 
@@ -260,8 +260,8 @@ class BallotSetForm(forms.Form):
             else:
                 forfeiter = None
 
-            CHOICES = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
-            self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, initial=forfeiter, required=False)
+            choices = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
+            self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, initial=forfeiter, required=False)
 
     def _initial_data(self):
         """Generates dictionary of initial form data."""

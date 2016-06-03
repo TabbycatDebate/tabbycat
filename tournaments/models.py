@@ -29,12 +29,12 @@ class Tournament(models.Model):
     active = models.BooleanField(default=True)
 
     @property
-    def LAST_SUBSTANTIVE_POSITION(self):
+    def LAST_SUBSTANTIVE_POSITION(self):  # flake8: noqa
         """Returns the number of substantive speakers."""
         return self.pref('substantive_speakers')
 
     @property
-    def REPLY_POSITION(self):
+    def REPLY_POSITION(self):  # flake8: noqa
         """If there is a reply position, returns one more than the number of
         substantive speakers. If there is no reply position, returns None."""
         if self.pref('reply_scores_enabled'):
@@ -43,7 +43,7 @@ class Tournament(models.Model):
             return None
 
     @property
-    def POSITIONS(self):
+    def POSITIONS(self):  # flake8: noqa
         """Guaranteed to be consecutive numbers starting at one. Includes the
         reply speaker."""
         speaker_positions = 1 + self.pref('substantive_speakers')
