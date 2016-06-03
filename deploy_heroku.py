@@ -37,7 +37,10 @@ config_group.add_argument("--enable-debug", action="store_true", default=False,
 
 # Import tournament arguments are copied from importtournament.py, and should be
 # updated when these options in importtournament.py change.
-import_tournament_group = parser.add_argument_group("import tournament options", "Passed to the importtournament command. Ignored unless --import-tournament is used. Provided for convenience; to use other importtournament options, run the importtournament command separately instead.")
+import_tournament_group = parser.add_argument_group("import tournament options",
+    "Passed to the importtournament command. Ignored unless " +
+    "--import-tournament is used. Provided for convenience; to use other " +
+    "importtournament options, run the importtournament command separately instead.")
 import_tournament_group.add_argument('-s', '--slug', type=str, action='store', default=None, dest="tournament_slug",
     help='Override tournament slug. (Default: use name of directory.)'),
 import_tournament_group.add_argument('--name', type=str, action='store', default=None, dest="tournament_name",

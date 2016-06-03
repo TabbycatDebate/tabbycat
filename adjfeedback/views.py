@@ -16,7 +16,8 @@ from results.models import SpeakerScoreByAdj
 from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
-from utils.mixins import SingleObjectFromTournamentMixin, SingleObjectByRandomisedUrlMixin, PublicCacheMixin, SuperuserRequiredMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, PostOnlyRedirectView
+from utils.mixins import SingleObjectFromTournamentMixin, SingleObjectByRandomisedUrlMixin, PublicCacheMixin
+from utils.mixins import SuperuserRequiredMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, PostOnlyRedirectView
 from utils.urlkeys import populate_url_keys
 from utils.views import *
 

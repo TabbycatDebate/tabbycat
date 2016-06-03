@@ -10,9 +10,10 @@
 # E128 = E128 continuation line under-indented for visual indent
 # E265 = block comment should start with '# '
 
-# E501 = line too long
 # E731 = do not assign a lambda expression, use a def
 
-ignore = E501,F403,E128,E221,E226,E261,E203,E231,E265,E241,E731
+ignore = F403,E128,E221,E226,E261,E203,E231,E265,E241,E731
 
-exclude = docs/*, migrations/*, node_modules/*, venv/*, */__init__.py
+max-line-length = 200
+
+exclude = docs/*, */migrations/*, node_modules/*, venv/*, */__init__.py
