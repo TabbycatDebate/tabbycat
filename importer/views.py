@@ -113,7 +113,7 @@ def confirm_venues(request, t):
                     venue_group = VenueGroup.objects.get(name=venue_groups[i])
                 except VenueGroup.DoesNotExist:
                     venue_group = VenueGroup(name=venue_groups[i],
-                        short_name=venue_groups[i][:15]).save()
+                                             short_name=venue_groups[i][:15]).save()
         else:
             venue_group = None
 

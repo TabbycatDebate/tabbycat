@@ -27,7 +27,7 @@ def team_speakers(request, t, team_id):
 @public_optional_tournament_view('public_participants')
 def public_participants(request, t):
     adjs = Adjudicator.objects.all()
-    speakers = Speaker.objects.all().select_related('team','team__institution')
+    speakers = Speaker.objects.all().select_related('team', 'team__institution')
     return render(request, "public_participants.html", dict(adjs=adjs, speakers=speakers))
 
 
@@ -54,8 +54,8 @@ def public_confirm_shift_key(request, t, url_key):
     adj = get_object_or_404(Adjudicator, url_key=url_key)
     adj_debates = DebateAdjudicator.objects.filter(adjudicator=adj)
 
-    shifts_formset = modelformset_factory(DebateAdjudicator,
-        can_delete=False, extra=0, fields=['timing_confirmed'])
+    shifts_formset = modelformset_factory(DebateAdjudicator, can_delete=False,
+                                          extra=0, fields=['timing_confirmed'])
 
     if request.method == 'POST':
         formset = shifts_formset(request.POST, request.FILES)

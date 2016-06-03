@@ -32,9 +32,9 @@ class BaseRankAnnotator:
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
 
-    key = None # must be set by subclasses
-    name = None # must be set by subclasses
-    abbr = None # must be set by subclasses
+    key = None  # Must be set by subclasses
+    name = None  # Must be set by subclasses
+    abbr = None  # Must be set by subclasses
     glyphicon = None
 
     def run(self, standings):

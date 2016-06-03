@@ -41,7 +41,7 @@ def delete_ballotset(debate):
 
 
 def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False,
-        min_score=72, max_score=78, reply_random=False):
+                  min_score=72, max_score=78, reply_random=False):
     """Adds a ballot set to a debate.
 
     ``debate`` is the Debate to which the ballot set should be added.

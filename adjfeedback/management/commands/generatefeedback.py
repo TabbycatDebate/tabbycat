@@ -21,17 +21,32 @@ class Command(RoundCommand):
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
-        parser.add_argument("--debates", type=int, nargs="+", help="IDs of specific debates to add feedback to. Done in addition to rounds, if any.", default=[])
-        parser.add_argument("-p", "--probability", type=float, help="Probability with which to add feedback", default=1.0)
-        parser.add_argument("-T", "--submitter-type", type=str, help="Submitter type, either 'tabroom' or 'public'", choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
-        parser.add_argument("-u", "--user", type=str, help="Username of submitter", default="random")
+        parser.add_argument("--debates", type=int, nargs="+",
+                            help="IDs of specific debates to add feedback to. "
+                            "Done in addition to rounds, if any.",
+                            default=[])
+        parser.add_argument("-p", "--probability", type=float,
+                            help="Probability with which to add feedback",
+                            default=1.0)
+        parser.add_argument("-T", "--submitter-type", type=str,
+                            help="Submitter type, either 'tabroom' or 'public'",
+                            choices=list(SUBMITTER_TYPE_MAP.keys()),
+                            default="tabroom")
+        parser.add_argument("-u", "--user", type=str,
+                            help="Username of submitter", default="random")
 
         status = parser.add_mutually_exclusive_group()
-        status.add_argument("-D", "--discarded", action="store_true", help="Make feedback discarded")
-        status.add_argument("-c", "--confirmed", action="store_true", help="Make feedback confirmed")
+        status.add_argument("-D", "--discarded", action="store_true",
+                            help="Make feedback discarded")
+        status.add_argument("-c", "--confirmed", action="store_true",
+                            help="Make feedback confirmed")
 
-        parser.add_argument("--clean", help="Remove all associated feedback first", action="store_true")
-        parser.add_argument("--create-user", help="Create user if it doesn't exist", action="store_true")
+        parser.add_argument("--clean",
+                            help="Remove all associated feedback first",
+                            action="store_true")
+        parser.add_argument("--create-user",
+                            help="Create user if it doesn't exist",
+                            action="store_true")
 
     @staticmethod
     def _get_user(options):
@@ -66,7 +81,10 @@ class Command(RoundCommand):
                 try:
                     debate = Debate.objects.get(round__tournament=tournament, id=debate_id)
                 except Debate.DoesNotExist:
-                    self.stdout.write(self.style.WARNING("Warning: There is no debate with id {:d} for tournament {!r}, skipping".format(debate_id, tournament.slug)))
+                    self.stdout.write(
+                        self.style.WARNING("Warning: There is no debate with "
+                                           "id {:d} for tournament {!r}, "
+                                           "skipping".format(debate_id, tournament.slug)))
                 self.handle_debate(debate, **options)
 
     def handle_round(self, round, **options):

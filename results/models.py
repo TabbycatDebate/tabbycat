@@ -218,7 +218,8 @@ class TeamScore(models.Model):
     win = models.NullBooleanField()
     score = ScoreField()
 
-    forfeit = models.BooleanField(default=False, blank=False, null=False,
+    forfeit = models.BooleanField(
+        default=False, blank=False, null=False,
         help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 
     class Meta:

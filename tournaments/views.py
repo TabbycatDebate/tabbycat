@@ -66,7 +66,7 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
         stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
         stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
-        kwargs["stats"] = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
+        kwargs["stats"] = [[0, stats_confirmed], [0, stats_draft], [0, stats_none]]
 
         return super().get_context_data(**kwargs)
 
@@ -76,8 +76,12 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
             if self.request.user.is_superuser:
                 tournament.current_round = tournament.round_set.order_by('seq').first()
                 if tournament.current_round is None:
-                    return HttpResponse('<p>Error: This tournament has no rounds; you\'ll need to add some in the <a href="/admin/">Edit Data</a> area.</p>')
-                messages.warning(self.request, "The current round wasn't set, so it's been automatically set to the first round.")
+                    return HttpResponse('<p>Error: This tournament has no rounds; '
+                                        ' you\'ll need to add some in the '
+                                        '<a href="/admin/">Edit Data</a> area.'
+                                        '</p>')
+                messages.warning(self.request, "The current round wasn't set, "
+                                 "so it's been automatically set to the first round.")
                 logger.warning("Automatically set current round to {}".format(tournament.current_round))
                 tournament.save()
                 self.request.tournament = tournament  # Update for context processors
@@ -110,7 +114,7 @@ def all_tournaments_all_venues(request, t):
 def all_draws_for_venue(request, t, venue_id):
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
-        'round','round__tournament','division')
+        'round', 'round__tournament', 'division')
     return render(request, 'public_all_draws_for_venue.html', dict(
         venue_group=venue_group, debates=debates))
 
@@ -227,7 +231,8 @@ def create_division_allocation(request, t):
     divisions = Division.objects.filter(tournament=t).delete()
 
     alloc = DivisionAllocator(teams=teams, divisions=divisions,
-        venue_groups=venue_groups, tournament=t, institutions=institutions)
+                              venue_groups=venue_groups, tournament=t,
+                              institutions=institutions)
     success = alloc.allocate()
 
     if success:

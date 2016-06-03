@@ -65,7 +65,7 @@ class SpeakerScoreByAdjAdmin(admin.ModelAdmin, BaseModelAdmin):
                      'debate_adjudicator__adjudicator__name')
 
     list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name')
-    raw_id_fields = ('debate_team','ballot_submission')
+    raw_id_fields = ('debate_team', 'ballot_submission')
 
     def get_speaker_name_filter(self, obj):
         return SpeakerScore.objects.filter(debate_team=obj.debate_team, position=obj.position)[0].speaker.name

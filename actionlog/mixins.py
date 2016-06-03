@@ -56,7 +56,8 @@ class LogActionMixin:
     def log_action(self):
         ip_address = get_ip_address(self.request)
         ActionLogEntry.objects.log(type=self.get_action_log_type(),
-                ip_address=ip_address, **self.get_action_log_fields())
+                                   ip_address=ip_address,
+                                   **self.get_action_log_fields())
 
     def form_valid(self, form):
         self.log_action()

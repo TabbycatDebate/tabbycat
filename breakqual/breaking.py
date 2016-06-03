@@ -104,7 +104,9 @@ def update_breaking_teams(category):
     If a breaking team entry already exists and there is a remark associated
     with it, it retains the remark and skips that team.
     """
-    higher_breakingteams = BreakingTeam.objects.filter(break_category__priority__lt=category.priority, break_rank__isnull=False).select_related('team')
+    higher_breakingteams = BreakingTeam.objects.filter(
+        break_category__priority__lt=category.priority,
+        break_rank__isnull=False).select_related('team')
     higher_teams = {bt.team for bt in higher_breakingteams}
     eligible_teams = _eligible_team_set(category)
     _generate_breaking_teams(category, eligible_teams, higher_teams)
@@ -112,7 +114,7 @@ def update_breaking_teams(category):
 
 def _eligible_team_set(category):
     if category.is_general:
-        return category.tournament.team_set.all() # all in tournament
+        return category.tournament.team_set.all()  # All in tournament
     else:
         return category.team_set.all()
 

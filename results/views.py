@@ -146,8 +146,8 @@ def edit_ballotset(request, t, ballotsub_id):
             else:
                 action_type = ActionLogEntry.ACTION_TYPE_BALLOT_EDIT
                 messages.success(request, "Edits to ballot set for %s saved." % debate.matchup)
-            ActionLogEntry.objects.log(type=action_type, user=request.user,
-                ballot_submission=ballotsub, ip_address=get_ip_address(request), tournament=t)
+            ActionLogEntry.objects.log(type=action_type, user=request.user, ballot_submission=ballotsub,
+                                       ip_address=get_ip_address(request), tournament=t)
 
             return redirect_round('results', debate.round)
     else:
@@ -229,7 +229,8 @@ def new_ballotset(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
     ip_address = get_ip_address(request)
     ballotsub = BallotSubmission(debate=debate, submitter=request.user,
-        submitter_type=BallotSubmission.SUBMITTER_TABROOM, ip_address=ip_address)
+                                 submitter_type=BallotSubmission.SUBMITTER_TABROOM,
+                                 ip_address=ip_address)
 
     if not debate.adjudicators.has_chair:
         messages.error(request, "Whoops! The debate %s doesn't have a chair, so you can't enter results for it." % debate.matchup)
@@ -240,7 +241,7 @@ def new_ballotset(request, t, debate_id):
         if form.is_valid():
             form.save()
             ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_CREATE, user=request.user,
-                ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
+                                       ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
             messages.success(request, "Ballot set for %s added." % debate.matchup)
             return redirect_round('results', debate.round)
     else:
@@ -399,7 +400,7 @@ def post_ballot_checkin(request, round):
     debate.save()
 
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN,
-            user=request.user, debate=debate, tournament=round.tournament)
+                               user=request.user, debate=debate, tournament=round.tournament)
 
     obj = dict()
 

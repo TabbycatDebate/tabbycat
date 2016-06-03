@@ -24,7 +24,8 @@ class Command(TournamentCommand):
                     source_team=feedback.source_team).order_by('version')
                 num = others.count()
                 if num >= options["num"]:
-                    self.stdout.write(self.style.MIGRATE_HEADING(" *** Adjudicator: {0}, from: {1}, {2:d} versions".format(adj, feedback.source, num)))
+                    self.stdout.write(self.style.MIGRATE_HEADING(
+                        " *** Adjudicator: {0}, from: {1}, {2:d} versions".format(adj, feedback.source, num)))
                     for other in others:
                         self.stdout.write("   {id:>3} {submitter:<12} {round:<4} {c} {version} {score:.1f}".format(
                             score=other.score, version=other.version, round=other.round.abbreviation, submitter=other.submitter.username,

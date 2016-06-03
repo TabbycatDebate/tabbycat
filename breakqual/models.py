@@ -15,9 +15,12 @@ class BreakCategory(models.Model):
     institution_cap = models.IntegerField(
         blank=True,
         null=True,
-        help_text="Maximum number of teams from a single institution in this category; leave blank if not applicable")
+        help_text="Maximum number of teams from a single institution in this "
+        "category; leave blank if not applicable")
     priority = models.IntegerField(
-        help_text="If a team breaks in multiple categories, lower priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority")
+        help_text="If a team breaks in multiple categories, lower priority "
+        "numbers take precedence; teams can break into multiple categories if "
+        "and only if they all have the same priority")
 
     # Does nothing now, reintroduce later
     # STATUS_NONE      = 'N'

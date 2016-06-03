@@ -71,7 +71,7 @@ class OneUpOneDownSwapper(object):
         # nullified).
         while j >= 2:
             if action[j]:
-                l.insert(0, j-2) # insert index corresponding to start of swap
+                l.insert(0, j-2)  # Insert index corresponding to start of swap
             j -= (action[j] + 1)
         return state[n], l
 

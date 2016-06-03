@@ -48,13 +48,13 @@ class HungarianAllocator(Allocator):
     def allocate(self):
         from adjallocation.models import AdjudicatorAllocation
 
-        # remove trainees
+        # Remove trainees
         self.adjudicators = [a for a in self.adjudicators if a.score >= self.MIN_SCORE]
         logger.info("Have %s non-trainee adjudidcators", len(self.adjudicators))
 
-        # sort adjudicators and debates in descending score/importance
+        # Sort adjudicators and debates in descending score/importance
         self.adjudicators_sorted = list(self.adjudicators)
-        shuffle(self.adjudicators_sorted) # randomize equally-ranked judges
+        shuffle(self.adjudicators_sorted)  # Randomize equally-ranked judges
         self.adjudicators_sorted.sort(key=lambda a: a.score, reverse=True)
         self.debates_sorted = list(self.debates)
         self.debates_sorted.sort(key=lambda a: a.importance, reverse=True)

@@ -92,7 +92,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     return None
                 return {
                     'name': line['region'],
-                    'tournament' : self.tournament,
+                    'tournament': self.tournament,
                 }
             counts, errors = self._import(f, pm.Region, region_interpreter, expect_unique=False)
         else:
@@ -202,7 +202,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'use_institution_prefix': line.get('use_institution_prefix') or None,
                 }
             counts, errors = self._import(f, pm.Team, team_interpreter, expect_unique=False,
-                generated_fields={'emoji': self.get_emoji})
+                                          generated_fields={'emoji': self.get_emoji})
         else:
             counts = None
             errors = None
@@ -214,8 +214,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         def speaker_interpreter(line):
             institution = pm.Institution.objects.lookup(line['institution'])
-            line['team'] = pm.Team.objects.get(institution=institution,
-                                reference=line['team_name'], tournament=self.tournament)
+            line['team'] = pm.Team.objects.get(
+                institution=institution, reference=line['team_name'], tournament=self.tournament)
             line = speaker_interpreter_part(line)
             return line
         counts, errors = self._import(f, pm.Speaker, speaker_interpreter, counts=counts, errors=errors)
@@ -248,8 +248,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'score'       : float(line['test_score']),
                 'round'       : None,
             }
-        counts, errors = self._import(f, fm.AdjudicatorTestScoreHistory, test_score_interpreter,
-                counts=counts, errors=errors)
+        counts, errors = self._import(f, fm.AdjudicatorTestScoreHistory,
+                                      test_score_interpreter, counts=counts,
+                                      errors=errors)
 
         def own_institution_conflict_interpreter(line):
             institution = pm.Institution.objects.lookup(line['institution'])
@@ -257,8 +258,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'adjudicator' : pm.Adjudicator.objects.get(name=line['name'], institution=institution, tournament=self.tournament),
                 'institution' : institution,
             }
-        counts, errors = self._import(f, am.AdjudicatorInstitutionConflict, own_institution_conflict_interpreter,
-                counts=counts, errors=errors)
+        counts, errors = self._import(f, am.AdjudicatorInstitutionConflict,
+                                      own_institution_conflict_interpreter,
+                                      counts=counts, errors=errors)
 
         def institution_conflict_interpreter(line):
             if not line.get('institution_conflicts'):
@@ -272,8 +274,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'adjudicator' : adjudicator,
                     'institution' : institution,
                 }
-        counts, errors = self._import(f, am.AdjudicatorInstitutionConflict, institution_conflict_interpreter,
-                counts=counts, errors=errors)
+        counts, errors = self._import(f, am.AdjudicatorInstitutionConflict,
+                                      institution_conflict_interpreter,
+                                      counts=counts, errors=errors)
 
         def team_conflict_interpreter(line):
             if not line.get('team_conflicts'):
@@ -286,8 +289,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'adjudicator' : adjudicator,
                     'team'        : team,
                 }
-        counts, errors = self._import(f, am.AdjudicatorConflict, team_conflict_interpreter,
-                counts=counts, errors=errors)
+        counts, errors = self._import(f, am.AdjudicatorConflict,
+                                      team_conflict_interpreter,
+                                      counts=counts, errors=errors)
 
         return counts, errors
 

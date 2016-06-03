@@ -132,8 +132,7 @@ class BaseFeedbackForm(forms.Form):
             else:
                 field = IntegerScaleField(min_value=min_value, max_value=max_value)
         elif question.answer_type == question.ANSWER_TYPE_FLOAT:
-            field = forms.FloatField(min_value=question.min_value,
-                    max_value=question.max_value)
+            field = forms.FloatField(min_value=question.min_value, max_value=question.max_value)
         elif question.answer_type == question.ANSWER_TYPE_TEXT:
             field = forms.CharField()
         elif question.answer_type == question.ANSWER_TYPE_LONGTEXT:
@@ -170,8 +169,8 @@ class BaseFeedbackForm(forms.Form):
 
         if self._confirm_on_submit:
             self.discard_all_existing(adjudicator=kwargs['adjudicator'],
-                    source_adjudicator=kwargs['source_adjudicator'],
-                    source_team=kwargs['source_team'])
+                                      source_adjudicator=kwargs['source_adjudicator'],
+                                      source_team=kwargs['source_team'])
             af.confirmed = True
 
         af.score = self.cleaned_data['score']
@@ -179,8 +178,8 @@ class BaseFeedbackForm(forms.Form):
 
         for question in self.tournament.adj_feedback_questions.filter(**self.question_filter):
             if self.cleaned_data[question.reference] is not None:
-                answer = question.answer_type_class(feedback=af, question=question,
-                        answer=self.cleaned_data[question.reference])
+                answer = question.answer_type_class(
+                    feedback=af, question=question, answer=self.cleaned_data[question.reference])
                 answer.save()
 
         return af

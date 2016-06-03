@@ -370,7 +370,8 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     ((13, 'C', 0, [20,  5, 10, 26]), {"aff_count": 2, "allocated_side": "neg"})]
 
     expected = dict()
-    expected[1] = [dict(odd_bracket="pullup_top", pairing_method="slide", avoid_conflicts="one_up_one_down", side_allocations="balance"),
+    expected[1] = [dict(
+        odd_bracket="pullup_top", pairing_method="slide", avoid_conflicts="one_up_one_down", side_allocations="balance"),
         [(12,  2, ["pullup"], True),
          (3,  14, ["1u1d_hist"], True),
          (11,  4, ["1u1d_other"], False),
@@ -385,7 +386,8 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
          (16, 13, ["1u1d_other", "pullup"], True),
          (20, 26, ["1u1d_hist"], True)]]
 
-    expected[2] = [dict(odd_bracket="intermediate_bubble_up_down", pairing_method="slide", avoid_conflicts="one_up_one_down", side_allocations="balance"),
+    expected[2] = [dict(
+        odd_bracket="intermediate_bubble_up_down", pairing_method="slide", avoid_conflicts="one_up_one_down", side_allocations="balance"),
         [(12, 2, [], True),
          (3, 17, [], True),  # institution conflict, but swapping
                              # would give history conflict
@@ -401,7 +403,8 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
          (16, 26, ["bub_up_hist"], True),
          (19, 13, ["bub_up_accom"], False)]]
 
-    expected[3] = [dict(odd_bracket="intermediate1", pairing_method="fold", avoid_conflicts="off", side_allocations="preallocated"),
+    expected[3] = [dict(
+        odd_bracket="intermediate1", pairing_method="fold", avoid_conflicts="off", side_allocations="preallocated"),
         [(12, 11, [], False),
          (2,   8, [], False),
          (3,  17, [], False),
@@ -416,7 +419,8 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
          (20, 19, [], False),
          (21, 13, [], False)]]
 
-    expected[4] = [dict(odd_bracket="intermediate2", pairing_method="fold", avoid_conflicts="off", side_allocations="preallocated"),
+    expected[4] = [dict(
+        odd_bracket="intermediate2", pairing_method="fold", avoid_conflicts="off", side_allocations="preallocated"),
         [(12, 11, [], False),
          (2,   8, [], False),
          (3,  17, [], False),
@@ -486,11 +490,12 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
     ])
     brackets[4] = OrderedDict([
         (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": []}),
-        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1", "Caltech 3"]}),
-        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),
+        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1", "Caltech 3"]}),  # flake8: noqa
+        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),  # flake8: noqa
         (0, {"aff": [], "neg": ["Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
     ])
-    brackets[99] = OrderedDict([ # Uneven aff/neg, should raise exception
+    brackets[99] = OrderedDict([
+        # Uneven aff/neg, should raise exception
         (5, {"aff": [1, 2], "neg": []}),
         (4, {"aff": [3, 4], "neg": [14]}),
         (3, {"aff": [5, 6, 7, 8, 9], "neg": [15, 16]}),
@@ -530,8 +535,8 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
     ])
     expecteds["pullup_top"][4] = OrderedDict([
         (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
-        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Caltech 3", "Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),
-        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Princeton 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
+        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Caltech 3", "Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),  # flake8: noqa
+        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Princeton 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),  # flake8: noqa
         (0, {"aff": [], "neg": []}),
     ])
 
@@ -562,8 +567,8 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
     ])
     expecteds["pullup_bottom"][4] = OrderedDict([
         (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["Columbia 1", "Caltech 1", "Caltech 3"]}),
-        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),
-        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
+        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),  # flake8: noqa
+        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),  # flake8: noqa
         (0, {"aff": [], "neg": []}),
     ])
 

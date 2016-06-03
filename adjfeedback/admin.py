@@ -8,9 +8,11 @@ from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 
 
 class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type', 'required', 'chair_on_panellist', 'panellist_on_chair', 'panellist_on_panellist', 'team_on_orallist')
-    list_filter = ('tournament',)
-    ordering = ('tournament', 'seq')
+    list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type',
+                    'required', 'chair_on_panellist', 'panellist_on_chair',
+                    'panellist_on_panellist', 'team_on_orallist')
+    list_filter  = ('tournament',)
+    ordering     = ('tournament', 'seq')
 
 admin.site.register(AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuestionAdmin)
 
@@ -26,7 +28,8 @@ class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "question":
-            kwargs["queryset"] = AdjudicatorFeedbackQuestion.objects.filter(answer_type__in=AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE[self.model])
+            kwargs["queryset"] = AdjudicatorFeedbackQuestion.objects.filter(
+                answer_type__in=AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE[self.model])
         return super(BaseAdjudicatorFeedbackAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -48,17 +51,23 @@ class RoundListFilter(admin.SimpleListFilter):
 
 
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
-    list_display = ('adjudicator', 'source_adjudicator', 'source_team', 'confirmed', 'score', 'version')
-    search_fields = ('source_adjudicator__adjudicator__name', 'source_team__team__institution__code', 'source_team__team__reference', 'adjudicator__name', 'adjudicator__institution__code',)
+    list_display  = ('adjudicator', 'source_adjudicator', 'source_team',
+                     'confirmed', 'score', 'version')
+    search_fields = ('source_adjudicator__adjudicator__name',
+                     'source_team__team__institution__code',
+                     'source_team__team__reference', 'adjudicator__name',
+                     'adjudicator__institution__code',)
     raw_id_fields = ('source_team',)
-    list_filter = (RoundListFilter, 'adjudicator', 'source_adjudicator', 'source_team')
-    actions = ('mark_as_confirmed', 'mark_as_unconfirmed')
+    list_filter   = (RoundListFilter, 'adjudicator', 'source_adjudicator',
+                     'source_team')
+    actions       = ('mark_as_confirmed', 'mark_as_unconfirmed')
 
     # dynamically generate inline tables for different answer types
     inlines = []
     for _answer_type_class in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE:
-        _inline_class = type(_answer_type_class.__name__ + "Inline", (BaseAdjudicatorFeedbackAnswerInline,),
-                {"model": _answer_type_class, "__module__": __name__})
+        _inline_class = type(
+            _answer_type_class.__name__ + "Inline", (BaseAdjudicatorFeedbackAnswerInline,),
+            {"model": _answer_type_class, "__module__": __name__})
         inlines.append(_inline_class)
 
     def _construct_message_for_user(self, request, count, action, **kwargs):

@@ -36,7 +36,7 @@ from .utils import gather_adj_feedback, gather_adj_scores
 def adj_scores(request, t):
     data = {}
     # TODO: make round-dependent
-    for adj in Adjudicator.objects.all().select_related('tournament','tournament__current_round'):
+    for adj in Adjudicator.objects.all().select_related('tournament', 'tournament__current_round'):
         data[adj.id] = adj.score
 
     return HttpResponse(json.dumps(data), content_type="text/json")
@@ -413,8 +413,9 @@ class SetAdjudicatorTestScoreView(BaseAdjudicatorActionView):
         adjudicator.test_score = score
         adjudicator.save()
 
-        atsh = AdjudicatorTestScoreHistory(adjudicator=adjudicator,
-            round=self.get_tournament().current_round, score=score)
+        atsh = AdjudicatorTestScoreHistory(
+            adjudicator=adjudicator, round=self.get_tournament().current_round,
+            score=score)
         atsh.save()
         self.atsh = atsh
 
@@ -540,8 +541,10 @@ class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOn
         # Only works if there are no randomised URLs now
         if tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
                 tournament.team_set.filter(url_key__isnull=False).exists():
-            messages.error(self.request, "There are already randomised URLs. " +
-                "You must use the Django management commands to populate or delete randomised URLs.")
+            messages.error(
+                self.request, "There are already randomised URLs. " +
+                "You must use the Django management commands to populate or " +
+                "delete randomised URLs.")
         else:
             populate_url_keys(tournament.adjudicator_set.all())
             populate_url_keys(tournament.team_set.all())

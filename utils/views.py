@@ -62,10 +62,8 @@ def round_view(view_fn):
 
 def redirect_round(to, round, **kwargs):
     warn("utils.views.redirect_round is deprecated, import from utils.misc instead")
-    return redirect(to,
-                    tournament_slug=round.tournament.slug,
-                    round_seq=round.seq,
-                    *kwargs)
+    return redirect(to, tournament_slug=round.tournament.slug,
+                    round_seq=round.seq, *kwargs)
 
 
 def public_optional_round_view(preference_option):

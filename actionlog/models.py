@@ -52,12 +52,12 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_CHOICES = (
         (ACTION_TYPE_BALLOT_DISCARD          , 'Discarded ballot set'),
         (ACTION_TYPE_BALLOT_CHECKIN          , 'Checked in ballot set'),
-        (ACTION_TYPE_BALLOT_CREATE           , 'Created ballot set'), # For tab assistants , not debaters
+        (ACTION_TYPE_BALLOT_CREATE           , 'Created ballot set'),  # For tab assistants , not debaters
         (ACTION_TYPE_BALLOT_EDIT             , 'Edited ballot set'),
         (ACTION_TYPE_BALLOT_CONFIRM          , 'Confirmed ballot set'),
-        (ACTION_TYPE_BALLOT_SUBMIT           , 'Submitted ballot set from the public form'), # For debaters       , not tab assistants
-        (ACTION_TYPE_FEEDBACK_SUBMIT         , 'Submitted feedback from the public form'), # For debaters       , not tab assistants
-        (ACTION_TYPE_FEEDBACK_SAVE           , 'Saved feedback'), # For tab assistants , not debaters
+        (ACTION_TYPE_BALLOT_SUBMIT           , 'Submitted ballot set from the public form'),  # For debaters       , not tab assistants
+        (ACTION_TYPE_FEEDBACK_SUBMIT         , 'Submitted feedback from the public form'),  # For debaters       , not tab assistants
+        (ACTION_TYPE_FEEDBACK_SAVE           , 'Saved feedback'),  # For tab assistants , not debaters
         (ACTION_TYPE_TEST_SCORE_EDIT         , 'Edited adjudicator test score'),
         (ACTION_TYPE_ADJUDICATOR_NOTE_SET    , 'Set adjudicator note'),
         (ACTION_TYPE_ADJUDICATORS_SAVE       , 'Saved adjudicator allocation'),
@@ -136,9 +136,9 @@ class ActionLogEntry(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', blank=True, null=True)
     ballot_submission = models.ForeignKey('results.BallotSubmission', blank=True, null=True)
     adjudicator_test_score_history = models.ForeignKey('adjfeedback.AdjudicatorTestScoreHistory',
-            blank=True, null=True)
+                                                       blank=True, null=True)
     adjudicator_feedback = models.ForeignKey('adjfeedback.AdjudicatorFeedback',
-            blank=True, null=True)
+                                             blank=True, null=True)
     round = models.ForeignKey('tournaments.Round', blank=True, null=True)
     motion = models.ForeignKey('motions.Motion', blank=True, null=True)
     break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True)

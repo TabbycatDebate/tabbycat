@@ -290,14 +290,16 @@ class SetRoundStartTimeView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, 
         try:
             time = datetime.datetime.strptime(time_text, "%H:%M").time()
         except ValueError:
-            messages.error(request, "Sorry, \"{}\" isn't a valid time. It must be in 24-hour format, with a colon, for example: \"13:57\".".format(time_text))
+            messages.error(request, "Sorry, \"{}\" isn't a valid time. It must "
+                           "be in 24-hour format, with a colon, for "
+                           "example: \"13:57\".".format(time_text))
             return super().post(request, *args, **kwargs)
 
         round = self.get_round()
         round.starts_at = time
         round.save()
-
-        self.log_action() # need to call explicitly, since this isn't a form view
+        # Need to call explicitly, since this isn't a form view
+        self.log_action()
 
         return super().post(request, *args, **kwargs)
 

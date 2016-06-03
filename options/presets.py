@@ -16,7 +16,7 @@ class AustralsPreferences(PreferencesPreset):
         self.scoring__reply_score_min                   = 34.0
         self.scoring__reply_score_max                   = 41.0
         self.scoring__reply_score_step                  = 0.5
-        self.scoring__maximum_margin                    = 15.0 # TODO= check this
+        self.scoring__maximum_margin                    = 15.0  # TODO= check this
         # Draws
         self.draw_rules__avoid_same_institution         = True
         self.draw_rules__avoid_team_history             = True
@@ -30,7 +30,7 @@ class AustralsPreferences(PreferencesPreset):
         self.debate_rules__motion_vetoes_enabled        = True
         self.data_entry__enable_motions                 = True
         # Standings Rules
-        self.standings__standings_missed_debates        = 2 # TODO= check this
+        self.standings__standings_missed_debates        = 2  # TODO= check this
         self.standings__team_standings_precedence       = ['wins', 'speaks_sum']
         self.standings__rank_speakers_by                = 'total'
 
@@ -73,8 +73,8 @@ class NZEastersPreferences(AustralsPreferences):
         self.draw_rules__draw_odd_bracket               = 'intermediate'
         self.draw_rules__draw_pairing_method            = 'fold'
         self.draw_rules__draw_avoid_conflicts           = 'off'
-        self.draw_rules__avoid_same_institution         = False # TODO: CHECK
-        self.draw_rules__avoid_team_history             = False # TODO: CHECK
+        self.draw_rules__avoid_same_institution         = False  # TODO: CHECK
+        self.draw_rules__avoid_team_history             = False  # TODO: CHECK
         # UI Options
         self.ui_options__show_novices                   = True
 
@@ -116,21 +116,21 @@ class UADCPreferences(AustralsPreferences):
         self.show_in_list                               = True
         # Rules source = http://www.alcheringa.in/pdrules.pdf
         # Scoring
-        self.scoring__score_min                         = 69.0 # From Rules Book
-        self.scoring__score_max                         = 81.0 # From Rules Book
+        self.scoring__score_min                         = 69.0  # From Rules Book
+        self.scoring__score_max                         = 81.0  # From Rules Book
         self.scoring__score_step                        = 1.0
-        self.scoring__reply_score_min                   = 34.5 # Not specified; assuming half of substantive
-        self.scoring__reply_score_max                   = 42.0 # Not specified; assuming  half of substantive
+        self.scoring__reply_score_min                   = 34.5  # Not specified; assuming half of substantive
+        self.scoring__reply_score_max                   = 42.0  # Not specified; assuming  half of substantive
         self.scoring__reply_score_step                  = 0.5
-        self.scoring__maximum_margin                    = 0.0 # TODO= check this
-        self.scoring__margin_includes_dissenters        = True # From Rules:10.9.5
+        self.scoring__maximum_margin                    = 0.0  # TODO= check this
+        self.scoring__margin_includes_dissenters        = True  # From Rules:10.9.5
         # # Draws
         self.draw_rules__avoid_same_institution         = False
         self.draw_rules__avoid_team_history             = True
-        self.draw_rules__draw_odd_bracket               = 'pullup_top' # From Rules 10.3.1
-        self.draw_rules__draw_side_allocations          = 'balance' # From Rules 10.6
-        self.draw_rules__draw_pairing_method            = 'slide' # From rules 10.5
-        self.draw_rules__draw_avoid_conflicts           = 'one_up_one_down' # From rules 10.6.4
+        self.draw_rules__draw_odd_bracket               = 'pullup_top'  # From Rules 10.3.1
+        self.draw_rules__draw_side_allocations          = 'balance'  # From Rules 10.6
+        self.draw_rules__draw_pairing_method            = 'slide'  # From rules 10.5
+        self.draw_rules__draw_avoid_conflicts           = 'one_up_one_down'  # From rules 10.6.4
         # # Debate Rules
         self.debate_rules__substantive_speakers         = 3
         self.debate_rules__reply_scores_enabled         = True
@@ -139,10 +139,10 @@ class UADCPreferences(AustralsPreferences):
         # self.standings__team_standings_precedence     = 'australs' # TODO: need a new standings rule
         self.standings__team_standings_precedence       = ['wins', 'speaks_sum']
         # Feedback
-        self.feedback__adj_min_score                    = 1.0 # Explicit in the rules
-        self.feedback__adj_max_score                    = 5.0 # Explicit in the rules
+        self.feedback__adj_min_score                    = 1.0  # Explicit in the rules
+        self.feedback__adj_max_score                    = 5.0  # Explicit in the rules
         # UI Options
-        self.public_features__feedback_progress         = True # Feedback is compulsory
+        self.public_features__feedback_progress         = True  # Feedback is compulsory
 
 
 class WADLPreferences(PreferencesPreset):

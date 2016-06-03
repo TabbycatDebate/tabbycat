@@ -37,9 +37,9 @@ class BaseMetricAnnotator:
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
 
-    key = None # must be set by subclasses
-    name = None # must be set by subclasses
-    abbr = None # must be set by subclasses
+    key = None  # must be set by subclasses
+    name = None  # must be set by subclasses
+    abbr = None  # must be set by subclasses
     glyphicon = None
     ranked_only = False
 
@@ -66,7 +66,7 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
     class attributes, and use the `key` attribute when adding metrics in
     implementing `annotate()`."""
 
-    ranked_only = True # repeated metrics don't make sense outside the precedence
+    ranked_only = True  # Repeated metrics don't make sense outside the precedence
 
     def __init__(self, index, keys):
         self.index = index

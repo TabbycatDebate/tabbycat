@@ -72,8 +72,9 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
         speakers = self.get_speakers()
         metrics, extra_metrics = self.get_metrics()
         rank_filter = self.get_rank_filter()
-        generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics,
-                rank_filter=rank_filter)
+        generator = SpeakerStandingsGenerator(metrics, self.rankings,
+                                              extra_metrics,
+                                              rank_filter=rank_filter)
         standings = generator.generate(speakers, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
