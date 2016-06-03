@@ -1,7 +1,5 @@
 import os
-import csv
 import logging
-from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
@@ -12,6 +10,7 @@ import venues.models as vm
 from tournaments.models import Tournament
 from importer.anorak import AnorakTournamentDataImporter
 from importer.base import DUPLICATE_INFO, TournamentDataImporterFatal
+
 
 class Command(BaseCommand):
     help = 'Delete all data for a tournament and import from specified directory.'
@@ -71,23 +70,27 @@ class Command(BaseCommand):
 
     def _print_stage(self, message):
         if self.verbosity > 0:
-            if self.color: message = "\033[0;36m" + message + "\033[0m\n"
+            if self.color:
+                message = "\033[0;36m" + message + "\033[0m\n"
             self.stdout.write(message)
 
     def _print_result(self, counts, errors):
         if self.verbosity > 0:
             if errors:
                 for message in errors.itermessages():
-                    if self.color: message = "\033[1;32m" + message + "\032[0m\n"
+                    if self.color:
+                        message = "\033[1;32m" + message + "\032[0m\n"
                     self.stdout.write(message)
             count_strs = ("{1:d} {0}".format(model._meta.verbose_name_plural, count) for model, count in counts.items())
             message = "Imported " + ", ".join(count_strs) + ", hit {1:d} errors".format(counts, len(errors))
-            if self.color: "\033[0;36m" + message + "\033[0m\n"
+            if self.color:
+                "\033[0;36m" + message + "\033[0m\n"
             self.stdout.write(message)
 
     def _warning(self, message):
         if self.verbosity > 0:
-            if self.color: message = "\033[0;33mWarning: " + message + "\033[0m\n"
+            if self.color:
+                message = "\033[0;33mWarning: " + message + "\033[0m\n"
             self.stdout.write(message)
 
     def _csv_file_path(self, filename):

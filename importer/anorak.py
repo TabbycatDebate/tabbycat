@@ -1,15 +1,14 @@
-from .base import BaseTournamentDataImporter, TournamentDataImporterError, make_lookup, make_interpreter
+from .base import BaseTournamentDataImporter, make_lookup, make_interpreter
 import adjallocation.models as am
 import breakqual.models as bm
 import draw.models as dm
 import adjfeedback.models as fm
 import motions.models as mm
-import options.models as cm
 import participants.models as pm
 import tournaments.models as tm
 import tournaments.utils
 import venues.models as vm
-import csv
+
 
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     """Anorak: The original tournament data format."""
@@ -130,8 +129,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'name'       : line['group'],
                     'short_name' : line['group'][:25],
                 }
-            counts, errors = self._import(f, vm.VenueGroup,
-                    venue_group_interpreter, expect_unique=False)
+            counts, errors = self._import(
+                f, vm.VenueGroup, venue_group_interpreter, expect_unique=False)
         else:
             counts = None
             errors = None
@@ -165,6 +164,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             tournament=self.tournament,
             institution=pm.Institution.objects.lookup
         )
+
         def team_interpreter(line):
             line = team_interpreter_part(line)
             line['short_reference'] = line['reference'][:34]
@@ -191,6 +191,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         if auto_create_teams:
             self.initialise_emoji_options()
+
             def team_interpreter(line):
                 return {
                     'tournament':  self.tournament,
@@ -200,7 +201,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'use_institution_prefix': line.get('use_institution_prefix') or None,
                 }
             counts, errors = self._import(f, pm.Team, team_interpreter, expect_unique=False,
-                    generated_fields={'emoji': self.get_emoji})
+                generated_fields={'emoji': self.get_emoji})
         else:
             counts = None
             errors = None
@@ -209,6 +210,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             DELETE=['use_institution_prefix', 'institution', 'team_name'],
             gender=self.lookup_gender,
         )
+
         def speaker_interpreter(line):
             institution = pm.Institution.objects.lookup(line['institution'])
             line['team'] = pm.Team.objects.get(institution=institution,

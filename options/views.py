@@ -1,7 +1,5 @@
 import inspect
 
-from django import forms
-from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.utils.text import slugify
 from django.views.generic import TemplateView
@@ -17,6 +15,7 @@ from utils.misc import reverse_tournament
 from . import presets
 from .forms import tournament_preference_form_builder
 from .dynamic_preferences_registry import tournament_preferences_registry
+
 
 @admin_required
 @tournament_view
@@ -120,7 +119,6 @@ def tournament_preference_apply(request, t, preset_name):
     context['preset_title'] = selected_preset[0][1]().name
     context['preferences'] = preset_preferences
 
-
     return render(request, 'preferences_presets_apply.html', context)
 
 
@@ -128,4 +126,3 @@ class TournamentPreferenceApplyView(TemplateView):
 
     preset = None
     template_name = "preferences_presets_apply.html"
-

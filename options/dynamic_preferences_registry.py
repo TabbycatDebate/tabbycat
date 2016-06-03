@@ -7,6 +7,7 @@ from standings.teams import TeamStandingsGenerator
 scoring = Section('scoring')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class MinimumSpeakerScore(FloatPreference):
     help_text = "Minimum allowed score for substantive speeches"
@@ -14,6 +15,7 @@ class MinimumSpeakerScore(FloatPreference):
     name = 'score_min'
     verbose_name = 'Minimum speaker score'
     default = 68.0
+
 
 @tournament_preferences_registry.register
 class MaximumSpeakerScore(FloatPreference):
@@ -23,6 +25,7 @@ class MaximumSpeakerScore(FloatPreference):
     name = 'score_max'
     default = 82.0
 
+
 @tournament_preferences_registry.register
 class SpeakerScoreStep(FloatPreference):
     verbose_name = 'Speaker score step'
@@ -30,6 +33,7 @@ class SpeakerScoreStep(FloatPreference):
     section = scoring
     name = 'score_step'
     default = 1.0
+
 
 @tournament_preferences_registry.register
 class MinimumReplyScore(FloatPreference):
@@ -48,6 +52,7 @@ class MaximumReplyScore(FloatPreference):
     name = 'reply_score_max'
     default = 41.0
 
+
 @tournament_preferences_registry.register
 class ReplyScoreStep(FloatPreference):
     help_text = "Score steps allowed for reply speeches, e.g. full points (1) or half points (0.5)"
@@ -56,6 +61,7 @@ class ReplyScoreStep(FloatPreference):
     name = 'reply_score_step'
     default = 0.5
 
+
 @tournament_preferences_registry.register
 class MaximumMargin(FloatPreference):
     help_text = "The largest amount by which one team can beat another (0 means no limit)"
@@ -63,6 +69,7 @@ class MaximumMargin(FloatPreference):
     section = scoring
     name = 'maximum_margin'
     default = 0.0
+
 
 @tournament_preferences_registry.register
 class MarginIncludesDissent(BooleanPreference):
@@ -76,6 +83,7 @@ class MarginIncludesDissent(BooleanPreference):
 draw_rules = Section('draw_rules')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class VotingScore(FloatPreference):
     help_text = "The auto-allocator will only take adjudicators at or above this score as voting panellists"
@@ -83,6 +91,7 @@ class VotingScore(FloatPreference):
     section = draw_rules
     name = 'adj_min_voting_score'
     default = 1.5
+
 
 @tournament_preferences_registry.register
 class AdjConflictPenalty(IntegerPreference):
@@ -92,6 +101,7 @@ class AdjConflictPenalty(IntegerPreference):
     name = "adj_conflict_penalty"
     default = 1000000
 
+
 @tournament_preferences_registry.register
 class AdjHistoryPenalty(IntegerPreference):
     help_text = "Penalty applied by auto-allocator for adjudicator-team history"
@@ -99,6 +109,7 @@ class AdjHistoryPenalty(IntegerPreference):
     section = draw_rules
     name = "adj_history_penalty"
     default = 10000
+
 
 @tournament_preferences_registry.register
 class AvoidSameInstitution(BooleanPreference):
@@ -108,6 +119,7 @@ class AvoidSameInstitution(BooleanPreference):
     name = "avoid_same_institution"
     default = True
 
+
 @tournament_preferences_registry.register
 class AvoidTeamHistory(BooleanPreference):
     help_text = "If checked, the draw will try to avoid having teams see each other twice"
@@ -115,6 +127,7 @@ class AvoidTeamHistory(BooleanPreference):
     section = draw_rules
     name = "avoid_team_history"
     default = True
+
 
 @tournament_preferences_registry.register
 class TeamInstitutionPenalty(IntegerPreference):
@@ -124,6 +137,7 @@ class TeamInstitutionPenalty(IntegerPreference):
     name = "team_institution_penalty"
     default = 1
 
+
 @tournament_preferences_registry.register
 class TeamHistoryPenalty(IntegerPreference):
     help_text = "Penalty applied by conflict avoidance method for teams seeing each other twice or more"
@@ -131,6 +145,7 @@ class TeamHistoryPenalty(IntegerPreference):
     section = draw_rules
     name = "team_history_penalty"
     default = 1000
+
 
 @tournament_preferences_registry.register
 class DrawOddBracket(ChoicePreference):
@@ -149,6 +164,7 @@ class DrawOddBracket(ChoicePreference):
     )
     default = 'intermediate_bubble_up_down'
 
+
 @tournament_preferences_registry.register
 class DrawSideAllocations(ChoicePreference):
     help_text = "How affirmative/negative positions are assigned (see documentation for further details)"
@@ -162,6 +178,7 @@ class DrawSideAllocations(ChoicePreference):
         ('manual-ballot', 'Manually enter from ballot'),
     )
     default = 'balance'
+
 
 @tournament_preferences_registry.register
 class DrawPairingMethod(ChoicePreference):
@@ -178,6 +195,7 @@ class DrawPairingMethod(ChoicePreference):
     )
     default = 'slide'
 
+
 @tournament_preferences_registry.register
 class DrawAvoidConflicts(ChoicePreference):
     help_text = "Method used to try to avoid teams facing each other multiple times or their own institution (see documentation for further details)"
@@ -190,6 +208,7 @@ class DrawAvoidConflicts(ChoicePreference):
     )
     default = 'one_up_one_down'
 
+
 @tournament_preferences_registry.register
 class SkipAdjCheckins(BooleanPreference):
     help_text = "Automatically make all adjudicators available for all rounds"
@@ -198,6 +217,7 @@ class SkipAdjCheckins(BooleanPreference):
     name = "draw_skip_adj_checkins"
     default = False
 
+
 @tournament_preferences_registry.register
 class HidePanellistPosition(BooleanPreference):
     help_text = "Hide panellist positions in the UI (and don't allocate them)"
@@ -205,6 +225,7 @@ class HidePanellistPosition(BooleanPreference):
     section = draw_rules
     name = "no_panellist_position"
     default = False
+
 
 @tournament_preferences_registry.register
 class HideTraineePosition(BooleanPreference):
@@ -218,6 +239,7 @@ class HideTraineePosition(BooleanPreference):
 feedback = Section('feedback')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class MinimumAdjScore(FloatPreference):
     help_text = "Minimum possible adjudicator score"
@@ -225,6 +247,7 @@ class MinimumAdjScore(FloatPreference):
     section = feedback
     name = 'adj_min_score'
     default = 0.0
+
 
 @tournament_preferences_registry.register
 class MaximumAdjScore(FloatPreference):
@@ -234,6 +257,7 @@ class MaximumAdjScore(FloatPreference):
     name = 'adj_max_score'
     default = 5.0
 
+
 @tournament_preferences_registry.register
 class ShowUnaccredited(BooleanPreference):
     help_text = "Show if an adjudicator is a novice (unaccredited)"
@@ -241,6 +265,7 @@ class ShowUnaccredited(BooleanPreference):
     section = feedback
     name = 'show_unaccredited'
     default = False
+
 
 @tournament_preferences_registry.register
 class ScoreReturnLocation(StringPreference):
@@ -250,6 +275,7 @@ class ScoreReturnLocation(StringPreference):
     name = 'score_return_location'
     default = 'TBA'
 
+
 @tournament_preferences_registry.register
 class FeedbackReturnLocation(StringPreference):
     help_text = "The location to return feedback to, printed on pre-printed feedback forms"
@@ -257,6 +283,7 @@ class FeedbackReturnLocation(StringPreference):
     section = feedback
     name = 'feedback_return_location'
     default = 'TBA'
+
 
 @tournament_preferences_registry.register
 class PanellistFeedbackEnabled(BooleanPreference):
@@ -267,10 +294,10 @@ class PanellistFeedbackEnabled(BooleanPreference):
     default = True
 
 
-
 # ==============================================================================
 debate_rules = Section('debate_rules')
 # ==============================================================================
+
 
 @tournament_preferences_registry.register
 class SubstantiveSpeakers(IntegerPreference):
@@ -303,6 +330,7 @@ class MotionVetoes(BooleanPreference):
 standings = Section('standings')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class StandingsMissedDebates(IntegerPreference):
     help_text = "The number of debates a speaker can miss and still be on the speaker tab"
@@ -310,6 +338,7 @@ class StandingsMissedDebates(IntegerPreference):
     section = standings
     name = "standings_missed_debates"
     default = 1
+
 
 @tournament_preferences_registry.register
 class RankSpeakersBy(ChoicePreference):
@@ -323,6 +352,7 @@ class RankSpeakersBy(ChoicePreference):
     )
     default = 'total'
 
+
 @tournament_preferences_registry.register
 class TeamStandingsPrecedence(MultiValueChoicePreference):
     help_text = "Metrics to use to rank teams (see documentation for further details)"
@@ -333,6 +363,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
     nfields = 8
     allow_empty = True
     default = ['points', 'speaks_avg']
+
 
 @tournament_preferences_registry.register
 class TeamStandingsExtraMetrics(MultiValueChoicePreference):
@@ -349,6 +380,7 @@ class TeamStandingsExtraMetrics(MultiValueChoicePreference):
 tab_release = Section('tab_release')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class TeamTabReleased(BooleanPreference):
     help_text = "Enables public display of the team tab. Intended for use after the tournament."
@@ -356,6 +388,7 @@ class TeamTabReleased(BooleanPreference):
     section = tab_release
     name = "team_tab_released"
     default = False
+
 
 @tournament_preferences_registry.register
 class SpeakerTabReleased(BooleanPreference):
@@ -365,6 +398,7 @@ class SpeakerTabReleased(BooleanPreference):
     name = "speaker_tab_released"
     default = False
 
+
 @tournament_preferences_registry.register
 class ProsTabReleased(BooleanPreference):
     help_text = "Enables public display of a pro-speakers only tab. Intended for use after the tournament."
@@ -372,6 +406,7 @@ class ProsTabReleased(BooleanPreference):
     section = tab_release
     name = "pros_tab_released"
     default = False
+
 
 @tournament_preferences_registry.register
 class NovicesTabReleased(BooleanPreference):
@@ -381,6 +416,7 @@ class NovicesTabReleased(BooleanPreference):
     name = "novices_tab_released"
     default = False
 
+
 @tournament_preferences_registry.register
 class RepliesTabReleased(BooleanPreference):
     help_text = "Enables public display of the replies tab. Intended for use after the tournament."
@@ -389,6 +425,7 @@ class RepliesTabReleased(BooleanPreference):
     name = "replies_tab_released"
     default = False
 
+
 @tournament_preferences_registry.register
 class MotionTabReleased(BooleanPreference):
     help_text = "Enables public display of the motions tab. Intended for use after the tournament."
@@ -396,6 +433,7 @@ class MotionTabReleased(BooleanPreference):
     section = tab_release
     name = "motion_tab_released"
     default = False
+
 
 @tournament_preferences_registry.register
 class BallotsReleased(BooleanPreference):
@@ -410,6 +448,7 @@ class BallotsReleased(BooleanPreference):
 data_entry = Section('data_entry')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class PublicBallots(BooleanPreference):
     help_text = "Enables public interface to add ballots using normal URLs"
@@ -417,6 +456,7 @@ class PublicBallots(BooleanPreference):
     section = data_entry
     name = "public_ballots"
     default = False
+
 
 @tournament_preferences_registry.register
 class PublicBallotsRandomised(BooleanPreference):
@@ -426,6 +466,7 @@ class PublicBallotsRandomised(BooleanPreference):
     name = "public_ballots_randomised"
     default = False
 
+
 @tournament_preferences_registry.register
 class PublicFeedback(BooleanPreference):
     help_text = "Enables public interface to add feedback using normal URLs"
@@ -433,6 +474,7 @@ class PublicFeedback(BooleanPreference):
     section = data_entry
     name = "public_feedback"
     default = False
+
 
 @tournament_preferences_registry.register
 class PublicFeedbackRandomised(BooleanPreference):
@@ -442,6 +484,7 @@ class PublicFeedbackRandomised(BooleanPreference):
     name = "public_feedback_randomised"
     default = False
 
+
 @tournament_preferences_registry.register
 class PublicUsePassword(BooleanPreference):
     help_text = "If checked, users must enter a password when submitting public feedback and ballots"
@@ -449,6 +492,7 @@ class PublicUsePassword(BooleanPreference):
     section = data_entry
     name = "public_use_password"
     default = False
+
 
 @tournament_preferences_registry.register
 class PublicPassword(StringPreference):
@@ -458,6 +502,7 @@ class PublicPassword(StringPreference):
     name = "public_password"
     default = 'Enter Password'
 
+
 @tournament_preferences_registry.register
 class DisableBallotConfirmation(BooleanPreference):
     help_text = "Bypasses double checking by setting ballots to be automatically confirmed"
@@ -465,6 +510,7 @@ class DisableBallotConfirmation(BooleanPreference):
     section = data_entry
     name = "disable_ballot_confirms"
     default = False
+
 
 @tournament_preferences_registry.register
 class EnableMotions(BooleanPreference):
@@ -478,6 +524,7 @@ class EnableMotions(BooleanPreference):
 public_features = Section('public_features')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class PublicParticipants(BooleanPreference):
     help_text = "Enables the public page listing all participants in the tournament"
@@ -485,6 +532,7 @@ class PublicParticipants(BooleanPreference):
     section = public_features
     name = "public_participants"
     default = False
+
 
 @tournament_preferences_registry.register
 class PublicBreakCategories(BooleanPreference):
@@ -494,6 +542,7 @@ class PublicBreakCategories(BooleanPreference):
     name = "public_break_categories"
     default = False
 
+
 @tournament_preferences_registry.register
 class PublicSideAllocations(BooleanPreference):
     help_text = "Enables the public page listing pre-allocated sides"
@@ -501,6 +550,7 @@ class PublicSideAllocations(BooleanPreference):
     section = public_features
     name = "public_side_allocations"
     default = False
+
 
 @tournament_preferences_registry.register
 class PublicDraw(BooleanPreference):
@@ -510,6 +560,7 @@ class PublicDraw(BooleanPreference):
     name = "public_draw"
     default = False
 
+
 @tournament_preferences_registry.register
 class PublicResults(BooleanPreference):
     help_text = "Enables the public page showing results of non-silent rounds"
@@ -517,6 +568,7 @@ class PublicResults(BooleanPreference):
     section = public_features
     name = "public_results"
     default = False
+
 
 @tournament_preferences_registry.register
 class PublicMotions(BooleanPreference):
@@ -526,6 +578,7 @@ class PublicMotions(BooleanPreference):
     name = "public_motions"
     default = False
 
+
 @tournament_preferences_registry.register
 class PublicTeamStandings(BooleanPreference):
     help_text = "Enables the public page showing team standings, showing wins only (not speaker scores or ranking)"
@@ -533,6 +586,7 @@ class PublicTeamStandings(BooleanPreference):
     section = public_features
     name = "public_team_standings"
     default = False
+
 
 @tournament_preferences_registry.register
 class PublicBreakingTeams(BooleanPreference):
@@ -542,6 +596,7 @@ class PublicBreakingTeams(BooleanPreference):
     name = "public_breaking_teams"
     default = False
 
+
 @tournament_preferences_registry.register
 class PublicBreakingAdjs(BooleanPreference):
     help_text = "Enables the public page showing breaking adjudicators. Intended for use after the break announcement."
@@ -549,6 +604,7 @@ class PublicBreakingAdjs(BooleanPreference):
     section = public_features
     name = "public_breaking_adjs"
     default = False
+
 
 @tournament_preferences_registry.register
 class FeedbackProgress(BooleanPreference):
@@ -562,6 +618,7 @@ class FeedbackProgress(BooleanPreference):
 ui_options = Section('ui_options')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class ShowSplittingAdjudicators(BooleanPreference):
     help_text = "If showing results to public, show splitting adjudicators in them"
@@ -569,6 +626,7 @@ class ShowSplittingAdjudicators(BooleanPreference):
     name = 'show_splitting_adjudicators'
     section = ui_options
     default = False
+
 
 @tournament_preferences_registry.register
 class ShowMotionsInResults(BooleanPreference):
@@ -578,6 +636,7 @@ class ShowMotionsInResults(BooleanPreference):
     name = 'show_motions_in_results'
     default = False
 
+
 @tournament_preferences_registry.register
 class ShowEmoji(BooleanPreference):
     help_text = "Enables emoji in the draw"
@@ -585,6 +644,7 @@ class ShowEmoji(BooleanPreference):
     section = ui_options
     name = 'show_emoji'
     default = True
+
 
 @tournament_preferences_registry.register
 class ShowInstitutions(BooleanPreference):
@@ -594,6 +654,7 @@ class ShowInstitutions(BooleanPreference):
     name = 'show_institutions'
     default = True
 
+
 @tournament_preferences_registry.register
 class ShowNovices(BooleanPreference):
     help_text = "Indicates next to a speaker's name if they are a novice"
@@ -601,6 +662,7 @@ class ShowNovices(BooleanPreference):
     section = ui_options
     name = 'show_novices'
     default = False
+
 
 @tournament_preferences_registry.register
 class ShowSpeakersInDraw(BooleanPreference):
@@ -610,6 +672,7 @@ class ShowSpeakersInDraw(BooleanPreference):
     name = 'show_speakers_in_draw'
     default = True
 
+
 @tournament_preferences_registry.register
 class ShowAllDraws(BooleanPreference):
     help_text = "If showing draws to public, show all (past and future) released draws"
@@ -617,6 +680,7 @@ class ShowAllDraws(BooleanPreference):
     section = ui_options
     name = 'show_all_draws'
     default = False
+
 
 @tournament_preferences_registry.register
 class PublicMotionsDescending(ChoicePreference):
@@ -634,6 +698,7 @@ class PublicMotionsDescending(ChoicePreference):
 league_options = Section('league_options')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class PublicDivisions(BooleanPreference):
     help_text = "Enables public interface to see divisions"
@@ -641,6 +706,7 @@ class PublicDivisions(BooleanPreference):
     section = league_options
     name = "public_divisions"
     default = False
+
 
 @tournament_preferences_registry.register
 class EnableDivisions(BooleanPreference):
@@ -650,6 +716,7 @@ class EnableDivisions(BooleanPreference):
     name = "enable_divisions"
     default = False
 
+
 @tournament_preferences_registry.register
 class EnablePostponements(BooleanPreference):
     help_text = "Enables debates to have their status set to postponed"
@@ -657,6 +724,7 @@ class EnablePostponements(BooleanPreference):
     section = league_options
     name = "enable_postponements"
     default = False
+
 
 @tournament_preferences_registry.register
 class enable_forfeits(BooleanPreference):
@@ -666,6 +734,7 @@ class enable_forfeits(BooleanPreference):
     name = "enable_forfeits"
     default = False
 
+
 @tournament_preferences_registry.register
 class enable_division_motions(BooleanPreference):
     help_text = "Enables assigning motions to a division"
@@ -673,6 +742,7 @@ class enable_division_motions(BooleanPreference):
     section = league_options
     name = "enable_division_motions"
     default = False
+
 
 @tournament_preferences_registry.register
 class minimum_division_size(IntegerPreference):
@@ -682,6 +752,7 @@ class minimum_division_size(IntegerPreference):
     name = "minimum_division_size"
     default = 5
 
+
 @tournament_preferences_registry.register
 class ideal_division_size(IntegerPreference):
     help_text = "Ideal size for a division"
@@ -690,6 +761,7 @@ class ideal_division_size(IntegerPreference):
     name = "ideal_division_size"
     default = 6
 
+
 @tournament_preferences_registry.register
 class MaximumDivisionSize(IntegerPreference):
     help_text = "Largest allowed size for a division"
@@ -697,6 +769,7 @@ class MaximumDivisionSize(IntegerPreference):
     section = league_options
     name = "maximum_division_size"
     default = 8
+
 
 @tournament_preferences_registry.register
 class EnableFlaggedMotions(BooleanPreference):
@@ -715,6 +788,7 @@ class EnableAdjNotes(BooleanPreference):
     name = "enable_adj_notes"
     default = False
 
+
 @tournament_preferences_registry.register
 class EnableVenueGroups(BooleanPreference):
     help_text = "Enables the display of venue groups"
@@ -722,6 +796,7 @@ class EnableVenueGroups(BooleanPreference):
     section = league_options
     name = "enable_venue_groups"
     default = False
+
 
 @tournament_preferences_registry.register
 class EnableVenueTimes(BooleanPreference):
@@ -731,6 +806,7 @@ class EnableVenueTimes(BooleanPreference):
     name = "enable_debate_scheduling"
     default = False
 
+
 @tournament_preferences_registry.register
 class EnableVenueOverlaps(BooleanPreference):
     help_text = "Allow and automatically debates to be placed in the first room"
@@ -738,6 +814,7 @@ class EnableVenueOverlaps(BooleanPreference):
     section = league_options
     name = "enable_venue_overlaps"
     default = False
+
 
 @tournament_preferences_registry.register
 class ShareAdjs(BooleanPreference):
@@ -747,6 +824,7 @@ class ShareAdjs(BooleanPreference):
     name = "share_adjs"
     default = False
 
+
 @tournament_preferences_registry.register
 class ShareVenues(BooleanPreference):
     help_text = 'Use shared venues (those without a set tournament) in this tournament'
@@ -754,6 +832,7 @@ class ShareVenues(BooleanPreference):
     section = league_options
     name = "share_venues"
     default = False
+
 
 @tournament_preferences_registry.register
 class DuplicateAdjs(BooleanPreference):
@@ -763,9 +842,10 @@ class DuplicateAdjs(BooleanPreference):
     name = "duplicate_adjs"
     default = False
 
+
 @tournament_preferences_registry.register
 class AdjAllocationConfirmations(BooleanPreference):
-    help_text ='Allow links to be sent to adjudicators that allow them to confirm shifts'
+    help_text = 'Allow links to be sent to adjudicators that allow them to confirm shifts'
     verbose_name = "Adjudicator allocation confirmations"
     section = league_options
     name = "allocation_confirmations"

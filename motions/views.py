@@ -11,6 +11,7 @@ from django.forms.models import ModelMultipleChoiceField
 
 from utils.views import *
 
+
 @admin_required
 @round_view
 def motions(request, round):
@@ -35,8 +36,8 @@ def public_motions(request, t):
 @admin_required
 @round_view
 def motions_edit(request, round):
-    MotionFormSet = modelformset_factory(Motion,
-        can_delete=True, extra=3, exclude=['round'])
+    MotionFormSet = modelformset_factory(
+        Motion, can_delete=True, extra=3, exclude=['round'])
 
     if request.method == 'POST':
         formset = MotionFormSet(request.POST, request.FILES)
@@ -45,7 +46,8 @@ def motions_edit(request, round):
             for motion in motions:
                 motion.round = round
                 motion.save()
-                ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_MOTION_EDIT,
+                ActionLogEntry.objects.log(
+                    type=ActionLogEntry.ACTION_TYPE_MOTION_EDIT,
                     user=request.user, motion=motion, tournament=round.tournament)
             for motions in formset.deleted_objects:
                 motions.delete()
@@ -69,7 +71,10 @@ def motions_assign(request, round):
             )
 
     class ModelAssignForm(ModelForm):
-        divisions = MyModelChoiceField(widget=CheckboxSelectMultiple, queryset=Division.objects.filter(tournament=round.tournament).order_by('venue_group'))
+        divisions = MyModelChoiceField(
+            widget=CheckboxSelectMultiple,
+            queryset=Division.objects.filter(tournament=round.tournament).order_by('venue_group'))
+
         class Meta:
             model = Motion
             fields = ("divisions",)
@@ -78,7 +83,7 @@ def motions_assign(request, round):
 
     if request.method == 'POST':
         formset = MotionFormSet(request.POST)
-        formset.save() # Should be checking for validity but on a deadline and was buggy
+        formset.save()  # Should be checking for validity but on a deadline and was buggy
         if 'submit' in request.POST:
             return redirect_round('motions', round)
 
@@ -92,10 +97,12 @@ def motions_assign(request, round):
 def release_motions(request, round):
     round.motions_released = True
     round.save()
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE,
+    ActionLogEntry.objects.log(
+        type=ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE,
         user=request.user, round=round, tournament=round.tournament)
 
     return redirect_round('draw', round)
+
 
 @admin_required
 @expect_post
@@ -103,7 +110,8 @@ def release_motions(request, round):
 def unrelease_motions(request, round):
     round.motions_released = False
     round.save()
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE,
+    ActionLogEntry.objects.log(
+        type=ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE,
         user=request.user, round=round, tournament=round.tournament)
 
     return redirect_round('draw', round)

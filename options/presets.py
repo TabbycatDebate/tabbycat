@@ -50,6 +50,7 @@ class AustralianEastersPreferences(AustralsPreferences):
         # UI Options
         self.ui_options__show_novices                   = True
 
+
 class NZEastersPreferences(AustralsPreferences):
     """ 2 vs 2 with replies, chosen motions, chosen sides, and novice statuses."""
     def __init__(self):

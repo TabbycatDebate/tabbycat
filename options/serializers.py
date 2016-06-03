@@ -1,5 +1,6 @@
 from dynamic_preferences.serializers import BaseSerializer
 
+
 class MultiValueSerializer(BaseSerializer):
 
     separator = "//"
