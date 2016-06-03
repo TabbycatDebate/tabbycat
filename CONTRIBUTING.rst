@@ -22,8 +22,17 @@ Getting started
 
 - Insert general setup instructions
 - Insert instructions on how to make a feature/bug branch
-- Maybe insert instructions on how to run tests / flake8
+- Maybe insert instructions on how to run tests
 - Insert pull request checklist/guidelines
+
+Style guide
+===========
+
+We use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series of style rules. Warnings will trigger a Travis CI build to fail. The entire codebase can be checked by using::
+
+    $ flake8 .
+
+While in the base directory
 
 Semantic versioning convention
 ==============================
