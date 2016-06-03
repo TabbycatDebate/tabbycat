@@ -1,15 +1,18 @@
 [flake8]
 # Idea is to remove these over time
-# E128 = E128 continuation line under-indented for visual indent
 # E203 = whitespace before ':'
 # E221 = multiple spaces before operator
 # E231 = missing whitespace after ','
 # E241 = multiple spaces after ','
 # E261 = at least two spaces before inline comment
-# E265 = block comment should start with '# '
 # F403 = 'import *' used; unable to detect undefined names
+
+# E128 = E128 continuation line under-indented for visual indent
+# E265 = block comment should start with '# '
+
 # E501 = line too long
+# E731 = do not assign a lambda expression, use a def
 
-ignore = E501,F403,E128,E221,E226,E261,E203,E231,E265,E241
+ignore = E501,F403,E128,E221,E226,E261,E203,E231,E265,E241,E731
 
-exclude = docs/*,migrations/*,*/__init__.py
+exclude = docs/*, migrations/*, node_modules/*, venv/*, */__init__.py

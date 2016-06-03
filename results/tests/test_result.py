@@ -1,7 +1,5 @@
 """Unit tests for result.py"""
 
-import random
-from unittest import SkipTest
 from django.test import TestCase
 
 from tournaments.models import Tournament, Round
@@ -9,8 +7,9 @@ from participants.models import Institution, Team, Speaker, Adjudicator
 from venues.models import Venue
 from draw.models import Debate, DebateTeam
 from results.models import BallotSubmission
-from ..result import BallotSet
 from adjallocation.models import DebateAdjudicator
+
+from ..result import BallotSet
 
 
 class BaseTestResult(TestCase):
@@ -25,8 +24,8 @@ class BaseTestResult(TestCase):
         'majority_totals': [262.25, 265.5],
         'winner_by_adj': [0, 1, 1],
         'winner': 1,
-        'num_adjs_for_team': [1, 2],
-   }
+        'num_adjs_for_team': [1, 2]
+    }
     testdata[2] = {
         'scores': [[[73.0, 76.0, 79.0, 37.5], [77.0, 77.0, 78.0, 39.0]],
                    [[79.0, 80.0, 70.0, 36.0], [78.0, 79.0, 73.0, 37.0]],
@@ -59,8 +58,7 @@ class BaseTestResult(TestCase):
                       'majority_totals': [None, None],
                       'winner_by_adj': [None, None, None],
                       'winner': None,
-                      'num_adjs_for_team': [None, None],
-    }
+                      'num_adjs_for_team': [None, None]}
 
     def setUp(self):
         self.t = Tournament.objects.create(slug="resulttest", name="ResultTest")
@@ -68,7 +66,7 @@ class BaseTestResult(TestCase):
             inst = Institution.objects.create(code="Inst{:d}".format(i), name="Institution {:d}".format(i))
             team = Team.objects.create(tournament=self.t, institution=inst, reference="Team {:d}".format(i), use_institution_prefix=False)
             for j in range(3):
-                Speaker.objects.create(team=team, name="Speaker %d-%d"%(i,j))
+                Speaker.objects.create(team=team, name="Speaker %d-%d" % (i, j))
         inst = Institution.objects.create(code="Adjs", name="Adjudicators")
         for i in range(3):
             Adjudicator.objects.create(tournament=self.t, institution=inst, name="Adjudicator {:d}".format(i), test_score=5)
@@ -131,6 +129,7 @@ class BaseTestResult(TestCase):
 
         return ballotset
 
+
 class CommonTests(object):
 
     def on_all_datasets(test_fn):
@@ -182,15 +181,15 @@ class CommonTests(object):
     def test_winner_by_adj(self, ballotset, testdata):
         for adj, winner in zip(self.adjs, testdata['winner_by_adj']):
             self.assertEqual(ballotset.adjudicator_sheets[adj].winner,
-                    self.teams[winner])
+                self.teams[winner])
 
     @on_all_datasets
     def test_winner_by_adj_by_side(self, ballotset, testdata):
         for adj, winner in zip(self.adjs, testdata['winner_by_adj']):
             self.assertEqual(ballotset.adjudicator_sheets[adj].aff_win,
-                    winner == 0)
+                winner == 0)
             self.assertEqual(ballotset.adjudicator_sheets[adj].neg_win,
-                    winner == 1)
+                winner == 1)
 
     @on_all_datasets
     def test_num_adjs_for_team(self, ballotset, testdata):
@@ -237,15 +236,18 @@ class CommonTests(object):
     def test_incomplete_save(self):
         self.assertRaises(AssertionError, self.save_complete_ballotset, self.teams_input, self.incompletedata)
 
+
 class TestResultByTeam(BaseTestResult, CommonTests):
     def setUp(self):
         BaseTestResult.setUp(self)
         self.teams_input = self.teams
 
+
 class TestResultBySide(BaseTestResult, CommonTests):
     def setUp(self):
         BaseTestResult.setUp(self)
         self.teams_input = ['aff', 'neg']
+
 
 class TestResultWithInitiallyUnknownSides(BaseTestResult, CommonTests):
 

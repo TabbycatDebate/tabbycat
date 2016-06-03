@@ -9,6 +9,7 @@ django-extensions==1.6.7 # For the generate secret command
 django-gulp==2.4.0 # Run gulp tasks with runserver/collectstatic
 django-ipware==1.1.5 # IP Address logging
 django-jet==0.1.4 # Admin Backend
+flake8==2.5.4 # For testing/linting (not strictly required)
 psycopg2==2.6.1 # For Django to talk to postgres
 six==1.10.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.1.19

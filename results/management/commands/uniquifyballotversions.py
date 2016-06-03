@@ -1,7 +1,6 @@
-from utils.management.base import TournamentCommand
 from draw.models import Debate
-from ...models import BallotSubmission
-from collections import Counter
+from utils.management.base import TournamentCommand
+
 
 class Command(TournamentCommand):
 
@@ -18,8 +17,8 @@ class Command(TournamentCommand):
             for i, bsub in enumerate(bsubs, start=1):
                 if bsub.version != i:
                     self.stdout.write("{verb} from version {old:d} to {new:d}: {bsub:s}".format(
-                            verb="Would change" if options["dry_run"] else "Changing",
-                            old=bsub.version, new=i, bsub=str(bsub)))
+                        verb="Would change" if options["dry_run"] else "Changing",
+                        old=bsub.version, new=i, bsub=str(bsub)))
                 elif options["verbosity"] >= 3:
                     self.stdout.write("Stays version {:d}: {bsub:s}".format(bsub.version, bsub=str(bsub)))
                 if not options["dry_run"]:

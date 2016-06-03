@@ -3,7 +3,7 @@ from django.test import TestCase
 from ..teams import TeamStandingsGenerator
 
 from tournaments.models import Tournament, Round
-from participants.models import Institution, Team, Speaker, Adjudicator
+from participants.models import Institution, Team, Adjudicator
 from venues.models import Venue
 from draw.models import Debate, DebateTeam
 from adjallocation.models import DebateAdjudicator
@@ -57,7 +57,6 @@ class TestBasicStandings(TestCase):
                                 'B': {'margin': -25.0, 'points': 0, 'score': 251.0, 'win': False}},
                          'CD': {'C': {'margin': -13.5, 'points': 0, 'score': 246.5, 'win': False},
                                 'D': {'margin': 13.5, 'points': 1, 'score': 260.0, 'win': True}}}]}
-
 
     rankings = ('rank',)
 

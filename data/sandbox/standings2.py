@@ -38,7 +38,7 @@ teams = teams.extra({
     "speaker_score": EXTRA_QUERY.format(field="score", round=round.seq)}
 ).distinct()
 
-print teams.query
+print teams.query  # flake8: noqa
 print teams.count()
 
 # Add draw strength annotation.

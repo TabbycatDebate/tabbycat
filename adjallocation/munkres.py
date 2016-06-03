@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: iso-8859-1 -*-
-
-# Documentation is intended to be processed by Epydoc.
-
 """
 Introduction
 ============
@@ -201,7 +196,7 @@ creation of the cost matrix::
 
 So, the above profit-calculation program can be recast as::
 
-    from munkres import Munkres, print_matrix, make_cost_matrix
+    Munkres, print_matrix, make_cost_matrix
 
     matrix = [[5, 9, 1],
               [10, 3, 2],
@@ -277,8 +272,8 @@ __docformat__ = 'restructuredtext'
 # Imports
 # ---------------------------------------------------------------------------
 
-import sys
-import copy
+import sys  # noqa
+import copy  # noqa
 
 # ---------------------------------------------------------------------------
 # Exports
@@ -442,7 +437,7 @@ class Munkres:
         For each row of the matrix, find the smallest element and
         subtract it from every element in its row. Go to Step 2.
         """
-        C = self.C
+        C = self.C  # noqa
         n = self.n
         for i in range(n):
             minval = min(self.C[i])
@@ -753,8 +748,7 @@ def print_matrix(matrix, msg=None):
 
 if __name__ == '__main__':
 
-    matrices = [
-                # Square
+    matrices = [# Square
                 ([[400, 150, 400],
                   [400, 450, 600],
                   [300, 225, 300]],

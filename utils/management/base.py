@@ -51,13 +51,13 @@ class TournamentCommand(BaseCommand):
             pass
 
         elif options["all_tournaments"]:
-            if tournament_option:
+            if options["tournament_selection"]:
                 raise CommandError(
                     "You can't use --tournament and --all-tournaments together.")
             options["__tournaments__"] = list(Tournament.objects.all())
 
         elif not options["tournament_selection"]:
-            # if there is only one tournament, that'll do.
+            # If there is only one tournament, that'll do.
             if Tournament.objects.count() > 1:
                 raise CommandError(
                     "You must specify a tournament, because there is more than one tournament in the database.")

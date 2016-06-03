@@ -2,6 +2,7 @@ from utils.management.base import TournamentCommand
 from ...models import BallotSubmission
 from draw.models import Debate
 
+
 class Command(TournamentCommand):
 
     help = "Makes discarded/confirmed fields of BallotSubmissions consistent with result_status field of Debates. Not guaranteed to be minimalist with changes."

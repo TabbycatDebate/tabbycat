@@ -189,11 +189,11 @@ class StabPanel(object):
 
 
 def test():
-    p = PanelMaker()
     from tournaments.models import Round
-    r = Round.objects.get(pk=1)
 
+    r = Round.objects.get(pk=1)
     a = StabAllocator(r.debates(), r.active_adjudicators.all())
+
     return a.allocate()
 
 if __name__ == '__main__':

@@ -75,7 +75,7 @@ class StandingInfo:
         self.metrics = dict()
         self.rankings = dict()
 
-    def instance():
+    def instance(self):
         if not self._instance:
             self._instance = self.model.objects.get(id=self.instance_id)
         return self._instance

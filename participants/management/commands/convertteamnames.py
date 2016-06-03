@@ -1,5 +1,6 @@
 from utils.management.base import TournamentCommand
 
+
 class Command(TournamentCommand):
 
     help = "Removes institution codes from team names and enables 'use institution prefix' on them. " \

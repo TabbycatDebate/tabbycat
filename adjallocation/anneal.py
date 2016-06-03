@@ -201,6 +201,7 @@ def test():
     initial = StabAllocator(debates, adjs).allocate()
 
     sa = SAAllocator(debates, adjs).allocate(initial)
+    print(sa)
 
 if __name__ == '__main__':
     test()

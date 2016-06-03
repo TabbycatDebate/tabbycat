@@ -1,6 +1,7 @@
 from utils.management.base import TournamentCommand
 from ...models import BallotSubmission, SpeakerScoreByAdj
 
+
 class Command(TournamentCommand):
 
     help = "Removes all blank ballot submissions, i.e. ones without any scores attached."

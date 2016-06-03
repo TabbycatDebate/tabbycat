@@ -1,11 +1,10 @@
-from utils.management.base import RoundCommand, CommandError
-from results.dbutils import add_ballotset, add_ballotsets_to_round, delete_ballotset, delete_all_ballotsets_for_round, add_ballotsets_to_round_partial
-
 from django.contrib.auth import get_user_model
-from tournaments.models import Round
+
+from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from results.models import BallotSubmission
-from adjallocation.models import DebateAdjudicator
+from utils.management.base import RoundCommand, CommandError
+from results.dbutils import add_ballotset, add_ballotsets_to_round, delete_ballotset, delete_all_ballotsets_for_round, add_ballotsets_to_round_partial
 
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {
@@ -13,6 +12,7 @@ SUBMITTER_TYPE_MAP = {
     'public':  BallotSubmission.SUBMITTER_PUBLIC
 }
 User = get_user_model()
+
 
 class GenerateResultsCommandMixin:
 
