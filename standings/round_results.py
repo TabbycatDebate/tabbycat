@@ -1,12 +1,13 @@
-import itertools
 import logging
-logger = logging.getLogger(__name__)
 
 from django.db.models.expressions import RawSQL
 
 from results.models import TeamScore, SpeakerScore
 from participants.models import Team
-from tournaments.models import Round
+
+
+logger = logging.getLogger(__name__)
+
 
 def add_team_round_results(standings, rounds, lookup=None):
     """Sets, on each item `info` in `standings`, an attribute
@@ -30,11 +31,11 @@ def add_team_round_results(standings, rounds, lookup=None):
 
     teams = [info.instance_id for info in standings]
     teamscores = TeamScore.objects.select_related(
-            'debate_team__team', 'debate_team__debate__round').filter(
-            ballot_submission__confirmed=True,
-            debate_team__debate__round__in=rounds,
-            debate_team__team_id__in=teams
-        )
+        'debate_team__team', 'debate_team__debate__round').filter(
+        ballot_submission__confirmed=True,
+        debate_team__debate__round__in=rounds,
+        debate_team__team_id__in=teams
+    )
     teamscores = teamscores.annotate(opposition_id=RawSQL("""
         SELECT opposition.team_id
         FROM draw_debateteam AS opposition
@@ -52,6 +53,7 @@ def add_team_round_results(standings, rounds, lookup=None):
         ts.opposition = oppositions[ts.opposition_id]
         info = lookup(standings, ts.debate_team.team)
         info.round_results[round_lookup[ts.debate_team.debate.round]] = ts
+
 
 def add_team_round_results_public(teams, rounds):
     """Sets, on each item `t` in `teams`, the following attributes:
@@ -79,9 +81,9 @@ def add_speaker_round_results(standings, rounds, tournament, replies=False):
 
     speaker_ids = [info.instance_id for info in standings]
     speaker_scores = SpeakerScore.objects.select_related('speaker',
-            'ballot_submission', 'debate_team__debate__round').filter(
-            ballot_submission__confirmed=True, debate_team__debate__round__in=rounds,
-            speaker_id__in=speaker_ids)
+        'ballot_submission', 'debate_team__debate__round').filter(
+        ballot_submission__confirmed=True, debate_team__debate__round__in=rounds,
+        speaker_id__in=speaker_ids)
 
     if replies:
         speaker_scores = speaker_scores.filter(position=tournament.REPLY_POSITION)

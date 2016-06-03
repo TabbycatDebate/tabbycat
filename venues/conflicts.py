@@ -1,8 +1,10 @@
 
-def  _constraints_satisfied(constraints, venue):
+
+def _constraints_satisfied(constraints, venue):
     """Returns True if either there are no constraints, or one constraint has
     been meet. Returns False otherwise. `constraints` must be a query set."""
     return not constraints.exists() or constraints.filter(venue_group__venue=venue).exists()
+
 
 def venue_conflicts(debate):
     """Returns a list of unfulfilled venue constraints for a debate.

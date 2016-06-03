@@ -7,10 +7,11 @@ but there are other "types" of ranks, for example, ranks within brackets
 ("subranks") or divisions ("division ranks").
 """
 
+import logging
+
 from .metrics import metricgetter
 from itertools import groupby
-from operator import attrgetter
-import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -86,4 +87,3 @@ class SubrankAnnotator(BaseRankAnnotator):
                 for info in subgroup:
                     info.add_ranking("subrank", (subrank, len(subgroup) > 1))
                 subrank += len(subgroup)
-

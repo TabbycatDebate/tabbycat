@@ -7,8 +7,7 @@ class VenueGroup(models.Model):
     team_capacity = models.IntegerField(
         blank=True,
         null=True,
-        help_text=
-        "The greatest possible number of teams that can debate in this venue group")
+        help_text="The greatest possible number of teams that can debate in this venue group")
 
     @property
     def divisions_count(self):
@@ -29,9 +28,10 @@ class Venue(models.Model):
     name = models.CharField(max_length=40)
     group = models.ForeignKey(VenueGroup, blank=True, null=True)
     priority = models.IntegerField(
-            help_text="Venues with a higher priority number will be preferred in the draw")
-    tournament = models.ForeignKey('tournaments.Tournament', blank=True, null=True, db_index=True,
-           help_text="Venues not assigned to any tournament can be shared between tournaments")
+        help_text="Venues with a higher priority number will be preferred in the draw")
+    tournament = models.ForeignKey(
+        'tournaments.Tournament', blank=True, null=True, db_index=True,
+        help_text="Venues not assigned to any tournament can be shared between tournaments")
 
     class Meta:
         ordering = ['group', 'name']

@@ -1,14 +1,11 @@
-from django import template
-from django.utils.encoding import force_text
-from django.conf import settings
-from django.core.urlresolvers import reverse
-from participants.emoji import EMOJI_LIST
-
 import re
 import os
 
-register = template.Library()
+from django import template
+from django.conf import settings
+from django.core.urlresolvers import reverse
 
+register = template.Library()
 STATIC_PATH = settings.MEDIA_ROOT
 version_cache = {}
 
@@ -54,7 +51,6 @@ def neg_count(team, round):
 register.simple_tag(neg_count)
 
 
-
 @register.filter
 def break_rank(team, round):
     rank = team.break_rank_for_category(round.break_category)
@@ -65,6 +61,7 @@ def break_rank(team, round):
 
 register.simple_tag(break_rank)
 
+
 def team_status_classes(team):
     classes = list()
     if team.region is not None:
@@ -72,7 +69,6 @@ def team_status_classes(team):
     for category in team.break_categories_nongeneral.order_by('priority'):
         classes.append("breakcategory-" + category.slug)
     return " ".join(classes)
-
 
 register.simple_tag(team_status_classes)
 

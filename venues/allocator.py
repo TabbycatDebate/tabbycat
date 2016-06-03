@@ -1,12 +1,15 @@
 import logging
 import random
-logger = logging.getLogger(__name__)
 
 from .models import TeamVenueConstraint, AdjudicatorVenueConstraint, InstitutionVenueConstraint
+
+logger = logging.getLogger(__name__)
+
 
 def allocate_venues(round, debates=None):
     allocator = VenueAllocator()
     allocator.allocate(round, debates)
+
 
 class VenueAllocator:
     """Allocates venues in a draw to satisfy, as best it can, applicable venue
@@ -93,7 +96,7 @@ class VenueAllocator:
                 logger.debug("Unfilfilled (highest): {}".format(highest_constraint))
                 if len(constraints) == 0:
                     logger.debug("{} is now unconstrained".format(debate))
-                    continue # failed all constraints, debate is now unconstrained
+                    continue  # Failed all constraints, debate is now unconstrained
                 new_priority = constraints[0].priority
                 for i, dc in enumerate(debate_constraints):
                     if new_priority >= dc[1][0].priority:
@@ -107,7 +110,7 @@ class VenueAllocator:
             satisified_constraints = []
             for constraint in constraints:
                 if any(sc.subject == constraint.subject for sc in satisified_constraints):
-                    continue # skip if we've already done a constraint for this team/adj/inst/div
+                    continue  # Skip if we've already done a constraint for this team/adj/inst/div
                 constraint_venues = set(constraint.venue_group.venues)
                 if eligible_venues.isdisjoint(constraint_venues):
                     logger.debug("Unfilfilled: {}".format(constraint))
@@ -138,7 +141,7 @@ class VenueAllocator:
         preferred venues."""
 
         assert len(self._preferred_venues) == len(debates), "{:d} preferred venues " \
-                "but {:d} debates".format(len(self._preferred_venues), len(debates))
+            "but {:d} debates".format(len(self._preferred_venues), len(debates))
 
         random.shuffle(debates)
         return {debate: venue for debate, venue in zip(debates, self._preferred_venues)}

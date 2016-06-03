@@ -5,7 +5,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.functional import cached_property
 
 from participants.emoji import EMOJI_LIST
-from adjallocation.anneal import SAAllocator
 
 import logging
 logger = logging.getLogger(__name__)
@@ -220,7 +219,7 @@ class Round(models.Model):
         help_text="Which draw technique to use")
     stage = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY,
         help_text="Preliminary = inrounds, elimination = outrounds")
-    break_category = models.ForeignKey( 'breakqual.BreakCategory', blank=True, null=True,
+    break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True,
         help_text="If elimination round, which break category")
 
     draw_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
@@ -347,7 +346,7 @@ class Round(models.Model):
                                           self.id}, )
 
         if self.tournament.pref('share_venues'):
-            return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament or v.tournament == None]
+            return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament or v.tournament is None]
         else:
             return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
 
@@ -360,7 +359,7 @@ class Round(models.Model):
                                           id_field='person_ptr_id')
 
         if self.tournament.pref('share_adjs'):
-            return [a for a in all_adjs if a.tournament == self.tournament or a.tournament == None]
+            return [a for a in all_adjs if a.tournament == self.tournament or a.tournament is None]
         else:
             return [a for a in all_adjs if a.tournament == self.tournament]
 
@@ -504,9 +503,8 @@ class Round(models.Model):
             id=self.id).order_by('-seq').first()
         prior_results = TeamScore.objects.filter(
             win=True, ballot_submission__confirmed=True,
-            ballot_submission__debate__round = prior_break_round)
+            ballot_submission__debate__round=prior_break_round)
         self.set_available_teams([r.debate_team.team.id for r in prior_results])
-
 
     def activate_all(self):
         from venues.models import Venue

@@ -11,6 +11,7 @@ from utils.misc import reverse_round
 from .models import Venue
 from .allocator import allocate_venues
 
+
 class EditVenuesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
     template_name = "venues_edit.html"

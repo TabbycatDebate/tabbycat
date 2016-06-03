@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from tournaments.models import Tournament, Round
 from settings import TABBYCAT_APPS
-from argparse import ArgumentTypeError
 import logging
 
 
@@ -30,8 +29,7 @@ class TournamentCommand(BaseCommand):
             action="append",
             dest="tournament_selection",
             metavar="TOURNAMENT",
-            help=
-            "Slug of tournament(s), required if there is more than one tournament. "
+            help="Slug of tournament(s), required if there is more than one tournament. "
             "Can be specified multiple times to run the command on multiple tournaments.")
         tournaments_group.add_argument(
             "--all-tournaments",
@@ -174,7 +172,7 @@ class RoundCommand(TournamentCommand):
             return tournament.round_set.get(**{spectype: specifier})
         except Round.DoesNotExist:
             raise CommandError("The tournament {tournament!r} has no round with {type} {spec!r}".format(
-                    tournament=tournament.slug, type=spectype, spec=specifier))
+                tournament=tournament.slug, type=spectype, spec=specifier))
 
     def get_rounds(self, options):
         """Returns a list of rounds implied by command-line arguments.
@@ -201,12 +199,10 @@ class RoundCommand(TournamentCommand):
 
     def _confirm_rounds(self, rounds, **options):
         if not options["confirm"]:
-            self.stdout.write(self.style.WARNING(
-                    "WARNING! You are about to {} from the following rounds:".format(
-                    self.confirm_round_destruction)))
+            self.stdout.write(self.style.WARNING("WARNING! You are about to {} from the following rounds:".format(self.confirm_round_destruction)))
             for r in rounds:
                 self.stdout.write(self.style.WARNING("  [{t}]: {r}".format(
-                        t=r.tournament.name, r=r.name)))
+                    t=r.tournament.name, r=r.name)))
             response = input("Are you sure? ")
             if response != "yes":
                 raise CommandError("Cancelled by user.")

@@ -3,12 +3,15 @@
 from operator import itemgetter
 import random
 import logging
-logger = logging.getLogger(__name__)
 
 from .metrics import RepeatedMetricAnnotator
 
+logger = logging.getLogger(__name__)
+
+
 class StandingsError(RuntimeError):
     pass
+
 
 class StandingInfo:
     """Stores standing information for an instance of a model.
@@ -71,7 +74,6 @@ class StandingInfo:
 
         self.metrics = dict()
         self.rankings = dict()
-
 
     def instance():
         if not self._instance:

@@ -1,5 +1,4 @@
 from django.conf.urls import *
-from django.core.urlresolvers import reverse
 
 from . import views
 
@@ -10,8 +9,6 @@ urlpatterns = [
     url(r'^admin/overview/$',
         views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
-
-    #url(r'^admin/actions/$', 'action_log', name='action_log'),
 
     # TODO: 'core' app functionality?
     url(r'^admin/round/(?P<round_seq>\d+)/round_increment_check/$',

@@ -1,5 +1,7 @@
-from tournaments.models import Division
 import random
+
+from tournaments.models import Division
+
 
 class DivisionAllocator():
 
@@ -10,14 +12,15 @@ class DivisionAllocator():
         self.venue_groups = venue_groups
         self.tournament = tournament
         self.institutions = institutions
-        self.minimum_division_size = tournament.pref('minimum_division_size')# cannot see teams more than once
+        # cannot see teams more than once
+        self.minimum_division_size = tournament.pref('minimum_division_size')
         self.ideal_division_size = tournament.pref('ideal_division_size')
-        self.maximum_division_size = tournament.pref('maximum_division_size') # shouldn't have more than two byes?
-
+        # shouldn't have more than two byes?
+        self.maximum_division_size = tournament.pref('maximum_division_size')
 
     def allocate(self):
         # Entry Point
-        division_dict = {v:[] for v in self.venue_groups}
+        division_dict = {v: [] for v in self.venue_groups}
         allocated_teams = []
         all_preferences = []
         all_teams = self.teams
@@ -32,7 +35,6 @@ class DivisionAllocator():
         for institution in all_institutions:
             if institution.venue_preferences:
                 all_preferences.extend(institution.venue_preferences)
-
 
         # First sweep of allocations using team preferences
         division_dict, allocated_teams = self.allocate_teams(division_dict, allocated_teams, all_teams, all_preferences)
@@ -50,7 +52,6 @@ class DivisionAllocator():
         self.determine_division_size(division_dict, allocated_teams,all_teams)
 
         return True
-
 
     def allocate_teams(self, division_dict, allocated_teams, all_teams, all_preferences):
         teams_to_allocate = list(all_teams)
@@ -139,25 +140,23 @@ class DivisionAllocator():
         print("------")
         print("Made %s divisions over %s venues, Allocated %s / %s teams" % (di, len(division_dict), len(allocated_teams), len(all_teams)))
 
-        unalloacted_teams = [te for te in all_teams if not te in allocated_teams]
+        unalloacted_teams = [te for te in all_teams if te not in allocated_teams]
         for ute in unalloacted_teams:
             # print("\t %s not allocated" % ute)
             pass
 
-
     def create_division(self, di, group, group_teams, team_index, division_size):
 
         new_division, created = Division.objects.get_or_create(
-            name = str(di),
-            tournament = self.tournament,
-            venue_group = group
+            name=str(di),
+            tournament=self.tournament,
+            venue_group=group
         )
         for i in range(team_index,team_index+division_size):
             group_teams[i].division = new_division
             group_teams[i].save()
 
         print("\t Made division #%s of size %s" % (new_division, division_size))
-
 
     def create_venue_divisions(self,group,group_teams,di,base_division_size,possible_divisions,remainder):
 
@@ -171,7 +170,7 @@ class DivisionAllocator():
 
         team_index = 0
         for division_size in divisions:
-            self.create_division(di,group,group_teams,team_index,division_size)
+            self.create_division(di, group, group_teams, team_index, division_size)
             team_index += division_size
             di += 1
 

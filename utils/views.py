@@ -2,20 +2,16 @@
 should use the Django class-based views framework, and use the mixins in
 mixins.py (in this directory) instead.
 """
-
-from django.contrib.auth.decorators import user_passes_test, login_required
-from django.contrib import messages
-from django.conf import settings
-from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
-from django.template import RequestContext
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.cache import cache_page
-from django.core.cache import cache
-
 from functools import wraps
 from warnings import warn
+
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponseBadRequest
+from django.shortcuts import redirect
+
 from .misc import get_ip_address as misc_get_ip_address
 from .misc import redirect_tournament as misc_redirect_tournament
+
 
 def get_ip_address(request):
     warn("utils.views.get_ip_address is deprecated, import from utils.misc instead")
@@ -96,4 +92,3 @@ def expect_post(view_fn):
         return view_fn(request, *args, **kwargs)
 
     return foo
-

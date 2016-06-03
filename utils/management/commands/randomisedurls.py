@@ -1,7 +1,8 @@
-from utils.management.base import TournamentCommand
-from ...urlkeys import populate_url_keys, delete_url_keys
-from tournaments.models import Tournament
 from argparse import ArgumentParser
+
+from utils.management.base import TournamentCommand
+
+from ...urlkeys import populate_url_keys, delete_url_keys
 
 
 class Command(TournamentCommand):
@@ -63,9 +64,8 @@ class Command(TournamentCommand):
 
         model_name = relatedmanager.model._meta.verbose_name_plural.lower()
         if existing.exists():
-            self.stdout.write(self.style.WARNING(
-                "Skipping {0:d} {1:s} that already have randomised URLs. Use --overwrite to overwrite them.".format(
-                    existing.count(), model_name)))
+            self.stdout.write(self.style.WARNING("Skipping {0:d} {1:s} that already have randomised URLs. Use --overwrite to overwrite them.".format(
+                existing.count(), model_name)))
 
         self.stdout.write("Generating randomised URLs for {0:d} {1:s}".format(
             queryset.count(), model_name))
