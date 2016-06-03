@@ -2,13 +2,17 @@
 Change Log
 ==========
 
-?.?.?
+0.9.0
 -----
+- Added a beta implementation of the break rounds workflow
+- Added
 - Added a button to regenerate draws
 - Refactored team and speaker standings implementation
 - New standings metrics, draw methods, and interface settings for running small tournaments and division-based tournaments
 - Improved support for multiple tournaments
 - Improved user-facing error messages in some scenarios
+- Most frontend dependencies now handled by Bower
+- Static file compilation now handled by Gulp
 - Various bug fixes, optimisations, and documentation edits
 
 
