@@ -1,11 +1,10 @@
-from utils.management.base import RoundCommand, CommandError
-from results.dbutils import add_ballotset, add_ballotsets_to_round, delete_ballotset, delete_all_ballotsets_for_round, add_ballotsets_to_round_partial
-
 from django.contrib.auth import get_user_model
-from tournaments.models import Round
+
+from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from results.models import BallotSubmission
-from adjallocation.models import DebateAdjudicator
+from utils.management.base import CommandError, RoundCommand
+from results.dbutils import add_ballotset, add_ballotsets_to_round, add_ballotsets_to_round_partial, delete_all_ballotsets_for_round, delete_ballotset
 
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {
@@ -14,23 +13,36 @@ SUBMITTER_TYPE_MAP = {
 }
 User = get_user_model()
 
+
 class GenerateResultsCommandMixin:
 
     def add_arguments(self, parser):
         super(GenerateResultsCommandMixin, self).add_arguments(parser)
-        parser.add_argument("-T", "--submitter-type", type=str, help="Submitter type, either 'tabroom' or 'public'", choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
-        parser.add_argument("-u", "--user", type=str, help="Username of submitter", default="random")
+        parser.add_argument("-T", "--submitter-type", type=str,
+                            help="Submitter type, either 'tabroom' or 'public'",
+                            choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
+        parser.add_argument("-u", "--user", type=str,
+                            help="Username of submitter", default="random")
 
         parser.add_argument("--create-user", help="Create user if it doesn't exist", action="store_true")
 
         status = parser.add_mutually_exclusive_group(required=True)
-        status.add_argument("-D", "--discarded", action="store_true", help="Make added ballot sets discarded")
-        status.add_argument("-d", "--draft", action="store_true", help="Make added ballot sets draft (neither discarded nor confirmed")
-        status.add_argument("-c", "--confirmed", action="store_true", help="Make added ballot sets confirmed")
+        status.add_argument("-D", "--discarded", action="store_true",
+                            help="Make added ballot sets discarded")
+        status.add_argument("-d", "--draft", action="store_true",
+                            help="Make added ballot sets draft (neither discarded nor confirmed")
+        status.add_argument("-c", "--confirmed", action="store_true",
+                            help="Make added ballot sets confirmed")
 
-        parser.add_argument("-m", "--min-score", type=float, help="Minimum speaker score (for substantive)", default=72)
-        parser.add_argument("-M", "--max-score", type=float, help="Maximum speaker score (for substantive)", default=78)
-        parser.add_argument("--reply-random", action="store_true", help="Choose reply speaker at random (rather than always use first speaker", default=False)
+        parser.add_argument("-m", "--min-score", type=float,
+                            help="Minimum speaker score (for substantive)",
+                            default=72)
+        parser.add_argument("-M", "--max-score", type=float,
+                            help="Maximum speaker score (for substantive)",
+                            default=78)
+        parser.add_argument("--reply-random", action="store_true",
+                            help="Choose reply speaker at random (rather than always use first speaker",
+                            default=False)
 
     @staticmethod
     def _get_user(options):
@@ -62,22 +74,30 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
-        parser.add_argument("--debates", type=int, nargs="+", help="IDs of specific debates to add feedback to. Done in addition to rounds, if any.", default=[])
-        parser.add_argument("--clean", help="Remove all associated ballot sets first", action="store_true")
-        parser.add_argument("-n", "--num-ballots", type=int, help="Number of ballot sets to add per round (default all) or debate (default 1)", default=None)
+        parser.add_argument("--debates", type=int, nargs="+",
+                            help="IDs of specific debates to add feedback to. "
+                            "Done in addition to rounds, if any.", default=[])
+        parser.add_argument("--clean",
+                            help="Remove all associated ballot sets first",
+                            action="store_true")
+        parser.add_argument("-n", "--num-ballots", type=int,
+                            help="Number of ballot sets to add per round "
+                            "(default all) or debate (default 1)", default=None)
 
     def handle(self, *args, **options):
         if not self.get_rounds(options) and not options["debates"]:
             raise CommandError("No rounds or debates were given. (Use --help for more info.)")
 
-        super(Command, self).handle(*args, **options) # handles rounds
+        super(Command, self).handle(*args, **options)  # Handles rounds
 
         for tournament in self.get_tournaments(options):
             for debate_id in options["debates"]:
                 try:
                     debate = Debate.objects.get(round__tournament=tournament, id=debate_id)
                 except Debate.DoesNotExist:
-                    self.stdout.write(self.style.WARNING("Warning: There is no debate with id {:d} for tournament {!r}, skipping".format(debate_id, tournament.slug)))
+                    self.stdout.write(self.style.WARNING(
+                        "Warning: There is no debate with id {:d} for "
+                        "tournament {!r}, skipping".format(debate_id, tournament.slug)))
                 self.handle_debate(debate, **options)
 
     def handle_round(self, round, **options):
@@ -87,10 +107,13 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
 
         try:
             if options["num_ballots"] is not None:
-                self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot sets for {:d} randomly-chosen debates in {}...".format(options["num_ballots"], round.name)))
+                self.stdout.write(self.style.MIGRATE_HEADING(
+                    "Generating ballot sets for {:d} randomly-chosen debates "
+                    "in {}...".format(options["num_ballots"], round.name)))
                 add_ballotsets_to_round_partial(round, options["num_ballots"], **self.ballotset_kwargs(options))
             else:
-                self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot sets for all debates in {}...".format(round.name)))
+                self.stdout.write(self.style.MIGRATE_HEADING(
+                    "Generating ballot sets for all debates in {}...".format(round.name)))
                 add_ballotsets_to_round(round, **self.ballotset_kwargs(options))
 
         except ValueError as e:

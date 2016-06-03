@@ -5,25 +5,31 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
 from django.utils.translation import ugettext as _
 
-from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
-from tournaments.models import Round
-from participants.models import Adjudicator, Team
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
-from utils.forms import OptionalChoiceField
+from participants.models import Adjudicator, Team
 from results.forms import TournamentPasswordField
+from tournaments.models import Round
+from utils.forms import OptionalChoiceField
+
+from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 
 logger = logging.getLogger(__name__)
 
+
+# ==============================================================================
 # General, but only used here
+# ==============================================================================
 
 class IntegerRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
     """Used by IntegerRadioSelect."""
     outer_html = '<table{id_attr} class="feedback-integer-scale-table"><tr>{content}</tr></table>'
     inner_html = '<td>{choice_value}{sub_widgets}</td>'
 
+
 class IntegerRadioSelect(forms.RadioSelect):
     renderer = IntegerRadioFieldRenderer
+
 
 class IntegerScaleField(forms.IntegerField):
     """Class to do integer scale fields."""
@@ -32,6 +38,7 @@ class IntegerScaleField(forms.IntegerField):
     def __init__(self, *args, **kwargs):
         super(IntegerScaleField, self).__init__(*args, **kwargs)
         self.widget.choices = tuple((i, str(i)) for i in range(self.min_value, self.max_value+1))
+
 
 class BlankUnknownBooleanSelect(forms.NullBooleanSelect):
     """Uses '--------' instead of 'Unknown' for the None choice."""
@@ -43,15 +50,18 @@ class BlankUnknownBooleanSelect(forms.NullBooleanSelect):
         # skip the NullBooleanSelect constructor
         super(forms.NullBooleanSelect, self).__init__(attrs, choices)
 
+
 class BooleanSelectField(forms.NullBooleanField):
     """Widget to do boolean select fields following our conventions.
     Specifically, if 'required', checks that an option was chosen."""
     widget = BlankUnknownBooleanSelect
+
     def clean(self, value):
         value = super(BooleanSelectField, self).clean(value)
         if self.required and value is None:
             raise forms.ValidationError(_("This field is required."))
         return value
+
 
 class RequiredTypedChoiceField(forms.TypedChoiceField):
     def clean(self, value):
@@ -60,15 +70,20 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
             raise forms.ValidationError(_("This field is required."))
         return value
 
+
+# ==============================================================================
 # Feedback Fields
+# ==============================================================================
 
 class AdjudicatorFeedbackCheckboxFieldRenderer(forms.widgets.CheckboxFieldRenderer):
     """Used by AdjudicatorFeedbackCheckboxSelectMultiple."""
     outer_html = '<div{id_attr} class="feedback-multiple-select">{content}</div>'
     inner_html = '<div class="feedback-option">{choice_value}{sub_widgets}</div>'
 
+
 class AdjudicatorFeedbackCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
     renderer = AdjudicatorFeedbackCheckboxFieldRenderer
+
 
 class AdjudicatorFeedbackCheckboxSelectMultipleField(forms.MultipleChoiceField):
     """Class to do multiple choice fields following our conventions.
@@ -79,14 +94,17 @@ class AdjudicatorFeedbackCheckboxSelectMultipleField(forms.MultipleChoiceField):
         value = super(AdjudicatorFeedbackCheckboxSelectMultipleField, self).clean(value)
         return AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(value)
 
+
+# ==============================================================================
 # Feedback Forms
+# ==============================================================================
 
 class BaseFeedbackForm(forms.Form):
     """Base class for all dynamically-created feedback forms. Contains all
     question fields."""
 
     # parameters set at "compile time" by subclasses
-    tournament = None # must be set by subclasses
+    tournament = None  # must be set by subclasses
     _use_tournament_password = False
     _confirm_on_submit = False
     _enforce_required = True
@@ -114,8 +132,7 @@ class BaseFeedbackForm(forms.Form):
             else:
                 field = IntegerScaleField(min_value=min_value, max_value=max_value)
         elif question.answer_type == question.ANSWER_TYPE_FLOAT:
-            field = forms.FloatField(min_value=question.min_value,
-                    max_value=question.max_value)
+            field = forms.FloatField(min_value=question.min_value, max_value=question.max_value)
         elif question.answer_type == question.ANSWER_TYPE_TEXT:
             field = forms.CharField()
         elif question.answer_type == question.ANSWER_TYPE_LONGTEXT:
@@ -152,8 +169,8 @@ class BaseFeedbackForm(forms.Form):
 
         if self._confirm_on_submit:
             self.discard_all_existing(adjudicator=kwargs['adjudicator'],
-                    source_adjudicator=kwargs['source_adjudicator'],
-                    source_team=kwargs['source_team'])
+                                      source_adjudicator=kwargs['source_adjudicator'],
+                                      source_team=kwargs['source_team'])
             af.confirmed = True
 
         af.score = self.cleaned_data['score']
@@ -161,8 +178,8 @@ class BaseFeedbackForm(forms.Form):
 
         for question in self.tournament.adj_feedback_questions.filter(**self.question_filter):
             if self.cleaned_data[question.reference] is not None:
-                answer = question.answer_type_class(feedback=af, question=question,
-                        answer=self.cleaned_data[question.reference])
+                answer = question.answer_type_class(
+                    feedback=af, question=question, answer=self.cleaned_data[question.reference])
                 answer.save()
 
         return af
@@ -171,6 +188,7 @@ class BaseFeedbackForm(forms.Form):
         for fb in AdjudicatorFeedback.objects.filter(**kwargs):
             fb.discarded = True
             fb.save()
+
 
 def make_feedback_form_class(source, *args, **kwargs):
     """Constructs a FeedbackForm class specific to the given source.
@@ -186,20 +204,23 @@ def make_feedback_form_class(source, *args, **kwargs):
     else:
         raise TypeError('source must be Adjudicator or Team: %r' % source)
 
+
 def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submit=False,
-        enforce_required=True, include_unreleased_draws=False):
+                                     enforce_required=True, include_unreleased_draws=False):
     """Constructs a FeedbackForm class specific to the given source adjudicator.
     Parameters are as for make_feedback_form_class."""
 
     def adj_choice(da):
         return (da.id, '%s (%s, %s)' % (da.adjudicator.name,
                 da.debate.round.name, da.get_type_display()))
+
     def coerce_da(value):
         return DebateAdjudicator.objects.get(id=int(value))
 
     debate_filter = {'debateadjudicator__adjudicator': source}
     if not source.tournament.pref('panellist_feedback_enabled'):
-        debate_filter['debateadjudicator__type'] = DebateAdjudicator.TYPE_CHAIR # include only debates for which this adj was the chair
+        # Include only debates for which this adj was the chair
+        debate_filter['debateadjudicator__type'] = DebateAdjudicator.TYPE_CHAIR
     if include_unreleased_draws:
         debate_filter['round__draw_status__in'] = [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]
     else:
@@ -216,7 +237,7 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
 
     class FeedbackForm(BaseFeedbackForm):
         tournament = source.tournament  # BaseFeedbackForm setting
-        _use_tournament_password = True # BaseFeedbackForm setting
+        _use_tournament_password = True  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
         question_filter = dict(chair_on_panellist=True)
@@ -233,8 +254,9 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
 
     return FeedbackForm
 
+
 def make_feedback_form_class_for_team(source, submission_fields, confirm_on_submit=False,
-        enforce_required=True, include_unreleased_draws=False):
+                                      enforce_required=True, include_unreleased_draws=False):
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
 
@@ -271,7 +293,7 @@ def make_feedback_form_class_for_team(source, submission_fields, confirm_on_subm
 
     class FeedbackForm(BaseFeedbackForm):
         tournament = source.tournament  # BaseFeedbackForm setting
-        _use_tournament_password = True # BaseFeedbackForm setting
+        _use_tournament_password = True  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
         question_filter = dict(team_on_orallist=True)
@@ -287,4 +309,3 @@ def make_feedback_form_class_for_team(source, submission_fields, confirm_on_subm
             return self.save_adjudicatorfeedback(**kwargs)
 
     return FeedbackForm
-

@@ -1,12 +1,12 @@
-import django.contrib.auth.views as auth_views
-import tournaments.views
-
+from django.contrib.auth import views as auth_views
 from django.conf import settings
-from django.conf.urls import *
+from django.conf.urls import include, url
 from django.contrib import admin, messages
-from django.contrib.auth.signals import user_logged_out, user_logged_in
+from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.views.generic.base import RedirectView
+
+import tournaments.views
 
 admin.autodiscover()
 
@@ -59,6 +59,7 @@ if settings.DEBUG:
 # Logout/Login Confirmations
 # ==============================================================================
 
+
 @receiver(user_logged_out)
 def on_user_logged_out(sender, request, **kwargs):
     messages.success(
@@ -74,6 +75,7 @@ def on_user_logged_in(sender, request, **kwargs):
 # ==============================================================================
 # Redirect Method
 # ==============================================================================
+
 
 def redirect(view):
     from django.http import HttpResponseRedirect

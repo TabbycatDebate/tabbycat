@@ -1,15 +1,16 @@
-from django.views.generic.base import TemplateView
 from django.http import HttpResponse
+from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from tournaments.mixins import RoundMixin
-from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView
+from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.misc import reverse_round
 
-from .models import Venue
 from .allocator import allocate_venues
+from .models import Venue
+
 
 class EditVenuesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 

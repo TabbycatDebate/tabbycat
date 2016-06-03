@@ -1,7 +1,5 @@
 import os
-import csv
 import logging
-from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
@@ -13,6 +11,7 @@ from tournaments.models import Tournament
 from importer.anorak import AnorakTournamentDataImporter
 from importer.base import DUPLICATE_INFO, TournamentDataImporterFatal
 
+
 class Command(BaseCommand):
     help = 'Delete all data for a tournament and import from specified directory.'
 
@@ -21,25 +20,25 @@ class Command(BaseCommand):
         parser.add_argument('items', help="Items to import (default: import all)", nargs="*", default=[])
 
         parser.add_argument('-r', '--auto-rounds', type=int, metavar='N', default=None,
-            help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.')
+                            help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.')
         parser.add_argument('--force', action='store_true', default=False,
-            help='Do not prompt before deleting tournament that already exists.')
+                            help='Do not prompt before deleting tournament that already exists.')
         parser.add_argument('--keep-existing', action='store_true', default=False,
-            help='Keep existing tournament and data, skipping lines if they are duplicates.')
+                            help='Keep existing tournament and data, skipping lines if they are duplicates.')
         parser.add_argument('--delete-institutions', action='store_true', default=False,
-            help='Delete all institutions from the database. Overrides --keep-existing.')
+                            help='Delete all institutions from the database. Overrides --keep-existing.')
         parser.add_argument('--delete-venue-groups', action='store_true', default=False,
-            help='Delete all venue groups from the database. Overrides --keep-existing.')
+                            help='Delete all venue groups from the database. Overrides --keep-existing.')
         parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
-            help='Don\'t crash if there is an error, just skip and keep going.')
+                            help='Don\'t crash if there is an error, just skip and keep going.')
 
         # Tournament options
         parser.add_argument('-s', '--slug', type=str, action='store', default=None,
-            help='Override tournament slug. (Default: use name of directory.)'),
+                            help='Override tournament slug. (Default: use name of directory.)'),
         parser.add_argument('--name', type=str, action='store', default=None,
-            help='Override tournament name. (Default: use name of directory.)'),
+                            help='Override tournament name. (Default: use name of directory.)'),
         parser.add_argument('--short-name', type=str, action='store', default=None,
-            help='Override tournament short name. (Default: use name of directory.)'),
+                            help='Override tournament short name. (Default: use name of directory.)'),
 
     def handle(self, *args, **options):
         self.options = options
@@ -53,8 +52,8 @@ class Command(BaseCommand):
             self.delete_venue_groups()
         self.make_tournament()
         loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
-        self.importer = AnorakTournamentDataImporter(self.t, loglevel=loglevel,
-                strict=options['strict'], expect_unique=not options['keep_existing'])
+        self.importer = AnorakTournamentDataImporter(
+            self.t, loglevel=loglevel, strict=options['strict'], expect_unique=not options['keep_existing'])
 
         self._make('venue_groups')
         self._make('venues')
@@ -71,23 +70,27 @@ class Command(BaseCommand):
 
     def _print_stage(self, message):
         if self.verbosity > 0:
-            if self.color: message = "\033[0;36m" + message + "\033[0m\n"
+            if self.color:
+                message = "\033[0;36m" + message + "\033[0m\n"
             self.stdout.write(message)
 
     def _print_result(self, counts, errors):
         if self.verbosity > 0:
             if errors:
                 for message in errors.itermessages():
-                    if self.color: message = "\033[1;32m" + message + "\032[0m\n"
+                    if self.color:
+                        message = "\033[1;32m" + message + "\032[0m\n"
                     self.stdout.write(message)
             count_strs = ("{1:d} {0}".format(model._meta.verbose_name_plural, count) for model, count in counts.items())
             message = "Imported " + ", ".join(count_strs) + ", hit {1:d} errors".format(counts, len(errors))
-            if self.color: "\033[0;36m" + message + "\033[0m\n"
+            if self.color:
+                "\033[0;36m" + message + "\033[0m\n"
             self.stdout.write(message)
 
     def _warning(self, message):
         if self.verbosity > 0:
-            if self.color: message = "\033[0;33mWarning: " + message + "\033[0m\n"
+            if self.color:
+                message = "\033[0;33mWarning: " + message + "\033[0m\n"
             self.stdout.write(message)
 
     def _csv_file_path(self, filename):
@@ -132,7 +135,7 @@ class Command(BaseCommand):
             self.stdout.write('Importing from directory: ' + path)
             return path
 
-        if os.path.isabs(arg): # absolute path
+        if os.path.isabs(arg):  # Absolute path
             return _check_return(arg)
 
         # relative path, look in debate/data

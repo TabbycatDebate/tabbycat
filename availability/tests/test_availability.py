@@ -1,9 +1,8 @@
-from utils.tests import BaseDebateTestCase
-
-from tournaments.models import Round
 from draw.manager import DrawManager
 from draw.models import Debate, DebateTeam
-from participants.models import Team, Adjudicator
+from participants.models import Adjudicator, Team
+from tournaments.models import Round
+from utils.tests import BaseDebateTestCase
 from venues.models import Venue
 
 

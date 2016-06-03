@@ -14,3 +14,7 @@ six==1.10.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.1.19
 whitenoise==3.2.0 # Static file serving
 waitress==0.9.0 # For web serving
+flake8==2.5.4 # For testing/linting (not strictly required)
+pep8-naming==0.3.3 # Flake plugin for naming conventions
+flake8-import-order==0.8 # Flake plugin for import order
+flake8-quotes==0.3.0 # Flake plugin for quotes

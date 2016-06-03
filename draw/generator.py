@@ -1,9 +1,9 @@
-from collections import OrderedDict
 import random
-import math
-import copy
-from .one_up_one_down import OneUpOneDownSwapper
 import logging
+from collections import OrderedDict
+
+from .one_up_one_down import OneUpOneDownSwapper
+
 logger = logging.getLogger(__name__)
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
@@ -187,7 +187,7 @@ class BaseDrawGenerator(object):
     can_be_first_round = True
     requires_even_teams = True
     requires_prev_results = False
-    draw_type = None # must be set by subclasses
+    draw_type = None  # Must be set by subclasses
 
     # All subclasses must define this with any options that may exist.
     DEFAULT_OPTIONS = {}
@@ -205,11 +205,15 @@ class BaseDrawGenerator(object):
                 raise DrawError("There were no teams for the draw.")
 
         if results is None and self.requires_prev_results:
-            raise TypeError("'results' is required for draw of type {0:s}".format(
+            raise TypeError(
+                "'results' is required for draw of type {0:s}".format(
                     self.__class__.__name__))
+
         if results is not None and not self.requires_prev_results:
-            logger.warning("'results' not required for draw of type {0:s}, will probably be ignored".format(
+            logger.warning(
+                "'results' not required for draw of type {0:s}, will probably be ignored".format(
                     self.__class__.__name__))
+
         if results is not None:
             self.results = results
 
@@ -289,17 +293,19 @@ class BaseDrawGenerator(object):
         if not all(has_attribute):
             offending_teams = has_attribute.count(False)
             raise DrawError("{0} out of {1} teams don't have a '{name}' attribute.".format(
-                    offending_teams, len(self.teams), name=name))
+                offending_teams, len(self.teams), name=name))
+
         if choices:
             attribute_value_valid = [getattr(x, name) in choices for x in self.teams]
         elif checkfunc:
             attribute_value_valid = [checkfunc(getattr(x, name)) for x in self.teams]
         else:
             return
+
         if not all(attribute_value_valid):
             offending_teams = attribute_value_valid.count(False)
             raise DrawError("{0} out of {1} teams has an invalid '{name}' attribute. Valid choices: ".format(
-                    offending_teams, len(self.teams), name=name) + ", ".join(map(repr, choices)))
+                offending_teams, len(self.teams), name=name) + ", ".join(map(repr, choices)))
 
 
 class RandomDrawGenerator(BaseDrawGenerator):
@@ -322,12 +328,12 @@ class RandomDrawGenerator(BaseDrawGenerator):
 
     def generate(self):
         self._draw = self._make_initial_pairings()
-        self.avoid_conflicts(self._draw) # operates in-place
-        self.balance_sides(self._draw) # operates in-place
+        self.avoid_conflicts(self._draw)  # Operates in-place
+        self.balance_sides(self._draw)  # Operates in-place
         return self._draw
 
     def _make_initial_pairings(self):
-        teams = list(self.teams) # make a copy
+        teams = list(self.teams)  # Make a copy
         random.shuffle(teams)
         debates = len(teams) // 2
         pairings = [Pairing(teams=t, bracket=0, room_rank=0) for t in zip(teams[:debates], teams[debates:])]
@@ -350,7 +356,7 @@ class RandomDrawGenerator(BaseDrawGenerator):
                     pairing.teams[1], swap_pairing.teams[1] = swap_pairing.teams[1], pairing.teams[1]
                     badness_new = self._badness(pairing, swap_pairing)
                     if badness_new == 0:
-                        break # yay!
+                        break  # yay!
                     elif badness_new >= badness_orig or self._badness(swap_pairing) > 0:
                         # swap back and try again
                         pairing.teams[1], swap_pairing.teams[1] = swap_pairing.teams[1], pairing.teams[1]
@@ -392,9 +398,7 @@ class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
 
         random.shuffle(aff_teams)
         random.shuffle(neg_teams)
-        debates = len(aff_teams)
-        pairings = [Pairing(teams=t, bracket=0, room_rank=0) \
-                for t in zip(aff_teams, neg_teams)]
+        pairings = [Pairing(teams=t, bracket=0, room_rank=0) for t in zip(aff_teams, neg_teams)]
         return pairings
 
 
@@ -443,15 +447,15 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
 
     def generate(self):
         self._brackets = self._make_raw_brackets()
-        self.resolve_odd_brackets(self._brackets) # operates in-place
+        self.resolve_odd_brackets(self._brackets)  # Operates in-place
         self._pairings = self.generate_pairings(self._brackets)
-        self.avoid_conflicts(self._pairings) # operates in-place
+        self.avoid_conflicts(self._pairings)  # Operates in-place
         self._draw = list()
         for bracket in self._pairings.values():
             self._draw.extend(bracket)
 
-        self.balance_sides(self._draw) # operates in-place
-        self.annotate_team_flags(self._draw) # operates in-place
+        self.balance_sides(self._draw)  # Operates in-place
+        self.annotate_team_flags(self._draw)  # Operates in-place
         return self._draw
 
     def _make_raw_brackets(self):
@@ -468,7 +472,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
             brackets[points] = pool
         return brackets
 
-    ## Odd bracket resolutions
+    # Odd bracket resolutions
 
     ODD_BRACKET_FUNCTIONS = {
         "pullup_top"                  : "_pullup_top",
@@ -532,25 +536,26 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     def _intermediate_bubbles_with_up_down(self, brackets):
         """Operates in-place.
         Requires Team.institution and Team.seen() to be defined."""
-        self._intermediate_bubbles(brackets) # operates in-place
+        self._intermediate_bubbles(brackets)  # Operates in-place
         # Check each of the intermediate bubbles for conflicts.
         # If there is one, try swapping the top team with the bottom team
         # of the bracket above. Failing that, try the same with the bottom
         # team and the top team of the bracket below. Failing that, give up.
         # Note: Under no circumstances do we swap both teams.
+
         def _check_conflict(team1, team2):
             try:
                 if team1.institution == team2.institution:
-                    return 1 # institution
+                    return 1  # Institution
                 if team1.seen(team2):
-                    return 2 # history
+                    return 2  # History
             except AttributeError:
                 raise DrawError("For conflict avoidance, teams must have attributes 'institution' and 'seen'.")
-            return 0 # no conflict
+            return 0  # No conflict
 
         for points, teams in brackets.items():
             if int(points) == points:
-                continue # skip non-intermediate brackets
+                continue  # Skip non-intermediate brackets
             # a couple of checks
             assert points % 0.5 == 0
             assert teams[0].points > teams[1].points
@@ -571,7 +576,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
 
             # bubble down, if bubble up didn't work
             if points-0.5 in brackets:
-                swap_team = brackets[points-0.5][0] # bottom team
+                swap_team = brackets[points-0.5][0]  # Bottom team
                 if not _check_conflict(swap_team, teams[0]):
                     self.add_team_flag(teams[1], (conflict == 1) and "bub_dn_inst" or "bub_dn_hist")
                     self.add_team_flag(swap_team, "bub_dn_accom")
@@ -581,9 +586,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
             # if nothing worked, add a "didn't work" flag
             self.add_team_flag(teams[0], "no_bub_updn")
 
-
-    ## Pairings generation
-
+    # Pairings generation
     PAIRING_FUNCTIONS = {
         "fold"                  : "_pairings_fold",
         "slide"                 : "_pairings_slide",
@@ -674,10 +677,10 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     def _pairings_fold_top_adjacent_rest(cls, brackets):
         return cls._pairings_top_special(brackets, cls._subpool_fold, cls._subpool_adjacent)
 
-    ## Conflict avoidance
+    # Conflict avoidance
 
     AVOID_CONFLICT_FUNCTIONS = {
-        "one_up_one_down" : "_one_up_one_down",
+        "one_up_one_down": "_one_up_one_down",
     }
 
     def avoid_conflicts(self, pairings):
@@ -694,10 +697,11 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
 
         for bracket in pairings.values():
             pairs = [tuple(p.teams) for p in bracket]
-            pairs_orig = list(pairs) # keep a copy for comparison
-            OPTIONS = ["avoid_history", "avoid_institution", "history_penalty",
-                    "institution_penalty"]
-            options = dict((key, self.options[key]) for key in OPTIONS)
+            pairs_orig = list(pairs)  # Keep a copy for comparison
+            OPTIONS = [
+                "avoid_history", "avoid_institution", "history_penalty",
+                "institution_penalty"]
+            options = dict((key, self.options[key]) for key in OPTIONS)  # flake8: noqa
             swapper = OneUpOneDownSwapper(**options)
             pairs_new = swapper.run(pairs)
             swaps = swapper.swaps
@@ -829,7 +833,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                 pullups_needed_teams.extend(pullup_teams)
 
             # Then, figure out if we need any pullups in *this* bracket.
-            aff_surplus = len(pool["aff"]) - len(pool["neg"]) # could be negative
+            aff_surplus = len(pool["aff"]) - len(pool["neg"])  # Could be negative
             if aff_surplus > 0:
                 new_pullups_needed_for.append((pool["neg"], "neg", aff_surplus))
             elif aff_surplus < 0:
@@ -910,7 +914,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
 
         new = OrderedDict()
         unfilled = OrderedDict()
-        intermediates = OrderedDict() # values are lists of {"aff", "neg"} dicts
+        intermediates = OrderedDict()  # Values are lists of {"aff", "neg"} dicts
         for points, pool in brackets.items():
 
             to_delete_from_unfilled = []
@@ -998,7 +1002,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
     @classmethod
     def _pairings_slide(cls, brackets):
         def slide(pool):
-            pass # do nothing
+            pass  # Do nothing
         return cls._pairings(brackets, slide)
 
     @classmethod
@@ -1055,7 +1059,7 @@ class FirstEliminationDrawGenerator(BaseDrawGenerator):
     @staticmethod
     def _bypass_debate_split(number):
         next_pow2 = 1 << (number.bit_length() - 1)
-        if next_pow2 == number: # no partial elimination
+        if next_pow2 == number:  # No partial elimination
             return number, 0
         debates = number - next_pow2
         return next_pow2 - debates, 2*debates
@@ -1073,13 +1077,11 @@ class EliminationDrawGenerator(BaseDrawGenerator):
     'results' should be a list of Pairings with winners indicated."""
 
     can_be_first_round = False
-    requires_even_teams = False # It does but enabling trips it at init rather than the DrawError() below
+    requires_even_teams = False  # It does but enabling trips it at init rather than the DrawError() below
     requires_prev_results = False
     draw_type = "elimination"
 
     def generate(self):
-        category = self.round.break_category
-
         # Sort by break rank
         for team in self.teams:
             team.break_rank = team.break_rank_for_category(self.round.break_category)
@@ -1105,6 +1107,7 @@ class EliminationDrawGenerator(BaseDrawGenerator):
             pairings.append(pairing)
         return pairings
 
+
 class RoundRobinDrawGenerator(BaseDrawGenerator):
     """ Class for round-robin stype matchups using divisions """
 
@@ -1118,7 +1121,6 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         "random": "_pairings_random"
     }
 
-
     DEFAULT_OPTIONS = {"max_swap_attempts": 20, "avoid_conflicts": "off"}
 
     def generate(self):
@@ -1130,7 +1132,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         for bracket in self._pairings.values():
             self._draw.extend(bracket)
 
-        self.balance_sides(self._draw) # operates in-place
+        self.balance_sides(self._draw)  # Operates in-place
         return self._draw
 
     def _make_raw_brackets_from_divisions(self):
@@ -1160,13 +1162,12 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     def generate_pairings(self, brackets):
         pairings = OrderedDict()
 
-        first_bracket_teams = next(iter(brackets.values()))
         effective_round = self.round.seq
         print("-------\nTaking as effective round of %s" % effective_round)
 
         for bracket in brackets.items():
-            teams_list = bracket[1] # Team Array is second item
-            points =  bracket[0]
+            teams_list = bracket[1]  # Team Array is second item
+            points = bracket[0]
             total_debates = len(teams_list) // 2
             print("BRACKET %s with %s teams" % (points, len(teams_list)))
 
@@ -1182,11 +1183,11 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]])
 
             for i in range(1, effective_round):
-                 # left-most bottom goes to position[1] on the top
+                # Left-most bottom goes to position[1] on the top
                 folded_list.insert(1, (folded_list.pop(total_debates)))
-                # right-most top goes to right-most bottom
+                # Right-most top goes to right-most bottom
                 folded_list.append(folded_list.pop(total_debates))
-                #print "popping %s iteration %s" % (i, total_debates)
+                # Print "popping %s iteration %s" % (i, total_debates)
 
             print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]])
             print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]])
@@ -1220,8 +1221,6 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                     print("couldn't find an opposition")
 
             pairings[points] = assigned_pairings
-
-
 
         return pairings
 

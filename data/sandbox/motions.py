@@ -1,13 +1,11 @@
 """Sandbox for figuring out how to do motion aggregations."""
 
-import header
+import argparse
+
 import tournaments.models as tm
 import draw.models as dm
 import motions.models as mm
 
-from django.db import models
-
-import argparse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("round", type=int, help="Round to look at")
 args = parser.parse_args()
@@ -26,9 +24,8 @@ TEAM_SCORE_QUERY = """
     AND "draws_debateteam"."position" = '{pos:s}'
 """
 
-
-
-motions = motions.extra({"chosen_in": """
+motions = motions.extra({
+    "chosen_in": """
         SELECT COUNT (*)
         FROM "results_ballotsubmission"
         WHERE "results_ballotsubmission"."confirmed" = True
@@ -39,4 +36,5 @@ motions = motions.extra({"chosen_in": """
 })
 
 for motion in motions:
-    print "{0:30} {1:5} {2:5} {3:5}".format(motion.reference, motion.chosen_in, motion.aff_score, motion.neg_score)
+    print("{0:30} {1:5} {2:5} {3:5}".format(
+        motion.reference, motion.chosen_in, motion.aff_score, motion.neg_score))

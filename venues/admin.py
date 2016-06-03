@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from .models import (VenueGroup, Venue, TeamVenueConstraint,
-    AdjudicatorVenueConstraint, InstitutionVenueConstraint, DivisionVenueConstraint)
+from .models import (
+    AdjudicatorVenueConstraint, DivisionVenueConstraint,
+    InstitutionVenueConstraint, TeamVenueConstraint, Venue, VenueGroup)
 
 
 class VenueGroupAdmin(admin.ModelAdmin):

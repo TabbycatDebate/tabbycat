@@ -1,21 +1,17 @@
 from django.contrib import admin
-from django import forms
+
+from adjallocation.models import DebateAdjudicator
+from utils.admin import BaseModelAdmin
 
 from .models import Debate, DebateTeam
-from participants.models import Speaker, Team
-from adjallocation.models import DebateAdjudicator
+
 
 # ==============================================================================
 # DebateTeam
 # ==============================================================================
 
-_dt_round = lambda o: o.debate.round.abbreviation
-_dt_round.short_description = 'Round'
-_dt_tournament = lambda o: o.debate.round.tournament
-_dt_tournament.short_description = 'Tournament'
-
-class DebateTeamAdmin(admin.ModelAdmin):
-    list_display = ('team', _dt_tournament, _dt_round, 'position')
+class DebateTeamAdmin(admin.ModelAdmin, BaseModelAdmin):
+    list_display = ('team', 'get_tournament', 'get_round', 'position')
     search_fields = ('team', )
     raw_id_fields = ('debate', 'team', )
 
@@ -31,7 +27,6 @@ admin.site.register(DebateTeam, DebateTeamAdmin)
 # ==============================================================================
 # Debate
 # ==============================================================================
-
 
 class DebateTeamInline(admin.TabularInline):
     model = DebateTeam

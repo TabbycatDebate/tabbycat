@@ -1,19 +1,19 @@
 from django.db.models import Count
-from django.views.generic.base import View, ContextMixin, TemplateView
+from django.views.generic.base import ContextMixin, TemplateView, View
 from django.conf import settings
 from django.shortcuts import render
 
 import motions.statistics as motion_statistics
 from motions.models import Motion
-from participants.models import Team, Speaker
-from results.models import TeamScore, SpeakerScore
-from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
+from participants.models import Speaker, Team
+from results.models import SpeakerScore, TeamScore
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.mixins import SuperuserRequiredMixin
 
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
-from .round_results import add_team_round_results, add_team_round_results_public, add_speaker_round_results
+from .round_results import add_speaker_round_results, add_team_round_results, add_team_round_results_public
 
 
 class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
@@ -24,19 +24,19 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         round = self.get_round()
 
         speaks = SpeakerScore.objects.filter(ballot_submission__confirmed=True).exclude(
-                position=round.tournament.REPLY_POSITION).select_related('debate_team__debate__round')
+            position=round.tournament.REPLY_POSITION).select_related('debate_team__debate__round')
         kwargs["top_speaks"] = speaks.order_by('-score')[:10]
         kwargs["bottom_speaks"] = speaks.order_by('score')[:10]
 
-        margins = TeamScore.objects.filter(ballot_submission__confirmed=True,
-                margin__gte=0).select_related(
-                'debate_team__team', 'debate_team__debate__round',
-                'debate_team__team__institution')
+        margins = TeamScore.objects.filter(
+            ballot_submission__confirmed=True, margin__gte=0).select_related(
+            'debate_team__team', 'debate_team__debate__round',
+            'debate_team__team__institution')
         kwargs["top_margins"] = margins.order_by('-margin')[:10]
         kwargs["bottom_margins"] = margins.order_by('margin')[:10]
 
         motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
-                Count('ballotsubmission'))
+            Count('ballotsubmission'))
         kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:10]
         kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:10]
 
@@ -72,8 +72,9 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
         speakers = self.get_speakers()
         metrics, extra_metrics = self.get_metrics()
         rank_filter = self.get_rank_filter()
-        generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics,
-                rank_filter=rank_filter)
+        generator = SpeakerStandingsGenerator(metrics, self.rankings,
+                                              extra_metrics,
+                                              rank_filter=rank_filter)
         standings = generator.generate(speakers, round=round)
 
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
@@ -96,7 +97,7 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
 
     def get_speakers(self):
         return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
-                        'team', 'team__institution', 'team__tournament')
+            'team', 'team__institution', 'team__tournament')
 
     def get_metrics(self):
         method = self.get_tournament().pref('rank_speakers_by')
@@ -108,7 +109,7 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
     def get_rank_filter(self):
         tournament = self.get_tournament()
         total_prelim_rounds = tournament.round_set.filter(
-                stage=Round.STAGE_PRELIMINARY, seq__lte=self.get_round().seq).count()
+            stage=Round.STAGE_PRELIMINARY, seq__lte=self.get_round().seq).count()
         missable_debates = tournament.pref('standings_missed_debates')
         minimum_debates_needed = total_prelim_rounds - missable_debates
         return lambda info: info.metrics["speeches_count"] >= minimum_debates_needed
@@ -165,9 +166,10 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
     def get_speakers(self):
         tournament = self.get_tournament()
-        return Speaker.objects.filter(team__tournament=tournament,
-                speakerscore__position=tournament.REPLY_POSITION).select_related(
-                'team', 'team__institution', 'team__tournament').distinct()
+        return Speaker.objects.filter(
+            team__tournament=tournament,
+            speakerscore__position=tournament.REPLY_POSITION).select_related(
+            'team', 'team__institution', 'team__tournament').distinct()
 
     def get_metrics(self):
         return ('replies_avg',), ('replies_stddev', 'replies_count')
@@ -259,6 +261,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     def show_ballots(self):
         return self.get_tournament().pref('ballots_released')
 
+
 # ==============================================================================
 # Motion standings
 # ==============================================================================
@@ -296,7 +299,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, TemplateView):
             round = round.prev
 
         if round is not None and round.silent is False:
-            teams = tournament.team_set.order_by('institution__code', 'reference') # obscure true rankings, in case client disabled JavaScript
+            teams = tournament.team_set.order_by('institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
             rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
             add_team_round_results_public(teams, rounds)
 

@@ -6,13 +6,14 @@ number of wins (points), or draw strength. Subclasses should be defined in
 context-specific files, e.g., teams.py or speakers.py.
 """
 
+import logging
+
 from operator import itemgetter
 
 from django.db.models.expressions import RawSQL
 
-import random
-import logging
 logger = logging.getLogger(__name__)
+
 
 def metricgetter(*items):
     """Returns a callable object that fetches `item` from its operand's
@@ -36,9 +37,9 @@ class BaseMetricAnnotator:
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
 
-    key = None # must be set by subclasses
-    name = None # must be set by subclasses
-    abbr = None # must be set by subclasses
+    key = None  # must be set by subclasses
+    name = None  # must be set by subclasses
+    abbr = None  # must be set by subclasses
     glyphicon = None
     ranked_only = False
 
@@ -65,7 +66,7 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
     class attributes, and use the `key` attribute when adding metrics in
     implementing `annotate()`."""
 
-    ranked_only = True # repeated metrics don't make sense outside the precedence
+    ranked_only = True  # Repeated metrics don't make sense outside the precedence
 
     def __init__(self, index, keys):
         self.index = index
@@ -100,7 +101,7 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
         for item in queryset:
             if item.metric is None:
                 logger.warning("Metric {metric!r} for {item} was None, setting to 0".format(
-                        metric=self.key, item=item))
+                    metric=self.key, item=item))
                 item.metric = 0
             standings.add_metric(item, self.key, item.metric)
 

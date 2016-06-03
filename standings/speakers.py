@@ -2,9 +2,10 @@
 
 from participants.models import Round
 
-from .base import BaseStandingsGenerator, StandingsError
-from .metrics import QuerySetMetricAnnotator, metricgetter
+from .base import BaseStandingsGenerator
+from .metrics import QuerySetMetricAnnotator
 from .ranking import BasicRankAnnotator
+
 
 # ==============================================================================
 # Metric annotators
@@ -14,8 +15,8 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     """Base class for annotators for metrics based on conditional aggregations
     of SpeakerScore instances."""
 
-    function = None # must be set by subclasses
-    field = None # must be set by subclasses
+    function = None  # Must be set by subclasses
+    field = None  # Must be set by subclasses
     replies = False
 
     @staticmethod

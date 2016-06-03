@@ -1,7 +1,9 @@
 from django.forms.fields import IntegerField
 from django.forms import ModelForm
+
 from .models import Tournament
 from .utils import auto_make_rounds
+
 
 class TournamentForm(ModelForm):
 

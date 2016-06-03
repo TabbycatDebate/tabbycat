@@ -1,7 +1,10 @@
-from utils.management.base import RoundCommand, CommandError
-from ...models import TeamPositionAllocation
 from random import shuffle
 from operator import attrgetter
+
+from utils.management.base import CommandError, RoundCommand
+
+from ...models import TeamPositionAllocation
+
 
 class Command(RoundCommand):
 

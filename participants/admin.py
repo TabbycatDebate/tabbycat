@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django import forms
 
-from .models import Region, Institution, Speaker, Adjudicator, Team
 from draw.models import TeamPositionAllocation
-from adjallocation.models import AdjudicatorConflict, AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict
+from adjallocation.models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict
 from adjfeedback.models import AdjudicatorTestScoreHistory
 from venues.models import TeamVenueConstraint
+
+from .models import Adjudicator, Institution, Region, Speaker, Team
+
 
 # ==============================================================================
 # Region
@@ -16,6 +18,7 @@ class RegionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Region, RegionAdmin)
+
 
 # ==============================================================================
 # Institution
@@ -28,6 +31,7 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Institution, InstitutionAdmin)
+
 
 # ==============================================================================
 # Speaker
@@ -87,6 +91,7 @@ class TeamAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Team, TeamAdmin)
+
 
 # ==============================================================================
 # Adjudicator

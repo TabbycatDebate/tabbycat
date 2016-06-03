@@ -2,8 +2,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
 
-from results.models import Submission
 from adjallocation.models import DebateAdjudicator
+from results.models import Submission
 
 
 class AdjudicatorTestScoreHistory(models.Model):
@@ -97,12 +97,10 @@ class AdjudicatorFeedbackQuestion(models.Model):
         help_text="The order in which questions are displayed")
     text = models.CharField(
         max_length=255,
-        help_text=
-        "The question displayed to participants, e.g., \"Did you agree with the decision?\"")
+        help_text="The question displayed to participants, e.g., \"Did you agree with the decision?\"")
     name = models.CharField(
         max_length=30,
-        help_text=
-        "A short name for the question, e.g., \"Agree with decision\"")
+        help_text="A short name for the question, e.g., \"Agree with decision\"")
     reference = models.SlugField(
         help_text="Code-compatible reference, e.g., \"agree_with_decision\"")
 
@@ -118,19 +116,16 @@ class AdjudicatorFeedbackQuestion(models.Model):
     min_value = models.FloatField(
         blank=True,
         null=True,
-        help_text=
-        "Minimum allowed value for numeric fields (ignored for text or boolean fields)")
+        help_text="Minimum allowed value for numeric fields (ignored for text or boolean fields)")
     max_value = models.FloatField(
         blank=True,
         null=True,
-        help_text=
-        "Maximum allowed value for numeric fields (ignored for text or boolean fields)")
+        help_text="Maximum allowed value for numeric fields (ignored for text or boolean fields)")
     choices = models.CharField(
         max_length=500,
         blank=True,
         null=True,
-        help_text=
-        "Permissible choices for select one/multiple fields, separated by %r (ignored for other fields)"
+        help_text="Permissible choices for select one/multiple fields, separated by %r (ignored for other fields)"
         % CHOICE_SEPARATOR)
 
     class Meta:
@@ -198,7 +193,7 @@ class AdjudicatorFeedback(Submission):
         try:
             return self.adjudicator.debateadjudicator_set.get(
                 debate=self.debate)
-        except DebateAdjudicator.DoesNotExist as e:
+        except DebateAdjudicator.DoesNotExist:
             return None
 
     @property

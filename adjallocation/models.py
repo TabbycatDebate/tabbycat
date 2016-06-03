@@ -1,7 +1,7 @@
 from django.db import models
 
 from tournaments.models import SRManager
-from participants.models import Adjudicator
+
 
 class DebateAdjudicator(models.Model):
     TYPE_CHAIR = 'C'
@@ -35,6 +35,7 @@ class AdjudicatorConflict(models.Model):
     class Meta:
         verbose_name = "adjudicator-team conflict"
 
+
 class AdjudicatorAdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', related_name="source_adjudicator")
     conflict_adjudicator = models.ForeignKey('participants.Adjudicator', related_name="target_adjudicator", verbose_name="Adjudicator")
@@ -42,12 +43,14 @@ class AdjudicatorAdjudicatorConflict(models.Model):
     class Meta:
         verbose_name = "adjudicator-adjudicator conflict"
 
+
 class AdjudicatorInstitutionConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator')
     institution = models.ForeignKey('participants.Institution')
 
     class Meta:
         verbose_name = "adjudicator-institution conflict"
+
 
 class AdjudicatorAllocation:
     """Not a model, just a container object for the adjudicators on a panel."""
@@ -83,7 +86,8 @@ class AdjudicatorAllocation:
 
     def __eq__(self, other):
         return self.debate == other.debate and self.chair == other.chair and \
-                set(self.panel) == set(other.panel) and set(self.trainees) == set(other.trainees)
+            set(self.panel) == set(other.panel) and \
+            set(self.trainees) == set(other.trainees)
 
     def delete(self):
         """Delete existing, current allocation"""

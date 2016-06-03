@@ -1,16 +1,17 @@
-from adjallocation.hungarian import HungarianAllocator
-from adjallocation.allocator import allocate_adjudicators
-from draw.models import Debate
-from draw.manager import DrawManager
-from utils.management.base import RoundCommand, CommandError
-from venues.allocator import allocate_venues
-from results.dbutils import add_ballotsets_to_round
-from results.management.commands.generateresults import GenerateResultsCommandMixin, SUBMITTER_TYPE_MAP
-from tournaments.models import Round
-
 from django.contrib.auth import get_user_model
 
+from adjallocation.allocator import allocate_adjudicators
+from adjallocation.hungarian import HungarianAllocator
+from draw.models import Debate
+from draw.manager import DrawManager
+from results.dbutils import add_ballotsets_to_round
+from results.management.commands.generateresults import GenerateResultsCommandMixin
+from tournaments.models import Round
+from utils.management.base import RoundCommand
+from venues.allocator import allocate_venues
+
 User = get_user_model()
+
 
 class Command(GenerateResultsCommandMixin, RoundCommand):
 

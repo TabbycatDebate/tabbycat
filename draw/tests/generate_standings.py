@@ -9,26 +9,27 @@ test_draw.py.
 
 This script must be run from the directory it is in."""
 
-# Some import gymnastics.
-import os.path, sys
-draw_dir = os.path.abspath(os.path.join("..", ".."))
-if draw_dir not in sys.path: sys.path.append(draw_dir)
-print(draw_dir)
-del draw_dir
+import os.path
+import sys
+import string
+import random
+import argparse
 
 from draw.tests.utils import TestTeam
 from draw.generator import DrawGenerator
 
-import string
-import random
-import itertools
+draw_dir = os.path.abspath(os.path.join("..", ".."))
+if draw_dir not in sys.path:
+    sys.path.append(draw_dir)
+print(draw_dir)
+del draw_dir
 
-import argparse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("rounds", type=int, help="Number of rounds")
 parser.add_argument("teams", type=int, help="Number of teams")
 parser.add_argument("insts", type=int, help="Number of institutions")
 args = parser.parse_args()
+
 R = args.rounds
 T = args.teams
 I = args.insts
@@ -36,7 +37,7 @@ I = args.insts
 assert(T % 2 == 0)
 
 teams = list()
-for i in range(1,T+1):
+for i in range(1, T+1):
     team = TestTeam(i, random.choice(string.uppercase[:I]), 0, list(), aff_count=0)
     teams.append(team)
 
@@ -70,9 +71,11 @@ for i in range(R):
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
     print("({id}, '{inst}', {points}, {hist}, {aff_count}),".format(
         id=team.id, inst=team.institution, points=team.points,
-            hist=[t.id for t in team.hist], aff_count=team.aff_count))
+        hist=[t.id for t in team.hist], aff_count=team.aff_count))
+
 print("")
+
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
     print("{id}, {inst}, {points}, {hist}, {aff_count}".format(
         id=team.id, inst=team.institution, points=team.points,
-            hist=", ".join([str(t.id) for t in team.hist]), aff_count=team.aff_count))
+        hist=", ".join([str(t.id) for t in team.hist]), aff_count=team.aff_count))

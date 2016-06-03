@@ -1,7 +1,7 @@
 from django.contrib import admin
-from django import forms
 
-from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
+from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
+
 
 # ==============================================================================
 # ActiveVenue
@@ -14,6 +14,7 @@ class ActiveVenueAdmin(admin.ModelAdmin):
 
 admin.site.register(ActiveVenue, ActiveVenueAdmin)
 
+
 # ==============================================================================
 # ActiveTeam
 # ==============================================================================
@@ -24,6 +25,7 @@ class ActiveTeamAdmin(admin.ModelAdmin):
     list_filter = ('team', 'round')
 
 admin.site.register(ActiveTeam, ActiveTeamAdmin)
+
 
 # ==============================================================================
 # ActiveAdjudicator

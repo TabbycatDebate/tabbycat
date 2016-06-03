@@ -1,6 +1,8 @@
 from dynamic_preferences.types import BasePreferenceType
+
 from .fields import MultiValueChoiceField
 from .serializers import MultiValueSerializer
+
 
 class MultiValueChoicePreference(BasePreferenceType):
 

@@ -68,11 +68,11 @@ urlpatterns = [
 
     # Scheduling
     url(r'^round/(?P<round_seq>\d+)/schedule_debates/$',
-            views.schedule_debates,
-            name='schedule_debates'),
+        views.schedule_debates,
+        name='schedule_debates'),
     url(r'^round/(?P<round_seq>\d+)/schedule_debates/save/$',
-            views.apply_schedule,
-            name='apply_schedule'),
+        views.apply_schedule,
+        name='apply_schedule'),
     url(r'^round/(?P<round_seq>\d+)/start_time/set/$',
         views.SetRoundStartTimeView.as_view(),
         name='set_round_start_time'),

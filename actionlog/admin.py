@@ -6,6 +6,7 @@ from .models import ActionLogEntry
 # Adjudicator Logs
 # ==============================================================================
 
+
 class ActionLogEntryAdmin(admin.ModelAdmin):
     list_display = ('type', 'user', 'timestamp', 'get_parameters_display',
                     'tournament')
