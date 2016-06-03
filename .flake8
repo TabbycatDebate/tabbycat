@@ -12,8 +12,19 @@
 # E128 = E128 continuation line under-indented for visual indent
 # E265 = block comment should start with '# '
 
-ignore = F403,E128,E221,E226,E261,E203,E231,E265,E241
+# Q000 = double quotes
+# N802 function name should be lowercase
+# N805 first argument of a method should be named 'self'
+# I100 Import statements are in the wrong order.
+# I101 Imported names are in the wrong order.
+# I201 Missing newline before sections or imports.
+# N806 variable in function should be lowercas
+# N803 argument name should be lowercase
+# N801 class names should use CapWords convention
 
+ignore = F403,E128,E221,E226,E261,E203,E231,E265,E241,Q000, N802, N805, I100, I101, I201, N806, N803, N801
 max-line-length = 200
 
 exclude = docs, migrations, node_modules, venv, */__init__.py
+
+import-order-style = google
