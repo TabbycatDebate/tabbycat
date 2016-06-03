@@ -1,7 +1,8 @@
+import math
+import random
+
 from .allocator import Allocator
 from .stab import StabAllocator
-import random
-import math
 
 
 class SAAllocator(Allocator):

@@ -1,11 +1,13 @@
+import logging
+from threading import Lock
+
 from django.db import models
 from django.utils.functional import cached_property
 from django.conf import settings
-from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
-from threading import Lock
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist, ValidationError
+
 from .result import BallotSet
 
-import logging
 logger = logging.getLogger(__name__)
 
 

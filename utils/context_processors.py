@@ -1,5 +1,6 @@
-from tournaments.models import Tournament
 from django.conf import settings
+
+from tournaments.models import Tournament
 
 
 def debate_context(request):

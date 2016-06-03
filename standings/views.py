@@ -1,19 +1,19 @@
 from django.db.models import Count
-from django.views.generic.base import View, ContextMixin, TemplateView
+from django.views.generic.base import ContextMixin, TemplateView, View
 from django.conf import settings
 from django.shortcuts import render
 
 import motions.statistics as motion_statistics
 from motions.models import Motion
-from participants.models import Team, Speaker
-from results.models import TeamScore, SpeakerScore
-from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
+from participants.models import Speaker, Team
+from results.models import SpeakerScore, TeamScore
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.mixins import SuperuserRequiredMixin
 
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
-from .round_results import add_team_round_results, add_team_round_results_public, add_speaker_round_results
+from .round_results import add_speaker_round_results, add_team_round_results, add_team_round_results_public
 
 
 class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):

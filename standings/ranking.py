@@ -8,9 +8,9 @@ but there are other "types" of ranks, for example, ranks within brackets
 """
 
 import logging
+from itertools import groupby
 
 from .metrics import metricgetter
-from itertools import groupby
 
 logger = logging.getLogger(__name__)
 

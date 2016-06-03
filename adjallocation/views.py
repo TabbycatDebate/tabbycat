@@ -1,8 +1,8 @@
 import json
 import logging
 
-from django.views.generic.base import View
 from django.db.utils import IntegrityError
+from django.views.generic.base import View
 
 from actionlog.models import ActionLogEntry
 from draw.models import Debate, DebateTeam
@@ -10,9 +10,10 @@ from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
+
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
-from .models import AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, AdjudicatorAdjudicatorConflict, DebateAdjudicator
+from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 
 logger = logging.getLogger(__name__)
 

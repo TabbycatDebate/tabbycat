@@ -11,14 +11,12 @@
 # E261 = at least two spaces before inline comment
 # E128 = E128 continuation line under-indented for visual indent
 # E265 = block comment should start with '# '
+# I101 = Imported names are in the wrong order.
 
 # Q000 = double quotes
 # N805 first argument of a method should be named 'self'
-# I100 Import statements are in the wrong order.
-# I101 Imported names are in the wrong order.
-# I201 Missing newline before sections or imports.
 
-ignore = F403,E128,E221,E226,E261,E203,E231,E265,E241,Q000, N805, I100, I101, I201
+ignore = F403,E128,E221,E226,E261,E203,E231,E265,E241,Q000,N805,I100
 max-line-length = 200
 
 exclude = docs, migrations, node_modules, venv, */__init__.py

@@ -1,7 +1,7 @@
 import logging
 import random
 
-from .models import TeamVenueConstraint, AdjudicatorVenueConstraint, InstitutionVenueConstraint
+from .models import AdjudicatorVenueConstraint, InstitutionVenueConstraint, TeamVenueConstraint
 
 logger = logging.getLogger(__name__)
 

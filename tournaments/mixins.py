@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 from utils.misc import redirect_tournament
 
-from .models import Tournament, Round
+from .models import Round, Tournament
 
 logger = logging.getLogger(__name__)
 

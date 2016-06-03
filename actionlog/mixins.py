@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
-from .models import ActionLogEntry
+
 from utils.misc import get_ip_address
+
+from .models import ActionLogEntry
 
 User = get_user_model()
 

@@ -1,7 +1,9 @@
-import string
-import random
 import logging
+import random
+import string
+
 from django.db import IntegrityError
+
 logger = logging.getLogger(__name__)
 
 

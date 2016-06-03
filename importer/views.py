@@ -1,7 +1,7 @@
 from utils.views import *
 
-from participants.models import Adjudicator, Institution, Team, Speaker
-from venues.models import Venue, VenueGroup, InstitutionVenueConstraint
+from participants.models import Adjudicator, Institution, Speaker, Team
+from venues.models import InstitutionVenueConstraint, Venue, VenueGroup
 
 
 @admin_required

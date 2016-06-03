@@ -6,7 +6,7 @@ from django.views.decorators.cache import cache_page
 from adjallocation.models import DebateAdjudicator
 from utils.views import *
 
-from .models import Adjudicator, Speaker, Institution, Team
+from .models import Adjudicator, Institution, Speaker, Team
 
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)

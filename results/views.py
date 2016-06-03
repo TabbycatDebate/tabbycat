@@ -4,7 +4,7 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.template import Template, Context
+from django.template import Context, Template
 from django.views.generic.base import TemplateView
 from django.views.decorators.cache import cache_page
 
@@ -13,7 +13,7 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from participants.models import Adjudicator
 from motions.models import Motion
-from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.views import *
 from utils.misc import get_ip_address

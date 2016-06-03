@@ -5,13 +5,14 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
 from django.utils.translation import ugettext as _
 
-from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
-from tournaments.models import Round
-from participants.models import Adjudicator, Team
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
-from utils.forms import OptionalChoiceField
+from participants.models import Adjudicator, Team
 from results.forms import TournamentPasswordField
+from tournaments.models import Round
+from utils.forms import OptionalChoiceField
+
+from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 
 logger = logging.getLogger(__name__)
 

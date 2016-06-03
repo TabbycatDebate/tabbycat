@@ -3,8 +3,8 @@ import copy
 
 from collections import OrderedDict
 
-from .. import DrawGenerator, Pairing, DrawError
-from .utils import TestTeam, TestRound
+from .. import DrawError, DrawGenerator, Pairing
+from .utils import TestRound, TestTeam
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
 

@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
+from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
+
 
 # ==============================================================================
 # ActiveVenue
 # ==============================================================================
-
 
 class ActiveVenueAdmin(admin.ModelAdmin):
     list_display = ('venue', 'round')
@@ -14,10 +14,10 @@ class ActiveVenueAdmin(admin.ModelAdmin):
 
 admin.site.register(ActiveVenue, ActiveVenueAdmin)
 
+
 # ==============================================================================
 # ActiveTeam
 # ==============================================================================
-
 
 class ActiveTeamAdmin(admin.ModelAdmin):
     list_display = ('team', 'round')
@@ -26,10 +26,10 @@ class ActiveTeamAdmin(admin.ModelAdmin):
 
 admin.site.register(ActiveTeam, ActiveTeamAdmin)
 
+
 # ==============================================================================
 # ActiveAdjudicator
 # ==============================================================================
-
 
 class ActiveAdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'round')

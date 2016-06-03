@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 
 from utils.management.base import TournamentCommand
 
-from ...urlkeys import populate_url_keys, delete_url_keys
+from ...urlkeys import delete_url_keys, populate_url_keys
 
 
 class Command(TournamentCommand):

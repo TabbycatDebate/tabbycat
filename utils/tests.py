@@ -1,6 +1,6 @@
 from django.test import TestCase
 from tournaments.models import Tournament
-from participants.models import Institution, Team, Speaker, Adjudicator
+from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
 
 

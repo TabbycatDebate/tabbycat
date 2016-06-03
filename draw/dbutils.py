@@ -1,5 +1,6 @@
-from .models import Debate
 from tournaments.models import Round
+
+from .models import Debate
 
 
 def delete_round_draw(round, **options):

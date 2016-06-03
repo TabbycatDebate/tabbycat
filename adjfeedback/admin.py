@@ -1,5 +1,4 @@
-from django.contrib import admin
-import django.contrib.messages as messages
+from django.contrib import admin, messages
 
 from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 

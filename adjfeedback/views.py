@@ -2,8 +2,8 @@ import json
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
@@ -14,13 +14,13 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
-from results.mixins import TabroomSubmissionFieldsMixin, PublicSubmissionFieldsMixin
+from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
 from results.models import SpeakerScoreByAdj
-from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
+from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
-from utils.mixins import SingleObjectFromTournamentMixin, SingleObjectByRandomisedUrlMixin, PublicCacheMixin
-from utils.mixins import SuperuserRequiredMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, PostOnlyRedirectView
+from utils.mixins import PublicCacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
+from utils.mixins import PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin
 from utils.urlkeys import populate_url_keys
 from utils.views import *
 

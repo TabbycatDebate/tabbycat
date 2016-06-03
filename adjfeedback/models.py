@@ -2,8 +2,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
 
-from results.models import Submission
 from adjallocation.models import DebateAdjudicator
+from results.models import Submission
 
 
 class AdjudicatorTestScoreHistory(models.Model):

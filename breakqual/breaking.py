@@ -1,6 +1,6 @@
 """Module to compute the teams breaking in a BreakCategory."""
-
 from collections import Counter
+
 from standings.teams import TeamStandingsGenerator
 
 from .models import BreakingTeam

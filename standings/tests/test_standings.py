@@ -2,8 +2,8 @@ from django.test import TestCase
 
 from ..teams import TeamStandingsGenerator
 
-from tournaments.models import Tournament, Round
-from participants.models import Institution, Team, Adjudicator
+from tournaments.models import Round, Tournament
+from participants.models import Adjudicator, Institution, Team
 from venues.models import Venue
 from draw.models import Debate, DebateTeam
 from adjallocation.models import DebateAdjudicator

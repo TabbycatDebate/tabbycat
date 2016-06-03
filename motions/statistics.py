@@ -1,7 +1,7 @@
-from .models import Motion, DebateTeamMotionPreference
 from draw.models import DebateTeam
 from results.models import TeamScore
 
+from .models import DebateTeamMotionPreference, Motion
 # From scipy.stats import chisquare
 
 

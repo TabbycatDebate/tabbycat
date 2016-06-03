@@ -1,6 +1,8 @@
 from utils.management.base import TournamentCommand
-from ...models import BallotSubmission
+
 from draw.models import Debate
+
+from ...models import BallotSubmission
 
 
 class Command(TournamentCommand):

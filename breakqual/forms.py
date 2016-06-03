@@ -1,6 +1,8 @@
 from django import forms
-from .models import BreakingTeam
+
 from utils.forms import OptionalChoiceField
+
+from .models import BreakingTeam
 from .breaking import get_breaking_teams
 
 # ==============================================================================

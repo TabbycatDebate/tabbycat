@@ -1,7 +1,9 @@
-from django.core.management.base import BaseCommand, CommandError
-from tournaments.models import Tournament, Round
-from settings import TABBYCAT_APPS
 import logging
+
+from django.core.management.base import BaseCommand, CommandError
+
+from settings import TABBYCAT_APPS
+from tournaments.models import Round, Tournament
 
 
 def _set_log_level(level):

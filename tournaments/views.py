@@ -5,25 +5,25 @@ from threading import Lock
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy
 from django.views.decorators.cache import cache_page
 from django.shortcuts import render
 
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import FormView, CreateView
+from django.views.generic.edit import CreateView, FormView
 from draw.models import Debate, DebateTeam
-from participants.models import Team, Institution
+from participants.models import Institution, Team
 from utils.forms import SuperuserCreationForm
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import *
 from utils.misc import redirect_tournament
-from venues.models import VenueGroup, TeamVenueConstraint, InstitutionVenueConstraint
+from venues.models import InstitutionVenueConstraint, TeamVenueConstraint, VenueGroup
 
 from .forms import TournamentForm
 from .mixins import TournamentMixin
-from .models import Tournament, Division
+from .models import Division, Tournament
 
 User = get_user_model()
 logger = logging.getLogger(__name__)

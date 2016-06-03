@@ -1,17 +1,16 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.views.decorators.cache import cache_page
-
-from .models import Motion
-from actionlog.models import ActionLogEntry
-from tournaments.models import Round, Division
-
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory
 from django.forms.widgets import CheckboxSelectMultiple
 from django.forms.models import ModelMultipleChoiceField
 
+from actionlog.models import ActionLogEntry
+from tournaments.models import Division, Round
 from utils.views import *
+
+from .models import Motion
 
 
 @admin_required

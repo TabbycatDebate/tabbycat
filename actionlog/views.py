@@ -1,10 +1,11 @@
 import json
 
-from django.template import Template, Context
 from django.contrib.auth.decorators import login_required
+from django.template import Context, Template
+
+from utils.views import *
 
 from .models import ActionLogEntry
-from utils.views import *
 
 
 @login_required

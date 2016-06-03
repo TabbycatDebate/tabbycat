@@ -1,4 +1,4 @@
-from django.forms import MultiValueField, MultiWidget, ChoiceField, Select
+from django.forms import ChoiceField, MultiValueField, MultiWidget, Select
 
 EMPTY_CHOICE = '__no_choice__'
 

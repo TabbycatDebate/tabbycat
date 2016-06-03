@@ -1,13 +1,14 @@
-from .base import BaseTournamentDataImporter, make_lookup, make_interpreter
 import adjallocation.models as am
+import adjfeedback.models as fm
 import breakqual.models as bm
 import draw.models as dm
-import adjfeedback.models as fm
 import motions.models as mm
 import participants.models as pm
 import tournaments.models as tm
 import tournaments.utils
 import venues.models as vm
+
+from .base import BaseTournamentDataImporter, make_interpreter, make_lookup
 
 
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):

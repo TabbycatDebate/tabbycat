@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from tournaments.models import SRManager
 from participants.models import Team
 from venues.conflicts import venue_conflicts
+
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
 logger = logging.getLogger(__name__)

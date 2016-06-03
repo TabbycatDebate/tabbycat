@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from .models import Debate, DebateTeam
 from adjallocation.models import DebateAdjudicator
-
 from utils.admin import BaseModelAdmin
+
+from .models import Debate, DebateTeam
 
 
 # ==============================================================================

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Tournament, Division, Round
+from .models import Division, Round, Tournament
 
 
 # ==============================================================================

@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.generic.base import View, TemplateResponseMixin
+from django.views.generic.base import TemplateResponseMixin, View
 from django.views.generic.detail import SingleObjectMixin
 
 from tournaments.mixins import TournamentMixin

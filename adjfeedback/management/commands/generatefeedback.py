@@ -1,10 +1,10 @@
-from utils.management.base import RoundCommand, CommandError
-from ...dbutils import add_feedback, add_feedback_to_round, delete_all_feedback_for_round, delete_feedback
-
 from django.contrib.auth import get_user_model
 
-from draw.models import Debate
 from adjfeedback.models import AdjudicatorFeedback
+from draw.models import Debate
+from utils.management.base import CommandError, RoundCommand
+
+from ...dbutils import add_feedback, add_feedback_to_round, delete_all_feedback_for_round, delete_feedback
 
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import BallotSubmission, TeamScore, SpeakerScore, SpeakerScoreByAdj
+from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
 
 from utils.admin import BaseModelAdmin
 

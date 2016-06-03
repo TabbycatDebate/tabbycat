@@ -1,7 +1,10 @@
-from dynamic_preferences.types import BooleanPreference, ChoicePreference, StringPreference, IntegerPreference, FloatPreference, Section
+from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, Section, StringPreference
+
+from standings.teams import TeamStandingsGenerator
+
 from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
-from standings.teams import TeamStandingsGenerator
+
 
 # ==============================================================================
 scoring = Section('scoring')

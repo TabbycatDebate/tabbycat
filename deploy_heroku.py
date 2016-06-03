@@ -3,10 +3,10 @@
 This script is compatible with both Python 2.7 and Python 3.4 (and later)."""
 
 import argparse
-import subprocess
-import re
-import sys
 import platform
+import re
+import subprocess
+import sys
 
 # Arguments
 parser = argparse.ArgumentParser(description="Deploy Tabbycat to a new Heroku app.")

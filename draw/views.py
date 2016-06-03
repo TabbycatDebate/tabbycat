@@ -15,15 +15,15 @@ from motions.models import Motion
 from participants.models import Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import RoundMixin
-from tournaments.models import Tournament, Round, Division
-from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView
-from utils.misc import reverse_round, redirect_round
+from tournaments.models import Division, Round, Tournament
+from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.misc import redirect_round, reverse_round
 from utils.views import *
 from venues.models import Venue, VenueGroup
 from venues.allocator import allocate_venues
 
 from .manager import DrawManager
-from .models import TeamPositionAllocation, Debate, DebateTeam
+from .models import Debate, DebateTeam, TeamPositionAllocation
 
 logger = logging.getLogger(__name__)
 
