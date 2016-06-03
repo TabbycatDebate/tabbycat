@@ -4,19 +4,24 @@ to results of debates.
 These are mainly used in management commands, but in principle could be used
 by a front-end interface as well."""
 
-from draw.models import Debate
-from results.models import BallotSubmission
-from django.contrib.auth import get_user_model
-from results.result import BallotSet
 import random
 import logging
+
+from django.contrib.auth import get_user_model
+
+from draw.models import Debate
+from results.models import BallotSubmission
+from results.result import BallotSet
+
 logger = logging.getLogger(__name__)
 User = get_user_model()
+
 
 def add_ballotsets_to_round(round, **kwargs):
     """Calls add_ballotset() for every debate in the given round."""
     for debate in round.debate_set.all():
         add_ballotset(debate, **kwargs)
+
 
 def add_ballotsets_to_round_partial(round, num, **kwargs):
     """Calls ``add_ballotset()`` on ``num`` randomly-chosen debates in the given round."""
@@ -24,13 +29,16 @@ def add_ballotsets_to_round_partial(round, num, **kwargs):
     for debate in debates:
         add_ballotset(debate, **kwargs)
 
+
 def delete_all_ballotsets_for_round(round):
     """Deletes all ballot sets from the given round."""
     BallotSubmission.objects.filter(debate__round=round).delete()
 
+
 def delete_ballotset(debate):
     """Deletes all ballot sets from the given debate."""
     debate.ballotsubmission_set.all().delete()
+
 
 def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False,
         min_score=72, max_score=78, reply_random=False):
@@ -57,6 +65,7 @@ def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False
 
     def gen_results():
         r = {'aff': (0,), 'neg': (0,)}
+
         def do():
             s = [random.randint(min_score, max_score) for i in range(LAST_SUBSTANTIVE_POSITION)]
             s.append(random.randint(min_score, max_score)/2)
@@ -103,8 +112,8 @@ def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False
         debate.result_status = Debate.STATUS_DRAFT
     debate.save()
 
-    logger.info("{debate} won by {team} on {motion}".format(debate=debate.matchup,
-            team=bset.aff_win and "affirmative" or "negative",
-            motion=bset.motion and bset.motion.reference or "<No motion>"))
+    logger.info("{debate} won by {team} on {motion}".format(
+        debate=debate.matchup, team=bset.aff_win and "affirmative" or "negative",
+        motion=bset.motion and bset.motion.reference or "<No motion>"))
 
     return bset

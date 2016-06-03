@@ -1,8 +1,11 @@
 from django.http import JsonResponse
 from django.forms.models import modelformset_factory
-from utils.views import *
-from .models import Adjudicator, Speaker, Institution, Team
+
 from adjallocation.models import DebateAdjudicator
+from utils.views import *
+
+from .models import Adjudicator, Speaker, Institution, Team
+
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @tournament_view
@@ -14,6 +17,7 @@ def team_speakers(request, t, team_id):
         data[i] = "<li>" + speaker.name + "</li>"
 
     return JsonResponse(data, safe=False)
+
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_participants')

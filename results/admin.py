@@ -1,8 +1,7 @@
 from django.contrib import admin
-from .models import BallotSubmission, TeamScore, SpeakerScore, SpeakerScore, SpeakerScoreByAdj
-from participants.models import Team, Speaker, Adjudicator
-from tournaments.models import Round
-from results.models import SpeakerScore
+
+from .models import BallotSubmission, TeamScore, SpeakerScore, SpeakerScoreByAdj
+
 
 # ==============================================================================
 # BallotSubmission
@@ -10,6 +9,7 @@ from results.models import SpeakerScore
 
 _bs_round = lambda o: o.debate.round.seq
 _bs_round.short_description = 'Round'
+
 
 class BallotSubmissionAdmin(admin.ModelAdmin):
     list_display = ('id', 'debate', _bs_round, 'timestamp', 'submitter_type', 'submitter', 'confirmer')
@@ -30,6 +30,7 @@ _ts_round.short_description = 'Round'
 _ts_team = lambda o: o.debate_team.team
 _ts_team.short_description = 'Team'
 
+
 class TeamScoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ts_team, 'score')
     search_fields = ('debate_team__debate__round__seq',
@@ -44,6 +45,7 @@ admin.site.register(TeamScore, TeamScoreAdmin)
 
 _ss_speaker = lambda o: o.speaker.name
 _ss_speaker.short_description = 'Speaker'
+
 
 class SpeakerScoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ts_team, 'position', _ss_speaker, 'score')
@@ -69,6 +71,7 @@ _ssba_speaker = lambda o: SpeakerScore.objects.filter(debate_team=o.debate_team,
 _ssba_speaker.short_description = 'Speaker'
 _ssba_adj = lambda o: o.debate_adjudicator.adjudicator.name
 _ssba_adj.short_description = 'Adjudicator'
+
 
 class SpeakerScoreByAdjAdmin(admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', _ts_round, _ssba_adj, _ts_team, _ssba_speaker, 'position', 'score')

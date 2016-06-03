@@ -7,6 +7,7 @@ from adjallocation.models import AdjudicatorConflict, AdjudicatorAdjudicatorConf
 from adjfeedback.models import AdjudicatorTestScoreHistory
 from venues.models import TeamVenueConstraint
 
+
 # ==============================================================================
 # Region
 # ==============================================================================
@@ -16,6 +17,7 @@ class RegionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Region, RegionAdmin)
+
 
 # ==============================================================================
 # Institution
@@ -28,6 +30,7 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Institution, InstitutionAdmin)
+
 
 # ==============================================================================
 # Speaker
@@ -87,6 +90,7 @@ class TeamAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Team, TeamAdmin)
+
 
 # ==============================================================================
 # Adjudicator

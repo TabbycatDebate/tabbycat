@@ -1,5 +1,7 @@
-from .models import Submission
 from utils.misc import get_ip_address
+
+from .models import Submission
+
 
 class TabroomSubmissionFieldsMixin:
     """Mixin that provides retrieval of appropriate fields for the Submission
