@@ -2,9 +2,9 @@ import logging
 
 from django.db import models
 from django.utils.functional import cached_property
-from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 
-from adjallocation.models import DebateAdjudicator, AdjudicatorAllocation
+from adjallocation.models import AdjudicatorAllocation, DebateAdjudicator
 from tournaments.models import SRManager
 from participants.models import Team
 from venues.conflicts import venue_conflicts
@@ -218,7 +218,7 @@ class Debate(models.Model):
                 adjs += adj.name + " Ⓣ, "
             else:
                 adjs += adj.name + ", "
-        return adjs[:-2] # Remove trailing comma on return
+        return adjs[:-2]  # Remove trailing comma on return
 
     @property
     def chair(self):

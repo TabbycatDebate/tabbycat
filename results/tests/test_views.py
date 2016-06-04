@@ -2,6 +2,7 @@ from utils.tests import ConditionalTableViewTest, TestCase
 
 from tournaments.models import Round
 
+
 class PublicResultsForRoundViewTestCase(ConditionalTableViewTest, TestCase):
 
     view_toggle = 'public_features__public_results'

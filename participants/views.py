@@ -1,19 +1,20 @@
+import json
+from collections import OrderedDict
+
 from django.conf import settings
 from django.contrib import messages
-
-from django.http import JsonResponse
 from django.forms.models import modelformset_factory
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import cache_page
 
 from adjallocation.models import DebateAdjudicator
+from tournaments.mixins import PublicTournamentPageMixin
 from utils.views import public_optional_tournament_view, tournament_view
+from utils.mixins import HeadlessTemplateView, PublicCacheMixin, VueTableMixin
 
 from .models import Adjudicator, Institution, Speaker, Team
 
-from utils.views import *
-from utils.mixins import PublicCacheMixin, VueTableMixin, HeadlessTemplateView
-from tournaments.mixins import PublicTournamentPageMixin
 
 @cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
 @tournament_view
@@ -47,7 +48,7 @@ class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMi
         kwargs["tableDataA"] = json.dumps(adjs_data)
 
         speakers_data = []
-        speakers = Speaker.objects.filter(team__tournament=t).select_related('team','team__institution')
+        speakers = Speaker.objects.filter(team__tournament=t).select_related('team', 'team__institution')
         for speaker in speakers:
             ddict.extend(self.speaker_cells(speaker, t))
             ddict.extend(self.team_cells(speaker.team, t))

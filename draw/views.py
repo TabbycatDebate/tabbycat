@@ -19,10 +19,12 @@ from breakqual.models import BreakingTeam
 from motions.models import Motion
 from participants.models import Team
 from standings.teams import TeamStandingsGenerator
-from tournaments.mixins import RoundMixin, PublicTournamentPageMixin
-from tournaments.models import Tournament, Round, Division
-from utils.mixins import SuperuserRequiredMixin, PostOnlyRedirectView, PublicCacheMixin, VueTableMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
+from tournaments.models import Division, Round, Tournament
+from utils.mixins import PostOnlyRedirectView, PublicCacheMixin, SuperuserRequiredMixin, VueTableMixin
 from utils.misc import reverse_round
+from utils.views import admin_required, expect_post, public_optional_round_view
+from utils.views import public_optional_tournament_view, redirect_round, round_view, tournament_view
 from venues.models import Venue, VenueGroup
 from venues.allocator import allocate_venues
 
@@ -59,7 +61,7 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
         if t.pref('enable_division_motions'):
             ddict.append(('motion', [m.reference for m in d.division_motions]))
         if not t.pref('enable_divisions'):
-            ddict.append(('adjudicators', d.adjudicators_for_draw ))
+            ddict.append(('adjudicators', d.adjudicators_for_draw))
 
         return OrderedDict(ddict)
 
@@ -128,11 +130,11 @@ def draw(request, round):
             draw = round.get_draw()
             return render(request,
                           "public_draw_released.html",
-                          draw=draw, round=round))
+                          draw=draw, round=round)
         else:
             return render(request, 'public_draw_unreleased.html', dict(
                           'public_draw_unreleased.html',
-                           draw=None, round=round))
+                          draw=None, round=round))
 
     raise
 
@@ -463,9 +465,10 @@ def save_matchups(request, round):
     return HttpResponse("ok")
 
 
-==============================================================================
+# ==============================================================================
 # Public Draw Views
 # ==============================================================================
+
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_draw')
 def public_draw(request, t):

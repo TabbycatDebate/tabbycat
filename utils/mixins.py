@@ -7,12 +7,13 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.generic.base import View, TemplateView, TemplateResponseMixin
+from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import SingleObjectMixin
 
 from tournaments.mixins import TournamentMixin
 
 logger = logging.getLogger(__name__)
+
 
 class PostOnlyRedirectView(View):
     """Base class for views that only accept POST requests.
@@ -124,7 +125,7 @@ class VueTableMixin:
     will end up as rows within a Vue table."""
 
     def adj_cells(self, adjudicator, tournament):
-        adj_info = [('Name', adjudicator.name )]
+        adj_info = [('Name', adjudicator.name)]
         if tournament.pref('show_institutions'):
             if adjudicator.adj_core:
                 adj_info.append(('Institution', "Adj Core / " + adjudicator.institution.name))
@@ -137,46 +138,46 @@ class VueTableMixin:
     def team_cells(self, team, tournament, break_categories=None):
         team_info = []
         if tournament.pref('show_emoji'):
-            team_info.append(('❔', team.emoji ))
+            team_info.append(('❔', team.emoji))
         team_info.append(('Team', team.short_name))
         if break_categories is not None:
             team_info.append(('Categories', break_categories))
         if tournament.pref('show_institutions'):
-            team_info.append(('Institution', team.institution.code ))
+            team_info.append(('Institution', team.institution.code))
 
         return team_info
 
     def speaker_cells(self, speaker, tournament):
-        speaker_info = [('Name', speaker.name )]
+        speaker_info = [('Name', speaker.name)]
         if tournament.pref('show_novices'):
-            speaker_info.append(('Novice', speaker.novice ))
+            speaker_info.append(('Novice', speaker.novice))
         return speaker_info
 
     def venue_cells(self, debate, tournament, with_times=False):
         venue_info = []
         if tournament.pref('enable_divisions'):
-            venue_info.append(('division', d.division.name))
+            venue_info.append(('division', debate.division.name))
 
         if tournament.pref('enable_venue_groups') and debate.division:
-            venue_info.append(('venue', debate.division.venue_group.short_name ))
+            venue_info.append(('venue', debate.division.venue_group.short_name))
         elif tournament.pref('enable_venue_groups'):
             venue_info.append(('venue', debate.venue.group.short_name + debate.venue.name))
         else:
-            venue_info.append(('venue', debate.venue.name ))
+            venue_info.append(('venue', debate.venue.name))
 
         if with_times and tournament.pref('enable_debate_scheduling'):
             if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
-                venue_info.append((' ', "" ))
-                venue_info.append((' ', "Bye" ))
-            elif d.result_status == "P" :
-                venue_info.append((' ', "" ))
-                venue_info.append((' ', "Postponed" ))
-            elif d.confirmed_ballot.forfeit :
-                venue_info.append((' ', "" ))
-                venue_info.append((' ', "Forfeit" ))
+                venue_info.append((' ', ""))
+                venue_info.append((' ', "Bye"))
+            elif debate.result_status == "P":
+                venue_info.append((' ', ""))
+                venue_info.append((' ', "Postponed"))
+            elif debate.confirmed_ballot.forfeit:
+                venue_info.append((' ', ""))
+                venue_info.append((' ', "Forfeit"))
             else:
-                venue_info.append(('status', debate.time.strftime("D jS F" )))
-                venue_info.append(('status', debate.time.strftime('h:i A' )))
+                venue_info.append(('status', debate.time.strftime("D jS F")))
+                venue_info.append(('status', debate.time.strftime('h:i A')))
 
         return venue_info
 

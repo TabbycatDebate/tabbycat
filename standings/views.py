@@ -236,7 +236,7 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, VueTableMixin, View):
 
             ddict.extend(self.ranking_cells(info))
             ddict.extend(self.team_cells(info.team, tournament,
-                break_categories=info.team.break_categories_str))
+                         break_categories=info.team.break_categories_str))
 
             for round, result in zip(rounds, info.round_results):
                 ddict.append((round.abbreviation, result.win))
