@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from . import views
-from .models import ActiveTeam, ActiveVenue, ActiveAdjudicator
+from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
 
 urlpatterns = [
 

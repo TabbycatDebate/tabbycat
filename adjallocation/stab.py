@@ -1,5 +1,6 @@
 from .allocator import Allocator
 
+
 class PanelMaker(object):
     RANK_A = 0
     RANK_B = 1
@@ -56,7 +57,7 @@ class PanelMaker(object):
         assert panels_left <= len(self.available) // 3
         num_b = self._count(self.RANK_B)
         num_c = self._count(self.RANK_C)
-        num_d = self._count(self.RANK_D)
+        # num_d = self._count(self.RANK_D)
 
         if num_b / 2 < panels_left:
             self.build(self.RANK_B, self.RANK_B, self.RANK_B, num_b % 2)
@@ -65,7 +66,7 @@ class PanelMaker(object):
                 self.build(self.RANK_B, self.RANK_B, self.RANK_C, num_bbc)
                 num_c -= num_bbc
             else:
-                raise # not enough C's
+                raise  # not enough C's
         else:
             self.build(self.RANK_B, self.RANK_B, self.RANK_B, num_b -
                        panels_left * 2)
@@ -90,7 +91,6 @@ class PanelMaker(object):
             self.build(self.RANK_C, self.RANK_C, self.RANK_D, panels_left * 3 -
                        num_c)
 
-
     def build(self, r1, r2, r3, n):
         for i in range(n):
             self.add_panel(self.pop(r1), self.pop(r2), self.pop(r3))
@@ -108,6 +108,7 @@ class PanelMaker(object):
     def _count(self, r):
         return len([(adj, rank) for adj, rank in self.available if rank == r])
 
+
 class StabAllocator(Allocator):
     def allocate(self, avoid_conflicts=True):
         p = PanelMaker()
@@ -116,7 +117,7 @@ class StabAllocator(Allocator):
         assert len(self.debates) <= len(panels)
 
         self.debates.sort(key=lambda d: self.get_debate_energy(d), reverse=True)
-        panels.sort(key=lambda p:p.get_energy(), reverse=True)
+        panels.sort(key=lambda p: p.get_energy(), reverse=True)
 
         self.pairings = list(zip(self.debates, panels))
 
@@ -141,7 +142,6 @@ class StabAllocator(Allocator):
     def get_debate_energy(self, debate, bubble=False):
         # TODO: does TeamAtRound exist?
         from tournaments.models import TeamAtRound
-        from draw.models import DebateTeam
         aff_team = TeamAtRound(debate.aff_team, debate.round)
         neg_team = TeamAtRound(debate.neg_team, debate.round)
 
@@ -151,7 +151,6 @@ class StabAllocator(Allocator):
         energy += neg_team.speaker_score
 
         return energy
-
 
     def search_swap(self, idx, search_range):
         base_debate, base_panel = self.pairings[idx]
@@ -188,12 +187,13 @@ class StabPanel(object):
                     return True
         return False
 
-def test():
-    p = PanelMaker()
-    from tournaments.models import Round
-    r = Round.objects.get(pk=1)
 
+def test():
+    from tournaments.models import Round
+
+    r = Round.objects.get(pk=1)
     a = StabAllocator(r.debates(), r.active_adjudicators.all())
+
     return a.allocate()
 
 if __name__ == '__main__':

@@ -1,7 +1,8 @@
 from django.conf.urls import url
 
+from participants.models import Adjudicator, Team
+
 from . import views
-from participants.models import Team, Adjudicator
 
 urlpatterns = [
     # Overviews

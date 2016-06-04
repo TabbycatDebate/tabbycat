@@ -1,5 +1,5 @@
 from utils.tests import ConditionalTableViewTest, TestCase
-from participants.models import Speaker, Adjudicator
+from participants.models import Adjudicator, Speaker
 
 
 class PublicParticipantsViewTestCase(ConditionalTableViewTest, TestCase):

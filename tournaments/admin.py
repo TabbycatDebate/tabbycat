@@ -1,7 +1,7 @@
 from django.contrib import admin
-from django import forms
 
-from .models import Tournament, Division, Round
+from .models import Division, Round, Tournament
+
 
 # ==============================================================================
 # Tournament
@@ -13,6 +13,7 @@ class TournamentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Tournament, TournamentAdmin)
+
 
 # ==============================================================================
 # Division
@@ -26,6 +27,7 @@ class DivisionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Division, DivisionAdmin)
+
 
 # ==============================================================================
 # Round

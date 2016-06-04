@@ -22,8 +22,9 @@ teamscores_by_team = {t: [] for t in TEAMS}
 
 # Comment out this line and add a new line setting up results to use doctored
 # scores.
-results = [{debate: {team: {"score": round(random.normalvariate(75*3.5, 10)*2)/2}
-        for team in debate} for debate in rd} for rd in DRAW_FOR_WHOLE_TOURNAMENT]
+results = [{debate: {team: {"score": round(
+    random.normalvariate(75*3.5, 10)*2)/2} for team in debate} for debate in rd}
+    for rd in DRAW_FOR_WHOLE_TOURNAMENT]
 
 # For example:
 # results = [{'AB': {'A': {'score': 269.5}, 'B': {'score': 254.0}},
@@ -57,8 +58,8 @@ for team, teamscores in teamscores_by_team.items():
         "speaks_sum": sum(teamscore["score"] for teamscore in teamscores),
         "margin_sum": sum(teamscore["margin"] for teamscore in teamscores),
         "points": sum(teamscore["points"] for teamscore in teamscores),
-        "draw_strength": 0, # initialize
-        "against": dict.fromkeys([t for t in TEAMS if t is not team], "n/a"), # initialize
+        "draw_strength": 0,  # Initialize
+        "against": dict.fromkeys([t for t in TEAMS if t is not team], "n/a"),  # Initialize
     }
 
 # Build up standings metrics that require reference to opponents

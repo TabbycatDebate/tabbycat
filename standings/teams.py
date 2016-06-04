@@ -1,20 +1,20 @@
 """Standings generator for teams."""
 
-import random
 import logging
-logger = logging.getLogger(__name__)
 from itertools import groupby
 
 from django.db.models import Sum
 from django.db.models.expressions import RawSQL
 
 from participants.models import Round
-from participants.models import Team
 from results.models import TeamScore
 
-from .base import BaseStandingsGenerator, StandingsError
+from .base import BaseStandingsGenerator
 from .metrics import BaseMetricAnnotator, RepeatedMetricAnnotator, QuerySetMetricAnnotator, metricgetter
 from .ranking import BaseRankAnnotator, BasicRankAnnotator, SubrankAnnotator
+
+logger = logging.getLogger(__name__)
+
 
 # ==============================================================================
 # Metric annotators
@@ -24,15 +24,14 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations
     of TeamScore instances."""
 
-    function = None # must be set by subclasses
-    field = None # must be set by subclasses
+    function = None  # must be set by subclasses
+    field = None  # must be set by subclasses
 
     exclude_forfeits = False
     where_value = None
 
     @staticmethod
-    def get_annotation_metric_query_str(field, function, round=None,
-            exclude_forfeits=False, where_value=None):
+    def get_annotation_metric_query_str(field, function, round=None, exclude_forfeits=False, where_value=None):
         """Returns a string, being an SQL query that can be passed into RawSQL()."""
         # This is what might be more concisely expressed, if it were permissible
         # in Django, as:
@@ -84,8 +83,10 @@ class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     choice_name = "Points (2/1/0)"
 
     def annotate(self, queryset, standings, round=None):
-        wins_query = self.get_annotation_metric_query_str("win", "COUNT", round, False, "TRUE") # includes forfeits
-        losses_query = self.get_annotation_metric_query_str("win", "COUNT", round, True, "FALSE") # excludes forfeits
+        # Includes forfeits
+        wins_query = self.get_annotation_metric_query_str("win", "COUNT", round, False, "TRUE")
+        # Excludes forfeits
+        losses_query = self.get_annotation_metric_query_str("win", "COUNT", round, True, "FALSE")
         query = "({wins}) * 2 + ({losses})".format(wins=wins_query, losses=losses_query)
         sql = RawSQL(query, ())
         logger.info("Running query: " + query)
@@ -168,7 +169,7 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
 
         logger.info("Running points query for draw strength:")
         full_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
-                queryset[0].tournament.team_set.all(), "points", "points", "SUM", round)
+            queryset[0].tournament.team_set.all(), "points", "points", "SUM", round)
 
         for team in queryset:
             draw_strength = 0
@@ -214,17 +215,17 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
         equal_teams.remove(tsi)
         other = equal_teams[0]
         ts = TeamScore.objects.filter(
-                ballot_submission__confirmed=True,
-                debate_team__team=tsi.team,
-                debate_team__debate__debateteam__team=other.team)
+            ballot_submission__confirmed=True,
+            debate_team__team=tsi.team,
+            debate_team__debate__debateteam__team=other.team)
 
         if round is not None:
             ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)
 
         ts = ts.aggregate(Sum('points'))
         logger.info("who beat whom, {0} {3} vs {1} {4}: {2}".format(
-                tsi.team.short_name, other.team.short_name,
-                ts["points__sum"], key(tsi), key(other)))
+            tsi.team.short_name, other.team.short_name,
+            ts["points__sum"], key(tsi), key(other)))
         return ts
 
     def annotate(self, queryset, standings, round=None):
@@ -233,7 +234,7 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
         def who_beat_whom(tsi):
             equal_teams = [x for x in standings.infoview() if key(x) == key(tsi)]
             if len(equal_teams) != 2:
-                return "n/a" # fail fast if attempt to compare with an int
+                return "n/a"  # fail fast if attempt to compare with an int
 
             ts = self.get_team_scores(key, equal_teams, tsi, round)
             return ts["points__sum"] or 0
@@ -256,10 +257,9 @@ class DivisionsWhoBeatWhomMetricAnnotator(WhoBeatWhomMetricAnnotator):
         key = metricgetter(*self.keys)
 
         def who_beat_whom_divisions(tsi):
-            equal_teams = [x for x in standings.infoview() if key(x) == key(tsi)
-                and x.team.division == tsi.team.division]
+            equal_teams = [x for x in standings.infoview() if key(x) == key(tsi) and x.team.division == tsi.team.division]
             if len(equal_teams) != 2:
-                return 0 # fail fast if attempt to compare with an int
+                return 0  # Fail fast if attempt to compare with an int
 
             ts = self.get_team_scores(key, equal_teams, tsi, round)
             return ts["points__sum"] or 0
@@ -267,6 +267,7 @@ class DivisionsWhoBeatWhomMetricAnnotator(WhoBeatWhomMetricAnnotator):
         for tsi in standings.infoview():
             wbwd = who_beat_whom_divisions(tsi)
             tsi.add_metric(self.key, wbwd)
+
 
 # ==============================================================================
 # Ranking annotators
@@ -282,7 +283,7 @@ class DivisionRankAnnotator(BaseRankAnnotator):
         self.rank_key = metricgetter(*metrics)
 
     def annotate(self, standings):
-        division_key = lambda x: x.team.division.name
+        division_key = lambda x: x.team.division.name  # flake8: noqa
         by_division = sorted(standings, key=division_key)
         for division, division_teams in groupby(by_division, key=division_key):
             rank = 1

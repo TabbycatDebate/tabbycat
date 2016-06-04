@@ -2,16 +2,16 @@
 -r requirements_common.txt
 
 # Base Heroku Requirements (from the toolbelt)
-dj-database-url==0.3.0
-static3==0.6.1
+dj-database-url==0.4.1
+static3==0.7.0
 dj-static==0.0.6
 
 # For Mem-Caching
 # Must be in requirements.txt for memcachier to work https://www.memcachier.com/documentation#django
-pylibmc==1.5.0
+pylibmc==1.5.1
 django-pylibmc==0.6.1
 
-# For monitoring
+# For monitoring (required add-on is not added by default)
 newrelic
 
 # For emailing

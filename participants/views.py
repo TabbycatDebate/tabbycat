@@ -1,11 +1,15 @@
-import json
-from collections import OrderedDict
+from django.conf import settings
+from django.contrib import messages
 
 from django.http import JsonResponse
 from django.forms.models import modelformset_factory
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.cache import cache_page
 
-from .models import Adjudicator, Speaker, Institution, Team
 from adjallocation.models import DebateAdjudicator
+from utils.views import public_optional_tournament_view, tournament_view
+
+from .models import Adjudicator, Institution, Speaker, Team
 
 from utils.views import *
 from utils.mixins import PublicCacheMixin, VueTableMixin, HeadlessTemplateView
@@ -80,15 +84,15 @@ def public_confirm_shift_key(request, t, url_key):
     adj = get_object_or_404(Adjudicator, url_key=url_key)
     adj_debates = DebateAdjudicator.objects.filter(adjudicator=adj)
 
-    ShiftsFormset = modelformset_factory(DebateAdjudicator,
-        can_delete=False, extra=0, fields=['timing_confirmed'])
+    shifts_formset = modelformset_factory(DebateAdjudicator, can_delete=False,
+                                          extra=0, fields=['timing_confirmed'])
 
     if request.method == 'POST':
-        formset = ShiftsFormset(request.POST, request.FILES)
+        formset = shifts_formset(request.POST, request.FILES)
         if formset.is_valid():
             formset.save()
             messages.success(request, "Your shift check-ins have been saved")
     else:
-        formset = ShiftsFormset(queryset=adj_debates)
+        formset = shifts_formset(queryset=adj_debates)
 
     return render(request, 'confirm_shifts.html', dict(formset=formset, adjudicator=adj))

@@ -1,11 +1,13 @@
+import logging
+from threading import Lock
+
 from django.db import models
 from django.utils.functional import cached_property
 from django.conf import settings
-from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
-from threading import Lock
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist, ValidationError
+
 from .result import BallotSet
 
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -178,9 +180,9 @@ class BallotSubmission(Submission):
         return True
 
     # For further discussion
-    #submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
-    #submitter_email = models.EmailField(max_length=254, blank=True, null=True) # only relevant for public submissions
-    #submitter_phone = models.CharField(max_length=40, blank=True, null=True)   # only relevant for public submissions
+    # submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
+    # submitter_email = models.EmailField(max_length=254, blank=True, null=True) # only relevant for public submissions
+    # submitter_phone = models.CharField(max_length=40, blank=True, null=True)   # only relevant for public submissions
 
 
 class SpeakerScoreByAdj(models.Model):
@@ -216,7 +218,8 @@ class TeamScore(models.Model):
     win = models.NullBooleanField()
     score = ScoreField()
 
-    forfeit = models.BooleanField(default=False, blank=False, null=False,
+    forfeit = models.BooleanField(
+        default=False, blank=False, null=False,
         help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 
     class Meta:

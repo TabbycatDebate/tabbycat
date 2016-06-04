@@ -1,35 +1,39 @@
 import json
 import logging
-logger = logging.getLogger(__name__)
 from threading import Lock
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib import messages
+from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-User = get_user_model()
-import django.contrib.messages as messages
-from django.core import serializers
 from django.core.urlresolvers import reverse_lazy
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.shortcuts import redirect, render
+from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import FormView, CreateView
+from django.views.generic.edit import CreateView, FormView
 
 from draw.models import Debate, DebateTeam
-from draw.models import TeamVenuePreference, InstitutionVenuePreference
-from participants.models import Team, Institution
+from participants.models import Institution, Team
 from utils.forms import SuperuserCreationForm
 from utils.mixins import SuperuserRequiredMixin
-from utils.views import *
+from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view, tournament_view
 from utils.misc import redirect_tournament
-from venues.models import VenueGroup
+from venues.models import InstitutionVenueConstraint, TeamVenueConstraint, VenueGroup
 
 from .forms import TournamentForm
 from .mixins import TournamentMixin
-from .models import Tournament, Division
+from .models import Division, Tournament
 
-@cache_page(10) # Set slower to show new indexes so it will show new pages
+User = get_user_model()
+logger = logging.getLogger(__name__)
+
+
+@cache_page(10)  # Set slower to show new indexes so it will show new pages
 @tournament_view
 def public_index(request, t):
     return render(request, 'public_tournament_index.html')
+
 
 def index(request):
     tournaments = Tournament.objects.all()
@@ -44,9 +48,10 @@ def index(request):
     else:
         return render(request, 'site_index.html', dict(tournaments=tournaments))
 
+
 class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView):
 
-    template_name = "tournament_home.html"
+    template_name = "tournament_index.html"
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
@@ -61,7 +66,7 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
         stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
         stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
-        kwargs["stats"] = [[0,stats_confirmed], [0,stats_draft], [0,stats_none]]
+        kwargs["stats"] = [[0, stats_confirmed], [0, stats_draft], [0, stats_none]]
 
         return super().get_context_data(**kwargs)
 
@@ -69,15 +74,17 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         tournament = self.get_tournament()
         if tournament.current_round is None:
             if self.request.user.is_superuser:
-                if tournament.round_set.order_by('seq').first() is None:
-                    # Returning a non-500 response as it's a user-caused exception
-                    return HttpResponse('<p>Server Error: This tournament has no Rounds; you\'ll need to add some in the <a href="/admin/">Edit Data</a> area.</p>')
-                else:
-                    messages.warning(self.request, "The current round wasn't set, so it's been automatically set to the first round.")
-                    tournament.current_round = tournament.round_set.order_by('seq').first()
-                    logger.warning("Automatically set current round to {}".format(tournament.current_round))
-                    tournament.save()
-                    self.request.tournament = tournament # update for context processors
+                tournament.current_round = tournament.round_set.order_by('seq').first()
+                if tournament.current_round is None:
+                    return HttpResponse('<p>Error: This tournament has no rounds; '
+                                        ' you\'ll need to add some in the '
+                                        '<a href="/admin/">Edit Data</a> area.'
+                                        '</p>')
+                messages.warning(self.request, "The current round wasn't set, "
+                                 "so it's been automatically set to the first round.")
+                logger.warning("Automatically set current round to {}".format(tournament.current_round))
+                tournament.save()
+                self.request.tournament = tournament  # Update for context processors
             else:
                 raise Http404()
         return super().get(self, request, *args, **kwargs)
@@ -94,18 +101,20 @@ def public_divisions(request, t):
 
     return render(request, 'public_divisions.html', dict(venue_groups=venue_groups))
 
+
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_tournaments_all_venues(request, t):
     venues = VenueGroup.objects.all()
     return render(request, 'public_all_tournament_venues.html', dict(venues=venues))
 
+
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def all_draws_for_venue(request, t, venue_id):
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
-        'round','round__tournament','division')
+        'round', 'round__tournament', 'division')
     return render(request, 'public_all_draws_for_venue.html', dict(
         venue_group=venue_group, debates=debates))
 
@@ -122,38 +131,41 @@ def all_draws_for_institution(request, t, institution_id):
         institution=institution, debates=debates))
 
 
-
 @admin_required
 @round_view
 def round_increment_check(request, round):
-    if round != request.tournament.current_round: # doesn't make sense if not current round
+    if round != request.tournament.current_round:  # Doesn't make sense if not current round
         raise Http404()
-    num_unconfirmed = round.get_draw().filter(result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
+    num_unconfirmed = round.get_draw().filter(
+        result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
     increment_ok = num_unconfirmed == 0
-    return render(request, "round_increment_check.html", dict(num_unconfirmed=num_unconfirmed, increment_ok=increment_ok))
+    return render(request, "round_increment_check.html", dict(
+        num_unconfirmed=num_unconfirmed, increment_ok=increment_ok))
+
 
 @admin_required
 @expect_post
 @round_view
 def round_increment(request, round):
-    if round != request.tournament.current_round: # doesn't make sense if not current round
+    if round != request.tournament.current_round:  # Doesn't make sense if not current round
         raise Http404()
     request.tournament.advance_round()
-    return redirect_round('draw', request.tournament.current_round )
+    return redirect_round('draw', request.tournament.current_round)
+
 
 @admin_required
 @tournament_view
 def division_allocations(request, t):
     teams = list(Team.objects.filter(tournament=t).all().values(
-            'id', 'short_reference', 'division', 'use_institution_prefix', 'institution__code', 'institution__id'))
+        'id', 'short_reference', 'division', 'use_institution_prefix', 'institution__code', 'institution__id'))
 
     for team in teams:
         team['institutional_preferences'] = list(
-            InstitutionVenuePreference.objects.filter(
+            InstitutionVenueConstraint.objects.filter(
                 institution=team['institution__id']).values(
                     'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
         team['team_preferences'] = list(
-            TeamVenuePreference.objects.filter(
+            TeamVenueConstraint.objects.filter(
                 team=team['id']).values(
                     'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
 
@@ -172,6 +184,7 @@ def division_allocations(request, t):
     return render(request, "division_allocations.html", dict(
         teams=teams, divisions=divisions, venue_groups=venue_groups))
 
+
 @admin_required
 @tournament_view
 def create_division(request, t):
@@ -180,6 +193,7 @@ def create_division(request, t):
     division.name = "%s" % division.id
     division.save()
     return redirect_tournament('division_allocations', t)
+
 
 @admin_required
 @tournament_view
@@ -191,7 +205,7 @@ def create_byes(request, t):
         if teams_count % 2 != 0:
             bye_institution, created = Institution.objects.get_or_create(
                 name="Byes", code="Byes")
-            bye_team = Team(
+            Team(
                 institution=bye_institution,
                 reference="Bye for Division " + division.name,
                 short_reference="Bye",
@@ -202,6 +216,7 @@ def create_byes(request, t):
             ).save()
 
     return redirect_tournament('division_allocations', t)
+
 
 @admin_required
 @tournament_view
@@ -215,13 +230,16 @@ def create_division_allocation(request, t):
     # Delete all existing divisions - this shouldn't affect teams (on_delete=models.SET_NULL))
     divisions = Division.objects.filter(tournament=t).delete()
 
-    alloc = DivisionAllocator(teams=teams, divisions=divisions, venue_groups=venue_groups, tournament=t, institutions=institutions)
+    alloc = DivisionAllocator(teams=teams, divisions=divisions,
+                              venue_groups=venue_groups, tournament=t,
+                              institutions=institutions)
     success = alloc.allocate()
 
     if success:
         return redirect_tournament('division_allocations', t)
     else:
         return HttpResponseBadRequest("Couldn't create divisions")
+
 
 @admin_required
 @expect_post
@@ -237,19 +255,21 @@ def set_division_venue_group(request, t):
     division.save()
     return HttpResponse("ok")
 
+
 @admin_required
 @expect_post
 @tournament_view
 def set_team_division(request, t):
     team = Team.objects.get(pk=int(request.POST['team']))
     if request.POST['division'] == '':
-        team.division = None;
+        team.division = None
     else:
-        team.division = Division.objects.get(pk=int(request.POST['division']));
+        team.division = Division.objects.get(pk=int(request.POST['division']))
         team.save()
         print("saved divison for ", team.short_name)
 
     return HttpResponse("ok")
+
 
 @admin_required
 @expect_post
@@ -257,10 +277,10 @@ def set_team_division(request, t):
 def set_division_time(request, t):
     division = Division.objects.get(pk=int(request.POST['division']))
     if request.POST['division'] == '':
-        division = None;
+        division = None
     else:
-        division.time_slot=request.POST['time']
-        division.save();
+        division.time_slot = request.POST['time']
+        division.save()
 
     return HttpResponse("ok")
 
@@ -299,6 +319,7 @@ class BlankSiteStartView(FormView):
         messages.success(self.request, "Welcome! You've created an account for %s." % user.username)
 
         return super().form_valid(form)
+
 
 class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""

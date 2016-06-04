@@ -3,12 +3,15 @@
 from operator import itemgetter
 import random
 import logging
-logger = logging.getLogger(__name__)
 
 from .metrics import RepeatedMetricAnnotator
 
+logger = logging.getLogger(__name__)
+
+
 class StandingsError(RuntimeError):
     pass
+
 
 class StandingInfo:
     """Stores standing information for an instance of a model.
@@ -72,8 +75,7 @@ class StandingInfo:
         self.metrics = dict()
         self.rankings = dict()
 
-
-    def instance():
+    def instance(self):
         if not self._instance:
             self._instance = self.model.objects.get(id=self.instance_id)
         return self._instance
@@ -221,7 +223,7 @@ class BaseStandingsGenerator:
     DEFAULT_OPTIONS = {
         "tiebreak": "random",
         "rank_filter": None,
-        "include_filter": None, # not currently used by other code
+        "include_filter": None,  # not currently used by other code
     }
 
     TIEBREAK_FUNCTIONS = {

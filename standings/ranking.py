@@ -7,10 +7,11 @@ but there are other "types" of ranks, for example, ranks within brackets
 ("subranks") or divisions ("division ranks").
 """
 
-from .metrics import metricgetter
-from itertools import groupby
-from operator import attrgetter
 import logging
+from itertools import groupby
+
+from .metrics import metricgetter
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,9 +32,9 @@ class BaseRankAnnotator:
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
 
-    key = None # must be set by subclasses
-    name = None # must be set by subclasses
-    abbr = None # must be set by subclasses
+    key = None  # Must be set by subclasses
+    name = None  # Must be set by subclasses
+    abbr = None  # Must be set by subclasses
     glyphicon = None
 
     def run(self, standings):
@@ -86,4 +87,3 @@ class SubrankAnnotator(BaseRankAnnotator):
                 for info in subgroup:
                     info.add_ranking("subrank", (subrank, len(subgroup) > 1))
                 subrank += len(subgroup)
-

@@ -9,5 +9,7 @@ services:
   - postgresql
 install:
   - pip install -r requirements_common.txt
+before_script:
+  - flake8 .
 script:
   - dj test -v 2

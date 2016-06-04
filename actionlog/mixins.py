@@ -1,8 +1,11 @@
 from django.contrib.auth import get_user_model
-from .models import ActionLogEntry
+
 from utils.misc import get_ip_address
 
+from .models import ActionLogEntry
+
 User = get_user_model()
+
 
 class LogActionMixin:
     """Mixin for views that log an action in the action log when a form is
@@ -53,7 +56,8 @@ class LogActionMixin:
     def log_action(self):
         ip_address = get_ip_address(self.request)
         ActionLogEntry.objects.log(type=self.get_action_log_type(),
-                ip_address=ip_address, **self.get_action_log_fields())
+                                   ip_address=ip_address,
+                                   **self.get_action_log_fields())
 
     def form_valid(self, form):
         self.log_action()

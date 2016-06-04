@@ -1,10 +1,12 @@
-from .allocator import Allocator
-from .stab import StabAllocator
-from .munkres import Munkres
+import logging
 from math import exp
 from random import shuffle
-import logging
+
+from .allocator import Allocator
+from .munkres import Munkres
+
 logger = logging.getLogger(__name__)
+
 
 class HungarianAllocator(Allocator):
 
@@ -35,7 +37,7 @@ class HungarianAllocator(Allocator):
         cost += self.HISTORY_PENALTY * adj.seen_team(debate.neg_team, debate.round)
 
         impt = (debate.importance or self.DEFAULT_IMPORTANCE) + adjustment
-        diff = 5+ impt - adj.score
+        diff = 5 + impt - adj.score
         if diff > 0.25:
             cost += 100000 * exp(diff - 0.25)
 
@@ -46,13 +48,13 @@ class HungarianAllocator(Allocator):
     def allocate(self):
         from adjallocation.models import AdjudicatorAllocation
 
-        # remove trainees
+        # Remove trainees
         self.adjudicators = [a for a in self.adjudicators if a.score >= self.MIN_SCORE]
         logger.info("Have %s non-trainee adjudidcators", len(self.adjudicators))
 
-        # sort adjudicators and debates in descending score/importance
+        # Sort adjudicators and debates in descending score/importance
         self.adjudicators_sorted = list(self.adjudicators)
-        shuffle(self.adjudicators_sorted) # randomize equally-ranked judges
+        shuffle(self.adjudicators_sorted)  # Randomize equally-ranked judges
         self.adjudicators_sorted.sort(key=lambda a: a.score, reverse=True)
         self.debates_sorted = list(self.debates)
         self.debates_sorted.sort(key=lambda a: a.importance, reverse=True)
@@ -136,7 +138,7 @@ class HungarianAllocator(Allocator):
 
                     # for the top half of these debates, the final panellist
                     # can be of lower quality than the other 2
-                    if i < npan/2 and j==2:
+                    if i < npan/2 and j == 2:
                         adjustment = -1.0
                     else:
                         adjustment = 0
@@ -174,6 +176,7 @@ class HungarianAllocator(Allocator):
             logger.info("%s %s %s", a.debate, a.chair, a.panel)
 
         return alloc
+
 
 def test():
     from tournaments.models import Round

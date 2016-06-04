@@ -38,7 +38,7 @@ urlpatterns = [
 
     # Creation/Release
     url(r'^round/(?P<round_seq>\d+)/create/$',
-        views.create_draw,
+        views.CreateDrawView.as_view(),
         name='create_draw'),
     url(r'^round/(?P<round_seq>\d+)/confirm/$',
         views.confirm_draw,
@@ -67,21 +67,13 @@ urlpatterns = [
         views.save_matchups,
         name='save_matchups'),
 
-    # Venue Editing
-    url(r'^round/(?P<round_seq>\d+)/venues/$',
-        views.draw_venues_edit,
-        name='draw_venues_edit'),
-    url(r'^round/(?P<round_seq>\d+)/venues/save/$',
-        views.save_venues,
-        name='save_venues'),
-
     # Scheduling
     url(r'^round/(?P<round_seq>\d+)/schedule_debates/$',
-            views.schedule_debates,
-            name='schedule_debates'),
+        views.schedule_debates,
+        name='schedule_debates'),
     url(r'^round/(?P<round_seq>\d+)/schedule_debates/save/$',
-            views.apply_schedule,
-            name='apply_schedule'),
+        views.apply_schedule,
+        name='apply_schedule'),
     url(r'^round/(?P<round_seq>\d+)/start_time/set/$',
         views.SetRoundStartTimeView.as_view(),
         name='set_round_start_time'),

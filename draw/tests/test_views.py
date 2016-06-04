@@ -1,7 +1,5 @@
 from utils.tests import ConditionalTableViewTest, TestCase
-from django.core.urlresolvers import reverse
 
-from breakqual.models import BreakingTeam
 from tournaments.models import Round
 
 

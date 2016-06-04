@@ -19,51 +19,53 @@ if args.teams:
     teams = tm.Team.objects
 
     teams = teams.filter(
-        institution__tournament = round.tournament,
-        debateteam__debate__round__seq__lte = round.seq,
+        institution__tournament=round.tournament,
+        debateteam__debate__round__seq__lte=round.seq,
     )
 
-    #teams = teams.filter(
-        #debateteam__teamscore__ballot_submission__confirmed = True
-    #).annotate(
-        #points = models.Count('debateteam__teamscore__points'),
-        #speaker_score = models.Count('debateteam__teamscore__score'),
-    #).order_by('-points', '-speaker_score')
+    '''
+    teams = teams.filter(
+        debateteam__teamscore__ballot_submission__confirmed = True
+    ).annotate(
+        points = models.Count('debateteam__teamscore__points'),
+        speaker_score = models.Count('debateteam__teamscore__score'),
+    ).order_by('-points', '-speaker_score')
 
-    #teams = teams.annotate(
-        #points = models.Count('debateteam__teamscore__points'),
-        #speaker_score = models.Count('debateteam__teamscore__score'),
-    #)
+    teams = teams.annotate(
+        points = models.Count('debateteam__teamscore__points'),
+        speaker_score = models.Count('debateteam__teamscore__score'),
+    )
 
-    #teams = teams.order_by('-points', '-speaker_score')
+    teams = teams.order_by('-points', '-speaker_score')
 
-    # Sum the team scores for each team for which
-    #teams = teams.extra({"points": """
-        #SELECT DISTINCT SUM("points")
-        #FROM "results_teamscore"
-        #JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
-        #JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
-        #JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
-        #JOIN "tournaments_round" ON "draws_debate"."round_id" = "tournaments_round"."id"
-        #JOIN "debate_institution" ON "debate_team"."instition_id" = "debate_institution"."id"
-        #WHERE "results_ballotsubmission"."confirmed" = True
-        #AND "draws_debateteam"."team_id" = "debate_team"."id"
-        #AND "debate_institution"."tournament_id" = {tournament:d}
-        #AND "tournaments_round"."seq" <= {round:d}
-    #""".format(tournament=round.tournament.id, round=round.seq),
-    #"speaker_score": """
-        #SELECT SUM("score")
-        #FROM "results_teamscore"
-        #JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
-        #JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
-        #JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
-        #JOIN "tournaments_round" ON "draws_debate"."round_id" = "tournaments_round"."id"
-        #JOIN "debate_institution" ON "debate_team"."institution_id" = "debate_institution"."id"
-        #WHERE "results_ballotsubmission"."confirmed" = True
-        #AND "draws_debateteam"."team_id" = "debate_team"."id"
-        #AND "debate_institution"."tournament_id" = {tournament:d}
-        #AND "tournaments_round"."seq" <= {round:d}
-    #""".format(tournament=round.tournament.id, round=round.seq)}).distinct()
+    Sum the team scores for each team for which
+    teams = teams.extra({"points": """
+        SELECT DISTINCT SUM("points")
+        FROM "results_teamscore"
+        JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
+        JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
+        JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
+        JOIN "tournaments_round" ON "draws_debate"."round_id" = "tournaments_round"."id"
+        JOIN "debate_institution" ON "debate_team"."instition_id" = "debate_institution"."id"
+        WHERE "results_ballotsubmission"."confirmed" = True
+        AND "draws_debateteam"."team_id" = "debate_team"."id"
+        AND "debate_institution"."tournament_id" = {tournament:d}
+        AND "tournaments_round"."seq" <= {round:d}
+    """.format(tournament=round.tournament.id, round=round.seq),
+    "speaker_score": """
+        SELECT SUM("score")
+        FROM "results_teamscore"
+        JOIN "results_ballotsubmission" ON "results_teamscore"."ballot_submission_id" = "results_ballotsubmission"."id"
+        JOIN "draws_debateteam" ON "results_teamscore"."debate_team_id" = "draws_debateteam"."id"
+        JOIN "draws_debate" ON "draws_debateteam"."debate_id" = "draws_debate"."id"
+        JOIN "tournaments_round" ON "draws_debate"."round_id" = "tournaments_round"."id"
+        JOIN "debate_institution" ON "debate_team"."institution_id" = "debate_institution"."id"
+        WHERE "results_ballotsubmission"."confirmed" = True
+        AND "draws_debateteam"."team_id" = "debate_team"."id"
+        AND "debate_institution"."tournament_id" = {tournament:d}
+        AND "tournaments_round"."seq" <= {round:d}
+    """.format(tournament=round.tournament.id, round=round.seq)}).distinct()
+    '''
 
     EXTRA_QUERY = """
         SELECT DISTINCT SUM({field:s})
@@ -81,7 +83,7 @@ if args.teams:
         "speaker_score": EXTRA_QUERY.format(field="score", round=round.seq, affects_averages=True)}
     ).distinct().order_by("-points", "-speaker_score")
 
-    print teams.query
+    print teams.query  # flake8: noqa
     print teams.count()
 
     for team in teams:
@@ -91,13 +93,15 @@ if args.speakers:
     speakers = Speaker.objects.filter(
         team__institution__tournament=round.tournament,
         speakerscore__position__lte=round.tournament.LAST_SUBSTANTIVE_POSITION,
-        speakerscore__debate_team__debate__round__seq__lte = round.seq,
+        speakerscore__debate_team__debate__round__seq__lte=round.seq,
     )
 
     # TODO fix this, should only aggregate over confirmed ballots
-    #speakers = speakers.annotate(
-        #total = models.Sum('speakerscore__score'),
-    #).order_by('-total', 'name')
+    '''
+    speakers = speakers.annotate(
+        total = models.Sum('speakerscore__score'),
+    ).order_by('-total', 'name')
+    '''
 
     EXTRA_QUERY = """
         SELECT DISTINCT SUM("score")
@@ -111,18 +115,21 @@ if args.speakers:
         AND "debate_speakerscore"."position" <= {position:d}
         AND "tournaments_round"."seq" <= {round:d}
     """.format(
-        round = round.seq,
-        position = round.tournament.LAST_SUBSTANTIVE_POSITION
+        round=round.seq,
+        position=round.tournament.LAST_SUBSTANTIVE_POSITION
     )
     speakers = speakers.extra({"total": EXTRA_QUERY}).distinct().order_by("-total")
 
     print speakers.query
     print speakers.count()
-    #print SpeakerScore.objects.filter(
-        #ballot_submission__confirmed=True,
-        #debate_team__debate__round__seq__lte = round.seq,
-        #position__lte = round.tournament.LAST_SUBSTANTIVE_POSITION
-    #).distinct().count()
+
+    '''
+    print SpeakerScore.objects.filter(
+        ballot_submission__confirmed=True,
+        debate_team__debate__round__seq__lte = round.seq,
+        position__lte = round.tournament.LAST_SUBSTANTIVE_POSITION
+    ).distinct().count()
+    '''
 
     for speaker in speakers:
         print "{0:<30} {1:>10.2f}".format(speaker.name, speaker.total)
@@ -131,8 +138,7 @@ if args.replies:
     speakers = Speaker.objects.filter(
         team__institution__tournament=round.tournament,
         speakerscore__position=round.tournament.REPLY_POSITION,
-        speakerscore__debate_team__debate__round__seq__lte =
-        round.seq,
+        speakerscore__debate_team__debate__round__seq__lte=round.seq,
     )
 
     EXTRA_QUERY = """
@@ -148,13 +154,13 @@ if args.replies:
         AND "tournaments_round"."seq" <= {round:d}
     """
     speakers = speakers.extra({"average": EXTRA_QUERY.format(
-        aggregator = "AVG",
-        round = round.seq,
-        position = round.tournament.REPLY_POSITION
+        aggregator="AVG",
+        round=round.seq,
+        position=round.tournament.REPLY_POSITION
     ), "replies": EXTRA_QUERY.format(
-        aggregator = "COUNT",
-        round = round.seq,
-        position = round.tournament.REPLY_POSITION
+        aggregator="COUNT",
+        round=round.seq,
+        position=round.tournament.REPLY_POSITION
     )}).distinct().order_by('-average', '-replies', 'name')
 
     print speakers.query

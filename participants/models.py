@@ -1,10 +1,11 @@
-from django.db import models
-from django.utils.functional import cached_property
-from django.db.models import signals
-from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
+from django.db import models
+from django.db.models import signals
 from django.utils.functional import cached_property
+
 from tournaments.models import Round
+
 from .emoji import EMOJI_LIST
 
 
@@ -32,12 +33,10 @@ class InstitutionManager(models.Manager):
 class Institution(models.Model):
     name = models.CharField(
         max_length=100,
-        help_text=
-        "The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\"")
+        help_text="The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\"")
     code = models.CharField(
         max_length=20,
-        help_text=
-        "What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\"")
+        help_text="What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\"")
     abbreviation = models.CharField(
         max_length=8,
         default="",
@@ -72,8 +71,7 @@ class Person(models.Model):
     phone = models.CharField(max_length=40, blank=True, null=True)
     novice = models.BooleanField(
         default=False,
-        help_text=
-        "Novice status is indicated on the tab, and may have its own Break Category or Top Speakers Tab")
+        help_text="Novice status is indicated on the tab, and may have its own Break Category or Top Speakers Tab")
 
     checkin_message = models.TextField(blank=True)
     notes = models.TextField(blank=True, null=True)
@@ -89,14 +87,12 @@ class Person(models.Model):
         choices=GENDER_CHOICES,
         blank=True,
         null=True,
-        help_text=
-        "Gender is displayed in the adjudicator allocation interface, and nowhere else")
+        help_text="Gender is displayed in the adjudicator allocation interface, and nowhere else")
     pronoun = models.CharField(
         max_length=10,
         blank=True,
         null=True,
-        help_text=
-        "If printing ballots using Tabbycat there is the option to pre-print pronouns")
+        help_text="If printing ballots using Tabbycat there is the option to pre-print pronouns")
 
     @property
     def has_contact(self):
@@ -128,13 +124,11 @@ class Team(models.Model):
     reference = models.CharField(
         max_length=150,
         verbose_name="Full name or suffix",
-        help_text=
-        "Do not include institution name (see \"uses institutional prefix\" below)")
+        help_text="Do not include institution name (see \"uses institutional prefix\" below)")
     short_reference = models.CharField(
         max_length=35,
         verbose_name="Short name/suffix",
-        help_text=
-        "The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
+        help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
     emoji = models.CharField(max_length=2,
                              blank=True,
                              null=True,
@@ -148,8 +142,7 @@ class Team(models.Model):
     use_institution_prefix = models.BooleanField(
         default=False,
         verbose_name="Uses institutional prefix",
-        help_text=
-        "If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
+        help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
     url_key = models.SlugField(blank=True,
                                null=True,
                                unique=True,
@@ -378,7 +371,7 @@ class Adjudicator(Person):
         if self.tournament:
             weight = self.tournament.current_round.feedback_weight
         else:
-            weight = 1 # For shared ajudicators
+            weight = 1  # For shared ajudicators
 
         feedback_score = self._feedback_score()
         if feedback_score is None:

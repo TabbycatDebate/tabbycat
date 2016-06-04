@@ -1,11 +1,14 @@
 from django import forms
-from .models import BreakingTeam
+
 from utils.forms import OptionalChoiceField
+
+from .models import BreakingTeam
 from .breaking import get_breaking_teams
 
 # ==============================================================================
 # Break eligbility form
 # ==============================================================================
+
 
 class BreakEligibilityForm(forms.Form):
     """Sets which teams are eligible for the break."""
@@ -24,8 +27,8 @@ class BreakEligibilityForm(forms.Form):
         Team."""
         for team in self.tournament.team_set.all():
             self.fields[self._fieldname_eligibility(team)] = forms.ModelMultipleChoiceField(
-                    queryset=self.tournament.breakcategory_set.all(), widget=forms.CheckboxSelectMultiple,
-                    required=False)
+                queryset=self.tournament.breakcategory_set.all(), widget=forms.CheckboxSelectMultiple,
+                required=False)
             self.initial[self._fieldname_eligibility(team)] = team.break_categories.all()
 
     def save(self):
@@ -52,7 +55,7 @@ class BreakingTeamsForm(forms.Form):
         self._generate_standings()
 
     @staticmethod
-    def _fieldname_remark(team): # Team not BreakingTeam
+    def _fieldname_remark(team):  # Team not BreakingTeam
         return 'remark_%(team)d' % {'team': team.id}
 
     def _bt(self, team):
@@ -85,4 +88,3 @@ class BreakingTeamsForm(forms.Form):
     def team_iter(self):
         for standing in self._standings:
             yield standing, self[self._fieldname_remark(standing.team)]
-

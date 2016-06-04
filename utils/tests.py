@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.test import Client, TestCase
 
 from tournaments.models import Tournament
-from participants.models import Institution, Team, Speaker, Adjudicator
+from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
 
 
@@ -114,9 +114,9 @@ class BaseDebateTestCase(TestCase):
                     speaker = Speaker(team=t, name="Speaker%s%s%s" % (i, j, k))
                     speaker.save()
             for j in range(2):
-                a = Adjudicator(tournament=self.t, institution=ins,
-                                name="Adjudicator%s%s" % (i, j), test_score=0)
-                a.save()
+                adj = Adjudicator(tournament=self.t, institution=ins,
+                                  name="Adjudicator%s%s" % (i, j), test_score=0)
+                adj.save()
 
         for i in range(8):
             venue = Venue(name="Venue %s" % i)
@@ -126,4 +126,3 @@ class BaseDebateTestCase(TestCase):
             venue = Venue(name="IVenue %s" % i)
             venue.priority = i
             venue.save()
-

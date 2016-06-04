@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
@@ -5,7 +7,12 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist, Multiple
 from adjallocation.models import DebateAdjudicator, AdjudicatorAllocation
 from tournaments.models import SRManager
 from participants.models import Team
+from venues.conflicts import venue_conflicts
+
 from .generator import DRAW_FLAG_DESCRIPTIONS
+
+logger = logging.getLogger(__name__)
+
 
 class DebateManager(models.Manager):
     use_for_related_fields = True
@@ -34,7 +41,8 @@ class Debate(models.Model):
     bracket = models.FloatField(default=0)
     room_rank = models.IntegerField(default=0)
 
-    time = models.DateTimeField(blank=True, null=True,
+    time = models.DateTimeField(
+        blank=True, null=True,
         help_text="The time/date of a debate if it is specifically scheduled")
 
     # comma-separated list of strings
@@ -104,18 +112,6 @@ class Debate(models.Model):
         return None
 
     @cached_property
-    def draw_conflicts(self):
-        d = []
-        history = self.aff_team.seen(self.neg_team,
-                                     before_round=self.round.seq)
-        if history:
-            d.append("History conflict (%d)" % history)
-        if self.aff_team.institution == self.neg_team.institution:
-            d.append("Institution conflict")
-
-        return d
-
-    @cached_property
     def confirmed_ballot(self):
         """Returns the confirmed BallotSubmission for this debate, or None if
         there is no such ballot submission."""
@@ -161,7 +157,22 @@ class Debate(models.Model):
 
     @property
     def all_conflicts(self):
-        return self.draw_conflicts + self.adjudicator_conflicts
+        return self.draw_conflicts + self.adjudicator_conflicts + venue_conflicts(self)
+
+    @cached_property
+    def draw_conflicts(self):
+        d = []
+        history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
+        if history == 1:
+            d.append("Teams have met once")
+        elif history == 2:
+            d.append("Teams have met twice")
+        elif history > 2:
+            d.append("Teams have met %d times" % (history,))
+        if self.aff_team.institution == self.neg_team.institution:
+            d.append("Teams are from the same institution")
+
+        return d
 
     @cached_property
     def adjudicator_conflicts(self):
@@ -171,7 +182,7 @@ class Debate(models.Model):
                 self.team = team
 
             def __str__(self):
-                return 'Adj %s + %s' % (self.adj, self.team)
+                return 'Adjudicator %s conflicts with %s' % (self.adj, self.team)
 
         a = []
         for t, adj in self.adjudicators:
@@ -285,29 +296,3 @@ class TeamPositionAllocation(models.Model):
 
     class Meta:
         unique_together = [('round', 'team')]
-
-
-class TeamVenuePreference(models.Model):
-    team = models.ForeignKey('participants.Team', db_index=True)
-    venue_group = models.ForeignKey('venues.VenueGroup')
-    priority = models.IntegerField()
-
-    class Meta:
-        ordering = ['priority', ]
-
-    def __str__(self):
-        return '%s with priority %s for %s' % (self.team, self.priority,
-                                               self.venue_group)
-
-
-class InstitutionVenuePreference(models.Model):
-    institution = models.ForeignKey('participants.Institution', db_index=True)
-    venue_group = models.ForeignKey('venues.VenueGroup')
-    priority = models.IntegerField()
-
-    class Meta:
-        ordering = ['priority', ]
-
-    def __str__(self):
-        return '%s with priority %s for %s' % (self.institution, self.priority,
-                                               self.venue_group)

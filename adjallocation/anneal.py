@@ -1,7 +1,9 @@
+import math
+import random
+
 from .allocator import Allocator
 from .stab import StabAllocator
-import random
-import math
+
 
 class SAAllocator(Allocator):
     SCORE_ADJ_TEAM_CONFLICT = 10000
@@ -39,8 +41,8 @@ class SAAllocator(Allocator):
 
         self.anneal(800, 1, 1e4, self.state)
 
-        #i = 0
-        #while self.best_energy > 0 and i < self.MAX_TRIES:
+        # i = 0
+        # while self.best_energy > 0 and i < self.MAX_TRIES:
         #    self.anneal(100, 1, 1e3, self.best_state)
         #    i += 1
 
@@ -72,7 +74,7 @@ class SAAllocator(Allocator):
 
         for i in range(steps):
 
-            temp = max_temp * math.exp( tf * i/steps )
+            temp = max_temp * math.exp(tf * i/steps)
 
             diff, swap = self.candidate_swap()
             if diff < 0 or math.exp(-diff / temp) > random.random():
@@ -85,7 +87,8 @@ class SAAllocator(Allocator):
 
                     if self.energy < self.best_energy:
                         self.save_best()
-                        if self.energy == 0: break
+                        if self.energy == 0:
+                            break
 
         print("accepts", accepts, "improves", improves)
         print("end energy", self.best_energy)
@@ -94,7 +97,6 @@ class SAAllocator(Allocator):
 
     def calc_energy(self, state):
         return sum(self.score(debate, panel) for debate, panel in list(state.items()))
-
 
     def candidate_swap(self):
         meth = random.choice((self.panel_swap, self.member_swap))
@@ -151,7 +153,6 @@ class SAAllocator(Allocator):
         for debate, panel in swap:
             self.state[debate] = panel
 
-
     def score(self, debate, panel):
         score = sum(getattr(self, f)(debate, panel) for f in dir(self) if f.startswith('score_'))
         return score
@@ -174,7 +175,6 @@ class SAAllocator(Allocator):
 
         return score
 
-
     def score_adj_adj_history(self, debate, panel):
         score = 0
 
@@ -184,12 +184,12 @@ class SAAllocator(Allocator):
 
         return score
 
-
     def score_target_panel_strength(self, debate, panel):
         avg = sum(p.score for p in panel) / len(panel)
         diff = abs(debate.target_panel - avg)
 
         return self.SCORE_TARGET_PANEL * diff * debate.target_panel * avg
+
 
 def test():
     from tournaments.models import Round
@@ -202,7 +202,7 @@ def test():
     initial = StabAllocator(debates, adjs).allocate()
 
     sa = SAAllocator(debates, adjs).allocate(initial)
+    print(sa)
 
 if __name__ == '__main__':
     test()
-

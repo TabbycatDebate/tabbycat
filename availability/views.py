@@ -1,10 +1,10 @@
 from tournaments.models import Round
-from participants.models import Person, Adjudicator
-from venues.models import Venue
+from participants.models import Person
 from actionlog.models import ActionLogEntry
 from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
 
-from utils.views import *
+from utils.views import admin_required, expect_post, round_view, redirect_round, public_optional_round_view, public_optional_tournament_view, tournament_view
+
 
 @admin_required
 @round_view
@@ -22,12 +22,12 @@ def availability_index(request, round):
         'total'     : t.teams.count(),
         'in_now'    : ActiveTeam.objects.filter(round=round).count(),
         'in_before' : ActiveTeam.objects.filter(round=round.prev).count() if round.prev else None,
-    },{
+    }, {
         'type'      : "Adjudicator",
         'total'     : round.tournament.adjudicator_set.count(),
         'in_now'    : ActiveAdjudicator.objects.filter(round=round).count(),
         'in_before' : ActiveAdjudicator.objects.filter(round=round.prev).count() if round.prev else None,
-    },{
+    }, {
         'type'      : "Venue",
         'total'     : round.tournament.venue_set.count(),
         'in_now'    : ActiveVenue.objects.filter(round=round).count(),
@@ -52,9 +52,10 @@ def availability_index(request, round):
 @round_view
 def update_availability_all(request, round):
     round.activate_all()
-    messages.add_message(request, messages.SUCCESS,
-        'Checked in all teams, adjudicators, and venues')
+    messages.add_message(
+        request, messages.SUCCESS, 'Checked in all teams, adjudicators, and venues')
     return redirect_round('availability_index', round)
+
 
 @admin_required
 @round_view
@@ -69,8 +70,8 @@ def update_availability_previous(request, round):
 @round_view
 def update_availability_breaking_adjs(request, round):
     round.activate_all_breaking_adjs()
-    messages.add_message(request, messages.SUCCESS,
-        'Checked in all breaking adjudicators')
+    messages.add_message(
+        request, messages.SUCCESS, 'Checked in all breaking adjudicators')
     return redirect_round('availability_index', round)
 
 
@@ -78,8 +79,8 @@ def update_availability_breaking_adjs(request, round):
 @round_view
 def update_availability_breaking_teams(request, round):
     round.activate_all_breaking_teams()
-    messages.add_message(request, messages.SUCCESS,
-        'Checked in all breaking teams')
+    messages.add_message(
+        request, messages.SUCCESS, 'Checked in all breaking teams')
     return redirect_round('availability_index', round)
 
 
@@ -91,12 +92,14 @@ def update_availability_advancing_teams(request, round):
         'Checked in all advancing teams')
     return redirect_round('availability_index', round)
 
+
 def _availability(request, round, model, context_name):
     items = getattr(round, '%s_availability' % model)()
-    context = { context_name: items }
+    context = {context_name: items}
     return render(request, '%s_availability.html' % model, context)
 
-# public (for barcode checkins)
+
+# Public (for barcode checkins)
 @round_view
 def checkin(request, round):
     context = {}
@@ -106,8 +109,8 @@ def checkin(request, round):
             barcode_id = int(v)
             p = Person.objects.get(barcode_id=barcode_id)
             ch, created = Checkin.objects.get_or_create(
-                person = p,
-                round = round
+                person=p,
+                round=round
             )
             context['person'] = p
 
@@ -116,8 +119,8 @@ def checkin(request, round):
 
     return render(request, 'person_checkin.html', context)
 
+
 # public (for barcode checkins)
-# public
 @round_view
 def post_checkin(request, round):
     v = request.POST.get('barcode_id')
@@ -125,8 +128,8 @@ def post_checkin(request, round):
         barcode_id = int(v)
         p = Person.objects.get(barcode_id=barcode_id)
         ch, created = Checkin.objects.get_or_create(
-            person = p,
-            round = round
+            person=p,
+            round=round
         )
 
         message = p.checkin_message
@@ -143,10 +146,12 @@ def post_checkin(request, round):
 def checkin_results(request, round, model, context_name):
     return _availability(request, round, model, context_name)
 
+
 @admin_required
 @round_view
 def availability(request, round, model, context_name):
     return _availability(request, round, model, context_name)
+
 
 def _update_availability(request, round, update_method, active_model, active_attr):
     if request.POST.get('copy'):
@@ -171,16 +176,18 @@ def _update_availability(request, round, update_method, active_model, active_att
         ActiveAdjudicator: ActionLogEntry.ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE,
     }
     if active_model in ACTION_TYPES:
-        ActionLogEntry.objects.log(type=ACTION_TYPES[active_model],
+        ActionLogEntry.objects.log(type=ACTION_TYPES[active_model],  # flake8: noqa
             user=request.user, round=round, tournament=round.tournament)
 
     return HttpResponse("ok")
+
 
 @admin_required
 @expect_post
 @round_view
 def update_availability(request, round, update_method, active_model, active_attr):
     return _update_availability(request, round, update_method, active_model, active_attr)
+
 
 @expect_post
 @round_view

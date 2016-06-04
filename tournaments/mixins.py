@@ -1,12 +1,15 @@
 import logging
-logger = logging.getLogger(__name__)
 
 from django.core.cache import cache
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 from utils.misc import redirect_tournament
 
-from .models import Tournament, Round
+from .models import Round, Tournament
+
+logger = logging.getLogger(__name__)
+
 
 class TournamentMixin:
     """Mixin for views that relate to a tournament, and are specified as

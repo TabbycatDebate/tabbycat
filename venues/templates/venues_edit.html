@@ -10,6 +10,12 @@
 {% block page-subnav-sections %}
   {% include "tables/table_search.html" %}
   <a class="btn btn-success" id="save">Save Venues</a>
+  <form id="autoallocateForm" method="POST" action="{% round_url venues-auto-allocate %}">
+    {% csrf_token %}
+    <button class="btn btn-primary submit-disable" type="submit">
+      Auto Allocate
+    </button>
+  </form>
   <a class="btn btn-danger" href="{% round_url draw %}">Quit</a>
 {% endblock %}
 
@@ -173,7 +179,7 @@
       btn.attr("disabled", true);
       $.ajax( {
         type: "POST",
-        url: "{% round_url save_venues %}",
+        url: "{% round_url venues-save %}",
         data: debates,
         success: function(data, status) {
           btn.attr("disabled", false);

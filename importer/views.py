@@ -1,10 +1,8 @@
-from utils.views import *
+from django.shortcuts import render
 
-from . import forms
-
-from participants.models import Adjudicator, Institution, Team, Speaker
-from venues.models import Venue, VenueGroup
-from draw.models import InstitutionVenuePreference
+from participants.models import Adjudicator, Institution, Speaker, Team
+from utils.views import admin_required, expect_post, tournament_view
+from venues.models import InstitutionVenueConstraint, Venue, VenueGroup
 
 
 @admin_required
@@ -13,12 +11,13 @@ def data_index(request, t):
     return render(request, 'data_index.html')
 
 
-# INSTITUTIONS
+# ==============================================================================
+# Institutions
+# ==============================================================================
 
 @admin_required
 @tournament_view
 def add_institutions(request, t):
-    form = forms.AddInstitutionsForm
     return render(request, 'add_institutions.html')
 
 
@@ -61,13 +60,16 @@ def confirm_institutions(request, t):
     confirmed = {"kind": "Institutions", "quantity": len(institution_names)}
     return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
-# VENUES
+
+# ==============================================================================
+# Venues
+# ==============================================================================
 
 @admin_required
 @tournament_view
 def add_venues(request, t):
-    form = forms.AddVenuesForm
     return render(request, 'add_venues.html')
+
 
 @admin_required
 @expect_post
@@ -111,7 +113,7 @@ def confirm_venues(request, t):
                     venue_group = VenueGroup.objects.get(name=venue_groups[i])
                 except VenueGroup.DoesNotExist:
                     venue_group = VenueGroup(name=venue_groups[i],
-                        short_name=venue_groups[i][:15]).save()
+                                             short_name=venue_groups[i][:15]).save()
         else:
             venue_group = None
 
@@ -127,7 +129,10 @@ def confirm_venues(request, t):
     confirmed = {"kind": "Venues", "quantity": len(venue_names)}
     return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
-# VENUE PREFERENCES
+
+# ==============================================================================
+# Venue Preferences
+# ==============================================================================
 
 @admin_required
 @tournament_view
@@ -160,10 +165,9 @@ def edit_venue_preferences(request, t):
 @tournament_view
 def confirm_venue_preferences(request, t):
 
-    institutions = []
     for institution_id in request.POST.getlist('institutionIDs'):
         institution = Institution.objects.get(pk=institution_id)
-        InstitutionVenuePreference.objects.filter(
+        InstitutionVenueConstraint.objects.filter(
             institution=institution).delete()
 
     venue_priorities = request.POST.dict()
@@ -179,7 +183,7 @@ def confirm_venue_preferences(request, t):
             # print('making a pref')
             institution = Institution.objects.get(pk=int(institution_id))
             venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
-            venue_preference = InstitutionVenuePreference(
+            venue_preference = InstitutionVenueConstraint(
                 institution=institution,
                 priority=priority,
                 venue_group=venue_group)
@@ -189,14 +193,15 @@ def confirm_venue_preferences(request, t):
     confirmed = {"kind": "Venue Preferences", "quantity": created_preferences}
     return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
-# TEAMS
 
+# ==============================================================================
+# Teams
+# ==============================================================================
 
 @admin_required
 @tournament_view
 def add_teams(request, t):
     institutions = Institution.objects.all()
-    form = forms.AddTeamsForm
     return render(request, 'add_teams.html', dict(institutions=institutions))
 
 
@@ -209,7 +214,8 @@ def edit_teams(request, t):
     # Set default speaker text to match tournament setup
     default_speakers = ""
     for i in range(1, t.pref('substantive_speakers') + 1):
-        if i > 1: default_speakers += ","
+        if i > 1:
+            default_speakers += ","
         default_speakers += "Speaker %s" % i
 
     for name, quantity in request.POST.items():
@@ -277,17 +283,16 @@ def confirm_teams(request, t):
     confirmed = {"kind": "Teams", "quantity": int((len(sorted_post) - 1) / 4)}
     return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
-# ADJUDICATORS
 
+# ==============================================================================
+# Adjudicators
+# ==============================================================================
 
 @admin_required
 @tournament_view
 def add_adjudicators(request, t):
     institutions = Institution.objects.all()
-    form = forms.AddAdjudicatorsForm
-    return render(request,
-                  'add_adjudicators.html',
-                  dict(institutions=institutions))
+    return render(request, 'add_adjudicators.html', dict(institutions=institutions))
 
 
 @admin_required

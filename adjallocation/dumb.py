@@ -1,5 +1,6 @@
 from .allocator import Allocator
 
+
 class DumbAllocator(Allocator):
     def allocate(self):
         from adjallocation.models import AdjudicatorAllocation

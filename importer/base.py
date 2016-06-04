@@ -13,10 +13,11 @@ from participants.models import Team
 from participants.emoji import EMOJI_LIST
 
 NON_FIELD_ERRORS = '__all__'
-DUPLICATE_INFO = 19 # logging level just below INFO
+DUPLICATE_INFO = 19  # Logging level just below INFO
 logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
 
-def make_interpreter(DELETE=[], **kwargs):
+
+def make_interpreter(DELETE=[], **kwargs):  # flake8: noqa
     """Convenience function for building an interpreter."""
     def interpreter(line):
         # remove blank and unwanted values
@@ -33,6 +34,7 @@ def make_interpreter(DELETE=[], **kwargs):
         return line
     return interpreter
 
+
 def make_lookup(name, choices):
     def lookup(val):
         for k, v in choices.items():
@@ -44,6 +46,7 @@ def make_lookup(name, choices):
 
 class TournamentDataImporterFatal(Exception):
     pass
+
 
 class TournamentDataImporterError(Exception):
     """Inspired by Django's ValidationError, but adapted for the importer's
@@ -95,7 +98,7 @@ class TournamentDataImporterError(Exception):
             for error in ve.error_list:
                 self.add(lineno, model, "; ".join(error), NON_FIELD_ERRORS)
         else:
-            message = "Model validation failed: "+ str(ve)
+            message = "Model validation failed: " + str(ve)
             self.add(lineno, model, message, NON_FIELD_ERRORS)
 
     def update(self, tdie):

@@ -1,5 +1,6 @@
 from utils.tests import BaseDebateTestCase
-from participants.models import Institution, Adjudicator
+
+from ..models import Adjudicator, Institution
 
 
 class TestInstitution(BaseDebateTestCase):

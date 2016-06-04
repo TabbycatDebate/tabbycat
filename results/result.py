@@ -1,11 +1,15 @@
 from functools import wraps
 from statistics import mean
+
 from django.core.exceptions import ObjectDoesNotExist
+
 from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
 
+
 class ResultError(RuntimeError):
     pass
+
 
 class Scoresheet(object):
     """Representation of a single adjudicator's scoresheet in a single ballot
@@ -55,8 +59,7 @@ class Scoresheet(object):
 
     @property
     def is_complete(self):
-        return all(all(self.data[dt][p] is not None for p in self.POSITIONS) \
-                for dt in self.dts)
+        return all(all(self.data[dt][p] is not None for p in self.POSITIONS) for dt in self.dts)
 
     def save(self):
         """Saves the information in this instance to the database."""
@@ -69,7 +72,7 @@ class Scoresheet(object):
         """Loads the scores for the given DebateTeam from the database into the
         buffer."""
         scores = self.ballotsub.speakerscorebyadj_set.filter(
-                debate_adjudicator=self.da, debate_team=dt)
+            debate_adjudicator=self.da, debate_team=dt)
         for ss in scores:
             self._set_score(dt, ss.position, ss.score)
 
@@ -127,7 +130,7 @@ class Scoresheet(object):
         incomplete or if it is a draw."""
         if not self.is_complete:
             return None
-        dts = list(self.dts) # fix order for loops
+        dts = list(self.dts)  # fix order for loops
         totals = [self._get_total(dt) for dt in dts]
         max_total = max(totals)
         if totals.count(max_total) > 1:
@@ -135,7 +138,7 @@ class Scoresheet(object):
         for dt, total in zip(dts, totals):
             if total == max_total:
                 return dt
-        raise RuntimeError("Unexpected error") # this should never happen
+        raise RuntimeError("Unexpected error")  # this should never happen
 
     # --------------------------------------------------------------------------
     # Side-specific methods
@@ -178,7 +181,6 @@ class BallotSet(object):
       - Calculates the majority-average speaker scores.
     """
 
-
     def __init__(self, ballotsub):
         """Constructor.
         'ballotsub' must be a BallotSubmission.
@@ -186,7 +188,7 @@ class BallotSet(object):
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
         self.adjudicators = self.debate.adjudicators.list
-        self.dts = self.debate.debateteam_set.all() # note, this is a QuerySet
+        self.dts = self.debate.debateteam_set.all()  # Note, this is a QuerySet
         assert self.dts.count() == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
 
         self.SIDES = (DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE)
@@ -226,7 +228,7 @@ class BallotSet(object):
     def adjudicator_sheets(self):
         if self._adjudicator_sheets is None:
             self._adjudicator_sheets = {a: Scoresheet(self.ballotsub, a)
-                    for a in self.adjudicators}
+                for a in self.adjudicators}
             self._sheets_created = True
         return self._adjudicator_sheets
 
@@ -237,7 +239,7 @@ class BallotSet(object):
     def save(self):
         assert self.is_complete, "Tried to save ballot set when it is incomplete"
 
-        self.ballotsub.save() # need BallotSubmission object to exist first
+        self.ballotsub.save()  # need BallotSubmission object to exist first
         for sheet in self.adjudicator_sheets.values():
             sheet.save()
         self._calc_decision()
@@ -259,7 +261,7 @@ class BallotSet(object):
 
         try:
             dtmp = self.ballotsub.debateteammotionpreference_set.get(
-                    debate_team=dt, preference=3)
+                debate_team=dt, preference=3)
             self.motion_veto[dt] = dtmp.motion
         except ObjectDoesNotExist:
             self.motion_veto[dt] = None
@@ -273,20 +275,20 @@ class BallotSet(object):
         margin = self._get_margin(dt)
         self.ballotsub.teamscore_set.filter(debate_team=dt).delete()
         self.ballotsub.teamscore_set.create(debate_team=dt, score=total,
-                points=points, win=win, margin=margin)
+            points=points, win=win, margin=margin)
 
         self.ballotsub.speakerscore_set.filter(debate_team=dt).delete()
         for pos in self.POSITIONS:
             speaker = self.speakers[dt][pos]
             score = self._get_avg_score(dt, pos)
             self.ballotsub.speakerscore_set.create(debate_team=dt,
-                    speaker=speaker, score=score, position=pos)
+                speaker=speaker, score=score, position=pos)
 
         self.ballotsub.debateteammotionpreference_set.filter(debate_team=dt,
                 preference=3).delete()
         if self.motion_veto[dt] is not None:
             self.ballotsub.debateteammotionpreference_set.create(debate_team=dt,
-                    preference=3, motion=self.motion_veto[dt])
+                preference=3, motion=self.motion_veto[dt])
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval (speakers and per-adjudicator scores)
@@ -409,7 +411,7 @@ class BallotSet(object):
 
         self._decision_calculated = True
 
-    def _requires_decision(default):
+    def _requires_decision(default): # flake8: noqa
         def wrap(func):
             @wraps(func)
             def wrapped(self, *args, **kwargs):
@@ -445,7 +447,6 @@ class BallotSet(object):
 
     def _dissenting_inclusive_score(self, dt):
         return mean(self.adjudicator_sheets[adj]._get_total(dt) for adj in self.adjudicators)
-
 
     # Abstracted to not be tied to wins
     def _get_points(self, dt):
@@ -569,8 +570,8 @@ class BallotSet(object):
                 print pos.name, pos.speaker, pos.score
             print sheet.neg_score, sheet.neg_win
         """
-        REPLY_POSITION = self.debate.round.tournament.REPLY_POSITION
-        POSITIONS = self.debate.round.tournament.POSITIONS
+        reply_position = self.debate.round.tournament.REPLY_POSITION
+        positions = self.debate.round.tournament.POSITIONS
         ballotset = self # provide access in inner classes
 
         class Position(object):
@@ -582,7 +583,7 @@ class BallotSet(object):
 
             @property
             def name(self):
-                return "Reply" if (self.pos == REPLY_POSITION) else str(self.pos)
+                return "Reply" if (self.pos == reply_position) else str(self.pos)
 
             @property
             def speaker(self):
@@ -599,7 +600,7 @@ class BallotSet(object):
                 self.adjudicator = adj
 
             def position_iter(self, side):
-                for pos in POSITIONS:
+                for pos in positions:
                     yield Position(self.sheet, side, pos)
 
             @property
@@ -642,7 +643,7 @@ class ForfeitBallotSet(BallotSet):
         self.adjudicators = self.debate.adjudicators.list
         self.forfeiter = forfeiter
         self.motion_veto = None
-        self.dts = self.debate.debateteam_set.all() # note, this is a QuerySet
+        self.dts = self.debate.debateteam_set.all() # Note, this is a QuerySet
 
     def _save_team(self, dt):
         if self.forfeiter == dt:
