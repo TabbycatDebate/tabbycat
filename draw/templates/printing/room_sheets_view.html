@@ -31,7 +31,18 @@
               </li>
             {% endfor %}
             <li class="list-group-item">
-              {{ debate.time|time:"H:i" }}
+              {% if debate.confirmed_ballot.forfeit %}
+                <del>{{ debate.time|time:"H:i" }}</del>
+                {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
+                  (Forfeit by Aff)
+                {% else %}
+                  (Forfeit by Neg)
+                {% endif %}
+              {% elif debate.time %}
+                {{ debate.time|time:"H:i" }}
+              {% else %}
+                (No time set)
+              {% endif %}
             </li>
             <li class="list-group-item">
               <strong>Affirmative</strong>: {{ debate.aff_team.short_name }}

@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% load add_field_css %}
 
-{% block head-title %}<span class="emoji">🏆</span> Create New Tournament{% endblock %}
+{% block head-title %}<span class="emoji">🏆</span>Create New Tournament{% endblock %}
 {% block page-title %}Tabbycat{% endblock %}
 
 {% block nav %}<div class="col-md-12">{% endblock %}
 
 {% block content %}
 
-  <form action="." method="POST" class="form-horizontal">
+<div class="panel panel-default"><div class="panel-body">
+
+  <form action="." method="POST" class="">
 
     {% csrf_token %}
 
@@ -21,30 +23,32 @@
 
     {% for field in form %}
     <div class="form-group">
-      <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
-      <div class="col-md-2">
-        {{ field|addcss:"form-control" }}
-      </div>
-      <div class="col-sm-5">
-        <span class="help-block">
-          {{ field.help_text }}
-        </span>
-        {% if field.errors %}
-          {{ field.errors }}
-        {% endif %}
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+          {{ field|addcss:"form-control" }}
+        </div>
+        <div class="col-sm-6">
+          <label></label>
+          <span class="help-block">
+            {{ field.help_text }}
+          </span>
+          {% if field.errors %}
+            {{ field.errors }}
+          {% endif %}
+        </div>
       </div>
     </div>
     {% endfor %}
 
     <div class="form-group">
-      <div class="col-md-offset-2 col-md-2 col-sm-4">
-        <button type="submit" class="btn btn-success form-control submit-disable" data-loading-text="Creating tournament…">
-          Create tournament
-        </button>
-      </div>
+      <button type="submit" class="btn btn-block btn-success form-control submit-disable" data-loading-text="Creating tournament…">
+        Create tournament
+      </button>
     </div>
 
   </form>
 
-{% endblock %}
+</div></div>
 
+{% endblock %}

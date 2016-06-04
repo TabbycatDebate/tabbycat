@@ -1,10 +1,10 @@
-from utils.management.base import RoundCommand, CommandError
-from ...dbutils import add_feedback, add_feedback_to_round, delete_all_feedback_for_round, delete_feedback
-
 from django.contrib.auth import get_user_model
-from tournaments.models import Round
-from draw.models import Debate
+
 from adjfeedback.models import AdjudicatorFeedback
+from draw.models import Debate
+from utils.management.base import CommandError, RoundCommand
+
+from ...dbutils import add_feedback, add_feedback_to_round, delete_all_feedback_for_round, delete_feedback
 
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {
@@ -13,6 +13,7 @@ SUBMITTER_TYPE_MAP = {
 }
 User = get_user_model()
 
+
 class Command(RoundCommand):
 
     help = "Adds randomly-generated feedback to the database"
@@ -20,17 +21,32 @@ class Command(RoundCommand):
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
-        parser.add_argument("--debates", type=int, nargs="+", help="IDs of specific debates to add feedback to. Done in addition to rounds, if any.", default=[])
-        parser.add_argument("-p", "--probability", type=float, help="Probability with which to add feedback", default=1.0)
-        parser.add_argument("-T", "--submitter-type", type=str, help="Submitter type, either 'tabroom' or 'public'", choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
-        parser.add_argument("-u", "--user", type=str, help="Username of submitter", default="random")
+        parser.add_argument("--debates", type=int, nargs="+",
+                            help="IDs of specific debates to add feedback to. "
+                            "Done in addition to rounds, if any.",
+                            default=[])
+        parser.add_argument("-p", "--probability", type=float,
+                            help="Probability with which to add feedback",
+                            default=1.0)
+        parser.add_argument("-T", "--submitter-type", type=str,
+                            help="Submitter type, either 'tabroom' or 'public'",
+                            choices=list(SUBMITTER_TYPE_MAP.keys()),
+                            default="tabroom")
+        parser.add_argument("-u", "--user", type=str,
+                            help="Username of submitter", default="random")
 
         status = parser.add_mutually_exclusive_group()
-        status.add_argument("-D", "--discarded", action="store_true", help="Make feedback discarded")
-        status.add_argument("-c", "--confirmed", action="store_true", help="Make feedback confirmed")
+        status.add_argument("-D", "--discarded", action="store_true",
+                            help="Make feedback discarded")
+        status.add_argument("-c", "--confirmed", action="store_true",
+                            help="Make feedback confirmed")
 
-        parser.add_argument("--clean", help="Remove all associated feedback first", action="store_true")
-        parser.add_argument("--create-user", help="Create user if it doesn't exist", action="store_true")
+        parser.add_argument("--clean",
+                            help="Remove all associated feedback first",
+                            action="store_true")
+        parser.add_argument("--create-user",
+                            help="Create user if it doesn't exist",
+                            action="store_true")
 
     @staticmethod
     def _get_user(options):
@@ -58,14 +74,17 @@ class Command(RoundCommand):
         if not self.get_rounds(options) and not options["debates"]:
             raise CommandError("No rounds or debates were given. (Use --help for more info.)")
 
-        super(Command, self).handle(*args, **options) # handles rounds
+        super(Command, self).handle(*args, **options)  # Handles rounds
 
         for tournament in self.get_tournaments(options):
             for debate_id in options["debates"]:
                 try:
                     debate = Debate.objects.get(round__tournament=tournament, id=debate_id)
                 except Debate.DoesNotExist:
-                    self.stdout.write(self.style.WARNING("Warning: There is no debate with id {:d} for tournament {!r}, skipping".format(debate_id, tournament.slug)))
+                    self.stdout.write(
+                        self.style.WARNING("Warning: There is no debate with "
+                                           "id {:d} for tournament {!r}, "
+                                           "skipping".format(debate_id, tournament.slug)))
                 self.handle_debate(debate, **options)
 
     def handle_round(self, round, **options):
@@ -89,4 +108,3 @@ class Command(RoundCommand):
             add_feedback(debate, **self.feedback_kwargs(options))
         except ValueError as e:
             raise CommandError(e)
-

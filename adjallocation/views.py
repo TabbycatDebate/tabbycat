@@ -1,19 +1,23 @@
 import json
 import logging
-logger = logging.getLogger(__name__)
 
+from django.db.utils import IntegrityError
 from django.views.generic.base import View
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render
+
 from actionlog.models import ActionLogEntry
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
-
 from tournaments.mixins import RoundMixin
 from utils.mixins import SuperuserRequiredMixin
+from utils.views import admin_required, expect_post, round_view
 
+from .allocator import allocate_adjudicators
+from .hungarian import HungarianAllocator
+from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 
-from .models import AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, AdjudicatorAdjudicatorConflict, DebateAdjudicator
-
-from utils.views import *
+logger = logging.getLogger(__name__)
 
 
 @admin_required
@@ -26,8 +30,7 @@ def create_adj_allocation(request, round):
     if round.draw_status != round.STATUS_CONFIRMED:
         return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
 
-    from adjallocation.hungarian import HungarianAllocator
-    round.allocate_adjudicators(HungarianAllocator)
+    allocate_adjudicators(round, HungarianAllocator)
 
     return _json_adj_allocation(round.get_draw(), round.unused_adjudicators())
 
@@ -85,10 +88,11 @@ def draw_adjudicators_edit(request, round):
         'seq').exclude(is_general=True)
     colors = ["#C70062", "#00C79B", "#B1E001", "#476C5E",
               "#777", "#FF2983", "#6A268C", "#00C0CF", "#0051CF"]
-    context['regions'] = list(zip(regions, colors + ["black"]
-                             * (len(regions) - len(colors))))
+    context['regions'] = list(zip(regions, colors + ["black"] * (len(regions) -
+                                                                 len(colors))))
     context['break_categories'] = list(zip(
-        break_categories, colors + ["black"] * (len(break_categories) - len(colors))))
+        break_categories, colors + ["black"] * (len(break_categories) -
+                                                len(colors))))
 
     return render(request, "draw_adjudicators_edit.html", context)
 
@@ -157,7 +161,7 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
             adjs = [Adjudicator.objects.get(id=int(x)) for x in values]
             if key.startswith("chair_"):
                 if len(adjs) > 1:
-                    logger.warning("There was more than one chair for debate {}, only saving the first".format(allocation.debate))
+                    logger.warning("There was more than one chair for debate {}, only saving the first".format(alloc.debate))
                 alloc.chair = adjs[0]
             elif key.startswith("panel_"):
                 alloc.panel.extend(adjs)
@@ -173,7 +177,12 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
                 logger.info("Saving adjudicators for debate {}".format(debate))
                 logger.info("{} --> {}".format(existing, revised))
                 existing.delete()
-                revised.save()
+                try:
+                    revised.save()
+                except IntegrityError:
+                    return HttpResponseBadRequest("""An adjudicator
+                        was allocated to the same debate multiple times. Please
+                        remove them and re-save.""")
 
         if not changed:
             logger.warning("Didn't save any adjudicator allocations, nothing changed.")
@@ -220,10 +229,10 @@ def adj_conflicts(request, round):
         try:
             add('history', da.adjudicator_id, da.debate.aff_team.id)
         except DebateTeam.DoesNotExist:
-            pass # For when a Debate/DebateTeam may have been deleted
+            pass  # For when a Debate/DebateTeam may have been deleted
         try:
             add('history', da.adjudicator_id, da.debate.neg_team.id)
         except DebateTeam.DoesNotExist:
-            pass # For when a Debate/DebateTeam may have been deleted
+            pass  # For when a Debate/DebateTeam may have been deleted
 
     return HttpResponse(json.dumps(data), content_type="text/json")

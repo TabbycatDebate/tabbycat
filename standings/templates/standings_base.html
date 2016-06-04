@@ -1,0 +1,41 @@
+{% extends "base_vue_table.html" %}
+{% load debate_tags %}
+
+{% block page-subnav-sections %}
+
+  <a class="btn btn-default {% block standings_active %}{% endblock %}" href="{% round_url standings-index current_round %}">
+    Standings Overview
+  </a>
+  <a class="btn btn-default {% block team_active %}{% endblock %}" href="{% round_url standings-team current_round %}">
+    Team Standings
+  </a>
+  {% if pref.enable_divisions %}
+  <a class="btn btn-default {% block division_active %}{% endblock %}" href="{% round_url standings-division current_round %}">
+    Division Standings
+  </a>
+  {% endif %}
+  <a class="btn btn-default {% block speaker_active %}{% endblock %}" href="{% round_url standings-speaker current_round %}">
+    Speaker Standings
+  </a>
+  {% if pref.show_novices %}
+    <a class="btn btn-default {% block pros_active %}{% endblock %}" href="{% round_url standings-pro current_round %}">
+      Pros Standings
+    </a>
+    <a class="btn btn-default {% block novices_active %}{% endblock %}" href="{% round_url standings-novice current_round %}">
+      Novices Standings
+    </a>
+  {% endif %}
+  {% if pref.reply_scores_enabled %}
+    <a class="btn btn-default {% block replies_active %}{% endblock %}" href="{% round_url standings-reply current_round %}">
+      Replies Standings
+    </a>
+  {% endif %}
+  <a class="btn btn-default {% block motion_active %}{% endblock %}" href="{% round_url standings-motion current_round %}">
+    Motion Balance
+  </a>
+  <a class="btn btn-default {% block motion_active %}{% endblock %}" href="{% round_url standings-diversity current_round %}">
+    Diversity
+  </a>
+  {% include "tables/table_search.html" %}
+
+{% endblock %}

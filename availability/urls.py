@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from . import views
-from .models import ActiveTeam, ActiveVenue, ActiveAdjudicator
+from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
 
 urlpatterns = [
 
@@ -43,6 +43,12 @@ urlpatterns = [
          'active_model': ActiveTeam,
          'update_method': 'set_available_teams'},
         name='update_team_availability'),
+    url(r'teams/update/breaking/$',
+        views.update_availability_breaking_teams,
+        name='update_availability_breaking_teams'),
+    url(r'teams/update/advancing/$',
+        views.update_availability_advancing_teams,
+        name='update_availability_advancing_teams'),
 
     # Venues
     url(r'venues/$', views.availability, {'model': 'venue',
@@ -67,4 +73,7 @@ urlpatterns = [
          'active_model': ActiveAdjudicator,
          'update_method': 'set_available_adjudicators'},
         name='update_adjudicator_availability'),
+    url(r'adjudicators/update/breaking/$',
+        views.update_availability_breaking_adjs,
+        name='update_availability_breaking_adjs'),
 ]

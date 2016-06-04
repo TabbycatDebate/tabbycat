@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block page-subnav-sections %}
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="panel panel-default">
+    <div class="panel-body" id="tableContainer">
+      <smart-table
+        :data="gridData"
+        :filter-key="searchQuery">
+      </smart-table>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block extra-js %}
+  {{ block.super }}
+  {% include "vue/table.vue" %}
+  <script>
+    var fromTeamsTable = new Vue({
+      el: '#tableContainer',
+      data: {
+        searchQuery: '',
+        gridData: {{ tableData|safe }},
+      },
+      ready: function() {
+        var thisTable = this; // this in the next context is the element
+        document.getElementById('table-search').onkeyup = function (e) {
+          thisTable.$set('searchQuery', this.value);
+        }
+      },
+    });
+  </script>
+{% endblock extra-js %}

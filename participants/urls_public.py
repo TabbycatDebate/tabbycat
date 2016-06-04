@@ -1,10 +1,10 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
 from . import views
 
 urlpatterns = [
     url(r'^list/$',
-        views.public_participants,
+        views.PublicParticipants.as_view(),
         name='public_participants'),
     url(r'^team_list/(?P<team_id>\d+)/$',
         views.team_speakers,

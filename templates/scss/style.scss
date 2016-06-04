@@ -1,0 +1,342 @@
+//------------------------------------------------------------------------------
+// Bootstrap
+//------------------------------------------------------------------------------
+
+// Our overrides
+@import 'partials/variables';
+// Core variables and mixins
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/mixins';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables';
+// Reset
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/normalize';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/print';
+// Core CSS
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/type';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/code';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/grid';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/tables';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/forms';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/buttons';
+// Components
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/component-animations';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/glyphicons';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/dropdowns';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/button-groups';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/input-groups';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/navs';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/navbar';
+// @import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/breadcrumbs';
+// @import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/pagination';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/pager';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/labels';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/badges';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/jumbotron';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/thumbnails';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/alerts';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/progress-bars';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/media';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/list-group';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/panels';
+// @import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/wells';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/close';
+// Components w/ JavaScript
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/modals';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/tooltip';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/popovers';
+// @import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/carousel';
+// Utility classes
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/utilities';
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities';
+
+//------------------------------------------------------------------------------
+// Tabbycat
+//------------------------------------------------------------------------------
+
+@import 'modules/typography';
+@import 'modules/print';
+@import 'modules/nav';
+@import 'modules/footer';
+@import 'modules/tables';
+@import 'modules/forms';
+@import 'modules/base';
+@import 'modules/allocation';
+@import 'modules/interaction';
+@import 'modules/datavis';
+
+//------------------------------------------------------------------------------
+// Below should be refactored
+//------------------------------------------------------------------------------
+
+.ui-helper-hidden-accessible {
+  display: none; // Remove when jquery UI is removed
+}
+
+@import 'components/page-specific';
+@include text-emphasis-variant('.text-success', $brand-success);
+@include text-emphasis-variant('.text-info', $brand-info);
+@include text-emphasis-variant('.text-warning', $brand-warning);
+@include text-emphasis-variant('.text-danger', $brand-danger);
+
+.no-vertical-spacing,
+table.table > thead > tr > th.no-vertical-spacing,
+table.table > tbody > tr > td.no-vertical-spacing {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.no-horizontal-spacing,
+table.table > thead > tr > th.no-horizontal-spacing,
+table.table > tbody > tr > td.no-horizontal-spacing {
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.no-borders,
+.table > thead > tr > th.no-borders,
+.table > tbody > tr > td.no-borders {
+  border-bottom: 0;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+}
+
+// For the collapsedmdouble menu
+.navbar-nav {
+  @media (max-width: $screen-xs-max) {
+    &.navbar-left {
+      float: left;
+      width: 40%;
+    }
+
+    &.navbar-right {
+      float: right;
+      width: 60%;
+    }
+
+    .dropdown-menu .dropdown.open ul {
+      clear: both;
+    }
+
+    .dropdown.open li {
+      display: block;
+    }
+
+    .dropdown.open li a {
+      padding-left: 15px;
+      padding-right: 0;
+    }
+
+    .dropdown.open .divider {
+      display: none;
+    }
+
+    .dropdown.open .dropdown-menu {}
+  }
+}
+// Universal Style overrides
+.page-header h1 {
+  margin-top: 0; // fixes button alignment easily
+}
+
+[data-toggle='tooltip'] {
+  cursor: pointer; // for tooltips
+}
+
+.alert-link {
+  text-decoration: underline;
+  font-weight: normal;
+}
+
+.check_target {
+  cursor: pointer;
+}
+// Forms
+#resultsForm {
+  overflow: hidden;
+}
+
+input.error,
+select.error,
+.error input {
+  background: $state-danger-bg;
+  border-color: $state-danger-text;
+  color: $state-danger-text;
+}
+
+.errorlist {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.error,
+.errorlist li {
+  border-color: $state-danger-text;
+  color: $state-danger-text;
+}
+
+.form-control-parent input {
+  @extend .form-control;
+}
+
+.ballot-errors .errorlist {
+  list-style-type: disc;
+  margin: 0 2.5em;
+  padding: 0;
+}
+
+.forfeits-group ul {
+  list-style-type: none;
+
+  label {
+    width: 200px;
+    input[type='radio'].form-control {
+      float: left;
+      margin-right: 6px;
+      margin-top: -8px;
+    }
+  }
+
+  li {
+    display: inline;
+  }
+}
+
+input[type='radio'].form-control,
+input[type='checkbox'].form-control {
+  display: inline;
+  margin-top: 0;
+  max-width: 20px;
+}
+// Modals
+.modal-body {
+  overflow: auto;
+}
+
+.modal-lg {
+  width: 98%;
+}
+// Tables - Specific
+.adj-chair {
+  text-decoration: underline;
+}
+
+.adj-trainee {
+  font-style: italic;
+}
+// Ballots
+.scoresheet {
+  .score input {
+    width: 70px;
+  }
+
+  .aff_total,
+  .neg_total {
+    width: 70px;
+    font-weight: bold;
+    cursor: default;
+  }
+}
+
+.edit-ballot-link-discarded,
+.edit-ballot-link-discarded:hover {
+  color: #808080;
+  text-decoration: line-through;
+}
+
+// Motions
+.assign-motions .list-group-item-text {
+  height: 54px;
+  overflow: hidden;
+}
+
+// Scoresheets
+.scoresheet-view {
+  .control-label {
+    text-align: right;
+    vertical-align: middle;
+  }
+
+  .score {
+    width: 70px;
+    text-align: right;
+  }
+
+  .total {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .total.score {
+    font-weight: bold;
+    border-radius: 3px;
+  }
+
+  .win {
+    background-color: #47a447;
+    color: white;
+    border-color: #398439;
+  }
+
+  .loss {
+    background-color: #d2322d;
+    color: white;
+    border-color: #ac2925;
+  }
+
+  .motion-veto {
+    text-decoration: line-through;
+  }
+}
+
+.team-tab a.team-score {
+  // Darker than normal link, but not black
+  color: #285379;
+}
+
+.feedback-integer-scale-table {
+  width: 100%;
+}
+
+.feedback-integer-scale-table td {
+  text-align: center;
+}
+
+.feedback-integer-scale-table input[type='radio'].form-control {
+  width: 20px;
+  margin: 0 auto;
+  vertical-align: middle;
+  display: block;
+}
+
+.feedback-multiple-select .feedback-option {
+  display: inline-block;
+}
+
+.feedback-multiple-select .feedback-option label {
+  margin-right: 20pt;
+}
+
+.feedback-multiple-select input[type='checkbox'].form-control {
+  vertical-align: middle;
+  width: 20px;
+}
+
+.forms-block-inline form {
+  display: inline-block;
+}
+
+@media (max-width: $screen-xs-max) {
+  .page-header {
+    margin-top: 0;
+  }
+
+  #header-options {
+    min-height: 82px;
+  }
+}

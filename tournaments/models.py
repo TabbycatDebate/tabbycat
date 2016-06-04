@@ -5,63 +5,36 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.functional import cached_property
 
 from participants.emoji import EMOJI_LIST
-from adjallocation.anneal import SAAllocator
 
 import logging
 logger = logging.getLogger(__name__)
 
 
 class Tournament(models.Model):
-    name = models.CharField(
-        max_length=100,
-        help_text=
-        "The full name used on the homepage, e.g. \"Australasian Intervarsity Debating Championships 2016\"")
-    short_name = models.CharField(
-        max_length=25,
-        blank=True,
-        null=True,
-        default="",
+    name = models.CharField(max_length=100,
+        help_text="The full name used on the homepage, e.g. \"Australasian Intervarsity Debating Championships 2016\"")
+    short_name = models.CharField(max_length=25, blank=True, null=True, default="",
         help_text="The name used in the menu, e.g. \"Australs 2016\"")
-    emoji = models.CharField(max_length=2,
-                             blank=True,
-                             null=True,
-                             unique=True,
-                             choices=EMOJI_LIST)
-    seq = models.IntegerField(
-        blank=True,
-        null=True,
-        help_text=
-        "A number that determines the relative order in which tournaments are displayed on the homepage.")
-    slug = models.SlugField(
-        unique=True,
-        help_text=
-        "The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\"")
-    current_round = models.ForeignKey(
-        'Round',
-        null=True,
-        blank=True,
-        related_name='tournament_',
-        help_text=
-        "Must be set for the tournament to start! (Set after rounds are inputted)")
-    welcome_msg = models.TextField(
-        blank=True,
-        null=True,
-        default="",
-        help_text=
-        "Text/html entered here shows on the homepage for this tournament")
-    release_all = models.BooleanField(
-        default=False,
-        help_text=
-        "This releases all results, including silent rounds; do so only after the tournament is finished!")
+    emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST)
+    seq = models.IntegerField(blank=True, null=True,
+        help_text="A number that determines the relative order in which tournaments are displayed on the homepage.")
+    slug = models.SlugField(unique=True,
+        help_text="The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\"")
+    current_round = models.ForeignKey('Round', null=True, blank=True, related_name='tournament_',
+        help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
+    welcome_msg = models.TextField(blank=True, null=True, default="",
+        help_text="Text/html entered here shows on the homepage for this tournament")
+    release_all = models.BooleanField(default=False,
+        help_text="This releases all results, including silent rounds; do so only after the tournament is finished!")
     active = models.BooleanField(default=True)
 
     @property
-    def LAST_SUBSTANTIVE_POSITION(self):
+    def LAST_SUBSTANTIVE_POSITION(self):  # flake8: noqa
         """Returns the number of substantive speakers."""
         return self.pref('substantive_speakers')
 
     @property
-    def REPLY_POSITION(self):
+    def REPLY_POSITION(self):  # flake8: noqa
         """If there is a reply position, returns one more than the number of
         substantive speakers. If there is no reply position, returns None."""
         if self.pref('reply_scores_enabled'):
@@ -70,7 +43,7 @@ class Tournament(models.Model):
             return None
 
     @property
-    def POSITIONS(self):
+    def POSITIONS(self):  # flake8: noqa
         """Guaranteed to be consecutive numbers starting at one. Includes the
         reply speaker."""
         speaker_positions = 1 + self.pref('substantive_speakers')
@@ -98,7 +71,7 @@ class Tournament(models.Model):
     def get_all_tournaments_all_teams(self):
         return ('all_tournaments_all_teams', [self.slug])
 
-    @property
+    @cached_property
     def teams(self):
         return self.team_set
 
@@ -164,9 +137,7 @@ signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
 class Division(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name or suffix")
-    seq = models.IntegerField(
-        blank=True,
-        null=True,
+    seq = models.IntegerField(blank=True, null=True,
         help_text="The order in which divisions are displayed")
     tournament = models.ForeignKey(Tournament)
     time_slot = models.TimeField(blank=True, null=True)
@@ -241,54 +212,30 @@ class Round(models.Model):
     objects = RoundManager()
 
     tournament = models.ForeignKey(Tournament)
-    seq = models.IntegerField(
-        help_text=
-        "A number that determines the order of the round, IE 1 for the initial round")
+    seq = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
     name = models.CharField(max_length=40, help_text="e.g. \"Round 1\"")
     abbreviation = models.CharField(max_length=10, help_text="e.g. \"R1\"")
-    draw_type = models.CharField(max_length=1,
-                                 choices=DRAW_CHOICES,
-                                 help_text="Which draw technique to use")
-    stage = models.CharField(
-        max_length=1,
-        choices=STAGE_CHOICES,
-        default=STAGE_PRELIMINARY,
+    draw_type = models.CharField(max_length=1, choices=DRAW_CHOICES,
+        help_text="Which draw technique to use")
+    stage = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY,
         help_text="Preliminary = inrounds, elimination = outrounds")
-    break_category = models.ForeignKey(
-        'breakqual.BreakCategory',
-        blank=True,
-        null=True,
+    break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True,
         help_text="If elimination round, which break category")
 
-    draw_status = models.CharField(max_length=1,
-                                   choices=STATUS_CHOICES,
-                                   default=STATUS_NONE,
-                                   help_text="The status of this round's draw")
+    draw_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
+       help_text="The status of this round's draw")
 
-    checkins = models.ManyToManyField('participants.Person',
-                                      through='availability.Checkin',
-                                      related_name='checkedin_rounds')
+    checkins = models.ManyToManyField('participants.Person', through='availability.Checkin', related_name='checkedin_rounds')
+    active_venues = models.ManyToManyField('venues.Venue', through='availability.ActiveVenue')
+    active_adjudicators = models.ManyToManyField('participants.Adjudicator', through='availability.ActiveAdjudicator')
+    active_teams = models.ManyToManyField('participants.Team', through='availability.ActiveTeam')
 
-    active_venues = models.ManyToManyField('venues.Venue',
-                                           through='availability.ActiveVenue')
-    active_adjudicators = models.ManyToManyField(
-        'participants.Adjudicator',
-        through='availability.ActiveAdjudicator')
-    active_teams = models.ManyToManyField('participants.Team',
-                                          through='availability.ActiveTeam')
-
-    feedback_weight = models.FloatField(
-        default=0,
-        help_text=
-        "The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback.")
-    silent = models.BooleanField(
-        default=False,
-        help_text=
-        "If marked silent, information about this round (such as it's results) will not be shown publicly.")
-    motions_released = models.BooleanField(
-        default=False,
-        help_text=
-        "Whether motions will appear on the public website, assuming that feature is turned on")
+    feedback_weight = models.FloatField(default=0,
+        help_text="The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback.")
+    silent = models.BooleanField(default=False,
+        help_text="If marked silent, information about this round (such as it's results) will not be shown publicly.")
+    motions_released = models.BooleanField(default=False,
+        help_text="Whether motions will appear on the public website, assuming that feature is turned on")
     starts_at = models.TimeField(blank=True, null=True)
 
     class Meta:
@@ -297,212 +244,56 @@ class Round(models.Model):
         index_together = ['tournament', 'seq']
 
     def __str__(self):
-        return "%s - %s" % (self.tournament, self.name)
-
-    def draw(self, override_team_checkins=False):
-        from draw.models import Debate, TeamPositionAllocation
-        from draw import DrawGenerator
-        from participants.models import Team
-
-        if self.draw_status != self.STATUS_NONE:
-            raise RuntimeError(
-                "Tried to run draw on round that already has a draw")
-
-        # Delete all existing debates for this round.
-        self.debate_set.all().delete()
-
-        # There is a bit of logic to go through to figure out what we need to
-        # provide to the draw class.
-        OPTIONS_TO_CONFIG_MAPPING = {
-            "avoid_institution": "draw_rules__avoid_same_institution",
-            "avoid_history": "draw_rules__avoid_team_history",
-            "history_penalty": "draw_rules__team_history_penalty",
-            "institution_penalty": "draw_rules__team_institution_penalty",
-            "side_allocations": "draw_rules__draw_side_allocations",
-        }
-
-        if override_team_checkins is True:
-            teams = self.tournament.team_set.all()
-        else:
-            teams = self.active_teams.all()
-
-        # Set type-specific options
-        if self.draw_type == self.DRAW_RANDOM:
-            draw_type = "random"
-            OPTIONS_TO_CONFIG_MAPPING.update({
-                "avoid_conflicts": "draw_rules__draw_avoid_conflicts",
-            })
-        elif self.draw_type == self.DRAW_MANUAL:
-            draw_type = "manual"
-
-        elif self.draw_type == self.DRAW_POWERPAIRED:
-            from participants.models import Team
-            from standings.teams import TeamStandingsGenerator
-            metrics = self.tournament.pref('team_standings_precedence')
-            generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random")
-            standings = generator.generate(teams, round=self.prev)
-            teams = []
-            for standing in standings:
-                team = standing.team
-                team.points = next(standing.itermetrics())
-                teams.append(team)
-
-            draw_type = "power_paired"
-            OPTIONS_TO_CONFIG_MAPPING.update({
-                "avoid_conflicts" : "draw_rules__draw_avoid_conflicts",
-                "odd_bracket"     : "draw_rules__draw_odd_bracket",
-                "pairing_method"  : "draw_rules__draw_pairing_method",
-            })
-
-        elif self.draw_type == self.DRAW_ROUNDROBIN:
-            draw_type = "round_robin"
-        else:
-            raise RuntimeError("Break rounds aren't supported yet.")
-
-        # Annotate attributes as required by DrawGenerator.
-        if self.prev:
-            for team in teams:
-                team.aff_count = team.get_aff_count(self.prev.seq)
-        else:
-            for team in teams:
-                team.aff_count = 0
-
-        # Evaluate this query set first to avoid hitting the database inside a loop.
-        tpas = dict()
-        TPA_MAP = {TeamPositionAllocation.POSITION_AFFIRMATIVE: "aff",
-                   TeamPositionAllocation.POSITION_NEGATIVE: "neg"}
-        for tpa in self.teampositionallocation_set.all():
-            tpas[tpa.team] = TPA_MAP[tpa.position]
-        for team in teams:
-            if team in tpas:
-                team.allocated_side = tpas[team]
-        del tpas
-
-        options = dict()
-        for key, value in OPTIONS_TO_CONFIG_MAPPING.items():
-            options[key] = self.tournament.preferences[value]
-        if options["side_allocations"] == "manual-ballot":
-            options["side_allocations"] = "balance"
-
-        drawer = DrawGenerator(draw_type, teams, self, results=None, **options)
-        draw = drawer.generate()
-        self.make_debates(draw)
-        self.draw_status = self.STATUS_DRAFT
-        self.save()
-
-    def allocate_adjudicators(self, alloc_class=SAAllocator):
-        if self.draw_status != self.STATUS_CONFIRMED:
-            raise RuntimeError(
-                "Tried to allocate adjudicators on unconfirmed draw")
-
-        debates = self.get_draw()
-        adjs = list(self.active_adjudicators.accredited())
-        allocator = alloc_class(debates, adjs)
-
-        for alloc in allocator.allocate():
-            alloc.save()
-
-        self.adjudicator_status = self.STATUS_DRAFT
-        self.save()
+        return "[%s] %s" % (self.tournament, self.name)
 
     @property
     def adjudicators_allocation_validity(self):
-        debates = self.get_cached_draw
+        debates = self.cached_draw
         if not all(debate.adjudicators.has_chair for debate in debates):
             return 1
         if not all(debate.adjudicators.valid for debate in debates):
             return 2
         return 0
 
-    def venue_allocation_validity(self):
-        debates = self.get_cached_draw
+    def venue_allocation_valid(self):
+        debates = self.cached_draw
         if all(debate.venue for debate in debates):
             return True
         else:
             return False
 
     @cached_property
-    def get_cached_draw(self):
+    def is_break_round(self):
+        if self.stage is self.STAGE_ELIMINATION:
+            return True
+        else:
+            return False
+
+    @cached_property
+    def break_size(self):
+        if self.break_category:
+            return self.break_category.break_size
+        else:
+            return False
+
+    @cached_property
+    def cached_draw(self):
         return self.get_draw()
 
-    def get_draw(self):
+    def _get_draw(self, *ordering):
+        related = ('venue',)
         if self.tournament.pref('enable_divisions'):
-            debates = self.debate_set.order_by('room_rank').select_related(
-                'venue', 'division', 'division__venue_group')
-        else:
-            debates = self.debate_set.order_by('room_rank').select_related(
-                'venue')
+            related += ('division', 'division__venue_group')
+        return self.debate_set.order_by(*ordering).select_related(*related)
 
-        return debates
+    def get_draw(self):
+        return self._get_draw('room_rank')
 
     def get_draw_by_room(self):
-        if self.tournament.pref('enable_divisions'):
-            debates = self.debate_set.order_by('venue__name').select_related(
-                'venue', 'division', 'division__venue_group')
-        else:
-            debates = self.debate_set.order_by('venue__name').select_related(
-                'venue')
-
-        return debates
+        return self._get_draw('venue__name')
 
     def get_draw_by_team(self):
-        # TODO is there a more efficient way to do this?
-        draw_by_team = list()
-        for debate in self.debate_set.all():
-            draw_by_team.append((debate.aff_team, debate))
-            draw_by_team.append((debate.neg_team, debate))
-        draw_by_team.sort(key=lambda x: str(x[0]))
-        return draw_by_team
-
-    def make_debates(self, pairings):
-        from draw.models import Debate, DebateTeam
-        import random
-
-        venues = list(self.active_venues.order_by('-priority'))[:len(pairings)]
-
-        if len(venues) < len(pairings):
-            raise DrawError("There are %d debates but only %d venues." %
-                            (len(pairings), len(venues)))
-
-        random.shuffle(venues)
-        random.shuffle(pairings)  # to avoid IDs indicating room ranks
-
-        for pairing in pairings:
-            try:
-                if pairing.division:
-                    if (pairing.teams[0].type == "B") or (
-                            pairing.teams[1].type == "B"):
-                        # If the match is a bye then they don't get a venue
-                        selected_venue = None
-                    else:
-                        selected_venue = next(
-                            v
-                            for v in venues
-                            if v.group == pairing.division.venue_group)
-                        venues.pop(venues.index(selected_venue))
-                else:
-                    selected_venue = venues.pop(0)
-            except:
-                print("Error assigning venues")
-                selected_venue = None
-
-            debate = Debate(round=self, venue=selected_venue)
-
-            debate.division = pairing.division
-            debate.bracket = pairing.bracket
-            debate.room_rank = pairing.room_rank
-            debate.flags = ",".join(pairing.flags)  # comma-separated list
-            debate.save()
-
-            aff = DebateTeam(debate=debate,
-                             team=pairing.teams[0],
-                             position=DebateTeam.POSITION_AFFIRMATIVE)
-            neg = DebateTeam(debate=debate,
-                             team=pairing.teams[1],
-                             position=DebateTeam.POSITION_NEGATIVE)
-
-            aff.save()
-            neg.save()
+        return self._get_draw('debateteam__team')
 
     # TODO: all these availability methods should be in the availability app
 
@@ -537,8 +328,8 @@ class Round(models.Model):
         all_venues = self.base_availability(Venue, 'availability_activevenue',
                                             'venue_id', 'venues_venue')
 
-        if  self.tournament.pref('share_venues'):
-            return all_venues
+        if self.tournament.pref('share_venues'):
+            return [v for v in all_venues if v.tournament == self.tournament or v.tournament is None]
         else:
             return [v for v in all_venues if v.tournament == self.tournament]
 
@@ -555,7 +346,7 @@ class Round(models.Model):
                                           self.id}, )
 
         if self.tournament.pref('share_venues'):
-            return [v for v in result if v.is_active and not v.is_used]
+            return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament or v.tournament is None]
         else:
             return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
 
@@ -568,7 +359,7 @@ class Round(models.Model):
                                           id_field='person_ptr_id')
 
         if self.tournament.pref('share_adjs'):
-            return all_adjs
+            return [a for a in all_adjs if a.tournament == self.tournament or a.tournament is None]
         else:
             return [a for a in all_adjs if a.tournament == self.tournament]
 
@@ -693,14 +484,43 @@ class Round(models.Model):
         else:
             self.activeteam_set.filter(team=team).delete()
 
+    def activate_all_breaking_adjs(self):
+        from participants.models import Adjudicator
+        self.set_available_adjudicators(
+            [a.id for a in Adjudicator.objects.filter(breaking=True)])
+
+    def activate_all_breaking_teams(self):
+        from breakqual.models import BreakingTeam
+        breaking_teams = BreakingTeam.objects.filter(
+            break_category=self.break_category, remark=None,
+            team__tournament=self.tournament)
+        self.set_available_teams([bt.team.id for bt in breaking_teams])
+
+    def activate_all_advancing_teams(self):
+        from results.models import TeamScore
+        prior_break_round = Round.objects.filter(
+            break_category=self.break_category, seq__lte=self.seq).exclude(
+            id=self.id).order_by('-seq').first()
+        prior_results = TeamScore.objects.filter(
+            win=True, ballot_submission__confirmed=True,
+            ballot_submission__debate__round=prior_break_round)
+        self.set_available_teams([r.debate_team.team.id for r in prior_results])
+
     def activate_all(self):
         from venues.models import Venue
         from participants.models import Adjudicator, Team
-        self.set_available_venues([v.id for v in Venue.objects.all()])
-        self.set_available_adjudicators([a.id for a in Adjudicator.objects.all(
-        )])
-        self.set_available_teams([t.id for t in Team.objects.filter(
-            tournament=self.tournament)])
+        all_teams = Team.objects.filter(tournament=self.tournament)
+        all_venues = Venue.objects.filter(tournament=self.tournament)
+        all_adjs = Adjudicator.objects.filter(tournament=self.tournament)
+
+        if self.tournament.pref('share_adjs'):
+            all_adjs = all_adjs | Adjudicator.objects.filter(tournament=None)
+        if self.tournament.pref('share_venues'):
+            all_venues = all_venues | Venue.objects.filter(tournament=None)
+
+        self.set_available_teams([t.id for t in all_teams])
+        self.set_available_venues([v.id for v in all_venues])
+        self.set_available_adjudicators([a.id for a in all_adjs])
 
     def activate_previous(self):
         from availability.models import ActiveTeam, ActiveAdjudicator, ActiveVenue

@@ -1,41 +1,114 @@
+import datetime
 import json
-from actionlog.models import ActionLogEntry
-from participants.models import Team
-from tournaments.models import Tournament, Round, Division
-from motions.models import Motion
-from venues.models import Venue, VenueGroup
-from adjfeedback.models import AdjudicatorFeedbackQuestion
-from .models import TeamPositionAllocation, Debate, DebateTeam
-from standings.teams import TeamStandingsGenerator
+import logging
+from collections import OrderedDict
 
 from django.views.generic.base import TemplateView
-from tournaments.mixins import RoundMixin
-from utils.mixins import SuperuserRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.views.decorators.cache import cache_page
+from django.shortcuts import render
 
-from utils.views import *
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
+from adjfeedback.models import AdjudicatorFeedbackQuestion
+from breakqual.models import BreakingTeam
+from motions.models import Motion
+from participants.models import Team
+from standings.teams import TeamStandingsGenerator
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
+from tournaments.models import Division, Round, Tournament
+from utils.mixins import PostOnlyRedirectView, PublicCacheMixin, SuperuserRequiredMixin, VueTableMixin
+from utils.misc import reverse_round
+from utils.views import admin_required, expect_post, public_optional_round_view
+from utils.views import public_optional_tournament_view, redirect_round, round_view, tournament_view
+from venues.models import Venue, VenueGroup
+from venues.allocator import allocate_venues
 
-import datetime
-import logging
+from .manager import DrawManager
+from .models import Debate, DebateTeam, TeamPositionAllocation
+
 logger = logging.getLogger(__name__)
+
+
+TPA_MAP = {
+    TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
+    TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
+    None: "-"
+}
+
+
+# ==============================================================================
 # Viewing Draw
+# ==============================================================================
 
-@admin_required
-@round_view
-def draw_display_by_venue(request, round):
-    draw = round.get_draw()
-    return render(request,
-               "draw_display_by_venue.html",
-               dict(round=round,
-                    draw=draw))
+class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
+
+    template_name = 'draw_display_by.html'
+
+    def create_row(self, d, t, sort_key=None, sort_value=None):
+        ddict = []
+        if sort_key and sort_value:
+            ddict.append((sort_key, sort_value))
+
+        ddict.extend(self.venue_cells(d, t, with_times=True))
+        ddict.extend(self.team_cells(d.aff_team, t))
+        ddict.extend(self.team_cells(d.neg_team, t))
+
+        if t.pref('enable_division_motions'):
+            ddict.append(('motion', [m.reference for m in d.division_motions]))
+        if not t.pref('enable_divisions'):
+            ddict.append(('adjudicators', d.adjudicators_for_draw))
+
+        return OrderedDict(ddict)
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+        draw = round.get_draw()
+        t = self.get_tournament()
+        if self.sorting is "team":
+            draw_data = []
+            for d in draw:
+                aff_row = self.create_row(d, t, 'Team', d.aff_team.short_name)
+                neg_row = self.create_row(d, t, 'Team', d.neg_team.short_name)
+                draw_data.extend([aff_row, neg_row])
+        else:
+            draw_data = [self.create_row(debate, t) for debate in draw]
+
+        kwargs["tableData"] = json.dumps(draw_data)
+        kwargs["round"] = self.get_round()
+        return super().get_context_data(**kwargs)
 
 
-@admin_required
-@round_view
-def draw_display_by_team(request, round):
-    draw = round.get_draw()
-    return render(request, "draw_display_by_team.html", dict(draw=draw))
-
+# ==============================================================================
 # Creating Draw
+# ==============================================================================
+
+class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, PublicCacheMixin):
+
+    public_page_preference = 'public_draw'
+    sorting = 'venue'
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+        if round.draw_status != round.STATUS_RELEASED:
+            self.template = "public_draw_unreleased.html"
+            return
+        else:
+            return super().get_context_data(**kwargs)
+
+
+class AdminDrawForRoundByVenue(DrawTablePage, LoginRequiredMixin):
+    sorting = 'venue'
+
+
+class AdminDrawForRoundByTeam(DrawTablePage, LoginRequiredMixin):
+    sorting = 'team'
+
+
 @login_required
 @round_view
 def draw(request, round):
@@ -56,14 +129,12 @@ def draw(request, round):
         if round.draw_status == round.STATUS_RELEASED:
             draw = round.get_draw()
             return render(request,
-                       "public_draw_released.html",
-                       dict(draw=draw,
-                            round=round))
+                          "public_draw_released.html",
+                          draw=draw, round=round)
         else:
-            return render(request,
-                       'public_draw_unreleased.html',
-                       dict(draw=None,
-                            round=round))
+            return render(request, 'public_draw_unreleased.html', dict(
+                          'public_draw_unreleased.html',
+                          draw=None, round=round))
 
     raise
 
@@ -72,28 +143,38 @@ def assistant_draw(request, round):
     if round.draw_status == round.STATUS_RELEASED:
         return draw_confirmed(request, round)
 
+
 def get_draw_with_standings(round):
     draw = round.get_draw()
 
     if round.prev is None:
         return None, draw
 
-    teams = Team.objects.teams_for_standings(round)
+    teams = round.tournament.team_set.select_related('institution')
     metrics = round.tournament.pref('team_standings_precedence')
     generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
     standings = generator.generate(teams, round=round.prev)
 
     for debate in draw:
-        aff_standing = standings.get_team_standing(debate.aff_team)
-        neg_standing = standings.get_team_standing(debate.neg_team)
-        debate.aff_subrank = aff_standing.rankings["subrank"]
-        debate.neg_subrank = neg_standing.rankings["subrank"]
+        aff_standing = standings.get_standing(debate.aff_team)
+        neg_standing = standings.get_standing(debate.neg_team)
         debate.metrics = [(a, n) for a, n in zip(aff_standing.itermetrics(), neg_standing.itermetrics())]
-        if "points" in standings.metric_keys:
-            debate.aff_is_pullup = abs(aff_standing.metrics["points"] - debate.bracket) >= 1
-            debate.neg_is_pullup = abs(neg_standing.metrics["points"] - debate.bracket) >= 1
+        if round.is_break_round:
+            debate.aff_breakrank = BreakingTeam.objects.get(
+                break_category=round.break_category,
+                team=debate.aff_team.id).break_rank
+            debate.neg_breakrank = BreakingTeam.objects.get(
+                break_category=round.break_category,
+                team=debate.neg_team.id).break_rank
+        else:
+            if "points" in standings.metric_keys:
+                debate.aff_is_pullup = abs(aff_standing.metrics["points"] - debate.bracket) >= 1
+                debate.neg_is_pullup = abs(neg_standing.metrics["points"] - debate.bracket) >= 1
+            debate.aff_subrank = aff_standing.rankings["subrank"]
+            debate.neg_subrank = neg_standing.rankings["subrank"]
 
     return standings, draw
+
 
 def draw_none(request, round):
     all_teams_count = Team.objects.filter(tournament=round.tournament).count()
@@ -107,62 +188,67 @@ def draw_none(request, round):
     else:
         previous_unconfirmed = 0
 
-    return render(request,
-               "draw_none.html",
-               dict(active_teams=active_teams,
-                    active_venues_count=active_venues_count,
-                    active_adjs=active_adjs,
-                    rooms=rooms,
-                    round=round,
-                    previous_unconfirmed=previous_unconfirmed,
-                    all_teams_count=all_teams_count))
+    return render(
+        request, "draw_none.html", dict(
+            active_teams=active_teams,
+            active_venues_count=active_venues_count,
+            active_adjs=active_adjs,
+            rooms=rooms,
+            round=round,
+            previous_unconfirmed=previous_unconfirmed,
+            all_teams_count=all_teams_count))
 
 
 def draw_draft(request, round):
     standings, draw = get_draw_with_standings(round)
-    return render(request, "draw_draft.html", dict(draw=draw, standings=standings))
+    return render(request, "draw_draft.html", dict(
+        draw=draw, standings=standings))
 
 
 def draw_confirmed(request, round):
-    draw = round.get_cached_draw
+    draw = round.cached_draw
     rooms = float(round.active_teams.count()) // 2
     active_adjs = round.active_adjudicators.all()
 
-    return render(request,
-               "draw_confirmed.html",
-               dict(draw=draw,
-                    active_adjs=active_adjs,
-                    rooms=rooms))
+    return render(request, "draw_confirmed.html", dict(
+                  draw=draw, active_adjs=active_adjs, rooms=rooms))
 
 
 @admin_required
 @round_view
 def draw_with_standings(request, round):
     standings, draw = get_draw_with_standings(round)
-    return render(request, "draw_with_standings.html", dict(draw=draw, standings=standings))
+    return render(request, "draw_with_standings.html", dict(
+        draw=draw, standings=standings))
 
 
-@admin_required
-@expect_post
-@round_view
-def create_draw(request, round, override_team_checkins=False):
-    if round.draw_status == round.STATUS_NONE:
-        round.draw(override_team_checkins=override_team_checkins)
-        ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE,
-                                   user=request.user,
-                                   round=round,
-                                   tournament=round.tournament)
-    else:
-        messages.error(request, "Could not create draw for {}, there was already a draw!".format(round.name))
+class CreateDrawView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
 
-    return redirect_round('draw', round)
+    action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_CREATE
+
+    def get_redirect_url(self):
+        return reverse_round('draw', self.get_round())
+
+    def post(self, request, *args, **kwargs):
+        round = self.get_round()
+
+        if round.draw_status != round.STATUS_NONE:
+            messages.error(request, "Could not create draw for {}, there was already a draw!".format(round.name))
+            return super().post(request, *args, **kwargs)
+
+        manager = DrawManager(round)
+        manager.create()
+
+        allocate_venues(round)
+
+        self.log_action()
+        return super().post(request, *args, **kwargs)
 
 
 @admin_required
 @expect_post
 @round_view
 def confirm_draw(request, round):
-
     if round.draw_status != round.STATUS_DRAFT:
         return HttpResponseBadRequest("Draw status is not DRAFT")
 
@@ -173,6 +259,24 @@ def confirm_draw(request, round):
                                round=round,
                                tournament=round.tournament)
 
+    return redirect_round('draw', round)
+
+
+@round_view
+def draw_confirm_regenerate(request, round):
+    return render(request, "draw_confirm_regeneration.html", dict())
+
+
+@admin_required
+@expect_post
+@round_view
+def draw_regenerate(request, round):
+    from .dbutils import delete_round_draw
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DRAW_REGENERATE,
+                               user=request.user,
+                               round=round,
+                               tournament=round.tournament)
+    delete_round_draw(round)
     return redirect_round('draw', round)
 
 
@@ -217,44 +321,39 @@ def side_allocations(request, t):
     teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
-    TPA_MAP = {
-        TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
-        TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
-        None: "-"
-    }
     for tpa in TeamPositionAllocation.objects.all():
         tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
     for team in teams:
         team.side_allocations = [tpas.get(
             (team.id, round.id), "-") for round in rounds]
-    return render(request,
-               "side_allocations.html",
-               dict(teams=teams,
-                    rounds=rounds))
+    return render(request, "side_allocations.html", dict(
+        teams=teams, rounds=rounds))
 
 
-@admin_required
-@expect_post
-@round_view
-def set_round_start_time(request, round):
+class SetRoundStartTimeView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
 
-    time_text = request.POST["start_time"]
-    try:
-        time = datetime.datetime.strptime(time_text, "%H:%M").time()
-    except ValueError as e:
-        print(e)
-        return redirect_round('draw', round)
+    action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_START_TIME_SET
 
-    round.starts_at = time
-    round.save()
+    def get_redirect_url(self):
+        return reverse_round('draw', self.get_round())
 
-    ActionLogEntry.objects.log(
-        type=ActionLogEntry.ACTION_TYPE_ROUND_START_TIME_SET,
-        user=request.user,
-        round=round,
-        tournament=round.tournament)
+    def post(self, request, *args, **kwargs):
+        time_text = request.POST["start_time"]
+        try:
+            time = datetime.datetime.strptime(time_text, "%H:%M").time()
+        except ValueError:
+            messages.error(request, "Sorry, \"{}\" isn't a valid time. It must "
+                           "be in 24-hour format, with a colon, for "
+                           "example: \"13:57\".".format(time_text))
+            return super().post(request, *args, **kwargs)
 
-    return redirect_round('draw', round)
+        round = self.get_round()
+        round.starts_at = time
+        round.save()
+        # Need to call explicitly, since this isn't a form view
+        self.log_action()
+
+        return super().post(request, *args, **kwargs)
 
 
 @admin_required
@@ -262,9 +361,8 @@ def set_round_start_time(request, round):
 def schedule_debates(request, round):
     venue_groups = VenueGroup.objects.all()
     divisions = Division.objects.filter(tournament=round.tournament).order_by('id')
-    return render(request,
-               "draw_set_debate_times.html",
-               dict(venue_groups=venue_groups, divisions=divisions))
+    return render(request, "draw_set_debate_times.html", dict(
+        venue_groups=venue_groups, divisions=divisions))
 
 
 @admin_required
@@ -280,11 +378,11 @@ def apply_schedule(request, round):
             if date:
                 time = "%s %s" % (date, division.time_slot)
                 try:
-                    debate.time = datetime.datetime.strptime(time,
-                        "%Y-%m-%d %H:%M:%S") # Chrome
+                    debate.time = datetime.datetime.strptime(
+                        time, "%Y-%m-%d %H:%M:%S")  # Chrome
                 except ValueError:
-                    debate.time = datetime.datetime.strptime(time,
-                        "%d/%m/%Y %H:%M:%S") # Others
+                    debate.time = datetime.datetime.strptime(
+                        time, "%d/%m/%Y %H:%M:%S")  # Others
 
                 debate.save()
 
@@ -296,15 +394,12 @@ def apply_schedule(request, round):
 @round_view
 def draw_matchups_edit(request, round):
     standings, draw = get_draw_with_standings(round)
-    debates = len(draw)
     unused_teams = round.unused_teams()
     possible_debates = len(unused_teams) // 2 + 1  # The blank rows to add
     possible_debates = [None] * possible_debates
-    return render(request,
-               "draw_matchups_edit.html",
-               dict(draw=draw, standings=standings,
-                    possible_debates=possible_debates,
-                    unused_teams=unused_teams))
+    return render(request, "draw_matchups_edit.html", dict(
+        draw=draw, standings=standings, possible_debates=possible_debates,
+        unused_teams=unused_teams))
 
 
 @admin_required
@@ -312,7 +407,7 @@ def draw_matchups_edit(request, round):
 @round_view
 def save_matchups(request, round):
     # TODO: move to draws app
-    #print request.POST.keys()
+    # print request.POST.keys()
 
     existing_debate_ids = [int(a.replace('debate_', ''))
                            for a in list(request.POST.keys())
@@ -370,46 +465,9 @@ def save_matchups(request, round):
     return HttpResponse("ok")
 
 
-@admin_required
-@round_view
-def draw_venues_edit(request, round):
-
-    draw = round.get_draw()
-    return render(request, "draw_venues_edit.html", dict(draw=draw))
-
-
-@admin_required
-@expect_post
-@round_view
-def save_venues(request, round):
-    # TODO: move to draws app
-    def v_id(a):
-        try:
-            return int(request.POST[a].split('_')[1])
-        except IndexError:
-            return None
-
-    data = [(int(a.split('_')[1]), v_id(a)) for a in list(request.POST.keys())]
-
-    debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
-    venues = Venue.objects.in_bulk([v_id for _, v_id in data])
-    for debate_id, venue_id in data:
-        if venue_id == None:
-            debates[debate_id].venue = None
-        else:
-            debates[debate_id].venue = venues[venue_id]
-
-        debates[debate_id].save()
-
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_VENUES_SAVE,
-                               user=request.user,
-                               round=round,
-                               tournament=round.tournament)
-
-    return HttpResponse("ok")
-
-# Public
-
+# ==============================================================================
+# Public Draw Views
+# ==============================================================================
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @public_optional_tournament_view('public_draw')
@@ -417,15 +475,11 @@ def public_draw(request, t):
     r = t.current_round
     if r.draw_status == r.STATUS_RELEASED:
         draw = r.get_draw()
-        return render(request,
-                   "public_draw_released.html",
-                   dict(draw=draw,
-                        round=r))
+        return render(request, "public_draw_released.html", dict(
+            draw=draw, round=r))
     else:
-        return render(request,
-                   'public_draw_unreleased.html',
-                   dict(draw=None,
-                        round=r))
+        return render(request, 'public_draw_unreleased.html', dict(
+            draw=None, round=r))
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -433,15 +487,11 @@ def public_draw(request, t):
 def public_draw_by_round(request, round):
     if round.draw_status == round.STATUS_RELEASED:
         draw = round.get_draw()
-        return render(request,
-                   "public_draw_released.html",
-                   dict(draw=draw,
-                        round=round))
+        return render(request, "public_draw_released.html", dict(
+            draw=draw, round=round))
     else:
-        return render(request,
-                   'public_draw_unreleased.html',
-                   dict(draw=None,
-                        round=round))
+        return render(request, "public_draw_unreleased.html", dict(
+            draw=None, round=round))
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -452,9 +502,8 @@ def public_all_draws(request, t):
     for r in all_rounds:
         r.draw = r.get_draw()
 
-    return render(request,
-               'public_draw_display_all.html',
-               dict(all_rounds=all_rounds))
+    return render(request, 'public_draw_display_all.html', dict(
+        all_rounds=all_rounds))
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -464,19 +513,14 @@ def public_side_allocations(request, t):
     teams = Team.objects.filter(tournament=t)
     rounds = Round.objects.filter(tournament=t).order_by("seq")
     tpas = dict()
-    TPA_MAP = {
-        TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
-        TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
-    }
     for tpa in TeamPositionAllocation.objects.all():
         tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
     for team in teams:
         team.side_allocations = [tpas.get(
             (team.id, round.id), "-") for round in rounds]
-    return render(request,
-               "public_side_allocations.html",
-               dict(teams=teams,
-                    rounds=rounds))
+    return render(request, "side_allocations.html", dict(
+        teams=teams, rounds=rounds))
+
 
 @login_required
 @round_view
@@ -491,14 +535,14 @@ def confirmations_view(request, round):
 
     return render(request, 'confirmations_view.html', dict(adjs=adjs))
 
+
 # Mastersheets
 @login_required
 @round_view
 def master_sheets_list(request, round):
     venue_groups = VenueGroup.objects.all()
-    return render(request,
-               'division_sheets_list.html',
-               dict(venue_groups=venue_groups))
+    return render(request, 'division_sheets_list.html', dict(
+        venue_groups=venue_groups))
 
 
 @login_required
@@ -515,15 +559,12 @@ def master_sheets_view(request, round, venue_group_id):
                 # All Debates, with a matching round, at the same venue group name
                 round__seq=round.seq,
                 round__tournament=tournament,
-                division__venue_group__short_name=
-                base_venue_group.short_name  # hack - remove when venue groups are unified
-            ).order_by('round', 'division__venue_group__short_name',
-                       'division')
+                # Hack - remove when venue groups are unified
+                division__venue_group__short_name=base_venue_group.short_name
+        ).order_by('round', 'division__venue_group__short_name', 'division')
 
-    return render(request,
-               'printing/master_sheets_view.html',
-               dict(base_venue_group=base_venue_group,
-                    active_tournaments=active_tournaments))
+    return render(request, 'printing/master_sheets_view.html', dict(
+        base_venue_group=base_venue_group, active_tournaments=active_tournaments))
 
 
 @login_required
@@ -540,10 +581,8 @@ def room_sheets_view(request, round, venue_group_id):
             venue=venue
         ).select_related('round__tournament__short_name').order_by('round__tournament__seq')
 
-    return render(request,
-               'printing/room_sheets_view.html',
-               dict(base_venue_group=base_venue_group,
-                    venues=venues))
+    return render(request, 'printing/room_sheets_view.html', dict(
+        base_venue_group=base_venue_group, venues=venues))
 
 
 class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
@@ -551,16 +590,20 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'printing/feedback_list.html'
 
     def team_on_orallist(self):
-        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, chair_on_panellist=True).exists()
+        return AdjudicatorFeedbackQuestion.objects.filter(
+            tournament=self.get_round().tournament, chair_on_panellist=True).exists()
 
     def chair_on_panellist(self):
-        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, panellist_on_chair=True).exists()
+        return AdjudicatorFeedbackQuestion.objects.filter(
+            tournament=self.get_round().tournament, panellist_on_chair=True).exists()
 
     def panellist_on_panellist(self):
-        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, panellist_on_panellist=True).exists()
+        return AdjudicatorFeedbackQuestion.objects.filter(
+            tournament=self.get_round().tournament, panellist_on_panellist=True).exists()
 
     def panellist_on_chair(self):
-        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self.get_round().tournament, team_on_orallist=True).exists()
+        return AdjudicatorFeedbackQuestion.objects.filter(
+            tournament=self.get_round().tournament, team_on_orallist=True).exists()
 
     def questions_json_dict(self):
         questions = []
@@ -630,8 +673,8 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['ballots'] = []
 
         for debate in self.get_round().get_draw_by_room():
-            debateInfo = {
-                'room': debate.venue.name,
+            debate_info = {
+                'room': debate.venue.name if debate.venue else 'TBA',
                 'aff': debate.aff_team.short_name,
                 'affEmoji': debate.aff_team.emoji,
                 'affSpeakers': [s.name for s in debate.aff_team.speakers],
@@ -641,15 +684,28 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                 'panel': []
             }
             for position, adj in debate.adjudicators:
-                debateInfo['panel'].append({ 'name': adj.name, 'institution': adj.institution.code, 'position': position})
+                debate_info['panel'].append({
+                    'name': adj.name,
+                    'institution': adj.institution.code,
+                    'position': position
+                })
 
-            for adj in (a for a in debateInfo['panel'] if a['position'] != "T"):
-                ballotData = {
-                    'author': adj['name'],
-                    'authorInstitution': adj['institution'],
-                    'authorPosition': adj['position'],
+            if len(debate_info['panel']) is 0:
+                ballot_data = {
+                    'author': "_______________________________________________",
+                    'authorInstitution': "",
+                    'authorPosition': "",
                 }
-                ballotData.update(debateInfo) # Extend with debateInfo keys
-                kwargs['ballots'].append(ballotData)
+                ballot_data.update(debate_info)  # Extend with debateInfo keys
+                kwargs['ballots'].append(ballot_data)
+            else:
+                for adj in (a for a in debate_info['panel'] if a['position'] != "T"):
+                    ballot_data = {
+                        'author': adj['name'],
+                        'authorInstitution': adj['institution'],
+                        'authorPosition': adj['position'],
+                    }
+                    ballot_data.update(debate_info)  # Extend with debateInfo keys
+                    kwargs['ballots'].append(ballot_data)
 
         return super().get_context_data(**kwargs)

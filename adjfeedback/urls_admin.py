@@ -1,7 +1,8 @@
 from django.conf.urls import url
 
+from participants.models import Adjudicator, Team
+
 from . import views
-from participants.models import Team, Adjudicator
 
 urlpatterns = [
     # Overviews
@@ -20,14 +21,14 @@ urlpatterns = [
         views.get_adj_feedback,
         name='get_adj_feedback'),
     url(r'^test/set/$',
-        views.set_adj_test_score,
-        name='set_adj_test_score'),
+        views.SetAdjudicatorTestScoreView.as_view(),
+        name='adjfeedback-set-adj-test-score'),
     url(r'^breaking/set/$',
-        views.set_adj_breaking_status,
-        name='set_adj_breaking_status'),
+        views.SetAdjudicatorBreakingStatusView.as_view(),
+        name='adjfeedback-set-adj-breaking-status'),
     url(r'^notes/test/set/$',
-        views.set_adj_note,
-        name='set_adj_note'),
+        views.SetAdjudicatorNoteView.as_view(),
+        name='adjfeedback-set-adj-note'),
 
     # Source
     url(r'^latest/$',

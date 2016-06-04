@@ -1,10 +1,8 @@
-from utils.views import *
+from django.shortcuts import render
 
-from . import forms
-
-from participants.models import Adjudicator, Institution, Team, Speaker
-from venues.models import Venue, VenueGroup
-from draw.models import InstitutionVenuePreference
+from participants.models import Adjudicator, Institution, Speaker, Team
+from utils.views import admin_required, expect_post, tournament_view
+from venues.models import InstitutionVenueConstraint, Venue, VenueGroup
 
 
 @admin_required
@@ -13,12 +11,13 @@ def data_index(request, t):
     return render(request, 'data_index.html')
 
 
-# INSTITUTIONS
+# ==============================================================================
+# Institutions
+# ==============================================================================
 
 @admin_required
 @tournament_view
 def add_institutions(request, t):
-    form = forms.AddInstitutionsForm
     return render(request, 'add_institutions.html')
 
 
@@ -61,13 +60,16 @@ def confirm_institutions(request, t):
     confirmed = {"kind": "Institutions", "quantity": len(institution_names)}
     return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
-# VENUES
+
+# ==============================================================================
+# Venues
+# ==============================================================================
 
 @admin_required
 @tournament_view
 def add_venues(request, t):
-    form = forms.AddVenuesForm
     return render(request, 'add_venues.html')
+
 
 @admin_required
 @expect_post
@@ -97,9 +99,11 @@ def edit_venues(request, t):
 @expect_post
 @tournament_view
 def confirm_venues(request, t):
+    print(request.POST)
     venue_names = request.POST.getlist('venue_names')
     venue_priorities = request.POST.getlist('venue_priorities')
     venue_groups = request.POST.getlist('venue_groups')
+    venue_shares = request.POST.getlist('venue_shares')
     for i, key in enumerate(venue_names):
         if venue_groups[i]:
             try:
@@ -109,21 +113,26 @@ def confirm_venues(request, t):
                     venue_group = VenueGroup.objects.get(name=venue_groups[i])
                 except VenueGroup.DoesNotExist:
                     venue_group = VenueGroup(name=venue_groups[i],
-                        short_name=venue_groups[i][:15]).save()
+                                             short_name=venue_groups[i][:15]).save()
         else:
             venue_group = None
-        try:
-            venue = Venue(name=venue_names[i], priority=venue_priorities[i],
-                          group=venue_group,
-                          tournament=None if t.pref('share_venues') else t)
-            venue.save()
-        except:
-            pass
+
+        if venue_shares[i] == "yes":
+            venue_tournament = None
+        else:
+            venue_tournament = t
+
+        venue = Venue(name=venue_names[i], priority=venue_priorities[i],
+                      group=venue_group, tournament=venue_tournament)
+        venue.save()
 
     confirmed = {"kind": "Venues", "quantity": len(venue_names)}
     return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
-# VENUE PREFERENCES
+
+# ==============================================================================
+# Venue Preferences
+# ==============================================================================
 
 @admin_required
 @tournament_view
@@ -156,10 +165,9 @@ def edit_venue_preferences(request, t):
 @tournament_view
 def confirm_venue_preferences(request, t):
 
-    institutions = []
     for institution_id in request.POST.getlist('institutionIDs'):
         institution = Institution.objects.get(pk=institution_id)
-        InstitutionVenuePreference.objects.filter(
+        InstitutionVenueConstraint.objects.filter(
             institution=institution).delete()
 
     venue_priorities = request.POST.dict()
@@ -175,7 +183,7 @@ def confirm_venue_preferences(request, t):
             # print('making a pref')
             institution = Institution.objects.get(pk=int(institution_id))
             venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
-            venue_preference = InstitutionVenuePreference(
+            venue_preference = InstitutionVenueConstraint(
                 institution=institution,
                 priority=priority,
                 venue_group=venue_group)
@@ -185,14 +193,15 @@ def confirm_venue_preferences(request, t):
     confirmed = {"kind": "Venue Preferences", "quantity": created_preferences}
     return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
-# TEAMS
 
+# ==============================================================================
+# Teams
+# ==============================================================================
 
 @admin_required
 @tournament_view
 def add_teams(request, t):
     institutions = Institution.objects.all()
-    form = forms.AddTeamsForm
     return render(request, 'add_teams.html', dict(institutions=institutions))
 
 
@@ -201,9 +210,16 @@ def add_teams(request, t):
 @tournament_view
 def edit_teams(request, t):
     institutions_with_team_numbers = []
+
+    # Set default speaker text to match tournament setup
+    default_speakers = ""
+    for i in range(1, t.pref('substantive_speakers') + 1):
+        if i > 1:
+            default_speakers += ","
+        default_speakers += "Speaker %s" % i
+
     for name, quantity in request.POST.items():
         if quantity:
-            print(quantity)
             desired_teams_count = int(quantity) + 1  # +1 as we dont want teams named 0
             institution = Institution.objects.get(name=name)
             team_names = Team.objects.filter(
@@ -232,9 +248,9 @@ def edit_teams(request, t):
             })
             # print('____')
 
-    return render(request,
-                  'edit_teams.html',
-                  dict(institutions=institutions_with_team_numbers))
+    return render(request, 'edit_teams.html',
+                  dict(institutions=institutions_with_team_numbers,
+                       default_speakers=default_speakers))
 
 
 @admin_required
@@ -267,17 +283,16 @@ def confirm_teams(request, t):
     confirmed = {"kind": "Teams", "quantity": int((len(sorted_post) - 1) / 4)}
     return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
 
-# ADJUDICATORS
 
+# ==============================================================================
+# Adjudicators
+# ==============================================================================
 
 @admin_required
 @tournament_view
 def add_adjudicators(request, t):
     institutions = Institution.objects.all()
-    form = forms.AddAdjudicatorsForm
-    return render(request,
-                  'add_adjudicators.html',
-                  dict(institutions=institutions))
+    return render(request, 'add_adjudicators.html', dict(institutions=institutions))
 
 
 @admin_required
@@ -304,18 +319,22 @@ def edit_adjudicators(request, t):
 def confirm_adjudicators(request, t):
     sorted_post = sorted(request.POST.items())
 
-    for i in range(0, len(sorted_post) - 1,
-                   3):  # Sort through the items advancing 3 at a time
-        institution_name = sorted_post[i][1]
+    for i in range(0, len(sorted_post), 4):
+        # Sort through the items advancing 4 at a time
+        adj_institution = Institution.objects.get(name=sorted_post[i][1])
         adj_name = sorted_post[i + 1][1]
         adj_rating = sorted_post[i + 2][1]
+        adj_shared = sorted_post[i + 3][1]
 
-        institution = Institution.objects.get(name=institution_name)
-        if adj_name and adj_rating and institution:
-            newadj = Adjudicator(institution=institution,
-                                 name=adj_name,
-                                 tournament=None if t.pref('share_adjs') else t,
-                                 test_score=adj_rating, )
+        if adj_shared == "yes":
+            adj_t = None
+        else:
+            adj_t = t
+
+        if adj_name and adj_rating and adj_institution:
+            newadj = Adjudicator(institution=adj_institution,
+                                 name=adj_name, tournament=adj_t,
+                                 test_score=adj_rating)
             newadj.save()
 
     confirmed = {"kind": "Adjudicators",

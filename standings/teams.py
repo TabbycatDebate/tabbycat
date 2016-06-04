@@ -1,206 +1,304 @@
-"""Standings generator for teams.
+"""Standings generator for teams."""
 
-The main engine for generating team standings."""
-
-from collections import OrderedDict
-from operator import itemgetter
-from participants.models import Team
-from .metrics import MetricAnnotator
-from .ranking import RankAnnotator
-import random
 import logging
+from itertools import groupby
+
+from django.db.models import Sum
+from django.db.models.expressions import RawSQL
+
+from participants.models import Round
+from results.models import TeamScore
+
+from .base import BaseStandingsGenerator
+from .metrics import BaseMetricAnnotator, RepeatedMetricAnnotator, QuerySetMetricAnnotator, metricgetter
+from .ranking import BaseRankAnnotator, BasicRankAnnotator, SubrankAnnotator
+
 logger = logging.getLogger(__name__)
 
-class StandingsError(RuntimeError):
-    pass
 
-class TeamStandingInfo:
-    """Stores standing information for a team.
+# ==============================================================================
+# Metric annotators
+# ==============================================================================
 
-    This class is designed to be accessed directly by Django templates. Its
-    `metrics` and `rankings` attributes support item lookup, so may be accessed
-    like this:
+class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
+    """Base class for annotators that metrics based on conditional aggregations
+    of TeamScore instances."""
 
-                  Django template               Python code
-        Points:   {{ tsi.metrics.points }}      tsi.metrics["points"]
-        Rank:     {{ tsi.rankings.rank }}       tsi.rankings["rank"]
+    function = None  # must be set by subclasses
+    field = None  # must be set by subclasses
 
-    The `itermetrics()` and `iterrankings()` methods return iterators over the
-    values of `metrics` and `rankings` respectively, in the order specified by
-    `standings.metric_keys`. For example:
+    exclude_forfeits = False
+    where_value = None
 
-    Django template:
+    @staticmethod
+    def get_annotation_metric_query_str(field, function, round=None, exclude_forfeits=False, where_value=None):
+        """Returns a string, being an SQL query that can be passed into RawSQL()."""
+        # This is what might be more concisely expressed, if it were permissible
+        # in Django, as:
+        # teams = teams.annotate_if(
+        #     models.Sum('debateteam__teamscore__{field:s}'),
+        #     condition={"debateteam__teamscore__ballot_submission__confirmed": True,
+        #         "debateteam__debate__round__stage": Round.STAGE_PRELIMINARY}
+        # )
+        #
+        # That is, it adds up the relevant field on *confirmed* ballots for each
+        # team and adds them as columns to the table it returns. The standings
+        # include only preliminary rounds.
 
-        {# Assuming the header row was rendered as in TeamStandings: #}
-        {% for tsi in standings.standings %}
-          <tr>
-            {% for metric in tsi.itermetrics %}
-              <td>{{ metric }}</td>
-            {% endfor %}
-          </tr>
-        {% endfor %}
+        query = """
+            SELECT DISTINCT {function}({field:s})
+            FROM results_teamscore
+            JOIN results_ballotsubmission ON results_teamscore.ballot_submission_id = results_ballotsubmission.id
+            JOIN draw_debateteam ON results_teamscore.debate_team_id = draw_debateteam.id
+            JOIN draw_debate ON draw_debateteam.debate_id = draw_debate.id
+            JOIN tournaments_round ON draw_debate.round_id = tournaments_round.id
+            WHERE results_ballotsubmission.confirmed = TRUE
+            AND draw_debateteam.team_id = participants_team.id
+            AND tournaments_round.stage = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
 
-    Python code:
+        if round is not None:
+            query += """
+            AND tournaments_round.seq <= {round:d}""".format(round=round.seq)
 
-        for tsi in standings.standings:
-            for metric, value in zip(standings.metric_info, tsi.itermetrics()):
-                print("{0}: {1}".format(metric["name"], value))
+        if exclude_forfeits:
+            query += """
+            AND results_teamscore.forfeit = FALSE"""
 
-    Note that no order is guaranteed when iterating over `metrics.values()` or
-    `rankings.values()`. Use `itermetrics()` and `iterrankings()` instead.
-    """
+        if where_value is not None:
+            query += """
+            AND {field:s} = """ + str(where_value)
 
-    def __init__(self, standings, team):
-        self.standings = standings
+        return query.format(field=field, function=function)
 
-        if isinstance(team, int):
-            self.team_id = team
-            self._team = None
-        elif hasattr(team, 'id'):
-            self.team_id = team.id
-            self._team = team
-        else:
-            raise TypeError("'team' should be a object with 'id' attribute or an integer")
-
-        self.metrics = dict()
-        self.rankings = dict()
-
-        class TeamStandingInfoMetricLists:
-            """Supports item lookup only. Finds all metrics that start with the
-            requested metric name and have a numeric suffix, and returns a list
-            of them, sorted by the numeric suffix. For example, if a
-            `TeamStandingInfo` object `tsi` has metrics `wbw1`, `wbw3`, `wbw4`,
-            then `tsi.metric_lists["wbw"]` returns `[tsi.metrics["wbw1"],
-            tsi.metrics["wbw3"], tsi.metrics["wbw4"]]`."""
-            def __getitem__(this, key):
-                metrics = [k for k in self.metrics.keys() if k.startswith(key) and k[len(key):].isdigit()]
-                metrics.sort()
-                return [self.metrics[m] for m in metrics]
-        self.metric_lists = TeamStandingInfoMetricLists()
-
-    @property
-    def team(self):
-        if not self._team:
-            self._team = Team.objects.get(id=self.team_id)
-        return self._team
-
-    def add_metric(self, name, value):
-        if name in self.metrics:
-            raise ValueError("There is already a metric {!r} for this team".format(name))
-        self.metrics[name] = value
-
-    def add_ranking(self, name, value):
-        if name in self.rankings:
-            raise ValueError("There is already a ranking {!r} for this team".format(name))
-        self.rankings[name] = value
-
-    def itermetrics(self):
-        for key in self.standings.metric_keys:
-            yield self.metrics[key]
-
-    def iterrankings(self):
-        for key in self.standings.ranking_keys:
-            yield self.rankings[key]
-
-class TeamStandings:
-    """Presents all information about the team standings requested. Returned
-    by `TeamStandingsGenerator`.
-
-    This class is designed to be accessed directly by Django templates. The
-    `metrics_info` method returns an iterator yielding dictionaries with keys
-    "key", "name", "abbr" and "glyphicon". For example:
-
-    Django template:
-
-        <tr>
-          {% for metric in standings.metrics_info %}
-            <td>{{ metric.name }}</td>
-          {% endfor %}
-        </tr>
-
-    Python code:
-
-        for metric in standings.metric_info:
-            print("Key is {0}, name is {1}".format(metric["key"], metric["name"]))
-
-    The `rankings_info` attribute behaves similarly.
-
-    The `standings` property returns a list of `TeamStandingInfo` objects. For
-    information on how to iterate over them, see the docstring for
-    `TeamStandingInfo`.
-    """
-
-    _SPEC_FIELDS = ("key", "name", "abbr", "glyphicon")
-
-    def __init__(self, teams):
-        self.infos = {team: TeamStandingInfo(self, team) for team in teams}
-        self.ranked = False
-
-        self.metric_keys = list()
-        self.ranking_keys = list()
-        self._metric_specs = list()
-        self._ranking_specs = list()
-
-    @property
-    def standings(self):
-        assert self.ranked, "sort() must be called before accessing standings"
-        return self._standings
-
-    def __len__(self):
-        return len(self.standings)
-
-    def __iter__(self):
-        """Returns an iterator that iterates over constituent TeamStandingInfo
-        objects in ranked order. Raises AttributeError if rankings have not yet
-        been generated."""
-        return iter(self.standings)
-
-    def infoview(self):
-        return self.infos.values()
-
-    def metrics_info(self):
-        for spec in self._metric_specs:
-            yield dict(zip(self._SPEC_FIELDS, spec))
-
-    def rankings_info(self):
-        for spec in self._ranking_specs:
-            yield dict(zip(self._SPEC_FIELDS, spec))
-
-    def get_team_list(self):
-        return [s.team for s in self.standings]
-
-    def get_team_standing(self, team):
-        try:
-            return self.infos[team]
-        except KeyError:
-            raise ValueError("The team {!r} isn't in these standings.")
-
-    def record_added_metric(self, key, name, abbr, glyphicon):
-        self.metric_keys.append(key)
-        self._metric_specs.append((key, name, abbr, glyphicon))
-
-    def record_added_ranking(self, key, name, abbr, glyphicon):
-        self.ranking_keys.append(key)
-        self._ranking_specs.append((key, name, abbr, glyphicon))
-
-    def add_metric_to_team(self, team, key, value):
-        assert not self.ranked, "Can't add metrics once TeamStandings object is sorted"
-        self.get_team_standing(team).add_metric(key, value)
-
-    def sort(self, precedence, tiebreak_func=None):
-        self._standings = list(self.infos.values())
-        if tiebreak_func:
-            tiebreak_func(self._standings)
-        try:
-            self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics), reverse=True)
-        except TypeError:
-            for tsi in self.infos:
-                logger.info("{:30} {}".format(tsi.team.short_name, itemgetter(*precedence)(tsi.metrics)))
-            raise
-        self.ranked = True
+    def get_annotation_metric_query_args(self, round):
+        return (self.field, self.function, round, self.exclude_forfeits, self.where_value)
 
 
-class TeamStandingsGenerator:
+class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for team points using win = 2, loss = 1, loss by forfeit = 0."""
+    key = "points210"
+    name = "points"
+    abbr = "Pts"
+
+    choice_name = "Points (2/1/0)"
+
+    def annotate(self, queryset, standings, round=None):
+        # Includes forfeits
+        wins_query = self.get_annotation_metric_query_str("win", "COUNT", round, False, "TRUE")
+        # Excludes forfeits
+        losses_query = self.get_annotation_metric_query_str("win", "COUNT", round, True, "FALSE")
+        query = "({wins}) * 2 + ({losses})".format(wins=wins_query, losses=losses_query)
+        sql = RawSQL(query, ())
+        logger.info("Running query: " + query)
+        queryset = queryset.annotate(metric=sql).distinct()
+        self.annotate_with_queryset(queryset, standings, round)
+
+
+class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total number of points."""
+    key = "points"
+    name = "points"
+    abbr = "Pts"
+
+    function = "SUM"
+    field = "points"
+
+
+class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total number of wins."""
+    key = "wins"
+    name = "wins"
+    abbr = "Wins"
+
+    function = "COUNT"
+    field = "win"
+    where_value = "TRUE"
+
+
+class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total speaker score."""
+    key = "speaks_sum"
+    name = "total speaker score"
+    abbr = "Spk"
+
+    function = "SUM"
+    field = "score"
+
+
+class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total speaker score."""
+    key = "speaks_avg"
+    name = "average speaker score"
+    abbr = "ASS"
+    exclude_forfeits = True
+
+    function = "AVG"
+    field = "score"
+
+
+class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for sum of margins."""
+    key = "margin_sum"
+    name = "sum of margins"
+    abbr = "Marg"
+
+    function = "SUM"
+    field = "margin"
+
+
+class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for average margin, excluding forfeit ballots."""
+    key = "margin_avg"
+    name = "average margin"
+    abbr = "AWM"
+
+    function = "AVG"
+    field = "margin"
+    exclude_forfeits = True
+
+
+class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
+    """Metric annotator for draw strength."""
+    key = "draw_strength"
+    name = "draw strength"
+    abbr = "DS"
+
+    def annotate(self, queryset, standings, round=None):
+        if not queryset.exists():
+            return
+
+        logger.info("Running points query for draw strength:")
+        full_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
+            queryset[0].tournament.team_set.all(), "points", "points", "SUM", round)
+
+        for team in queryset:
+            draw_strength = 0
+            debateteam_set = team.debateteam_set.all()
+            if round is not None:
+                debateteam_set = debateteam_set.filter(debate__round__seq__lte=round.seq)
+            for dt in debateteam_set:
+                points = full_queryset.get(id=dt.opposition.team_id).points
+                if points is not None: # points is None when no debates have happened
+                    draw_strength += points
+            standings.add_metric(team, self.key, draw_strength)
+
+
+class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
+    """Metric annotator for number of adjudicators."""
+
+    key = "num_adjs"
+    name = "number of adjudicators"
+    abbr = "Adjs"
+
+    def __init__(self, adjs_per_debate=3):
+        self.adjs_per_debate = 3
+
+    def annotate(self, queryset, standings, round=None):
+        raise NotImplementedError("number of adjudicators doesn't work yet")
+
+
+class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
+    """Metric annotator for who-beat-whom. Use once for every who-beat-whom in
+    the precedence."""
+
+    key_prefix = "wbw"
+    name_prefix = "WBW"
+    abbr_prefix = "WBW"
+    choice_name = "who-beat-whom"
+
+    def __init__(self, index, keys):
+        if len(keys) == 0:
+            raise ValueError("keys must not be empty")
+        super(WhoBeatWhomMetricAnnotator, self).__init__(index, keys)
+
+    def get_team_scores(self, key, equal_teams, tsi, round):
+        equal_teams.remove(tsi)
+        other = equal_teams[0]
+        ts = TeamScore.objects.filter(
+            ballot_submission__confirmed=True,
+            debate_team__team=tsi.team,
+            debate_team__debate__debateteam__team=other.team)
+
+        if round is not None:
+            ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)
+
+        ts = ts.aggregate(Sum('points'))
+        logger.info("who beat whom, {0} {3} vs {1} {4}: {2}".format(
+            tsi.team.short_name, other.team.short_name,
+            ts["points__sum"], key(tsi), key(other)))
+        return ts
+
+    def annotate(self, queryset, standings, round=None):
+        key = metricgetter(*self.keys)
+
+        def who_beat_whom(tsi):
+            equal_teams = [x for x in standings.infoview() if key(x) == key(tsi)]
+            if len(equal_teams) != 2:
+                return "n/a"  # fail fast if attempt to compare with an int
+
+            ts = self.get_team_scores(key, equal_teams, tsi, round)
+            return ts["points__sum"] or 0
+
+        for tsi in standings.infoview():
+            wbw = who_beat_whom(tsi)
+            tsi.add_metric(self.key, wbw)
+
+
+class DivisionsWhoBeatWhomMetricAnnotator(WhoBeatWhomMetricAnnotator):
+    """Metric annotator for who-beat-whom within divisions. Use once for
+    every who-beat-whom in the precedence."""
+
+    key_prefix = "wbwd"
+    name_prefix = "WBWD"
+    abbr_prefix = "WBWD"
+    choice_name = "who-beat-whom (in divisions)"
+
+    def annotate(self, queryset, standings, round=None):
+        key = metricgetter(*self.keys)
+
+        def who_beat_whom_divisions(tsi):
+            equal_teams = [x for x in standings.infoview() if key(x) == key(tsi) and x.team.division == tsi.team.division]
+            if len(equal_teams) != 2:
+                return 0  # Fail fast if attempt to compare with an int
+
+            ts = self.get_team_scores(key, equal_teams, tsi, round)
+            return ts["points__sum"] or 0
+
+        for tsi in standings.infoview():
+            wbwd = who_beat_whom_divisions(tsi)
+            tsi.add_metric(self.key, wbwd)
+
+
+# ==============================================================================
+# Ranking annotators
+# ==============================================================================
+
+class DivisionRankAnnotator(BaseRankAnnotator):
+
+    key = "division_rank"
+    name = "division rank"
+    abbr = "DivR"
+
+    def __init__(self, metrics):
+        self.rank_key = metricgetter(*metrics)
+
+    def annotate(self, standings):
+        division_key = lambda x: x.team.division.name  # flake8: noqa
+        by_division = sorted(standings, key=division_key)
+        for division, division_teams in groupby(by_division, key=division_key):
+            rank = 1
+            for key, group in groupby(division_teams, self.rank_key):
+                group = list(group)
+                for tsi in group:
+                    tsi.add_ranking("division_rank", (rank, len(group) > 1))
+                rank += len(group)
+
+
+# ==============================================================================
+# Standings generator
+# ==============================================================================
+
+class TeamStandingsGenerator(BaseStandingsGenerator):
     """Class for generating standings. An instance is configured with metrics
     and rankings in the constructor, and an iterable of Team objects is passed
     to its `generate()` method to generate standings. Example:
@@ -211,101 +309,26 @@ class TeamStandingsGenerator:
     The generate() method returns a TeamStandings object.
     """
 
-    DEFAULT_OPTIONS = {
-        "tiebreak": "random",
+    TIEBREAK_FUNCTIONS = BaseStandingsGenerator.TIEBREAK_FUNCTIONS.copy()
+    TIEBREAK_FUNCTIONS["shortname"] = lambda x: x.sort(key=lambda y: y.team.short_name)
+    TIEBREAK_FUNCTIONS["institution"] = lambda x: x.sort(key=lambda y: y.team.institution.name)
+
+    metric_annotator_classes = {
+        "points"        : PointsMetricAnnotator,
+        "points210"     : Points210MetricAnnotator,
+        "wins"          : WinsMetricAnnotator,
+        "speaks_sum"    : TotalSpeakerScoreMetricAnnotator,
+        "speaks_avg"    : AverageSpeakerScoreMetricAnnotator,
+        "draw_strength" : DrawStrengthMetricAnnotator,
+        "margin_sum"    : SumMarginMetricAnnotator,
+        "margin_avg"    : AverageMarginMetricAnnotator,
+        # "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
+        "wbw"           : WhoBeatWhomMetricAnnotator,
+        "wbwd"          : DivisionsWhoBeatWhomMetricAnnotator,
     }
 
-    TIEBREAK_FUNCTIONS = {
-        "random"     : random.shuffle,
-        "shortname"  : lambda x: x.sort(key=lambda y: y.team.short_name),
-        "institution": lambda x: x.sort(key=lambda y: y.team.institution.name)
+    ranking_annotator_classes = {
+        "rank"     : BasicRankAnnotator,
+        "subrank"  : SubrankAnnotator,
+        "division" : DivisionRankAnnotator,
     }
-
-    def __init__(self, metrics, rankings, **options):
-
-        # Set up options dictionary
-        self.options = self.DEFAULT_OPTIONS.copy()
-        for key in options:
-            if key not in self.options:
-                raise ValueError("Unrecognized option: {0}".format(key))
-        self.options.update(options)
-
-        # Set up annotators
-        self._interpret_metrics(metrics)
-        self._interpret_rankings(rankings)
-        self._check_annotators(self.metric_annotators, "metric")
-        self._check_annotators(self.ranking_annotators, "ranking")
-
-    def generate(self, queryset, round=None):
-        """Generates standings for the teams in queryset. Returns a
-        TeamStandings object.
-
-        `queryset` can be a QuerySet or Manager object, and should return just
-            those teams of interest for these standings.
-        `round`, if specified, is the round for which to generate the standings.
-            (That is, rounds after `round` are excluded from the standings.)
-        """
-
-        standings = TeamStandings(queryset)
-
-        for annotator in self.metric_annotators:
-            annotator.annotate(queryset, standings, round)
-
-        standings.sort(self.precedence, self._tiebreak_func)
-
-        for annotator in self.ranking_annotators:
-            annotator.annotate(standings)
-
-        return standings
-
-    def _interpret_metrics(self, metrics):
-        """Given a list of metrics, sets:
-            - `self.precedence` to a copy of `metrics` with who-beat-whoms numbered
-            - `self.metric_annotators` to the appropriate metric annotators
-        For example:
-            ('points', 'wbw', 'speaks', 'wbw', 'margins')
-        sets:
-        ```
-            self.precedence = ['points', 'wbw1', 'speaks', 'wbw2', 'margins']
-            self.metric_annotators = [PointsMetricAnnotator(), WhoBeatWhomMetricAnnotator(1, ('points',)) ...]
-        ```
-        """
-        self.precedence = list()
-        self.metric_annotators = list()
-        index = 1
-
-        for i, metric in enumerate(metrics):
-            if metric == "wbw":
-                wbw_keys = tuple(m for m in self.precedence[0:i] if m != "wbw")
-                args = (index, wbw_keys)
-                index += 1
-            else:
-                self.precedence.append(metric)
-                args = ()
-
-            annotator = MetricAnnotator(metric, *args)
-            self.metric_annotators.append(annotator)
-            self.precedence.append(annotator.key)
-
-    def _check_annotators(self, annotators, type_str):
-        """Checks the given list of annotators to ensure there are no conflicts.
-        A conflict occurs if two annotators would add annotations of the same
-        name."""
-        names = list()
-        for annotator in annotators:
-            names.append(annotator.key)
-        if len(names) != len(set(names)):
-            raise StandingsError("The same {} would be added twice:\n{!r}".format(type_str, names))
-
-    def _interpret_rankings(self, rankings):
-        """Given a list of rankings, sets `self.ranking_annotators` to the
-        appropriate ranking annotators."""
-        self.ranking_annotators = list()
-
-        for ranking in rankings:
-            self.ranking_annotators.append(RankAnnotator(ranking, self.precedence))
-
-
-    @property
-    def _tiebreak_func(self):
-        return self.TIEBREAK_FUNCTIONS[self.options["tiebreak"]]

@@ -43,7 +43,7 @@
 
         <div class="col-md-6">
           <div class="row">
-            <label class="h4 col-xs-offset-1 control-label" >{{ debate.aff_team }}</label>
+            <label class="h4 col-xs-offset-1 control-label" >{{ debate.aff_team.short_name }}</label>
           </div>
           {% for position in sheet.affs %}
           <div class="row aff speaker s{{ position.pos }}">

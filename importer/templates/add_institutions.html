@@ -2,13 +2,13 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">🏫</span> Bulk Add Institutions{% endblock %}
+{% block head-title %}<span class="emoji">🏫</span>Bulk Add Institutions{% endblock %}
 {% block page-title %}🏫 Bulk Add Institutions{% endblock %}
 
 {% block content %}
 
 <div class="alert alert-info alert-dismissable" id="">
-  <p>Copy+paste in an institutions list, with one institution per line, using the format of:<br><br>
+  <p>Copy and paste an institutions list into the text box below, with one institution per line, using the format of:<br><br>
     <strong>Full Name, Short Nickname</strong><br><br>For example: </p>
   <p>
     <br><em>Victoria University of Wellington, VIC<br>
@@ -23,7 +23,7 @@
     <textarea class="form-control" name="institutions_raw" id="insts" rows="20"></textarea>
   </div>
   <input type="submit" class="btn btn-primary btn-block submit-disable" value="Submit Institutions List">
-  
+
 </form>
 
 {% endblock content %}

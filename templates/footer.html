@@ -3,50 +3,36 @@
 <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
   <div class="container-fluid">
 
-    {% if tournament %}
-    <div class="navbar-header">
-      <span class="navbar-brand font-size-reset small font-weight-reset">
-            {{ tournament }} runs on
-            <a href="https://github.com/czlee/tabbycat/" target="_new">
-              <span class="emoji">😸</span>Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}),
-      </a>
-      created by Qi-Shan,
-      <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, &
-      <a href="https://twitter.com/philipbelesky" target="_new">Philip</a>.
-      {% if not 'admin/' in request.path %}
-        On Android? Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper!</a>
-      {% endif %}
-      </span>
-    </div>
-    {% endif %}
-
-    <ul class="nav navbar-nav navbar-right font-size-reset small">
-      <li>
-        <a href="/">
-          <span class="emoji">🏠</span>Home
-        </a>
-      </li>
+    <ul class="nav navbar-nav navbar-right small">
+      <li><a href="/">
+        <span class="emoji">🏠</span>Home
+      </a></li>
+      <li><a href="http://tabbycat.readthedocs.io/" target="_blank">
+        <span class="emoji">❓</span>Help
+      </a></li>
       {% if user.is_authenticated %}
-      <li>
-        <a href="http://tabbycat.readthedocs.org/" target="_blank">
-          <span class="emoji">❓</span>Help
-        </a>
-      </li>
-      <li>
-        <a class="" href="/accounts/logout/">
+        <li><a class="" href="/accounts/logout/">
           <span class="emoji">🔒</span>Logout of {{ user }}
-        </a>
-      </li>
+        </a></li>
       {% else %}
-      <li>
-        <a class="" href="/accounts/login/">
+        <li><a class="" href="/accounts/login/">
           <span class="emoji">🔓</span>Login
-        </a>
-      </li>
+        </a></li>
       {% endif %}
     </ul>
 
+    <p class="navbar-text small">
+      {% if tournament %}{{ tournament }} runs on {% endif %}
+      <a href="https://github.com/czlee/tabbycat/" target="_new">
+        <span class="emoji">😸</span>Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }})
+      </a> created by Qi-Shan,
+      <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, &
+      <a href="http://philipbelesky.com" target="_new">Philip</a>.
+      Want to <a href="http://tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-way" target="_new">setup your own copy?</a>
+      <br>
+      Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> for time-keeping on Android
+      devices and <a href="http://debatingballot.com/" target="_new">debatingballot.com</a> for ballot templates.
+    </p>
+
   </div>
-  <!-- /.container-fluid -->
 </nav>
-<!-- /.navbar -->

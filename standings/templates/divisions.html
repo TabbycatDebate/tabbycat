@@ -1,0 +1,10 @@
+{% extends "teams.html" %}
+{% load static %}
+{% load debate_tags %}
+{% load metricformat %}
+
+{% block page-title %}👯Division Standings after {{ round.name }}{% endblock %}
+{% block head-title %}<span class="emoji">👯</span>Division Standings{% endblock %}
+{% block sub-title %}after {{ round.name }}{% endblock %}
+{% block team_active %}{% endblock %}
+{% block division_active %}active{% endblock %}

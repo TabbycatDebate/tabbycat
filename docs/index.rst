@@ -36,12 +36,14 @@ tournaments.
 
    features/adjudicator-feedback
    features/adjudicator-allocation
+   features/breaks
    features/data-entry
    features/draw-generation
    features/data-importers
    features/printing
    features/team-standings-rules
    features/user-accounts
+   features/venue-constraints
 
 .. _about-docs:
 

@@ -1,18 +1,22 @@
+import itertools
+import logging
+
+from collections import Counter
+
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-import itertools
-from collections import Counter
-import logging
 
 from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
-from .result import BallotSet
 
+from .result import BallotSet, ForfeitBallotSet
 
 logger = logging.getLogger(__name__)
 
+
 class FormConstructionError(Exception):
     pass
+
 
 # ==============================================================================
 # Result/ballot custom fields
@@ -84,9 +88,11 @@ class BaseScoreField(forms.FloatField):
                     _(msg), code='decimal'
                 )
 
+
 class MotionModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return "%d. %s" % (obj.seq, obj.text)
+
 
 class SubstantiveScoreField(BaseScoreField):
     CONFIG_MIN_VALUE_FIELD  = 'scoring__score_min'
@@ -104,6 +110,7 @@ class ReplyScoreField(BaseScoreField):
     DEFAULT_MIN_VALUE = 34
     DEFAULT_MAX_VALUE = 41
     DEFAULT_STEP_VALUE = 0.5
+
 
 # ==============================================================================
 # Result/ballot forms
@@ -144,15 +151,15 @@ class BallotSetForm(forms.Form):
         super(BallotSetForm, self).__init__(*args, **kwargs)
 
         self.POSITIONS = self.tournament.POSITIONS
-        self.LAST_SUBSTANTIVE_POSITION = self.tournament.LAST_SUBSTANTIVE_POSITION # also used in template
-        self.REPLY_POSITION = self.tournament.REPLY_POSITION # also used in template
+        self.LAST_SUBSTANTIVE_POSITION = self.tournament.LAST_SUBSTANTIVE_POSITION  # also used in template
+        self.REPLY_POSITION = self.tournament.REPLY_POSITION  # also used in template
 
         self._create_fields()
         self._set_tab_indices()
         self.initial = self._initial_data()
 
     @property
-    def SIDES_AND_POSITIONS(self):
+    def SIDES_AND_POSITIONS(self):  # flake8: noqa
         return itertools.product(self.SIDES, self.POSITIONS)
 
     # --------------------------------------------------------------------------
@@ -229,11 +236,11 @@ class BallotSetForm(forms.Form):
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(queryset=queryset)
 
             # 4(b). Speaker scores
-            ScoreField = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
+            scorefield = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
             for adj in self.adjudicators:
-                self.fields[self._fieldname_score(adj, side, pos)] = ScoreField(
-                        widget=forms.NumberInput(attrs={'class': 'required number'}),
-                        tournament_preferences=self.tournament.preferences)
+                self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
+                    widget=forms.NumberInput(attrs={'class': 'required number'}),
+                    tournament_preferences=self.tournament.preferences)
 
         # 5. If forfeits are enabled, don't require some fields and add the forfeit field
         if self.using_forfeits:
@@ -242,15 +249,27 @@ class BallotSetForm(forms.Form):
                 self.fields[self._fieldname_speaker(side, pos)].required = False
             if self.using_motions:
                 self.fields['motion'].required = False
-            CHOICES = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
-            self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=False)
+            if self.ballotsub.forfeit is not None:
+                self.forfeit_declared = True
+                if self.ballotsub.forfeit == self.debate.aff_dt:
+                    forfeiter = "aff_forfeit"
+                elif self.ballotsub.forfeit == self.debate.neg_dt:
+                    forfeiter = "neg_forfeit"
+                else:
+                    raise ValueError('Forfeit was declared but was neither set as the aff or neg team')
+            else:
+                forfeiter = None
+
+            choices = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
+            self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, initial=forfeiter, required=False)
 
     def _initial_data(self):
         """Generates dictionary of initial form data."""
 
         ballotset = BallotSet(self.ballotsub)
         initial = {'debate_result_status': self.debate.result_status,
-                'confirmed': ballotset.confirmed, 'discarded': ballotset.discarded}
+                   'confirmed': ballotset.confirmed,
+                   'discarded': ballotset.discarded}
 
         # When bypassing confirmations we just pre-check
         if self.bypassing_checks:
@@ -326,7 +345,7 @@ class BallotSetForm(forms.Form):
             except KeyError as e:
                 logger.warning(e)
 
-        self.nexttabindex = i + 1 # for other UI elements in the tempate
+        self.nexttabindex = i + 1  # for other UI elements in the tempate
 
     # --------------------------------------------------------------------------
     # Validation and save methods
@@ -334,7 +353,6 @@ class BallotSetForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(BallotSetForm, self).clean()
-        errors = list()
 
         if cleaned_data.get('forfeits') in ["aff_forfeit", "neg_forfeit"]:
             self.forfeit_declared = True
@@ -366,7 +384,6 @@ class BallotSetForm(forms.Form):
                             params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
                         ))
 
-
             # Pull team info again, in case it's changed since the form was loaded.
             if self.choosing_sides:
                 teams = cleaned_data.get('choose_sides', [None] * len(self.SIDES))
@@ -388,8 +405,8 @@ class BallotSetForm(forms.Form):
                     if team is not None and speaker not in team.speakers:
                         self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
                             _("The speaker %(speaker)s doesn't appear to be on team %(team)s."),
-                            params={'speaker': speaker.name, 'team': team.short_name}, code='speaker_wrongteam'
-                            ))
+                            params={'speaker': speaker.name, 'team': team.short_name}, code='speaker_wrongteam')
+                        )
                     speaker_counts[speaker] += 1
 
                 # The substantive speakers must be unique.
@@ -409,7 +426,7 @@ class BallotSetForm(forms.Form):
                         self.add_error(self._fieldname_speaker(side, self.REPLY_POSITION), forms.ValidationError(
                             _("The last substantive speaker and reply speaker for the %(side)s team can't be the same."),
                             params={'side': self._LONG_NAME[side]}, code='reply_speaker_consecutive'
-                            ))
+                        ))
 
                     # The reply speaker must have given a substantive speech.
                     if speaker_counts[reply_speaker] == 0:
@@ -477,7 +494,7 @@ class BallotSetForm(forms.Form):
             yield self['team_%d' % team.id]
 
     def adj_iter(self):
-        form = self # provide access in inner classes
+        form = self  # provide access in inner classes
 
         class Position(object):
             def __init__(self, adj, pos):
@@ -520,7 +537,6 @@ class BallotSetForm(forms.Form):
             def position_iter(self):
                 for i in form.POSITIONS:
                     yield Position(self.adj, i)
-
 
         for adj in self.adjudicators:
             yield AdjudicatorWrapper(adj)

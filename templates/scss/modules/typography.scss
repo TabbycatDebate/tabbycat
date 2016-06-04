@@ -1,0 +1,47 @@
+@import '../partials/variables';
+
+// WEB FONTS
+@font-face {
+  font-family: 'LatoLatinWeb';
+  src: url('/static/fonts/vendor/lato-regular.eot');
+  src:  url('/static/fonts/vendor/lato-regular.eot?#iefix') format('embedded-opentype'),
+        url('/static/fonts/vendor/lato-regular.woff2') format('woff2'),
+        url('/static/fonts/vendor/lato-regular.woff') format('woff'),
+        url('/static/fonts/vendor/lato-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+}
+
+// UTILITIES
+
+.text-muted {
+  color: $gray-light;
+}
+
+// EMOJI
+.emoji {
+  display: inline-block;
+  font-family: sans-serif; // Need to be a system font or they wont show
+  font-style: normal;
+  font-weight: normal;
+  margin-right: 1px;
+  min-width: 20px;
+}
+.small .emoji {
+  min-width: 13px;
+}
+
+// BUTTONS
+.nav {
+  // Actionable elements (buttons, navs) should be distinct
+  font-family: $headings-font-family;
+}
+
+.nav-pills a.btn-default {
+  color: $brand-primary;
+}
+
+.nav-tabs a {
+  letter-spacing: .5px;
+}

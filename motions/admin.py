@@ -1,31 +1,23 @@
 from django.contrib import admin
 
-from .models import Motion, DebateTeamMotionPreference
+from .models import DebateTeamMotionPreference, Motion
+
+from utils.admin import BaseModelAdmin
+
 
 # ==============================================================================
 # Motions
 # ==============================================================================
 
-_m_tournament = lambda o: o.round.tournament
-class MotionAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'round', 'seq', _m_tournament)
+class MotionAdmin(admin.ModelAdmin, BaseModelAdmin):
+    list_display = ('reference', 'round', 'seq', 'get_tournament')
     list_filter = ('round', 'divisions')
-
 
 admin.site.register(Motion, MotionAdmin)
 
-_dtmp_team_name = lambda o: o.debate_team.team.short_name
-_dtmp_team_name.short_description = 'Team'
-_dtmp_position = lambda o: o.debate_team.position
-_dtmp_position.short_description = 'Position'
-_dtmp_motion = lambda o: o.motion.reference
-_dtmp_motion.short_description = 'Motion'
-_dtmp_confirmed = lambda o: o.ballot_submission.confirmed
-_dtmp_confirmed.short_description = 'Confirmed'
-class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('ballot_submission', _dtmp_confirmed, _dtmp_team_name,
-                    _dtmp_position, 'preference', _dtmp_motion)
 
+class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin, BaseModelAdmin):
+    list_display = ('ballot_submission', 'get_confirmed', 'get_team',
+                    'get_team_position', 'preference', 'get_motion_ref')
 
-admin.site.register(DebateTeamMotionPreference,
-                    DebateTeamMotionPreferenceAdmin)
+admin.site.register(DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)

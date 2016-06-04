@@ -1,8 +1,9 @@
-from django.core.management.base import BaseCommand, CommandError
-from tournaments.models import Tournament, Round
-from settings import TABBYCAT_APPS
-from argparse import ArgumentTypeError
 import logging
+
+from django.core.management.base import BaseCommand, CommandError
+
+from settings import TABBYCAT_APPS
+from tournaments.models import Round, Tournament
 
 
 def _set_log_level(level):
@@ -30,8 +31,7 @@ class TournamentCommand(BaseCommand):
             action="append",
             dest="tournament_selection",
             metavar="TOURNAMENT",
-            help=
-            "Slug of tournament(s), required if there is more than one tournament. "
+            help="Slug of tournament(s), required if there is more than one tournament. "
             "Can be specified multiple times to run the command on multiple tournaments.")
         tournaments_group.add_argument(
             "--all-tournaments",
@@ -53,13 +53,13 @@ class TournamentCommand(BaseCommand):
             pass
 
         elif options["all_tournaments"]:
-            if tournament_option:
+            if options["tournament_selection"]:
                 raise CommandError(
                     "You can't use --tournament and --all-tournaments together.")
             options["__tournaments__"] = list(Tournament.objects.all())
 
         elif not options["tournament_selection"]:
-            # if there is only one tournament, that'll do.
+            # If there is only one tournament, that'll do.
             if Tournament.objects.count() > 1:
                 raise CommandError(
                     "You must specify a tournament, because there is more than one tournament in the database.")
@@ -173,11 +173,8 @@ class RoundCommand(TournamentCommand):
         try:
             return tournament.round_set.get(**{spectype: specifier})
         except Round.DoesNotExist:
-            raise CommandError(
-                "The tournament {tournament!r} has no round with {type} {spec!r}".format(
-                    tournament=tournament.slug,
-                    type=spectype,
-                    spec=specifier))
+            raise CommandError("The tournament {tournament!r} has no round with {type} {spec!r}".format(
+                tournament=tournament.slug, type=spectype, spec=specifier))
 
     def get_rounds(self, options):
         """Returns a list of rounds implied by command-line arguments.
@@ -189,8 +186,7 @@ class RoundCommand(TournamentCommand):
 
         rounds = list()
         for tournament in self.get_tournaments(options):
-            rounds.extend(self._get_round(tournament, spec)
-                          for spec in options["round_selection"])
+            rounds.extend(self._get_round(tournament, spec) for spec in options["round_selection"])
             if options.get("all_rounds", False):
                 rounds.extend(tournament.round_set.all())
             if options.get("prelim_rounds", False):
@@ -198,28 +194,23 @@ class RoundCommand(TournamentCommand):
             if options.get("break_rounds", False):
                 rounds.extend(tournament.break_rounds.all())
         if not rounds and self.rounds_required:
-            raise CommandError(
-                "No rounds were given. (Use --help for more info.)")
+            raise CommandError("No rounds were given. (Use --help for more info.)")
 
         options["__rounds__"] = rounds
         return rounds
 
     def _confirm_rounds(self, rounds, **options):
         if not options["confirm"]:
-            self.stdout.write(self.style.WARNING(
-                "WARNING! You are about to {} from the following rounds:".format(
-                    self.confirm_round_destruction)))
+            self.stdout.write(self.style.WARNING("WARNING! You are about to {} from the following rounds:".format(self.confirm_round_destruction)))
             for r in rounds:
-                self.stdout.write(self.style.WARNING(
-                    "  [{t}]: {r}".format(t=r.tournament.name,
-                                          r=r.name)))
+                self.stdout.write(self.style.WARNING("  [{t}]: {r}".format(
+                    t=r.tournament.name, r=r.name)))
             response = input("Are you sure? ")
             if response != "yes":
                 raise CommandError("Cancelled by user.")
 
         elif options["confirm"] != options["round_selection"]:
-            raise CommandError(
-                "The --confirm arguments did not match the positional arguments.")
+            raise CommandError("The --confirm arguments did not match the positional arguments.")
 
     def handle(self, *args, **options):
         self._set_log_level(**options)

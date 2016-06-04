@@ -1,21 +1,17 @@
 from django.contrib import admin
-from django import forms
 
-from .models import Debate, DebateTeam, TeamVenuePreference, InstitutionVenuePreference
-from participants.models import Speaker, Team
 from adjallocation.models import DebateAdjudicator
+from utils.admin import BaseModelAdmin
+
+from .models import Debate, DebateTeam
+
 
 # ==============================================================================
 # DebateTeam
 # ==============================================================================
 
-_dt_round = lambda o: o.debate.round.abbreviation
-_dt_round.short_description = 'Round'
-_dt_tournament = lambda o: o.debate.round.tournament
-_dt_tournament.short_description = 'Tournament'
-
-class DebateTeamAdmin(admin.ModelAdmin):
-    list_display = ('team', _dt_tournament, _dt_round, 'position')
+class DebateTeamAdmin(admin.ModelAdmin, BaseModelAdmin):
+    list_display = ('team', 'get_tournament', 'get_round', 'position')
     search_fields = ('team', )
     raw_id_fields = ('debate', 'team', )
 
@@ -27,38 +23,10 @@ class DebateTeamAdmin(admin.ModelAdmin):
 
 admin.site.register(DebateTeam, DebateTeamAdmin)
 
-# ==============================================================================
-# TeamVenuePreference
-# ==============================================================================
-
-class TeamVenuePreferenceAdmin(admin.ModelAdmin):
-    list_display = ('team', 'venue_group', 'priority')
-    search_fields = ('team', 'venue_group', 'priority')
-    list_filter = ('team', 'venue_group', 'priority')
-    raw_id_fields = ('team', )
-
-
-admin.site.register(TeamVenuePreference, TeamVenuePreferenceAdmin)
-
-# ==============================================================================
-# InstitutionVenuePreference
-# ==============================================================================
-
-
-class InstitutionVenuePreferenceAdmin(admin.ModelAdmin):
-    list_display = ('institution', 'venue_group', 'priority')
-    search_fields = ('institution', 'venue_group', 'priority')
-    list_filter = ('institution', 'venue_group', 'priority')
-    raw_id_fields = ('institution', )
-
-
-admin.site.register(InstitutionVenuePreference,
-                    InstitutionVenuePreferenceAdmin)
 
 # ==============================================================================
 # Debate
 # ==============================================================================
-
 
 class DebateTeamInline(admin.TabularInline):
     model = DebateTeam

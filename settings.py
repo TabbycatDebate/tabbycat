@@ -1,23 +1,22 @@
-import sys
 import os
-import urllib.parse
+
+from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT = (os.path.join(BASE_DIR, 'media'), )
 
-# ========================
-# = Overwritten in Local =
-# ========================
+# ==============================================================================
+# Overwritten in Local
+# ==============================================================================
 
 ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS = ADMINS
 DEBUG = False
 DEBUG_ASSETS = DEBUG
-LIVE_RELOAD = False
 
-# ===================
-# = Global Settings =
-# ===================
+# ==============================================================================
+# Global Settings
+# ==============================================================================
 
 MEDIA_URL = '/media/'
 TIME_ZONE = 'Australia/Melbourne'
@@ -29,20 +28,20 @@ TABBYCAT_VERSION = '0.8.3'
 TABBYCAT_CODENAME = 'Bengal'
 READTHEDOCS_VERSION = 'v0.8.3'
 
-# ===========================
-# = Django-specific Modules =
-# ===========================
+# ==============================================================================
+# Django-specific Module
+# ==============================================================================
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # For Static Files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'utils.middleware.DebateMiddleware' )
+    'utils.middleware.DebateMiddleware')
 
 TABBYCAT_APPS = ('actionlog',
                  'adjallocation',
@@ -66,20 +65,20 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django_gulp',  # Asset compilation; must be before staticfiles
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'django_extensions', # For Secret Generation Command
-    'compressor', )
+    'django_extensions')  # For Secret Generation Command
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
 
-# =============
-# = Templates =
-# =============
+# ==============================================================================
+# Templates
+# ==============================================================================
 
 TEMPLATES = [
     {
@@ -94,9 +93,12 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
-                'django.template.context_processors.request',  # For Jet
-                'utils.context_processors.debate_context',  # For tournament config vars
-                'utils.context_processors.get_menu_highlight',  # For nav highlight
+                # For Jet
+                'django.template.context_processors.request',
+                # For tournament config vars
+                'utils.context_processors.debate_context',
+                # For nav highlights
+                'utils.context_processors.get_menu_highlight',
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
@@ -108,14 +110,14 @@ TEMPLATES = [
     }
 ]
 
-# ===========
-# = Caching =
-# ===========
+# ==============================================================================
+# Caching
+# ==============================================================================
 
-PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60
-                                               * 1))
-TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 *
-                                             120))
+PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT',
+                                60 * 1))
+TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT',
+                                60 * 120))
 
 # Default non-heroku cache is to use local memory
 CACHES = {
@@ -128,9 +130,9 @@ CACHES = {
 # Use the cache for sessions rather than the db
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-# ================
-# = Static Files =
-# ================
+# ==============================================================================
+# Static Files
+# ==============================================================================
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
@@ -140,25 +142,23 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder', )
+)
 
 # Whitenoise Gzipping and unique names
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# =============
-# = Pipelines =
-# =============
+# ==============================================================================
+# Compilation
+# ==============================================================================
 
-# Compression
-COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = True
-COMPRESS_PRECOMPILERS = (('text/x-scss', 'django_libsass.SassCompiler'), )
+# Run with collectstatic with DEBUG as False
+GULP_PRODUCTION_COMMAND = "npm run gulp build --production"
+# Run with collectstatic with DEBUG as True
+GULP_DEVELOP_COMMAND = "npm run gulp"
 
-LIBSASS_OUTPUT_STYLE = 'compressed'
-
-# ===========
-# = Logging =
-# ===========
+# ==============================================================================
+# Logging
+# ==============================================================================
 
 if os.environ.get('SENDGRID_USERNAME', ''):
     SERVER_EMAIL = os.environ['SENDGRID_USERNAME']
@@ -219,17 +219,17 @@ for app in TABBYCAT_APPS:
         'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG' if DEBUG else 'INFO'),
     }
 
-# ============
-# = Messages =
-# ============
+# ==============================================================================
+# Messages
+# ==============================================================================
 
-from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {messages.ERROR: 'danger', }
 
-# ==========
-# = Heroku =
-# ==========
+# ==============================================================================
+# Heroku
+# ==============================================================================
 
+# Get key from heroku config env else use a fall back
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY', '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc')
 
@@ -278,9 +278,11 @@ if os.environ.get('DEBUG', ''):
     DEBUG = bool(int(os.environ['DEBUG']))
     TEMPLATES[0]['OPTIONS']['debug'] = True
 
-# =============
-# = Travis CI =
-# =============
+# ==============================================================================
+# Travis CI
+# ==============================================================================
+
+FIXTURE_DIRS = (os.path.join(BASE_DIR, 'data', 'fixtures'), )
 
 if os.environ.get('TRAVIS', '') == 'true':
     DATABASES = {
@@ -293,14 +295,14 @@ if os.environ.get('TRAVIS', '') == 'true':
         }
     }
 
-# ===================
-# = Local Overrides =
-# ===================
+# ==============================================================================
+# Local Overrides
+# ==============================================================================
 
 try:
     LOCAL_SETTINGS
 except NameError:
     try:
-        from local_settings import *
+        from local_settings import *   # flake8: noqa
     except ImportError:
         pass

@@ -2,7 +2,7 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">👯</span> Bulk Add Teams{% endblock %}
+{% block head-title %}<span class="emoji">👯</span>Bulk Add Teams{% endblock %}
 {% block page-title %}👯 Bulk Add Teams{% endblock %}
 
 {% block content %}
@@ -20,10 +20,10 @@
       {% for institution in institutions %}
       <li class="list-group-item">
         <div class="row">
-          <div class="col-sm-1">
+          <div class="col-sm-2">
             <input type="number" class="form-control" name="{{ institution }}" id="" placeholder="0">
           </div>
-          <label class="col-sm-11">
+          <label class="col-sm-10">
             {{ institution }} ({{ institution.code }})
           </label>
         </div>

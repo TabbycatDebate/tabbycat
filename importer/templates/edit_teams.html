@@ -2,14 +2,14 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">👯</span> Edit Teams{% endblock %}
+{% block head-title %}<span class="emoji">👯</span>Edit Teams{% endblock %}
 {% block page-title %}👯 Edit Teams{% endblock %}
 
 {% block content %}
 
 <div class="alert alert-info alert-dismissable" id="">
   <p>When adding speakers use the format:<br><br>
-    <strong>Name of Speaker1, Name of Speaker2, Name of Speaker3</strong>
+    <strong>Name of Speaker1,Name of Speaker2,Name of Speaker3</strong>
     </p>
 </div>
 
@@ -51,7 +51,7 @@
                 <div class="form-group row">
                   <label class="col-sm-4 control-label">Team #{{ team_number }}'s Speakers</label>
                   <div class="col-sm-8">
-                    <input class="form-control team-speakers" type="text" name="{{ institution.id }}_{{ team_number }}_Speakers" value="Speaker 1, Speaker 2, Speaker 3" />
+                    <input class="form-control team-speakers" type="text" name="{{ institution.id }}_{{ team_number }}_Speakers" value="{{ default_speakers }}" />
                   </div>
                 </div>
 

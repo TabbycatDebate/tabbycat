@@ -1,6 +1,6 @@
 """Unit tests for the Anorak importer."""
 
-from unittest import skip, expectedFailure
+from unittest import skip
 import logging
 import os.path
 
@@ -16,6 +16,7 @@ import venues.models as vm
 
 from ..anorak import AnorakTournamentDataImporter
 from ..base import TournamentDataImporterError
+
 
 class TestImporterAnorak(TestCase):
 
@@ -68,7 +69,7 @@ class TestImporterAnorak(TestCase):
 
     @skip("test file does not yet exist")
     def test_teams(self):
-        f = self._open_csv_file(self.TESTDIR, "teams")
+        f = self._open_csv_file(self.TESTDIR, "teams")  # noqa
         counts, errors = self.importer.import_teams(self)
         self.assertEqual(counts, {pm.Team: 12})
         self.assertFalse(errors)

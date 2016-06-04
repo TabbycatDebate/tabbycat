@@ -1,5 +1,7 @@
 from utils.management.base import TournamentCommand
+
 from ...models import BallotSubmission, SpeakerScoreByAdj
+
 
 class Command(TournamentCommand):
 

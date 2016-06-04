@@ -1,10 +1,17 @@
 # Django Related
 local_settings.py
-staticfiles/
 .gitmodules/
-.sass-cache/
 __pycache__/
-static/css/style.css
+
+# Compilation
+staticfiles/
+static/css/
+static/js/
+static/fonts/
+
+# Dependencies
+node_modules
+bower_components
 
 # Data to ignore
 data/*
@@ -15,6 +22,7 @@ data/*
 !data/sandbox/
 !data/test/
 !data/presets/
+!data/fixtues/
 
 # Docs
 site/

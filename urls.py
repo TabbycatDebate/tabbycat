@@ -1,24 +1,18 @@
-from django.conf.urls import *
+from django.contrib.auth import views as auth_views
 from django.conf import settings
-from django.contrib import admin
-from django.views.static import serve
+from django.conf.urls import include, url
+from django.contrib import admin, messages
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.dispatch import receiver
 from django.views.generic.base import RedirectView
 
-import django.contrib.auth.views as auth_views
 import tournaments.views
 
 admin.autodiscover()
 
-
-def redirect(view):
-    from django.http import HttpResponseRedirect
-    from django.core.urlresolvers import reverse
-
-    def foo(request):
-        return HttpResponseRedirect(reverse(view))
-
-    return foo
-
+# ==============================================================================
+# Base Patterns
+# ==============================================================================
 
 urlpatterns = [
 
@@ -26,7 +20,8 @@ urlpatterns = [
     url(r'^$',
         tournaments.views.index,
         name='tabbycat-index'),
-    url(r'^t/(?P<tournament_slug>[-\w_]+)/', include('tournaments.urls')),
+    url(r'^t/(?P<tournament_slug>[-\w_]+)/',
+        include('tournaments.urls')),
     url(r'^start/',
         tournaments.views.BlankSiteStartView.as_view(),
         name='blank-site-start'),
@@ -35,17 +30,22 @@ urlpatterns = [
         name='tournament-create'),
 
     # Admin area
-    url(r'^jet/', include('jet.urls', 'jet')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^jet/',
+        include('jet.urls', 'jet')),
+    url(r'^admin/',
+        include(admin.site.urls)),
 
     # Accounts
     url(r'^accounts/login/$',
         auth_views.login,
         name='auth-login'),
-    url(r'^accounts/logout/$', auth_views.logout, {'next_page': '/'}),
+    url(r'^accounts/logout/$',
+        auth_views.logout,
+        {'next_page': '/'}),
 
     # Favicon for old browsers that ignore the head link
-    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico'))
+    url(r'^favicon\.ico$',
+        RedirectView.as_view(url='/static/favicon.ico'))
 ]
 
 if settings.DEBUG:
@@ -55,10 +55,9 @@ if settings.DEBUG:
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
 
-# LOGOUT AND LOGIN Confirmations
-from django.contrib.auth.signals import user_logged_out, user_logged_in
-from django.dispatch import receiver
-from django.contrib import messages
+# ==============================================================================
+# Logout/Login Confirmations
+# ==============================================================================
 
 
 @receiver(user_logged_out)
@@ -72,3 +71,17 @@ def on_user_logged_out(sender, request, **kwargs):
 def on_user_logged_in(sender, request, **kwargs):
     messages.success(
         request, 'Hi, ' + kwargs['user'].username + ' — you just logged in!')
+
+# ==============================================================================
+# Redirect Method
+# ==============================================================================
+
+
+def redirect(view):
+    from django.http import HttpResponseRedirect
+    from django.core.urlresolvers import reverse
+
+    def foo(request):
+        return HttpResponseRedirect(reverse(view))
+
+    return foo

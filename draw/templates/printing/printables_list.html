@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% load compress %}
 
 {% block nav %}<div class="col-md-12">{% endblock %}
 {% block footer %}{% endblock %}
@@ -12,7 +11,5 @@
 {% endblock %}
 
 {% block extra-css %}
-  {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="/static/scss/printables.scss" />
-  {% endcompress %}
+  <link rel="stylesheet" type="text/css" href="/static/css/printables.min.css" />
 {% endblock extra-css %}

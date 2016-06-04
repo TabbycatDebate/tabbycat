@@ -2,46 +2,58 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">🎪</span> Edit Venues{% endblock %}
+{% block head-title %}<span class="emoji">🎪</span>Edit Venues{% endblock %}
 {% block page-title %}🎪 Edit Venues{% endblock %}
 
 {% block content %}
 
 <form id="addVenues" action="{% tournament_url confirm_venues %}" method="POST">
-  {% csrf_token %}
+
   <ul class="list-group">
     {% for venue in venues %}
-    <li class="list-group-item">
+      <li class="list-group-item">
 
-      <div class="row">
-        <label class="col-sm-1 control-label">Full Name</label>
-        <div class="col-sm-3">
-          <input class="form-control" type="text" name="venue_names" value="{{ venue.name }}" />
-        </div>
-        <label class="col-sm-1 control-label">Code</label>
-        <div class="col-sm-3">
-          <input class="form-control" type="text" name="venue_priorities" value="{{ venue.priority }}" />
-        </div>
-        {% if venue.group %}
-          <label class="col-sm-1 control-label">Group</label>
+        <div class="row">
+
+          <label class="col-sm-1 control-label">Name</label>
+
           <div class="col-sm-3">
-            <input class="form-control" type="text" name="venue_groups" value="{{ venue.group }}" />
+            <input class="form-control" type="text" name="venue_names" value="{{ venue.name }}" />
           </div>
-        {% else %}
-            <input class="hidden" type="text" name="venue_groups" value="" />
-        {% endif %}
 
-      </div>
-    </li>
+          <label class="col-sm-1 control-label">Priority</label>
+          <div class="col-sm-1">
+            <input class="form-control" type="text" name="venue_priorities" value="{{ venue.priority }}" />
+          </div>
+
+          {% if venue.group %}
+            <label class="col-sm-1 control-label">Group</label>
+            <div class="col-sm-2">
+              <input class="form-control" type="text" name="venue_groups" value="{{ venue.group }}" />
+            </div>
+          {% else %}
+            <input class="hidden" type="text" name="venue_groups" value="" />
+          {% endif %}
+
+          <label class="col-sm-1 control-label">
+            Shared?
+          </label>
+
+          <div class="col-sm-1">
+            <select class="form-control" name="venue_shares">
+              <option value="yes">Yes</option>
+              <option value="no" selected>No</option>
+            </select>
+          </div>
+
+        </div>
+      </li>
     {% endfor %}
   </ul>
 
-  {% csrf_token %}
   <div class="row">
     <div class="col-md-12">
-
       <input class="btn btn-success submit-disable btn-block" type="submit" value="Save All Venues" />
-
     </div>
   </div>
 

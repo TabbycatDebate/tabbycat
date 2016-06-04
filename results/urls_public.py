@@ -1,14 +1,14 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
 from . import views
 
 urlpatterns = [
     # Viewing
     url(r'^$',
-        views.public_results_index,
+        views.PublicResultsIndexView.as_view(),
         name='public_results_index'),
     url(r'^round/(?P<round_seq>\d+)/$',
-        views.public_results,
+        views.PublicResultsForRoundView.as_view(),
         name='public_results'),
     url(r'^ballots/debate/(?P<debate_id>\d+)/$',
         views.public_ballots_view,

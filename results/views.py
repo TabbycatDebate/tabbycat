@@ -1,21 +1,34 @@
-from django.template import Template, Context
+from collections import OrderedDict
 import json
 import datetime
+import logging
 
-from adjallocation.models import DebateAdjudicator
-from tournaments.models import Round
-from venues.models import Venue
-from participants.models import Adjudicator
-from draw.models import Debate
-from motions.models import Motion
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import Http404, HttpResponse
+from django.template import Context, Template
+from django.shortcuts import get_object_or_404, render
+from django.views.generic.base import TemplateView
+from django.views.decorators.cache import cache_page
+
 from actionlog.models import ActionLogEntry
+from adjallocation.models import DebateAdjudicator
+from draw.models import Debate
+from participants.models import Adjudicator
+from motions.models import Motion
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
+from tournaments.models import Round
+from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view, tournament_view
+from utils.misc import get_ip_address, reverse_tournament
+from utils.mixins import HeadlessTemplateView, VueTableMixin
+from venues.models import Venue
 
 from .result import BallotSet
 from .forms import BallotSetForm
-
-from utils.views import *
-from utils.misc import get_ip_address
 from .models import BallotSubmission
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -61,33 +74,86 @@ def results(request, round):
     has_motions = num_motions > 0
 
     return render(request, template, dict(draw=draw, stats=stats,
-        show_motions_column=show_motions_column, has_motions=has_motions)
-    )
+                  show_motions_column=show_motions_column, has_motions=has_motions))
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_round_view('public_results')
-def public_results(request, round):
-    # Can't see results for current round or later
-    if (round.seq >= round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
-        print("Result page denied: round %d, current round %d, release all %s, silent %s" % (round.seq, round.tournament.current_round.seq, round.tournament.release_all, round.silent))
-        raise Http404()
-    draw = round.get_draw()
-    show_motions_column = Motion.objects.filter(round=round).count() > 1 and round.tournament.pref('show_motions_in_results')
-    show_splits = round.tournament.pref('show_splitting_adjudicators')
-    show_ballots = round.tournament.pref('ballots_released')
-    return render(request, "public_results_for_round.html", dict(
-            draw=draw, show_motions_column=show_motions_column, show_splits=show_splits,
-            show_ballots=show_ballots))
+class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin, HeadlessTemplateView):
+
+    template_name = 'base_vue_table.html'
+    public_page_preference = 'public_results'
+    page_title = 'Results'
+    page_emoji = '💥'
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+        t = self.get_tournament()
+        draw = round.get_draw()
+
+        draw_data = []
+        for d in draw:
+            ddict = []
+            if t.pref('enable_divisions'):
+                ddict.append(('Division', d.division.name))
+            ddict.append(('Venue', d.venue.name))
+            if t.pref('ballots_released'):
+                if d.confirmed_ballot:
+                    ddict.append(('Ballot', reverse_tournament('public_ballots_view', t, kwargs={'debate_id': d.id})))
+                else:
+                    ddict.append(('Ballot', ""))
+
+            if d.confirmed_ballot.ballot_set.aff_win:
+                ddict.append(('AR', "Won"))
+            else:
+                ddict.append(('AR', "Lost"))
+
+            ddict.extend(self.team_cells(d.aff_team, t))
+
+            if d.confirmed_ballot.ballot_set.neg_win:
+                ddict.append(('NR', "Won"))
+            else:
+                ddict.append(('NR', "Lost"))
+
+            ddict.extend(self.team_cells(d.neg_team, t))
+
+            # Adjudicators with splits
+            if d.confirmed_ballot and t.pref('show_splitting_adjudicators'):
+                pass  # TODO
+            else:
+                ddict.append(('adjudicators', d.adjudicators_for_draw))
+
+            if t.pref('show_motions_in_results'):
+                ddict.append(('Motion', d.confirmed_ballot.motion.reference))
+
+            draw_data.append(OrderedDict(ddict))
+
+        kwargs["draw"] = draw  # To deprecate
+        kwargs["tableData"] = json.dumps(draw_data)
+
+        return super().get_context_data(**kwargs)
+
+    def get(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+        round = self.get_round()
+        if round.silent:
+            logger.info("Refused results for %s: silent", round.name)
+            return render(request, 'public_results_silent.html')
+        if round.seq >= tournament.current_round.seq and not tournament.release_all:
+            logger.info("Refused results for %s: not yet available", round.name)
+            return render(request, 'public_results_not_available.html')
+        return super().get(request, *args, **kwargs)
 
 
+class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_results')
-def public_results_index(request, tournament):
-    rounds = Round.objects.filter(tournament=tournament,
-        seq__lt=tournament.current_round.seq, silent=False).order_by('seq')
-    return render(request, "public_results_index.html", dict(rounds=rounds))
+    template_name = 'public_results_index.html'
+    public_page_preference = 'public_results'
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs["rounds"] = tournament.round_set.filter(
+            seq__lt=tournament.current_round.seq,
+            silent=False).order_by('seq')
+        return super().get_context_data(**kwargs)
 
 
 @login_required
@@ -124,8 +190,8 @@ def edit_ballotset(request, t, ballotsub_id):
             else:
                 action_type = ActionLogEntry.ACTION_TYPE_BALLOT_EDIT
                 messages.success(request, "Edits to ballot set for %s saved." % debate.matchup)
-            ActionLogEntry.objects.log(type=action_type, user=request.user,
-                ballot_submission=ballotsub, ip_address=get_ip_address(request), tournament=t)
+            ActionLogEntry.objects.log(type=action_type, user=request.user, ballot_submission=ballotsub,
+                                       ip_address=get_ip_address(request), tournament=t)
 
             return redirect_round('results', debate.round)
     else:
@@ -141,7 +207,6 @@ def edit_ballotset(request, t, ballotsub_id):
         'round'            : debate.round,
         'not_singleton'    : all_ballotsubs.exclude(id=ballotsub_id).exists(),
         'new'              : False,
-        'show_adj_contact' : True,
     }
     return render(request, template, context)
 
@@ -152,34 +217,41 @@ def public_new_ballotset_key(request, t, url_key):
     adjudicator = get_object_or_404(Adjudicator, tournament=t, url_key=url_key)
     return public_new_ballotset(request, t, adjudicator)
 
+
 # Don't cache
 @public_optional_tournament_view('public_ballots')
 def public_new_ballotset_id(request, t, adj_id):
     adjudicator = get_object_or_404(Adjudicator, tournament=t, id=adj_id)
     return public_new_ballotset(request, t, adjudicator)
 
+
 def public_new_ballotset(request, t, adjudicator):
     round = t.current_round
 
     if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
-        return render(request, 'public_enter_results_error.html', dict(adjudicator=adjudicator,
-                message='The draw and/or motions for the round haven\'t been released yet.'))
+        return render(request, 'public_enter_results_error.html', dict(
+            adjudicator=adjudicator, message='The draw and/or motions for the '
+            'round haven\'t been released yet.'))
+
     try:
         da = DebateAdjudicator.objects.get(adjudicator=adjudicator, debate__round=round)
     except DebateAdjudicator.DoesNotExist:
-        return render(request, 'public_enter_results_error.html', dict(adjudicator=adjudicator,
-                message='It looks like you don\'t have a debate this round.'))
+        return render(request, 'public_enter_results_error.html', dict(
+            adjudicator=adjudicator,
+            message='It looks like you don\'t have a debate this round.'))
 
     ip_address = get_ip_address(request)
-    ballotsub = BallotSubmission(debate=da.debate, ip_address=ip_address,
-            submitter_type=BallotSubmission.SUBMITTER_PUBLIC)
+    ballotsub = BallotSubmission(
+        debate=da.debate, ip_address=ip_address,
+        submitter_type=BallotSubmission.SUBMITTER_PUBLIC)
 
     if request.method == 'POST':
         form = BallotSetForm(ballotsub, request.POST, password=True)
         if form.is_valid():
             form.save()
-            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT,
-                    ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
+            ActionLogEntry.objects.log(
+                type=ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT,
+                ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
             return render(request, 'public_success.html', dict(success_kind="ballot"))
     else:
         form = BallotSetForm(ballotsub, password=True)
@@ -191,7 +263,6 @@ def public_new_ballotset(request, t, adjudicator):
         'ballotsub'           : ballotsub,
         'adjudicator'         : adjudicator,
         'existing_ballotsubs' : da.debate.ballotsubmission_set.exclude(discarded=True).count(),
-        'show_adj_contact'    : False,
     }
     return render(request, 'public_enter_results.html', context)
 
@@ -202,17 +273,20 @@ def new_ballotset(request, t, debate_id):
     debate = get_object_or_404(Debate, id=debate_id)
     ip_address = get_ip_address(request)
     ballotsub = BallotSubmission(debate=debate, submitter=request.user,
-            submitter_type=BallotSubmission.SUBMITTER_TABROOM, ip_address=ip_address)
+                                 submitter_type=BallotSubmission.SUBMITTER_TABROOM,
+                                 ip_address=ip_address)
 
     if not debate.adjudicators.has_chair:
-        return HttpResponseBadRequest("Whoops! This debate doesn't have a chair, so you can't enter results for it.")
+        messages.error(request, "Whoops! The debate %s doesn't have a chair, "
+                       "so you can't enter results for it." % debate.matchup)
+        return redirect_round('results', debate.round)
 
     if request.method == 'POST':
         form = BallotSetForm(ballotsub, request.POST)
         if form.is_valid():
             form.save()
             ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_CREATE, user=request.user,
-                    ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
+                                       ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
             messages.success(request, "Ballot set for %s added." % debate.matchup)
             return redirect_round('results', debate.round)
     else:
@@ -220,7 +294,7 @@ def new_ballotset(request, t, debate_id):
 
     template = 'enter_results.html' if request.user.is_superuser else 'assistant_enter_results.html'
     all_ballotsubs = debate.ballotsubmission_set_by_version if request.user.is_superuser \
-            else debate.ballotsubmission_set_by_version_except_discarded
+        else debate.ballotsubmission_set_by_version_except_discarded
     context = {
         'form'             : form,
         'ballotsub'        : ballotsub,
@@ -229,7 +303,6 @@ def new_ballotset(request, t, debate_id):
         'all_ballotsubs'   : all_ballotsubs,
         'not_singleton'    : all_ballotsubs.exists(),
         'new'              : True,
-        'show_adj_contact' : True,
     }
     return render(request, template, context)
 
@@ -276,7 +349,8 @@ def ballots_status(request, t):
 def latest_results(request, t):
     # Latest Results for Tournament Homepage
     results_objects = []
-    ballots = BallotSubmission.objects.filter(confirmed=True).order_by(
+    ballots = BallotSubmission.objects.filter(
+        debate__round__tournament=t, confirmed=True).order_by(
         '-timestamp')[:15].select_related('debate')
     timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
     for b in ballots:
@@ -295,15 +369,16 @@ def latest_results(request, t):
     return HttpResponse(json.dumps(results_objects), content_type="text/json")
 
 
-
 @admin_required
 @round_view
 def ballot_checkin(request, round):
     ballots_left = ballot_checkin_number_left(round)
     return render(request, 'ballot_checkin.html', dict(ballots_left=ballots_left))
 
+
 class DebateBallotCheckinError(Exception):
     pass
+
 
 def get_debate_from_ballot_checkin_request(request, round):
     # Called by the submit button on the ballot checkin form.
@@ -325,9 +400,11 @@ def get_debate_from_ballot_checkin_request(request, round):
 
     return debate
 
+
 def ballot_checkin_number_left(round):
     count = Debate.objects.filter(round=round, ballot_in=False).count()
     return count
+
 
 @admin_required
 @round_view
@@ -368,7 +445,8 @@ def post_ballot_checkin(request, round):
     debate.save()
 
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN,
-            user=request.user, debate=debate, tournament=round.tournament)
+                               user=request.user, debate=debate,
+                               tournament=round.tournament)
 
     obj = dict()
 
@@ -409,7 +487,6 @@ def public_ballot_submit(request, t):
     das = DebateAdjudicator.objects.filter(debate__round=r).select_related('adjudicator', 'debate')
 
     if r.draw_status == r.STATUS_RELEASED and r.motions_good_for_public:
-        draw = r.get_draw()
         return render(request, 'public_add_ballot.html', dict(das=das))
     else:
         return render(request, 'public_add_ballot_unreleased.html', dict(das=None, round=r))

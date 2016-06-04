@@ -1,7 +1,8 @@
-import os.path, sys
 import unittest
+
 from .utils import TestTeam
 from ..one_up_one_down import OneUpOneDownSwapper
+
 
 class TestOneUpOneDown(unittest.TestCase):
 
@@ -9,7 +10,7 @@ class TestOneUpOneDown(unittest.TestCase):
     def _1u1d_no_change(data):
         return [(t1[0], t2[0]) for t1, t2 in data]
 
-    def testNoSwap(self):
+    def test_no_swap(self):
         data = (((1, 'A'), (5, 'B')),
                 ((2, 'C'), (6, 'A')),
                 ((3, 'B'), (7, 'D')),
@@ -18,7 +19,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
-    def testSwapInst(self):
+    def test_swap_inst(self):
         data = (((1, 'A'), (5, 'A')),
                 ((2, 'C'), (6, 'B')),
                 ((3, 'B'), (7, 'D')),
@@ -27,7 +28,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
-    def testNoSwapInst(self):
+    def test_no_swap_inst(self):
         data = (((1, 'A'), (5, 'A')),
                 ((2, 'C'), (6, 'B')),
                 ((3, 'B'), (7, 'D')),
@@ -36,7 +37,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data, avoid_institution=False))
         return self.draw(data)
 
-    def testSwapHist(self):
+    def test_swap_hist(self):
         data = (((1, 'A', None, 5), (5, 'B')),
                 ((2, 'C'), (6, 'A')),
                 ((3, 'B'), (7, 'D')),
@@ -45,7 +46,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
-    def testNoSwapHist(self):
+    def test_no_swap_hist(self):
         data = (((1, 'A', None, 5), (5, 'B')),
                 ((2, 'C'), (6, 'A')),
                 ((3, 'B'), (7, 'D')),
@@ -54,7 +55,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data, avoid_history=False))
         return self.draw(data)
 
-    def testLastSwap(self):
+    def test_last_swap(self):
         data = (((1, 'A'), (5, 'B')),
                 ((2, 'C'), (6, 'A')),
                 ((3, 'B'), (7, 'D')),
@@ -63,7 +64,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
-    def testExhaustInstitution1(self):
+    def test_exhaust_institution_1(self):
         data = (((1, 'C'), (5, 'A')),
                 ((2, 'A'), (6, 'A')),
                 ((3, 'C'), (7, 'A')),
@@ -72,7 +73,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
-    def testExhaustInstitution2(self):
+    def test_exhaust_institution_2(self):
         data = (((1, 'A'), (5, 'C')),
                 ((2, 'A'), (6, 'A')),
                 ((3, 'A'), (7, 'D')),
@@ -81,7 +82,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
-    def testExhaustInstitution3(self):
+    def test_exhaust_institution_3(self):
         data = (((1, 'A'), (5, 'C')),
                 ((2, 'A'), (6, 'A')),
                 ((3, 'B'), (7, 'A')),
@@ -90,7 +91,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
-    def testExhaustHistory1(self):
+    def test_exhaust_history_1(self):
         data = (((1, 'C'), (5, 'B')),
                 ((2, 'A', None, (5, 6, 7)), (6, 'C')),
                 ((3, 'C'), (7, 'D')),
@@ -99,7 +100,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
-    def testExhaustHistory2(self):
+    def test_exhaust_history_2(self):
         data = (((1, 'C'), (5, 'B')),
                 ((2, 'A', None, (5, 6)), (6, 'C')),
                 ((3, 'C', None, 6), (7, 'D')),
@@ -108,7 +109,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
-    def testPreferInstitutionToHistory(self):
+    def test_prefer_institution_to_history(self):
         data = (((1, 'C'), (5, 'B')),
                 ((2, 'A', None, (5, 7)), (6, 'A')),
                 ((3, 'C'), (7, 'D')),
@@ -117,7 +118,7 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
-    def testPreferFewerSwaps(self):
+    def test_prefer_fewer_swaps(self):
         """It should swap the middle two debates, as opposed to the
         top two and last two."""
         data = (((1, 'C'), (5, 'B')),

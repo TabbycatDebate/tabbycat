@@ -2,8 +2,8 @@ from django.test import TestCase
 
 from ..teams import TeamStandingsGenerator
 
-from tournaments.models import Tournament, Round
-from participants.models import Institution, Team, Speaker, Adjudicator
+from tournaments.models import Round, Tournament
+from participants.models import Adjudicator, Institution, Team
 from venues.models import Venue
 from draw.models import Debate, DebateTeam
 from adjallocation.models import DebateAdjudicator
@@ -58,7 +58,6 @@ class TestBasicStandings(TestCase):
                          'CD': {'C': {'margin': -13.5, 'points': 0, 'score': 246.5, 'win': False},
                                 'D': {'margin': 13.5, 'points': 1, 'score': 260.0, 'win': True}}}]}
 
-
     rankings = ('rank',)
 
     def setup_testdata(self, testdata):
@@ -109,12 +108,12 @@ class TestBasicStandings(TestCase):
 
                     for teamname, expected in testdata["standings"].items():
                         team = teams[teamname]
-                        standing = standings.get_team_standing(team)
+                        standing = standings.get_standing(team)
                         for metric in metrics:
                             self.assertEqual(standing.metrics[metric], expected[metric])
 
                     ranked_teams = [teams[x] for x in testdata["rankings"][metrics]]
-                    self.assertEqual(ranked_teams, standings.get_team_list())
+                    self.assertEqual(ranked_teams, standings.get_instance_list())
 
     # TODO check that WBW is correct when not in first metrics
     # TODO check that it doesn't break when not all metrics present
