@@ -102,6 +102,11 @@
             <a href="{% tournament_url public_breaking_adjs %}">Breaking Adjudicators</a>
           </li>
         {% endif %}
+        {% if pref.public_diversity %}
+          <li class="list-group-item">
+            <a href="{% tournament_url standings-public-diversity %}">Diversity Overview</a>
+          </li>
+        {% endif %}
         {% if pref.public_participants %}
           <li class="list-group-item">
             <a href="{% tournament_url public_participants %}">Participants</a>

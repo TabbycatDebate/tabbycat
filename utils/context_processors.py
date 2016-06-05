@@ -40,6 +40,8 @@ def get_menu_highlight(request):
         return {'divisions_nav': True}
     elif "draw" in request.path:
         return {'draw_nav': True}
+    elif "diversity" in request.path:
+        return {'diversity_nav': True}
     elif "feedback" in request.path and "add" in request.path:
         return {'enter_feedback_nav': True}
     elif "feedback_progress" in request.path:

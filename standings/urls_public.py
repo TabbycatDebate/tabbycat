@@ -24,4 +24,7 @@ urlpatterns = [
     url(r'^motions/$',
         views.PublicMotionsTabView.as_view(),
         name='standings-public-tab-motions'),
+    url(r'^diversity/$',
+        views.PublicDiversityStandingsView.as_view(),
+        name='standings-public-diversity'),
 ]

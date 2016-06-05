@@ -329,3 +329,8 @@ class DiversityStandingsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs["data_sets"] = get_data_sets()
 
         return super().get_context_data(**kwargs)
+
+class PublicDiversityStandingsView(DiversityStandingsView):
+
+    template_name = 'public_diversity_info.html'
+

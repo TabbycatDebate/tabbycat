@@ -27,7 +27,7 @@
   </li>
 {% endif %}
 {% if pref.motion_tab_released > 0 %}
-  <li class="{% if tab_motions_nav %}active{% endif %}">
+  <li class="{% if motions_nav %}active{% endif %}">
     <a href="{% tournament_url standings-public-tab-motions %}">Motions Tab</a>
   </li>
 {% endif %}
@@ -111,6 +111,11 @@
 {% if pref.public_team_standings > 0 and current_round.prev and pref.team_tab_released == 0 %}
   <li>
     <a href="{% tournament_url standings-public-teams-current %}">Standings</a>
+  </li>
+{% endif %}
+{% if pref.public_diversity %}
+  <li class="{% if diversity_nav %}active{% endif %}">
+    <a href="{% tournament_url standings-public-diversity %}">Diversity</a>
   </li>
 {% endif %}
 {% if pref.public_participants %}
