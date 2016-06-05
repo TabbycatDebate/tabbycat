@@ -5,6 +5,7 @@
 
 {% block page-title %}🗃Diversity Overview{% endblock %}
 {% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
+{% block body-id %}diversityData{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-default" href="{% round_url standings-index current_round %}">
@@ -50,29 +51,9 @@
         Speakers Demographics
       </div>
       <div class="panel-body">
-        All Speakers
-        <li>m: {{ speakers_m }}</li>
-        <li>f: {{ speakers_f }}</li>
-        <li>o: {{ speakers_o }}</li>
-        <li>u: {{ speakers_u }}</li>
-        Breaking Speakers
-        <li>m: {{ bspeakers_m }}</li>
-        <li>f: {{ bspeakers_f }}</li>
-        <li>o: {{ bspeakers_o }}</li>
-        <li>u: {{ bspeakers_u }}</li>
-        Pro Speakers
-        <li>m: {{ pspeakers_m }}</li>
-        <li>f: {{ pspeakers_f }}</li>
-        <li>o: {{ pspeakers_o }}</li>
-        <li>u: {{ pspeakers_u }}</li>
-        Novice Speakers
-        <li>m: {{ nspeakers_m }}</li>
-        <li>f: {{ nspeakers_f }}</li>
-        <li>o: {{ nspeakers_o }}</li>
-        <li>u: {{ nspeakers_u }}</li>
-
-        <donut-chart data=""></donut-chart>
-
+        <template v-for="set in dataSets['speakers_gender']">
+          <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
+        </template>
       </div>
     </div>
   </div>
@@ -83,41 +64,9 @@
         Adjudicators Demographics
       </div>
       <div class="panel-body">
-        All Adjudicators
-        <li>m: {{ adjs_m }}</li>
-        <li>f: {{ adjs_f }}</li>
-        <li>o: {{ adjs_o }}</li>
-        <li>u: {{ adjs_u }}</li>
-        Breaking Adjudicators
-        <li>m: {{ badjs_m }}</li>
-        <li>f: {{ badjs_f }}</li>
-        <li>o: {{ badjs_o }}</li>
-        <li>u: {{ badjs_u }}</li>
-        Independent Adjudicators
-        <li>m: {{ iadjs_m }}</li>
-        <li>f: {{ iadjs_f }}</li>
-        <li>o: {{ iadjs_o }}</li>
-        <li>u: {{ iadjs_u }}</li>
-        Adjudication Core
-        <li>m: {{ aadjs_m }}</li>
-        <li>f: {{ aadjs_f }}</li>
-        <li>o: {{ aadjs_o }}</li>
-        <li>u: {{ aadjs_u }}</li>
-        Chairs
-        <li>m: {{ chair_adjs_m }}</li>
-        <li>f: {{ chair_adjs_f }}</li>
-        <li>o: {{ chair_adjs_o }}</li>
-        <li>u: {{ chair_adjs_u }}</li>
-        Panellists
-        <li>m: {{ panel_adjs_m }}</li>
-        <li>f: {{ panel_adjs_f }}</li>
-        <li>o: {{ panel_adjs_o }}</li>
-        <li>u: {{ panel_adjs_u }}</li>
-        Trainees
-        <li>m: {{ trainee_adjs_m }}</li>
-        <li>f: {{ trainee_adjs_f }}</li>
-        <li>o: {{ trainee_adjs_o }}</li>
-        <li>u: {{ trainee_adjs_u }}</li>
+        <template v-for="set in dataSets['adjudicators_gender']">
+          <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
+        </template>
       </div>
     </div>
   </div>
@@ -174,5 +123,16 @@
 
   <script src="{% static 'js/vendor/d3.min.js' %}"></script>
   {% include "vue/donut-chart.vue" %}
+  <script>
+    var latests = new Vue({
+      el: '#diversityData',
+      data: {
+        dataSets: {{ data_sets|safe }}
+      },
+      methods: {
+      }
+    });
+  </script>
+
 
 {% endblock extra-js %}
