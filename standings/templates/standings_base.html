@@ -7,33 +7,33 @@
     Standings Overview
   </a>
   <a class="btn btn-default {% block team_active %}{% endblock %}" href="{% round_url standings-team current_round %}">
-    Team Standings
+    Teams
   </a>
   {% if pref.enable_divisions %}
   <a class="btn btn-default {% block division_active %}{% endblock %}" href="{% round_url standings-division current_round %}">
-    Division Standings
+    Divisions
   </a>
   {% endif %}
   <a class="btn btn-default {% block speaker_active %}{% endblock %}" href="{% round_url standings-speaker current_round %}">
-    Speaker Standings
+    Speakers
   </a>
   {% if pref.show_novices %}
     <a class="btn btn-default {% block pros_active %}{% endblock %}" href="{% round_url standings-pro current_round %}">
-      Pros Standings
+      Pros
     </a>
     <a class="btn btn-default {% block novices_active %}{% endblock %}" href="{% round_url standings-novice current_round %}">
-      Novices Standings
+      Novices
     </a>
   {% endif %}
   {% if pref.reply_scores_enabled %}
     <a class="btn btn-default {% block replies_active %}{% endblock %}" href="{% round_url standings-reply current_round %}">
-      Replies Standings
+      Replies
     </a>
   {% endif %}
   <a class="btn btn-default {% block motion_active %}{% endblock %}" href="{% round_url standings-motion current_round %}">
-    Motion Balance
+    Motions
   </a>
-  <a class="btn btn-default {% block motion_active %}{% endblock %}" href="{% round_url standings-diversity current_round %}">
+  <a class="btn btn-default {% block diversity_active %}{% endblock %}" href="{% round_url standings-diversity current_round %}">
     Diversity
   </a>
   {% include "tables/table_search.html" %}

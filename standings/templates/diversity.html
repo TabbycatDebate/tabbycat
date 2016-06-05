@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 {% load static %}
+{% block diversity_active %}active{% endblock %}
 
 {% block page-title %}🗃Diversity Information{% endblock %}
 {% block head-title %}<span class="emoji">🗃</span>Diversity Information{% endblock %}
@@ -46,7 +47,7 @@
   <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-        Speakers
+        Speakers Demographics
       </div>
       <div class="panel-body">
         All Speakers
@@ -69,6 +70,9 @@
         <li>f: {{ nspeakers_f }}</li>
         <li>o: {{ nspeakers_o }}</li>
         <li>u: {{ nspeakers_u }}</li>
+
+        <donut-chart data=""></donut-chart>
+
       </div>
     </div>
   </div>
@@ -76,7 +80,7 @@
   <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-        Adjudicators
+        Adjudicators Demographics
       </div>
       <div class="panel-body">
         All Adjudicators
@@ -118,21 +122,50 @@
     </div>
   </div>
 
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <li>M AVG Speak: {{ m_avg_speak.score__avg|floatformat:"-2" }}</li>
-          <li>F AVG Speak: {{ f_avg_speak.score__avg|floatformat:"-2" }}</li>
-          <li>M AVG Adj Rating: {{ m_avg_rating.score__avg|floatformat:"-2" }}</li>
-          <li>F AVG Adj Rating: {{ f_avg_rating.score__avg|floatformat:"-2" }}</li>
-          <br>
-          <li>M Median Speak: {{ m_median_speak }}</li>
-          <li>F Median Speak: {{ f_median_speak }}</li>
-          <li>M Median Adj Rating: {{ m_median_rating }}</li>
-          <li>F Median Adj Rating: {{ f_median_rating }}</li>
-        </div>
+
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Speakers Results
+      </div>
+      <div class="panel-body">
+        <li>M AVG Speak: {{ m_avg_speak.score__avg|floatformat:"-2" }}</li>
+        <li>F AVG Speak: {{ f_avg_speak.score__avg|floatformat:"-2" }}</li>
+        <li>M AVG Adj Rating: {{ m_avg_rating.score__avg|floatformat:"-2" }}</li>
+        <li>F AVG Adj Rating: {{ f_avg_rating.score__avg|floatformat:"-2" }}</li>
+        <br>
+        <li>M Median Speak: {{ m_median_speak }}</li>
+        <li>F Median Speak: {{ f_median_speak }}</li>
+        <li>M Median Adj Rating: {{ m_median_rating }}</li>
+        <li>F Median Adj Rating: {{ f_median_rating }}</li>
       </div>
     </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Adjudicators Results
+      </div>
+      <div class="panel-body">
+        Chairs
+        <li>m: {{ chair_adjs_m }}</li>
+        <li>f: {{ chair_adjs_f }}</li>
+        <li>o: {{ chair_adjs_o }}</li>
+        <li>u: {{ chair_adjs_u }}</li>
+        Panellists
+        <li>m: {{ panel_adjs_m }}</li>
+        <li>f: {{ panel_adjs_f }}</li>
+        <li>o: {{ panel_adjs_o }}</li>
+        <li>u: {{ panel_adjs_u }}</li>
+        Trainees
+        <li>m: {{ trainee_adjs_m }}</li>
+        <li>f: {{ trainee_adjs_f }}</li>
+        <li>o: {{ trainee_adjs_o }}</li>
+        <li>u: {{ trainee_adjs_u }}</li>
+      </div>
+    </div>
+  </div>
 
 </div>
 {% endblock content %}
@@ -140,8 +173,6 @@
 {% block extra-js %}
 
   <script src="{% static 'js/vendor/d3.min.js' %}"></script>
-  {% include "vue/import-vue.html" %}
-  <script>
+  {% include "vue/donut-chart.vue" %}
 
-  </script>
 {% endblock extra-js %}
