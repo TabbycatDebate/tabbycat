@@ -40,7 +40,7 @@ def get_diversity_data_sets():
         'Other':    Speaker.objects.filter(team__breakingteam__isnull=False, gender=Person.GENDER_OTHER).count(),
         'Unknown':  Speaker.objects.filter(team__breakingteam__isnull=False, gender=None).count(),
     }
-    data_sets['speakers_gender'].append(package_data_set('Breaking Speakers', **values))
+    data_sets['speakers_gender'].append(package_data_set('Breaking', **values))
 
     values = {
         'Male':     Speaker.objects.filter(novice=False, gender=Person.GENDER_MALE).count(),
@@ -48,7 +48,7 @@ def get_diversity_data_sets():
         'Other':    Speaker.objects.filter(novice=False, gender=Person.GENDER_OTHER).count(),
         'Unknown':  Speaker.objects.filter(novice=False, gender=None).count(),
     }
-    data_sets['speakers_gender'].append(package_data_set('Pro Speakers', **values))
+    data_sets['speakers_gender'].append(package_data_set('Pros', **values))
 
     values = {
         'Male':     Speaker.objects.filter(novice=True, gender=Person.GENDER_MALE).count(),
@@ -56,7 +56,7 @@ def get_diversity_data_sets():
         'Other':    Speaker.objects.filter(novice=True, gender=Person.GENDER_OTHER).count(),
         'Unknown':  Speaker.objects.filter(novice=True, gender=None).count(),
     }
-    data_sets['speakers_gender'].append(package_data_set('Novice Speakers', **values))
+    data_sets['speakers_gender'].append(package_data_set('Novices', **values))
 
     values = {
         'Male':     Adjudicator.objects.filter(gender=Person.GENDER_MALE).count(),
@@ -64,7 +64,7 @@ def get_diversity_data_sets():
         'Other':    Adjudicator.objects.filter(gender=Person.GENDER_OTHER).count(),
         'Unknown':  Adjudicator.objects.filter(gender=None).count()
     }
-    data_sets['adjudicators_gender'].append(package_data_set('Adjudicators', **values))
+    data_sets['adjudicators_gender'].append(package_data_set('All Adjudicators', **values))
 
     values = {
         'Male':     Adjudicator.objects.filter(gender=Person.GENDER_MALE, breaking=True).count(),
@@ -72,7 +72,7 @@ def get_diversity_data_sets():
         'Other':    Adjudicator.objects.filter(gender=Person.GENDER_OTHER, breaking=True).count(),
         'Unknown':  Adjudicator.objects.filter(gender=None, breaking=True).count()
     }
-    data_sets['adjudicators_gender'].append(package_data_set('Breaking Adjudicators', **values))
+    data_sets['adjudicators_gender'].append(package_data_set('Breaking', **values))
 
     values = {
         'Male':     Adjudicator.objects.filter(gender=Person.GENDER_MALE, independent=True).count(),
@@ -80,7 +80,7 @@ def get_diversity_data_sets():
         'Other':    Adjudicator.objects.filter(gender=Person.GENDER_OTHER, independent=True).count(),
         'Unknown':  Adjudicator.objects.filter(gender=None, independent=True).count()
     }
-    data_sets['adjudicators_gender'].append(package_data_set('Independent Adjudicators', **values))
+    data_sets['adjudicators_gender'].append(package_data_set('Independents', **values))
 
     values = {
         'Male':     Adjudicator.objects.filter(gender=Person.GENDER_MALE, adj_core=True).count(),

@@ -16,8 +16,20 @@
 
   function InitChart(vueContext){
 
+    vueContext.graphData.sort(function(a, b) {
+     if (a.label > b.label) {
+        return 1;
+      }
+      if (a.label < b.label) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    });
+
+    // Female - Male - Other - Unknown
     var color = d3.scale.ordinal()
-      .range(["#4182c4", "#ff17c4", "#00ff00", "#cbcbcb"]);
+      .range(["#ff17c4", "#4182c4", "#00ff00", "#cbcbcb"]);
 
     var pie = d3.layout.pie()
         .value(function(d) { return d.count; })
