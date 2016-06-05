@@ -133,7 +133,7 @@ class AdjudicatorForm(forms.ModelForm):
 class AdjudicatorAdmin(admin.ModelAdmin):
     form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament', 'novice',
-                    'independent')
+                    'independent', 'adj_core')
     search_fields = ('name',
                      'tournament__name',
                      'institution__name',
