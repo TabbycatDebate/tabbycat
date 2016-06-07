@@ -94,24 +94,12 @@
   <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-        Adjudicators Results
+        Adjudicators Positions
       </div>
       <div class="panel-body">
-        Chairs
-        <li>m: {{ chair_adjs_m }}</li>
-        <li>f: {{ chair_adjs_f }}</li>
-        <li>o: {{ chair_adjs_o }}</li>
-        <li>u: {{ chair_adjs_u }}</li>
-        Panellists
-        <li>m: {{ panel_adjs_m }}</li>
-        <li>f: {{ panel_adjs_f }}</li>
-        <li>o: {{ panel_adjs_o }}</li>
-        <li>u: {{ panel_adjs_u }}</li>
-        Trainees
-        <li>m: {{ trainee_adjs_m }}</li>
-        <li>f: {{ trainee_adjs_f }}</li>
-        <li>o: {{ trainee_adjs_o }}</li>
-        <li>u: {{ trainee_adjs_u }}</li>
+        <template v-for="set in dataSets['adjudicators_positions']">
+          <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
+        </template>
       </div>
     </div>
   </div>

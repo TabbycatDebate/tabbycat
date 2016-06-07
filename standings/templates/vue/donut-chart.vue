@@ -57,8 +57,8 @@
     props: {
       title: String,
       graphData: Array,
-      radius: { type: Number, default: 80 },
-      padding: { type: Number, default: 5 },
+      radius: { type: Number, default: 68 },
+      padding: { type: Number, default: 2 },
     },
     ready: function() {
       if (this.graphData !== undefined) {

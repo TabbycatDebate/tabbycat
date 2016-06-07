@@ -24,7 +24,11 @@ def median_value(queryset, term):
 
 def get_diversity_data_sets():
 
-    data_sets = {'speakers_gender': [], 'adjudicators_gender': []}
+    data_sets = {
+        'speakers_gender': [],
+        'adjudicators_gender': [],
+        'adjudicators_positions': []
+    }
 
     values = {
         'Male':     Speaker.objects.filter(gender=Person.GENDER_MALE).count(),
@@ -90,34 +94,31 @@ def get_diversity_data_sets():
     }
     data_sets['adjudicators_gender'].append(package_data_set('Adjudication Core', **values))
 
+    values = {
+        'Male':     DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_CHAIR).count(),
+        'Female':   DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_CHAIR).count(),
+        'Other':    DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_CHAIR).count(),
+        'Unknown':  DebateAdjudicator.objects.filter(adjudicator__gender=None, type=DebateAdjudicator.TYPE_CHAIR).count()
+    }
+    data_sets['adjudicators_positions'].append(package_data_set('Chairs', **values))
+
+    values = {
+        'Male':     DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_PANEL).count(),
+        'Female':   DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_PANEL).count(),
+        'Other':    DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_PANEL).count(),
+        'Unknown':  DebateAdjudicator.objects.filter(adjudicator__gender=None, type=DebateAdjudicator.TYPE_PANEL).count()
+    }
+    data_sets['adjudicators_positions'].append(package_data_set('Panellists', **values))
+
+    values = {
+        'Male':     DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_TRAINEE).count(),
+        'Female':   DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_TRAINEE).count(),
+        'Other':    DebateAdjudicator.objects.filter(adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_TRAINEE).count(),
+        'Unknown':  DebateAdjudicator.objects.filter(adjudicator__gender=None, type=DebateAdjudicator.TYPE_TRAINEE).count()
+    }
+    data_sets['adjudicators_positions'].append(package_data_set('Trainees', **values))
+
     kwargs = {}
-    kwargs['chair_adjs_m'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_CHAIR).count()
-    kwargs['chair_adjs_f'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_CHAIR).count()
-    kwargs['chair_adjs_o'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_CHAIR).count()
-    kwargs['chair_adjs_u'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=None, type=DebateAdjudicator.TYPE_CHAIR).count()
-
-    kwargs['panel_adjs_m'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_PANEL).count()
-    kwargs['panel_adjs_f'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_PANEL).count()
-    kwargs['panel_adjs_o'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_PANEL).count()
-    kwargs['panel_adjs_u'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=None, type=DebateAdjudicator.TYPE_PANEL).count()
-
-    kwargs['trainee_adjs_m'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_TRAINEE).count()
-    kwargs['trainee_adjs_f'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=Person.GENDER_FEMALE, type=DebateAdjudicator.TYPE_TRAINEE).count()
-    kwargs['trainee_adjs_o'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=Person.GENDER_OTHER, type=DebateAdjudicator.TYPE_TRAINEE).count()
-    kwargs['trainee_adjs_u'] = DebateAdjudicator.objects.filter(
-        adjudicator__gender=None, type=DebateAdjudicator.TYPE_TRAINEE).count()
-
     kwargs['m_avg_speak'] = SpeakerScore.objects.filter(speaker__gender=Person.GENDER_MALE).aggregate(Avg('score'))
     kwargs['f_avg_speak'] = SpeakerScore.objects.filter(speaker__gender=Person.GENDER_FEMALE).aggregate(Avg('score'))
 
