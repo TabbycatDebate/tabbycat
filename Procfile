@@ -1,4 +1,5 @@
 # production
-web: waitress-serve --port=$PORT wsgi:application
+web: sh -c 'cd ./tabbycat/ && waitress-serve --port=$PORT wsgi:application'
+
 # debug
-#web: waitress-serve --port=$PORT --expose-tracebacks wsgi:application
+web: sh -c 'cd tabbycat && waitress-serve --port=$PORT --expose-tracebacks wsgi:application'

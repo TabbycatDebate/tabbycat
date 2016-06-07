@@ -12,6 +12,6 @@ ignore = E203,E221,E226,E241,I100,Q000
 
 max-line-length = 150
 
-exclude = docs, migrations, node_modules, venv, */__init__.py
+exclude = docs, migrations, node_modules, bower_components, venv, */__init__.py
 
 import-order-style = google

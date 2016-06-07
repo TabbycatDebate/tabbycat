@@ -19,36 +19,38 @@ gulp.task('fonts-compile', function() {
       'bower_components/**/*.woff2',
     ])
     .pipe(rename({dirname: ''})) // Remove folder structure
-    .pipe(gulp.dest('static/fonts/vendor/'));
+    .pipe(gulp.dest('tabbycat/static/fonts/vendor/'));
 });
 
 gulp.task('styles-compile', function() {
-  gulp.src(['templates/scss/printables.scss', 'templates/scss/style.scss'])
+  gulp.src([
+      'tabbycat/templates/scss/printables.scss',
+      'tabbycat/templates/scss/style.scss'])
     .pipe(sass().on('error', sass.logError))
     .pipe(minifyCSS())
     .pipe(rename(function (path) {
       path.basename += ".min";
     }))
-    .pipe(gulp.dest('static/css/'));
+    .pipe(gulp.dest('tabbycat/static/css/'));
 });
 
 // Creates task for collecting dependencies
 gulp.task('js-compile', function() {
-  gulp.src(['templates/js/*.js'])
+  gulp.src(['tabbycat/templates/js/*.js'])
   .pipe(uglify())
   .pipe(rename(function (path) {
     path.basename += ".min";
   }))
   .pipe(rename({dirname: ''})) // Remove folder structure
-  .pipe(gulp.dest('static/js/'));
+  .pipe(gulp.dest('tabbycat/static/js/'));
 });
 
 // Creates task for collecting dependencies
 gulp.task('js-main-vendor-compile', function() {
   gulp.src(['bower_components/jquery/dist/jquery.js',
             'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-            'templates/js/vendor/jquery.dataTables.min.js',
-            'templates/js/vendor/fixed-header.js',
+            'tabbycat/templates/js/vendor/jquery.dataTables.min.js',
+            'tabbycat/templates/js/vendor/fixed-header.js',
           ])
   .pipe(concat('vendor.js'))
   .pipe(uglify())
@@ -56,7 +58,7 @@ gulp.task('js-main-vendor-compile', function() {
     path.basename += ".min";
   }))
   .pipe(rename({dirname: ''})) // Remove folder structure
-  .pipe(gulp.dest('static/js/vendor/'));
+  .pipe(gulp.dest('tabbycat/static/js/vendor/'));
 });
 
 // Creates task for collecting dependencies
@@ -70,13 +72,13 @@ gulp.task('js-alt-vendor-compile', function() {
           ])
   .pipe(uglify())
   .pipe(rename({dirname: ''})) // Remove folder structure
-  .pipe(gulp.dest('static/js/vendor/'));
+  .pipe(gulp.dest('tabbycat/static/js/vendor/'));
 });
 
 // Automatically build and watch the CSS folder for when a file changes
 gulp.task('default', ['build'], function() {
-  gulp.watch('templates/scss/**/*.scss', ['styles-compile']);
-  gulp.watch('templates/js/**/*.js', ['js-compress']);
+  gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
+  gulp.watch('tabbycat/templates/js/**/*.js', ['js-compress']);
 });
 
 // Build task for production
