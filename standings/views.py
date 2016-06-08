@@ -326,7 +326,8 @@ class DiversityStandingsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'diversity.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['data_sets'] = json.dumps(get_diversity_data_sets())
+        tournament = self.get_tournament()
+        kwargs['data_sets'] = json.dumps(get_diversity_data_sets(tournament))
         return super().get_context_data(**kwargs)
 
 

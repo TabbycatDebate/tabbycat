@@ -1,54 +1,25 @@
-{% extends "base.html" %}
+{% extends "standings_base.html" %}
 {% load debate_tags %}
 {% load static %}
-{% block diversity_active %}active{% endblock %}
 
 {% block page-title %}🗃Diversity Overview{% endblock %}
 {% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
+{% block diversity_active %}active{% endblock %}
+
 {% block body-id %}diversityData{% endblock %}
 
-{% block page-subnav-sections %}
-  <a class="btn btn-default" href="{% round_url standings-index current_round %}">
-    Standings Overview
-  </a>
-  <a class="btn btn-default" href="{% round_url standings-team current_round %}">
-    Team Standings
-  </a>
-  {% if pref.enable_divisions %}
-  <a class="btn btn-default" href="{% round_url standings-division current_round %}">
-    Divisions Standings
-  </a>
-  {% endif %}
-  <a class="btn btn-default" href="{% round_url standings-speaker current_round %}">
-    Speaker Standings
-  </a>
-  {% if pref.show_novices %}
-    <a class="btn btn-default" href="{% round_url standings-pro current_round %}">
-      Pros Standings
-    </a>
-    <a class="btn btn-default" href="{% round_url standings-novice current_round %}">
-      Novices Standings
-    </a>
-  {% endif %}
-  {% if pref.reply_scores_enabled %}
-    <a class="btn btn-default" href="{% round_url standings-reply current_round %}">
-      Replies Standings
-    </a>
-  {% endif %}
-  <a class="btn btn-default active" href="{% round_url standings-motion current_round %}">
-    Motion Balance
-  </a>
-  {% include "tables/table_search.html" %}
+{% block page-alerts %}
+  <div class="alert alert-info">Key goes here</div>
 {% endblock %}
 
 {% block content %}
 
 <div class="row">
 
-  <div class="col-md-6">
+  <div class="col-md-2">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        Speakers Demographics
+      <div class="panel-heading text-center">
+        Speaker <br> Demographics
       </div>
       <div class="panel-body">
         <template v-for="set in dataSets['speakers_gender']">
@@ -58,10 +29,25 @@
     </div>
   </div>
 
-  <div class="col-md-6">
+  <div class="col-md-3">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        Adjudicators Demographics
+      <div class="panel-heading text-center">
+        Speaker <br>Results
+      </div>
+      <div class="panel-body">
+
+        <template v-for="set in dataSets['speakers_results']">
+          <text-display :graph-data="set['data']" :title="set['title']"></donut-chart>
+        </template>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-2">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">
+        Adjudicator <br> Demographics
       </div>
       <div class="panel-body">
         <template v-for="set in dataSets['adjudicators_gender']">
@@ -71,35 +57,30 @@
     </div>
   </div>
 
-
-  <div class="col-md-6">
+  <div class="col-md-2">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        Speakers Results
-      </div>
-      <div class="panel-body">
-        <li>M AVG Speak: {{ m_avg_speak.score__avg|floatformat:"-2" }}</li>
-        <li>F AVG Speak: {{ f_avg_speak.score__avg|floatformat:"-2" }}</li>
-        <li>M AVG Adj Rating: {{ m_avg_rating.score__avg|floatformat:"-2" }}</li>
-        <li>F AVG Adj Rating: {{ f_avg_rating.score__avg|floatformat:"-2" }}</li>
-        <br>
-        <li>M Median Speak: {{ m_median_speak }}</li>
-        <li>F Median Speak: {{ f_median_speak }}</li>
-        <li>M Median Adj Rating: {{ m_median_rating }}</li>
-        <li>F Median Adj Rating: {{ f_median_rating }}</li>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        Adjudicators Positions
+      <div class="panel-heading text-center">
+        Adjudicator <br> Positions
       </div>
       <div class="panel-body">
         <template v-for="set in dataSets['adjudicators_positions']">
           <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
         </template>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">
+        Adudicator <br> Results
+      </div>
+      <div class="panel-body">
+
+        <template v-for="set in dataSets['adjudicators_results']">
+          <text-display :graph-data="set['data']" :title="set['title']"></donut-chart>
+        </template>
+
       </div>
     </div>
   </div>
@@ -111,6 +92,7 @@
 
   <script src="{% static 'js/vendor/d3.min.js' %}"></script>
   {% include "vue/donut-chart.vue" %}
+  {% include "vue/text-display.vue" %}
   <script>
     var latests = new Vue({
       el: '#diversityData',
