@@ -182,14 +182,14 @@ def _generate_breaking_teams(category, eligible_teams, teams_broken_higher_prior
 
             breaking_teams.append(team)
 
+            # Take note of the institution
+            teams_from_institution[team.institution] += 1
+
         bt.full_clean()
         if existing:
             bt.save()
         else:
             breaking_teams_to_create.append(bt)
-
-        # Take note of the institution
-        teams_from_institution[team.institution] += 1
 
     BreakingTeam.objects.bulk_create(breaking_teams_to_create)
     BreakingTeam.objects.filter(break_category=category, break_rank__isnull=False).exclude(
