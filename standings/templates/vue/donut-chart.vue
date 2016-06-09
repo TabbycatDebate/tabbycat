@@ -16,20 +16,7 @@
 
   function InitChart(vueContext){
 
-    vueContext.graphData.sort(function(a, b) {
-     if (a.label > b.label) {
-        return 1;
-      }
-      if (a.label < b.label) {
-        return -1;
-      }
-      // a must be equal to b
-      return 0;
-    });
-
     // Female - Male - Other - Unknown
-    var color = d3.scale.ordinal()
-      .range(["#ff17c4", "#4182c4", "#00ff00", "#cbcbcb"]);
 
     var pie = d3.layout.pie()
         .value(function(d) { return d.count; })
@@ -48,7 +35,7 @@
     var path = svg.selectAll("path")
         .data(pie(vueContext.graphData))
       .enter().append("path")
-        .attr("fill", function(d, i) { return color(i); }) // Get color based on index of data
+        .attr("class", function(d, i) { return "gender-graph " + vueContext.graphData[i].label.toLowerCase(); })
         .attr("d", arc);
   }
 

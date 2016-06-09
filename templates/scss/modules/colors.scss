@@ -1,0 +1,48 @@
+.gender-display {
+
+  color: #fff;
+
+  &.male {
+    background-color: $male;
+  }
+  &.female, &.nm {
+    background-color: $female;
+  }
+  &.other {
+    background-color: $other;
+  }
+  &.unknown {
+    background-color: $unknown;
+  }
+
+}
+.gender-text {
+
+  &.male {
+    color: $male;
+  }
+  &.female, &.nm {
+    color: $female;
+  }
+  &.other {
+    color: $other;
+  }
+  &.unknown {
+    color: $unknown;
+  }
+
+}
+.gender-graph {
+  &.male {
+    fill: $male;
+  }
+  &.female, &.nm {
+    fill: $female;
+  }
+  &.other {
+    fill: $other;
+  }
+  &.unknown {
+    fill: $unknown;
+  }
+}

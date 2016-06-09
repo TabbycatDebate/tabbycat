@@ -4,7 +4,9 @@
   <div class="row">
     <template v-for="d in graphData">
       <div class="col-md-4 text-center ">
-        <h3 class="no-bottom-margin text-body" style="color: red;">[[ round(d.count) ]]</h3>
+        <h3 class="no-bottom-margin text-body gender-text [[ d.label.toLowerCase() ]]">
+          <template v-if="d.label != 'Overall' && d.count > 0">+</template>[[ round(d.count) ]]
+        </h3>
       </div>
     </template>
   </div>
