@@ -150,7 +150,7 @@ def round_increment(request, round):
     if round != request.tournament.current_round:  # Doesn't make sense if not current round
         raise Http404()
     request.tournament.advance_round()
-    return redirect_round('draw', request.tournament.current_round)
+    return redirect_round('availability_index', request.tournament.current_round)
 
 
 @admin_required

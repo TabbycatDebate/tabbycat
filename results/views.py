@@ -19,8 +19,8 @@ from participants.models import Adjudicator
 from motions.models import Motion
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
-from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view, tournament_view
-from utils.misc import get_ip_address, reverse_tournament
+from utils.views import admin_required, expect_post, public_optional_tournament_view, round_view, tournament_view
+from utils.misc import get_ip_address, reverse_tournament, redirect_round
 from utils.mixins import HeadlessTemplateView, VueTableMixin
 from venues.models import Venue
 

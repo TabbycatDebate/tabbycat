@@ -2,13 +2,17 @@
 Change Log
 ==========
 
-?.?.?
+0.9.0
 -----
+- Added a beta implementation of the break rounds workflow
+- Added venue constraints, to allow participants or divisions to preferentially be given venues from predefined groups
 - Added a button to regenerate draws
-- Refactored team and speaker standings implementation
+- Refactored speaker standings implementation to match team standings implementation
 - New standings metrics, draw methods, and interface settings for running small tournaments and division-based tournaments
 - Improved support for multiple tournaments
 - Improved user-facing error messages in some scenarios
+- Most frontend dependencies now handled by Bower
+- Static file compilation now handled by Gulp
 - Various bug fixes, optimisations, and documentation edits
 
 
@@ -16,8 +20,9 @@ Change Log
 -----
 - Restored and reworking printing functionality for scoresheets/feedback
 - Restored Edit Venues and Edit Matchups on the draw pages
-- Improved Dashboard and Feedback graphs
-- Add seperate Pro-speakers tab
+- Reworked tournament data importers to use csv.DictReader, so that column order in files doesn't matter
+- Improved dashboard and feedback graphs
+- Add separate pro speakers tab
 - Various bug fixes, optimisations, and documentation edits
 
 
