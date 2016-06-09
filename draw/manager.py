@@ -132,9 +132,19 @@ class RoundRobinDrawManager(BaseDrawManager):
     draw_type = "round_robin"
 
 
+class FirstEliminationDrawManager(BaseDrawManager):
+    draw_type = "first_elimination"
+
+
+class EliminationDrawManager(BaseDrawManager):
+    draw_type = "elimination"
+
+
 DRAW_MANAGER_CLASSES = {
     Round.DRAW_RANDOM: RandomDrawManager,
     Round.DRAW_POWERPAIRED: PowerPairedDrawManager,
     Round.DRAW_ROUNDROBIN: RoundRobinDrawManager,
     Round.DRAW_MANUAL: ManualDrawManager,
+    Round.DRAW_FIRSTBREAK: FirstEliminationDrawManager,
+    Round.DRAW_BREAK: EliminationDrawManager,
 }
