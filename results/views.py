@@ -20,7 +20,7 @@ from .result import BallotSet
 from .forms import BallotSetForm
 
 from utils.views import *
-from utils.misc import get_ip_address
+from utils.misc import get_ip_address, redirect_round
 from .models import BallotSubmission
 
 
