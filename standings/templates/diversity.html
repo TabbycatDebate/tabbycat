@@ -11,17 +11,24 @@
 
 {% block page-alerts %}
 
-    <div class="nav nav-pills navbar-left vertical-spacing">
-      <span class="btn btn-default gender-display male h6">
-        Male identifying
-      </span>
-      <span class="btn btn-default gender-display nm h6">
-        Female identifying or non-binary
-      </span>
-      <span class="btn btn-default gender-display unknown h6">
-        Unknown
-      </span>
-    </div>
+
+  <div class="alert alert-info">
+    The 'results' data displayed here is presented without tests for statistical
+    significance. The correlations should not be automatically considered
+    reliable; particularly at small tournaments.
+  </div>
+
+  <div class="nav nav-pills navbar-left vertical-spacing">
+    <span class="btn btn-default gender-display male h6">
+      Male identifying
+    </span>
+    <span class="btn btn-default gender-display nm h6">
+      Female identifying or non-binary
+    </span>
+    <span class="btn btn-default gender-display unknown h6">
+      Unknown
+    </span>
+  </div>
 
 {% endblock %}
 
@@ -29,14 +36,17 @@
 
 <div class="row">
 
-  <div class="col-md-2">
+  <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading text-center">
-        Speaker <br> Demographics
+        Speaker Demographics
       </div>
-      <div class="panel-body text-center">
+      <div class="panel-body text-center no-side-padding">
         <template v-for="set in dataSets['speakers_gender']">
           <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
+        </template>
+        <template v-for="set in dataSets['speakers_region']">
+          <donut-chart :graph-data="set['data']" :title="set['title']" :regions="dataSets['regions']"></donut-chart>
         </template>
       </div>
     </div>
@@ -44,8 +54,24 @@
 
   <div class="col-md-3">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        Speaker <br>Results
+      <div class="panel-heading text-center">
+        Adjudicator Demographics
+      </div>
+      <div class="panel-body text-center no-side-padding">
+        <template v-for="set in dataSets['adjudicators_gender']">
+          <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
+        </template>
+        <template v-for="set in dataSets['adjudicators_region']">
+          <donut-chart :graph-data="set['data']" :title="set['title']" :regions="dataSets['regions']"></donut-chart>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">
+        Speaker Results
       </div>
       <div class="panel-body text-center">
         <template v-for="set in dataSets['speakers_results']">
@@ -55,36 +81,10 @@
     </div>
   </div>
 
-  <div class="col-md-2">
-    <div class="panel panel-default">
-      <div class="panel-heading text-center">
-        Adjudicator <br> Demographics
-      </div>
-      <div class="panel-body text-center">
-        <template v-for="set in dataSets['adjudicators_gender']">
-          <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
-        </template>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-2">
-    <div class="panel panel-default">
-      <div class="panel-heading text-center">
-        Adjudicator <br> Positions
-      </div>
-      <div class="panel-body">
-        <template v-for="set in dataSets['adjudicators_positions']">
-          <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
-        </template>
-      </div>
-    </div>
-  </div>
-
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading text-center">
-        Adudicator <br> Results
+        Adudicator Results
       </div>
       <div class="panel-body">
 

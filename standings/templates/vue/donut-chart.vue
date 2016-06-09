@@ -1,12 +1,12 @@
 <!-- Pie Graphs for Diversity Reports -->
 <script type="text/x-template" id="donut-chart">
 
-  <div :style="{
-    width: this.radius * 2 + this.padding + this.padding + 'px',
-    display: 'inline-block'
-  }">
+    <div :style="{
+      width: '49.5%',
+      display: 'inline-block'
+    }">
 
-    <h5 class="text-center">[[ title ]] ([[ total ]])</h5
+    <h5 class="text-center no-top-padding vertical-spacing">[[ title ]]<br>([[ total ]])</h5
 
   </div>
 
@@ -35,7 +35,7 @@
     var path = svg.selectAll("path")
         .data(pie(vueContext.graphData))
       .enter().append("path")
-        .attr("class", function(d, i) { return "d3-hoverable gender-graph " + vueContext.graphData[i].label.toLowerCase(); })
+        .attr("class", function(d, i) { return "d3-hoverable " + vueContext.colorclass(vueContext.graphData[i].label); })
         .attr("d", arc)
 
     var tooltip = d3.select("body").append("div")
@@ -43,7 +43,12 @@
       .style("opacity", 0);
 
     path.on('mouseover', function(d, i) {
-      tooltip.html("<div class='tooltip-inner'>" + vueContext.graphData[i].count + "</div>")
+      tooltip.html("<div class='tooltip-inner'>" +
+        vueContext.graphData[i].count + " " +
+        vueContext.percentage(vueContext.graphData[i].count) +
+        "<br>" +
+        vueContext.nicelabel(vueContext.graphData[i].label) +
+        "</div>")
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px")
         .style('opacity', 1)
@@ -63,7 +68,8 @@
       title: String,
       graphData: Array,
       radius: { type: Number, default: 60 },
-      padding: { type: Number, default: 2 },
+      padding: { type: Number, default: 1 },
+      regions: Array,
     },
     ready: function() {
       if (this.graphData !== undefined) {
@@ -77,6 +83,34 @@
           total += this.graphData[i].count;
         }
         return total
+      }
+    },
+    methods: {
+      colorclass: function(label) {
+        if (this.regions == null) {
+          return "gender-display " + label.toLowerCase();
+        } else {
+          regionid = this.regions.map(function(obj, index) {
+              if(obj[label] == label) {
+                  return index;
+              }
+          }).filter(isFinite)
+          return "region-display region-" + String(Number(regionid) + 1);
+        }
+      },
+      nicelabel: function (label) {
+        if (label == "Male") {
+          return "Male identifying";
+        } else if (label == "NM") {
+          return "Female identifying or non-binary";
+        } else if (label == "Unknown") {
+          return "Unspecified";
+        } else {
+          return label;
+        }
+      },
+      percentage: function(quantity) {
+        return " (" + Math.round(quantity / this.total * 100) + "%)";
       }
     }
   })

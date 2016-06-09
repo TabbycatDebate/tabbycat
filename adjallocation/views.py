@@ -86,6 +86,7 @@ def draw_adjudicators_edit(request, round):
     regions = round.tournament.region_set.order_by('name')
     break_categories = round.tournament.breakcategory_set.order_by(
         'seq').exclude(is_general=True)
+    # TODO: colors below are redundant
     colors = ["#C70062", "#00C79B", "#B1E001", "#476C5E",
               "#777", "#FF2983", "#6A268C", "#00C0CF", "#0051CF"]
     context['regions'] = list(zip(regions, colors + ["black"] * (len(regions) -

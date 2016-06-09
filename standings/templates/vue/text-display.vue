@@ -6,16 +6,16 @@
     <template v-for="(index, d) in graphData">
 
       <div class="col-md-4 text-center">
-        <h3 class="no-bottom-margin text-body gender-text [[ d.label.toLowerCase() ]]">
+        <h4 class="no-bottom-margin text-body gender-text [[ d.label.toLowerCase() ]]">
           [[ offset(d.count) ]]
-        </h3>
+        </h4>
       </div>
 
       <template v-if="datum && index == 0">
         <div class="col-md-4 text-center">
-          <h3 class="no-bottom-margin text-body">
+          <h4 class="no-bottom-margin text-body">
           [[ round(datum) ]]
-          </h3>
+          </h4>
         </div>
       </template>
 
@@ -24,7 +24,7 @@
   </div>
 
   <div class="row">
-   <h5 class="text-center">[[ title ]]</h5>
+   <h5 class="text-center vertical-spacing">[[ title ]]</h5>
   </div>
 
 </script>
