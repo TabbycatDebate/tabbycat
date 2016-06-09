@@ -6,22 +6,68 @@ from participants.models import Adjudicator, Person, Speaker
 from results.models import SpeakerScore
 
 
-def package_data_set(title, data_set):
-    data_package = {'title': title, 'data': []}
-    for data_piece in data_set:
-        for key, value in data_piece.items():
-            data_package['data'].append({'label': key, 'count': value})
+def compile_data(title, queryset, filter_source, filters, datum=False, **kwargs):
+    ''' Filter the queryset given filters and return a dictionary of results '''
 
-    return data_package
+    data_set = []
+    for item in filters:
+        [(key, value)] = item.items()  # Get the key/value pairs
+
+        # Use keywords to filter data sets; using Q for OR conditions
+        if value is not None and len(value) == 2:
+            filtered = queryset.filter(Q(**{filter_source: value[0]}) | Q(**{filter_source: value[1]}))
+        else:
+            filtered = queryset.filter(**{filter_source: value})
+
+        # Return a structure ready to fit the Vue template
+        data_set.append({
+            'label': key,
+            'count': calculate_result(filtered, kwargs),
+        })
+
+    if datum is not False:  # Get the overall number to use as baseline
+        datum = calculate_result(queryset, kwargs)
+
+    return {'title': title, 'data': data_set, 'datum': datum}
 
 
-def median_value(queryset, term):
-    count = queryset.count()
-    if count > 0:
-        count = queryset.values_list(term, flat=True).order_by(term)[int(round(count / 2))]
-        return count
+def calculate_result(queryset, keywords):
+    if 'count' in keywords:
+        return queryset.count()
+    elif 'average' in keywords:
+        return queryset.aggregate(Avg('score'))['score__avg']
+    elif 'median' in keywords or 'lowerq' in keywords or 'upperq' in keywords:
+        ordered_values = sorted(queryset.values_list('score', flat=True))
+        if 'median' in keywords:
+            return median_value(ordered_values)
+        elif 'lowerq' in keywords:
+            return quartile(ordered_values, lower=True)
+        elif 'upperq' in keywords:
+            return quartile(ordered_values, upper=True)
+
+
+def median_value(ordered_values):
+    mid = len(ordered_values) / 2
+
+    if (len(ordered_values) % 2 == 0):
+        return (ordered_values[int(mid)-1] + ordered_values[int(mid)]) / 2.0
     else:
-        return None
+        return ordered_values[int(mid)]
+
+
+def quartile(ordered_values, lower=False, upper=False):
+    mid = len(ordered_values) / 2
+
+    if (len(ordered_values) % 2 == 0):
+        if upper:
+            return median_value(ordered_values[int(mid):])
+        elif lower:
+            return median_value(ordered_values[:int(mid)])
+    else:
+        if upper:
+            return median_value(ordered_values[int(mid)+1:])
+        elif lower:
+            return median_value(ordered_values[:int(mid)])
 
 
 def get_diversity_data_sets(t):
@@ -38,143 +84,146 @@ def get_diversity_data_sets(t):
     # Speakers Demographics
     # ==========================================================================
 
-    data_sets['speakers_gender'].append(package_data_set('All Speakers', [
-        {'Unknown':  Speaker.objects.filter(team__tournament=t).filter(
-            gender=None).count()},
-        {'NM':       Speaker.objects.filter(team__tournament=t).filter(
-            Q(gender=Person.GENDER_FEMALE) | Q(gender=Person.GENDER_OTHER)).count()},
-        {'Male':     Speaker.objects.filter(team__tournament=t).filter(
-            gender=Person.GENDER_MALE).count()},
-    ]))
+    data_sets['speakers_gender'].append(compile_data(
+        'All Speakers', Speaker.objects.filter(team__tournament=t), 'gender', filters=[
+            {'Unknown':  None},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+            {'Male':     Person.GENDER_MALE},
+        ], count=True))
 
     if Speaker.objects.filter(team__tournament=t).filter(team__breakingteam__isnull=False).count() > 0:
-        data_sets['speakers_gender'].append(package_data_set('Breaking', [
-            {'Male':     Speaker.objects.filter(team__tournament=t).filter(
-                team__breakingteam__isnull=False, gender=Person.GENDER_MALE).count()},
-            {'NM':       Speaker.objects.filter(team__tournament=t).filter(
-                team__breakingteam__isnull=False).filter(Q(gender=Person.GENDER_FEMALE) | Q(gender=Person.GENDER_OTHER)).count()},
-            {'Unknown':  Speaker.objects.filter(team__tournament=t).filter(
-                team__breakingteam__isnull=False, gender=None).count()},
-        ]))
+        data_sets['speakers_gender'].append(compile_data(
+            'Breaking', Speaker.objects.filter(team__tournament=t, team__breakingteam__isnull=False), 'gender', filters=[
+                {'Unknown':  None},
+                {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+                {'Male':     Person.GENDER_MALE},
+            ], count=True))
 
     if Speaker.objects.filter(team__tournament=t).filter(novice=True).count() > 0:
-        data_sets['speakers_gender'].append(package_data_set('Pros', [
-            {'Male':     Speaker.objects.filter(team__tournament=t).filter(
-                novice=False, gender=Person.GENDER_MALE).count()},
-            {'NM':       Speaker.objects.filter(team__tournament=t).filter(
-                novice=False).filter(Q(gender=Person.GENDER_FEMALE) | Q(gender=Person.GENDER_OTHER)).count()},
-            {'Unknown':  Speaker.objects.filter(team__tournament=t).filter(
-                novice=False, gender=None).count()},
-        ]))
-        data_sets['speakers_gender'].append(package_data_set('Novices', [
-            {'Male':     Speaker.objects.filter(team__tournament=t).filter(
-                novice=True, gender=Person.GENDER_MALE).count()},
-            {'NM':       Speaker.objects.filter(team__tournament=t).filter(
-                novice=True).filter(Q(gender=Person.GENDER_FEMALE) | Q(gender=Person.GENDER_OTHER)).count()},
-            {'Unknown':  Speaker.objects.filter(team__tournament=t).filter(
-                novice=True, gender=None).count()},
-        ]))
+        data_sets['speakers_gender'].append(compile_data(
+            'Pros', Speaker.objects.filter(team__tournament=t, novice=False), 'gender', filters=[
+                {'Unknown':  None},
+                {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+                {'Male':     Person.GENDER_MALE},
+            ], count=True))
+        data_sets['speakers_gender'].append(compile_data(
+            'Novices', Speaker.objects.filter(team__tournament=t, novice=True), 'gender', filters=[
+                {'Unknown':  None},
+                {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+                {'Male':     Person.GENDER_MALE},
+            ], count=True))
 
     # ==========================================================================
     # Adjudicators Demographics
     # ==========================================================================
 
-    data_sets['adjudicators_gender'].append(package_data_set('All Adjudicators', [
-        {'Male':     Adjudicator.objects.filter(tournament=t).filter(
-            gender=Person.GENDER_MALE).count()},
-        {'NM':       Adjudicator.objects.filter(tournament=t).filter(
-            Q(gender=Person.GENDER_FEMALE) | Q(gender=Person.GENDER_OTHER)).count()},
-        {'Unknown':  Adjudicator.objects.filter(tournament=t).filter(
-            gender=None).count()}
-    ]))
+    data_sets['adjudicators_gender'].append(compile_data(
+        'All Adjudicators', Adjudicator.objects.filter(tournament=t), 'gender', filters=[
+            {'Unknown':  None},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+            {'Male':     Person.GENDER_MALE},
+        ], count=True))
 
     if Adjudicator.objects.filter(tournament=t).filter(independent=True).count() > 0:
-        data_sets['adjudicators_gender'].append(package_data_set('Independents', [
-            {'Male':     Adjudicator.objects.filter(tournament=t).filter(
-                gender=Person.GENDER_MALE, independent=True).count()},
-            {'NM':       Adjudicator.objects.filter(tournament=t).filter(
-                Q(gender=Person.GENDER_FEMALE) | Q(gender=Person.GENDER_OTHER)).filter(independent=True).count()},
-            {'Unknown':  Adjudicator.objects.filter(tournament=t).filter(
-                gender=None, independent=True).count()}
-        ]))
+        data_sets['adjudicators_gender'].append(compile_data(
+            'Independents', Adjudicator.objects.filter(tournament=t, independent=True), 'gender', filters=[
+                {'Unknown':  None},
+                {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+                {'Male':     Person.GENDER_MALE},
+            ], count=True))
 
     if Adjudicator.objects.filter(breaking=True).count() > 0:
-        data_sets['adjudicators_gender'].append(package_data_set('Breaking', [
-            {'Male':     Adjudicator.objects.filter(tournament=t).filter(
-                gender=Person.GENDER_MALE, breaking=True).count()},
-            {'NM':       Adjudicator.objects.filter(tournament=t).filter(
-                Q(gender=Person.GENDER_FEMALE) | Q(gender=Person.GENDER_OTHER)).filter(breaking=True).count()},
-            {'Unknown':  Adjudicator.objects.filter(tournament=t).filter(
-                gender=None, breaking=True).count()}
-        ]))
+        data_sets['adjudicators_gender'].append(compile_data(
+            'Breaking', Adjudicator.objects.filter(tournament=t, breaking=True), 'gender', filters=[
+                {'Unknown':  None},
+                {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+                {'Male':     Person.GENDER_MALE},
+            ], count=True))
 
-    data_sets['adjudicators_positions'].append(package_data_set('Chairs', [
-        {'Male':     DebateAdjudicator.objects.filter(adjudicator__tournament=t).filter(
-            adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_CHAIR).count()},
-        {'NM':       DebateAdjudicator.objects.filter(adjudicator__tournament=t).filter(
-            Q(adjudicator__gender=Person.GENDER_FEMALE) | Q(adjudicator__gender=Person.GENDER_OTHER)).filter(type=DebateAdjudicator.TYPE_CHAIR).count()},
-        {'Unknown':  DebateAdjudicator.objects.filter(adjudicator__tournament=t).filter(
-            adjudicator__gender=None, type=DebateAdjudicator.TYPE_CHAIR).count()}
-    ]))
-    data_sets['adjudicators_positions'].append(package_data_set('Panellists', [
-        {'Male':     DebateAdjudicator.objects.filter(adjudicator__tournament=t).filter(
-            adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_PANEL).count()},
-        {'NM':       DebateAdjudicator.objects.filter(adjudicator__tournament=t).filter(
-            Q(adjudicator__gender=Person.GENDER_FEMALE) | Q(adjudicator__gender=Person.GENDER_OTHER)).filter(type=DebateAdjudicator.TYPE_PANEL).count()},
-        {'Unknown':  DebateAdjudicator.objects.filter(adjudicator__tournament=t).filter(
-            adjudicator__gender=None, type=DebateAdjudicator.TYPE_PANEL).count()}
-    ]))
-    data_sets['adjudicators_positions'].append(package_data_set('Trainees', [
-        {'Male':     DebateAdjudicator.objects.filter(adjudicator__tournament=t).filter(
-            adjudicator__gender=Person.GENDER_MALE, type=DebateAdjudicator.TYPE_TRAINEE).count()},
-        {'NM':       DebateAdjudicator.objects.filter(adjudicator__tournament=t).filter(
-            Q(adjudicator__gender=Person.GENDER_FEMALE) | Q(adjudicator__gender=Person.GENDER_OTHER)).filter(type=DebateAdjudicator.TYPE_TRAINEE).count()},
-        {'Unknown':  DebateAdjudicator.objects.filter(adjudicator__tournament=t).filter(
-            adjudicator__gender=None, type=DebateAdjudicator.TYPE_TRAINEE).count()}
-    ]))
+    data_sets['adjudicators_positions'].append(compile_data(
+        'Chairs', DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_CHAIR), 'adjudicator__gender', filters=[
+            {'Unknown':  None},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+            {'Male':     Person.GENDER_MALE},
+        ], count=True))
+
+    data_sets['adjudicators_positions'].append(compile_data(
+        'Panelists', DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_PANEL), 'adjudicator__gender', filters=[
+            {'Unknown':  None},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+            {'Male':     Person.GENDER_MALE},
+        ], count=True))
+
+    data_sets['adjudicators_positions'].append(compile_data(
+        'Trainees', DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_TRAINEE), 'adjudicator__gender', filters=[
+            {'Unknown':  None},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+            {'Male':     Person.GENDER_MALE},
+        ], count=True))
 
     # ==========================================================================
     # Adjudicators Results
     # ==========================================================================
 
-    overall = AdjudicatorFeedback.objects.filter(adjudicator__tournament=t).aggregate(Avg('score'))['score__avg']
-    data_sets['adjudicators_results'].append(package_data_set('Average Rating', [
-        {'Male':     AdjudicatorFeedback.objects.filter(adjudicator__tournament=t).filter(
-            adjudicator__gender=Person.GENDER_MALE).aggregate(Avg('score'))['score__avg'] - overall},
-        {'Overall':  overall},
-        {'NM':       AdjudicatorFeedback.objects.filter(adjudicator__tournament=t).filter(
-            Q(adjudicator__gender=Person.GENDER_FEMALE) | Q(adjudicator__gender=Person.GENDER_OTHER)).aggregate(Avg('score'))['score__avg'] - overall}
-    ]))
+    data_sets['adjudicators_results'].append(compile_data(
+        'Average Rating', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t), 'adjudicator__gender', filters=[
+            {'Male':     Person.GENDER_MALE},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+        ], average=True, datum=True))
 
-    overall = median_value(AdjudicatorFeedback.objects.filter(adjudicator__tournament=t), 'score')
-    data_sets['adjudicators_results'].append(package_data_set('Median Rating', [
-        {'Male':     median_value(AdjudicatorFeedback.objects.filter(adjudicator__tournament=t).filter(
-            adjudicator__gender=Person.GENDER_MALE), 'score') - overall},
-        {'Overall':overall},
-        {'NM':       median_value(AdjudicatorFeedback.objects.filter(adjudicator__tournament=t).filter(
-            Q(adjudicator__gender=Person.GENDER_FEMALE) | Q(adjudicator__gender=Person.GENDER_OTHER)), 'score') - overall}
-    ]))
+    data_sets['adjudicators_results'].append(compile_data(
+        'Median Rating', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t), 'adjudicator__gender', filters=[
+            {'Male':     Person.GENDER_MALE},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+        ], median=True, datum=True))
+
+    data_sets['adjudicators_results'].append(compile_data(
+        'Upper Quartile Rating', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t), 'adjudicator__gender', filters=[
+            {'Male':     Person.GENDER_MALE},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+        ], upperq=True, datum=True))
+
+    data_sets['adjudicators_results'].append(compile_data(
+        'Lower Quartile Rating', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t), 'adjudicator__gender', filters=[
+            {'Male':     Person.GENDER_MALE},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+        ], lowerq=True, datum=True))
+
+    # overall = AdjudicatorFeedback.objects.filter(adjudicator__tournament=t)
+    # overall = [af for af in list(overall) if af.debate_adjudicator and af.debate_adjudicator.type is DebateAdjudicator.TYPE_CHAIR]
+
+    # data_sets['adjudicators_results'].append(package_data_set('Average Chair Rating', [
+    #     {'Male':     sum([af.score for af in overall if af.adjudicator.gender is Person.GENDER_MALE]) / len(overall) - overall},
+    #     {'Overall':  sum([af.score for af in overall]) / len(overall)},
+    #     {'NM':       sum([af.score for af in overall if af.adjudicator.gender is Person.GENDER_FEMALE or Person.GENDER_OTHER]) / len(overall) - overall},
+    # ]))
 
     # ==========================================================================
     # Speakers Results
     # ==========================================================================
 
-    overall = SpeakerScore.objects.filter(speaker__team__tournament=t).aggregate(Avg('score'))['score__avg']
-    data_sets['speakers_results'].append(package_data_set('Average Score', [
-        {'Male':     SpeakerScore.objects.filter(speaker__team__tournament=t).filter(
-            speaker__gender=Person.GENDER_MALE).aggregate(Avg('score'))['score__avg'] - overall},
-        {'Overall':  overall},
-        {'NM':       SpeakerScore.objects.filter(speaker__team__tournament=t).filter(
-            Q(speaker__gender=Person.GENDER_FEMALE) | Q(speaker__gender=Person.GENDER_OTHER)).aggregate(Avg('score'))['score__avg'] - overall}
-    ]))
+    data_sets['speakers_results'].append(compile_data(
+        'Average Score', SpeakerScore.objects.filter(speaker__team__tournament=t), 'speaker__gender', filters=[
+            {'Male':     Person.GENDER_MALE},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+        ], average=True, datum=True))
 
-    overall = median_value(SpeakerScore.objects.filter(speaker__team__tournament=t), 'score')
-    data_sets['speakers_results'].append(package_data_set('Median Score', [
-        {'Male':     median_value(SpeakerScore.objects.filter(speaker__team__tournament=t).filter(
-            speaker__gender=Person.GENDER_MALE), 'score') - overall},
-        {'Overall':  overall},
-        {'NM':       median_value(SpeakerScore.objects.filter(speaker__team__tournament=t).filter(
-            Q(speaker__gender=Person.GENDER_FEMALE) | Q(speaker__gender=Person.GENDER_OTHER)), 'score') - overall}
-    ]))
+    data_sets['speakers_results'].append(compile_data(
+        'Median Score', SpeakerScore.objects.filter(speaker__team__tournament=t), 'speaker__gender', filters=[
+            {'Male':     Person.GENDER_MALE},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+        ], median=True, datum=True))
+
+    data_sets['speakers_results'].append(compile_data(
+        'Upper Quartile Score', SpeakerScore.objects.filter(speaker__team__tournament=t), 'speaker__gender', filters=[
+            {'Male':     Person.GENDER_MALE},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+        ], upperq=True, datum=True))
+
+    data_sets['speakers_results'].append(compile_data(
+        'Lower Quartile Score', SpeakerScore.objects.filter(speaker__team__tournament=t), 'speaker__gender', filters=[
+            {'Male':     Person.GENDER_MALE},
+            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+        ], lowerq=True, datum=True))
 
     return data_sets

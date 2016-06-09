@@ -50,7 +50,7 @@
       <div class="panel-body">
 
         <template v-for="set in dataSets['speakers_results']">
-          <text-display :graph-data="set['data']" :title="set['title']"></donut-chart>
+          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
 
       </div>
@@ -91,7 +91,7 @@
       <div class="panel-body">
 
         <template v-for="set in dataSets['adjudicators_results']">
-          <text-display :graph-data="set['data']" :title="set['title']"></donut-chart>
+          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
 
       </div>
