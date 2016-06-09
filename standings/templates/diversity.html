@@ -13,7 +13,7 @@
 
     <div class="nav nav-pills navbar-left vertical-spacing">
       <span class="btn btn-default gender-display male h6">
-        Male
+        Male identifying
       </span>
       <span class="btn btn-default gender-display nm h6">
         Female identifying or non-binary
@@ -34,7 +34,7 @@
       <div class="panel-heading text-center">
         Speaker <br> Demographics
       </div>
-      <div class="panel-body">
+      <div class="panel-body text-center">
         <template v-for="set in dataSets['speakers_gender']">
           <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
         </template>
@@ -44,15 +44,13 @@
 
   <div class="col-md-3">
     <div class="panel panel-default">
-      <div class="panel-heading text-center">
+      <div class="panel-heading">
         Speaker <br>Results
       </div>
-      <div class="panel-body">
-
+      <div class="panel-body text-center">
         <template v-for="set in dataSets['speakers_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
-
       </div>
     </div>
   </div>
@@ -62,7 +60,7 @@
       <div class="panel-heading text-center">
         Adjudicator <br> Demographics
       </div>
-      <div class="panel-body">
+      <div class="panel-body text-center">
         <template v-for="set in dataSets['adjudicators_gender']">
           <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
         </template>

@@ -6,7 +6,7 @@
     display: 'inline-block'
   }">
 
-    <h5 class="text-center">[[ title ]]</h5
+    <h5 class="text-center">[[ title ]] ([[ total ]])</h5
 
   </div>
 
@@ -35,8 +35,26 @@
     var path = svg.selectAll("path")
         .data(pie(vueContext.graphData))
       .enter().append("path")
-        .attr("class", function(d, i) { return "gender-graph " + vueContext.graphData[i].label.toLowerCase(); })
-        .attr("d", arc);
+        .attr("class", function(d, i) { return "d3-hoverable gender-graph " + vueContext.graphData[i].label.toLowerCase(); })
+        .attr("d", arc)
+
+    var tooltip = d3.select("body").append("div")
+      .attr("class", "d3-tooltip tooltip")
+      .style("opacity", 0);
+
+    path.on('mouseover', function(d, i) {
+      tooltip.html("<div class='tooltip-inner'>" + vueContext.graphData[i].count + "</div>")
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px")
+        .style('opacity', 1)
+      d3.select(this).style('opacity', 0.5);
+    });
+
+    path.on('mouseout', function(d) {
+      tooltip.style('opacity', 0)
+      d3.select(this).style('opacity', 1);
+    });
+
   }
 
   Vue.component('donut-chart', {
@@ -52,6 +70,15 @@
         InitChart(this); // Only init if we have some info
       }
     },
+    computed: {
+      total: function() {
+        total = 0;
+        for (var i = 0; i < this.graphData.length; i++) {
+          total += this.graphData[i].count;
+        }
+        return total
+      }
+    }
   })
 
 </script>

@@ -4,6 +4,7 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
 from participants.models import Adjudicator, Person, Speaker
 from results.models import SpeakerScore
+from tournaments.models import Round
 
 
 def compile_data(title, queryset, filter_source, filters, datum=False, **kwargs):
@@ -85,7 +86,7 @@ def get_diversity_data_sets(t):
     # ==========================================================================
 
     data_sets['speakers_gender'].append(compile_data(
-        'All Speakers', Speaker.objects.filter(team__tournament=t), 'gender', filters=[
+        'All', Speaker.objects.filter(team__tournament=t), 'gender', filters=[
             {'Unknown':  None},
             {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
             {'Male':     Person.GENDER_MALE},
@@ -118,7 +119,7 @@ def get_diversity_data_sets(t):
     # ==========================================================================
 
     data_sets['adjudicators_gender'].append(compile_data(
-        'All Adjudicators', Adjudicator.objects.filter(tournament=t), 'gender', filters=[
+        'All', Adjudicator.objects.filter(tournament=t), 'gender', filters=[
             {'Unknown':  None},
             {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
             {'Male':     Person.GENDER_MALE},
@@ -225,5 +226,18 @@ def get_diversity_data_sets(t):
             {'Male':     Person.GENDER_MALE},
             {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
         ], lowerq=True, datum=True))
+
+    if SpeakerScore.objects.filter(speaker__team__tournament=t, debate_team__debate__round__stage=Round.STAGE_ELIMINATION).count() > 0:
+        data_sets['speakers_results'].append(compile_data(
+            'Average Finals Score', SpeakerScore.objects.filter(speaker__team__tournament=t, debate_team__debate__round__stage=Round.STAGE_ELIMINATION), 'speaker__gender', filters=[
+                {'Male':     Person.GENDER_MALE},
+                {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+            ], average=True, datum=True))
+
+        data_sets['speakers_results'].append(compile_data(
+            'Median Finals Score', SpeakerScore.objects.filter(speaker__team__tournament=t, debate_team__debate__round__stage=Round.STAGE_ELIMINATION), 'speaker__gender', filters=[
+                {'Male':     Person.GENDER_MALE},
+                {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+            ], median=True, datum=True))
 
     return data_sets
