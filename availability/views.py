@@ -1,3 +1,5 @@
+from django.shortcuts import render
+
 from tournaments.models import Round
 from participants.models import Person
 from actionlog.models import ActionLogEntry
