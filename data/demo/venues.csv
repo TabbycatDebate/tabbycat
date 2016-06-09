@@ -15,9 +15,9 @@ name,priority,group
 "K04",20,Date
 "K05",20,Date
 "K06",20,
-"K08",20,Feijoa
-"P01",30,Grape
-"P03",30,Grape
+"K08",20,Date
+"P01",30,Feijoa
+"P03",30,Feijoa
 "P05",30,Kiwifruit
 "P07",30,Kiwifruit
 "Z09",40,Lemon
