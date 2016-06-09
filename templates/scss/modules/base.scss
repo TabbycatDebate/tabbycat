@@ -12,6 +12,16 @@ body {
 .no-bottom-padding {
   padding-bottom: 0px; // Mostly for panel-body elements
 }
+.no-bottom-margin {
+  margin-bottom: 0px; // Used by infographics
+}
+.no-side-padding {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.no-top-padding {
+  margin-top: 0px;
+}
 // BASE ELEMENTS: HEADER
 .head-title {
   padding: 0 0 16px 5px;

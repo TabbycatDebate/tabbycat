@@ -1,12 +1,18 @@
-from django.views.decorators.cache import cache_page
+import json
+from collections import OrderedDict
+
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render
+from django.views.decorators.cache import cache_page
 
 from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
 from utils.misc import get_ip_address
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_tournament, tournament_view
+from utils.mixins import HeadlessTemplateView, PublicCacheMixin, VueTableMixin
+from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from .models import BreakCategory, BreakingTeam
 from . import forms
@@ -19,16 +25,32 @@ def public_break_index(request, t):
     return render(request, "public_break_index.html")
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_breaking_teams')
-def public_breaking_teams(request, t, category):
-    bc = get_object_or_404(BreakCategory, slug=category, tournament=t)
-    standings = breaking.get_breaking_teams(
-        bc, include_all=True, include_categories=t.pref('public_break_categories'))
-    generated = BreakingTeam.objects.filter(
-        break_category__tournament=t).exists()
-    return render(request, 'public_breaking_teams.html', dict(
-        category=bc, generated=generated, standings=standings))
+class PublicBreakingTeams(PublicTournamentPageMixin, PublicCacheMixin, VueTableMixin, HeadlessTemplateView):
+
+    template_name = 'base_vue_table.html'
+
+    public_page_preference = 'public_breaking_teams'
+
+    page_emoji = "👑"
+
+    def get_context_data(self, **kwargs):
+        t = self.get_tournament()
+        bc = get_object_or_404(BreakCategory, slug=self.kwargs.get('category'), tournament=t)
+
+        standings = breaking.get_breaking_teams(bc, include_all=True, include_categories=t.pref('public_break_categories'))
+        # generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
+
+        teams_data = []
+        for info in standings.standings:
+            ddict = []
+            ddict.extend(self.ranking_cells(info))
+            ddict.extend(self.team_cells(info.team, t))
+            ddict.extend(self.metric_cells(info.metrics))
+            teams_data.append(OrderedDict(ddict))
+
+        self.page_title = bc.name
+        kwargs["tableData"] = json.dumps(teams_data)
+        return super().get_context_data(**kwargs)
 
 
 @admin_required
@@ -94,18 +116,33 @@ def update_breaking_teams(request, t, category):
     return redirect_tournament('breaking_teams', t, category=category)
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_breaking_adjs')
-def public_breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
-    return render(request, 'public_breaking_adjs.html', dict(adjs=adjs))
+class BreakingAdjudicators(TournamentMixin, VueTableMixin, HeadlessTemplateView):
+
+    template_name = 'base_vue_table.html'
+    page_title = 'Breaking Adjudicators'
+    page_emoji = '🎉'
+
+    def get_context_data(self, **kwargs):
+        t = self.get_tournament()
+
+        adjs_data = []
+        for adj in Adjudicator.objects.filter(breaking=True, tournament=t):
+            adjs_data.append(OrderedDict(self.adj_cells(adj, t)))
+
+        kwargs["tableData"] = json.dumps(adjs_data)
+        return super().get_context_data(**kwargs)
 
 
-@admin_required
-@tournament_view
-def breaking_adjs(request, t):
-    adjs = Adjudicator.objects.filter(breaking=True, tournament=t)
-    return render(request, 'breaking_adjs.html', dict(adjs=adjs))
+class AdminBreakingAdjudicators(LoginRequiredMixin, BreakingAdjudicators):
+
+    def get(self, request, *args, **kwargs):
+        messages.info(self.request, "Adjudicators can be marked as breaking in the Feedback section.")
+        return super().get(self, request, *args, **kwargs)
+
+
+class PublicBreakingAdjudicators(PublicTournamentPageMixin, PublicCacheMixin, BreakingAdjudicators):
+
+    public_page_preference = 'public_breaking_adjs'
 
 
 @admin_required

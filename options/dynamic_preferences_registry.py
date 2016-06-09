@@ -538,6 +538,15 @@ class PublicParticipants(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class PublicDiversity(BooleanPreference):
+    help_text = "Enables the public page listing diversity statistics"
+    verbose_name = "Enable public view of diversity info"
+    section = public_features
+    name = "public_diversity"
+    default = False
+
+
+@tournament_preferences_registry.register
 class PublicBreakCategories(BooleanPreference):
     help_text = "If the participants list is enabled, displays break category eligibility on that page"
     verbose_name = "Show break categories on participants page"

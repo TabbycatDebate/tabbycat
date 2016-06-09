@@ -202,16 +202,6 @@
 
 <style style="text/css">
 
-  {% for region, color in regions %}
-    .region-display.region-{{ region.id }} {
-      background: {{ color }};
-      color: #fff;
-    }
-    .region-display.region-{{ region.id }} span a {
-      color: #fff;
-    }
-  {% endfor %}
-
   {% for category, color in break_categories %}
     .breakcategory-display.breakcategory-{{ category.slug }} {
       background: {{ color }};

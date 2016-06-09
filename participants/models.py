@@ -211,8 +211,7 @@ class Team(models.Model):
     @property
     def break_categories_str(self):
         categories = self.break_categories_nongeneral
-        return "(" + ", ".join(c.name
-                               for c in categories) + ")" if categories else ""
+        return ", ".join(c.name for c in categories) if categories else ""
 
     def break_rank_for_category(self, category):
         from breakqual.models import BreakingTeam

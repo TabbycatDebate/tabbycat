@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.generic.base import TemplateResponseMixin, View
+from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import SingleObjectMixin
 
 from tournaments.mixins import TournamentMixin
@@ -105,3 +105,103 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     """
     slug_field = 'url_key'
     slug_url_kwarg = 'url_key'
+
+
+class HeadlessTemplateView(TemplateView):
+    """Mixin for views that sets context data for the page and html header
+    directly into the base template, obviating the need for page templates in
+    many instances"""
+
+    def get_context_data(self, **kwargs):
+
+        kwargs["page_title"] = self.page_title
+        kwargs["page_emoji"] = self.page_emoji
+
+        return super().get_context_data(**kwargs)
+
+
+class VueTableMixin:
+    """Mixing that provides shortcuts for adding data when building arrays that
+    will end up as rows within a Vue table."""
+
+    def adj_cells(self, adjudicator, tournament):
+        adj_info = [('Name', adjudicator.name)]
+        if tournament.pref('show_institutions'):
+            if adjudicator.adj_core:
+                adj_info.append(('Institution', "Adj Core / " + adjudicator.institution.name))
+            elif adjudicator.independent:
+                adj_info.append(('Institution', "Independent / " + adjudicator.institution.name))
+            else:
+                adj_info.append(('Institution', adjudicator.institution.name))
+        return adj_info
+
+    def team_cells(self, team, tournament, break_categories=None):
+        team_info = []
+        if tournament.pref('show_emoji'):
+            team_info.append(('❔', team.emoji))
+        team_info.append(('Team', team.short_name))
+        if break_categories is not None:
+            team_info.append(('Categories', break_categories))
+        if tournament.pref('show_institutions'):
+            team_info.append(('Institution', team.institution.code))
+
+        return team_info
+
+    def speaker_cells(self, speaker, tournament):
+        speaker_info = [('Name', speaker.name)]
+        if tournament.pref('show_novices'):
+            speaker_info.append(('Novice', speaker.novice))
+        return speaker_info
+
+    def venue_cells(self, debate, tournament, with_times=False):
+        venue_info = []
+        if tournament.pref('enable_divisions'):
+            venue_info.append(('division', debate.division.name))
+
+        if tournament.pref('enable_venue_groups') and debate.division:
+            venue_info.append(('venue', debate.division.venue_group.short_name))
+        elif tournament.pref('enable_venue_groups'):
+            venue_info.append(('venue', debate.venue.group.short_name + debate.venue.name))
+        else:
+            venue_info.append(('venue', debate.venue.name))
+
+        if with_times and tournament.pref('enable_debate_scheduling'):
+            if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
+                venue_info.append((' ', ""))
+                venue_info.append((' ', "Bye"))
+            elif debate.result_status == "P":
+                venue_info.append((' ', ""))
+                venue_info.append((' ', "Postponed"))
+            elif debate.confirmed_ballot.forfeit:
+                venue_info.append((' ', ""))
+                venue_info.append((' ', "Forfeit"))
+            else:
+                venue_info.append(('status', debate.time.strftime("D jS F")))
+                venue_info.append(('status', debate.time.strftime('h:i A')))
+
+        return venue_info
+
+    def format_cell_number(self, value):
+        if isinstance(value, float):
+            return "{0:.2f}".format(value)
+        else:
+            return value
+
+    def ranking_cells(self, standing):
+        ddict = []
+        for key, value in standing.rankings.items():
+            if value[1]:
+                ddict.append((key, value[0] + '='))
+            else:
+                ddict.append((key, value[0]))
+        if hasattr(standing, 'break_rank'):
+            ddict.append(('Break', standing.break_rank))
+
+        return ddict
+
+    def metric_cells(self, metrics):
+        ddict = []
+        for key, value in metrics.items():
+            ddict.append((key, self.format_cell_number(value)))
+
+        return ddict

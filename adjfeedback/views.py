@@ -99,8 +99,8 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, TemplateView):
             teams_data.append({
                 'name': team.short_name,
                 'institution': team.institution.name,
-                'feedbacks': "%s Feedbacks" % feedbacks,
-                'rowLink': reverse_tournament('adjfeedback-view-from-team', tournament, kwargs={'pk': team.pk}),
+                'count': "%s Feedbacks" % feedbacks,
+                'feedback': reverse_tournament('adjfeedback-view-from-team', tournament, kwargs={'pk': team.pk}),
             })
 
         adjs_data = []
@@ -114,6 +114,7 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, TemplateView):
                 'feedbacks': "%s Feedbacks" % feedbacks,
                 'rowLink': reverse_tournament('adjfeedback-view-from-adjudicator', tournament, kwargs={'pk': adj.pk}),
             })
+
         kwargs['teams'] = teams_data
         kwargs['adjs'] = adjs_data
         return super().get_context_data(**kwargs)

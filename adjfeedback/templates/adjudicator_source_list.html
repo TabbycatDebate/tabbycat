@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-    <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
+  <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
 {% endblock %}
 
 {% block content %}
@@ -73,7 +73,6 @@
 
 {% block extra-js %}
 
-  {% include "vue/import-vue.html" %}
   {% include "vue/table.vue" %}
   <script>
     var fromTeamsTable = new Vue({

@@ -1,12 +1,17 @@
+import json
+from collections import OrderedDict
+
 from django.conf import settings
 from django.contrib import messages
-from django.http import JsonResponse
 from django.forms.models import modelformset_factory
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import cache_page
 
 from adjallocation.models import DebateAdjudicator
+from tournaments.mixins import PublicTournamentPageMixin
 from utils.views import public_optional_tournament_view, tournament_view
+from utils.mixins import HeadlessTemplateView, PublicCacheMixin, VueTableMixin
 
 from .models import Adjudicator, Institution, Speaker, Team
 
@@ -23,12 +28,38 @@ def team_speakers(request, t, team_id):
     return JsonResponse(data, safe=False)
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_participants')
-def public_participants(request, t):
-    adjs = Adjudicator.objects.all()
-    speakers = Speaker.objects.all().select_related('team', 'team__institution')
-    return render(request, "public_participants.html", dict(adjs=adjs, speakers=speakers))
+class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMixin, HeadlessTemplateView):
+
+    public_page_preference = 'public_participants'
+    template_name = 'base_double_vue_table.html'
+    page_title = 'Participants'
+    page_emoji = '🚌'
+
+    def get_context_data(self, **kwargs):
+        t = self.get_tournament()
+
+        adjs_data = []
+        adjudicators = Adjudicator.objects.filter(tournament=t).select_related('institution')
+        for adjudicator in adjudicators:
+            ddict = self.adj_cells(adjudicator, t)
+            adjs_data.append(OrderedDict(ddict))
+
+        kwargs["table_a_title"] = "Adjudicators"
+        kwargs["tableDataA"] = json.dumps(adjs_data)
+
+        speakers_data = []
+        speakers = Speaker.objects.filter(team__tournament=t).select_related('team', 'team__institution')
+        for speaker in speakers:
+            ddict.extend(self.speaker_cells(speaker, t))
+            ddict.extend(self.team_cells(speaker.team, t))
+            # if t.pref('public_break_categories'):
+            #     ddict.append(('Break Categories', s.team.break_categories_nongeneral ))
+            speakers_data.append(OrderedDict(ddict))
+
+        kwargs["table_b_title"] = "Speakers"
+        kwargs["tableDataB"] = json.dumps(speakers_data)
+
+        return super().get_context_data(**kwargs)
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)

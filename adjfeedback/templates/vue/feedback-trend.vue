@@ -109,7 +109,7 @@
       .attr("cx", function (d) { return xScale (d.x); })
       .attr("cy", function (d) { return yScale (d.y); })
       .attr("r", 5) // Size of circle
-      .attr("class", "d3-hoverable")
+      .attr("class", "d3-hoverable d3-hover-black")
       .attr("fill", function (d) {
         if (d.position === "Chair") {
           return '#3700A8'; // Dark purple
@@ -122,7 +122,7 @@
         }
         return yScale (d.position);
       })
-      .on("mouseover", function(d) {
+      .on("mouseover", function(d, i) {
         div.transition()
             .duration(200)
             .style("opacity", .9);
@@ -130,7 +130,7 @@
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY - 28) + "px");
       })
-      .on("mouseout", function(d) {
+      .on("mouseout", function(d, i) {
         div.transition()
           .duration(500)
           .style("opacity", 0);

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import json
 import datetime
 import logging
@@ -19,7 +20,8 @@ from motions.models import Motion
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view, tournament_view
-from utils.misc import get_ip_address
+from utils.misc import get_ip_address, reverse_tournament
+from utils.mixins import HeadlessTemplateView, VueTableMixin
 from venues.models import Venue
 
 from .result import BallotSet
@@ -75,16 +77,58 @@ def results(request, round):
                   show_motions_column=show_motions_column, has_motions=has_motions))
 
 
-class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, TemplateView):
+class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin, HeadlessTemplateView):
 
-    template_name = 'public_results_for_round.html'
+    template_name = 'base_vue_table.html'
     public_page_preference = 'public_results'
+    page_title = 'Results'
+    page_emoji = '💥'
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
-        tournament = self.get_tournament()
-        kwargs["draw"] = round.get_draw()
-        kwargs["show_motions_column"] = round.motion_set.count() > 1 and tournament.pref('show_motions_in_results')
+        t = self.get_tournament()
+        draw = round.get_draw()
+
+        draw_data = []
+        for d in draw:
+            ddict = []
+            if t.pref('enable_divisions'):
+                ddict.append(('Division', d.division.name))
+            ddict.append(('Venue', d.venue.name))
+            if t.pref('ballots_released'):
+                if d.confirmed_ballot:
+                    ddict.append(('Ballot', reverse_tournament('public_ballots_view', t, kwargs={'debate_id': d.id})))
+                else:
+                    ddict.append(('Ballot', ""))
+
+            if d.confirmed_ballot.ballot_set.aff_win:
+                ddict.append(('AR', "Won"))
+            else:
+                ddict.append(('AR', "Lost"))
+
+            ddict.extend(self.team_cells(d.aff_team, t))
+
+            if d.confirmed_ballot.ballot_set.neg_win:
+                ddict.append(('NR', "Won"))
+            else:
+                ddict.append(('NR', "Lost"))
+
+            ddict.extend(self.team_cells(d.neg_team, t))
+
+            # Adjudicators with splits
+            if d.confirmed_ballot and t.pref('show_splitting_adjudicators'):
+                pass  # TODO
+            else:
+                ddict.append(('adjudicators', d.adjudicators_for_draw))
+
+            if t.pref('show_motions_in_results'):
+                ddict.append(('Motion', d.confirmed_ballot.motion.reference))
+
+            draw_data.append(OrderedDict(ddict))
+
+        kwargs["draw"] = draw  # To deprecate
+        kwargs["tableData"] = json.dumps(draw_data)
+
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -186,8 +230,8 @@ def public_new_ballotset(request, t, adjudicator):
 
     if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
         return render(request, 'public_enter_results_error.html', dict(
-            adjudicator=adjudicator,
-            message='The draw and/or motions for the round haven\'t been released yet.'))
+            adjudicator=adjudicator, message='The draw and/or motions for the '
+            'round haven\'t been released yet.'))
 
     try:
         da = DebateAdjudicator.objects.get(adjudicator=adjudicator, debate__round=round)
@@ -233,7 +277,8 @@ def new_ballotset(request, t, debate_id):
                                  ip_address=ip_address)
 
     if not debate.adjudicators.has_chair:
-        messages.error(request, "Whoops! The debate %s doesn't have a chair, so you can't enter results for it." % debate.matchup)
+        messages.error(request, "Whoops! The debate %s doesn't have a chair, "
+                       "so you can't enter results for it." % debate.matchup)
         return redirect_round('results', debate.round)
 
     if request.method == 'POST':
@@ -400,7 +445,8 @@ def post_ballot_checkin(request, round):
     debate.save()
 
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN,
-                               user=request.user, debate=debate, tournament=round.tournament)
+                               user=request.user, debate=debate,
+                               tournament=round.tournament)
 
     obj = dict()
 

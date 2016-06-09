@@ -18,6 +18,10 @@
 .text-muted {
   color: $gray-light;
 }
+.text-body {
+  // Override headings
+  font-family: $font-family-sans-serif;
+}
 
 // EMOJI
 .emoji {

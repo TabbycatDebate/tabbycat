@@ -1,3 +1,5 @@
+import json
+
 from django.db.models import Count
 from django.views.generic.base import ContextMixin, TemplateView, View
 from django.conf import settings
@@ -11,6 +13,7 @@ from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.mixins import SuperuserRequiredMixin
 
+from .diversity import get_diversity_data_sets
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
 from .round_results import add_speaker_round_results, add_team_round_results, add_team_round_results_public
@@ -306,10 +309,28 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, TemplateView):
             kwargs["teams"] = teams
             kwargs["rounds"] = rounds
             kwargs["round"] = round
-
         else:
             kwargs["teams"] = []
             kwargs["rounds"] = []
             kwargs["round"] = None
 
         return super().get_context_data(**kwargs)
+
+
+# ==============================================================================
+# Diversity
+# ==============================================================================
+
+class DiversityStandingsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+
+    template_name = 'diversity.html'
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['data_sets'] = json.dumps(get_diversity_data_sets(tournament))
+        return super().get_context_data(**kwargs)
+
+
+class PublicDiversityStandingsView(DiversityStandingsView):
+
+    template_name = 'public_diversity_info.html'

@@ -43,14 +43,14 @@ gulp.task('js-compile', function() {
   .pipe(gulp.dest('static/js/'));
 });
 
-// Creates task for collecting dependencies
-gulp.task('js-main-vendor-compile', function() {
+gulp.task('js-admin-vendor-compile', function() {
   gulp.src(['bower_components/jquery/dist/jquery.js',
             'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-            'templates/js/vendor/jquery.dataTables.min.js',
+            'templates/js/vendor/jquery.dataTables.js',
             'templates/js/vendor/fixed-header.js',
+            'bower_components/vue/dist/vue.js'
           ])
-  .pipe(concat('vendor.js'))
+  .pipe(concat('vendor-admin.js'))
   .pipe(uglify())
   .pipe(rename(function (path) {
     path.basename += ".min";
@@ -59,8 +59,21 @@ gulp.task('js-main-vendor-compile', function() {
   .pipe(gulp.dest('static/js/vendor/'));
 });
 
-// Creates task for collecting dependencies
-gulp.task('js-alt-vendor-compile', function() {
+gulp.task('js-public-vendor-compile', function() {
+  gulp.src(['bower_components/jquery/dist/jquery.js', // deprecate?
+            'bower_components/vue/dist/vue.js',
+          ])
+  .pipe(concat('vendor-public.js'))
+  .pipe(uglify())
+  .pipe(rename(function (path) {
+    path.basename += ".min";
+  }))
+  .pipe(rename({dirname: ''})) // Remove folder structure
+  .pipe(gulp.dest('static/js/vendor/'));
+});
+
+// Creates task for collecting optional dependencies (loaded per page)
+gulp.task('js-optional-vendor-compile', function() {
   gulp.src(['bower_components/jquery/dist/jquery.min.js', // Redundant but needed for debug toolbar
             'bower_components/d3/d3.min.js',
             'bower_components/jquery-ui/jquery-ui.min.js',
@@ -68,7 +81,6 @@ gulp.task('js-alt-vendor-compile', function() {
             'bower_components/vue/dist/vue.min.js',
             'bower_components/vue/dist/vue.js', // For when debug is on
           ])
-  .pipe(uglify())
   .pipe(rename({dirname: ''})) // Remove folder structure
   .pipe(gulp.dest('static/js/vendor/'));
 });
@@ -80,4 +92,11 @@ gulp.task('default', ['build'], function() {
 });
 
 // Build task for production
-gulp.task('build', ['fonts-compile', 'styles-compile', 'js-compile', 'js-main-vendor-compile', 'js-alt-vendor-compile' ]);
+gulp.task('build', [
+                    'fonts-compile',
+                    'styles-compile',
+                    'js-compile',
+                    'js-admin-vendor-compile',
+                    'js-public-vendor-compile',
+                    'js-optional-vendor-compile'
+                   ]);

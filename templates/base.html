@@ -5,7 +5,7 @@
   <meta >
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block page-title %}{% endblock %}</title>
+  <title>{% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
   <link rel="icon" type="image/png" href="/static/favicon.ico" />
   <!--[if IE]><link rel="shortcut icon" href="{% static 'favicon.ico' %}"/><![endif]-->
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.min.css' %}" />
@@ -36,7 +36,11 @@
     <div class="row head-title {% if 'admin/' in request.path and user.is_superuser %}white-bg vertical-spacing{% endif %}">
       <div class="col-md-12">
         <h3>
-          {% block head-title %}{% endblock %}
+          {% if page_title %}
+            {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
+          {% else %}
+            {% block head-title %}{% endblock %}
+          {% endif %}
           <small class="pull-right">
             {% block sub-title %}{% endblock %}
           </small>
@@ -87,50 +91,59 @@
   {% endblock body %}
 
   <!-- Dependencies and JS for all pages -->
-  <script src="{% static 'js/vendor/vendor.min.js' %}"></script>
-  <script>
-    jQuery.extend( true, $.fn.dataTable.defaults, {
-      // Default Data Table options
-      "sDom":
-        "<'row'<'table-container'lr" + "t"+ "f<p>",
-      "bPaginate": false,
-      "oLanguage": {
-        "sSearch": "Search: "
-      }
-    });
-    $(document).ready(function(){
-      // Enable hover tooltips for all elements
-      $('[data-toggle=tooltip]').tooltip({
-        'html': true,
-        'placement': 'bottom'
-      });
-      // Disable buttons post submission
-      $('.submit-disable').on('click', function () {
-        var $btn = $(this).button('loading');
-      });
-      // Popovers for team names
-      $('[data-toggle="popover"]').popover({
-        trigger: 'hover',
-        container: 'body',
-        content: getTeamSpeakers,
-        html: true,
-        placement: 'bottom'
-      });
-      // Dynamic lookup speakers on hover
-      var cachedData = Array();
-      function getTeamSpeakers(){
-        var id = $(this).attr('id').replace("team_speakers_", "");
-        var localData = "error";
-        $.ajax('{{ tournament.get_public_url }}participants/team_list/' + id + '/', {
-          async: false,
-          success: function(data){
-            localData = data[0] + data[1] + data[2];
+
+    {% if 'admin/' not in request.path %}
+      <script src="{% static 'js/vendor/vendor-public.min.js' %}"></script>
+    {% else %}
+      <script src="{% static 'js/vendor/vendor-admin.min.js' %}"></script>
+      <script>
+        jQuery.extend( true, $.fn.dataTable.defaults, {
+          // Default Data Table options
+          "sDom":
+            "<'row'<'table-container'lr" + "t"+ "f<p>",
+          "bPaginate": false,
+          "oLanguage": {
+            "sSearch": "Search: "
           }
         });
-        return localData;
-      }
-    });
-  </script>
+        $(document).ready(function(){
+          // Enable hover tooltips for all elements
+          $('[data-toggle=tooltip]').tooltip({
+            'html': true,
+            'placement': 'bottom'
+          });
+          // Disable buttons post submission
+          $('.submit-disable').on('click', function () {
+            var $btn = $(this).button('loading');
+          });
+          // Popovers for team names
+          $('[data-toggle="popover"]').popover({
+            trigger: 'hover',
+            container: 'body',
+            content: getTeamSpeakers,
+            html: true,
+            placement: 'bottom'
+          });
+          // Dynamic lookup speakers on hover
+          var cachedData = Array();
+          function getTeamSpeakers(){
+            var id = $(this).attr('id').replace("team_speakers_", "");
+            var localData = "error";
+            $.ajax('{{ tournament.get_public_url }}participants/team_list/' + id + '/', {
+              async: false,
+              success: function(data){
+                localData = data[0] + data[1] + data[2];
+              }
+            });
+            return localData;
+          }
+        });
+      </script>
+    {% endif %}
+    <script>
+      {% if debug %}Vue.config.debug = true;{% endif %}
+      Vue.config.delimiters = ["[[", "]]"];
+    </script>
 
   <!-- Page specific JS and dependencies -->
   {% block extra-js %}{% endblock extra-js %}

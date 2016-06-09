@@ -1,9 +1,11 @@
 import datetime
 import json
 import logging
+from collections import OrderedDict
 
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
@@ -17,11 +19,12 @@ from breakqual.models import BreakingTeam
 from motions.models import Motion
 from participants.models import Team
 from standings.teams import TeamStandingsGenerator
-from tournaments.mixins import RoundMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Division, Round, Tournament
-from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
-from utils.misc import redirect_round, reverse_round
-from utils.views import admin_required, expect_post, public_optional_round_view, public_optional_tournament_view, round_view, tournament_view
+from utils.mixins import PostOnlyRedirectView, PublicCacheMixin, SuperuserRequiredMixin, VueTableMixin
+from utils.misc import reverse_round
+from utils.views import admin_required, expect_post, public_optional_round_view
+from utils.views import public_optional_tournament_view, redirect_round, round_view, tournament_view
 from venues.models import Venue, VenueGroup
 from venues.allocator import allocate_venues
 
@@ -29,6 +32,7 @@ from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamPositionAllocation
 
 logger = logging.getLogger(__name__)
+
 
 TPA_MAP = {
     TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
@@ -41,23 +45,69 @@ TPA_MAP = {
 # Viewing Draw
 # ==============================================================================
 
-@admin_required
-@round_view
-def draw_display_by_venue(request, round):
-    draw = round.get_draw()
-    return render(request, "draw_display_by_venue.html", dict(round=round, draw=draw))
+class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
 
+    template_name = 'draw_display_by.html'
 
-@admin_required
-@round_view
-def draw_display_by_team(request, round):
-    draw = round.get_draw()
-    return render(request, "draw_display_by_team.html", dict(draw=draw))
+    def create_row(self, d, t, sort_key=None, sort_value=None):
+        ddict = []
+        if sort_key and sort_value:
+            ddict.append((sort_key, sort_value))
+
+        ddict.extend(self.venue_cells(d, t, with_times=True))
+        ddict.extend(self.team_cells(d.aff_team, t))
+        ddict.extend(self.team_cells(d.neg_team, t))
+
+        if t.pref('enable_division_motions'):
+            ddict.append(('motion', [m.reference for m in d.division_motions]))
+        if not t.pref('enable_divisions'):
+            ddict.append(('adjudicators', d.adjudicators_for_draw))
+
+        return OrderedDict(ddict)
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+        draw = round.get_draw()
+        t = self.get_tournament()
+        if self.sorting is "team":
+            draw_data = []
+            for d in draw:
+                aff_row = self.create_row(d, t, 'Team', d.aff_team.short_name)
+                neg_row = self.create_row(d, t, 'Team', d.neg_team.short_name)
+                draw_data.extend([aff_row, neg_row])
+        else:
+            draw_data = [self.create_row(debate, t) for debate in draw]
+
+        kwargs["tableData"] = json.dumps(draw_data)
+        kwargs["round"] = self.get_round()
+        return super().get_context_data(**kwargs)
 
 
 # ==============================================================================
 # Creating Draw
 # ==============================================================================
+
+class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, PublicCacheMixin):
+
+    public_page_preference = 'public_draw'
+    sorting = 'venue'
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+        if round.draw_status != round.STATUS_RELEASED:
+            self.template = "public_draw_unreleased.html"
+            return
+        else:
+            return super().get_context_data(**kwargs)
+
+
+class AdminDrawForRoundByVenue(DrawTablePage, LoginRequiredMixin):
+    sorting = 'venue'
+
+
+class AdminDrawForRoundByTeam(DrawTablePage, LoginRequiredMixin):
+    sorting = 'team'
+
 
 @login_required
 @round_view
@@ -78,11 +128,13 @@ def draw(request, round):
     else:
         if round.draw_status == round.STATUS_RELEASED:
             draw = round.get_draw()
-            return render(request, "public_draw_released.html", dict(
-                draw=draw, round=round))
+            return render(request,
+                          "public_draw_released.html",
+                          draw=draw, round=round)
         else:
             return render(request, 'public_draw_unreleased.html', dict(
-                draw=None, round=round))
+                          'public_draw_unreleased.html',
+                          draw=None, round=round))
 
     raise
 
@@ -159,7 +211,7 @@ def draw_confirmed(request, round):
     active_adjs = round.active_adjudicators.all()
 
     return render(request, "draw_confirmed.html", dict(
-        draw=draw, active_adjs=active_adjs, rooms=rooms))
+                  draw=draw, active_adjs=active_adjs, rooms=rooms))
 
 
 @admin_required

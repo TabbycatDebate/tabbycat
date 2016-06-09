@@ -11,11 +11,14 @@
 	  shape-rendering: crispEdges;
   }
 
-  .d3-hoverable:hover {
-    cursor: pointer;
-    fill: black;
-  }
+}
 
+.d3-hoverable:hover {
+  cursor: pointer;
+}
+
+.d3-hover-black:hover {
+  fill: black;
 }
 
 .d3-feedback-trend {

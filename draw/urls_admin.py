@@ -12,11 +12,12 @@ urlpatterns = [
         views.draw_with_standings,
         name='draw_with_standings'),
     url(r'^round/(?P<round_seq>\d+)/display_by_venue/$',
-        views.draw_display_by_venue,
+        views.AdminDrawForRoundByVenue.as_view(),
         name='draw_display_by_venue'),
     url(r'^round/(?P<round_seq>\d+)/display_by_team/$',
-        views.draw_display_by_team,
+        views.AdminDrawForRoundByTeam.as_view(),
         name='draw_display_by_team'),
+
 
     # Print
     url(r'^round/(?P<round_seq>\d+)/print/scoresheets/$',

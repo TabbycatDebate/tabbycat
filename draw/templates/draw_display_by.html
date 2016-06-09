@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_vue_table.html" %}
 {% load debate_tags %}
 {% load static %}
 
@@ -10,7 +10,6 @@
 {% endblock %}
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
 {% block sub-title %}ESC stops scroll{% endblock %}
-
 
 {% block nav %}
   {# For admins the draw opens without menu (for displaying publicly)#}
@@ -44,16 +43,7 @@
 {% endblock %}
 
 {% block extra-js %}
-  <script type="text/javascript">
-  $(document).ready( function() {
-    var dTable = $('#draw').DataTable({
-      "aaSorting": [[ 0, "asc" ]],
-    });
-    var fixedHeader = new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
-    $('#table-search').keyup(function(){
-      dTable.search($(this).val()).draw();
-    })
-  });
-  </script>
+  {{ block.super }}
+  <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
   <script src="{% static 'js/scroller.min.js' %}"></script>
 {% endblock extra-js %}
