@@ -12,4 +12,4 @@ install:
 before_script:
   - flake8 .
 script:
-  - dj test -v 2
+  - cd tabbycat && dj test -v 2

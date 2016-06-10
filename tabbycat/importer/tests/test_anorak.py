@@ -20,9 +20,9 @@ from ..base import TournamentDataImporterError
 
 class TestImporterAnorak(TestCase):
 
-    TESTDIR = "data/test/standard"
-    TESTDIR_CHOICES = "data/test/choices"
-    TESTDIR_ERRORS = "data/test/errors"
+    TESTDIR = "../data/test/standard"
+    TESTDIR_CHOICES = "../data/test/choices"
+    TESTDIR_ERRORS = "../data/test/errors"
 
     def setUp(self):
         super(TestImporterAnorak, self).setUp()

@@ -82,7 +82,7 @@ Open a command shell. Navigate to an appropriate directory on your computer usin
 
 1. Navigate to your Tabbycat directory::
 
-    cd path/to/my/tabbycat
+    cd path/to/my/tabbycat/directory
 
 2. Run the script to deploy the app to Heroku. Replace ``<yourappname>`` with your preferred URL. Your website will be at ``<yourname>.herokuapp.com``.
 
