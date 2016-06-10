@@ -9,7 +9,7 @@ import motions.statistics as motion_statistics
 from motions.models import Motion
 from participants.models import Speaker, Team
 from results.models import SpeakerScore, TeamScore
-from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
 from utils.mixins import SuperuserRequiredMixin
 
@@ -321,16 +321,19 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, TemplateView):
 # Diversity
 # ==============================================================================
 
-class DiversityStandingsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+class DiversityStandingsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
 
     template_name = 'diversity.html'
+    for_public = False
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
-        kwargs['data_sets'] = json.dumps(get_diversity_data_sets(tournament))
+        kwargs['data_sets'] = json.dumps(get_diversity_data_sets(tournament, self.for_public))
         return super().get_context_data(**kwargs)
 
 
-class PublicDiversityStandingsView(DiversityStandingsView):
+class PublicDiversityStandingsView(PublicTabMixin, DiversityStandingsView):
 
+    public_page_preference = 'public_diversity'
     template_name = 'public_diversity_info.html'
+    for_public = True

@@ -11,7 +11,6 @@
 
 {% block page-alerts %}
 
-
   <div class="alert alert-info">
     The 'results' data displayed here is presented without tests for statistical
     significance. The correlations should not be automatically considered
@@ -87,11 +86,9 @@
         Adudicator Results
       </div>
       <div class="panel-body">
-
         <template v-for="set in dataSets['adjudicators_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
-
       </div>
     </div>
   </div>
@@ -114,6 +111,5 @@
       }
     });
   </script>
-
 
 {% endblock extra-js %}

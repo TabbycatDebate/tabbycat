@@ -48,7 +48,7 @@ gulp.task('js-compile', function() {
 gulp.task('js-admin-vendor-compile', function() {
   gulp.src(['bower_components/jquery/dist/jquery.js',
             'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-            'tabbycat/templates/js/vendor/jquery.dataTables.min.js',
+            'tabbycat/templates/js/vendor/jquery.dataTables.js',
             'tabbycat/templates/js/vendor/fixed-header.js',
             'bower_components/vue/dist/vue.js'
           ])
@@ -81,7 +81,6 @@ gulp.task('js-optional-vendor-compile', function() {
             'bower_components/d3/d3.min.js',
             'bower_components/jquery-ui/jquery-ui.min.js',
             'bower_components/jquery-validation/dist/jquery.validate.min.js',
-            'bower_components/vue/dist/vue.min.js',
             'bower_components/vue/dist/vue.js', // For when debug is on
           ])
   .pipe(uglify())

@@ -140,10 +140,9 @@
         });
       </script>
     {% endif %}
-    <script>
-      {% if debug %}Vue.config.debug = true;{% endif %}
-      Vue.config.delimiters = ["[[", "]]"];
-    </script>
+
+    {% if debug %}<script>Vue.config.debug = true;</script>{% endif %}
+    <script>Vue.config.delimiters = ["[[", "]]"];</script>
 
   <!-- Page specific JS and dependencies -->
   {% block extra-js %}{% endblock extra-js %}
