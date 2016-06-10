@@ -122,7 +122,10 @@ class HeadlessTemplateView(TemplateView):
 
 class VueTableMixin:
     """Mixing that provides shortcuts for adding data when building arrays that
-    will end up as rows within a Vue table."""
+    will end up as rows within a Vue table. Each cell can be represented
+    either as a string value or a dictionary to enable richer inline content
+    (emoji, links, etc). Functions below return blocks of content (ie not just
+     a team name row, but also institution/category status as needed)."""
 
     def adj_cells(self, adjudicator, tournament):
         adj_info = [('Name', adjudicator.name)]
@@ -135,11 +138,22 @@ class VueTableMixin:
                 adj_info.append(('Institution', adjudicator.institution.name))
         return adj_info
 
+    def motion_cells(self, motion):
+        team_info = [('Motion', {
+            'text':     motion.reference,
+            'tooltip':  motion.text,
+        })]
+        return team_info
+
     def team_cells(self, team, tournament, break_categories=None):
         team_info = []
-        if tournament.pref('show_emoji'):
-            team_info.append(('❔', team.emoji))
-        team_info.append(('Team', team.short_name))
+        team_info.append(('Team', {
+            'text':     team.short_name,
+            'emoji':    team.emoji if tournament.pref('show_emoji') else None,
+            'link':     'www.google.com',
+            'sort':     team.short_name
+        }))
+
         if break_categories is not None:
             team_info.append(('Categories', break_categories))
         if tournament.pref('show_institutions'):

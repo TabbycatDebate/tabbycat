@@ -97,34 +97,39 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
             ddict.append(('Venue', d.venue.name))
             if t.pref('ballots_released'):
                 if d.confirmed_ballot:
-                    ddict.append(('Ballot', reverse_tournament('public_ballots_view', t, kwargs={'debate_id': d.id})))
+                    ddict.append(('Ballot', {
+                        'text': "View Ballot",
+                        'link': reverse_tournament('public_ballots_view', t, kwargs={'debate_id': d.id})
+                    }))
                 else:
                     ddict.append(('Ballot', ""))
 
-            if d.confirmed_ballot.ballot_set.aff_win:
-                ddict.append(('AR', "Won"))
-            else:
-                ddict.append(('AR', "Lost"))
+            for team in (d.aff_team, d.neg_team):
+                bs = d.confirmed_ballot.ballot_set
+                result = {'text': ''}
 
-            ddict.extend(self.team_cells(d.aff_team, t))
+                if bs.aff_win and team is d.aff_team or bs.neg_win and team is d.neg_team:
+                    result['text'] = "<span class=\"glyphicon glyphicon-arrow-up text-success\"></span> vs "
+                else:
+                    result['text'] = "<span class=\"glyphicon glyphicon-arrow-down text-danger\"></span> vs "
+                if team is d.aff_team:
+                    result['text'] += d.neg_team.short_name + " (Neg)"
+                else:
+                    result['text'] += d.aff_team.short_name + " (Aff)"
 
-            if d.confirmed_ballot.ballot_set.neg_win:
-                ddict.append(('NR', "Won"))
-            else:
-                ddict.append(('NR', "Lost"))
+                ddict.append(('Result', result))
+                ddict.extend(self.team_cells(team, t))
 
-            ddict.extend(self.team_cells(d.neg_team, t))
+                # Adjudicators with splits
+                if d.confirmed_ballot and t.pref('show_splitting_adjudicators'):
+                    pass  # TODO
+                else:
+                    ddict.append(('adjudicators', d.adjudicators_for_draw))
 
-            # Adjudicators with splits
-            if d.confirmed_ballot and t.pref('show_splitting_adjudicators'):
-                pass  # TODO
-            else:
-                ddict.append(('adjudicators', d.adjudicators_for_draw))
+                if t.pref('show_motions_in_results'):
+                    ddict.extend(self.motion_cells(d.confirmed_ballot.motion))
 
-            if t.pref('show_motions_in_results'):
-                ddict.append(('Motion', d.confirmed_ballot.motion.reference))
-
-            draw_data.append(OrderedDict(ddict))
+                draw_data.append(OrderedDict(ddict))
 
         kwargs["draw"] = draw  # To deprecate
         kwargs["tableData"] = json.dumps(draw_data)
