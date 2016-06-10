@@ -12,6 +12,7 @@ version_cache = {}
 rx = re.compile(r'^(.*)\.(.*?)$')
 
 
+@register.simple_tag
 def version(path_string, base_url=settings.MEDIA_URL):
 
     if not hasattr(
@@ -32,36 +33,21 @@ def version(path_string, base_url=settings.MEDIA_URL):
         return base_url + path_string
 
 
-register.simple_tag(version)
-
-
+@register.simple_tag
 def aff_count(team, round):
     if round is None:
         return 0
     return team.get_aff_count(round.seq)
 
-register.simple_tag(aff_count)
 
-
+@register.simple_tag
 def neg_count(team, round):
     if round is None:
         return 0
     return team.get_neg_count(round.seq)
 
-register.simple_tag(neg_count)
 
-
-@register.filter
-def break_rank(team, round):
-    rank = team.break_rank_for_category(round.break_category)
-    if rank:
-        return "(Broke %s)" % rank
-    else:
-        return None
-
-register.simple_tag(break_rank)
-
-
+@register.simple_tag
 def team_status_classes(team):
     classes = list()
     if team.region is not None:
@@ -70,9 +56,8 @@ def team_status_classes(team):
         classes.append("breakcategory-" + category.slug)
     return " ".join(classes)
 
-register.simple_tag(team_status_classes)
 
-
+@register.simple_tag
 def debate_draw_status_class(debate):
     if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
         return "active text-muted"
@@ -81,9 +66,6 @@ def debate_draw_status_class(debate):
     elif debate.confirmed_ballot:
         if debate.confirmed_ballot.forfeit:
             return "active text-muted"
-
-
-register.simple_tag(debate_draw_status_class)
 
 
 class RoundURLNode(template.Node):
@@ -166,18 +148,14 @@ def times(number):
     return list(range(number))
 
 
+@register.simple_tag
 def divide(number_a, number_b):
     return number_a / number_b
 
 
-register.simple_tag(divide)
-
-
+@register.simple_tag
 def percentage(number_a, number_b):
     if number_b > 0:
         return number_a / number_b * 100
     else:
         return 0
-
-
-register.simple_tag(percentage)
