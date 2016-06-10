@@ -71,7 +71,7 @@ gulp.task('js-public-vendor-compile', function() {
     path.basename += ".min";
   }))
   .pipe(rename({dirname: ''})) // Remove folder structure
-  .pipe(gulp.dest('static/js/vendor/'));
+  .pipe(gulp.dest('tabbycat/static/js/vendor/'));
 });
 
 // Creates task for collecting optional dependencies (loaded per page)
