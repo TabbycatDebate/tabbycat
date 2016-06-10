@@ -12,4 +12,4 @@ class PublicResultsForRoundViewTestCase(ConditionalTableViewTest, TestCase):
     def table_data(self):
         # Check number of debates is correct
         round = Round.objects.get(tournament=self.t, seq=self.round_seq)
-        return len(round.get_draw())
+        return len(round.get_draw()) * 2
