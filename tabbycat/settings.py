@@ -282,7 +282,7 @@ if os.environ.get('DEBUG', ''):
 # Travis CI
 # ==============================================================================
 
-FIXTURE_DIRS = (os.path.join(BASE_DIR, 'data', 'fixtures'), )
+FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'data', 'fixtures'), )
 
 if os.environ.get('TRAVIS', '') == 'true':
     DATABASES = {
