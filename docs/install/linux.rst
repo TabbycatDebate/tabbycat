@@ -41,6 +41,7 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   pip install --upgrade pip
   pip install -r requirements_common.txt
   npm install
+  cd tabbycat
   dj migrate
   dj collectstatic
   dj createsuperuser
@@ -141,11 +142,27 @@ Almost there!
 
 1. Navigate to your Tabbycat directory::
 
-    $ cd path/to/my/tabbycat
+    $ cd path/to/my/tabbycat/directory
 
 .. _local-settings-linux:
 
-2. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+2. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:
+
+  .. code:: bash
+
+    $ python3 -m venv venv
+
+3. Run the ``activate`` script. This puts you "into" the virtual environment::
+
+    $ source venv/bin/activate
+
+4. Install Tabbycat's requirements into your virtual environment::
+
+    $ pip install --upgrade pip
+    $ pip install -r requirements_common.txt
+    $ npm install
+
+5. Navigate to the **tabbycat** sub folder and copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
 
   .. code:: python
 
@@ -160,24 +177,9 @@ Almost there!
          }
      }
 
-3. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:
+6. Navigate to the **tabbycat** sub folder in the terminal, initialize the database, compile the assets, and create a user account for yourself::
 
-  .. code:: bash
-
-    $ python3 -m venv venv
-
-4. Run the ``activate`` script. This puts you "into" the virtual environment::
-
-    $ source venv/bin/activate
-
-5. Install Tabbycat's requirements into your virtual environment::
-
-    $ pip install --upgrade pip
-    $ pip install -r requirements_common.txt
-    $ npm install
-
-6. Initialize the database, compile the assets, and create a user account for yourself::
-
+    $ cd tabbycat
     $ dj migrate
     $ dj collectstatic
     $ dj createsuperuser
@@ -203,6 +205,7 @@ Starting up an existing Tabbycat instance
 =========================================
 To start your Tabbycat instance up again next time you use your computer::
 
-    $ cd path/to/my/tabbycat
+    $ cd path/to/my/tabbycat/directory
     $ source venv/bin/activate
+    $ cd tabbycat
     $ waitress-serve wsgi:application

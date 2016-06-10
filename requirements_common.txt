@@ -1,6 +1,6 @@
 # This file contains the necessary dependencies for local and heroku installs
 
-Django==1.9.6
+Django==1.9.7
 dj-cmd==0.5 # Provides the dj command alias
 django-appconf==1.0.2 # Adds helper class for handling app configs
 django-dynamic-preferences==0.8.1

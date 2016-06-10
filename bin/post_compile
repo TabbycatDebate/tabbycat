@@ -2,6 +2,7 @@
 set -eo pipefail
 
 echo "-----> I'm post-compile hook"
+cd ./tabbycat/
 
 echo "-----> Running database migration"
 python manage.py migrate

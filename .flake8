@@ -1,17 +1,21 @@
 [flake8]
 # Idea is to remove these over time
-
+#
 # E203 = whitespace before ':'
 # E221 = multiple spaces before operator
-# E226 = missing whitespace around arithmetic operator
-# E241 = multiple spaces after ‘,’
+# E241 = multiple spaces after ','
+# E231 = missing whitespace after ','
+
+# E261 = at least two spaces before inline comment
+# E128 = E128 continuation line under-indented for visual indent
 # I101 = Imported names are in the wrong order.
+
 # Q000 = double quotes
 
-ignore = E203,E221,E226,E241,I100,Q000
+ignore = E128,E221,E226,E261,E203,E231,E241,Q000,I100
 
-max-line-length = 150
+max-line-length = 200
 
-exclude = docs, migrations, node_modules, venv, */__init__.py
+exclude = docs, migrations, node_modules, bower_components, venv, */__init__.py
 
 import-order-style = google

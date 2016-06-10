@@ -1,0 +1,172 @@
+{% extends "standings_base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">📊</span>Standings{% endblock %}
+{% block page-title %}{% endblock %}
+
+{% block standings_active %}active{% endblock %}
+
+
+{% block content %}
+
+  <div class="row">
+
+    <div class="{% if pref.motion_vetoes_enabled %}col-md-4{% else %}col-md-6{% endif %}">
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+          <h4>Top Speaker Scores</h4>
+        </div>
+        <!-- List group -->
+        <ul class="list-group">
+          {% if top_speaks %}
+            {% for top_speak in top_speaks %}
+              <li class="list-group-item">
+                {{ top_speak.speaker }} in
+                {{ top_speak.debate_team.debate.round.abbreviation }}
+                <span class="badge pull-right">{{ top_speak.score|floatformat }}</span>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item">
+              No data yet
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <div class="{% if pref.motion_vetoes_enabled %}col-md-4{% else %}col-md-6{% endif %}">
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+          <h4>Top Debate Margins</h4>
+        </div>
+        <!-- List group -->
+        <ul class="list-group">
+          {% if top_margins %}
+            {% for top_margin in top_margins %}
+              <li class="list-group-item">
+                {{ top_margin.debate_team.team.short_name }}  vs
+                {{ top_margin.debate_team.opposition.team.short_name }} in
+                {{ top_margin.debate_team.debate.round.abbreviation }}
+                <span class="badge pull-right">{{ top_margin.margin|floatformat }}</span>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item">
+              No data yet
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    {% if pref.motion_vetoes_enabled %}
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+          <h4>Most Popular Motions</h4>
+        </div>
+        <!-- List group -->
+        <ul class="list-group">
+          {% if top_motions %}
+            {% for top_motion in top_motions %}
+              <li class="list-group-item">
+                {{ top_motion.reference }}
+                <span class="badge pull-right">{{ top_motion.ballotsubmission__count }}</span>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item">
+              No data yet
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+  <div class="row">
+
+    <div class="{% if pref.motion_vetoes_enabled %}col-md-4{% else %}col-md-6{% endif %}">
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+          <h4>Bottom Speaker Scores</h4>
+        </div>
+        <!-- List group -->
+        <ul class="list-group">
+          {% if bottom_speaks %}
+            {% for bottom_speak in bottom_speaks %}
+              <li class="list-group-item">
+                {{ bottom_speak.speaker }} in
+                {{ bottom_speak.debate_team.debate.round.abbreviation }}
+                <span class="badge pull-right">{{ bottom_speak.score|floatformat }}</span>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item">
+              No data yet
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <div class="{% if pref.motion_vetoes_enabled %}col-md-4{% else %}col-md-6{% endif %}">
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+          <h4>Closest Debate Margins</h4>
+        </div>
+        <!-- List group -->
+        <ul class="list-group">
+          {% if bottom_margins %}
+            {% for bottom_margin in bottom_margins %}
+              <li class="list-group-item">
+                {{ bottom_margin.debate_team.team.short_name }} vs
+                {{ bottom_margin.debate_team.opposition.team.short_name }} in
+                {{ bottom_margin.debate_team.debate.round.abbreviation }}
+                <span class="badge pull-right">{{ bottom_margin.margin|floatformat }}</span>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item">
+              No data yet
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    {% if pref.motion_vetoes_enabled %}
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+          <h4>Least Popular Motions</h4>
+        </div>
+        <!-- List group -->
+        <ul class="list-group">
+          {% if bottom_motions %}
+            {% for bottom_motion in bottom_motions %}
+              <li class="list-group-item">
+                {{ bottom_motion.reference }}
+                <span class="badge pull-right">{{ bottom_motion.ballotsubmission__count }}</span>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item">
+              No data yet
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block extra-js %}
+  // Override this from the child template as no Vue tables here
+{% endblock %}

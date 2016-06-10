@@ -91,7 +91,7 @@ Almost there!
 
 1. Navigate to your Tabbycat directory::
 
-    $ cd path/to/my/tabbycat
+    $ cd path/to/my/tabbycat/directory
 
 2. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
 
@@ -121,10 +121,10 @@ Almost there!
     $ pip install --upgrade pip
     $ pip install -r requirements_common.txt
     $ npm install
-    $ bower install
 
-6. Initialize the database, compile the assets, and create a user account for yourself::
+6. Navigate to the **tabbycat** sub folder, initialize the database, compile the assets, and create a user account for yourself::
 
+    $ cd tabbycat
     $ dj migrate
     $ dj collectstatic
     $ dj createsuperuser
@@ -150,6 +150,7 @@ Starting up an existing Tabbycat instance
 ================================================================================
 To start your Tabbycat instance up again next time you use your computer::
 
-    $ cd path/to/my/tabbycat
+    $ cd path/to/my/tabbycat/directory
     $ source venv/bin/activate
+    $ cd tabbycat
     $ waitress-serve wsgi:application
