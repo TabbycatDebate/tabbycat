@@ -11,4 +11,3 @@ def break_rank(team, round):
         return "(broke %s)" % ordinal(rank)
     else:
         return None
-

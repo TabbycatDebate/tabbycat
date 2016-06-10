@@ -159,4 +159,3 @@ def percentage(number_a, number_b):
         return number_a / number_b * 100
     else:
         return 0
-
