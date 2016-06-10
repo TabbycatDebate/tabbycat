@@ -194,6 +194,7 @@ Almost there!
 
 6. Initialize the database and create a user account for yourself::
 
+    > cd tabbycat
     > dj migrate
     > dj collectstatic
     > dj createsuperuser
@@ -223,4 +224,5 @@ To start your Tabbycat instance up again next time you use your computer, open a
 
     > Set-Location C:\Users\myusername\Documents\GitHub\tabbycat # or wherever your installation is
     > .\venv\Scripts\activate
+    > cd tabbycat
     > waitress-serve wsgi:application
