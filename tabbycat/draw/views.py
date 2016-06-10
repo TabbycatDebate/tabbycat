@@ -48,6 +48,7 @@ TPA_MAP = {
 class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
 
     template_name = 'draw_display_by.html'
+    sort_key = 'Venue'
 
     def create_row(self, d, t, sort_key=None, sort_value=None):
         ddict = []

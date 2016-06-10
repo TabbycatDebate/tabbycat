@@ -9,7 +9,9 @@
     <div class="panel-body" id="tableContainer">
       <smart-table
         :data="gridData"
-        :filter-key="searchQuery">
+        :filter-key="searchQuery"
+        :default-sort-key="sortKey"
+      >
       </smart-table>
     </div>
   </div>
@@ -24,6 +26,7 @@
       data: {
         searchQuery: '',
         gridData: {{ tableData|safe }},
+        sortKey: '{{ sortKey }}',
       },
       ready: function() {
         var thisTable = this; // this in the next context is the element

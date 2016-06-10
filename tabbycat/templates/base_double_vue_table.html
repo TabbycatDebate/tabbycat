@@ -9,7 +9,11 @@
     <div class="panel panel-default">
       <div class="panel-heading"><h4>{{ table_a_title }}</h4></div>
       <div class="panel-body" id="tableContainerA">
-        <smart-table :data="gridData" :filter-key="searchQuery"></smart-table>
+        <smart-table
+          :data="gridData"
+          :filter-key="searchQuery"
+          :default-sort-key="sortKey"
+        ></smart-table>
       </div>
     </div>
   </div>
@@ -17,7 +21,11 @@
     <div class="panel panel-default">
       <div class="panel-heading"><h4>{{ table_b_title }}</h4></div>
       <div class="panel-body" id="tableContainerB">
-        <smart-table :data="gridData" :filter-key="searchQuery"></smart-table>
+        <smart-table
+          :data="gridData"
+          :filter-key="searchQuery"
+          :default-sort-key="sortKey"
+        ></smart-table>
       </div>
     </div>
   </div>
@@ -32,6 +40,7 @@
       data: {
         searchQuery: '',
         gridData: {{ tableDataA|safe }},
+        sortKey: '{{ sortKey }}',
       },
       ready: function() {
         var thisTable = this; // this in the next context is the element
@@ -45,6 +54,7 @@
       data: {
         searchQuery: '',
         gridData: {{ tableDataB|safe }},
+        sortKey: '{{ sortKey }}',
       },
       ready: function() {
         var thisTable = this; // this in the next context is the element

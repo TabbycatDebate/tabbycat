@@ -34,6 +34,7 @@ class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMi
     template_name = 'base_double_vue_table.html'
     page_title = 'Participants'
     page_emoji = '🚌'
+    sort_key = 'Name'
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()

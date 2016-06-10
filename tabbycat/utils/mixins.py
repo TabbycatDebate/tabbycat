@@ -128,6 +128,12 @@ class VueTableMixin:
     (emoji, links, etc). Functions below return blocks of content (ie not just
      a team name row, but also institution/category status as needed)."""
 
+    sort_key = ''
+
+    def get_context_data(self, **kwargs):
+        kwargs["sortKey"] = self.sort_key
+        return super().get_context_data(**kwargs)
+
     def adj_cells(self, adjudicator, tournament):
         adj_info = [('Name', adjudicator.name)]
         if tournament.pref('show_institutions'):
@@ -166,11 +172,9 @@ class VueTableMixin:
         speaker_info = [('Name', speaker.name)]
         if tournament.pref('show_novices'):
             if speaker.novice:
-                speaker_info.append(('Novice', {
-                    'text':"<span class=\"glyphicon glyphicon-ok\"></span>"}))
+                speaker_info.append(('Novice', {'icon':"glyphicon-ok"}))
             else:
-                speaker_info.append(('Novice', {
-                    'text':"<span class=\"glyphicon glyphicon-ok\"></span>"}))
+                speaker_info.append(('Novice', {'icon':"glyphicon-ok"}))
 
         return speaker_info
 

@@ -29,7 +29,7 @@
           </span>
           <template v-else>
 
-            <span class="hidden" v-if="row[cellType]['sort']">
+            <span v-if="row[cellType]['sort']" class="hidden">
               [[ row[cellType]["sort"] ]]
             </span>
 
@@ -37,13 +37,16 @@
               <span data-toggle="tooltip" :title="row[cellType]['tooltip']">
             </template>
 
+              <span v-if="row[cellType]['icon']" class="glyphicon" :class="row[cellType]['icon']">
+              </span>
               <span class="emoji" v-if="row[cellType]['emoji']">
                 [[ row[cellType]["emoji"] ]]
               </span>
               <a v-if="row[cellType]['link']" :href="row[cellType]['link']" >
                 <span v-html="row[cellType]['text']"></span>
               </a>
-              <span v-else v-html="row[cellType]['text']"></span>
+              <span v-else v-html="row[cellType]['text']">
+              </span>
 
             <template v-if="row[cellType]['tooltip']">
               </span>
@@ -96,7 +99,8 @@
     props: {
       data: Array,
       columns: Array,
-      filterKey: String
+      filterKey: String,
+      defaultSortKey: String
     },
     data: function () {
       var sortOrders = {}
@@ -104,7 +108,7 @@
         sortOrders[key] = 1; // Set all to sort none (1 is +asc, -1 is desc)
       })
       return {
-        sortKey: '',
+        sortKey: this.defaultSortKey,
         sortOrders: sortOrders
       }
     },

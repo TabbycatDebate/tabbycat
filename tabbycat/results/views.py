@@ -83,6 +83,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
     public_page_preference = 'public_results'
     page_title = 'Results'
     page_emoji = '💥'
+    sort_key = 'Team'
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
@@ -109,13 +110,13 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
                 result = {'text': ''}
 
                 if bs.aff_win and team is d.aff_team or bs.neg_win and team is d.neg_team:
-                    result['text'] = "<span class=\"glyphicon glyphicon-arrow-up text-success\"></span> vs "
+                    result['icon'] = "glyphicon-arrow-up text-success"
                 else:
-                    result['text'] = "<span class=\"glyphicon glyphicon-arrow-down text-danger\"></span> vs "
+                    result['icon'] = "glyphicon-arrow-down text-danger"
                 if team is d.aff_team:
-                    result['text'] += d.neg_team.short_name + " (Neg)"
+                    result['text'] += " vs " + d.neg_team.short_name + " (Neg)"
                 else:
-                    result['text'] += d.aff_team.short_name + " (Aff)"
+                    result['text'] += " vs " + d.aff_team.short_name + " (Aff)"
 
                 ddict.append(('Result', result))
                 ddict.extend(self.team_cells(team, t))
