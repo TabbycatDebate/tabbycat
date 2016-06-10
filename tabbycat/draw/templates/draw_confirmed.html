@@ -193,7 +193,7 @@
           <tr>
             {% if pref.enable_divisions %}
               <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip"title="Division">{{ debate.division.name }}</span></th>
-            {% else %}
+            {% elif not round.is_break_round %}
               <th><span class="glyphicon glyphicon-tasks" data-toggle="tooltip" title="Bracket"></span></th>
             {% endif %}
             {% if pref.enable_venue_groups %}
@@ -217,7 +217,7 @@
         <tr class="{% if debate.all_conflicts or not debate.adjudicators.valid %}danger{% endif %}">
           {% if pref.enable_divisions %}
             <td>{{ debate.division.name }}</td>
-          {% else %}
+          {% elif not round.is_break_round %}
             <td>{{ debate.bracket }}</td>
           {% endif %}
           {% if pref.enable_venue_groups %}
