@@ -26,6 +26,9 @@
         </li>
       {% endfor %}
       <li class="list-group-item">
+        <span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;<a href="/admin/"><em>Edit data area</em></a>
+      </li>
+      <li class="list-group-item">
         <span class="emoji">➕</span><a href="{% url 'tournament-create' %}"><em>Create new tournament</em></a>
       </li>
     {% else %}
