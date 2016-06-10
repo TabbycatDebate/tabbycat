@@ -80,7 +80,6 @@ gulp.task('js-optional-vendor-compile', function() {
             'bower_components/d3/d3.min.js',
             'bower_components/jquery-ui/jquery-ui.min.js',
             'bower_components/jquery-validation/dist/jquery.validate.min.js',
-            'bower_components/vue/dist/vue.min.js',
             'bower_components/vue/dist/vue.js', // For when debug is on
           ])
   .pipe(uglify())
