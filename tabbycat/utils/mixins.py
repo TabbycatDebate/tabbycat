@@ -11,6 +11,7 @@ from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import SingleObjectMixin
 
 from tournaments.mixins import TournamentMixin
+from utils.misc import reverse_tournament
 
 logger = logging.getLogger(__name__)
 
@@ -150,7 +151,7 @@ class VueTableMixin:
         team_info.append(('Team', {
             'text':     team.short_name,
             'emoji':    team.emoji if tournament.pref('show_emoji') else None,
-            'link':     'www.google.com',
+            'link':     reverse_tournament('team_speakers', tournament, kwargs={'team_id': team.id}),
             'sort':     team.short_name
         }))
 
@@ -164,7 +165,13 @@ class VueTableMixin:
     def speaker_cells(self, speaker, tournament):
         speaker_info = [('Name', speaker.name)]
         if tournament.pref('show_novices'):
-            speaker_info.append(('Novice', speaker.novice))
+            if speaker.novice:
+                speaker_info.append(('Novice', {
+                    'text':"<span class=\"glyphicon glyphicon-ok\"></span>"}))
+            else:
+                speaker_info.append(('Novice', {
+                    'text':"<span class=\"glyphicon glyphicon-ok\"></span>"}))
+
         return speaker_info
 
     def venue_cells(self, debate, tournament, with_times=False):

@@ -52,8 +52,6 @@ class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMi
         for speaker in speakers:
             ddict.extend(self.speaker_cells(speaker, t))
             ddict.extend(self.team_cells(speaker.team, t))
-            # if t.pref('public_break_categories'):
-            #     ddict.append(('Break Categories', s.team.break_categories_nongeneral ))
             speakers_data.append(OrderedDict(ddict))
 
         kwargs["table_b_title"] = "Speakers"
