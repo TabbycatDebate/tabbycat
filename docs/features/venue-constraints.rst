@@ -46,3 +46,35 @@ For each constraint, you need to specify three things:
 
 The priority is only used to resolve conflicts between constraints. If none of
 your constraints will ever conflict, then the priority is arbitrary.
+
+Applying venue constraints
+==========================
+
+Venue constraints are applied automatically when the draw is generated. However,
+at this point, only team, institution and division constraints can be accounted
+for. Generating the draw doesn't generate an adjudicator allocation, so if there
+are any adjudicator venue constraints, they won't be taken into account.
+
+If after you allocate adjudicators, or at any other point (say, after adding a
+new venue constraint), you would like to re-run the venue allocation algorithm,
+you can do so under **Edit Venues** (while looking at the draw), then in the
+screen where you can edit venues, click the **Auto Allocate** button.
+
+If a venue constraint couldn't be met, a message will show in the
+"conflicts/flags" column of the draw. A constraint might not be met for a
+number of reasons:
+
+- It could be that constraints of different parties (say, one team and one
+  adjudicator) conflicted, so only one could be fulfilled.
+- It could be that all available rooms in the relevant venue group were already
+  taken by other, higher-priority constraints.
+- It could just be one of those edge cases that's too hard for the naïve
+  algorithm to handle.
+
+Currently, Tabbycat doesn't tell you which of these happened, so if the venue
+allocation fails to meet all your constraints, it's on you to figure out why. In
+most scenarios, we imagine you'll have few enough constraints that this will be
+obvious; for example, if the chief adjudicator is judging a team with
+accessibility requirements, it might be obvious that the latter's constraint
+took priority. We might in future add support for more useful guidance on
+conflicting constraints, but we currently consider this to be of low priority.
