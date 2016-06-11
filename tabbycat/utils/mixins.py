@@ -174,7 +174,7 @@ class VueTableMixin:
             if speaker.novice:
                 speaker_info.append(('Novice', {'icon':"glyphicon-ok"}))
             else:
-                speaker_info.append(('Novice', {'icon':"glyphicon-ok"}))
+                speaker_info.append(('Novice', {'icon':"glyphicon-remove"}))
 
         return speaker_info
 
@@ -227,6 +227,14 @@ class VueTableMixin:
     def metric_cells(self, metrics):
         ddict = []
         for key, value in metrics.items():
+            # Bit of a hack; although probably best place to have an interface
+            if key is 'speaks_avg':
+                key = "AVG Speaks"
+            elif key is 'speaks_stddev':
+                key = "STD Dev Speaks"
+            elif key is 'speaks_sum':
+                key = "Total Speaks"
+
             ddict.append((key, self.format_cell_number(value)))
 
         return ddict

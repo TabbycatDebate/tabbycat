@@ -471,31 +471,6 @@ def save_matchups(request, round):
 # ==============================================================================
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_draw')
-def public_draw(request, t):
-    r = t.current_round
-    if r.draw_status == r.STATUS_RELEASED:
-        draw = r.get_draw()
-        return render(request, "public_draw_released.html", dict(
-            draw=draw, round=r))
-    else:
-        return render(request, 'public_draw_unreleased.html', dict(
-            draw=None, round=r))
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_round_view('show_all_draws')
-def public_draw_by_round(request, round):
-    if round.draw_status == round.STATUS_RELEASED:
-        draw = round.get_draw()
-        return render(request, "public_draw_released.html", dict(
-            draw=draw, round=round))
-    else:
-        return render(request, "public_draw_unreleased.html", dict(
-            draw=None, round=round))
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
 @tournament_view
 def public_all_draws(request, t):
     all_rounds = list(Round.objects.filter(

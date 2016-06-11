@@ -23,27 +23,26 @@
 {% block footer %}{% endblock %}
 
 {% block page-subnav-sections %}
-  <span class="btn btn-secondary">Scroll</span>
+  <span class="btn btn-secondary">Scroll Speed:</span>
   <div class="btn-group hidden-xs">
     <a class="btn btn-default" href="" id="scroll_draw1">Fast</a>
     <a class="btn btn-default" href="" id="scroll_draw2"><span class="hidden-xs">Medium</span></a>
     <a class="btn btn-default" href="" id="scroll_draw3">Slow</a>
-    <a class="btn btn-default" href="" id="scroll_draw4">XS</a>
-    <a class="btn btn-default" href="" id="scroll_draw5">XXS</a>
+    <a class="btn btn-default" href="" id="scroll_draw4">Extra Slow</a>
+    <a class="btn btn-default" href="" id="scroll_draw5">Turtle Slow</a>
   </div>
-  <span class="btn btn-secondary">Text</span>
+  <span class="btn btn-secondary">Text Size:</span>
   <div class="btn-group">
-    <a class="btn btn-default" href="" id="tiny_text">XS</a>
-    <a class="btn btn-default" href="" id="small_text">S</a>
-    <a class="btn btn-default active" href="" id="medium_text">M</a>
-    <a class="btn btn-default" href="" id="large_text">L</a>
-    <a class="btn btn-default" href="" id="huge_text">XL</a>
+    <a class="btn btn-default" href="" id="tiny_text">Tiny</a>
+    <a class="btn btn-default" href="" id="small_text">Small</a>
+    <a class="btn btn-default" href="" id="medium_text">Medium</a>
+    <a class="btn btn-default" href="" id="large_text">Large</a>
+    <a class="btn btn-default" href="" id="huge_text">Huge</a>
   </div>
   {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block extra-js %}
   {{ block.super }}
-  <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
   <script src="{% static 'js/scroller.min.js' %}"></script>
 {% endblock extra-js %}
