@@ -5,9 +5,9 @@
 {% block page-title %}🗃Diversity Overview{% endblock %}
 {% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
 {% block diversity_active %}active{% endblock %}
-
 {% block body-id %}diversityData{% endblock %}
 
+{% if for_public %}{% block page-subnav-sections %}{% endblock %}{% endif %}
 
 {% block page-alerts %}
 
@@ -29,6 +29,14 @@
     </span>
   </div>
 
+  <div class="nav nav-pills pull-right vertical-spacing">
+    {% for key, value in regions %}
+      <span class="btn btn-default region-display region-{{ forloop.counter }} h6">
+        {{ key }}
+      </span>
+    {% endfor %}
+  </div>
+
 {% endblock %}
 
 {% block content %}
@@ -44,6 +52,7 @@
         <template v-for="set in dataSets['speakers_gender']">
           <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
         </template>
+        <hr>
         <template v-for="set in dataSets['speakers_region']">
           <donut-chart :graph-data="set['data']" :title="set['title']" :regions="dataSets['regions']"></donut-chart>
         </template>
@@ -60,6 +69,7 @@
         <template v-for="set in dataSets['adjudicators_gender']">
           <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
         </template>
+        <hr>
         <template v-for="set in dataSets['adjudicators_region']">
           <donut-chart :graph-data="set['data']" :title="set['title']" :regions="dataSets['regions']"></donut-chart>
         </template>
@@ -76,6 +86,10 @@
         <template v-for="set in dataSets['speakers_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
+        <hr>
+        <template v-for="set in dataSets['detailed_speakers_results']">
+          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+        </template>
       </div>
     </div>
   </div>
@@ -87,6 +101,10 @@
       </div>
       <div class="panel-body">
         <template v-for="set in dataSets['adjudicators_results']">
+          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+        </template>
+        <hr>
+        <template v-for="set in dataSets['detailed_adjudicators_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
       </div>
