@@ -9,7 +9,7 @@ from participants.models import Team
 logger = logging.getLogger(__name__)
 
 
-def add_team_round_results(standings, rounds, lookup=None):
+def add_team_round_results(standings, rounds, lookup=None, id_attr='instance_id'):
     """Sets, on each item `info` in `standings`, an attribute
     `info.round_results` to be a list of `TeamScore` objects, one for each round
     in `rounds` (in the same order), relating to the team associated with that
@@ -29,7 +29,7 @@ def add_team_round_results(standings, rounds, lookup=None):
     if lookup is None:
         lookup = lambda standings, x: standings.get_standing(x)  # flake8: noqa
 
-    teams = [info.instance_id for info in standings]
+    teams = [getattr(info, id_attr) for info in standings]
     teamscores = TeamScore.objects.select_related(
         'debate_team__team', 'debate_team__debate__round').filter(
         ballot_submission__confirmed=True,
@@ -65,7 +65,7 @@ def add_team_round_results_public(teams, rounds):
       - `t.points`, the number of points that team has from the rounds in
         `rounds`.
     """
-    add_team_round_results(teams, rounds, (lambda teams, x: [t for t in teams if t == x][0]))
+    add_team_round_results(teams, rounds, (lambda teams, x: [t for t in teams if t == x][0]), 'id')
     for team in teams:
         team.wins = [ts.win for ts in team.round_results if ts].count(True)
         team.points = sum([ts.points for ts in team.round_results if ts])
