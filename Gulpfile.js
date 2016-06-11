@@ -45,14 +45,13 @@ gulp.task('js-compile', function() {
   .pipe(gulp.dest('tabbycat/static/js/'));
 });
 
-gulp.task('js-admin-vendor-compile', function() {
-  gulp.src(['bower_components/jquery/dist/jquery.js',
+
+gulp.task('js-base-vendor-compile', function() {
+  gulp.src(['bower_components/jquery/dist/jquery.js', // deprecate?
             'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-            'tabbycat/templates/js/vendor/jquery.dataTables.js',
-            'tabbycat/templates/js/vendor/fixed-header.js',
-            'bower_components/vue/dist/vue.js'
+            'bower_components/vue/dist/vue.js',
           ])
-  .pipe(concat('vendor-admin.js'))
+  .pipe(concat('vendor-base.js'))
   .pipe(uglify())
   .pipe(rename(function (path) {
     path.basename += ".min";
@@ -61,12 +60,12 @@ gulp.task('js-admin-vendor-compile', function() {
   .pipe(gulp.dest('tabbycat/static/js/vendor/'));
 });
 
-gulp.task('js-public-vendor-compile', function() {
-  gulp.src(['bower_components/jquery/dist/jquery.js', // deprecate?
-            'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-            'bower_components/vue/dist/vue.js',
+
+gulp.task('js-admin-vendor-compile', function() {
+  gulp.src(['tabbycat/templates/js/vendor/jquery.dataTables.js',
+            'tabbycat/templates/js/vendor/fixed-header.js',
           ])
-  .pipe(concat('vendor-public.js'))
+  .pipe(concat('vendor-admin.js'))
   .pipe(uglify())
   .pipe(rename(function (path) {
     path.basename += ".min";
@@ -99,7 +98,7 @@ gulp.task('build', [
                     'fonts-compile',
                     'styles-compile',
                     'js-compile',
+                    'js-base-vendor-compile',
                     'js-admin-vendor-compile',
-                    'js-public-vendor-compile',
                     'js-optional-vendor-compile'
                    ]);

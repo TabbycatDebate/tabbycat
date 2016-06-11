@@ -216,9 +216,9 @@ class VueTableMixin:
         ddict = []
         for key, value in standing.rankings.items():
             if value[1]:
-                ddict.append((key, value[0] + '='))
+                ddict.append((key, str(value[0]) + '='))
             else:
-                ddict.append((key, value[0]))
+                ddict.append((key, str(value[0])))
         if hasattr(standing, 'break_rank'):
             ddict.append(('Break', standing.break_rank))
 

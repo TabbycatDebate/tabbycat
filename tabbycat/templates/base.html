@@ -92,54 +92,57 @@
 
   <!-- Dependencies and JS for all pages -->
 
-    {% if 'admin/' not in request.path %}
-      <script src="{% static 'js/vendor/vendor-public.min.js' %}"></script>
-    {% else %}
-      <script src="{% static 'js/vendor/vendor-admin.min.js' %}"></script>
-      <script>
-        jQuery.extend( true, $.fn.dataTable.defaults, {
-          // Default Data Table options
-          "sDom":
-            "<'row'<'table-container'lr" + "t"+ "f<p>",
-          "bPaginate": false,
-          "oLanguage": {
-            "sSearch": "Search: "
-          }
-        });
-        $(document).ready(function(){
-          // Enable hover tooltips for all elements
-          $('[data-toggle=tooltip]').tooltip({
-            'html': true,
-            'placement': 'bottom'
-          });
-          // Disable buttons post submission
-          $('.submit-disable').on('click', function () {
-            var $btn = $(this).button('loading');
-          });
-          // Popovers for team names
-          $('[data-toggle="popover"]').popover({
-            trigger: 'hover',
-            container: 'body',
-            content: getTeamSpeakers,
-            html: true,
-            placement: 'bottom'
-          });
-          // Dynamic lookup speakers on hover
-          var cachedData = Array();
-          function getTeamSpeakers(){
-            var id = $(this).attr('id').replace("team_speakers_", "");
-            var localData = "error";
-            $.ajax('{{ tournament.get_public_url }}participants/team_list/' + id + '/', {
-              async: false,
-              success: function(data){
-                localData = data[0] + data[1] + data[2];
-              }
-            });
-            return localData;
-          }
-        });
-      </script>
+    <script src="{% static 'js/vendor/vendor-base.min.js' %}"></script>
+
+    {% if 'admin/' in request.path %}
+    <script src="{% static 'js/vendor/vendor-admin.min.js' %}"></script>
+    <script>
+      jQuery.extend( true, $.fn.dataTable.defaults, {
+        // Default Data Table options
+        "sDom":
+          "<'row'<'table-container'lr" + "t"+ "f<p>",
+        "bPaginate": false,
+        "oLanguage": {
+          "sSearch": "Search: "
+        }
+      });
+    </script>
     {% endif %}
+
+    <script>
+      $(document).ready(function(){
+        // Enable hover tooltips for all elements
+        $('[data-toggle=tooltip]').tooltip({
+          'html': true,
+          'placement': 'bottom'
+        });
+        // Disable buttons post submission
+        $('.submit-disable').on('click', function () {
+          var $btn = $(this).button('loading');
+        });
+        // Popovers for team names
+        $('[data-toggle="popover"]').popover({
+          trigger: 'hover',
+          container: 'body',
+          content: getTeamSpeakers,
+          html: true,
+          placement: 'bottom'
+        });
+        // Dynamic lookup speakers on hover
+        var cachedData = Array();
+        function getTeamSpeakers(){
+          var id = $(this).attr('id').replace("team_speakers_", "");
+          var localData = "error";
+          $.ajax('{{ tournament.get_public_url }}participants/team_list/' + id + '/', {
+            async: false,
+            success: function(data){
+              localData = data[0] + data[1] + data[2];
+            }
+          });
+          return localData;
+        }
+      });
+    </script>
 
     {% if debug %}<script>Vue.config.debug = true;</script>{% endif %}
     <script>Vue.config.delimiters = ["[[", "]]"];</script>
