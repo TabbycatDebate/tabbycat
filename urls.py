@@ -61,15 +61,18 @@ if settings.DEBUG:
 
 @receiver(user_logged_out)
 def on_user_logged_out(sender, request, **kwargs):
-    messages.success(
-        request,
-        'Later, ' + kwargs['user'].username + ' — you were logged out!')
+    if kwargs.get('user'):
+        messages.success(request, 'Later, ' + kwargs['user'].username + ' — you were logged out!')
+    else: # should never happen, but just in case
+        messages.success(request, 'Later! You were logged out!')
 
 
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
-    messages.success(
-        request, 'Hi, ' + kwargs['user'].username + ' — you just logged in!')
+    if kwargs.get('user'):
+        messages.success(request, 'Hi, ' + kwargs['user'].username + ' — you just logged in!')
+    else: # should never happen, but just in case
+        messages.success(request, 'Welcome! You just logged in!')
 
 # ==============================================================================
 # Redirect Method
