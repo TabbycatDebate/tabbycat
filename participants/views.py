@@ -24,7 +24,7 @@ def public_participants(request, t):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@tournament_view
+@public_optional_tournament_view('enable_mass_draws')
 def all_tournaments_all_institutions(request, t):
     institutions = Institution.objects.all()
     return render(request, 'public_all_tournament_institutions.html', dict(
@@ -32,7 +32,7 @@ def all_tournaments_all_institutions(request, t):
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@tournament_view
+@public_optional_tournament_view('enable_mass_draws')
 def all_tournaments_all_teams(request, t):
     teams = Team.objects.filter(tournament__active=True).select_related('tournament').prefetch_related('division')
     return render(request, 'public_all_tournament_teams.html', dict(

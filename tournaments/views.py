@@ -91,14 +91,15 @@ def public_divisions(request, t):
 
     return render(request, 'public_divisions.html', dict(venue_groups=venue_groups))
 
+
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@tournament_view
+@public_optional_tournament_view('enable_mass_draws')
 def all_tournaments_all_venues(request, t):
     venues = VenueGroup.objects.all()
     return render(request, 'public_all_tournament_venues.html', dict(venues=venues))
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@tournament_view
+@public_optional_tournament_view('enable_mass_draws')
 def all_draws_for_venue(request, t, venue_id):
     venue_group = VenueGroup.objects.get(pk=venue_id)
     debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
@@ -108,6 +109,7 @@ def all_draws_for_venue(request, t, venue_id):
 
 
 @tournament_view
+@public_optional_tournament_view('enable_mass_draws')
 def all_draws_for_institution(request, t, institution_id):
     # TODO: move to draws app
     institution = Institution.objects.get(pk=institution_id)

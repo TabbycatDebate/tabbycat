@@ -770,3 +770,12 @@ class AdjAllocationConfirmations(BooleanPreference):
     section = league_options
     name = "allocation_confirmations"
     default = False
+
+
+@tournament_preferences_registry.register
+class EnableCrossTournamentDrawPages(BooleanPreference):
+    help_text = "Enables pages that show draws across tournaments (ie by institution)"
+    verbose_name = "Public cross draw pages"
+    section = league_options
+    name = "enable_mass_draws"
+    default = False
