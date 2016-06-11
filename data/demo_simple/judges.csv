@@ -1,12 +1,12 @@
 name,institution,rating,institution_conflicts,team_conflicts
-Ramona Cobb,California Institute of Technology,1,Harvard University,
-Justin Ford,California Institute of Technology,5,,
-Luis Bennett,Columbia University,2,,
-Mandy Estrada,Cornell University,5,,Caltech 1
-Leigh Mcgee,Harvard University,4,,
-Jacqueline Freeman,Harvard University,5,,Caltech 2
-Wilma Vaughn,Johns Hopkins University,4,,
-Virginia Mccarthy,Johns Hopkins University,2,,
-Pearl Graves,Johns Hopkins University,5,,
-Tasha Jenkins,Massachusetts Institute of Technology,2,"Johns Hopkins University, Harvard University",MIT 1
-Toby Wong,Massachusetts Institute of Technology,5,California Institute of Technology,
+Ramona Cobb,RMIT University,1,Victoria University,
+Justin Ford,RMIT University,5,,
+Luis Bennett,Melbourne University,2,,
+Mandy Estrada,Monash University,5,,Caltech 1
+Leigh Mcgee,Victoria University,4,,
+Jacqueline Freeman,Victoria University,5,,Caltech 2
+Wilma Vaughn,Auckland University,4,,
+Virginia Mccarthy,Auckland University,2,,
+Pearl Graves,Auckland University,5,,
+Tasha Jenkins,Otago University,2,"Auckland University, Victoria University",MIT 1
+Toby Wong,Otago University,5,RMIT University,
