@@ -92,13 +92,26 @@ class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, CacheMixin):
     public_page_preference = 'public_draw'
     sorting = 'venue'
 
+    def get_template_names(self):
+        round = self.get_round()
+        if round.draw_status != round.STATUS_RELEASED:
+            return ["public_draw_unreleased.html"]
+        else:
+            return super().get_template_names()
+
     def get_context_data(self, **kwargs):
         round = self.get_round()
         if round.draw_status != round.STATUS_RELEASED:
-            self.template = "public_draw_unreleased.html"
-            return
+            kwargs["round"] = self.get_round()
+            return super(DrawTablePage, self).get_context_data(**kwargs) # skip DrawTablePage
         else:
             return super().get_context_data(**kwargs)
+
+
+class PublicDrawForCurrentRound(PublicDrawForRound):
+
+    def get_round(self):
+        return self.get_tournament().current_round
 
 
 class AdminDrawForRoundByVenue(DrawTablePage, LoginRequiredMixin):

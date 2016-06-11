@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$',
-        views.PublicDrawForRound.as_view(),
+        views.PublicDrawForCurrentRound.as_view(),
         name='public_draw'),
     url(r'^round/(?P<round_seq>\d+)/$',
         views.PublicDrawForRound.as_view(),

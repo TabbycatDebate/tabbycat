@@ -214,7 +214,7 @@ class Debate(models.Model):
         for type, adj in self.adjudicators:
             if type == DebateAdjudicator.TYPE_CHAIR:
                 adjs += adj.name + " Ⓒ, "
-            elif type == DebateAdjudicator.TYPE_PANEL:
+            elif type == DebateAdjudicator.TYPE_TRAINEE:
                 adjs += adj.name + " Ⓣ, "
             else:
                 adjs += adj.name + ", "
