@@ -302,7 +302,6 @@ def get_diversity_data_sets(t, for_public):
                     {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
                 ], average=True, datum=True))
 
-
         if SpeakerScore.objects.filter(speaker__team__tournament=t, debate_team__debate__round__stage=Round.STAGE_ELIMINATION).count() > 0:
             data_sets['detailed_speakers_results'].append(compile_data(
                 'Average Finals Score', SpeakerScore.objects.filter(

@@ -333,9 +333,11 @@ class BaseDiversityStandingsView(TournamentMixin, TemplateView):
         kwargs['for_public'] = self.for_public
         return super().get_context_data(**kwargs)
 
+
 class DiversityStandingsView(BaseDiversityStandingsView, SuperuserRequiredMixin):
 
     for_public = False
+
 
 class PublicDiversityStandingsView(BaseDiversityStandingsView, PublicTabMixin):
 
