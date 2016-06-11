@@ -10,6 +10,7 @@ from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import SingleObjectMixin
 
+from adjallocation.models import DebateAdjudicator
 from tournaments.mixins import TournamentMixin
 from utils.misc import reverse_tournament
 
@@ -134,27 +135,58 @@ class VueTableMixin:
         kwargs["sortKey"] = self.sort_key
         return super().get_context_data(**kwargs)
 
+    def format_cell_number(self, value):
+        if isinstance(value, float):
+            return "{0:.2f}".format(value)
+        else:
+            return value
+
+    def get_adj_symbol(self, adj_type):
+        if adj_type == DebateAdjudicator.TYPE_CHAIR:
+            return "Ⓒ"
+        elif adj_type == DebateAdjudicator.TYPE_PANEL:
+            return "Ⓣ"
+        else:
+            return ""
+
     def adj_cells(self, adjudicator, tournament):
         adj_info = [('Name', adjudicator.name)]
         if tournament.pref('show_institutions'):
             if adjudicator.adj_core:
-                adj_info.append(('Institution', "Adj Core / " + adjudicator.institution.name))
+                adj_info.append(('Institution', {'text': "Adj Core / " + adjudicator.institution.name}))
             elif adjudicator.independent:
-                adj_info.append(('Institution', "Independent / " + adjudicator.institution.name))
+                adj_info.append(('Institution', {'text': "Independent / " + adjudicator.institution.name}))
             else:
-                adj_info.append(('Institution', adjudicator.institution.name))
+                adj_info.append(('Institution', {'text': adjudicator.institution.name}))
         return adj_info
 
-    def motion_cells(self, motion):
-        team_info = [('Motion', {
+    def adjudicators_cells(self, debate, tournament, key='Adjudicators', show_splits=False):
+
+        adjs_text = ''
+        if debate.confirmed_ballot and show_splits:
+            for type, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
+                adjs_info = adj.name + " " + self.get_adj_symbol(type) + " , "
+                if split:
+                    adjs_text += "<span class='text-danger'>" + adjs_info + "</span>"
+                else:
+                    adjs_text += adjs_info
+        else:
+            for type, adj in debate.adjudicators:
+                adjs_text += adj.name + " " + self.get_adj_symbol(type) + " , "
+
+        adjs_info = [(key, {'text': adjs_text[:-2]})] # Remove trailing comma
+        return adjs_info
+
+    def motion_cells(self, motion, key='Motion'):
+        motion_info = [(key, {
             'text':     motion.reference,
             'tooltip':  motion.text,
         })]
-        return team_info
+        return motion_info
 
-    def team_cells(self, team, tournament, break_categories=None):
+    def team_cells(self, team, tournament, break_categories=None, hide_institution=False, key='Team'):
         team_info = []
-        team_info.append(('Team', {
+        team_info.append((key, {
             'text':     team.short_name,
             'emoji':    team.emoji if tournament.pref('show_emoji') else None,
             'link':     reverse_tournament('team_speakers', tournament, kwargs={'team_id': team.id}),
@@ -162,14 +194,14 @@ class VueTableMixin:
         }))
 
         if break_categories is not None:
-            team_info.append(('Categories', break_categories))
-        if tournament.pref('show_institutions'):
-            team_info.append(('Institution', team.institution.code))
+            team_info.append(('Categories', {'text': break_categories}))
+        if tournament.pref('show_institutions') and not hide_institution:
+            team_info.append(('Institution', {'text': team.institution.code}))
 
         return team_info
 
-    def speaker_cells(self, speaker, tournament):
-        speaker_info = [('Name', speaker.name)]
+    def speaker_cells(self, speaker, tournament, key='Name'):
+        speaker_info = [(key, speaker.name)]
         if tournament.pref('show_novices'):
             if speaker.novice:
                 speaker_info.append(('Novice', {'icon':"glyphicon-ok"}))
@@ -181,46 +213,40 @@ class VueTableMixin:
     def venue_cells(self, debate, tournament, with_times=False):
         venue_info = []
         if tournament.pref('enable_divisions'):
-            venue_info.append(('division', debate.division.name))
+            venue_info.append(('division', {'text': debate.division.name}))
 
         if tournament.pref('enable_venue_groups') and debate.division:
-            venue_info.append(('venue', debate.division.venue_group.short_name))
+            venue_info.append(('venue', {'text': debate.division.venue_group.short_name}))
         elif tournament.pref('enable_venue_groups'):
-            venue_info.append(('venue', debate.venue.group.short_name + debate.venue.name))
+            venue_info.append(('venue', {'text': debate.venue.group.short_name + debate.venue.name}))
         else:
-            venue_info.append(('venue', debate.venue.name))
+            venue_info.append(('venue', {'text': debate.venue.name}))
 
         if with_times and tournament.pref('enable_debate_scheduling'):
             if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
-                venue_info.append((' ', ""))
-                venue_info.append((' ', "Bye"))
+                venue_info.append((' ', {'text': ""}))
+                venue_info.append((' ', {'text': "Bye"}))
             elif debate.result_status == "P":
-                venue_info.append((' ', ""))
-                venue_info.append((' ', "Postponed"))
+                venue_info.append((' ', {'text': ""}))
+                venue_info.append((' ', {'text': "Postponed"}))
             elif debate.confirmed_ballot.forfeit:
-                venue_info.append((' ', ""))
-                venue_info.append((' ', "Forfeit"))
+                venue_info.append((' ', {'text': ""}))
+                venue_info.append((' ', {'text': "Forfeit"}))
             else:
-                venue_info.append(('status', debate.time.strftime("D jS F")))
-                venue_info.append(('status', debate.time.strftime('h:i A')))
+                venue_info.append(('status', {'text': debate.time.strftime("D jS F")}))
+                venue_info.append(('status', {'text': debate.time.strftime('h:i A')}))
 
         return venue_info
-
-    def format_cell_number(self, value):
-        if isinstance(value, float):
-            return "{0:.2f}".format(value)
-        else:
-            return value
 
     def ranking_cells(self, standing):
         ddict = []
         for key, value in standing.rankings.items():
             if value[1]:
-                ddict.append((key, str(value[0]) + '='))
+                ddict.append((key, {'text': str(value[0]) + '='}))
             else:
-                ddict.append((key, str(value[0])))
+                ddict.append((key, {'text': str(value[0])}))
         if hasattr(standing, 'break_rank'):
-            ddict.append(('Break', standing.break_rank))
+            ddict.append(('Break', {'text': standing.break_rank}))
 
         return ddict
 
@@ -235,6 +261,6 @@ class VueTableMixin:
             elif key is 'speaks_sum':
                 key = "Total Speaks"
 
-            ddict.append((key, self.format_cell_number(value)))
+            ddict.append((key, {'text': self.format_cell_number(value)}))
 
         return ddict

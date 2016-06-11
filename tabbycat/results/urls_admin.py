@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     # Viewing
     url(r'^round/(?P<round_seq>\d+)/$',
-        views.results,
+        views.ResultsEntryForRoundView.as_view(),
         name='results'),
 
     # JSON updates
@@ -17,7 +17,7 @@ urlpatterns = [
         name='latest_results'),
 
     # Inline Actions
-    url(r'^toggle_postponed/$',
+    url(r'^toggle_postponed/(?P<debate_id>\d+)$',
         views.toggle_postponed,
         name='toggle_postponed'),
     url(r'^round/(?P<round_seq>\d+)/checkin/$',

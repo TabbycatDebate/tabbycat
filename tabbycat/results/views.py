@@ -19,32 +19,67 @@ from participants.models import Adjudicator
 from motions.models import Motion
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
-from utils.views import admin_required, expect_post, public_optional_tournament_view, round_view, tournament_view
+from utils.views import admin_required, public_optional_tournament_view, round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round, reverse_tournament
-from utils.mixins import HeadlessTemplateView, VueTableMixin
+from utils.mixins import HeadlessTemplateView, SuperuserRequiredMixin, VueTableMixin
 from venues.models import Venue
 
 from .result import BallotSet
 from .forms import BallotSetForm
 from .models import BallotSubmission
+from .mixins import DebateResultCellsMixin
 
 logger = logging.getLogger(__name__)
 
 
 @login_required
 @tournament_view
-@expect_post
-def toggle_postponed(request, t):
-    debate_id = request.POST.get('debate')
+def toggle_postponed(request, t, debate_id):
     debate = Debate.objects.get(pk=debate_id)
     if debate.result_status == debate.STATUS_POSTPONED:
         debate.result_status = debate.STATUS_NONE
     else:
         debate.result_status = debate.STATUS_POSTPONED
 
-    print(debate.result_status)
     debate.save()
-    return HttpResponse("ok")
+    return redirect_round('results', debate.round)
+
+
+class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, DebateResultCellsMixin, TemplateView):
+
+    template_name = 'results.html'
+    sort_key = 'Status'
+
+    def get_context_data(self, **kwargs):
+        draw = self.get_round().get_draw()
+        t = self.get_tournament()
+
+        kwargs["stats"] = {
+            'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
+            'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
+            'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
+            'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
+            'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
+        }
+
+        draw_data = []
+        for d in draw:
+            ddict = [self.status_cells(d)]
+            ddict.extend(self.ballot_entry_cells(d, t))
+            ddict.append(('bracket', {'text': d.bracket}))
+            ddict.extend(self.venue_cells(d, t))
+            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", hide_institution=True))
+            ddict.extend(self.team_cells(d.neg_team, t, key="negative", hide_institution=True))
+            ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
+
+            for value in ddict:
+                value[1]['cell-class'] = "test"
+
+            draw_data.append(OrderedDict(ddict))
+
+        kwargs["tableData"] = json.dumps(draw_data)
+
+        return super().get_context_data(**kwargs)
 
 
 @login_required
@@ -93,17 +128,15 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         draw_data = []
         for d in draw:
             ddict = []
-            if t.pref('enable_divisions'):
-                ddict.append(('Division', d.division.name))
-            ddict.append(('Venue', d.venue.name))
+
+            ddict.extend(self.venue_cells(d, t))
+
             if t.pref('ballots_released'):
                 if d.confirmed_ballot:
                     ddict.append(('Ballot', {
                         'text': "View Ballot",
                         'link': reverse_tournament('public_ballots_view', t, kwargs={'debate_id': d.id})
                     }))
-                else:
-                    ddict.append(('Ballot', ""))
 
             for team in (d.aff_team, d.neg_team):
                 bs = d.confirmed_ballot.ballot_set
@@ -120,12 +153,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
 
                 ddict.append(('Result', result))
                 ddict.extend(self.team_cells(team, t))
-
-                # Adjudicators with splits
-                if d.confirmed_ballot and t.pref('show_splitting_adjudicators'):
-                    pass  # TODO
-                else:
-                    ddict.append(('adjudicators', d.adjudicators_for_draw))
+                ddict.extend(self.adjudicators_cells(d, t, show_splits=False))
 
                 if t.pref('show_motions_in_results'):
                     ddict.extend(self.motion_cells(d.confirmed_ballot.motion))

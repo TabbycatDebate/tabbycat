@@ -208,18 +208,6 @@ class Debate(models.Model):
                 alloc.trainees.append(a.adjudicator)
         return alloc
 
-    @cached_property
-    def adjudicators_for_draw(self):
-        adjs = ""
-        for type, adj in self.adjudicators:
-            if type == DebateAdjudicator.TYPE_CHAIR:
-                adjs += adj.name + " Ⓒ, "
-            elif type == DebateAdjudicator.TYPE_PANEL:
-                adjs += adj.name + " Ⓣ, "
-            else:
-                adjs += adj.name + ", "
-        return adjs[:-2]  # Remove trailing comma on return
-
     @property
     def chair(self):
         from adjallocation.models import DebateAdjudicator

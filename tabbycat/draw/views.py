@@ -23,7 +23,7 @@ from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Division, Round, Tournament
 from utils.mixins import PostOnlyRedirectView, PublicCacheMixin, SuperuserRequiredMixin, VueTableMixin
 from utils.misc import reverse_round
-from utils.views import admin_required, expect_post, public_optional_round_view
+from utils.views import admin_required, expect_post
 from utils.views import public_optional_tournament_view, redirect_round, round_view, tournament_view
 from venues.models import Venue, VenueGroup
 from venues.allocator import allocate_venues
@@ -62,7 +62,7 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
         if t.pref('enable_division_motions'):
             ddict.append(('motion', [m.reference for m in d.division_motions]))
         if not t.pref('enable_divisions'):
-            ddict.append(('adjudicators', d.adjudicators_for_draw))
+            ddict.extend(self.adjudicators_cells(d, t, show_splits=False))
 
         return OrderedDict(ddict)
 
@@ -70,7 +70,7 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
         round = self.get_round()
         draw = round.get_draw()
         t = self.get_tournament()
-        if self.sorting is "team":
+        if self.sorting is 'team':
             draw_data = []
             for d in draw:
                 aff_row = self.create_row(d, t, 'Team', d.aff_team.short_name)
@@ -79,8 +79,8 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
         else:
             draw_data = [self.create_row(debate, t) for debate in draw]
 
-        kwargs["tableData"] = json.dumps(draw_data)
-        kwargs["round"] = self.get_round()
+        kwargs['tableData'] = json.dumps(draw_data)
+        kwargs['round'] = self.get_round()
         return super().get_context_data(**kwargs)
 
 

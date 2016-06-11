@@ -22,35 +22,31 @@
     </thead>
     <tbody>
       <tr v-for="row in data | filterBy filterKey | caseInsensitiveOrderBy sortKey sortOrders[sortKey]" >
-        <td v-for="cellType in gridColumns">
+        <td v-for="cellType in gridColumns"
+          :class="row[cellType]['cell-class']"
+          :title="row[cellType]['tooltip']">
 
-          <span v-if="typeof row[cellType] != 'object'">
+          <template v-if="typeof row[cellType] != 'object'">
+
             [[ row[cellType] ]]
-          </span>
+
+          </template>
+
           <template v-else>
 
             <span v-if="row[cellType]['sort']" class="hidden">
               [[ row[cellType]["sort"] ]]
             </span>
 
-            <template v-if="row[cellType]['tooltip']">
-              <span data-toggle="tooltip" :title="row[cellType]['tooltip']">
-            </template>
-
-              <span v-if="row[cellType]['icon']" class="glyphicon" :class="row[cellType]['icon']">
-              </span>
-              <span class="emoji" v-if="row[cellType]['emoji']">
-                [[ row[cellType]["emoji"] ]]
-              </span>
-              <a v-if="row[cellType]['link']" :href="row[cellType]['link']" >
-                <span v-html="row[cellType]['text']"></span>
-              </a>
-              <span v-else v-html="row[cellType]['text']">
-              </span>
-
-            <template v-if="row[cellType]['tooltip']">
-              </span>
-            </template>
+            <span v-if="row[cellType]['icon']" class="glyphicon" :class="row[cellType]['icon']">
+            </span>
+            <span class="emoji" v-if="row[cellType]['emoji']">
+              [[ row[cellType]["emoji"] ]]
+            </span>
+            <a v-if="row[cellType]['link']" :href="row[cellType]['link']" >
+              <span v-html="row[cellType]['text']"></span>
+            </a>
+            <span v-else v-html="row[cellType]['text']"></span>
 
           </template>
 
@@ -82,10 +78,10 @@
       b = Vue.util.isObject(b) ? Vue.parsers.path.getPath(b, sortKey) : b
 
       // Check if cell has custom sorting
-      if (typeof(a.sort) !== 'undefined') {
+      if (a && b && typeof(a.sort) !== 'undefined') {
         a = a.sort
         b = b.sort
-      } else if (typeof(a.text) !== 'undefined') {
+      } else if (a && b && typeof(a.text) !== 'undefined') {
         a = a.text
         b = b.text
       }
