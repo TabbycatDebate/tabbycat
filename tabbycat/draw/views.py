@@ -21,7 +21,7 @@ from participants.models import Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Division, Round, Tournament
-from utils.mixins import PostOnlyRedirectView, PublicCacheMixin, SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import PostOnlyRedirectView, CacheMixin, SuperuserRequiredMixin, VueTableMixin
 from utils.misc import reverse_round
 from utils.views import admin_required, expect_post, public_optional_round_view
 from utils.views import public_optional_tournament_view, redirect_round, round_view, tournament_view
@@ -87,7 +87,7 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
 # Creating Draw
 # ==============================================================================
 
-class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, PublicCacheMixin):
+class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, CacheMixin):
 
     public_page_preference = 'public_draw'
     sorting = 'venue'

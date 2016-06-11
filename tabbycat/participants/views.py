@@ -7,28 +7,30 @@ from django.forms.models import modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import cache_page
+from django.views.generic.base import View, TemplateView
 
 from adjallocation.models import DebateAdjudicator
-from tournaments.mixins import PublicTournamentPageMixin
+from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
 from utils.views import public_optional_tournament_view, tournament_view
-from utils.mixins import HeadlessTemplateView, PublicCacheMixin, VueTableMixin
+from utils.mixins import HeadlessTemplateView, CacheMixin, VueTableMixin, SingleObjectFromTournamentMixin, SingleObjectByRandomisedUrlMixin
 
 from .models import Adjudicator, Institution, Speaker, Team
 
 
-@cache_page(settings.TAB_PAGES_CACHE_TIMEOUT)
-@tournament_view
-def team_speakers(request, t, team_id):
-    team = Team.objects.get(pk=team_id)
-    speakers = team.speakers
-    data = {}
-    for i, speaker in enumerate(speakers):
-        data[i] = "<li>" + speaker.name + "</li>"
+class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
 
-    return JsonResponse(data, safe=False)
+    model = Team
+    pk_url_kwarg = 'team_id'
+    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
+
+    def get(self, request, *args, **kwargs):
+        team = self.get_object()
+        speakers = team.speakers
+        data = {i: "<li>" + speaker.name + "</li>" for i, speaker in enumerate(speakers)}
+        return JsonResponse(data, safe=False)
 
 
-class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMixin, HeadlessTemplateView):
+class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, CacheMixin, HeadlessTemplateView):
 
     public_page_preference = 'public_participants'
     template_name = 'base_double_vue_table.html'
@@ -62,38 +64,62 @@ class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMi
         return super().get_context_data(**kwargs)
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('enable_mass_draws')
-def all_tournaments_all_institutions(request, t):
-    institutions = Institution.objects.all()
-    return render(request, 'public_all_tournament_institutions.html', dict(
-        institutions=institutions))
+class AllTournamentsAllInstitutionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
+    public_page_preference = 'enable_mass_draws'
+    template_name = 'public_all_tournament_institutions.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['institutions'] = Institution.objects.all()
+        return super().get_context_data(**kwargs)
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('enable_mass_draws')
-def all_tournaments_all_teams(request, t):
-    teams = Team.objects.filter(tournament__active=True).select_related('tournament').prefetch_related('division')
-    return render(request, 'public_all_tournament_teams.html', dict(
-        teams=teams))
+class AllTournamentsAllTeamsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
+    public_page_preference = 'enable_mass_draws'
+    template_name = 'public_all_tournament_teams.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['teams'] = Team.objects.filter(tournament__active=True).select_related('tournament').prefetch_related('division')
+        return super().get_context_data(**kwargs)
 
 
 # Scheduling
 
-@public_optional_tournament_view('allocation_confirmations')
-def public_confirm_shift_key(request, t, url_key):
-    adj = get_object_or_404(Adjudicator, url_key=url_key)
-    adj_debates = DebateAdjudicator.objects.filter(adjudicator=adj)
 
-    shifts_formset = modelformset_factory(DebateAdjudicator, can_delete=False,
-                                          extra=0, fields=['timing_confirmed'])
+class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, PublicTournamentPageMixin, TemplateView):
+    # Django doesn't have a class-based view for form sets, so this implements
+    # the form processing analogously to FormView, with less decomposition.
 
-    if request.method == 'POST':
-        formset = shifts_formset(request.POST, request.FILES)
+    public_page_preference = 'allocation_confirmations'
+    template_name = 'confirm_shifts.html'
+    model = Adjudicator
+
+    def get_formset(self):
+        ShiftFormSet = modelformset_factory(DebateAdjudicator, can_delete=False,
+                extra=0, fields=['timing_confirmed'])
+
+        if self.request.method in ('POST', 'PUT'):
+            return ShiftFormSet(data=self.request.POST, files=self.request.FILES)
+        elif self.request.method == 'GET':
+            debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.get_object())
+            return ShiftFormSet(queryset=debateadjs)
+
+    def get_context_data(self, **kwargs):
+        kwargs['adjudicator'] = self.get_object()
+        kwargs['formset'] = self.get_formset()
+        return super().get_context_data(**kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        formset = self.get_formset()
         if formset.is_valid():
             formset.save()
             messages.success(request, "Your shift check-ins have been saved")
-    else:
-        formset = shifts_formset(queryset=adj_debates)
+        return super().get(request, *args, **kwargs) # then render form as usual (don't call super().post())
 
-    return render(request, 'confirm_shifts.html', dict(formset=formset, adjudicator=adj))
+    def put(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+

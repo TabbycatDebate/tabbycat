@@ -21,7 +21,7 @@ from results.models import SpeakerScoreByAdj
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
-from utils.mixins import PublicCacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
+from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
 from utils.mixins import PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin
 from utils.urlkeys import populate_url_keys
 from utils.views import admin_required, public_optional_tournament_view, tournament_view
@@ -261,7 +261,7 @@ class TabroomAddFeedbackIndexView(SuperuserOrTabroomAssistantTemplateResponseMix
     assistant_template_name = 'assistant_add_feedback.html'
 
 
-class PublicAddFeedbackIndexView(PublicCacheMixin, PublicTournamentPageMixin, BaseAddFeedbackIndexView):
+class PublicAddFeedbackIndexView(CacheMixin, PublicTournamentPageMixin, BaseAddFeedbackIndexView):
     """View for the index page for public users to add feedback. The index page
     lists all possible sources; public users should then choose themselves."""
 

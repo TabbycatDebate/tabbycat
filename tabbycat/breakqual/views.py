@@ -11,7 +11,7 @@ from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
 from utils.misc import get_ip_address
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_tournament, tournament_view
-from utils.mixins import HeadlessTemplateView, PublicCacheMixin, VueTableMixin
+from utils.mixins import HeadlessTemplateView, CacheMixin, VueTableMixin
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from .models import BreakCategory, BreakingTeam
@@ -25,7 +25,7 @@ def public_break_index(request, t):
     return render(request, "public_break_index.html")
 
 
-class PublicBreakingTeams(PublicTournamentPageMixin, PublicCacheMixin, VueTableMixin, HeadlessTemplateView):
+class PublicBreakingTeams(PublicTournamentPageMixin, CacheMixin, VueTableMixin, HeadlessTemplateView):
 
     template_name = 'base_vue_table.html'
 
@@ -140,7 +140,7 @@ class AdminBreakingAdjudicators(LoginRequiredMixin, BreakingAdjudicators):
         return super().get(self, request, *args, **kwargs)
 
 
-class PublicBreakingAdjudicators(PublicTournamentPageMixin, PublicCacheMixin, BreakingAdjudicators):
+class PublicBreakingAdjudicators(PublicTournamentPageMixin, CacheMixin, BreakingAdjudicators):
 
     public_page_preference = 'public_breaking_adjs'
 
