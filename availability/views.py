@@ -17,19 +17,28 @@ def availability_index(request, round):
         previous_unconfirmed = None
 
     t = round.tournament
+
+    total_adjs = round.tournament.adjudicator_set.count()
+    if t.pref('share_adjs'):
+        total_adjs += Adjudicator.objects.filter(tournament=None).count()
+
+    total_venues = round.tournament.venue_set.count()
+    if t.pref('share_venues'):
+        total_venues += Venue.objects.filter(tournament=None).count()
+
     checks = [{
-        'type'      : "Team",
+        'type'      : 'Team',
         'total'     : t.teams.count(),
         'in_now'    : ActiveTeam.objects.filter(round=round).count(),
         'in_before' : ActiveTeam.objects.filter(round=round.prev).count() if round.prev else None,
-    },{
-        'type'      : "Adjudicator",
-        'total'     : round.tournament.adjudicator_set.count(),
+    }, {
+        'type'      : 'Adjudicator',
+        'total'     : total_adjs,
         'in_now'    : ActiveAdjudicator.objects.filter(round=round).count(),
         'in_before' : ActiveAdjudicator.objects.filter(round=round.prev).count() if round.prev else None,
-    },{
-        'type'      : "Venue",
-        'total'     : round.tournament.venue_set.count(),
+    }, {
+        'type'      : 'Venue',
+        'total'     : total_venues,
         'in_now'    : ActiveVenue.objects.filter(round=round).count(),
         'in_before' : ActiveVenue.objects.filter(round=round.prev).count() if round.prev else None,
     }]
