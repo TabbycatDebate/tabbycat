@@ -46,7 +46,7 @@
           </template>
 
           <span class="glyphicon vue-sort-key pull-right"
-                :class="headers[headerIndex].order > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
+                :class="sortIndex === headerIndex && sortOrder > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
           </span>
 
         </th>
@@ -54,7 +54,7 @@
 
     </thead>
     <tbody>
-      <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex headers[sortIndex].order" >
+      <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder" >
         <td v-for="(cellIndex, cell) in row" :class="cell['cell-class'] ? cell['cell-class'] : null">
 
             <!-- Sorting key -->
@@ -126,6 +126,7 @@
     data: function () {
       return {
         sortIndex: this.getDefaultSortIndex(),
+        sortOrder: 1
       }
     },
     methods: {
@@ -142,8 +143,11 @@
       sortByHeader: function (headerIndex) {
         // Set the current sorting key; flip it (x * -1) if already in place
         // We have to modify the original .data so that the computed props will update
-        var originalHeaderOrder = this.tableContent[0][headerIndex]['head'].order
-        this.tableContent[0][headerIndex]['head'].order = originalHeaderOrder * -1;
+        if (this.sortIndex === headerIndex) {
+          this.sortOrder = this.sortOrder * -1;
+        } else {
+          this.sortOrder = 1;
+        }
         this.sortIndex = headerIndex;
       },
       showTooltip: function(event) {
@@ -167,9 +171,6 @@
         var headers = [];
         // For each cell in the rows; push its head value to a consolidated list
         for (var i = 0; i < this.tableContent[0].length; i++) {
-          if (typeof(this.tableContent[0][i]['head']['order']) === 'undefined') {
-            this.tableContent[0][i]['head']['order'] = 1 // Add ordering value to each header
-          }
           headers.push(this.tableContent[0][i]['head'])
         }
         return headers
