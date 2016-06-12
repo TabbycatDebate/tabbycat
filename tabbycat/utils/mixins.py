@@ -12,7 +12,6 @@ from django.views.generic.detail import SingleObjectMixin
 
 from adjallocation.models import DebateAdjudicator
 from tournaments.mixins import TournamentMixin
-from utils.misc import reverse_tournament
 
 logger = logging.getLogger(__name__)
 

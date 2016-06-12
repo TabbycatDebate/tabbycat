@@ -1,5 +1,4 @@
 import json
-from collections import OrderedDict
 
 from django.conf import settings
 from django.contrib import messages
