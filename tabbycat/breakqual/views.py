@@ -11,7 +11,7 @@ from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
 from utils.misc import get_ip_address
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_tournament, tournament_view
-from utils.mixins import HeadlessTemplateView, CacheMixin, VueTableMixin
+from utils.mixins import CacheMixin, HeadlessTemplateView, VueTableMixin
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from .models import BreakCategory, BreakingTeam

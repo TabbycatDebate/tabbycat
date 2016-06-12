@@ -5,14 +5,11 @@ from django.conf import settings
 from django.contrib import messages
 from django.forms.models import modelformset_factory
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, render
-from django.views.decorators.cache import cache_page
-from django.views.generic.base import View, TemplateView
+from django.views.generic.base import TemplateView, View
 
 from adjallocation.models import DebateAdjudicator
-from tournaments.mixins import TournamentMixin, PublicTournamentPageMixin
-from utils.views import public_optional_tournament_view, tournament_view
-from utils.mixins import HeadlessTemplateView, CacheMixin, VueTableMixin, SingleObjectFromTournamentMixin, SingleObjectByRandomisedUrlMixin
+from tournaments.mixins import PublicTournamentPageMixin
+from utils.mixins import CacheMixin, HeadlessTemplateView, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin, VueTableMixin
 
 from .models import Adjudicator, Institution, Speaker, Team
 
@@ -122,4 +119,3 @@ class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, PublicTournamentP
 
     def put(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
-
