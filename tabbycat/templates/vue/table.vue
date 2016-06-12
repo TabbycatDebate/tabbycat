@@ -7,38 +7,38 @@
 
       <tr>
         <th class="vue-sortable"
-            v-for="(headerIndex, headerType) in gridColumns"
-            v-on:click="sortBy(headerType)"
-            v-bind:class="{'vue-sort-active': sortKey == headerType}">
+            v-for="(headerIndex, header) in headers"
+            v-on:click="sortByHeader(headerIndex)"
+            v-bind:class="{'vue-sort-active': sortIndex == headerIndex}">
 
-          <span v-if="typeof data[0][headerIndex]['head'] !== 'object'">
-            [[ data[0][headerIndex]['head'] | capitalize ]]
-          </span>
+            <span :title="header['tooltip']"
+                  :data-toggle="header['tooltip'] ? 'tooltip' : null"
+                  :v-on:hover="header['tooltip'] ? showTooltip  : null">
 
-          <template v-else>
-
-            <span :title="data[0][headerIndex]['head']['tooltip']"
-                  :data-toggle="data[0][headerIndex]['head']['tooltip'] ? 'tooltip' : null"
-                  :v-on:hover="data[0][headerIndex]['head']['tooltip'] ? showTooltip  : null">
-
-                <template v-if="data[0][headerIndex]['head']['icon']">
-                  <span class="glyphicon" :class="data[0][headerIndex]['head']['icon']"></span>
+                <template v-if="header['icon']">
+                  <span class="glyphicon" :class="header['icon']"></span>
                 </template>
 
-                <template v-if="data[0][headerIndex]['head']['visible-sm']">
+                <template v-if="header['visible-sm']">
                   <span class="visible-sm-inline">
-                    [[ data[0][headerIndex]['head']['visible-sm'] ]]
+                    [[ header['visible-sm'] ]]
                   </span>
                 </template>
-                <template v-if="data[0][headerIndex]['head']['visible-md']">
+
+                <template v-if="header['visible-md']">
                   <span class="visible-md-inline">
-                    [[ data[0][headerIndex]['head']['visible-md'] ]]
+                    [[ header['visible-md'] ]]
                   </span>
                 </template>
-                <template v-if="data[0][headerIndex]['head']['visible-lg']">
+
+                <template v-if="header['visible-lg']">
                   <span class="visible-lg-inline">
-                    [[ data[0][headerIndex]['head']['visible-lg'] ]]
+                    [[ header['visible-lg'] ]]
                   </span>
+                </template>
+
+                <template v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('visible-sm') && !header.hasOwnProperty('visible-md') && !header.hasOwnProperty('visible-lg')">
+                  [[ header['key'] ]]
                 </template>
 
             </span>
@@ -46,7 +46,7 @@
           </template>
 
           <span class="glyphicon vue-sort-key pull-right"
-                :class="sortOrders[key] > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
+                :class="headers[headerIndex].order > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
           </span>
 
         </th>
@@ -54,40 +54,33 @@
 
     </thead>
     <tbody>
-      <tr v-for="row in data | filterBy filterKey | caseInsensitiveOrderBy sortKey sortOrders[sortKey]" >
-        <td v-for="(cellIndex, cellType) in gridColumns" :class="getCellClass(row[cellIndex]['cell'])">
-
-          <span v-if="typeof row[cellIndex]['cell'] !== 'object'" v-html="row[cellIndex]['cell']">
-          </span>
-          <template v-else>
+      <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex headers[sortIndex].order" >
+        <td v-for="(cellIndex, cell) in row" :class="cell['cell-class'] ? cell['cell-class'] : null">
 
             <!-- Sorting key -->
-            <span v-if="row[cellIndex]['cell']['sort']" class="hidden">
-              [[ row[cellIndex]['cell']["sort"] ]]
+            <span v-if="cell['sort']" class="hidden">
+              [[ cell["sort"] ]]
             </span>
 
+            <!-- Tooltip Hovers Wrapper -->
+            <span :title="cell['tooltip']"
+                  :data-toggle="cell['tooltip'] ? 'tooltip' : null"
+                  :v-on:hover="cell['tooltip'] ? showTooltip  : null">
 
-            <!-- Tooltip Hovers -->
-            <span :title="row[cellIndex]['cell']['tooltip']"
-                  :data-toggle="row[cellIndex]['cell']['tooltip'] ? 'tooltip' : null"
-                  :v-on:hover="row[cellIndex]['cell']['tooltip'] ? showTooltip  : null">
+                <!-- Icons or Emoji -->
+                <span v-if="cell['icon']" class="glyphicon" :class="cell['icon']">
+                </span>
+                <span class="emoji" v-if="cell['emoji']">
+                  [[ cell["emoji"] ]]
+                </span>
 
-              <!-- Icons or Emoji -->
-              <span v-if="row[cellIndex]['cell']['icon']" class="glyphicon" :class="row[cellIndex]['cell']['icon']">
-              </span>
-              <span class="emoji" v-if="row[cellIndex]['cell']['emoji']">
-                [[ row[cellIndex]['cell']["emoji"] ]]
-              </span>
-
-              <!-- Text (with link if needed) -->
-              <a v-if="row[cellIndex]['cell']['link']" :href="row[cellIndex]['cell']['link']" >
-                <span v-html="row[cellIndex]['cell']['text']"></span>
-              </a>
-              <span v-else v-html="row[cellIndex]['cell']['text']"></span>
+                <!-- Text (with link if needed) -->
+                <a v-if="cell['link']" :href="cell['link']" >
+                  <span v-html="cell['text']"></span>
+                </a>
+                <span v-else v-html="cell['text']"></span>
 
             </span>
-
-          </template>
 
         </td>
       </tr>
@@ -100,29 +93,23 @@
 <!-- Table Component Behaviour -->
 <script>
 
-  Vue.filter('caseInsensitiveOrderBy', function (arr, sortKey, reverse) {
+  Vue.filter('caseInsensitiveOrderBy', function (arr, sortIndex, reverse) {
     // This is basically a copy of Vue's native orderBy except we are overriding
     // the last part to see if the cell has custom sort attributes
-    if (!sortKey) {
+    if (!sortIndex) {
       return arr
     }
+
     var order = (reverse && reverse < 0) ? -1 : 1
     // sort on a copy to avoid mutating original array
     return arr.slice().sort(function (a, b) {
-      if (sortKey !== '$key') {
-        if (Vue.util.isObject(a) && '$value' in a) a = a.$value
-        if (Vue.util.isObject(b) && '$value' in b) b = b.$value
-      }
-      a = Vue.util.isObject(a) ? Vue.parsers.path.getPath(a, sortKey) : a
-      b = Vue.util.isObject(b) ? Vue.parsers.path.getPath(b, sortKey) : b
-
       // Check if cell has custom sorting
-      if (a && b && typeof(a.sort) !== 'undefined') {
-        a = a.sort
-        b = b.sort
-      } else if (a && b && typeof(a.text) !== 'undefined') {
-        a = a.text
-        b = b.text
+      if (a && b && typeof(a[sortIndex].sort) !== 'undefined') {
+        a = a[sortIndex].sort
+        b = b[sortIndex].sort
+      } else if (a && b && typeof(a[sortIndex].text) !== 'undefined') {
+        a = a[sortIndex].text
+        b = b[sortIndex].text
       }
       return a === b ? 0 : a > b ? order : -order
     })
@@ -132,57 +119,61 @@
   Vue.component('smart-table', {
     template: '#smart-table',
     props: {
-      data: Array,
-      columns: Array,
+      tableContent: Array,
       filterKey: String,
       defaultSortKey: String
     },
     data: function () {
-      var sortOrders = {}
-      this.getColumns().forEach(function (key) {
-        sortOrders[key] = 1; // Set all to sort none (1 is +asc, -1 is desc)
-      })
       return {
-        sortKey: this.defaultSortKey,
-        sortOrders: sortOrders
+        sortIndex: this.getDefaultSortIndex(),
       }
     },
     methods: {
-      getColumns: function() {
-        // Extract column headers from first row of data
-        var columns = [];
-        var firstRow = this.data[0];
-        for (var i = 0; i < firstRow.length; i++) {
-          // If the header is plain text append it; if a dict then extract the key
-          if (typeof(firstRow[i]['head'].key) !== 'undefined') {
-            columns.push(firstRow[i]['head'].key)
-          } else {
-            columns.push(firstRow[i]['head'])
+      getDefaultSortIndex: function() {
+        // Find the index of the column that matches the default sorting key
+        var index = null
+        for (var i = 0; i < this.tableContent[0].length; i++) {
+          if (this.tableContent[0][i]['head'].key === this.defaultSortKey) {
+            index = i
           }
         }
-        console.log(columns)
-        return columns
+        return index
       },
-      getCellClass: function(cell) {
-        if (cell && typeof(cell['cell-class']) !== 'undefined') {
-          cell['cell-class']
-        } else {
-          return null
-        }
-      },
-      sortBy: function (key) {
+      sortByHeader: function (headerIndex) {
         // Set the current sorting key; flip it (x * -1) if already in place
-        this.sortKey = key
-        this.sortOrders[key] = this.sortOrders[key] * -1
+        // We have to modify the original .data so that the computed props will update
+        var originalHeaderOrder = this.tableContent[0][headerIndex]['head'].order
+        this.tableContent[0][headerIndex]['head'].order = originalHeaderOrder * -1;
+        this.sortIndex = headerIndex;
       },
       showTooltip: function(event) {
         $(event.target).tooltip('show')
       }
     },
     computed: {
-      gridColumns: function() {
-        return this.getColumns();
-      }
+      rows: function() {
+        var rows = []
+        for (var i = 0; i < this.tableContent.length; i++) {
+          // For each row and cell type push it to the master list
+          var rowCells = []
+          for (var j = 0; j < this.tableContent[i].length; j++) {
+            rowCells.push(this.tableContent[i][j]['cell']);
+          }
+          rows.push(rowCells);
+        };
+        return rows;
+      },
+      headers: function() {
+        var headers = [];
+        // For each cell in the rows; push its head value to a consolidated list
+        for (var i = 0; i < this.tableContent[0].length; i++) {
+          if (typeof(this.tableContent[0][i]['head']['order']) === 'undefined') {
+            this.tableContent[0][i]['head']['order'] = 1 // Add ordering value to each header
+          }
+          headers.push(this.tableContent[0][i]['head'])
+        }
+        return headers
+      },
     }
   })
 </script>

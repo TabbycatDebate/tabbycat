@@ -52,7 +52,6 @@ class DebateResultCellsMixin:
             'key': key,
             'tooltip': "Status of this debate's ballot",
             'icon': "glyphicon-th-list",
-            'visible-lg': "Ballot Status"
         }
         result_cell = {
             'icon': icon,
@@ -88,7 +87,7 @@ class DebateResultCellsMixin:
             link = reverse_tournament('new_ballotset', t, kwargs={'debate_id': d.id})
             ballotsets_info += "<a href=" + link + ">Enter New</a>"
 
-        ballot_cells = [{'head': 'enter ballots', 'cell': ballotsets_info}]
+        ballot_cells = [{'head': {'key':'enter ballots'}, 'cell': {'text': ballotsets_info}}]
 
         if t.pref('enable_postponements'):
             pcell = {'link': reverse_tournament('toggle_postponed', t, kwargs={'debate_id': d.id})}

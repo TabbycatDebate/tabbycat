@@ -10,7 +10,7 @@
       <div class="panel-heading"><h4>{{ table_a_title }}</h4></div>
       <div class="panel-body" id="tableContainerA">
         <smart-table
-          :data="gridData"
+          :table-content="gridData"
           :filter-key="searchQuery"
           :default-sort-key="sortKey"
         ></smart-table>
@@ -22,7 +22,7 @@
       <div class="panel-heading"><h4>{{ table_b_title }}</h4></div>
       <div class="panel-body" id="tableContainerB">
         <smart-table
-          :data="gridData"
+          :table-content="gridData"
           :filter-key="searchQuery"
           :default-sort-key="sortKey"
         ></smart-table>

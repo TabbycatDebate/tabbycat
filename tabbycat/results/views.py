@@ -67,10 +67,10 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             ddict = self.status_cells(d)
             ddict.extend(self.ballot_entry_cells(d, t))
             # ddict.append(('bracket', {'text': d.bracket}))
-            # ddict.extend(self.venue_cells(d, t))
-            # ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
-            # ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
-            # ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
+            ddict.extend(self.venue_cells(d, t))
+            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
+            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
+            ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
 
             # for value in ddict:
             #     value[1]['cell-class'] = "test"
@@ -127,41 +127,43 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
 
         draw_data = []
         for d in draw:
-            ddict = []
-
-            ddict.extend(self.venue_cells(d, t))
-
-            if t.pref('ballots_released'):
-                if d.confirmed_ballot:
-                    ddict.append(('Ballot', {
-                        'text': "View Ballot",
-                        'link': reverse_tournament('public_ballots_view', t, kwargs={'debate_id': d.id})
-                    }))
-
             for team in (d.aff_team, d.neg_team):
-                bs = d.confirmed_ballot.ballot_set
-                result = {'text': ''}
+                ddict = []
+                ddict.extend(self.venue_cells(d, t))
+
+                if t.pref('ballots_released'):
+                    if d.confirmed_ballot:
+                        ddict.append({
+                            'head': {'key': 'Ballot', 'icon': 'glyphicon-search'},
+                            'cell': {
+                                'text': "View Ballot",
+                                'link': reverse_tournament('public_ballots_view', t, kwargs={'debate_id': d.id})
+                            }
+                        })
+                result_text, result_icon, bs = "", "", d.confirmed_ballot.ballot_set
 
                 if bs.aff_win and team is d.aff_team or bs.neg_win and team is d.neg_team:
-                    result['icon'] = "glyphicon-arrow-up text-success"
+                    result_icon = "glyphicon-arrow-up text-success"
                 else:
-                    result['icon'] = "glyphicon-arrow-down text-danger"
+                    result_icon = "glyphicon-arrow-down text-danger"
                 if team is d.aff_team:
-                    result['text'] += " vs " + d.neg_team.short_name + " (Neg)"
+                    result_text += " vs " + d.neg_team.short_name + " (Neg)"
                 else:
-                    result['text'] += " vs " + d.aff_team.short_name + " (Aff)"
+                    result_text += " vs " + d.aff_team.short_name + " (Aff)"
 
-                ddict.append(('Result', result))
+                ddict.append({'head': {'key': 'Result'}, 'cell': {
+                    'text': result_text, 'icon': result_icon}})
+
                 ddict.extend(self.team_cells(team, t))
                 ddict.extend(self.adjudicators_cells(d, t, show_splits=False))
 
                 if t.pref('show_motions_in_results'):
                     ddict.extend(self.motion_cells(d.confirmed_ballot.motion))
 
-                draw_data.append(ddict)
+                draw_data.append(ddict)  # Only one team's result per line
 
-        kwargs["draw"] = draw  # To deprecate
-        kwargs["tableData"] = json.dumps(draw_data)
+        kwargs['draw'] = draw  # To deprecate
+        kwargs['tableData'] = json.dumps(draw_data)
 
         return super().get_context_data(**kwargs)
 
