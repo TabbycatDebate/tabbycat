@@ -43,7 +43,7 @@ class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMi
         adjudicators = Adjudicator.objects.filter(tournament=t).select_related('institution')
         for adjudicator in adjudicators:
             ddict = self.adj_cells(adjudicator, t)
-            adjs_data.append(OrderedDict(ddict))
+            adjs_data.append(ddict)
 
         kwargs["table_a_title"] = "Adjudicators"
         kwargs["tableDataA"] = json.dumps(adjs_data)
@@ -53,7 +53,7 @@ class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMi
         for speaker in speakers:
             ddict.extend(self.speaker_cells(speaker, t))
             ddict.extend(self.team_cells(speaker.team, t))
-            speakers_data.append(OrderedDict(ddict))
+            speakers_data.append(ddict)
 
         kwargs["table_b_title"] = "Speakers"
         kwargs["tableDataB"] = json.dumps(speakers_data)

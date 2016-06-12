@@ -7,50 +7,83 @@
 
       <tr>
         <th class="vue-sortable"
-          v-for="key in gridColumns"
-          v-on:click="sortBy(key)"
-          v-bind:class="{ 'vue-sort-active': sortKey == key}">
-          [[ key | capitalize ]]
-          <span class="glyphicon vue-sort-key pull-right"
-            :class="sortOrders[key] > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
+            v-for="(headerIndex, headerType) in gridColumns"
+            v-on:click="sortBy(headerType)"
+            v-bind:class="{'vue-sort-active': sortKey == headerType}">
+
+          <span v-if="typeof data[0][headerIndex]['head'] !== 'object'">
+            [[ data[0][headerIndex]['head'] | capitalize ]]
           </span>
+
+          <template v-else>
+
+            <span :title="data[0][headerIndex]['head']['tooltip']"
+                  :data-toggle="data[0][headerIndex]['head']['tooltip'] ? 'tooltip' : null"
+                  :v-on:hover="data[0][headerIndex]['head']['tooltip'] ? showTooltip  : null">
+
+                <template v-if="data[0][headerIndex]['head']['icon']">
+                  <span class="glyphicon" :class="data[0][headerIndex]['head']['icon']"></span>
+                </template>
+
+                <template v-if="data[0][headerIndex]['head']['visible-sm']">
+                  <span class="visible-sm-inline">
+                    [[ data[0][headerIndex]['head']['visible-sm'] ]]
+                  </span>
+                </template>
+                <template v-if="data[0][headerIndex]['head']['visible-md']">
+                  <span class="visible-md-inline">
+                    [[ data[0][headerIndex]['head']['visible-md'] ]]
+                  </span>
+                </template>
+                <template v-if="data[0][headerIndex]['head']['visible-lg']">
+                  <span class="visible-lg-inline">
+                    [[ data[0][headerIndex]['head']['visible-lg'] ]]
+                  </span>
+                </template>
+
+            </span>
+
+          </template>
+
+          <span class="glyphicon vue-sort-key pull-right"
+                :class="sortOrders[key] > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
+          </span>
+
         </th>
       </tr>
 
     </thead>
     <tbody>
       <tr v-for="row in data | filterBy filterKey | caseInsensitiveOrderBy sortKey sortOrders[sortKey]" >
-        <td v-for="cellType in gridColumns" :class="row[cellType]['cell-class']">
+        <td v-for="(cellIndex, cellType) in gridColumns" :class="getCellClass(row[cellIndex]['cell'])">
 
-          <template v-if="typeof row[cellType] != 'object'">
-
-            [[ row[cellType] ]]
-
-          </template>
+          <span v-if="typeof row[cellIndex]['cell'] !== 'object'" v-html="row[cellIndex]['cell']">
+          </span>
           <template v-else>
 
             <!-- Sorting key -->
-            <span v-if="row[cellType]['sort']" class="hidden">
-              [[ row[cellType]["sort"] ]]
+            <span v-if="row[cellIndex]['cell']['sort']" class="hidden">
+              [[ row[cellIndex]['cell']["sort"] ]]
             </span>
 
-            <!-- Icons or Emoji -->
-            <span v-if="row[cellType]['icon']" class="glyphicon" :class="row[cellType]['icon']">
-            </span>
-            <span class="emoji" v-if="row[cellType]['emoji']">
-              [[ row[cellType]["emoji"] ]]
-            </span>
 
             <!-- Tooltip Hovers -->
-            <span :title="row[cellType]['tooltip']"
-                  :data-toggle="row[cellType]['tooltip'] ? 'tooltip' : null"
-                  :v-on:hover="row[cellType]['tooltip'] ? showTooltip  : null">
+            <span :title="row[cellIndex]['cell']['tooltip']"
+                  :data-toggle="row[cellIndex]['cell']['tooltip'] ? 'tooltip' : null"
+                  :v-on:hover="row[cellIndex]['cell']['tooltip'] ? showTooltip  : null">
+
+              <!-- Icons or Emoji -->
+              <span v-if="row[cellIndex]['cell']['icon']" class="glyphicon" :class="row[cellIndex]['cell']['icon']">
+              </span>
+              <span class="emoji" v-if="row[cellIndex]['cell']['emoji']">
+                [[ row[cellIndex]['cell']["emoji"] ]]
+              </span>
 
               <!-- Text (with link if needed) -->
-              <a v-if="row[cellType]['link']" :href="row[cellType]['link']" >
-                <span v-html="row[cellType]['text']"></span>
+              <a v-if="row[cellIndex]['cell']['link']" :href="row[cellIndex]['cell']['link']" >
+                <span v-html="row[cellIndex]['cell']['text']"></span>
               </a>
-              <span v-else v-html="row[cellType]['text']"></span>
+              <span v-else v-html="row[cellIndex]['cell']['text']"></span>
 
             </span>
 
@@ -117,9 +150,25 @@
     methods: {
       getColumns: function() {
         // Extract column headers from first row of data
+        var columns = [];
         var firstRow = this.data[0];
-        var columns = Object.keys(firstRow);
+        for (var i = 0; i < firstRow.length; i++) {
+          // If the header is plain text append it; if a dict then extract the key
+          if (typeof(firstRow[i]['head'].key) !== 'undefined') {
+            columns.push(firstRow[i]['head'].key)
+          } else {
+            columns.push(firstRow[i]['head'])
+          }
+        }
+        console.log(columns)
         return columns
+      },
+      getCellClass: function(cell) {
+        if (cell && typeof(cell['cell-class']) !== 'undefined') {
+          cell['cell-class']
+        } else {
+          return null
+        }
       },
       sortBy: function (key) {
         // Set the current sorting key; flip it (x * -1) if already in place

@@ -38,17 +38,28 @@ class DebateResultCellsMixin:
         elif debate.result_status == debate.STATUS_NONE and not debate.ballot_in:
             icon, sorting, tooltip = "glyphicon-remove text-danger", 0, "No Ballot"
         elif debate.result_status == debate.STATUS_NONE and debate.ballot_in:
-            icon, sorting, tooltip = "glyphicon-inbox text-warning", 1, "Ballot In"
+            icon, sorting, tooltip = "glyphicon-inbox text-warning", 1, "Ballot is In"
         elif debate.result_status == debate.STATUS_DRAFT:
-            icon, sorting, tooltip = "glyphicon-adjust text-info", 2, "Unconfirmed Ballot"
+            icon, sorting, tooltip = "glyphicon-adjust text-info", 2, "Ballot is Unconfirmed"
         elif debate.result_status == debate.STATUS_CONFIRMED:
-            icon, sorting, tooltip = "glyphicon-ok text-success", 3, "Confirmed Ballot"
+            icon, sorting, tooltip = "glyphicon-ok text-success", 3, "Ballot is Confirmed"
         elif debate.result_status == debate.STATUS_POSTPONED:
-            icon, sorting, tooltip = "glyphicon-pause", 4, "Debate Postponed"
+            icon, sorting, tooltip = "glyphicon-pause", 4, "Debate was Postponed"
         else:
             raise ValueError('Debate has no discernable status')
 
-        result_info = (key, {'icon': icon, 'sort': sorting, 'tooltip': tooltip})
+        result_header = {
+            'key': key,
+            'tooltip': "Status of this debate's ballot",
+            'icon': "glyphicon-th-list",
+            'visible-lg': "Ballot Status"
+        }
+        result_cell = {
+            'icon': icon,
+            'sort': sorting,
+            'tooltip': tooltip
+        }
+        result_info = [{'head': result_header, 'cell': result_cell}]
         return result_info
 
     def ballot_entry_cells(self, d, t):
@@ -77,7 +88,7 @@ class DebateResultCellsMixin:
             link = reverse_tournament('new_ballotset', t, kwargs={'debate_id': d.id})
             ballotsets_info += "<a href=" + link + ">Enter New</a>"
 
-        ballot_cells = [('ballot', {'text': ballotsets_info})]
+        ballot_cells = [{'head': 'enter ballots', 'cell': ballotsets_info}]
 
         if t.pref('enable_postponements'):
             pcell = {'link': reverse_tournament('toggle_postponed', t, kwargs={'debate_id': d.id})}
@@ -86,6 +97,6 @@ class DebateResultCellsMixin:
             else:
                 pcell['text'] = 'Postpone'
 
-            ballot_cells.append(('postpone', pcell))
+            ballot_cells.append({'head': 'postpone'}, {'cell': pcell})
 
         return ballot_cells

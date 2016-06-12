@@ -64,18 +64,18 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
 
         draw_data = []
         for d in draw:
-            ddict = [self.status_cells(d)]
+            ddict = self.status_cells(d)
             ddict.extend(self.ballot_entry_cells(d, t))
-            ddict.append(('bracket', {'text': d.bracket}))
-            ddict.extend(self.venue_cells(d, t))
-            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
-            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
-            ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
+            # ddict.append(('bracket', {'text': d.bracket}))
+            # ddict.extend(self.venue_cells(d, t))
+            # ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
+            # ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
+            # ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
 
-            for value in ddict:
-                value[1]['cell-class'] = "test"
+            # for value in ddict:
+            #     value[1]['cell-class'] = "test"
 
-            draw_data.append(OrderedDict(ddict))
+            draw_data.append(ddict)
 
         kwargs["tableData"] = json.dumps(draw_data)
 
@@ -158,7 +158,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
                 if t.pref('show_motions_in_results'):
                     ddict.extend(self.motion_cells(d.confirmed_ballot.motion))
 
-                draw_data.append(OrderedDict(ddict))
+                draw_data.append(ddict)
 
         kwargs["draw"] = draw  # To deprecate
         kwargs["tableData"] = json.dumps(draw_data)

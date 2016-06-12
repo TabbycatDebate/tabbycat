@@ -64,7 +64,7 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
         if not t.pref('enable_divisions'):
             ddict.extend(self.adjudicators_cells(d, t, show_splits=False))
 
-        return OrderedDict(ddict)
+        return ddict
 
     def get_context_data(self, **kwargs):
         round = self.get_round()

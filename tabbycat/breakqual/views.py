@@ -46,7 +46,7 @@ class PublicBreakingTeams(PublicTournamentPageMixin, PublicCacheMixin, VueTableM
             ddict.extend(self.ranking_cells(info))
             ddict.extend(self.team_cells(info.team, t))
             ddict.extend(self.metric_cells(info.metrics))
-            teams_data.append(OrderedDict(ddict))
+            teams_data.append(ddict)
 
         self.page_title = bc.name
         kwargs["tableData"] = json.dumps(teams_data)
@@ -127,7 +127,7 @@ class BreakingAdjudicators(TournamentMixin, VueTableMixin, HeadlessTemplateView)
 
         adjs_data = []
         for adj in Adjudicator.objects.filter(breaking=True, tournament=t):
-            adjs_data.append(OrderedDict(self.adj_cells(adj, t)))
+            adjs_data.append(self.adj_cells(adj, t))
 
         kwargs["tableData"] = json.dumps(adjs_data)
         return super().get_context_data(**kwargs)
