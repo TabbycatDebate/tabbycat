@@ -144,10 +144,6 @@ table.table > tbody > tr > td.no-horizontal-spacing {
   margin-top: 0; // fixes button alignment easily
 }
 
-[data-toggle='tooltip'] {
-  cursor: pointer; // for tooltips
-}
-
 .alert-link {
   text-decoration: underline;
   font-weight: normal;

@@ -145,9 +145,9 @@ class VueTableMixin:
         if adj_type == DebateAdjudicator.TYPE_CHAIR:
             return "Ⓒ"
         elif adj_type == DebateAdjudicator.TYPE_PANEL:
-            return "Ⓣ"
-        else:
             return ""
+        else:
+            return "Ⓣ"
 
     def adj_cells(self, adjudicator, tournament):
         adj_info = [('Name', adjudicator.name)]
@@ -184,14 +184,15 @@ class VueTableMixin:
         })]
         return motion_info
 
-    def team_cells(self, team, tournament, break_categories=None, hide_institution=False, key='Team'):
+    def team_cells(self, team, tournament, break_categories=None, show_speakers=False, hide_institution=False, key='Team'):
         team_info = []
         team_info.append((key, {
             'text':     team.short_name,
             'emoji':    team.emoji if tournament.pref('show_emoji') else None,
-            'link':     reverse_tournament('team_speakers', tournament, kwargs={'team_id': team.id}),
             'sort':     team.short_name
         }))
+        if tournament.pref('show_speakers_in_draw') or show_speakers:
+            team_info[0][1]['tooltip'] = [" " + s.name for s in team.speakers]
 
         if break_categories is not None:
             team_info.append(('Categories', {'text': break_categories}))

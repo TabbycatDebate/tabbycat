@@ -9,12 +9,10 @@
         <th class="vue-sortable"
           v-for="key in gridColumns"
           v-on:click="sortBy(key)"
-          v-bind:class="{ 'vue-sort-active': sortKey == key}"
-        >
+          v-bind:class="{ 'vue-sort-active': sortKey == key}">
           [[ key | capitalize ]]
           <span class="glyphicon vue-sort-key pull-right"
-            :class="sortOrders[key] > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'"
-          >
+            :class="sortOrders[key] > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
           </span>
         </th>
       </tr>
@@ -22,31 +20,39 @@
     </thead>
     <tbody>
       <tr v-for="row in data | filterBy filterKey | caseInsensitiveOrderBy sortKey sortOrders[sortKey]" >
-        <td v-for="cellType in gridColumns"
-          :class="row[cellType]['cell-class']"
-          :title="row[cellType]['tooltip']">
+        <td v-for="cellType in gridColumns" :class="row[cellType]['cell-class']">
 
           <template v-if="typeof row[cellType] != 'object'">
 
             [[ row[cellType] ]]
 
           </template>
-
           <template v-else>
 
+            <!-- Sorting key -->
             <span v-if="row[cellType]['sort']" class="hidden">
               [[ row[cellType]["sort"] ]]
             </span>
 
+            <!-- Icons or Emoji -->
             <span v-if="row[cellType]['icon']" class="glyphicon" :class="row[cellType]['icon']">
             </span>
             <span class="emoji" v-if="row[cellType]['emoji']">
               [[ row[cellType]["emoji"] ]]
             </span>
-            <a v-if="row[cellType]['link']" :href="row[cellType]['link']" >
-              <span v-html="row[cellType]['text']"></span>
-            </a>
-            <span v-else v-html="row[cellType]['text']"></span>
+
+            <!-- Tooltip Hovers -->
+            <span :title="row[cellType]['tooltip']"
+                  :data-toggle="row[cellType]['tooltip'] ? 'tooltip' : null"
+                  :v-on:hover="row[cellType]['tooltip'] ? showTooltip  : null">
+
+              <!-- Text (with link if needed) -->
+              <a v-if="row[cellType]['link']" :href="row[cellType]['link']" >
+                <span v-html="row[cellType]['text']"></span>
+              </a>
+              <span v-else v-html="row[cellType]['text']"></span>
+
+            </span>
 
           </template>
 
@@ -120,6 +126,9 @@
         this.sortKey = key
         this.sortOrders[key] = this.sortOrders[key] * -1
       },
+      showTooltip: function(event) {
+        $(event.target).tooltip('show')
+      }
     },
     computed: {
       gridColumns: function() {

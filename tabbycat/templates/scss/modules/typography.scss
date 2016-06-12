@@ -49,3 +49,16 @@
 .nav-tabs a {
   letter-spacing: .5px;
 }
+
+// Tooltips
+[data-toggle='tooltip'] {
+  &:hover {
+    cursor: pointer; // for tooltips
+    span {
+      border-color: $brand-primary;
+    }
+  }
+  span {
+    border-bottom: 2px dotted #ccc;
+  }
+}

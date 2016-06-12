@@ -68,8 +68,8 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             ddict.extend(self.ballot_entry_cells(d, t))
             ddict.append(('bracket', {'text': d.bracket}))
             ddict.extend(self.venue_cells(d, t))
-            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", hide_institution=True))
-            ddict.extend(self.team_cells(d.neg_team, t, key="negative", hide_institution=True))
+            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
+            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
             ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
 
             for value in ddict:
