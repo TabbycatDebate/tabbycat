@@ -91,7 +91,7 @@ class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, PublicTournamentP
     model = Adjudicator
 
     def get_formset(self):
-        ShiftFormSet = modelformset_factory(DebateAdjudicator, can_delete=False,
+        ShiftFormSet = modelformset_factory(DebateAdjudicator, can_delete=False, # flake8: noqa
                 extra=0, fields=['timing_confirmed'])
 
         if self.request.method in ('POST', 'PUT'):
