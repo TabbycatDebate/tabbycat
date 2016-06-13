@@ -601,6 +601,15 @@ class PublicTeamStandings(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class PublicSummaryPages(BooleanPreference):
+    help_text = "Enables the public page for each team and adjudicator showing a summary of information for them"
+    verbose_name = "Enable public summary pages"
+    section = public_features
+    name = "public_summary"
+    default = False
+
+
+@tournament_preferences_registry.register
 class PublicBreakingTeams(BooleanPreference):
     help_text = "Enables the public page showing the team breaks. Intended for use after the break announcement."
     verbose_name = "Release team breaks to public"

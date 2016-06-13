@@ -7,6 +7,13 @@ urlpatterns = [
         views.PublicParticipantsListView.as_view(),
         name='participants-public-list'),
 
+    url(r'^team/(?P<pk>\d+)/$',
+        views.PublicTeamSummaryView.as_view(),
+        name='participants-public-team-summary'),
+    url(r'^adjudicator/(?P<pk>\d+)/$',
+        views.PublicAdjudicatorSummaryView.as_view(),
+        name='participants-public-adjudicator-summary'),
+
     url(r'^team_list/(?P<team_id>\d+)/$',
         views.TeamSpeakersJsonView.as_view(),
         name='participants-team-speakers'),
