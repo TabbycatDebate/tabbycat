@@ -54,6 +54,9 @@
 
     </thead>
     <tbody>
+
+      <h4 v-if="typeof tableContent[0] === 'undefined'">No Data Available</h4>
+
       <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder" >
         <td v-for="(cellIndex, cell) in row" :class="cell['cell-class'] ? cell['cell-class'] : null">
 
@@ -62,17 +65,17 @@
               [[ cell["sort"] ]]
             </span>
 
+            <!-- Icons or Emoji -->
+            <span v-if="cell['icon']" class="glyphicon" :class="cell['icon']">
+            </span>
+            <span class="emoji" v-if="cell['emoji']">
+              [[ cell["emoji"] ]]
+            </span>
+
             <!-- Tooltip Hovers Wrapper -->
             <span :title="cell['tooltip']"
                   :data-toggle="cell['tooltip'] ? 'tooltip' : null"
                   :v-on:hover="cell['tooltip'] ? showTooltip  : null">
-
-              <!-- Icons or Emoji -->
-              <span v-if="cell['icon']" class="glyphicon" :class="cell['icon']">
-              </span>
-              <span class="emoji" v-if="cell['emoji']">
-                [[ cell["emoji"] ]]
-              </span>
 
               <!-- Text (with link if needed) -->
               <a v-if="cell['link']" :href="cell['link']" >
@@ -129,9 +132,11 @@
       getDefaultSortIndex: function() {
         // Find the index of the column that matches the default sorting key
         var index = null
-        for (var i = 0; i < this.tableContent[0].length; i++) {
-          if (this.tableContent[0][i]['head'].key === this.defaultSortKey) {
-            index = i
+        if (typeof(this.tableContent[0]) !== 'undefined') { // Check table is not empty
+          for (var i = 0; i < this.tableContent[0].length; i++) {
+            if (this.tableContent[0][i]['head'].key === this.defaultSortKey) {
+              index = i
+            }
           }
         }
         return index
@@ -164,10 +169,12 @@
         return rows;
       },
       headers: function() {
+        // For each cell in the rows push its head value to a consolidated list
         var headers = [];
-        // For each cell in the rows; push its head value to a consolidated list
-        for (var i = 0; i < this.tableContent[0].length; i++) {
-          headers.push(this.tableContent[0][i]['head'])
+        if (typeof(this.tableContent[0]) !== 'undefined') { // Check table is not empty
+          for (var i = 0; i < this.tableContent[0].length; i++) {
+            headers.push(this.tableContent[0][i]['head'])
+          }
         }
         return headers
       },

@@ -86,6 +86,8 @@ class StandingsView(RoundMixin, VueTableMixin):
         }
         if hasattr(ranking_or_metric_info, 'glyphicon'):
             iterator_cell['head']['icon'] = ranking_or_metric_info['glyphicon']
+        elif ranking_or_metric_info['abbr'] is "Rk":
+            iterator_cell['head']['icon'] = 'glyphicon-signal'
 
         return iterator_cell
 

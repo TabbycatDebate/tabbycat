@@ -239,7 +239,7 @@ class VueTableMixin:
             })
         if tournament.pref('show_institutions') and not hide_institution:
             team_info.append({
-                'head': {'key': 'Institution', 'icon': "glyphicon glyphicon-home"},
+                'head': {'key': 'Institution'},
                 'cell': {'text': team.institution.code}
             })
         return team_info
