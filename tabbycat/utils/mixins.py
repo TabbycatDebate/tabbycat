@@ -159,7 +159,6 @@ class VueTableMixin:
         }]
         return round_info
 
-
     def adj_cells(self, adjudicator, tournament):
 
         adj_info = [{

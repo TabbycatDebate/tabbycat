@@ -274,7 +274,7 @@ class BaseMotionStandingsView(RoundMixin, TemplateView, VueTableMixin):
     sort_key = 'Round'
 
     def get_context_data(self, **kwargs):
-        r = round=self.get_round()
+        r = self.get_round()
         t = self.get_tournament()
         motions_data = []
         for motion in motion_statistics.statistics(round=r):
@@ -305,8 +305,6 @@ class BaseMotionStandingsView(RoundMixin, TemplateView, VueTableMixin):
         kwargs["tableData"] = json.dumps(motions_data)
 
         return super().get_context_data(**kwargs)
-
-
 
 
 class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
