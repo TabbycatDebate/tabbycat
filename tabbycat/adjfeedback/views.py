@@ -472,7 +472,6 @@ class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixi
             ddict.extend(self.adj_cells(adj, t))
             adjs_progress_data.append(ddict)
 
-
         kwargs["tableDataA"] = json.dumps(teams_progress_data)
         kwargs["tableDataB"] = json.dumps(adjs_progress_data)
 
