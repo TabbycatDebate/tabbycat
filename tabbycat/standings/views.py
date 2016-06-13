@@ -69,21 +69,27 @@ class StandingsView(RoundMixin, VueTableMixin):
     def format_iterators(self, key, value, infos):
         """Shared function for creating cells from metrics or ranks"""
         ranking_or_metric_info = [r for r in infos if r['key'] == key][0]
-
-        if isinstance(value, float):
-            rank_or_metric = self.format_cell_number(value)  # Metric
-        elif isinstance(value, int):
-            rank_or_metric = value  # Metric
-        else:
-            rank_or_metric = str(value[0]) if len(value) > 1 else 'N/A' # Rank
-            rank_or_metric += '=' if value[1] else ''
-
         iterator_cell = {
             'head': {
                 'key': ranking_or_metric_info['abbr'],
                 'tooltip': ranking_or_metric_info['name']},
-            'cell': {'text': rank_or_metric}
+            'cell': {}
         }
+
+        if isinstance(value, float):
+            iterator_cell['cell']['text'] = self.format_cell_number(value)  # Metric
+        elif isinstance(value, int):
+            iterator_cell['cell']['text'] = value  # Metric
+        elif isinstance(value, tuple) and len(value) == 2:
+            if value[0] is not None:
+                iterator_cell['cell']['text'] = str(value[0]) + ('=' if value[1] else '')
+                iterator_cell['cell']['sort'] = value[0]
+            else:
+                iterator_cell['cell']['text'] = 'N/A'
+                iterator_cell['cell']['sort'] = ''
+        else:
+            iterator_cell['cell']['text'] = '<error>' # should never happen
+
         if hasattr(ranking_or_metric_info, 'glyphicon'):
             iterator_cell['head']['icon'] = ranking_or_metric_info['glyphicon']
         elif ranking_or_metric_info['abbr'] is "Rk":
