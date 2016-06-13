@@ -62,17 +62,3 @@
   </div>
 </div>
 {% endblock content %}
-
-{% block extra-js %}
-  <script type="text/javascript">
-    $(document).ready( function() {
-      var dTable = $('#draw').DataTable({
-        "aaSorting": [[ 0, "asc" ],[ 1, "asc" ]],
-      });
-      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
-      $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
-      })
-    });
-  </script>
-{% endblock extra-js %}
