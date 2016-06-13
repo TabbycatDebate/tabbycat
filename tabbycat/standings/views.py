@@ -76,19 +76,17 @@ class StandingsView(RoundMixin, VueTableMixin):
             'cell': {}
         }
 
-        if isinstance(value, float):
-            iterator_cell['cell']['text'] = self.format_cell_number(value)  # Metric
-        elif isinstance(value, int):
-            iterator_cell['cell']['text'] = value  # Metric
-        elif isinstance(value, tuple) and len(value) == 2:
+        if isinstance(value, tuple) and len(value) == 2:  # Rank
             if value[0] is not None:
                 iterator_cell['cell']['text'] = str(value[0]) + ('=' if value[1] else '')
                 iterator_cell['cell']['sort'] = value[0]
             else:
                 iterator_cell['cell']['text'] = 'N/A'
                 iterator_cell['cell']['sort'] = ''
+        elif isinstance(value, float):  # Metric
+            iterator_cell['cell']['text'] = self.format_cell_number(value)
         else:
-            iterator_cell['cell']['text'] = '<error>' # should never happen
+            iterator_cell['cell']['text'] = str(value)
 
         if hasattr(ranking_or_metric_info, 'glyphicon'):
             iterator_cell['head']['icon'] = ranking_or_metric_info['glyphicon']
