@@ -124,12 +124,12 @@ class AdjudicatorSummaryView(BaseSummaryView):
     template_name = 'adjudicator_summary.html'
 
 
-class PublicTeamSummaryView(TeamSummaryView):
-    pass
+class PublicTeamSummaryView(PublicTournamentPageMixin, TeamSummaryView):
+    public_page_preference = 'public_summary'
 
 
-class PublicAdjudicatorSummaryView(AdjudicatorSummaryView):
-    pass
+class PublicAdjudicatorSummaryView(PublicTournamentPageMixin, AdjudicatorSummaryView):
+    public_page_preference = 'public_summary'
 
 
 # ==============================================================================
