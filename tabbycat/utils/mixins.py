@@ -148,6 +148,18 @@ class VueTableMixin:
         else:
             return "Ⓣ"
 
+    def round_cells(self, round):
+        round_info = [{
+            'head': {'key': 'Round'},
+            'cell': {
+                'sort': round.seq,
+                'text': round.abbreviation,
+                'tooltip': round.name
+            }
+        }]
+        return round_info
+
+
     def adj_cells(self, adjudicator, tournament):
 
         adj_info = [{
@@ -192,11 +204,19 @@ class VueTableMixin:
         }]
         return adjs_info
 
-    def motion_cells(self, motion, key='Motion'):
-        motion_info = [{
+    def motion_cells(self, motion, tournament, key='Motion'):
+        motion_info = []
+
+        if tournament.pref('enable_motions'):
+            motion_info.append({
+                'head': {'key': 'Order'},
+                'cell': {'text': motion.seq}
+            })
+
+        motion_info.append({
             'head': {'key': key},
             'cell': {'text': motion.reference, 'tooltip': motion.text}
-        }]
+        })
         return motion_info
 
     def team_cells(self, team, tournament, break_categories=None, show_speakers=False, hide_institution=False, key='Team'):
@@ -228,9 +248,11 @@ class VueTableMixin:
             'cell': {'text': speaker.name}
         }]
         if tournament.pref('show_novices'):
+            icon = "glyphicon-ok" if speaker.novice else "glyphicon-remove"
+            sort = 1 if speaker.novice else 0
             speaker_info.append({
                 'head': {'key': 'Novice'},
-                'cell': {'icon': "glyphicon-ok" if speaker.novice else "glyphicon-remove"}
+                'cell': {'icon': icon, 'sort': sort}
             })
 
         return speaker_info

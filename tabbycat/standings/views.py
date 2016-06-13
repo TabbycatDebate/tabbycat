@@ -11,7 +11,7 @@ from participants.models import Speaker, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import HeadlessTemplateView, SuperuserRequiredMixin, VueTableMixin
 
 from .diversity import get_diversity_data_sets
 from .teams import TeamStandingsGenerator
@@ -269,20 +269,56 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 # Motion standings
 # ==============================================================================
 
-class BaseMotionStandingsView(RoundMixin, TemplateView):
+class BaseMotionStandingsView(RoundMixin, TemplateView, VueTableMixin):
+
+    sort_key = 'Round'
 
     def get_context_data(self, **kwargs):
-        kwargs["motions"] = motion_statistics.statistics(round=self.get_round())
+        r = round=self.get_round()
+        t = self.get_tournament()
+        motions_data = []
+        for motion in motion_statistics.statistics(round=r):
+            ddict = []
+            ddict.extend(self.round_cells(motion.round))
+            ddict.extend(self.motion_cells(motion, t))
+            ddict.append({
+                'head': {'key': 'Selected'},
+                'cell': {'text': motion.chosen_in}
+            })
+            if t.pref('motion_vetoes_enabled'):
+                ddict.extend([{
+                    'head': {'key': 'Aff Vetoes'},
+                    'cell': {'text': motion.aff_vetoes}
+                },{
+                    'head': {'key': 'Neg Vetoes'},
+                    'cell': {'text': motion.neg_vetoes}
+                }])
+            ddict.extend([{
+                'head': {'key': 'Aff Wins'},
+                'cell': {'text': motion.aff_wins}
+            },{
+                'head': {'key': 'Neg Wins'},
+                'cell': {'text': motion.neg_wins}
+            }])
+            motions_data.append(ddict)
+
+        kwargs["tableData"] = json.dumps(motions_data)
+
         return super().get_context_data(**kwargs)
+
+
 
 
 class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
     template_name = 'motions.html'
 
 
-class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
+class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView, HeadlessTemplateView):
+
     public_page_preference = 'motion_tab_released'
-    template_name = 'public_motions_tab.html'
+    template_name = 'base_vue_table.html'
+    page_title = 'Motions Tab'
+    page_emoji = '💭'
 
 
 # ==============================================================================

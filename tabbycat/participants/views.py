@@ -50,7 +50,7 @@ class PublicParticipants(PublicTournamentPageMixin, VueTableMixin, PublicCacheMi
         speakers_data = []
         speakers = Speaker.objects.filter(team__tournament=t).select_related('team', 'team__institution')
         for speaker in speakers:
-            ddict.extend(self.speaker_cells(speaker, t))
+            ddict = self.speaker_cells(speaker, t)
             ddict.extend(self.team_cells(speaker.team, t))
             speakers_data.append(ddict)
 
