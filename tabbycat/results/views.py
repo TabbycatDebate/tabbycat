@@ -113,7 +113,6 @@ def results(request, round):
 
 class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin, HeadlessTemplateView):
 
-    template_name = 'base_vue_table.html'
     public_page_preference = 'public_results'
     page_title = 'Results'
     page_emoji = '💥'

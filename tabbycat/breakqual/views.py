@@ -26,10 +26,7 @@ def public_break_index(request, t):
 
 class PublicBreakingTeams(PublicTournamentPageMixin, CacheMixin, VueTableMixin, HeadlessTemplateView):
 
-    template_name = 'base_vue_table.html'
-
     public_page_preference = 'public_breaking_teams'
-
     page_emoji = "👑"
 
     def get_context_data(self, **kwargs):
@@ -117,7 +114,6 @@ def update_breaking_teams(request, t, category):
 
 class BreakingAdjudicators(TournamentMixin, VueTableMixin, HeadlessTemplateView):
 
-    template_name = 'base_vue_table.html'
     page_title = 'Breaking Adjudicators'
     page_emoji = '🎉'
 

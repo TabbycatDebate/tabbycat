@@ -62,9 +62,9 @@ class PublicTabMixin(PublicTournamentPageMixin):
 # Shared standings
 # ==============================================================================
 
-class StandingsView(VueTableMixin, TemplateView):
+class StandingsView(RoundMixin, VueTableMixin):
 
-    sort_key = 'Rank'
+    sort_key = 'Rk'
 
     def format_iterators(self, key, value, infos):
         """Shared function for creating cells from metrics or ranks"""
@@ -93,7 +93,7 @@ class StandingsView(VueTableMixin, TemplateView):
 # Speaker standings
 # ==============================================================================
 
-class BaseSpeakerStandingsView(RoundMixin, StandingsView):
+class BaseSpeakerStandingsView(StandingsView, HeadlessTemplateView):
     """Base class for views that display speaker standings."""
 
     rankings = ('rank',)
@@ -149,6 +149,8 @@ class BaseSpeakerStandingsView(RoundMixin, StandingsView):
 
 class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
     """The standard speaker standings view."""
+    page_title = 'Speaker Tab'
+    page_emoji = '💯'
 
     def get_speakers(self):
         return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
@@ -174,50 +176,50 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
 
 
 class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsView):
-    template_name = 'speakers.html'
+    template_name = 'standings_base.html'
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
     public_page_preference = 'speaker_tab_released'
-    template_name = 'public_speaker_tab.html'
 
 
 class BaseNoviceStandingsView(BaseStandardSpeakerStandingsView):
     """Speaker standings view for novices."""
-
-    template_name = 'novices.html'
+    page_title = 'Novice Speaker Standings'
 
     def get_speakers(self):
         return super().get_speakers().filter(novice=True)
 
 
 class NoviceStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
-    template_name = 'novices.html'
+    template_name = 'standings_base.html'
 
 
 class PublicNoviceTabView(PublicTabMixin, BaseNoviceStandingsView):
     public_page_preference = 'novices_tab_released'
-    template_name = 'public_novices_tab.html'
 
 
 class BaseProStandingsView(BaseStandardSpeakerStandingsView):
     """Speaker standings view for non-novices (pro, varsity)."""
+
+    page_title = 'Pros Speaker Standings'
 
     def get_speakers(self):
         return super().get_speakers().filter(novice=False)
 
 
 class ProStandingsView(SuperuserRequiredMixin, BaseProStandingsView):
-    template_name = 'speakers.html'
+    template_name = 'standings_base.html'
 
 
 class PublicProTabView(PublicTabMixin, BaseProStandingsView):
     public_page_preference = 'pros_tab_released'
-    template_name = 'public_pros_tab.html'
 
 
-class BaseReplyStandingsView(BaseSpeakerStandingsView):
+class BaseReplyStandingsView(BaseSpeakerStandingsView, HeadlessTemplateView):
     """Speaker standings view for replies."""
+    page_title = 'Reply Speaker Standings'
+    page_emoji = '💁'
 
     def get_speakers(self):
         tournament = self.get_tournament()
@@ -243,22 +245,22 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
 
 class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
-    template_name = 'replies.html'
+    template_name = 'standings_base.html'
 
 
-class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
+class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView ):
     public_page_preference = 'replies_tab_released'
-    template_name = 'public_reply_tab.html'
 
 
 # ==============================================================================
 # Team standings
 # ==============================================================================
 
-class BaseTeamStandingsView(RoundMixin, StandingsView):
+class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
     """Base class for views that display team standings."""
 
-    sort_key = 'Rank'
+    page_title = 'Team Standings'
+    page_emoji = '👯'
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
@@ -324,13 +326,15 @@ class BaseTeamStandingsView(RoundMixin, StandingsView):
 class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     """The standard team standings view."""
     rankings = ('rank',)
-    template_name = 'teams.html'
+    template_name = 'standings_base.html'
 
 
 class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
-    template_name = 'divisions.html'
+    page_title = 'Division Standings'
+    page_emoji = '👯'
+    template_name = 'standings_base.html'
 
 
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
@@ -341,19 +345,17 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     "team tab"."""
     public_page_preference = 'team_tab_released'
     rankings = ('rank',)
-    template_name = 'public_team_tab.html'
-
-    def show_ballots(self):
-        return self.get_tournament().pref('ballots_released')
 
 
 # ==============================================================================
 # Motion standings
 # ==============================================================================
 
-class BaseMotionStandingsView(RoundMixin, TemplateView, VueTableMixin):
+class BaseMotionStandingsView(RoundMixin, VueTableMixin, HeadlessTemplateView):
 
     sort_key = 'Round'
+    page_title = 'Motions Tab'
+    page_emoji = '💭'
 
     def get_context_data(self, **kwargs):
         r = self.get_round()
@@ -390,24 +392,19 @@ class BaseMotionStandingsView(RoundMixin, TemplateView, VueTableMixin):
 
 
 class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
-    template_name = 'motions.html'
+    template_name = 'standings_base.html'
 
 
-class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView, HeadlessTemplateView):
-
+class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
     public_page_preference = 'motion_tab_released'
-    template_name = 'base_vue_table.html'
-    page_title = 'Motions Tab'
-    page_emoji = '💭'
 
 
 # ==============================================================================
 # Current team standings (win-loss records only)
 # ==============================================================================
 
-class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, TemplateView):
+class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, HeadlessTemplateView):
     public_page_preference = 'public_team_standings'
-    template_name = 'public_team_standings.html'
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()

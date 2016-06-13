@@ -112,6 +112,8 @@ class HeadlessTemplateView(TemplateView):
     """Mixin for views that sets context data for the page and html header
     directly into the base template, obviating the need for page templates in
     many instances"""
+    page_title = ''
+    page_emoji = ''
 
     def get_context_data(self, **kwargs):
 
@@ -129,6 +131,7 @@ class VueTableMixin:
      a team name row, but also institution/category status as needed)."""
 
     sort_key = ''
+    template_name = 'base_vue_table.html'
 
     def get_context_data(self, **kwargs):
         kwargs["sortKey"] = self.sort_key
