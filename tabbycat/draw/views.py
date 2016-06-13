@@ -20,7 +20,7 @@ from participants.models import Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Division, Round, Tournament
-from utils.mixins import PostOnlyRedirectView, PublicCacheMixin, SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableMixin
 from utils.misc import reverse_round
 from utils.views import admin_required, expect_post
 from utils.views import public_optional_tournament_view, redirect_round, round_view, tournament_view
@@ -87,18 +87,31 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
 # Creating Draw
 # ==============================================================================
 
-class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, PublicCacheMixin):
+class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, CacheMixin):
 
     public_page_preference = 'public_draw'
     sorting = 'venue'
 
+    def get_template_names(self):
+        round = self.get_round()
+        if round.draw_status != round.STATUS_RELEASED:
+            return ["public_draw_unreleased.html"]
+        else:
+            return super().get_template_names()
+
     def get_context_data(self, **kwargs):
         round = self.get_round()
         if round.draw_status != round.STATUS_RELEASED:
-            self.template = "public_draw_unreleased.html"
-            return
+            kwargs["round"] = self.get_round()
+            return super(DrawTablePage, self).get_context_data(**kwargs) # skip DrawTablePage
         else:
             return super().get_context_data(**kwargs)
+
+
+class PublicDrawForCurrentRound(PublicDrawForRound):
+
+    def get_round(self):
+        return self.get_tournament().current_round
 
 
 class AdminDrawForRoundByVenue(DrawTablePage, LoginRequiredMixin):

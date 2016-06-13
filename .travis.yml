@@ -9,7 +9,5 @@ services:
   - postgresql
 install:
   - pip install -r requirements_common.txt
-before_script:
-  - flake8 .
 script:
-  - cd tabbycat && dj test -v 2
+  - cd tabbycat && flake8 . && dj test -v 2

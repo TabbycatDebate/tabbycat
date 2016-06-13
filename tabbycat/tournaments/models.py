@@ -65,11 +65,11 @@ class Tournament(models.Model):
 
     @models.permalink
     def get_all_tournaments_all_institutions(self):
-        return ('all_tournaments_all_institutions', [self.slug])
+        return ('participants-all-tournaments-all-institutions', [self.slug])
 
     @models.permalink
     def get_all_tournaments_all_teams(self):
-        return ('all_tournaments_all_teams', [self.slug])
+        return ('participants-all-tournaments-all-teams', [self.slug])
 
     @cached_property
     def teams(self):

@@ -75,7 +75,7 @@ class SuperuserOrTabroomAssistantTemplateResponseMixin(LoginRequiredMixin, Templ
             return [self.assistant_template_name]
 
 
-class PublicCacheMixin:
+class CacheMixin:
     """Mixin for views that cache the page."""
 
     cache_timeout = settings.PUBLIC_PAGE_CACHE_TIMEOUT

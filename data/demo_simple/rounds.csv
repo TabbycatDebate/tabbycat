@@ -1,4 +1,4 @@
-seq,name,abbv,stage,type,is_silent
+seq,name,abbreviation,stage,draw_type,silent
 1,Round 1,R1,P,R,0
 2,Round 2,R2,P,P,0
 3,Round 3,R3,P,P,0
