@@ -250,7 +250,7 @@ class VueTableMixin:
             icon = "glyphicon-ok" if speaker.novice else "glyphicon-remove"
             sort = 1 if speaker.novice else 0
             speaker_info.append({
-                'head': {'key': 'Novice'},
+                'head': {'key': 'Novice', 'icon': 'glyphicon-leaf', 'tooltip': "Novice Status"},
                 'cell': {'icon': icon, 'sort': sort}
             })
 

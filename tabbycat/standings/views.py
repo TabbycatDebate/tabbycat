@@ -58,17 +58,47 @@ class PublicTabMixin(PublicTournamentPageMixin):
         # Never highlight missing results on public tab pages
         pass
 
+# ==============================================================================
+# Shared standings
+# ==============================================================================
+
+class StandingsView(VueTableMixin, TemplateView):
+
+    sort_key = 'Rank'
+
+    def format_iterators(self, key, value, infos):
+        """Shared function for creating cells from metrics or ranks"""
+        ranking_or_metric_info = [r for r in infos if r['key'] == key][0]
+
+        if isinstance(value, float):
+            rank_or_metric = self.format_cell_number(value)  # Metric
+        elif isinstance(value, int):
+            rank_or_metric = value  # Metric
+        else:
+            rank_or_metric = str(value[0]) if len(value) > 1 else 'N/A' # Rank
+            rank_or_metric += '=' if value[1] else ''
+
+        iterator_cell = {
+            'head': {
+                'key': ranking_or_metric_info['abbr'],
+                'tooltip': ranking_or_metric_info['name']},
+            'cell': {'text': rank_or_metric}
+        }
+        if hasattr(ranking_or_metric_info, 'glyphicon'):
+            iterator_cell['head']['icon'] = ranking_or_metric_info['glyphicon']
+
+        return iterator_cell
 
 # ==============================================================================
 # Speaker standings
 # ==============================================================================
 
-class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
+class BaseSpeakerStandingsView(RoundMixin, StandingsView):
     """Base class for views that display speaker standings."""
 
     rankings = ('rank',)
 
-    def get(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
         round = self.get_round()
 
@@ -83,9 +113,31 @@ class BaseSpeakerStandingsView(RoundMixin, ContextMixin, View):
         rounds = tournament.prelim_rounds(until=round).order_by('seq')
         self.add_round_results(standings, rounds)
         self.populate_result_missing(standings)
-        context = self.get_context_data(standings=standings, rounds=rounds)
 
-        return render(request, self.template_name, context)
+        standings_data = []
+        for standing in standings:
+            ddict = []
+
+            for key, value in zip(standings.ranking_keys, standing.iterrankings()):
+                ddict.append(self.format_iterators(key, value, standings.rankings_info()))
+
+            ddict.extend(self.speaker_cells(standing.speaker, tournament))
+            ddict.extend(self.team_cells(standing.speaker.team, tournament))
+
+            for round, score in zip(rounds, standing.scores):
+                ddict.append({
+                    'head': {'key': round.abbreviation},
+                    'cell': {'text': self.format_cell_number(score)}
+                })
+
+            for key, value in zip(standings.metric_keys, standing.itermetrics()):
+                ddict.append(self.format_iterators(key, value, standings.metrics_info()))
+
+            standings_data.append(ddict)
+
+        kwargs["tableData"] = json.dumps(standings_data)
+
+        return super().get_context_data(**kwargs)
 
     def get_rank_filter(self):
         return None
@@ -203,20 +255,12 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
 # Team standings
 # ==============================================================================
 
-class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
+class BaseTeamStandingsView(RoundMixin, StandingsView):
     """Base class for views that display team standings."""
 
+    sort_key = 'Rank'
+
     def get_context_data(self, **kwargs):
-        if 'show_ballots' not in kwargs:
-            kwargs['show_ballots'] = self.show_ballots()
-        if 'round' not in kwargs:
-            kwargs['round'] = self.get_round()
-        return super().get_context_data(**kwargs)
-
-    def show_ballots(self):
-        return False
-
-    def get(self, request, *args, **kwargs):
         tournament = self.get_tournament()
         round = self.get_round()
 
@@ -230,9 +274,47 @@ class BaseTeamStandingsView(RoundMixin, ContextMixin, View):
         add_team_round_results(standings, rounds)
         self.populate_result_missing(standings)
 
-        context = self.get_context_data(standings=standings, rounds=rounds)
+        teams_data = []
+        for standing in standings:
+            ddict = []
 
-        return render(request, self.template_name, context)
+            for key, value in zip(standings.ranking_keys, standing.iterrankings()):
+                ddict.append(self.format_iterators(key, value, standings.rankings_info()))
+
+            ddict.extend(self.team_cells(standing.team, tournament))
+
+            for round, team_score in zip(rounds, standing.round_results):
+
+                rr = {'head': {'key': round.abbreviation}, 'cell': {'text': ''}}
+                if team_score:
+                    if team_score.win:
+                        rr['cell']['icon'] = "glyphicon-arrow-up text-success"
+                        rr['cell']['tooltip'] = "Won against "
+                    else:
+                        rr['cell']['icon'] = "glyphicon-arrow-up text-danger"
+                        rr['cell']['tooltip'] = "Lost to "
+
+                    rr['cell']['text'] += "vs " + team_score.opposition.emoji + "  " + self.format_cell_number(team_score.score)
+                    rr['cell']['tooltip'] += team_score.opposition.short_name + " and received " + self.format_cell_number(team_score.score) + " total speaks"
+
+                ddict.append(rr)
+
+            for key, value in zip(standings.metric_keys, standing.itermetrics()):
+                ddict.append(self.format_iterators(key, value, standings.metrics_info()))
+
+            teams_data.append(ddict)
+
+        # if 'show_ballots' not in kwargs:
+        #     kwargs['show_ballots'] = self.show_ballots()
+        # if 'round' not in kwargs:
+        #     kwargs['round'] = self.get_round()
+
+        kwargs["tableData"] = json.dumps(teams_data)
+
+        return super().get_context_data(**kwargs)
+
+    def show_ballots(self):
+        return False
 
     def populate_result_missing(self, standings):
         for info in standings:

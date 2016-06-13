@@ -37,24 +37,10 @@
       </thead>
       <tbody>
       {% for team in teams %}
-      <tr>
-        {% if pref.enable_divisions %}
-          <td>{{ team.division.name }}</td>
-        {% endif %}
-        <td>
-          {% include "tables/team.html" with team=team %}
-        </td>
-        {% if pref.show_emoji %}
-          <td class="team-emoji">{{ team.emoji }}</td>
-        {% endif %}
-        {% if pref.show_institutions %}
-          <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
-        {% endif %}
-        {% if pref.enable_divisions %}
-          <td>{{ team.points }}</td>
-        {% endif %}
-        <td>{{ team.wins }}</td>
+
+
         {% for round_results in team.round_results %}
+
           {% if round_results.win >= 0 %}
             <td>
               {% if round_results.score == 0 %}
@@ -76,6 +62,7 @@
           {% else %}
             <td></td>
           {% endif %}
+
         {% endfor %}
 
       </tr>

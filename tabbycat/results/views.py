@@ -157,7 +157,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
                 ddict.extend(self.adjudicators_cells(d, t, show_splits=False))
 
                 if t.pref('show_motions_in_results'):
-                    ddict.extend(self.motion_cells(d.confirmed_ballot.motion))
+                    ddict.extend(self.motion_cells(d.confirmed_ballot.motion, t))
 
                 draw_data.append(ddict)  # Only one team's result per line
 
