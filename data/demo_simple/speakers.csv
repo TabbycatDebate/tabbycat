@@ -1,4 +1,4 @@
-name,institution,team_name,use_team_name_as_prefix
+name,institution,team_name,use_institution_prefix
 Georgia Crawford,RMIT University,1,1
 Wanda Griffin,RMIT University,1,1
 Helen Keller,RMIT University,1,1
@@ -14,9 +14,9 @@ Robin Roberson,Melbourne University,1,1
 Gwen Newman,Monash University,1,1
 Robyn Caldwell,Monash University,1,1
 Angie Holt,Monash University,1,1
-Melvin Jordan,Victoria University,1,
-Gladys Burke,Victoria University,1,
-Patty Saunders,Victoria University,1,
+Melvin Jordan,Victoria University,1,1
+Gladys Burke,Victoria University,1,1
+Patty Saunders,Victoria University,1,1
 Thomas Pierce,Victoria University,2,1
 Stella Lindsey,Victoria University,2,1
 Adrian May,Victoria University,2,1
