@@ -22,11 +22,11 @@
     </ul>
 
     <p class="navbar-text small">
-      {% if tournament %}{{ tournament }} runs on {% endif %}
+      {% if tournament %}{{ tournament }} runs on {% else %}Running on {% endif %}
       <a href="https://github.com/czlee/tabbycat/" target="_new">
-        <span class="emoji">😸</span>Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }})
-      </a> created by Qi-Shan,
-      <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, &
+        <span class="emoji">😸</span>Tabbycat{% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}</a>
+       created by Qi-Shan,
+      <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, and
       <a href="http://philipbelesky.com" target="_new">Philip</a>.
       Want to <a href="http://tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-way" target="_new">setup your own copy?</a>
       <br>
