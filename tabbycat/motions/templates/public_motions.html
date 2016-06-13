@@ -91,23 +91,3 @@
 
   </div>
 {% endblock content %}
-
-{% block extra-js %}
-{% if pref.enable_divisions and pref.enable_division_motions %}
-  <script type="text/javascript">
-    $(document).ready( function() {
-      var dTable = $("#dataTable").DataTable({
-        "aaSorting": [[1, 'asc'], [2, 'asc']],
-        "aoColumnDefs": [
-          {"iDataSort": 0, "aTargets": [1] }, //sort based on a hidden column when another column is clicked
-          { "bVisible": false, "aTargets": [0] }, //set column visibility
-        ],
-      });
-      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
-      $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
-      })
-    });
-  </script>
-{% endif %}
-{% endblock extra-js %}

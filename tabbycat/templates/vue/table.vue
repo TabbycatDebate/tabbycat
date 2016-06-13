@@ -96,10 +96,6 @@
   Vue.filter('caseInsensitiveOrderBy', function (arr, sortIndex, reverse) {
     // This is basically a copy of Vue's native orderBy except we are overriding
     // the last part to see if the cell has custom sort attributes
-    if (!sortIndex) {
-      return arr
-    }
-
     var order = (reverse && reverse < 0) ? -1 : 1
     // sort on a copy to avoid mutating original array
     return arr.slice().sort(function (a, b) {
