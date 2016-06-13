@@ -7,7 +7,7 @@ from . import views
 urlpatterns = [
     # Overviews
     url(r'^feedback_progress/$',
-        views.public_feedback_progress,
+        views.PublicFeedbackProgress.as_view(),
         name='public_feedback_progress'),
 
     # Submission via Public Form

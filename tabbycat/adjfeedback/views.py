@@ -1,13 +1,11 @@
 import json
 
-from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
-from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormView
@@ -19,15 +17,16 @@ from participants.models import Adjudicator, Team
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
 from results.models import SpeakerScoreByAdj
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
-from tournaments.models import Round
+
 from utils.misc import reverse_tournament
 from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
-from utils.mixins import PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin
+from utils.mixins import HeadlessTemplateView, PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin, VueTableMixin
 from utils.urlkeys import populate_url_keys
-from utils.views import admin_required, public_optional_tournament_view, tournament_view
+from utils.views import admin_required, tournament_view
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
+from .progress import get_feedback_progress, progress_cells
 from .utils import gather_adj_feedback, gather_adj_scores
 
 
@@ -448,70 +447,44 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
         adjudicator.save()
 
 
-def get_feedback_progress(request, t):
-    def calculate_coverage(submitted, total):
-        if total == 0 or submitted == 0:
-            return 0  # Avoid divide-by-zero error
-        else:
-            return int(submitted / total * 100)
+class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixin, HeadlessTemplateView):
 
-    feedback = AdjudicatorFeedback.objects.select_related(
-        'source_adjudicator__adjudicator', 'source_team__team').all()
-    adjudicators = Adjudicator.objects.filter(tournament=t)
-    adjudications = list(
-        DebateAdjudicator.objects.select_related('adjudicator', 'debate').filter(
-            debate__round__stage=Round.STAGE_PRELIMINARY))
-    teams = Team.objects.filter(tournament=t)
+    template_name = 'base_double_vue_table.html'
+    page_title = "Missing Feedback Ballots"
+    page_emoji = "🆘"
+    sort_key = 'Coverage'
 
-    # Teams only owe feedback on non silent rounds
-    rounds_owed = t.round_set.filter(
-        silent=False, stage=Round.STAGE_PRELIMINARY, draw_status=t.current_round.STATUS_RELEASED).count()
+    def get_context_data(self, **kwargs):
+        t = self.get_tournament()
+        team_progress, adj_progress = get_feedback_progress(t)
 
-    for adj in adjudicators:
-        adj.total_ballots = 0
-        adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator=adj)
-        adjs_adjudications = [a for a in adjudications if a.adjudicator == adj]
+        teams_progress_data = []
+        for team in team_progress:
+            ddict = []
+            ddict.extend(progress_cells(team))
+            ddict.extend(self.team_cells(team, t))
+            teams_progress_data.append(ddict)
 
-        for item in adjs_adjudications:
-            # Finding out the composition of their panel, tallying owed ballots
-            if item.type == item.TYPE_CHAIR:
-                adj.total_ballots += len(item.debate.adjudicators.trainees)
-                adj.total_ballots += len(item.debate.adjudicators.panel)
-
-            if item.type == item.TYPE_PANEL:
-                # Panelists owe on chairs
-                adj.total_ballots += 1
-
-            if item.type == item.TYPE_TRAINEE:
-                # Trainees owe on chairs
-                adj.total_ballots += 1
-
-        adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
-        adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
-        adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
-
-    for team in teams:
-        team.submitted_ballots = max(feedback.filter(source_team__team=team).count(), 0)
-        team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
-        team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
-
-    return {'teams': teams, 'adjs': adjudicators}
+        adjs_progress_data = []
+        for adj in adj_progress:
+            ddict = []
+            ddict.extend(progress_cells(team))
+            ddict.extend(self.adj_cells(adj, t))
+            adjs_progress_data.append(ddict)
 
 
-@admin_required
-@tournament_view
-def feedback_progress(request, t):
-    progress = get_feedback_progress(request, t)
-    return render(request, 'feedback_progress.html',
-                  dict(teams=progress['teams'], adjudicators=progress['adjs']))
+        kwargs["tableDataA"] = json.dumps(teams_progress_data)
+        kwargs["tableDataB"] = json.dumps(adjs_progress_data)
+
+        return super().get_context_data(**kwargs)
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('feedback_progress')
-def public_feedback_progress(request, t):
-    progress = get_feedback_progress(request, t)
-    return render(request, 'public_feedback_progress.html',
-                  dict(teams=progress['teams'], adjudicators=progress['adjs']))
+class FeedbackProgress(BaseFeedbackProgress):
+    template_name = 'feedback_progress.html'
+
+
+class PublicFeedbackProgress(BaseFeedbackProgress, PublicTournamentPageMixin, CacheMixin):
+    public_page_preference = 'feedback_progress'
 
 
 class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):

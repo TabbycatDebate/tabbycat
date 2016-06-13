@@ -10,7 +10,7 @@ urlpatterns = [
         views.feedback_overview,
         name='adjfeedback-overview'),
     url(r'^progress/$',
-        views.feedback_progress,
+        views.FeedbackProgress.as_view(),
         name='feedback_progress'),
 
     # Getting/setting values

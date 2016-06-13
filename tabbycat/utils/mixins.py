@@ -172,17 +172,17 @@ class VueTableMixin:
             if adjudicator.adj_core:
                 adj_info.append({
                     'head': {'key': 'Institution'},
-                    'cell': {'text': "Adj Core / " + adjudicator.institution.name}
+                    'cell': {'text': "Adj Core / " + adjudicator.institution.code}
                 })
             elif adjudicator.independent:
                 adj_info.append({
                     'head': {'key': 'Institution'},
-                    'cell': {'text': "Independent / " + adjudicator.institution.name}
+                    'cell': {'text': "Independent / " + adjudicator.institution.code}
                 })
             else:
                 adj_info.append({
                     'head': {'key': 'Institution'},
-                    'cell': {'text': adjudicator.institution.name}
+                    'cell': {'text': adjudicator.institution.code}
                 })
         return adj_info
 

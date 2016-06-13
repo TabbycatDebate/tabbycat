@@ -1,9 +1,8 @@
 import json
 
 from django.db.models import Count
-from django.views.generic.base import ContextMixin, TemplateView, View
+from django.views.generic.base import TemplateView
 from django.conf import settings
-from django.shortcuts import render
 
 import motions.statistics as motion_statistics
 from motions.models import Motion
@@ -58,6 +57,7 @@ class PublicTabMixin(PublicTournamentPageMixin):
         # Never highlight missing results on public tab pages
         pass
 
+
 # ==============================================================================
 # Shared standings
 # ==============================================================================
@@ -88,6 +88,7 @@ class StandingsView(RoundMixin, VueTableMixin):
             iterator_cell['head']['icon'] = ranking_or_metric_info['glyphicon']
 
         return iterator_cell
+
 
 # ==============================================================================
 # Speaker standings
@@ -248,7 +249,7 @@ class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
     template_name = 'standings_base.html'
 
 
-class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView ):
+class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
     public_page_preference = 'replies_tab_released'
 
 
