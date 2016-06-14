@@ -44,6 +44,7 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
     template_name = 'feedback_overview.html'
     page_title = 'Adjudicator Feedback Summary'
     page_emoji = '🙅'
+    sort_key = 'Score'
 
     def get_adjudicators(self):
         t = self.get_tournament()
@@ -126,38 +127,52 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
 
 
 
-class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, TemplateView):
+class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):
 
-    template_name = "adjudicator_source_list.html"
+    template_name = "feedback_base.html"
+    tables_titles = ['From Teams', 'From Adjudicators', 'On Adjudicators']
+    page_title = 'Find Feedback'
+    page_emoji = '🔍'
+    sort_key = 'Feedbacks'
 
-    def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
+    def get_tables_data(self):
+        t = self.get_tournament()
+
         teams_data = []
-        for team in Team.objects.filter(tournament=tournament):
-            feedbacks = AdjudicatorFeedback.objects.filter(source_team__team=team).select_related(
-                'source_team__team').count()
-            teams_data.append({
-                'name': team.short_name,
-                'institution': team.institution.name,
-                'count': "%s Feedbacks" % feedbacks,
-                'feedback': reverse_tournament('adjfeedback-view-from-team', tournament, kwargs={'pk': team.pk}),
-            })
+        for team in Team.objects.filter(tournament=t):
+            ddict = self.team_cells(team, t)
 
-        adjs_data = []
-        for adj in Adjudicator.objects.filter(tournament=tournament):
+            feedbacks = AdjudicatorFeedback.objects.filter(
+                source_team__team=team).select_related(
+                'source_team__team').count()
+            ddict.append({
+                'head': {'key': 'Feedbacks'},
+                'cell': {
+                    'text': "%s Feedbacks" % feedbacks,
+                    'link': reverse_tournament('adjfeedback-view-from-team', t, kwargs={'pk': team.id})
+                }
+            })
+            teams_data.append(ddict)
+
+        from_adjs_data = []
+        for adj in Adjudicator.objects.filter(tournament=t):
+            ddict = self.adj_cells(adj, t)
+
             feedbacks = AdjudicatorFeedback.objects.filter(
                 source_adjudicator__adjudicator=adj).select_related(
                 'source_adjudicator__adjudicator').count(),
-            adjs_data.append({
-                'name': adj.name,
-                'institution': adj.institution.name,
-                'feedbacks': "%s Feedbacks" % feedbacks,
-                'rowLink': reverse_tournament('adjfeedback-view-from-adjudicator', tournament, kwargs={'pk': adj.pk}),
+            ddict.append({
+                'head': {'key': 'Feedbacks'},
+                'cell': {
+                    'text': "%s Feedbacks" % feedbacks,
+                    'link': reverse_tournament('adjfeedback-view-from-adjudicator', t, kwargs={'pk': adj.id})
+                }
             })
+            from_adjs_data.append(ddict)
 
-        kwargs['teams'] = teams_data
-        kwargs['adjs'] = adjs_data
-        return super().get_context_data(**kwargs)
+        on_adjs_data = []
+
+        return [teams_data, from_adjs_data]
 
 
 class FeedbackCardsView(LoginRequiredMixin, TournamentMixin, TemplateView):
@@ -517,7 +532,7 @@ class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixi
 
 
 class FeedbackProgress(BaseFeedbackProgress):
-    template_name = 'feedback_progress.html'
+    template_name = 'feedback_base.html'
 
 
 class PublicFeedbackProgress(BaseFeedbackProgress, PublicTournamentPageMixin, CacheMixin):

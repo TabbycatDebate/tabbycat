@@ -1,35 +1,9 @@
-{% extends "base_vue_table.html" %}
+{% extends "feedback_base.html" %}
 {% load debate_tags %}
 {% load static %}
 
 {% block sub-title %}<span id="breaking_count">{{ breaking_count }}</span> marked as breaking{% endblock %}
 {% block body-id %}feedbackOverview{% endblock %}
-
-{% block page-subnav-sections %}
-  <a class="btn btn-default active" href="{% tournament_url adjfeedback-overview %}">
-    Feedback Overview
-  </a>
-  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-latest %}">
-    Latest Feedback
-  </a>
-  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-by-source %}">
-    Find Feedback
-  </a>
-  {% if pref.public_ballots_randomised or pref.public_feedback_randomised or pref.allocation_confirmations %}
-    <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">
-      Randomised URLs
-    </a>
-  {% endif %}
-  <a class="btn btn-default submit-disable" href="{% tournament_url feedback_progress %}">
-    Unsubmitted Ballots
-  </a>
-  {% include "tables/table_search.html" %}
-{% endblock %}
-
-{% block page-subnav-actions %}
-  <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
-{% endblock %}
-
 
 {% block content %}
 
@@ -101,8 +75,6 @@
   {% endif %}
 
 {% endblock %}
-
-
 
 {% block extra-js %}
 

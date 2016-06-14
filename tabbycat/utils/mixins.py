@@ -144,10 +144,10 @@ class VueTableMixin:
         kwargs["tables_data"] = json.dumps(table_data)
         return super().get_context_data(**kwargs)
 
-    def get_table_data(self, **kwargs):
+    def get_table_data(self):
         pass
 
-    def get_tables_data(self, **kwargs):
+    def get_tables_data(self):
         return [self.get_table_data()] # Default to return single table
 
     def format_cell_number(self, value):

@@ -35,10 +35,10 @@
   {% include "vue/table.vue" %}
   <script>
 
-    var tablesCount = {{ tables_count }};
-    var tablesData = {{ tables_data|safe }};
-    var tablesSort = '{{ tables_sort }}';
-    var tablesTitles = {{ tables_titles|safe }};
+    var tablesCount = {% if tables_count %}{{ tables_count }}{% else %}null{% endif %};
+    var tablesData = {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %};
+    var tablesSort = {% if tables_sort %}'{{ tables_sort }}'{% else %}null{% endif %};
+    var tablesTitles = {% if tables_titles %}{{ tables_titles|safe }}{% else %}null{% endif %};
     var tablesVue = [];
 
     for (var tableIndex in tablesCount) {

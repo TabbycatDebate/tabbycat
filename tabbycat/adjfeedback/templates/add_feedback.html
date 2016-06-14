@@ -1,17 +1,8 @@
-{% extends "base.html" %}
+{% extends "feedback_base.html" %}
 {% load debate_tags %}
 
 {% block head-title %}Who is the feedback from?{% endblock %}
 {% block page-title %}Enter Feedback{% endblock %}
-
-{% block page-subnav-sections %}
-  <div class="btn-group">
-    <a class="btn btn-default" href="{% tournament_url adjfeedback-overview %}">Feedback Summary</a>
-    <a class="btn btn-default" href="{% tournament_url adjfeedback-view-latest %}">Latest Feedback</a>
-    <a class="btn btn-default" href="{% tournament_url adjfeedback-view-by-source %}">Feedback By Source</a>
-  </div>
-  {% include "tables/table_search.html" %}
-{% endblock %}
 
 {% block content %}
 <div class="row">

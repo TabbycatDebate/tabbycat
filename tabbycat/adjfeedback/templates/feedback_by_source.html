@@ -11,9 +11,7 @@
   {% for feedback in feedbacks %}
 
     <div class="col-md-4">
-
       {% include 'feedback_card.html' %}
-
     </div>
 
     {% if forloop.counter|divisibleby:3 %}
@@ -27,7 +25,3 @@
   </div>
 
 {% endblock content %}
-
-{% block extra-js %}
-
-{% endblock extra-js %}
