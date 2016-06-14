@@ -30,6 +30,8 @@
 
 {% block extra-js %}
   {{ block.super }}
+  {% include "vue/cell.vue" %}
+  {% include "vue/header.vue" %}
   {% include "vue/table.vue" %}
   <script>
 
@@ -41,7 +43,7 @@
 
     for (var tableIndex in tablesCount) {
       tablesVue.push(
-        new Vue({
+        new Vue({ // Create a new Vue context fir each table
           el: String('#tableContainer' + tableIndex),
           data: {
             searchQuery: '',
@@ -58,7 +60,6 @@
         })
       );
     }
-
 
   </script>
 {% endblock extra-js %}

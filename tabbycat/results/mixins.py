@@ -85,7 +85,7 @@ class DebateResultCellsMixin:
 
         if not d.ballotsubmission_set_by_version_except_discarded:
             link = reverse_tournament('new_ballotset', t, kwargs={'debate_id': d.id})
-            ballotsets_info += "<a href=" + link + ">Enter New Ballot</a>"
+            ballotsets_info += "<a href=" + link + ">Enter Ballot</a>"
 
         ballot_cells = [{'head': {'key':'EB', 'icon': 'glyphicon-plus'}, 'cell': {'text': ballotsets_info}}]
 

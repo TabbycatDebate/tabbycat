@@ -2,92 +2,20 @@
 <script type="text/x-template" id="smart-table">
 
   <table class="table">
-
     <thead>
-
       <tr>
-        <th class="vue-sortable"
-            v-for="(headerIndex, header) in headers"
-            v-on:click="sortByHeader(headerIndex)"
-            v-bind:class="{'vue-sort-active': sortIndex == headerIndex}">
-
-            <span :title="header['tooltip']"
-                  :data-toggle="header['tooltip'] ? 'tooltip' : null"
-                  :v-on:hover="header['tooltip'] ? showTooltip  : null">
-
-              <template v-if="header['icon']">
-                <span class="glyphicon" :class="header['icon']"></span>
-              </template>
-
-              <template v-if="header['visible-sm']">
-                <span class="visible-sm-inline">
-                  [[ header['visible-sm'] ]]
-                </span>
-              </template>
-
-              <template v-if="header['visible-md']">
-                <span class="visible-md-inline">
-                  [[ header['visible-md'] ]]
-                </span>
-              </template>
-
-              <template v-if="header['visible-lg']">
-                <span class="visible-lg-inline">
-                  [[ header['visible-lg'] ]]
-                </span>
-              </template>
-
-              <template v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('visible-sm') && !header.hasOwnProperty('visible-md') && !header.hasOwnProperty('visible-lg')">
-                [[ header['key'] ]]
-              </template>
-
-            </span>
-
-          </template>
-
-          <span class="glyphicon vue-sort-key pull-right"
-                :class="sortIndex === headerIndex && sortOrder > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
-          </span>
-
-        </th>
+        <template v-for="(headerIndex, headerData) in headers">
+          <smart-header :header-index="headerIndex" :header-data="headerData"></smart-header>
+        </template>
       </tr>
-
     </thead>
     <tbody>
-
       <h4 v-if="typeof tableContent[0] === 'undefined'">No Data Available</h4>
-
       <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder" >
-        <td v-for="(cellIndex, cell) in row" :class="cell['cell-class'] ? cell['cell-class'] : null">
-
-            <!-- Sorting key -->
-            <span v-if="cell['sort']" class="hidden">
-              [[ cell["sort"] ]]
-            </span>
-
-            <!-- Icons or Emoji -->
-            <span v-if="cell['icon']" class="glyphicon" :class="cell['icon']">
-            </span>
-            <span class="emoji" v-if="cell['emoji']">
-              [[ cell["emoji"] ]]
-            </span>
-
-            <!-- Tooltip Hovers Wrapper -->
-            <span :title="cell['tooltip']"
-                  :data-toggle="cell['tooltip'] ? 'tooltip' : null"
-                  :v-on:hover="cell['tooltip'] ? showTooltip  : null">
-
-              <!-- Text (with link if needed) -->
-              <a v-if="cell['link']" :href="cell['link']" >
-                <span v-html="cell['text']"></span>
-              </a>
-              <span v-else v-html="cell['text']"></span>
-
-            </span>
-
-        </td>
+        <template v-for="(cellIndex, cellData) in row">
+          <smart-cell :cell-data="cellData"></smart-cell>
+        </template>
       </tr>
-
     </tbody>
   </table>
 
@@ -122,6 +50,11 @@
       filterKey: String,
       defaultSortKey: String
     },
+    components: {
+      // Register the child components locally
+      'smart-cell': smartCell,
+      'smart-header': smartHeader
+    },
     data: function () {
       return {
         sortIndex: this.getDefaultSortIndex(),
@@ -145,7 +78,9 @@
         }
         return index
       },
-      sortByHeader: function (headerIndex) {
+    },
+    events: {
+      receiveSortByHeader: function (headerIndex) {
         // Set the current sorting key; flip it (x * -1) if already in place
         // We have to modify the original .data so that the computed props will update
         if (this.sortIndex === headerIndex) {
@@ -155,9 +90,6 @@
         }
         this.sortIndex = headerIndex;
       },
-      showTooltip: function(event) {
-        $(event.target).tooltip('show')
-      }
     },
     computed: {
       rows: function() {
