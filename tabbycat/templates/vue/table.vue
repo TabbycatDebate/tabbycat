@@ -5,7 +5,10 @@
     <thead>
       <tr>
         <template v-for="(headerIndex, headerData) in headers">
-          <smart-header :header-index="headerIndex" :header-data="headerData"></smart-header>
+          <smart-header :header-index="headerIndex"
+                        :header-data="headerData"
+                        :sort-index="sortIndex"
+                        :sort-order="sortOrder"></smart-header>
         </template>
       </tr>
     </thead>

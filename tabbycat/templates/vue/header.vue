@@ -1,8 +1,7 @@
 <!-- Table Template -->
 <script type="text/x-template" id="smart-header">
 
-  <th class="vue-sortable" v-on:click="notifySortByHeader()"
-      v-bind:class="{'vue-sort-active': sortIndex == headerIndex}">
+  <th class="vue-sortable" v-on:click="notifySortByHeader()">
 
     <span :title="headerData['tooltip']"
           :data-toggle="headerData['tooltip'] ? 'tooltip' : null"
@@ -36,9 +35,7 @@
 
     </span>
 
-    <span class="glyphicon vue-sort-key pull-right"
-          :class="sortIndex === headerIndex && sortOrder > 0 ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'">
-    </span>
+    <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
 
   </th>
 
@@ -53,6 +50,20 @@
     props: {
       headerData: Object,
       headerIndex: Number,
+      sortOrder: Number,
+      sortIndex: Number
+    },
+    computed: {
+      sortClasses: function() {
+        if (this.sortIndex === this.headerIndex && this.sortOrder < 0) {
+          classes = "text-success glyphicon-sort-by-attributes-alt";
+        } else if (this.sortIndex === this.headerIndex && this.sortOrder > 0) {
+          classes = "text-success glyphicon-sort-by-attributes";
+        } else {
+          classes = "text-muted glyphicon-sort";
+        }
+        return classes;
+      }
     },
     methods: {
       showTooltip: function(event) {

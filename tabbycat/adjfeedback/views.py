@@ -61,6 +61,12 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
             ddict.extend(self.adj_cells(adj, t, hide_institution=True))
             ddict[0]['cell']['text'] += "<br><em>%s</em>" % adj.institution.code
 
+            if t.pref('show_unaccredited'):
+                ddict.append({
+                    'head': {'key': 'N', 'icon': 'glyphicon-leaf', 'tooltip': 'Novice Status'},
+                    'cell': {'icon': 'glyphicon-ok' if adj.novice else ''}
+                })
+
             checkbox = '<input type="checkbox" adj_id=%s' % adj.id
             checkbox += ' checked >' if adj.breaking else '>'
             ddict.append({
@@ -68,13 +74,11 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
                 'cell': {'text': checkbox, 'sort': adj.breaking, 'cell-class': 'toggle_breaking_status'}
             })
 
-            ddict.append({
-                'head': {'key': 'Score'},
+            ddict.append({'head': {'key': 'Score'},
                 'cell': {'text': self.format_cell_number(adj.feedback_score)}
             })
 
-            ddict.append({
-                'head': {'key': 'Test'},
+            ddict.append({'head': {'key': 'Test'},
                 'cell': {
                     'text': self.format_cell_number(adj.score),
                     'modal': adj.id,
@@ -82,15 +86,15 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
                     'tooltip': 'Click to edit test score'
                 }
             })
-            # TODO: feedback trend
-            if t.pref('show_unaccredited'):
-                ddict.append({
-                    'head': {'key': 'N', 'icon': 'glyphicon-leaf', 'tooltip': 'Novice Status'},
-                    'cell': {'icon': "glyphicon-ok" if adj.novice else ""}
-                })
+
+            ddict.append({
+                'head': {'key': 'Trend', 'tooltip': 'Graph of feedback received'},
+                'cell': {'text': ''}
+            })
+
             ddict.append({
                 'head': {'key': 'VF', 'icon': 'glyphicon-question-sign'},
-                'cell': {'text': "View<br>Feedback",
+                'cell': {'text': 'View<br>Feedback',
                          'cell-class': 'view-feedback',
                          'link': '',
                          'modal': adj.id}
@@ -99,19 +103,19 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
             if t.pref('enable_adj_notes'):
                 ddict.append({
                     'head': {'key': 'NO', 'icon': 'glyphicon-list-alt'},
-                    'cell': {'text': "Edit<br>Note", 'cell-class': 'edit-note', 'modal': str(adj.id) + "===" + str(adj.notes)}
+                    'cell': {'text': 'Edit<br>Note', 'cell-class': 'edit-note', 'modal': str(adj.id) + '===' + str(adj.notes)}
                 })
             # TODO: adj checkbox
             ddict.append({
-                'head': {'key': 'DD', 'icon': 'glyphicon-eye-open', 'tooltip': "Debates adjudicated"},
+                'head': {'key': 'DD', 'icon': 'glyphicon-eye-open', 'tooltip': 'Debates adjudicated'},
                 'cell': {'text': adj.debates}
             })
             ddict.append({
-                'head': {'key': 'DD', 'icon': 'glyphicon-resize-full', 'tooltip': "Average Margin"},
+                'head': {'key': 'DD', 'icon': 'glyphicon-resize-full', 'tooltip': 'Average Margin'},
                 'cell': {'text': self.format_cell_number(adj.avg_margin)}
             })
             ddict.append({
-                'head': {'key': 'DD', 'icon': 'glyphicon-stats', 'tooltip': "Average Score"},
+                'head': {'key': 'DD', 'icon': 'glyphicon-stats', 'tooltip': 'Average Score'},
                 'cell': {'text': self.format_cell_number(adj.avg_score)}
             })
 
