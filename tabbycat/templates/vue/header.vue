@@ -7,29 +7,10 @@
           :data-toggle="headerData['tooltip'] ? 'tooltip' : null"
           :v-on:hover="headerData['tooltip'] ? showTooltip  : null">
 
-      <template v-if="headerData['icon']">
-        <span class="glyphicon" :class="headerData['icon']"></span>
-      </template>
+      <span v-if="headerData['icon']" class="glyphicon" :class="headerData['icon']"></span>
+      <span v-if="headerData['text']" v-html="headerData['text']"></span>
 
-      <template v-if="headerData['visible-sm']">
-        <span class="visible-sm-inline">
-          [[ headerData['visible-sm'] ]]
-        </span>
-      </template>
-
-      <template v-if="headerData['visible-md']">
-        <span class="visible-md-inline">
-          [[ headerData['visible-md'] ]]
-        </span>
-      </template>
-
-      <template v-if="headerData['visible-lg']">
-        <span class="visible-lg-inline">
-          [[ headerData['visible-lg'] ]]
-        </span>
-      </template>
-
-      <template v-if="!headerData.hasOwnProperty('icon') && !headerData.hasOwnProperty('visible-sm') && !headerData.hasOwnProperty('visible-md') && !headerData.hasOwnProperty('visible-lg')">
+      <template v-if="!headerData.hasOwnProperty('icon') && !headerData.hasOwnProperty('text')">
         [[ headerData['key'] ]]
       </template>
 

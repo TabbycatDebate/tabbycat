@@ -3,13 +3,16 @@
 
 {% block page-subnav-sections %}
   <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-overview %}">
-    Feedback Overview
+    Overview
   </a>
   <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-latest %}">
-    Latest Feedback
+    Latest
   </a>
   <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-by-source %}">
-    Find Feedback by Source
+    Find by Source
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-by-target %}">
+    Find by Target
   </a>
   {% if pref.public_ballots_randomised or pref.public_feedback_randomised or pref.allocation_confirmations %}
     <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">

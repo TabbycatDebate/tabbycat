@@ -1,8 +1,8 @@
 <!-- Adjudicator's Mini Feedback Graph -->
 <script type="text/x-template" id="feedback-trend">
-
-  <div id="[[ elementID ]]" class="d3-graph d3-feedback-trend"></div>
-
+  <td class="unpadded-cell">
+    <div class="d3-graph d3-feedback-trend"></div>
+  </td>
 </script>
 
 <script>
@@ -63,9 +63,10 @@
       .attr("class", "d3-tooltip tooltip")
       .style("opacity", 0);
 
-    var svg = d3.select("#" + vueContext.elementID).append("svg")
+    var element = $(vueContext.$el).children(".d3-graph")[0]
+    var svg = d3.select(element).insert("svg", ":first-child")
         .attr("width", vueContext.width + vueContext.padding + vueContext.padding)
-        .attr("height", vueContext.height + vueContext.padding + vueContext.padding)
+        .attr("height", vueContext.height + vueContext.padding)
       .append("g")
         .attr("transform", "translate(" + vueContext.padding + "," + vueContext.padding + ")");
 
@@ -85,23 +86,28 @@
 		var ySeries = vueContext.graphData.map(function(d) { return parseFloat(d['y']); });
 		var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
-		// apply the reults of the least squares regression
-		var x1 = xLabels[0];
-		var y1 = leastSquaresCoeff[0] + leastSquaresCoeff[1];
-		var x2 = xLabels[xLabels.length - 1];
-		var y2 = leastSquaresCoeff[0] * xSeries.length + leastSquaresCoeff[1];
-		var trendData = [[x1,y1,x2,y2]];
-		var trendline = svg.selectAll(".trendline").data(trendData);
+    if (!isNaN(leastSquaresCoeff[0]) && !isNaN(leastSquaresCoeff[1])) {
+      // apply the reults of the least squares regression (if there are enough data points for it)
+      var x1 = xLabels[0];
+      var y1 = leastSquaresCoeff[0] + leastSquaresCoeff[1];
 
-		trendline.enter()
-			.append("line")
-			.attr("class", "trendline")
-			.attr("x1", function(d) { return xScale(d[0]); })
-			.attr("y1", function(d) { return yScale(d[1]); })
-			.attr("x2", function(d) { return xScale(d[2]); })
-			.attr("y2", function(d) { return yScale(d[3]); })
-			.attr("stroke", "#999")
-			.attr("stroke-width", 2);
+      var x2 = xLabels[xLabels.length - 1];
+      var y2 = leastSquaresCoeff[0] * xSeries.length + leastSquaresCoeff[1];
+
+      var trendData = [[x1,y1,x2,y2]];
+      var trendline = svg.selectAll(".trendline").data(trendData);
+
+      trendline.enter()
+        .append("line")
+        .attr("class", "trendline")
+        .attr("x1", function(d) { return xScale(d[0]); })
+        .attr("y1", function(d) { return yScale(d[1]); })
+        .attr("x2", function(d) { return xScale(d[2]); })
+        .attr("y2", function(d) { return yScale(d[3]); })
+        .attr("stroke", "#999")
+        .attr("stroke-width", 2);
+    }
+
 
     var circles = svg.selectAll("circle").data(vueContext.graphData)
     circles
@@ -109,19 +115,7 @@
       .attr("cx", function (d) { return xScale (d.x); })
       .attr("cy", function (d) { return yScale (d.y); })
       .attr("r", 5) // Size of circle
-      .attr("class", "d3-hoverable d3-hover-black")
-      .attr("fill", function (d) {
-        if (d.position === "Chair") {
-          return '#3700A8'; // Dark purple
-        } else if (d.position === "Panellist") {
-          return '#007FFF'; // Royal blue
-        } else if (d.position === "Trainee") {
-          return '#A0E6E5'; // Light teal
-        } else {
-          return 'grey'; // Test
-        }
-        return yScale (d.position);
-      })
+      .attr("class", function(d) { return "d3-hoverable position-display d3-hover-black " + d.position.toLowerCase()})
       .on("mouseover", function(d, i) {
         div.transition()
             .duration(200)
@@ -138,22 +132,16 @@
 
   }
 
-  Vue.component('feedback-trend', {
+  var feedbackTrend = Vue.extend({
     template: '#feedback-trend',
     props: {
-      id: Number,
       minScore: Number,
       maxScore: Number,
       roundSeq: Number,
       graphData: Array,
-      width: { type: Number, default: 300 },
-      height: { type: Number, default: 42 },
+      width: { type: Number, default: 320 },
+      height: { type: Number, default: 46 },
       padding: { type: Number, default: 5 },
-    },
-    computed: {
-      elementID: function () {
-        return "feedbackTrendForAdj" + String(this.id)
-      },
     },
     ready: function() {
       if (this.graphData !== undefined) {
@@ -161,4 +149,10 @@
       }
     },
   })
+
+  pluginComponents.push({
+    template: 'feedback-trend',
+    reference: feedbackTrend
+  })
+
 </script>

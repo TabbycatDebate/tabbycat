@@ -4,14 +4,8 @@
 
 .panel-body .table {
   margin-bottom: 0; // Panel body has its own bottom padding
-  > tr:nth-of-type(odd) {
-    background-color: $table-bg-accent; // Force .table-striped style
-  }
   > tbody > tr:hover td {
     background-color: $table-bg-hover;
-  }
-  > tbody > tr.clickable:hover {
-    cursor: pointer;
   }
 }
 
@@ -25,6 +19,7 @@ thead {
   }
 }
 
+// Deprecate after datatables removed
 .dataTables_filter {
   display: none; // Hide the default search box
 }
@@ -35,6 +30,7 @@ thead {
 
 .table > thead > tr > th {
 
+  // Deprecate after datatables removed
   &.sorting,
   &.sorting_asc,
   &.sorting_desc,
@@ -46,6 +42,7 @@ thead {
   }
 }
 
+// Deprecate after datatables removed
 .sorting {
   &::after {
     content: '\e150';
@@ -57,29 +54,33 @@ thead {
 }
 
 .vue-sortable {
-  &:hover {
+  &:hover, &:hover .glyphicon {
     color: $brand-success;
     cursor: pointer;
   }
 }
 
+// Deprecate after datatables removed
 .sorting_asc,
 .sorting_desc {
   color: $brand-success;
 }
 
+// Deprecate after datatables removed
 .sorting_asc {
   &::after {
     content: '\e155';
   }
 }
 
+// Deprecate after datatables removed
 .sorting_desc {
   &::after {
     content: '\e156';
   }
 }
 
+// Deprecate after datatables removed
 table thead .sorting:after,
 table thead .sorting_asc:after,
 table thead .sorting_desc:after,
@@ -98,27 +99,23 @@ table thead .sorting_desc_disabled:after {
 
 .table > tbody > tr > th,
 .table > tbody > tr > td {
-  border-left: 0;
-  border-right: 0;
+  &.unpadded-cell {
+    padding: 0px;
+  }
 }
 
 //------------------------------------------------------------------------------
 // SPECIFIC DECORATORS
 //------------------------------------------------------------------------------
 
+// Deprecate after draw_with_standings_content converted
 .draw-with-standings .em {
   font-weight: bold;
   color: chocolate;
   font-style: normal;
 }
 
+// Deprecate after draw_with_standings_content converted
 .draw-with-standings .first-in-bracket {
   border-top: 3px solid chocolate;
-}
-
-.no-overflow {
-  max-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }

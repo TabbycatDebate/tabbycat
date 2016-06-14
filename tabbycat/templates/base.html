@@ -145,7 +145,10 @@
     </script>
 
     {% if debug %}<script>Vue.config.debug = true;</script>{% endif %}
-    <script>Vue.config.delimiters = ["[[", "]]"];</script>
+    <script>
+      Vue.config.delimiters = ["[[", "]]"];
+      var pluginComponents = [] // For adding extra components to load
+    </script>
 
   <!-- Page specific JS and dependencies -->
   {% block extra-js %}{% endblock extra-js %}

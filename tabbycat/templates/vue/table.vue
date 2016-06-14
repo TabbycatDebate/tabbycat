@@ -16,7 +16,15 @@
       <h4 v-if="typeof tableContent[0] === 'undefined'">No Data Available</h4>
       <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder" >
         <template v-for="(cellIndex, cellData) in row">
-          <smart-cell :cell-data="cellData"></smart-cell>
+          <smart-cell v-if="!cellData['component']" :cell-data="cellData"></smart-cell>
+          <template v-else>
+            <feedback-trend v-if="cellData['component'] === 'feedback-trend'"
+                          :min-score="cellData['min-score']"
+                          :max-score="cellData['max-score']"
+                          :round-seq="cellData['round-seq']"
+                          :graph-data="cellData['data']">
+            </feedback-trend>
+          </template>
         </template>
       </tr>
     </tbody>
@@ -46,6 +54,16 @@
 
   });
 
+  // Setup base components
+  var tableComponents = {
+      'smart-cell': smartCell,
+      'smart-header': smartHeader,
+  }
+  // Extend
+  for (var i = 0; i < pluginComponents.length; i++) {
+    tableComponents[pluginComponents[i].template] = pluginComponents[i].reference
+  }
+
   Vue.component('smart-table', {
     template: '#smart-table',
     props: {
@@ -53,11 +71,7 @@
       filterKey: String,
       defaultSortKey: String
     },
-    components: {
-      // Register the child components locally
-      'smart-cell': smartCell,
-      'smart-header': smartHeader
-    },
+    components: tableComponents,
     data: function () {
       return {
         sortIndex: this.getDefaultSortIndex(),

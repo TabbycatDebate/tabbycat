@@ -70,17 +70,22 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
             checkbox = '<input type="checkbox" adj_id=%s' % adj.id
             checkbox += ' checked >' if adj.breaking else '>'
             ddict.append({
-                'head': {'key': 'B', 'icon': 'glyphicon-star'},
+                'head': {'key': 'B', 'icon': 'glyphicon-star', 'tooltip': 'Whether the adj is marked as breaking (click to mark)'},
                 'cell': {'text': checkbox, 'sort': adj.breaking, 'cell-class': 'toggle_breaking_status'}
             })
 
-            ddict.append({'head': {'key': 'Score'},
-                'cell': {'text': self.format_cell_number(adj.feedback_score)}
+            current_score = str(self.format_cell_number(adj.feedback_score, dp=1)) if adj.feedback_score else 'N/A'
+            ddict.append({
+                'head': {'key': 'Score', 'icon': 'glyphicon-signal', 'tooltip': 'Current weighted score'},
+                'cell': {'text': '<strong>%s</strong>' % current_score, 'tooltip': 'Current weighted average of all feedback'}
             })
 
-            ddict.append({'head': {'key': 'Test'},
+            ddict.append({
+                'head': {
+                    'key': 'Test', 'icon': 'glyphicon-scale', 'tooltip': 'Test Score Result'
+                },
                 'cell': {
-                    'text': self.format_cell_number(adj.score),
+                    'text': self.format_cell_number(adj.score, dp=1),
                     'modal': adj.id,
                     'cell-class': 'edit-test-score',
                     'tooltip': 'Click to edit test score'
@@ -88,16 +93,26 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
             })
 
             ddict.append({
-                'head': {'key': 'Trend', 'tooltip': 'Graph of feedback received'},
-                'cell': {'text': ''}
+                'head': {
+                    'key': 'Feedback',
+                    'text': 'Feedback as <span class="position-display chair">&nbsp;Chair&nbsp;</span>' +
+                    ' <span class="position-display panellist">&nbsp;Panellist&nbsp;</span>' +
+                    ' <span class="position-display trainee">&nbsp;Trainee&nbsp;</span>'
+                },
+                'cell': {
+                    'data': adj.feedback_data,
+                    'component': 'feedback-trend',
+                    'min-score': t.pref('adj_min_score'),
+                    'max-score': t.pref('adj_max_score'),
+                    'round-seq': t.current_round.seq,
+                }
             })
 
             ddict.append({
                 'head': {'key': 'VF', 'icon': 'glyphicon-question-sign'},
                 'cell': {'text': 'View<br>Feedback',
                          'cell-class': 'view-feedback',
-                         'link': '',
-                         'modal': adj.id}
+                         'link': reverse_tournament('adjfeedback-view-on-adjudicator', t, kwargs={'pk': adj.pk})}
             })
             # TODO
             if t.pref('enable_adj_notes'):
@@ -111,17 +126,39 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
                 'cell': {'text': adj.debates}
             })
             ddict.append({
-                'head': {'key': 'DD', 'icon': 'glyphicon-resize-full', 'tooltip': 'Average Margin'},
-                'cell': {'text': self.format_cell_number(adj.avg_margin)}
-            })
-            ddict.append({
-                'head': {'key': 'DD', 'icon': 'glyphicon-stats', 'tooltip': 'Average Score'},
-                'cell': {'text': self.format_cell_number(adj.avg_score)}
+                'head': {'key': 'DD', 'icon': 'glyphicon-resize-full', 'tooltip': 'Average Margin (top) and Average Score (bottom)'},
+                'cell': {'text': "%s<br>%s" % (self.format_cell_number(adj.avg_margin, dp=1), self.format_cell_number(adj.avg_score, dp=1))}
             })
 
             feedback_data.append(ddict)
 
         return feedback_data
+
+
+class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):
+    template_name = "feedback_base.html"
+    page_title = 'Find Feedback on Adjudicator'
+    page_emoji = '🔍'
+    sort_key = 'Name'
+
+    def get_table_data(self):
+        t = self.get_tournament()
+
+        on_adjs_data = []
+        for adj in Adjudicator.objects.filter(tournament=t):
+            ddict = self.adj_cells(adj, t)
+
+            feedbacks = AdjudicatorFeedback.objects.filter(adjudicator=adj).count(),
+            ddict.append({
+                'head': {'key': 'Feedbacks'},
+                'cell': {
+                    'text': "%s Feedbacks" % feedbacks,
+                    'link': reverse_tournament('adjfeedback-view-on-adjudicator', t, kwargs={'pk': adj.id})
+                }
+            })
+            on_adjs_data.append(ddict)
+
+        return on_adjs_data
 
 
 class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):
@@ -223,10 +260,12 @@ class FeedbackFromSourceView(SingleObjectMixin, FeedbackCardsView):
 
     template_name = "feedback_by_source.html"
     source_name_attr = None
+    source_type = "from"
     adjfeedback_filter_field = None
 
     def get_context_data(self, **kwargs):
         kwargs['source_name'] = getattr(self.object, self.source_name_attr, '<ERROR>')
+        kwargs['source_type'] = self.source_type
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -240,6 +279,17 @@ class FeedbackFromSourceView(SingleObjectMixin, FeedbackCardsView):
     def get_feedback_queryset(self):
         kwargs = {self.adjfeedback_filter_field: self.object}
         return AdjudicatorFeedback.objects.filter(**kwargs).order_by('-timestamp')
+
+
+class FeedbackOnAdjudicatorView(FeedbackFromSourceView):
+    """Base class for views displaying feedback from a given team or adjudicator."""
+    # SingleObjectFromTournamentMixin doesn't work great here, it induces an MRO
+    # conflict between TournamentMixin and ContextMixin.
+
+    model = Adjudicator
+    source_name_attr = 'name'
+    source_type = "on"
+    adjfeedback_filter_field = 'adjudicator'
 
 
 class FeedbackFromTeamView(FeedbackFromSourceView):

@@ -43,6 +43,12 @@ urlpatterns = [
     url(r'^source/adjudicator/(?P<pk>\d+)/$',
         views.FeedbackFromAdjudicatorView.as_view(),
         name='adjfeedback-view-from-adjudicator'),
+    url(r'^target/list/$',
+        views.FeedbackByTargetView.as_view(),
+        name='adjfeedback-view-by-target'),
+    url(r'^target/adjudicator/(?P<pk>\d+)/$',
+        views.FeedbackOnAdjudicatorView.as_view(),
+        name='adjfeedback-view-on-adjudicator'),
 
     # Adding
     url(r'^add/$',

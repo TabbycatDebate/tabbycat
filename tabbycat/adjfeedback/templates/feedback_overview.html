@@ -78,28 +78,17 @@
 
 {% block extra-js %}
 
-  {{ block.super }}
-
   <script src="{% static 'js/vendor/d3.min.js' %}"></script>
   {% include "vue/feedback-trend.vue" %}
 
   <script>
 
-    // var vueData =  {
-    //   minScore: {{ pref.adj_min_score }},
-    //   maxScore: {{ pref.adj_max_score }},
-    //   roundSeq: {{ current_round.seq }}
-    // }
-    // new Vue({
-    //   el: '#feedbackOverview',
-    //   data: vueData
-    // })
-
-    // $(document).ready( function() {
+    $(document).ready( function() {
 
       // TODO FIX with new cards method
       // $(".view-feedback a").each( function() {
       //   $(this).click( function() {
+      //     var adj_id = parseInt($(this).attr("data-target"));
       //     // Remove previous data to prevent confusion during slow loads
       //     adjTable.api().clear().draw()
       //     var adj_info = get_adj_information(this);
@@ -151,7 +140,10 @@
         });
       });
 
-    // });
+    });
 
   </script>
+
+  {{ block.super }}
+
 {% endblock extra-js %}

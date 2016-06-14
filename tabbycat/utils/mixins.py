@@ -161,9 +161,12 @@ class VueTableMixin:
     def get_tables_data(self):
         return [self.get_table_data()] # Default to return single table
 
-    def format_cell_number(self, value):
+    def format_cell_number(self, value, dp=2):
         if isinstance(value, float):
-            return "{0:.2f}".format(value)
+            if dp is 2:
+                return "{0:.2f}".format(value)
+            else:
+                return "{0:.1f}".format(value)
         else:
             return value
 

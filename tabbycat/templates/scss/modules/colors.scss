@@ -1,7 +1,26 @@
-.gender-display {
 
+.position-display { // For feedback graph
   color: #fff;
-
+  &.chair {
+    background-color: #b10095; // Purpleish
+    fill: #b10095;
+  }
+  &.panellist {
+    background-color: $male;
+    fill: $male;
+  }
+  &.trainee {
+    background-color: $female;
+    fill: $female;
+  }
+  &.test {
+    background-color: $unknown;
+    fill: $unknown;
+  }
+}
+// For diversity graphs and allocation
+.gender-display {
+  color: #fff;
   &.male {
     background-color: $male;
     fill: $male;
@@ -20,7 +39,6 @@
   }
 }
 .gender-text {
-
   &.male {
     color: $male;
   }
@@ -34,6 +52,7 @@
     color: $unknown;
   }
 }
+// For diversity graphs and allocation
 .region-display {
   color: #fff;
   span a {
