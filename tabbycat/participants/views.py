@@ -8,8 +8,8 @@ from django.views.generic.base import TemplateView, View
 
 from adjallocation.models import DebateAdjudicator
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
-from utils.misc import reverse_tournament
-from utils.mixins import CacheMixin, HeadlessTemplateView, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin, VueTableMixin
+from utils.mixins import CacheMixin, HeadlessTemplateView, SingleObjectByRandomisedUrlMixin, \
+        SuperuserRequiredMixin, SingleObjectFromTournamentMixin, VueTableMixin
 
 from .models import Adjudicator, Institution, Speaker, Team
 
@@ -42,9 +42,6 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
         adjudicators = t.adjudicator_set.select_related('institution')
         for adjudicator in adjudicators:
             ddict = self.adj_cells(adjudicator, t)
-            if t.pref('public_summary'):
-                ddict[0]['cell']['link'] = reverse_tournament('participants-public-adjudicator-summary',
-                        t, kwargs={'pk': adjudicator.pk})
             adjs_data.append(ddict)
 
         kwargs["table_a_title"] = "Adjudicators"
@@ -54,11 +51,7 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
         speakers = Speaker.objects.filter(team__tournament=t).select_related('team', 'team__institution')
         for speaker in speakers:
             ddict = self.speaker_cells(speaker, t)
-            team_cell_index = len(ddict)
             ddict.extend(self.team_cells(speaker.team, t))
-            if t.pref('public_summary'):
-                ddict[team_cell_index]['cell']['link'] = reverse_tournament('participants-public-team-summary',
-                        t, kwargs={'pk': speaker.team.pk})
             speakers_data.append(ddict)
 
         kwargs["table_b_title"] = "Speakers"
@@ -71,7 +64,7 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
 # Team and adjudicator summary pages
 # ==============================================================================
 
-class ParticipantsListView(TournamentMixin, VueTableMixin, TemplateView):
+class ParticipantsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixin, TemplateView):
 
     template_name = 'base_double_vue_table.html'
     page_title = 'Team and Adjudicator Summary Pages'
@@ -85,8 +78,6 @@ class ParticipantsListView(TournamentMixin, VueTableMixin, TemplateView):
         adjudicators = t.adjudicator_set.select_related('institution')
         for adj in adjudicators:
             ddict = self.adj_cells(adj, t)
-            ddict[0]['cell']['link'] = reverse_tournament('participants-adjudicator-summary',
-                    t, kwargs={'pk': adj.pk})
             adjs_data.append(ddict)
 
         kwargs["table_a_title"] = "Adjudicators"
@@ -96,8 +87,6 @@ class ParticipantsListView(TournamentMixin, VueTableMixin, TemplateView):
         teams = t.team_set.select_related('institution')
         for team in teams:
             ddict = self.team_cells(team, t, key='Name')
-            ddict[0]['cell']['link'] = reverse_tournament('participants-team-summary',
-                    t, kwargs={'pk': team.pk})
             teams_data.append(ddict)
 
         kwargs["table_b_title"] = "Teams"
@@ -112,16 +101,24 @@ class BaseSummaryView(SingleObjectFromTournamentMixin, VueTableMixin, TemplateVi
         return super().get(request, *args, **kwargs)
 
 
-class TeamSummaryView(BaseSummaryView):
+class BaseTeamSummaryView(BaseSummaryView):
 
     model = Team
     template_name = 'team_summary.html'
 
 
-class AdjudicatorSummaryView(BaseSummaryView):
+class BaseAdjudicatorSummaryView(BaseSummaryView):
 
     model = Adjudicator
     template_name = 'adjudicator_summary.html'
+
+
+class TeamSummaryView(SuperuserRequiredMixin, BaseTeamSummaryView):
+    pass
+
+
+class AdjudicatorSummaryView(SuperuserRequiredMixin, BaseAdjudicatorSummaryView):
+    pass
 
 
 class PublicTeamSummaryView(PublicTournamentPageMixin, TeamSummaryView):

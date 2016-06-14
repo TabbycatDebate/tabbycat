@@ -13,6 +13,8 @@ from django.views.generic.detail import SingleObjectMixin
 from adjallocation.models import DebateAdjudicator
 from tournaments.mixins import TournamentMixin
 
+from .misc import reverse_tournament
+
 logger = logging.getLogger(__name__)
 
 
@@ -168,6 +170,14 @@ class VueTableMixin:
             'head': {'key': 'Name'},
             'cell': {'text': adjudicator.name}
         }]
+
+        if isinstance(self, SuperuserRequiredMixin):
+            adj_info[0]['cell']['link'] = reverse_tournament('participants-adjudicator-summary',
+                    tournament, kwargs={'pk': adjudicator.pk})
+        elif tournament.pref('public_summary'):
+            adj_info[0]['cell']['link'] = reverse_tournament('participants-public-adjudicator-summary',
+                    tournament, kwargs={'pk': adjudicator.pk})
+
         if tournament.pref('show_institutions'):
             if adjudicator.adj_core:
                 adj_info.append({
@@ -231,6 +241,13 @@ class VueTableMixin:
                 'tooltip':  [" " + s.name for s in team.speakers] if tournament.pref('show_speakers_in_draw') or show_speakers else None
             }
         }]
+
+        if isinstance(self, SuperuserRequiredMixin):
+            team_info[0]['cell']['link'] = reverse_tournament('participants-team-summary',
+                    tournament, kwargs={'pk': team.pk})
+        elif tournament.pref('public_summary'):
+            team_info[0]['cell']['link'] = reverse_tournament('participants-public-team-summary',
+                    tournament, kwargs={'pk': team.pk})
 
         if break_categories is not None:
             team_info.append({
