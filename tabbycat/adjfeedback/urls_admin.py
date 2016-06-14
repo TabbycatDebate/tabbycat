@@ -15,10 +15,10 @@ urlpatterns = [
 
     # Getting/setting values
     url(r'^scores/all/$',
-        views.adj_scores,
+        views.GetAdjScores.as_view(),
         name='adj_scores'),
     url(r'^scores/get/$',
-        views.get_adj_feedback,
+        views.GetAdjFeedback.as_view(),
         name='get_adj_feedback'),
     url(r'^test/set/$',
         views.SetAdjudicatorTestScoreView.as_view(),

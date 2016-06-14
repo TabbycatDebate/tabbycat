@@ -1,8 +1,5 @@
-import json
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.db.models import Q
@@ -18,25 +15,22 @@ from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsM
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from utils.misc import reverse_tournament
-from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
+from utils.mixins import CacheMixin, JsonDataResponseView, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
 from utils.mixins import HeadlessTemplateView, PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin, VueTableMixin
 from utils.urlkeys import populate_url_keys
-from utils.views import admin_required, tournament_view
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
-from .utils import get_feedback_progress, get_feedback_overview, progress_cells
+from .utils import get_feedback_overview, get_feedback_progress, progress_cells
 
 
-@admin_required
-@tournament_view
-def adj_scores(request, t):
-    data = {}
-    # TODO: make round-dependent
-    for adj in Adjudicator.objects.all().select_related('tournament', 'tournament__current_round'):
-        data[adj.id] = adj.score
+class GetAdjScores(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
 
-    return HttpResponse(json.dumps(data), content_type="text/json")
+    def get_data(self):
+        data = {}
+        for adj in Adjudicator.objects.all().select_related('tournament', 'tournament__current_round'):
+            data[adj.id] = adj.score
+        return data
 
 
 class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):
@@ -126,7 +120,6 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
         return feedback_data
 
 
-
 class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):
 
     template_name = "feedback_base.html"
@@ -169,8 +162,6 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin, H
                 }
             })
             from_adjs_data.append(ddict)
-
-        on_adjs_data = []
 
         return [teams_data, from_adjs_data]
 
@@ -261,15 +252,9 @@ class FeedbackFromAdjudicatorView(FeedbackFromSourceView):
     adjfeedback_filter_field = 'source_adjudicator__adjudicator'
 
 
-@login_required
-@tournament_view
-def get_adj_feedback(request, t):
+class GetAdjFeedback(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
 
-    adj = get_object_or_404(Adjudicator, pk=int(request.GET['id']))
-    feedback = adj.get_feedback().filter(confirmed=True)
-    questions = t.adj_feedback_questions
-
-    def _parse_feedback(f):
+    def parse_feedback(self, f, questions):
 
         if f.source_team:
             source_annotation = " (" + f.source_team.result + ")"
@@ -293,8 +278,15 @@ def get_adj_feedback(request, t):
                 data.append("-")
         data.append(f.confirmed)
         return data
-    data = [_parse_feedback(f) for f in feedback]
-    return HttpResponse(json.dumps({'aaData': data}), content_type="text/json")
+
+    def get_data(self):
+        t = self.get_tournament()
+        adj = get_object_or_404(Adjudicator, pk=int(self.request.GET['id']))
+        feedback = adj.get_feedback().filter(confirmed=True)
+        questions = t.adj_feedback_questions
+
+        data = [self.parse_feedback(f, questions) for f in feedback]
+        return {'aaData': data}
 
 
 class BaseAddFeedbackIndexView(TournamentMixin, TemplateView):

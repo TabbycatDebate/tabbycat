@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
@@ -50,6 +50,17 @@ class PostOnlyRedirectView(View):
 
     def post(self, request, *args, **kwargs):
         return HttpResponseRedirect(self.get_redirect_url())
+
+
+class JsonDataResponseView(View):
+    """Mixings for views that dump back a json response"""
+
+    def get_data():
+        pass
+
+    def get(self, request, *args, **kwargs):
+        self.request = request
+        return HttpResponse(json.dumps(self.get_data()), content_type="text/json")
 
 
 class SuperuserRequiredMixin(UserPassesTestMixin):
