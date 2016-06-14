@@ -57,7 +57,6 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             self.draw = self.get_round().get_draw()
             return self.draw
 
-
     def get_table_data(self):
         t = self.get_tournament()
         draw = self.get_or_set_draw()
