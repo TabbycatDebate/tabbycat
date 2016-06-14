@@ -303,7 +303,7 @@ class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
                         rr['cell']['icon'] = "glyphicon-arrow-up text-danger"
                         rr['cell']['tooltip'] = "Lost to "
 
-                    rr['cell']['text'] += "vs " + team_score.opposition.emoji + "  " + self.format_cell_number(team_score.score)
+                    rr['cell']['text'] += "vs " + team_score.opposition.emoji + "<br>" + self.format_cell_number(team_score.score)
                     rr['cell']['tooltip'] += team_score.opposition.short_name + " and received " + self.format_cell_number(team_score.score) + " total speaks"
 
                 ddict.append(rr)
